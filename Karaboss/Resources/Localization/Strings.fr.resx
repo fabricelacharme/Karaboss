@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="addToPlaylist" xml:space="preserve">
+    <value>Ajouter à la playlist</value>
+  </data>
+  <data name="play" xml:space="preserve">
+    <value>Jouer</value>
+  </data>
+  <data name="QuitApplication" xml:space="preserve">
+    <value>Quitter l'application ?</value>
+  </data>
+  <data name="deleteMenu" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="renameAllMenu" xml:space="preserve">
+    <value>Renommer tout</value>
+  </data>
+  <data name="renameMenu" xml:space="preserve">
+    <value>Renommer</value>
+  </data>
+  <data name="replaceAllMenu" xml:space="preserve">
+    <value>Remplacer tout</value>
+  </data>
+  <data name="edit" xml:space="preserve">
+    <value>Editer</value>
+  </data>
+  <data name="newFolderMenu" xml:space="preserve">
+    <value>Nouveau dossier</value>
+  </data>
+  <data name="refreshDisplayMenu" xml:space="preserve">
+    <value>Rafraichir</value>
+  </data>
+  <data name="fileName" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Modified" xml:space="preserve">
+    <value>Modifié le</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Taille</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Singer" xml:space="preserve">
+    <value>Chanteur</value>
+  </data>
+  <data name="KaraokeOptions" xml:space="preserve">
+    <value>Options du Karaoke</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Langage</value>
+  </data>
+  <data name="SongTextEncoding" xml:space="preserve">
+    <value>Encodage des caractères</value>
+  </data>
+  <data name="UpdateKaraboss" xml:space="preserve">
+    <value>Mises à jour</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>Nouvelle playlist</value>
+  </data>
+  <data name="aboutMenu" xml:space="preserve">
+    <value>A propos...</value>
+  </data>
+  <data name="cancelButton" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="changeKeyMenu" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="chooseColorMenu" xml:space="preserve">
+    <value>Modifier les couleurs</value>
+  </data>
+  <data name="chooseColorsTitle" xml:space="preserve">
+    <value>Modifier les couleurs des notes</value>
+  </data>
+  <data name="chooseInstrumentsMenu" xml:space="preserve">
+    <value>Sélectionner un instrument</value>
+  </data>
+  <data name="chooseInstrumentsTitle" xml:space="preserve">
+    <value>Sélectionner un instrument pour chaque piste</value>
+  </data>
+  <data name="closeMenu" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="colorMenu" xml:space="preserve">
+    <value>Couleurs</value>
+  </data>
+  <data name="combineNotesMenu" xml:space="preserve">
+    <value>Arranger les notes dans un intervalle</value>
+  </data>
+  <data name="combineStaffMenu" xml:space="preserve">
+    <value>Séparer les notes dans 2 pistes</value>
+  </data>
+  <data name="deselectAllTracksMenu" xml:space="preserve">
+    <value>Déselectionner toutes les pistes</value>
+  </data>
+  <data name="down" xml:space="preserve">
+    <value>descendre</value>
+  </data>
+  <data name="endMeasure" xml:space="preserve">
+    <value>Fin de mesure</value>
+  </data>
+  <data name="exitMenu" xml:space="preserve">
+    <value>Quitter</value>
+  </data>
+  <data name="fastForward" xml:space="preserve">
+    <value>Retour rapide</value>
+  </data>
+  <data name="fileMenu" xml:space="preserve">
+    <value>Fichier</value>
+  </data>
+  <data name="helpContentsMenu" xml:space="preserve">
+    <value>Aide...</value>
+  </data>
+  <data name="helpMenu" xml:space="preserve">
+    <value>Aide</value>
+  </data>
+  <data name="AddSongToNewPlaylist" xml:space="preserve">
+    <value>Ajouter {0} chansons à une nouvelle playlist</value>
+  </data>
+  <data name="CreateNewPlaylist" xml:space="preserve">
+    <value>Créer une nouvelle playlist</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>Ouvrir le dossier</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Durée</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copier</value>
+  </data>
+  <data name="DeleteLine" xml:space="preserve">
+    <value>Supprimer la ligne</value>
+  </data>
+  <data name="InsertNewLine" xml:space="preserve">
+    <value>Insérer une nouvelle ligne</value>
+  </data>
+  <data name="OffsetDown" xml:space="preserve">
+    <value>Décaler vers le bas</value>
+  </data>
+  <data name="OffsetUp" xml:space="preserve">
+    <value>Décaler vers le haut</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>Coller</value>
+  </data>
+  <data name="SungBy" xml:space="preserve">
+    <value>Chanté par</value>
+  </data>
+  <data name="MidiEditor" xml:space="preserve">
+    <value>Editeur MIDI</value>
+  </data>
+  <data name="AllTracks" xml:space="preserve">
+    <value>Toutes les pistes</value>
+  </data>
+  <data name="DeleteHalfTime" xml:space="preserve">
+    <value>Supprimer 1/2 temps</value>
+  </data>
+  <data name="DeleteMeasure" xml:space="preserve">
+    <value>Supprimer une mesure</value>
+  </data>
+  <data name="DeleteOneTime" xml:space="preserve">
+    <value>Supprimer 1 temps</value>
+  </data>
+  <data name="InsertHalfTime" xml:space="preserve">
+    <value>Insérer 1/2 temps</value>
+  </data>
+  <data name="InsertMeasure" xml:space="preserve">
+    <value>Insérer une mesure</value>
+  </data>
+  <data name="InsertOnetime" xml:space="preserve">
+    <value>Insérer 1 temps</value>
+  </data>
+  <data name="SelectMeasures" xml:space="preserve">
+    <value>Sélectionner des mesures</value>
+  </data>
+  <data name="ThisTrack" xml:space="preserve">
+    <value>Cette piste</value>
+  </data>
+</root>

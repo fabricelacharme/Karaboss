@@ -1,0 +1,477 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="trackMenu" xml:space="preserve">
+    <value>Track</value>
+  </data>
+  <data name="notesMenu" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="fileMenu" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="openMenu" xml:space="preserve">
+    <value>Open...</value>
+  </data>
+  <data name="openSampleSongMenu" xml:space="preserve">
+    <value>Open Sample Song...</value>
+  </data>
+  <data name="closeMenu" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="saveImagesMenu" xml:space="preserve">
+    <value>Save As Images...</value>
+  </data>
+  <data name="savePDFMenu" xml:space="preserve">
+    <value>Save As PDF...</value>
+  </data>
+  <data name="previewMenu" xml:space="preserve">
+    <value>Print Preview...</value>
+  </data>
+  <data name="printMenu" xml:space="preserve">
+    <value>Print...</value>
+  </data>
+  <data name="exitMenu" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="viewMenu" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="zoomInMenu" xml:space="preserve">
+    <value>Zoom In</value>
+  </data>
+  <data name="zoomOutMenu" xml:space="preserve">
+    <value>Zoom Out</value>
+  </data>
+  <data name="zoom100Menu" xml:space="preserve">
+    <value>Zoom to 100%</value>
+  </data>
+  <data name="zoom150Menu" xml:space="preserve">
+    <value>Zoom to 150%</value>
+  </data>
+  <data name="scrollVertMenu" xml:space="preserve">
+    <value>Scroll Vertically</value>
+  </data>
+  <data name="scrollHorizMenu" xml:space="preserve">
+    <value>Scroll Horizontally</value>
+  </data>
+  <data name="smallNotesMenu" xml:space="preserve">
+    <value>Small Notes</value>
+  </data>
+  <data name="largeNotesMenu" xml:space="preserve">
+    <value>Large Notes</value>
+  </data>
+  <data name="colorMenu" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="useColorMenu" xml:space="preserve">
+    <value>Use Color</value>
+  </data>
+  <data name="chooseColorMenu" xml:space="preserve">
+    <value>Choose Colors...</value>
+  </data>
+  <data name="trackDisplayMenu" xml:space="preserve">
+    <value>Select Tracks to Display</value>
+  </data>
+  <data name="selectAllTracksMenu" xml:space="preserve">
+    <value>Select All Tracks</value>
+  </data>
+  <data name="deselectAllTracksMenu" xml:space="preserve">
+    <value>Deselect All Tracks</value>
+  </data>
+  <data name="trackMuteMenu" xml:space="preserve">
+    <value>Select Tracks to Mute</value>
+  </data>
+  <data name="muteAllTracksMenu" xml:space="preserve">
+    <value>Mute All Tracks</value>
+  </data>
+  <data name="unmuteAllTracksMenu" xml:space="preserve">
+    <value>Unmute All Tracks</value>
+  </data>
+  <data name="oneStaffMenu" xml:space="preserve">
+    <value>Show One Staff Per Track</value>
+  </data>
+  <data name="splitStaffMenu" xml:space="preserve">
+    <value>Split Track Into Two Staffs</value>
+  </data>
+  <data name="combineStaffMenu" xml:space="preserve">
+    <value>Combine All Tracks Into Two Staffs</value>
+  </data>
+  <data name="chooseInstrumentsMenu" xml:space="preserve">
+    <value>Choose Instruments...</value>
+  </data>
+  <data name="showLettersMenu" xml:space="preserve">
+    <value>Show Note Letters</value>
+  </data>
+  <data name="none" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="showLetters" xml:space="preserve">
+    <value>Letters</value>
+  </data>
+  <data name="showFixedDoReMi" xml:space="preserve">
+    <value>Fixed Do-Re-Mi</value>
+  </data>
+  <data name="showMovableDoReMi" xml:space="preserve">
+    <value>Movable Do-Re-Mi</value>
+  </data>
+  <data name="showFixedNumbers" xml:space="preserve">
+    <value>Fixed Numbers</value>
+  </data>
+  <data name="showMovableNumbers" xml:space="preserve">
+    <value>Movable Numbers</value>
+  </data>
+  <data name="showLyricsMenu" xml:space="preserve">
+    <value>Show Lyrics</value>
+  </data>
+  <data name="showMeasuresMenu" xml:space="preserve">
+    <value>Show Measure Numbers</value>
+  </data>
+  <data name="changeKeyMenu" xml:space="preserve">
+    <value>Key Signature</value>
+  </data>
+  <data name="showDefault" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="transposeMenu" xml:space="preserve">
+    <value>Transpose</value>
+  </data>
+  <data name="up" xml:space="preserve">
+    <value>Up</value>
+  </data>
+  <data name="down" xml:space="preserve">
+    <value>Down</value>
+  </data>
+  <data name="shiftNotesMenu" xml:space="preserve">
+    <value>Shift Notes</value>
+  </data>
+  <data name="shiftRight18" xml:space="preserve">
+    <value>Right 1/8 note</value>
+  </data>
+  <data name="shiftRight14" xml:space="preserve">
+    <value>Right 1/4 note</value>
+  </data>
+  <data name="shiftRight38" xml:space="preserve">
+    <value>Right 3/8 note</value>
+  </data>
+  <data name="shiftRight12" xml:space="preserve">
+    <value>Right 1/2 note</value>
+  </data>
+  <data name="shiftRight58" xml:space="preserve">
+    <value>Right 5/8 note</value>
+  </data>
+  <data name="shiftRight34" xml:space="preserve">
+    <value>Right 3/4 note</value>
+  </data>
+  <data name="shiftRight78" xml:space="preserve">
+    <value>Right 7/8 note</value>
+  </data>
+  <data name="measureMenu" xml:space="preserve">
+    <value>Measure Length</value>
+  </data>
+  <data name="pulses" xml:space="preserve">
+    <value>pulses</value>
+  </data>
+  <data name="timeSigMenu" xml:space="preserve">
+    <value>Time Signature</value>
+  </data>
+  <data name="combineNotesMenu" xml:space="preserve">
+    <value>Combine Notes Within Interval</value>
+  </data>
+  <data name="milliseconds" xml:space="preserve">
+    <value>milliseconds</value>
+  </data>
+  <data name="playMeasuresMenu" xml:space="preserve">
+    <value>Play Measures in a Loop...</value>
+  </data>
+  <data name="helpMenu" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="helpContentsMenu" xml:space="preserve">
+    <value>Help Contents...</value>
+  </data>
+  <data name="aboutMenu" xml:space="preserve">
+    <value>About...</value>
+  </data>
+  <data name="sampleSongTitle" xml:space="preserve">
+    <value>Choose a Sample MIDI Song</value>
+  </data>
+  <data name="okButton" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="cancelButton" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="chooseColorsTitle" xml:space="preserve">
+    <value>Choose Note Colors</value>
+  </data>
+  <data name="chooseInstrumentsTitle" xml:space="preserve">
+    <value>Choose Instruments For Each Track</value>
+  </data>
+  <data name="setAllPiano" xml:space="preserve">
+    <value>Set All To Piano</value>
+  </data>
+  <data name="playMeasuresTitle" xml:space="preserve">
+    <value>Play Selected Measures in a Loop</value>
+  </data>
+  <data name="startMeasure" xml:space="preserve">
+    <value>Start Measure</value>
+  </data>
+  <data name="endMeasure" xml:space="preserve">
+    <value>End Measure</value>
+  </data>
+  <data name="rewind" xml:space="preserve">
+    <value>Rewind</value>
+  </data>
+  <data name="play" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="fastForward" xml:space="preserve">
+    <value>Fast Forward</value>
+  </data>
+  <data name="speed" xml:space="preserve">
+    <value>Speed</value>
+  </data>
+  <data name="volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="QuitApplication" xml:space="preserve">
+    <value>Quit application?</value>
+  </data>
+  <data name="fileName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Modified" xml:space="preserve">
+    <value>Modified</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="addToPlaylist" xml:space="preserve">
+    <value>Add to Playlist</value>
+  </data>
+  <data name="deleteMenu" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="renameAllMenu" xml:space="preserve">
+    <value>Rename All</value>
+  </data>
+  <data name="renameMenu" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="replaceAllMenu" xml:space="preserve">
+    <value>Replace All</value>
+  </data>
+  <data name="newFolderMenu" xml:space="preserve">
+    <value>New Folder</value>
+  </data>
+  <data name="refreshDisplayMenu" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Singer" xml:space="preserve">
+    <value>Singer</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>New Playlist</value>
+  </data>
+  <data name="edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="KaraokeOptions" xml:space="preserve">
+    <value>Karaoke Options</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="SongTextEncoding" xml:space="preserve">
+    <value>Song text encoding</value>
+  </data>
+  <data name="UpdateKaraboss" xml:space="preserve">
+    <value>Update Karaboss</value>
+  </data>
+  <data name="AddSongToNewPlaylist" xml:space="preserve">
+    <value>Add {0} songs to a new playlist</value>
+  </data>
+  <data name="CreateNewPlaylist" xml:space="preserve">
+    <value>Create a new playlist</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>Open Folder</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="DeleteLine" xml:space="preserve">
+    <value>Delete line</value>
+  </data>
+  <data name="InsertNewLine" xml:space="preserve">
+    <value>Insert a new line</value>
+  </data>
+  <data name="OffsetDown" xml:space="preserve">
+    <value>Offset down</value>
+  </data>
+  <data name="OffsetUp" xml:space="preserve">
+    <value>Offset up</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
+  <data name="SungBy" xml:space="preserve">
+    <value>Sung by</value>
+  </data>
+  <data name="MidiEditor" xml:space="preserve">
+    <value>MidiEditor</value>
+  </data>
+  <data name="AllTracks" xml:space="preserve">
+    <value>All tracks</value>
+  </data>
+  <data name="DeleteHalfTime" xml:space="preserve">
+    <value>Delete 1/2 time</value>
+  </data>
+  <data name="DeleteMeasure" xml:space="preserve">
+    <value>Delete measure</value>
+  </data>
+  <data name="DeleteOneTime" xml:space="preserve">
+    <value>Delete 1 time</value>
+  </data>
+  <data name="InsertHalfTime" xml:space="preserve">
+    <value>Insert 1/2 time</value>
+  </data>
+  <data name="InsertMeasure" xml:space="preserve">
+    <value>Insert measure</value>
+  </data>
+  <data name="InsertOneTime" xml:space="preserve">
+    <value>Insert 1 time</value>
+  </data>
+  <data name="SelectMeasures" xml:space="preserve">
+    <value>Select measures</value>
+  </data>
+  <data name="ThisTrack" xml:space="preserve">
+    <value>This track</value>
+  </data>
+</root>

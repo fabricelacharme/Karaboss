@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3792319C-FE86-404C-AC23-54522F7044CC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FlShell</RootNamespace>
+    <AssemblyName>FlShell</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Interop\BHID.cs" />
+    <Compile Include="Interop\CoClass.cs" />
+    <Compile Include="Interop\ComCtl32.cs" />
+    <Compile Include="Interop\HResult.cs" />
+    <Compile Include="Interop\ICommDlgBrowser.cs" />
+    <Compile Include="Interop\IContextMenu.cs" />
+    <Compile Include="Interop\IDropSource.cs" />
+    <Compile Include="Interop\IDropTarget.cs" />
+    <Compile Include="Interop\IEnumIDList.cs" />
+    <Compile Include="Interop\IKnownFolder.cs" />
+    <Compile Include="Interop\IKnownFolderManager.cs" />
+    <Compile Include="Interop\IOleCommandTarget.cs" />
+    <Compile Include="Interop\IQueryInfo.cs" />
+    <Compile Include="Interop\IServiceProvider.cs" />
+    <Compile Include="Interop\IShellBrowser.cs" />
+    <Compile Include="Interop\IShellExtInit.cs" />
+    <Compile Include="Interop\IShellFolder.cs" />
+    <Compile Include="Interop\IShellItem.cs" />
+    <Compile Include="Interop\IShellItemArray.cs" />
+    <Compile Include="Interop\IShellView.cs" />
+    <Compile Include="Interop\Kernel32.cs" />
+    <Compile Include="Interop\Ole32.cs" />
+    <Compile Include="Interop\Shell32.cs" />
+    <Compile Include="Interop\ShlWapi.cs" />
+    <Compile Include="Interop\User32.cs" />
+    <Compile Include="KnownFolderManager.cs" />
+    <Compile Include="ListViewColumnSorter.cs" />
+    <Compile Include="PlacesToolbar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PlacesToolbar.Designer.cs">
+      <DependentUpon>PlacesToolbar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Localization\Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ShellBrowser.cs" />
+    <Compile Include="ShellContextMenu.cs" />
+    <Compile Include="ShellHelper.cs" />
+    <Compile Include="ShellHistory.cs" />
+    <Compile Include="ShellItem.cs" />
+    <Compile Include="ShellItemEditor.cs" />
+    <Compile Include="ShellListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ShellNotificationListener.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ShellTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ShellView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="StringLogicalComparer.cs" />
+    <Compile Include="SystemImageList.cs" />
+    <Compile Include="SystemImageListManager.cs" />
+    <Compile Include="WindowsContextMenu.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Back.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NewFolder.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Up.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Views.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Forward.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="PlacesToolbar.resx">
+      <DependentUpon>PlacesToolbar.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Localization\Strings.en.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Localization\Strings.fr.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Localization\Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

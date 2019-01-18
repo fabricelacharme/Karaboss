@@ -1,0 +1,865 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2F1767E7-39EB-48A6-9DDF-2896A27297D8}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Karaboss</RootNamespace>
+    <AssemblyName>Karaboss</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publier\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>karaboss.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AForge.Video, Version=2.2.5.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Mp3 Video\Video\AForge.Video.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video.FFMPEG, Version=2.2.5.0, Culture=neutral, PublicKeyToken=03563089b1be05dd, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Mp3 Video\Video\AForge.Video.FFMPEG.dll</HintPath>
+    </Reference>
+    <Reference Include="Bass.Net, Version=2.4.11.1, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Mp3 Video\Bass\Bass.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="CDGNet">
+      <HintPath>..\CDGNet\bin\Debug\CDGNet.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Mp3 Video\Unzip\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="MP3+CDG To Video Converter">
+      <HintPath>..\MP3+CDG To Video Converter\bin\Debug\MP3+CDG To Video Converter.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AudioManager.cs" />
+    <Compile Include="Buttons\CheckButtonControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Buttons\CheckButtonControl.Designer.cs">
+      <DependentUpon>CheckButtonControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Buttons\MinusButtonControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Buttons\MinusButtonControl.Designer.cs">
+      <DependentUpon>MinusButtonControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Buttons\PlusButtonControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Buttons\PlusButtonControl.Designer.cs">
+      <DependentUpon>PlusButtonControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ConfigurationBaseControl.cs" />
+    <Compile Include="Configuration\ConfigurationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\ConfigurationTreeNode.cs" />
+    <Compile Include="Configuration\KaraokeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\KaraokeControl.Designer.cs">
+      <DependentUpon>KaraokeControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\LangControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\LangControl.Designer.cs">
+      <DependentUpon>LangControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\MidiEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\MidiEditorControl.Designer.cs">
+      <DependentUpon>MidiEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\PlaylistsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\PlaylistsControl.Designer.cs">
+      <DependentUpon>PlaylistsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\SongEncodingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\SongEncodingControl.Designer.cs">
+      <DependentUpon>SongEncodingControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\UpdControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\UpdControl.Designer.cs">
+      <DependentUpon>UpdControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\UpdFrequency.cs" />
+    <Compile Include="frmGuitarTraining.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmGuitarTraining.Designer.cs">
+      <DependentUpon>frmGuitarTraining.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmExternalMidiPlay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmExternalMidiPlay.Designer.cs">
+      <DependentUpon>frmExternalMidiPlay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmExternalMidiRecord.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmExternalMidiRecord.Designer.cs">
+      <DependentUpon>frmExternalMidiRecord.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmPianoTraining.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPianoTraining.Designer.cs">
+      <DependentUpon>frmPianoTraining.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuitarTraining\BassControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GuitarTraining\BassControl.Designer.cs">
+      <DependentUpon>BassControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuitarTraining\Border.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GuitarTraining\Border.Designer.cs">
+      <DependentUpon>Border.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuitarTraining\GuitarControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GuitarTraining\GuitarControl.Designer.cs">
+      <DependentUpon>GuitarControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuitarTraining\InfoTrackPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GuitarTraining\InfoTrackPanel.Designer.cs">
+      <DependentUpon>InfoTrackPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuitarTraining\MessageDto.cs" />
+    <Compile Include="GuitarTraining\TextBlock.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GuitarTraining\TextBlock.Designer.cs">
+      <DependentUpon>TextBlock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ConnectedControl\ListViewItemComparer.cs" />
+    <Compile Include="Pages\ExplorerControl\KnownFolders.cs" />
+    <Compile Include="Pages\ExplorerControl\xplorerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\ExplorerControl\xplorerControl.Designer.cs">
+      <DependentUpon>xplorerControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmAboutDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAboutDialog.Designer.cs">
+      <DependentUpon>frmAboutDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmLoading.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLoading.Designer.cs">
+      <DependentUpon>frmLoading.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmLyricsEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLyricsEdit.Designer.cs">
+      <DependentUpon>frmLyricsEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMessageBox.Designer.cs">
+      <DependentUpon>frmMessageBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmPianoRoll.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPianoRoll.Designer.cs">
+      <DependentUpon>frmPianoRoll.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmPrint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPrint.Designer.cs">
+      <DependentUpon>frmPrint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmRecorder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmRecorder.Designer.cs">
+      <DependentUpon>frmRecorder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmLyricsSelectTrack.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLyricsSelectTrack.Designer.cs">
+      <DependentUpon>frmLyricsSelectTrack.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmSplashScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSplashScreen.Designer.cs">
+      <DependentUpon>frmSplashScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmTags.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTags.Designer.cs">
+      <DependentUpon>frmTags.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTest.Designer.cs">
+      <DependentUpon>frmTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmLyric.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLyric.designer.cs">
+      <DependentUpon>frmLyric.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmLyrOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLyrOptions.Designer.cs">
+      <DependentUpon>frmLyrOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmExplorer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmExplorer.Designer.cs">
+      <DependentUpon>frmExplorer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmTools.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTools.Designer.cs">
+      <DependentUpon>frmTools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MP3GPlayer\frmCDGWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MP3GPlayer\frmCDGWindow.Designer.cs">
+      <DependentUpon>frmCDGWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MP3GPlayer\frmCDGPlayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MP3GPlayer\frmCDGPlayer.Designer.cs">
+      <DependentUpon>frmCDGPlayer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MP3GPlayer\Unzip.cs" />
+    <Compile Include="Pages\ConnectedControl\ConnectedControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\ConnectedControl\ConnectedControl.Designer.cs">
+      <DependentUpon>ConnectedControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PDF\Adler.cs" />
+    <Compile Include="PDF\PDFWithImages.cs" />
+    <Compile Include="Pages\PlaylistsControl\FrmNewPlaylist.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\PlaylistsControl\FrmNewPlaylist.Designer.cs">
+      <DependentUpon>FrmNewPlaylist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmPlayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPlayer.Designer.cs">
+      <DependentUpon>frmPlayer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Karaclass.cs" />
+    <Compile Include="Pages\PlaylistsControl\Playlist.cs" />
+    <Compile Include="Pages\PlaylistsControl\PlaylistGroup.cs" />
+    <Compile Include="Pages\PlaylistsControl\PlaylistGroupItem.cs" />
+    <Compile Include="Pages\PlaylistsControl\PlaylistGroupsHelper.cs" />
+    <Compile Include="Pages\PlaylistsControl\PlaylistItem.cs" />
+    <Compile Include="Pages\PlaylistsControl\PlaylistsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\PlaylistsControl\PlaylistsControl.Designer.cs">
+      <DependentUpon>PlaylistsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\PlaylistsControl\ShellAPI.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Localization\Strings.Designer.cs" />
+    <Compile Include="ListViewItemComparer.cs" />
+    <Compile Include="Pages\SearchControl\SearchControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\SearchControl\SearchControl.Designer.cs">
+      <DependentUpon>SearchControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SearchControl\ShellAPI.cs" />
+    <Compile Include="Mp3 Video\frmVideoRecorder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Mp3 Video\frmVideoRecorder.Designer.cs">
+      <DependentUpon>frmVideoRecorder.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Buttons\CheckButtonControl.resx">
+      <DependentUpon>CheckButtonControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Buttons\MinusButtonControl.resx">
+      <DependentUpon>MinusButtonControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Buttons\PlusButtonControl.resx">
+      <DependentUpon>PlusButtonControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ConfigurationBaseControl.resx">
+      <DependentUpon>ConfigurationBaseControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ConfigurationForm.en.resx">
+      <DependentUpon>ConfigurationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ConfigurationForm.fr.resx">
+      <DependentUpon>ConfigurationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ConfigurationForm.resx">
+      <DependentUpon>ConfigurationForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\KaraokeControl.fr.resx">
+      <DependentUpon>KaraokeControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\KaraokeControl.resx">
+      <DependentUpon>KaraokeControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\LangControl.fr.resx">
+      <DependentUpon>LangControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\LangControl.resx">
+      <DependentUpon>LangControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\MidiEditorControl.fr.resx">
+      <DependentUpon>MidiEditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\MidiEditorControl.resx">
+      <DependentUpon>MidiEditorControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\PlaylistsControl.fr.resx">
+      <DependentUpon>PlaylistsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\PlaylistsControl.resx">
+      <DependentUpon>PlaylistsControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\SongEncodingControl.fr.resx">
+      <DependentUpon>SongEncodingControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\SongEncodingControl.resx">
+      <DependentUpon>SongEncodingControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\UpdControl.fr.resx">
+      <DependentUpon>UpdControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\UpdControl.resx">
+      <DependentUpon>UpdControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmExternalMidiPlay.resx">
+      <DependentUpon>frmExternalMidiPlay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmExternalMidiRecord.resx">
+      <DependentUpon>frmExternalMidiRecord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmGuitarTraining.resx">
+      <DependentUpon>frmGuitarTraining.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPianoTraining.resx">
+      <DependentUpon>frmPianoTraining.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GuitarTraining\BassControl.resx">
+      <DependentUpon>BassControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GuitarTraining\Border.resx">
+      <DependentUpon>Border.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GuitarTraining\InfoTrackPanel.resx">
+      <DependentUpon>InfoTrackPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GuitarTraining\TextBlock.resx">
+      <DependentUpon>TextBlock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ConnectedControl\ConnectedControl.fr.resx">
+      <DependentUpon>ConnectedControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ExplorerControl\xplorerControl.en.resx">
+      <DependentUpon>xplorerControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ExplorerControl\xplorerControl.fr.resx">
+      <DependentUpon>xplorerControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ExplorerControl\xplorerControl.resx">
+      <DependentUpon>xplorerControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmAboutDialog.resx">
+      <DependentUpon>frmAboutDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmExplorer.fr.resx">
+      <DependentUpon>frmExplorer.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLoading.resx">
+      <DependentUpon>frmLoading.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLyricsEdit.en.resx">
+      <DependentUpon>frmLyricsEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLyricsEdit.fr.resx">
+      <DependentUpon>frmLyricsEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLyricsEdit.resx">
+      <DependentUpon>frmLyricsEdit.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLyric.en.resx">
+      <DependentUpon>frmLyric.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLyric.fr.resx">
+      <DependentUpon>frmLyric.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLyrOptions.en.resx">
+      <DependentUpon>frmLyrOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLyrOptions.fr.resx">
+      <DependentUpon>frmLyrOptions.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMessageBox.resx">
+      <DependentUpon>frmMessageBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPianoRoll.resx">
+      <DependentUpon>frmPianoRoll.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPlayer.en.resx">
+      <DependentUpon>frmPlayer.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPlayer.fr.resx">
+      <DependentUpon>frmPlayer.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPrint.fr.resx">
+      <DependentUpon>frmPrint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPrint.resx">
+      <DependentUpon>frmPrint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmRecorder.resx">
+      <DependentUpon>frmRecorder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLyricsSelectTrack.resx">
+      <DependentUpon>frmLyricsSelectTrack.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSplashScreen.resx">
+      <DependentUpon>frmSplashScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTags.resx">
+      <DependentUpon>frmTags.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTest.resx">
+      <DependentUpon>frmTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLyric.resx">
+      <DependentUpon>frmLyric.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLyrOptions.resx">
+      <DependentUpon>frmLyrOptions.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmExplorer.resx">
+      <DependentUpon>frmExplorer.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTools.fr.resx">
+      <DependentUpon>frmTools.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTools.resx">
+      <DependentUpon>frmTools.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MP3GPlayer\frmCDGWindow.resx">
+      <DependentUpon>frmCDGWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MP3GPlayer\frmCDGPlayer.resx">
+      <DependentUpon>frmCDGPlayer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ConnectedControl\ConnectedControl.resx">
+      <DependentUpon>ConnectedControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\PlaylistsControl\FrmNewPlaylist.fr.resx">
+      <DependentUpon>FrmNewPlaylist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\PlaylistsControl\FrmNewPlaylist.resx">
+      <DependentUpon>FrmNewPlaylist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPlayer.resx">
+      <DependentUpon>frmPlayer.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\PlaylistsControl\PlaylistsControl.en.resx">
+      <DependentUpon>PlaylistsControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\PlaylistsControl\PlaylistsControl.fr.resx">
+      <DependentUpon>PlaylistsControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\PlaylistsControl\PlaylistsControl.resx">
+      <DependentUpon>PlaylistsControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Localization\Strings.en.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Localization\Strings.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Localization\Strings.fr.resx" />
+    <EmbeddedResource Include="Pages\SearchControl\SearchControl.de.resx">
+      <DependentUpon>SearchControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\SearchControl\SearchControl.en.resx">
+      <DependentUpon>SearchControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\SearchControl\SearchControl.fr.resx">
+      <DependentUpon>SearchControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\SearchControl\SearchControl.resx">
+      <DependentUpon>SearchControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mp3 Video\frmVideoRecorder.resx">
+      <DependentUpon>frmVideoRecorder.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AutoUpdater\AutoUpdater.csproj">
+      <Project>{f8b4da50-0645-4ed3-b62c-5e3422696c31}</Project>
+      <Name>AutoUpdater</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AzLyrics.Api\AzLyrics.Api.csproj">
+      <Project>{ec7d6ab0-5fba-45a2-96f3-d0c9f325ef73}</Project>
+      <Name>AzLyrics.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ballsControl\BallsControl.csproj">
+      <Project>{20f29fef-4cc3-4f38-8982-57dd80a8ee9e}</Project>
+      <Name>BallsControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ColorSlider\ColorSlider.csproj">
+      <Project>{16e224dc-7ff0-4908-8318-d6a3ac2e797a}</Project>
+      <Name>ColorSlider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\flShell\FlShell.csproj">
+      <Project>{3792319c-fe86-404c-ac23-54522f7044cc}</Project>
+      <Name>FlShell</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hqub.MusicBrainz.API\Hqub.MusicBrainz.API.csproj">
+      <Project>{77832ded-eefe-4db9-94af-b0be02cec356}</Project>
+      <Name>Hqub.MusicBrainz.API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\knobControl\KnobControl.csproj">
+      <Project>{04123f59-331d-4582-be0d-721feab6050f}</Project>
+      <Name>KnobControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LyricsWikia.Api\LyricsWikia.Api.csproj">
+      <Project>{7e6a19a2-655d-400e-9f3f-ccd7b80c278f}</Project>
+      <Name>LyricsWikia.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\picControl\PicControl.csproj">
+      <Project>{5A59550C-4187-4E78-B9A4-2DF31D17BD64}</Project>
+      <Name>PicControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sanford.Collections\Sanford.Collections.csproj">
+      <Project>{2cb17756-93fd-40d6-b675-4ddf3ad56a6b}</Project>
+      <Name>Sanford.Collections</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sanford.Multimedia.Midi\Sanford.Multimedia.Midi.csproj">
+      <Project>{4269c72a-8d3a-4737-8f89-72eaa33ea9e1}</Project>
+      <Name>Sanford.Multimedia.Midi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sanford.Multimedia.Timers\Sanford.Multimedia.Timers.csproj">
+      <Project>{14d9362a-7f0b-4e3c-b219-12fea0a0b61f}</Project>
+      <Name>Sanford.Multimedia.Timers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sanford.Multimedia\Sanford.Multimedia.csproj">
+      <Project>{b51d2d36-c9fa-46ca-a0fe-0504a488c8a9}</Project>
+      <Name>Sanford.Multimedia</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sanford.Threading\Sanford.Threading.csproj">
+      <Project>{fb3cd051-cede-44c5-a35f-fc0be6c9bc1e}</Project>
+      <Name>Sanford.Threading</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SideBarControl\VBarControl.csproj">
+      <Project>{2b68bfcb-a5e4-4859-b22b-a1e5f406dd41}</Project>
+      <Name>VBarControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Si\Si.csproj">
+      <Project>{A14C5A9A-89E9-473D-8F45-72968A837892}</Project>
+      <Name>Si</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SongLyrics.Api\SongLyrics.Api.csproj">
+      <Project>{744b9645-0703-4eea-86cd-e28b20774b90}</Project>
+      <Name>SongLyrics.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\trkControl\TrkControl.csproj">
+      <Project>{e04f332f-ff37-4680-9d38-7962eacd58c0}</Project>
+      <Name>TrkControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VU_MeterLibrary\VU_MeterLibrary.csproj">
+      <Project>{5d223b76-4462-4055-91b7-10ebfd8558e6}</Project>
+      <Name>VU_MeterLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Media-Controls-Skip-To-Start-icon.png" />
+    <None Include="Resources\Media-Controls-Skip-To-End-icon.png" />
+    <None Include="Resources\Media-Controls-Rewind-icon.png" />
+    <None Include="Resources\Media-Controls-Fast-Forward-icon.png" />
+    <None Include="Resources\Media-Controls-Pause-icon.png" />
+    <None Include="Resources\Media-Controls-Stop-icon.png" />
+    <None Include="Resources\Media-Controls-Play-icon.png" />
+    <None Include="Resources\triolet30.png" />
+    <None Include="Resources\triolet301.png" />
+    <None Include="Resources\triolet1.png" />
+    <None Include="Resources\playlist-delete2-icon24.png" />
+    <None Include="Resources\playlist-icon1.png" />
+    <None Include="Resources\Play-icon24.png" />
+    <None Include="Resources\Search-icon.png" />
+    <None Include="Resources\treble30.png" />
+    <EmbeddedResource Include="Resources\treble.png" />
+    <None Include="Resources\Max.png" />
+    <None Include="Resources\MaxNormal.png" />
+    <Content Include="karaboss.ico" />
+    <None Include="Resources\Close.bmp" />
+    <None Include="Resources\CloseOver.png" />
+    <None Include="Resources\Close.png" />
+    <EmbeddedResource Include="Resources\bass.png" />
+    <None Include="Resources\bass30.png" />
+    <None Include="Resources\Folder-icon.png" />
+    <None Include="Resources\Actions-delete-icon.png" />
+    <None Include="Resources\Actions-folder-new-icon.png" />
+    <None Include="Resources\Action-File-Save-icon.png" />
+    <None Include="Resources\Action-New-File-icon.png" />
+    <None Include="Resources\Adobe-PDF-Document-icon.png" />
+    <None Include="Resources\64x64.png" />
+    <None Include="Resources\32x32.png" />
+    <None Include="Resources\Apps-Pdf-icon.png" />
+    <None Include="Resources\BTN_Thumb_Blue.bmp" />
+    <None Include="Resources\forwardGreen.png" />
+    <None Include="Resources\forwardGreen1.png" />
+    <None Include="Resources\btn_black_play.png" />
+    <None Include="Resources\btn_blue_play.png" />
+    <None Include="Resources\btn_black_stop.png" />
+    <None Include="Resources\btn_blue_stop.png" />
+    <None Include="Resources\btn_red_stop.png" />
+    <None Include="Resources\btn_black_next.png" />
+    <None Include="Resources\btn_green_next.png" />
+    <None Include="Resources\btn_red_next.png" />
+    <None Include="Resources\btn_black_prev.png" />
+    <None Include="Resources\btn_blue_prev.png" />
+    <None Include="Resources\btn_green_prev.png" />
+    <None Include="Resources\btn_red_prev.png" />
+    <None Include="Resources\btn_blue_next.png" />
+    <None Include="Resources\btn_black_pause.png" />
+    <None Include="Resources\btn_blue_pause.png" />
+    <None Include="Resources\btn_red_pause.png" />
+    <None Include="Resources\btn_green_pause.png" />
+    <None Include="Resources\Action_Edit.ico" />
+    <None Include="Resources\Action_Edit1.ico" />
+    <None Include="Resources\edit.png" />
+    <None Include="Resources\folder-delete2-icon24.png" />
+    <None Include="Resources\folder-delete-icon24.png" />
+    <None Include="Resources\Folder-Open-icon24.png" />
+    <None Include="Resources\Folder_icon24.png" />
+    <None Include="Resources\Action_folder24.png" />
+    <None Include="Resources\folder_classic_down.png" />
+    <None Include="Resources\ball.png" />
+    <None Include="Resources\ball1.png" />
+    <None Include="Resources\Bouton-minus-gris-32.png" />
+    <None Include="Resources\Bouton-minus-vert1-32.png" />
+    <None Include="Resources\Bouton-minus-vert2-32.png" />
+    <None Include="Resources\Bouton-plus-gris-32.png" />
+    <None Include="Resources\Bouton-plus-vert1-32.png" />
+    <None Include="Resources\Bouton-plus-vert2-32.png" />
+    <None Include="Resources\Bouton-Check-PaleGreen-32.png" />
+    <None Include="Resources\Bouton-Cross-Red-32.png" />
+    <None Include="Resources\Bouton-Check-Gray-32.png" />
+    <None Include="Resources\Bouton-Cross-Gray-32.png" />
+    <Content Include="Resources\Bouton-minus-palegreen-32.png" />
+    <Content Include="Resources\Bouton-plus-palegreen-32.png" />
+    <Content Include="Resources\Ico\kar.ico" />
+    <Content Include="Resources\Ico\mid.ico" />
+    <None Include="Resources\pointer.png" />
+    <None Include="Resources\pencil.png" />
+    <None Include="Resources\pencil.png.bmp" />
+    <None Include="Resources\Pen30x30.bmp" />
+    <None Include="Resources\Karaoke About Screen Metro UI.png" />
+    <None Include="Resources\Karaoke Splash Screen Metro UI-2.png" />
+    <None Include="Resources\erase.png" />
+    <None Include="Resources\note1.png" />
+    <None Include="Resources\becarre.png" />
+    <None Include="Resources\bemol.png" />
+    <None Include="Resources\diese.png" />
+    <None Include="Resources\note64.png" />
+    <None Include="Resources\note32.png" />
+    <None Include="Resources\note16.png" />
+    <None Include="Resources\note8.png" />
+    <None Include="Resources\note4.png" />
+    <None Include="Resources\note2.png" />
+    <None Include="Resources\button_black_rew.png" />
+    <None Include="Resources\button_black_stop.png" />
+    <None Include="Resources\button_black_ffw.png" />
+    <None Include="Resources\button_black_pause.png" />
+    <None Include="Resources\button_black_play.png" />
+    <None Include="Resources\player_play.png" />
+    <None Include="Resources\button_green_play.png" />
+    <EmbeddedResource Include="Resources\Images\two.png" />
+    <EmbeddedResource Include="Resources\Images\twelve.png" />
+    <EmbeddedResource Include="Resources\Images\treble.png" />
+    <EmbeddedResource Include="Resources\Images\three.png" />
+    <EmbeddedResource Include="Resources\Images\six.png" />
+    <EmbeddedResource Include="Resources\Images\NotePair.png" />
+    <EmbeddedResource Include="Resources\Images\nine.png" />
+    <EmbeddedResource Include="Resources\Images\four.png" />
+    <EmbeddedResource Include="Resources\Images\eight.png" />
+    <EmbeddedResource Include="Resources\Images\bass.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 et x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Release\" />
+    <Folder Include="Mp3 Video\Bass\" />
+    <Folder Include="Mp3 Video\Cdg\" />
+    <Folder Include="Mp3 Video\Lame\" />
+    <Folder Include="Mp3 Video\Unzip\" />
+    <Folder Include="Mp3 Video\Video\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
