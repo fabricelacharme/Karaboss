@@ -2093,7 +2093,8 @@ namespace FlShell
                 //    return;
 
                 //CreateShellView(m_CurrentFolder);
-                Navigate(m_CurrentFolder);
+                if (e.Item.ToString() != "shell:///")
+                    Navigate(m_CurrentFolder);
 
             }
 
