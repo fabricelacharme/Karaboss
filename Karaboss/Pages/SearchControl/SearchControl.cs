@@ -734,7 +734,17 @@ namespace Karaboss.Search
                 {
                     case SearchViewStyle.Author:
                         // only the "author - song" is being changed   
-                        NewName = listView.Items[e.Item].Group.Header + " - " + e.Label.Trim() + Path.GetExtension(fullname);
+                        try
+                        {
+                            NewName = listView.Items[e.Item].Group.Header + " - " + e.Label.Trim() + Path.GetExtension(fullname);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Sometime the file does not respect the format "author - song", so listView.Items[e.Item].Group.Header is null
+                            MessageBox.Show("Rename not done, unable to find the author of this song.", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            e.CancelEdit = true;
+                            return;
+                        }
                         break;
 
                     case SearchViewStyle.File:
