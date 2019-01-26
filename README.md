@@ -28,5 +28,5 @@ You can display and modify the music scores of your files, or create a new one f
 This editor is basic compared to professionnal ones (even the free versions) but enough to have some fun. 
 ![GitHub Logo](/Gifs/en.explorer.png)
 
-The sources are hard to show because the merger of all these projects into one results in a non-optimized code (to be nice)
+The sources are hard to show because the merger of all these projects into one results in a non-optimized code (to be fair)
 Anayway, the program can be freely downloadable at http://karaoke.lacharme.net
