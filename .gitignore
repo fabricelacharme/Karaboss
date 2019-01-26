@@ -7,6 +7,7 @@
 *.pdb
 _ReSharper.*
 obj/
+Debug/
 Release/
 packages
 
