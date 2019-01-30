@@ -266,7 +266,7 @@ namespace Karaboss
             this.MouseWheel += new MouseEventHandler(FrmPlayer_MouseWheel);
 
             //outDeviceID = outputDeviceID;
-            outDevice = outputDevice;
+            outDevice = outputDevice;           
 
             // If true, launch player
             bPlayNow = bplay;
@@ -4695,6 +4695,8 @@ namespace Karaboss
                     string outDeviceName = OutputDeviceBase.GetDeviceCapabilities(outDevice.DeviceID).name;
                     lblOutputDevice.Text = outDeviceName;
 
+                    AlertOutputDevice(outDeviceName);
+
                     sequence1.LoadProgressChanged += HandleLoadProgressChanged;
                     sequence1.LoadCompleted += HandleLoadCompleted;
 
@@ -7562,6 +7564,14 @@ namespace Karaboss
 
 
         #region settings
+
+        private void AlertOutputDevice(string Name)
+        {
+            if (Name == "Microsoft GS Wavetable Synth")
+                lblOutputDevice.ForeColor = Color.Red;
+            else
+                lblOutputDevice.ForeColor = Color.PaleGreen;
+        }
 
         private void ResetPlaySettings()
         {
