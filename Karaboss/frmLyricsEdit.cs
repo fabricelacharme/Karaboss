@@ -171,8 +171,12 @@ namespace Karaboss
         {
             double dur = _tempo * (ticks / _ppqn) / 1000000; //seconds     
             int Min = (int)(dur / 60);
-            int Sec = (int)(dur - (Min * 60));
-            string tx = string.Format("{0:00}:{1:00}", Min, Sec);
+            int Sec = (int)(dur - (Min * 60));            
+
+
+            int Cent = (int)(100*(dur - (Min * 60) - Sec));
+
+            string tx = string.Format("{0:00}:{1:00}:{2:00}", Min, Sec, Cent);
             return tx;
         }
 
