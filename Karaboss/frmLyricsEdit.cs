@@ -41,8 +41,6 @@ using PicControl;
 using System.IO;
 using System.Text.RegularExpressions;
 using Karaboss.Resources.Localization;
-using System.Text;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Karaboss
 {
@@ -61,8 +59,7 @@ namespace Karaboss
          * 
          * 
          */
-
-        [Serializable()]
+        
         public class LRCS
         {
             public string sTime { get; set; }
@@ -192,7 +189,7 @@ namespace Karaboss
 
             int Cent = (int)(100*(dur - (Min * 60) - Sec));
 
-            string tx = string.Format("{0:00}:{1:00}:{2:00}", Min, Sec, Cent);
+            string tx = string.Format("{0:00}:{1:00}.{2:00}", Min, Sec, Cent);
             return tx;
         }
 
@@ -370,7 +367,7 @@ namespace Karaboss
             bool bfound = false;
 
             int plTime = 0;
-            string plRealTime = "00:00";
+            string plRealTime = "00:00.00";
             string plType = string.Empty;
             int plNote = 60;
             string plElement = string.Empty;
@@ -687,7 +684,7 @@ namespace Karaboss
         {
             int Row = dgView.CurrentRow.Index;
             int plTime = 0;
-            string plRealTime = "00:00";
+            string plRealTime = "00:00.00";
 
             if (dgView.Rows[Row].Cells[COL_TICKS].Value != null)
             {
@@ -722,7 +719,7 @@ namespace Karaboss
         {
             int Row = dgView.CurrentRow.Index;
             int plTime = 0;
-            string plRealTime = "00:00";
+            string plRealTime = "00:00.00";
             int pNote = 0;
             string pElement = string.Empty;
             string pReplace = string.Empty;
@@ -979,29 +976,56 @@ namespace Karaboss
             #endregion
 
             string fileName = saveMidiFileDialog.FileName;
+
             string ssTime = string.Empty;
             string ssLyric = string.Empty;
+            object vLyric;
+            string lrcs = string.Empty;
+            string cr = "\r";
+            string Artist = "Artist";
+            string Title = "Title";
 
-            List<LRCS> lrcs = new List<LRCS>();
+            string SingleName = Path.GetFileNameWithoutExtension(fileName);
+            string[] toto = SingleName.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            if (toto.Length == 1)
+            {
+                Title = toto[0].Trim();
+            }
+            else if (toto.Length == 2)
+            {
+                Artist = toto[0].Trim();
+                Title = toto[1].Trim();
+            }
+
+            lrcs += "[ti:" + Title + "]" + cr;
+            lrcs += "[ar:" + Artist + "]" + cr;
+            lrcs += "[al:Album]" + cr;
+            lrcs += "[la:Lang]" + cr;
 
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
-                if (dgView.Rows[i].Cells[COL_TIME].Value != null && dgView.Rows[i].Cells[COL_REPLACE].Value != null)
+                vLyric = dgView.Rows[i].Cells[COL_REPLACE].Value;
+
+                if (dgView.Rows[i].Cells[COL_TIME].Value != null && vLyric != null)
                 {
-                    ssTime = dgView.Rows[i].Cells[COL_TIME].Value.ToString();
-                    ssLyric = dgView.Rows[i].Cells[COL_REPLACE].Value.ToString();
-                    lrcs.Add(new LRCS (ssTime, ssLyric));
+                    ssLyric = vLyric.ToString();
+                    ssLyric = ssLyric.Replace("_", " ");
+                    ssLyric = ssLyric.Trim();
+
+                    if (ssLyric != "" && ssLyric != cr)
+                    {
+                        ssTime = dgView.Rows[i].Cells[COL_TIME].Value.ToString();
+                        lrcs += "[" + ssTime + "]" + ssLyric + cr;
+                    }
                 }
             }
 
+
             try
             {
-                using (Stream stream = File.Open(fileName, FileMode.Create))
-                {
-                    
-                    BinaryFormatter bin = new BinaryFormatter();
-                    bin.Serialize(stream, lrcs);
-                }
+                System.IO.File.WriteAllText(fileName, lrcs);
+                System.Diagnostics.Process.Start(@fileName);
+
             }
             catch (IOException)
             {
@@ -1081,7 +1105,7 @@ namespace Karaboss
             string s = string.Empty;
             string d = string.Empty;
             int plTime = 0;
-            string plRealTime = "00:00";
+            string plRealTime = "00:00.00";
 
             for (int i = 0; i < result.Length; i++)
             {

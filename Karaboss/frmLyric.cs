@@ -601,6 +601,7 @@ namespace Karaboss
 
         #endregion form load close resize
 
+
         #region loadfile
         
         private string LoadLyricsFile()
@@ -777,6 +778,7 @@ namespace Karaboss
         }
 
         #endregion
+
     }
 
 
