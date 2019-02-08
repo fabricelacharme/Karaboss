@@ -31,6 +31,12 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmLyricsEdit));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.dgView = new System.Windows.Forms.DataGridView();
+            this.dTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dRealTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dNote = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dText = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dReplace = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlBottom = new System.Windows.Forms.Panel();
             this.txtResult = new System.Windows.Forms.RichTextBox();
             this.pnlTop = new System.Windows.Forms.Panel();
@@ -50,6 +56,9 @@
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSave = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileSep2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuFileSaveAsLrc = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditLoadTrack = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,12 +67,6 @@
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.saveMidiFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.dTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dRealTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dNote = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dText = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dReplace = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -105,6 +108,37 @@
             this.dgView.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgView_CellEnter);
             this.dgView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DgView_KeyDown);
             this.dgView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DgView_MouseDown);
+            // 
+            // dTime
+            // 
+            resources.ApplyResources(this.dTime, "dTime");
+            this.dTime.Name = "dTime";
+            // 
+            // dRealTime
+            // 
+            resources.ApplyResources(this.dRealTime, "dRealTime");
+            this.dRealTime.Name = "dRealTime";
+            // 
+            // dType
+            // 
+            resources.ApplyResources(this.dType, "dType");
+            this.dType.MaxInputLength = 3;
+            this.dType.Name = "dType";
+            // 
+            // dNote
+            // 
+            resources.ApplyResources(this.dNote, "dNote");
+            this.dNote.Name = "dNote";
+            // 
+            // dText
+            // 
+            resources.ApplyResources(this.dText, "dText");
+            this.dText.Name = "dText";
+            // 
+            // dReplace
+            // 
+            resources.ApplyResources(this.dReplace, "dReplace");
+            this.dReplace.Name = "dReplace";
             // 
             // pnlBottom
             // 
@@ -239,6 +273,9 @@
             this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFileSave,
             this.mnuFileSaveAs,
+            this.mnuFileSep2,
+            this.mnuFileSaveAsLrc,
+            this.mnuFileSep1,
             this.mnuFileQuit});
             this.mnuFile.Name = "mnuFile";
             resources.ApplyResources(this.mnuFile, "mnuFile");
@@ -254,6 +291,22 @@
             this.mnuFileSaveAs.Name = "mnuFileSaveAs";
             resources.ApplyResources(this.mnuFileSaveAs, "mnuFileSaveAs");
             this.mnuFileSaveAs.Click += new System.EventHandler(this.MnuFileSaveAs_Click);
+            // 
+            // mnuFileSep2
+            // 
+            this.mnuFileSep2.Name = "mnuFileSep2";
+            resources.ApplyResources(this.mnuFileSep2, "mnuFileSep2");
+            // 
+            // mnuFileSaveAsLrc
+            // 
+            this.mnuFileSaveAsLrc.Name = "mnuFileSaveAsLrc";
+            resources.ApplyResources(this.mnuFileSaveAsLrc, "mnuFileSaveAsLrc");
+            this.mnuFileSaveAsLrc.Click += new System.EventHandler(this.mnuFileSaveAsLrc_Click);
+            // 
+            // mnuFileSep1
+            // 
+            this.mnuFileSep1.Name = "mnuFileSep1";
+            resources.ApplyResources(this.mnuFileSep1, "mnuFileSep1");
             // 
             // mnuFileQuit
             // 
@@ -293,37 +346,6 @@
             this.mnuHelpAbout.Name = "mnuHelpAbout";
             resources.ApplyResources(this.mnuHelpAbout, "mnuHelpAbout");
             this.mnuHelpAbout.Click += new System.EventHandler(this.MnuHelpAbout_Click);
-            // 
-            // dTime
-            // 
-            resources.ApplyResources(this.dTime, "dTime");
-            this.dTime.Name = "dTime";
-            // 
-            // dRealTime
-            // 
-            resources.ApplyResources(this.dRealTime, "dRealTime");
-            this.dRealTime.Name = "dRealTime";
-            // 
-            // dType
-            // 
-            resources.ApplyResources(this.dType, "dType");
-            this.dType.MaxInputLength = 3;
-            this.dType.Name = "dType";
-            // 
-            // dNote
-            // 
-            resources.ApplyResources(this.dNote, "dNote");
-            this.dNote.Name = "dNote";
-            // 
-            // dText
-            // 
-            resources.ApplyResources(this.dText, "dText");
-            this.dText.Name = "dText";
-            // 
-            // dReplace
-            // 
-            resources.ApplyResources(this.dReplace, "dReplace");
-            this.dReplace.Name = "dReplace";
             // 
             // frmLyricsEdit
             // 
@@ -388,5 +410,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dNote;
         private System.Windows.Forms.DataGridViewTextBoxColumn dText;
         private System.Windows.Forms.DataGridViewTextBoxColumn dReplace;
+        private System.Windows.Forms.ToolStripSeparator mnuFileSep2;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileSaveAsLrc;
+        private System.Windows.Forms.ToolStripSeparator mnuFileSep1;
     }
 }

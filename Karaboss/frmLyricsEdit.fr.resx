@@ -208,19 +208,31 @@
     <value>&amp;Enregistrer</value>
   </data>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>157, 22</value>
+    <value>204, 22</value>
   </data>
   <data name="mnuFileSave.Text" xml:space="preserve">
     <value>&amp;Enregistrer</value>
   </data>
   <data name="mnuFileSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>157, 22</value>
+    <value>204, 22</value>
   </data>
   <data name="mnuFileSaveAs.Text" xml:space="preserve">
     <value>Enregistrer &amp;sous</value>
   </data>
+  <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>201, 6</value>
+  </data>
+  <data name="mnuFileSaveAsLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>204, 22</value>
+  </data>
+  <data name="mnuFileSaveAsLrc.Text" xml:space="preserve">
+    <value>Enregistrer au format .lrc</value>
+  </data>
+  <data name="mnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>201, 6</value>
+  </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>157, 22</value>
+    <value>204, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
@@ -231,8 +243,17 @@
   <data name="mnuFile.Text" xml:space="preserve">
     <value>&amp;Fichier</value>
   </data>
+  <data name="mnuEditLoadTrack.Size" type="System.Drawing.Size, System.Drawing">
+    <value>232, 22</value>
+  </data>
   <data name="mnuEditLoadTrack.Text" xml:space="preserve">
     <value>&amp;Charger une piste</value>
+  </data>
+  <data name="mnuEditLoadMelodyText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>232, 22</value>
+  </data>
+  <data name="mnuEditLoadMelodyText.Text" xml:space="preserve">
+    <value>Charger un fichier de paraoles</value>
   </data>
   <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 20</value>

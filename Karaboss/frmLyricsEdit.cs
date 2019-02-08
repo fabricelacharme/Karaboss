@@ -41,6 +41,8 @@ using PicControl;
 using System.IO;
 using System.Text.RegularExpressions;
 using Karaboss.Resources.Localization;
+using System.Text;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Karaboss
 {
@@ -59,6 +61,20 @@ namespace Karaboss
          * 
          * 
          */
+
+        [Serializable()]
+        public class LRCS
+        {
+            public string sTime { get; set; }
+            public string sLyric { get; set; }
+
+            public LRCS (string t, string l)
+            {
+                sTime = t;
+                sLyric = l;
+            }
+        }
+
 
         frmPlayer frmPlayer;
 
@@ -578,7 +594,68 @@ namespace Karaboss
             Dispose();
         }
 
-       
+        /// <summary>
+        /// Form Resize
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void frmLyricsEdit_Resize(object sender, EventArgs e)
+        {
+            ResizeMe();
+        }
+
+        private void ResizeMe()
+        {
+            btnInsertCr.Left = 3;
+            btnInsertCr.Top = 3;
+
+            btnInsertText.Left = 3;
+            btnInsertText.Top = 32;
+
+            btnDelete.Left = 3;
+            btnDelete.Top = 61;
+
+            btnSpaceLeft.Left = 112;
+            btnSpaceLeft.Top = 3;
+
+            btnSpaceRight.Left = 112;
+            btnSpaceRight.Top = 32;
+
+
+            btnView.Left = 176;
+            btnView.Top = 3;
+
+            btnSave.Left = 176;
+            btnSave.Top = 32;
+
+            btnPlay.Left = 176;
+            btnPlay.Top = 61;
+
+            // Adapt width of last column
+            int W = dgView.RowHeadersWidth + 19;
+            int WP = dgView.Parent.Width;
+            for (int i = 0; i < dgView.Columns.Count - 1; i++)
+            {
+                W += dgView.Columns[i].Width;
+            }
+            if (WP - W > 0)
+                dgView.Columns[dgView.Columns.Count - 1].Width = WP - W;
+
+        }
+
+
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            // Adapt width of last column
+            int W = dgView.RowHeadersWidth + 19;
+            int WP = dgView.Parent.Width;
+            for (int i = 0; i < dgView.Columns.Count - 1; i++)
+            {
+                W += dgView.Columns[i].Width;
+            }
+            if (WP - W > 0)
+                dgView.Columns[dgView.Columns.Count - 1].Width = WP - W;
+        }
 
         #endregion form load close resize
 
@@ -781,7 +858,23 @@ namespace Karaboss
             }
         }
 
- 
+      
+
+        private void BtnFontPlus_Click(object sender, EventArgs e)
+        {
+            float emSize = txtResult.Font.Size;
+            emSize++;
+            txtResult.Font = new Font(txtResult.Font.FontFamily, emSize);
+        }
+
+        private void BtnFontMoins_Click(object sender, EventArgs e)
+        {
+            float emSize = txtResult.Font.Size;
+            emSize--;
+            if (emSize > 5)
+                txtResult.Font = new Font(txtResult.Font.FontFamily, emSize);
+        }
+
 
 
         #endregion buttons
@@ -815,7 +908,107 @@ namespace Karaboss
         {
             SaveAsFileProc();
         }
-                
+
+        /// <summary>
+        /// Save lyrics to .lrc format
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuFileSaveAsLrc_Click(object sender, EventArgs e)
+        {
+            #region select filename
+            string fName = "New.lrc";
+            string fPath = Path.GetDirectoryName(MIDIfileName);
+
+            string fullName = string.Empty;
+            string defName = string.Empty;
+
+            #region search name
+            if (fPath == null || fPath == "")
+            {
+                if (Directory.Exists(CreateNewMidiFile.DefaultDirectory))
+                    fPath = CreateNewMidiFile.DefaultDirectory;
+                else
+                    fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            }
+            else
+            {
+                fName = Path.GetFileName(MIDIfileName);
+            }
+
+            string defExt = ".lrc";         // Extension
+            fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
+            string inifName = fName + defExt;                            // Original name with extension
+            defName = fName;                                    // Proposed name for dialog box
+
+            fullName = fPath + "\\" + inifName;
+
+            if (File.Exists(fullName) == true)
+            {
+                // Remove all (1) (2) etc..
+                string pattern = @"[(\d)]";
+                string replace = @"";
+                inifName = Regex.Replace(fName, pattern, replace);
+
+                int i = 1;
+                string addName = "(" + i.ToString() + ")";
+                defName = inifName + addName + defExt;
+                fullName = fPath + "\\" + defName;
+
+                while (File.Exists(fullName) == true)
+                {
+                    i++;
+                    defName = inifName + "(" + i.ToString() + ")" + defExt;
+                    fullName = fPath + "\\" + defName;
+                }
+            }
+
+            #endregion search name                   
+
+            string defFilter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
+
+            saveMidiFileDialog.Title = "Save to LRC format";
+            saveMidiFileDialog.Filter = defFilter;
+            saveMidiFileDialog.DefaultExt = defExt;
+            saveMidiFileDialog.InitialDirectory = @fPath;
+            saveMidiFileDialog.FileName = defName;
+
+            if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+            
+            #endregion
+
+            string fileName = saveMidiFileDialog.FileName;
+            string ssTime = string.Empty;
+            string ssLyric = string.Empty;
+
+            List<LRCS> lrcs = new List<LRCS>();
+
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                if (dgView.Rows[i].Cells[COL_TIME].Value != null && dgView.Rows[i].Cells[COL_REPLACE].Value != null)
+                {
+                    ssTime = dgView.Rows[i].Cells[COL_TIME].Value.ToString();
+                    ssLyric = dgView.Rows[i].Cells[COL_REPLACE].Value.ToString();
+                    lrcs.Add(new LRCS (ssTime, ssLyric));
+                }
+            }
+
+            try
+            {
+                using (Stream stream = File.Open(fileName, FileMode.Create))
+                {
+                    
+                    BinaryFormatter bin = new BinaryFormatter();
+                    bin.Serialize(stream, lrcs);
+                }
+            }
+            catch (IOException)
+            {
+            }
+
+        }
+
         /// <summary>
         /// Quit windowx
         /// </summary>
@@ -1468,76 +1661,6 @@ namespace Karaboss
 
         #endregion
 
-        private void frmLyricsEdit_Resize(object sender, EventArgs e)
-        {
-            ResizeMe();
-        }
-
-        private void ResizeMe()
-        {
-            btnInsertCr.Left = 3;
-            btnInsertCr.Top = 3;
-
-            btnInsertText.Left = 3;
-            btnInsertText.Top = 32;
-
-            btnDelete.Left = 3;
-            btnDelete.Top = 61;
-
-            btnSpaceLeft.Left = 112;
-            btnSpaceLeft.Top = 3;
-
-            btnSpaceRight.Left = 112;
-            btnSpaceRight.Top = 32;
-
-
-            btnView.Left = 176;
-            btnView.Top = 3;
-
-            btnSave.Left = 176;
-            btnSave.Top = 32;
-
-            btnPlay.Left = 176;
-            btnPlay.Top = 61;
-
-            // Adapt width of last column
-            int W = dgView.RowHeadersWidth + 19;
-            int WP = dgView.Parent.Width;
-            for (int i = 0; i < dgView.Columns.Count - 1; i++)
-            {
-                W += dgView.Columns[i].Width;
-            }
-            if (WP - W > 0)
-                dgView.Columns[dgView.Columns.Count - 1].Width = WP - W;
-
-        }
-
-        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-            // Adapt width of last column
-            int W = dgView.RowHeadersWidth + 19;
-            int WP = dgView.Parent.Width;
-            for (int i = 0; i < dgView.Columns.Count - 1; i++)
-            {
-                W += dgView.Columns[i].Width;
-            }
-            if (WP - W > 0)
-                dgView.Columns[dgView.Columns.Count - 1].Width = WP - W;
-        }
-
-        private void BtnFontPlus_Click(object sender, EventArgs e)
-        {
-            float emSize = txtResult.Font.Size;
-            emSize++;
-            txtResult.Font = new Font(txtResult.Font.FontFamily, emSize);           
-        }
-
-        private void BtnFontMoins_Click(object sender, EventArgs e)
-        {
-            float emSize = txtResult.Font.Size;
-            emSize--;
-            if (emSize > 5)            
-                txtResult.Font = new Font(txtResult.Font.FontFamily, emSize);
-        }
+     
     }
 }
