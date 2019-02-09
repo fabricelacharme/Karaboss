@@ -49,12 +49,12 @@ namespace Karaboss
 
         /* Lyrics edition form
          * 
-         * 0 - Ticks    0
-         * 1 - Time
-         * 2 - Type     1
-         * 3 - Note     2
-         * 4 - Text     3
-         * 5 - Replace  4
+         * 0 - Ticks    Number of ticks
+         * 1 - Time     Time in sec
+         * 2 - Type     
+         * 3 - Note     Note value
+         * 4 - Text     Old text, initially note value
+         * 5 - Replace  New text
          * 
          * 
          * 
@@ -179,7 +179,13 @@ namespace Karaboss
                 _measurelen = sequence1.Time.Measure;
         }
 
-
+        /// <summary>
+        /// Convert ticks to time
+        /// Minutes, seconds, cent of seconds
+        /// Ex: 6224 ticks => 00:09.10 (mm:ss.cent)
+        /// </summary>
+        /// <param name="ticks"></param>
+        /// <returns></returns>
         private string TicksToTime(int ticks)
         {
             double dur = _tempo * (ticks / _ppqn) / 1000000; //seconds     
