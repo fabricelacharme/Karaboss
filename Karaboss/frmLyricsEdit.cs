@@ -60,6 +60,7 @@ namespace Karaboss
          * 
          */
         
+        /*
         public class LRCS
         {
             public string sTime { get; set; }
@@ -71,7 +72,7 @@ namespace Karaboss
                 sLyric = l;
             }
         }
-
+        */
 
         frmPlayer frmPlayer;
 
@@ -179,25 +180,7 @@ namespace Karaboss
                 _measurelen = sequence1.Time.Measure;
         }
 
-        /// <summary>
-        /// Convert ticks to time
-        /// Minutes, seconds, cent of seconds
-        /// Ex: 6224 ticks => 00:09.10 (mm:ss.cent)
-        /// </summary>
-        /// <param name="ticks"></param>
-        /// <returns></returns>
-        private string TicksToTime(int ticks)
-        {
-            double dur = _tempo * (ticks / _ppqn) / 1000000; //seconds     
-            int Min = (int)(dur / 60);
-            int Sec = (int)(dur - (Min * 60));            
-
-
-            int Cent = (int)(100*(dur - (Min * 60) - Sec));
-
-            string tx = string.Format("{0:00}:{1:00}.{2:00}", Min, Sec, Cent);
-            return tx;
-        }
+      
 
         /// <summary>
         /// Retrieve Lyrics format from frmPlayer
@@ -883,6 +866,184 @@ namespace Karaboss
         #endregion buttons
 
 
+        #region lrc
+
+        /// <summary>
+        /// Convert ticks to time
+        /// Minutes, seconds, cent of seconds
+        /// Ex: 6224 ticks => 00:09.10 (mm:ss.cent)
+        /// </summary>
+        /// <param name="ticks"></param>
+        /// <returns></returns>
+        private string TicksToTime(int ticks)
+        {
+            double dur = _tempo * (ticks / _ppqn) / 1000000; //seconds     
+            int Min = (int)(dur / 60);
+            int Sec = (int)(dur - (Min * 60));
+
+
+            int Cent = (int)(100 * (dur - (Min * 60) - Sec));
+
+            string tx = string.Format("{0:00}:{1:00}.{2:00}", Min, Sec, Cent);
+            return tx;
+        }
+
+        /// <summary>
+        /// Save lyrics to lrc format
+        /// </summary>
+        /// <param name="FileName"></param>
+        private void SaveLRCParcels(string File)
+        {
+            string sTime = string.Empty;
+            string sLyric = string.Empty;
+            object vLyric;
+            object vTime;
+            string lrcs = string.Empty;
+            string cr = "\r";
+            string Artist = "Artist";
+            string Title = "Title";
+
+            string SingleName = Path.GetFileNameWithoutExtension(File);
+            string[] toto = SingleName.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            if (toto.Length == 1)
+            {
+                Title = toto[0].Trim();
+            }
+            else if (toto.Length == 2)
+            {
+                Artist = toto[0].Trim();
+                Title = toto[1].Trim();
+            }
+
+            lrcs += "[ti:" + Title + "]" + cr;
+            lrcs += "[ar:" + Artist + "]" + cr;
+            lrcs += "[al:Album]" + cr;
+            lrcs += "[la:Lang]" + cr;
+
+            // Save syllabe by syllabe
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                vLyric = dgView.Rows[i].Cells[COL_REPLACE].Value;
+                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+
+                if (vTime != null && vLyric != null)
+                {
+                    sLyric = vLyric.ToString();
+                    sLyric = sLyric.Replace("_", " ");
+                    sLyric = sLyric.Trim();
+
+                    if (sLyric != "" && sLyric != cr)
+                    {
+                        sTime = vTime.ToString();
+                        lrcs += "[" + sTime + "]" + sLyric + cr;
+                    }
+                }
+            }
+
+            try
+            {
+                System.IO.File.WriteAllText(File, lrcs);
+                System.Diagnostics.Process.Start(@File);
+
+            }
+            catch (IOException)
+            {
+            }
+        }
+
+        private void SaveLRCLines(string File)
+        {
+            string sTime = string.Empty;
+            string sLyric = string.Empty;
+            string sLine = string.Empty;
+            object vLyric;
+            object vTime;
+            string lrcs = string.Empty;
+            string cr = "\r";
+            string Artist = "Artist";
+            string Title = "Title";
+
+            string SingleName = Path.GetFileNameWithoutExtension(File);
+            string[] toto = SingleName.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            if (toto.Length == 1)
+            {
+                Title = toto[0].Trim();
+            }
+            else if (toto.Length == 2)
+            {
+                Artist = toto[0].Trim();
+                Title = toto[1].Trim();
+            }
+
+            lrcs += "[ti:" + Title + "]" + cr;
+            lrcs += "[ar:" + Artist + "]" + cr;
+            lrcs += "[al:Album]" + cr;
+            lrcs += "[la:Lang]" + cr;
+
+            bool bStartLine = true;
+
+            // Save syllabe by syllabe
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                vLyric = dgView.Rows[i].Cells[COL_REPLACE].Value;
+                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+
+                if (vTime != null && vLyric != null)
+                {
+                    sLyric = vLyric.ToString();                    
+                    sLyric = sLyric.Trim();
+
+                    if (sLyric != "" && sLyric != cr)
+                    {
+                        if (bStartLine)
+                        {
+                            sTime = vTime.ToString();
+                            sLine = "[" + sTime + "]" + sLyric;
+                            bStartLine = false;
+                        }
+                        else
+                        {
+                            // Line continuation
+                            sLine += sLyric;
+                        }
+                    }
+                    else if (sLyric == "" || sLyric == cr)
+                    {
+                        // Start new line
+                        object vType = dgView.Rows[i].Cells[COL_TYPE].Value;
+
+                        if (vType != null && vType.ToString() == "cr")
+                        {
+                            // Save current line
+                            if (sLine != "")
+                            {
+                                sLine = sLine.Replace("_", " ");
+                                lrcs += sLine + cr;
+                            }
+
+                            // Reset all
+                            bStartLine = true;
+                            sLine = string.Empty;
+                        }
+
+                    }
+                }
+            }
+
+            try
+            {
+                System.IO.File.WriteAllText(File, lrcs);
+                System.Diagnostics.Process.Start(@File);
+
+            }
+            catch (IOException)
+            {
+            }
+        }
+
+
+        #endregion
+
         #region menus
 
         /// <summary>
@@ -983,61 +1144,15 @@ namespace Karaboss
 
             string fileName = saveMidiFileDialog.FileName;
 
-            string ssTime = string.Empty;
-            string ssLyric = string.Empty;
-            object vLyric;
-            string lrcs = string.Empty;
-            string cr = "\r";
-            string Artist = "Artist";
-            string Title = "Title";
+            string bLRCType = "Lines";
 
-            string SingleName = Path.GetFileNameWithoutExtension(fileName);
-            string[] toto = SingleName.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-            if (toto.Length == 1)
-            {
-                Title = toto[0].Trim();
-            }
-            else if (toto.Length == 2)
-            {
-                Artist = toto[0].Trim();
-                Title = toto[1].Trim();
-            }
-
-            lrcs += "[ti:" + Title + "]" + cr;
-            lrcs += "[ar:" + Artist + "]" + cr;
-            lrcs += "[al:Album]" + cr;
-            lrcs += "[la:Lang]" + cr;
-
-            for (int i = 0; i < dgView.Rows.Count; i++)
-            {
-                vLyric = dgView.Rows[i].Cells[COL_REPLACE].Value;
-
-                if (dgView.Rows[i].Cells[COL_TIME].Value != null && vLyric != null)
-                {
-                    ssLyric = vLyric.ToString();
-                    ssLyric = ssLyric.Replace("_", " ");
-                    ssLyric = ssLyric.Trim();
-
-                    if (ssLyric != "" && ssLyric != cr)
-                    {
-                        ssTime = dgView.Rows[i].Cells[COL_TIME].Value.ToString();
-                        lrcs += "[" + ssTime + "]" + ssLyric + cr;
-                    }
-                }
-            }
-
-
-            try
-            {
-                System.IO.File.WriteAllText(fileName, lrcs);
-                System.Diagnostics.Process.Start(@fileName);
-
-            }
-            catch (IOException)
-            {
-            }
+            if (bLRCType == "Lines")
+                SaveLRCLines(fileName);
+            else
+                SaveLRCParcels(fileName);
 
         }
+
 
         /// <summary>
         /// Quit windowx
