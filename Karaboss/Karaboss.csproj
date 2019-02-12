@@ -206,6 +206,10 @@
     <Compile Include="GuitarTraining\TextBlock.Designer.cs">
       <DependentUpon>TextBlock.cs</DependentUpon>
     </Compile>
+    <Compile Include="Lrc\FileWriter.cs" />
+    <Compile Include="Lrc\FormatFileName.cs" />
+    <Compile Include="Lrc\NeteaseMusic.cs" />
+    <Compile Include="Lrc\SharedFramework.cs" />
     <Compile Include="Pages\ConnectedControl\ListViewItemComparer.cs" />
     <Compile Include="Pages\ExplorerControl\KnownFolders.cs" />
     <Compile Include="Pages\ExplorerControl\xplorerControl.cs">
