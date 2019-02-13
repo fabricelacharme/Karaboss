@@ -208,8 +208,11 @@
     </Compile>
     <Compile Include="Lrc\FileWriter.cs" />
     <Compile Include="Lrc\FormatFileName.cs" />
+    <Compile Include="Lrc\Lrc.cs" />
+    <Compile Include="Lrc\LrcManager.cs" />
     <Compile Include="Lrc\NeteaseMusic.cs" />
     <Compile Include="Lrc\SharedFramework.cs" />
+    <Compile Include="Lrc\Time.cs" />
     <Compile Include="Pages\ConnectedControl\ListViewItemComparer.cs" />
     <Compile Include="Pages\ExplorerControl\KnownFolders.cs" />
     <Compile Include="Pages\ExplorerControl\xplorerControl.cs">

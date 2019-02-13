@@ -158,7 +158,7 @@ namespace Karaboss.Lrc.SharedFramework
         }
         
         /// <summary>
-        /// 有 Tag ，没有时间轴
+        /// Tag 
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -174,7 +174,6 @@ namespace Karaboss.Lrc.SharedFramework
         public Lyrics(List<LyricsLine> Lyrics)
         {
             LyricsLineText = Lyrics;
-
         }
 
         public Lyrics()
@@ -200,34 +199,34 @@ namespace Karaboss.Lrc.SharedFramework
                 StringBuilder tmp = new StringBuilder(rowText);
 
                 tmp.Replace(@"\r", "\r");
-                tmp.Replace(@"\n", "\n");//将明码出的\r \n 成为转义符
+                tmp.Replace(@"\n", "\n");
 
-                if (Regex.IsMatch(tmp.ToString(), @"\r(?!\n)"))//存在\r单独存在的情况
+                if (Regex.IsMatch(tmp.ToString(), @"\r(?!\n)"))
                 {
                     MatchCollection mc = Regex.Matches(tmp.ToString(), @"\r(?!\n)");
                     for (int i = 0; i < mc.Count; i++)
                     {
-                        tmp.Remove(mc[i].Index + i, 1);//删除插入会影响sb的index
+                        tmp.Remove(mc[i].Index + i, 1);
                         tmp.Insert(mc[i].Index + i, "\r\n");
                     }
                 }
 
-                if (Regex.IsMatch(tmp.ToString(), @"(?<!\r)\n"))//存在\n单独存在的情况
+                if (Regex.IsMatch(tmp.ToString(), @"(?<!\r)\n"))
                 {
                     MatchCollection mc = Regex.Matches(tmp.ToString(), @"(?<!\r)\n");
                     for (int i = 0; i < mc.Count; i++)
                     {
-                        tmp.Remove(mc[i].Index + i, 1);//删除插入会影响sb的index
+                        tmp.Remove(mc[i].Index + i, 1);
                         tmp.Insert(mc[i].Index + i, "\r\n");
                     }
                 }
 
-                if (Regex.IsMatch(tmp.ToString(), @"\r\n"))//存在\r\n单独存在的情况
+                if (Regex.IsMatch(tmp.ToString(), @"\r\n"))
                 {
                     MatchCollection mc = Regex.Matches(tmp.ToString(), @"(?<!\r)\n");
                     for (int i = 0; i < mc.Count; i++)
                     {
-                        tmp.Remove(mc[i].Index + i, 1);//删除插入会影响sb的index
+                        tmp.Remove(mc[i].Index + i, 1);
                         tmp.Insert(mc[i].Index + i, "\r\n");
                     }
                 }
@@ -235,13 +234,13 @@ namespace Karaboss.Lrc.SharedFramework
             }
             text = formatNewline(text);
             string[] textList = text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-            int totalCount = textList.Count();//总行数
+            int totalCount = textList.Count();
 
-            int j = -1;//指示List，可能有同行多个时间轴
-            for (int i = 0; i < totalCount; i++)//i指示原文本行，只在歌词行时跳
-            {//要考虑到有些写了标签却没写内容的小婊砸
-                //要考虑到有些有多个相同标签的小婊砸
-                if (Regex.IsMatch(textList[i], @"^\[Ar:.*\]$", RegexOptions.IgnoreCase))//命中则说明为tags Ar
+            int j = -1;
+
+            for (int i = 0; i < totalCount; i++)
+            {                
+                if (Regex.IsMatch(textList[i], @"^\[Ar:.*\]$", RegexOptions.IgnoreCase))// tags Artist
                 {
                     string tagText = Regex.Match(textList[i], @"(?<=\[Ar:).*(?=\])", RegexOptions.IgnoreCase).Value;
                     if (Tags.ContainsKey(LyricsTags.Ar))
@@ -250,7 +249,7 @@ namespace Karaboss.Lrc.SharedFramework
                         Tags.Add(LyricsTags.Ar, tagText);
                     continue;
                 }
-                if (Regex.IsMatch(textList[i], @"^\[Ti:.*\]$", RegexOptions.IgnoreCase))//命中则说明为tags Ti
+                if (Regex.IsMatch(textList[i], @"^\[Ti:.*\]$", RegexOptions.IgnoreCase))//tags Title
                 {
                     string tagText = Regex.Match(textList[i], @"(?<=\[Ti:).*(?=\])", RegexOptions.IgnoreCase).Value;
                     if (Tags.ContainsKey(LyricsTags.Ti))
@@ -259,7 +258,7 @@ namespace Karaboss.Lrc.SharedFramework
                         Tags.Add(LyricsTags.Ti, tagText);
                     continue;
                 }
-                if (Regex.IsMatch(textList[i], @"^\[Al:.*\]$", RegexOptions.IgnoreCase))//命中则说明为tags Al
+                if (Regex.IsMatch(textList[i], @"^\[Al:.*\]$", RegexOptions.IgnoreCase))// tags Album
                 {
                     string tagText = Regex.Match(textList[i], @"(?<=\[Al:).*(?=\])", RegexOptions.IgnoreCase).Value;
                     if (Tags.ContainsKey(LyricsTags.Al))
@@ -268,7 +267,7 @@ namespace Karaboss.Lrc.SharedFramework
                         Tags.Add(LyricsTags.Al, tagText);
                     continue;
                 }
-                if (Regex.IsMatch(textList[i], @"^\[By:.*\]$", RegexOptions.IgnoreCase))//命中则说明为tags By
+                if (Regex.IsMatch(textList[i], @"^\[By:.*\]$", RegexOptions.IgnoreCase))// tags By
                 {
                     string tagText = Regex.Match(textList[i], @"(?<=\[By:).*(?=\])", RegexOptions.IgnoreCase).Value;
                     if (Tags.ContainsKey(LyricsTags.By))
@@ -277,18 +276,18 @@ namespace Karaboss.Lrc.SharedFramework
                         Tags.Add(LyricsTags.By, tagText);
                     continue;
                 }
-                if (Regex.IsMatch(textList[i], @"^\[\D+:.*\]$", RegexOptions.IgnoreCase))//匹配一些可能是tag但不支持的文本，直接忽略掉以免当成时间轴（还有怎么有人的tag是中！文！的！居然有[作词:xxx]这样的东西！！！
+                if (Regex.IsMatch(textList[i], @"^\[\D+:.*\]$", RegexOptions.IgnoreCase))// tag！！！
                     continue;
 
                 MatchCollection mc = Regex.Matches(textList[i], @"(?<=\[).+?(?=\])");
-                int c = mc.Count;//可能有同行多个时间轴的可能性
+                int c = mc.Count;
                 for (int k = 0; k < c; k++)
                 {
                     j++;
                     LyricsLineText.Add(new LyricsLine());
                     LyricsLineText[j].Timeline = mc[k].Value;
 
-                    if (breakText != null)//有翻译
+                    if (breakText != null)
                     {
                         LyricsLineText[j].OriLyrics = Regex.Match(textList[i], @"(?<=\[.+\])[^\[\]]+(?=" + breakText + @")").Value;
                         LyricsLineText[j].SetTransLyrics(breakText, Regex.Match(textList[i], @"(?<=" + breakText + @").+$").Value);
@@ -312,7 +311,7 @@ namespace Karaboss.Lrc.SharedFramework
             string errorLog = "";
             switch (modelIndex)
             {
-                case 0://翻译延迟，作为新行出现
+                case 0:
                     try
                     {
                         int DelayMsec = Convert.ToInt32(args[0]);
@@ -325,13 +324,13 @@ namespace Karaboss.Lrc.SharedFramework
                                 return new string[] { "", errorLog };
                             }
                             else if (this[i].HasTrans())
-                            {//如果有翻译
+                            {
                                 if (returnString.ToString() != "")
                                 {
-                                    returnString.Append("\r\n[" + this[i].Timeline + "]" + (DelayMsec >= 0 ? this[i].OriLyrics : this[i].TransLyrics));//三目是有人希望可以让翻译先展示，过一会再显示原文
+                                    returnString.Append("\r\n[" + this[i].Timeline + "]" + (DelayMsec >= 0 ? this[i].OriLyrics : this[i].TransLyrics));
                                     this[i].DelayTimeline((DelayMsec >= 0 ? DelayMsec : -DelayMsec));
                                     returnString.Append("\r\n[" + this[i].Timeline + "]" + (DelayMsec >= 0 ? this[i].TransLyrics : this[i].OriLyrics));
-                                    this[i].DelayTimeline((DelayMsec >= 0 ? -DelayMsec : DelayMsec));//复原原本的时间轴
+                                    this[i].DelayTimeline((DelayMsec >= 0 ? -DelayMsec : DelayMsec));
                                 }
 
                                 else
@@ -339,7 +338,7 @@ namespace Karaboss.Lrc.SharedFramework
                                     returnString.Append("[" + this[i].Timeline + "]" + (DelayMsec >= 0 ? this[i].OriLyrics : this[i].TransLyrics));
                                     this[i].DelayTimeline((DelayMsec >= 0 ? DelayMsec : -DelayMsec));
                                     returnString.Append("\r\n[" + this[i].Timeline + "]" + (DelayMsec >= 0 ? this[i].TransLyrics : this[i].OriLyrics));
-                                    this[i].DelayTimeline((DelayMsec >= 0 ? -DelayMsec : DelayMsec));//复原原本的时间轴
+                                    this[i].DelayTimeline((DelayMsec >= 0 ? -DelayMsec : DelayMsec));
                                 }
 
                             }
@@ -357,7 +356,7 @@ namespace Karaboss.Lrc.SharedFramework
                             }
                         }
 
-                        return new string[] { (GetAllTags() != "" ? GetAllTags() + "\r\n" : "") + returnString.ToString(), errorLog };//写入 Tag 信息
+                        return new string[] { (GetAllTags() != "" ? GetAllTags() + "\r\n" : "") + returnString.ToString(), errorLog };
                     }
                     catch (System.ArgumentNullException)
                     {
@@ -419,10 +418,10 @@ namespace Karaboss.Lrc.SharedFramework
                                 return new string[] { "", errorLog };
                             }
                             else if (this[i].HasTrans())
-                            {//如果有翻译
+                            {
                                 double totalTextSize = 0;
-                                string connectedText = this[i].OriLyrics + this[i].TransLyrics;//将原文和翻译合并，计算来确定能否同屏显示
-                                void getSize(string pattern, double multiple)//获取指定正则规则下的字符 size，然后在 connectedText 中去掉
+                                string connectedText = this[i].OriLyrics + this[i].TransLyrics;
+                                void getSize(string pattern, double multiple)// size，connectedText
                                 {
                                     MatchCollection mc = Regex.Matches(connectedText, pattern);
                                     totalTextSize += mc.Count * multiple;
@@ -431,27 +430,27 @@ namespace Karaboss.Lrc.SharedFramework
                                 }
                                 foreach (var item in textSize)
                                     getSize(item.Key, item.Value);
-                                if (connectedText != "")//假如还有剩，就是上面没有命中，属于遗漏的
+                                if (connectedText != "")
                                 {
                                     totalTextSize += connectedText.Count() * 0.76;
                                     errorLog = errorLog + "<connectedText{(" + connectedText.Count().ToString() + ") " + connectedText + "} is not empty>";
                                 }
                                 System.Diagnostics.Debug.WriteLine(this[i].OriLyrics + this[i].TransLyrics + "\r\n" + connectedText.Count().ToString() + ") " + connectedText + "\r\n" + totalTextSize + "\r\n============");
-                                if (totalTextSize < 30)//30 为三行同屏的 size
+                                if (totalTextSize < 30) //30 size
                                 {
                                     if (returnString.ToString() != "")
                                         returnString.Append("\r\n[" + this[i].Timeline + "]" + this[i].ToString());
                                     else
                                         returnString.Append("[" + this[i].Timeline + "]" + this[i].ToString());
                                 }
-                                else//同case0
-                                {//TODO 不要copy
+                                else //case0
+                                {//TODO copy
                                     if (returnString.ToString() != "")
                                     {
-                                        returnString.Append("\r\n[" + this[i].Timeline + "]" + (DelayMsec >= 0 ? this[i].OriLyrics : this[i].TransLyrics));//三目是有人希望可以让翻译先展示，过一会再显示原文
+                                        returnString.Append("\r\n[" + this[i].Timeline + "]" + (DelayMsec >= 0 ? this[i].OriLyrics : this[i].TransLyrics));
                                         this[i].DelayTimeline((DelayMsec >= 0 ? DelayMsec : -DelayMsec));
                                         returnString.Append("\r\n[" + this[i].Timeline + "]" + (DelayMsec >= 0 ? this[i].TransLyrics : this[i].OriLyrics));
-                                        this[i].DelayTimeline((DelayMsec >= 0 ? -DelayMsec : DelayMsec));//复原原本的时间轴
+                                        this[i].DelayTimeline((DelayMsec >= 0 ? -DelayMsec : DelayMsec));
                                     }
 
                                     else
@@ -459,7 +458,7 @@ namespace Karaboss.Lrc.SharedFramework
                                         returnString.Append("[" + this[i].Timeline + "]" + (DelayMsec >= 0 ? this[i].OriLyrics : this[i].TransLyrics));
                                         this[i].DelayTimeline((DelayMsec >= 0 ? DelayMsec : -DelayMsec));
                                         returnString.Append("\r\n[" + this[i].Timeline + "]" + (DelayMsec >= 0 ? this[i].TransLyrics : this[i].OriLyrics));
-                                        this[i].DelayTimeline((DelayMsec >= 0 ? -DelayMsec : DelayMsec));//复原原本的时间轴
+                                        this[i].DelayTimeline((DelayMsec >= 0 ? -DelayMsec : DelayMsec));
                                     }
                                 }
                             }
