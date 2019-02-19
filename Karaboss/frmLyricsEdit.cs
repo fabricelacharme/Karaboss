@@ -1226,11 +1226,20 @@ namespace Karaboss
             string s = string.Empty;
             string d = string.Empty;
             int plTime = 0;
+            int plNote = 0;
+            string plType = "text";
             string plRealTime = "00:00.00";
+            string plElement = "";
 
             for (int i = 0; i < result.Length; i++)
             {
                 s = result[i];
+                if (i < dgView.Rows.Count)
+                {
+                    string[] row = { plTime.ToString(), plRealTime, plType, plNote.ToString(), plNote.ToString(), plElement };
+                    dgView.Rows.Add(row);
+                }
+
                 if (i < dgView.Rows.Count)
                 {
                     if (s != "<cr>")
@@ -1239,7 +1248,8 @@ namespace Karaboss
                     {
                         if (dgView.Rows[i].Cells[COL_TICKS].Value != null)
                         {
-                            plTime = (int)dgView.Rows[i].Cells[COL_TICKS].Value;
+                            //plTime = 0;                            
+                            plTime = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
                             plRealTime = TicksToTime(plTime);
                         }
                         dgView.Rows.Insert(i, plTime, plRealTime ,"cr", dgView.Rows[i].Cells[COL_NOTE].Value.ToString(), "");
@@ -1692,7 +1702,10 @@ namespace Karaboss
             string s = string.Empty;
             for (int row = 0; row < r; row++)
             {
-                s = dgView.Rows[row].Cells[COL_REPLACE].Value.ToString();
+                s = string.Empty;
+                if (dgView.Rows[row].Cells[COL_REPLACE].Value != null)
+                    s = dgView.Rows[row].Cells[COL_REPLACE].Value.ToString();
+
                 if (s == "" && dgView.Rows[row].Cells[COL_TYPE].Value != null && dgView.Rows[row].Cells[COL_TYPE].Value.ToString() == "cr")
                     s = "\r";
                 s = s.Replace("_", " ");

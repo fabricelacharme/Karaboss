@@ -244,16 +244,16 @@
     <value>&amp;Fichier</value>
   </data>
   <data name="mnuEditLoadTrack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>232, 22</value>
+    <value>226, 22</value>
   </data>
   <data name="mnuEditLoadTrack.Text" xml:space="preserve">
     <value>&amp;Charger une piste</value>
   </data>
   <data name="mnuEditLoadMelodyText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>232, 22</value>
+    <value>226, 22</value>
   </data>
   <data name="mnuEditLoadMelodyText.Text" xml:space="preserve">
-    <value>Charger un fichier de paraoles</value>
+    <value>Charger un fichier de paroles</value>
   </data>
   <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 20</value>
