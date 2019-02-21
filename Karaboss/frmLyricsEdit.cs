@@ -298,7 +298,7 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Display current line in textboxbx
+        /// Display current line in textbox
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1211,8 +1211,13 @@ namespace Karaboss
 
         }
 
+        /// <summary>
+        /// Load text without times
+        /// </summary>
+        /// <param name="source"></param>
         private void LoadTextGuide(string source)
-        {            
+        {
+            // Split into peaces of words
             source = source.Replace("\r\n", " <cr> ");
             source = source.Replace(" <cr>  <cr> ", " <cr> <cr> ");
             string[] stringSeparators = new string[] { " " };
@@ -1231,31 +1236,82 @@ namespace Karaboss
             string plRealTime = "00:00.00";
             string plElement = "";
 
+            int addl = result.Length - dgView.Rows.Count;
+            if (addl > 0)
+            {
+                for (int i = 0; i < addl; i++)
+                {
+                    dgView.Rows.Add();
+                }
+            }
+
             for (int i = 0; i < result.Length; i++)
             {
                 s = result[i];
-                if (i < dgView.Rows.Count)
-                {
-                    string[] row = { plTime.ToString(), plRealTime, plType, plNote.ToString(), plNote.ToString(), plElement };
-                    dgView.Rows.Add(row);
-                }
-
+               
                 if (i < dgView.Rows.Count)
                 {
                     if (s != "<cr>")
-                        dgView.Rows[i].Cells[COL_REPLACE].Value = s + " ";
+                    {
+                        // insert TEXT
+                        plType = "text";
+
+                        if (dgView.Rows[i].Cells[COL_TICKS].Value == null)
+                        {
+                            dgView.Rows[i].Cells[COL_TICKS].Value = plTime;
+                            plRealTime = TicksToTime(plTime);
+                            dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
+                        }
+                        else
+                        {
+                            plTime = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
+                        }
+                        
+                        dgView.Rows[i].Cells[COL_TYPE].Value = plType;
+
+                        if (dgView.Rows[i].Cells[COL_NOTE].Value == null)
+                            dgView.Rows[i].Cells[COL_NOTE].Value = 0;
+
+                        plElement = s + " ";
+
+                        dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
+                        dgView.Rows[i].Cells[COL_REPLACE].Value = plElement;
+                        
+                    }
                     else
                     {
+                        // insert <CR>;
+                        plType = "cr";
                         if (dgView.Rows[i].Cells[COL_TICKS].Value != null)
                         {
-                            //plTime = 0;                            
                             plTime = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
                             plRealTime = TicksToTime(plTime);
                         }
-                        dgView.Rows.Insert(i, plTime, plRealTime ,"cr", dgView.Rows[i].Cells[COL_NOTE].Value.ToString(), "");
+                        if (dgView.Rows[i].Cells[COL_NOTE].Value == null)
+                            dgView.Rows[i].Cells[COL_NOTE].Value = 0;
+
+                        plNote = Convert.ToInt32(dgView.Rows[i].Cells[COL_NOTE].Value);
+
+                        plElement = "";                        
+
+                        dgView.Rows[i].Cells[COL_TICKS].Value = plTime;
+                        dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
+                        dgView.Rows[i].Cells[COL_TYPE].Value = plType;
+                        dgView.Rows[i].Cells[COL_NOTE].Value = plNote.ToString();
+                        dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
+                        dgView.Rows[i].Cells[COL_REPLACE].Value = plElement;
+
+
                     }
                 }
             }
+
+            //Load modification into local list of lyrics
+            LoadModifiedLyrics();
+            PopulateTextBox(localplLyrics);
+
+            // File was modified
+            FileModified();
 
         }
 
@@ -1269,6 +1325,15 @@ namespace Karaboss
             PopulateTextBox(localplLyrics);
         }
 
+        /// <summary>
+        /// Load a text file LRC format (times stamps + lyrics)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuEditLoadLRCFile_Click(object sender, EventArgs e)
+        {
+
+        }
 
         /// <summary>
         /// Menu : about
@@ -1817,8 +1882,9 @@ namespace Karaboss
                 TextLyricFormat = LyricFormat.Lyric;
         }
 
+
         #endregion
 
-     
+       
     }
 }

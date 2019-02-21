@@ -454,6 +454,9 @@
     <EmbeddedResource Include="frmGuitarTraining.resx">
       <DependentUpon>frmGuitarTraining.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmLyricsSelectTrack.fr.resx">
+      <DependentUpon>frmLyricsSelectTrack.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmPianoTraining.resx">
       <DependentUpon>frmPianoTraining.cs</DependentUpon>
     </EmbeddedResource>

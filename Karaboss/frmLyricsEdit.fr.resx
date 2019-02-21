@@ -207,6 +207,15 @@
   <data name="btnSave.Text" xml:space="preserve">
     <value>&amp;Enregistrer</value>
   </data>
+  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>54, 20</value>
+  </data>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;Fichier</value>
+  </data>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
     <value>204, 22</value>
   </data>
@@ -237,35 +246,41 @@
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
   </data>
-  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>54, 20</value>
-  </data>
-  <data name="mnuFile.Text" xml:space="preserve">
-    <value>&amp;Fichier</value>
-  </data>
-  <data name="mnuEditLoadTrack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>226, 22</value>
-  </data>
-  <data name="mnuEditLoadTrack.Text" xml:space="preserve">
-    <value>&amp;Charger une piste</value>
-  </data>
-  <data name="mnuEditLoadMelodyText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>226, 22</value>
-  </data>
-  <data name="mnuEditLoadMelodyText.Text" xml:space="preserve">
-    <value>Charger un fichier de paroles</value>
-  </data>
   <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 20</value>
   </data>
   <data name="mnuEdit.Text" xml:space="preserve">
     <value>&amp;Edition</value>
   </data>
-  <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 22</value>
+  <data name="mnuEditLoadTrack.Size" type="System.Drawing.Size, System.Drawing">
+    <value>259, 22</value>
   </data>
-  <data name="mnuHelpAbout.Text" xml:space="preserve">
-    <value>A &amp;propos</value>
+  <data name="mnuEditLoadTrack.Text" xml:space="preserve">
+    <value>&amp;Charger une piste</value>
+  </data>
+  <data name="mnuEditLoadTrack.ToolTipText" xml:space="preserve">
+    <value>Charger une piste contenant des notes pour synchroniser le texte.</value>
+  </data>
+  <data name="mnuEditSep1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>256, 6</value>
+  </data>
+  <data name="mnuEditLoadMelodyText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>259, 22</value>
+  </data>
+  <data name="mnuEditLoadMelodyText.Text" xml:space="preserve">
+    <value>Charger un fichier texte (paroles)</value>
+  </data>
+  <data name="mnuEditLoadMelodyText.ToolTipText" xml:space="preserve">
+    <value>Charger un fichier texte (uniquement des paroles, pas de temps)</value>
+  </data>
+  <data name="mnuEditLoadLRCFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>259, 22</value>
+  </data>
+  <data name="mnuEditLoadLRCFile.Text" xml:space="preserve">
+    <value>Charge un fichier texte (format .lrc)</value>
+  </data>
+  <data name="mnuEditLoadLRCFile.ToolTipText" xml:space="preserve">
+    <value>Charger un fichier texte au format LRC (temps + Lyriques)</value>
   </data>
   <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
     <value>43, 20</value>
@@ -273,8 +288,11 @@
   <data name="mnuHelp.Text" xml:space="preserve">
     <value>&amp;Aide</value>
   </data>
-  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
+  <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 22</value>
+  </data>
+  <data name="mnuHelpAbout.Text" xml:space="preserve">
+    <value>A &amp;propos</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
