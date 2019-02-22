@@ -211,8 +211,8 @@ namespace Karaboss
         {
             int val = 0;
 
-            // If first col is edited
-            if (dgView.CurrentCell.ColumnIndex == 0)
+            // If first col is edited (TICKS)
+            if (dgView.CurrentCell.ColumnIndex == COL_TICKS)
             {
                 if (!IsNumeric(dgView.CurrentCell.Value.ToString()))
                 {
@@ -245,7 +245,18 @@ namespace Karaboss
                 if (dgView.Rows[dgView.CurrentCell.RowIndex].Cells[dgView.Columns.Count - 1].Value == null)
                     dgView.Rows[dgView.CurrentCell.RowIndex].Cells[dgView.Columns.Count - 1].Value = "";
 
+                // Ticks to time
+                dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TIME].Value = TicksToTime(Convert.ToInt32(dgView.CurrentCell.Value));
 
+            }
+            else if (dgView.CurrentCell.ColumnIndex == COL_TIME)
+            {
+                // If COL_TIME is edited
+                if (dgView.CurrentCell.Value != null)
+                {
+                    // Time to ticks
+                    dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TICKS].Value = TimeToTicks(dgView.CurrentCell.Value.ToString());
+                }
 
             }
             else  if (dgView.CurrentCell.ColumnIndex == dgView.Columns.Count - 1)
@@ -1224,7 +1235,37 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuEditLoadTrack_Click(object sender, EventArgs e)
         {
+            DialogResult dr = new DialogResult();
+            frmLyricsSelectTrack TrackDialog = new frmLyricsSelectTrack(sequence1);
+            dr = TrackDialog.ShowDialog();
+
+            if (dr == System.Windows.Forms.DialogResult.Cancel)
+                return;
+
+            // Get track number for melody
+            // -1 if no track
+            melodytracknum = TrackDialog.TrackNumber - 1;
+
+            
+            if (melodytracknum == -1)
+            {
+                //MessageBox.Show("No track found for the melody", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                dgView.Rows.Clear();
+                return;
+            }
+
             LoadTrackGuide();
+        }
+
+        /// <summary>
+        /// Select track audio guide & lyrics format
+        /// </summary>
+        private void LoadTrackGuide()
+        {
+            
+            PopulateDataGridViewTrack(melodytracknum);
+            LoadModifiedLyrics();
+            PopulateTextBox(localplLyrics);
         }
 
         /// <summary>
@@ -1328,7 +1369,7 @@ namespace Karaboss
                         if (dgView.Rows[i].Cells[COL_NOTE].Value == null)
                             dgView.Rows[i].Cells[COL_NOTE].Value = 0;
 
-                        plElement = s + " ";
+                        plElement = s + "_";
 
                         dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
                         dgView.Rows[i].Cells[COL_REPLACE].Value = plElement;
@@ -1369,15 +1410,7 @@ namespace Karaboss
 
         }
 
-        /// <summary>
-        /// Select track audio guide & lyrics format
-        /// </summary>
-        private void LoadTrackGuide()
-        {                     
-            PopulateDataGridViewTrack(melodytracknum);                        
-            LoadModifiedLyrics();
-            PopulateTextBox(localplLyrics);
-        }
+      
 
         /// <summary>
         /// Load a text file LRC format (times stamps + lyrics)
@@ -1423,6 +1456,10 @@ namespace Karaboss
             Lyrics lyrics = new Lyrics();
             lyrics.ArrangeLyrics(Source);
 
+
+            // Clear dgView
+            dgView.Rows.Clear();
+            
             // Add missing lines before
             int addl = lyrics.Count - dgView.Rows.Count;
             if (addl > 0)
@@ -1433,25 +1470,58 @@ namespace Karaboss
                 }
             }
 
+            // ADD rows for CR
+            addl = dgView.Rows.Count;
+            for (int i = 0; i < addl; i++)
+            {
+                dgView.Rows.Add();
+            }
+
+
             int plTime = 0;
             string plRealTime = string.Empty;
             string plType = string.Empty;
             string plNote = string.Empty;
-            string plElement = string.Empty;
+            string plElement = string.Empty;            
+            int row = 0;
 
             for (int i = 0; i < lyrics.Count; i++)
             {
+
                 LyricsLine lyline = lyrics[i];
-                plRealTime= lyline.Timeline;
+                plRealTime = lyline.Timeline;
+
+                if (row > 0)
+                {
+                    // Add CR
+                    plElement = "";
+                    plType = "cr";
+                    dgView.Rows[row].Cells[COL_TICKS].Value = plTime;
+                    dgView.Rows[row].Cells[COL_TIME].Value = plRealTime;
+                    dgView.Rows[row].Cells[COL_TYPE].Value = plType;
+                    dgView.Rows[row].Cells[COL_NOTE].Value = plNote;
+                    dgView.Rows[row].Cells[COL_TEXT].Value = plElement;
+                    dgView.Rows[row].Cells[COL_REPLACE].Value = plElement;
+
+                    row++;
+                }
+
+                
+
+                plType = "text";
                 plElement = lyline.OriLyrics;
 
                 plTime = TimeToTicks(plRealTime);
-                dgView.Rows[i].Cells[COL_TICKS].Value = plTime;
-                dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
-                dgView.Rows[i].Cells[COL_TYPE].Value = plType;
-                dgView.Rows[i].Cells[COL_NOTE].Value = plNote;
-                dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
-                dgView.Rows[i].Cells[COL_REPLACE].Value = plElement;
+                dgView.Rows[row].Cells[COL_TICKS].Value = plTime;
+                dgView.Rows[row].Cells[COL_TIME].Value = plRealTime;
+                dgView.Rows[row].Cells[COL_TYPE].Value = plType;
+                dgView.Rows[row].Cells[COL_NOTE].Value = plNote;
+                dgView.Rows[row].Cells[COL_TEXT].Value = plElement;
+                dgView.Rows[row].Cells[COL_REPLACE].Value = plElement;
+
+                row++;
+
+
             }
 
             //Load modification into local list of lyrics

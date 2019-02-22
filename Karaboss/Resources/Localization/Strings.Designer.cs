@@ -1064,5 +1064,12 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("SelectMeasures", resourceCulture);
             }
         }
+        internal static string NoMelodyTrack
+        {
+            get
+            {
+                return ResourceManager.GetString("NoMelodyTrack", resourceCulture);
+            }
+        }
     }
 }
