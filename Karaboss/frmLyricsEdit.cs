@@ -41,6 +41,7 @@ using PicControl;
 using System.IO;
 using System.Text.RegularExpressions;
 using Karaboss.Resources.Localization;
+using Karaboss.Lrc.SharedFramework;
 
 namespace Karaboss
 {
@@ -59,20 +60,7 @@ namespace Karaboss
          * 
          * 
          */
-        
-        /*
-        public class LRCS
-        {
-            public string sTime { get; set; }
-            public string sLyric { get; set; }
-
-            public LRCS (string t, string l)
-            {
-                sTime = t;
-                sLyric = l;
-            }
-        }
-        */
+       
 
         frmPlayer frmPlayer;
 
@@ -889,36 +877,68 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Save lyrics to lrc format
+        /// Convert time to ticks
+        /// 01:15.51 (min, sec, cent)
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        private int TimeToTicks(string time)
+        {
+            int ti = 0;
+            double dur = 0;
+
+            string[] split1 = time.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split1.Length != 2)
+                return ti;
+
+            string min = split1[0];            
+
+            string[] split2 = split1[1].Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split2.Length != 2)
+                return ti;
+
+            string sec = split2[0];
+            string cent = split2[1];
+
+            // Calculate dur in seconds
+            int Min = Convert.ToInt32(min);
+            dur = Min * 60;
+            int Sec = Convert.ToInt32(sec);
+            dur += Sec;
+            int Cent = Convert.ToInt32(cent);
+            dur += Cent / 100;
+
+            ti = Convert.ToInt32(_ppqn * dur * 1000000 / _tempo);
+
+            return ti;
+        }
+
+
+        /// <summary>
+        /// Save lyrics to lrc format, syllabe by syllabe
         /// </summary>
         /// <param name="FileName"></param>
-        private void SaveLRCParcels(string File)
+        private void SaveLRCParcels(string File, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
         {
             string sTime = string.Empty;
             string sLyric = string.Empty;
             object vLyric;
             object vTime;
             string lrcs = string.Empty;
-            string cr = "\r";
-            string Artist = "Artist";
-            string Title = "Title";
+            string cr = "\r\n";
 
-            string SingleName = Path.GetFileNameWithoutExtension(File);
-            string[] toto = SingleName.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-            if (toto.Length == 1)
-            {
-                Title = toto[0].Trim();
-            }
-            else if (toto.Length == 2)
-            {
-                Artist = toto[0].Trim();
-                Title = toto[1].Trim();
-            }
-
-            lrcs += "[ti:" + Title + "]" + cr;
-            lrcs += "[ar:" + Artist + "]" + cr;
-            lrcs += "[al:Album]" + cr;
-            lrcs += "[la:Lang]" + cr;
+            if (Tag_Title != "")
+                lrcs += "[Ti:" + Tag_Title + "]" + cr;
+            if (Tag_Artist != "")
+                lrcs += "[Ar:" + Tag_Artist + "]" + cr;
+            if (Tag_Album != "")
+                lrcs += "[Al:" + Tag_Album + "]" + cr;
+            if (Tag_Lang != "")
+                lrcs += "[La:" + Tag_Lang + "]" + cr;
+            if (Tag_By != "")
+                lrcs += "[By:" + Tag_Album + "]" + cr;
+            if (Tag_DPlus != "")
+                lrcs += "[D+:" + Tag_DPlus + "]" + cr;
 
             // Save syllabe by syllabe
             for (int i = 0; i < dgView.Rows.Count; i++)
@@ -951,7 +971,17 @@ namespace Karaboss
             }
         }
 
-        private void SaveLRCLines(string File)
+        /// <summary>
+        /// Save Lyrics .lrc file format and by lines
+        /// </summary>
+        /// <param name="File"></param>
+        /// <param name="Tag_Title"></param>
+        /// <param name="Tag_Artist"></param>
+        /// <param name="Tag_Album"></param>
+        /// <param name="Tag_Lang"></param>
+        /// <param name="Tag_By"></param>
+        /// <param name="Tag_DPlus"></param>
+        private void SaveLRCLines(string File, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
         {
             string sTime = string.Empty;
             string sLyric = string.Empty;
@@ -959,26 +989,22 @@ namespace Karaboss
             object vLyric;
             object vTime;
             string lrcs = string.Empty;
-            string cr = "\r";
-            string Artist = "Artist";
-            string Title = "Title";
+            string cr = "\r\n";
 
-            string SingleName = Path.GetFileNameWithoutExtension(File);
-            string[] toto = SingleName.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-            if (toto.Length == 1)
-            {
-                Title = toto[0].Trim();
-            }
-            else if (toto.Length == 2)
-            {
-                Artist = toto[0].Trim();
-                Title = toto[1].Trim();
-            }
 
-            lrcs += "[ti:" + Title + "]" + cr;
-            lrcs += "[ar:" + Artist + "]" + cr;
-            lrcs += "[al:Album]" + cr;
-            lrcs += "[la:Lang]" + cr;
+            if (Tag_Title != "")
+                lrcs += "[Ti:" + Tag_Title + "]" + cr;
+            if (Tag_Artist != "")
+                lrcs += "[Ar:" + Tag_Artist + "]" + cr;
+            if (Tag_Album != "")
+                lrcs += "[Al:" + Tag_Album + "]" + cr;
+            if (Tag_Lang != "")
+                lrcs += "[La:" + Tag_Lang + "]" + cr;
+            if (Tag_By != "")
+                lrcs += "[By:" + Tag_Album + "]" + cr;
+            if (Tag_DPlus != "")
+                lrcs += "[D+:" + Tag_DPlus + "]" + cr;
+
 
             bool bStartLine = true;
 
@@ -1025,10 +1051,17 @@ namespace Karaboss
                             bStartLine = true;
                             sLine = string.Empty;
                         }
-
                     }
                 }
             }
+
+            // Save last line
+            if (sLine != "")
+            {
+                sLine = sLine.Replace("_", " ");
+                lrcs += sLine + cr;
+            }
+
 
             try
             {
@@ -1139,17 +1172,37 @@ namespace Karaboss
 
             if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
                 return;
-            
+
             #endregion
 
-            string fileName = saveMidiFileDialog.FileName;
+            string Tag_Title = string.Empty;
+            string Tag_Artist = string.Empty;
+            string Tag_Album = string.Empty;
+            string Tag_Lang = string.Empty;
+            string Tag_By = string.Empty;
+            string Tag_DPlus = string.Empty;
 
+            string FileName = saveMidiFileDialog.FileName;
             string bLRCType = "Lines";
 
+            // Search Title & Artist
+            string SingleName = Path.GetFileNameWithoutExtension(FileName);
+            string[] split = SingleName.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split.Length == 1)
+            {
+                Tag_Title = split[0].Trim();
+            }
+            else if (split.Length == 2)
+            {
+                Tag_Artist = split[0].Trim();
+                Tag_Title = split[1].Trim();
+            }
+
+
             if (bLRCType == "Lines")
-                SaveLRCLines(fileName);
+                SaveLRCLines(FileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
             else
-                SaveLRCParcels(fileName);
+                SaveLRCParcels(FileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
 
         }
 
@@ -1199,7 +1252,7 @@ namespace Karaboss
                         String lines = sr.ReadToEnd();
                         //Console.WriteLine(lines);
 
-                        LoadTextGuide(lines);
+                        LoadTextFile(lines);
                     }
                 }
                 catch (Exception errl)
@@ -1215,7 +1268,7 @@ namespace Karaboss
         /// Load text without times
         /// </summary>
         /// <param name="source"></param>
-        private void LoadTextGuide(string source)
+        private void LoadTextFile(string source)
         {
             // Split into peaces of words
             source = source.Replace("\r\n", " <cr> ");
@@ -1228,14 +1281,7 @@ namespace Karaboss
                     result[i] = "<cr>";
             }
 
-            string s = string.Empty;
-            string d = string.Empty;
-            int plTime = 0;
-            int plNote = 0;
-            string plType = "text";
-            string plRealTime = "00:00.00";
-            string plElement = "";
-
+            // Add missing lines before
             int addl = result.Length - dgView.Rows.Count;
             if (addl > 0)
             {
@@ -1244,6 +1290,16 @@ namespace Karaboss
                     dgView.Rows.Add();
                 }
             }
+
+            // write lyrics on each line
+            string s = string.Empty;
+
+            int plTime = 0;
+            string plRealTime = "00:00.00";
+            int plNote = 0;
+            string plType = "text";            
+            string plElement = "";
+
 
             for (int i = 0; i < result.Length; i++)
             {
@@ -1300,8 +1356,6 @@ namespace Karaboss
                         dgView.Rows[i].Cells[COL_NOTE].Value = plNote.ToString();
                         dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
                         dgView.Rows[i].Cells[COL_REPLACE].Value = plElement;
-
-
                     }
                 }
             }
@@ -1332,7 +1386,80 @@ namespace Karaboss
         /// <param name="e"></param>
         private void mnuEditLoadLRCFile_Click(object sender, EventArgs e)
         {
+            openFileDialog.Title = "Open a .lrc file";
+            openFileDialog.DefaultExt = "lrc";
+            openFileDialog.Filter = "lrc files|*.lrc|All files|*.*";
+            if (MIDIfileName != null || MIDIfileName != "")
+                openFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
 
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = openFileDialog.FileName;
+
+                try
+                {
+                    using (StreamReader sr = new StreamReader(fileName))
+                    {
+                        String lines = sr.ReadToEnd();
+                        //Console.WriteLine(lines);
+                        LoadLRCFile(lines);
+                    }
+                }
+                catch (Exception errl)
+                {
+                    Console.WriteLine("The file could not be read:");
+                    Console.WriteLine(errl.Message);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Load a LRC file (times + lyrics)
+        /// </summary>
+        /// <param name="Source"></param>
+        private void LoadLRCFile(string Source)
+        {
+            Lyrics lyrics = new Lyrics();
+            lyrics.ArrangeLyrics(Source);
+
+            // Add missing lines before
+            int addl = lyrics.Count - dgView.Rows.Count;
+            if (addl > 0)
+            {
+                for (int i = 0; i < addl; i++)
+                {
+                    dgView.Rows.Add();
+                }
+            }
+
+            int plTime = 0;
+            string plRealTime = string.Empty;
+            string plType = string.Empty;
+            string plNote = string.Empty;
+            string plElement = string.Empty;
+
+            for (int i = 0; i < lyrics.Count; i++)
+            {
+                LyricsLine lyline = lyrics[i];
+                plRealTime= lyline.Timeline;
+                plElement = lyline.OriLyrics;
+
+                plTime = TimeToTicks(plRealTime);
+                dgView.Rows[i].Cells[COL_TICKS].Value = plTime;
+                dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
+                dgView.Rows[i].Cells[COL_TYPE].Value = plType;
+                dgView.Rows[i].Cells[COL_NOTE].Value = plNote;
+                dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
+                dgView.Rows[i].Cells[COL_REPLACE].Value = plElement;
+            }
+
+            //Load modification into local list of lyrics
+            LoadModifiedLyrics();
+            PopulateTextBox(localplLyrics);
+
+            // File was modified
+            FileModified();
         }
 
         /// <summary>

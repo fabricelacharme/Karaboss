@@ -134,6 +134,7 @@ namespace Karaboss.Lrc.SharedFramework
         {
             get => GetAllTags() != "";
         }
+
         public string GetAllTags()
         {
             string allTags = "";
@@ -146,6 +147,7 @@ namespace Karaboss.Lrc.SharedFramework
             }
             return allTags;
         }
+
         public enum LyricsTags {[Description("Artist")] Ar, [Description("Title")] Ti, [Description("Album")] Al, [Description("By")] By };
         public Dictionary<LyricsTags, string> Tags = new Dictionary<LyricsTags, string>();
 
@@ -232,6 +234,7 @@ namespace Karaboss.Lrc.SharedFramework
                 }
                 return tmp.ToString();
             }
+
             text = formatNewline(text);
             string[] textList = text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             int totalCount = textList.Count();
