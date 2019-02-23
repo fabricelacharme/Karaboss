@@ -354,7 +354,7 @@ namespace Karaboss
             //string[] row;
             bool bfound = false;
 
-            int plTime = 0;
+            int plTicksOn = 0;
             string plRealTime = "00:00.00";
             string plType = string.Empty;
             int plNote = 60;
@@ -368,15 +368,15 @@ namespace Karaboss
                 // On affiche la liste des lyrics 
                 for (idx = 0; idx < lLyrics.Count; idx++)
                 {
-                    plTime = lLyrics[idx].Time;
-                    plRealTime = TicksToTime(plTime);           // TODO
+                    plTicksOn = lLyrics[idx].TicksOn;
+                    plRealTime = TicksToTime(plTicksOn);           // TODO
                     plNote = 0;
                     plElement = lLyrics[idx].Element;
                     plElement = plElement.Replace(" ", "_");
                     plType = lLyrics[idx].Type;
 
                     // New Row
-                    string[] rowlyric = { plTime.ToString(), plRealTime, plType, plNote.ToString(), plElement, plElement };
+                    string[] rowlyric = { plTicksOn.ToString(), plRealTime, plType, plNote.ToString(), plElement, plElement };
                     dgView.Rows.Add(rowlyric);
                 }
             }
@@ -386,8 +386,8 @@ namespace Karaboss
                 for (int i = 0; i < lLyrics.Count; i++)
                 {
                     bfound = false;
-                    plTime = lLyrics[i].Time;
-                    plRealTime = TicksToTime(plTime);           // TODO
+                    plTicksOn = lLyrics[i].TicksOn;
+                    plRealTime = TicksToTime(plTicksOn);           // TODO
                     plNote = 0;
                     plElement = lLyrics[i].Element;
                     plElement = plElement.Replace(" ", "_");
@@ -396,7 +396,7 @@ namespace Karaboss
                     if (idx < lLyrics.Count)
                     {
                         // Afficher les notes dont le start est avant celui du Lyric courant
-                        while (idx < melodyTrack.Notes.Count && melodyTrack.Notes[idx].StartTime < plTime)
+                        while (idx < melodyTrack.Notes.Count && melodyTrack.Notes[idx].StartTime < plTicksOn)
                         {
                             int beforeplTime = melodyTrack.Notes[idx].StartTime;
                             string beforeplRealTime = TicksToTime(beforeplTime);
@@ -411,10 +411,10 @@ namespace Karaboss
 
                         }
                         // Afficher la note dont le start est égal à celui du lyric courant
-                        if (idx < melodyTrack.Notes.Count && melodyTrack.Notes[idx].StartTime == plTime) 
+                        if (idx < melodyTrack.Notes.Count && melodyTrack.Notes[idx].StartTime == plTicksOn) 
                         {
                             plNote = melodyTrack.Notes[idx].Number;
-                            string[] rowlyric = { plTime.ToString(), plRealTime, plType, plNote.ToString(), plElement, plElement };
+                            string[] rowlyric = { plTicksOn.ToString(), plRealTime, plType, plNote.ToString(), plElement, plElement };
                             dgView.Rows.Add(rowlyric);
                             bfound = true; // lyric inscrit dans la grille
                             // Incrémente le compteur de notes si différent de retour chariot
@@ -427,7 +427,7 @@ namespace Karaboss
                     // Lyric courant pas inscrit dans la grille ?
                     if (bfound == false)
                     {
-                        string[] rowlyric = { plTime.ToString(), plRealTime, plType, plNote.ToString(), plElement, plElement };
+                        string[] rowlyric = { plTicksOn.ToString(), plRealTime, plType, plNote.ToString(), plElement, plElement };
                         dgView.Rows.Add(rowlyric);
                     }
                 }
@@ -461,7 +461,7 @@ namespace Karaboss
             if (tracknumber >= 0 && tracknumber < sequence1.tracks.Count)
             {
                 Track track = sequence1.tracks[tracknumber];
-                int plTime = 0;
+                int plTicksOn = 0;
                 string plRealTime = string.Empty;
                 string plType = string.Empty;
                 int plNote = 0;
@@ -470,13 +470,13 @@ namespace Karaboss
                 for (int i = 0; i < track.Notes.Count; i++)
                 {
                     MidiNote n = track.Notes[i];
-                    plTime = n.StartTime;
-                    plRealTime = TicksToTime(plTime);
+                    plTicksOn = n.StartTime;
+                    plRealTime = TicksToTime(plTicksOn);
                     plType = "text";
                     plNote = n.Number;
                     plElement = plNote.ToString();
 
-                    string[] row = { plTime.ToString(), plRealTime, plType, plNote.ToString(), plNote.ToString(), plElement };
+                    string[] row = { plTicksOn.ToString(), plRealTime, plType, plNote.ToString(), plNote.ToString(), plElement };
                     dgView.Rows.Add(row);
                 }
             }            
@@ -671,17 +671,17 @@ namespace Karaboss
         private void BtnInsert_Click(object sender, EventArgs e)
         {
             int Row = dgView.CurrentRow.Index;
-            int plTime = 0;
+            int plTicksOn = 0;
             string plRealTime = "00:00.00";
 
             if (dgView.Rows[Row].Cells[COL_TICKS].Value != null)
             {
-                plTime = Convert.ToInt32(dgView.Rows[Row].Cells[COL_TICKS].Value);
-                plRealTime = TicksToTime(plTime);
+                plTicksOn = Convert.ToInt32(dgView.Rows[Row].Cells[COL_TICKS].Value);
+                plRealTime = TicksToTime(plTicksOn);
             }
 
             // time, type, note, text, text
-            dgView.Rows.Insert(Row, plTime, plRealTime,"cr", "", "", "");
+            dgView.Rows.Insert(Row, plTicksOn, plRealTime,"cr", "", "", "");
 
             //Load modification into local list of lyrics
             LoadModifiedLyrics();
@@ -706,7 +706,7 @@ namespace Karaboss
         private void InsertLine()
         {
             int Row = dgView.CurrentRow.Index;
-            int plTime = 0;
+            int plTicksOn = 0;
             string plRealTime = "00:00.00";
             int pNote = 0;
             string pElement = string.Empty;
@@ -714,8 +714,8 @@ namespace Karaboss
 
             if (dgView.Rows[Row].Cells[COL_TICKS].Value != null)
             {
-                plTime = Convert.ToInt32(dgView.Rows[Row].Cells[COL_TICKS].Value);
-                plRealTime = TicksToTime(plTime);
+                plTicksOn = Convert.ToInt32(dgView.Rows[Row].Cells[COL_TICKS].Value);
+                plRealTime = TicksToTime(plTicksOn);
             }
 
             pElement = "text";
@@ -727,7 +727,7 @@ namespace Karaboss
                 pReplace = "text";
 
 
-            dgView.Rows.Insert(Row, plTime, plRealTime, "text", pNote, pElement, pReplace);
+            dgView.Rows.Insert(Row, plTicksOn, plRealTime, "text", pNote, pElement, pReplace);
 
             HeightsToDurations();
 
@@ -1335,7 +1335,7 @@ namespace Karaboss
             // write lyrics on each line
             string s = string.Empty;
 
-            int plTime = 0;
+            int plTicksOn = 0;
             string plRealTime = "00:00.00";
             int plNote = 0;
             string plType = "text";            
@@ -1355,13 +1355,13 @@ namespace Karaboss
 
                         if (dgView.Rows[i].Cells[COL_TICKS].Value == null)
                         {
-                            dgView.Rows[i].Cells[COL_TICKS].Value = plTime;
-                            plRealTime = TicksToTime(plTime);
+                            dgView.Rows[i].Cells[COL_TICKS].Value = plTicksOn;
+                            plRealTime = TicksToTime(plTicksOn);
                             dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
                         }
                         else
                         {
-                            plTime = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
+                            plTicksOn = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
                         }
                         
                         dgView.Rows[i].Cells[COL_TYPE].Value = plType;
@@ -1381,8 +1381,8 @@ namespace Karaboss
                         plType = "cr";
                         if (dgView.Rows[i].Cells[COL_TICKS].Value != null)
                         {
-                            plTime = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
-                            plRealTime = TicksToTime(plTime);
+                            plTicksOn = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
+                            plRealTime = TicksToTime(plTicksOn);
                         }
                         if (dgView.Rows[i].Cells[COL_NOTE].Value == null)
                             dgView.Rows[i].Cells[COL_NOTE].Value = 0;
@@ -1391,7 +1391,7 @@ namespace Karaboss
 
                         plElement = "";                        
 
-                        dgView.Rows[i].Cells[COL_TICKS].Value = plTime;
+                        dgView.Rows[i].Cells[COL_TICKS].Value = plTicksOn;
                         dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
                         dgView.Rows[i].Cells[COL_TYPE].Value = plType;
                         dgView.Rows[i].Cells[COL_NOTE].Value = plNote.ToString();
@@ -1478,7 +1478,7 @@ namespace Karaboss
             }
 
 
-            int plTime = 0;
+            int plTicksOn = 0;
             string plRealTime = string.Empty;
             string plType = string.Empty;
             string plNote = string.Empty;
@@ -1496,7 +1496,7 @@ namespace Karaboss
                     // Add CR
                     plElement = "";
                     plType = "cr";
-                    dgView.Rows[row].Cells[COL_TICKS].Value = plTime;
+                    dgView.Rows[row].Cells[COL_TICKS].Value = plTicksOn;
                     dgView.Rows[row].Cells[COL_TIME].Value = plRealTime;
                     dgView.Rows[row].Cells[COL_TYPE].Value = plType;
                     dgView.Rows[row].Cells[COL_NOTE].Value = plNote;
@@ -1511,8 +1511,8 @@ namespace Karaboss
                 plType = "text";
                 plElement = lyline.OriLyrics;
 
-                plTime = TimeToTicks(plRealTime);
-                dgView.Rows[row].Cells[COL_TICKS].Value = plTime;
+                plTicksOn = TimeToTicks(plRealTime);
+                dgView.Rows[row].Cells[COL_TICKS].Value = plTicksOn;
                 dgView.Rows[row].Cells[COL_TIME].Value = plRealTime;
                 dgView.Rows[row].Cells[COL_TYPE].Value = plType;
                 dgView.Rows[row].Cells[COL_NOTE].Value = plNote;
@@ -1841,7 +1841,7 @@ namespace Karaboss
         /// </summary>
         private void LoadModifiedLyrics()
         {
-            int plTime = 0;
+            int plTicksOn = 0;
             string val = string.Empty;
             string plType = string.Empty;
             string plElement = string.Empty;
@@ -1855,9 +1855,9 @@ namespace Karaboss
                 if (dgView.Rows[row].Cells[COL_TICKS].Value != null)
                 {
                     if (dgView.Rows[row].Cells[COL_TICKS].Value != null && dgView.Rows[row].Cells[COL_TICKS].Value.ToString() != "")
-                        plTime = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
+                        plTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
                     else
-                        plTime = 0;
+                        plTicksOn = 0;
 
                     // Type
                     if (dgView.Rows[row].Cells[COL_TYPE].Value != null)
@@ -1886,7 +1886,7 @@ namespace Karaboss
 
                     // replace again spaces
                     plElement = plElement.Replace("_", " ");
-                    localplLyrics.Add(new pictureBoxControl.plLyric() { Type = plType, Element = plElement, Time = plTime });
+                    localplLyrics.Add(new pictureBoxControl.plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn });
                 }
             }
 
@@ -1995,7 +1995,7 @@ namespace Karaboss
         /// </summary>
         private void HeightsToDurations()
         {
-            int plTime = 0;
+            int plTicksOn = 0;
             int n = 0;
             int averageDuration = 0;
             int Duration = 0;
@@ -2010,17 +2010,17 @@ namespace Karaboss
             {
                 if (dgView.Rows[row].Cells[COL_TICKS].Value != null)
                 {
-                    plTime = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
+                    plTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
                     if (previousTime == 0)
                     {
-                        previousTime = plTime;
+                        previousTime = plTicksOn;
                     }
                     else
                     {
-                        if (plTime > previousTime)
+                        if (plTicksOn > previousTime)
                         {
-                            averageDuration += (plTime - previousTime);
-                            previousTime = plTime;
+                            averageDuration += (plTicksOn - previousTime);
+                            previousTime = plTicksOn;
                             n++;
                         }
                     }                    
@@ -2035,17 +2035,17 @@ namespace Karaboss
             {
                 if (dgView.Rows[row].Cells[COL_TICKS].Value != null)
                 {
-                    plTime = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
-                    if (plTime > 0)
+                    plTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
+                    if (plTicksOn > 0)
                     {
                         if (previousTime == 0)
                         {
-                            previousTime = plTime;
+                            previousTime = plTicksOn;
                         }
-                        else if (plTime > previousTime)
+                        else if (plTicksOn > previousTime)
                         {
                             H = dgView.Rows[row].Height;
-                            Duration = plTime - previousTime;
+                            Duration = plTicksOn - previousTime;
                             delta = Duration / averageDuration;
 
                             if (delta > 0)
@@ -2055,7 +2055,7 @@ namespace Karaboss
                                     newH = 5 * H0;
                                 dgView.Rows[row].Height = newH;
                             }
-                            previousTime = plTime;
+                            previousTime = plTicksOn;
                         }
                     }
                 }

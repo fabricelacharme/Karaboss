@@ -403,17 +403,17 @@ namespace Sanford.Multimedia.Midi
                     if (sy.Replace("\r", "@").Trim() == "@")
                     {
                         track.TotalLyricsL += "\r";
-                        track.Lyrics.Add(new Track.Lyric() { Type = "cr", Element = "\r", Time = ticks });
+                        track.Lyrics.Add(new Track.Lyric() { Type = "cr", Element = "\r", TicksOn = ticks });
                     }
                     else if (sy.Substring(0, 1) == "\r" && sy.Length > 2)
                     {
                         reste = sy.Substring(1, sy.Length - 1);
 
                         track.TotalLyricsL += "\r";
-                        track.Lyrics.Add(new Track.Lyric() { Type = "cr", Element = "\r", Time = ticks });
+                        track.Lyrics.Add(new Track.Lyric() { Type = "cr", Element = "\r", TicksOn = ticks });
 
                         track.TotalLyricsL += reste;
-                        track.Lyrics.Add(new Track.Lyric() { Type = "text", Element = reste, Time = ticks });
+                        track.Lyrics.Add(new Track.Lyric() { Type = "text", Element = reste, TicksOn = ticks });
                     }
                     else if (sy.Length > 2 && sy.Substring(sy.Length - 2, 2) == "\r")
                     {
@@ -421,10 +421,10 @@ namespace Sanford.Multimedia.Midi
                         reste = sy.Substring(0, sy.Length - 2);
 
                         track.TotalLyricsL += reste;
-                        track.Lyrics.Add(new Track.Lyric() { Type = "text", Element = reste, Time = ticks });
+                        track.Lyrics.Add(new Track.Lyric() { Type = "text", Element = reste, TicksOn = ticks });
 
                         track.TotalLyricsL += "\r";
-                        track.Lyrics.Add(new Track.Lyric() { Type = "cr", Element = "\r", Time = ticks });
+                        track.Lyrics.Add(new Track.Lyric() { Type = "cr", Element = "\r", TicksOn = ticks });
                     }
                     else
                     {
@@ -432,7 +432,7 @@ namespace Sanford.Multimedia.Midi
                         {
                             // Pas de retour chariot
                             track.TotalLyricsL += sy;
-                            track.Lyrics.Add(new Track.Lyric() { Type = "text", Element = sy, Time = ticks });
+                            track.Lyrics.Add(new Track.Lyric() { Type = "text", Element = sy, TicksOn = ticks });
                         }
                     }
 
@@ -565,7 +565,7 @@ namespace Sanford.Multimedia.Midi
                         // contient \r avec des espaces ou non
                         if (sy.Replace("\r", "@").Trim() == "@")
                         {
-                            track.LyricsText.Add(new Track.Lyric() { Type = "cr", Element = "\r", Time = ticks });
+                            track.LyricsText.Add(new Track.Lyric() { Type = "cr", Element = "\r", TicksOn = ticks });
                             track.TotalLyricsT += "\r";
                         }
 
@@ -573,11 +573,11 @@ namespace Sanford.Multimedia.Midi
                         {
                             reste = sy.Substring(1, sy.Length - 1);
 
-                            track.LyricsText.Add(new Track.Lyric() { Type = "cr", Element = "\r", Time = ticks });
+                            track.LyricsText.Add(new Track.Lyric() { Type = "cr", Element = "\r", TicksOn = ticks });
                             track.TotalLyricsT += "\r";
 
                             track.TotalLyricsT += reste;
-                            track.LyricsText.Add(new Track.Lyric() { Type = "text", Element = reste, Time = ticks });
+                            track.LyricsText.Add(new Track.Lyric() { Type = "text", Element = reste, TicksOn = ticks });
                         }
                         else if (sy.Length > 2 && sy.Substring(sy.Length - 2, 2) == "\r")
                         {
@@ -585,10 +585,10 @@ namespace Sanford.Multimedia.Midi
                             reste = sy.Substring(0, sy.Length - 2);
 
                             track.TotalLyricsT += reste;
-                            track.LyricsText.Add(new Track.Lyric() { Type = "text", Element = reste, Time = ticks });
+                            track.LyricsText.Add(new Track.Lyric() { Type = "text", Element = reste, TicksOn = ticks });
 
                             track.TotalLyricsT += "\r";
-                            track.LyricsText.Add(new Track.Lyric() { Type = "cr", Element = "\r", Time = ticks });
+                            track.LyricsText.Add(new Track.Lyric() { Type = "cr", Element = "\r", TicksOn = ticks });
                         }
                         else
                         {
@@ -596,7 +596,7 @@ namespace Sanford.Multimedia.Midi
                             {
                                 // Pas de retour chariot
                                 track.TotalLyricsT += sy;
-                                track.LyricsText.Add(new Track.Lyric() { Type = "text", Element = sy, Time = ticks });
+                                track.LyricsText.Add(new Track.Lyric() { Type = "text", Element = sy, TicksOn = ticks });
                             }
                         }
                     }

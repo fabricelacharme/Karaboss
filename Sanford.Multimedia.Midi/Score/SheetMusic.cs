@@ -3166,7 +3166,7 @@ namespace Sanford.Multimedia.Midi.Score
 
                     if (text != "")
                     {
-                        LyricSymbol sym = new LyricSymbol(ev.Time, text);
+                        LyricSymbol sym = new LyricSymbol(ev.TicksOn, text);
                         result[tracknum].Add(sym);
                     }
                 }

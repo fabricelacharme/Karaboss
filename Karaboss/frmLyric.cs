@@ -457,7 +457,7 @@ namespace Karaboss
                 for (int i = 0; i < plLyrics.Count; i++)
                 {
                     plType = plLyrics[i].Type;
-                    plTime = plLyrics[i].Time;
+                    plTime = plLyrics[i].TicksOn;
 
                     if (plType == "text")
                     {

@@ -3459,7 +3459,7 @@ namespace Karaboss
             int nblyrics = 0;
             for (int i = 0; i < plLyrics.Count; i++)
             {
-                if (plLyrics[i].Type == "text" && plLyrics[i].Time > 0)                
+                if (plLyrics[i].Type == "text" && plLyrics[i].TicksOn > 0)                
                     nblyrics++;                           
             }
 
@@ -3483,34 +3483,7 @@ namespace Karaboss
                         diff = nbnotes - nblyrics;
                         if (diff < 0) diff = -diff;
 
-                        int oldtn = -1;
-
-                        #region delete
-                        /*
-                        // Comparaison 2 : les lyrics correspondent-ils aux notes ?
-                        // nombre de lyrics trouvés dans un rayon de temps de 50 autour des notes
-                        for (int j = track.Notes.Count - 1; j >= 0; j--)
-                        {
-                            MidiNote n = track.Notes[j];
-                            int tn = n.StartTime;
-
-                            // Search lyrics descending
-                            for (int k = plLyrics.Count - 1; k >= 0; k--)
-                            {
-                                int tl = plLyrics[k].Time;
-                                if (tl > tn - 50 && tl < tn + 50)
-                                {
-                                    nbfound++;
-                                    break;
-                                }
-                                else if (tl < tn)
-                                {
-                                    break;
-                                }
-                            }                       
-                        }
-                        */
-                        #endregion
+                        int oldtn = -1;                     
 
                         // Search if notes have a start time corresponding of those of lytics 
                         // Search is performed in a time frame of 20 plus or minus
@@ -3523,7 +3496,7 @@ namespace Karaboss
                                 // Search lyrics 
                                 for (int k = 0; k < plLyrics.Count; k++)
                                 {
-                                    int tl = plLyrics[k].Time;
+                                    int tl = plLyrics[k].TicksOn;
                                     if (tl > tn - 20 && tl < tn + 20)
                                     {
                                         nbfound++;
@@ -3703,7 +3676,7 @@ namespace Karaboss
                 else
                 {
                     // C'est un lyric
-                    currentTick = plLyrics[idx].Time;
+                    currentTick = plLyrics[idx].TicksOn;
                     if (currentTick >= lastcurrenttick)
                     {
 
@@ -3712,21 +3685,14 @@ namespace Karaboss
                         currentElement = currentCR + plLyrics[idx].Element;
 
                         // Transforme en byte la nouvelle chaine
-                        byte[] newdata = Encoding.Default.GetBytes(currentElement);
-                        /*
-                        byte[] newdata = new byte[currentElement.Length];
-                        for (int u = 0; u < newdata.Length; u++)
-                        {
-                            newdata[u] = (byte)currentElement[u];
-                        }
-                        */
+                        byte[] newdata = Encoding.Default.GetBytes(currentElement);                       
 
                         MetaMessage mtMsg;
 
                         // Update Track.Lyrics List
                         Track.Lyric L = new Track.Lyric() {
                             Element = plLyrics[idx].Element,
-                            Time = plLyrics[idx].Time,
+                            TicksOn = plLyrics[idx].TicksOn,
                             Type = plLyrics[idx].Type,
                         };
 
@@ -3832,8 +3798,14 @@ namespace Karaboss
                     // Stockage dans liste plLyrics
                     string plType = track.LyricsText[k].Type;
                     string plElement = track.LyricsText[k].Element;
-                    int plTime = track.LyricsText[k].Time;
-                    plLyrics.Add(new pictureBoxControl.plLyric() { Type = plType, Element = plElement, Time = plTime });
+
+                    // Start time for a lyric
+                    int plTicksOn = track.LyricsText[k].TicksOn;
+
+                    // Stop time for a lyric (maxi 1 beat ?)
+                    int plTicksOff = 0;                 
+
+                    plLyrics.Add(new pictureBoxControl.plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
                 }
 
                 return lyrics;
@@ -3866,8 +3838,14 @@ namespace Karaboss
                         // Stockage dans liste plLyrics
                         string plType = track.Lyrics[k].Type;
                         string plElement = track.Lyrics[k].Element;
-                        int plTime = track.Lyrics[k].Time;
-                        plLyrics.Add(new pictureBoxControl.plLyric() { Type = plType, Element = plElement, Time = plTime });
+
+                        // Start time for a lyric
+                        int plTicksOn = track.Lyrics[k].TicksOn;
+
+                        // Stop time for the lyric
+                        int plTicksOff = 0;
+
+                        plLyrics.Add(new pictureBoxControl.plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
                     }
 
 
@@ -3891,6 +3869,8 @@ namespace Karaboss
             }
             return retval;
         }
+
+       
 
         /// <summary>
         /// Load form frmLyrics       

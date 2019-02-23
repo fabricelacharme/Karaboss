@@ -75,7 +75,8 @@ namespace PicControl
         {
             public string Type { get; set; }
             public string Element { get; set; }
-            public int Time { get; set; }
+            public int TicksOn { get; set; }
+            public int TicksOff { get; set; }
         }
 
         #region properties
@@ -696,11 +697,11 @@ namespace PicControl
                     
                     plType = "text";
                     plElement = reste;
-                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, Time = plTime });
+                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
 
                     plType = "cr";
                     plElement = "\r";
-                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, Time = plTime });
+                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
 
                 }
                 else
@@ -710,7 +711,7 @@ namespace PicControl
                     else
                         plType = "text";
                     
-                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, Time = plTime });
+                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
                 }                
             }
             return plLyrics;
@@ -888,7 +889,7 @@ namespace PicControl
                     {
                         tx = plLyrics[indexSyllabe].Element;
                         string trimtx = tx.Trim();
-                        itime = plLyrics[indexSyllabe].Time;
+                        itime = plLyrics[indexSyllabe].TicksOn;
 
 
                         if (trimtx != "" && plLyrics[indexSyllabe].Type != "cr")
