@@ -300,6 +300,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Sequencing\MidiEvent.cs" />
+    <Compile Include="Sequencing\Track Classes\frmTools.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sequencing\Track Classes\frmTools.Designer.cs">
+      <DependentUpon>frmTools.cs</DependentUpon>
+    </Compile>
     <Compile Include="Sequencing\Track Classes\Track.cs" />
     <Compile Include="Sequencing\Track Classes\Track.Iterators.cs" />
     <Compile Include="Sequencing\Track Classes\TrackReader.cs">
@@ -417,6 +423,12 @@
     <EmbeddedResource Include="Score\UI\zoomDialog.resx">
       <DependentUpon>zoomDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sequencing\Track Classes\frmTools.fr.resx">
+      <DependentUpon>frmTools.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sequencing\Track Classes\frmTools.resx">
+      <DependentUpon>frmTools.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Sequencing\UI\DeviceDialog.resx">
       <SubType>Designer</SubType>

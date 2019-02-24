@@ -881,21 +881,7 @@ namespace Sanford.Multimedia.Midi
             {
                 if (endtime > m.StartTime)
                     m.Duration = endtime - m.StartTime;
-            }
-
-            /*
-            for (int i = lsn.Count - 1; i >= 0; i--)
-            {
-                MidiNote note = lsn[i];
-                if (note.Channel == channel && note.Number == notenumber && note.Duration == 0)
-                {                    
-                    if (endtime >  note.StartTime)
-                        note.Duration = endtime - note.StartTime;
-
-                    break;
-                }
-            }
-            */
+            }            
         }
 
 
