@@ -158,8 +158,8 @@
             // 
             // btnCancel
             // 
-            resources.ApplyResources(this.btnCancel, "btnCancel");
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            resources.ApplyResources(this.btnCancel, "btnCancel");
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -175,15 +175,14 @@
             // 
             // tabControl1
             // 
-            resources.ApplyResources(this.tabControl1, "tabControl1");
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage1);
+            resources.ApplyResources(this.tabControl1, "tabControl1");
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             // 
             // tabPage2
             // 
-            resources.ApplyResources(this.tabPage2, "tabPage2");
             this.tabPage2.Controls.Add(this.label15);
             this.tabPage2.Controls.Add(this.txtWTag);
             this.tabPage2.Controls.Add(this.label14);
@@ -196,6 +195,7 @@
             this.tabPage2.Controls.Add(this.txtITag);
             this.tabPage2.Controls.Add(this.txtLTag);
             this.tabPage2.Controls.Add(this.txtKTag);
+            resources.ApplyResources(this.tabPage2, "tabPage2");
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
@@ -261,7 +261,6 @@
             // 
             // tabPage1
             // 
-            resources.ApplyResources(this.tabPage1, "tabPage1");
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.txtCopyright);
             this.tabPage1.Controls.Add(this.label2);
@@ -280,12 +279,12 @@
             this.tabPage1.Controls.Add(this.txtGenre);
             this.tabPage1.Controls.Add(this.txtAlbum);
             this.tabPage1.Controls.Add(this.txtDate);
+            resources.ApplyResources(this.tabPage1, "tabPage1");
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // frmTags
             // 
-            this.AcceptButton = this.btnSave;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;

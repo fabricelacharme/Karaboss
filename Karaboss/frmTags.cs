@@ -204,9 +204,12 @@ namespace Karaboss
                 if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                 {
                     frmPlayer frmPlayer = GetForm<frmPlayer>();
-                    frmPlayer.bfilemodified = true;
+                    //frmPlayer.bfilemodified = true;
+                    frmPlayer.FileModified();
                 }
                 MessageBox.Show("Tags saved successfully", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                this.Close();
             }
         }
         
