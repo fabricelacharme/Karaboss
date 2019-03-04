@@ -666,13 +666,19 @@ namespace Karaboss
 
         #region events
 
+        /// <summary>
+        /// Textbox only accept numbers
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtSlideShowFreq_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (char.IsDigit(e.KeyChar))
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
                 e.Handled = true;
             }           
         }       
+
 
         private void TxtSlideShowFreq_TextChanged(object sender, EventArgs e)
         {
@@ -685,8 +691,7 @@ namespace Karaboss
                     int freq = Convert.ToInt32(f);
 
                     freqSlideShow = freq;
-                    pBox.FreqDirSlideShow = freqSlideShow;
-                    //this.pBox.SetFrequency(freqSlideShow);
+                    pBox.FreqDirSlideShow = freqSlideShow;                    
                 }
                 catch (Exception eee)
                 {

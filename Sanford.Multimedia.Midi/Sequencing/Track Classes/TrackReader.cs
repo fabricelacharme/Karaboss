@@ -544,6 +544,7 @@ namespace Sanford.Multimedia.Midi
         {
             string sy = string.Empty;
 
+            #region text encoding
             switch (OpenMidiFileOptions.TextEncoding)
             {
                 case "Ascii":
@@ -583,13 +584,14 @@ namespace Sanford.Multimedia.Midi
                     sy = System.Text.Encoding.Default.GetString(data);
                     break;
             }
+            #endregion
 
             // Clean special characters
             sy = CleanSpecialChars(sy);
 
             try
             {
-                if (sy != "")
+                if (sy != string.Empty)
                 {
                     // Elimine caractères bizarres dans certains fichiers    
                     sy = cleanLyric(sy);                    
@@ -651,6 +653,7 @@ namespace Sanford.Multimedia.Midi
             // Lyric element:
             string sy = string.Empty;
 
+            #region text encoding
             switch (OpenMidiFileOptions.TextEncoding)
             {
                 case "Ascii":
@@ -690,6 +693,7 @@ namespace Sanford.Multimedia.Midi
                     sy = System.Text.Encoding.Default.GetString(data);
                     break;
             }
+            #endregion
 
             // Clean special characters
             sy = CleanSpecialChars(sy);           
@@ -698,6 +702,11 @@ namespace Sanford.Multimedia.Midi
             {
                 if (sy != string.Empty)
                 {
+
+                    // Elimine caractères bizarres dans certains fichiers    
+                    sy = cleanLyric(sy);
+
+                    // Tags
                     if (sy.Substring(0, 1) == "@" && ticks == 0)
                     {
                         // Old tags: text begining with @ character
@@ -713,11 +722,10 @@ namespace Sanford.Multimedia.Midi
                     }
                     else if ((sy.Substring(0, 1) != "@") && ticks >= 0)
                     {
+                        /*
                         // Elimine caractères bizarres dans certains fichiers                    
                         sy = Regex.Replace(sy, "\0.$", "");
-                        sy = sy.Replace("\0", " ");
-
-                        // caractères non ascii ?
+                        sy = sy.Replace("\0", " ");                        
 
                         // Insere retours chariots
                         if ((sy.Substring(0, 1) == "/") || (sy.Substring(0, 1) == "\\"))
@@ -725,6 +733,7 @@ namespace Sanford.Multimedia.Midi
                             sy = sy.Replace("/", "\r");
                             sy = sy.Replace("\\", "\r");
                         }
+                        */
 
                         string s = sy.Trim();
                         string reste = string.Empty;
