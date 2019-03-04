@@ -468,56 +468,64 @@ namespace PicControl
         /// <param name="dirImages"></param>
         public void SetBackground(string dirImages)
         {
-            UpdateTimerEnable(false);
 
-            m_Cancel = true;
-            m_Restart = true;
-
-            m_CurrentImage = null;
-            strCurrentImage = string.Empty;
-            rndIter = 0;
-
-            pboxWnd.Image = null;
-            pboxWnd.Invalidate();
-            m_ImageFilePaths.Clear();
-
-            if (dirImages == null)
+            try
             {
-                pboxWnd.BackColor = Color.Black;
+                UpdateTimerEnable(false);
+
+                m_Cancel = true;
+                m_Restart = true;
+
+                m_CurrentImage = null;
+                strCurrentImage = string.Empty;
+                rndIter = 0;
+
+                pboxWnd.Image = null;
+                pboxWnd.Invalidate();
+                m_ImageFilePaths.Clear();
+
+                if (dirImages == null)
+                {
+                    pboxWnd.BackColor = Color.Black;
+                }
+                else if (Directory.Exists(dirImages))
+                {
+                    int C = 0;
+
+                    if (_optionbackground == "Diaporama")
+                    {
+                        LoadImageList(dirImages);
+                        C = m_ImageFilePaths.Count;
+                    }
+
+                    switch (C)
+                    {
+                        case 0:
+                            // No image, just background color
+                            m_Cancel = true;
+                            break;
+                        case 1:
+                            // Single image
+                            m_Cancel = true;
+                            pboxWnd.Image = Image.FromFile(m_ImageFilePaths[0]);
+                            break;
+                        default:
+                            // Slideshow => backgroundworker
+
+                            //m_Cancel = true;
+                            m_Cancel = false;
+
+                            // Initialize backgroundworker
+                            InitBackGroundWorker();
+                            random = new Random();
+                            Start();
+                            break;
+                    }
+                }
             }
-            else if (Directory.Exists(dirImages))
-            {                
-                int C = 0;
-
-                if (_optionbackground == "Diaporama")
-                {
-                    LoadImageList(dirImages);
-                    C = m_ImageFilePaths.Count;
-                }
-
-                switch (C)
-                {
-                    case 0:
-                        // No image, just background color
-                        m_Cancel = true;
-                        break;
-                    case 1:
-                        // Single image
-                        m_Cancel = true;
-                        pboxWnd.Image = Image.FromFile(m_ImageFilePaths[0]);
-                        break;
-                    default:
-                        // Slideshow => backgroundworker
-
-                        //m_Cancel = true;
-                        m_Cancel = false;
-
-                        // Initialize backgroundworker
-                        InitBackGroundWorker();
-                        random = new Random();
-                        Start();
-                        break;
-                }
+            catch (Exception e)
+            {
+                Console.Write("Error: " + e.Message);
             }
 
         }
