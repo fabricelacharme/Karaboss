@@ -40,6 +40,8 @@ using System.Threading;
 using System.ComponentModel; // DLL import
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using PicControl;
+using System.Reflection;
 
 namespace Karaboss
 {
@@ -78,7 +80,7 @@ namespace Karaboss
                 Properties.Settings.Default.Save();
             }
         }
-        
+
 
         public static string m_drivePlaylists; // usual drive Playlists
 
@@ -100,12 +102,12 @@ namespace Karaboss
                 //path must be like "file:///c:/users/a453868/Music/karaoke/sasin";
                 inipath = "file:///" + inipath.Replace("\\", "/");
             }
-            
+
 
             return inipath;
         }
 
-        
+
         /// <summary>
         /// Save starting path of application (ie last directory visited)
         /// </summary>
@@ -183,25 +185,62 @@ namespace Karaboss
             return false;
         }
 
+    
+
+        public static string plTypeToString(plLyric.Types plType)
+        {
+            switch (plType)
+            {
+                case plLyric.Types.Text:
+                    return "text";
+                case plLyric.Types.LineFeed:
+                    return "cr";
+                case plLyric.Types.Paragraph:
+                    return "par";
+                default:
+                    return "text";
+            }
+        }
+
+       
     }
 
-      
     /// <summary>
     /// A class to store some properties of the lyrics
     /// </summary>
     public class CLyric
     {
+        public enum LyricTypes
+        {
+            Text = 0,
+            Lyric = 1
+        }
+
         public int lyricstracknum = -1;     // num of track containing lyrics
         public int melodytracknum = -1;     // num  of track containing the melody       
-        public string lyrictype;            // type lyric or text          
+        public LyricTypes lyrictype;            // type lyric or text                 
 
         public CLyric()
         {
             lyricstracknum = -1;
             melodytracknum = -1;
-            lyrictype = "text";
+            lyrictype = LyricTypes.Text;
         }
 
+    }
+
+    public class plLyric
+    {
+        public enum Types
+        {
+            Text = 1,
+            LineFeed = 2,
+            Paragraph = 3,
+        }
+        public Types Type { get; set; }
+        public string Element { get; set; }
+        public int TicksOn { get; set; }
+        public int TicksOff { get; set; }
     }
 
     /// <summary>

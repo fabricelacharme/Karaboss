@@ -43,6 +43,7 @@ using System.Text.RegularExpressions;
 using Karaboss.Resources.Localization;
 using Karaboss.Lrc.SharedFramework;
 
+
 namespace Karaboss
 {
     public partial class frmLyricsEdit : Form
@@ -67,7 +68,7 @@ namespace Karaboss
         private bool bfilemodified = false;
 
         private Sequence sequence1;
-        private List<pictureBoxControl.plLyric> localplLyrics;
+        private List<plLyric> localplLyrics;
 
         private Track melodyTrack;
         private CLyric myLyric;
@@ -75,7 +76,7 @@ namespace Karaboss
         private ContextMenuStrip dgContextMenu;
         private DataGridViewSelectedCellCollection DGV;
 
-        enum LyricFormat
+        enum LyricFormats
         {
             Text = 0,
             Lyric = 1
@@ -88,7 +89,7 @@ namespace Karaboss
         const int COL_TEXT = 4;
         const int COL_REPLACE = 5;
 
-        LyricFormat TextLyricFormat;        
+        LyricFormats TextLyricFormat;        
 
         int melodytracknum = 0;
 
@@ -103,7 +104,7 @@ namespace Karaboss
         private int _measurelen;
 
 
-        public frmLyricsEdit(Sequence sequence, List<pictureBoxControl.plLyric> plLyrics, CLyric mylyric, string fileName)
+        public frmLyricsEdit(Sequence sequence, List<plLyric> plLyrics, CLyric mylyric, string fileName)
         {
             InitializeComponent();            
 
@@ -118,14 +119,14 @@ namespace Karaboss
             if (melodytracknum != -1)
                 melodyTrack = sequence1.tracks[melodytracknum];
 
-            if (myLyric.lyrictype == "text")
+            if (myLyric.lyrictype == CLyric.LyricTypes.Text)
             {
-                TextLyricFormat = LyricFormat.Text;
+                TextLyricFormat = LyricFormats.Text;
                 optFormatText.Checked = true;
             }
             else
             {
-                TextLyricFormat = LyricFormat.Lyric;
+                TextLyricFormat = LyricFormats.Lyric;
                 optFormatLyrics.Checked = true;
             }
 
@@ -181,19 +182,19 @@ namespace Karaboss
             }
             else
             {
-                TextLyricFormat = LyricFormat.Text;
+                TextLyricFormat = LyricFormats.Text;
                 optFormatLyrics.Checked = true;
                 return;
             }
 
-            if (frmPlayer.myLyric.lyrictype == "text")
+            if (frmPlayer.myLyric.lyrictype == CLyric.LyricTypes.Text)
             {
-                TextLyricFormat = LyricFormat.Text;
+                TextLyricFormat = LyricFormats.Text;
                 optFormatText.Checked = true;                                
             }
             else
             {
-                TextLyricFormat = LyricFormat.Lyric;
+                TextLyricFormat = LyricFormats.Lyric;
                 optFormatLyrics.Checked = true;
             }
             melodytracknum = frmPlayer.myLyric.melodytracknum;
@@ -349,14 +350,17 @@ namespace Karaboss
         /// Populate datagridview with lyrics
         /// </summary>
         /// <param name="plLyrics"></param>
-        private void PopulateDataGridView(List<pictureBoxControl.plLyric> lLyrics)
+        private void PopulateDataGridView(List<plLyric> lLyrics)
         {
             //string[] row;
             bool bfound = false;
 
             int plTicksOn = 0;
             string plRealTime = "00:00.00";
-            string plType = string.Empty;
+            plLyric.Types plType = plLyric.Types.Text;
+
+             
+
             int plNote = 60;
             string plElement = string.Empty;
 
@@ -376,7 +380,7 @@ namespace Karaboss
                     plType = lLyrics[idx].Type;
 
                     // New Row
-                    string[] rowlyric = { plTicksOn.ToString(), plRealTime, plType, plNote.ToString(), plElement, plElement };
+                    string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), plNote.ToString(), plElement, plElement };
                     dgView.Rows.Add(rowlyric);
                 }
             }
@@ -414,11 +418,11 @@ namespace Karaboss
                         if (idx < melodyTrack.Notes.Count && melodyTrack.Notes[idx].StartTime == plTicksOn) 
                         {
                             plNote = melodyTrack.Notes[idx].Number;
-                            string[] rowlyric = { plTicksOn.ToString(), plRealTime, plType, plNote.ToString(), plElement, plElement };
+                            string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), plNote.ToString(), plElement, plElement };
                             dgView.Rows.Add(rowlyric);
                             bfound = true; // lyric inscrit dans la grille
                             // Incrémente le compteur de notes si différent de retour chariot
-                            if (plType != "cr")
+                            if (plType != plLyric.Types.LineFeed)
                                 idx++;
                         }
                        
@@ -427,7 +431,7 @@ namespace Karaboss
                     // Lyric courant pas inscrit dans la grille ?
                     if (bfound == false)
                     {
-                        string[] rowlyric = { plTicksOn.ToString(), plRealTime, plType, plNote.ToString(), plElement, plElement };
+                        string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), plNote.ToString(), plElement, plElement };
                         dgView.Rows.Add(rowlyric);
                     }
                 }
@@ -1087,6 +1091,7 @@ namespace Karaboss
 
 
         #endregion
+
 
         #region menus
 
@@ -1843,12 +1848,12 @@ namespace Karaboss
         {
             int plTicksOn = 0;
             string val = string.Empty;
-            string plType = string.Empty;
+            plLyric.Types plType = plLyric.Types.Text;
             string plElement = string.Empty;
             string plReplace = string.Empty;
 
 
-            localplLyrics = new List<pictureBoxControl.plLyric>();
+            localplLyrics = new List<plLyric>();
 
             for (int row = 0; row < dgView.Rows.Count; row++)
             {
@@ -1863,20 +1868,28 @@ namespace Karaboss
                     if (dgView.Rows[row].Cells[COL_TYPE].Value != null)
                     {
                         val = dgView.Rows[row].Cells[COL_TYPE].Value.ToString();
-                        if (val == "text" || val == "cr")
-                            plType = val;
-                        else
-                            plType = "text";
+                        switch (val)
+                        {
+                            case "text":
+                                plType = plLyric.Types.Text;
+                                break;
+                            case "cr":
+                                plType = plLyric.Types.LineFeed;
+                                break;
+                            default:
+                                plType = plLyric.Types.Text;
+                                break;
+                        }
                     }
                     else
                     {
-                        plType = "text";
+                        plType = plLyric.Types.Text;
                     }
 
                     // Element
                     if (dgView.Rows[row].Cells[COL_REPLACE].Value != null)
                     {
-                        if (plType == "cr")
+                        if (plType == plLyric.Types.LineFeed)
                             plElement = "\r";
                         else
                             plElement = dgView.Rows[row].Cells[COL_REPLACE].Value.ToString();
@@ -1886,7 +1899,7 @@ namespace Karaboss
 
                     // replace again spaces
                     plElement = plElement.Replace("_", " ");
-                    localplLyrics.Add(new pictureBoxControl.plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn });
+                    localplLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn });
                 }
             }
 
@@ -1898,12 +1911,12 @@ namespace Karaboss
         /// </summary>
         private void ReplaceLyrics()
         {
-            string ltype;
+            CLyric.LyricTypes ltype;
 
-            if (TextLyricFormat == LyricFormat.Text)
-                ltype = "text";
+            if (TextLyricFormat == LyricFormats.Text)
+                ltype = CLyric.LyricTypes.Text;
             else
-                ltype = "lyric";
+                ltype = CLyric.LyricTypes.Lyric;
 
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
@@ -1928,10 +1941,10 @@ namespace Karaboss
         /// Display modifications into a textbox
         /// </summary>
         /// <param name="lLyrics"></param>
-        private void PopulateTextBox(List<pictureBoxControl.plLyric> lLyrics)
+        private void PopulateTextBox(List<plLyric> lLyrics)
         {
             string plElement = string.Empty;
-            string plType = string.Empty;
+            plLyric.Types plType = plLyric.Types.Text;
             string tx = string.Empty;
 
             for (int i = 0; i < lLyrics.Count; i++)
@@ -2070,13 +2083,13 @@ namespace Karaboss
         private void OptFormatText_CheckedChanged(object sender, EventArgs e)
         {
             if (optFormatText.Checked)
-                TextLyricFormat = LyricFormat.Text;
+                TextLyricFormat = LyricFormats.Text;
         }
 
         private void OptFormatLyrics_CheckedChanged(object sender, EventArgs e)
         {
             if (optFormatLyrics.Checked)
-                TextLyricFormat = LyricFormat.Lyric;
+                TextLyricFormat = LyricFormats.Lyric;
         }
 
 

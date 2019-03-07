@@ -430,7 +430,7 @@ namespace Karaboss
         /// <summary>
         /// Load song in picturebox control
         /// </summary>
-        public void LoadSong(List<pictureBoxControl.plLyric> plLyrics)
+        public void LoadSong(List<plLyric> plLyrics)
         {            
             currentTextPos = 0;
             lyrics = "";
@@ -438,20 +438,35 @@ namespace Karaboss
             {
                 lyrics += plLyrics[i].Element; 
             }
-            pBox.LoadSong(plLyrics);
+
+            List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
+            foreach (plLyric plL in plLyrics)
+            {
+                pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric();
+                pcL.Type = (pictureBoxControl.plLyric.Types)plL.Type;
+                pcL.Element = plL.Element;
+                pcL.TicksOn = plL.TicksOn;
+                pcL.TicksOff = plL.TicksOff;
+
+                pcLyrics.Add(pcL);
+            }
+
+
+            pBox.LoadSong(pcLyrics);
+           
         }
 
         /// <summary>
         /// Load times for the Ball animation
         /// </summary>
         /// <param name="plLyrics"></param>
-        public void LoadBallsTimes(List<pictureBoxControl.plLyric> plLyrics)
+        public void LoadBallsTimes(List<plLyric> plLyrics)
         {
             if (plLyrics.Count > 0)
             {
                 LyricsTimes = new List<int>();
 
-                string plType = string.Empty;
+                plLyric.Types plType = plLyric.Types.Text;
                 int plTime = 0;
 
                 for (int i = 0; i < plLyrics.Count; i++)
@@ -459,7 +474,7 @@ namespace Karaboss
                     plType = plLyrics[i].Type;
                     plTime = plLyrics[i].TicksOn;
 
-                    if (plType == "text")
+                    if (plType == plLyric.Types.Text)
                     {
                         LyricsTimes.Add(plTime);
                     }

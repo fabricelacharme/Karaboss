@@ -69,15 +69,22 @@ namespace PicControl
 
         private string strCurrentImage; // current image to insure that random will provide a different one
         private int rndIter = 0;
-        
 
+        
         public class plLyric
         {
-            public string Type { get; set; }
+            public enum Types
+            {
+                Text = 1,
+                LineFeed = 2,
+                Paragraph = 3,
+            }
+            public Types Type { get; set; }
             public string Element { get; set; }
             public int TicksOn { get; set; }
-            public int TicksOff { get; set; }
+            public int TicksOff { get; set; }            
         }
+        
 
         #region properties
 
@@ -687,7 +694,7 @@ namespace PicControl
             string sx = string.Empty;
             string plElement = string.Empty;
             int plTime = 0;
-            string plType = string.Empty;
+            plLyric.Types plType = plLyric.Types.Text;
 
             for (int i = 0; i < strLyricSyllabes.Length; i++)
             {
@@ -703,11 +710,11 @@ namespace PicControl
                     // chaine Fini par \r
                     string reste = sx.Substring(0, sx.Length - 1);
                     
-                    plType = "text";
+                    plType = plLyric.Types.Text;
                     plElement = reste;
                     plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
 
-                    plType = "cr";
+                    plType =  plLyric.Types.LineFeed;
                     plElement = "\r";
                     plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
 
@@ -715,9 +722,9 @@ namespace PicControl
                 else
                 {
                     if (sx == "\r")
-                        plType = "cr";
+                        plType = plLyric.Types.LineFeed;
                     else
-                        plType = "text";
+                        plType = plLyric.Types.Text;
                     
                     plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
                 }                
@@ -798,7 +805,22 @@ namespace PicControl
             lstLyricsLines = new List<string>();
 
             string tx = string.Empty;
-            string lyr = ly.Replace("\r\n", "¼");
+
+            /*
+            * A back slash "\" character marks the end of a line of lyrics, as displayed by a Karaoke viewer/player program.
+            *
+            * A forward slash "/" character marks the end of a "paragraph" of lyrics. 
+            * Some Karaoke viewer / player programs interpret this to mean that the screen should be refreshed starting with the next line of lyrics at the top.
+            *
+            * Dash characters at the end of syllables are removed by the Karaoke viewer/player program, and the syllables are joined together. 
+            */
+
+            string lyr = string.Empty;
+
+            lyr = ly.Replace("\\", "¼");    // '\' linefeed
+            lyr = ly.Replace("/", "¼");     // '/' paragraph
+
+            lyr = ly.Replace("\r\n", "¼");
             lyr = lyr.Replace("\r", "¼");
             lyr = lyr.Replace("\n", "¼");
 
@@ -822,7 +844,7 @@ namespace PicControl
         /// Store syllabes in a list, each item being a class called syllabe
         /// </summary>
         /// <param name="plLyrics"></param>
-        private void StoreLyricsSyllabes(List<pictureBoxControl.plLyric> plLyrics)
+        private void StoreLyricsSyllabes(List<plLyric> plLyrics)
         {
             syllabes = new List<syllabe>();
 
@@ -855,7 +877,7 @@ namespace PicControl
                     {
                         tx = plLyrics[ind].Element;
                         tx = tx.Trim();
-                        if (tx != "" && plLyrics[ind].Type != "cr")
+                        if (tx != "" && plLyrics[ind].Type != plLyric.Types.LineFeed)
                         {
 
                             // Si toutes les syllabes sont identiques dans la ligne (ex la la la la)
@@ -900,12 +922,12 @@ namespace PicControl
                         itime = plLyrics[indexSyllabe].TicksOn;
 
 
-                        if (trimtx != "" && plLyrics[indexSyllabe].Type != "cr")
+                        if (trimtx != "" && plLyrics[indexSyllabe].Type !=  plLyric.Types.LineFeed)
                         {
                             pos = strwrkline.IndexOf(trimtx, lastpos);
 
                             if (pos != -1)
-                            {
+                            { 
                                 offset = 0; // Offset de la ligne
                                 lastpos = pos;
 
