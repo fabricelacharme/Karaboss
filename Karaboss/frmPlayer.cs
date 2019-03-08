@@ -3582,6 +3582,9 @@ namespace Karaboss
             if (myLyric == null)
             {
                 NewMyLyric(melodytracknum, melodytracknum);
+
+                // TODO : Décharger la forme frmLyrics ?
+
             }
 
             // Warning change of type of lyric (lyric or text)
@@ -3618,7 +3621,7 @@ namespace Karaboss
                 myLyric.lyrictype = lyricType;
             }
 
-            // Display in frmLyrics
+            // Display the form frmLyrics
             DisplayLyricsForm();
 
             int tracknum = myLyric.lyricstracknum;
@@ -3673,15 +3676,20 @@ namespace Karaboss
                     else
                         currentCR = "\r";
                 }
+                else if (plLyrics[idx].Type == plLyric.Types.Paragraph)
+                {
+                    if (myLyric.lyrictype == CLyric.LyricTypes.Text)
+                        currentCR = "\\";
+                    else
+                        currentCR = "\r\r";
+                }
                 else
                 {
                     // C'est un lyric
                     currentTick = plLyrics[idx].TicksOn;
                     if (currentTick >= lastcurrenttick)
                     {
-
                         lastcurrenttick = currentTick;
-
                         currentElement = currentCR + plLyrics[idx].Element;
 
                         // Transforme en byte la nouvelle chaine
@@ -3696,19 +3704,17 @@ namespace Karaboss
                             Type = (Track.Lyric.Types)plLyrics[idx].Type,
                         };
 
-                        // si lyrics de type text
+                        
                         if (myLyric.lyrictype == CLyric.LyricTypes.Text)
                         {
+                            // si lyrics de type text
                             mtMsg = new MetaMessage(MetaType.Text, newdata);
-
                             Track.LyricsText.Add(L);
-                        }
-                        // si lyrics de type lyrics
+                        }                        
                         else
                         {
-                            mtMsg = new MetaMessage(MetaType.Lyric, newdata);
-
-                            // Update Track.Lyrics List
+                            // si lyrics de type lyrics
+                            mtMsg = new MetaMessage(MetaType.Lyric, newdata);                            
                             Track.Lyrics.Add(L);
                         }
 
@@ -3760,12 +3766,8 @@ namespace Karaboss
             {
                 // regarde lequel est le plus gros... lol                
 
-                // Si pas de retour chariot dans lyrics => choisir texte
-                if (lyrics.IndexOf("\r") == -1)
-                {
-                    trklyric = -1;
-                }                
-                else if (l_lyric >= l_text)
+               
+                if (l_lyric >= l_text)
                 {
                     // Elimine texte et choisi les lyrics
                     trktext = -1;
@@ -4128,6 +4130,11 @@ namespace Karaboss
                     // Lance immédiatement la lecture du morceau                
                     if (bPlayNow)
                         PlayPauseMusic();
+                    else
+                    {
+                        if (bKaraokeAlwaysOn && bHasLyrics)
+                            DisplayLyricsForm();
+                    }
                 }
             }
             else

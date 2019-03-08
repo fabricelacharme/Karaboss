@@ -599,42 +599,57 @@ namespace Sanford.Multimedia.Midi
                     string s = sy.Trim();
                     string reste = string.Empty;
 
-                    // Commence par \r
-                    if (sy.Replace("\r", "@").Trim() == "@")
-                    {
-                        newTrack.TotalLyricsL += "\r";
-                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "\r", TicksOn = ticks });
-                    }
-                    else if (sy.Substring(0, 1) == "\r" && sy.Length > 2)
-                    {
-                        reste = sy.Substring(1, sy.Length - 1);
+                    #region extract data
 
-                        newTrack.TotalLyricsL += "\r";
-                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "\r", TicksOn = ticks });
+                    string Paragraph = "\r\r";
+                    int iParagraph = sy.IndexOf(Paragraph);
+                    int iLineFeed = sy.IndexOf('\r');
 
-                        newTrack.TotalLyricsL += reste;
-                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
-                    }
-                    else if (sy.Length > 2 && sy.Substring(sy.Length - 2, 2) == "\r")
+                    if (iParagraph > -1)
                     {
-                        // Fini par \r
-                        reste = sy.Substring(0, sy.Length - 2);
+                        // single paragraph
+                        // A forward slash "/" character marks the end of a "paragraph" of lyrics
+                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "\\", TicksOn = ticks });
+                        newTrack.TotalLyricsL += "\\";
 
-                        newTrack.TotalLyricsL += reste;
-                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
-
-                        newTrack.TotalLyricsL += "\r";
-                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "\r", TicksOn = ticks });
-                    }
-                    else
-                    {
-                        if (s != "")
+                        if (sy.Length > Paragraph.Length)
                         {
-                            // Pas de retour chariot
-                            newTrack.TotalLyricsL += sy;
-                            newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = sy, TicksOn = ticks });
+                            // Text
+                            if (iParagraph == 0)                                                            
+                                reste = sy.Substring(Paragraph.Length, sy.Length - Paragraph.Length);                           
+                            else                            
+                                reste = sy.Substring(0, iParagraph);
+                            
+                            newTrack.TotalLyricsL += reste;
+                            newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
                         }
                     }
+                    else if (iLineFeed > -1)
+                    {
+                        // Single linefeed
+                        // A back slash "\" character marks the end of a line of lyrics
+                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "/", TicksOn = ticks });
+                        newTrack.TotalLyricsL += "/";
+
+                        if (sy.Length > 1)
+                        {
+                            // Text
+                            if (iLineFeed == 0)
+                                reste = sy.Substring(1, sy.Length - 1);
+                            else
+                                reste = sy.Substring(0, iLineFeed);
+                            
+                            newTrack.TotalLyricsL += reste;
+                            newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
+                        }
+                    }
+                    else if (s != "")
+                    {
+                        // no linefeed
+                        newTrack.TotalLyricsL += sy;
+                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = sy, TicksOn = ticks });
+                    }
+                    #endregion                  
 
                 } // s != ""                 
             }
@@ -705,7 +720,7 @@ namespace Sanford.Multimedia.Midi
 
                     // Elimine caractères bizarres dans certains fichiers    
                     sy = cleanLyric(sy);
-
+                    
                     // Tags
                     if (sy.Substring(0, 1) == "@" && ticks == 0)
                     {
@@ -722,59 +737,62 @@ namespace Sanford.Multimedia.Midi
                     }
                     else if ((sy.Substring(0, 1) != "@") && ticks >= 0)
                     {
-                        /*
-                        // Elimine caractères bizarres dans certains fichiers                    
-                        sy = Regex.Replace(sy, "\0.$", "");
-                        sy = sy.Replace("\0", " ");                        
-
-                        // Insere retours chariots
-                        if ((sy.Substring(0, 1) == "/") || (sy.Substring(0, 1) == "\\"))
-                        {
-                            sy = sy.Replace("/", "\r");
-                            sy = sy.Replace("\\", "\r");
-                        }
-                        */
 
                         string s = sy.Trim();
                         string reste = string.Empty;
 
-                        // contient \r avec des espaces ou non
-                        if (sy.Replace("\r", "@").Trim() == "@")
+                        #region extract data
+
+                        int iParagraph = sy.IndexOf('\\');
+                        int iLineFeed = sy.IndexOf('/');
+
+                        if (iParagraph > -1)
                         {
-                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "\r", TicksOn = ticks });
-                            newTrack.TotalLyricsT += "\r";
-                        }
+                            // single paragraph
+                            // A forward slash "/" character marks the end of a "paragraph" of lyrics
+                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "\\", TicksOn = ticks });
+                            newTrack.TotalLyricsT += "\\";
 
-                        else if (sy.Substring(0, 1) == "\r" && sy.Length > 2)
-                        {
-                            reste = sy.Substring(1, sy.Length - 1);
-
-                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "\r", TicksOn = ticks });
-                            newTrack.TotalLyricsT += "\r";
-
-                            newTrack.TotalLyricsT += reste;
-                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
-                        }
-                        else if (sy.Length > 2 && sy.Substring(sy.Length - 2, 2) == "\r")
-                        {
-                            // Fini par \r
-                            reste = sy.Substring(0, sy.Length - 2);
-
-                            newTrack.TotalLyricsT += reste;
-                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
-
-                            newTrack.TotalLyricsT += "\r";
-                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "\r", TicksOn = ticks });
-                        }
-                        else
-                        {
-                            if (s != "")
+                            if (sy.Length > 1)
                             {
-                                // Pas de retour chariot
-                                newTrack.TotalLyricsT += sy;
-                                newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = sy, TicksOn = ticks });
+                                // Text
+                                if (iParagraph == 0)
+                                    reste = sy.Substring(1, sy.Length - 1);
+                                else
+                                    reste = sy.Substring(0, iParagraph);
+
+                                newTrack.TotalLyricsT += reste;
+                                newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
                             }
                         }
+                        else if (iLineFeed > -1)
+                        {
+                            // Single linefeed
+                            // A back slash "\" character marks the end of a line of lyrics
+                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "/", TicksOn = ticks });
+                            newTrack.TotalLyricsT += "/";
+
+                            if (sy.Length > 1)
+                            {
+                                // Text
+                                if (iLineFeed == 0)
+                                    reste = sy.Substring(1, sy.Length - 1);
+                                else
+                                    reste = sy.Substring(0, iLineFeed);
+
+                                newTrack.TotalLyricsT += reste;
+                                newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
+                            }
+                        }
+                        else if (s != "")
+                        {
+                            // no linefeed
+                            newTrack.TotalLyricsT += sy;
+                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = sy, TicksOn = ticks });
+                        }
+
+                        #endregion
+                      
                     }
                 }
 
@@ -845,8 +863,8 @@ namespace Sanford.Multimedia.Midi
             l = Regex.Replace(l, "\0.$", "");
             l = l.Replace("\0", " ");
 
-            l = l.Replace("/", "\r");
-            l = l.Replace("\\", "\r");
+            //l = l.Replace("/", "\r");   // A forward slash "/" character marks the end of a "paragraph" of lyrics
+            //l = l.Replace("\\", "\r");  // A back slash "\" character marks the end of a line of lyrics
 
             l = l.Replace("\r\n", "\r");
             l = l.Replace("\n", "\r");

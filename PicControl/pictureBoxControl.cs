@@ -818,13 +818,13 @@ namespace PicControl
             string lyr = string.Empty;
 
             lyr = ly.Replace("\\", "¼");    // '\' linefeed
-            lyr = ly.Replace("/", "¼");     // '/' paragraph
+            lyr = lyr.Replace("/", "¼");     // '/' paragraph
 
-            lyr = ly.Replace("\r\n", "¼");
-            lyr = lyr.Replace("\r", "¼");
-            lyr = lyr.Replace("\n", "¼");
+            //lyr = lyr.Replace("\r\n", "¼");
+            //lyr = lyr.Replace("\r", "¼");
+            //lyr = lyr.Replace("\n", "¼");
 
-            string[] strLyricsLines = lyr.Split(new Char[] { '¼' });  
+            string[] strLyricsLines = lyr.Split(new Char[] { '¼' }, StringSplitOptions.RemoveEmptyEntries);  
 
             for (int i = 0; i < strLyricsLines.Length; i++)
             {
@@ -877,7 +877,7 @@ namespace PicControl
                     {
                         tx = plLyrics[ind].Element;
                         tx = tx.Trim();
-                        if (tx != "" && plLyrics[ind].Type != plLyric.Types.LineFeed)
+                        if (tx != "" && plLyrics[ind].Type != plLyric.Types.LineFeed && plLyrics[ind].Type != plLyric.Types.Paragraph)
                         {
 
                             // Si toutes les syllabes sont identiques dans la ligne (ex la la la la)
@@ -922,7 +922,7 @@ namespace PicControl
                         itime = plLyrics[indexSyllabe].TicksOn;
 
 
-                        if (trimtx != "" && plLyrics[indexSyllabe].Type !=  plLyric.Types.LineFeed)
+                        if (trimtx != "" && plLyrics[indexSyllabe].Type != plLyric.Types.LineFeed && plLyrics[indexSyllabe].Type != plLyric.Types.Paragraph)
                         {
                             pos = strwrkline.IndexOf(trimtx, lastpos);
 

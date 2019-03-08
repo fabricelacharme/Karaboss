@@ -258,6 +258,29 @@ namespace Karaboss
                     // Time to ticks
                     dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TICKS].Value = TimeToTicks(dgView.CurrentCell.Value.ToString());
                 }
+            }
+            else if (dgView.CurrentCell.ColumnIndex == COL_TYPE)
+            {
+                // If COL_TYPE is edited
+                if (dgView.CurrentCell.Value != null)
+                {
+                    string type = dgView.CurrentCell.Value.ToString();
+                    switch (type)
+                    {
+                        case "text":
+                            break;
+                        case "par":
+                            dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_REPLACE].Value = "\\";
+                            break;
+                        case "cr":
+                            dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_REPLACE].Value = "/";
+                            break;
+                        default:
+                            break;
+                    }
+                    // Time to ticks
+                    //dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TICKS].Value = TimeToTicks(dgView.CurrentCell.Value.ToString());
+                }
 
             }
             else  if (dgView.CurrentCell.ColumnIndex == dgView.Columns.Count - 1)
@@ -267,7 +290,16 @@ namespace Karaboss
                 if (dgView.CurrentCell.Value == null)
                     dgView.CurrentCell.Value = "";
 
-                dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TYPE].Value = "text";
+                if (dgView.CurrentCell.Value.ToString() == "/")
+                {
+                    dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TYPE].Value = "cr";
+                }
+                else if (dgView.CurrentCell.Value.ToString() == "\\")
+                {
+                    dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TYPE].Value = "par";
+                }
+                else 
+                    dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TYPE].Value = "text";
 
                 string c = dgView.CurrentCell.Value.ToString();
                 c = c.Replace(" ", "_");
@@ -351,17 +383,15 @@ namespace Karaboss
         /// </summary>
         /// <param name="plLyrics"></param>
         private void PopulateDataGridView(List<plLyric> lLyrics)
-        {
-            //string[] row;
+        {          
             bool bfound = false;
 
             int plTicksOn = 0;
             string plRealTime = "00:00.00";
-            plLyric.Types plType = plLyric.Types.Text;
+            plLyric.Types plType = plLyric.Types.Text;             
 
-             
-
-            int plNote = 60;
+            int plNote = 0;
+            string sNote = string.Empty;
             string plElement = string.Empty;
 
             int idx = 0;
@@ -375,12 +405,13 @@ namespace Karaboss
                     plTicksOn = lLyrics[idx].TicksOn;
                     plRealTime = TicksToTime(plTicksOn);           // TODO
                     plNote = 0;
+                    sNote = "";
                     plElement = lLyrics[idx].Element;
                     plElement = plElement.Replace(" ", "_");
                     plType = lLyrics[idx].Type;
 
                     // New Row
-                    string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), plNote.ToString(), plElement, plElement };
+                    string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement, plElement };
                     dgView.Rows.Add(rowlyric);
                 }
             }
@@ -418,7 +449,11 @@ namespace Karaboss
                         if (idx < melodyTrack.Notes.Count && melodyTrack.Notes[idx].StartTime == plTicksOn) 
                         {
                             plNote = melodyTrack.Notes[idx].Number;
-                            string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), plNote.ToString(), plElement, plElement };
+                            sNote = plNote.ToString();
+                            if (plType == plLyric.Types.LineFeed || plType == plLyric.Types.Paragraph)
+                                sNote = "";                           
+
+                            string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement, plElement };
                             dgView.Rows.Add(rowlyric);
                             bfound = true; // lyric inscrit dans la grille
                             // Incrémente le compteur de notes si différent de retour chariot
@@ -1001,8 +1036,10 @@ namespace Karaboss
             string sTime = string.Empty;
             string sLyric = string.Empty;
             string sLine = string.Empty;
+            string sType = string.Empty;
             object vLyric;
             object vTime;
+            object vType;
             string lrcs = string.Empty;
             string cr = "\r\n";
 
@@ -1028,13 +1065,14 @@ namespace Karaboss
             {
                 vLyric = dgView.Rows[i].Cells[COL_REPLACE].Value;
                 vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+                vType = dgView.Rows[i].Cells[COL_TYPE].Value;
 
-                if (vTime != null && vLyric != null)
+                if (vTime != null && vLyric != null && vType != null)
                 {
-                    sLyric = vLyric.ToString();                    
-                    sLyric = sLyric.Trim();
+                    sLyric = vLyric.ToString().Trim();                                        
+                    sType = vType.ToString().Trim();
 
-                    if (sLyric != "" && sLyric != cr)
+                    if (sLyric != "" && sType != "cr" && sType != "par")
                     {
                         if (bStartLine)
                         {
@@ -1048,24 +1086,20 @@ namespace Karaboss
                             sLine += sLyric;
                         }
                     }
-                    else if (sLyric == "" || sLyric == cr)
+                    else if (sType == "cr" || sType == "par")
                     {
-                        // Start new line
-                        object vType = dgView.Rows[i].Cells[COL_TYPE].Value;
-
-                        if (vType != null && vType.ToString() == "cr")
+                        // Start new line    
+                        
+                        // Save current line
+                        if (sLine != "")
                         {
-                            // Save current line
-                            if (sLine != "")
-                            {
-                                sLine = sLine.Replace("_", " ");
-                                lrcs += sLine + cr;
-                            }
-
-                            // Reset all
-                            bStartLine = true;
-                            sLine = string.Empty;
+                            sLine = sLine.Replace("_", " ");
+                            lrcs += sLine + cr;
                         }
+
+                        // Reset all
+                        bStartLine = true;
+                        sLine = string.Empty;                        
                     }
                 }
             }
@@ -1876,6 +1910,9 @@ namespace Karaboss
                             case "cr":
                                 plType = plLyric.Types.LineFeed;
                                 break;
+                            case "par":
+                                plType = plLyric.Types.Paragraph;
+                                break;
                             default:
                                 plType = plLyric.Types.Text;
                                 break;
@@ -1890,7 +1927,9 @@ namespace Karaboss
                     if (dgView.Rows[row].Cells[COL_REPLACE].Value != null)
                     {
                         if (plType == plLyric.Types.LineFeed)
-                            plElement = "\r";
+                            plElement = "/";
+                        else if (plType == plLyric.Types.Paragraph)
+                            plElement = "\\";
                         else
                             plElement = dgView.Rows[row].Cells[COL_REPLACE].Value.ToString();
                     }
@@ -1900,6 +1939,8 @@ namespace Karaboss
                     // replace again spaces
                     plElement = plElement.Replace("_", " ");
                     localplLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn });
+
+                    // TODO add TicksOff
                 }
             }
 
@@ -1951,7 +1992,11 @@ namespace Karaboss
             {
                 // Affiche les blancs
                 plElement = lLyrics[i].Element;
-                plElement = plElement.Replace("\r", "\r\n");
+                //plElement = plElement.Replace("\r", "\r\n");
+
+                plElement = plElement.Replace("\\", "\r\n\r\n");   // Paragraph
+                plElement = plElement.Replace("/", "\r\n");        // LineFeed
+
 
                 plType = lLyrics[i].Type;
 
@@ -1975,16 +2020,28 @@ namespace Karaboss
             // Text before current
             string tx = string.Empty;
             string s = string.Empty;
+
             for (int row = 0; row < r; row++)
             {
                 s = string.Empty;
-                if (dgView.Rows[row].Cells[COL_REPLACE].Value != null)
-                    s = dgView.Rows[row].Cells[COL_REPLACE].Value.ToString();
 
-                if (s == "" && dgView.Rows[row].Cells[COL_TYPE].Value != null && dgView.Rows[row].Cells[COL_TYPE].Value.ToString() == "cr")
-                    s = "\r";
+                if (dgView.Rows[row].Cells[COL_TYPE].Value != null)
+                {
+                    if (dgView.Rows[row].Cells[COL_TYPE].Value.ToString() == "cr")
+                        s = "\n";
+                    else if (dgView.Rows[row].Cells[COL_TYPE].Value.ToString() == "par")
+                        s = "\n\n";
+                    else if (dgView.Rows[row].Cells[COL_TYPE].Value.ToString() == "text")
+                    {
+                        if (dgView.Rows[row].Cells[COL_REPLACE].Value != null)
+                            s = dgView.Rows[row].Cells[COL_REPLACE].Value.ToString();
+                    }
+
+                }
+               
                 s = s.Replace("_", " ");
-                s = s.Replace("\r", "\n");
+                //s = s.Replace("\r", "\n");
+
                 tx += s;
             }
 

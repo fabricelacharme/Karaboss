@@ -38,23 +38,30 @@ namespace Karaboss.Lrc.SharedFramework
 
             set
             {
-                if (Regex.IsMatch(value, @"^offset:\d+$", RegexOptions.IgnoreCase)) // offset
+                try
                 {
-                    _offset = Convert.ToInt32(Math.Round(Convert.ToDecimal(Regex.Match(value, @"(?<=offset:)\d+$", RegexOptions.IgnoreCase).Value) / 10));
-                    return;
-                }
+                    if (Regex.IsMatch(value, @"^offset:\d+$", RegexOptions.IgnoreCase)) // offset
+                    {
+                        _offset = Convert.ToInt32(Math.Round(Convert.ToDecimal(Regex.Match(value, @"(?<=offset:)\d+$", RegexOptions.IgnoreCase).Value) / 10));
+                        return;
+                    }
 
-                int MSec = 0, Sec = 0, Min = 0;// Msec 10
-                Min = Convert.ToInt32(Regex.Match(value, @"^\d+(?=:)").Value);
-                Sec = Convert.ToInt32(Regex.Match(value, @"(?<=:)\d+(?=\.)").Value != "" ? Regex.Match(value, @"(?<=:)\d+(?=\.)").Value : Regex.Match(value, @"(?<=:)\d+$").Value);
-                MSec = Convert.ToInt32(Regex.Match(value, @"(?<=\.)\d+$").Value != "" ? Regex.Match(value, @"(?<=\.)\d+$").Value : "0"); // 00:37
-                if (MSec > 99)
-                    MSec = Convert.ToInt32(Math.Round(MSec / 10.0));
-                int tl = MSec + Sec * 100 + Min * 100 * 60;
-                if (tl > 0)
-                    _timeline = tl;
-                else
-                    _timeline = 0;
+                    int MSec = 0, Sec = 0, Min = 0;// Msec 10
+                    Min = Convert.ToInt32(Regex.Match(value, @"^\d+(?=:)").Value);
+                    Sec = Convert.ToInt32(Regex.Match(value, @"(?<=:)\d+(?=\.)").Value != "" ? Regex.Match(value, @"(?<=:)\d+(?=\.)").Value : Regex.Match(value, @"(?<=:)\d+$").Value);
+                    MSec = Convert.ToInt32(Regex.Match(value, @"(?<=\.)\d+$").Value != "" ? Regex.Match(value, @"(?<=\.)\d+$").Value : "0"); // 00:37
+                    if (MSec > 99)
+                        MSec = Convert.ToInt32(Math.Round(MSec / 10.0));
+                    int tl = MSec + Sec * 100 + Min * 100 * 60;
+                    if (tl > 0)
+                        _timeline = tl;
+                    else
+                        _timeline = 0;
+                }
+                catch (Exception ex)
+                {
+                    
+                }
             }
         }
 
