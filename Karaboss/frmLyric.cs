@@ -439,6 +439,9 @@ namespace Karaboss
                 lyrics += plLyrics[i].Element; 
             }
 
+            lyrics = lyrics.Replace("\\", "\r\n\r\n");
+            lyrics = lyrics.Replace("/", "\r\n");
+
             List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
             foreach (plLyric plL in plLyrics)
             {
