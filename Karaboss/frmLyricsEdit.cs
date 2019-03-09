@@ -466,7 +466,11 @@ namespace Karaboss
                     // Lyric courant pas inscrit dans la grille ?
                     if (bfound == false)
                     {
-                        string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), plNote.ToString(), plElement, plElement };
+                        sNote = plNote.ToString();
+                        if (plType == plLyric.Types.LineFeed || plType == plLyric.Types.Paragraph)
+                            sNote = "";
+
+                        string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement, plElement };
                         dgView.Rows.Add(rowlyric);
                     }
                 }
