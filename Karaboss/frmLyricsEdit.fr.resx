@@ -129,8 +129,11 @@
   <data name="dText.HeaderText" xml:space="preserve">
     <value>Texte</value>
   </data>
-  <data name="dReplace.HeaderText" xml:space="preserve">
-    <value>Remplacer par</value>
+  <data name="dgView.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer1.Panel1.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="txtResult.TabIndex" type="System.Int32, mscorlib">
@@ -139,22 +142,34 @@
   <data name="txtResult.Text" xml:space="preserve">
     <value>Hello World</value>
   </data>
+  <data name="txtResult.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlBottom.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnInsertParagraph.Text" xml:space="preserve">
+    <value>Nouveau paragraphe (\)</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="btnInsertCr.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 23</value>
+  <data name="BtnFontMoins.Location" type="System.Drawing.Point, System.Drawing">
+    <value>443, 93</value>
+  </data>
+  <data name="BtnFontPlus.Location" type="System.Drawing.Point, System.Drawing">
+    <value>408, 93</value>
   </data>
   <data name="btnInsertCr.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
   <data name="btnInsertCr.Text" xml:space="preserve">
-    <value>Retour à la ligne</value>
+    <value>Retour à la ligne (/)</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="btnSpaceRight.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnSpaceRight.Location" type="System.Drawing.Point, System.Drawing">
-    <value>112, 3</value>
+    <value>408, 3</value>
   </data>
   <data name="btnSpaceRight.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -163,22 +178,16 @@
     <value>NoControl</value>
   </data>
   <data name="btnSpaceLeft.Location" type="System.Drawing.Point, System.Drawing">
-    <value>112, 31</value>
+    <value>408, 36</value>
   </data>
   <data name="btnSpaceLeft.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
-  </data>
-  <data name="btnInsertText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 23</value>
   </data>
   <data name="btnInsertText.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
   <data name="btnInsertText.Text" xml:space="preserve">
-    <value>Inserer &amp;texte</value>
-  </data>
-  <data name="btnDelete.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 23</value>
+    <value>Insérer une ligne</value>
   </data>
   <data name="btnDelete.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -186,14 +195,8 @@
   <data name="btnDelete.Text" xml:space="preserve">
     <value>&amp;Supprimer la ligne</value>
   </data>
-  <data name="btnPlay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>139, 23</value>
-  </data>
   <data name="btnPlay.Text" xml:space="preserve">
     <value>&amp;Jouer à partir du curseur</value>
-  </data>
-  <data name="btnView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>139, 23</value>
   </data>
   <data name="btnView.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -201,20 +204,17 @@
   <data name="btnView.Text" xml:space="preserve">
     <value>&amp;Visualiser les paroles</value>
   </data>
-  <data name="btnSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>139, 23</value>
-  </data>
   <data name="btnSave.Text" xml:space="preserve">
     <value>&amp;Enregistrer</value>
   </data>
-  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
+  <data name="pnlTop.ToolTip" xml:space="preserve">
+    <value />
   </data>
-  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>54, 20</value>
+  <data name="splitContainer1.Panel2.ToolTip" xml:space="preserve">
+    <value />
   </data>
-  <data name="mnuFile.Text" xml:space="preserve">
-    <value>&amp;Fichier</value>
+  <data name="splitContainer1.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
     <value>204, 22</value>
@@ -246,11 +246,11 @@
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
   </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 20</value>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>54, 20</value>
   </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>&amp;Edition</value>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;Fichier</value>
   </data>
   <data name="mnuEditLoadTrack.Size" type="System.Drawing.Size, System.Drawing">
     <value>259, 22</value>
@@ -282,17 +282,77 @@
   <data name="mnuEditLoadLRCFile.ToolTipText" xml:space="preserve">
     <value>Charger un fichier texte au format LRC (temps + Lyriques)</value>
   </data>
-  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>43, 20</value>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 20</value>
   </data>
-  <data name="mnuHelp.Text" xml:space="preserve">
-    <value>&amp;Aide</value>
+  <data name="mnuEdit.Text" xml:space="preserve">
+    <value>&amp;Edition</value>
   </data>
   <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
     <value>122, 22</value>
   </data>
   <data name="mnuHelpAbout.Text" xml:space="preserve">
     <value>A &amp;propos</value>
+  </data>
+  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 20</value>
+  </data>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Aide</value>
+  </data>
+  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="menuStrip1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="tabPage1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="button1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label15.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="txtWTag.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label14.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="txtTTag.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label13.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label12.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label11.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label10.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="txtVTag.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="txtITag.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="txtLTag.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="txtKTag.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="tabPage2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="tabControl1.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -320,5 +380,8 @@
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Karaboss - Modifier les paroles</value>
+  </data>
+  <data name="$this.ToolTip" xml:space="preserve">
+    <value />
   </data>
 </root>

@@ -53,10 +53,9 @@ namespace Karaboss
          * 
          * 0 - Ticks    Number of ticks
          * 1 - Time     Time in sec
-         * 2 - Type     
+         * 2 - Type     text, paragraph, linefeed
          * 3 - Note     Note value
-         * 4 - Text     Old text, initially note value
-         * 5 - Replace  New text
+         * 4 - Text     text        
          * 
          * 
          * 
@@ -87,7 +86,7 @@ namespace Karaboss
         const int COL_TYPE = 2;
         const int COL_NOTE = 3;
         const int COL_TEXT = 4;
-        const int COL_REPLACE = 5;
+        
 
         LyricFormats TextLyricFormat;        
 
@@ -151,9 +150,55 @@ namespace Karaboss
 
             dgView.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
 
+            // Color separators
+            ColorSepRows();
+
+            DisplayTags();
+
             ResizeMe();
         }
 
+
+        private void DisplayTags()
+        {
+            string cr = Environment.NewLine;
+            int i = 0;
+        
+            // Classic Karaoke Midi tags
+            /*
+            @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
+            @L	(single) Language	FRAN, ENGL        
+            @W	(multiple) Copyright (of Karaoke file, not song)        
+            @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
+            @I	Information  ex Date(of Karaoke file, not song)
+            @V	(single) Version ex 0100 ?             
+            */
+
+            for (i = 0; i < sequence1.KTag.Count; i++)
+            {
+                txtKTag.Text += sequence1.KTag[i] + cr;
+            }
+            for (i = 0; i < sequence1.WTag.Count; i++)
+            {
+                txtWTag.Text += sequence1.WTag[i] + cr;
+            }
+            for (i = 0; i < sequence1.TTag.Count; i++)
+            {
+                txtTTag.Text += sequence1.TTag[i] + cr;
+            }
+            for (i = 0; i < sequence1.ITag.Count; i++)
+            {
+                txtITag.Text += sequence1.ITag[i] + cr;
+            }
+            for (i = 0; i < sequence1.VTag.Count; i++)
+            {
+                txtVTag.Text += sequence1.VTag[i] + cr;
+            }
+            for (i = 0; i < sequence1.LTag.Count; i++)
+            {
+                txtLTag.Text += sequence1.LTag[i] + cr;
+            }
+        }
 
         /// <summary>
         /// Upadate MIDI times
@@ -270,16 +315,16 @@ namespace Karaboss
                         case "text":
                             break;
                         case "par":
-                            dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_REPLACE].Value = "\\";
+                            dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TEXT].Value = "\\";
                             break;
                         case "cr":
-                            dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_REPLACE].Value = "/";
+                            dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TEXT].Value = "/";
                             break;
                         default:
                             break;
                     }
-                    // Time to ticks
-                    //dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TICKS].Value = TimeToTicks(dgView.CurrentCell.Value.ToString());
+
+                    ColorSepRows();
                 }
 
             }
@@ -363,11 +408,18 @@ namespace Karaboss
             dgView.Rows.Clear();
             dgView.Refresh();
 
-            dgView.ColumnHeadersDefaultCellStyle.BackColor = Color.Navy;
+            // Header color
+            dgView.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(43, 87, 151);
             dgView.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgView.ColumnHeadersDefaultCellStyle.Font = new Font("Arial", 12F, FontStyle.Bold);
+
+            dgView.ColumnHeadersDefaultCellStyle.Font = new Font("Arial", 12F, FontStyle.Regular);
             dgView.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dgView.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;           
+            dgView.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+            // Selection
+            dgView.DefaultCellStyle.SelectionBackColor = Color.FromArgb(45, 137, 239);
+
+            dgView.EnableHeadersVisualStyles = false;
 
             //Change cell font
             foreach (DataGridViewColumn c in dgView.Columns)
@@ -377,6 +429,22 @@ namespace Karaboss
                 c.ReadOnly = false;               
             }
         }
+
+        private void ColorSepRows()
+        {
+            for (int i = 1; i < dgView.Rows.Count; i++)
+            {
+                if (dgView.Rows[i].Cells[COL_TYPE].Value != null && dgView.Rows[i].Cells[COL_TYPE].Value.ToString() == "cr")
+                {
+                    dgView.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(239, 244, 255);
+                }
+                else if (dgView.Rows[i].Cells[COL_TYPE].Value != null && dgView.Rows[i].Cells[COL_TYPE].Value.ToString() == "par")
+                {
+                    dgView.Rows[i].DefaultCellStyle.BackColor = Color.LightGray;
+                }
+            }
+        }
+
 
         /// <summary>
         /// Populate datagridview with lyrics
@@ -411,7 +479,7 @@ namespace Karaboss
                     plType = lLyrics[idx].Type;
 
                     // New Row
-                    string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement, plElement };
+                    string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
                     dgView.Rows.Add(rowlyric);
                 }
             }
@@ -438,7 +506,7 @@ namespace Karaboss
                             int beforeplNote = melodyTrack.Notes[idx].Number;
                             string beforeplElement = "";
                             string beforeplType = "text";
-                            string[] rownote = { beforeplTime.ToString(), beforeplRealTime, beforeplType, beforeplNote.ToString(), beforeplElement, beforeplElement };
+                            string[] rownote = { beforeplTime.ToString(), beforeplRealTime, beforeplType, beforeplNote.ToString(), beforeplElement };
                             dgView.Rows.Add(rownote);
                             idx++;
                             if (idx >= melodyTrack.Notes.Count)
@@ -453,7 +521,7 @@ namespace Karaboss
                             if (plType == plLyric.Types.LineFeed || plType == plLyric.Types.Paragraph)
                                 sNote = "";                           
 
-                            string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement, plElement };
+                            string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
                             dgView.Rows.Add(rowlyric);
                             bfound = true; // lyric inscrit dans la grille
                             // Incrémente le compteur de notes si différent de retour chariot
@@ -470,7 +538,7 @@ namespace Karaboss
                         if (plType == plLyric.Types.LineFeed || plType == plLyric.Types.Paragraph)
                             sNote = "";
 
-                        string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement, plElement };
+                        string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
                         dgView.Rows.Add(rowlyric);
                     }
                 }
@@ -483,7 +551,7 @@ namespace Karaboss
                     int afterplNote = melodyTrack.Notes[idx].Number;
                     string afterplElement = "";
                     string afterplType = "text";
-                    string[] rownote = { afterplTime.ToString(), afterplRealTime, afterplType, afterplNote.ToString(), afterplElement, afterplElement };
+                    string[] rownote = { afterplTime.ToString(), afterplRealTime, afterplType, afterplNote.ToString(), afterplElement };
                     dgView.Rows.Add(rownote);
                     idx++;
                     if (idx >= melodyTrack.Notes.Count)
@@ -519,7 +587,7 @@ namespace Karaboss
                     plNote = n.Number;
                     plElement = plNote.ToString();
 
-                    string[] row = { plTicksOn.ToString(), plRealTime, plType, plNote.ToString(), plNote.ToString(), plElement };
+                    string[] row = { plTicksOn.ToString(), plRealTime, plType, plNote.ToString(), plElement };
                     dgView.Rows.Add(row);
                 }
             }            
@@ -634,31 +702,6 @@ namespace Karaboss
 
         private void ResizeMe()
         {
-            btnInsertCr.Left = 3;
-            btnInsertCr.Top = 3;
-
-            btnInsertText.Left = 3;
-            btnInsertText.Top = 32;
-
-            btnDelete.Left = 3;
-            btnDelete.Top = 61;
-
-            btnSpaceLeft.Left = 112;
-            btnSpaceLeft.Top = 3;
-
-            btnSpaceRight.Left = 112;
-            btnSpaceRight.Top = 32;
-
-
-            btnView.Left = 176;
-            btnView.Top = 3;
-
-            btnSave.Left = 176;
-            btnSave.Top = 32;
-
-            btnPlay.Left = 176;
-            btnPlay.Top = 61;
-
             // Adapt width of last column
             int W = dgView.RowHeadersWidth + 19;
             int WP = dgView.Parent.Width;
@@ -707,15 +750,36 @@ namespace Karaboss
 
 
         /// <summary>
-        /// Insert a CR
+        /// Insert a LineFeed
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void BtnInsert_Click(object sender, EventArgs e)
         {
+            InsertSepLine("cr");     
+        }
+
+        /// <summary>
+        /// Insert a Paragraph
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnInsertParagraph_Click(object sender, EventArgs e)
+        {
+            InsertSepLine("par");
+      
+        }
+
+        /// <summary>
+        /// Insert Linefeed or Paragraph
+        /// </summary>
+        /// <param name="sep"></param>
+        private void InsertSepLine(string sep)
+        {
             int Row = dgView.CurrentRow.Index;
             int plTicksOn = 0;
             string plRealTime = "00:00.00";
+            string plElement = string.Empty;
 
             if (dgView.Rows[Row].Cells[COL_TICKS].Value != null)
             {
@@ -723,8 +787,13 @@ namespace Karaboss
                 plRealTime = TicksToTime(plTicksOn);
             }
 
+            if (sep == "cr")
+                plElement = "/";
+            else
+                plElement = "\\";
+
             // time, type, note, text, text
-            dgView.Rows.Insert(Row, plTicksOn, plRealTime,"cr", "", "", "");
+            dgView.Rows.Insert(Row, plTicksOn, plRealTime, sep, "", plElement);
 
             //Load modification into local list of lyrics
             LoadModifiedLyrics();
@@ -732,10 +801,14 @@ namespace Karaboss
 
             HeightsToDurations();
 
+            // Color separators
+            ColorSepRows();
+
             // File was modified
             FileModified();
-        }  
-        
+        }
+
+
         /// <summary>
         /// Insert a Text
         /// </summary>
@@ -746,6 +819,9 @@ namespace Karaboss
             InsertLine();
         }
 
+        /// <summary>
+        /// Insert text line
+        /// </summary>
         private void InsertLine()
         {
             int Row = dgView.CurrentRow.Index;
@@ -764,8 +840,8 @@ namespace Karaboss
             pElement = "text";
 
             // Column Replace
-            if (dgView.Rows[Row].Cells[COL_REPLACE].Value != null)
-                pReplace = dgView.Rows[Row].Cells[COL_REPLACE].Value.ToString();
+            if (dgView.Rows[Row].Cells[COL_TEXT].Value != null)
+                pReplace = dgView.Rows[Row].Cells[COL_TEXT].Value.ToString();
             else
                 pReplace = "text";
 
@@ -787,9 +863,9 @@ namespace Karaboss
         private void BtnSpaceLeft_Click(object sender, EventArgs e)
         {
             int Row = dgView.CurrentRow.Index;
-            if (dgView.Rows[Row].Cells[COL_REPLACE].Value != null)
+            if (dgView.Rows[Row].Cells[COL_TEXT].Value != null)
             {
-                dgView.Rows[Row].Cells[COL_REPLACE].Value = "_" + dgView.Rows[Row].Cells[COL_REPLACE].Value;
+                dgView.Rows[Row].Cells[COL_TEXT].Value = "_" + dgView.Rows[Row].Cells[COL_TEXT].Value;
             }
         }
 
@@ -801,9 +877,9 @@ namespace Karaboss
         private void BtnSpaceRight_Click(object sender, EventArgs e)
         {
             int Row = dgView.CurrentRow.Index;
-            if (dgView.Rows[Row].Cells[COL_REPLACE].Value != null)
+            if (dgView.Rows[Row].Cells[COL_TEXT].Value != null)
             {
-                dgView.Rows[Row].Cells[COL_REPLACE].Value = dgView.Rows[Row].Cells[COL_REPLACE].Value + "_";
+                dgView.Rows[Row].Cells[COL_TEXT].Value = dgView.Rows[Row].Cells[COL_TEXT].Value + "_";
                 
                 // File was modified
                 FileModified();
@@ -997,7 +1073,7 @@ namespace Karaboss
             // Save syllabe by syllabe
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
-                vLyric = dgView.Rows[i].Cells[COL_REPLACE].Value;
+                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
                 vTime = dgView.Rows[i].Cells[COL_TIME].Value;
 
                 if (vTime != null && vLyric != null)
@@ -1067,7 +1143,7 @@ namespace Karaboss
             // Save syllabe by syllabe
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
-                vLyric = dgView.Rows[i].Cells[COL_REPLACE].Value;
+                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
                 vTime = dgView.Rows[i].Cells[COL_TIME].Value;
                 vType = dgView.Rows[i].Cells[COL_TYPE].Value;
 
@@ -1252,12 +1328,10 @@ namespace Karaboss
                 Tag_Title = split[1].Trim();
             }
 
-
             if (bLRCType == "Lines")
                 SaveLRCLines(FileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
             else
                 SaveLRCParcels(FileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
-
         }
 
 
@@ -1288,7 +1362,6 @@ namespace Karaboss
             // Get track number for melody
             // -1 if no track
             melodytracknum = TrackDialog.TrackNumber - 1;
-
             
             if (melodytracknum == -1)
             {
@@ -1324,18 +1397,14 @@ namespace Karaboss
             if (MIDIfileName != null || MIDIfileName != "")
                 openFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
 
-
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string fileName = openFileDialog.FileName;
-
                 try
                 {
                     using (StreamReader sr = new StreamReader(fileName))
                     {
-                        String lines = sr.ReadToEnd();
-                        //Console.WriteLine(lines);
-
+                        String lines = sr.ReadToEnd();                        
                         LoadTextFile(lines);
                     }
                 }
@@ -1345,7 +1414,6 @@ namespace Karaboss
                     Console.WriteLine(errl.Message);
                 }
             }
-
         }
 
         /// <summary>
@@ -1414,8 +1482,7 @@ namespace Karaboss
 
                         plElement = s + "_";
 
-                        dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
-                        dgView.Rows[i].Cells[COL_REPLACE].Value = plElement;
+                        dgView.Rows[i].Cells[COL_TEXT].Value = plElement;                        
                         
                     }
                     else
@@ -1438,8 +1505,7 @@ namespace Karaboss
                         dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
                         dgView.Rows[i].Cells[COL_TYPE].Value = plType;
                         dgView.Rows[i].Cells[COL_NOTE].Value = plNote.ToString();
-                        dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
-                        dgView.Rows[i].Cells[COL_REPLACE].Value = plElement;
+                        dgView.Rows[i].Cells[COL_TEXT].Value = plElement;                        
                     }
                 }
             }
@@ -1448,9 +1514,11 @@ namespace Karaboss
             LoadModifiedLyrics();
             PopulateTextBox(localplLyrics);
 
+            // Color separators
+            ColorSepRows();
+
             // File was modified
             FileModified();
-
         }
 
       
@@ -1520,7 +1588,6 @@ namespace Karaboss
                 dgView.Rows.Add();
             }
 
-
             int plTicksOn = 0;
             string plRealTime = string.Empty;
             string plType = string.Empty;
@@ -1530,7 +1597,6 @@ namespace Karaboss
 
             for (int i = 0; i < lyrics.Count; i++)
             {
-
                 LyricsLine lyline = lyrics[i];
                 plRealTime = lyline.Timeline;
 
@@ -1544,13 +1610,9 @@ namespace Karaboss
                     dgView.Rows[row].Cells[COL_TYPE].Value = plType;
                     dgView.Rows[row].Cells[COL_NOTE].Value = plNote;
                     dgView.Rows[row].Cells[COL_TEXT].Value = plElement;
-                    dgView.Rows[row].Cells[COL_REPLACE].Value = plElement;
-
                     row++;
                 }
-
                 
-
                 plType = "text";
                 plElement = lyline.OriLyrics;
 
@@ -1560,16 +1622,16 @@ namespace Karaboss
                 dgView.Rows[row].Cells[COL_TYPE].Value = plType;
                 dgView.Rows[row].Cells[COL_NOTE].Value = plNote;
                 dgView.Rows[row].Cells[COL_TEXT].Value = plElement;
-                dgView.Rows[row].Cells[COL_REPLACE].Value = plElement;
 
                 row++;
-
-
             }
 
             //Load modification into local list of lyrics
             LoadModifiedLyrics();
             PopulateTextBox(localplLyrics);
+
+            // Color separators
+            ColorSepRows();
 
             // File was modified
             FileModified();
@@ -1703,9 +1765,9 @@ namespace Karaboss
 
             for (row = dgView.Rows.Count - 1; row > r; row--) 
             {
-                dgView.Rows[row].Cells[COL_REPLACE].Value = dgView.Rows[row-1].Cells[COL_REPLACE].Value;
+                dgView.Rows[row].Cells[COL_TEXT].Value = dgView.Rows[row-1].Cells[COL_TEXT].Value;
             }
-            dgView.Rows[r].Cells[COL_REPLACE].Value = "";
+            dgView.Rows[r].Cells[COL_TEXT].Value = "";
             LoadModifiedLyrics();
             PopulateTextBox(localplLyrics);
         }
@@ -1722,7 +1784,7 @@ namespace Karaboss
 
             for (row = r; row <= dgView.Rows.Count - 2; row++)
             {
-                dgView.Rows[row].Cells[COL_REPLACE].Value = dgView.Rows[row + 1].Cells[COL_REPLACE].Value;
+                dgView.Rows[row].Cells[COL_TEXT].Value = dgView.Rows[row + 1].Cells[COL_TEXT].Value;
             }
             LoadModifiedLyrics();
             PopulateTextBox(localplLyrics);
@@ -1928,14 +1990,14 @@ namespace Karaboss
                     }
 
                     // Element
-                    if (dgView.Rows[row].Cells[COL_REPLACE].Value != null)
+                    if (dgView.Rows[row].Cells[COL_TEXT].Value != null)
                     {
                         if (plType == plLyric.Types.LineFeed)
                             plElement = "/";
                         else if (plType == plLyric.Types.Paragraph)
                             plElement = "\\";
                         else
-                            plElement = dgView.Rows[row].Cells[COL_REPLACE].Value.ToString();
+                            plElement = dgView.Rows[row].Cells[COL_TEXT].Value.ToString();
                     }
                     else
                         plElement = "text";
@@ -2037,8 +2099,8 @@ namespace Karaboss
                         s = "\n\n";
                     else if (dgView.Rows[row].Cells[COL_TYPE].Value.ToString() == "text")
                     {
-                        if (dgView.Rows[row].Cells[COL_REPLACE].Value != null)
-                            s = dgView.Rows[row].Cells[COL_REPLACE].Value.ToString();
+                        if (dgView.Rows[row].Cells[COL_TEXT].Value != null)
+                            s = dgView.Rows[row].Cells[COL_TEXT].Value.ToString();
                     }
 
                 }
@@ -2154,8 +2216,214 @@ namespace Karaboss
         }
 
 
+
         #endregion
 
-       
+
+        #region Tags
+
+        /// <summary>
+        /// Save tags
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSaveTags_Click(object sender, EventArgs e)
+        {
+            bool bModified = false;
+            string tx = string.Empty;         
+
+            string[] S;
+            string newline = string.Empty;
+
+            sequence1.ITag.Clear();
+            sequence1.KTag.Clear();
+            sequence1.LTag.Clear();
+            sequence1.TTag.Clear();
+            sequence1.VTag.Clear();
+            sequence1.WTag.Clear();
+
+            tx = txtITag.Text.Trim();
+            S = tx.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string line in S)
+            {
+                newline = line.Trim();
+                if (newline != "")
+                    sequence1.ITag.Add(line.Trim());
+            }
+            tx = txtKTag.Text.Trim();
+            S = tx.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string line in S)
+            {
+                newline = line.Trim();
+                if (newline != "")
+                    sequence1.KTag.Add(line.Trim());
+            }
+            tx = txtLTag.Text.Trim();
+            S = tx.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string line in S)
+            {
+                newline = line.Trim();
+                if (newline != "")
+                    sequence1.LTag.Add(line.Trim());
+            }
+            tx = txtTTag.Text.Trim();
+            S = tx.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string line in S)
+            {
+                newline = line.Trim();
+                if (newline != "")
+                    sequence1.TTag.Add(line.Trim());
+            }
+            tx = txtVTag.Text.Trim();
+            S = tx.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string line in S)
+            {
+                newline = line.Trim();
+                if (newline != "")
+                    sequence1.VTag.Add(line.Trim());
+            }
+            tx = txtWTag.Text.Trim();
+            S = tx.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string line in S)
+            {
+                newline = line.Trim();
+                if (newline != "")
+                    sequence1.WTag.Add(line.Trim());
+            }          
+
+            if (sequence1.ITag.Count != 0 || sequence1.KTag.Count != 0 || sequence1.LTag.Count != 0 || sequence1.TTag.Count != 0 || sequence1.VTag.Count != 0 || sequence1.WTag.Count != 0)
+            {
+                bModified = true;
+            }
+
+
+            if (bModified == true)
+            {
+                AddTags();
+
+                if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+                {
+                    frmPlayer frmPlayer = GetForm<frmPlayer>();                    
+                    frmPlayer.FileModified();
+                }
+                MessageBox.Show("Tags saved successfully", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);               
+            }
+        }
+
+        /// <summary>
+        /// Add tags to midi file
+        /// </summary>
+        private void AddTags()
+        {
+            int i = 0;
+
+            // @#Title      Title
+            // @#Artist     Artist
+            // @#Album      Album
+            // @#Copyright  Copyright
+            // @#Date       Date
+            // @#Editor     Editor
+            // @#Genre      Genre        
+            // @#Evaluation Evaluation
+            // @#Comment    Comment
+
+            // Remove prev tags
+            Track track = sequence1.tracks[0];
+            track.RemoveTagsEvent("@#");
+
+            string Comment = "@#Comment=" + sequence1.TagComment;
+            AddTag(Comment);
+
+            string Evaluation = "@#Evaluation=" + sequence1.TagEvaluation;
+            AddTag(Evaluation);
+
+            string Genre = "@#Genre=" + sequence1.TagGenre;
+            AddTag(Genre);
+
+            string Editor = "@#Editor=" + sequence1.TagEditor;
+            AddTag(Editor);
+
+            string Date = "@#Date=" + sequence1.TagDate;
+            AddTag(Date);
+
+            string Copyright = "@#Copyright=" + sequence1.TagCopyright;
+            AddTag(Copyright);
+
+            string Album = "@#Album=" + sequence1.TagAlbum;
+            AddTag(Album);
+
+            string Artist = "@#Artist=" + sequence1.TagArtist;
+            AddTag(Artist);
+
+            string Title = "@#Title=" + sequence1.TagTitle;
+            AddTag(Title);
+
+            // Classic Karaoke tags
+            string tx = string.Empty;
+            track.RemoveTagsEvent("@I");
+            track.RemoveTagsEvent("@K");
+            track.RemoveTagsEvent("@L");
+            track.RemoveTagsEvent("@T");
+            track.RemoveTagsEvent("@V");
+            track.RemoveTagsEvent("@W");
+
+            for (i = sequence1.ITag.Count - 1; i >= 0; i--)
+            {
+                tx = "@I" + sequence1.ITag[i];
+                AddTag(tx);
+            }
+            for (i = sequence1.KTag.Count - 1; i >= 0; i--)
+            {
+                tx = "@K" + sequence1.KTag[i];
+                AddTag(tx);
+            }
+            for (i = sequence1.LTag.Count - 1; i >= 0; i--)
+            {
+                tx = "@L" + sequence1.LTag[i];
+                AddTag(tx);
+            }
+            for (i = sequence1.TTag.Count - 1; i >= 0; i--)
+            {
+                tx = "@T" + sequence1.TTag[i];
+                AddTag(tx);
+            }
+            for (i = sequence1.VTag.Count - 1; i >= 0; i--)
+            {
+                tx = "@V" + sequence1.VTag[i];
+                AddTag(tx);
+            }
+            for (i = sequence1.WTag.Count - 1; i >= 0; i--)
+            {
+                tx = "@W" + sequence1.WTag[i];
+                AddTag(tx);
+            }
+        }
+
+        /// <summary>
+        /// Insert Tag at tick 0
+        /// </summary>
+        /// <param name="strTag"></param>
+        private void AddTag(string strTag)
+        {
+            Track track = sequence1.tracks[0];
+            int currentTick = 0;
+            string currentElement = strTag;
+
+            // Transforme en byte la nouvelle chaine
+            byte[] newdata = new byte[currentElement.Length];
+            for (int u = 0; u < newdata.Length; u++)
+            {
+                newdata[u] = (byte)currentElement[u];
+            }
+
+            MetaMessage mtMsg;
+
+            mtMsg = new MetaMessage(MetaType.Text, newdata);
+
+            // Insert new message
+            track.Insert(currentTick, mtMsg);
+        }
+
+        #endregion
     }
 }
