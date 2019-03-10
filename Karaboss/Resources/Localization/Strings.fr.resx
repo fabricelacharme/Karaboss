@@ -300,4 +300,10 @@
   <data name="NoMelodyTrack" xml:space="preserve">
     <value>Pas de piste pour la mélodie</value>
   </data>
+  <data name="InsertNewParagraph" xml:space="preserve">
+    <value>Insérer un nouveau paragraphe</value>
+  </data>
+  <data name="InsertLineBreak" xml:space="preserve">
+    <value>Insérer un retour à la ligne</value>
+  </data>
 </root>

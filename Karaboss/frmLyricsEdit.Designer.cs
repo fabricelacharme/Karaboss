@@ -127,7 +127,7 @@
             this.dText});
             this.dgView.Name = "dgView";
             this.dgView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgView_CellEndEdit);
-            this.dgView.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgView_CellEnter);
+            this.dgView.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgView_CellEnter);            
             this.dgView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DgView_KeyDown);
             this.dgView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DgView_MouseDown);
             // 
@@ -219,6 +219,7 @@
             // 
             resources.ApplyResources(this.btnInsertCr, "btnInsertCr");
             this.btnInsertCr.Name = "btnInsertCr";
+            this.btnInsertCr.TabStop = false;
             this.toolTip1.SetToolTip(this.btnInsertCr, resources.GetString("btnInsertCr.ToolTip"));
             this.btnInsertCr.UseVisualStyleBackColor = true;
             this.btnInsertCr.Click += new System.EventHandler(this.BtnInsert_Click);

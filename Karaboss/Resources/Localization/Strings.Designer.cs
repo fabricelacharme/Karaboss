@@ -973,6 +973,20 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("InsertNewLine", resourceCulture);
             }
         }
+        internal static string InsertLineBreak
+        {
+            get
+            {
+                return ResourceManager.GetString("InsertLineBreak", resourceCulture);
+            }
+        }
+        internal static string InsertNewParagraph
+        {
+            get
+            {
+                return ResourceManager.GetString("InsertNewParagraph", resourceCulture);
+            }
+        }
         internal static string OffsetUp
         {
             get

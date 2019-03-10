@@ -213,9 +213,7 @@ namespace Karaboss
             if (sequence1.Time != null)
                 _measurelen = sequence1.Time.Measure;
         }
-
       
-
         /// <summary>
         /// Retrieve Lyrics format from frmPlayer
         /// </summary>
@@ -253,6 +251,11 @@ namespace Karaboss
             return int.TryParse(input, out test);
         }
 
+        /// <summary>
+        /// Cell edition
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DgView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             int val = 0;
@@ -300,8 +303,32 @@ namespace Karaboss
                 // If COL_TIME is edited
                 if (dgView.CurrentCell.Value != null)
                 {
+
+                    string sval = dgView.CurrentCell.Value.ToString().Trim();
+                    Regex regex = new Regex(@"\d\d:\d\d.\d\d");
+                    Match match = regex.Match(sval);
+                    if (sval != "" && !match.Success)
+                    {
+                        if (IsNumeric(sval))
+                        {
+                            int total = Convert.ToInt32(sval);
+                            int min = total / 60;
+                            int sec = total - min * 60;
+
+                            dgView.CurrentCell.Value = string.Format("{0:00}:{1:00}.00", min, sec);                            
+                        }
+                        else
+                        {
+                            MessageBox.Show("Please use format 00:00.00", "Time", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            dgView.CurrentCell.Value = "00:00.00";
+                        }
+                    }
+
                     // Time to ticks
                     dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TICKS].Value = TimeToTicks(dgView.CurrentCell.Value.ToString());
+                    // Type = text
+                    dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TYPE].Value = "text";
+
                 }
             }
             else if (dgView.CurrentCell.ColumnIndex == COL_TYPE)
@@ -414,7 +441,8 @@ namespace Karaboss
 
             dgView.ColumnHeadersDefaultCellStyle.Font = new Font("Arial", 12F, FontStyle.Regular);
             dgView.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dgView.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgView.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;           
+
 
             // Selection
             dgView.DefaultCellStyle.SelectionBackColor = Color.FromArgb(45, 137, 239);
@@ -430,6 +458,12 @@ namespace Karaboss
             }
         }
 
+     
+
+
+        /// <summary>
+        /// Apply colors to comlumns: Line Break & Paragraph
+        /// </summary>
         private void ColorSepRows()
         {
             for (int i = 1; i < dgView.Rows.Count; i++)
@@ -776,6 +810,9 @@ namespace Karaboss
         /// <param name="sep"></param>
         private void InsertSepLine(string sep)
         {
+            if (dgView.CurrentRow == null)
+                return;
+
             int Row = dgView.CurrentRow.Index;
             int plTicksOn = 0;
             string plRealTime = "00:00.00";
@@ -816,14 +853,17 @@ namespace Karaboss
         /// <param name="e"></param>
         private void BtnInsertText_Click(object sender, EventArgs e)
         {
-            InsertLine();
+            InsertTextLine();
         }
 
         /// <summary>
         /// Insert text line
         /// </summary>
-        private void InsertLine()
+        private void InsertTextLine()
         {
+            if (dgView.CurrentRow == null)
+                return;
+
             int Row = dgView.CurrentRow.Index;
             int plTicksOn = 0;
             string plRealTime = "00:00.00";
@@ -1663,10 +1703,21 @@ namespace Karaboss
                 dgContextMenu.Items.Clear();
 
                 
-                // Insert line
-                ToolStripMenuItem menuInsertLine = new ToolStripMenuItem(Strings.InsertNewLine);
-                dgContextMenu.Items.Add(menuInsertLine);
-                menuInsertLine.Click += new System.EventHandler(this.MnuInsertLine_Click);
+                // Insert Text line
+                ToolStripMenuItem menuInsertTextLine = new ToolStripMenuItem(Strings.InsertNewLine);
+                dgContextMenu.Items.Add(menuInsertTextLine);
+                menuInsertTextLine.Click += new System.EventHandler(this.MnuInsertTextLine_Click);
+
+                // Insert LineFeed
+                ToolStripMenuItem menuInsertLineBreak = new ToolStripMenuItem(Strings.InsertLineBreak);
+                dgContextMenu.Items.Add(menuInsertLineBreak);
+                menuInsertLineBreak.Click += new System.EventHandler(this.MnuInsertLineBreak_Click);
+
+
+                // Insert paragraph
+                ToolStripMenuItem menuInsertParagraph = new ToolStripMenuItem(Strings.InsertNewParagraph);
+                dgContextMenu.Items.Add(menuInsertParagraph);
+                menuInsertParagraph.Click += new System.EventHandler(this.MnuInsertParagraph_Click);
 
                 // Delete line
                 ToolStripMenuItem menuDeleteLine = new ToolStripMenuItem(Strings.DeleteLine);
@@ -1709,14 +1760,39 @@ namespace Karaboss
 
         }
 
+        private void MnuInsertLineBreak_Click(object sender, EventArgs e)
+        {
+            InsertSepLine("cr");
+        }
+
+        /// <summary>
+        /// Insert paragraph separator
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuInsertParagraph_Click(object sender, EventArgs e)
+        {
+            InsertSepLine("par");
+        }
+
+        /// <summary>
+        /// DElete current line
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MnuDeleteLine_Click(object sender, EventArgs e)
         {
             DeleteLine();
         }
 
-        private void MnuInsertLine_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Insert text line
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuInsertTextLine_Click(object sender, EventArgs e)
         {           
-            InsertLine();
+            InsertTextLine();
         }
 
         private void MnuPaste_Click(object sender, EventArgs e)
@@ -2425,5 +2501,7 @@ namespace Karaboss
         }
 
         #endregion
+
+     
     }
 }
