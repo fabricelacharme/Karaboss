@@ -466,7 +466,7 @@ namespace Karaboss
         /// </summary>
         private void ColorSepRows()
         {
-            for (int i = 1; i < dgView.Rows.Count; i++)
+            for (int i = 0; i < dgView.Rows.Count; i++)
             {
                 if (dgView.Rows[i].Cells[COL_TYPE].Value != null && dgView.Rows[i].Cells[COL_TYPE].Value.ToString() == "cr")
                 {

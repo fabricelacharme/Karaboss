@@ -475,7 +475,6 @@ namespace PicControl
         /// <param name="dirImages"></param>
         public void SetBackground(string dirImages)
         {
-
             try
             {
                 UpdateTimerEnable(false);
@@ -1341,13 +1340,20 @@ namespace PicControl
                 // prend la précédente
                 if (itime < syllab.time)
                 {
-                    // Cas 1 : La première syllabe dont le temps est supérieur au temps courant est située sur la prochaine ligne
-                    // Cela signifie que l'on vient de jouer la dernière syllabe de la ligne.
-                    // Si "fin de ligne" et temps écoulé supérieur à 2 noires
-                    // prendre la première syllabe dont le temps est supérieur au temps courant, soit l'indice "i"
-                    // indiquer également qu'il ne faut pas encore colorer cette syllabe
-                    if (i > 0 && syllab.posline == 0 && itime > syllabes[i - 1].time + 2 * _beatDuration)
+                    
+                    if (i > 0 && syllab.posline == 0 && syllab.SylCount == 1)
                     {
+                        //  LRC : 1 ligne = 1 seule syllabe
+                        bHighLight = true;
+                        return i - 1;
+                    }
+                    else if (i > 0 && syllab.posline == 0 && itime > syllabes[i - 1].time + 2 * _beatDuration)
+                    {
+                        // Cas 1 : La première syllabe dont le temps est supérieur au temps courant est située sur la prochaine ligne
+                        // Cela signifie que l'on vient de jouer la dernière syllabe de la ligne.
+                        // Si "fin de ligne" et temps écoulé supérieur à 2 noires
+                        // prendre la première syllabe dont le temps est supérieur au temps courant, soit l'indice "i"
+                        // indiquer également qu'il ne faut pas encore colorer cette syllabe
                         // On force le changement de ligne au bout de 2 temps                       
                         bHighLight = false;   // Ne pas mettre en surbrillance la syllabe tant que son temps n'est pas arrivé
                         return i;                        
@@ -1441,7 +1447,11 @@ namespace PicControl
                         // Calculations are made on active syllabe (celle qui correspond à currentpos !)
 
                         // End of line
-                        if (syllab.posline == syllab.SylCount - 1)
+                        if (syllab.SylCount == 1)
+                        {
+                            bEndOfLine = true;
+                        }
+                        else if (syllab.SylCount > 1 && syllab.posline == syllab.SylCount - 1)
                         {
                             bEndOfLine = true;                           
                         }
@@ -1462,7 +1472,7 @@ namespace PicControl
                                     // Soit le début de la prochaine ligne, soit la fin de la ligne courante
                                     int t1 = syllabes[i + next].time;
                                     int t2 = syllabes[i + next - 1].time + 2 * _beatDuration; // on passe à la ligne au bout de 2 temps
-                                   
+                                                                        
                                     nextStartOfLineTime = t1 < t2 ? t1 : t2;
 
                                     // Duration until next line 
@@ -1863,8 +1873,8 @@ namespace PicControl
         #region paint resize
 
         /// <summary>
-        /// Guess if picturebox should be paint
-        /// Paint only if syllable has changed
+        /// Guess if picturebox should be paint.
+        /// Paint should be done only if syllable has changed
         /// </summary>
         private void guessInvalidate()
         {          
@@ -1959,10 +1969,7 @@ namespace PicControl
                 return;
 
             try
-            {
-                // Syllabe position vs current time
-                //currentTextPos = findPosition(_currentPosition);          // A priori pas utile, déjà calculé dans guessInvalidate
-               
+            {                               
                 // Create list of rectangles when line changes
                 synchronize(currentTextPos);
 
