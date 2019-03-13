@@ -552,7 +552,7 @@ namespace PicControl
         public void ColorLyric(int songposition)
         {
             _currentPosition = songposition;           
-            guessInvalidate();
+            SetOffset();
         }
 
         /// <summary>
@@ -600,8 +600,9 @@ namespace PicControl
                 // Store syllabes
                 StoreLyricsSyllabes(plLyrics);
 
-                // Position initiale 
+                // Position initiale                 
                 currentTextPos = -1;
+
                 // Create rectangles
                 createListRectangles(0);       
                 if (syllabes != null && syllabes.Count > 0)
@@ -699,12 +700,12 @@ namespace PicControl
             {
                 sx = strLyricSyllabes[i];
                 sx = sx.Replace("]", " ");    // spaces
-                sx = sx.Replace("[", "\r");   // carriage return
+                sx = sx.Replace("[", "/");   // carriage return
 
                 plElement = sx;
                 plTime = ticks + (i + 1) * 10;        // time each 10 ticks
 
-                if (sx.Length > 1 && sx.Substring(sx.Length - 1, 1) == "\r")
+                if (sx.Length > 1 && sx.Substring(sx.Length - 1, 1) == "/")
                 {
                     // chaine Fini par \r
                     string reste = sx.Substring(0, sx.Length - 1);
@@ -714,13 +715,13 @@ namespace PicControl
                     plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
 
                     plType =  plLyric.Types.LineFeed;
-                    plElement = "\r";
+                    plElement = "/";
                     plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
 
                 }
                 else
                 {
-                    if (sx == "\r")
+                    if (sx == "/")
                         plType = plLyric.Types.LineFeed;
                     else
                         plType = plLyric.Types.Text;
@@ -738,7 +739,7 @@ namespace PicControl
         {
             _currentPosition = 30;
             currentLine = 1;
-            currentTextPos = 0;
+
 
             txtBackColor = Color.Black;     
             txtContourColor = Color.White;
@@ -773,6 +774,10 @@ namespace PicControl
             List<plLyric> plLyrics = StoreDemoText(tx);
                         
             LoadSong(plLyrics);
+
+            currentTextPos = 2;
+            bHighLight = true;
+
 
             pboxWnd.Invalidate();
         }
@@ -1876,7 +1881,7 @@ namespace PicControl
         /// Guess if picturebox should be paint.
         /// Paint should be done only if syllable has changed
         /// </summary>
-        private void guessInvalidate()
+        private void SetOffset()
         {          
             int ctp = findPosition(_currentPosition);  // index syllabe à chanter
             int newvOffset = 0;
@@ -2007,6 +2012,7 @@ namespace PicControl
             }
             #endregion
         }
+
 
         private void ajustTextAgain()
         {
