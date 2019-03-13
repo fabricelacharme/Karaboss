@@ -231,6 +231,9 @@
   <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
     <value>201, 6</value>
   </data>
+  <data name="mnuFileSaveAsLrcLines.Text" xml:space="preserve">
+    <value>Lignes</value>
+  </data>
   <data name="mnuFileSaveAsLrc.Size" type="System.Drawing.Size, System.Drawing">
     <value>204, 22</value>
   </data>
@@ -309,7 +312,7 @@
   <data name="tabPage1.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="button1.ToolTip" xml:space="preserve">
+  <data name="btnSaveTags.ToolTip" xml:space="preserve">
     <value />
   </data>
   <data name="label15.ToolTip" xml:space="preserve">

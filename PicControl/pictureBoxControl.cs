@@ -1343,7 +1343,7 @@ namespace PicControl
                     
                     if (i > 0 && syllab.posline == 0 && syllab.SylCount == 1)
                     {
-                        //  LRC : 1 ligne = 1 seule syllabe
+                        //  LRC : 1 ligne = 1 seule syllabe                        
                         bHighLight = true;
                         return i - 1;
                     }
@@ -1434,13 +1434,13 @@ namespace PicControl
                     }                    
                     else if (syllab.pos == currentTextPos)
                     {
-                        
-                        // Surbrillance normale                            
+
+                        // Surbrillance normale   
                         if (bHighLight)
-                            drawSyllabe(txtHighlightColor, syllab,y0, e);                       // surbrillance                                                        
+                            drawSyllabe(txtHighlightColor, syllab, y0, e);                       // surbrillance
                         else
                             drawSyllabe(txtNextColor, syllab, y0, e);
-
+                        
 
                         #region EndOfLine & calculations
 

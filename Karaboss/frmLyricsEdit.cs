@@ -1075,7 +1075,7 @@ namespace Karaboss
             dur = Min * 60;
             int Sec = Convert.ToInt32(sec);
             dur += Sec;
-            int Cent = Convert.ToInt32(cent);
+            float Cent = Convert.ToInt32(cent);
             dur += Cent / 100;
 
             ti = Convert.ToInt32(_ppqn * dur * 1000000 / _tempo);
@@ -1088,7 +1088,7 @@ namespace Karaboss
         /// Save lyrics to lrc format, syllabe by syllabe
         /// </summary>
         /// <param name="FileName"></param>
-        private void SaveLRCParcels(string File, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
+        private void SaveLRCSyllabes(string File, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
         {
             string sTime = string.Empty;
             string sLyric = string.Empty;
@@ -1276,12 +1276,13 @@ namespace Karaboss
             SaveAsFileProc();
         }
 
+       
         /// <summary>
-        /// Save lyrics to .lrc format
+        /// Save lyrics to text file .lrc format - line by line
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void mnuFileSaveAsLrc_Click(object sender, EventArgs e)
+        private void mnuFileSaveAsLrcLines_Click(object sender, EventArgs e)
         {
             #region select filename
             string fName = "New.lrc";
@@ -1367,11 +1368,103 @@ namespace Karaboss
                 Tag_Artist = split[0].Trim();
                 Tag_Title = split[1].Trim();
             }
+           
+            SaveLRCLines(FileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);           
+        }
 
-            if (bLRCType == "Lines")
-                SaveLRCLines(FileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+        /// <summary>
+        /// Save lyrics to text file .lrc format - syllabe by syllabe
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuFileSaveAsLrcSyllabes_Click(object sender, EventArgs e)
+        {
+            #region select filename
+            string fName = "New.lrc";
+            string fPath = Path.GetDirectoryName(MIDIfileName);
+
+            string fullName = string.Empty;
+            string defName = string.Empty;
+
+            #region search name
+            if (fPath == null || fPath == "")
+            {
+                if (Directory.Exists(CreateNewMidiFile.DefaultDirectory))
+                    fPath = CreateNewMidiFile.DefaultDirectory;
+                else
+                    fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            }
             else
-                SaveLRCParcels(FileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+            {
+                fName = Path.GetFileName(MIDIfileName);
+            }
+
+            string defExt = ".lrc";         // Extension
+            fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
+            string inifName = fName + defExt;                            // Original name with extension
+            defName = fName;                                    // Proposed name for dialog box
+
+            fullName = fPath + "\\" + inifName;
+
+            if (File.Exists(fullName) == true)
+            {
+                // Remove all (1) (2) etc..
+                string pattern = @"[(\d)]";
+                string replace = @"";
+                inifName = Regex.Replace(fName, pattern, replace);
+
+                int i = 1;
+                string addName = "(" + i.ToString() + ")";
+                defName = inifName + addName + defExt;
+                fullName = fPath + "\\" + defName;
+
+                while (File.Exists(fullName) == true)
+                {
+                    i++;
+                    defName = inifName + "(" + i.ToString() + ")" + defExt;
+                    fullName = fPath + "\\" + defName;
+                }
+            }
+
+            #endregion search name                   
+
+            string defFilter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
+
+            saveMidiFileDialog.Title = "Save to LRC format";
+            saveMidiFileDialog.Filter = defFilter;
+            saveMidiFileDialog.DefaultExt = defExt;
+            saveMidiFileDialog.InitialDirectory = @fPath;
+            saveMidiFileDialog.FileName = defName;
+
+            if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            #endregion
+
+            string Tag_Title = string.Empty;
+            string Tag_Artist = string.Empty;
+            string Tag_Album = string.Empty;
+            string Tag_Lang = string.Empty;
+            string Tag_By = string.Empty;
+            string Tag_DPlus = string.Empty;
+
+            string FileName = saveMidiFileDialog.FileName;
+            string bLRCType = "Lines";
+
+            // Search Title & Artist
+            string SingleName = Path.GetFileNameWithoutExtension(FileName);
+            string[] split = SingleName.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split.Length == 1)
+            {
+                Tag_Title = split[0].Trim();
+            }
+            else if (split.Length == 2)
+            {
+                Tag_Artist = split[0].Trim();
+                Tag_Title = split[1].Trim();
+            }
+            
+            SaveLRCSyllabes(FileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
         }
 
 
@@ -2500,8 +2593,9 @@ namespace Karaboss
             track.Insert(currentTick, mtMsg);
         }
 
+
         #endregion
 
-     
+    
     }
 }
