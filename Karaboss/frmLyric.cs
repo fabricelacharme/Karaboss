@@ -454,8 +454,11 @@ namespace Karaboss
                 pcLyrics.Add(pcL);
             }
 
-
+            // Load song
             pBox.LoadSong(pcLyrics);
+            
+            //Initial position
+            pBox.CurrentTextPos = -1;
            
         }
 
@@ -498,7 +501,7 @@ namespace Karaboss
             // déclencheur : timer_2
             // IMPERATIF : calculer ici la position de la syllabe, utilisée pour l'animation des balles
             // drivé par timer_2 de frmplayer            
-            currentTextPos = pBox.textPos;
+            currentTextPos = pBox.CurrentTextPos;
             pBox.ColorLyric(songposition);
         }
 

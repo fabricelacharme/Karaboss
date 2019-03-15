@@ -57,7 +57,8 @@ namespace Karaboss
          * 3 - Note     Note value
          * 4 - Text     text        
          * 
-         * 
+         * Line break is '/'
+         * Paragraph is '\'
          * 
          */
        
@@ -158,7 +159,9 @@ namespace Karaboss
             ResizeMe();
         }
 
-
+        /// <summary>
+        /// Display tags
+        /// </summary>
         private void DisplayTags()
         {
             string cr = Environment.NewLine;

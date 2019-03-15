@@ -169,11 +169,15 @@ namespace PicControl
             set { _beatDuration = value; }
         }
 
-        public int currentTextPos;        
-        public int textPos 
+        public int _currentTextPos;        
+        public int CurrentTextPos 
         {
             get
-            { return currentTextPos; }
+            { return _currentTextPos; }
+            set
+            {
+                _currentTextPos = value;
+            }
         }                     
 
         /// <summary>
@@ -277,7 +281,8 @@ namespace PicControl
         }
 
         #endregion Textcolor       
-        
+
+        #region Text others
 
         /// <summary>
         /// Background color
@@ -311,6 +316,7 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
+        #endregion
 
         /// <summary>
         /// SlideShow directory
@@ -566,7 +572,7 @@ namespace PicControl
             nextStartOfLineTime = 0;
 
             _currentPosition = 0;
-            currentTextPos = -1;
+            _currentTextPos = -1;
             pboxWnd.Invalidate();
         }
 
@@ -574,7 +580,7 @@ namespace PicControl
         /// Load text of song
         /// </summary>
         /// <param name="toto"></param>
-        public void LoadSong(List<plLyric> plLyrics)
+        public void LoadSong(List<plLyric> plLyrics, bool bDemoMode = false)
         {
             string lyrics = string.Empty;
             m_wait = false;
@@ -600,14 +606,25 @@ namespace PicControl
                 // Store syllabes
                 StoreLyricsSyllabes(plLyrics);
 
-                // Position initiale                 
-                currentTextPos = -1;
+
+                if (bDemoMode)
+                {
+                    bHighLight = true;
+
+                }
+                else
+                {
+                    bHighLight = false;
+                    // Position initiale                 
+                    _currentTextPos = -1;
+                }
 
                 // Create rectangles
                 createListRectangles(0);       
                 if (syllabes != null && syllabes.Count > 0)
                     createListNextRectangles(syllabes[0].last + 1);
-            }  
+            } 
+                     
         }
 
         #endregion methods
@@ -629,32 +646,37 @@ namespace PicControl
         #endregion SlideShow functions
 
 
+        #region demo, wait
+
         /// <summary>
         /// Count Down: decreasing numbers to wait for next song to start 
         /// </summary>
         /// <param name="sec">Count down max </param>
         public void LoadWaitSong(int sec)
-        {
-            vOffset = 0;
-            nextStartOfLineTime = 0;
-
+        {           
             string tx = string.Empty;
 
             // |10|9|8|7|6|5|4|3|2|1|0|
             //tx = "|";           
             for (int i = sec; i >= 0; i--)
             {
-                tx += i.ToString() + "|";
+                tx += i.ToString() + "/";
             }
-            tx += "|";
+            tx += "/";
 
             List<plLyric> plLyrics = StoreDemoText(tx);
             
             _txtNbLines = 1;
             dirSlideShow = null;
             SetBackground(null);
+
             LoadSong(plLyrics);
-            
+
+            // Initial position
+            _currentTextPos = -1;
+            vOffset = 0;
+            nextStartOfLineTime = 0;
+
             m_wait = true;
         }
 
@@ -672,15 +694,15 @@ namespace PicControl
         private List<plLyric> StoreDemoText(string tx, int ticks = 0)
         {
             // replace spaces and carriage return 
-            // tata toto|titi tutu devient
-            // tata] toto[ titi] tutu devient
+            // tata toto/titi tutu devient
+            // tata¼ toto/ titi¼ tutu¼ devient
             // tata], toto[, titi], tutu
 
             // protect spaces, replaced by ']' + space
-            string S = tx.Replace(" ", "] ");
+            string S = tx.Replace(" ", "¼ ");
             
             // '|' = Carriage return, replaced by '[' + space
-            S = S.Replace("|", "[ ");
+            S = S.Replace("/", "/ ");
 
             // Split syllabes by spaces
             string[] strLyricSyllabes = S.Split(new Char[] { ' ' });
@@ -699,8 +721,8 @@ namespace PicControl
             for (int i = 0; i < strLyricSyllabes.Length; i++)
             {
                 sx = strLyricSyllabes[i];
-                sx = sx.Replace("]", " ");    // spaces
-                sx = sx.Replace("[", "/");   // carriage return
+                sx = sx.Replace("¼", " ");    // spaces
+                //sx = sx.Replace("[", "/");   // carriage return
 
                 plElement = sx;
                 plTime = ticks + (i + 1) * 10;        // time each 10 ticks
@@ -736,11 +758,7 @@ namespace PicControl
         /// Set default values for demonstration purpose
         /// </summary>
         private void SetDefaultValues()
-        {
-            _currentPosition = 30;
-            currentLine = 1;
-
-
+        {           
             txtBackColor = Color.Black;     
             txtContourColor = Color.White;
             txtNextColor = Color.White;
@@ -765,18 +783,27 @@ namespace PicControl
             pboxWnd.SizeMode = PictureBoxSizeMode.Zoom;
 
             // Default text
-            string tx = "Lorem ipsum dolor sit amet,|";
-            tx += "consectetur adipisicing elit,|";
-            tx += "sed do eiusmod tempor incididunt|";
-            tx += "ut labore et dolore magna aliqua.|";
-            tx += "Ut enim ad minim veniam,";
+            string tx = "Lorem ipsum dolor sit amet,/";
+            tx += "consectetur adipisicing elit,/";
+            tx += "sed do eiusmod tempor incididunt/";
+            tx += "ut labore et dolore magna aliqua./";
+            tx += "Ut enim ad minim veniam,/";
+            tx += "quis nostrud exercitation ullamco/";
+            tx += "laboris nisi ut aliquip/";
+            tx += "ex ea commodo consequat./";
+            tx += "Duis aute irure dolor in reprehenderit/";
+            tx += "in voluptate velit esse cillum dolore/";
+            tx += "eu fugiat nulla pariatur.";
 
             List<plLyric> plLyrics = StoreDemoText(tx);
                         
-            LoadSong(plLyrics);
+            LoadSong(plLyrics, true);
 
-            currentTextPos = 2;
-            bHighLight = true;
+            // Initial conditions
+            _currentPosition = 30;
+            currentLine = 1;
+            _currentTextPos = 2;
+            
 
 
             pboxWnd.Invalidate();
@@ -787,15 +814,19 @@ namespace PicControl
         /// </summary>
         /// <param name="tx"></param>
         public void DisplayText(string tx, int ticks = 0)
-        {
-            _currentPosition = 0;
-            currentLine = 1;
-            currentTextPos = 0;
-            
+        {            
             List<plLyric> plLyrics = StoreDemoText(tx, ticks);
             LoadSong(plLyrics);
+
+            // Initial position
+            _currentPosition = 0;
+            currentLine = 1;
+            _currentTextPos = 0;
+
             pboxWnd.Invalidate();
         }
+
+        #endregion demo wait
 
 
         #region Text
@@ -821,8 +852,8 @@ namespace PicControl
 
             string lyr = string.Empty;
 
-            lyr = ly.Replace("\\", "¼");    // '\' linefeed
-            lyr = lyr.Replace("/", "¼");     // '/' paragraph
+            lyr = ly.Replace("\\", "¼");    // '\' Paragraph
+            lyr = lyr.Replace("/", "¼");     // '/' Linefeed, line break
 
             //lyr = lyr.Replace("\r\n", "¼");
             //lyr = lyr.Replace("\r", "¼");
@@ -1334,8 +1365,8 @@ namespace PicControl
             int x0 = 0;
 
             // optimisation : partir de la dernière position connue si le temps de celle-ci est inférieur au temps actuel
-            if (currentTextPos > 0 && syllabes[currentTextPos].time < itime)
-                x0 = currentTextPos - 1;
+            if (_currentTextPos > 0 && syllabes[_currentTextPos].time < itime)
+                x0 = _currentTextPos - 1;
 
             for (int i = x0; i < syllabes.Count; i++)
             {
@@ -1420,8 +1451,8 @@ namespace PicControl
             int i;
             syllabe syllab;
 
-            if (currentTextPos >= 0)
-                x0 = currentTextPos - syllabes[currentTextPos].posline;
+            if (_currentTextPos >= 0)
+                x0 = _currentTextPos - syllabes[_currentTextPos].posline;
                         
             for (i = x0; i < syllabes.Count; i++)            
             {
@@ -1432,12 +1463,12 @@ namespace PicControl
                 if (syllab.line == currentLine)
                 {
                     
-                    if (syllabes[i].pos < currentTextPos)
+                    if (syllabes[i].pos < _currentTextPos)
                     {
                         // syllabes avant celle active
                         drawSyllabe(txtBeforeColor, syllab, y0, e);                            // déjà chanté
                     }                    
-                    else if (syllab.pos == currentTextPos)
+                    else if (syllab.pos == _currentTextPos)
                     {
 
                         // Surbrillance normale   
@@ -1619,8 +1650,8 @@ namespace PicControl
             
             if (_bTextBackGround && syllabes != null)
             {
-                if (currentTextPos >= 0)
-                    x0 = currentTextPos - syllabes[currentTextPos].posline;
+                if (_currentTextPos >= 0)
+                    x0 = _currentTextPos - syllabes[_currentTextPos].posline;
 
 
                 for (int k = 0; k < _txtNbLines; k++)
@@ -1875,7 +1906,7 @@ namespace PicControl
         #endregion backgroundworker
 
 
-        #region paint resize
+        #region paint resize terminate
 
         /// <summary>
         /// Guess if picturebox should be paint.
@@ -1899,14 +1930,14 @@ namespace PicControl
             }           
 
             // If syllabe change => redraw
-            if (ctp != currentTextPos)
+            if (ctp != _currentTextPos)
             {  
                 if (bEndOfLine)
                 {
                     bEndOfLine = false;                    
                     vOffset = 0;
                 }
-                currentTextPos = ctp;                
+                _currentTextPos = ctp;                
             }
            
             // Redraw the display
@@ -1976,7 +2007,7 @@ namespace PicControl
             try
             {                               
                 // Create list of rectangles when line changes
-                synchronize(currentTextPos);
+                synchronize(_currentTextPos);
 
                 // Antialiasing
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -2021,7 +2052,7 @@ namespace PicControl
                 int pos = 0;
                 AjustText(lineMax);
 
-                if (currentTextPos < 0)
+                if (_currentTextPos < 0)
                 {
                     // Rectangles of current line
                     createListRectangles(0);
@@ -2036,11 +2067,11 @@ namespace PicControl
                 else
                 {
                     // Rectangles of current line
-                    pos = currentTextPos - syllabes[currentTextPos].posline;
+                    pos = _currentTextPos - syllabes[_currentTextPos].posline;
                     createListRectangles(pos);
                     
                     // Rectangles of next line
-                    pos = syllabes[currentTextPos].last + 1;
+                    pos = syllabes[_currentTextPos].last + 1;
                     // Rectangles for other lines 
                     createListNextRectangles(pos);
                 }
@@ -2091,13 +2122,11 @@ namespace PicControl
             }
             #endregion
 
-        }
+        }              
 
-       
-
-        #endregion paint resize
-
-
+        /// <summary>
+        /// Terminate
+        /// </summary>
         public void Terminate()
         {
             m_Cancel = true;
@@ -2116,7 +2145,7 @@ namespace PicControl
             }
             
         }
-       
-    
+
+        #endregion paint resize
     }
 }
