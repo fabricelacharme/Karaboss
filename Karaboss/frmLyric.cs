@@ -137,6 +137,18 @@ namespace Karaboss
                 pBox.TxtBeforeColor = _txtBeforeColor;
             }
         }
+        // Contour
+        private bool _bColorContour = true;
+        public bool bColorContour
+        {
+            get
+            { return _bColorContour; }
+            set
+            {
+                _bColorContour = value;
+                pBox.bColorContour = _bColorContour;
+            }
+        }
         // Text contour
         private Color _txtContourColor;
         public Color TxtContourColor { get {return _txtContourColor; } set { _txtContourColor = value;
@@ -395,6 +407,7 @@ namespace Karaboss
                 TxtNextColor = Properties.Settings.Default.TxtNextColor;
                 TxtHighlightColor = Properties.Settings.Default.TxtHighlightColor;
                 TxtBeforeColor = Properties.Settings.Default.TxtBeforeColor;
+                bColorContour = Properties.Settings.Default.bColorContour;
                 TxtContourColor = Properties.Settings.Default.TxtContourColor;
 
                 // Number of Lines to display

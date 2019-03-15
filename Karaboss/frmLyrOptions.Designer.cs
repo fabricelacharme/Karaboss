@@ -67,6 +67,7 @@
             this.cbOptionsTextDisplay = new System.Windows.Forms.ComboBox();
             this.pBox = new PicControl.pictureBoxControl();
             this.chkTextBackground = new System.Windows.Forms.CheckBox();
+            this.chkContour = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -333,6 +334,7 @@
             this.pBox.BackColor = System.Drawing.Color.Black;
             this.pBox.BeatDuration = 0;
             this.pBox.bTextBackGround = true;
+            this.pBox.CurrentTextPos = 2;
             this.pBox.CurrentTime = 30;
             this.pBox.DirSlideShow = null;
             this.pBox.FreqDirSlideShow = 0;
@@ -366,10 +368,20 @@
             this.chkTextBackground.UseVisualStyleBackColor = true;
             this.chkTextBackground.CheckedChanged += new System.EventHandler(this.chkTextBackground_CheckedChanged);
             // 
+            // chkContour
+            // 
+            resources.ApplyResources(this.chkContour, "chkContour");
+            this.chkContour.Checked = true;
+            this.chkContour.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkContour.Name = "chkContour";
+            this.chkContour.UseVisualStyleBackColor = true;
+            this.chkContour.CheckedChanged += new System.EventHandler(this.chkContour_CheckedChanged);
+            // 
             // frmLyrOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkContour);
             this.Controls.Add(this.chkTextBackground);
             this.Controls.Add(this.cbOptionsTextDisplay);
             this.Controls.Add(this.pnlBalls);
@@ -465,5 +477,6 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.ComboBox cbOptionsTextDisplay;
         private System.Windows.Forms.CheckBox chkTextBackground;
+        private System.Windows.Forms.CheckBox chkContour;
     }
 }

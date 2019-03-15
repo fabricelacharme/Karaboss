@@ -55,9 +55,10 @@ namespace Karaboss
         
         // Background color
         private Color TxtBackColor;
-       
-        
+
+
         // Contour color
+        private bool bColorContour = true;
         private Color TxtContourColor;
 
         // Number of lines to display
@@ -101,7 +102,10 @@ namespace Karaboss
                 TxtNextColor = Properties.Settings.Default.TxtNextColor;
                 TxtHighlightColor = Properties.Settings.Default.TxtHighlightColor;
                 TxtBeforeColor = Properties.Settings.Default.TxtBeforeColor;
+
+                bColorContour = Properties.Settings.Default.bColorContour;
                 TxtContourColor = Properties.Settings.Default.TxtContourColor;
+                chkContour.Checked = bColorContour;
 
                 // Backgroud color beside lyrics to help to read when an image is displayed
                 chkTextBackground.Checked = Properties.Settings.Default.bLyricsBackGround;
@@ -197,6 +201,7 @@ namespace Karaboss
                 TxtBeforeColor = Color.Cyan;
                 TxtContourColor = Color.DarkTurquoise;
                 NbLines = 3;
+                bColorContour = true;
 
                 //dirSlideShow = Application.StartupPath + "\\slideshow";
                 dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName) + "\\slideshow";
@@ -224,6 +229,9 @@ namespace Karaboss
                 Properties.Settings.Default.TxtNextColor = TxtNextColor;
                 Properties.Settings.Default.TxtHighlightColor = TxtHighlightColor;
                 Properties.Settings.Default.TxtBeforeColor = TxtBeforeColor;
+
+                // Contour
+                Properties.Settings.Default.bColorContour = bColorContour;
                 Properties.Settings.Default.TxtContourColor = TxtContourColor;
 
                 Properties.Settings.Default.TxtNbLines = NbLines;
@@ -288,7 +296,10 @@ namespace Karaboss
                 // buttons
                 pictBackColor.BackColor = TxtBackColor;
                 pictBefore.BackColor = TxtBeforeColor;
+
+                chkContour.Checked = bColorContour;
                 pictContour.BackColor = TxtContourColor;
+
                 pictHighlight.BackColor = TxtHighlightColor;
                 pictNext.BackColor = TxtNextColor;
 
@@ -302,7 +313,9 @@ namespace Karaboss
 
                 pBox.TxtBackColor = TxtBackColor;
 
+                pBox.bColorContour = bColorContour;
                 pBox.TxtContourColor = TxtContourColor;
+
                 pBox.TxtNextColor = TxtNextColor;
                 pBox.TxtHighlightColor = TxtHighlightColor;
                 pBox.TxtBeforeColor = TxtBeforeColor;
@@ -327,6 +340,7 @@ namespace Karaboss
             
             pBox.TxtBackColor = TxtBackColor;
 
+            pBox.bColorContour = bColorContour;
             pBox.TxtContourColor = TxtContourColor;
             pBox.TxtNextColor = TxtNextColor;
             pBox.TxtHighlightColor = TxtHighlightColor;
@@ -348,6 +362,11 @@ namespace Karaboss
 
         #region select colors
 
+        /// <summary>
+        /// Dialog get color
+        /// </summary>
+        /// <param name="defColor"></param>
+        /// <returns></returns>
         private Color DlgGetColor(Color defColor)
         {
             ColorDialog MyDialog = new ColorDialog()
@@ -439,6 +458,17 @@ namespace Karaboss
             ApplyNewColors();            
         }
 
+        /// <summary>
+        /// Draw contour or not
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkContour_CheckedChanged(object sender, EventArgs e)
+        {
+            bColorContour = chkContour.Checked;
+            ApplyNewColors();
+        }
+
         #endregion select colors
 
 
@@ -514,6 +544,8 @@ namespace Karaboss
                 frmLyric.TxtNextColor = TxtNextColor;
                 frmLyric.TxtHighlightColor = TxtHighlightColor;
                 frmLyric.TxtBeforeColor = TxtBeforeColor;
+
+                frmLyric.bColorContour = bColorContour;
                 frmLyric.TxtContourColor = TxtContourColor;
 
                 NbLines = Convert.ToInt32(UpDownNbLines.Value);
@@ -788,8 +820,9 @@ namespace Karaboss
 
 
 
+
         #endregion
 
-       
+      
     }
 }

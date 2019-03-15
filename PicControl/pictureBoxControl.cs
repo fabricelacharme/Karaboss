@@ -267,7 +267,19 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
-        
+
+        private bool _bColorContour = true;
+        public bool bColorContour
+        {
+            get
+            { return _bColorContour; }
+            set
+            {
+                _bColorContour = value;
+                pboxWnd.Invalidate();
+            }
+        }
+
         // Text contour
         private Color txtContourColor;
         public Color TxtContourColor {
@@ -1573,7 +1585,8 @@ namespace PicControl
                 #region Draw text of syllabe
                 path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
                 e.Graphics.FillPath(new SolidBrush(clr), path);
-                e.Graphics.DrawPath(new Pen(txtContourColor), path); 
+                if (_bColorContour)
+                    e.Graphics.DrawPath(new Pen(txtContourColor), path); 
 
                 path.Dispose();
                 #endregion
@@ -1708,7 +1721,8 @@ namespace PicControl
                         var path = new GraphicsPath();
                         path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point(x0, y0 + i * offset), sf);
                         e.Graphics.FillPath(new SolidBrush(txtNextColor), path);
-                        e.Graphics.DrawPath(new Pen(txtContourColor), path);
+                        if (_bColorContour)
+                            e.Graphics.DrawPath(new Pen(txtContourColor), path);
                         path.Dispose();
                     }
                 }
@@ -1724,7 +1738,8 @@ namespace PicControl
                     var path = new GraphicsPath();
                     path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point(x0, y0 + offset), sf);
                     e.Graphics.FillPath(new SolidBrush(txtNextColor), path);
-                    e.Graphics.DrawPath(new Pen(txtContourColor), path);
+                    if (_bColorContour)
+                        e.Graphics.DrawPath(new Pen(txtContourColor), path);
                     path.Dispose();
 
                 }
