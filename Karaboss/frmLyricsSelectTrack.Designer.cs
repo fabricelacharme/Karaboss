@@ -41,22 +41,22 @@
             // 
             // cbSelectTrack
             // 
-            this.cbSelectTrack.FormattingEnabled = true;
             resources.ApplyResources(this.cbSelectTrack, "cbSelectTrack");
+            this.cbSelectTrack.FormattingEnabled = true;
             this.cbSelectTrack.Name = "cbSelectTrack";
             // 
             // btnOk
             // 
-            this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnOk, "btnOk");
+            this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOk.Name = "btnOk";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.BtnOk_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             resources.ApplyResources(this.btnCancel, "btnCancel");
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.BtnCancel_Click);
@@ -90,7 +90,7 @@
             this.optLyricFormat.Name = "optLyricFormat";
             this.optLyricFormat.UseVisualStyleBackColor = true;
             // 
-            // frmSelectTrack
+            // frmLyricsSelectTrack
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -105,7 +105,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmSelectTrack";
+            this.Name = "frmLyricsSelectTrack";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmSelectTrack_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();

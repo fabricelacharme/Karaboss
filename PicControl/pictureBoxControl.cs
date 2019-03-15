@@ -69,14 +69,22 @@ namespace PicControl
 
         private string strCurrentImage; // current image to insure that random will provide a different one
         private int rndIter = 0;
-        
 
+        
         public class plLyric
         {
-            public string Type { get; set; }
+            public enum Types
+            {
+                Text = 1,
+                LineFeed = 2,
+                Paragraph = 3,
+            }
+            public Types Type { get; set; }
             public string Element { get; set; }
-            public int Time { get; set; }
+            public int TicksOn { get; set; }
+            public int TicksOff { get; set; }            
         }
+        
 
         #region properties
 
@@ -161,11 +169,15 @@ namespace PicControl
             set { _beatDuration = value; }
         }
 
-        public int currentTextPos;        
-        public int textPos 
+        public int _currentTextPos;        
+        public int CurrentTextPos 
         {
             get
-            { return currentTextPos; }
+            { return _currentTextPos; }
+            set
+            {
+                _currentTextPos = value;
+            }
         }                     
 
         /// <summary>
@@ -255,7 +267,19 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
-        
+
+        private bool _bColorContour = true;
+        public bool bColorContour
+        {
+            get
+            { return _bColorContour; }
+            set
+            {
+                _bColorContour = value;
+                pboxWnd.Invalidate();
+            }
+        }
+
         // Text contour
         private Color txtContourColor;
         public Color TxtContourColor {
@@ -269,7 +293,8 @@ namespace PicControl
         }
 
         #endregion Textcolor       
-        
+
+        #region Text others
 
         /// <summary>
         /// Background color
@@ -303,6 +328,7 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
+        #endregion
 
         /// <summary>
         /// SlideShow directory
@@ -467,56 +493,63 @@ namespace PicControl
         /// <param name="dirImages"></param>
         public void SetBackground(string dirImages)
         {
-            UpdateTimerEnable(false);
-
-            m_Cancel = true;
-            m_Restart = true;
-
-            m_CurrentImage = null;
-            strCurrentImage = string.Empty;
-            rndIter = 0;
-
-            pboxWnd.Image = null;
-            pboxWnd.Invalidate();
-            m_ImageFilePaths.Clear();
-
-            if (dirImages == null)
+            try
             {
-                pboxWnd.BackColor = Color.Black;
+                UpdateTimerEnable(false);
+
+                m_Cancel = true;
+                m_Restart = true;
+
+                m_CurrentImage = null;
+                strCurrentImage = string.Empty;
+                rndIter = 0;
+
+                pboxWnd.Image = null;
+                pboxWnd.Invalidate();
+                m_ImageFilePaths.Clear();
+
+                if (dirImages == null)
+                {
+                    pboxWnd.BackColor = Color.Black;
+                }
+                else if (Directory.Exists(dirImages))
+                {
+                    int C = 0;
+
+                    if (_optionbackground == "Diaporama")
+                    {
+                        LoadImageList(dirImages);
+                        C = m_ImageFilePaths.Count;
+                    }
+
+                    switch (C)
+                    {
+                        case 0:
+                            // No image, just background color
+                            m_Cancel = true;
+                            break;
+                        case 1:
+                            // Single image
+                            m_Cancel = true;
+                            pboxWnd.Image = Image.FromFile(m_ImageFilePaths[0]);
+                            break;
+                        default:
+                            // Slideshow => backgroundworker
+
+                            //m_Cancel = true;
+                            m_Cancel = false;
+
+                            // Initialize backgroundworker
+                            InitBackGroundWorker();
+                            random = new Random();
+                            Start();
+                            break;
+                    }
+                }
             }
-            else if (Directory.Exists(dirImages))
-            {                
-                int C = 0;
-
-                if (_optionbackground == "Diaporama")
-                {
-                    LoadImageList(dirImages);
-                    C = m_ImageFilePaths.Count;
-                }
-
-                switch (C)
-                {
-                    case 0:
-                        // No image, just background color
-                        m_Cancel = true;
-                        break;
-                    case 1:
-                        // Single image
-                        m_Cancel = true;
-                        pboxWnd.Image = Image.FromFile(m_ImageFilePaths[0]);
-                        break;
-                    default:
-                        // Slideshow => backgroundworker
-
-                        //m_Cancel = true;
-                        m_Cancel = false;
-
-                        // Initialize backgroundworker
-                        InitBackGroundWorker();
-                        random = new Random();
-                        Start();
-                        break;
-                }
+            catch (Exception e)
+            {
+                Console.Write("Error: " + e.Message);
             }
 
         }
@@ -537,7 +570,7 @@ namespace PicControl
         public void ColorLyric(int songposition)
         {
             _currentPosition = songposition;           
-            guessInvalidate();
+            SetOffset();
         }
 
         /// <summary>
@@ -551,7 +584,7 @@ namespace PicControl
             nextStartOfLineTime = 0;
 
             _currentPosition = 0;
-            currentTextPos = -1;
+            _currentTextPos = -1;
             pboxWnd.Invalidate();
         }
 
@@ -559,7 +592,7 @@ namespace PicControl
         /// Load text of song
         /// </summary>
         /// <param name="toto"></param>
-        public void LoadSong(List<plLyric> plLyrics)
+        public void LoadSong(List<plLyric> plLyrics, bool bDemoMode = false)
         {
             string lyrics = string.Empty;
             m_wait = false;
@@ -585,13 +618,25 @@ namespace PicControl
                 // Store syllabes
                 StoreLyricsSyllabes(plLyrics);
 
-                // Position initiale 
-                currentTextPos = -1;
+
+                if (bDemoMode)
+                {
+                    bHighLight = true;
+
+                }
+                else
+                {
+                    bHighLight = false;
+                    // Position initiale                 
+                    _currentTextPos = -1;
+                }
+
                 // Create rectangles
                 createListRectangles(0);       
                 if (syllabes != null && syllabes.Count > 0)
                     createListNextRectangles(syllabes[0].last + 1);
-            }  
+            } 
+                     
         }
 
         #endregion methods
@@ -613,32 +658,37 @@ namespace PicControl
         #endregion SlideShow functions
 
 
+        #region demo, wait
+
         /// <summary>
         /// Count Down: decreasing numbers to wait for next song to start 
         /// </summary>
         /// <param name="sec">Count down max </param>
         public void LoadWaitSong(int sec)
-        {
-            vOffset = 0;
-            nextStartOfLineTime = 0;
-
+        {           
             string tx = string.Empty;
 
             // |10|9|8|7|6|5|4|3|2|1|0|
             //tx = "|";           
             for (int i = sec; i >= 0; i--)
             {
-                tx += i.ToString() + "|";
+                tx += i.ToString() + "/";
             }
-            tx += "|";
+            tx += "/";
 
             List<plLyric> plLyrics = StoreDemoText(tx);
             
             _txtNbLines = 1;
             dirSlideShow = null;
             SetBackground(null);
+
             LoadSong(plLyrics);
-            
+
+            // Initial position
+            _currentTextPos = -1;
+            vOffset = 0;
+            nextStartOfLineTime = 0;
+
             m_wait = true;
         }
 
@@ -656,15 +706,15 @@ namespace PicControl
         private List<plLyric> StoreDemoText(string tx, int ticks = 0)
         {
             // replace spaces and carriage return 
-            // tata toto|titi tutu devient
-            // tata] toto[ titi] tutu devient
+            // tata toto/titi tutu devient
+            // tata¼ toto/ titi¼ tutu¼ devient
             // tata], toto[, titi], tutu
 
             // protect spaces, replaced by ']' + space
-            string S = tx.Replace(" ", "] ");
+            string S = tx.Replace(" ", "¼ ");
             
             // '|' = Carriage return, replaced by '[' + space
-            S = S.Replace("|", "[ ");
+            S = S.Replace("/", "/ ");
 
             // Split syllabes by spaces
             string[] strLyricSyllabes = S.Split(new Char[] { ' ' });
@@ -678,39 +728,39 @@ namespace PicControl
             string sx = string.Empty;
             string plElement = string.Empty;
             int plTime = 0;
-            string plType = string.Empty;
+            plLyric.Types plType = plLyric.Types.Text;
 
             for (int i = 0; i < strLyricSyllabes.Length; i++)
             {
                 sx = strLyricSyllabes[i];
-                sx = sx.Replace("]", " ");    // spaces
-                sx = sx.Replace("[", "\r");   // carriage return
+                sx = sx.Replace("¼", " ");    // spaces
+                //sx = sx.Replace("[", "/");   // carriage return
 
                 plElement = sx;
                 plTime = ticks + (i + 1) * 10;        // time each 10 ticks
 
-                if (sx.Length > 1 && sx.Substring(sx.Length - 1, 1) == "\r")
+                if (sx.Length > 1 && sx.Substring(sx.Length - 1, 1) == "/")
                 {
                     // chaine Fini par \r
                     string reste = sx.Substring(0, sx.Length - 1);
                     
-                    plType = "text";
+                    plType = plLyric.Types.Text;
                     plElement = reste;
-                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, Time = plTime });
+                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
 
-                    plType = "cr";
-                    plElement = "\r";
-                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, Time = plTime });
+                    plType =  plLyric.Types.LineFeed;
+                    plElement = "/";
+                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
 
                 }
                 else
                 {
-                    if (sx == "\r")
-                        plType = "cr";
+                    if (sx == "/")
+                        plType = plLyric.Types.LineFeed;
                     else
-                        plType = "text";
+                        plType = plLyric.Types.Text;
                     
-                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, Time = plTime });
+                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
                 }                
             }
             return plLyrics;
@@ -720,11 +770,7 @@ namespace PicControl
         /// Set default values for demonstration purpose
         /// </summary>
         private void SetDefaultValues()
-        {
-            _currentPosition = 30;
-            currentLine = 1;
-            currentTextPos = 0;
-
+        {           
             txtBackColor = Color.Black;     
             txtContourColor = Color.White;
             txtNextColor = Color.White;
@@ -749,15 +795,28 @@ namespace PicControl
             pboxWnd.SizeMode = PictureBoxSizeMode.Zoom;
 
             // Default text
-            string tx = "Lorem ipsum dolor sit amet,|";
-            tx += "consectetur adipisicing elit,|";
-            tx += "sed do eiusmod tempor incididunt|";
-            tx += "ut labore et dolore magna aliqua.|";
-            tx += "Ut enim ad minim veniam,";
+            string tx = "Lorem ipsum dolor sit amet,/";
+            tx += "consectetur adipisicing elit,/";
+            tx += "sed do eiusmod tempor incididunt/";
+            tx += "ut labore et dolore magna aliqua./";
+            tx += "Ut enim ad minim veniam,/";
+            tx += "quis nostrud exercitation ullamco/";
+            tx += "laboris nisi ut aliquip/";
+            tx += "ex ea commodo consequat./";
+            tx += "Duis aute irure dolor in reprehenderit/";
+            tx += "in voluptate velit esse cillum dolore/";
+            tx += "eu fugiat nulla pariatur.";
 
             List<plLyric> plLyrics = StoreDemoText(tx);
                         
-            LoadSong(plLyrics);
+            LoadSong(plLyrics, true);
+
+            // Initial conditions
+            _currentPosition = 30;
+            currentLine = 1;
+            _currentTextPos = 2;
+            
+
 
             pboxWnd.Invalidate();
         }
@@ -767,15 +826,19 @@ namespace PicControl
         /// </summary>
         /// <param name="tx"></param>
         public void DisplayText(string tx, int ticks = 0)
-        {
-            _currentPosition = 0;
-            currentLine = 1;
-            currentTextPos = 0;
-            
+        {            
             List<plLyric> plLyrics = StoreDemoText(tx, ticks);
             LoadSong(plLyrics);
+
+            // Initial position
+            _currentPosition = 0;
+            currentLine = 1;
+            _currentTextPos = 0;
+
             pboxWnd.Invalidate();
         }
+
+        #endregion demo wait
 
 
         #region Text
@@ -789,11 +852,26 @@ namespace PicControl
             lstLyricsLines = new List<string>();
 
             string tx = string.Empty;
-            string lyr = ly.Replace("\r\n", "¼");
-            lyr = lyr.Replace("\r", "¼");
-            lyr = lyr.Replace("\n", "¼");
 
-            string[] strLyricsLines = lyr.Split(new Char[] { '¼' });  
+            /*
+            * A back slash "\" character marks the end of a line of lyrics, as displayed by a Karaoke viewer/player program.
+            *
+            * A forward slash "/" character marks the end of a "paragraph" of lyrics. 
+            * Some Karaoke viewer / player programs interpret this to mean that the screen should be refreshed starting with the next line of lyrics at the top.
+            *
+            * Dash characters at the end of syllables are removed by the Karaoke viewer/player program, and the syllables are joined together. 
+            */
+
+            string lyr = string.Empty;
+
+            lyr = ly.Replace("\\", "¼");    // '\' Paragraph
+            lyr = lyr.Replace("/", "¼");     // '/' Linefeed, line break
+
+            //lyr = lyr.Replace("\r\n", "¼");
+            //lyr = lyr.Replace("\r", "¼");
+            //lyr = lyr.Replace("\n", "¼");
+
+            string[] strLyricsLines = lyr.Split(new Char[] { '¼' }, StringSplitOptions.RemoveEmptyEntries);  
 
             for (int i = 0; i < strLyricsLines.Length; i++)
             {
@@ -813,7 +891,7 @@ namespace PicControl
         /// Store syllabes in a list, each item being a class called syllabe
         /// </summary>
         /// <param name="plLyrics"></param>
-        private void StoreLyricsSyllabes(List<pictureBoxControl.plLyric> plLyrics)
+        private void StoreLyricsSyllabes(List<plLyric> plLyrics)
         {
             syllabes = new List<syllabe>();
 
@@ -846,7 +924,7 @@ namespace PicControl
                     {
                         tx = plLyrics[ind].Element;
                         tx = tx.Trim();
-                        if (tx != "" && plLyrics[ind].Type != "cr")
+                        if (tx != "" && plLyrics[ind].Type != plLyric.Types.LineFeed && plLyrics[ind].Type != plLyric.Types.Paragraph)
                         {
 
                             // Si toutes les syllabes sont identiques dans la ligne (ex la la la la)
@@ -888,15 +966,15 @@ namespace PicControl
                     {
                         tx = plLyrics[indexSyllabe].Element;
                         string trimtx = tx.Trim();
-                        itime = plLyrics[indexSyllabe].Time;
+                        itime = plLyrics[indexSyllabe].TicksOn;
 
 
-                        if (trimtx != "" && plLyrics[indexSyllabe].Type != "cr")
+                        if (trimtx != "" && plLyrics[indexSyllabe].Type != plLyric.Types.LineFeed && plLyrics[indexSyllabe].Type != plLyric.Types.Paragraph)
                         {
                             pos = strwrkline.IndexOf(trimtx, lastpos);
 
                             if (pos != -1)
-                            {
+                            { 
                                 offset = 0; // Offset de la ligne
                                 lastpos = pos;
 
@@ -1299,8 +1377,8 @@ namespace PicControl
             int x0 = 0;
 
             // optimisation : partir de la dernière position connue si le temps de celle-ci est inférieur au temps actuel
-            if (currentTextPos > 0 && syllabes[currentTextPos].time < itime)
-                x0 = currentTextPos - 1;
+            if (_currentTextPos > 0 && syllabes[_currentTextPos].time < itime)
+                x0 = _currentTextPos - 1;
 
             for (int i = x0; i < syllabes.Count; i++)
             {
@@ -1310,13 +1388,20 @@ namespace PicControl
                 // prend la précédente
                 if (itime < syllab.time)
                 {
-                    // Cas 1 : La première syllabe dont le temps est supérieur au temps courant est située sur la prochaine ligne
-                    // Cela signifie que l'on vient de jouer la dernière syllabe de la ligne.
-                    // Si "fin de ligne" et temps écoulé supérieur à 2 noires
-                    // prendre la première syllabe dont le temps est supérieur au temps courant, soit l'indice "i"
-                    // indiquer également qu'il ne faut pas encore colorer cette syllabe
-                    if (i > 0 && syllab.posline == 0 && itime > syllabes[i - 1].time + 2 * _beatDuration)
+                    
+                    if (i > 0 && syllab.posline == 0 && syllab.SylCount == 1)
                     {
+                        //  LRC : 1 ligne = 1 seule syllabe                        
+                        bHighLight = true;
+                        return i - 1;
+                    }
+                    else if (i > 0 && syllab.posline == 0 && itime > syllabes[i - 1].time + 2 * _beatDuration)
+                    {
+                        // Cas 1 : La première syllabe dont le temps est supérieur au temps courant est située sur la prochaine ligne
+                        // Cela signifie que l'on vient de jouer la dernière syllabe de la ligne.
+                        // Si "fin de ligne" et temps écoulé supérieur à 2 noires
+                        // prendre la première syllabe dont le temps est supérieur au temps courant, soit l'indice "i"
+                        // indiquer également qu'il ne faut pas encore colorer cette syllabe
                         // On force le changement de ligne au bout de 2 temps                       
                         bHighLight = false;   // Ne pas mettre en surbrillance la syllabe tant que son temps n'est pas arrivé
                         return i;                        
@@ -1378,8 +1463,8 @@ namespace PicControl
             int i;
             syllabe syllab;
 
-            if (currentTextPos >= 0)
-                x0 = currentTextPos - syllabes[currentTextPos].posline;
+            if (_currentTextPos >= 0)
+                x0 = _currentTextPos - syllabes[_currentTextPos].posline;
                         
             for (i = x0; i < syllabes.Count; i++)            
             {
@@ -1390,27 +1475,31 @@ namespace PicControl
                 if (syllab.line == currentLine)
                 {
                     
-                    if (syllabes[i].pos < currentTextPos)
+                    if (syllabes[i].pos < _currentTextPos)
                     {
                         // syllabes avant celle active
                         drawSyllabe(txtBeforeColor, syllab, y0, e);                            // déjà chanté
                     }                    
-                    else if (syllab.pos == currentTextPos)
+                    else if (syllab.pos == _currentTextPos)
                     {
-                        
-                        // Surbrillance normale                            
+
+                        // Surbrillance normale   
                         if (bHighLight)
-                            drawSyllabe(txtHighlightColor, syllab,y0, e);                       // surbrillance                                                        
+                            drawSyllabe(txtHighlightColor, syllab, y0, e);                       // surbrillance
                         else
                             drawSyllabe(txtNextColor, syllab, y0, e);
-
+                        
 
                         #region EndOfLine & calculations
 
                         // Calculations are made on active syllabe (celle qui correspond à currentpos !)
 
                         // End of line
-                        if (syllab.posline == syllab.SylCount - 1)
+                        if (syllab.SylCount == 1)
+                        {
+                            bEndOfLine = true;
+                        }
+                        else if (syllab.SylCount > 1 && syllab.posline == syllab.SylCount - 1)
                         {
                             bEndOfLine = true;                           
                         }
@@ -1431,7 +1520,7 @@ namespace PicControl
                                     // Soit le début de la prochaine ligne, soit la fin de la ligne courante
                                     int t1 = syllabes[i + next].time;
                                     int t2 = syllabes[i + next - 1].time + 2 * _beatDuration; // on passe à la ligne au bout de 2 temps
-                                   
+                                                                        
                                     nextStartOfLineTime = t1 < t2 ? t1 : t2;
 
                                     // Duration until next line 
@@ -1496,7 +1585,8 @@ namespace PicControl
                 #region Draw text of syllabe
                 path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
                 e.Graphics.FillPath(new SolidBrush(clr), path);
-                e.Graphics.DrawPath(new Pen(txtContourColor), path); 
+                if (_bColorContour)
+                    e.Graphics.DrawPath(new Pen(txtContourColor), path); 
 
                 path.Dispose();
                 #endregion
@@ -1573,8 +1663,8 @@ namespace PicControl
             
             if (_bTextBackGround && syllabes != null)
             {
-                if (currentTextPos >= 0)
-                    x0 = currentTextPos - syllabes[currentTextPos].posline;
+                if (_currentTextPos >= 0)
+                    x0 = _currentTextPos - syllabes[_currentTextPos].posline;
 
 
                 for (int k = 0; k < _txtNbLines; k++)
@@ -1631,7 +1721,8 @@ namespace PicControl
                         var path = new GraphicsPath();
                         path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point(x0, y0 + i * offset), sf);
                         e.Graphics.FillPath(new SolidBrush(txtNextColor), path);
-                        e.Graphics.DrawPath(new Pen(txtContourColor), path);
+                        if (_bColorContour)
+                            e.Graphics.DrawPath(new Pen(txtContourColor), path);
                         path.Dispose();
                     }
                 }
@@ -1647,7 +1738,8 @@ namespace PicControl
                     var path = new GraphicsPath();
                     path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point(x0, y0 + offset), sf);
                     e.Graphics.FillPath(new SolidBrush(txtNextColor), path);
-                    e.Graphics.DrawPath(new Pen(txtContourColor), path);
+                    if (_bColorContour)
+                        e.Graphics.DrawPath(new Pen(txtContourColor), path);
                     path.Dispose();
 
                 }
@@ -1829,13 +1921,13 @@ namespace PicControl
         #endregion backgroundworker
 
 
-        #region paint resize
+        #region paint resize terminate
 
         /// <summary>
-        /// Guess if picturebox should be paint
-        /// Paint only if syllable has changed
+        /// Guess if picturebox should be paint.
+        /// Paint should be done only if syllable has changed
         /// </summary>
-        private void guessInvalidate()
+        private void SetOffset()
         {          
             int ctp = findPosition(_currentPosition);  // index syllabe à chanter
             int newvOffset = 0;
@@ -1853,14 +1945,14 @@ namespace PicControl
             }           
 
             // If syllabe change => redraw
-            if (ctp != currentTextPos)
+            if (ctp != _currentTextPos)
             {  
                 if (bEndOfLine)
                 {
                     bEndOfLine = false;                    
                     vOffset = 0;
                 }
-                currentTextPos = ctp;                
+                _currentTextPos = ctp;                
             }
            
             // Redraw the display
@@ -1928,12 +2020,9 @@ namespace PicControl
                 return;
 
             try
-            {
-                // Syllabe position vs current time
-                //currentTextPos = findPosition(_currentPosition);          // A priori pas utile, déjà calculé dans guessInvalidate
-               
+            {                               
                 // Create list of rectangles when line changes
-                synchronize(currentTextPos);
+                synchronize(_currentTextPos);
 
                 // Antialiasing
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -1970,6 +2059,7 @@ namespace PicControl
             #endregion
         }
 
+
         private void ajustTextAgain()
         {
             if (lineMax != null && syllabes != null)
@@ -1977,7 +2067,7 @@ namespace PicControl
                 int pos = 0;
                 AjustText(lineMax);
 
-                if (currentTextPos < 0)
+                if (_currentTextPos < 0)
                 {
                     // Rectangles of current line
                     createListRectangles(0);
@@ -1992,11 +2082,11 @@ namespace PicControl
                 else
                 {
                     // Rectangles of current line
-                    pos = currentTextPos - syllabes[currentTextPos].posline;
+                    pos = _currentTextPos - syllabes[_currentTextPos].posline;
                     createListRectangles(pos);
                     
                     // Rectangles of next line
-                    pos = syllabes[currentTextPos].last + 1;
+                    pos = syllabes[_currentTextPos].last + 1;
                     // Rectangles for other lines 
                     createListNextRectangles(pos);
                 }
@@ -2047,13 +2137,11 @@ namespace PicControl
             }
             #endregion
 
-        }
+        }              
 
-       
-
-        #endregion paint resize
-
-
+        /// <summary>
+        /// Terminate
+        /// </summary>
         public void Terminate()
         {
             m_Cancel = true;
@@ -2072,7 +2160,7 @@ namespace PicControl
             }
             
         }
-       
-    
+
+        #endregion paint resize
     }
 }

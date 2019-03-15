@@ -55,9 +55,10 @@ namespace Karaboss
         
         // Background color
         private Color TxtBackColor;
-       
-        
+
+
         // Contour color
+        private bool bColorContour = true;
         private Color TxtContourColor;
 
         // Number of lines to display
@@ -83,7 +84,196 @@ namespace Karaboss
             pBox.SetBackground(dirSlideShow);
         }
 
+
         #region option form settings
+
+        /// <summary>
+        /// Load stored options
+        /// </summary>
+        private void LoadOptions()
+        {
+            try
+            {
+                // Display balls on lyrics
+                chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
+
+                TxtBackColor = Properties.Settings.Default.TxtBackColor;
+                // Colors
+                TxtNextColor = Properties.Settings.Default.TxtNextColor;
+                TxtHighlightColor = Properties.Settings.Default.TxtHighlightColor;
+                TxtBeforeColor = Properties.Settings.Default.TxtBeforeColor;
+
+                bColorContour = Properties.Settings.Default.bColorContour;
+                TxtContourColor = Properties.Settings.Default.TxtContourColor;
+                chkContour.Checked = bColorContour;
+
+                // Backgroud color beside lyrics to help to read when an image is displayed
+                chkTextBackground.Checked = Properties.Settings.Default.bLyricsBackGround;
+
+                switch (Properties.Settings.Default.LyricsOptionDisplay)
+                {
+                    case "Top":
+                        OptionDisplay = Karaclass.OptionsDisplay.Top;
+                        cbOptionsTextDisplay.SelectedIndex = 0;
+                        pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Top;
+                        break;
+                    case "Center":
+                        OptionDisplay = Karaclass.OptionsDisplay.Center;
+                        cbOptionsTextDisplay.SelectedIndex = 1;
+                        pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Center;
+                        break;
+                    case "Bottom":
+                        OptionDisplay = Karaclass.OptionsDisplay.Bottom;
+                        cbOptionsTextDisplay.SelectedIndex = 2;
+                        pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Bottom;
+                        break;
+                    default:
+                        OptionDisplay = Karaclass.OptionsDisplay.Center;
+                        cbOptionsTextDisplay.SelectedIndex = 1;
+                        pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Center;
+                        break;
+                }
+
+                // Background
+                string bgOption = Properties.Settings.Default.BackGroundOption;
+
+                switch (bgOption)
+                {
+                    case "Diaporama":
+                        radioDiaporama.Checked = true;
+                        break;
+                    case "SolidColor":
+                        radioSolidColor.Checked = true;
+                        break;
+                    case "Transparent":
+                        radioTransparent.Checked = true;
+                        break;
+                    default:
+                        bgOption = "Diaporama";
+                        break;
+                }
+
+
+                // Nb lines to display
+                NbLines = Properties.Settings.Default.TxtNbLines;
+
+
+                // SlideShow directory
+                dirSlideShow = Properties.Settings.Default.dirSlideShow;
+
+                if (Directory.Exists(dirSlideShow) == false)
+                    dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+
+
+                freqSlideShow = Properties.Settings.Default.freqSlideShow;
+
+
+                switch (Properties.Settings.Default.SizeMode)
+                {
+                    case PictureBoxSizeMode.Normal:
+                        cbSizeMode.SelectedText = "Normal";
+                        cbSizeMode.Text = "Normal";
+                        break;
+                    case PictureBoxSizeMode.AutoSize:
+                        cbSizeMode.SelectedText = "AutoSize";
+                        cbSizeMode.Text = "AutoSize";
+                        break;
+                    case PictureBoxSizeMode.CenterImage:
+                        cbSizeMode.SelectedText = "CenterImage";
+                        cbSizeMode.Text = "CenterImage";
+                        break;
+                    case PictureBoxSizeMode.StretchImage:
+                        cbSizeMode.SelectedText = "StretchImage";
+                        cbSizeMode.Text = "StretchImage";
+                        break;
+                    case PictureBoxSizeMode.Zoom:
+                        cbSizeMode.SelectedText = "Zoom";
+                        cbSizeMode.Text = "Zoom";
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write("Error: " + e.Message);
+                TxtBackColor = Color.White;
+                TxtNextColor = Color.Black;
+                TxtHighlightColor = Color.Red;
+                TxtBeforeColor = Color.Cyan;
+                TxtContourColor = Color.DarkTurquoise;
+                NbLines = 3;
+                bColorContour = true;
+
+                //dirSlideShow = Application.StartupPath + "\\slideshow";
+                dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName) + "\\slideshow";
+
+                freqSlideShow = 10;
+                SizeMode = PictureBoxSizeMode.Zoom;
+            }
+        }
+
+        /// <summary>
+        /// Save options
+        /// </summary>
+        private void SaveOptions()
+        {
+            try
+            {
+                // Display balls
+                Properties.Settings.Default.DisplayBalls = Karaclass.m_DisplayBalls;
+
+                // Background type (Diaporama, Solidcolor, Transparent
+                Properties.Settings.Default.BackGroundOption = bgOption;
+
+                Properties.Settings.Default.TxtBackColor = TxtBackColor;
+
+                Properties.Settings.Default.TxtNextColor = TxtNextColor;
+                Properties.Settings.Default.TxtHighlightColor = TxtHighlightColor;
+                Properties.Settings.Default.TxtBeforeColor = TxtBeforeColor;
+
+                // Contour
+                Properties.Settings.Default.bColorContour = bColorContour;
+                Properties.Settings.Default.TxtContourColor = TxtContourColor;
+
+                Properties.Settings.Default.TxtNbLines = NbLines;
+
+                dirSlideShow = txtSlideShow.Text.Trim();
+                if (Directory.Exists(dirSlideShow) == false)
+                    dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+                Properties.Settings.Default.dirSlideShow = dirSlideShow;
+
+
+
+                Properties.Settings.Default.freqSlideShow = freqSlideShow;
+                Properties.Settings.Default.SizeMode = SizeMode;
+
+                switch (OptionDisplay)
+                {
+                    case Karaclass.OptionsDisplay.Top:
+                        Properties.Settings.Default.LyricsOptionDisplay = "Top";
+                        break;
+                    case Karaclass.OptionsDisplay.Center:
+                        Properties.Settings.Default.LyricsOptionDisplay = "Center";
+                        break;
+                    case Karaclass.OptionsDisplay.Bottom:
+                        Properties.Settings.Default.LyricsOptionDisplay = "Bottom";
+                        break;
+                    default:
+                        Properties.Settings.Default.LyricsOptionDisplay = "Center";
+                        break;
+                }
+
+                Properties.Settings.Default.bLyricsBackGround = chkTextBackground.Checked;
+
+                // Save all
+                Properties.Settings.Default.Save();
+
+            }
+            catch (Exception e)
+            {
+                Console.Write("Error: " + e.Message);
+            }
+        }
+
 
 
         /// <summary>
@@ -91,40 +281,54 @@ namespace Karaboss
         /// </summary>
         private void SetOptions()
         {
-            pnlBalls.Visible = chkDisplayBalls.Checked;
 
-            // Nombre de lignes à afficher
-            UpDownNbLines.Value = NbLines;            
+            try
+            {
+                pnlBalls.Visible = chkDisplayBalls.Checked;
 
-            // Slideshow
-            txtSlideShow.Text = dirSlideShow;
-            txtSlideShowFreq.Text = freqSlideShow.ToString();
+                // Nombre de lignes à afficher
+                UpDownNbLines.Value = NbLines;
 
-            // buttons
-            pictBackColor.BackColor = TxtBackColor;
-            pictBefore.BackColor = TxtBeforeColor;
-            pictContour.BackColor = TxtContourColor;
-            pictHighlight.BackColor = TxtHighlightColor;
-            pictNext.BackColor = TxtNextColor;
-         
+                // Slideshow
+                txtSlideShow.Text = dirSlideShow;
+                txtSlideShowFreq.Text = freqSlideShow.ToString();
 
-            // picturebox            
-            pBox.FreqDirSlideShow = freqSlideShow;
-            pBox.TxtNbLines = NbLines;
-            pBox.CurrentTime = 30;
+                // buttons
+                pictBackColor.BackColor = TxtBackColor;
+                pictBefore.BackColor = TxtBeforeColor;
 
-           
+                chkContour.Checked = bColorContour;
+                pictContour.BackColor = TxtContourColor;
 
-            pBox.TxtBackColor = TxtBackColor;
+                pictHighlight.BackColor = TxtHighlightColor;
+                pictNext.BackColor = TxtNextColor;
 
-            pBox.TxtContourColor = TxtContourColor;
-            pBox.TxtNextColor = TxtNextColor;
-            pBox.TxtHighlightColor = TxtHighlightColor;
-            pBox.TxtBeforeColor = TxtBeforeColor;
 
-            cbSizeMode.SelectedText = SizeMode.ToString();
+                // picturebox            
+                pBox.FreqDirSlideShow = freqSlideShow;
+                pBox.TxtNbLines = NbLines;
+                pBox.CurrentTime = 30;
 
-            pBox.OptionBackground = bgOption;
+
+
+                pBox.TxtBackColor = TxtBackColor;
+
+                pBox.bColorContour = bColorContour;
+                pBox.TxtContourColor = TxtContourColor;
+
+                pBox.TxtNextColor = TxtNextColor;
+                pBox.TxtHighlightColor = TxtHighlightColor;
+                pBox.TxtBeforeColor = TxtBeforeColor;
+
+                cbSizeMode.SelectedText = SizeMode.ToString();
+
+                pBox.OptionBackground = bgOption;
+            }
+            catch (Exception e)
+            {
+                Console.Write("Error: " + e.Message);
+
+            }
         }
 
         /// <summary>
@@ -136,6 +340,7 @@ namespace Karaboss
             
             pBox.TxtBackColor = TxtBackColor;
 
+            pBox.bColorContour = bColorContour;
             pBox.TxtContourColor = TxtContourColor;
             pBox.TxtNextColor = TxtNextColor;
             pBox.TxtHighlightColor = TxtHighlightColor;
@@ -154,8 +359,14 @@ namespace Karaboss
 
         #endregion option form settings
 
+
         #region select colors
 
+        /// <summary>
+        /// Dialog get color
+        /// </summary>
+        /// <param name="defColor"></param>
+        /// <returns></returns>
         private Color DlgGetColor(Color defColor)
         {
             ColorDialog MyDialog = new ColorDialog()
@@ -247,7 +458,19 @@ namespace Karaboss
             ApplyNewColors();            
         }
 
+        /// <summary>
+        /// Draw contour or not
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkContour_CheckedChanged(object sender, EventArgs e)
+        {
+            bColorContour = chkContour.Checked;
+            ApplyNewColors();
+        }
+
         #endregion select colors
+
 
         #region buttons
         /// <summary>
@@ -321,6 +544,8 @@ namespace Karaboss
                 frmLyric.TxtNextColor = TxtNextColor;
                 frmLyric.TxtHighlightColor = TxtHighlightColor;
                 frmLyric.TxtBeforeColor = TxtBeforeColor;
+
+                frmLyric.bColorContour = bColorContour;
                 frmLyric.TxtContourColor = TxtContourColor;
 
                 NbLines = Convert.ToInt32(UpDownNbLines.Value);
@@ -356,190 +581,7 @@ namespace Karaboss
         }
 
         #endregion buttons
-
-        #region options
-        
-        /// <summary>
-        /// Load stored options
-        /// </summary>
-        private void LoadOptions()
-        {
-            try
-            {
-                // Display balls on lyrics
-                chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
-
-                TxtBackColor = Properties.Settings.Default.TxtBackColor;
-                // Colors
-                TxtNextColor = Properties.Settings.Default.TxtNextColor;
-                TxtHighlightColor = Properties.Settings.Default.TxtHighlightColor;
-                TxtBeforeColor = Properties.Settings.Default.TxtBeforeColor;
-                TxtContourColor = Properties.Settings.Default.TxtContourColor;
-
-                // Backgroud color beside lyrics to help to read when an image is displayed
-                chkTextBackground.Checked = Properties.Settings.Default.bLyricsBackGround;
-
-                switch (Properties.Settings.Default.LyricsOptionDisplay)
-                {
-                    case "Top":
-                        OptionDisplay = Karaclass.OptionsDisplay.Top;
-                        cbOptionsTextDisplay.SelectedIndex = 0;
-                        pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Top;
-                        break;
-                    case "Center":
-                        OptionDisplay = Karaclass.OptionsDisplay.Center;
-                        cbOptionsTextDisplay.SelectedIndex = 1;
-                        pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Center;
-                        break;                    
-                    case "Bottom":
-                        OptionDisplay = Karaclass.OptionsDisplay.Bottom;
-                        cbOptionsTextDisplay.SelectedIndex = 2;
-                        pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Bottom;
-                        break;
-                    default:
-                        OptionDisplay = Karaclass.OptionsDisplay.Center;
-                        cbOptionsTextDisplay.SelectedIndex = 1;
-                        pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Center;
-                        break;
-                }
-
-                // Background
-                string bgOption = Properties.Settings.Default.BackGroundOption;
-
-                switch (bgOption)
-                {
-                    case "Diaporama":
-                        radioDiaporama.Checked = true;
-                        break;
-                    case "SolidColor":
-                        radioSolidColor.Checked = true;
-                        break;
-                    case "Transparent":
-                        radioTransparent.Checked = true;
-                        break;
-                    default:
-                        bgOption = "Diaporama";
-                        break;
-                }
-                
-
-                // Nb lines to display
-                NbLines = Properties.Settings.Default.TxtNbLines;
-                
-                
-                // SlideShow directory
-                dirSlideShow = Properties.Settings.Default.dirSlideShow;
-
-                if (Directory.Exists(dirSlideShow) == false)                                
-                    dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-                
-
-                freqSlideShow = Properties.Settings.Default.freqSlideShow;
-
-
-                switch (Properties.Settings.Default.SizeMode)
-                {
-                    case PictureBoxSizeMode.Normal:
-                        cbSizeMode.SelectedText = "Normal";
-                        cbSizeMode.Text = "Normal";
-                        break;
-                    case PictureBoxSizeMode.AutoSize:
-                        cbSizeMode.SelectedText = "AutoSize";
-                        cbSizeMode.Text = "AutoSize";
-                        break;
-                    case PictureBoxSizeMode.CenterImage:
-                        cbSizeMode.SelectedText = "CenterImage";
-                        cbSizeMode.Text = "CenterImage";
-                        break;
-                    case PictureBoxSizeMode.StretchImage:
-                        cbSizeMode.SelectedText = "StretchImage";
-                        cbSizeMode.Text = "StretchImage";
-                        break;
-                    case PictureBoxSizeMode.Zoom:
-                        cbSizeMode.SelectedText = "Zoom";
-                        cbSizeMode.Text = "Zoom";
-                        break;                
-                }                                    
-            }
-            catch (Exception e)
-            {
-                Console.Write("Error: " + e.Message);
-                TxtBackColor = Color.White;
-                TxtNextColor = Color.Black;
-                TxtHighlightColor = Color.Red;
-                TxtBeforeColor = Color.Cyan;
-                TxtContourColor = Color.DarkTurquoise;
-                NbLines = 3;
-                
-                //dirSlideShow = Application.StartupPath + "\\slideshow";
-                dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName) + "\\slideshow";
-
-                freqSlideShow = 10;
-                SizeMode = PictureBoxSizeMode.Zoom;
-            }
-        }
-
-        /// <summary>
-        /// Save options
-        /// </summary>
-        private void SaveOptions()
-        {
-            try
-            {
-                // Display balls
-                Properties.Settings.Default.DisplayBalls = Karaclass.m_DisplayBalls;
-
-                // Background type (Diaporama, Solidcolor, Transparent
-                Properties.Settings.Default.BackGroundOption = bgOption;
-                                
-                Properties.Settings.Default.TxtBackColor = TxtBackColor;
-                                
-                Properties.Settings.Default.TxtNextColor = TxtNextColor;
-                Properties.Settings.Default.TxtHighlightColor = TxtHighlightColor;
-                Properties.Settings.Default.TxtBeforeColor = TxtBeforeColor;
-                Properties.Settings.Default.TxtContourColor = TxtContourColor;
-
-                Properties.Settings.Default.TxtNbLines = NbLines;
-
-                dirSlideShow = txtSlideShow.Text.Trim();
-                if (Directory.Exists(dirSlideShow) == false)
-                    dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-                Properties.Settings.Default.dirSlideShow = dirSlideShow;
-
-
-
-                Properties.Settings.Default.freqSlideShow = freqSlideShow;
-                Properties.Settings.Default.SizeMode = SizeMode;
-
-                switch (OptionDisplay)
-                {
-                    case Karaclass.OptionsDisplay.Top:
-                        Properties.Settings.Default.LyricsOptionDisplay = "Top";
-                        break;
-                    case Karaclass.OptionsDisplay.Center:
-                        Properties.Settings.Default.LyricsOptionDisplay = "Center";
-                        break;
-                    case Karaclass.OptionsDisplay.Bottom:
-                        Properties.Settings.Default.LyricsOptionDisplay = "Bottom";
-                        break;
-                    default:
-                        Properties.Settings.Default.LyricsOptionDisplay = "Center";
-                        break;
-                }
-
-                Properties.Settings.Default.bLyricsBackGround = chkTextBackground.Checked;
-
-                // Save all
-                Properties.Settings.Default.Save();
-
-            }
-            catch (Exception e)
-            {
-                Console.Write("Error: " + e.Message);
-            }
-        }
-
-        #endregion options
+     
 
         #region form load close
 
@@ -599,82 +641,7 @@ namespace Karaboss
 
 
         #endregion form load close
-
-        private void TxtSlideShowFreq_TextChanged(object sender, EventArgs e)
-        {
-            string f = txtSlideShowFreq.Text;
-            f = f.Trim();
-            if (f != "")
-            {
-                try
-                {
-                    int freq = Convert.ToInt32(f);
-
-                    freqSlideShow = freq;
-                    pBox.FreqDirSlideShow = freqSlideShow;
-                    //this.pBox.SetFrequency(freqSlideShow);
-                }
-                catch (Exception eee)
-                {
-                    Console.Write(eee.Message);
-                }
-
-            }
-        }
-
-        private void CbSizeMode_SelectedIndexChanged(object sender, EventArgs e)
-        {            
-            string sel = cbSizeMode.Text;
-
-            switch (sel)
-            {
-                case "Normal":
-                    SizeMode = PictureBoxSizeMode.Normal;
-                    break;
-                case "StretchImage":
-                    SizeMode = PictureBoxSizeMode.StretchImage;
-                    break;
-                case "AutoSize":
-                    SizeMode = PictureBoxSizeMode.AutoSize;
-                    break;                
-                case "CenterImage":
-                    SizeMode = PictureBoxSizeMode.CenterImage;
-                    break;
-                case "Zoom":
-                    SizeMode = PictureBoxSizeMode.Zoom;
-                    break;
-
-            }
-            pBox.SizeMode = SizeMode;
-            
-
-        }
-
-        /// <summary>
-        /// Number of Karaoke lines to display
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UpDownNbLines_ValueChanged(object sender, EventArgs e)
-        {            
-            NbLines = (int)UpDownNbLines.Value;
-            pBox.TxtNbLines = NbLines;
-        }
-
     
-        private void TxtSlideShow_TextChanged(object sender, EventArgs e)
-        {
-            string tx = txtSlideShow.Text;
-            tx = tx.Trim();
-            dirSlideShow = tx;
-            pBox.DirSlideShow = dirSlideShow;
-        }
-
-        private bool IsNumeric(string s)
-        {
-            float output;
-            return float.TryParse(s, out output);
-        }
 
         #region Background selection
 
@@ -728,6 +695,98 @@ namespace Karaboss
 
         #endregion Background selection
 
+
+        #region events
+
+        /// <summary>
+        /// Textbox only accept numbers
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void txtSlideShowFreq_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }           
+        }       
+
+
+        private void TxtSlideShowFreq_TextChanged(object sender, EventArgs e)
+        {
+            string f = txtSlideShowFreq.Text;
+            f = f.Trim();
+            if (f != "" && IsNumeric(f))
+            {
+                try
+                {
+                    int freq = Convert.ToInt32(f);
+
+                    freqSlideShow = freq;
+                    pBox.FreqDirSlideShow = freqSlideShow;                    
+                }
+                catch (Exception eee)
+                {
+                    Console.Write(eee.Message);
+                }
+
+            }
+        }
+
+        private void CbSizeMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string sel = cbSizeMode.Text;
+
+            switch (sel)
+            {
+                case "Normal":
+                    SizeMode = PictureBoxSizeMode.Normal;
+                    break;
+                case "StretchImage":
+                    SizeMode = PictureBoxSizeMode.StretchImage;
+                    break;
+                case "AutoSize":
+                    SizeMode = PictureBoxSizeMode.AutoSize;
+                    break;
+                case "CenterImage":
+                    SizeMode = PictureBoxSizeMode.CenterImage;
+                    break;
+                case "Zoom":
+                    SizeMode = PictureBoxSizeMode.Zoom;
+                    break;
+
+            }
+            pBox.SizeMode = SizeMode;
+
+
+        }
+
+        /// <summary>
+        /// Number of Karaoke lines to display
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UpDownNbLines_ValueChanged(object sender, EventArgs e)
+        {
+            NbLines = (int)UpDownNbLines.Value;
+            pBox.TxtNbLines = NbLines;
+        }
+
+        private void TxtSlideShow_TextChanged(object sender, EventArgs e)
+        {
+            string tx = txtSlideShow.Text;
+            tx = tx.Trim();
+            dirSlideShow = tx;
+            pBox.DirSlideShow = dirSlideShow;
+        }
+
+        private bool IsNumeric(string s)
+        {
+            float output;
+            return float.TryParse(s, out output);
+        }
+
+
         private void chkDisplayBalls_CheckedChanged(object sender, EventArgs e)
         {
             Karaclass.m_DisplayBalls = chkDisplayBalls.Checked;
@@ -758,5 +817,12 @@ namespace Karaboss
         {            
             pBox.bTextBackGround = chkTextBackground.Checked;
         }
+
+
+
+
+        #endregion
+
+      
     }
 }

@@ -881,21 +881,7 @@ namespace Sanford.Multimedia.Midi
             {
                 if (endtime > m.StartTime)
                     m.Duration = endtime - m.StartTime;
-            }
-
-            /*
-            for (int i = lsn.Count - 1; i >= 0; i--)
-            {
-                MidiNote note = lsn[i];
-                if (note.Channel == channel && note.Number == notenumber && note.Duration == 0)
-                {                    
-                    if (endtime >  note.StartTime)
-                        note.Duration = endtime - note.StartTime;
-
-                    break;
-                }
-            }
-            */
+            }            
         }
 
 
@@ -1479,9 +1465,9 @@ namespace Sanford.Multimedia.Midi
 
             for (int i = this.Lyrics.Count - 1; i >= 0; i--)
             {
-                if (Lyrics[i].Time >= starttime)
+                if (Lyrics[i].TicksOn >= starttime)
                 {
-                    Lyrics[i].Time = Lyrics[i].Time + offset;
+                    Lyrics[i].TicksOn = Lyrics[i].TicksOn + offset;
                 }
             }
 
@@ -1562,9 +1548,9 @@ namespace Sanford.Multimedia.Midi
 
             for (int i = 0; i < Lyrics.Count; i++)
             {
-                if (Lyrics[i].Time >= starttime + offset)
+                if (Lyrics[i].TicksOn >= starttime + offset)
                 {
-                    Lyrics[i].Time = Lyrics[i].Time - offset;
+                    Lyrics[i].TicksOn = Lyrics[i].TicksOn - offset;
                 }
             }
 
@@ -2389,9 +2375,17 @@ namespace Sanford.Multimedia.Midi
         //FAB: 29/05/2014
         public class Lyric
         {
-            public string Type { get; set; }
+            public enum Types
+            {
+                Text = 1,
+                LineFeed = 2,
+                Paragraph = 3,
+            }
+
+            public Types Type { get; set; }
             public string Element { get; set; }
-            public int Time { get; set; }
+            public int TicksOn { get; set; }
+            public int TicksOff { get; set; }
         }
         // Paroles trouvées en mode texte
         public List<Lyric> LyricsText = new List<Lyric>();

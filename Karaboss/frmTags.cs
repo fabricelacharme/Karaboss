@@ -203,10 +203,12 @@ namespace Karaboss
 
                 if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                 {
-                    frmPlayer frmPlayer = GetForm<frmPlayer>();
-                    frmPlayer.bfilemodified = true;
+                    frmPlayer frmPlayer = GetForm<frmPlayer>();                    
+                    frmPlayer.FileModified();
                 }
                 MessageBox.Show("Tags saved successfully", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                this.Close();
             }
         }
         
@@ -297,8 +299,6 @@ namespace Karaboss
                 tx = "@W" + sequence1.WTag[i];
                 AddTag(tx);
             }
-
-
         }
 
         /// <summary>
@@ -337,7 +337,7 @@ namespace Karaboss
         {
             return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
         }
-    
 
+        
     }
 }

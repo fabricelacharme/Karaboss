@@ -74,7 +74,8 @@ namespace Karaboss
             string name = string.Empty;
             string item = string.Empty;
 
-            item = "No melody track";
+            //item = "No melody track";
+            item = Karaboss.Resources.Localization.Strings.NoMelodyTrack;
             cbSelectTrack.Items.Add(item);
 
             for (int i = 0; i < sequence1.tracks.Count; i++)
@@ -92,6 +93,9 @@ namespace Karaboss
                 item = i.ToString("00") + " - " + lsInstruments[patch] + " - " + name;                                
                 cbSelectTrack.Items.Add(item);
             }
+
+            cbSelectTrack.SelectedIndex = 0;
+
         }
 
 

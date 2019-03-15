@@ -67,6 +67,7 @@
             this.cbOptionsTextDisplay = new System.Windows.Forms.ComboBox();
             this.pBox = new PicControl.pictureBoxControl();
             this.chkTextBackground = new System.Windows.Forms.CheckBox();
+            this.chkContour = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -132,10 +133,6 @@
             resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
             // 
-            // folderBrowserDialog1
-            // 
-            resources.ApplyResources(this.folderBrowserDialog1, "folderBrowserDialog1");
-            // 
             // txtSlideShow
             // 
             resources.ApplyResources(this.txtSlideShow, "txtSlideShow");
@@ -171,6 +168,7 @@
             resources.ApplyResources(this.txtSlideShowFreq, "txtSlideShowFreq");
             this.txtSlideShowFreq.Name = "txtSlideShowFreq";
             this.txtSlideShowFreq.TextChanged += new System.EventHandler(this.TxtSlideShowFreq_TextChanged);
+            this.txtSlideShowFreq.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSlideShowFreq_KeyPress);
             // 
             // label4
             // 
@@ -184,7 +182,6 @@
             // 
             // cbSizeMode
             // 
-            resources.ApplyResources(this.cbSizeMode, "cbSizeMode");
             this.cbSizeMode.FormattingEnabled = true;
             this.cbSizeMode.Items.AddRange(new object[] {
             resources.GetString("cbSizeMode.Items"),
@@ -192,6 +189,7 @@
             resources.GetString("cbSizeMode.Items2"),
             resources.GetString("cbSizeMode.Items3"),
             resources.GetString("cbSizeMode.Items4")});
+            resources.ApplyResources(this.cbSizeMode, "cbSizeMode");
             this.cbSizeMode.Name = "cbSizeMode";
             this.cbSizeMode.SelectedIndexChanged += new System.EventHandler(this.CbSizeMode_SelectedIndexChanged);
             // 
@@ -265,81 +263,83 @@
             // 
             // pnlBalls
             // 
-            resources.ApplyResources(this.pnlBalls, "pnlBalls");
             this.pnlBalls.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.pnlBalls.Controls.Add(this.pictureBox2);
             this.pnlBalls.Controls.Add(this.pictureBox1);
+            resources.ApplyResources(this.pnlBalls, "pnlBalls");
             this.pnlBalls.Name = "pnlBalls";
             // 
             // pictureBox2
             // 
-            resources.ApplyResources(this.pictureBox2, "pictureBox2");
             this.pictureBox2.Image = global::Karaboss.Properties.Resources.ball;
+            resources.ApplyResources(this.pictureBox2, "pictureBox2");
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.TabStop = false;
             // 
             // pictureBox1
             // 
-            resources.ApplyResources(this.pictureBox1, "pictureBox1");
             this.pictureBox1.Image = global::Karaboss.Properties.Resources.ball;
+            resources.ApplyResources(this.pictureBox1, "pictureBox1");
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.TabStop = false;
             // 
             // pictBackColor
             // 
-            resources.ApplyResources(this.pictBackColor, "pictBackColor");
             this.pictBackColor.BackColor = System.Drawing.Color.Black;
+            resources.ApplyResources(this.pictBackColor, "pictBackColor");
             this.pictBackColor.Name = "pictBackColor";
             this.pictBackColor.TabStop = false;
             // 
             // pictContour
             // 
-            resources.ApplyResources(this.pictContour, "pictContour");
             this.pictContour.BackColor = System.Drawing.Color.White;
+            resources.ApplyResources(this.pictContour, "pictContour");
             this.pictContour.Name = "pictContour";
             this.pictContour.TabStop = false;
             // 
             // pictNext
             // 
-            resources.ApplyResources(this.pictNext, "pictNext");
             this.pictNext.BackColor = System.Drawing.Color.White;
+            resources.ApplyResources(this.pictNext, "pictNext");
             this.pictNext.Name = "pictNext";
             this.pictNext.TabStop = false;
             // 
             // pictHighlight
             // 
-            resources.ApplyResources(this.pictHighlight, "pictHighlight");
             this.pictHighlight.BackColor = System.Drawing.Color.Red;
+            resources.ApplyResources(this.pictHighlight, "pictHighlight");
             this.pictHighlight.Name = "pictHighlight";
             this.pictHighlight.TabStop = false;
             // 
             // pictBefore
             // 
-            resources.ApplyResources(this.pictBefore, "pictBefore");
             this.pictBefore.BackColor = System.Drawing.Color.LightGreen;
+            resources.ApplyResources(this.pictBefore, "pictBefore");
             this.pictBefore.Name = "pictBefore";
             this.pictBefore.TabStop = false;
             // 
             // cbOptionsTextDisplay
             // 
-            resources.ApplyResources(this.cbOptionsTextDisplay, "cbOptionsTextDisplay");
             this.cbOptionsTextDisplay.FormattingEnabled = true;
             this.cbOptionsTextDisplay.Items.AddRange(new object[] {
             resources.GetString("cbOptionsTextDisplay.Items"),
             resources.GetString("cbOptionsTextDisplay.Items1"),
             resources.GetString("cbOptionsTextDisplay.Items2")});
+            resources.ApplyResources(this.cbOptionsTextDisplay, "cbOptionsTextDisplay");
             this.cbOptionsTextDisplay.Name = "cbOptionsTextDisplay";
             this.cbOptionsTextDisplay.SelectedIndexChanged += new System.EventHandler(this.cbOptionsTextDisplay_SelectedIndexChanged);
             // 
             // pBox
             // 
-            resources.ApplyResources(this.pBox, "pBox");
-            this.pBox.BackColor = System.Drawing.Color.Black;            
+            this.pBox.BackColor = System.Drawing.Color.Black;
+            this.pBox.BeatDuration = 0;
             this.pBox.bTextBackGround = true;
+            this.pBox.CurrentTextPos = 2;
             this.pBox.CurrentTime = 30;
             this.pBox.DirSlideShow = null;
             this.pBox.FreqDirSlideShow = 0;
             this.pBox.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
+            resources.ApplyResources(this.pBox, "pBox");
             this.pBox.LyricsTimes = ((System.Collections.Generic.List<int>)(resources.GetObject("pBox.LyricsTimes")));
             this.pBox.LyricsWords = ((System.Collections.Generic.List<string>)(resources.GetObject("pBox.LyricsWords")));
             this.pBox.m_Alpha = 255;
@@ -368,10 +368,20 @@
             this.chkTextBackground.UseVisualStyleBackColor = true;
             this.chkTextBackground.CheckedChanged += new System.EventHandler(this.chkTextBackground_CheckedChanged);
             // 
+            // chkContour
+            // 
+            resources.ApplyResources(this.chkContour, "chkContour");
+            this.chkContour.Checked = true;
+            this.chkContour.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkContour.Name = "chkContour";
+            this.chkContour.UseVisualStyleBackColor = true;
+            this.chkContour.CheckedChanged += new System.EventHandler(this.chkContour_CheckedChanged);
+            // 
             // frmLyrOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkContour);
             this.Controls.Add(this.chkTextBackground);
             this.Controls.Add(this.cbOptionsTextDisplay);
             this.Controls.Add(this.pnlBalls);
@@ -467,5 +477,6 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.ComboBox cbOptionsTextDisplay;
         private System.Windows.Forms.CheckBox chkTextBackground;
+        private System.Windows.Forms.CheckBox chkContour;
     }
 }

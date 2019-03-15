@@ -137,6 +137,18 @@ namespace Karaboss
                 pBox.TxtBeforeColor = _txtBeforeColor;
             }
         }
+        // Contour
+        private bool _bColorContour = true;
+        public bool bColorContour
+        {
+            get
+            { return _bColorContour; }
+            set
+            {
+                _bColorContour = value;
+                pBox.bColorContour = _bColorContour;
+            }
+        }
         // Text contour
         private Color _txtContourColor;
         public Color TxtContourColor { get {return _txtContourColor; } set { _txtContourColor = value;
@@ -395,6 +407,7 @@ namespace Karaboss
                 TxtNextColor = Properties.Settings.Default.TxtNextColor;
                 TxtHighlightColor = Properties.Settings.Default.TxtHighlightColor;
                 TxtBeforeColor = Properties.Settings.Default.TxtBeforeColor;
+                bColorContour = Properties.Settings.Default.bColorContour;
                 TxtContourColor = Properties.Settings.Default.TxtContourColor;
 
                 // Number of Lines to display
@@ -430,7 +443,7 @@ namespace Karaboss
         /// <summary>
         /// Load song in picturebox control
         /// </summary>
-        public void LoadSong(List<pictureBoxControl.plLyric> plLyrics)
+        public void LoadSong(List<plLyric> plLyrics)
         {            
             currentTextPos = 0;
             lyrics = "";
@@ -438,28 +451,49 @@ namespace Karaboss
             {
                 lyrics += plLyrics[i].Element; 
             }
-            pBox.LoadSong(plLyrics);
+
+            lyrics = lyrics.Replace("\\", "\r\n\r\n");
+            lyrics = lyrics.Replace("/", "\r\n");
+
+            List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
+            foreach (plLyric plL in plLyrics)
+            {
+                pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric();
+                pcL.Type = (pictureBoxControl.plLyric.Types)plL.Type;
+                pcL.Element = plL.Element;
+                pcL.TicksOn = plL.TicksOn;
+                pcL.TicksOff = plL.TicksOff;
+
+                pcLyrics.Add(pcL);
+            }
+
+            // Load song
+            pBox.LoadSong(pcLyrics);
+            
+            //Initial position
+            pBox.CurrentTextPos = -1;
+           
         }
 
         /// <summary>
         /// Load times for the Ball animation
         /// </summary>
         /// <param name="plLyrics"></param>
-        public void LoadBallsTimes(List<pictureBoxControl.plLyric> plLyrics)
+        public void LoadBallsTimes(List<plLyric> plLyrics)
         {
             if (plLyrics.Count > 0)
             {
                 LyricsTimes = new List<int>();
 
-                string plType = string.Empty;
+                plLyric.Types plType = plLyric.Types.Text;
                 int plTime = 0;
 
                 for (int i = 0; i < plLyrics.Count; i++)
                 {
                     plType = plLyrics[i].Type;
-                    plTime = plLyrics[i].Time;
+                    plTime = plLyrics[i].TicksOn;
 
-                    if (plType == "text")
+                    if (plType == plLyric.Types.Text)
                     {
                         LyricsTimes.Add(plTime);
                     }
@@ -480,7 +514,7 @@ namespace Karaboss
             // déclencheur : timer_2
             // IMPERATIF : calculer ici la position de la syllabe, utilisée pour l'animation des balles
             // drivé par timer_2 de frmplayer            
-            currentTextPos = pBox.textPos;
+            currentTextPos = pBox.CurrentTextPos;
             pBox.ColorLyric(songposition);
         }
 
@@ -600,6 +634,7 @@ namespace Karaboss
         }     
 
         #endregion form load close resize
+
 
         #region loadfile
         
@@ -777,6 +812,7 @@ namespace Karaboss
         }
 
         #endregion
+
     }
 
 

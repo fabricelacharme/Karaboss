@@ -117,235 +117,235 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="&gt;&gt;optTextFormat.Name" xml:space="preserve">
+    <value>optTextFormat</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="cbSelectTrack.Location" type="System.Drawing.Point, System.Drawing">
-    <value>86, 54</value>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>357, 251</value>
   </data>
-  <data name="cbSelectTrack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>259, 21</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="cbSelectTrack.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;cbSelectTrack.Name" xml:space="preserve">
-    <value>cbSelectTrack</value>
-  </data>
-  <data name="&gt;&gt;cbSelectTrack.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cbSelectTrack.Parent" xml:space="preserve">
+  <data name="&gt;&gt;btnCancel.Parent" xml:space="preserve">
     <value>$this</value>
-  </data>
-  <data name="&gt;&gt;cbSelectTrack.ZOrder" xml:space="preserve">
-    <value>7</value>
   </data>
   <data name="btnOk.Location" type="System.Drawing.Point, System.Drawing">
     <value>21, 223</value>
   </data>
-  <data name="btnOk.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="btnOk.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="btnOk.Text" xml:space="preserve">
-    <value>&amp;Ok</value>
-  </data>
-  <data name="&gt;&gt;btnOk.Name" xml:space="preserve">
-    <value>btnOk</value>
+  <data name="&gt;&gt;btnCancel.Name" xml:space="preserve">
+    <value>btnCancel</value>
   </data>
   <data name="&gt;&gt;btnOk.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblHelp.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;lblSelectLyricFormat.Name" xml:space="preserve">
+    <value>lblSelectLyricFormat</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>frmLyricsSelectTrack</value>
+  </data>
+  <data name="&gt;&gt;label1.Name" xml:space="preserve">
+    <value>label1</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="btnCancel.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;lblHelp.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="lblHelp.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterParent</value>
+  </data>
+  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="optTextFormat.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;optLyricFormat.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="label1.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 13</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btnOk.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;btnOk.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="btnCancel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>270, 223</value>
-  </data>
-  <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="btnCancel.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="btnCancel.Text" xml:space="preserve">
-    <value>&amp;Cancel</value>
-  </data>
-  <data name="&gt;&gt;btnCancel.Name" xml:space="preserve">
-    <value>btnCancel</value>
-  </data>
-  <data name="&gt;&gt;btnCancel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnCancel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;btnCancel.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 61</value>
-  </data>
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>67, 13</value>
-  </data>
-  <data name="label1.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="label1.Text" xml:space="preserve">
-    <value>Select track:</value>
-  </data>
-  <data name="&gt;&gt;label1.Name" xml:space="preserve">
-    <value>label1</value>
-  </data>
-  <data name="&gt;&gt;label1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="lblHelp.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="optLyricFormat.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
-  </data>
-  <data name="lblHelp.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 9</value>
-  </data>
-  <data name="lblHelp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>333, 49</value>
-  </data>
-  <data name="lblHelp.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="lblHelp.Text" xml:space="preserve">
-    <value>Select here the track containing the melody of the song, this will help you to enter text note by note.</value>
-  </data>
-  <data name="&gt;&gt;lblHelp.Name" xml:space="preserve">
-    <value>lblHelp</value>
-  </data>
-  <data name="&gt;&gt;lblHelp.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblHelp.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;lblHelp.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="lblSelectLyricFormat.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblSelectLyricFormat.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 117</value>
-  </data>
-  <data name="lblSelectLyricFormat.Size" type="System.Drawing.Size, System.Drawing">
-    <value>333, 39</value>
-  </data>
-  <data name="lblSelectLyricFormat.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="lblSelectLyricFormat.Text" xml:space="preserve">
-    <value>You may prefer lyrics on a separate track (Text format) or visible on the screen (Lyric format)</value>
-  </data>
-  <data name="&gt;&gt;lblSelectLyricFormat.Name" xml:space="preserve">
-    <value>lblSelectLyricFormat</value>
-  </data>
-  <data name="&gt;&gt;lblSelectLyricFormat.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblSelectLyricFormat.Parent" xml:space="preserve">
-    <value>$this</value>
   </data>
   <data name="&gt;&gt;lblSelectLyricFormat.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="optTextFormat.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="optTextFormat.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 154</value>
-  </data>
-  <data name="optTextFormat.Size" type="System.Drawing.Size, System.Drawing">
-    <value>81, 17</value>
+  <data name="lblSelectLyricFormat.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="optTextFormat.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
   </data>
-  <data name="optTextFormat.Text" xml:space="preserve">
-    <value>Text Format</value>
-  </data>
-  <data name="&gt;&gt;optTextFormat.Name" xml:space="preserve">
-    <value>optTextFormat</value>
-  </data>
-  <data name="&gt;&gt;optTextFormat.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;optTextFormat.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;optTextFormat.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="optLyricFormat.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="optLyricFormat.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="optLyricFormat.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 177</value>
-  </data>
-  <data name="optLyricFormat.Size" type="System.Drawing.Size, System.Drawing">
-    <value>82, 17</value>
+  <data name="&gt;&gt;lblHelp.Name" xml:space="preserve">
+    <value>lblHelp</value>
   </data>
   <data name="optLyricFormat.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
   </data>
-  <data name="optLyricFormat.Text" xml:space="preserve">
-    <value>Lyric Format</value>
+  <data name="&gt;&gt;cbSelectTrack.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
-  <data name="&gt;&gt;optLyricFormat.Name" xml:space="preserve">
-    <value>optLyricFormat</value>
+  <data name="&gt;&gt;cbSelectTrack.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;optLyricFormat.Type" xml:space="preserve">
+  <data name="&gt;&gt;optTextFormat.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblSelectLyricFormat.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 117</value>
+  </data>
+  <data name="lblHelp.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;optTextFormat.Type" xml:space="preserve">
     <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="cbSelectTrack.Location" type="System.Drawing.Point, System.Drawing">
+    <value>86, 54</value>
+  </data>
+  <data name="optTextFormat.Size" type="System.Drawing.Size, System.Drawing">
+    <value>81, 17</value>
+  </data>
+  <data name="&gt;&gt;lblHelp.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="btnCancel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>270, 223</value>
+  </data>
+  <data name="&gt;&gt;cbSelectTrack.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;optTextFormat.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblSelectLyricFormat.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="optTextFormat.Text" xml:space="preserve">
+    <value>Text Format</value>
+  </data>
+  <data name="lblSelectLyricFormat.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;btnOk.ZOrder" xml:space="preserve">
+    <value>6</value>
   </data>
   <data name="&gt;&gt;optLyricFormat.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;optLyricFormat.ZOrder" xml:space="preserve">
+  <data name="optLyricFormat.Text" xml:space="preserve">
+    <value>Lyric Format</value>
+  </data>
+  <data name="lblHelp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>333, 49</value>
+  </data>
+  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblHelp.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 9</value>
+  </data>
+  <data name="btnOk.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="optLyricFormat.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 177</value>
+  </data>
+  <data name="cbSelectTrack.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <data name="optTextFormat.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 154</value>
+  </data>
+  <data name="optLyricFormat.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
-  </metadata>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
   </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>357, 251</value>
+  <data name="btnOk.Text" xml:space="preserve">
+    <value>&amp;Ok</value>
   </data>
-  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
-    <value>CenterParent</value>
+  <data name="&gt;&gt;optLyricFormat.Name" xml:space="preserve">
+    <value>optLyricFormat</value>
+  </data>
+  <data name="cbSelectTrack.Size" type="System.Drawing.Size, System.Drawing">
+    <value>259, 21</value>
+  </data>
+  <data name="optLyricFormat.Size" type="System.Drawing.Size, System.Drawing">
+    <value>82, 17</value>
+  </data>
+  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 61</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Karaboss - Select Audio Track &amp; Lyrics format</value>
   </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>frmSelectTrack</value>
+  <data name="lblSelectLyricFormat.Text" xml:space="preserve">
+    <value>You may prefer lyrics on a separate track (Text format) or visible on the screen (Lyric format)</value>
+  </data>
+  <data name="lblHelp.Text" xml:space="preserve">
+    <value>Select here the track containing the melody of the song, this will help you to enter text note by note.</value>
+  </data>
+  <data name="&gt;&gt;optLyricFormat.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblSelectLyricFormat.Size" type="System.Drawing.Size, System.Drawing">
+    <value>333, 39</value>
+  </data>
+  <data name="&gt;&gt;cbSelectTrack.Name" xml:space="preserve">
+    <value>cbSelectTrack</value>
+  </data>
+  <data name="&gt;&gt;lblSelectLyricFormat.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnOk.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="&gt;&gt;btnOk.Name" xml:space="preserve">
+    <value>btnOk</value>
+  </data>
+  <data name="btnCancel.Text" xml:space="preserve">
+    <value>&amp;Cancel</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Select track:</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

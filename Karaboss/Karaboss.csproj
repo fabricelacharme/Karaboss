@@ -206,6 +206,13 @@
     <Compile Include="GuitarTraining\TextBlock.Designer.cs">
       <DependentUpon>TextBlock.cs</DependentUpon>
     </Compile>
+    <Compile Include="Lrc\FileWriter.cs" />
+    <Compile Include="Lrc\FormatFileName.cs" />
+    <Compile Include="Lrc\Lrc.cs" />
+    <Compile Include="Lrc\LrcManager.cs" />
+    <Compile Include="Lrc\NeteaseMusic.cs" />
+    <Compile Include="Lrc\SharedFramework.cs" />
+    <Compile Include="Lrc\Time.cs" />
     <Compile Include="Pages\ConnectedControl\ListViewItemComparer.cs" />
     <Compile Include="Pages\ExplorerControl\KnownFolders.cs" />
     <Compile Include="Pages\ExplorerControl\xplorerControl.cs">
@@ -447,8 +454,14 @@
     <EmbeddedResource Include="frmGuitarTraining.resx">
       <DependentUpon>frmGuitarTraining.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmLyricsSelectTrack.fr.resx">
+      <DependentUpon>frmLyricsSelectTrack.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmPianoTraining.resx">
       <DependentUpon>frmPianoTraining.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTags.fr.resx">
+      <DependentUpon>frmTags.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GuitarTraining\BassControl.resx">
       <DependentUpon>BassControl.cs</DependentUpon>

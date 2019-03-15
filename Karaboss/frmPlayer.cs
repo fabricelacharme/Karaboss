@@ -59,8 +59,8 @@ namespace Karaboss
 
         private bool bHasLyrics = false;
         // Lyrics 
-        public CLyric myLyric;        
-        private List<pictureBoxControl.plLyric> plLyrics;
+        public CLyric myLyric;                
+        private List<plLyric> plLyrics;
         // SlideShow directory
         public string dirSlideShow;             
 
@@ -310,7 +310,7 @@ namespace Karaboss
             #endregion
 
             // Reset plLyrics
-            plLyrics = new List<pictureBoxControl.plLyric>();
+            plLyrics = new List<plLyric>();
 
             // Zoom
             zoom = 1.0f;
@@ -2611,7 +2611,7 @@ namespace Karaboss
                             // Create track at position 2 for text lyrics           
                             // Set myLyrics.melodytracknum & myMyrics.lyricstracknum
                             AddTrackWords();
-                            myLyric.lyrictype = "text";
+                            myLyric.lyrictype = CLyric.LyricTypes.Text;
                         }
                         else
                         {
@@ -2622,7 +2622,7 @@ namespace Karaboss
                                 myLyric.lyricstracknum = melodytracknum;
                             else
                                 myLyric.lyricstracknum = 0;
-                            myLyric.lyrictype = "lyric";
+                            myLyric.lyrictype = CLyric.LyricTypes.Lyric;
                         }
                         DisplayLyricsInfos();
                     }
@@ -3410,12 +3410,12 @@ namespace Karaboss
             if (myLyric != null)
             {                
                 // Lyric : mélodie dans quelle piste  ?
-                if (myLyric.lyrictype == "lyric")
+                if (myLyric.lyrictype == CLyric.LyricTypes.Lyric)
                 {
                     if (myLyric.lyricstracknum != -1 && myLyric.melodytracknum == -1)
                         myLyric.melodytracknum = GuessMelodyTrack();                    
                 }
-                else if (myLyric.lyrictype == "text" && myLyric.melodytracknum == -1)
+                else if (myLyric.lyrictype == CLyric.LyricTypes.Text && myLyric.melodytracknum == -1)
                 {
                     myLyric.melodytracknum = GuessMelodyTrack();
                 }                
@@ -3459,7 +3459,7 @@ namespace Karaboss
             int nblyrics = 0;
             for (int i = 0; i < plLyrics.Count; i++)
             {
-                if (plLyrics[i].Type == "text" && plLyrics[i].Time > 0)                
+                if (plLyrics[i].Type == plLyric.Types.Text && plLyrics[i].TicksOn > 0)                
                     nblyrics++;                           
             }
 
@@ -3483,34 +3483,7 @@ namespace Karaboss
                         diff = nbnotes - nblyrics;
                         if (diff < 0) diff = -diff;
 
-                        int oldtn = -1;
-
-                        #region delete
-                        /*
-                        // Comparaison 2 : les lyrics correspondent-ils aux notes ?
-                        // nombre de lyrics trouvés dans un rayon de temps de 50 autour des notes
-                        for (int j = track.Notes.Count - 1; j >= 0; j--)
-                        {
-                            MidiNote n = track.Notes[j];
-                            int tn = n.StartTime;
-
-                            // Search lyrics descending
-                            for (int k = plLyrics.Count - 1; k >= 0; k--)
-                            {
-                                int tl = plLyrics[k].Time;
-                                if (tl > tn - 50 && tl < tn + 50)
-                                {
-                                    nbfound++;
-                                    break;
-                                }
-                                else if (tl < tn)
-                                {
-                                    break;
-                                }
-                            }                       
-                        }
-                        */
-                        #endregion
+                        int oldtn = -1;                     
 
                         // Search if notes have a start time corresponding of those of lytics 
                         // Search is performed in a time frame of 20 plus or minus
@@ -3523,7 +3496,7 @@ namespace Karaboss
                                 // Search lyrics 
                                 for (int k = 0; k < plLyrics.Count; k++)
                                 {
-                                    int tl = plLyrics[k].Time;
+                                    int tl = plLyrics[k].TicksOn;
                                     if (tl > tn - 20 && tl < tn + 20)
                                     {
                                         nbfound++;
@@ -3600,7 +3573,7 @@ namespace Karaboss
         /// Replace existing lyrics by others
         /// </summary>
         /// <param name="pLyrics"></param>
-        public void ReplaceLyrics(List<pictureBoxControl.plLyric> alienpLyrics, string lyricType, int melodytracknum)
+        public void ReplaceLyrics(List<plLyric> alienpLyrics, CLyric.LyricTypes lyricType, int melodytracknum)
         {
             bool bRefreshDisplay = false;
 
@@ -3609,13 +3582,16 @@ namespace Karaboss
             if (myLyric == null)
             {
                 NewMyLyric(melodytracknum, melodytracknum);
+
+                // TODO : Décharger la forme frmLyrics ?
+
             }
 
             // Warning change of type of lyric (lyric or text)
             if (lyricType != myLyric.lyrictype)
             {
                 // Todo : check if track for words exists
-                if (lyricType == "text")
+                if (lyricType == CLyric.LyricTypes.Text)
                 {
                     // Changement de lyric à text
                     // => effacer l'affichage des lyrics sur la piste melodytracknum
@@ -3627,7 +3603,7 @@ namespace Karaboss
                     AddTrackWords();
 
                 }
-                else if (lyricType == "lyric")
+                else if (lyricType == CLyric.LyricTypes.Lyric)
                 {
                     //Changement de text à lyric 
 
@@ -3645,7 +3621,7 @@ namespace Karaboss
                 myLyric.lyrictype = lyricType;
             }
 
-            // Display in frmLyrics
+            // Display the form frmLyrics
             DisplayLyricsForm();
 
             int tracknum = myLyric.lyricstracknum;
@@ -3658,7 +3634,7 @@ namespace Karaboss
             InsTrkEvents(tracknum);
 
             // Refresh display of lyrics
-            if (bRefreshDisplay || myLyric.lyrictype == "lyric") {                
+            if (bRefreshDisplay || myLyric.lyrictype == CLyric.LyricTypes.Lyric) {                
                 RefreshDisplay();               
             }
 
@@ -3693,56 +3669,52 @@ namespace Karaboss
             {                
 
                 // Si c'est un CR, le stocke et le collera au prochain lyric
-                if (plLyrics[idx].Type == "cr")
+                if (plLyrics[idx].Type == plLyric.Types.LineFeed)
                 {
-                    if (myLyric.lyrictype == "text")
+                    if (myLyric.lyrictype == CLyric.LyricTypes.Text)
                         currentCR = "/";
                     else
                         currentCR = "\r";
                 }
+                else if (plLyrics[idx].Type == plLyric.Types.Paragraph)
+                {
+                    if (myLyric.lyrictype == CLyric.LyricTypes.Text)
+                        currentCR = "\\";
+                    else
+                        currentCR = "\r\r";
+                }
                 else
                 {
                     // C'est un lyric
-                    currentTick = plLyrics[idx].Time;
+                    currentTick = plLyrics[idx].TicksOn;
                     if (currentTick >= lastcurrenttick)
                     {
-
                         lastcurrenttick = currentTick;
-
                         currentElement = currentCR + plLyrics[idx].Element;
 
                         // Transforme en byte la nouvelle chaine
-                        byte[] newdata = Encoding.Default.GetBytes(currentElement);
-                        /*
-                        byte[] newdata = new byte[currentElement.Length];
-                        for (int u = 0; u < newdata.Length; u++)
-                        {
-                            newdata[u] = (byte)currentElement[u];
-                        }
-                        */
+                        byte[] newdata = Encoding.Default.GetBytes(currentElement);                       
 
                         MetaMessage mtMsg;
 
                         // Update Track.Lyrics List
                         Track.Lyric L = new Track.Lyric() {
                             Element = plLyrics[idx].Element,
-                            Time = plLyrics[idx].Time,
-                            Type = plLyrics[idx].Type,
+                            TicksOn = plLyrics[idx].TicksOn,
+                            Type = (Track.Lyric.Types)plLyrics[idx].Type,
                         };
 
-                        // si lyrics de type text
-                        if (myLyric.lyrictype == "text")
+                        
+                        if (myLyric.lyrictype == CLyric.LyricTypes.Text)
                         {
+                            // si lyrics de type text
                             mtMsg = new MetaMessage(MetaType.Text, newdata);
-
                             Track.LyricsText.Add(L);
-                        }
-                        // si lyrics de type lyrics
+                        }                        
                         else
                         {
-                            mtMsg = new MetaMessage(MetaType.Lyric, newdata);
-
-                            // Update Track.Lyrics List
+                            // si lyrics de type lyrics
+                            mtMsg = new MetaMessage(MetaType.Lyric, newdata);                            
                             Track.Lyrics.Add(L);
                         }
 
@@ -3794,12 +3766,8 @@ namespace Karaboss
             {
                 // regarde lequel est le plus gros... lol                
 
-                // Si pas de retour chariot dans lyrics => choisir texte
-                if (lyrics.IndexOf("\r") == -1)
-                {
-                    trklyric = -1;
-                }                
-                else if (l_lyric >= l_text)
+               
+                if (l_lyric >= l_text)
                 {
                     // Elimine texte et choisi les lyrics
                     trktext = -1;
@@ -3818,7 +3786,7 @@ namespace Karaboss
                 myLyric = new CLyric() {
                     melodytracknum = -1,
                     lyricstracknum = trktext,
-                    lyrictype = "text",
+                    lyrictype = CLyric.LyricTypes.Text,
                 };
                 
                 lyrics = sequence1.tracks[trktext].TotalLyricsT;
@@ -3830,10 +3798,16 @@ namespace Karaboss
                 for (int k = 0; k < track.LyricsText.Count; k++)
                 {
                     // Stockage dans liste plLyrics
-                    string plType = track.LyricsText[k].Type;
+                    plLyric.Types plType = (plLyric.Types)track.LyricsText[k].Type;
                     string plElement = track.LyricsText[k].Element;
-                    int plTime = track.LyricsText[k].Time;
-                    plLyrics.Add(new pictureBoxControl.plLyric() { Type = plType, Element = plElement, Time = plTime });
+
+                    // Start time for a lyric
+                    int plTicksOn = track.LyricsText[k].TicksOn;
+
+                    // Stop time for a lyric (maxi 1 beat ?)
+                    int plTicksOff = 0;                 
+
+                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
                 }
 
                 return lyrics;
@@ -3850,7 +3824,7 @@ namespace Karaboss
                     myLyric = new CLyric() {
                         melodytracknum = -1,
                         lyricstracknum = trklyric,
-                        lyrictype = "lyric",
+                        lyrictype = CLyric.LyricTypes.Lyric,
                     };
 
                     
@@ -3864,10 +3838,16 @@ namespace Karaboss
                     for (int k = 0; k < track.Lyrics.Count; k++)
                     {
                         // Stockage dans liste plLyrics
-                        string plType = track.Lyrics[k].Type;
+                        plLyric.Types plType = (plLyric.Types)track.Lyrics[k].Type;
                         string plElement = track.Lyrics[k].Element;
-                        int plTime = track.Lyrics[k].Time;
-                        plLyrics.Add(new pictureBoxControl.plLyric() { Type = plType, Element = plElement, Time = plTime });
+
+                        // Start time for a lyric
+                        int plTicksOn = track.Lyrics[k].TicksOn;
+
+                        // Stop time for the lyric
+                        int plTicksOff = 0;
+
+                        plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
                     }
 
 
@@ -3891,6 +3871,8 @@ namespace Karaboss
             }
             return retval;
         }
+
+       
 
         /// <summary>
         /// Load form frmLyrics       
@@ -4082,7 +4064,7 @@ namespace Karaboss
                     */
                     if (sequence1.OrigFormat == 0)
                     {
-                        if (myLyric.lyrictype == "lyric")
+                        if (myLyric.lyrictype == CLyric.LyricTypes.Lyric)
                         {
                             int tracknum = myLyric.lyricstracknum;
                             Track track = sequence1.tracks[tracknum];
@@ -4148,6 +4130,11 @@ namespace Karaboss
                     // Lance immédiatement la lecture du morceau                
                     if (bPlayNow)
                         PlayPauseMusic();
+                    else
+                    {
+                        if (bKaraokeAlwaysOn && bHasLyrics)
+                            DisplayLyricsForm();
+                    }
                 }
             }
             else
@@ -6042,7 +6029,7 @@ namespace Karaboss
 
         private void ResetMidiFile()
         {
-            plLyrics = new List<pictureBoxControl.plLyric>();
+            plLyrics = new List<plLyric>();
 
             OpenMidiFileOptions.TextEncoding = Karaclass.m_textEncoding;            
             OpenMidiFileOptions.SplitHands = false;

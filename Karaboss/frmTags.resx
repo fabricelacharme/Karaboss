@@ -613,7 +613,7 @@
     <value>NoControl</value>
   </data>
   <data name="label15.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 324</value>
+    <value>7, 358</value>
   </data>
   <data name="label15.Size" type="System.Drawing.Size, System.Drawing">
     <value>51, 13</value>
@@ -637,13 +637,13 @@
     <value>0</value>
   </data>
   <data name="txtWTag.Location" type="System.Drawing.Point, System.Drawing">
-    <value>73, 324</value>
+    <value>73, 354</value>
   </data>
   <data name="txtWTag.Multiline" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="txtWTag.Size" type="System.Drawing.Size, System.Drawing">
-    <value>371, 62</value>
+    <value>371, 39</value>
   </data>
   <data name="txtWTag.TabIndex" type="System.Int32, mscorlib">
     <value>14</value>
@@ -663,20 +663,23 @@
   <data name="label14.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label14.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  </data>
   <data name="label14.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="label14.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 255</value>
+    <value>7, 162</value>
   </data>
   <data name="label14.Size" type="System.Drawing.Size, System.Drawing">
-    <value>32, 13</value>
+    <value>452, 13</value>
   </data>
   <data name="label14.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
   </data>
   <data name="label14.Text" xml:space="preserve">
-    <value>Song</value>
+    <value>@T Title of song, artist, sequencer (SEQ), ... Examples True Love Bing Crosby</value>
   </data>
   <data name="&gt;&gt;label14.Name" xml:space="preserve">
     <value>label14</value>
@@ -691,7 +694,7 @@
     <value>2</value>
   </data>
   <data name="txtTTag.Location" type="System.Drawing.Point, System.Drawing">
-    <value>73, 255</value>
+    <value>73, 177</value>
   </data>
   <data name="txtTTag.Multiline" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -717,20 +720,23 @@
   <data name="label13.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label13.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  </data>
   <data name="label13.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="label13.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 216</value>
+    <value>7, 120</value>
   </data>
   <data name="label13.Size" type="System.Drawing.Size, System.Drawing">
-    <value>42, 13</value>
+    <value>285, 13</value>
   </data>
   <data name="label13.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
   </data>
   <data name="label13.Text" xml:space="preserve">
-    <value>Version</value>
+    <value>@V The program version number. Generally 0100</value>
   </data>
   <data name="&gt;&gt;label13.Name" xml:space="preserve">
     <value>label13</value>
@@ -751,16 +757,16 @@
     <value>NoControl</value>
   </data>
   <data name="label12.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 136</value>
+    <value>7, 272</value>
   </data>
   <data name="label12.Size" type="System.Drawing.Size, System.Drawing">
-    <value>59, 13</value>
+    <value>105, 13</value>
   </data>
   <data name="label12.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
   </data>
   <data name="label12.Text" xml:space="preserve">
-    <value>Information</value>
+    <value>@I other information.</value>
   </data>
   <data name="&gt;&gt;label12.Name" xml:space="preserve">
     <value>label12</value>
@@ -777,20 +783,23 @@
   <data name="label11.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label11.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  </data>
   <data name="label11.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="label11.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 98</value>
+    <value>7, 80</value>
   </data>
   <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
-    <value>31, 13</value>
+    <value>283, 13</value>
   </data>
   <data name="label11.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
   </data>
   <data name="label11.Text" xml:space="preserve">
-    <value>Lang</value>
+    <value>@L language of the song. Example ENGL, FREN</value>
   </data>
   <data name="&gt;&gt;label11.Name" xml:space="preserve">
     <value>label11</value>
@@ -807,17 +816,20 @@
   <data name="label10.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label10.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  </data>
   <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 12</value>
+    <value>7, 17</value>
   </data>
   <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>47, 13</value>
+    <value>411, 13</value>
   </data>
   <data name="label10.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
   </data>
   <data name="label10.Text" xml:space="preserve">
-    <value>Karaoke</value>
+    <value>@K Type of file / copyright information. Generally MIDI KARAOKE FILE</value>
   </data>
   <data name="&gt;&gt;label10.Name" xml:space="preserve">
     <value>label10</value>
@@ -832,7 +844,7 @@
     <value>7</value>
   </data>
   <data name="txtVTag.Location" type="System.Drawing.Point, System.Drawing">
-    <value>73, 213</value>
+    <value>73, 135</value>
   </data>
   <data name="txtVTag.Size" type="System.Drawing.Size, System.Drawing">
     <value>371, 20</value>
@@ -853,7 +865,7 @@
     <value>8</value>
   </data>
   <data name="txtITag.Location" type="System.Drawing.Point, System.Drawing">
-    <value>73, 133</value>
+    <value>73, 287</value>
   </data>
   <data name="txtITag.Multiline" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -898,13 +910,13 @@
     <value>10</value>
   </data>
   <data name="txtKTag.Location" type="System.Drawing.Point, System.Drawing">
-    <value>73, 12</value>
+    <value>73, 33</value>
   </data>
   <data name="txtKTag.Multiline" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="txtKTag.Size" type="System.Drawing.Size, System.Drawing">
-    <value>371, 62</value>
+    <value>371, 41</value>
   </data>
   <data name="txtKTag.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -934,7 +946,7 @@
     <value>1</value>
   </data>
   <data name="tabPage2.Text" xml:space="preserve">
-    <value>Kar tags</value>
+    <value>MIDI Karaoke standard Tags</value>
   </data>
   <data name="&gt;&gt;tabPage2.Name" xml:space="preserve">
     <value>tabPage2</value>
@@ -1033,7 +1045,7 @@
     <value>CenterScreen</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>Karaboss - Song properties</value>
+    <value>Karaboss - Song properties (MIDI tags)</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmTags</value>
