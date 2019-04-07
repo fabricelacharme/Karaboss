@@ -607,8 +607,7 @@ namespace Karaboss.playlists
             _itemDnD = (ListViewItem)e.Item;
             _itemPhantom = null;
             _itemCurrent = null;
-
-            //DoDragDrop(e.Item, DragDropEffects.Move);
+            
             DoDragDrop(listView.SelectedItems, DragDropEffects.Move);
         }
 

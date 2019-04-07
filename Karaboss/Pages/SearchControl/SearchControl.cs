@@ -168,7 +168,7 @@ namespace Karaboss.Search
             set
             {
                 m_View = value;
-                
+                listView.AllowDrop = (m_View == SearchViewStyle.Author ? true : false);
                 RecreateSearchView();
                
             }
@@ -459,6 +459,7 @@ namespace Karaboss.Search
 
         #endregion
 
+        #region ListView
 
         #region listview functions
 
@@ -920,6 +921,39 @@ namespace Karaboss.Search
         }
         #endregion
 
+
+        #region Drag Drop
+
+        // idea: possibility to drag & drop files from and to the search results area
+
+        private void ListView_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            DoDragDrop(listView.SelectedItems, DragDropEffects.Move);
+        }
+
+        private void ListView_DragOver(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void ListView_DragLeave(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ListView_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void ListView_DragDrop(object sender, DragEventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #endregion
 
         #region buttons
 
@@ -1853,10 +1887,15 @@ namespace Karaboss.Search
                 txtSearch.Focus();
         }
 
-        #endregion      
+        #endregion
 
 
         #region menu
+        /// <summary>
+        /// Search results sorted by author
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MnuViewByAuthor_Click(object sender, EventArgs e)
         {
             SView = SearchViewStyle.Author;
@@ -1864,6 +1903,11 @@ namespace Karaboss.Search
             mnuViewByFile.Checked = false;
         }
 
+        /// <summary>
+        /// Search results sorted by file name
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MnuViewByFile_Click(object sender, EventArgs e)
         {
             SView = SearchViewStyle.File;
@@ -2040,8 +2084,10 @@ namespace Karaboss.Search
             }
         }
 
+
         #endregion
 
-       
+
+        
     }
 }

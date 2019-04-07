@@ -181,12 +181,18 @@
             // listView
             // 
             resources.ApplyResources(this.listView, "listView");
+            this.listView.AllowDrop = true;
             this.listView.HideSelection = false;
             this.listView.Name = "listView";
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.ListView_AfterLabelEdit);
             this.listView.BeforeLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.ListView_BeforeLabelEdit);
+            this.listView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.ListView_ItemDrag);
             this.listView.SelectedIndexChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
+            this.listView.DragDrop += new System.Windows.Forms.DragEventHandler(this.ListView_DragDrop);
+            this.listView.DragEnter += new System.Windows.Forms.DragEventHandler(this.ListView_DragEnter);
+            this.listView.DragOver += new System.Windows.Forms.DragEventHandler(this.ListView_DragOver);
+            this.listView.DragLeave += new System.EventHandler(this.ListView_DragLeave);
             this.listView.DoubleClick += new System.EventHandler(this.ListView_DoubleClick);
             this.listView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListView_Keydown);
             this.listView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ListView_MouseDown);
