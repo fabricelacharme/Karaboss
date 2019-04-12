@@ -459,6 +459,7 @@ namespace Karaboss.Search
 
         #endregion
 
+
         #region ListView
 
         #region listview functions
@@ -928,7 +929,17 @@ namespace Karaboss.Search
 
         private void ListView_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            DoDragDrop(listView.SelectedItems, DragDropEffects.Move);
+            //DoDragDrop(listView.SelectedItems, DragDropEffects.Move);
+
+            List<string> selection = new List<string>();
+            foreach (ListViewItem item in listView.SelectedItems)
+            {
+                //int imgIndex = item.ImageIndex;
+                selection.Add(item.Tag.ToString());
+                //selection.Add(item.Text);
+            }
+            DataObject data = new DataObject(DataFormats.FileDrop, selection.ToArray());
+            DoDragDrop(data, DragDropEffects.Move);
         }
 
         private void ListView_DragOver(object sender, DragEventArgs e)
@@ -948,12 +959,61 @@ namespace Karaboss.Search
 
         private void ListView_DragDrop(object sender, DragEventArgs e)
         {
+            
+            Point cp = listView.PointToClient(new Point(e.X, e.Y));
+            ListViewItem itemOver = listView.GetItemAt(cp.X, cp.Y);            
+
+            if (itemOver == null)
+                return;
+
+            //Console.Write(itemOver.Text);
+            //Console.Write(itemOver.Tag);
+            string DestFile = itemOver.Tag.ToString();
+
+            if (DestFile == string.Empty)            
+                return;
+
+            string OrgPath = string.Empty;
+            string OrgFileName = string.Empty;
+            string DestPath = Path.GetDirectoryName(DestFile);
+            if (!Directory.Exists(DestPath))
+            {
+                MessageBox.Show("This path does not exists:" + "\n<" + DestPath + ">", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                // Note that you can have more than one file.
+                var Files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                
+                //Console.WriteLine("Got Files");
+                foreach (var OrgFullFileName in Files)
+                {
+                    Console.WriteLine($"  File={OrgFullFileName}");
+                    OrgPath = Path.GetDirectoryName(OrgFullFileName);
+                    OrgFileName = Path.GetFileName(OrgFullFileName);
+
+                    // Files already exists ?
+                    try 
+                    {
+                        System.IO.File.Move(Path.Combine(OrgPath, OrgFileName), Path.Combine(DestPath, OrgFileName));
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    
+
+                }
+            }
 
         }
 
         #endregion
 
         #endregion
+
 
         #region buttons
 

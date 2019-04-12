@@ -2542,7 +2542,6 @@ namespace Karaboss.playlists
         #endregion
 
 
-
         #region appearance
 
         /// <summary>
