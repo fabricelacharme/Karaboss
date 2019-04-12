@@ -859,6 +859,30 @@ namespace Sanford.Multimedia.Midi
             //byte[] l = Encoding.Default.GetBytes(sy);
             //sy = Encoding.UTF8.GetString(l);
 
+            // FAB 12/04/2019 - UTF8 encoding
+            sy = sy.Replace("Ã©", "é");
+            sy = sy.Replace("Ã¨", "è");
+            sy = sy.Replace("â€™", "’");
+
+            sy = sy.Replace("Ã§", "ç");
+            sy = sy.Replace("Ã‡", "Ç");
+
+            sy = sy.Replace("Ãª", "ê");
+            sy = sy.Replace("Ã¢", "â");
+            sy = sy.Replace("Ã´", "ô");
+            sy = sy.Replace("Ã ", "à");
+            sy = sy.Replace("Ã¦", "æ");
+            sy = sy.Replace("Å“", "œ");
+            sy = sy.Replace("Ã®", "î");
+            sy = sy.Replace("à®", "î");
+
+            sy = sy.Replace("Ã»", "û");
+            sy = sy.Replace("Ãº", "ú");
+            sy = sy.Replace("Ã¹", "ù");
+
+            sy = sy.Replace("â€”", "—");
+            
+
             /*
             var dictionary = new Dictionary<string, string>()
             {
@@ -920,7 +944,7 @@ namespace Sanford.Multimedia.Midi
                 {"â€ž", "„"},
                 {"â€¦", "…"},
                 {"â€¡", "‡"},                
-                { "Ë†", "ˆ"},
+                {"Ë†", "ˆ"},
                 {"â€°", "‰"},
                 {"Å ", "Š"},
                 {"â€¹", "‹"},
@@ -967,7 +991,7 @@ namespace Sanford.Multimedia.Midi
                 {"Â¾", "¾"},                
                 {"Â¿", "¿"},                
                 {"â€", "†"},                                
-                { "Ã¢", "â"},
+                {"Ã¢", "â"},
                 {"Ã‚", "Â"},
                 {"Ãƒ", "Ã"},                
             };
