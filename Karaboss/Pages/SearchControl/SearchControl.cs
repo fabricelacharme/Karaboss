@@ -55,7 +55,6 @@ namespace Karaboss.Search
         File,
     }
 
-
     // Events
     public delegate void SelectedIndexChangedEventHandler(object sender, string fileName);
     public delegate void PlayMidiEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
@@ -200,7 +199,6 @@ namespace Karaboss.Search
 
             // initialize listview
             InitListview();
-
 
             if (_songroot == "C:\\\\" || Directory.Exists(_songroot) == false)
                 _songroot = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
@@ -520,6 +518,11 @@ namespace Karaboss.Search
             FlShell.SystemImageList.UseSystemImageList(listView);
         }
 
+        /// <summary>
+        /// Click on a Group => navigate to the folder
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ListView_GroupHeaderClick(object sender, int e)
         {
             int i = 0;
@@ -537,18 +540,10 @@ namespace Karaboss.Search
                         MessageBox.Show("This path does not exists:" + "\n<" + path + ">", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         return;
                     }
-
                     NavigateTo?.Invoke(this, path);
                     return;
                 }
-            }
-            //listView.Groups[0].ID
-
-            if (e < listView.Groups.Count)
-            {
-                Console.Write(string.Format("\nGroup = {0}", e));
-                Console.Write(listView.Groups[e].Header);
-            }
+            }            
         }
 
         /// <summary>
@@ -556,8 +551,7 @@ namespace Karaboss.Search
         /// </summary>
         private void ResetListView()
         {                       
-            listView.Items.Clear();
-            
+            listView.Items.Clear();            
         }
 
         /// <summary>
@@ -918,14 +912,16 @@ namespace Karaboss.Search
             NavigateFolder(lvi);
         }
 
+        /// <summary>
+        /// Navigate to a folder
+        /// </summary>
+        /// <param name="lvi"></param>
         private void NavigateFolder(ListViewItem lvi)
         {
             string file = lvi.Tag.ToString();
 
-            if (file == string.Empty)
-            {
-                return;
-            }
+            if (file == string.Empty)            
+                return;            
 
             string path = Path.GetDirectoryName(file);
             if (!Directory.Exists(path))
@@ -933,7 +929,6 @@ namespace Karaboss.Search
                 MessageBox.Show("This path does not exists:" + "\n<" + path + ">", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-
             NavigateTo?.Invoke(this, path);
         }
 
@@ -958,7 +953,11 @@ namespace Karaboss.Search
             }
         }
 
-
+        /// <summary>
+        /// Cursor = hand when mouse is over a group, indcating that we can navigate to its folder
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ListView_MouseMove(object sender, MouseEventArgs e)
         {
             if (m_View != SearchViewStyle.Author)
