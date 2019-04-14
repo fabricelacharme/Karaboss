@@ -46,7 +46,8 @@
             this.btnScan = new System.Windows.Forms.Button();
             this.lblSearchDir = new System.Windows.Forms.Label();
             this.txtSearchDir = new System.Windows.Forms.TextBox();
-            this.listView = new System.Windows.Forms.ListView();
+            //this.listView = new System.Windows.Forms.ListView();
+            this.listView = new MyListView();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnRemoveFromSearch = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -196,6 +197,8 @@
             this.listView.DoubleClick += new System.EventHandler(this.ListView_DoubleClick);
             this.listView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListView_Keydown);
             this.listView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ListView_MouseDown);
+            this.listView.MouseLeave += new System.EventHandler(this.ListView_MouseLeave);
+            this.listView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ListView_MouseMove);
             // 
             // toolStrip1
             // 
@@ -353,7 +356,8 @@
         private System.Windows.Forms.Button btnScan;
         private System.Windows.Forms.CheckBox chkCaseSensitive;
         private System.Windows.Forms.TextBox txtSearch;
-        private System.Windows.Forms.ListView listView;
+        //private System.Windows.Forms.ListView listView;
+        private MyListView listView;
         private System.Windows.Forms.Label lblSearch;
         private System.Windows.Forms.FolderBrowserDialog fldDialog;
         private System.Windows.Forms.Label lblDirSong;

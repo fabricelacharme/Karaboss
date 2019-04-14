@@ -330,6 +330,9 @@
     <Compile Include="Pages\ConnectedControl\ConnectedControl.Designer.cs">
       <DependentUpon>ConnectedControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SearchControl\MyListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="PDF\Adler.cs" />
     <Compile Include="PDF\PDFWithImages.cs" />
     <Compile Include="Pages\PlaylistsControl\FrmNewPlaylist.cs">
