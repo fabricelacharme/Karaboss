@@ -258,12 +258,17 @@ namespace Sanford.Multimedia.Midi.Score
             int xpos = keysigWidth;
             //int ypos = height - 12;
             int ypos = this.Height - 20; //FAB
+            string t = string.Empty;
 
             foreach (LyricSymbol lyric in lyrics)
             {
                 if ( (xpos + lyric.X >= clip.X - lyric.MinWidth - 50) && (xpos + lyric.X <= clip.X + clip.Width + 50))
                 {
-                    g.DrawString(lyric.Text,
+                    t = lyric.Text;
+                    t = t.Replace("\\","");
+                    t = t.Replace("/", "");
+
+                    g.DrawString(t,
                              SheetMusic.LetterFont,
                              Brushes.Black,
                              xpos + lyric.X, ypos);
