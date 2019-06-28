@@ -2628,8 +2628,9 @@ namespace Sanford.Multimedia.Midi.Score
                 int ticksTo = 0;
 
                 // Display Dialog form
+                int maxi = nbMeasures;
                 DialogResult dr = new DialogResult();
-                UI.selectMeasuresDialog SelectMeasuresDialog = new UI.selectMeasuresDialog(MeasureFrom);
+                UI.selectMeasuresDialog SelectMeasuresDialog = new UI.selectMeasuresDialog(MeasureFrom, maxi);
                 dr = SelectMeasuresDialog.ShowDialog();
 
                 if (dr == System.Windows.Forms.DialogResult.Cancel)
