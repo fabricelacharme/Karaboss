@@ -2005,8 +2005,18 @@ namespace Karaboss
                             if (MessageBox.Show(tx, "Karaboss - Delete directories", MessageBoxButtons.OKCancel) == DialogResult.OK)
                             {                            
                                 bAbortDelete = false;
-                                Directory.Delete(directory, false);
-                                iNbDelete++;
+                                try
+                                {
+                                    Directory.Delete(directory, false);
+                                    iNbDelete++;
+                                }
+                                catch (Exception e)
+                                {
+                                    MessageBox.Show(e.Message, "Karaboss - Delete directories", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    bAbortDelete = true;
+                                    return;
+                                }
+                                
                             }
                             else
                             {
@@ -2016,8 +2026,17 @@ namespace Karaboss
                         }
                         else
                         {
-                            Directory.Delete(directory, false);
-                            iNbDelete++;
+                            try
+                            {
+                                Directory.Delete(directory, false);
+                                iNbDelete++;
+                            }
+                            catch (Exception e)
+                            {
+                                MessageBox.Show(e.Message, "Karaboss - Delete directories", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                bAbortDelete = true;
+                                return;
+                            }
                         }
 
                     }
