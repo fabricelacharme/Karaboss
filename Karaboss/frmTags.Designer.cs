@@ -217,7 +217,7 @@
             // txtTTag
             // 
             resources.ApplyResources(this.txtTTag, "txtTTag");
-            this.txtTTag.Name = "txtTTag";
+            this.txtTTag.Name = "txtTTag";            
             // 
             // label13
             // 
@@ -257,7 +257,7 @@
             // txtKTag
             // 
             resources.ApplyResources(this.txtKTag, "txtKTag");
-            this.txtKTag.Name = "txtKTag";
+            this.txtKTag.Name = "txtKTag";            
             // 
             // tabPage1
             // 
@@ -293,7 +293,7 @@
             this.Controls.Add(this.btnCancel);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmTags";
+            this.Name = "frmTags";            
             this.tabControl1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();

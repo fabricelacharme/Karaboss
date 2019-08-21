@@ -338,6 +338,6 @@ namespace Karaboss
             return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
         }
 
-        
+     
     }
 }
