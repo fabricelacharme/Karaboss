@@ -65,9 +65,13 @@
             this.pictHighlight = new System.Windows.Forms.PictureBox();
             this.pictBefore = new System.Windows.Forms.PictureBox();
             this.cbOptionsTextDisplay = new System.Windows.Forms.ComboBox();
-            this.pBox = new PicControl.pictureBoxControl();
             this.chkTextBackground = new System.Windows.Forms.CheckBox();
             this.chkContour = new System.Windows.Forms.CheckBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.pBox = new PicControl.pictureBoxControl();
+            this.fontDialog1 = new System.Windows.Forms.FontDialog();
+            this.btnFonts = new System.Windows.Forms.Button();
+            this.txtFont = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -329,9 +333,33 @@
             this.cbOptionsTextDisplay.Name = "cbOptionsTextDisplay";
             this.cbOptionsTextDisplay.SelectedIndexChanged += new System.EventHandler(this.cbOptionsTextDisplay_SelectedIndexChanged);
             // 
+            // chkTextBackground
+            // 
+            resources.ApplyResources(this.chkTextBackground, "chkTextBackground");
+            this.chkTextBackground.Checked = true;
+            this.chkTextBackground.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTextBackground.Name = "chkTextBackground";
+            this.chkTextBackground.UseVisualStyleBackColor = true;
+            this.chkTextBackground.CheckedChanged += new System.EventHandler(this.chkTextBackground_CheckedChanged);
+            // 
+            // chkContour
+            // 
+            resources.ApplyResources(this.chkContour, "chkContour");
+            this.chkContour.Checked = true;
+            this.chkContour.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkContour.Name = "chkContour";
+            this.chkContour.UseVisualStyleBackColor = true;
+            this.chkContour.CheckedChanged += new System.EventHandler(this.chkContour_CheckedChanged);
+            // 
+            // label7
+            // 
+            resources.ApplyResources(this.label7, "label7");
+            this.label7.Name = "label7";
+            // 
             // pBox
             // 
             this.pBox.BackColor = System.Drawing.Color.Black;
+            this.pBox.bColorContour = true;
             this.pBox.BeatDuration = 0;
             this.pBox.bTextBackGround = true;
             this.pBox.CurrentTextPos = 2;
@@ -339,6 +367,7 @@
             this.pBox.DirSlideShow = null;
             this.pBox.FreqDirSlideShow = 0;
             this.pBox.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pBox.KaraokeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             resources.ApplyResources(this.pBox, "pBox");
             this.pBox.LyricsTimes = ((System.Collections.Generic.List<int>)(resources.GetObject("pBox.LyricsTimes")));
             this.pBox.LyricsWords = ((System.Collections.Generic.List<string>)(resources.GetObject("pBox.LyricsWords")));
@@ -359,28 +388,25 @@
             this.pBox.TxtNbLines = 3;
             this.pBox.TxtNextColor = System.Drawing.Color.YellowGreen;
             // 
-            // chkTextBackground
+            // btnFonts
             // 
-            resources.ApplyResources(this.chkTextBackground, "chkTextBackground");
-            this.chkTextBackground.Checked = true;
-            this.chkTextBackground.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTextBackground.Name = "chkTextBackground";
-            this.chkTextBackground.UseVisualStyleBackColor = true;
-            this.chkTextBackground.CheckedChanged += new System.EventHandler(this.chkTextBackground_CheckedChanged);
+            resources.ApplyResources(this.btnFonts, "btnFonts");
+            this.btnFonts.Name = "btnFonts";
+            this.btnFonts.UseVisualStyleBackColor = true;
+            this.btnFonts.Click += new System.EventHandler(this.BtnFonts_Click);
             // 
-            // chkContour
+            // txtFont
             // 
-            resources.ApplyResources(this.chkContour, "chkContour");
-            this.chkContour.Checked = true;
-            this.chkContour.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkContour.Name = "chkContour";
-            this.chkContour.UseVisualStyleBackColor = true;
-            this.chkContour.CheckedChanged += new System.EventHandler(this.chkContour_CheckedChanged);
+            resources.ApplyResources(this.txtFont, "txtFont");
+            this.txtFont.Name = "txtFont";
             // 
             // frmLyrOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.txtFont);
+            this.Controls.Add(this.btnFonts);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.chkContour);
             this.Controls.Add(this.chkTextBackground);
             this.Controls.Add(this.cbOptionsTextDisplay);
@@ -478,5 +504,9 @@
         private System.Windows.Forms.ComboBox cbOptionsTextDisplay;
         private System.Windows.Forms.CheckBox chkTextBackground;
         private System.Windows.Forms.CheckBox chkContour;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.FontDialog fontDialog1;
+        private System.Windows.Forms.Button btnFonts;
+        private System.Windows.Forms.TextBox txtFont;
     }
 }

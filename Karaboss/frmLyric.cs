@@ -58,6 +58,7 @@ namespace Karaboss
         private HashSet<Control> controlsToMove = new HashSet<Control>();
         #endregion
 
+        private Font _karaokeFont;
         private string lyrics;
         private int currentTextPos = 0;
         private Point Mouselocation;
@@ -75,6 +76,18 @@ namespace Karaboss
         }
 
         #region text characteristics
+
+        public Font KaraokeFont
+        {
+            get { return _karaokeFont; }
+            set
+            {
+                _karaokeFont = value;
+                // Redraw
+                pBox.KaraokeFont = _karaokeFont;
+            }
+        }
+
         private Karaclass.OptionsDisplay _OptionDisplay;
         /// <summary>
         /// Display lyrics option: top, Center, Bottom
@@ -360,6 +373,9 @@ namespace Karaboss
         {
             try
             {
+                _karaokeFont = Properties.Settings.Default.KaraokeFont;
+                pBox.KaraokeFont = _karaokeFont;
+
                 // show balls
                 bShowBalls = Karaclass.m_DisplayBalls;
 

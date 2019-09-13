@@ -296,6 +296,19 @@ namespace PicControl
 
         #region Text others
 
+        public Font KaraokeFont
+        {
+            get { return _karaokeFont; }
+            set
+            {
+                _karaokeFont = value;
+                // Redraw
+                //SetDimensions();
+                pboxWnd.Invalidate();
+            }
+        }
+
+
         /// <summary>
         /// Background color
         /// </summary>
@@ -401,6 +414,7 @@ namespace PicControl
         private int vOffset = 0;
         private int _lineHeight = 0;
 
+        private Font _karaokeFont;
         private int _linesHeight = 0;
         private int _nbLyricsLines = 0;
 
@@ -446,6 +460,8 @@ namespace PicControl
         public pictureBoxControl()
         {
             InitializeComponent();
+
+            _karaokeFont = new Font("Arial", this.Font.Size);
 
             #region Move form without title bar
             Application.AddMessageFilter(this);
@@ -787,11 +803,13 @@ namespace PicControl
             m_Cancel = false;
             
             emSize = 4;
-            m_font = new Font("Arial", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            //m_font = new Font("Arial", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            m_font = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
             sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
 
-            pboxWnd.Font = new Font(Name = "Arial", emSize);            
+            //pboxWnd.Font = new Font(Name = "Arial", emSize);            
+            pboxWnd.Font = new Font(Name = _karaokeFont.Name, emSize);
             pboxWnd.SizeMode = PictureBoxSizeMode.Zoom;
 
             // Default text
@@ -1095,7 +1113,8 @@ namespace PicControl
                 using (Graphics g = pboxWnd.CreateGraphics())
                 {
 
-                    m_font = new Font("Arial", femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    //m_font = new Font("Arial", femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
                     SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
                     ret = sz.Width;
@@ -1123,7 +1142,10 @@ namespace PicControl
                 {
 
                     if (femSize > 0)
-                        m_font = new Font("Arial", femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    {
+                        //m_font = new Font("Arial", femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                        m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    }
 
                     SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
                     ret = sz.Height;
@@ -1230,8 +1252,10 @@ namespace PicControl
                 if (inisize > 0)
                 {
                     emSize = g.DpiY * inisize / 72;
-                    m_font = new Font("Arial", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
-                    pboxWnd.Font = new Font(Name = "Arial", emSize);
+                    //m_font = new Font("Arial", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    m_font = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    //pboxWnd.Font = new Font(Name = "Arial", emSize);
+                    pboxWnd.Font = new Font(Name = _karaokeFont.Name, emSize);
 
                     // Vertical distance between lines
                     _lineHeight = (int)emSize + 10;
