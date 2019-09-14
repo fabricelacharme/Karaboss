@@ -841,6 +841,9 @@ namespace Karaboss
 
         private void BtnFonts_Click(object sender, EventArgs e)
         {
+            // Show the dialog.
+            fontDialog1.Font = _karaokeFont;
+
             if (fontDialog1.ShowDialog() == DialogResult.OK)
             {
                 txtFont.Text = fontDialog1.Font.Name;
