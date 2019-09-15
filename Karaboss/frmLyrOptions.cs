@@ -841,15 +841,24 @@ namespace Karaboss
 
         private void BtnFonts_Click(object sender, EventArgs e)
         {
-            // Show the dialog.
-            fontDialog1.Font = _karaokeFont;
-
-            if (fontDialog1.ShowDialog() == DialogResult.OK)
+            try
             {
-                txtFont.Text = fontDialog1.Font.Name;
-                _karaokeFont = fontDialog1.Font;
-                pBox.KaraokeFont = _karaokeFont;
+                // Show the dialog.
+                fontDialog1.Font = _karaokeFont;
 
+                if (fontDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    txtFont.Text = fontDialog1.Font.Name;
+                    _karaokeFont = fontDialog1.Font;
+                    pBox.KaraokeFont = _karaokeFont;
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                _karaokeFont = new Font("Arial", this.Font.Size);
 
             }
         
