@@ -1561,6 +1561,12 @@ namespace Karaboss
             // Split into peaces of words
             source = source.Replace("\r\n", " <cr> ");
             source = source.Replace(" <cr>  <cr> ", " <cr> <cr> ");
+
+            // Split syllabes 
+            // go#ing => go# ing
+            source = source.Replace("*", "# ");
+
+            // Separate words by space
             string[] stringSeparators = new string[] { " " };
             string[] result = source.Split(stringSeparators, StringSplitOptions.None);
             for (int i = 0; i < result.Length; i++)
@@ -1616,7 +1622,10 @@ namespace Karaboss
                         if (dgView.Rows[i].Cells[COL_NOTE].Value == null)
                             dgView.Rows[i].Cells[COL_NOTE].Value = 0;
 
-                        plElement = s + "_";
+                        if (s.EndsWith("#"))
+                            plElement = s.Substring(0, s.Length - 1);
+                        else
+                            plElement = s + "_";
 
                         dgView.Rows[i].Cells[COL_TEXT].Value = plElement;                        
                         
@@ -1625,6 +1634,7 @@ namespace Karaboss
                     {
                         // insert <CR>;
                         plType = "cr";
+
                         if (dgView.Rows[i].Cells[COL_TICKS].Value != null)
                         {
                             plTicksOn = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
@@ -1635,13 +1645,11 @@ namespace Karaboss
 
                         plNote = Convert.ToInt32(dgView.Rows[i].Cells[COL_NOTE].Value);
 
-                        plElement = "";                        
+                        plElement = "/";
 
-                        dgView.Rows[i].Cells[COL_TICKS].Value = plTicksOn;
-                        dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
-                        dgView.Rows[i].Cells[COL_TYPE].Value = plType;
-                        dgView.Rows[i].Cells[COL_NOTE].Value = plNote.ToString();
-                        dgView.Rows[i].Cells[COL_TEXT].Value = plElement;                        
+                        // Insert new row
+                        dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);                      
+
                     }
                 }
             }
@@ -1896,13 +1904,79 @@ namespace Karaboss
             int line = dgView.CurrentCell.RowIndex;
             int k = dgView.CurrentCell.ColumnIndex;            
 
-            if (DGV.Count > 0)
+            if (DGV != null && DGV.Count > 0)
             {
                 for (int i = 0; i <= DGV.Count - 1; i++)
                 {
                     dgView.Rows[line].Cells[k].Value = DGV[i].Value;
                     line++;
                 }                                             
+            }
+            else
+            {
+                PasteClipboard();
+                //Load modification into local list of lyrics
+                LoadModifiedLyrics();
+                PopulateTextBox(localplLyrics);
+            }
+        }
+
+        private void PasteClipboard()
+        {
+            try
+            {
+                string s = Clipboard.GetText();
+                string c = string.Empty;
+                string[] lines = s.Split('\n');
+                int iFail = 0, iRow = dgView.CurrentCell.RowIndex;
+                int iCol = dgView.CurrentCell.ColumnIndex;
+                DataGridViewCell oCell;
+                
+                if (dgView.Rows.Count < lines.Length)
+                    dgView.Rows.Add(lines.Length - 1);
+                
+                foreach (string line in lines)
+                {
+                    if (iRow < dgView.RowCount && line.Length > 0)
+                    {
+                        string[] sCells = line.Split('\t');
+                        for (int i = 0; i < sCells.GetLength(0); ++i)
+                        {
+                            if (iCol + i < this.dgView.ColumnCount)
+                            {
+                                oCell = dgView[iCol + i, iRow];
+                                if (!oCell.ReadOnly)
+                                {                                    
+                                    c = sCells[i];
+                                    c = c.Trim();
+                                    c = c.Replace("\r", "");
+
+                                    if (c.EndsWith("*"))
+                                        c = c.Substring(0, c.Length - 1);
+                                    else
+                                        c = c + "_";
+
+                                    oCell.Value = c;                                   
+                                }
+                            }
+                            else
+                            { break; }
+                        }
+                        iRow++;
+                    }
+                    else
+                    { break; }
+
+                    
+                }
+                if (iFail > 0)
+                    MessageBox.Show(string.Format("{0} updates failed due" +
+                                    " to read only column setting", iFail));
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("The data you pasted is in the wrong format for the cell");
+                return;
             }
         }
 
