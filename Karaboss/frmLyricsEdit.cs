@@ -1921,6 +1921,9 @@ namespace Karaboss
             }
         }
 
+        /// <summary>
+        /// Paste from Clipboard
+        /// </summary>
         private void PasteClipboard()
         {
             try
@@ -1951,6 +1954,8 @@ namespace Karaboss
                                     c = c.Trim();
                                     c = c.Replace("\r", "");
 
+                                    // Check if a syllabe separator exists
+                                    // No additional trailing space between syllabes of a word
                                     if (c.EndsWith("*"))
                                         c = c.Substring(0, c.Length - 1);
                                     else
@@ -2303,8 +2308,7 @@ namespace Karaboss
             for (int i = 0; i < lLyrics.Count; i++)
             {
                 // Affiche les blancs
-                plElement = lLyrics[i].Element;
-                //plElement = plElement.Replace("\r", "\r\n");
+                plElement = lLyrics[i].Element;                
 
                 plElement = plElement.Replace("\\", "\r\n\r\n");   // Paragraph
                 plElement = plElement.Replace("/", "\r\n");        // LineFeed
