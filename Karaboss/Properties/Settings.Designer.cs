@@ -12,7 +12,7 @@ namespace Karaboss.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.2.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.3.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -1007,6 +1007,42 @@ namespace Karaboss.Properties {
             }
             set {
                 this["KaraokeFont"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("*")]
+        public string SepSyllabe {
+            get {
+                return ((string)(this["SepSyllabe"]));
+            }
+            set {
+                this["SepSyllabe"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("/")]
+        public string SepLine {
+            get {
+                return ((string)(this["SepLine"]));
+            }
+            set {
+                this["SepLine"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\")]
+        public string SepParagraph {
+            get {
+                return ((string)(this["SepParagraph"]));
+            }
+            set {
+                this["SepParagraph"] = value;
             }
         }
     }

@@ -248,5 +248,14 @@
     <Setting Name="KaraokeFont" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Arial Narrow, 8.25pt</Value>
     </Setting>
+    <Setting Name="SepSyllabe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">*</Value>
+    </Setting>
+    <Setting Name="SepLine" Type="System.String" Scope="User">
+      <Value Profile="(Default)">/</Value>
+    </Setting>
+    <Setting Name="SepParagraph" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

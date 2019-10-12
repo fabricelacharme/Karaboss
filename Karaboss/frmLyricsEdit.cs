@@ -59,7 +59,7 @@ namespace Karaboss
          * 
          * Line break is '/'
          * Paragraph is '\'
-         * 
+         * Syllabe separator is '*'
          */
        
 
@@ -73,8 +73,7 @@ namespace Karaboss
         private Track melodyTrack;
         private CLyric myLyric;
 
-        private ContextMenuStrip dgContextMenu;
-        private DataGridViewSelectedCellCollection DGV;
+        private ContextMenuStrip dgContextMenu;        
 
         enum LyricFormats
         {
@@ -102,7 +101,6 @@ namespace Karaboss
         private double _ppqn;
         private int _tempo;
         private int _measurelen;
-
 
         public frmLyricsEdit(Sequence sequence, List<plLyric> plLyrics, CLyric mylyric, string fileName)
         {
@@ -1901,24 +1899,11 @@ namespace Karaboss
 
         private void MnuPaste_Click(object sender, EventArgs e)
         {
-            int line = dgView.CurrentCell.RowIndex;
-            int k = dgView.CurrentCell.ColumnIndex;            
-
-            if (DGV != null && DGV.Count > 0)
-            {
-                for (int i = 0; i <= DGV.Count - 1; i++)
-                {
-                    dgView.Rows[line].Cells[k].Value = DGV[i].Value;
-                    line++;
-                }                                             
-            }
-            else
-            {
-                PasteClipboard();
-                //Load modification into local list of lyrics
-                LoadModifiedLyrics();
-                PopulateTextBox(localplLyrics);
-            }
+            // Paste from Clipboard
+            PasteClipboard();
+            //Load modification into local list of lyrics
+            LoadModifiedLyrics();
+            PopulateTextBox(localplLyrics);           
         }
 
         /// <summary>
@@ -1928,13 +1913,23 @@ namespace Karaboss
         {
             try
             {
-                string s = Clipboard.GetText();
-                string c = string.Empty;
+                string s = Clipboard.GetText();                
                 string[] lines = s.Split('\n');
-                int iFail = 0, iRow = dgView.CurrentCell.RowIndex;
+
+                int iFail = 0;
+                int iRow = dgView.CurrentCell.RowIndex;
                 int iCol = dgView.CurrentCell.ColumnIndex;
                 DataGridViewCell oCell;
-                
+
+                string c = string.Empty;
+
+                string plType = string.Empty;
+                int plTicksOn = 0;
+                string plRealTime = string.Empty;
+                int plNote = 0;
+                string plElement = string.Empty;
+
+
                 if (dgView.Rows.Count < lines.Length)
                     dgView.Rows.Add(lines.Length - 1);
                 
@@ -1943,6 +1938,7 @@ namespace Karaboss
                     if (iRow < dgView.RowCount && line.Length > 0)
                     {
                         string[] sCells = line.Split('\t');
+                        
                         for (int i = 0; i < sCells.GetLength(0); ++i)
                         {
                             if (iCol + i < this.dgView.ColumnCount)
@@ -1956,12 +1952,58 @@ namespace Karaboss
 
                                     // Check if a syllabe separator exists
                                     // No additional trailing space between syllabes of a word
-                                    if (c.EndsWith("*"))
+                                    
+                                    //if (c.EndsWith("*"))
+                                    if (c.EndsWith(Karaclass.m_SepSyllabe))
+                                    {
                                         c = c.Substring(0, c.Length - 1);
-                                    else
-                                        c = c + "_";
+                                        oCell.Value = c;
+                                    }
+                                    // Check if a LineFeed exists
+                                    // A new line has to be inserted
+                                    //else if (c.StartsWith("/"))
+                                    else if (c.StartsWith(Karaclass.m_SepLine))
+                                    {                                       
 
-                                    oCell.Value = c;                                   
+                                        // 1. insert <CR>;
+                                        plType = "cr";
+
+                                        if (dgView.Rows[iRow].Cells[COL_TICKS].Value != null)
+                                        {
+                                            plTicksOn = Convert.ToInt32(dgView.Rows[iRow].Cells[COL_TICKS].Value);
+                                            plRealTime = TicksToTime(plTicksOn);
+                                        }
+                                        if (dgView.Rows[iRow].Cells[COL_NOTE].Value == null)
+                                            dgView.Rows[iRow].Cells[COL_NOTE].Value = 0;
+
+                                        plNote = Convert.ToInt32(dgView.Rows[iRow].Cells[COL_NOTE].Value);
+
+                                        plElement = "/";
+
+                                        // Insert new row
+                                        dgView.Rows.Insert(iRow, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);
+
+                                        iRow++;
+                                        oCell = dgView[iCol + i, iRow];
+
+                                        // 2. Write line after
+                                        // Remove the character "/"
+                                        c = c.Substring(1, c.Length - 1);
+                                        // Add space if not present
+                                        if (! c.EndsWith("_"))
+                                            c = c + "_";
+
+                                        oCell.Value = c;
+
+                                    }
+                                    else
+                                    {
+                                        // Add space if not present
+                                        if (!c.EndsWith("_"))
+                                            c = c + "_";
+                                        oCell.Value = c;
+                                    }
+                                    
                                 }
                             }
                             else
@@ -1987,7 +2029,7 @@ namespace Karaboss
 
         private void MnuCopy_Click(object sender, EventArgs e)
         {
-            DGV = this.dgView.SelectedCells;         
+            //DGV = this.dgView.SelectedCells;         
 
             if (dgView.GetCellCount(DataGridViewElementStates.Selected) > 0)
             {
@@ -2452,7 +2494,8 @@ namespace Karaboss
         #endregion functions
 
 
-        #region Option lyrics format
+        #region Option lyrics format       
+
         private void OptFormatText_CheckedChanged(object sender, EventArgs e)
         {
             if (optFormatText.Checked)
@@ -2464,8 +2507,6 @@ namespace Karaboss
             if (optFormatLyrics.Checked)
                 TextLyricFormat = LyricFormats.Lyric;
         }
-
-
 
         #endregion
 

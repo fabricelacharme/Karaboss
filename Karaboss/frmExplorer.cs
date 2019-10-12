@@ -622,6 +622,10 @@ namespace Karaboss
             Karaclass.m_TransposeAmount = Properties.Settings.Default.TransposeAmount;
             Karaclass.m_Velocity = Properties.Settings.Default.Velocity;
 
+            Karaclass.m_SepLine = Properties.Settings.Default.SepLine;
+            Karaclass.m_SepSyllabe = Properties.Settings.Default.SepSyllabe;
+            Karaclass.m_SepParagraph = Properties.Settings.Default.SepParagraph;
+
             // Listview column length
             int l = Properties.Settings.Default.lvFileNameColumn;
             xplorerControl.SetColumnWidth(0, l);

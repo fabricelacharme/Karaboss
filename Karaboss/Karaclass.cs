@@ -57,6 +57,10 @@ namespace Karaboss
         public static int m_TransposeAmount;    // transpose amount
         public static int m_Velocity;           // Velocity of new notes
 
+        public static string m_SepSyllabe;
+        public static string m_SepLine;
+        public static string m_SepParagraph;
+
 
         public enum OptionsDisplay
         {
