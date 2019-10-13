@@ -1911,7 +1911,13 @@ namespace Karaboss
             PasteClipboard();
             //Load modification into local list of lyrics
             LoadModifiedLyrics();
-            PopulateTextBox(localplLyrics);           
+            PopulateTextBox(localplLyrics);
+
+            // Color separators
+            ColorSepRows();
+
+            // File was modified
+            FileModified();
         }
 
         /// <summary>

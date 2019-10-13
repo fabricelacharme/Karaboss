@@ -88,6 +88,7 @@
             // 
             resources.ApplyResources(this.txtSepSyllabe, "txtSepSyllabe");
             this.txtSepSyllabe.Name = "txtSepSyllabe";
+            this.txtSepSyllabe.Validating += new System.ComponentModel.CancelEventHandler(this.txtSepSyllabe_Validating);
             // 
             // label3
             // 
@@ -113,6 +114,7 @@
             // 
             resources.ApplyResources(this.txtSepLine, "txtSepLine");
             this.txtSepLine.Name = "txtSepLine";
+            this.txtSepLine.Validating += new System.ComponentModel.CancelEventHandler(this.txtSepLine_Validating);
             // 
             // label7
             // 
@@ -128,6 +130,7 @@
             // 
             resources.ApplyResources(this.txtSepParagraph, "txtSepParagraph");
             this.txtSepParagraph.Name = "txtSepParagraph";
+            this.txtSepParagraph.Validating += new System.ComponentModel.CancelEventHandler(this.txtSepParagraph_Validating);
             // 
             // KaraokeControl
             // 

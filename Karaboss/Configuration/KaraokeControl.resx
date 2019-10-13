@@ -315,6 +315,9 @@
   <data name="txtSepSyllabe.Location" type="System.Drawing.Point, System.Drawing">
     <value>200, 170</value>
   </data>
+  <data name="txtSepSyllabe.MaxLength" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
   <data name="txtSepSyllabe.Size" type="System.Drawing.Size, System.Drawing">
     <value>39, 26</value>
   </data>
@@ -459,6 +462,9 @@
   <data name="txtSepLine.Location" type="System.Drawing.Point, System.Drawing">
     <value>200, 210</value>
   </data>
+  <data name="txtSepLine.MaxLength" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
   <data name="txtSepLine.Size" type="System.Drawing.Size, System.Drawing">
     <value>39, 26</value>
   </data>
@@ -545,6 +551,9 @@
   </data>
   <data name="txtSepParagraph.Location" type="System.Drawing.Point, System.Drawing">
     <value>200, 250</value>
+  </data>
+  <data name="txtSepParagraph.MaxLength" type="System.Int32, mscorlib">
+    <value>1</value>
   </data>
   <data name="txtSepParagraph.Size" type="System.Drawing.Size, System.Drawing">
     <value>39, 26</value>
