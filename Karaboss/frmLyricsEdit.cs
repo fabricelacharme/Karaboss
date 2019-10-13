@@ -57,8 +57,8 @@ namespace Karaboss
          * 3 - Note     Note value
          * 4 - Text     text        
          * 
-         * Line break is '/'
-         * Paragraph is '\'
+         * Line break is '/' - cr
+         * Paragraph is '\'  - par
          * Syllabe separator is '*'
          */
        
@@ -1559,9 +1559,10 @@ namespace Karaboss
             // Split into peaces of words
             source = source.Replace("\r\n", " <cr> ");
             source = source.Replace(" <cr>  <cr> ", " <cr> <cr> ");
+            source = source.Replace("<cr> <cr>", "<par>");
 
             // Split syllabes 
-            // go#ing => go# ing
+            // go*ing => go# ing
             source = source.Replace("*", "# ");
 
             // Separate words by space
@@ -1599,7 +1600,7 @@ namespace Karaboss
                
                 if (i < dgView.Rows.Count)
                 {
-                    if (s != "<cr>")
+                    if (s != "<cr>" && s != "<par>")
                     {
                         // insert TEXT
                         plType = "text";
@@ -1628,10 +1629,19 @@ namespace Karaboss
                         dgView.Rows[i].Cells[COL_TEXT].Value = plElement;                        
                         
                     }
-                    else
+                    else if (s == "<cr>" || s == "<par>")
                     {
-                        // insert <CR>;
-                        plType = "cr";
+                        if (s == "<cr>")
+                        {
+                            // insert <CR>;
+                            plType = "cr";
+                            plElement = "/";
+                        }
+                        else
+                        {
+                            plType = "par";
+                            plElement = "\\";
+                        }
 
                         if (dgView.Rows[i].Cells[COL_TICKS].Value != null)
                         {
@@ -1641,9 +1651,7 @@ namespace Karaboss
                         if (dgView.Rows[i].Cells[COL_NOTE].Value == null)
                             dgView.Rows[i].Cells[COL_NOTE].Value = 0;
 
-                        plNote = Convert.ToInt32(dgView.Rows[i].Cells[COL_NOTE].Value);
-
-                        plElement = "/";
+                        plNote = Convert.ToInt32(dgView.Rows[i].Cells[COL_NOTE].Value);                        
 
                         // Insert new row
                         dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);                      
@@ -1947,12 +1955,14 @@ namespace Karaboss
                                 if (!oCell.ReadOnly)
                                 {                                    
                                     c = sCells[i];
-                                    c = c.Trim();
+                                    //c = c.Trim();
                                     c = c.Replace("\r", "");
+                                    c = c.Replace(" ", "_");
 
                                     // Check if a syllabe separator exists
                                     // No additional trailing space between syllabes of a word
-                                    
+
+                                    /*
                                     //if (c.EndsWith("*"))
                                     if (c.EndsWith(Karaclass.m_SepSyllabe))
                                     {
@@ -1961,12 +1971,23 @@ namespace Karaboss
                                     }
                                     // Check if a LineFeed exists
                                     // A new line has to be inserted
-                                    //else if (c.StartsWith("/"))
-                                    else if (c.StartsWith(Karaclass.m_SepLine))
-                                    {                                       
+                                    //else if (c.StartsWith("/"))                                    
+                                    //else if (c.StartsWith(Karaclass.m_SepLine))
+                                    */
+                                    if (c.StartsWith(Karaclass.m_SepLine) || c.StartsWith(Karaclass.m_SepParagraph))
+                                    {
 
-                                        // 1. insert <CR>;
-                                        plType = "cr";
+                                        if (c.StartsWith(Karaclass.m_SepLine))
+                                        {
+                                            // 1. insert <CR>;
+                                            plType = "cr";
+                                            plElement = "/";
+                                        }
+                                        else
+                                        {
+                                            plType = "par";
+                                            plElement = "\\";
+                                        }
 
                                         if (dgView.Rows[iRow].Cells[COL_TICKS].Value != null)
                                         {
@@ -1978,7 +1999,7 @@ namespace Karaboss
 
                                         plNote = Convert.ToInt32(dgView.Rows[iRow].Cells[COL_NOTE].Value);
 
-                                        plElement = "/";
+                                        
 
                                         // Insert new row
                                         dgView.Rows.Insert(iRow, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);
@@ -1990,8 +2011,8 @@ namespace Karaboss
                                         // Remove the character "/"
                                         c = c.Substring(1, c.Length - 1);
                                         // Add space if not present
-                                        if (! c.EndsWith("_"))
-                                            c = c + "_";
+                                        //if (! c.EndsWith("_"))
+                                        //    c = c + "_";
 
                                         oCell.Value = c;
 
@@ -1999,8 +2020,8 @@ namespace Karaboss
                                     else
                                     {
                                         // Add space if not present
-                                        if (!c.EndsWith("_"))
-                                            c = c + "_";
+                                        //if (!c.EndsWith("_"))
+                                        //    c = c + "_";
                                         oCell.Value = c;
                                     }
                                     
