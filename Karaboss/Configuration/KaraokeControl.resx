@@ -123,7 +123,7 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="lblMuteMelody.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 130</value>
+    <value>25, 140</value>
   </data>
   <data name="lblMuteMelody.Size" type="System.Drawing.Size, System.Drawing">
     <value>119, 13</value>
@@ -150,7 +150,7 @@
     <value>True</value>
   </data>
   <data name="chkMuteMelody.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 130</value>
+    <value>200, 140</value>
   </data>
   <data name="chkMuteMelody.Size" type="System.Drawing.Size, System.Drawing">
     <value>15, 14</value>
@@ -235,7 +235,7 @@
     <value>247, 90</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>328, 31</value>
+    <value>328, 40</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -259,10 +259,10 @@
     <value>NoControl</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 130</value>
+    <value>247, 140</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>297, 31</value>
+    <value>297, 40</value>
   </data>
   <data name="label2.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -313,7 +313,7 @@
     <value>Microsoft Sans Serif, 12pt</value>
   </data>
   <data name="txtSepSyllabe.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 170</value>
+    <value>200, 190</value>
   </data>
   <data name="txtSepSyllabe.MaxLength" type="System.Int32, mscorlib">
     <value>1</value>
@@ -349,7 +349,7 @@
     <value>NoControl</value>
   </data>
   <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 170</value>
+    <value>25, 190</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
     <value>88, 13</value>
@@ -376,10 +376,10 @@
     <value>NoControl</value>
   </data>
   <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 170</value>
+    <value>247, 190</value>
   </data>
   <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>297, 31</value>
+    <value>297, 40</value>
   </data>
   <data name="label4.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -403,10 +403,10 @@
     <value>NoControl</value>
   </data>
   <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 210</value>
+    <value>247, 240</value>
   </data>
   <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>297, 31</value>
+    <value>297, 40</value>
   </data>
   <data name="label5.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -433,7 +433,7 @@
     <value>NoControl</value>
   </data>
   <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 210</value>
+    <value>25, 240</value>
   </data>
   <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 13</value>
@@ -460,7 +460,7 @@
     <value>Microsoft Sans Serif, 12pt</value>
   </data>
   <data name="txtSepLine.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 210</value>
+    <value>200, 240</value>
   </data>
   <data name="txtSepLine.MaxLength" type="System.Int32, mscorlib">
     <value>1</value>
@@ -493,10 +493,10 @@
     <value>NoControl</value>
   </data>
   <data name="label7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 250</value>
+    <value>247, 290</value>
   </data>
   <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>297, 31</value>
+    <value>297, 40</value>
   </data>
   <data name="label7.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
@@ -523,7 +523,7 @@
     <value>NoControl</value>
   </data>
   <data name="label8.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 250</value>
+    <value>25, 290</value>
   </data>
   <data name="label8.Size" type="System.Drawing.Size, System.Drawing">
     <value>103, 13</value>
@@ -550,7 +550,7 @@
     <value>Microsoft Sans Serif, 12pt</value>
   </data>
   <data name="txtSepParagraph.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 250</value>
+    <value>200, 290</value>
   </data>
   <data name="txtSepParagraph.MaxLength" type="System.Int32, mscorlib">
     <value>1</value>
@@ -586,7 +586,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>600, 288</value>
+    <value>600, 340</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>KaraokeControl</value>

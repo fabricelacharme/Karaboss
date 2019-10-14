@@ -131,18 +131,54 @@
     <value>Afficher les balles sur les paroles</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>328, 43</value>
+    <value>328, 40</value>
   </data>
   <data name="label1.Text" xml:space="preserve">
     <value>Chaque syllabe à chanter est représentée par une boules animée qui défile en haut de l'écran. La syllabe doit être chantée lorsque la boule atteint la gauche de l'écran.</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>319, 31</value>
+    <value>319, 40</value>
   </data>
   <data name="label2.Text" xml:space="preserve">
     <value>Entendre ou bien rendre muet le son de la mélodie, en ne gardant que l'accompagnement.</value>
   </data>
   <data name="lblDescription.Text" xml:space="preserve">
     <value>Paramètres du Karaoké : afficher/masquer les boules animées et couper ou non la mélodie.</value>
+  </data>
+  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>114, 13</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>Séparateur de syllabes</value>
+  </data>
+  <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 40</value>
+  </data>
+  <data name="label4.Text" xml:space="preserve">
+    <value>Caractère séparateur utilisé pour séparer les syllabes lors du chargement d'un texte de paroles : ex : Ka*ra*boss est mer*veil*leux</value>
+  </data>
+  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 40</value>
+  </data>
+  <data name="label5.Text" xml:space="preserve">
+    <value>Caractère séparateur utilisé pour séparer les lignes</value>
+  </data>
+  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 13</value>
+  </data>
+  <data name="label6.Text" xml:space="preserve">
+    <value>Séparateur de lignes</value>
+  </data>
+  <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 40</value>
+  </data>
+  <data name="label7.Text" xml:space="preserve">
+    <value>Caractère séparateur utilisé pour séparer les paragraphes</value>
+  </data>
+  <data name="label8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>136, 13</value>
+  </data>
+  <data name="label8.Text" xml:space="preserve">
+    <value>Séparateur de paragraphes</value>
   </data>
 </root>
