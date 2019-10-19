@@ -978,6 +978,26 @@ namespace Karaboss
             Focus();
         }
 
+
+        /// <summary>
+        /// Erase all lyrics
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnDeleteAllLyrics_Click(object sender, EventArgs e)
+        {
+            frmPlayer frmPlayer = GetForm<frmPlayer>();
+            frmPlayer.DeleteAllLyrics();
+
+            localplLyrics = new List<plLyric>();
+
+            InitGridView();
+
+            // File was modified
+            FileModified();
+
+        }
+
         /// <summary>
         /// Play from current time
         /// </summary>
@@ -991,14 +1011,17 @@ namespace Karaboss
             // Display new lyrics in frmLyrics
             ReplaceLyrics();
 
-            int Row = dgView.CurrentRow.Index;
-            if (dgView.Rows[Row].Cells[COL_TICKS].Value != null)
+            if (dgView.CurrentRow != null)
             {
-                int pTime = Convert.ToInt32(dgView.Rows[Row].Cells[COL_TICKS].Value);
-                if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+                int Row = dgView.CurrentRow.Index;
+                if (dgView.Rows[Row].Cells[COL_TICKS].Value != null)
                 {
-                    frmPlayer frmPlayer = GetForm<frmPlayer>();
-                    frmPlayer.FirstPlaySong(pTime);
+                    int pTime = Convert.ToInt32(dgView.Rows[Row].Cells[COL_TICKS].Value);
+                    if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+                    {
+                        frmPlayer frmPlayer = GetForm<frmPlayer>();
+                        frmPlayer.FirstPlaySong(pTime);
+                    }
                 }
             }
         }
@@ -2424,8 +2447,7 @@ namespace Karaboss
 
                 }
                
-                s = s.Replace("_", " ");
-                //s = s.Replace("\r", "\n");
+                s = s.Replace("_", " ");                
 
                 tx += s;
             }
@@ -2743,8 +2765,9 @@ namespace Karaboss
         }
 
 
+
         #endregion
 
-    
+       
     }
 }

@@ -3579,6 +3579,20 @@ namespace Karaboss
 
             this.plLyrics = alienpLyrics;
 
+            if (this.plLyrics.Count == 0)
+                return;
+            else
+                bHasLyrics = true;
+
+
+            // si on repart de zéro
+            if (myLyric.lyricstracknum == -1 && myLyric.melodytracknum == -1)
+            {
+                myLyric.lyrictype = lyricType;
+                myLyric.melodytracknum = melodytracknum;
+                myLyric.lyricstracknum = melodytracknum;
+            }
+
             if (myLyric == null)
             {
                 NewMyLyric(melodytracknum, melodytracknum);
@@ -3595,9 +3609,11 @@ namespace Karaboss
                 {
                     // Changement de lyric à text
                     // => effacer l'affichage des lyrics sur la piste melodytracknum
-                    sequence1.tracks[myLyric.melodytracknum].deleteLyrics();
-                    sequence1.tracks[myLyric.melodytracknum].Lyrics.Clear();
-
+                    if (myLyric.melodytracknum > -1)
+                    {
+                        sequence1.tracks[myLyric.melodytracknum].deleteLyrics();
+                        sequence1.tracks[myLyric.melodytracknum].Lyrics.Clear();
+                    }
                     // Ajouter éventuellement une piste en position 2
                     // Change la valeur de myLyric.melodytracknum
                     AddTrackWords();
@@ -3606,10 +3622,11 @@ namespace Karaboss
                 else if (lyricType == CLyric.LyricTypes.Lyric)
                 {
                     //Changement de text à lyric 
-
-                    sequence1.tracks[myLyric.lyricstracknum].deleteLyrics();
-                    sequence1.tracks[myLyric.lyricstracknum].LyricsText.Clear();
-
+                    if (myLyric.lyricstracknum > -1)
+                    {
+                        sequence1.tracks[myLyric.lyricstracknum].deleteLyrics();
+                        sequence1.tracks[myLyric.lyricstracknum].LyricsText.Clear();
+                    }
                     // mettre les lyrics sur la piste de la mélodie (tracknum = melodytracknum)
                     if (melodytracknum > -1)
                         myLyric.lyricstracknum = melodytracknum;
@@ -3637,6 +3654,33 @@ namespace Karaboss
             if (bRefreshDisplay || myLyric.lyrictype == CLyric.LyricTypes.Lyric) {                
                 RefreshDisplay();               
             }
+
+            // File was modified
+            FileModified();
+        }
+
+        /// <summary>
+        /// Erase all lyrics
+        /// </summary>
+        public void DeleteAllLyrics()
+        {
+            foreach (Track trk in sequence1.tracks)
+            {
+                trk.deleteLyrics();
+                trk.Lyrics.Clear();
+                trk.LyricsText.Clear();
+            }
+
+            this.plLyrics.Clear();
+            myLyric = new CLyric();
+            bHasLyrics = false;
+
+            // Ferme le formulaire frmLyric
+            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+            {
+                frmLyric.Close();
+            }
+
 
             // File was modified
             FileModified();
