@@ -55,19 +55,19 @@ using System.Threading;
 namespace FlShell
 {
     // Specific Karaboss    
-
     // Selected item changed
     public delegate void SelectedIndexChangedEventHandler(object sender, string fileName);
-    
     // Play MIDI or KAR file
     public delegate void PlayMidiEventHandler(object sender, FileInfo fi, bool bplay);
     // Play CDG file
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
     // Playlists management
     public delegate void AddToPlaylistByNameHandler(object sender, ShellItem[] fls, string plname, string key = null, bool newPlaylist = false);
-    
     // Display number of directories and files
     public delegate void ContentChangedEvenHandler(object sender, string strContent, string strPath);
+    // SendK Key to Parent
+    public delegate void SenKeyToParentHandler(object sender, Keys k);
+
 
 
     public partial class ShellListView : Control, IDropSource, Interop.IDropTarget
@@ -77,12 +77,19 @@ namespace FlShell
 
         private WindowsContextMenu m_WindowsContextMenu = new WindowsContextMenu();
 
+        /// <summary>
+        /// Represents the method that will handle FilterItem events.
+        /// </summary>
+        public delegate void FilterItemEventHandler(object sender, FilterItemEventArgs e);
 
         // Specific Karaboss : Play a song, a playlist or edit a song
         public event SelectedIndexChangedEventHandler SelectedIndexChanged;
         public event PlayMidiEventHandler PlayMidi;
         public event PlayCDGEventHandler PlayCDG;
         public event AddToPlaylistByNameHandler AddToPlaylist;
+        
+        // Send Key to parent
+        public event SenKeyToParentHandler SenKeyToParent; 
 
         // Display number of directories and files
         public event ContentChangedEvenHandler lvContentChanged;
@@ -94,11 +101,6 @@ namespace FlShell
         public event lvFunctionKeyEventHandler lvFunctionKeyClicked;
        
         /// <summary>
-        /// Represents the method that will handle FilterItem events.
-        /// </summary>
-        public delegate void FilterItemEventHandler(object sender, FilterItemEventArgs e);
-
-        /// <summary>
         /// Occurs when the <see cref="ShellView"/> control is about to 
         /// navigate to a new folder.
         /// </summary>
@@ -109,6 +111,7 @@ namespace FlShell
         /// new folder.
         /// </summary>
         public event EventHandler Navigated;
+
 
         //avoid Globalization problem-- an empty timevalue
         DateTime EmptyTimeValue = new DateTime(1, 1, 1, 0, 0, 0);
@@ -365,10 +368,9 @@ namespace FlShell
         /// <summary>
         /// Refreshes the contents of the <see cref="ShellView"/>.
         /// </summary>
-        public void RefreshContents()
+        public void RefreshContents(string FullPath = "")
         {                        
-            RecreateShellView(CurrentFolder);
-
+            RecreateShellView(CurrentFolder, FullPath);
         }
 
         #endregion
@@ -656,13 +658,17 @@ namespace FlShell
 
         #region create
 
-        void RecreateShellView(ShellItem folder)
+        void RecreateShellView(ShellItem folder, string FullPath = "")
         {
             Cursor.Current = Cursors.WaitCursor;
             
             // Selected item
             string tx = string.Empty;            
-            if (m_ListView.SelectedItems.Count > 0)                            
+            if (FullPath != "")
+            {
+                tx = FullPath;
+            }          
+            else if (m_ListView.SelectedItems.Count > 0)                            
                 tx = m_ListView.SelectedItems[0].Text;               
                             
 
@@ -862,10 +868,7 @@ namespace FlShell
             }
             lvi.SubItems[lvi.SubItems.Count - 1].ForeColor = Color.Gray;
             #endregion
-
-
-
-            //m_ListView.Items.Add(lvi);
+            
             return lvi;
 
         }
@@ -1423,6 +1426,9 @@ namespace FlShell
                                         
             switch (e.KeyCode)
             {
+
+               
+
                 case Keys.Delete:                    
                     if (m_ListView.SelectedItems.Count > 0)
                         DeleteSelectedItems();
@@ -1477,6 +1483,12 @@ namespace FlShell
                     case Keys.C:
                         CopySelectedItems();
                         break;
+
+                    case Keys.K:
+                        // Ctrl + k => rename .mid to .kar and reverse
+                        SenKeyToParent(this, e.KeyCode);
+                        break;
+
                     case Keys.N:
                         lvFunctionKeyClicked(this, e.KeyCode, e.KeyData);
                         break;

@@ -152,12 +152,14 @@ namespace Karaboss.xplorer
                        
             // F3, F4, F6            
             shellListView.lvFunctionKeyClicked += new FlShell.lvFunctionKeyEventHandler(ShellListView_lvFunctionKeyClicked);
-            
+            shellListView.SenKeyToParent += new FlShell.SenKeyToParentHandler(shellListView_SendKeyToParent);
+
             treeView.tvFunctionKeyClicked += new FlShell.tvFunctionKeyEventHandler(TreeView_tvFunctionKeyClicked);
 
             // Load existing playlists
             LoadPlaylists();            
         }
+
 
 
         #region public functions    
@@ -193,9 +195,13 @@ namespace Karaboss.xplorer
             return shellListView.GetColumnWidth(column);
         }
 
-        public void RefreshContents()
+        /// <summary>
+        /// Refresh ontent of ShellListView
+        /// </summary>
+        /// <param name="fullPath"></param>
+        public void RefreshContents(string fullPath = "")
         {
-            shellListView.RefreshContents();
+            shellListView.RefreshContents(fullPath);
         }
 
         #endregion
@@ -263,7 +269,7 @@ namespace Karaboss.xplorer
                 case Keys.N:
                     if (KeyData == (Keys.N | Keys.Control))
                         CreateNewMidiFile?.Invoke(this);
-                    break;
+                    break;               
 
                 case Keys.F3:
                     RenameAllQuestion();                    
@@ -280,9 +286,7 @@ namespace Karaboss.xplorer
                 default:
                     break;
             }
-        }
-
-      
+        }      
 
         #endregion
 
@@ -400,6 +404,54 @@ namespace Karaboss.xplorer
         }
 
         #endregion
+
+        /// <summary>
+        /// REplace .mid by .kar
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="k"></param>
+        private void shellListView_SendKeyToParent(object sender, Keys k)
+        {
+            if (k == Keys.K)
+            {
+                try
+                {
+                    if (shellListView.SelectedItems.Length > 0)
+                    {
+                        FlShell.ShellItem shi = shellListView.SelectedItems[0];
+                        string newfileName = string.Empty;
+
+                        string oldFileName = shi.FileSystemPath;
+                        string physicalPath = Path.GetDirectoryName(oldFileName);
+
+                        if (Karaclass.IsMidiExtension(oldFileName))
+                        {
+                            if (Path.GetExtension(oldFileName).ToLower() == ".mid")
+                            {
+                                newfileName = oldFileName.Replace(".mid", ".kar");
+                                newfileName = GetUniqueFileName(newfileName);
+
+                                RenameFile(oldFileName, newfileName, physicalPath);                                
+                            }
+                            else if (Path.GetExtension(oldFileName).ToLower() == ".kar")
+                            {
+                                newfileName = oldFileName.Replace(".kar", ".mid");
+                                newfileName = GetUniqueFileName(newfileName);
+
+                                RenameFile(oldFileName, newfileName, physicalPath);                                                                                               
+                            }
+
+                            // Refresh & Set SelectedItem                            
+                            RefreshContents(Path.GetFileName(newfileName));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }     
 
 
         #region rename all
@@ -1256,16 +1308,7 @@ namespace Karaboss.xplorer
                 string fileName = Karaclass.GetPlaylistGroupFile(PlGroupHelper.File);
                 PlGroupHelper.File = fileName;
                 PlGroup = PlGroupHelper.Load(fileName);
-
-                // Send the list of playlists to the shell control
-                /*
-                List<string> pls = new List<string>();
-                for (int i = 0; i < allPlaylists.Count; i++)
-                {
-                    pls.Add(allPlaylists[i].Name);
-                }
-                this.shellListView.allPlaylists = pls;
-                */
+               
 
                 int id = 0;
                 for (int i = 0; i < PlGroup.plGroupItems.Count; i++)

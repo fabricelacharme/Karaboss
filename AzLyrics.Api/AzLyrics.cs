@@ -9,15 +9,15 @@ namespace AzLyrics.Api
     {
         // AZLYRICS
         // https://www.azlyrics.com/lyrics/juliendore/danstesrves.html
-        private const string _url = "http://www.azlyrics.com/lyrics/";
+        private const string _url = "https://www.azlyrics.com/lyrics/";
 
         // SONGLYRICS
-        // http://www.songlyrics.com/alain-bashung/gaby-oh-gaby-lyrics/
+        // https://www.songlyrics.com/alain-bashung/gaby-oh-gaby-lyrics/
         // private const string _url = "https://www.songlyrics.com/";
 
         // LYRICS.WIKIA
-        // http://lyrics.wikia.com/wiki/Alain_Souchon:C%27Est_Comme_Vous_Voulez
-        // private const string _url = "http://lyrics.wikia.com/wiki/";
+        // https://lyrics.wikia.com/wiki/Alain_Souchon:C%27Est_Comme_Vous_Voulez
+        // private const string _url = "https://lyrics.wikia.com/wiki/";
 
         private int _error;
         public int Error { get { return _error; } }
@@ -25,7 +25,7 @@ namespace AzLyrics.Api
 
         public AzLyrics(string artist, string title)
         {
-            // http://www.azlyrics.com/lyrics/youngthug/richniggashit.htm
+            // https://www.azlyrics.com/lyrics/youngthug/richniggashit.htm
             artist = StringUtils.cleanArtist(artist);
             artist = StringUtils.cleanInput(artist);
             title = StringUtils.cleanInput(title);
@@ -44,6 +44,10 @@ namespace AzLyrics.Api
             {
                 webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 6.3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36");
                 webClient.Encoding = Encoding.UTF8;
+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                ServicePointManager.ServerCertificateValidationCallback += new System.Net.Security.RemoteCertificateValidationCallback((s, ce, ch, ssl) => true);
+
                 try
                 {
                     var date = webClient.DownloadString(_uri);
@@ -60,7 +64,10 @@ namespace AzLyrics.Api
 
         private string ExtractLyricsFromHtml(string htmlPage)
         {
-            const string find1 = "<!-- AddThis Button END -->";
+            //const string find1 = "<!-- AddThis Button END -->";
+            const string find1 = "<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->";
+            //const string find1 = "<div class='lyricsh'>";
+            
             const string find2 = "<!-- MxM banner -->";
             var idx = htmlPage.IndexOf(find1, StringComparison.Ordinal);
             if (idx > 0)
