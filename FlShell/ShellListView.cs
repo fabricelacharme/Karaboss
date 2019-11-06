@@ -688,8 +688,10 @@ namespace FlShell
             // restore selected item          
             ListViewItem lvi = m_ListView.FindItemWithText(tx);
             if (lvi != null)
+            {
                 lvi.Selected = true;
-            
+                lvi.EnsureVisible();
+            }
             
             Cursor.Current = Cursors.Default;
 
