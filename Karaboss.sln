@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Karaboss", "Karaboss\Karaboss.csproj", "{2F1767E7-39EB-48A6-9DDF-2896A27297D8}"
 EndProject
@@ -49,6 +49,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SongLyrics.Api", "SongLyrics.Api\SongLyrics.Api.csproj", "{744B9645-0703-4EEA-86CD-E28B20774B90}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyricsWikia.Api", "LyricsWikia.Api\LyricsWikia.Api.csproj", "{7E6A19A2-655D-400E-9F3F-CCD7B80C278F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Control_MarkedEditBox", "MarkedEditBox\Control_MarkedEditBox.csproj", "{5B294E8D-A43A-4EEC-AFFE-899AE406AEDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -189,6 +191,12 @@ Global
 		{7E6A19A2-655D-400E-9F3F-CCD7B80C278F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7E6A19A2-655D-400E-9F3F-CCD7B80C278F}.Travis|Any CPU.ActiveCfg = Release|Any CPU
 		{7E6A19A2-655D-400E-9F3F-CCD7B80C278F}.Travis|Any CPU.Build.0 = Release|Any CPU
+		{5B294E8D-A43A-4EEC-AFFE-899AE406AEDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B294E8D-A43A-4EEC-AFFE-899AE406AEDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B294E8D-A43A-4EEC-AFFE-899AE406AEDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B294E8D-A43A-4EEC-AFFE-899AE406AEDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B294E8D-A43A-4EEC-AFFE-899AE406AEDA}.Travis|Any CPU.ActiveCfg = Release|Any CPU
+		{5B294E8D-A43A-4EEC-AFFE-899AE406AEDA}.Travis|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

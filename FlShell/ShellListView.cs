@@ -689,6 +689,8 @@ namespace FlShell
             ListViewItem lvi = m_ListView.FindItemWithText(tx);
             if (lvi != null)
             {
+                //m_ListView.Select();
+                lvi.Focused = true;
                 lvi.Selected = true;
                 lvi.EnsureVisible();
             }

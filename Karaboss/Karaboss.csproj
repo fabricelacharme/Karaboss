@@ -213,6 +213,12 @@
     <Compile Include="Lrc\NeteaseMusic.cs" />
     <Compile Include="Lrc\SharedFramework.cs" />
     <Compile Include="Lrc\Time.cs" />
+    <Compile Include="Pages\ABCnotation\FrmABCnotation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\ABCnotation\FrmABCnotation.Designer.cs">
+      <DependentUpon>FrmABCnotation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ConnectedControl\ListViewItemComparer.cs" />
     <Compile Include="Pages\ExplorerControl\KnownFolders.cs" />
     <Compile Include="Pages\ExplorerControl\xplorerControl.cs">
@@ -478,6 +484,9 @@
     <EmbeddedResource Include="GuitarTraining\TextBlock.resx">
       <DependentUpon>TextBlock.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ABCnotation\FrmABCnotation.resx">
+      <DependentUpon>FrmABCnotation.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Pages\ConnectedControl\ConnectedControl.fr.resx">
       <DependentUpon>ConnectedControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -682,6 +691,10 @@
     <ProjectReference Include="..\LyricsWikia.Api\LyricsWikia.Api.csproj">
       <Project>{7e6a19a2-655d-400e-9f3f-ccd7b80c278f}</Project>
       <Name>LyricsWikia.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MarkedEditBox\Control_MarkedEditBox.csproj">
+      <Project>{5b294e8d-a43a-4eec-affe-899ae406aeda}</Project>
+      <Name>Control_MarkedEditBox</Name>
     </ProjectReference>
     <ProjectReference Include="..\picControl\PicControl.csproj">
       <Project>{5A59550C-4187-4E78-B9A4-2DF31D17BD64}</Project>
