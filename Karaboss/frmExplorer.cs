@@ -45,6 +45,7 @@ using Sanford.Multimedia.Midi.UI;
 using PrgAutoUpdater;
 using System.Net;
 using System.Xml;
+using Karaboss.Pages.ABCnotation;
 
 namespace Karaboss
 {
@@ -1262,6 +1263,12 @@ namespace Karaboss
                     frmExternalMidiRecord.Close();
                 }
 
+                if (Application.OpenForms.OfType<FrmABCnotation>().Count() > 0)
+                {
+                    FrmABCnotation frm = GetForm<FrmABCnotation>();
+                    frm.Close();
+                }
+
 
                 Dispose();
                 //Environment.Exit(Environment.ExitCode);
@@ -1765,7 +1772,7 @@ namespace Karaboss
             LoadConfigurationForm();
         }
 
-
+        #region tools
         /// <summary>
         /// Search doubles MD5 compared to reference
         /// </summary>
@@ -1844,6 +1851,22 @@ namespace Karaboss
             frmTools fTool = new frmTools(referencepath, selectedpath, "SearchNameDoubles");
             fTool.ShowDialog();
             
+        }
+        #endregion
+
+        /// <summary>
+        /// ABC Notation
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuToolsABC_Click(object sender, EventArgs e)
+        {
+            if (Application.OpenForms["FrmABCnotation"] == null)
+            {
+                FrmABCnotation frmABCnotation = new FrmABCnotation();
+                frmABCnotation.Show();
+                frmABCnotation.Activate();
+            }
         }
 
 
@@ -2222,8 +2245,8 @@ namespace Karaboss
 
 
 
+
         #endregion
 
-       
     }
 }

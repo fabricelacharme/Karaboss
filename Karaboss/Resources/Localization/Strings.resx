@@ -483,4 +483,7 @@
   <data name="InsertLineBreak" xml:space="preserve">
     <value>Insert a line break</value>
   </data>
+  <data name="MusicSubfolder" xml:space="preserve">
+    <value />
+  </data>
 </root>

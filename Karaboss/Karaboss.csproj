@@ -213,12 +213,18 @@
     <Compile Include="Lrc\NeteaseMusic.cs" />
     <Compile Include="Lrc\SharedFramework.cs" />
     <Compile Include="Lrc\Time.cs" />
+    <Compile Include="Pages\ABCnotation\ABC.cs" />
+    <Compile Include="Pages\ABCnotation\ColumnSorter.cs" />
     <Compile Include="Pages\ABCnotation\FrmABCnotation.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Pages\ABCnotation\FrmABCnotation.Designer.cs">
       <DependentUpon>FrmABCnotation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ABCnotation\LOTROFocuser.cs" />
+    <Compile Include="Pages\ABCnotation\Song.cs" />
+    <Compile Include="Pages\ABCnotation\Toolbar.cs" />
+    <Compile Include="Pages\ABCnotation\Utils.cs" />
     <Compile Include="Pages\ConnectedControl\ListViewItemComparer.cs" />
     <Compile Include="Pages\ExplorerControl\KnownFolders.cs" />
     <Compile Include="Pages\ExplorerControl\xplorerControl.cs">
@@ -372,6 +378,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\ABCResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ABCResource.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\Localization\Strings.Designer.cs" />
     <Compile Include="ListViewItemComparer.cs" />
@@ -626,6 +637,10 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ABCResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ABCResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Localization\Strings.en.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -687,6 +702,10 @@
     <ProjectReference Include="..\knobControl\KnobControl.csproj">
       <Project>{04123f59-331d-4582-be0d-721feab6050f}</Project>
       <Name>KnobControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LOMMSplitButton\Control_LOMMSplitButton.csproj">
+      <Project>{b12a704e-7dc3-4005-a01d-6dfa54ac3b18}</Project>
+      <Name>Control_LOMMSplitButton</Name>
     </ProjectReference>
     <ProjectReference Include="..\LyricsWikia.Api\LyricsWikia.Api.csproj">
       <Project>{7e6a19a2-655d-400e-9f3f-ccd7b80c278f}</Project>
@@ -819,6 +838,56 @@
     <None Include="Resources\Bouton-Cross-Red-32.png" />
     <None Include="Resources\Bouton-Check-Gray-32.png" />
     <None Include="Resources\Bouton-Cross-Gray-32.png" />
+    <Content Include="Pages\ABCnotation\Resources\cut.png" />
+    <Content Include="Pages\ABCnotation\Resources\logo.png" />
+    <Content Include="Pages\ABCnotation\Resources\LOMM.ico" />
+    <Content Include="Pages\ABCnotation\Resources\NewABC.txt" />
+    <Content Include="Pages\ABCnotation\Resources\page_copy.png" />
+    <Content Include="Pages\ABCnotation\Resources\page_paste.png" />
+    <Content Include="Pages\ABCnotation\Resources\resultset_next.png" />
+    <Content Include="Pages\ABCnotation\Resources\script_lightning.png" />
+    <Content Include="Pages\ABCnotation\Resources\script_save.png" />
+    <Content Include="Pages\ABCnotation\Resources\Separator.ico" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\add.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\arrow_branch.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\arrow_down.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\arrow_refresh.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\arrow_up.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\book_open.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\cog_add.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\cog_delete.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\cog_edit.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\comment.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\control_fastforward_blue.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\control_pause_blue.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\control_play_blue.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\control_stop_blue.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\cut.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\delete.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\help.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\layers.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\music.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\page_add.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\page_copy.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\page_delete.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\page_edit.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\page_paste.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\page_refresh.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\page_save.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\picture_add.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\plugin.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\readme.html" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\readme.txt" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\resultset_next.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\script_add.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\script_delete.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\script_edit.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\script_gear.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\script_link.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\table_multiple.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\textfield_add.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\wand.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\wrench.png" />
     <Content Include="Resources\Bouton-minus-palegreen-32.png" />
     <Content Include="Resources\Bouton-plus-palegreen-32.png" />
     <Content Include="Resources\Ico\kar.ico" />

@@ -1045,5 +1045,119 @@ namespace Karaboss.Properties {
                 this["SepParagraph"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::Karaboss.Pages.ABCnotation.FavoriteSongs FavoriteSongs
+        {
+            get
+            {
+                return ((global::Karaboss.Pages.ABCnotation.FavoriteSongs)(this["FavoriteSongs"]));
+            }
+            set
+            {
+                this["FavoriteSongs"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("746, 618")]
+        public global::System.Drawing.Size FrmABCnotationSize {
+            get {
+                return ((global::System.Drawing.Size)(this["FrmABCnotationSize"]));
+            }
+            set {
+                this["FrmABCnotationSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Point FrmABCnotationLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["FrmABCnotationLocation"]));
+            }
+            set {
+                this["FrmABCnotationLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FrmABCnotationAOT {
+            get {
+                return ((bool)(this["FrmABCnotationAOT"]));
+            }
+            set {
+                this["FrmABCnotationAOT"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool LoadABCAtStartup {
+            get {
+                return ((bool)(this["LoadABCAtStartup"]));
+            }
+            set {
+                this["LoadABCAtStartup"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::MarkedEditBox.RegexTagBag TagsEdit
+        {
+            get
+            {
+                return ((global::MarkedEditBox.RegexTagBag)(this["TagsEdit"]));
+            }
+            set
+            {
+                this["TagsEdit"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TagsPerform {
+            get {
+                return ((string)(this["TagsPerform"]));
+            }
+            set {
+                this["TagsPerform"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HighlightABC {
+            get {
+                return ((bool)(this["HighlightABC"]));
+            }
+            set {
+                this["HighlightABC"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::Karaboss.Pages.ABCnotation.LotroToolbarList Toolbars
+        {
+            get
+            {
+                return ((global::Karaboss.Pages.ABCnotation.LotroToolbarList)(this["Toolbars"]));
+            }
+            set
+            {
+                this["Toolbars"] = value;
+            }
+        }
     }
 }
