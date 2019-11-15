@@ -249,6 +249,7 @@ namespace Karaboss.Pages.ABCnotation
             try
             {
                 AddFilesToList(di.GetFiles("*.abc", SearchOption.AllDirectories));
+                AddFilesToList(di.GetFiles("*.mml", SearchOption.AllDirectories));
                 AddFilesToList(di.GetFiles("*.txt", SearchOption.AllDirectories));
             }
             catch (Exception ex )

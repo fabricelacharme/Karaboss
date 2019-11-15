@@ -128,6 +128,7 @@ namespace Karaboss
             xplorerControl.SelectedIndexChanged += new xplorer.SelectedIndexChangedEventHandler(Global_SelectedIndexChanged);            
             xplorerControl.PlayMidi += new xplorer.PlayMidiEventHandler(Global_xPlayMidi);
             xplorerControl.PlayCDG += new xplorer.PlayCDGEventHandler(Global_PlayCDG);
+            xplorerControl.PlayText += new xplorer.PlayTextEventHandler(Global_PlayText);
             xplorerControl.LvContentChanged += new xplorer.ContentChangedEventHandler(Xplorer_ContentChanged);
             xplorerControl.CreateNewMidiFile += new xplorer.CreateNewMidiFileEventHandler(Xplorer_CreateNewMidiFile);
 
@@ -138,6 +139,7 @@ namespace Karaboss
             playlistsControl.SelectedIndexChanged += new playlists.SelectedIndexChangedEventHandler(Global_SelectedIndexChanged);
             playlistsControl.PlayMidi += new playlists.PlayMidiEventHandler(Global_PlayMidi);
             playlistsControl.PlayCDG += new playlists.PlayCDGEventHandler(Global_PlayCDG);
+            //playlistsControl.PlayText += new playlists.PlayTextEventHandler(Global_PlayText);
             playlistsControl.NavigateTo += new playlists.NavigateToEventHandler(Item_NavigateTo);
             #endregion
 
@@ -172,7 +174,7 @@ namespace Karaboss
             }
 
         }
-        
+
 
         #region Content Changed
         /// <summary>
@@ -890,7 +892,13 @@ namespace Karaboss
         {
             DisplayMidiPlayer(fi.FullName, pl, bplay);
         }
-        
+
+        private void Global_PlayText(object sender, FileInfo fi, bool bplay)
+        {
+            DisplayTextPlayer(fi.FullName, bplay);
+        }
+
+
 
         /// <summary>
         /// Display the CDG player
@@ -924,6 +932,60 @@ namespace Karaboss
                 Form frmCDGPlayer = new frmCDGPlayer(filename);
                 frmCDGPlayer.Show();
             }
+        }
+
+        /// <summary>
+        /// Displat ABC, MML text player
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="bPlayNow"></param>
+        private void DisplayTextPlayer(string fileName, bool bPlayNow)
+        {
+            if (fileName == null)
+                return;
+            
+            // edit or play a midi file
+            if (fileName != "new file")
+            {
+                // Launch an existing file                    
+                if (File.Exists(fileName) == false)
+                {
+                    MessageBox.Show("The file " + fileName + " doesn not exists!", "Karaboss", MessageBoxButtons.OK);
+                    return;
+                }
+            }
+            else
+            {
+                // create a new file
+                fileName = null;
+            }
+
+            Cursor.Current = Cursors.WaitCursor;
+
+            // ferme le formulaire frmPianoTraining
+            if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmPianoTraining"].Close();
+            }
+
+            // ferme le formulaire frmGuitarTraining
+            if (Application.OpenForms.OfType<frmGuitarTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmGuitarTraining"].Close();
+            }
+
+            // Affiche le formulaire frmPlay 
+            if (Application.OpenForms["FrmTextPlayer"] != null)
+                Application.OpenForms["FrmTextPlayer"].Close();
+
+            ResetOutPutDevice();
+
+            //Form frmPlayer = new frmPlayer(NumInstance, filename, null, bPlayNow, outDeviceID, songRoot);
+
+            
+            Form frmTextPlayer = new Karaboss.Pages.ABCnotation.FrmTextPlayer(outDevice, fileName);
+            frmTextPlayer.Show();
+            frmTextPlayer.Activate();
 
         }
 
@@ -1005,6 +1067,9 @@ namespace Karaboss
                 frmPlayer.Activate();
             }
         }
+
+
+
 
 
         #endregion Players

@@ -77,6 +77,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Mp3 Video\Unzip\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Midi, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Pages\ABCnotation\MIDIDll\Midi.dll</HintPath>
+    </Reference>
     <Reference Include="MP3+CDG To Video Converter">
       <HintPath>..\MP3+CDG To Video Converter\bin\Debug\MP3+CDG To Video Converter.dll</HintPath>
     </Reference>
@@ -222,6 +226,16 @@
       <DependentUpon>FrmABCnotation.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\ABCnotation\LOTROFocuser.cs" />
+    <Compile Include="Pages\ABCnotation\TextPlayer\FrmTextPlayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\ABCnotation\TextPlayer\FrmTextPlayer.Designer.cs">
+      <DependentUpon>FrmTextPlayer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ABCnotation\TextPlayer\IMidiPlayer.cs" />
+    <Compile Include="Pages\ABCnotation\TextPlayer\MidiDevice.cs" />
+    <Compile Include="Pages\ABCnotation\TextPlayer\PlayerABC.cs" />
+    <Compile Include="Pages\ABCnotation\TextPlayer\PlayerMML.cs" />
     <Compile Include="Pages\ABCnotation\Song.cs" />
     <Compile Include="Pages\ABCnotation\Toolbar.cs" />
     <Compile Include="Pages\ABCnotation\Utils.cs" />
@@ -498,6 +512,9 @@
     <EmbeddedResource Include="Pages\ABCnotation\FrmABCnotation.resx">
       <DependentUpon>FrmABCnotation.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ABCnotation\TextPlayer\FrmTextPlayer.resx">
+      <DependentUpon>FrmTextPlayer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Pages\ConnectedControl\ConnectedControl.fr.resx">
       <DependentUpon>ConnectedControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -751,6 +768,10 @@
       <Project>{744b9645-0703-4eea-86cd-e28b20774b90}</Project>
       <Name>SongLyrics.Api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TextPlayer\TextPlayer.csproj">
+      <Project>{5fff3b66-0f86-426a-8a7a-b60a145219ec}</Project>
+      <Name>TextPlayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\trkControl\TrkControl.csproj">
       <Project>{e04f332f-ff37-4680-9d38-7962eacd58c0}</Project>
       <Name>TrkControl</Name>
@@ -838,6 +859,7 @@
     <None Include="Resources\Bouton-Cross-Red-32.png" />
     <None Include="Resources\Bouton-Check-Gray-32.png" />
     <None Include="Resources\Bouton-Cross-Gray-32.png" />
+    <Content Include="Pages\ABCnotation\MIDIDll\Midi.dll" />
     <Content Include="Pages\ABCnotation\Resources\cut.png" />
     <Content Include="Pages\ABCnotation\Resources\logo.png" />
     <Content Include="Pages\ABCnotation\Resources\LOMM.ico" />

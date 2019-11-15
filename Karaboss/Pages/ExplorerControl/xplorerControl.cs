@@ -48,6 +48,7 @@ namespace Karaboss.xplorer
     public delegate void SelectedIndexChangedEventHandler(object sender, string fileName);   
     public delegate void PlayMidiEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayTextEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void ContentChangedEventHandler(object sender, string strContent, string strPath);
     public delegate void CreateNewMidiFileEventHandler(object sender);
 
@@ -59,6 +60,7 @@ namespace Karaboss.xplorer
         public event SelectedIndexChangedEventHandler SelectedIndexChanged;        
         public event PlayMidiEventHandler PlayMidi;
         public event PlayCDGEventHandler PlayCDG;
+        public event PlayTextEventHandler PlayText;
         public event ContentChangedEventHandler LvContentChanged;
         public event CreateNewMidiFileEventHandler CreateNewMidiFile;
         
@@ -147,6 +149,7 @@ namespace Karaboss.xplorer
             shellListView.AddToPlaylist += new FlShell.AddToPlaylistByNameHandler(ShellListView_AddToPlaylist);
             shellListView.PlayMidi += new FlShell.PlayMidiEventHandler(ShellListView_PlayMidi);
             shellListView.PlayCDG += new FlShell.PlayCDGEventHandler(ShellListView_PlayCDG);
+            shellListView.PlayText += new FlShell.PlayTextEventHandler(ShellListView_PlayText);
             shellListView.lvContentChanged += new FlShell.ContentChangedEvenHandler(ShellListView_ContentChanged);
             shellListView.SelectedIndexChanged += new FlShell.SelectedIndexChangedEventHandler(ShellListView_SelectedIndexChanged);
                        
@@ -159,7 +162,6 @@ namespace Karaboss.xplorer
             // Load existing playlists
             LoadPlaylists();            
         }
-
 
 
         #region public functions    
@@ -229,7 +231,10 @@ namespace Karaboss.xplorer
         {
             PlayMidi?.Invoke(this, fi, bplay);
         }
-
+        private void ShellListView_PlayText(object sender, FileInfo fi, bool bplay)
+        {
+            PlayText?.Invoke(this, fi, bplay);
+        }
         private void ShellListView_AddToPlaylist(object sender, FlShell.ShellItem[] fls, string plname, string key, bool bnewPlaylist)
         {
             if (bnewPlaylist == true)

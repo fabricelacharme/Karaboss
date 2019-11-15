@@ -54,6 +54,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Control_MarkedEditBox", "Ma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Control_LOMMSplitButton", "LOMMSplitButton\Control_LOMMSplitButton.csproj", "{B12A704E-7DC3-4005-A01D-6DFA54AC3B18}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextPlayer", "TextPlayer\TextPlayer.csproj", "{5FFF3B66-0F86-426A-8A7A-B60A145219EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -205,6 +207,12 @@ Global
 		{B12A704E-7DC3-4005-A01D-6DFA54AC3B18}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B12A704E-7DC3-4005-A01D-6DFA54AC3B18}.Travis|Any CPU.ActiveCfg = Release|Any CPU
 		{B12A704E-7DC3-4005-A01D-6DFA54AC3B18}.Travis|Any CPU.Build.0 = Release|Any CPU
+		{5FFF3B66-0F86-426A-8A7A-B60A145219EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FFF3B66-0F86-426A-8A7A-B60A145219EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FFF3B66-0F86-426A-8A7A-B60A145219EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FFF3B66-0F86-426A-8A7A-B60A145219EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FFF3B66-0F86-426A-8A7A-B60A145219EC}.Travis|Any CPU.ActiveCfg = Release|Any CPU
+		{5FFF3B66-0F86-426A-8A7A-B60A145219EC}.Travis|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
