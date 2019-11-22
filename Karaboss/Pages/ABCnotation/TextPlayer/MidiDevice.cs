@@ -37,40 +37,84 @@ namespace Karaboss.Pages.ABCnotation
 
     public class MidiDevice {
         private Midi.OutputDevice outputDevice;
-        private Sanford.Multimedia.Midi.OutputDevice outputDevice2;
+        private Sanford.Multimedia.Midi.OutputDevice outDevice;
         private List<NoteTimeOut> timeOuts;
         private bool muted;
 
-        public MidiDevice() {
-            timeOuts = new List<NoteTimeOut>();
-            outputDevice = Midi.OutputDevice.InstalledDevices[0];
-            //outputDevice2 = new Sanford.Multimedia.Midi.OutputDevice(0);
-            outputDevice.Open();
-            outputDevice.SilenceAllNotes();
+        public MidiDevice(Sanford.Multimedia.Midi.OutputDevice optdev) 
+        {
+            try
+            {
+                timeOuts = new List<NoteTimeOut>();
+                outputDevice = Midi.OutputDevice.InstalledDevices[1];
+                outDevice = optdev;
+
+                
+                //if (! outputDevice.IsOpen)
+                //    outputDevice.Open();
+                //outputDevice.SilenceAllNotes();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             System.Threading.Thread.Sleep(200); // fixes delay during initial playing, possibly due to midi device initialization
         }
 
         public void SetInstrument(Instrument instrument) {
-            foreach (var c in Enum.GetValues(typeof(Midi.Channel))) {
-                outputDevice.SendProgramChange((Midi.Channel)c, instrument);
-                
+
+            try
+            {
+                foreach (var c in Enum.GetValues(typeof(Midi.Channel)))
+                {
+                    //outputDevice.SendProgramChange((Midi.Channel)c, instrument);
+
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            
         }
 
         public void Close() {
-            outputDevice.Close();
+            try
+            {
+                //outputDevice.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             System.Threading.Thread.Sleep(200); // fixes delay during initial playing, possibly due to midi device initialization
         }
 
         public void StopNotes() {
             timeOuts = new List<NoteTimeOut>();
-            outputDevice.SilenceAllNotes();
+            try
+            {
+                //outputDevice.SilenceAllNotes();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         protected void NoteOn(Channel channel, Pitch pitch, int velocity) {
             if (muted)
                 return;
-            outputDevice.SendNoteOn(channel, pitch, velocity);
+            try
+            {
+                outDevice.Send(new Sanford.Multimedia.Midi.ChannelMessage(ChannelCommand.NoteOn, 0, (int)pitch, velocity));
+                
+                //outputDevice.SendNoteOn(channel, pitch, velocity);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void PlayNote(int track, TextPlayer.Note note, TimeSpan end) {
@@ -91,6 +135,7 @@ namespace Karaboss.Pages.ABCnotation
                 Velocity = velocity
             };
             timeOuts.Add(timeOut);
+
         }
 
         private Channel TrackToChannel(int track) {
@@ -122,8 +167,11 @@ namespace Karaboss.Pages.ABCnotation
         public void HandleTimeOuts(TimeSpan elapsed) {
             for (int i = timeOuts.Count - 1; i >= 0; i--) {
                 var timeOut = timeOuts[i];
-                if (elapsed >= timeOut.End) {
-                    outputDevice.SendNoteOff(timeOut.Channel, timeOut.Pitch, timeOut.Velocity);
+                if (elapsed >= timeOut.End) 
+                {
+                    outDevice.Send(new Sanford.Multimedia.Midi.ChannelMessage(ChannelCommand.NoteOff, 0, (int)timeOut.Pitch, timeOut.Velocity));
+                    //outputDevice.SendNoteOff(timeOut.Channel, timeOut.Pitch, timeOut.Velocity);
+
                     timeOuts.RemoveAt(i);
                 }
             }
@@ -131,5 +179,7 @@ namespace Karaboss.Pages.ABCnotation
 
         public List<NoteTimeOut> TimeOuts { get { return timeOuts; } }
         public bool Muted { get { return muted; } set { muted = value; } }
+
+        //public Sanford.Multimedia.Midi.OutputDevice OutDevice { get { return outDevice; } set { outDevice = value; } }
     }
 }

@@ -27,6 +27,7 @@ using System.Linq;
 using System.Text;
 using TextPlayer;
 using TextPlayer.ABC;
+using Sanford.Multimedia.Midi;
 
 namespace Karaboss.Pages.ABCnotation
 {
@@ -38,10 +39,15 @@ namespace Karaboss.Pages.ABCnotation
         private volatile bool loop;
         private volatile bool normalize;
         private volatile bool paused;
+        private Sanford.Multimedia.Midi.OutputDevice otpdev;
 
-        public PlayerABC()
+
+        public PlayerABC(Sanford.Multimedia.Midi.OutputDevice outputDevice)
             : base(false) {
-            midi = new MidiDevice();
+
+            otpdev = outputDevice;
+
+            midi = new MidiDevice(outputDevice);
             midi.SetInstrument(default(Midi.Instrument));
         }
 
@@ -66,7 +72,7 @@ namespace Karaboss.Pages.ABCnotation
 
         protected override void PlayNote(Note note, int channel, TimeSpan time) {
             if (!Muted && channel == 0) {
-                //Console.WriteLine(lastTime + ": " + note.Type + (note.Sharp ? "#" : "") + "[" + note.Octave + "] " + note.Length);
+                Console.WriteLine(lastTime + ": " + note.Type + (note.Sharp ? "#" : "") + "[" + note.Octave + "] " + note.Length);
             }
 
             if (normalize) {
@@ -74,6 +80,7 @@ namespace Karaboss.Pages.ABCnotation
             }
 
             midi.PlayNote(channel, note, elapsed + note.Length);
+            
         }
 
         public override void Update(TimeSpan currentTime) {

@@ -41,7 +41,7 @@ namespace Karaboss.Pages.ABCnotation
     /*
      *  voir https://github.com/micdah/midi-dot-net pour une dll midi.dll plus récente
      * 
-     * 
+     * Attention, si il manque Q : 90 tous les temps sont à zéro !!!!!!
      * 
      * 
      * 
@@ -108,7 +108,7 @@ namespace Karaboss.Pages.ABCnotation
             stopPlaying = false;
 
             if (format == SongFormat.MML) {
-                var mml = new PlayerMML();
+                var mml = new PlayerMML(outDevice);
                 mml.Settings.MaxDuration = TimeSpan.MaxValue;
                 mml.Settings.MaxSize = int.MaxValue;
                 mml.Mode = (TextPlayer.MML.MMLMode)Enum.Parse(typeof(TextPlayer.MML.MMLMode), cmbMMLMode.SelectedItem.ToString());
@@ -116,8 +116,8 @@ namespace Karaboss.Pages.ABCnotation
                 player = mml;
                 isLotroSong = null;
             }
-            else {
-                var abc = new PlayerABC();
+            else {               
+                var abc = new PlayerABC(outDevice);
                 abc.Settings.MaxDuration = TimeSpan.MaxValue;
                 abc.Settings.MaxSize = int.MaxValue;
                 abc.Load(reader);

@@ -2223,7 +2223,7 @@ namespace Karaboss
         #region outputdevice
 
         private void ResetOutPutDevice()
-        {
+        {            
             try
             {
                 if (outDevice != null)
@@ -2243,8 +2243,7 @@ namespace Karaboss
                     outDevice = new OutputDevice(outDeviceID - 1);
                 else
                     outDevice = null;
-            }
-
+            }            
         }
 
         /// <summary>
@@ -2256,6 +2255,7 @@ namespace Karaboss
             // Si OutDeviceID = celui de VirtualMidiSynth, on charge à ce moment précis le fichier soundfont
             // cela peut durer au moins 30 sec !!!
             // Mettre une page d'attente    
+            
             
             try
             {
@@ -2281,6 +2281,7 @@ namespace Karaboss
                 else
                     outDevice = null;
             }
+            
         }
 
         /// <summary>

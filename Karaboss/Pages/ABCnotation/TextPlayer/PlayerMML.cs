@@ -27,6 +27,7 @@ using System.Linq;
 using System.Text;
 using TextPlayer;
 using TextPlayer.MML;
+using Sanford.Multimedia.Midi;
 
 namespace Karaboss.Pages.ABCnotation
 {
@@ -39,9 +40,9 @@ namespace Karaboss.Pages.ABCnotation
         private volatile bool normalize;
         private volatile bool paused;
 
-        public PlayerMML()
+        public PlayerMML(Sanford.Multimedia.Midi.OutputDevice outputDevice)
             : base() {
-            midi = new MidiDevice();
+            midi = new MidiDevice(outputDevice);
             midi.SetInstrument(default(Midi.Instrument));
         }
 
