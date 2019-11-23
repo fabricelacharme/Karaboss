@@ -71,9 +71,11 @@ namespace Karaboss.Pages.ABCnotation
         }
 
         protected override void PlayNote(Note note, int channel, TimeSpan time) {
+            /*
             if (!Muted && channel == 0) {
                 Console.WriteLine(lastTime + ": " + note.Type + (note.Sharp ? "#" : "") + "[" + note.Octave + "] " + note.Length);
             }
+            */
 
             if (normalize) {
                 note.Volume = Math.Min(Math.Max(note.Volume * normalizeScalar, 0), 1);

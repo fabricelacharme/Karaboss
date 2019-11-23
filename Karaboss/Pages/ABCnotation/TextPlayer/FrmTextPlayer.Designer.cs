@@ -212,7 +212,7 @@
             this.chkLotroDetect.UseVisualStyleBackColor = true;
             this.chkLotroDetect.CheckedChanged += new System.EventHandler(this.chkLotroDetect_CheckedChanged);
             // 
-            // Form1
+            // FrmTextPlayer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -235,9 +235,10 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "FrmTextPlayer";
             this.Text = "MidiPlayer";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmTextPlayer_FormClosing);
+            this.Load += new System.EventHandler(this.FrmTextPlayer_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

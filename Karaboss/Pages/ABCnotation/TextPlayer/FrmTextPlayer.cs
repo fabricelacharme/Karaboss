@@ -70,10 +70,19 @@ namespace Karaboss.Pages.ABCnotation
         #endregion
 
 
-        public FrmTextPlayer(OutputDevice outdeviceText, string FileName) {
+        public FrmTextPlayer(OutputDevice outdeviceText, string path) {
             InitializeComponent();
-
             outDevice = outdeviceText;
+
+            using (StreamReader reader = File.OpenText(path))
+            {     
+                if (Path.GetExtension(path).ToLowerInvariant() == ".abc")
+                    LoadFile(reader, SongFormat.ABC);
+                else
+                    LoadFile(reader, SongFormat.MML);
+                lblFile.Text = "File: " + Path.GetFileName(path);                
+            }
+
         }
 
         delegate void SetScrollValueDelegate(int val);
@@ -107,10 +116,28 @@ namespace Karaboss.Pages.ABCnotation
             StopPlaying();
             stopPlaying = false;
 
+
+            if (cmbInstruments.SelectedItem == null)
+            {
+                foreach (var instrument in Enum.GetValues(typeof(Midi.Instrument)))
+                {
+                    string s = instrument.ToString();
+                    cmbInstruments.Items.Add(s);
+                    if (s == default(Midi.Instrument).ToString())
+                    {
+                        cmbInstruments.SelectedItem = s;
+                    }
+                }
+            }
+            if (cmbMMLMode.SelectedItem == null)
+            {
+                cmbMMLMode.SelectedIndex = 0;
+            }
+
             if (format == SongFormat.MML) {
                 var mml = new PlayerMML(outDevice);
                 mml.Settings.MaxDuration = TimeSpan.MaxValue;
-                mml.Settings.MaxSize = int.MaxValue;
+                mml.Settings.MaxSize = int.MaxValue;                                                
                 mml.Mode = (TextPlayer.MML.MMLMode)Enum.Parse(typeof(TextPlayer.MML.MMLMode), cmbMMLMode.SelectedItem.ToString());
                 mml.Load(reader, true);
                 player = mml;
@@ -124,7 +151,7 @@ namespace Karaboss.Pages.ABCnotation
                 isLotroSong = abc.LotroCompatible;
                 abc.LotroCompatible = chkLotroDetect.Checked;
                 player = abc;
-            }
+            }           
 
             player.SetInstrument((Midi.Instrument)Enum.Parse(typeof(Midi.Instrument), cmbInstruments.SelectedItem.ToString()));
             player.Normalize = chkNormalize.Checked;
@@ -145,10 +172,7 @@ namespace Karaboss.Pages.ABCnotation
             }
         }
 
-        protected override void OnClosed(EventArgs e) {
-            StopPlaying();
-            base.OnClosed(e);
-        }
+       
 
         private void Play() {
             try {
@@ -231,17 +255,38 @@ namespace Karaboss.Pages.ABCnotation
             filterIndex = diag.FilterIndex;
         }
 
-        private void Form1_Load(object sender, EventArgs e) {
-            foreach (var instrument in Enum.GetValues(typeof(Midi.Instrument))) {
+
+        #region form load unload
+        private void FrmTextPlayer_Load(object sender, EventArgs e) {
+            foreach (var instrument in Enum.GetValues(typeof(Midi.Instrument)))
+            {
                 string s = instrument.ToString();
                 cmbInstruments.Items.Add(s);
-                if (s == default(Midi.Instrument).ToString()) {
+                if (s == default(Midi.Instrument).ToString())
+                {
                     cmbInstruments.SelectedItem = s;
                 }
             }
 
             cmbMMLMode.SelectedIndex = 0;
         }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            StopPlaying();
+
+            if (outDevice != null && !outDevice.IsDisposed)
+                outDevice.Reset();
+
+            base.OnClosed(e);
+        }
+
+        private void FrmTextPlayer_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+        }
+
+        #endregion
 
         private void cmbInstruments_SelectionChangeCommitted(object sender, EventArgs e) {
             lock (playerLock) {
@@ -332,5 +377,7 @@ namespace Karaboss.Pages.ABCnotation
                 }
             }
         }
+
+       
     }
 }

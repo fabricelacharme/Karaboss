@@ -1122,8 +1122,22 @@ namespace Karaboss.xplorer
                             break;
                         }
 
+                    case ".abc":
+                    case ".mml":
+                        {
+                            PlayText?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
+
                     default:
-                        System.Diagnostics.Process.Start(@file);
+                        try
+                        {
+                            System.Diagnostics.Process.Start(@file);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message, "Error",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                         break;
                 }
             }

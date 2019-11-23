@@ -47,6 +47,7 @@ using System.Net;
 using System.Xml;
 using Karaboss.Pages.ABCnotation;
 
+
 namespace Karaboss
 {
 
@@ -974,19 +975,32 @@ namespace Karaboss
                 Application.OpenForms["frmGuitarTraining"].Close();
             }
 
+            // ferme le formulaire frmPlayer
+            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            {
+                Application.OpenForms["frmPlayer"].Close();
+            }
+
+
+
             // Affiche le formulaire frmPlay 
             if (Application.OpenForms["FrmTextPlayer"] != null)
                 Application.OpenForms["FrmTextPlayer"].Close();
 
             ResetOutPutDevice();
 
-            //Form frmPlayer = new frmPlayer(NumInstance, filename, null, bPlayNow, outDeviceID, songRoot);
-
-            
-            Form frmTextPlayer = new Karaboss.Pages.ABCnotation.FrmTextPlayer(outDevice, fileName);
-            frmTextPlayer.Show();
-            frmTextPlayer.Activate();
-
+            if (bPlayNow == false)
+            {
+                Form frmABCnotation = new Karaboss.Pages.ABCnotation.FrmABCnotation();
+                frmABCnotation.Show();
+                frmABCnotation.Activate();
+            }
+            else
+            {
+                Form frmTextPlayer = new Karaboss.Pages.ABCnotation.FrmTextPlayer(outDevice, fileName);
+                frmTextPlayer.Show();
+                frmTextPlayer.Activate();
+            }
         }
 
         /// <summary>
@@ -1029,6 +1043,13 @@ namespace Karaboss
                 {
                     Application.OpenForms["frmGuitarTraining"].Close();
                 }
+
+                // Ferme le formulaire FrmTextPlayer
+                if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
+                {
+                    Application.OpenForms["FrmTextPlayer"].Close();
+                }
+
 
                 // Affiche le formulaire frmPlay 
                 if (Application.OpenForms["frmPlayer"] != null)
