@@ -78,6 +78,8 @@ namespace Karaboss.Pages.ABCnotation
                     break;
             }
             //RemoteController.SendText(strCommand);
+            
+            
             return;
         }
 

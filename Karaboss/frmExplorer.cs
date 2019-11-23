@@ -991,7 +991,7 @@ namespace Karaboss
 
             if (bPlayNow == false)
             {
-                Form frmABCnotation = new Karaboss.Pages.ABCnotation.FrmABCnotation();
+                Form frmABCnotation = new Karaboss.Pages.ABCnotation.FrmABCnotation(outDevice, fileName);
                 frmABCnotation.Show();
                 frmABCnotation.Activate();
             }
@@ -1940,20 +1940,7 @@ namespace Karaboss
         }
         #endregion
 
-        /// <summary>
-        /// ABC Notation
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void mnuToolsABC_Click(object sender, EventArgs e)
-        {
-            if (Application.OpenForms["FrmABCnotation"] == null)
-            {
-                FrmABCnotation frmABCnotation = new FrmABCnotation();
-                frmABCnotation.Show();
-                frmABCnotation.Activate();
-            }
-        }
+      
 
 
 

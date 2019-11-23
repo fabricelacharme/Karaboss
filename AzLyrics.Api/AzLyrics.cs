@@ -57,6 +57,7 @@ namespace AzLyrics.Api
                 catch (WebException ex)
                 {
                     _error++;
+                    Console.WriteLine(ex.Message);
                 }
             }
             return lyrics;

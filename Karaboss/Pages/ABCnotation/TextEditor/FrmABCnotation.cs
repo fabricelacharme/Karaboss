@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Karaboss.Properties;
 using MarkedEditBox;
+using Sanford.Multimedia.Midi;
 
 namespace Karaboss.Pages.ABCnotation
 {
@@ -30,23 +31,24 @@ namespace Karaboss.Pages.ABCnotation
 
         private LOTROFocuser _focuser = new LOTROFocuser();
 
-        //public static List<FormToolbar> Toolbars = new List<FormToolbar>();
+        private string _editedFilePath;
         #endregion
 
         #region Form methods
-        public FrmABCnotation()
+        public FrmABCnotation(OutputDevice outdeviceText, string path)
         {//====================================================================
             InitializeComponent();
-            dlgSaveAs.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + Resources.ABCResource.MusicSubfolder;
-            dlgOpenFile.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + Resources.ABCResource.MusicSubfolder;
+
+            _editedFilePath = path;
+
+            dlgSaveAs.InitialDirectory = Path.GetDirectoryName(_editedFilePath); //Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + Resources.ABCResource.MusicSubfolder;
+            dlgOpenFile.InitialDirectory = Path.GetDirectoryName(_editedFilePath); //Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + Resources.ABCResource.MusicSubfolder;
             return;
         }
 
         private void OnLoad(object sender, EventArgs e)
         {//--------------------------------------------------------------------
             if (Settings.Default.FavoriteSongs == null) Settings.Default.FavoriteSongs = new FavoriteSongs();
-            //if (Properties.Settings.Default.Macros == null) Properties.Settings.Default.Macros = new MacroList();
-            //if (Properties.Settings.Default.Macros.Items == null) Properties.Settings.Default.Macros.Items = new List<Macro>();
 
             // Set up the sorting style we want in the list views
             lstFiles.Columns[0].Tag = SortType.TITLE;
@@ -234,6 +236,10 @@ namespace Karaboss.Pages.ABCnotation
             return;
         }
 
+        /// <summary>
+        /// Load file
+        /// </summary>
+        /// <param name="path"></param>
         private void ReloadFileList()
         {   //====================================================================
             // Get a prompt to save the file if necessary
@@ -245,16 +251,21 @@ namespace Karaboss.Pages.ABCnotation
             //rtePerform.Clear();
             SetChangedState(false);
 
-            DirectoryInfo di = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic) + "/" + Resources.ABCResource.MusicSubfolder);
+            //DirectoryInfo di = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic) + "/" + Resources.ABCResource.MusicSubfolder);
+            
+
             try
             {
-                AddFilesToList(di.GetFiles("*.abc", SearchOption.AllDirectories));
-                AddFilesToList(di.GetFiles("*.mml", SearchOption.AllDirectories));
-                AddFilesToList(di.GetFiles("*.txt", SearchOption.AllDirectories));
+                DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(_editedFilePath));
+                string s = Path.GetFileName(_editedFilePath);
+                AddFilesToList(di.GetFiles(s));
+                //AddFilesToList(di.GetFiles("*.abc", SearchOption.AllDirectories));
+                //AddFilesToList(di.GetFiles("*.mml", SearchOption.AllDirectories));
+                //AddFilesToList(di.GetFiles("*.txt", SearchOption.AllDirectories));
             }
             catch (Exception ex )
             {
-
+                Console.WriteLine(ex.Message);
             }
 
             if (bInitialLoad)
@@ -266,8 +277,10 @@ namespace Karaboss.Pages.ABCnotation
 
                 // Simulate a click on the "Title" column. Much more useful than starting with
                 // the filename sorted.
-                ColumnClickEventArgs eClick = new ColumnClickEventArgs(0);
-                OnColumnClick(lstFiles, eClick);
+                //ColumnClickEventArgs eClick = new ColumnClickEventArgs(0);
+                //OnColumnClick(lstFiles, eClick);
+
+                lstFiles.Items[0].Selected = true;
             }
 
             return;

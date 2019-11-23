@@ -60,7 +60,7 @@ namespace Karaboss.Pages.ABCnotation
         private volatile bool stopPlaying = false;
         private Thread backgroundThread;
         private int filterIndex = 1;
-        private bool? isLotroSong;
+        private bool? isLotroSong;        
 
 
         #region controls       
@@ -72,7 +72,7 @@ namespace Karaboss.Pages.ABCnotation
 
         public FrmTextPlayer(OutputDevice outdeviceText, string path) {
             InitializeComponent();
-            outDevice = outdeviceText;
+            outDevice = outdeviceText;            
 
             using (StreamReader reader = File.OpenText(path))
             {     

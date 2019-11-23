@@ -61,6 +61,7 @@
             this.MnuToolsSep4 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuToolsMngtFilesSearchSameNameComparedToReference = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuToolsMngtFilesSearchSameNameInASingleDirectory = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuMidi = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMidiInputDevice = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMidiOutputDevice = new System.Windows.Forms.ToolStripMenuItem();
@@ -88,8 +89,6 @@
             this.xplorerControl = new Karaboss.xplorer.xplorerControl();
             this.playlistsControl = new Karaboss.playlists.PlaylistsControl();
             this.searchControl = new Karaboss.Search.SearchControl();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuToolsABC = new System.Windows.Forms.ToolStripMenuItem();
             this.statusBar.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.pnlFileInfos.SuspendLayout();
@@ -226,8 +225,7 @@
             this.mnuToolsOption,
             this.MnuToolsSep1,
             this.mnuToolsMngtFiles,
-            this.toolStripMenuItem1,
-            this.mnuToolsABC});
+            this.toolStripMenuItem1});
             this.mnuTools.Name = "mnuTools";
             resources.ApplyResources(this.mnuTools, "mnuTools");
             // 
@@ -314,6 +312,11 @@
             this.mnuToolsMngtFilesSearchSameNameInASingleDirectory.Name = "mnuToolsMngtFilesSearchSameNameInASingleDirectory";
             resources.ApplyResources(this.mnuToolsMngtFilesSearchSameNameInASingleDirectory, "mnuToolsMngtFilesSearchSameNameInASingleDirectory");
             this.mnuToolsMngtFilesSearchSameNameInASingleDirectory.Click += new System.EventHandler(this.MnuToolsMngtFilesSearchSameNameInASingleDirectory_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            resources.ApplyResources(this.toolStripMenuItem1, "toolStripMenuItem1");
             // 
             // mnuMidi
             // 
@@ -510,17 +513,6 @@
             this.searchControl.SongRoot = "C:\\Users\\Fabrice\\Music";
             this.searchControl.SView = Karaboss.Search.SearchViewStyle.Author;
             // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            resources.ApplyResources(this.toolStripMenuItem1, "toolStripMenuItem1");
-            // 
-            // mnuToolsABC
-            // 
-            this.mnuToolsABC.Name = "mnuToolsABC";
-            resources.ApplyResources(this.mnuToolsABC, "mnuToolsABC");
-            this.mnuToolsABC.Click += new System.EventHandler(this.mnuToolsABC_Click);
-            // 
             // frmExplorer
             // 
             resources.ApplyResources(this, "$this");
@@ -615,6 +607,5 @@
         private System.Windows.Forms.ToolStripSeparator MnuToolsSep1;
         private System.Windows.Forms.ToolStripMenuItem MnuEditGuitarTraining;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem mnuToolsABC;
     }
 }
