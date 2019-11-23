@@ -61,7 +61,7 @@ namespace Karaboss.Search
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void MidiInfoEventHandler();
     public delegate void ContentChangedEventHandler(object sender, string strContent);
-    public delegate void NavigateToEventHandler(Object sender, string path);            // Says to parent to navigate to this folder
+    public delegate void NavigateToEventHandler(Object sender, string path, string file);            // Says to parent to navigate to this folder
     public delegate void SongRootChangedEventHandler(Object sender, string path);                   // Warn aprent that song library has changed
     
 
@@ -540,7 +540,9 @@ namespace Karaboss.Search
                         MessageBox.Show("This path does not exists:" + "\n<" + path + ">", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         return;
                     }
-                    NavigateTo?.Invoke(this, path);
+                    string file = Path.GetFileName(path);
+
+                    NavigateTo?.Invoke(this, path, file);
                     return;
                 }
             }            
@@ -918,18 +920,20 @@ namespace Karaboss.Search
         /// <param name="lvi"></param>
         private void NavigateFolder(ListViewItem lvi)
         {
-            string file = lvi.Tag.ToString();
+            string FullPath = lvi.Tag.ToString();
 
-            if (file == string.Empty)            
+            if (FullPath == string.Empty)            
                 return;            
 
-            string path = Path.GetDirectoryName(file);
+            string path = Path.GetDirectoryName(FullPath);
             if (!Directory.Exists(path))
             {
                 MessageBox.Show("This path does not exists:" + "\n<" + path + ">", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            NavigateTo?.Invoke(this, path);
+            string file = Path.GetFileName(FullPath);
+
+            NavigateTo?.Invoke(this, path, file);
         }
 
         private void MnuEditSearchlistItem_Click(object sender, EventArgs e)

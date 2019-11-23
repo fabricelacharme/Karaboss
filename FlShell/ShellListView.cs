@@ -402,7 +402,7 @@ namespace FlShell
 
         #region Navigate
 
-        void Navigate(ShellItem folder)
+        void Navigate(ShellItem folder, string item = "")
         {        
             NavigatingEventArgs e = new NavigatingEventArgs(folder);
             Navigating?.Invoke(this, e);
@@ -414,7 +414,7 @@ namespace FlShell
                
                 try
                 {
-                    RecreateShellView(folder);
+                    RecreateShellView(folder, item);
 
                     m_History.Add(folder);
                     OnNavigated();
@@ -453,9 +453,9 @@ namespace FlShell
         /// <exception cref="DirectoryNotFoundException">
         /// <paramref name="path"/> is not a valid folder.
         /// </exception>
-        public void Navigate(string path)
+        public void Navigate(string path, string file = "")
         {
-            Navigate(new ShellItem(path));
+            Navigate(new ShellItem(path), file);
         }
 
         /// <summary>

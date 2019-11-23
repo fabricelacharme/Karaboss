@@ -195,7 +195,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="path"></param>
-        private void Item_NavigateTo(object sender, string path)
+        private void Item_NavigateTo(object sender, string path, string file = "")
         {
             sideBarControl.SelectedItem = VBarControl.SideBarControl.SideBarControl.Selectables.Files;
 
@@ -204,7 +204,7 @@ namespace Karaboss
             searchControl.Visible = false;
            
             path = "file:///" + path.Replace("\\", "/");
-            xplorerControl.Navigate(path);
+            xplorerControl.Navigate(path, file);
         }
 
         private void Search_ContentChanged(object sender, string strContent)

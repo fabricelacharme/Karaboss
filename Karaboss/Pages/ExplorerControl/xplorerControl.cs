@@ -182,9 +182,9 @@ namespace Karaboss.xplorer
             shellListView.SelectFirstItem();                       
         }
 
-        public void Navigate(string path)
+        public void Navigate(string path, string file = "")
         {
-            shellListView.Navigate(path);
+            shellListView.Navigate(path, file);
         }
 
         public void SetColumnWidth(int column, int width)

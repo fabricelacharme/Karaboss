@@ -47,7 +47,7 @@ namespace Karaboss.playlists
     public delegate void SelectedIndexChangedEventHandler(object sender, string fileName);
     public delegate void PlayMidiEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
-    public delegate void NavigateToEventHandler(Object sender, string path);
+    public delegate void NavigateToEventHandler(Object sender, string path, string file);
 
 
     public partial class PlaylistsControl : UserControl
@@ -652,27 +652,34 @@ namespace Karaboss.playlists
             }
         }
 
+        /// <summary>
+        /// Navigate to the folder of the selected file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MnuOpenFolder_Click(object sender, EventArgs e)
         {
             if (listView.SelectedIndices.Count == 0)
                 return;
 
             ListViewItem lvi = listView.SelectedItems[0];
-            string file = lvi.Tag.ToString();
+            string FullPath = lvi.Tag.ToString();
             
-            if (file == string.Empty)
+            if (FullPath == string.Empty)
             {
                 return;
             }
 
-            string path = Path.GetDirectoryName(file);
+            string path = Path.GetDirectoryName(FullPath);
             if (!Directory.Exists(path))
             {
                 MessageBox.Show("This path does not exists:" + "\n<" + path + ">", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
+            string file = Path.GetFileName(FullPath);
 
-            NavigateTo?.Invoke(this, path);
+            NavigateTo?.Invoke(this, path, file);
+            //NavigateTo?.Invoke(this, file);
         }
 
 
