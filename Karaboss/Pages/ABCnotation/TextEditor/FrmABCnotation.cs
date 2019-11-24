@@ -48,7 +48,7 @@ namespace Karaboss.Pages.ABCnotation
 
         private void OnLoad(object sender, EventArgs e)
         {//--------------------------------------------------------------------
-            if (Settings.Default.FavoriteSongs == null) Settings.Default.FavoriteSongs = new FavoriteSongs();
+            
 
             // Set up the sorting style we want in the list views
             lstFiles.Columns[0].Tag = SortType.TITLE;
@@ -75,36 +75,15 @@ namespace Karaboss.Pages.ABCnotation
             cmbReciteChannel.SelectedIndex = 0;
 
             // Fill in the tags if they've been customized
-            if (Settings.Default.TagsEdit != null) rteEdit.Tags = Settings.Default.TagsEdit;
+            //if (Settings.Default.TagsEdit != null) rteEdit.Tags = Settings.Default.TagsEdit;
             //if (Settings.Default.TagsPerform != null) rtePerform.Tags = Settings.Default.TagsPerform;
 
             rteEdit.AutoTag = Settings.Default.HighlightABC;
 
             menustripMain.Left = 0;
 
-            //FormMacroManager fmm = new FormMacroManager();
-            //fmm.ShowDialog();
-            //CreateTestMacros();
-            if (null == Settings.Default.Toolbars) Settings.Default.Toolbars = new LotroToolbarList();
-            if (0 == Settings.Default.Toolbars.Items.Count)
-            {
-                LotroToolbar tb = new LotroToolbar();
-                tb.Name = "All Macros";
-                //foreach (Macro mac in Properties.Settings.Default.Macros.Items) tb.Items.Add(new LotroToolbarItem(mac));
-                Settings.Default.Toolbars.Items.Add(tb);
-                Settings.Default.Save();
-            }
-
-            // Load up all the toolbars
-            foreach (LotroToolbar tb in Settings.Default.Toolbars.Items)
-            {
-                /*
-                FormToolbar ft = new FormToolbar(tb);
-                Toolbars.All.Add(ft);
-                if (tb.Visible) ft.Show();
-                */
-            }
-
+          
+           
 
             // Kick off the timer that makes LOTRO music play while LOMM has focus
             _focuser.Start();
@@ -119,7 +98,7 @@ namespace Karaboss.Pages.ABCnotation
             _focuser.Stop();
 
             //Settings.Default.TagsPerform = new MarkedEditBox.RegexTagBag(rtePerform.Tags);
-            Settings.Default.TagsEdit = new MarkedEditBox.RegexTagBag(rteEdit.Tags);
+            //Settings.Default.TagsEdit = new MarkedEditBox.RegexTagBag(rteEdit.Tags);
             Settings.Default.FrmABCnotationLocation = Location;
             Settings.Default.FrmABCnotationSize = Size;
             Settings.Default.FrmABCnotationAOT = TopMost;
@@ -225,10 +204,6 @@ namespace Karaboss.Pages.ABCnotation
                     li.SubItems.Insert((int)SONG_COLUMN.Path, new ListViewItem.ListViewSubItem(li, song.ShortName));
                     li.SubItems.Insert((int)SONG_COLUMN.Index, new ListViewItem.ListViewSubItem(li, song.Index));
                     li.ToolTipText = song.ToolTip;
-                    if (Settings.Default.FavoriteSongs != null && Settings.Default.FavoriteSongs.Items != null)
-                    {
-                        li.Checked = Settings.Default.FavoriteSongs.Items.Contains(new FavoriteSong(song.ShortName, song.Index));
-                    }
                     lstFiles.Items.Add(li);
                 }
             }
@@ -813,17 +788,7 @@ namespace Karaboss.Pages.ABCnotation
 
         private void OnViewMenuOpening(object sender, EventArgs e)
         {   //====================================================================
-            mniViewToolbars.DropDown.Items.Clear();
-            foreach (LotroToolbar ltb in Settings.Default.Toolbars.Items)
-            {
-                ToolStripMenuItem tsmi = new ToolStripMenuItem();
-                tsmi.Text = ltb.Name;
-                tsmi.Tag = ltb;
-                tsmi.Checked = ltb.Visible;
-                tsmi.Click += new EventHandler(OnViewToolbarsItemClick);
-                mniViewToolbars.DropDown.Items.Add(tsmi);
-            }
-            return;
+           
         }
 
         
@@ -838,21 +803,7 @@ namespace Karaboss.Pages.ABCnotation
         }
 
         void OnRemoveToolbar(object sender, EventArgs e)
-        {   //====================================================================
-            String[] astr = new String[Settings.Default.Toolbars.Items.Count];
-            for (int i = 0; i < Settings.Default.Toolbars.Items.Count; i += 1) astr[i] = Settings.Default.Toolbars.Items[i].Name;
-            /*
-            FormInputChoice frm = new FormInputChoice("Remove toolbar", "Select toolbar to remove", astr, "");
-            if (frm.ShowDialog() == DialogResult.OK && frm.SelectedIndex != -1)
-            {
-                Settings.Default.Toolbars.Items.Remove(Toolbars.All[frm.SelectedIndex].Toolbar);
-                FormToolbar ft = Toolbars.All[frm.SelectedIndex];
-                Toolbars.All.RemoveAt(frm.SelectedIndex);
-                ft.Close();
-                ft.Dispose();
-            }
-            return;
-            */
+        {   
         }
 
         
@@ -909,14 +860,12 @@ namespace Karaboss.Pages.ABCnotation
             {
                 case true:
                     // Add the item to the list
-                    Settings.Default.FavoriteSongs.Items.Add(new FavoriteSong(e.Item.SubItems[(int)SONG_COLUMN.Path].Text,
-                                                                              e.Item.SubItems[(int)SONG_COLUMN.Index].Text,
-                                                                              e.Item.SubItems[(int)SONG_COLUMN.Title].Text));
+                    
                     break;
 
                 case false:
                     // Remove from the list - title is irrelevant except for display, so we don't need to pass it
-                    Settings.Default.FavoriteSongs.Items.Remove(new FavoriteSong(e.Item.SubItems[(int)SONG_COLUMN.Path].Text, e.Item.SubItems[(int)SONG_COLUMN.Index].Text));
+                    
                     break;
             }
             return;

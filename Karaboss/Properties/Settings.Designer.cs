@@ -1045,21 +1045,19 @@ namespace Karaboss.Properties {
                 this["SepParagraph"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::Karaboss.Pages.ABCnotation.FavoriteSongs FavoriteSongs
-        {
-            get
-            {
-                return ((global::Karaboss.Pages.ABCnotation.FavoriteSongs)(this["FavoriteSongs"]));
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FavoriteSongs {
+            get {
+                return ((string)(this["FavoriteSongs"]));
             }
-            set
-            {
+            set {
                 this["FavoriteSongs"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("746, 618")]
@@ -1107,21 +1105,19 @@ namespace Karaboss.Properties {
                 this["LoadABCAtStartup"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::MarkedEditBox.RegexTagBag TagsEdit
-        {
-            get
-            {
-                return ((global::MarkedEditBox.RegexTagBag)(this["TagsEdit"]));
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TagsEdit {
+            get {
+                return ((string)(this["TagsEdit"]));
             }
-            set
-            {
+            set {
                 this["TagsEdit"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
@@ -1145,18 +1141,64 @@ namespace Karaboss.Properties {
                 this["HighlightABC"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::Karaboss.Pages.ABCnotation.LotroToolbarList Toolbars
-        {
-            get
-            {
-                return ((global::Karaboss.Pages.ABCnotation.LotroToolbarList)(this["Toolbars"]));
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Toolbars {
+            get {
+                return ((string)(this["Toolbars"]));
             }
-            set
-            {
+            set {
                 this["Toolbars"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point FrmTextPlayerLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["FrmTextPlayerLocation"]));
+            }
+            set {
+                this["FrmTextPlayerLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FrmTextPlayerMaximized {
+            get {
+                return ((bool)(this["FrmTextPlayerMaximized"]));
+            }
+            set {
+                this["FrmTextPlayerMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600, 600")]
+        public global::System.Drawing.Size FrmTextPlayerSize {
+            get {
+                return ((global::System.Drawing.Size)(this["FrmTextPlayerSize"]));
+            }
+            set {
+                this["FrmTextPlayerSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowTextEditor {
+            get {
+                return ((bool)(this["ShowTextEditor"]));
+            }
+            set {
+                this["ShowTextEditor"] = value;
             }
         }
     }

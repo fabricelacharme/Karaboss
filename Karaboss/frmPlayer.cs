@@ -2749,21 +2749,7 @@ namespace Karaboss
                     WindowState = FormWindowState.Maximized;
                 }
                 else
-                {
-                    /*
-                    Location = Properties.Settings.Default.frmPlayerLocation;
-                    
-                    // Verify if this windows is visible in extended screens
-                    Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
-                    foreach (Screen screen in Screen.AllScreens)
-                        rect = Rectangle.Union(rect, screen.Bounds);
-
-                    if (Location.X > rect.Width)
-                        Location = new Point(0, Location.Y);
-                    if (Location.Y > rect.Height)
-                        Location = new Point(Location.X, 0);
-                        */
-
+                {                   
                     try
                     {
                         if (Properties.Settings.Default.frmPlayerSize.Height == SimplePlayerHeight)
@@ -2775,7 +2761,7 @@ namespace Karaboss
                     }
                     catch (Exception ex)
                     {
-
+                        Console.WriteLine(ex.Message);
                     }
 
                 }

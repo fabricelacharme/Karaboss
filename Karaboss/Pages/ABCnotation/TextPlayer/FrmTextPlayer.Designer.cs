@@ -24,7 +24,6 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.btnOpen = new System.Windows.Forms.Button();
             this.cmbInstruments = new System.Windows.Forms.ComboBox();
             this.chkNormalize = new System.Windows.Forms.CheckBox();
             this.chkLoop = new System.Windows.Forms.CheckBox();
@@ -39,24 +38,35 @@
             this.label1 = new System.Windows.Forms.Label();
             this.cmbMMLMode = new System.Windows.Forms.ComboBox();
             this.chkLotroDetect = new System.Windows.Forms.CheckBox();
+            this.pnlBottom = new System.Windows.Forms.Panel();
+            this.pnlMiddle = new System.Windows.Forms.Panel();
+            this.pnlEditText = new System.Windows.Forms.Panel();
+            this.txtEditText = new System.Windows.Forms.TextBox();
+            this.pnlTop = new System.Windows.Forms.Panel();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.nmuFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileNew = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuFileSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuFileExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDisplay = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDisplayText = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.pnlBottom.SuspendLayout();
+            this.pnlMiddle.SuspendLayout();
+            this.pnlEditText.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnOpen
-            // 
-            this.btnOpen.Location = new System.Drawing.Point(9, 50);
-            this.btnOpen.Margin = new System.Windows.Forms.Padding(2);
-            this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(72, 38);
-            this.btnOpen.TabIndex = 0;
-            this.btnOpen.Text = "Open...";
-            this.btnOpen.UseVisualStyleBackColor = true;
-            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
             // cmbInstruments
             // 
             this.cmbInstruments.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbInstruments.FormattingEnabled = true;
-            this.cmbInstruments.Location = new System.Drawing.Point(126, 107);
+            this.cmbInstruments.Location = new System.Drawing.Point(338, 30);
             this.cmbInstruments.Margin = new System.Windows.Forms.Padding(2);
             this.cmbInstruments.Name = "cmbInstruments";
             this.cmbInstruments.Size = new System.Drawing.Size(186, 21);
@@ -68,7 +78,7 @@
             this.chkNormalize.AutoSize = true;
             this.chkNormalize.Checked = true;
             this.chkNormalize.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkNormalize.Location = new System.Drawing.Point(9, 93);
+            this.chkNormalize.Location = new System.Drawing.Point(254, 31);
             this.chkNormalize.Margin = new System.Windows.Forms.Padding(2);
             this.chkNormalize.Name = "chkNormalize";
             this.chkNormalize.Size = new System.Drawing.Size(72, 17);
@@ -80,7 +90,7 @@
             // chkLoop
             // 
             this.chkLoop.AutoSize = true;
-            this.chkLoop.Location = new System.Drawing.Point(9, 115);
+            this.chkLoop.Location = new System.Drawing.Point(254, 53);
             this.chkLoop.Margin = new System.Windows.Forms.Padding(2);
             this.chkLoop.Name = "chkLoop";
             this.chkLoop.Size = new System.Drawing.Size(50, 17);
@@ -91,7 +101,7 @@
             // 
             // btnPause
             // 
-            this.btnPause.Location = new System.Drawing.Point(162, 50);
+            this.btnPause.Location = new System.Drawing.Point(90, 55);
             this.btnPause.Margin = new System.Windows.Forms.Padding(2);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(72, 38);
@@ -103,7 +113,7 @@
             // chkMute
             // 
             this.chkMute.AutoSize = true;
-            this.chkMute.Location = new System.Drawing.Point(9, 137);
+            this.chkMute.Location = new System.Drawing.Point(254, 75);
             this.chkMute.Margin = new System.Windows.Forms.Padding(2);
             this.chkMute.Name = "chkMute";
             this.chkMute.Size = new System.Drawing.Size(50, 17);
@@ -114,16 +124,16 @@
             // 
             // scrSeek
             // 
-            this.scrSeek.Location = new System.Drawing.Point(9, 26);
+            this.scrSeek.Location = new System.Drawing.Point(13, 31);
             this.scrSeek.Margin = new System.Windows.Forms.Padding(2);
             this.scrSeek.Name = "scrSeek";
-            this.scrSeek.Size = new System.Drawing.Size(302, 20);
+            this.scrSeek.Size = new System.Drawing.Size(225, 20);
             this.scrSeek.TabIndex = 6;
             this.scrSeek.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrSeek_MouseDown);
             // 
             // btnPlay
             // 
-            this.btnPlay.Location = new System.Drawing.Point(86, 50);
+            this.btnPlay.Location = new System.Drawing.Point(14, 55);
             this.btnPlay.Margin = new System.Windows.Forms.Padding(2);
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.Size = new System.Drawing.Size(72, 38);
@@ -134,7 +144,7 @@
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(238, 50);
+            this.btnStop.Location = new System.Drawing.Point(166, 55);
             this.btnStop.Margin = new System.Windows.Forms.Padding(2);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(72, 38);
@@ -146,7 +156,7 @@
             // lblFile
             // 
             this.lblFile.AutoEllipsis = true;
-            this.lblFile.Location = new System.Drawing.Point(7, 7);
+            this.lblFile.Location = new System.Drawing.Point(11, 12);
             this.lblFile.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblFile.Name = "lblFile";
             this.lblFile.Size = new System.Drawing.Size(236, 15);
@@ -156,7 +166,7 @@
             // lblTime
             // 
             this.lblTime.AutoSize = true;
-            this.lblTime.Location = new System.Drawing.Point(260, 7);
+            this.lblTime.Location = new System.Drawing.Point(188, 12);
             this.lblTime.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTime.Name = "lblTime";
             this.lblTime.Size = new System.Drawing.Size(48, 13);
@@ -167,7 +177,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(124, 91);
+            this.label3.Location = new System.Drawing.Point(336, 14);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 13);
@@ -177,7 +187,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(124, 133);
+            this.label1.Location = new System.Drawing.Point(336, 56);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(64, 13);
@@ -191,7 +201,7 @@
             this.cmbMMLMode.Items.AddRange(new object[] {
             "Mabinogi",
             "ArcheAge"});
-            this.cmbMMLMode.Location = new System.Drawing.Point(126, 150);
+            this.cmbMMLMode.Location = new System.Drawing.Point(338, 73);
             this.cmbMMLMode.Margin = new System.Windows.Forms.Padding(2);
             this.cmbMMLMode.Name = "cmbMMLMode";
             this.cmbMMLMode.Size = new System.Drawing.Size(186, 21);
@@ -203,7 +213,7 @@
             this.chkLotroDetect.AutoSize = true;
             this.chkLotroDetect.Checked = true;
             this.chkLotroDetect.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkLotroDetect.Location = new System.Drawing.Point(127, 179);
+            this.chkLotroDetect.Location = new System.Drawing.Point(542, 30);
             this.chkLotroDetect.Margin = new System.Windows.Forms.Padding(2);
             this.chkLotroDetect.Name = "chkLotroDetect";
             this.chkLotroDetect.Size = new System.Drawing.Size(191, 17);
@@ -212,41 +222,206 @@
             this.chkLotroDetect.UseVisualStyleBackColor = true;
             this.chkLotroDetect.CheckedChanged += new System.EventHandler(this.chkLotroDetect_CheckedChanged);
             // 
+            // pnlBottom
+            // 
+            this.pnlBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlBottom.Controls.Add(this.lblFile);
+            this.pnlBottom.Controls.Add(this.cmbInstruments);
+            this.pnlBottom.Controls.Add(this.chkLotroDetect);
+            this.pnlBottom.Controls.Add(this.chkNormalize);
+            this.pnlBottom.Controls.Add(this.label1);
+            this.pnlBottom.Controls.Add(this.chkLoop);
+            this.pnlBottom.Controls.Add(this.cmbMMLMode);
+            this.pnlBottom.Controls.Add(this.btnPause);
+            this.pnlBottom.Controls.Add(this.label3);
+            this.pnlBottom.Controls.Add(this.chkMute);
+            this.pnlBottom.Controls.Add(this.lblTime);
+            this.pnlBottom.Controls.Add(this.scrSeek);
+            this.pnlBottom.Controls.Add(this.btnPlay);
+            this.pnlBottom.Controls.Add(this.btnStop);
+            this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlBottom.Location = new System.Drawing.Point(0, 340);
+            this.pnlBottom.Name = "pnlBottom";
+            this.pnlBottom.Size = new System.Drawing.Size(834, 100);
+            this.pnlBottom.TabIndex = 3;
+            // 
+            // pnlMiddle
+            // 
+            this.pnlMiddle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlMiddle.Controls.Add(this.pnlEditText);
+            this.pnlMiddle.Location = new System.Drawing.Point(0, 74);
+            this.pnlMiddle.Name = "pnlMiddle";
+            this.pnlMiddle.Size = new System.Drawing.Size(834, 266);
+            this.pnlMiddle.TabIndex = 2;
+            this.pnlMiddle.Visible = false;
+            // 
+            // pnlEditText
+            // 
+            this.pnlEditText.BackColor = System.Drawing.Color.White;
+            this.pnlEditText.Controls.Add(this.txtEditText);
+            this.pnlEditText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlEditText.Location = new System.Drawing.Point(0, 0);
+            this.pnlEditText.Name = "pnlEditText";
+            this.pnlEditText.Size = new System.Drawing.Size(834, 266);
+            this.pnlEditText.TabIndex = 0;
+            // 
+            // txtEditText
+            // 
+            this.txtEditText.AcceptsReturn = true;
+            this.txtEditText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtEditText.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEditText.Location = new System.Drawing.Point(0, 0);
+            this.txtEditText.Multiline = true;
+            this.txtEditText.Name = "txtEditText";
+            this.txtEditText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtEditText.Size = new System.Drawing.Size(834, 266);
+            this.txtEditText.TabIndex = 0;
+            this.txtEditText.Text = "toto";
+            // 
+            // pnlTop
+            // 
+            this.pnlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlTop.Location = new System.Drawing.Point(0, 24);
+            this.pnlTop.Name = "pnlTop";
+            this.pnlTop.Size = new System.Drawing.Size(834, 50);
+            this.pnlTop.TabIndex = 1;
+            this.pnlTop.Visible = false;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.nmuFile,
+            this.mnuDisplay,
+            this.mnuHelp});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(834, 24);
+            this.menuStrip1.TabIndex = 0;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // nmuFile
+            // 
+            this.nmuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFileNew,
+            this.mnuFileOpen,
+            this.toolStripMenuItem2,
+            this.mnuFileSave,
+            this.mnuFileSaveAs,
+            this.toolStripMenuItem1,
+            this.mnuFileExit});
+            this.nmuFile.Name = "nmuFile";
+            this.nmuFile.Size = new System.Drawing.Size(37, 20);
+            this.nmuFile.Text = "&File";
+            // 
+            // mnuFileNew
+            // 
+            this.mnuFileNew.Name = "mnuFileNew";
+            this.mnuFileNew.Size = new System.Drawing.Size(138, 22);
+            this.mnuFileNew.Text = "&New";
+            this.mnuFileNew.Click += new System.EventHandler(this.mnuFileNew_Click);
+            // 
+            // mnuFileOpen
+            // 
+            this.mnuFileOpen.Name = "mnuFileOpen";
+            this.mnuFileOpen.Size = new System.Drawing.Size(138, 22);
+            this.mnuFileOpen.Text = "&Open";
+            this.mnuFileOpen.Click += new System.EventHandler(this.mnuFileOpen_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(135, 6);
+            // 
+            // mnuFileSave
+            // 
+            this.mnuFileSave.Name = "mnuFileSave";
+            this.mnuFileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.mnuFileSave.Size = new System.Drawing.Size(138, 22);
+            this.mnuFileSave.Text = "&Save";
+            this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
+            // 
+            // mnuFileSaveAs
+            // 
+            this.mnuFileSaveAs.Name = "mnuFileSaveAs";
+            this.mnuFileSaveAs.Size = new System.Drawing.Size(138, 22);
+            this.mnuFileSaveAs.Text = "Save as...";
+            this.mnuFileSaveAs.Click += new System.EventHandler(this.mnuFileSaveAs_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(135, 6);
+            // 
+            // mnuFileExit
+            // 
+            this.mnuFileExit.Name = "mnuFileExit";
+            this.mnuFileExit.Size = new System.Drawing.Size(138, 22);
+            this.mnuFileExit.Text = "&Exit";
+            this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
+            // 
+            // mnuDisplay
+            // 
+            this.mnuDisplay.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuDisplayText});
+            this.mnuDisplay.Name = "mnuDisplay";
+            this.mnuDisplay.Size = new System.Drawing.Size(57, 20);
+            this.mnuDisplay.Text = "&Display";
+            // 
+            // mnuDisplayText
+            // 
+            this.mnuDisplayText.Name = "mnuDisplayText";
+            this.mnuDisplayText.ShortcutKeys = System.Windows.Forms.Keys.F12;
+            this.mnuDisplayText.Size = new System.Drawing.Size(180, 22);
+            this.mnuDisplayText.Text = "Text";
+            this.mnuDisplayText.Click += new System.EventHandler(this.mnuDisplayText_Click);
+            // 
+            // mnuHelp
+            // 
+            this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuHelpAbout});
+            this.mnuHelp.Name = "mnuHelp";
+            this.mnuHelp.Size = new System.Drawing.Size(44, 20);
+            this.mnuHelp.Text = "&Help";
+            // 
+            // mnuHelpAbout
+            // 
+            this.mnuHelpAbout.Name = "mnuHelpAbout";
+            this.mnuHelpAbout.Size = new System.Drawing.Size(116, 22);
+            this.mnuHelpAbout.Text = "&About...";
+            this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
+            // 
             // FrmTextPlayer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(322, 207);
-            this.Controls.Add(this.chkLotroDetect);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.cmbMMLMode);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.lblTime);
-            this.Controls.Add(this.lblFile);
-            this.Controls.Add(this.btnStop);
-            this.Controls.Add(this.btnPlay);
-            this.Controls.Add(this.scrSeek);
-            this.Controls.Add(this.chkMute);
-            this.Controls.Add(this.btnPause);
-            this.Controls.Add(this.chkLoop);
-            this.Controls.Add(this.chkNormalize);
-            this.Controls.Add(this.cmbInstruments);
-            this.Controls.Add(this.btnOpen);
+            this.ClientSize = new System.Drawing.Size(834, 440);
+            this.Controls.Add(this.pnlMiddle);
+            this.Controls.Add(this.pnlTop);
+            this.Controls.Add(this.pnlBottom);
+            this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.Name = "FrmTextPlayer";
             this.Text = "MidiPlayer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmTextPlayer_FormClosing);
             this.Load += new System.EventHandler(this.FrmTextPlayer_Load);
+            this.Resize += new System.EventHandler(this.FrmTextPlayer_Resize);
+            this.pnlBottom.ResumeLayout(false);
+            this.pnlBottom.PerformLayout();
+            this.pnlMiddle.ResumeLayout(false);
+            this.pnlEditText.ResumeLayout(false);
+            this.pnlEditText.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnOpen;
         private System.Windows.Forms.ComboBox cmbInstruments;
         private System.Windows.Forms.CheckBox chkNormalize;
         private System.Windows.Forms.CheckBox chkLoop;
@@ -261,6 +436,24 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cmbMMLMode;
         private System.Windows.Forms.CheckBox chkLotroDetect;
+        private System.Windows.Forms.Panel pnlBottom;
+        private System.Windows.Forms.Panel pnlMiddle;
+        private System.Windows.Forms.Panel pnlTop;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem nmuFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileExit;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelp;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
+        private System.Windows.Forms.ToolStripMenuItem mnuDisplay;
+        private System.Windows.Forms.ToolStripMenuItem mnuDisplayText;
+        private System.Windows.Forms.Panel pnlEditText;
+        private System.Windows.Forms.TextBox txtEditText;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileSave;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileSaveAs;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileOpen;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileNew;
     }
 }
 

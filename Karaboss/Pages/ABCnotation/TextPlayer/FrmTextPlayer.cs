@@ -55,13 +55,31 @@ namespace Karaboss.Pages.ABCnotation
 
 
     public partial class FrmTextPlayer : Form {
+
+        #region private decl
+
         private volatile IMidiPlayer player;
         private object playerLock = new object();
         private volatile bool stopPlaying = false;
         private Thread backgroundThread;
         private int filterIndex = 1;
-        private bool? isLotroSong;        
+        private bool? isLotroSong;
 
+        private bool closing = false;
+        private bool bClosingRequired = false;
+        private bool loading = false; // loading file in progress
+        public bool bfilemodified = false;
+
+        private bool bTextEditorAlwaysOn = false;
+        private bool bForceShowTextEditor = false;
+        //private bool bKaraokeAlwaysOn = true;
+
+        // Dimensions
+        private int leftWidth = 179;
+        private int SimpleTextPlayerWidth = 850;
+        private int SimpleTextPlayerHeight = 170;
+
+        #endregion
 
         #region controls       
         private OutputDevice outDevice;
@@ -72,7 +90,11 @@ namespace Karaboss.Pages.ABCnotation
 
         public FrmTextPlayer(OutputDevice outdeviceText, string path) {
             InitializeComponent();
-            outDevice = outdeviceText;            
+            outDevice = outdeviceText;
+
+            txtEditText.Multiline = true;
+            txtEditText.WordWrap = false;
+            txtEditText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
 
             using (StreamReader reader = File.OpenText(path))
             {     
@@ -83,6 +105,7 @@ namespace Karaboss.Pages.ABCnotation
                 lblFile.Text = "File: " + Path.GetFileName(path);                
             }
 
+            txtEditText.Text = LoadSrcFile(path);
         }
 
         delegate void SetScrollValueDelegate(int val);
@@ -112,11 +135,98 @@ namespace Karaboss.Pages.ABCnotation
             lblTime.Left = scrSeek.Right - lblTime.Width;
         }
 
-        private void LoadFile(StreamReader reader, SongFormat format) {
+        
+        #region Menus
+
+        private void mnuFileNew_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mnuFileOpen_Click(object sender, EventArgs e)
+        {
+            OpenTextFile();
+        }
+
+        private void mnuFileSave_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mnuFileSaveAs_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mnuFileExit_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mnuDisplayText_Click(object sender, EventArgs e)
+        {
+            DisplayTextEditor();
+        }
+
+        private void mnuHelpAbout_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Open a Text file
+        /// </summary>
+        private void OpenTextFile()
+        {
+            var diag = new OpenFileDialog();
+
+            diag.InitialDirectory = ".";
+            diag.Filter = "Song files|*.mml;*.abc|MML files (*.mml)|*.mml|ABC files (*.abc)|*.abc|All files (*.*)|*.*";
+            diag.FilterIndex = filterIndex;
+            diag.RestoreDirectory = true;
+
+            Stream stream = null;
+            if (diag.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    if ((stream = diag.OpenFile()) != null)
+                    {
+                        using (stream)
+                        {
+                            using (var reader = new StreamReader(stream))
+                            {
+                                if (Path.GetExtension(diag.FileName).ToLowerInvariant() == ".abc")
+                                    LoadFile(reader, SongFormat.ABC);
+                                else
+                                    LoadFile(reader, SongFormat.MML);
+                                lblFile.Text = "File: " + Path.GetFileName(diag.FileName);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message + System.Environment.NewLine + ex.StackTrace);
+                    if (player != null)
+                        player.CloseDevice();
+                }
+            }
+
+            filterIndex = diag.FilterIndex;
+        }
+
+        /// <summary>
+        /// Load a file and start to play
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="format"></param>
+        private void LoadFile(StreamReader reader, SongFormat format)
+        {
             StopPlaying();
             stopPlaying = false;
 
-
+            #region guard
             if (cmbInstruments.SelectedItem == null)
             {
                 foreach (var instrument in Enum.GetValues(typeof(Midi.Instrument)))
@@ -133,17 +243,20 @@ namespace Karaboss.Pages.ABCnotation
             {
                 cmbMMLMode.SelectedIndex = 0;
             }
+            #endregion
 
-            if (format == SongFormat.MML) {
+            if (format == SongFormat.MML)
+            {
                 var mml = new PlayerMML(outDevice);
                 mml.Settings.MaxDuration = TimeSpan.MaxValue;
-                mml.Settings.MaxSize = int.MaxValue;                                                
+                mml.Settings.MaxSize = int.MaxValue;
                 mml.Mode = (TextPlayer.MML.MMLMode)Enum.Parse(typeof(TextPlayer.MML.MMLMode), cmbMMLMode.SelectedItem.ToString());
                 mml.Load(reader, true);
                 player = mml;
                 isLotroSong = null;
             }
-            else {               
+            else
+            {
                 var abc = new PlayerABC(outDevice);
                 abc.Settings.MaxDuration = TimeSpan.MaxValue;
                 abc.Settings.MaxSize = int.MaxValue;
@@ -151,7 +264,7 @@ namespace Karaboss.Pages.ABCnotation
                 isLotroSong = abc.LotroCompatible;
                 abc.LotroCompatible = chkLotroDetect.Checked;
                 player = abc;
-            }           
+            }
 
             player.SetInstrument((Midi.Instrument)Enum.Parse(typeof(Midi.Instrument), cmbInstruments.SelectedItem.ToString()));
             player.Normalize = chkNormalize.Checked;
@@ -165,99 +278,160 @@ namespace Karaboss.Pages.ABCnotation
             backgroundThread.Start();
         }
 
-        private void StopPlaying() {
-            stopPlaying = true;
-            if (backgroundThread != null) {
-                backgroundThread.Join(TimeSpan.FromSeconds(1));
+        private string LoadSrcFile(string path)
+        {
+            FileInfo fi = new FileInfo(path);
+            StreamReader sr = new StreamReader(fi.FullName);
+            string s = sr.ReadToEnd();
+            s = StringExtensions.ConvertNonDosFile(s);
+
+            return s;
+        }
+
+
+        /// <summary>
+        /// Resize according to sequencer visible or not
+        /// </summary>
+        /// <param name="bSequencerAlwaysOn"></param>
+        private void RedimIfSequencerVisible()
+        {
+            /*
+            * Bug quand on veut cacher le sequencer en faisant F12 lorsque
+            * bSequencerAlwaysOn = false && bForceShowSequencer = true                           
+            * 
+            */
+
+            if (bTextEditorAlwaysOn == true)
+            {
+                this.MaximizeBox = true;
+                this.FormBorderStyle = FormBorderStyle.Sizable;
+
+                // Show sequencer
+                pnlTop.Visible = true;
+                pnlMiddle.Visible = true;
+
+                pnlMiddle.Top = menuStrip1.Height +  pnlTop.Height;
+                pnlMiddle.Width = pnlTop.Width;
+                pnlMiddle.Height = this.ClientSize.Height - menuStrip1.Height - pnlTop.Height - pnlBottom.Height;
+                /*
+                pnlEditText.Top = pnlMiddle.Top;
+                txtEditText.Top = pnlEditText.Top;
+                txtEditText.Height = pnlEditText.Height;
+                txtEditText.Width = pnlEditText.Width;
+                */
+
+                #region window size & location
+                // If window is maximized
+                if (Properties.Settings.Default.FrmTextPlayerMaximized)
+                {
+                    Location = Properties.Settings.Default.FrmTextPlayerLocation;
+                    WindowState = FormWindowState.Maximized;
+                }
+                else
+                {
+                    try
+                    {
+                        if (Properties.Settings.Default.FrmTextPlayerSize.Height == SimpleTextPlayerHeight)
+                        {
+                            this.Size = new Size(Properties.Settings.Default.FrmTextPlayerSize.Width, 600);
+                        }
+                        else
+                            Size = Properties.Settings.Default.FrmTextPlayerSize;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+
+                }
+                #endregion
+
+                if (bTextEditorAlwaysOn == true)
+                    mnuDisplayText.Checked = true;
+            }
+            else
+            {
+
+                // Hide sequencer
+
+                // Save size                
+                #region save size
+                // Copy window location to app settings                
+                if (WindowState != FormWindowState.Minimized)
+                {
+                    if (WindowState == FormWindowState.Maximized)
+                    {
+                        Properties.Settings.Default.FrmTextPlayerLocation = RestoreBounds.Location;
+                        Properties.Settings.Default.FrmTextPlayerMaximized = true;
+
+                    }
+                    else if (WindowState == FormWindowState.Normal)
+                    {
+                        Properties.Settings.Default.FrmTextPlayerLocation = Location;
+                        if (Height != SimpleTextPlayerHeight)
+                            Properties.Settings.Default.FrmTextPlayerSize = Size;
+                        Properties.Settings.Default.FrmTextPlayerMaximized = false;
+                    }
+
+                    // Show sequencer
+                    Properties.Settings.Default.ShowTextEditor = bTextEditorAlwaysOn;
+                    //Properties.Settings.Default.ShowKaraoke = bKaraokeAlwaysOn;
+
+                    // Save settings
+                    Properties.Settings.Default.Save();
+                }
+                #endregion
+
+                this.MaximizeBox = false;
+                this.FormBorderStyle = FormBorderStyle.FixedSingle;
+
+
+                pnlTop.Visible = false;
+                pnlMiddle.Visible = false;
+
+                if (this.WindowState == FormWindowState.Maximized)
+                    WindowState = FormWindowState.Normal;
+
+                // Redim size to simple player
+                this.Size = new Size(SimpleTextPlayerWidth, SimpleTextPlayerHeight);
+
+                //mnuDisplaySequencer.Checked = false;
+                //MnuEditScore.Checked = false;
+
+                /*
+                if (sheetmusic != null)
+                    DspEdit(false);
+
+                if (sheetmusic != null)
+                    sheetmusic.bEditMode = false;
+                */
             }
         }
 
-       
+        private void SaveFileProc()
+        {
 
-        private void Play() {
-            try {
-                TimeSpan now = new TimeSpan(MusicPlayer.Time.Ticks);
-                player.Play(now);
-
-                while (player != null && !stopPlaying) {
-                    lock (playerLock) {
-                        if (player.Playing) {
-                            player.Update(now);
-                            int scrollVal = (int)player.Elapsed.TotalSeconds;
-                            if (scrollVal != scrSeek.Value) {
-                                SetScrollValue(scrollVal);
-                            }
-                        }
-                        else {
-                            if (scrSeek.Value != 0) {
-                                SetScrollValue(0);
-                            }
-                        }
-                    }
-                    Thread.Sleep(1);
-                    now = new TimeSpan(MusicPlayer.Time.Ticks);
-                }
-
-                lock (playerLock) {
-                    if (player.Playing) {
-                        player.Stop();
-                        //Console.WriteLine("Closed while playing, stopPlaying: " + stopPlaying + ", player was null: " + (player == null));
-                    }
-                    else {
-                        //Console.WriteLine("Closed due to done playing");
-                    }
-                }
-            }
-#if DEBUG
-            catch (Exception e) {
-                Console.WriteLine("Background thread terminated: " + e.ToString());
-            }
-#else
-            catch {
-            }
-#endif
-            finally {
-                player.CloseDevice();
-                player = null;
-            }
         }
 
-        private void btnOpen_Click(object sender, EventArgs e) {
-            var diag = new OpenFileDialog();
+        private void DisplayTextEditor()
+        {
+            bTextEditorAlwaysOn = !bTextEditorAlwaysOn;
+            // bForceShowSequencer was true, but user decided to hide the sequencer by clicking on the menu
+            if (bTextEditorAlwaysOn == false && bForceShowTextEditor == true)
+                bForceShowTextEditor = false;
 
-            diag.InitialDirectory = ".";
-            diag.Filter = "Song files|*.mml;*.abc|MML files (*.mml)|*.mml|ABC files (*.abc)|*.abc|All files (*.*)|*.*";
-            diag.FilterIndex = filterIndex;
-            diag.RestoreDirectory = true;
-
-            Stream stream = null;
-            if (diag.ShowDialog() == DialogResult.OK) {
-                try {
-                    if ((stream = diag.OpenFile()) != null) {
-                        using (stream) {
-                            using (var reader = new StreamReader(stream)) {
-                                if (Path.GetExtension(diag.FileName).ToLowerInvariant() == ".abc")
-                                    LoadFile(reader, SongFormat.ABC);
-                                else
-                                    LoadFile(reader, SongFormat.MML);
-                                lblFile.Text = "File: " + Path.GetFileName(diag.FileName);
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex) {
-                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message + System.Environment.NewLine + ex.StackTrace);
-                    if (player != null)
-                        player.CloseDevice();
-                }
-            }
-
-            filterIndex = diag.FilterIndex;
+            RedimIfSequencerVisible();
         }
+
+
+        #endregion
+
 
 
         #region form load unload
         private void FrmTextPlayer_Load(object sender, EventArgs e) {
+
+            #region set values
             foreach (var instrument in Enum.GetValues(typeof(Midi.Instrument)))
             {
                 string s = instrument.ToString();
@@ -269,6 +443,39 @@ namespace Karaboss.Pages.ABCnotation
             }
 
             cmbMMLMode.SelectedIndex = 0;
+            #endregion
+
+            // Set window location and size
+            #region window size & location
+            // If window is maximized
+            if (Properties.Settings.Default.FrmTextPlayerMaximized)
+            {
+                Location = Properties.Settings.Default.FrmTextPlayerLocation;                
+                WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                Location = Properties.Settings.Default.FrmTextPlayerLocation;
+                // Verify if this windows is visible in extended screens
+                Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
+                foreach (Screen screen in Screen.AllScreens)
+                    rect = Rectangle.Union(rect, screen.Bounds);
+
+                if (Location.X > rect.Width)
+                    Location = new Point(0, Location.Y);
+                if (Location.Y > rect.Height)
+                    Location = new Point(Location.X, 0);
+
+                Size = Properties.Settings.Default.frmPlayerSize;
+            }
+            #endregion
+
+            // Ne pas tenir compte si new file ou edit file
+            bTextEditorAlwaysOn = Properties.Settings.Default.ShowTextEditor;
+
+            // Redim form according to the visibility of the sequencer
+            RedimIfSequencerVisible();
+
         }
 
         protected override void OnClosed(EventArgs e)
@@ -283,10 +490,195 @@ namespace Karaboss.Pages.ABCnotation
 
         private void FrmTextPlayer_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (loading)
+            {
+                e.Cancel = true;
+            }
+            else
+            {
+                if (bfilemodified == true)
+                {
+                    string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
+                    if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        e.Cancel = true;
+                        // turlututu
+                        bClosingRequired = true;
+                        SaveFileProc();
+                        return;
+                    }
+                }
 
+                // enregistre la taille et la position de la forme
+                // Copy window location to app settings                
+                if (WindowState != FormWindowState.Minimized)
+                {
+                    if (WindowState == FormWindowState.Maximized)
+                    {
+                        Properties.Settings.Default.FrmTextPlayerLocation = RestoreBounds.Location;
+                        Properties.Settings.Default.FrmTextPlayerMaximized = true;
+
+                    }
+                    else if (WindowState == FormWindowState.Normal)
+                    {
+                        Properties.Settings.Default.FrmTextPlayerLocation = Location;
+
+                        // SDave only if not default size
+                        if (Height != SimpleTextPlayerHeight)
+                            Properties.Settings.Default.FrmTextPlayerSize = Size;
+
+                        Properties.Settings.Default.FrmTextPlayerMaximized = false;
+                    }
+
+                    // Show sequencer
+                    Properties.Settings.Default.ShowTextEditor = bTextEditorAlwaysOn;
+                    //Properties.Settings.Default.ShowKaraoke = bKaraokeAlwaysOn;
+
+                    // Save settings
+                    Properties.Settings.Default.Save();
+                }          
+                
+                // Active le formulaire frmExplorer
+                if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
+                {
+                    // Restore form
+                    Application.OpenForms["frmExplorer"].Restore();
+                    Application.OpenForms["frmExplorer"].Activate();
+                }
+                Dispose();
+            }
+        }
+
+
+        private void FrmTextPlayer_Resize(object sender, EventArgs e)
+        {
+            if (pnlMiddle.Visible)
+            {
+                pnlMiddle.Top = menuStrip1.Height + pnlTop.Height;
+                pnlMiddle.Width = pnlTop.Width;
+                pnlMiddle.Height = this.ClientSize.Height - menuStrip1.Height - pnlTop.Height - pnlBottom.Height;
+
+            }
         }
 
         #endregion
+
+
+
+        #region Buttons Play Pause Stop
+
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+            lock (playerLock)
+            {
+                if (player != null)
+                {
+                    if (player.Playing && !player.Paused)
+                        player.Stop();
+                    player.Play(new TimeSpan(MusicPlayer.Time.Ticks));
+                }
+            }
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            lock (playerLock)
+            {
+                if (player != null)
+                {
+                    player.Stop();
+                }
+            }
+        }
+
+        private void btnPause_Click(object sender, EventArgs e)
+        {
+            lock (playerLock)
+            {
+                if (player != null)
+                {
+                    if (player.Paused)
+                        player.Unpause();
+                    else if (player.Playing)
+                        player.Pause();
+                }
+            }
+        }
+
+        private void StopPlaying()
+        {
+            stopPlaying = true;
+            if (backgroundThread != null)
+            {
+                backgroundThread.Join(TimeSpan.FromSeconds(1));
+            }
+        }
+
+        private void Play()
+        {
+            try
+            {
+                TimeSpan now = new TimeSpan(MusicPlayer.Time.Ticks);
+                player.Play(now);
+
+                while (player != null && !stopPlaying)
+                {
+                    lock (playerLock)
+                    {
+                        if (player.Playing)
+                        {
+                            player.Update(now);
+                            int scrollVal = (int)player.Elapsed.TotalSeconds;
+                            if (scrollVal != scrSeek.Value)
+                            {
+                                SetScrollValue(scrollVal);
+                            }
+                        }
+                        else
+                        {
+                            if (scrSeek.Value != 0)
+                            {
+                                SetScrollValue(0);
+                            }
+                        }
+                    }
+                    Thread.Sleep(1);
+                    now = new TimeSpan(MusicPlayer.Time.Ticks);
+                }
+
+                lock (playerLock)
+                {
+                    if (player.Playing)
+                    {
+                        player.Stop();
+                        //Console.WriteLine("Closed while playing, stopPlaying: " + stopPlaying + ", player was null: " + (player == null));
+                    }
+                    else
+                    {
+                        //Console.WriteLine("Closed due to done playing");
+                    }
+                }
+            }
+#if DEBUG
+            catch (Exception e)
+            {
+                Console.WriteLine("Background thread terminated: " + e.ToString());
+            }
+#else
+            catch {
+            }
+#endif
+            finally
+            {
+                player.CloseDevice();
+                player = null;
+            }
+        }
+
+
+        #endregion
+
+        #region Others
 
         private void cmbInstruments_SelectionChangeCommitted(object sender, EventArgs e) {
             lock (playerLock) {
@@ -318,16 +710,6 @@ namespace Karaboss.Pages.ABCnotation
                 playerRef.Loop = chkLoop.Checked;
         }
 
-        private void btnPause_Click(object sender, EventArgs e) {
-            lock (playerLock) {
-                if (player != null) {
-                    if (player.Paused)
-                        player.Unpause();
-                    else if (player.Playing)
-                        player.Pause();
-                }
-            }
-        }
 
         private void chkMute_CheckedChanged(object sender, EventArgs e) {
             lock (playerLock) {
@@ -349,23 +731,6 @@ namespace Karaboss.Pages.ABCnotation
             }
         }
 
-        private void btnPlay_Click(object sender, EventArgs e) {
-            lock (playerLock) {
-                if (player != null) {
-                    if (player.Playing && !player.Paused)
-                        player.Stop();
-                    player.Play(new TimeSpan(MusicPlayer.Time.Ticks));
-                }
-            }
-        }
-
-        private void btnStop_Click(object sender, EventArgs e) {
-            lock (playerLock) {
-                if (player != null) {
-                    player.Stop();
-                }
-            }
-        }
 
         private void chkLotroDetect_CheckedChanged(object sender, EventArgs e) {
             lock (playerLock) {
@@ -378,6 +743,9 @@ namespace Karaboss.Pages.ABCnotation
             }
         }
 
-       
+
+        #endregion
+
+      
     }
 }

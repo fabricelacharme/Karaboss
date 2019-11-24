@@ -29,14 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-            System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-            System.Windows.Forms.ToolStripMenuItem mniHelpContents;
-            System.Windows.Forms.ToolStripMenuItem mniHelpAbout;
-            System.Windows.Forms.SplitContainer splitContainer1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmABCnotation));
-            System.Windows.Forms.TableLayoutPanel layoutButtons;
-            System.Windows.Forms.ToolStripMenuItem mniFileExit;
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mniHelpContents = new System.Windows.Forms.ToolStripMenuItem();
+            this.mniHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lstFiles = new System.Windows.Forms.ListView();
             this.Title = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.File = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -68,6 +66,7 @@
             this.mniEditSave = new System.Windows.Forms.ToolStripMenuItem();
             this.mniEditSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.mniEditUndoAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.layoutButtons = new System.Windows.Forms.TableLayoutPanel();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnUndo = new System.Windows.Forms.Button();
             this.btnToggleMusicMode = new System.Windows.Forms.Button();
@@ -96,6 +95,7 @@
             this.startGroupandSayFirstLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cmbReciteChannel = new System.Windows.Forms.ComboBox();
             this.imglstTabs = new System.Windows.Forms.ImageList(this.components);
+            this.mniFileExit = new System.Windows.Forms.ToolStripMenuItem();
             this.menustripMain = new System.Windows.Forms.MenuStrip();
             this.mniMusic = new System.Windows.Forms.ToolStripMenuItem();
             this.mniOptions = new System.Windows.Forms.ToolStripMenuItem();
@@ -138,22 +138,15 @@
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.menustripEmotes = new System.Windows.Forms.MenuStrip();
             this.emotesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            mniHelpContents = new System.Windows.Forms.ToolStripMenuItem();
-            mniHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
-            splitContainer1 = new System.Windows.Forms.SplitContainer();
-            layoutButtons = new System.Windows.Forms.TableLayoutPanel();
-            mniFileExit = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(splitContainer1)).BeginInit();
-            splitContainer1.Panel1.SuspendLayout();
-            splitContainer1.Panel2.SuspendLayout();
-            splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.mnuListContext.SuspendLayout();
             this.tabsMain.SuspendLayout();
             this.tpgEdit.SuspendLayout();
             this.mnuEditorContext.SuspendLayout();
-            layoutButtons.SuspendLayout();
+            this.layoutButtons.SuspendLayout();
             this.mnuPlay.SuspendLayout();
             this.tpgPerform.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitPerform)).BeginInit();
@@ -172,47 +165,47 @@
             // 
             // toolStripSeparator3
             // 
-            toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new System.Drawing.Size(235, 6);
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(235, 6);
             // 
             // toolStripSeparator2
             // 
-            toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new System.Drawing.Size(235, 6);
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(235, 6);
             // 
             // mniHelpContents
             // 
-            mniHelpContents.Image = global::Karaboss.Properties.Resources.help;
-            mniHelpContents.Name = "mniHelpContents";
-            mniHelpContents.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            mniHelpContents.Size = new System.Drawing.Size(197, 22);
-            mniHelpContents.Text = "Contents";
-            mniHelpContents.Click += new System.EventHandler(this.OnHelpContentsClick);
+            this.mniHelpContents.Image = global::Karaboss.Properties.Resources.help;
+            this.mniHelpContents.Name = "mniHelpContents";
+            this.mniHelpContents.ShortcutKeys = System.Windows.Forms.Keys.F1;
+            this.mniHelpContents.Size = new System.Drawing.Size(197, 22);
+            this.mniHelpContents.Text = "Contents";
+            this.mniHelpContents.Click += new System.EventHandler(this.OnHelpContentsClick);
             // 
             // mniHelpAbout
             // 
-            mniHelpAbout.Name = "mniHelpAbout";
-            mniHelpAbout.Size = new System.Drawing.Size(197, 22);
-            mniHelpAbout.Text = "&About LOMM...";
-            mniHelpAbout.Click += new System.EventHandler(this.OnHelpAbout);
+            this.mniHelpAbout.Name = "mniHelpAbout";
+            this.mniHelpAbout.Size = new System.Drawing.Size(197, 22);
+            this.mniHelpAbout.Text = "&About LOMM...";
+            this.mniHelpAbout.Click += new System.EventHandler(this.OnHelpAbout);
             // 
             // splitContainer1
             // 
-            splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            splitContainer1.Location = new System.Drawing.Point(0, 0);
-            splitContainer1.Name = "splitContainer1";
-            splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
-            splitContainer1.Panel1.Controls.Add(this.lstFiles);
+            this.splitContainer1.Panel1.Controls.Add(this.lstFiles);
             // 
             // splitContainer1.Panel2
             // 
-            splitContainer1.Panel2.Controls.Add(this.tabsMain);
-            splitContainer1.Size = new System.Drawing.Size(746, 547);
-            splitContainer1.SplitterDistance = 248;
-            splitContainer1.TabIndex = 1;
+            this.splitContainer1.Panel2.Controls.Add(this.tabsMain);
+            this.splitContainer1.Size = new System.Drawing.Size(746, 572);
+            this.splitContainer1.SplitterDistance = 259;
+            this.splitContainer1.TabIndex = 1;
             // 
             // lstFiles
             // 
@@ -229,7 +222,7 @@
             this.lstFiles.MultiSelect = false;
             this.lstFiles.Name = "lstFiles";
             this.lstFiles.ShowItemToolTips = true;
-            this.lstFiles.Size = new System.Drawing.Size(746, 248);
+            this.lstFiles.Size = new System.Drawing.Size(746, 259);
             this.lstFiles.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lstFiles.TabIndex = 0;
             this.lstFiles.UseCompatibleStateImageBehavior = false;
@@ -341,19 +334,19 @@
             this.tabsMain.Location = new System.Drawing.Point(0, 0);
             this.tabsMain.Name = "tabsMain";
             this.tabsMain.SelectedIndex = 0;
-            this.tabsMain.Size = new System.Drawing.Size(746, 295);
+            this.tabsMain.Size = new System.Drawing.Size(746, 309);
             this.tabsMain.TabIndex = 1;
             this.tabsMain.SelectedIndexChanged += new System.EventHandler(this.OnTabSelectedChanged);
             // 
             // tpgEdit
             // 
             this.tpgEdit.Controls.Add(this.rteEdit);
-            this.tpgEdit.Controls.Add(layoutButtons);
+            this.tpgEdit.Controls.Add(this.layoutButtons);
             this.tpgEdit.ImageIndex = 0;
             this.tpgEdit.Location = new System.Drawing.Point(4, 23);
             this.tpgEdit.Name = "tpgEdit";
             this.tpgEdit.Padding = new System.Windows.Forms.Padding(3);
-            this.tpgEdit.Size = new System.Drawing.Size(738, 281);
+            this.tpgEdit.Size = new System.Drawing.Size(738, 282);
             this.tpgEdit.TabIndex = 0;
             this.tpgEdit.Text = "Edit";
             this.tpgEdit.UseVisualStyleBackColor = true;
@@ -370,7 +363,7 @@
             this.rteEdit.InsertionRow = 0;
             this.rteEdit.Location = new System.Drawing.Point(3, 3);
             this.rteEdit.Name = "rteEdit";
-            this.rteEdit.Size = new System.Drawing.Size(732, 240);
+            this.rteEdit.Size = new System.Drawing.Size(732, 241);
             this.rteEdit.TabIndex = 0;
             this.rteEdit.Tags = new MarkedEditBox.RegexTag[] {
         ((MarkedEditBox.RegexTag)(resources.GetObject("rteEdit.Tags"))),
@@ -507,22 +500,22 @@
             // 
             // layoutButtons
             // 
-            layoutButtons.ColumnCount = 4;
-            layoutButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            layoutButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
-            layoutButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            layoutButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 125F));
-            layoutButtons.Controls.Add(this.btnSave, 0, 0);
-            layoutButtons.Controls.Add(this.btnUndo, 1, 0);
-            layoutButtons.Controls.Add(this.btnToggleMusicMode, 2, 0);
-            layoutButtons.Controls.Add(this.btnPlay, 3, 0);
-            layoutButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
-            layoutButtons.Location = new System.Drawing.Point(3, 243);
-            layoutButtons.Name = "layoutButtons";
-            layoutButtons.RowCount = 1;
-            layoutButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            layoutButtons.Size = new System.Drawing.Size(732, 35);
-            layoutButtons.TabIndex = 2;
+            this.layoutButtons.ColumnCount = 4;
+            this.layoutButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+            this.layoutButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.layoutButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 125F));
+            this.layoutButtons.Controls.Add(this.btnSave, 0, 0);
+            this.layoutButtons.Controls.Add(this.btnUndo, 1, 0);
+            this.layoutButtons.Controls.Add(this.btnToggleMusicMode, 2, 0);
+            this.layoutButtons.Controls.Add(this.btnPlay, 3, 0);
+            this.layoutButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.layoutButtons.Location = new System.Drawing.Point(3, 244);
+            this.layoutButtons.Name = "layoutButtons";
+            this.layoutButtons.RowCount = 1;
+            this.layoutButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutButtons.Size = new System.Drawing.Size(732, 35);
+            this.layoutButtons.TabIndex = 2;
             // 
             // btnSave
             // 
@@ -634,7 +627,7 @@
             this.tpgPerform.Location = new System.Drawing.Point(4, 23);
             this.tpgPerform.Name = "tpgPerform";
             this.tpgPerform.Padding = new System.Windows.Forms.Padding(3);
-            this.tpgPerform.Size = new System.Drawing.Size(738, 268);
+            this.tpgPerform.Size = new System.Drawing.Size(738, 282);
             this.tpgPerform.TabIndex = 1;
             this.tpgPerform.Text = "Perform";
             this.tpgPerform.UseVisualStyleBackColor = true;
@@ -653,7 +646,7 @@
             // 
             this.splitPerform.Panel2.Controls.Add(this.rtePerform);
             this.splitPerform.Panel2.SizeChanged += new System.EventHandler(this.OnPerformTextPaneSizeChanged);
-            this.splitPerform.Size = new System.Drawing.Size(732, 227);
+            this.splitPerform.Size = new System.Drawing.Size(732, 241);
             this.splitPerform.SplitterDistance = 332;
             this.splitPerform.TabIndex = 0;
             // 
@@ -664,7 +657,7 @@
             this.lstLyrics.HorizontalScrollbar = true;
             this.lstLyrics.Location = new System.Drawing.Point(0, 0);
             this.lstLyrics.Name = "lstLyrics";
-            this.lstLyrics.Size = new System.Drawing.Size(332, 227);
+            this.lstLyrics.Size = new System.Drawing.Size(332, 241);
             this.lstLyrics.TabIndex = 0;
             this.lstLyrics.SelectedIndexChanged += new System.EventHandler(this.OnLyricsListSelectedIndexChanged);
             this.lstLyrics.DoubleClick += new System.EventHandler(this.OnLyricListDblClick);
@@ -705,7 +698,7 @@
             this.layoutPerformButtons.Controls.Add(this.btnPerform, 3, 0);
             this.layoutPerformButtons.Controls.Add(this.cmbReciteChannel, 0, 0);
             this.layoutPerformButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.layoutPerformButtons.Location = new System.Drawing.Point(3, 230);
+            this.layoutPerformButtons.Location = new System.Drawing.Point(3, 244);
             this.layoutPerformButtons.Name = "layoutPerformButtons";
             this.layoutPerformButtons.RowCount = 1;
             this.layoutPerformButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -830,10 +823,10 @@
             // 
             // mniFileExit
             // 
-            mniFileExit.Name = "mniFileExit";
-            mniFileExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            mniFileExit.Size = new System.Drawing.Size(135, 22);
-            mniFileExit.Text = "E&xit";
+            this.mniFileExit.Name = "mniFileExit";
+            this.mniFileExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.mniFileExit.Size = new System.Drawing.Size(135, 22);
+            this.mniFileExit.Text = "E&xit";
             // 
             // menustripMain
             // 
@@ -857,7 +850,7 @@
             this.mniMusic.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mniOptions,
             this.toolStripSeparator8,
-            mniFileExit});
+            this.mniFileExit});
             this.mniMusic.Name = "mniMusic";
             this.mniMusic.Size = new System.Drawing.Size(37, 20);
             this.mniMusic.Text = "&File";
@@ -929,7 +922,7 @@
             // mniFile
             // 
             this.mniFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            toolStripSeparator3,
+            this.toolStripSeparator3,
             this.mniPlay,
             this.toolStripSeparator1,
             this.mniNew,
@@ -937,7 +930,7 @@
             this.mniSaveAs,
             this.mniDelete,
             this.mniUndoAll,
-            toolStripSeparator2,
+            this.toolStripSeparator2,
             this.mniRefresh});
             this.mniFile.Name = "mniFile";
             this.mniFile.Size = new System.Drawing.Size(51, 20);
@@ -976,7 +969,7 @@
             // mniSaveAs
             // 
             this.mniSaveAs.Name = "mniSaveAs";
-            this.mniSaveAs.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.mniSaveAs.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.A)));
             this.mniSaveAs.Size = new System.Drawing.Size(238, 22);
             this.mniSaveAs.Text = "Save &As...";
@@ -996,7 +989,7 @@
             this.mniUndoAll.Enabled = false;
             this.mniUndoAll.Image = global::Karaboss.Properties.Resources.page_refresh;
             this.mniUndoAll.Name = "mniUndoAll";
-            this.mniUndoAll.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.mniUndoAll.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.Z)));
             this.mniUndoAll.Size = new System.Drawing.Size(238, 22);
             this.mniUndoAll.Text = "&Undo All Changes";
@@ -1061,11 +1054,11 @@
             // mniHelp
             // 
             this.mniHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            mniHelpContents,
+            this.mniHelpContents,
             this.mniABCQuickReference,
             this.mniMacroQuickReference,
             this.toolStripSeparator4,
-            mniHelpAbout});
+            this.mniHelpAbout});
             this.mniHelp.Name = "mniHelp";
             this.mniHelp.Size = new System.Drawing.Size(44, 20);
             this.mniHelp.Text = "&Help";
@@ -1158,8 +1151,8 @@
             // 
             // toolStripContainer1.ContentPanel
             // 
-            this.toolStripContainer1.ContentPanel.Controls.Add(splitContainer1);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(746, 547);
+            this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainer1);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(746, 572);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
@@ -1193,7 +1186,7 @@
             this.emotesToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
             this.emotesToolStripMenuItem.Text = "Emotes";
             // 
-            // FormMain
+            // FrmABCnotation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -1202,24 +1195,23 @@
             this.Controls.Add(this.statPane);
             this.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::Karaboss.Properties.Settings.Default, "FrmABCnotationLocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.HelpButton = true;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Location = global::Karaboss.Properties.Settings.Default.FrmABCnotationLocation;
             this.MainMenuStrip = this.menustripMain;
-            this.Name = "FormMain";
+            this.Name = "FrmABCnotation";
             this.Text = "LOTRO Music and Macros";
             this.Activated += new System.EventHandler(this.OnActivated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnClosing);
             this.Load += new System.EventHandler(this.OnLoad);
-            splitContainer1.Panel1.ResumeLayout(false);
-            splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(splitContainer1)).EndInit();
-            splitContainer1.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.mnuListContext.ResumeLayout(false);
             this.tabsMain.ResumeLayout(false);
             this.tpgEdit.ResumeLayout(false);
             this.mnuEditorContext.ResumeLayout(false);
-            layoutButtons.ResumeLayout(false);
-            layoutButtons.PerformLayout();
+            this.layoutButtons.ResumeLayout(false);
+            this.layoutButtons.PerformLayout();
             this.mnuPlay.ResumeLayout(false);
             this.tpgPerform.ResumeLayout(false);
             this.splitPerform.Panel1.ResumeLayout(false);
@@ -1348,6 +1340,13 @@
         private System.Windows.Forms.ToolStripMenuItem mniNew;
         private System.Windows.Forms.ToolStripMenuItem mniSaveABC;
         private System.Windows.Forms.ToolStripMenuItem mniMacroQuickReference;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem mniHelpContents;
+        private System.Windows.Forms.ToolStripMenuItem mniHelpAbout;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.TableLayoutPanel layoutButtons;
+        private System.Windows.Forms.ToolStripMenuItem mniFileExit;
     }
 }
 
