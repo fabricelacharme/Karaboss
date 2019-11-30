@@ -483,4 +483,7 @@
   <data name="InsertLineBreak" xml:space="preserve">
     <value>Insert a line break</value>
   </data>
+  <data name="DeleteAllLyrics" xml:space="preserve">
+    <value>Be careful, all the lyrics will be deleted from this song. Do you want to continue?</value>
+  </data>
 </root>

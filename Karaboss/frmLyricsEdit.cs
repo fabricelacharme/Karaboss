@@ -42,6 +42,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Karaboss.Resources.Localization;
 using Karaboss.Lrc.SharedFramework;
+using Karaboss.Resources.Localization;
 
 
 namespace Karaboss
@@ -986,15 +987,19 @@ namespace Karaboss
         /// <param name="e"></param>
         private void btnDeleteAllLyrics_Click(object sender, EventArgs e)
         {
-            frmPlayer frmPlayer = GetForm<frmPlayer>();
-            frmPlayer.DeleteAllLyrics();
+            string tx = Karaboss.Resources.Localization.Strings.DeleteAllLyrics;            
+            if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+            {
+                frmPlayer frmPlayer = GetForm<frmPlayer>();
+                frmPlayer.DeleteAllLyrics();
 
-            localplLyrics = new List<plLyric>();
+                localplLyrics = new List<plLyric>();
 
-            InitGridView();
+                InitGridView();
 
-            // File was modified
-            FileModified();
+                // File was modified
+                FileModified();
+            }
 
         }
 

@@ -3191,6 +3191,7 @@ namespace Karaboss
             int division = ModifyTempoDialog.Division;
 
             ModTempo(tempo);
+            UpdateMidiTimes();
 
             FileModified();
             DisplayFileInfos();
