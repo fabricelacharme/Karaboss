@@ -211,14 +211,40 @@
             this.positionHScrollBar.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(140)))), ((int)(((byte)(180)))));
             resources.ApplyResources(this.positionHScrollBar, "positionHScrollBar");
             this.positionHScrollBar.ForeColor = System.Drawing.Color.White;
-            this.positionHScrollBar.LargeChange = ((uint)(10u));
+            this.positionHScrollBar.LargeChange = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.positionHScrollBar.MouseWheelBarPartitions = 1;
             this.positionHScrollBar.Name = "positionHScrollBar";
-            this.positionHScrollBar.ScaleDivisions = 5;
-            this.positionHScrollBar.ScaleSubDivisions = 5;
+            this.positionHScrollBar.ScaleDivisions = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.ScaleSubDivisions = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.positionHScrollBar.ShowDivisionsText = true;
             this.positionHScrollBar.ShowSmallScale = false;
-            this.positionHScrollBar.SmallChange = ((uint)(10u));
+            this.positionHScrollBar.SmallChange = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             this.positionHScrollBar.TabStop = false;
             this.positionHScrollBar.ThumbImage = global::Karaboss.Properties.Resources.BTN_Thumb_Blue;
             this.positionHScrollBar.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
@@ -228,7 +254,11 @@
             this.positionHScrollBar.TickAdd = 0F;
             this.positionHScrollBar.TickColor = System.Drawing.Color.White;
             this.positionHScrollBar.TickDivide = 0F;
-            this.positionHScrollBar.Value = 0;
+            this.positionHScrollBar.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.positionHScrollBar.ValueChanged += new System.EventHandler(this.positionHScrollBar_ValueChanged);
             this.positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.positionHScrollBar_Scroll);
             // 

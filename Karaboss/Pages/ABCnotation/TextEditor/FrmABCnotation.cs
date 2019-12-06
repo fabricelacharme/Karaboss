@@ -255,7 +255,8 @@ namespace Karaboss.Pages.ABCnotation
                 //ColumnClickEventArgs eClick = new ColumnClickEventArgs(0);
                 //OnColumnClick(lstFiles, eClick);
 
-                lstFiles.Items[0].Selected = true;
+                if (lstFiles.Items.Count > 0)
+                    lstFiles.Items[0].Selected = true;
             }
 
             return;

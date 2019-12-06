@@ -5738,7 +5738,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void SldMainVolume_ValueChanged(object sender, EventArgs e)
         {           
-            SetMidiMasterVolume(sldMainVolume.Value);
+            SetMidiMasterVolume((int)sldMainVolume.Value);
             lblMainVolume.Text = String.Format("{0}%", 100*sldMainVolume.Value/sldMainVolume.Maximum);           
         }              
 

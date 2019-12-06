@@ -1329,10 +1329,10 @@ namespace Karaboss
                 switch (PlayerState)
                 {
                     case PlayerStates.Playing:
-                        sequencer1.Position = e.NewValue - positionHScrollBar.Minimum;
+                        sequencer1.Position = e.NewValue - (int)positionHScrollBar.Minimum;
                         break;
                     case PlayerStates.Paused:
-                        newstart = e.NewValue - positionHScrollBar.Minimum;
+                        newstart = e.NewValue - (int)positionHScrollBar.Minimum;
                         sequencer1.Position = newstart;
                         pianoRollControl1.OffsetX = Convert.ToInt32(newstart * pianoRollControl1.XScale);
                         tlControl1.OffsetX = pianoRollControl1.OffsetX;
@@ -1340,7 +1340,7 @@ namespace Karaboss
                         
                         break;
                     case PlayerStates.Stopped:
-                        newstart = e.NewValue - positionHScrollBar.Minimum;
+                        newstart = e.NewValue - (int)positionHScrollBar.Minimum;
                         pianoRollControl1.OffsetX = Convert.ToInt32(newstart * pianoRollControl1.XScale);
                         tlControl1.OffsetX = pianoRollControl1.OffsetX;
                         nbstop = 0;                        

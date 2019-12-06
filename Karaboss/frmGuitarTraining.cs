@@ -922,16 +922,16 @@ namespace Karaboss
                 switch (PlayerState)
                 {
                     case PlayerStates.Playing:
-                        sequencer1.Position = e.NewValue - positionHScrollBar.Minimum;
+                        sequencer1.Position = e.NewValue - (int)positionHScrollBar.Minimum;
                         break;
                     case PlayerStates.Paused:
-                        sequencer1.Position = e.NewValue - positionHScrollBar.Minimum;                        
+                        sequencer1.Position = e.NewValue - (int)positionHScrollBar.Minimum;                        
                         nbstop = 0;
-                        newstart = e.NewValue - positionHScrollBar.Minimum;
+                        newstart = e.NewValue - (int)positionHScrollBar.Minimum;
                         break;
                     case PlayerStates.Stopped:                        
                         nbstop = 0;
-                        newstart = e.NewValue - positionHScrollBar.Minimum;
+                        newstart = e.NewValue - (int)positionHScrollBar.Minimum;
                         break;
                 }
                 positionHScrollBar.Parent.Focus();
@@ -954,7 +954,7 @@ namespace Karaboss
                 case PlayerStates.Paused:
                     break;
                 case PlayerStates.Stopped:                    
-                    newstart = positionHScrollBar.Value - positionHScrollBar.Minimum;
+                    newstart = (int)(positionHScrollBar.Value - positionHScrollBar.Minimum);
                     double dpercent = 100 * newstart / (double)_totalTicks;
                     DisplayTimeElapse(dpercent);
 
@@ -1203,8 +1203,8 @@ namespace Karaboss
       
         private int SetProperValue(int val)
         {
-            if (val < positionHScrollBar.Minimum) return positionHScrollBar.Minimum;
-            else if (val > positionHScrollBar.Maximum) return positionHScrollBar.Maximum;
+            if (val < positionHScrollBar.Minimum) return (int)positionHScrollBar.Minimum;
+            else if (val > positionHScrollBar.Maximum) return (int)positionHScrollBar.Maximum;
             else return val;
         }
 

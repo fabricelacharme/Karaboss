@@ -840,18 +840,16 @@ namespace Karaboss
                 switch (PlayerState)
                 {
                     case PlayerStates.Playing:
-                        sequencer1.Position = e.NewValue - positionHScrollBar.Minimum;
+                        sequencer1.Position = e.NewValue - (int)positionHScrollBar.Minimum;
                         break;
                     case PlayerStates.Paused:
-                        sequencer1.Position = e.NewValue - positionHScrollBar.Minimum;
-                        //vPianoRollControl1.OffsetY = Convert.ToInt32((e.NewValue - positionHScrollBar.Minimum) * vPianoRollControl1.yScale);
+                        sequencer1.Position = e.NewValue - (int)positionHScrollBar.Minimum;                        
                         nbstop = 0;
-                        newstart = e.NewValue - positionHScrollBar.Minimum;
+                        newstart = e.NewValue - (int)positionHScrollBar.Minimum;
                         break;
-                    case PlayerStates.Stopped:
-                        //vPianoRollControl1.OffsetY = Convert.ToInt32((e.NewValue - positionHScrollBar.Minimum) * vPianoRollControl1.yScale);
+                    case PlayerStates.Stopped:                        
                         nbstop = 0;
-                        newstart = e.NewValue - positionHScrollBar.Minimum;
+                        newstart = e.NewValue - (int)positionHScrollBar.Minimum;
                         break;
                 }
                 positionHScrollBar.Parent.Focus();
@@ -873,9 +871,8 @@ namespace Karaboss
                     break;
                 case PlayerStates.Paused:
                     break;
-                case PlayerStates.Stopped:
-                    //vPianoRollControl1.OffsetY = Convert.ToInt32((positionHScrollBar.Value - positionHScrollBar.Minimum) * vPianoRollControl1.yScale);
-                    newstart = positionHScrollBar.Value - positionHScrollBar.Minimum;
+                case PlayerStates.Stopped:                    
+                    newstart = (int)(positionHScrollBar.Value - positionHScrollBar.Minimum);
                     double dpercent = 100 * newstart / (double)_totalTicks;
                     DisplayTimeElapse(dpercent);
 
