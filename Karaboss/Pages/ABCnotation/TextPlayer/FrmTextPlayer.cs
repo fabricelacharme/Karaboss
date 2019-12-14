@@ -229,11 +229,11 @@ namespace Karaboss.Pages.ABCnotation
             #region guard
             if (cmbInstruments.SelectedItem == null)
             {
-                foreach (var instrument in Enum.GetValues(typeof(Midi.Instrument)))
+                foreach (var instrument in Enum.GetValues(typeof(MyMidi.Instrument)))
                 {
                     string s = instrument.ToString();
                     cmbInstruments.Items.Add(s);
-                    if (s == default(Midi.Instrument).ToString())
+                    if (s == default(MyMidi.Instrument).ToString())
                     {
                         cmbInstruments.SelectedItem = s;
                     }
@@ -266,7 +266,7 @@ namespace Karaboss.Pages.ABCnotation
                 player = abc;
             }
 
-            player.SetInstrument((Midi.Instrument)Enum.Parse(typeof(Midi.Instrument), cmbInstruments.SelectedItem.ToString()));
+            player.SetInstrument((MyMidi.Instrument)Enum.Parse(typeof(MyMidi.Instrument), cmbInstruments.SelectedItem.ToString()));
             player.Normalize = chkNormalize.Checked;
             player.Loop = chkLoop.Checked;
             player.CalculateNormalization();
@@ -432,11 +432,11 @@ namespace Karaboss.Pages.ABCnotation
         private void FrmTextPlayer_Load(object sender, EventArgs e) {
 
             #region set values
-            foreach (var instrument in Enum.GetValues(typeof(Midi.Instrument)))
+            foreach (var instrument in Enum.GetValues(typeof(MyMidi.Instrument)))
             {
                 string s = instrument.ToString();
                 cmbInstruments.Items.Add(s);
-                if (s == default(Midi.Instrument).ToString())
+                if (s == default(MyMidi.Instrument).ToString())
                 {
                     cmbInstruments.SelectedItem = s;
                 }
@@ -683,7 +683,7 @@ namespace Karaboss.Pages.ABCnotation
         private void cmbInstruments_SelectionChangeCommitted(object sender, EventArgs e) {
             lock (playerLock) {
                 if (player != null)
-                    player.SetInstrument((Midi.Instrument)Enum.Parse(typeof(Midi.Instrument), cmbInstruments.SelectedItem.ToString()));
+                    player.SetInstrument((MyMidi.Instrument)Enum.Parse(typeof(MyMidi.Instrument), cmbInstruments.SelectedItem.ToString()));
             }
         }
 

@@ -48,7 +48,7 @@ namespace Karaboss.Pages.ABCnotation
             otpdev = outputDevice;
 
             midi = new MidiDevice(outputDevice);
-            midi.SetInstrument(default(Midi.Instrument));
+            midi.SetInstrument(default(MyMidi.Instrument));
         }
 
         public override void Play(TimeSpan currentTime) {
@@ -112,7 +112,7 @@ namespace Karaboss.Pages.ABCnotation
             midi.StopNotes();
         }
 
-        public void SetInstrument(Midi.Instrument instrument) {
+        public void SetInstrument(MyMidi.Instrument instrument) {
             midi.SetInstrument(instrument);
         }
 

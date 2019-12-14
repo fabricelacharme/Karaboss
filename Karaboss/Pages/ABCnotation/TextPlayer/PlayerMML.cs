@@ -43,7 +43,7 @@ namespace Karaboss.Pages.ABCnotation
         public PlayerMML(Sanford.Multimedia.Midi.OutputDevice outputDevice)
             : base() {
             midi = new MidiDevice(outputDevice);
-            midi.SetInstrument(default(Midi.Instrument));
+            midi.SetInstrument(default(MyMidi.Instrument));
         }
 
         public void RecalculateDuration() {
@@ -78,7 +78,7 @@ namespace Karaboss.Pages.ABCnotation
             normalizeScalar = 15.0f / maxVol;
         }
 
-        public void SetInstrument(Midi.Instrument instrument) {
+        public void SetInstrument(MyMidi.Instrument instrument) {
             midi.SetInstrument(instrument);
         }
 

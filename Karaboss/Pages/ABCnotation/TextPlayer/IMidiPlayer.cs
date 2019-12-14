@@ -30,7 +30,7 @@ namespace Karaboss.Pages.ABCnotation
 {
     public interface IMidiPlayer {
         TimeSpan Elapsed { get; }
-        void SetInstrument(Midi.Instrument instrument);
+        void SetInstrument(MyMidi.Instrument instrument);
         bool Normalize { get; set; }
         bool Loop { get; set; }
         bool Playing { get; }

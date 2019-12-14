@@ -77,10 +77,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Mp3 Video\Unzip\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="Midi, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Pages\ABCnotation\MIDIDll\Midi.dll</HintPath>
-    </Reference>
     <Reference Include="MP3+CDG To Video Converter">
       <HintPath>..\MP3+CDG To Video Converter\bin\Debug\MP3+CDG To Video Converter.dll</HintPath>
     </Reference>
@@ -217,6 +213,7 @@
     <Compile Include="Lrc\NeteaseMusic.cs" />
     <Compile Include="Lrc\SharedFramework.cs" />
     <Compile Include="Lrc\Time.cs" />
+    <Compile Include="Pages\ABCnotation\Midi.cs" />
     <Compile Include="Pages\ABCnotation\TextEditor\ABC.cs" />
     <Compile Include="Pages\ABCnotation\TextEditor\ColumnSorter.cs" />
     <Compile Include="Pages\ABCnotation\TextEditor\FrmABCnotation.cs">
@@ -859,7 +856,6 @@
     <None Include="Resources\Bouton-Cross-Red-32.png" />
     <None Include="Resources\Bouton-Check-Gray-32.png" />
     <None Include="Resources\Bouton-Cross-Gray-32.png" />
-    <Content Include="Pages\ABCnotation\MIDIDll\Midi.dll" />
     <Content Include="Pages\ABCnotation\Resources\cut.png" />
     <Content Include="Pages\ABCnotation\Resources\logo.png" />
     <Content Include="Pages\ABCnotation\Resources\LOMM.ico" />

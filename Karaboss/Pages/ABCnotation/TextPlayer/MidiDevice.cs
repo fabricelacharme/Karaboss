@@ -23,20 +23,20 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using Midi;
+//using Midi;
 using Sanford.Multimedia.Midi;
 
 namespace Karaboss.Pages.ABCnotation
 {
     public struct NoteTimeOut {
         public TimeSpan End;
-        public Midi.Pitch Pitch;
-        public Midi.Channel Channel;
+        public MyMidi.Pitch Pitch;        
+        public MyMidi.Channel Channel;
         public int Velocity;
     }
 
     public class MidiDevice {
-        private Midi.OutputDevice outputDevice;
+        //private Midi.OutputDevice outputDevice;
         private Sanford.Multimedia.Midi.OutputDevice outDevice;
         private List<NoteTimeOut> timeOuts;
         private bool muted;
@@ -46,7 +46,7 @@ namespace Karaboss.Pages.ABCnotation
             try
             {
                 timeOuts = new List<NoteTimeOut>();
-                outputDevice = Midi.OutputDevice.InstalledDevices[1];
+                //outputDevice = Midi.OutputDevice.InstalledDevices[1];
                 outDevice = optdev;
 
                 
@@ -61,11 +61,11 @@ namespace Karaboss.Pages.ABCnotation
             System.Threading.Thread.Sleep(200); // fixes delay during initial playing, possibly due to midi device initialization
         }
 
-        public void SetInstrument(Instrument instrument) {
+        public void SetInstrument(MyMidi.Instrument instrument) {
 
             try
             {
-                foreach (var c in Enum.GetValues(typeof(Midi.Channel)))
+                foreach (var c in Enum.GetValues(typeof(MyMidi.Channel)))
                 {
                     //outputDevice.SendProgramChange((Midi.Channel)c, instrument);
 
@@ -102,7 +102,7 @@ namespace Karaboss.Pages.ABCnotation
             }
         }
 
-        protected void NoteOn(Channel channel, Pitch pitch, int velocity) {
+        protected void NoteOn(MyMidi.Channel channel, MyMidi.Pitch pitch, int velocity) {
             if (muted)
                 return;
             try
@@ -125,7 +125,7 @@ namespace Karaboss.Pages.ABCnotation
                 end);
         }
 
-        public void PlayNote(Channel channel, Pitch pitch, int velocity, TimeSpan end) {
+        public void PlayNote(MyMidi.Channel channel, MyMidi.Pitch pitch, int velocity, TimeSpan end) {
             NoteOn(channel, pitch, velocity);
 
             var timeOut = new NoteTimeOut() {
@@ -138,24 +138,24 @@ namespace Karaboss.Pages.ABCnotation
 
         }
 
-        private Channel TrackToChannel(int track) {
+        private MyMidi.Channel TrackToChannel(int track) {
             if (track >= 10) // skip percussion track
                 track++;
-            return (Midi.Channel)Enum.Parse(typeof(Midi.Channel), "Channel" + (track + 1), false);
+            return (MyMidi.Channel)Enum.Parse(typeof(MyMidi.Channel), "Channel" + (track + 1), false);
         }
 
-        private Pitch NoteToPitch(TextPlayer.Note note) {
+        private MyMidi.Pitch NoteToPitch(TextPlayer.Note note) {
             string type = note.Type.ToString().ToUpperInvariant();
             type += note.Sharp ? "Sharp" : "";
             type += note.Octave;
-            return (Midi.Pitch)Enum.Parse(typeof(Midi.Pitch), type);
+            return (MyMidi.Pitch)Enum.Parse(typeof(MyMidi.Pitch), type);
         }
 
         private int NoteToVelocity(TextPlayer.Note note) {
             return (int)(note.Volume * 127);
         }
 
-        private int ChannelToIndex(Channel channel) {
+        private int ChannelToIndex(MyMidi.Channel channel) {
             string s = channel.ToString();
             s = s.Replace("Channel", "");
             int index = Convert.ToInt32(s) - 1;
