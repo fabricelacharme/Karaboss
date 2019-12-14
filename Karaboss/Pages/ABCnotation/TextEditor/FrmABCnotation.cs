@@ -21,6 +21,9 @@ namespace Karaboss.Pages.ABCnotation
         protected int _nSelectedFile = -1;
         protected ColumnSorter _sorter = new ColumnSorter();
         protected int _nEditFirstLine = 0;
+        
+        private OutputDevice outDevice;
+        private int outDeviceID = 0;
 
         private enum SONG_COLUMN { Title = 0, Path = 1, Index = 2 };
         private enum PROMPT_LOGIN { Yes, No };
@@ -345,9 +348,107 @@ namespace Karaboss.Pages.ABCnotation
             if (lstFiles.SelectedItems.Count == 0) return;
 
             SaveFile();
-            ((Song)lstFiles.SelectedItems[0].Tag).Play(playtype);
-            _focuser.Start();
-            return;
+
+            Song sng = (Song)lstFiles.SelectedItems[0].Tag;
+            DisplayTextPlayer(sng.FileName, true);
+
+            //((Song)lstFiles.SelectedItems[0].Tag).Play(playtype);
+            
+            //_focuser.Start();
+            //return;
+        }
+
+
+        /// <summary>
+        /// Displat ABC, MML text player
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="bPlayNow"></param>
+        private void DisplayTextPlayer(string fileName, bool bPlayNow)
+        {
+            if (fileName == null)
+                return;
+
+            // edit or play a midi file
+            if (fileName != "new file")
+            {
+                // Launch an existing file                    
+                if (System.IO.File.Exists(fileName) == false)
+                {
+                    MessageBox.Show("The file " + fileName + " doesn not exists!", "Karaboss", MessageBoxButtons.OK);
+                    return;
+                }
+            }
+            else
+            {
+                // create a new file
+                fileName = null;
+            }
+
+            Cursor.Current = Cursors.WaitCursor;
+
+            // ferme le formulaire frmPianoTraining
+            if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmPianoTraining"].Close();
+            }
+
+            // ferme le formulaire frmGuitarTraining
+            if (Application.OpenForms.OfType<frmGuitarTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmGuitarTraining"].Close();
+            }
+
+            // ferme le formulaire frmPlayer
+            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            {
+                Application.OpenForms["frmPlayer"].Close();
+            }
+
+
+
+            // Affiche le formulaire frmPlay 
+            if (Application.OpenForms["FrmTextPlayer"] != null)
+                Application.OpenForms["FrmTextPlayer"].Close();
+
+            ResetOutPutDevice();
+
+            if (bPlayNow == false)
+            {
+                Form frmABCnotation = new Karaboss.Pages.ABCnotation.FrmABCnotation(outDevice, fileName);
+                frmABCnotation.Show();
+                frmABCnotation.Activate();
+            }
+            else
+            {
+                Form frmTextPlayer = new Karaboss.Pages.ABCnotation.FrmTextPlayer(outDevice, fileName);
+                frmTextPlayer.Show();
+                frmTextPlayer.Activate();
+            }
+        }
+
+        private void ResetOutPutDevice()
+        {
+            try
+            {
+                if (outDevice != null)
+                    outDevice.Dispose();
+                outDevice = new OutputDevice(outDeviceID);
+
+            }
+            catch (Exception ex)
+            {
+                Console.Write("ERROR " + ex.Message);
+
+                // Load other one
+                int devices = OutputDeviceBase.DeviceCount;
+                if (outDeviceID < devices - 1)
+                    outDevice = new OutputDevice(outDeviceID + 1);
+                else if (outDeviceID > 0)
+                    outDevice = new OutputDevice(outDeviceID - 1);
+                else
+                    outDevice = null;
+            }
         }
 
         private void OnToggleMusicMode(object sender, EventArgs e)
@@ -363,8 +464,11 @@ namespace Karaboss.Pages.ABCnotation
             // the "wait to play" button at the moment. We'll pull that fact 
             // off the button tag.
             PlaySong((Song.PlayType)btnPlay.Tag);
-            return;
-        } // OnPlay
+            
+        } 
+
+
+
 
         private void OnStartSync(object sender, EventArgs e)
         {

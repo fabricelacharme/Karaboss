@@ -514,6 +514,7 @@
             this.layoutButtons.Name = "layoutButtons";
             this.layoutButtons.RowCount = 1;
             this.layoutButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.layoutButtons.Size = new System.Drawing.Size(732, 35);
             this.layoutButtons.TabIndex = 2;
             // 
@@ -563,7 +564,7 @@
             this.btnPlay.Image = global::Karaboss.Properties.Resources.music;
             this.btnPlay.Location = new System.Drawing.Point(629, 3);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(100, 27);
+            this.btnPlay.Size = new System.Drawing.Size(100, 23);
             this.btnPlay.SplitMenu = this.mnuPlay;
             this.btnPlay.TabIndex = 0;
             this.btnPlay.Text = "Play";
