@@ -32,7 +32,7 @@ namespace Karaboss.Pages.ABCnotation
 
         //protected FormABCRef _abcref = new FormABCRef();
 
-        private LOTROFocuser _focuser = new LOTROFocuser();
+        //private LOTROFocuser _focuser = new LOTROFocuser();
 
         private string _editedFilePath;
         #endregion
@@ -89,7 +89,7 @@ namespace Karaboss.Pages.ABCnotation
            
 
             // Kick off the timer that makes LOTRO music play while LOMM has focus
-            _focuser.Start();
+            //_focuser.Start();
 
             return;
         }
@@ -98,7 +98,7 @@ namespace Karaboss.Pages.ABCnotation
 
         private void OnClosing(object sender, FormClosingEventArgs e)
         {//--------------------------------------------------------------------
-            _focuser.Stop();
+            //_focuser.Stop();
 
             //Settings.Default.TagsPerform = new MarkedEditBox.RegexTagBag(rtePerform.Tags);
             //Settings.Default.TagsEdit = new MarkedEditBox.RegexTagBag(rteEdit.Tags);
@@ -124,12 +124,13 @@ namespace Karaboss.Pages.ABCnotation
             return;
         }
 
+        /*
         private void OnActivated(object sender, EventArgs e)
         {   //====================================================================
-            _focuser.Start();
+            //_focuser.Start();
             return;
         }
-
+        */
         #endregion
 
         #region File List Management
@@ -421,7 +422,7 @@ namespace Karaboss.Pages.ABCnotation
             }
             else
             {
-                Form frmTextPlayer = new Karaboss.Pages.ABCnotation.FrmTextPlayer(outDevice, fileName);
+                Form frmTextPlayer = new Karaboss.Pages.ABCnotation.FrmTextPlayer(outDevice, fileName, bPlayNow);
                 frmTextPlayer.Show();
                 frmTextPlayer.Activate();
             }

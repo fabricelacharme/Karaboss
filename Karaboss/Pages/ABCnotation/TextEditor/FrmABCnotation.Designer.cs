@@ -1200,7 +1200,6 @@
             this.MainMenuStrip = this.menustripMain;
             this.Name = "FrmABCnotation";
             this.Text = "LOTRO Music and Macros";
-            this.Activated += new System.EventHandler(this.OnActivated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnClosing);
             this.Load += new System.EventHandler(this.OnLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);

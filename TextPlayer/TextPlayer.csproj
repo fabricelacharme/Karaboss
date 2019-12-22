@@ -34,12 +34,14 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ABC\ABCHeader.cs" />
     <Compile Include="ABC\ABCInfo.cs" />
     <Compile Include="ABC\ABCPlayer.cs" />
     <Compile Include="ABC\ABCSettings.cs" />
+    <Compile Include="ABC\ABCSong.cs" />
     <Compile Include="ABC\ABCStrictException.cs" />
     <Compile Include="ABC\AccidentalPropagation.cs" />
     <Compile Include="ABC\ABCNote.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SongSizeException.cs" />
     <Compile Include="ABC\Tune.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="ValidationSettings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

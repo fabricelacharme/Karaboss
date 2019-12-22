@@ -52,8 +52,7 @@ namespace Karaboss.Pages.ABCnotation
         MML, ABC
     }
 
-
-
+  
     public partial class FrmTextPlayer : Form {
 
         #region private decl
@@ -72,12 +71,22 @@ namespace Karaboss.Pages.ABCnotation
 
         private bool bTextEditorAlwaysOn = false;
         private bool bForceShowTextEditor = false;
-        //private bool bKaraokeAlwaysOn = true;
+        private bool bPlayNow = false;
 
         // Dimensions
         private int leftWidth = 179;
         private int SimpleTextPlayerWidth = 850;
         private int SimpleTextPlayerHeight = 170;
+
+        private TextPlayer.ABC.ABCSong Abcsong1;
+
+        // Current file beeing edited
+        private string MIDIfileName = string.Empty;
+        private string MIDIfilePath = string.Empty;
+        private string MIDIfileFullPath = string.Empty;
+
+        private bool bneverplayed = false;
+
 
         #endregion
 
@@ -88,24 +97,26 @@ namespace Karaboss.Pages.ABCnotation
         #endregion
 
 
-        public FrmTextPlayer(OutputDevice outdeviceText, string path) {
+        public FrmTextPlayer(OutputDevice outdeviceText, string path, bool bplay) {
             InitializeComponent();
-            outDevice = outdeviceText;
+            outDevice = outdeviceText;            
+
+            // If true, launch player
+            bPlayNow = bplay;
+
+            MIDIfileFullPath = path;
+            MIDIfileName = Path.GetFileName(path);
+            MIDIfilePath = Path.GetDirectoryName(path);
+
+
+            // if Edit, force show Text Editor 
+            if (bPlayNow == false)
+                bForceShowTextEditor = true;
 
             txtEditText.Multiline = true;
             txtEditText.WordWrap = false;
             txtEditText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-
-            using (StreamReader reader = File.OpenText(path))
-            {     
-                if (Path.GetExtension(path).ToLowerInvariant() == ".abc")
-                    LoadFile(reader, SongFormat.ABC);
-                else
-                    LoadFile(reader, SongFormat.MML);
-                lblFile.Text = "File: " + Path.GetFileName(path);                
-            }
-
-            txtEditText.Text = LoadSrcFile(path);
+        
         }
 
         delegate void SetScrollValueDelegate(int val);
@@ -197,9 +208,9 @@ namespace Karaboss.Pages.ABCnotation
                             using (var reader = new StreamReader(stream))
                             {
                                 if (Path.GetExtension(diag.FileName).ToLowerInvariant() == ".abc")
-                                    LoadFile(reader, SongFormat.ABC);
+                                    LoadFileIntoPlayer(reader, SongFormat.ABC);
                                 else
-                                    LoadFile(reader, SongFormat.MML);
+                                    LoadFileIntoPlayer(reader, SongFormat.MML);
                                 lblFile.Text = "File: " + Path.GetFileName(diag.FileName);
                             }
                         }
@@ -216,34 +227,17 @@ namespace Karaboss.Pages.ABCnotation
             filterIndex = diag.FilterIndex;
         }
 
+
+
         /// <summary>
         /// Load a file and start to play
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="format"></param>
-        private void LoadFile(StreamReader reader, SongFormat format)
-        {
+        private void LoadFileIntoPlayer(StreamReader reader, SongFormat format)
+        {            
             StopPlaying();
-            stopPlaying = false;
-
-            #region guard
-            if (cmbInstruments.SelectedItem == null)
-            {
-                foreach (var instrument in Enum.GetValues(typeof(MyMidi.Instrument)))
-                {
-                    string s = instrument.ToString();
-                    cmbInstruments.Items.Add(s);
-                    if (s == default(MyMidi.Instrument).ToString())
-                    {
-                        cmbInstruments.SelectedItem = s;
-                    }
-                }
-            }
-            if (cmbMMLMode.SelectedItem == null)
-            {
-                cmbMMLMode.SelectedIndex = 0;
-            }
-            #endregion
+            stopPlaying = false;        
 
             if (format == SongFormat.MML)
             {
@@ -265,7 +259,7 @@ namespace Karaboss.Pages.ABCnotation
                 abc.LotroCompatible = chkLotroDetect.Checked;
                 player = abc;
             }
-
+            
             player.SetInstrument((MyMidi.Instrument)Enum.Parse(typeof(MyMidi.Instrument), cmbInstruments.SelectedItem.ToString()));
             player.Normalize = chkNormalize.Checked;
             player.Loop = chkLoop.Checked;
@@ -274,19 +268,11 @@ namespace Karaboss.Pages.ABCnotation
             scrSeek.Maximum = (int)Math.Ceiling(player.Duration.TotalSeconds);
             scrSeek.Minimum = 0;
             scrSeek.Value = 0;
+            
             backgroundThread = new Thread(Play);
-            backgroundThread.Start();
-        }
-
-        private string LoadSrcFile(string path)
-        {
-            FileInfo fi = new FileInfo(path);
-            StreamReader sr = new StreamReader(fi.FullName);
-            string s = sr.ReadToEnd();
-            s = StringExtensions.ConvertNonDosFile(s);
-
-            return s;
-        }
+            backgroundThread.Start();          
+            
+        }      
 
 
         /// <summary>
@@ -428,10 +414,17 @@ namespace Karaboss.Pages.ABCnotation
 
 
 
-        #region form load unload
-        private void FrmTextPlayer_Load(object sender, EventArgs e) {
+        #region events
 
-            #region set values
+        /// <summary>
+        /// Event: loading of midi file terminated: launch song
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleLoadCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+
+            #region set cmbInstruments value
             foreach (var instrument in Enum.GetValues(typeof(MyMidi.Instrument)))
             {
                 string s = instrument.ToString();
@@ -445,6 +438,194 @@ namespace Karaboss.Pages.ABCnotation
             cmbMMLMode.SelectedIndex = 0;
             #endregion
 
+            // Source of File
+            txtEditText.Text = Abcsong1.Text;
+            lblFile.Text = "File: " + Path.GetFileName(MIDIfileFullPath);
+
+            if (bPlayNow)
+            {
+                bneverplayed = false;
+                LoadFile();
+            } 
+            else
+            {
+                bneverplayed = true;
+            }                      
+        }
+
+        private void LoadFile()
+        {
+            using (StreamReader reader = File.OpenText(MIDIfileFullPath))
+            {
+                if (Path.GetExtension(MIDIfileFullPath).ToLowerInvariant() == ".abc")
+                    LoadFileIntoPlayer(reader, SongFormat.ABC);
+                else
+                    LoadFileIntoPlayer(reader, SongFormat.MML);
+            }
+        }
+
+
+        /// <summary>
+        /// Event: save midi file terminated
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleSaveCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+        
+        }
+
+
+        /// <summary>
+        /// Event: loading of midi file in progress
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleLoadProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            loading = true;
+   
+        }
+
+
+        /// <summary>
+        /// Event: saving midi file in progress
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleSaveProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+           
+        }
+
+
+        #endregion
+
+
+        #region load save
+
+        /// <summary>
+        /// Load the midi file in the sequencer
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void LoadAsyncFile(string fileName)
+        {
+            try
+            {
+                //progressBarPlayer.Visible = true;
+
+                //ResetSequencer();
+                if (fileName != "\\")
+                {
+                    Abcsong1.LoadAsync(fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        /// <summary>
+        /// Save the midi file
+        /// </summary>
+        /// <param name="fileName"></param>
+        private void SaveFile(string fileName)
+        {
+            try
+            {
+                if (fileName != "")
+                {
+                    Abcsong1.SaveAsync(fileName);
+                }
+
+            }
+            catch (Exception errsave)
+            {
+                Console.Write(errsave.Message);
+            }
+        }
+        #endregion
+
+
+        #region form load unload
+
+
+        /// <summary>
+        /// Override form load event
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnLoad(EventArgs e)
+        {
+
+            if (outDevice == null)
+            {
+                MessageBox.Show("No MIDI output devices available.", "Error!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                Close();
+            }
+            else
+            {
+                try
+                {
+                    /*
+                    outDeviceProcessId = outDevice.Pid;
+                    string outDeviceName = OutputDeviceBase.GetDeviceCapabilities(outDevice.DeviceID).name;
+                    lblOutputDevice.Text = outDeviceName;
+                    AlertOutputDevice(outDeviceName);
+                    */
+
+                    if (Abcsong1 == null)
+                    {
+                        Abcsong1 = new TextPlayer.ABC.ABCSong();
+                        Abcsong1.LoadProgressChanged += HandleLoadProgressChanged;
+                        Abcsong1.LoadCompleted += HandleLoadCompleted;                        
+                    }
+
+                    // ==========================================================================
+                    // Chargement du fichier midi selectionné depuis frmExplorer
+                    // ==========================================================================
+
+                    //ResetMidiFile();
+
+                    // ACTIONS TO PERFORM
+                    SelectActionOnLoad();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error!",
+                        MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    Close();
+                }
+            }
+            base.OnLoad(e);
+        }
+
+
+        /// <summary>
+        /// Select what to do on load: new score, play single file, or playlist 
+        /// </summary>
+        private void SelectActionOnLoad()
+        {
+           if (MIDIfileFullPath != null && MIDIfileFullPath != "")
+            {
+                // Play a single MIDI file
+                LoadAsyncFile(MIDIfileFullPath);
+            }
+            else
+            {
+                // A new file must be created                                              
+                //NewMidiFile(CreateNewMidiFile.Numerator, CreateNewMidiFile.Denominator, CreateNewMidiFile.Division, CreateNewMidiFile.Tempo, CreateNewMidiFile.Measures);
+            }
+        }
+
+        /// <summary>
+        /// Form load event 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FrmTextPlayer_Load(object sender, EventArgs e) {
+     
             // Set window location and size
             #region window size & location
             // If window is maximized
@@ -564,18 +745,27 @@ namespace Karaboss.Pages.ABCnotation
         #endregion
 
 
-
         #region Buttons Play Pause Stop
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            lock (playerLock)
+            // TODO : save file before playing in case of modification
+            
+            if (bneverplayed)
             {
-                if (player != null)
+                LoadFile();
+                bneverplayed = false;
+            }
+            else
+            {
+                lock (playerLock)
                 {
-                    if (player.Playing && !player.Paused)
-                        player.Stop();
-                    player.Play(new TimeSpan(MusicPlayer.Time.Ticks));
+                    if (player != null)
+                    {
+                        if (player.Playing && !player.Paused)
+                            player.Stop();
+                        player.Play(new TimeSpan(MusicPlayer.Time.Ticks));
+                    }
                 }
             }
         }
@@ -610,7 +800,8 @@ namespace Karaboss.Pages.ABCnotation
             stopPlaying = true;
             if (backgroundThread != null)
             {
-                backgroundThread.Join(TimeSpan.FromSeconds(1));
+                if (backgroundThread.ThreadState != ThreadState.Unstarted)
+                    backgroundThread.Join(TimeSpan.FromSeconds(1));
             }
         }
 
@@ -670,13 +861,15 @@ namespace Karaboss.Pages.ABCnotation
 #endif
             finally
             {
-                player.CloseDevice();
+                if (player != null)
+                    player.CloseDevice();
                 player = null;
             }
         }
 
 
         #endregion
+
 
         #region Others
 

@@ -988,7 +988,7 @@ namespace Karaboss
                 Application.OpenForms["FrmTextPlayer"].Close();
 
             ResetOutPutDevice();
-
+            /*
             if (bPlayNow == false)
             {
                 Form frmABCnotation = new Karaboss.Pages.ABCnotation.FrmABCnotation(outDevice, fileName);
@@ -997,10 +997,15 @@ namespace Karaboss
             }
             else
             {
-                Form frmTextPlayer = new Karaboss.Pages.ABCnotation.FrmTextPlayer(outDevice, fileName);
+                Form frmTextPlayer = new Karaboss.Pages.ABCnotation.FrmTextPlayer(outDevice, fileName, bPlayNow);
                 frmTextPlayer.Show();
                 frmTextPlayer.Activate();
             }
+            */
+            Form frmTextPlayer = new Karaboss.Pages.ABCnotation.FrmTextPlayer(outDevice, fileName, bPlayNow);
+            frmTextPlayer.Show();
+            frmTextPlayer.Activate();
+
         }
 
         /// <summary>
@@ -1057,7 +1062,6 @@ namespace Karaboss
 
                 ResetOutPutDevice();
 
-                //Form frmPlayer = new frmPlayer(NumInstance, filename, null, bPlayNow, outDeviceID, songRoot);
                 Form frmPlayer = new frmPlayer(NumInstance, filename, null, bPlayNow, outDevice, songRoot);
                 frmPlayer.Show();
                 frmPlayer.Activate();
@@ -1065,7 +1069,7 @@ namespace Karaboss
             else
             {
                 // PLAYLIST MODE
-
+                #region playlist mode
                 // Launch an existing file                    
                 if (File.Exists(filename) == false)
                 {
@@ -1086,6 +1090,7 @@ namespace Karaboss
                 Form frmPlayer = new frmPlayer(NumInstance, filename, pl, bPlayNow, outDevice, songRoot);
                 frmPlayer.Show();
                 frmPlayer.Activate();
+                #endregion
             }
         }
 

@@ -222,7 +222,6 @@
     <Compile Include="Pages\ABCnotation\TextEditor\FrmABCnotation.Designer.cs">
       <DependentUpon>FrmABCnotation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Pages\ABCnotation\TextEditor\LOTROFocuser.cs" />
     <Compile Include="Pages\ABCnotation\TextPlayer\FrmTextPlayer.cs">
       <SubType>Form</SubType>
     </Compile>
