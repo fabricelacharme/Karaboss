@@ -287,7 +287,7 @@ namespace Karaboss.Pages.ABCnotation
             * 
             */
 
-            if (bTextEditorAlwaysOn == true)
+            if (bTextEditorAlwaysOn == true || bForceShowTextEditor == true)
             {
                 this.MaximizeBox = true;
                 this.FormBorderStyle = FormBorderStyle.Sizable;
