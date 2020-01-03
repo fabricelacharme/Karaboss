@@ -46,6 +46,7 @@ namespace Karaboss.playlists
     // Events
     public delegate void SelectedIndexChangedEventHandler(object sender, string fileName);
     public delegate void PlayMidiEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
+    public delegate void PlayTextEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void NavigateToEventHandler(Object sender, string path, string file);
 
@@ -55,6 +56,7 @@ namespace Karaboss.playlists
         // Events
         public event SelectedIndexChangedEventHandler SelectedIndexChanged;
         public event PlayMidiEventHandler PlayMidi;
+        public event PlayTextEventHandler PlayText;
         public event PlayCDGEventHandler PlayCDG;
         public event NavigateToEventHandler NavigateTo;
 
@@ -678,8 +680,7 @@ namespace Karaboss.playlists
             }
             string file = Path.GetFileName(FullPath);
 
-            NavigateTo?.Invoke(this, path, file);
-            //NavigateTo?.Invoke(this, file);
+            NavigateTo?.Invoke(this, path, file);            
         }
 
 
@@ -1482,9 +1483,7 @@ namespace Karaboss.playlists
                 PlaylistItem pli = GetPlaylistItem(songname);
 
                 if (pli == null)
-                    return;
-
-                //pli.Selected = true;
+                    return;             
 
                 // Check if this file exists
                 if (File.Exists(pli.File))
@@ -1493,12 +1492,46 @@ namespace Karaboss.playlists
                     //Check if other files exist
                     if (CheckAllPath(currentPlaylist) == true)
                     {
+                        // Raise event Play 
+                        bool bplay = true;
                         FileInfo fi = new FileInfo(pli.File);
-                        // Raise event Play                                                
-                        PlayMidi?.Invoke(this, fi, currentPlaylist, true);
+                        string file = fi.FullName;
+                        string ext = Path.GetExtension(file);
+                        switch (ext.ToLower())
+                        {
+                            case ".mid":
+                            case ".kar":
+                                {
+                                    PlayMidi?.Invoke(this, fi, currentPlaylist, bplay);
+                                    break;
+                                }
 
-                    }
-                        
+                            case ".zip":
+                            case ".cdg":
+                                {
+                                    PlayCDG?.Invoke(this, fi, bplay);
+                                    break;
+                                }
+
+                            case ".mml":
+                            case ".abc":
+                                {
+                                    PlayText?.Invoke(this, fi, currentPlaylist, bplay);
+                                    break;
+                                }
+
+                            default:
+                                try
+                                {
+                                    System.Diagnostics.Process.Start(@file);
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show(ex.Message);
+                                }
+                                break;
+                        }                                                                                              
+                    }                        
                 }
                 else
                 {
@@ -2350,6 +2383,13 @@ namespace Karaboss.playlists
                     case ".kar":
                         {
                             PlayMidi?.Invoke(this, new FileInfo(file), null, bplay);
+                            break;
+                        }
+
+                    case ".mml":
+                    case ".abc":
+                        {
+                            PlayText?.Invoke(this, new FileInfo(file), null, bplay);
                             break;
                         }
 

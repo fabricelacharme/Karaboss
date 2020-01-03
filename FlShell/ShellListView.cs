@@ -1429,13 +1429,9 @@ namespace FlShell
         }
 
         private void ListView_KeyDown(object sender, KeyEventArgs e)
-        {          
-                                        
+        {                                                  
             switch (e.KeyCode)
-            {
-
-               
-
+            {               
                 case Keys.Delete:                    
                     if (m_ListView.SelectedItems.Count > 0)
                         DeleteSelectedItems();

@@ -231,10 +231,12 @@ namespace Karaboss.xplorer
         {
             PlayMidi?.Invoke(this, fi, bplay);
         }
+        
         private void ShellListView_PlayText(object sender, FileInfo fi, bool bplay)
         {
             PlayText?.Invoke(this, fi, bplay);
         }
+        
         private void ShellListView_AddToPlaylist(object sender, FlShell.ShellItem[] fls, string plname, string key, bool bnewPlaylist)
         {
             if (bnewPlaylist == true)
@@ -411,7 +413,7 @@ namespace Karaboss.xplorer
         #endregion
 
         /// <summary>
-        /// REplace .mid by .kar
+        /// Replace .mid by .kar
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="k"></param>
