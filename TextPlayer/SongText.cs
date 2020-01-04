@@ -1,22 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Text;
 
-namespace TextPlayer.ABC
+namespace TextPlayer
 {
-    public sealed class ABCSong : IComponent
+    public sealed class SongText : IComponent
     {
+
         /*
-         * FAB : create a class on the model of Sequence 
-         * 
-         * 
-         * 
-         * 
-         * 
-         */ 
-        
+        * FAB : create a class on the model of Sequence 
+        * 
+        * 
+        * 
+        * 
+        * 
+        */
+
+
         #region Events
         public event EventHandler<AsyncCompletedEventArgs> LoadCompleted;
         public event ProgressChangedEventHandler LoadProgressChanged;
@@ -26,13 +26,23 @@ namespace TextPlayer.ABC
 
         #region Fields
         private BackgroundWorker loadWorker = new BackgroundWorker();
-        private BackgroundWorker saveWorker = new BackgroundWorker();        
+        private BackgroundWorker saveWorker = new BackgroundWorker();
         private bool disposed = false;
         #endregion
 
-        #region properties
+
+        #region private properties
 
         private ISite site = null;
+
+        #endregion
+
+
+        #region public properties
+
+        public String FileName { get; set; }
+
+
         public bool IsBusy
         {
             get
@@ -53,19 +63,21 @@ namespace TextPlayer.ABC
         /// <summary>
         /// Initializes a new instance of the Sequence class.
         /// </summary>
-        public ABCSong()
+        public SongText()
         {
+            FileName = String.Empty;
             InitializeBackgroundWorkers();
         }
 
-        public ABCSong(string fileName)
+        public SongText(string fileName)
         {
+
             InitializeBackgroundWorkers();
             Load(fileName);
         }
 
 
-        public ABCSong(StreamReader sr)
+        public SongText(StreamReader sr)
         {
             InitializeBackgroundWorkers();
             Load(sr);
@@ -87,7 +99,7 @@ namespace TextPlayer.ABC
 
 
         /// <summary>
-        /// Loads a text file into the ABCSong
+        /// Loads a text file into the SongText
         /// </summary>
         /// <param name="fileName">
         /// The file's name.
@@ -98,7 +110,7 @@ namespace TextPlayer.ABC
 
             if (disposed)
             {
-                throw new ObjectDisposedException("ABCSong");
+                throw new ObjectDisposedException("Song");
             }
             else if (IsBusy)
             {
@@ -109,7 +121,10 @@ namespace TextPlayer.ABC
                 throw new ArgumentNullException("fileName");
             }
 
-            #endregion                                  
+            #endregion
+
+            // Set property
+            FileName = fileName;
 
             StreamReader sr = new StreamReader(fileName);
             string s = sr.ReadToEnd();
@@ -118,7 +133,7 @@ namespace TextPlayer.ABC
         }
 
         /// <summary>
-        /// Load a text file into the ABCSong
+        /// Load a text file into the SongText
         /// </summary>
         /// <param name="sr"></param>
         public void Load(StreamReader sr)
@@ -127,7 +142,7 @@ namespace TextPlayer.ABC
 
             if (disposed)
             {
-                throw new ObjectDisposedException("ABCSong");
+                throw new ObjectDisposedException("Song");
             }
             else if (IsBusy)
             {
@@ -138,7 +153,7 @@ namespace TextPlayer.ABC
                 throw new ArgumentNullException("StreamReader");
             }
 
-            #endregion
+            #endregion                        
 
             string s = sr.ReadToEnd();
             _text = StringExtensions.ConvertNonDosFile(s);
@@ -151,7 +166,7 @@ namespace TextPlayer.ABC
 
             if (disposed)
             {
-                throw new ObjectDisposedException("ABCSong");
+                throw new ObjectDisposedException("Song");
             }
             else if (IsBusy)
             {
@@ -174,7 +189,7 @@ namespace TextPlayer.ABC
 
             if (disposed)
             {
-                throw new ObjectDisposedException("ABCSong");
+                throw new ObjectDisposedException("Song");
             }
 
             #endregion
@@ -186,7 +201,7 @@ namespace TextPlayer.ABC
         /// Saves the Sequence as a text file.
         /// </summary>
         /// <param name="fileName">
-        /// The name to use for saving the MIDI file.
+        /// The name to use for saving the file.
         /// </param>
         public void Save(string fileName)
         {
@@ -194,7 +209,7 @@ namespace TextPlayer.ABC
 
             if (disposed)
             {
-                throw new ObjectDisposedException("ABCSong");
+                throw new ObjectDisposedException("Song");
             }
             else if (fileName == null)
             {
@@ -208,7 +223,7 @@ namespace TextPlayer.ABC
 
             using (stream)
             {
-               
+
             }
         }
 
@@ -218,7 +233,7 @@ namespace TextPlayer.ABC
 
             if (disposed)
             {
-                throw new ObjectDisposedException("ABCSong");
+                throw new ObjectDisposedException("Song");
             }
             else if (IsBusy)
             {
@@ -240,7 +255,7 @@ namespace TextPlayer.ABC
 
             if (disposed)
             {
-                throw new ObjectDisposedException("ABCSong");
+                throw new ObjectDisposedException("Song");
             }
 
             #endregion
@@ -268,6 +283,9 @@ namespace TextPlayer.ABC
         {
             string fileName = (string)e.Argument;
 
+            //Set property
+            FileName = fileName;
+
             try
             {
                 StreamReader sr = new StreamReader(fileName);
@@ -276,7 +294,7 @@ namespace TextPlayer.ABC
 
             }
             catch (Exception ex)
-            {                                
+            {
                 e.Cancel = true;
             }
         }
@@ -304,7 +322,7 @@ namespace TextPlayer.ABC
 
                 using (stream)
                 {
-                  
+
 
                     if (saveWorker.CancellationPending)
                     {
@@ -314,7 +332,7 @@ namespace TextPlayer.ABC
             }
             catch (Exception ex)
             {
-                e.Cancel = true;                
+                e.Cancel = true;
             }
         }
 

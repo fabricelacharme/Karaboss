@@ -78,12 +78,8 @@ namespace Karaboss.Pages.ABCnotation
         private int SimpleTextPlayerWidth = 850;
         private int SimpleTextPlayerHeight = 170;
 
-        private TextPlayer.ABC.ABCSong Abcsong1;
-
         // Current file beeing edited
-        private string MIDIfileName = string.Empty;
-        private string MIDIfilePath = string.Empty;
-        private string MIDIfileFullPath = string.Empty;
+        private TextPlayer.SongText songtext1;
 
         private bool bneverplayed = false;
 
@@ -104,9 +100,13 @@ namespace Karaboss.Pages.ABCnotation
             // If true, launch player
             bPlayNow = bplay;
 
-            MIDIfileFullPath = path;
-            MIDIfileName = Path.GetFileName(path);
-            MIDIfilePath = Path.GetDirectoryName(path);
+            if (path != null && path != string.Empty)
+            {
+                songtext1 = new SongText();
+                songtext1.FileName = path;
+                songtext1.LoadProgressChanged += HandleLoadProgressChanged;
+                songtext1.LoadCompleted += HandleLoadCompleted;
+            }
 
 
             // if Edit, force show Text Editor 
@@ -161,6 +161,11 @@ namespace Karaboss.Pages.ABCnotation
 
         private void mnuFileSave_Click(object sender, EventArgs e)
         {
+            SaveFile();
+        }
+
+        private void SaveFile()
+        {
 
         }
 
@@ -203,17 +208,11 @@ namespace Karaboss.Pages.ABCnotation
                 {
                     if ((stream = diag.OpenFile()) != null)
                     {
-                        using (stream)
-                        {
-                            using (var reader = new StreamReader(stream))
-                            {
-                                if (Path.GetExtension(diag.FileName).ToLowerInvariant() == ".abc")
-                                    LoadFileIntoPlayer(reader, SongFormat.ABC);
-                                else
-                                    LoadFileIntoPlayer(reader, SongFormat.MML);
-                                lblFile.Text = "File: " + Path.GetFileName(diag.FileName);
-                            }
-                        }
+                        //LoadFileIntoPlayer();
+                        bPlayNow = false;
+                        bneverplayed = true;
+                        LoadAsyncFile(diag.FileName);
+                        lblFile.Text = "File: " + Path.GetFileName(diag.FileName);                                                   
                     }
                 }
                 catch (Exception ex)
@@ -234,11 +233,19 @@ namespace Karaboss.Pages.ABCnotation
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="format"></param>
-        private void LoadFileIntoPlayer(StreamReader reader, SongFormat format)
-        {            
+        private void LoadFileIntoPlayer()
+        {
+            SongFormat format;
+            
             StopPlaying();
-            stopPlaying = false;        
+            stopPlaying = false;
 
+            if (Path.GetExtension(songtext1.FileName).ToLowerInvariant() == ".abc")
+                format = SongFormat.ABC;
+            else
+                format = SongFormat.MML;
+
+            StreamReader reader = File.OpenText(songtext1.FileName);
             if (format == SongFormat.MML)
             {
                 var mml = new PlayerMML(outDevice);
@@ -439,30 +446,19 @@ namespace Karaboss.Pages.ABCnotation
             #endregion
 
             // Source of File
-            txtEditText.Text = Abcsong1.Text;
-            lblFile.Text = "File: " + Path.GetFileName(MIDIfileFullPath);
+            txtEditText.Text = songtext1.Text;
+            lblFile.Text = "File: " + songtext1.FileName;
 
             if (bPlayNow)
             {
                 bneverplayed = false;
-                LoadFile();
+                LoadFileIntoPlayer();
             } 
             else
             {
                 bneverplayed = true;
             }                      
-        }
-
-        private void LoadFile()
-        {
-            using (StreamReader reader = File.OpenText(MIDIfileFullPath))
-            {
-                if (Path.GetExtension(MIDIfileFullPath).ToLowerInvariant() == ".abc")
-                    LoadFileIntoPlayer(reader, SongFormat.ABC);
-                else
-                    LoadFileIntoPlayer(reader, SongFormat.MML);
-            }
-        }
+        }       
 
 
         /// <summary>
@@ -517,7 +513,7 @@ namespace Karaboss.Pages.ABCnotation
                 //ResetSequencer();
                 if (fileName != "\\")
                 {
-                    Abcsong1.LoadAsync(fileName);
+                    songtext1.LoadAsync(fileName);
                 }
             }
             catch (Exception ex)
@@ -536,7 +532,7 @@ namespace Karaboss.Pages.ABCnotation
             {
                 if (fileName != "")
                 {
-                    Abcsong1.SaveAsync(fileName);
+                    songtext1.SaveAsync(fileName);
                 }
 
             }
@@ -575,12 +571,14 @@ namespace Karaboss.Pages.ABCnotation
                     AlertOutputDevice(outDeviceName);
                     */
 
-                    if (Abcsong1 == null)
+                    /*
+                    if (songtext1 == null)
                     {
-                        Abcsong1 = new TextPlayer.ABC.ABCSong();
-                        Abcsong1.LoadProgressChanged += HandleLoadProgressChanged;
-                        Abcsong1.LoadCompleted += HandleLoadCompleted;                        
+                        songtext1 = new TextPlayer.SongText();
+                        songtext1.LoadProgressChanged += HandleLoadProgressChanged;
+                        songtext1.LoadCompleted += HandleLoadCompleted;                        
                     }
+                    */
 
                     // ==========================================================================
                     // Chargement du fichier midi selectionné depuis frmExplorer
@@ -607,10 +605,10 @@ namespace Karaboss.Pages.ABCnotation
         /// </summary>
         private void SelectActionOnLoad()
         {
-           if (MIDIfileFullPath != null && MIDIfileFullPath != "")
+           if (songtext1.FileName != null && songtext1.FileName != "")
             {
                 // Play a single MIDI file
-                LoadAsyncFile(MIDIfileFullPath);
+                LoadAsyncFile(songtext1.FileName);
             }
             else
             {
@@ -753,7 +751,8 @@ namespace Karaboss.Pages.ABCnotation
             
             if (bneverplayed)
             {
-                LoadFile();
+                //LoadFile();
+                LoadFileIntoPlayer();
                 bneverplayed = false;
             }
             else
