@@ -277,6 +277,7 @@
             this.txtEditText.Size = new System.Drawing.Size(834, 266);
             this.txtEditText.TabIndex = 0;
             this.txtEditText.Text = "toto";
+            this.txtEditText.TextChanged += new System.EventHandler(this.txtEditText_TextChanged);
             // 
             // pnlTop
             // 
@@ -372,7 +373,7 @@
             // 
             this.mnuDisplayText.Name = "mnuDisplayText";
             this.mnuDisplayText.ShortcutKeys = System.Windows.Forms.Keys.F12;
-            this.mnuDisplayText.Size = new System.Drawing.Size(180, 22);
+            this.mnuDisplayText.Size = new System.Drawing.Size(120, 22);
             this.mnuDisplayText.Text = "Text";
             this.mnuDisplayText.Click += new System.EventHandler(this.mnuDisplayText_Click);
             // 

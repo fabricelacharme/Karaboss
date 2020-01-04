@@ -2257,10 +2257,7 @@ namespace Karaboss
             progressBarPlayer.Visible = true;
 
             sequence1.SaveProgressChanged += HandleSaveProgressChanged;
-            sequence1.SaveCompleted += HandleSaveCompleted;
-
-            //addTags();
-
+            sequence1.SaveCompleted += HandleSaveCompleted;            
             SaveFile(fileName);
         }
 

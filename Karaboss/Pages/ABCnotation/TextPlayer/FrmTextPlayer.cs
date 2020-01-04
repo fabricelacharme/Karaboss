@@ -65,7 +65,7 @@ namespace Karaboss.Pages.ABCnotation
         private bool? isLotroSong;
 
         private bool closing = false;
-        private bool bClosingRequired = false;
+        private bool bClosingRequired = false;        
         private bool loading = false; // loading file in progress
         public bool bfilemodified = false;
 
@@ -106,6 +106,8 @@ namespace Karaboss.Pages.ABCnotation
                 songtext1.FileName = path;
                 songtext1.LoadProgressChanged += HandleLoadProgressChanged;
                 songtext1.LoadCompleted += HandleLoadCompleted;
+                songtext1.SaveProgressChanged += HandleSaveProgressChanged;
+                songtext1.SaveCompleted += HandleSaveCompleted;
             }
 
 
@@ -161,18 +163,35 @@ namespace Karaboss.Pages.ABCnotation
 
         private void mnuFileSave_Click(object sender, EventArgs e)
         {
-            SaveFile();
+            SaveFile(songtext1.FileName);
         }
 
-        private void SaveFile()
-        {
 
+        private string GetUniqueFileName()
+        {
+            string name = Path.GetFileNameWithoutExtension(songtext1.FileName);
+            string path = Path.GetDirectoryName(songtext1.FileName);            
+            string ext = Path.GetExtension(songtext1.FileName);
+            int suffix = 0;
+            string file = string.Format("{0}\\{1}{2}", path, name, ext);
+
+            if (File.Exists(file))
+            {
+                do
+                {
+                    file = string.Format("{0}\\{1} ({2}){3}", path, name, ++suffix, ext);
+                }
+                while (File.Exists(file));
+            }
+            return file;
         }
 
         private void mnuFileSaveAs_Click(object sender, EventArgs e)
         {
-
+            SaveAsFile(songtext1.FileName);
         }
+
+
 
         private void mnuFileExit_Click(object sender, EventArgs e)
         {
@@ -234,19 +253,12 @@ namespace Karaboss.Pages.ABCnotation
         /// <param name="reader"></param>
         /// <param name="format"></param>
         private void LoadFileIntoPlayer()
-        {
-            SongFormat format;
-            
+        {                      
             StopPlaying();
             stopPlaying = false;
 
-            if (Path.GetExtension(songtext1.FileName).ToLowerInvariant() == ".abc")
-                format = SongFormat.ABC;
-            else
-                format = SongFormat.MML;
-
             StreamReader reader = File.OpenText(songtext1.FileName);
-            if (format == SongFormat.MML)
+            if (songtext1.Format == SongText.SongFormat.MML)
             {
                 var mml = new PlayerMML(outDevice);
                 mml.Settings.MaxDuration = TimeSpan.MaxValue;
@@ -266,7 +278,10 @@ namespace Karaboss.Pages.ABCnotation
                 abc.LotroCompatible = chkLotroDetect.Checked;
                 player = abc;
             }
-            
+
+            // Important, otherwise, impossible to save
+            reader.Close();
+
             player.SetInstrument((MyMidi.Instrument)Enum.Parse(typeof(MyMidi.Instrument), cmbInstruments.SelectedItem.ToString()));
             player.Normalize = chkNormalize.Checked;
             player.Loop = chkLoop.Checked;
@@ -401,11 +416,7 @@ namespace Karaboss.Pages.ABCnotation
             }
         }
 
-        private void SaveFileProc()
-        {
-
-        }
-
+    
         private void DisplayTextEditor()
         {
             bTextEditorAlwaysOn = !bTextEditorAlwaysOn;
@@ -430,7 +441,6 @@ namespace Karaboss.Pages.ABCnotation
         /// <param name="e"></param>
         private void HandleLoadCompleted(object sender, AsyncCompletedEventArgs e)
         {
-
             #region set cmbInstruments value
             foreach (var instrument in Enum.GetValues(typeof(MyMidi.Instrument)))
             {
@@ -448,6 +458,7 @@ namespace Karaboss.Pages.ABCnotation
             // Source of File
             txtEditText.Text = songtext1.Text;
             lblFile.Text = "File: " + songtext1.FileName;
+            SetTitle(songtext1.File);
 
             if (bPlayNow)
             {
@@ -468,7 +479,22 @@ namespace Karaboss.Pages.ABCnotation
         /// <param name="e"></param>
         private void HandleSaveCompleted(object sender, AsyncCompletedEventArgs e)
         {
-        
+            lblFile.Text = "File: " + songtext1.FileName;
+            SetTitle(songtext1.File);
+            bfilemodified = false;
+
+            if (bClosingRequired)
+            {
+                bClosingRequired = false;
+                Close();
+            }
+
+            if (bPlayNow)
+            {
+                bneverplayed = false;
+                LoadFileIntoPlayer();                
+            }
+
         }
 
 
@@ -541,7 +567,43 @@ namespace Karaboss.Pages.ABCnotation
                 Console.Write(errsave.Message);
             }
         }
+        
+        private void SaveAsFile(string fileName)
+        {
+            var diag = new SaveFileDialog();
+
+            diag.FileName = songtext1.File;
+
+            if (songtext1.Format == SongText.SongFormat.ABC)
+            {
+                diag.Title = "Save ABC file";
+                diag.Filter = "ABC files (*.abc)|*.abc|All files (*.*)|*.*";
+                diag.InitialDirectory = Path.GetDirectoryName(songtext1.FileName);
+            }
+            else if (songtext1.Format == SongText.SongFormat.MML)
+            {
+                diag.Title = "Save MML file";
+                diag.Filter = "Song files|*.mml;*.abc|MML files (*.mml)|*.mml|All files (*.*)|*.*";
+                diag.InitialDirectory = Path.GetDirectoryName(songtext1.FileName);
+            }
+            else
+            {
+                diag.Title = "Save file";
+                diag.Filter = "Song files|*.mml;*.abc|MML files (*.mml)|*.mml|ABC files (*.abc)|*.abc|All files (*.*)|*.*";
+            }
+
+
+            if (diag.ShowDialog() == DialogResult.OK)
+            {
+                songtext1.FileName = diag.FileName;
+                
+                SaveFile(songtext1.FileName);
+            }
+        }
+        
+        
         #endregion
+
 
 
         #region form load unload
@@ -728,6 +790,29 @@ namespace Karaboss.Pages.ABCnotation
             }
         }
 
+        /// <summary>
+        /// Save File
+        /// </summary>
+        private void SaveFileProc()
+        {            
+            string path = songtext1.FileName;
+            string name = songtext1.File;
+
+            if (path == null || path == "" || name == null || name == "")
+            {
+                SaveAsFile(path);
+                return;
+            }
+
+
+            if (File.Exists(path) == false)
+            {
+                SaveAsFile(path);
+                return;
+            }
+
+            SaveFile(songtext1.FileName);
+        }
 
         private void FrmTextPlayer_Resize(object sender, EventArgs e)
         {
@@ -749,11 +834,17 @@ namespace Karaboss.Pages.ABCnotation
         {
             // TODO : save file before playing in case of modification
             
+            if (bfilemodified)
+            {
+                bPlayNow = true;
+                SaveFile(songtext1.FileName);
+                return;
+            }
+
             if (bneverplayed)
             {
-                //LoadFile();
-                LoadFileIntoPlayer();
                 bneverplayed = false;
+                LoadFileIntoPlayer();                
             }
             else
             {
@@ -936,8 +1027,63 @@ namespace Karaboss.Pages.ABCnotation
         }
 
 
+
         #endregion
 
-      
+        
+        #region TextBox
+        
+        /// <summary>
+        /// Song modified
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void txtEditText_TextChanged(object sender, EventArgs e)
+        {            
+            if (songtext1.Text != txtEditText.Text)
+            {
+                songtext1.Text = txtEditText.Text;
+                FileModified();
+            }
+        }
+
+        public void FileModified()
+        {
+            bfilemodified = true;
+            string fName = songtext1.File;
+            if (fName != null && fName != "")
+            {
+                string fExt = Path.GetExtension(fName);             // Extension
+                fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
+
+                string fShortName = fName.Replace("*", "");
+                if (fShortName == fName)
+                    fName = fName + "*";
+
+                fName = fName + fExt;
+                SetTitle(fName);
+            }
+        }
+
+        /// <summary>
+        /// Set Title of the form
+        /// </summary>
+        private void SetTitle(string displayName)
+        {
+            if (displayName != null)
+            {
+                displayName = displayName.Replace("__", ": ");
+                displayName = displayName.Replace("_", " ");
+            }
+            /*
+            if (NumInstance > 1)
+                Text = "Karaboss PLAYER (" + NumInstance + ") - " + displayName;
+            else
+                Text = "Karaboss PLAYER - " + displayName;
+            */
+            Text = "Karaboss PLAYER - " + displayName;
+        }
+
+        #endregion
     }
 }

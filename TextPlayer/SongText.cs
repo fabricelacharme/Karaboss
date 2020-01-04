@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Windows.Forms;
 
 namespace TextPlayer
 {
@@ -31,6 +32,11 @@ namespace TextPlayer
         #endregion
 
 
+        public enum SongFormat
+        {
+            MML, ABC
+        }
+
         #region private properties
 
         private ISite site = null;
@@ -39,8 +45,33 @@ namespace TextPlayer
 
 
         #region public properties
+        
+        public String Title { get; set; }
+        public String File { get; set; }
 
-        public String FileName { get; set; }
+        private SongFormat _format;
+        private string _filename;
+        
+        /// <summary>
+        /// Full path
+        /// </summary>
+        public String FileName 
+        { 
+            get 
+            { 
+                return _filename; 
+            }
+            set
+            {
+                _filename = value;
+                File = Path.GetFileName(_filename);
+                if (Path.GetExtension(_filename).ToLowerInvariant() == ".abc")
+                    _format = SongFormat.ABC;
+                else if (Path.GetExtension(_filename).ToLowerInvariant() == ".mml")
+                    _format = SongFormat.MML;
+            } 
+        }
+        public SongFormat Format { get { return _format; } set { _format = value; } }
 
 
         public bool IsBusy
@@ -128,6 +159,8 @@ namespace TextPlayer
 
             StreamReader sr = new StreamReader(fileName);
             string s = sr.ReadToEnd();
+
+            sr.Close();
             _text = StringExtensions.ConvertNonDosFile(s);
 
         }
@@ -156,6 +189,7 @@ namespace TextPlayer
             #endregion                        
 
             string s = sr.ReadToEnd();
+            sr.Close();
             _text = StringExtensions.ConvertNonDosFile(s);
         }
 
@@ -221,10 +255,7 @@ namespace TextPlayer
             FileStream stream = new FileStream(fileName, FileMode.Create,
                 FileAccess.Write, FileShare.None);
 
-            using (stream)
-            {
-
-            }
+            
         }
 
         public void SaveAsync(string fileName)
@@ -291,6 +322,7 @@ namespace TextPlayer
                 StreamReader sr = new StreamReader(fileName);
                 string s = sr.ReadToEnd();
                 _text = StringExtensions.ConvertNonDosFile(s);
+                sr.Close();
 
             }
             catch (Exception ex)
@@ -315,23 +347,21 @@ namespace TextPlayer
             string fileName = (string)e.Argument;
 
             try
-            {
-                FileStream stream = new FileStream(fileName, FileMode.Create,
-                    FileAccess.Write, FileShare.None);
-
-
-                using (stream)
+            {                                    
+                StreamWriter sw = new StreamWriter(fileName);
+                sw.Write(_text);
+                sw.Flush();
+                sw.Close();
+                /*
+                if (saveWorker.CancellationPending)
                 {
-
-
-                    if (saveWorker.CancellationPending)
-                    {
-                        e.Cancel = true;
-                    }
+                    e.Cancel = true;
                 }
+                */                
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 e.Cancel = true;
             }
         }
