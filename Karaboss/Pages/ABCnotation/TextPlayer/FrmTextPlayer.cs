@@ -117,7 +117,8 @@ namespace Karaboss.Pages.ABCnotation
 
             txtEditText.Multiline = true;
             txtEditText.WordWrap = false;
-            txtEditText.ScrollBars = System.Windows.Forms.ScrollBars.Both;        
+            txtEditText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            
         }
 
         delegate void SetScrollValueDelegate(int val);
@@ -458,6 +459,7 @@ namespace Karaboss.Pages.ABCnotation
             txtEditText.Text = songtext1.Text;
             lblFile.Text = "File: " + songtext1.FileName;
             SetTitle(songtext1.File);
+            BtnStatus();
 
             // Icon
             if (songtext1.Format == SongText.SongFormat.ABC)
@@ -1104,22 +1106,28 @@ namespace Karaboss.Pages.ABCnotation
         #endregion
 
 
+        #region Buttons Play Stop Pause
         private void BtnStatus()
         {
 
             if (player == null)
+            {
+                btnPlay.Image = Properties.Resources.btn_black_play;
+                btnPause.Image = Properties.Resources.btn_black_pause;
+                btnStop.Image = Properties.Resources.btn_red_stop;
                 return;
+            }
 
             if (!player.Playing && !player.Paused)      // if stopped
             {
                 btnPlay.Image = Properties.Resources.btn_black_play;
                 btnPause.Image = Properties.Resources.btn_black_pause;
-                btnStop.Image = Properties.Resources.btn_black_stop;
+                btnStop.Image = Properties.Resources.btn_red_stop;
             }
             else if (player.Paused)
             {
                 btnPlay.Image = Properties.Resources.btn_green_play;
-                btnPause.Image = Properties.Resources.btn_red_pause;
+                btnPause.Image = Properties.Resources.btn_green_pause;
                 btnStop.Image = Properties.Resources.btn_black_stop;
             }
             else if (player.Playing)
@@ -1154,28 +1162,6 @@ namespace Karaboss.Pages.ABCnotation
 
         }
 
-        private void BtnStop_MouseHover(object sender, EventArgs e)
-        {
-            if (player == null)
-                return;
-
-            if (!player.Playing && !player.Paused)      // if stopped
-                btnStop.Image = Properties.Resources.btn_black_stop;
-            else if (player.Playing || player.Paused)
-                btnStop.Image = Properties.Resources.btn_red_stop;
-        }
-
-        private void BtnStop_MouseLeave(object sender, EventArgs e)
-        {
-            if (player == null)
-                return;
-
-            if(!player.Paused)
-                btnStop.Image = Properties.Resources.btn_black_stop;
-            else if (player.Paused)
-                btnStop.Image = Properties.Resources.btn_red_stop;
-        }
-
         private void BtnPause_MouseHover(object sender, EventArgs e)
         {
             if (player == null)
@@ -1192,13 +1178,37 @@ namespace Karaboss.Pages.ABCnotation
         {
             if (player == null)
                 return;
-            
+
             if (player.Paused)
-                btnPause.Image = Properties.Resources.btn_red_pause;
+                btnPause.Image = Properties.Resources.btn_green_pause;
             else
                 btnPause.Image = Properties.Resources.btn_black_pause;
         }
 
+        private void BtnStop_MouseHover(object sender, EventArgs e)
+        {
+            if (player == null)
+                return;
+
+            if (!player.Playing && !player.Paused)      // if stopped
+                btnStop.Image = Properties.Resources.btn_red_stop;
+            else if (player.Playing || player.Paused)
+                btnStop.Image = Properties.Resources.btn_blue_stop;
+        }
+
+        private void BtnStop_MouseLeave(object sender, EventArgs e)
+        {
+            if (player == null)
+                return;
+
+            if (!player.Playing && !player.Paused)      // if stopped
+                btnStop.Image = Properties.Resources.btn_red_stop;
+            else
+                btnStop.Image = Properties.Resources.btn_black_stop;
+        }
+
+
+        #endregion
 
     }
 }
