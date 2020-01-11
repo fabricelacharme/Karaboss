@@ -996,6 +996,7 @@ namespace Karaboss
                 localplLyrics = new List<plLyric>();
 
                 InitGridView();
+                txtResult.Text = string.Empty;
 
                 // File was modified
                 FileModified();
