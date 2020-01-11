@@ -1514,16 +1514,6 @@ namespace Karaboss
             PlayPauseMusic();
         }
 
-        private void BtnPlay_MouseLeave(object sender, EventArgs e)
-        {
-            if (PlayerState == PlayerStates.Stopped)
-                btnPlay.Image = Properties.Resources.btn_black_play;
-            else if (PlayerState == PlayerStates.Paused)
-                btnPlay.Image = Properties.Resources.btn_red_pause;
-            else if (PlayerState == PlayerStates.Playing)
-                btnPlay.Image = Properties.Resources.btn_green_play;
-        }
-
         private void BtnPlay_MouseHover(object sender, EventArgs e)
         {
             if (PlayerState == PlayerStates.Stopped)
@@ -1533,6 +1523,17 @@ namespace Karaboss
             else if (PlayerState == PlayerStates.Playing)
                 btnPlay.Image = Properties.Resources.btn_blue_play;
         }
+
+        private void BtnPlay_MouseLeave(object sender, EventArgs e)
+        {
+            if (PlayerState == PlayerStates.Stopped)
+                btnPlay.Image = Properties.Resources.btn_black_play;
+            else if (PlayerState == PlayerStates.Paused)
+                btnPlay.Image = Properties.Resources.btn_red_pause;
+            else if (PlayerState == PlayerStates.Playing)
+                btnPlay.Image = Properties.Resources.btn_green_play;
+        }
+       
         #endregion
 
 
@@ -1544,15 +1545,16 @@ namespace Karaboss
                 StopMusic();
         }
 
-        private void BtnStop_MouseLeave(object sender, EventArgs e)
-        {
-            btnStop.Image = Properties.Resources.btn_black_stop;
-        }
 
         private void BtnStop_MouseHover(object sender, EventArgs e)
         {
             if (PlayerState == PlayerStates.Playing || PlayerState == PlayerStates.Paused)
                 btnStop.Image = Properties.Resources.btn_blue_stop;
+        }
+
+        private void BtnStop_MouseLeave(object sender, EventArgs e)
+        {
+            btnStop.Image = Properties.Resources.btn_black_stop;
         }
 
         #endregion

@@ -781,6 +781,11 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\mml.ico" />
+    <None Include="Resources\m.ico" />
+    <None Include="Resources\a.ico" />
+    <None Include="Resources\abc.ico" />
+    <Content Include="Resources\Ico\mml.ico" />
     <None Include="Resources\Media-Controls-Skip-To-Start-icon.png" />
     <None Include="Resources\Media-Controls-Skip-To-End-icon.png" />
     <None Include="Resources\Media-Controls-Rewind-icon.png" />
@@ -789,8 +794,6 @@
     <None Include="Resources\Media-Controls-Stop-icon.png" />
     <None Include="Resources\Media-Controls-Play-icon.png" />
     <None Include="Resources\triolet30.png" />
-    <None Include="Resources\triolet301.png" />
-    <None Include="Resources\triolet1.png" />
     <None Include="Resources\playlist-delete2-icon24.png" />
     <None Include="Resources\playlist-icon1.png" />
     <None Include="Resources\Play-icon24.png" />
@@ -907,6 +910,7 @@
     <Content Include="Pages\ABCnotation\Resources\SilkIcons\wrench.png" />
     <Content Include="Resources\Bouton-minus-palegreen-32.png" />
     <Content Include="Resources\Bouton-plus-palegreen-32.png" />
+    <Content Include="Resources\Ico\abc.ico" />
     <Content Include="Resources\Ico\kar.ico" />
     <Content Include="Resources\Ico\mid.ico" />
     <None Include="Resources\pointer.png" />

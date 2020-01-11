@@ -61,6 +61,16 @@ namespace Karaboss.Properties {
         }
         
         /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+        /// </summary>
+        internal static System.Drawing.Icon abc {
+            get {
+                object obj = ResourceManager.GetObject("abc", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Action_Edit {
@@ -997,6 +1007,16 @@ namespace Karaboss.Properties {
             get {
                 object obj = ResourceManager.GetObject("Media-Controls-Stop-icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+        /// </summary>
+        internal static System.Drawing.Icon mml {
+            get {
+                object obj = ResourceManager.GetObject("mml", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         

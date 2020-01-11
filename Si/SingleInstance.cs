@@ -125,7 +125,9 @@ namespace Si
                 }
             }
             catch (IOException)
-            { } //Pipe was broken
+            {
+                Console.WriteLine("\nError IOException SingleInstance");
+            } //Pipe was broken
             finally
             {
                 ListenForArguments(null);

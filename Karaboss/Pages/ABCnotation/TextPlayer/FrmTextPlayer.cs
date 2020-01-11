@@ -117,8 +117,7 @@ namespace Karaboss.Pages.ABCnotation
 
             txtEditText.Multiline = true;
             txtEditText.WordWrap = false;
-            txtEditText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-        
+            txtEditText.ScrollBars = System.Windows.Forms.ScrollBars.Both;        
         }
 
         delegate void SetScrollValueDelegate(int val);
@@ -459,6 +458,13 @@ namespace Karaboss.Pages.ABCnotation
             txtEditText.Text = songtext1.Text;
             lblFile.Text = "File: " + songtext1.FileName;
             SetTitle(songtext1.File);
+
+            // Icon
+            if (songtext1.Format == SongText.SongFormat.ABC)
+                this.Icon = Properties.Resources.abc;
+            else
+                this.Icon = Properties.Resources.mml;
+
 
             if (bPlayNow)
             {
@@ -832,8 +838,8 @@ namespace Karaboss.Pages.ABCnotation
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            // TODO : save file before playing in case of modification
             
+
             if (bfilemodified)
             {
                 bPlayNow = true;
@@ -858,10 +864,14 @@ namespace Karaboss.Pages.ABCnotation
                     }
                 }
             }
+
+            BtnStatus();
         }
 
         private void btnStop_Click(object sender, EventArgs e)
         {
+            
+
             lock (playerLock)
             {
                 if (player != null)
@@ -869,10 +879,13 @@ namespace Karaboss.Pages.ABCnotation
                     player.Stop();
                 }
             }
+
+            BtnStatus();
         }
 
         private void btnPause_Click(object sender, EventArgs e)
-        {
+        {            
+
             lock (playerLock)
             {
                 if (player != null)
@@ -883,6 +896,8 @@ namespace Karaboss.Pages.ABCnotation
                         player.Pause();
                 }
             }
+
+            BtnStatus();
         }
 
         private void StopPlaying()
@@ -899,6 +914,8 @@ namespace Karaboss.Pages.ABCnotation
         {
             try
             {
+                btnPlay.Image = Properties.Resources.btn_green_play;
+
                 TimeSpan now = new TimeSpan(MusicPlayer.Time.Ticks);
                 player.Play(now);
 
@@ -1085,5 +1102,103 @@ namespace Karaboss.Pages.ABCnotation
         }
 
         #endregion
+
+
+        private void BtnStatus()
+        {
+
+            if (player == null)
+                return;
+
+            if (!player.Playing && !player.Paused)      // if stopped
+            {
+                btnPlay.Image = Properties.Resources.btn_black_play;
+                btnPause.Image = Properties.Resources.btn_black_pause;
+                btnStop.Image = Properties.Resources.btn_black_stop;
+            }
+            else if (player.Paused)
+            {
+                btnPlay.Image = Properties.Resources.btn_green_play;
+                btnPause.Image = Properties.Resources.btn_red_pause;
+                btnStop.Image = Properties.Resources.btn_black_stop;
+            }
+            else if (player.Playing)
+            {
+                btnPlay.Image = Properties.Resources.btn_green_play;
+                btnPause.Image = Properties.Resources.btn_black_pause;
+                btnStop.Image = Properties.Resources.btn_black_stop;
+            }
+        }
+
+        private void BtnPlay_MouseHover(object sender, EventArgs e)
+        {
+
+            if (player == null)
+                return;
+
+            if (!player.Playing && !player.Paused)     // if stopped
+                btnPlay.Image = Properties.Resources.btn_blue_play;
+            else if (player.Playing || player.Paused)
+                btnPlay.Image = Properties.Resources.btn_blue_play;
+        }
+
+        private void BtnPlay_MouseLeave(object sender, EventArgs e)
+        {
+            if (player == null)
+                return;
+
+            if (!player.Playing && !player.Paused) // if stopped
+                btnPlay.Image = Properties.Resources.btn_black_play;
+            else if (player.Playing || player.Paused)
+                btnPlay.Image = Properties.Resources.btn_green_play;
+
+        }
+
+        private void BtnStop_MouseHover(object sender, EventArgs e)
+        {
+            if (player == null)
+                return;
+
+            if (!player.Playing && !player.Paused)      // if stopped
+                btnStop.Image = Properties.Resources.btn_black_stop;
+            else if (player.Playing || player.Paused)
+                btnStop.Image = Properties.Resources.btn_red_stop;
+        }
+
+        private void BtnStop_MouseLeave(object sender, EventArgs e)
+        {
+            if (player == null)
+                return;
+
+            if(!player.Paused)
+                btnStop.Image = Properties.Resources.btn_black_stop;
+            else if (player.Paused)
+                btnStop.Image = Properties.Resources.btn_red_stop;
+        }
+
+        private void BtnPause_MouseHover(object sender, EventArgs e)
+        {
+            if (player == null)
+                return;
+
+            if (player.Playing || player.Paused)
+                btnPause.Image = Properties.Resources.btn_blue_pause;
+            else
+                btnPause.Image = Properties.Resources.btn_black_pause;
+
+        }
+
+        private void BtnPause_MouseLeave(object sender, EventArgs e)
+        {
+            if (player == null)
+                return;
+            
+            if (player.Paused)
+                btnPause.Image = Properties.Resources.btn_red_pause;
+            else
+                btnPause.Image = Properties.Resources.btn_black_pause;
+        }
+
+
     }
 }

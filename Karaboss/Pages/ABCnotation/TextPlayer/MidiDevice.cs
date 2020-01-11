@@ -23,7 +23,6 @@
 #endregion
 using System;
 using System.Collections.Generic;
-//using Midi;
 using Sanford.Multimedia.Midi;
 
 namespace Karaboss.Pages.ABCnotation
@@ -35,24 +34,24 @@ namespace Karaboss.Pages.ABCnotation
         public int Velocity;
     }
 
-    public class MidiDevice {
-        //private Midi.OutputDevice outputDevice;
+    public class MidiDevice {        
         private Sanford.Multimedia.Midi.OutputDevice outDevice;
         private List<NoteTimeOut> timeOuts;
         private bool muted;
 
-        public MidiDevice(Sanford.Multimedia.Midi.OutputDevice optdev) 
+        public MidiDevice(Sanford.Multimedia.Midi.OutputDevice outputdev) 
         {
             try
             {
                 timeOuts = new List<NoteTimeOut>();
                 //outputDevice = Midi.OutputDevice.InstalledDevices[1];
-                outDevice = optdev;
+                outDevice = outputdev;
 
-                
+
                 //if (! outputDevice.IsOpen)
                 //    outputDevice.Open();
-                //outputDevice.SilenceAllNotes();
+                //outputDevice.SilenceAllNotes();                
+                SilenceAllNotes();
             }
             catch (Exception ex)
             {
@@ -69,6 +68,21 @@ namespace Karaboss.Pages.ABCnotation
                 {
                     //outputDevice.SendProgramChange((Midi.Channel)c, instrument);
 
+                    // Change the patch while playing
+                    int nChannel = (int)c;
+
+                    int p = (int)instrument;
+                    int v = 0;
+
+                    ChannelMessageBuilder builder = new ChannelMessageBuilder()
+                    {
+                        Command = ChannelCommand.ProgramChange,
+                        MidiChannel = nChannel,
+                        Data1 = p,
+                        Data2 = v,
+                    };
+                    builder.Build();
+                    outDevice.Send(builder.Result);
                 }
             }
             catch (Exception ex)
@@ -82,6 +96,7 @@ namespace Karaboss.Pages.ABCnotation
             try
             {
                 //outputDevice.Close();
+                //outDevice.Close();
             }
             catch (Exception ex)
             {
@@ -95,6 +110,7 @@ namespace Karaboss.Pages.ABCnotation
             try
             {
                 //outputDevice.SilenceAllNotes();
+                SilenceAllNotes();
             }
             catch (Exception ex)
             {
@@ -102,14 +118,31 @@ namespace Karaboss.Pages.ABCnotation
             }
         }
 
+        private void SilenceAllNotes()
+        {
+            foreach (var c in Enum.GetValues(typeof(MyMidi.Channel)))
+            {
+                ChannelMessageBuilder builder = new ChannelMessageBuilder()
+                {
+                    Command = ChannelCommand.Controller,
+                    MidiChannel = (int)c,
+                    Data1 = (int)ControllerType.AllNotesOff,
+                    Data2 = 0,
+                };
+
+                builder.Build();
+                outDevice.Send(builder.Result);
+            }
+        }
+
+
         protected void NoteOn(MyMidi.Channel channel, MyMidi.Pitch pitch, int velocity) {
             if (muted)
                 return;
             try
             {
-                outDevice.Send(new Sanford.Multimedia.Midi.ChannelMessage(ChannelCommand.NoteOn, 0, (int)pitch, velocity));
-                
                 //outputDevice.SendNoteOn(channel, pitch, velocity);
+                outDevice.Send(new Sanford.Multimedia.Midi.ChannelMessage(ChannelCommand.NoteOn, 0, (int)pitch, velocity));                                
             }
             catch (Exception ex)
             {
@@ -169,17 +202,14 @@ namespace Karaboss.Pages.ABCnotation
                 var timeOut = timeOuts[i];
                 if (elapsed >= timeOut.End) 
                 {
-                    outDevice.Send(new Sanford.Multimedia.Midi.ChannelMessage(ChannelCommand.NoteOff, 0, (int)timeOut.Pitch, timeOut.Velocity));
                     //outputDevice.SendNoteOff(timeOut.Channel, timeOut.Pitch, timeOut.Velocity);
-
+                    outDevice.Send(new Sanford.Multimedia.Midi.ChannelMessage(ChannelCommand.NoteOff, 0, (int)timeOut.Pitch, timeOut.Velocity));                    
                     timeOuts.RemoveAt(i);
                 }
             }
         }
 
         public List<NoteTimeOut> TimeOuts { get { return timeOuts; } }
-        public bool Muted { get { return muted; } set { muted = value; } }
-
-        //public Sanford.Multimedia.Midi.OutputDevice OutDevice { get { return outDevice; } set { outDevice = value; } }
+        public bool Muted { get { return muted; } set { muted = value; } }        
     }
 }

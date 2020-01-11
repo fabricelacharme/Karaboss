@@ -24,14 +24,15 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.cmbInstruments = new System.Windows.Forms.ComboBox();
             this.chkNormalize = new System.Windows.Forms.CheckBox();
-            this.chkLoop = new System.Windows.Forms.CheckBox();
-            this.btnPause = new System.Windows.Forms.Button();
+            this.chkLoop = new System.Windows.Forms.CheckBox();            
             this.chkMute = new System.Windows.Forms.CheckBox();
             this.scrSeek = new System.Windows.Forms.ProgressBar();
-            this.btnPlay = new System.Windows.Forms.Button();
-            this.btnStop = new System.Windows.Forms.Button();
+            this.btnPlay = new Karaboss.NoSelectButton();
+            this.btnPause = new Karaboss.NoSelectButton();
+            this.btnStop = new Karaboss.NoSelectButton();
             this.lblFile = new System.Windows.Forms.Label();
             this.lblTime = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -56,6 +57,7 @@
             this.mnuDisplayText = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.pnlBottom.SuspendLayout();
             this.pnlMiddle.SuspendLayout();
             this.pnlEditText.SuspendLayout();
@@ -99,17 +101,6 @@
             this.chkLoop.UseVisualStyleBackColor = true;
             this.chkLoop.CheckedChanged += new System.EventHandler(this.chkLoop_CheckedChanged);
             // 
-            // btnPause
-            // 
-            this.btnPause.Location = new System.Drawing.Point(90, 55);
-            this.btnPause.Margin = new System.Windows.Forms.Padding(2);
-            this.btnPause.Name = "btnPause";
-            this.btnPause.Size = new System.Drawing.Size(72, 38);
-            this.btnPause.TabIndex = 4;
-            this.btnPause.Text = "Pause";
-            this.btnPause.UseVisualStyleBackColor = true;
-            this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
-            // 
             // chkMute
             // 
             this.chkMute.AutoSize = true;
@@ -124,34 +115,75 @@
             // 
             // scrSeek
             // 
-            this.scrSeek.Location = new System.Drawing.Point(13, 31);
+            this.scrSeek.Location = new System.Drawing.Point(10, 31);
             this.scrSeek.Margin = new System.Windows.Forms.Padding(2);
             this.scrSeek.Name = "scrSeek";
-            this.scrSeek.Size = new System.Drawing.Size(225, 20);
+            this.scrSeek.Size = new System.Drawing.Size(200, 10);
             this.scrSeek.TabIndex = 6;
             this.scrSeek.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrSeek_MouseDown);
             // 
             // btnPlay
             // 
-            this.btnPlay.Location = new System.Drawing.Point(14, 55);
+            this.btnPlay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.btnPlay.FlatAppearance.BorderSize = 0;
+            this.btnPlay.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.btnPlay.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.btnPlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPlay.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.btnPlay.Image = global::Karaboss.Properties.Resources.btn_black_play;
+            this.btnPlay.Location = new System.Drawing.Point(10, 48);
             this.btnPlay.Margin = new System.Windows.Forms.Padding(2);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(72, 38);
+            this.btnPlay.Size = new System.Drawing.Size(50, 53);
             this.btnPlay.TabIndex = 7;
-            this.btnPlay.Text = "Play";
-            this.btnPlay.UseVisualStyleBackColor = true;
+            this.btnPlay.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnPlay, "Play");
+            this.btnPlay.UseVisualStyleBackColor = false;
             this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
+            this.btnPlay.MouseLeave += new System.EventHandler(this.BtnPlay_MouseLeave);
+            this.btnPlay.MouseHover += new System.EventHandler(this.BtnPlay_MouseHover);
+            // 
+            // btnPause
+            // 
+            this.btnPause.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.btnPause.FlatAppearance.BorderSize = 0;
+            this.btnPause.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.btnPause.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.btnPause.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPause.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.btnPause.Image = global::Karaboss.Properties.Resources.btn_black_pause;
+            this.btnPause.Location = new System.Drawing.Point(85, 48);
+            this.btnPause.Margin = new System.Windows.Forms.Padding(2);
+            this.btnPause.Name = "btnPause";
+            this.btnPause.Size = new System.Drawing.Size(50, 53);
+            this.btnPause.TabIndex = 4;
+            this.btnPause.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnPause, "Pause");
+            this.btnPause.UseVisualStyleBackColor = false;
+            this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
+            this.btnPause.MouseLeave += new System.EventHandler(this.BtnPause_MouseLeave);
+            this.btnPause.MouseHover += new System.EventHandler(this.BtnPause_MouseHover);
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(166, 55);
+            this.btnStop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.btnStop.FlatAppearance.BorderSize = 0;
+            this.btnStop.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.btnStop.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStop.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.btnStop.Image = global::Karaboss.Properties.Resources.btn_black_stop;
+            this.btnStop.Location = new System.Drawing.Point(160, 48);
             this.btnStop.Margin = new System.Windows.Forms.Padding(2);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(72, 38);
+            this.btnStop.Size = new System.Drawing.Size(50, 53);
             this.btnStop.TabIndex = 8;
-            this.btnStop.Text = "Stop";
-            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnStop, "Stop");
+            this.btnStop.UseVisualStyleBackColor = false;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            this.btnStop.MouseLeave += new System.EventHandler(this.BtnStop_MouseLeave);
+            this.btnStop.MouseHover += new System.EventHandler(this.BtnStop_MouseHover);
             // 
             // lblFile
             // 
@@ -240,9 +272,9 @@
             this.pnlBottom.Controls.Add(this.btnPlay);
             this.pnlBottom.Controls.Add(this.btnStop);
             this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlBottom.Location = new System.Drawing.Point(0, 340);
+            this.pnlBottom.Location = new System.Drawing.Point(0, 350);
             this.pnlBottom.Name = "pnlBottom";
-            this.pnlBottom.Size = new System.Drawing.Size(834, 100);
+            this.pnlBottom.Size = new System.Drawing.Size(834, 110);
             this.pnlBottom.TabIndex = 3;
             // 
             // pnlMiddle
@@ -396,7 +428,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(834, 440);
+            this.ClientSize = new System.Drawing.Size(834, 460);
             this.Controls.Add(this.pnlMiddle);
             this.Controls.Add(this.pnlTop);
             this.Controls.Add(this.pnlBottom);
@@ -426,11 +458,11 @@
         private System.Windows.Forms.ComboBox cmbInstruments;
         private System.Windows.Forms.CheckBox chkNormalize;
         private System.Windows.Forms.CheckBox chkLoop;
-        private System.Windows.Forms.Button btnPause;
+        private NoSelectButton btnPause;
         private System.Windows.Forms.CheckBox chkMute;
         private System.Windows.Forms.ProgressBar scrSeek;
-        private System.Windows.Forms.Button btnPlay;
-        private System.Windows.Forms.Button btnStop;
+        private NoSelectButton btnPlay;
+        private NoSelectButton btnStop;
         private System.Windows.Forms.Label lblFile;
         private System.Windows.Forms.Label lblTime;
         private System.Windows.Forms.Label label3;
@@ -455,6 +487,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem mnuFileNew;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 
