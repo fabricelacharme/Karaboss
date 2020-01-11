@@ -470,12 +470,22 @@ namespace Karaboss.Pages.ABCnotation
 
             if (bPlayNow)
             {
+
+                btnPlay.Image = Properties.Resources.btn_green_play;
+                btnPause.Image = Properties.Resources.btn_black_pause;
+                btnStop.Image = Properties.Resources.btn_black_stop;
+
                 bneverplayed = false;
                 LoadFileIntoPlayer();
             } 
             else
             {
+                btnPlay.Image = Properties.Resources.btn_black_play;
+                btnPause.Image = Properties.Resources.btn_black_pause;
+                btnStop.Image = Properties.Resources.btn_red_stop;
+
                 bneverplayed = true;
+
             }                      
         }       
 
@@ -839,9 +849,7 @@ namespace Karaboss.Pages.ABCnotation
         #region Buttons Play Pause Stop
 
         private void btnPlay_Click(object sender, EventArgs e)
-        {
-            
-
+        {            
             if (bfilemodified)
             {
                 bPlayNow = true;
@@ -849,8 +857,12 @@ namespace Karaboss.Pages.ABCnotation
                 return;
             }
 
+            btnPlay.Image = Properties.Resources.btn_green_play;
+            btnPause.Image = Properties.Resources.btn_black_pause;
+            btnStop.Image = Properties.Resources.btn_black_stop;
+
             if (bneverplayed)
-            {
+            {                
                 bneverplayed = false;
                 LoadFileIntoPlayer();                
             }
@@ -867,7 +879,7 @@ namespace Karaboss.Pages.ABCnotation
                 }
             }
 
-            BtnStatus();
+            
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -916,7 +928,7 @@ namespace Karaboss.Pages.ABCnotation
         {
             try
             {
-                btnPlay.Image = Properties.Resources.btn_green_play;
+                //btnPlay.Image = Properties.Resources.btn_green_play;
 
                 TimeSpan now = new TimeSpan(MusicPlayer.Time.Ticks);
                 player.Play(now);
@@ -1110,13 +1122,9 @@ namespace Karaboss.Pages.ABCnotation
         private void BtnStatus()
         {
 
-            if (player == null)
-            {
-                btnPlay.Image = Properties.Resources.btn_black_play;
-                btnPause.Image = Properties.Resources.btn_black_pause;
-                btnStop.Image = Properties.Resources.btn_red_stop;
+            if (player == null)         
                 return;
-            }
+            
 
             if (!player.Playing && !player.Paused)      // if stopped
             {
@@ -1146,7 +1154,7 @@ namespace Karaboss.Pages.ABCnotation
 
             if (!player.Playing && !player.Paused)     // if stopped
                 btnPlay.Image = Properties.Resources.btn_blue_play;
-            else if (player.Playing || player.Paused)
+            else if (player.Playing || player.Paused) 
                 btnPlay.Image = Properties.Resources.btn_blue_play;
         }
 
