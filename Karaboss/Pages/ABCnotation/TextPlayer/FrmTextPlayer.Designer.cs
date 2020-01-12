@@ -27,7 +27,7 @@
             this.components = new System.ComponentModel.Container();
             this.cmbInstruments = new System.Windows.Forms.ComboBox();
             this.chkNormalize = new System.Windows.Forms.CheckBox();
-            this.chkLoop = new System.Windows.Forms.CheckBox();            
+            this.chkLoop = new System.Windows.Forms.CheckBox();
             this.chkMute = new System.Windows.Forms.CheckBox();
             this.scrSeek = new System.Windows.Forms.ProgressBar();
             this.btnPlay = new Karaboss.NoSelectButton();
@@ -58,6 +58,8 @@
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.mnuFileNewABC = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileNewMML = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlBottom.SuspendLayout();
             this.pnlMiddle.SuspendLayout();
             this.pnlEditText.SuspendLayout();
@@ -349,47 +351,49 @@
             // 
             // mnuFileNew
             // 
+            this.mnuFileNew.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFileNewABC,
+            this.mnuFileNewMML});
             this.mnuFileNew.Name = "mnuFileNew";
-            this.mnuFileNew.Size = new System.Drawing.Size(138, 22);
+            this.mnuFileNew.Size = new System.Drawing.Size(180, 22);
             this.mnuFileNew.Text = "&New";
-            this.mnuFileNew.Click += new System.EventHandler(this.mnuFileNew_Click);
             // 
             // mnuFileOpen
             // 
             this.mnuFileOpen.Name = "mnuFileOpen";
-            this.mnuFileOpen.Size = new System.Drawing.Size(138, 22);
+            this.mnuFileOpen.Size = new System.Drawing.Size(180, 22);
             this.mnuFileOpen.Text = "&Open";
             this.mnuFileOpen.Click += new System.EventHandler(this.mnuFileOpen_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(135, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuFileSave
             // 
             this.mnuFileSave.Name = "mnuFileSave";
             this.mnuFileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.mnuFileSave.Size = new System.Drawing.Size(138, 22);
+            this.mnuFileSave.Size = new System.Drawing.Size(180, 22);
             this.mnuFileSave.Text = "&Save";
             this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
             // 
             // mnuFileSaveAs
             // 
             this.mnuFileSaveAs.Name = "mnuFileSaveAs";
-            this.mnuFileSaveAs.Size = new System.Drawing.Size(138, 22);
+            this.mnuFileSaveAs.Size = new System.Drawing.Size(180, 22);
             this.mnuFileSaveAs.Text = "Save as...";
             this.mnuFileSaveAs.Click += new System.EventHandler(this.mnuFileSaveAs_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(135, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuFileExit
             // 
             this.mnuFileExit.Name = "mnuFileExit";
-            this.mnuFileExit.Size = new System.Drawing.Size(138, 22);
+            this.mnuFileExit.Size = new System.Drawing.Size(180, 22);
             this.mnuFileExit.Text = "&Exit";
             this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
             // 
@@ -423,6 +427,20 @@
             this.mnuHelpAbout.Size = new System.Drawing.Size(116, 22);
             this.mnuHelpAbout.Text = "&About...";
             this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
+            // 
+            // mnuFileNewABC
+            // 
+            this.mnuFileNewABC.Name = "mnuFileNewABC";
+            this.mnuFileNewABC.Size = new System.Drawing.Size(180, 22);
+            this.mnuFileNewABC.Text = "ABC file";
+            this.mnuFileNewABC.Click += new System.EventHandler(this.mnuFileNewABC_Click);
+            // 
+            // mnuFileNewMML
+            // 
+            this.mnuFileNewMML.Name = "mnuFileNewMML";
+            this.mnuFileNewMML.Size = new System.Drawing.Size(180, 22);
+            this.mnuFileNewMML.Text = "MML file";
+            this.mnuFileNewMML.Click += new System.EventHandler(this.mnuFileNewMML_Click);
             // 
             // FrmTextPlayer
             // 
@@ -488,6 +506,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem mnuFileNew;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileNewABC;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileNewMML;
     }
 }
 

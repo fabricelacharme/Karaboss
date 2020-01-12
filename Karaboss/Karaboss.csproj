@@ -214,14 +214,6 @@
     <Compile Include="Lrc\SharedFramework.cs" />
     <Compile Include="Lrc\Time.cs" />
     <Compile Include="Pages\ABCnotation\Midi.cs" />
-    <Compile Include="Pages\ABCnotation\TextEditor\ABC.cs" />
-    <Compile Include="Pages\ABCnotation\TextEditor\ColumnSorter.cs" />
-    <Compile Include="Pages\ABCnotation\TextEditor\FrmABCnotation.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Pages\ABCnotation\TextEditor\FrmABCnotation.Designer.cs">
-      <DependentUpon>FrmABCnotation.cs</DependentUpon>
-    </Compile>
     <Compile Include="Pages\ABCnotation\TextPlayer\FrmTextPlayer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -232,9 +224,6 @@
     <Compile Include="Pages\ABCnotation\TextPlayer\MidiDevice.cs" />
     <Compile Include="Pages\ABCnotation\TextPlayer\PlayerABC.cs" />
     <Compile Include="Pages\ABCnotation\TextPlayer\PlayerMML.cs" />
-    <Compile Include="Pages\ABCnotation\TextEditor\Song.cs" />
-    <Compile Include="Pages\ABCnotation\TextEditor\Toolbar.cs" />
-    <Compile Include="Pages\ABCnotation\TextEditor\Utils.cs" />
     <Compile Include="Pages\ConnectedControl\ListViewItemComparer.cs" />
     <Compile Include="Pages\ExplorerControl\KnownFolders.cs" />
     <Compile Include="Pages\ExplorerControl\xplorerControl.cs">
@@ -504,9 +493,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GuitarTraining\TextBlock.resx">
       <DependentUpon>TextBlock.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Pages\ABCnotation\TextEditor\FrmABCnotation.resx">
-      <DependentUpon>FrmABCnotation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\ABCnotation\TextPlayer\FrmTextPlayer.resx">
       <DependentUpon>FrmTextPlayer.cs</DependentUpon>

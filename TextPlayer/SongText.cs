@@ -114,6 +114,38 @@ namespace TextPlayer
             Load(sr);
         }
 
+        /// <summary>
+        /// Check if song is Valid
+        /// </summary>
+        /// <returns></returns>
+        public bool IsValid()
+        {
+            string error = string.Empty;
+
+            if (_text.Trim() == "")
+                error = "Text is empty";
+                            
+
+            if (Format == SongFormat.ABC)
+            {
+
+            }
+            else if (Format == SongFormat.MML)
+            {                
+                string trimmedCode = _text.Trim(new char[] { ' ', '\t', '\n', '\r' });
+
+                if (!trimmedCode.StartsWith("MML@", StringComparison.InvariantCultureIgnoreCase))                
+                    error = "Mabinogi-format MML code should start with 'MML@'";                
+                if (!trimmedCode.EndsWith(";", StringComparison.InvariantCultureIgnoreCase))                
+                    error = "Mabinogi-format MML code should end with ';'";                                    
+            }
+
+            if (error != "") {
+                MessageBox.Show(error, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
+        }
 
         private void InitializeBackgroundWorkers()
         {

@@ -60,6 +60,10 @@ namespace Karaboss.Pages.ABCnotation
             System.Threading.Thread.Sleep(200); // fixes delay during initial playing, possibly due to midi device initialization
         }
 
+        /// <summary>
+        /// Set Midi instrument for all channels
+        /// </summary>
+        /// <param name="instrument"></param>
         public void SetInstrument(MyMidi.Instrument instrument) {
 
             try
@@ -92,6 +96,9 @@ namespace Karaboss.Pages.ABCnotation
             
         }
 
+        /// <summary>
+        /// Close Midi Output Device
+        /// </summary>
         public void Close() {
             try
             {
@@ -135,7 +142,12 @@ namespace Karaboss.Pages.ABCnotation
             }
         }
 
-
+        /// <summary>
+        /// Note On
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="pitch"></param>
+        /// <param name="velocity"></param>
         protected void NoteOn(MyMidi.Channel channel, MyMidi.Pitch pitch, int velocity) {
             if (muted)
                 return;
@@ -197,6 +209,10 @@ namespace Karaboss.Pages.ABCnotation
             return index;
         }
 
+        /// <summary>
+        /// Note Off
+        /// </summary>
+        /// <param name="elapsed"></param>
         public void HandleTimeOuts(TimeSpan elapsed) {
             for (int i = timeOuts.Count - 1; i >= 0; i--) {
                 var timeOut = timeOuts[i];

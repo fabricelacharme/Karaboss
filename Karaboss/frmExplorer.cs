@@ -971,6 +971,7 @@ namespace Karaboss
 
             Cursor.Current = Cursors.WaitCursor;
 
+            #region Close Windows
             // ferme le formulaire frmPianoTraining
             if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
             {
@@ -989,7 +990,7 @@ namespace Karaboss
                 Application.OpenForms["frmPlayer"].Close();
             }
 
-
+            #endregion
 
             // Affiche le formulaire frmPlay 
             if (Application.OpenForms["FrmTextPlayer"] != null)
@@ -1029,37 +1030,6 @@ namespace Karaboss
                     // create a new file
                     fpath = null;          
                 }
-
-                Cursor.Current = Cursors.WaitCursor;
-
-                // ferme le formulaire frmPianoTraining
-                if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
-                {
-                    Application.OpenForms["frmPianoTraining"].Close();
-                }
-
-                // ferme le formulaire frmGuitarTraining
-                if (Application.OpenForms.OfType<frmGuitarTraining>().Count() > 0)
-                {
-                    Application.OpenForms["frmGuitarTraining"].Close();
-                }
-
-                // Ferme le formulaire FrmTextPlayer
-                if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
-                {
-                    Application.OpenForms["FrmTextPlayer"].Close();
-                }
-
-
-                // Affiche le formulaire frmPlay 
-                if (Application.OpenForms["frmPlayer"] != null)
-                    Application.OpenForms["frmPlayer"].Close();
-
-                ResetOutPutDevice();
-
-                Form frmPlayer = new frmPlayer(NumInstance, fpath, null, bPlayNow, outDevice, songRoot);
-                frmPlayer.Show();
-                frmPlayer.Activate();
             }
             else
             {
@@ -1072,22 +1042,46 @@ namespace Karaboss
                     return;
                 }
 
-                // Launch player with a Playlist                               
-                Cursor.Current = Cursors.WaitCursor;
-
-                // Affiche le formulaire frmPlay 
-                if (Application.OpenForms["frmPlayer"] != null)
-                    Application.OpenForms["frmPlayer"].Close();
-
-                ResetOutPutDevice();
-
-                //Form frmPlayer = new frmPlayer(NumInstance, filename, pl, bPlayNow, outDeviceID, songRoot);
-                Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice, songRoot);
-                frmPlayer.Show();
-                frmPlayer.Activate();
                 #endregion
             }
-        }
+
+            // Launch player with a Playlist                               
+            Cursor.Current = Cursors.WaitCursor;
+
+            #region Close Windows
+            // ferme le formulaire frmPianoTraining
+            if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmPianoTraining"].Close();
+            }
+
+            // ferme le formulaire frmGuitarTraining
+            if (Application.OpenForms.OfType<frmGuitarTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmGuitarTraining"].Close();
+            }
+
+            // Ferme le formulaire FrmTextPlayer
+            if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
+            {
+                Application.OpenForms["FrmTextPlayer"].Close();
+            }
+            #endregion
+
+            // Affiche le formulaire frmPlay 
+            if (Application.OpenForms["frmPlayer"] != null)
+                Application.OpenForms["frmPlayer"].Close();
+
+            ResetOutPutDevice();
+
+            //Form frmPlayer = new frmPlayer(NumInstance, filename, pl, bPlayNow, outDeviceID, songRoot);
+            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice, songRoot);
+            frmPlayer.Show();
+            frmPlayer.Activate();
+
+
+        }        
+
 
         #endregion Players
 
@@ -1382,9 +1376,9 @@ namespace Karaboss
                     frmExternalMidiRecord.Close();
                 }
 
-                if (Application.OpenForms.OfType<FrmABCnotation>().Count() > 0)
+                if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
                 {
-                    FrmABCnotation frm = GetForm<FrmABCnotation>();
+                    FrmTextPlayer frm = GetForm<FrmTextPlayer>();
                     frm.Close();
                 }
 

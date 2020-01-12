@@ -152,8 +152,92 @@ namespace Karaboss.Pages.ABCnotation
         #region Menus
 
         private void mnuFileNew_Click(object sender, EventArgs e)
-        {
+        {           
 
+        }
+
+
+        private void mnuFileNewABC_Click(object sender, EventArgs e)
+        {
+            bneverplayed = true;
+            string path = songtext1.FileName;
+
+            songtext1 = new SongText();
+
+            if (File.Exists(path))
+            {
+                songtext1.FileName = GetUniqueFileName(path = Path.Combine(Path.GetDirectoryName(path), "New.abc"));
+            }
+            else
+                songtext1.FileName = "New.abc";
+
+            
+            songtext1.LoadProgressChanged += HandleLoadProgressChanged;
+            songtext1.LoadCompleted += HandleLoadCompleted;
+            songtext1.SaveProgressChanged += HandleSaveProgressChanged;
+            songtext1.SaveCompleted += HandleSaveCompleted;
+            
+            string tx = @"X:1
+T: <your title>
+M: 4/4     <Meter>
+L: 1/4     <Length of undecorated note>
+K: Amin    <Key signature>
+Q: 1/4=120 <Tempo>
+% Headers below are optional
+A: <Author - Carborunda Riverside of the Stoors>
+O: <Region of origin - Stock, The Shire, Eriador> 
+N: <Any notes you want>
+N: <And any more lines of note.>
+%
+% And now your lovely music...
+|ABCD|EFG>^G|[A4a4C4E4]||";
+
+            this.txtEditText.Text = tx;
+
+            /*
+            X:1
+            T: <your title>
+            M: 4/4     <Meter>
+            L: 1/4     <Length of undecorated note>
+            K: Amin    <Key signature>
+            Q: 1/4=120 <Tempo>
+            % Headers below are optional
+            A: <Author - Carborunda Riverside of the Stoors>
+            O: <Region of origin - Stock, The Shire, Eriador> 
+            N: <Any notes you want>
+            N: <And any more lines of note.>
+            %
+            % And now your lovely music...
+            |ABCD|EFG>^G|[A4a4C4E4]||
+            */
+
+            SetTitle("New.abc");
+            SetIcon();
+        }
+
+        private void mnuFileNewMML_Click(object sender, EventArgs e)
+        {
+            bneverplayed = true;
+            string path = songtext1.FileName;
+            songtext1 = new SongText();
+
+            if (File.Exists(path))
+            {
+                songtext1.FileName = GetUniqueFileName(path = Path.Combine(Path.GetDirectoryName(path), "New.mml"));
+            }
+            else
+                songtext1.FileName = "New.mml";
+                                    
+            songtext1.LoadProgressChanged += HandleLoadProgressChanged;
+            songtext1.LoadCompleted += HandleLoadCompleted;
+            songtext1.SaveProgressChanged += HandleSaveProgressChanged;
+            songtext1.SaveCompleted += HandleSaveCompleted;
+
+            string tx = @"MML@o2l4t120 cdefg2g2 aaaag2 aaaag2 ffffe2e2 ddddc1;";
+            this.txtEditText.Text = tx;
+            
+            SetTitle("New.mml");
+            SetIcon();
         }
 
         private void mnuFileOpen_Click(object sender, EventArgs e)
@@ -167,23 +251,23 @@ namespace Karaboss.Pages.ABCnotation
         }
 
 
-        private string GetUniqueFileName()
+        private string GetUniqueFileName(string FileName)
         {
-            string name = Path.GetFileNameWithoutExtension(songtext1.FileName);
-            string path = Path.GetDirectoryName(songtext1.FileName);            
-            string ext = Path.GetExtension(songtext1.FileName);
+            string name = Path.GetFileNameWithoutExtension(FileName);
+            string dir = Path.GetDirectoryName(FileName);            
+            string ext = Path.GetExtension(FileName);
             int suffix = 0;
-            string file = string.Format("{0}\\{1}{2}", path, name, ext);
+            string path = string.Format("{0}\\{1}{2}", dir, name, ext);
 
-            if (File.Exists(file))
+            if (File.Exists(path))
             {
                 do
                 {
-                    file = string.Format("{0}\\{1} ({2}){3}", path, name, ++suffix, ext);
+                    path = string.Format("{0}\\{1} ({2}){3}", dir, name, ++suffix, ext);
                 }
-                while (File.Exists(file));
+                while (File.Exists(path));
             }
-            return file;
+            return path;
         }
 
         private void mnuFileSaveAs_Click(object sender, EventArgs e)
@@ -195,7 +279,7 @@ namespace Karaboss.Pages.ABCnotation
 
         private void mnuFileExit_Click(object sender, EventArgs e)
         {
-
+            Close();
         }
 
         private void mnuDisplayText_Click(object sender, EventArgs e)
@@ -205,7 +289,8 @@ namespace Karaboss.Pages.ABCnotation
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)
         {
-
+            Form frmAboutDialog = new frmAboutDialog();
+            frmAboutDialog.ShowDialog();
         }
 
         /// <summary>
@@ -257,7 +342,11 @@ namespace Karaboss.Pages.ABCnotation
             StopPlaying();
             stopPlaying = false;
 
+            if (!songtext1.IsValid())
+                return;
+
             StreamReader reader = File.OpenText(songtext1.FileName);
+
             if (songtext1.Format == SongText.SongFormat.MML)
             {
                 var mml = new PlayerMML(outDevice);
@@ -290,7 +379,9 @@ namespace Karaboss.Pages.ABCnotation
             scrSeek.Maximum = (int)Math.Ceiling(player.Duration.TotalSeconds);
             scrSeek.Minimum = 0;
             scrSeek.Value = 0;
-            
+
+           
+
             backgroundThread = new Thread(Play);
             backgroundThread.Start();          
             
@@ -427,9 +518,7 @@ namespace Karaboss.Pages.ABCnotation
             RedimIfSequencerVisible();
         }
 
-
         #endregion
-
 
 
         #region events
@@ -461,11 +550,9 @@ namespace Karaboss.Pages.ABCnotation
             SetTitle(songtext1.File);
             BtnStatus();
 
-            // Icon
-            if (songtext1.Format == SongText.SongFormat.ABC)
-                this.Icon = Properties.Resources.abc;
-            else
-                this.Icon = Properties.Resources.mml;
+
+            SetIcon();
+           
 
 
             if (bPlayNow)
@@ -596,13 +683,15 @@ namespace Karaboss.Pages.ABCnotation
             {
                 diag.Title = "Save ABC file";
                 diag.Filter = "ABC files (*.abc)|*.abc|All files (*.*)|*.*";
-                diag.InitialDirectory = Path.GetDirectoryName(songtext1.FileName);
+                if (File.Exists(songtext1.FileName))
+                    diag.InitialDirectory = Path.GetDirectoryName(songtext1.FileName);
             }
             else if (songtext1.Format == SongText.SongFormat.MML)
             {
                 diag.Title = "Save MML file";
                 diag.Filter = "Song files|*.mml;*.abc|MML files (*.mml)|*.mml|All files (*.*)|*.*";
-                diag.InitialDirectory = Path.GetDirectoryName(songtext1.FileName);
+                if (File.Exists(songtext1.FileName))
+                    diag.InitialDirectory = Path.GetDirectoryName(songtext1.FileName);
             }
             else
             {
@@ -848,8 +937,111 @@ namespace Karaboss.Pages.ABCnotation
 
         #region Buttons Play Pause Stop
 
+        #region Mouse Hover Leave 
+        private void BtnStatus()
+        {
+
+            if (player == null)
+                return;
+
+
+            if (!player.Playing && !player.Paused)      // if stopped
+            {
+                btnPlay.Image = Properties.Resources.btn_black_play;
+                btnPause.Image = Properties.Resources.btn_black_pause;
+                btnStop.Image = Properties.Resources.btn_red_stop;
+            }
+            else if (player.Paused)
+            {
+                btnPlay.Image = Properties.Resources.btn_green_play;
+                btnPause.Image = Properties.Resources.btn_green_pause;
+                btnStop.Image = Properties.Resources.btn_black_stop;
+            }
+            else if (player.Playing)
+            {
+                btnPlay.Image = Properties.Resources.btn_green_play;
+                btnPause.Image = Properties.Resources.btn_black_pause;
+                btnStop.Image = Properties.Resources.btn_black_stop;
+            }
+        }
+
+        private void BtnPlay_MouseHover(object sender, EventArgs e)
+        {
+
+            if (player == null)
+                return;
+
+            if (!player.Playing && !player.Paused)     // if stopped
+                btnPlay.Image = Properties.Resources.btn_blue_play;
+            else if (player.Playing || player.Paused)
+                btnPlay.Image = Properties.Resources.btn_blue_play;
+        }
+
+        private void BtnPlay_MouseLeave(object sender, EventArgs e)
+        {
+            if (player == null)
+                return;
+
+            if (!player.Playing && !player.Paused) // if stopped
+                btnPlay.Image = Properties.Resources.btn_black_play;
+            else if (player.Playing || player.Paused)
+                btnPlay.Image = Properties.Resources.btn_green_play;
+
+        }
+
+        private void BtnPause_MouseHover(object sender, EventArgs e)
+        {
+            if (player == null)
+                return;
+
+            if (player.Playing || player.Paused)
+                btnPause.Image = Properties.Resources.btn_blue_pause;
+            else
+                btnPause.Image = Properties.Resources.btn_black_pause;
+
+        }
+
+        private void BtnPause_MouseLeave(object sender, EventArgs e)
+        {
+            if (player == null)
+                return;
+
+            if (player.Paused)
+                btnPause.Image = Properties.Resources.btn_green_pause;
+            else
+                btnPause.Image = Properties.Resources.btn_black_pause;
+        }
+
+        private void BtnStop_MouseHover(object sender, EventArgs e)
+        {
+            if (player == null)
+                return;
+
+            if (!player.Playing && !player.Paused)      // if stopped
+                btnStop.Image = Properties.Resources.btn_red_stop;
+            else if (player.Playing || player.Paused)
+                btnStop.Image = Properties.Resources.btn_blue_stop;
+        }
+
+        private void BtnStop_MouseLeave(object sender, EventArgs e)
+        {
+            if (player == null)
+                return;
+
+            if (!player.Playing && !player.Paused)      // if stopped
+                btnStop.Image = Properties.Resources.btn_red_stop;
+            else
+                btnStop.Image = Properties.Resources.btn_black_stop;
+        }
+
+
+        #endregion
+
         private void btnPlay_Click(object sender, EventArgs e)
-        {            
+        {
+            if (!songtext1.IsValid())            
+                return;            
+
             if (bfilemodified)
             {
                 bPlayNow = true;
@@ -925,7 +1117,7 @@ namespace Karaboss.Pages.ABCnotation
         }
 
         private void Play()
-        {
+        {            
             try
             {
                 //btnPlay.Image = Properties.Resources.btn_green_play;
@@ -1115,108 +1307,22 @@ namespace Karaboss.Pages.ABCnotation
             Text = "Karaboss PLAYER - " + displayName;
         }
 
+        /// <summary>
+        /// Set Icon of Window
+        /// </summary>
+        private void SetIcon()
+        {
+            // Icon
+            if (songtext1.Format == SongText.SongFormat.ABC)
+                this.Icon = Properties.Resources.abc;
+            else
+                this.Icon = Properties.Resources.mml;
+        }
+
         #endregion
 
 
-        #region Buttons Play Stop Pause
-        private void BtnStatus()
-        {
-
-            if (player == null)         
-                return;
-            
-
-            if (!player.Playing && !player.Paused)      // if stopped
-            {
-                btnPlay.Image = Properties.Resources.btn_black_play;
-                btnPause.Image = Properties.Resources.btn_black_pause;
-                btnStop.Image = Properties.Resources.btn_red_stop;
-            }
-            else if (player.Paused)
-            {
-                btnPlay.Image = Properties.Resources.btn_green_play;
-                btnPause.Image = Properties.Resources.btn_green_pause;
-                btnStop.Image = Properties.Resources.btn_black_stop;
-            }
-            else if (player.Playing)
-            {
-                btnPlay.Image = Properties.Resources.btn_green_play;
-                btnPause.Image = Properties.Resources.btn_black_pause;
-                btnStop.Image = Properties.Resources.btn_black_stop;
-            }
-        }
-
-        private void BtnPlay_MouseHover(object sender, EventArgs e)
-        {
-
-            if (player == null)
-                return;
-
-            if (!player.Playing && !player.Paused)     // if stopped
-                btnPlay.Image = Properties.Resources.btn_blue_play;
-            else if (player.Playing || player.Paused) 
-                btnPlay.Image = Properties.Resources.btn_blue_play;
-        }
-
-        private void BtnPlay_MouseLeave(object sender, EventArgs e)
-        {
-            if (player == null)
-                return;
-
-            if (!player.Playing && !player.Paused) // if stopped
-                btnPlay.Image = Properties.Resources.btn_black_play;
-            else if (player.Playing || player.Paused)
-                btnPlay.Image = Properties.Resources.btn_green_play;
-
-        }
-
-        private void BtnPause_MouseHover(object sender, EventArgs e)
-        {
-            if (player == null)
-                return;
-
-            if (player.Playing || player.Paused)
-                btnPause.Image = Properties.Resources.btn_blue_pause;
-            else
-                btnPause.Image = Properties.Resources.btn_black_pause;
-
-        }
-
-        private void BtnPause_MouseLeave(object sender, EventArgs e)
-        {
-            if (player == null)
-                return;
-
-            if (player.Paused)
-                btnPause.Image = Properties.Resources.btn_green_pause;
-            else
-                btnPause.Image = Properties.Resources.btn_black_pause;
-        }
-
-        private void BtnStop_MouseHover(object sender, EventArgs e)
-        {
-            if (player == null)
-                return;
-
-            if (!player.Playing && !player.Paused)      // if stopped
-                btnStop.Image = Properties.Resources.btn_red_stop;
-            else if (player.Playing || player.Paused)
-                btnStop.Image = Properties.Resources.btn_blue_stop;
-        }
-
-        private void BtnStop_MouseLeave(object sender, EventArgs e)
-        {
-            if (player == null)
-                return;
-
-            if (!player.Playing && !player.Paused)      // if stopped
-                btnStop.Image = Properties.Resources.btn_red_stop;
-            else
-                btnStop.Image = Properties.Resources.btn_black_stop;
-        }
-
-
-        #endregion
+      
 
     }
 }
