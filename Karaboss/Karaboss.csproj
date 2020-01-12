@@ -702,17 +702,9 @@
       <Project>{04123f59-331d-4582-be0d-721feab6050f}</Project>
       <Name>KnobControl</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LOMMSplitButton\Control_LOMMSplitButton.csproj">
-      <Project>{b12a704e-7dc3-4005-a01d-6dfa54ac3b18}</Project>
-      <Name>Control_LOMMSplitButton</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LyricsWikia.Api\LyricsWikia.Api.csproj">
       <Project>{7e6a19a2-655d-400e-9f3f-ccd7b80c278f}</Project>
       <Name>LyricsWikia.Api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MarkedEditBox\Control_MarkedEditBox.csproj">
-      <Project>{5b294e8d-a43a-4eec-affe-899ae406aeda}</Project>
-      <Name>Control_MarkedEditBox</Name>
     </ProjectReference>
     <ProjectReference Include="..\picControl\PicControl.csproj">
       <Project>{5A59550C-4187-4E78-B9A4-2DF31D17BD64}</Project>
