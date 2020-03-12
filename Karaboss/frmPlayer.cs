@@ -2365,7 +2365,14 @@ namespace Karaboss
                 while (File.Exists(file));
             }
             sequence1.WriteDump(MIDIfileName, file);
-            System.Diagnostics.Process.Start(@file);
+            try
+            {
+                System.Diagnostics.Process.Start(@file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         /// <summary>

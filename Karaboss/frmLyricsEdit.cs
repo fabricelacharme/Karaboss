@@ -1166,8 +1166,9 @@ namespace Karaboss
                 System.Diagnostics.Process.Start(@File);
 
             }
-            catch (IOException)
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -1268,8 +1269,9 @@ namespace Karaboss
                 System.Diagnostics.Process.Start(@File);
 
             }
-            catch (IOException)
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 

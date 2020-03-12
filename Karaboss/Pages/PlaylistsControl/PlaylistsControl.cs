@@ -2401,7 +2401,14 @@ namespace Karaboss.playlists
                         }
 
                     default:
-                        System.Diagnostics.Process.Start(@file);
+                        try
+                        {
+                            System.Diagnostics.Process.Start(@file);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
                         break;
                 }
             }

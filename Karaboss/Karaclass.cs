@@ -61,6 +61,7 @@ namespace Karaboss
         public static string m_SepLine;
         public static string m_SepParagraph;
 
+        public static bool m_SaveDefaultOutputDevice;   // Save default MIDI output device
 
         public enum OptionsDisplay
         {

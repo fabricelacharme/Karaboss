@@ -752,7 +752,14 @@ namespace Karaboss
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             string file = path + "\\lyrics.txt";
             System.IO.File.WriteAllText(@file, lyrics);
-            System.Diagnostics.Process.Start(@file);
+            try
+            {
+                System.Diagnostics.Process.Start(@file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void PnlWindow_Resize(object sender, EventArgs e)

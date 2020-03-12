@@ -411,13 +411,7 @@ namespace Karaboss
             
 
             if (filename != null && filename != "" && File.Exists(filename))
-            {
-                /*
-                if (Karaclass.IsMidiExtension(filename))
-                    DisplayMidiPlayer(filename, null, false);
-                else
-                    System.Diagnostics.Process.Start(@filename);
-                */
+            {                
                 SelectPlayer(filename, false);
             }
             else
@@ -634,6 +628,8 @@ namespace Karaboss
             Karaclass.m_SepLine = Properties.Settings.Default.SepLine;
             Karaclass.m_SepSyllabe = Properties.Settings.Default.SepSyllabe;
             Karaclass.m_SepParagraph = Properties.Settings.Default.SepParagraph;
+
+            Karaclass.m_SaveDefaultOutputDevice = Properties.Settings.Default.SaveDefaultOutputDevice;
 
             // Listview column length
             int l = Properties.Settings.Default.lvFileNameColumn;
@@ -1073,8 +1069,7 @@ namespace Karaboss
                 Application.OpenForms["frmPlayer"].Close();
 
             ResetOutPutDevice();
-
-            //Form frmPlayer = new frmPlayer(NumInstance, filename, pl, bPlayNow, outDeviceID, songRoot);
+            
             Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice, songRoot);
             frmPlayer.Show();
             frmPlayer.Activate();
@@ -1714,7 +1709,8 @@ namespace Karaboss
         private void MnuMidiOutputDevice_Click(object sender, EventArgs e)
         {
             DialogResult dr = new DialogResult();
-            OutputDeviceDialog MidiOutputDialog = new OutputDeviceDialog(outDeviceID);
+            OutputDeviceDialog MidiOutputDialog = new OutputDeviceDialog(outDeviceID, Karaclass.m_SaveDefaultOutputDevice);
+            
 
             dr = MidiOutputDialog.ShowDialog();
 
@@ -1724,6 +1720,10 @@ namespace Karaboss
                 ShowSplashSoundFonts();
 
                 outDeviceID = MidiOutputDialog.OutputDeviceID;
+
+                // Save preferences for Output dev
+                SaveDefaultOutputDevice(MidiOutputDialog.bSavePreferences);
+
                 SelectOutPutDevice();
 
                 // Remove splash window
@@ -2261,6 +2261,23 @@ namespace Karaboss
 
         #region outputdevice
 
+        /// <summary>
+        /// Save preferences Output Device
+        /// </summary>
+        private void SaveDefaultOutputDevice(bool bPref)
+        {
+            Karaclass.m_SaveDefaultOutputDevice = bPref;
+            Properties.Settings.Default.SaveDefaultOutputDevice = bPref;
+
+            if (bPref)                        
+                Properties.Settings.Default.DefaultOutputDevice = outDeviceID;                        
+
+            // Save settings
+            Properties.Settings.Default.Save();
+            
+            
+        }
+
         private void ResetOutPutDevice()
         {            
             try
@@ -2295,7 +2312,13 @@ namespace Karaboss
             // cela peut durer au moins 30 sec !!!
             // Mettre une page d'attente    
             
-            
+            // Default output device was saved
+            if (Karaclass.m_SaveDefaultOutputDevice)
+            {
+                if (Properties.Settings.Default.DefaultOutputDevice < OutputDeviceBase.DeviceCount)
+                    outDeviceID = Properties.Settings.Default.DefaultOutputDevice;
+            }
+
             try
             {
                 if (outDevice != null && outDevice.DeviceID != outDeviceID)
@@ -2346,10 +2369,6 @@ namespace Karaboss
                 inDevice = null;
             }
         }
-
-
-
-
 
         #endregion
 

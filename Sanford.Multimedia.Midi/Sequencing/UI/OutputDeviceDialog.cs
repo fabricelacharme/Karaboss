@@ -44,8 +44,48 @@ namespace Sanford.Multimedia.Midi.UI
     public partial class OutputDeviceDialog : Form
     {
         private int outputDeviceID = 0;
+        private bool _bsavepreferences;
 
-        public OutputDeviceDialog(int defID)
+        #region properties
+        /// <summary>
+        /// MIDI output device selected
+        /// </summary>
+        public int OutputDeviceID
+        {
+            get
+            {
+                #region Require
+                if (OutputDevice.DeviceCount == 0)
+                {
+                    throw new InvalidOperationException();
+                }
+                #endregion
+
+                return outputDeviceID;
+            }
+        }
+        
+        /// <summary>
+        /// Save selected MIDI Output Device 
+        /// </summary>
+        /// <param name="defID"></param>
+        public bool bSavePreferences
+        {
+            get
+            {
+                #region Require
+                if (OutputDevice.DeviceCount == 0)
+                {
+                    throw new InvalidOperationException();
+                }
+                #endregion
+
+                return _bsavepreferences;
+            }
+        }
+        #endregion
+
+        public OutputDeviceDialog(int defID, bool bSavePrefs)
         {
             InitializeComponent();
 
@@ -60,7 +100,10 @@ namespace Sanford.Multimedia.Midi.UI
                 {
                     outputDeviceID = defID;                   
                 }                
-                 outputComboBox.SelectedIndex = outputDeviceID;
+                outputComboBox.SelectedIndex = outputDeviceID;
+
+                // Save prefs
+                chkSavePreferences.Checked = bSavePrefs;
                 
             }
         }
@@ -90,21 +133,16 @@ namespace Sanford.Multimedia.Midi.UI
             DialogResult = DialogResult.Cancel;
         }
 
-        public int OutputDeviceID
+
+        /// <summary>
+        /// Save preferences was clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkSavePreferences_CheckedChanged(object sender, EventArgs e)
         {
-            get
-            {
-                #region Require
+            _bsavepreferences = chkSavePreferences.Checked;
 
-                if(OutputDevice.DeviceCount == 0)
-                {
-                    throw new InvalidOperationException();
-                }
-
-                #endregion
-
-                return outputDeviceID;
-            }
         }
     }
 }

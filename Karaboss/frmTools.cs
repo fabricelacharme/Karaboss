@@ -882,8 +882,15 @@ namespace Karaboss
                     break;
             }
 
-            System.IO.File.WriteAllText(@file, tx);
-            System.Diagnostics.Process.Start(@file);
+            try
+            {
+                System.IO.File.WriteAllText(@file, tx);
+                System.Diagnostics.Process.Start(@file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
 
