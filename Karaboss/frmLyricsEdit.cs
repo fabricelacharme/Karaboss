@@ -1647,6 +1647,7 @@ namespace Karaboss
             lrcs = lrcs.Replace(sep + "_", " ");
             lrcs = lrcs.Replace("_" + sep, " ");
             lrcs = lrcs.Replace(sep + cr, cr);
+            lrcs = lrcs.Replace(" " + cr, cr);
             lrcs = lrcs.Replace(sep, "*");
 
             try
