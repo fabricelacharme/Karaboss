@@ -1386,7 +1386,7 @@ namespace Karaboss
             string Tag_DPlus = string.Empty;
 
             string FileName = saveMidiFileDialog.FileName;
-            string bLRCType = "Lines";
+            //string bLRCType = "Lines";
 
             // Search Title & Artist
             string SingleName = Path.GetFileNameWithoutExtension(FileName);
@@ -1481,7 +1481,7 @@ namespace Karaboss
             string Tag_DPlus = string.Empty;
 
             string FileName = saveMidiFileDialog.FileName;
-            string bLRCType = "Lines";
+            //string bLRCType = "Lines";
 
             // Search Title & Artist
             string SingleName = Path.GetFileNameWithoutExtension(FileName);
@@ -1499,6 +1499,167 @@ namespace Karaboss
             SaveLRCSyllabes(FileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
         }
 
+        /// <summary>
+        /// Save text with all separators
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuSaveAsText_Click(object sender, EventArgs e)
+        {
+            #region select filename
+            string fName = "New.txt";
+            string fPath = Path.GetDirectoryName(MIDIfileName);
+
+            string fullName = string.Empty;
+            string defName = string.Empty;
+
+            #region search name
+            if (fPath == null || fPath == "")
+            {
+                if (Directory.Exists(CreateNewMidiFile.DefaultDirectory))
+                    fPath = CreateNewMidiFile.DefaultDirectory;
+                else
+                    fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            }
+            else
+            {
+                fName = Path.GetFileName(MIDIfileName);
+            }
+
+            string defExt = ".txt";         // Extension
+            fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
+            string inifName = fName + defExt;                            // Original name with extension
+            defName = fName;                                    // Proposed name for dialog box
+
+            fullName = fPath + "\\" + inifName;
+
+            if (File.Exists(fullName) == true)
+            {
+                // Remove all (1) (2) etc..
+                string pattern = @"[(\d)]";
+                string replace = @"";
+                inifName = Regex.Replace(fName, pattern, replace);
+
+                int i = 1;
+                string addName = "(" + i.ToString() + ")";
+                defName = inifName + addName + defExt;
+                fullName = fPath + "\\" + defName;
+
+                while (File.Exists(fullName) == true)
+                {
+                    i++;
+                    defName = inifName + "(" + i.ToString() + ")" + defExt;
+                    fullName = fPath + "\\" + defName;
+                }
+            }
+
+            #endregion search name                   
+
+            string defFilter = "TEXT files (*.txt)|*.txt|All files (*.*)|*.*";
+
+            saveMidiFileDialog.Title = "Save to TEXT format";
+            saveMidiFileDialog.Filter = defFilter;
+            saveMidiFileDialog.DefaultExt = defExt;
+            saveMidiFileDialog.InitialDirectory = @fPath;
+            saveMidiFileDialog.FileName = defName;
+
+            if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            #endregion
+         
+            string FileName = saveMidiFileDialog.FileName;            
+         
+            SaveTextWithSep(FileName);
+        }
+
+        private void SaveTextWithSep(string File)
+        {
+            string sTime = string.Empty;
+            string sLyric = string.Empty;
+            string sLine = string.Empty;
+            string sType = string.Empty;
+            object vLyric;
+            object vTime;
+            object vType;
+            string lrcs = string.Empty;
+            string cr = "\r\n";
+            string sep = "!";
+            
+            bool bStartLine = true;
+
+            // Save syllabe by syllabe
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
+                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+                vType = dgView.Rows[i].Cells[COL_TYPE].Value;
+
+                if (vTime != null && vLyric != null && vType != null)
+                {
+                    sLyric = vLyric.ToString().Trim();
+                    sType = vType.ToString().Trim();
+
+                    if (sLyric == "")
+                        sLyric = "_~~";
+
+                    if (sLyric != "" && sType != "cr" && sType != "par")
+                    {
+                        if (bStartLine)
+                        {                                                        
+                            sLine = sLyric + sep;
+                            bStartLine = false;
+                        }
+                        else
+                        {
+                            // Line continuation
+                            sLine += sLyric + sep;
+                        }
+                    }
+                    else if (sType == "cr" || sType == "par")
+                    {                       
+                        // Save current line
+                        if (sLine != "")
+                        {
+                            if (sType == "cr")
+                                lrcs += sLine + cr;
+                            else
+                                lrcs += sLine + cr + cr;
+                        }
+
+                        // Reset all
+                        bStartLine = true;
+                        sLine = string.Empty;
+                    }
+                }
+            }
+                        
+            // Save last line
+            if (sLine != "")
+            {
+                sLine = sLine.Replace("_", " ");
+                lrcs += sLine + cr;
+            }
+
+            
+            // * "Oh!_la!_la_la!_vie!_en!_rose!\r\nLe!_rose!_qu'on!_nous!_pro!pose!\r\nD'avoir!_les!_quan!ti!tés!_d'choses!\r\nQui!_donnent!_en!vie!_d'autre!_chose!\r\nAie!_on!_nous!_fait!_croire!\r\nQue!_le!_bonheur!_c'est!_d'a!voir!\r\nDe!_l'avoir!_plein!_nos!_ar!moires!\r\nDérisions!_de!_nous!_dé!ri!soires!\r\ncar...!\r\nFoule!_sen!ti!men!tale!\r\nOn_a!_soif!_d'idéal!\r\nAttiré!_par!_les!_é!toiles,!_les!_voiles!\r\nQue!_des!_choses!_pas!_com!mer!ciales!\r\nFoule!_sen!ti!men!tale!\r\nIl!_faut!_voir!_comme!_on!_nous!_parle!\r\nComme!_on!_nous!_parle!\r\nIl!_se!_dé!ga!ge!\r\nDe!_ces!_cartons!_d'em!bal!lage!\r\nDes!_gens!_lavés!_hors!_d'u!sage!\r\nEt!_triste!_et!_sans_au!cun!_a!van!tage!\r\nOn!_nous!_in!flige!\r\nDes!_désirs!_qui!_nous!_af!fligent!\r\nOn!_nous!_prend!_faut!_pas!_dé!con!ner!_dès!_qu'on!_est!_né!\r\nPour!_des!_cons!_alors!_qu'on!_est!\r\nDes!_foule!_sen!ti!men!tale!\r\nOn_a!_soif!_d'idéal!\r\nAttiré!_par!_les!_é!toiles,!_les!_voiles!\r\nQue!_des!_choses!_pas!_com!mer!ciales!\r\nFoule!_sen!ti!men!tale!\r\nIl!_faut
+            
+            lrcs = lrcs.Replace(sep + "_", " ");
+            lrcs = lrcs.Replace("_" + sep, " ");
+            lrcs = lrcs.Replace(sep + cr, cr);
+            lrcs = lrcs.Replace(sep, "*");
+
+            try
+            {
+                System.IO.File.WriteAllText(File, lrcs);
+                System.Diagnostics.Process.Start(@File);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
 
         /// <summary>
         /// Quit windowx
@@ -2011,7 +2172,7 @@ namespace Karaboss
                                     //else if (c.StartsWith("/"))                                    
                                     //else if (c.StartsWith(Karaclass.m_SepLine))
                                     */
-                                    if (c.StartsWith(Karaclass.m_SepLine) || c.StartsWith(Karaclass.m_SepParagraph))
+            if (c.StartsWith(Karaclass.m_SepLine) || c.StartsWith(Karaclass.m_SepParagraph))
                                     {
 
                                         if (c.StartsWith(Karaclass.m_SepLine))
@@ -2774,8 +2935,9 @@ namespace Karaboss
 
 
 
+
         #endregion
 
-       
+      
     }
 }

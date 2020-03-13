@@ -90,6 +90,7 @@
             this.txtITag = new System.Windows.Forms.TextBox();
             this.txtLTag = new System.Windows.Forms.TextBox();
             this.txtKTag = new System.Windows.Forms.TextBox();
+            this.MnuSaveAsText = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -326,6 +327,7 @@
             this.mnuFileSaveAs,
             this.mnuFileSep2,
             this.mnuFileSaveAsLrc,
+            this.MnuSaveAsText,
             this.mnuFileSep1,
             this.mnuFileQuit});
             this.mnuFile.Name = "mnuFile";
@@ -526,6 +528,12 @@
             resources.ApplyResources(this.txtKTag, "txtKTag");
             this.txtKTag.Name = "txtKTag";
             // 
+            // MnuSaveAsText
+            // 
+            this.MnuSaveAsText.Name = "MnuSaveAsText";
+            resources.ApplyResources(this.MnuSaveAsText, "MnuSaveAsText");
+            this.MnuSaveAsText.Click += new System.EventHandler(this.MnuSaveAsText_Click);
+            // 
             // frmLyricsEdit
             // 
             resources.ApplyResources(this, "$this");
@@ -618,5 +626,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnuFileSaveAsLrcLines;
         private System.Windows.Forms.ToolStripMenuItem mnuFileSaveAsLrcSyllabes;
         private System.Windows.Forms.Button btnDeleteAllLyrics;
+        private System.Windows.Forms.ToolStripMenuItem MnuSaveAsText;
     }
 }
