@@ -527,7 +527,6 @@ namespace Karaboss.xplorer
 
             // 3 - Apply format : <upper directory> - <song name>
             FormateFiles(dir, newPhysicalPath);
-
         }
 
 
@@ -562,8 +561,8 @@ namespace Karaboss.xplorer
             }
             catch (Exception er)
             {
-                Console.WriteLine("The process failed: {0}", er.ToString());
-            }
+                Console.WriteLine("The process failed: {0}", er.ToString());                
+            }                      
         }
 
 
@@ -751,9 +750,6 @@ namespace Karaboss.xplorer
                 
                 newfileName = newfileName.Trim();
 
-
-
-
                 //every first letter to upper case
                 newfileName = ToTitleCase(newfileName) + fileExtension;
 
@@ -761,6 +757,12 @@ namespace Karaboss.xplorer
                 if (newfileName.IndexOf(" K.mid") > 0)
                 {
                     newfileName = newfileName.Replace(" K.mid", ".kar");
+                }
+
+                // Replace "toto Kar.mid" by "toto.kar"
+                if (newfileName.IndexOf(" Kar.mid") > 0)
+                {
+                    newfileName = newfileName.Replace(" Kar.mid", ".kar");
                 }
 
 
