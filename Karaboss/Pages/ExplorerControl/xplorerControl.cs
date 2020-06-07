@@ -759,6 +759,17 @@ namespace Karaboss.xplorer
                     newfileName = newfileName.Replace(" K.mid", ".kar");
                 }
 
+                if (newfileName.IndexOf(" [K].mid") > 0)
+                {
+                    newfileName = newfileName.Replace(" [K].mid", ".kar");
+                }
+
+                if (newfileName.IndexOf(" (K).mid") > 0)
+                {
+                    newfileName = newfileName.Replace(" (K).mid", ".kar");
+                }
+
+
                 // Replace "toto Kar.mid" by "toto.kar"
                 if (newfileName.IndexOf(" Kar.mid") > 0)
                 {
