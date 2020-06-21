@@ -694,6 +694,13 @@ namespace Sanford.Multimedia.Midi
                         newTrack.TotalLyricsL += sy;
                         newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = sy, TicksOn = ticks });
                     }
+                    else if (sy == " ")
+                    {
+                        // Mange the space separator when lyrics are letter to letter
+                        newTrack.TotalLyricsL += "[]";                        
+                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = "[]", TicksOn = ticks });
+
+                    }
                     #endregion                  
 
                 } // s != ""                 
@@ -835,7 +842,7 @@ namespace Sanford.Multimedia.Midi
                             // no linefeed
                             newTrack.TotalLyricsT += sy;
                             newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = sy, TicksOn = ticks });
-                        }
+                        }                       
 
                         #endregion
                       

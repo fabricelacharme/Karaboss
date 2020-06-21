@@ -757,53 +757,70 @@ namespace Karaboss
 
             // Karaoke tags
             #region tags
-
-            tx = "";
-            for (i = 0; i < sequence1.KTag.Count; i++)
+            if (sequence1.KTag != null)
             {
-                tx += sequence1.KTag[i] + cr;
+                tx = "";
+                for (i = 0; i < sequence1.KTag.Count; i++)
+                {
+                    tx += sequence1.KTag[i] + cr;
+                }
+                MidiInfos.KTags = tx;
             }
-            MidiInfos.KTags = tx;
 
             // Version
-            tx = "";
-            for (i = 0; i < sequence1.VTag.Count; i++)
+            if (sequence1.VTag != null)
             {
-                tx += sequence1.VTag[i] + cr;
+                tx = "";
+                for (i = 0; i < sequence1.VTag.Count; i++)
+                {
+                    tx += sequence1.VTag[i] + cr;
+                }
+                MidiInfos.VTags = tx;
             }
-            MidiInfos.VTags = tx;
 
             // Lang
-            tx = "";
-            for (i = 0; i < sequence1.LTag.Count; i++)
+            if (sequence1.LTag != null)
             {
-                tx += sequence1.LTag[i] + cr;
+                tx = "";
+                for (i = 0; i < sequence1.LTag.Count; i++)
+                {
+                    tx += sequence1.LTag[i] + cr;
+                }
+                MidiInfos.LTags = tx;
             }
-            MidiInfos.LTags = tx;
 
             // Copyright of karaoke
-            tx = "";
-            for (i = 0; i < sequence1.WTag.Count; i++)
+            if (sequence1.WTag != null)
             {
-                tx += sequence1.WTag[i] + cr;
+                tx = "";
+                for (i = 0; i < sequence1.WTag.Count; i++)
+                {
+                    tx += sequence1.WTag[i] + cr;
+                }
+                MidiInfos.WTags = tx;
             }
-            MidiInfos.WTags = tx;
 
             // Song infos
-            tx = "";
-            for (i = 0; i < sequence1.TTag.Count; i++)
+            if (sequence1.TTag != null)
             {
-                tx += sequence1.TTag[i].Replace('\n', ' ' ).Replace('\r', ' ') + cr;                
+                tx = "";
+                for (i = 0; i < sequence1.TTag.Count; i++)
+                {
+                    tx += sequence1.TTag[i].Replace('\n', ' ').Replace('\r', ' ') + cr;
+                }
+                MidiInfos.TTags = tx;
             }
-            MidiInfos.TTags = tx;
 
             // Infos
-            tx = "";
-            for (i = 0; i < sequence1.ITag.Count; i++)
+            if (sequence1.ITag != null)
             {
-                tx += sequence1.ITag[i].Replace('\n', ' ').Replace('\r', ' ') + cr;
+                tx = "";
+                for (i = 0; i < sequence1.ITag.Count; i++)
+                {
+                    tx += sequence1.ITag[i].Replace('\n', ' ').Replace('\r', ' ') + cr;
+                }
+                MidiInfos.ITags = tx;
             }
-            MidiInfos.ITags = tx;
 
             #endregion
 

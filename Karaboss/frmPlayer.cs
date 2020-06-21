@@ -3870,21 +3870,36 @@ namespace Karaboss
                         plLyrics.Clear();
 
                     
-
+                    // Remove "[]" for the letter by letter lyrics
                     Track track = sequence1.tracks[myLyric.lyricstracknum];
+                    for (int k = 0; k < track.Lyrics.Count - 1; k++)
+                    {
+                        if (track.Lyrics[k].Element == "[]")
+                        {                            
+                            if (track.Lyrics[k + 1].Type == Track.Lyric.Types.Text)
+                            {
+                                track.Lyrics[k + 1].Element = " " + track.Lyrics[k + 1].Element;
+                            }                            
+                        }
+                    }
+
+                    
                     for (int k = 0; k < track.Lyrics.Count; k++)
                     {
-                        // Stockage dans liste plLyrics
-                        plLyric.Types plType = (plLyric.Types)track.Lyrics[k].Type;
-                        string plElement = track.Lyrics[k].Element;
+                        if (track.Lyrics[k].Element != "[]")
+                        {
+                            // Stockage dans liste plLyrics
+                            plLyric.Types plType = (plLyric.Types)track.Lyrics[k].Type;
+                            string plElement = track.Lyrics[k].Element;
 
-                        // Start time for a lyric
-                        int plTicksOn = track.Lyrics[k].TicksOn;
+                            // Start time for a lyric
+                            int plTicksOn = track.Lyrics[k].TicksOn;
 
-                        // Stop time for the lyric
-                        int plTicksOff = 0;
+                            // Stop time for the lyric
+                            int plTicksOff = 0;
 
-                        plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                            plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                        }
                     }
 
 

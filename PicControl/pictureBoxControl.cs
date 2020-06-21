@@ -943,8 +943,7 @@ namespace PicControl
                         tx = plLyrics[ind].Element;
                         tx = tx.Trim();
                         if (tx != "" && plLyrics[ind].Type != plLyric.Types.LineFeed && plLyrics[ind].Type != plLyric.Types.Paragraph)
-                        {
-
+                        {                            
                             // Si toutes les syllabes sont identiques dans la ligne (ex la la la la)
                             // , c'est faux .... lastpos reste à zéro
                             pos = strwrkline.IndexOf(tx, lastpos);
