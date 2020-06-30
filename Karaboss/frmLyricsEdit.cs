@@ -297,7 +297,8 @@ namespace Karaboss
                     dgView.Rows[dgView.CurrentCell.RowIndex].Cells[dgView.Columns.Count - 1].Value = "";
 
                 // Ticks to time
-                dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TIME].Value = TicksToTime(Convert.ToInt32(dgView.CurrentCell.Value));
+                if (dgView.CurrentCell.Value != null && IsNumeric(dgView.CurrentCell.Value.ToString()))
+                    dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TIME].Value = TicksToTime(Convert.ToInt32(dgView.CurrentCell.Value));
 
             }
             else if (dgView.CurrentCell.ColumnIndex == COL_TIME)
@@ -820,7 +821,7 @@ namespace Karaboss
             string plRealTime = "00:00.00";
             string plElement = string.Empty;
 
-            if (dgView.Rows[Row].Cells[COL_TICKS].Value != null)
+            if (dgView.Rows[Row].Cells[COL_TICKS].Value!= null && IsNumeric(dgView.Rows[Row].Cells[COL_TICKS].Value.ToString()))
             {
                 plTicksOn = Convert.ToInt32(dgView.Rows[Row].Cells[COL_TICKS].Value);
                 plRealTime = TicksToTime(plTicksOn);
@@ -873,7 +874,7 @@ namespace Karaboss
             string pElement = string.Empty;
             string pReplace = string.Empty;
 
-            if (dgView.Rows[Row].Cells[COL_TICKS].Value != null)
+            if (dgView.Rows[Row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[Row].Cells[COL_TICKS].Value.ToString()))
             {
                 plTicksOn = Convert.ToInt32(dgView.Rows[Row].Cells[COL_TICKS].Value);
                 plRealTime = TicksToTime(plTicksOn);
@@ -1020,7 +1021,7 @@ namespace Karaboss
             if (dgView.CurrentRow != null)
             {
                 int Row = dgView.CurrentRow.Index;
-                if (dgView.Rows[Row].Cells[COL_TICKS].Value != null)
+                if (dgView.Rows[Row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[Row].Cells[COL_TICKS].Value.ToString()))
                 {
                     int pTime = Convert.ToInt32(dgView.Rows[Row].Cells[COL_TICKS].Value);
                     if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
@@ -1806,7 +1807,9 @@ namespace Karaboss
                         }
                         else
                         {
-                            plTicksOn = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
+                            plTicksOn = 0;
+                            if (IsNumeric(dgView.Rows[i].Cells[COL_TICKS].Value.ToString()))
+                                plTicksOn = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
                         }
                         
                         dgView.Rows[i].Cells[COL_TYPE].Value = plType;
@@ -1836,7 +1839,7 @@ namespace Karaboss
                             plElement = "\\";
                         }
 
-                        if (dgView.Rows[i].Cells[COL_TICKS].Value != null)
+                        if (dgView.Rows[i].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_TICKS].Value.ToString()))
                         {
                             plTicksOn = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
                             plRealTime = TicksToTime(plTicksOn);
@@ -1844,7 +1847,8 @@ namespace Karaboss
                         if (dgView.Rows[i].Cells[COL_NOTE].Value == null)
                             dgView.Rows[i].Cells[COL_NOTE].Value = 0;
 
-                        plNote = Convert.ToInt32(dgView.Rows[i].Cells[COL_NOTE].Value);                        
+                        if (dgView.Rows[i].Cells[COL_NOTE].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_NOTE].Value.ToString()))
+                            plNote = Convert.ToInt32(dgView.Rows[i].Cells[COL_NOTE].Value);                        
 
                         // Insert new row
                         dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);                      
@@ -2124,8 +2128,13 @@ namespace Karaboss
                 string[] lines = s.Split('\n');
 
                 int iFail = 0;
-                int iRow = dgView.CurrentCell.RowIndex;
-                int iCol = dgView.CurrentCell.ColumnIndex;
+                int iRow = 0;
+                int iCol = 0;
+                if (dgView.CurrentCell != null)
+                {
+                    iRow = dgView.CurrentCell.RowIndex;
+                    iCol = dgView.CurrentCell.ColumnIndex;
+                }
                 DataGridViewCell oCell;
 
                 string c = string.Empty;
@@ -2134,6 +2143,7 @@ namespace Karaboss
                 int plTicksOn = 0;
                 string plRealTime = string.Empty;
                 int plNote = 0;
+                string strplnote = string.Empty;
                 string plElement = string.Empty;
 
 
@@ -2158,24 +2168,12 @@ namespace Karaboss
                                     c = c.Replace("\r", "");
                                     c = c.Replace(" ", "_");
 
-                                    // Check if a syllabe separator exists
-                                    // No additional trailing space between syllabes of a word
+                                    oCell.Value = c;
 
+                                    #region deleteme
                                     /*
-                                    //if (c.EndsWith("*"))
-                                    if (c.EndsWith(Karaclass.m_SepSyllabe))
+                                    if (c.StartsWith(Karaclass.m_SepLine) || c.StartsWith(Karaclass.m_SepParagraph))
                                     {
-                                        c = c.Substring(0, c.Length - 1);
-                                        oCell.Value = c;
-                                    }
-                                    // Check if a LineFeed exists
-                                    // A new line has to be inserted
-                                    //else if (c.StartsWith("/"))                                    
-                                    //else if (c.StartsWith(Karaclass.m_SepLine))
-                                    */
-            if (c.StartsWith(Karaclass.m_SepLine) || c.StartsWith(Karaclass.m_SepParagraph))
-                                    {
-
                                         if (c.StartsWith(Karaclass.m_SepLine))
                                         {
                                             // 1. insert <CR>;
@@ -2188,7 +2186,7 @@ namespace Karaboss
                                             plElement = "\\";
                                         }
 
-                                        if (dgView.Rows[iRow].Cells[COL_TICKS].Value != null)
+                                        if (dgView.Rows[iRow].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[iRow].Cells[COL_TICKS].Value.ToString()))
                                         {
                                             plTicksOn = Convert.ToInt32(dgView.Rows[iRow].Cells[COL_TICKS].Value);
                                             plRealTime = TicksToTime(plTicksOn);
@@ -2196,7 +2194,10 @@ namespace Karaboss
                                         if (dgView.Rows[iRow].Cells[COL_NOTE].Value == null)
                                             dgView.Rows[iRow].Cells[COL_NOTE].Value = 0;
 
-                                        plNote = Convert.ToInt32(dgView.Rows[iRow].Cells[COL_NOTE].Value);
+                                        plNote = 0;
+                                        strplnote = dgView.Rows[iRow].Cells[COL_NOTE].Value.ToString();
+                                        if (IsNumeric(strplnote))
+                                            plNote = Convert.ToInt32(strplnote);
 
                                         
 
@@ -2208,22 +2209,20 @@ namespace Karaboss
 
                                         // 2. Write line after
                                         // Remove the character "/"
-                                        c = c.Substring(1, c.Length - 1);
-                                        // Add space if not present
-                                        //if (! c.EndsWith("_"))
-                                        //    c = c + "_";
+                                        c = c.Substring(1, c.Length - 1);                                        
 
                                         oCell.Value = c;
+
 
                                     }
                                     else
-                                    {
-                                        // Add space if not present
-                                        //if (!c.EndsWith("_"))
-                                        //    c = c + "_";
+                                    {                                       
                                         oCell.Value = c;
                                     }
-                                    
+                                    */
+                                    #endregion
+
+
                                 }
                             }
                             else
@@ -2472,7 +2471,7 @@ namespace Karaboss
             {
                 if (dgView.Rows[row].Cells[COL_TICKS].Value != null)
                 {
-                    if (dgView.Rows[row].Cells[COL_TICKS].Value != null && dgView.Rows[row].Cells[COL_TICKS].Value.ToString() != "")
+                    if (dgView.Rows[row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
                         plTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
                     else
                         plTicksOn = 0;
@@ -2655,7 +2654,7 @@ namespace Karaboss
             // Average duration
             for (int row = 0; row < dgView.Rows.Count; row++)
             {
-                if (dgView.Rows[row].Cells[COL_TICKS].Value != null)
+                if (dgView.Rows[row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
                 {
                     plTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
                     if (previousTime == 0)
@@ -2680,7 +2679,7 @@ namespace Karaboss
             previousTime = 0;
             for (int row = 0; row < dgView.Rows.Count; row++)
             {
-                if (dgView.Rows[row].Cells[COL_TICKS].Value != null)
+                if (dgView.Rows[row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
                 {
                     plTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
                     if (plTicksOn > 0)
