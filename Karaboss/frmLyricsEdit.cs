@@ -103,6 +103,8 @@ namespace Karaboss
         private int _tempo;
         private int _measurelen;
 
+        private List<string> lsInstruments = Sanford.Multimedia.Midi.MidiFile.LoadInstruments();
+
         public frmLyricsEdit(Sequence sequence, List<plLyric> plLyrics, CLyric mylyric, string fileName)
         {
             InitializeComponent();            
@@ -111,12 +113,18 @@ namespace Karaboss
             sequence1 = sequence;
             UpdateMidiTimes();
 
+            // Load list of tracks
+            LoadTracks(sequence1);
+
             myLyric = mylyric;
             InitGridView();
             
+            // Track containing the melody
             melodytracknum = myLyric.melodytracknum;
             if (melodytracknum != -1)
                 melodyTrack = sequence1.tracks[melodytracknum];
+
+            DisplaySelectedTrack();
 
             if (myLyric.lyrictype == CLyric.LyricTypes.Text)
             {
@@ -133,7 +141,9 @@ namespace Karaboss
             if (plLyrics.Count == 0)
                 LoadTrackGuide();
             else
-            {               
+            {
+                localplLyrics = plLyrics;
+
                 // populate cells with existing Lyrics or notes
                 PopulateDataGridView(plLyrics);
                 // populate viewer
@@ -158,49 +168,7 @@ namespace Karaboss
             ResizeMe();
         }
 
-        /// <summary>
-        /// Display tags
-        /// </summary>
-        private void DisplayTags()
-        {
-            string cr = Environment.NewLine;
-            int i = 0;
-        
-            // Classic Karaoke Midi tags
-            /*
-            @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
-            @L	(single) Language	FRAN, ENGL        
-            @W	(multiple) Copyright (of Karaoke file, not song)        
-            @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
-            @I	Information  ex Date(of Karaoke file, not song)
-            @V	(single) Version ex 0100 ?             
-            */
 
-            for (i = 0; i < sequence1.KTag.Count; i++)
-            {
-                txtKTag.Text += sequence1.KTag[i] + cr;
-            }
-            for (i = 0; i < sequence1.WTag.Count; i++)
-            {
-                txtWTag.Text += sequence1.WTag[i] + cr;
-            }
-            for (i = 0; i < sequence1.TTag.Count; i++)
-            {
-                txtTTag.Text += sequence1.TTag[i] + cr;
-            }
-            for (i = 0; i < sequence1.ITag.Count; i++)
-            {
-                txtITag.Text += sequence1.ITag[i] + cr;
-            }
-            for (i = 0; i < sequence1.VTag.Count; i++)
-            {
-                txtVTag.Text += sequence1.VTag[i] + cr;
-            }
-            for (i = 0; i < sequence1.LTag.Count; i++)
-            {
-                txtLTag.Text += sequence1.LTag[i] + cr;
-            }
-        }
 
         /// <summary>
         /// Upadate MIDI times
@@ -244,6 +212,81 @@ namespace Karaboss
             }
             melodytracknum = frmPlayer.myLyric.melodytracknum;
         }
+
+
+
+
+        #region Tracks
+
+        /// <summary>
+        /// Load list of tracks
+        /// </summary>
+        /// <param name="sequence1"></param>
+        private void LoadTracks(Sequence sequence1)
+        {
+            string name = string.Empty;
+            string item = string.Empty;
+
+            //item = "No melody track";
+            item = Karaboss.Resources.Localization.Strings.NoMelodyTrack;
+            cbSelectTrack.Items.Add(item);
+
+            for (int i = 0; i < sequence1.tracks.Count; i++)
+            {
+                Track track = sequence1.tracks[i];
+
+                if (track.Name == null)
+                    name = "";
+                else
+                    name = track.Name;
+
+                int patch = track.ProgramChange;
+                if (patch > 127)
+                    patch = 0;
+                item = i.ToString("00") + " - " + lsInstruments[patch] + " - " + name;
+                cbSelectTrack.Items.Add(item);
+            }
+
+            cbSelectTrack.SelectedIndex = 0;
+
+        }
+
+        /// <summary>
+        /// Display the selected track for le melody
+        /// </summary>
+        private void DisplaySelectedTrack()
+        {
+            try
+            {
+                cbSelectTrack.SelectedIndex = melodytracknum + 1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+        private void cbSelectTrack_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int newmelodytracknum = cbSelectTrack.SelectedIndex - 1;
+            if (newmelodytracknum != -1 && newmelodytracknum != melodytracknum && localplLyrics != null)
+            {
+                melodytracknum = cbSelectTrack.SelectedIndex - 1;
+                melodyTrack = sequence1.tracks[melodytracknum];
+
+                InitGridView();
+                // populate cells with existing Lyrics or notes
+                PopulateDataGridView(localplLyrics);
+                // populate viewer
+                PopulateTextBox(localplLyrics);
+
+                // Color separators
+                ColorSepRows();
+            }
+        }
+
+        #endregion
 
 
         #region gridview
@@ -522,7 +565,7 @@ namespace Karaboss
             }
             else
             {
-                // Variante 1 : on affiche les lyrics par défaut et on essaye de raccrocher les notes
+                // Variante 1 : on affiche les lyrics par défaut et on essaye de raccrocher les notes 
                 for (int i = 0; i < lLyrics.Count; i++)
                 {
                     bfound = false;
@@ -739,6 +782,10 @@ namespace Karaboss
 
         private void ResizeMe()
         {
+            tabControl1.Top = pnlMenus.Height;
+            tabControl1.Width = Width;
+            tabControl1.Height = this.ClientSize.Height - pnlMenus.Height;
+
             // Adapt width of last column
             int W = dgView.RowHeadersWidth + 19;
             int WP = dgView.Parent.Width;
@@ -2731,6 +2778,51 @@ namespace Karaboss
 
         #region Tags
 
+
+        /// <summary>
+        /// Display tags
+        /// </summary>
+        private void DisplayTags()
+        {
+            string cr = Environment.NewLine;
+            int i = 0;
+
+            // Classic Karaoke Midi tags
+            /*
+            @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
+            @L	(single) Language	FRAN, ENGL        
+            @W	(multiple) Copyright (of Karaoke file, not song)        
+            @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
+            @I	Information  ex Date(of Karaoke file, not song)
+            @V	(single) Version ex 0100 ?             
+            */
+
+            for (i = 0; i < sequence1.KTag.Count; i++)
+            {
+                txtKTag.Text += sequence1.KTag[i] + cr;
+            }
+            for (i = 0; i < sequence1.WTag.Count; i++)
+            {
+                txtWTag.Text += sequence1.WTag[i] + cr;
+            }
+            for (i = 0; i < sequence1.TTag.Count; i++)
+            {
+                txtTTag.Text += sequence1.TTag[i] + cr;
+            }
+            for (i = 0; i < sequence1.ITag.Count; i++)
+            {
+                txtITag.Text += sequence1.ITag[i] + cr;
+            }
+            for (i = 0; i < sequence1.VTag.Count; i++)
+            {
+                txtVTag.Text += sequence1.VTag[i] + cr;
+            }
+            for (i = 0; i < sequence1.LTag.Count; i++)
+            {
+                txtLTag.Text += sequence1.LTag[i] + cr;
+            }
+        }
+
         /// <summary>
         /// Save tags
         /// </summary>
@@ -2936,8 +3028,9 @@ namespace Karaboss
 
 
 
+
         #endregion
 
-      
+       
     }
 }
