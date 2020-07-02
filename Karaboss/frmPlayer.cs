@@ -3584,6 +3584,18 @@ namespace Karaboss
                 myLyric.lyrictype = lyricType;
                 myLyric.melodytracknum = melodytracknum;
                 myLyric.lyricstracknum = melodytracknum;
+            } 
+            else if (myLyric.lyricstracknum != melodytracknum)
+            {
+                // FAB 02/07/20
+                foreach (Track T in sequence1.tracks)
+                {
+                    T.deleteLyrics();
+                    T.Lyrics.Clear();
+                }
+                //sequence1.tracks[myLyric.melodytracknum].deleteLyrics();
+                //sequence1.tracks[myLyric.melodytracknum].Lyrics.Clear();
+                myLyric.lyricstracknum = melodytracknum;
             }
 
             if (myLyric == null)

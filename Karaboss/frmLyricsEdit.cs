@@ -281,6 +281,8 @@ namespace Karaboss
                 // populate viewer
                 PopulateTextBox(localplLyrics);
 
+                HeightsToDurations();
+
                 // Color separators
                 ColorSepRows();
             }
@@ -551,7 +553,7 @@ namespace Karaboss
                 for (idx = 0; idx < lLyrics.Count; idx++)
                 {
                     plTicksOn = lLyrics[idx].TicksOn;
-                    plRealTime = TicksToTime(plTicksOn);           // TODO
+                    plRealTime = TicksToTime(plTicksOn);           
                     plNote = 0;
                     sNote = "";
                     plElement = lLyrics[idx].Element;
@@ -564,13 +566,13 @@ namespace Karaboss
                 }
             }
             else
-            {
+            {                
                 // Variante 1 : on affiche les lyrics par défaut et on essaye de raccrocher les notes 
                 for (int i = 0; i < lLyrics.Count; i++)
                 {
                     bfound = false;
-                    plTicksOn = lLyrics[i].TicksOn;
-                    plRealTime = TicksToTime(plTicksOn);           // TODO
+                    plTicksOn = lLyrics[i].TicksOn;                 
+                    plRealTime = TicksToTime(plTicksOn);           
                     plNote = 0;
                     plElement = lLyrics[i].Element;
                     plElement = plElement.Replace(" ", "_");
@@ -578,24 +580,30 @@ namespace Karaboss
 
                     if (idx < lLyrics.Count)
                     {
-                        // Afficher les notes dont le start est avant celui du Lyric courant
+                        int beforeLastStartTime = -1;
+                        // Afficher les notes dont le start est avant celui du Lyric courant                        
                         while (idx < melodyTrack.Notes.Count && melodyTrack.Notes[idx].StartTime < plTicksOn)
                         {
                             int beforeplTime = melodyTrack.Notes[idx].StartTime;
-                            string beforeplRealTime = TicksToTime(beforeplTime);
-                            int beforeplNote = melodyTrack.Notes[idx].Number;
-                            string beforeplElement = "";
-                            string beforeplType = "text";
-                            string[] rownote = { beforeplTime.ToString(), beforeplRealTime, beforeplType, beforeplNote.ToString(), beforeplElement };
-                            dgView.Rows.Add(rownote);
+                            if (beforeplTime != beforeLastStartTime)
+                            {
+                                beforeLastStartTime = beforeplTime;
+
+                                string beforeplRealTime = TicksToTime(beforeplTime);
+                                int beforeplNote = melodyTrack.Notes[idx].Number;
+                                string beforeplElement = "";
+                                string beforeplType = "text";
+                                string[] rownote = { beforeplTime.ToString(), beforeplRealTime, beforeplType, beforeplNote.ToString(), beforeplElement };
+                                dgView.Rows.Add(rownote);
+                            }
                             idx++;
                             if (idx >= melodyTrack.Notes.Count)
-                                break;
-
+                                break;                            
                         }
+
                         // Afficher la note dont le start est égal à celui du lyric courant
                         if (idx < melodyTrack.Notes.Count && melodyTrack.Notes[idx].StartTime == plTicksOn) 
-                        {
+                        {                            
                             plNote = melodyTrack.Notes[idx].Number;
                             sNote = plNote.ToString();
                             if (plType == plLyric.Types.LineFeed || plType == plLyric.Types.Paragraph)
@@ -612,7 +620,7 @@ namespace Karaboss
                     }
 
                     // Lyric courant pas inscrit dans la grille ?
-                    if (bfound == false)
+                    if (bfound == false )
                     {
                         sNote = plNote.ToString();
                         if (plType == plLyric.Types.LineFeed || plType == plLyric.Types.Paragraph)
@@ -623,16 +631,17 @@ namespace Karaboss
                     }
                 }
 
-                // Il reste des notes ?
+                // Il reste des notes ?                
                 while (idx < melodyTrack.Notes.Count)
                 {
-                    int afterplTime = melodyTrack.Notes[idx].StartTime;
+                    int afterplTime = melodyTrack.Notes[idx].StartTime;                                        
                     string afterplRealTime = TicksToTime(afterplTime);
                     int afterplNote = melodyTrack.Notes[idx].Number;
                     string afterplElement = "";
                     string afterplType = "text";
                     string[] rownote = { afterplTime.ToString(), afterplRealTime, afterplType, afterplNote.ToString(), afterplElement };
                     dgView.Rows.Add(rownote);
+                    
                     idx++;
                     if (idx >= melodyTrack.Notes.Count)
                         break;
@@ -658,17 +667,23 @@ namespace Karaboss
                 int plNote = 0;
                 string plElement = string.Empty;
 
+                int lastStartTime = -1;
+
                 for (int i = 0; i < track.Notes.Count; i++)
                 {
                     MidiNote n = track.Notes[i];
                     plTicksOn = n.StartTime;
-                    plRealTime = TicksToTime(plTicksOn);
-                    plType = "text";
-                    plNote = n.Number;
-                    plElement = plNote.ToString();
+                    if (plTicksOn != lastStartTime)
+                    {
+                        lastStartTime = plTicksOn;                  // avoid all notes of a chords
+                        plRealTime = TicksToTime(plTicksOn);
+                        plType = "text";
+                        plNote = n.Number;
+                        plElement = plNote.ToString();
 
-                    string[] row = { plTicksOn.ToString(), plRealTime, plType, plNote.ToString(), plElement };
-                    dgView.Rows.Add(row);
+                        string[] row = { plTicksOn.ToString(), plRealTime, plType, plNote.ToString(), plElement };
+                        dgView.Rows.Add(row);
+                    }
                 }
             }            
         }
@@ -1015,6 +1030,8 @@ namespace Karaboss
         /// <param name="e"></param>
         private void BtnSave_Click(object sender, EventArgs e)
         {
+            System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
+
             //Load modification into local list of lyrics
             LoadModifiedLyrics();
 
@@ -1023,8 +1040,11 @@ namespace Karaboss
 
             // Save file
             SaveFileProc();
+            
+            Cursor.Current = Cursors.Default;
 
             Focus();
+
         }
 
 
@@ -2796,30 +2816,32 @@ namespace Karaboss
             @I	Information  ex Date(of Karaoke file, not song)
             @V	(single) Version ex 0100 ?             
             */
-
-            for (i = 0; i < sequence1.KTag.Count; i++)
+            if (sequence1.KTag != null)
             {
-                txtKTag.Text += sequence1.KTag[i] + cr;
-            }
-            for (i = 0; i < sequence1.WTag.Count; i++)
-            {
-                txtWTag.Text += sequence1.WTag[i] + cr;
-            }
-            for (i = 0; i < sequence1.TTag.Count; i++)
-            {
-                txtTTag.Text += sequence1.TTag[i] + cr;
-            }
-            for (i = 0; i < sequence1.ITag.Count; i++)
-            {
-                txtITag.Text += sequence1.ITag[i] + cr;
-            }
-            for (i = 0; i < sequence1.VTag.Count; i++)
-            {
-                txtVTag.Text += sequence1.VTag[i] + cr;
-            }
-            for (i = 0; i < sequence1.LTag.Count; i++)
-            {
-                txtLTag.Text += sequence1.LTag[i] + cr;
+                for (i = 0; i < sequence1.KTag.Count; i++)
+                {
+                    txtKTag.Text += sequence1.KTag[i] + cr;
+                }
+                for (i = 0; i < sequence1.WTag.Count; i++)
+                {
+                    txtWTag.Text += sequence1.WTag[i] + cr;
+                }
+                for (i = 0; i < sequence1.TTag.Count; i++)
+                {
+                    txtTTag.Text += sequence1.TTag[i] + cr;
+                }
+                for (i = 0; i < sequence1.ITag.Count; i++)
+                {
+                    txtITag.Text += sequence1.ITag[i] + cr;
+                }
+                for (i = 0; i < sequence1.VTag.Count; i++)
+                {
+                    txtVTag.Text += sequence1.VTag[i] + cr;
+                }
+                for (i = 0; i < sequence1.LTag.Count; i++)
+                {
+                    txtLTag.Text += sequence1.LTag[i] + cr;
+                }
             }
         }
 
