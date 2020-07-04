@@ -3443,10 +3443,11 @@ namespace Karaboss
 
             float fRatioNotes = 0;
             float maxRatioNotes = 0;
-            //int diffNotes = 0;
+            
             int maxDiff = -1;
             int trackfnote = -1;
 
+            int delta = 30; // 20 origin
             
             // Eliminer les cr
             int nblyrics = 0;
@@ -3490,7 +3491,7 @@ namespace Karaboss
                                 for (int k = 0; k < plLyrics.Count; k++)
                                 {
                                     int tl = plLyrics[k].TicksOn;
-                                    if (tl > tn - 20 && tl < tn + 20)
+                                    if (tl > tn - delta && tl < tn + delta)
                                     {
                                         nbfound++;
                                         break;
@@ -3505,6 +3506,15 @@ namespace Karaboss
                             }
                         }
 
+                        // FAB 04/07/20
+                        //nbnotes = nbfound;   // empeche d'éliminer les pistes qui ont trop de notes
+                        //diff = nbnotes - nblyrics;
+                        //if (diff < 0) diff = -diff;
+
+                        // Il faudrait supprimer les lyrics qui n'ont pas de notes                        
+                        diff = nbnotes - nbfound;
+                        if (diff < 0) diff = -diff;
+
                         // TODO, which algoritm is the best ????
                         bool bchoice = false;
                         bchoice = true;
@@ -3518,7 +3528,7 @@ namespace Karaboss
                                 // ratio between the number of notes having the same start time than lyrics 
                                 // and the number of lyrics (ideally same number, ie 1)
                                 fRatioNotes = (float)nbfound / (float)nblyrics;
-                                if (fRatioNotes > 1) fRatioNotes = 1;
+                                if (fRatioNotes > 1) fRatioNotes = 1;   // FAB 04/07 origin = 1
                                 if (fRatioNotes >= maxRatioNotes)
                                 {
                                     maxRatioNotes = fRatioNotes;
