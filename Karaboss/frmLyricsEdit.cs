@@ -798,7 +798,7 @@ namespace Karaboss
         private void ResizeMe()
         {
             tabControl1.Top = pnlMenus.Height;
-            tabControl1.Width = Width;
+            tabControl1.Width = this.ClientSize.Width;
             tabControl1.Height = this.ClientSize.Height - pnlMenus.Height;
 
             // Adapt width of last column
