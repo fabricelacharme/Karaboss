@@ -613,7 +613,7 @@ namespace Karaboss
                             dgView.Rows.Add(rowlyric);
                             bfound = true; // lyric inscrit dans la grille
                             // Incrémente le compteur de notes si différent de retour chariot
-                            if (plType != plLyric.Types.LineFeed)
+                            if (plType != plLyric.Types.LineFeed && plType != plLyric.Types.Paragraph)
                                 idx++;
                         }
                        
