@@ -1260,7 +1260,18 @@ namespace Sanford.Multimedia.Midi
         {
             byte[] bytes = new byte[4];
             bytes[0] = Convert.ToByte(numerator);   // [nn] Numerator
-            bytes[1] = Convert.ToByte(denominator); // [dd] Denominator
+
+            int negativepowerof2 = 2;
+            try
+            {
+                negativepowerof2 = (int)(Math.Log(denominator) / Math.Log(2));
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+            }
+            bytes[1] = Convert.ToByte(negativepowerof2);    // [dd] Denominator negative power of 2
+            
             bytes[2] = Convert.ToByte(24);                  // [cc] MIDI ticks per metronome click
             bytes[3] = Convert.ToByte(8);                   // [bb] 32nd notes per MIDI quarter note
             MetaMessage metamessage = new MetaMessage(MetaType.TimeSignature, bytes);

@@ -3270,8 +3270,8 @@ namespace Karaboss
             {
                 track.RemoveTimesignature();
             }
-            
-            // Write new value in track 0
+
+            // Write new value in track 0            
             sequence1.tracks[0].insertTimesignature(numerator, denominator);
             
             return true;

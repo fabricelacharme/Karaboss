@@ -494,22 +494,13 @@ namespace Sanford.Multimedia.Midi
 
                 byte[] data = new byte[ReadVariableLengthValue()];
                 Array.Copy(trackData, trackIndex, data, 0, data.Length);
-                
-                // Fab - 15/05/16 - Correct some eroneous times ...
-                if (data[0] == 6 && data[1] == 3)
-                {
-                    data[0] = 12;
-                    data[1] = 4;
-                }
+                              
                 newTrack.Insert(ticks, new MetaMessage(type, data));
 
-                string TimeSignature = data[0].ToString();
-                
-
+                string TimeSignature = data[0].ToString();                
 
                 newTrack.Numerator = data[0];
-                newTrack.Denominator = data[1];
-
+                newTrack.Denominator = (int)Math.Pow(2, data[1]); // denominator is a negative power of 2
 
                 trackIndex += data.Length;
 
