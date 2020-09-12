@@ -468,8 +468,9 @@ namespace Karaboss
                 lyrics += plLyrics[i].Element; 
             }
 
-            lyrics = lyrics.Replace("\\", "\r\n\r\n");
-            lyrics = lyrics.Replace("/", "\r\n");
+            // FAB 12/09/2020
+            //lyrics = lyrics.Replace("\\", "\r\n\r\n");
+            //lyrics = lyrics.Replace("/", "\r\n");
 
             List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
             foreach (plLyric plL in plLyrics)
@@ -747,10 +748,17 @@ namespace Karaboss
             frmLyrOptions.ShowDialog();
         }
 
+        /// <summary>
+        /// Export words in notepad
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnFrmWords_Click(object sender, EventArgs e)
         {
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             string file = path + "\\lyrics.txt";
+            lyrics = lyrics.Replace("½", "\r\n\r\n");
+            lyrics = lyrics.Replace("¼", "\r\n");
             System.IO.File.WriteAllText(@file, lyrics);
             try
             {

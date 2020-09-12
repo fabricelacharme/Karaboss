@@ -3732,18 +3732,18 @@ namespace Karaboss
 
                 // Si c'est un CR, le stocke et le collera au prochain lyric
                 if (plLyrics[idx].Type == plLyric.Types.LineFeed)
-                {
+                {                                        
                     if (myLyric.lyrictype == CLyric.LyricTypes.Text)
                         currentCR = "/";
                     else
-                        currentCR = "\r";
+                        currentCR = "\r";                    
                 }
                 else if (plLyrics[idx].Type == plLyric.Types.Paragraph)
-                {
+                {                                        
                     if (myLyric.lyrictype == CLyric.LyricTypes.Text)
                         currentCR = "\\";
                     else
-                        currentCR = "\r\r";
+                        currentCR = "\r\r";                    
                 }
                 else
                 {

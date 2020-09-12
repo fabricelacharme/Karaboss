@@ -561,6 +561,17 @@ namespace Karaboss
                     plType = lLyrics[idx].Type;
 
                     // New Row
+                    switch (plType)
+                    {
+                        case plLyric.Types.LineFeed:                            
+                            plElement = "/";
+                            break;
+                        case plLyric.Types.Paragraph:                            
+                            plElement = "\\";
+                            break;
+                        default:
+                            break;
+                    }
                     string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
                     dgView.Rows.Add(rowlyric);
                 }
@@ -606,9 +617,19 @@ namespace Karaboss
                         {                            
                             plNote = melodyTrack.Notes[idx].Number;
                             sNote = plNote.ToString();
-                            if (plType == plLyric.Types.LineFeed || plType == plLyric.Types.Paragraph)
-                                sNote = "";                           
-
+                            switch (plType)
+                            {
+                                case plLyric.Types.LineFeed:
+                                    sNote = "";
+                                    plElement = "/";
+                                    break;
+                                case plLyric.Types.Paragraph:
+                                    sNote = "";
+                                    plElement = "\\";
+                                    break;
+                                default:
+                                    break;
+                            }
                             string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
                             dgView.Rows.Add(rowlyric);
                             bfound = true; // lyric inscrit dans la grille
@@ -623,9 +644,19 @@ namespace Karaboss
                     if (bfound == false )
                     {
                         sNote = plNote.ToString();
-                        if (plType == plLyric.Types.LineFeed || plType == plLyric.Types.Paragraph)
-                            sNote = "";
-
+                        switch (plType)
+                        {
+                            case plLyric.Types.LineFeed:
+                                sNote = "";
+                                plElement = "/";
+                                break;
+                            case plLyric.Types.Paragraph:
+                                sNote = "";
+                                plElement = "\\";
+                                break;
+                            default:
+                                break;
+                        }                        
                         string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
                         dgView.Rows.Add(rowlyric);
                     }
@@ -2572,9 +2603,9 @@ namespace Karaboss
                     if (dgView.Rows[row].Cells[COL_TEXT].Value != null)
                     {
                         if (plType == plLyric.Types.LineFeed)
-                            plElement = "/";
+                            plElement = "¼";
                         else if (plType == plLyric.Types.Paragraph)
-                            plElement = "\\";
+                            plElement = "½";
                         else
                             plElement = dgView.Rows[row].Cells[COL_TEXT].Value.ToString();
                     }
@@ -2630,23 +2661,60 @@ namespace Karaboss
         private void PopulateTextBox(List<plLyric> lLyrics)
         {
             string plElement = string.Empty;
-            plLyric.Types plType = plLyric.Types.Text;
+            //plLyric.Types plType = plLyric.Types.Text;
             string tx = string.Empty;
+
+            string Paragraph = "½";
+            int iParagraph = -1;
+            string LineFeed = "¼";
+            int iLineFeed = -1;
+            string reste = string.Empty;
 
             for (int i = 0; i < lLyrics.Count; i++)
             {
                 // Affiche les blancs
-                plElement = lLyrics[i].Element;                
-
-                plElement = plElement.Replace("\\", "\r\n\r\n");   // Paragraph
-                plElement = plElement.Replace("/", "\r\n");        // LineFeed
+                plElement = lLyrics[i].Element;
 
 
-                plType = lLyrics[i].Type;
+                //plElement = plElement.Replace("\\", "\r\n\r\n");   // Paragraph
+                //plElement = plElement.Replace("/", "\r\n");        // LineFeed
 
-                tx += plElement;
 
+                iParagraph = plElement.LastIndexOf(Paragraph);
+                iLineFeed = plElement.LastIndexOf(LineFeed);
+
+                
+
+                if (iParagraph == 0 || iParagraph == plElement.Length - Paragraph.Length)
+                {
+
+                    tx += "\r\n\r\n";
+                    if (plElement.Length > Paragraph.Length)
+                    {
+                        if (iParagraph == 0)
+                            reste = plElement.Substring(Paragraph.Length, plElement.Length - Paragraph.Length);
+                        else
+                            reste = plElement.Substring(0, iParagraph);
+                    }
+                }
+                else if (iLineFeed == 0 || iLineFeed == plElement.Length - LineFeed.Length)
+                {
+                    tx += "\r\n";
+                    if (plElement.Length > LineFeed.Length)
+                    {
+                        if (iLineFeed == 0)
+                            reste = plElement.Substring(LineFeed.Length, plElement.Length - LineFeed.Length);
+                        else
+                            reste = plElement.Substring(0, iLineFeed);
+                    }
+                }
+                else
+                {
+                    tx += plElement;
+                }
+                //plType = lLyrics[i].Type;                
             }
+
             txtResult.Text = tx;
 
             txtResult.SelectAll();

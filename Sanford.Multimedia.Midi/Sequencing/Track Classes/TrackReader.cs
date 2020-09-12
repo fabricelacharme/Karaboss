@@ -594,40 +594,40 @@ namespace Sanford.Multimedia.Midi
                     #region extract data
 
                     string Paragraph1 = "\r\r";
-                    int iParagraph1 = sy.IndexOf(Paragraph1);
+                    int iParagraph1 = sy.LastIndexOf(Paragraph1);
                     string Paragraph2 = "\\";
-                    int iParagraph2 = sy.IndexOf(Paragraph2);
+                    int iParagraph2 = sy.LastIndexOf(Paragraph2);
 
                     string LineFeed1 = "\r";
-                    int iLineFeed1 = sy.IndexOf(LineFeed1);
+                    int iLineFeed1 = sy.LastIndexOf(LineFeed1);
                     string LineFeed2 = "/";
-                    int iLineFeed2 = sy.IndexOf(LineFeed2);
+                    int iLineFeed2 = sy.LastIndexOf(LineFeed2);
 
-                    if (iParagraph1 > -1)
+                    if (iParagraph1 == 0 || (sy.Length > Paragraph1.Length && iParagraph1 == sy.Length - Paragraph1.Length))
                     {
                         // single paragraph
                         // A forward slash "/" character marks the end of a "paragraph" of lyrics
-                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "\\", TicksOn = ticks });
-                        newTrack.TotalLyricsL += "\\";
+                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "½", TicksOn = ticks });
+                        newTrack.TotalLyricsL += "½";
 
                         if (sy.Length > Paragraph1.Length)
                         {
                             // Text
-                            if (iParagraph1 == 0)                                                            
-                                reste = sy.Substring(Paragraph1.Length, sy.Length - Paragraph1.Length);                           
-                            else                            
+                            if (iParagraph1 == 0)
+                                reste = sy.Substring(Paragraph1.Length, sy.Length - Paragraph1.Length);
+                            else
                                 reste = sy.Substring(0, iParagraph1);
-                            
+
                             newTrack.TotalLyricsL += reste;
                             newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
                         }
                     }
-                    else if (iParagraph2 > -1)
+                    else if (iParagraph2 == 0 || (sy.Length > Paragraph2.Length && iParagraph2 == sy.Length - Paragraph2.Length))
                     {
                         // single paragraph
                         // A forward slash "/" character marks the end of a "paragraph" of lyrics
-                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "\\", TicksOn = ticks });
-                        newTrack.TotalLyricsL += "\\";
+                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "½", TicksOn = ticks });
+                        newTrack.TotalLyricsL += "½";
 
                         if (sy.Length > Paragraph2.Length)
                         {
@@ -641,14 +641,14 @@ namespace Sanford.Multimedia.Midi
                             newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
                         }
                     }
-                    else if (iLineFeed1 > -1)
+                    else if (iLineFeed1 == 0 || (sy.Length > LineFeed1.Length && iLineFeed1 == sy.Length - LineFeed1.Length))
                     {
                         // Single linefeed
                         // A back slash "\" character marks the end of a line of lyrics
-                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "/", TicksOn = ticks });
-                        newTrack.TotalLyricsL += "/";
+                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "¼", TicksOn = ticks });
+                        newTrack.TotalLyricsL += "¼";
 
-                        if (sy.Length > 1)
+                        if (sy.Length > LineFeed1.Length)
                         {
                             // Text
                             if (iLineFeed1 == 0)
@@ -660,14 +660,14 @@ namespace Sanford.Multimedia.Midi
                             newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
                         }
                     }
-                    else if (iLineFeed2 > -1)
+                    else if (iLineFeed2 == 0 || (sy.Length > LineFeed2.Length && iLineFeed2 == sy.Length - LineFeed2.Length))
                     {
                         // Single linefeed
                         // A back slash "\" character marks the end of a line of lyrics
-                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "/", TicksOn = ticks });
-                        newTrack.TotalLyricsL += "/";
+                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "¼", TicksOn = ticks });
+                        newTrack.TotalLyricsL += "¼";
 
-                        if (sy.Length > 1)
+                        if (sy.Length > LineFeed2.Length)
                         {
                             // Text
                             if (iLineFeed2 == 0)
@@ -687,7 +687,7 @@ namespace Sanford.Multimedia.Midi
                     }
                     else if (sy == " ")
                     {
-                        // Mange the space separator when lyrics are letter to letter
+                        // Manage the space separator when lyrics are letter to letter
                         newTrack.TotalLyricsL += "[]";                        
                         newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = "[]", TicksOn = ticks });
 
@@ -786,43 +786,89 @@ namespace Sanford.Multimedia.Midi
                         string reste = string.Empty;
 
                         #region extract data
+                        string Paragraph1 = "\r\r";
+                        int iParagraph1 = sy.LastIndexOf(Paragraph1);
+                        string Paragraph2 = "\\";
+                        int iParagraph2 = sy.LastIndexOf(Paragraph2);
 
-                        int iParagraph = sy.IndexOf('\\');
-                        int iLineFeed = sy.IndexOf('/');
+                        string LineFeed1 = "\r";
+                        int iLineFeed1 = sy.LastIndexOf(LineFeed1);
+                        string LineFeed2 = "/";
+                        int iLineFeed2 = sy.LastIndexOf(LineFeed2);
 
-                        if (iParagraph > -1)
+                       
+
+                        if (iParagraph1 == 0 || (sy.Length > Paragraph1.Length && iParagraph1 == sy.Length - Paragraph1.Length))
                         {
                             // single paragraph
-                            // A forward slash "/" character marks the end of a "paragraph" of lyrics
-                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "\\", TicksOn = ticks });
-                            newTrack.TotalLyricsT += "\\";
+                            // A double forward slash "\\" character marks the end of a "paragraph" of lyrics
+                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "½", TicksOn = ticks });
+                            newTrack.TotalLyricsT += "½";
 
-                            if (sy.Length > 1)
+                            if (sy.Length > Paragraph1.Length)
                             {
                                 // Text
-                                if (iParagraph == 0)
-                                    reste = sy.Substring(1, sy.Length - 1);
+                                if (iParagraph1 == 0)
+                                    reste = sy.Substring(1, sy.Length - Paragraph1.Length);
                                 else
-                                    reste = sy.Substring(0, iParagraph);
+                                    reste = sy.Substring(0, iParagraph1);
 
                                 newTrack.TotalLyricsT += reste;
                                 newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
                             }
                         }
-                        else if (iLineFeed > -1)
+                        else if (iParagraph2 == 0 || (sy.Length > Paragraph2.Length && iParagraph2 == sy.Length - Paragraph2.Length))
                         {
-                            // Single linefeed
-                            // A back slash "\" character marks the end of a line of lyrics
-                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "/", TicksOn = ticks });
-                            newTrack.TotalLyricsT += "/";
+                            // single paragraph
+                            // A double forward slash "\\" character marks the end of a "paragraph" of lyrics
+                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "½", TicksOn = ticks });
+                            newTrack.TotalLyricsT += "½";
 
-                            if (sy.Length > 1)
+                            if (sy.Length > Paragraph2.Length)
                             {
                                 // Text
-                                if (iLineFeed == 0)
-                                    reste = sy.Substring(1, sy.Length - 1);
+                                if (iParagraph2 == 0)
+                                    reste = sy.Substring(1, sy.Length - Paragraph2.Length);
                                 else
-                                    reste = sy.Substring(0, iLineFeed);
+                                    reste = sy.Substring(0, iParagraph2);
+
+                                newTrack.TotalLyricsT += reste;
+                                newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
+                            }
+                        }
+                        else if (iLineFeed1 == 0 || (sy.Length > LineFeed1.Length && iLineFeed1 == sy.Length - LineFeed1.Length))
+                        {
+                            // Single linefeed
+                            // A back slash "/" character marks the end of a line of lyrics
+                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "¼", TicksOn = ticks });
+                            newTrack.TotalLyricsT += "¼";
+
+                            if (sy.Length > LineFeed1.Length)
+                            {
+                                // Linefeed at the begining
+                                if (iLineFeed1 == 0)
+                                    reste = sy.Substring(1, sy.Length - LineFeed1.Length);
+                                else
+                                    reste = sy.Substring(0, iLineFeed1);
+
+                                newTrack.TotalLyricsT += reste;
+                                newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
+                            }
+                        }
+                        else if (iLineFeed2 == 0 || (sy.Length > LineFeed2.Length && iLineFeed2 == sy.Length - LineFeed2.Length))
+                        {
+                            // Single linefeed
+                            // A back slash "/" character marks the end of a line of lyrics
+                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "¼", TicksOn = ticks });
+                            newTrack.TotalLyricsT += "¼";
+
+                            if (sy.Length > LineFeed2.Length)
+                            {
+                                // Linefeed at the begining
+                                if (iLineFeed2 == 0)
+                                    reste = sy.Substring(1, sy.Length - LineFeed2.Length);
+                                else
+                                    reste = sy.Substring(0, iLineFeed2);
 
                                 newTrack.TotalLyricsT += reste;
                                 newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });

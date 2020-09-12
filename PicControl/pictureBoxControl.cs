@@ -882,12 +882,13 @@ namespace PicControl
 
             string lyr = string.Empty;
 
-            lyr = ly.Replace("\\", "¼");    // '\' Paragraph
-            lyr = lyr.Replace("/", "¼");     // '/' Linefeed, line break
+            //lyr = ly.Replace("\\", "¼");    // '\' Paragraph
+            //lyr = lyr.Replace("/", "¼");     // '/' Linefeed, line break
+            lyr = ly.Replace("½", "¼");
 
-            //lyr = lyr.Replace("\r\n", "¼");
-            //lyr = lyr.Replace("\r", "¼");
-            //lyr = lyr.Replace("\n", "¼");
+            // TO BE MODIFIED
+
+
 
             string[] strLyricsLines = lyr.Split(new Char[] { '¼' }, StringSplitOptions.RemoveEmptyEntries);  
 

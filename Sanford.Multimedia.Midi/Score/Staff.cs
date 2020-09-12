@@ -265,8 +265,8 @@ namespace Sanford.Multimedia.Midi.Score
                 if ( (xpos + lyric.X >= clip.X - lyric.MinWidth - 50) && (xpos + lyric.X <= clip.X + clip.Width + 50))
                 {
                     t = lyric.Text;
-                    t = t.Replace("\\","");
-                    t = t.Replace("/", "");
+                    t = t.Replace("½","");
+                    t = t.Replace("¼", "");
 
                     g.DrawString(t,
                              SheetMusic.LetterFont,
