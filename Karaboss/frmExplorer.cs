@@ -46,7 +46,7 @@ using PrgAutoUpdater;
 using System.Net;
 using System.Xml;
 using Karaboss.Pages.ABCnotation;
-
+using Karaboss.Mru;
 
 namespace Karaboss
 {
@@ -79,7 +79,10 @@ namespace Karaboss
         private string commandlinePath = string.Empty;
         public int NumInstance = 1;     
         private DisplayMidiInfos MidiInfos;
-        
+
+        // The MruList
+        int MruFilesCount = 10;
+        MruList MyMruList;
 
         public frmExplorer(string[] args, int numinstance)
         {
@@ -521,8 +524,72 @@ namespace Karaboss
             frmGuitarTraining.Show();            
             frmGuitarTraining.Activate();
         }
-        
-        
+
+
+        /// <summary>
+        /// Open a file selected from the MRU list.
+        /// </summary>
+        /// <param name="file_name"></param>
+        private void MyMruList_FileSelected(string FileName)
+        {
+            OpenMruFile(FileName);
+        }
+
+        private void OpenMruFile(string FullPath)
+        {
+            try
+            {
+                
+                sideBarControl.SelectedItem = VBarControl.SideBarControl.SideBarControl.Selectables.Files;
+                xplorerControl.Visible = true;
+                playlistsControl.Visible = false;
+                searchControl.Visible = false;
+
+                string path = Path.GetDirectoryName(FullPath);
+                
+                path = "file:///" + path.Replace("\\", "/");
+                string file = Path.GetFileName(FullPath);
+                xplorerControl.Navigate(path, file);
+
+
+                /*
+                string path = Path.GetDirectoryName(filename);
+                //path must be like "file:///c:/users/a453868/Music/karaoke/sasin";
+                path = "file:///" + path.Replace("\\", "/");
+                xplorerControl.Navigate(path, filename);                
+
+                xplorerControl.Visible = true;
+                playlistsControl.Visible = false;
+                searchControl.Visible = false;
+                connectedControl.Visible = false;
+                pnlFileInfos.Visible = true;
+
+                ShowPlayEditButtons(true);
+
+                //xplorerControl.Refresh();
+                xplorerControl.RefreshContents(filename);
+
+                tssLeft.Text = xplorerControl.CurrentFolder;
+                tssMiddle.Text = xplorerControl.CurrentContent;
+
+                InitDisplayMidiFileInfos(xplorerControl.SelectedFile);
+                */
+
+                // Add the file to the MRU list.
+                MyMruList.AddFile(FullPath);
+
+            }
+            catch (Exception ex)
+            {
+                // Remove the file from the MRU list.
+                MyMruList.RemoveFile(FullPath);
+
+                // Tell the user what happened.
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
         #endregion
 
 
@@ -1086,7 +1153,10 @@ namespace Karaboss
                 Application.OpenForms["frmPlayer"].Close();
 
             ResetOutPutDevice();
-            
+
+            // Add the file to the MRU list.
+            MyMruList.AddFile(fpath);
+
             Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice, songRoot);
             frmPlayer.Show();
             frmPlayer.Activate();
@@ -1206,7 +1276,10 @@ namespace Karaboss
             string inipath = string.Empty;
             inipath = Karaclass.GetStartDirectory();
 
-     
+            // Mru Files
+            MyMruList = new MruList(System.AppDomain.CurrentDomain.FriendlyName, MnuFileRecentFiles, MruFilesCount);
+            MyMruList.FileSelected += MyMruList_FileSelected;
+
 
             // If program was launched from another location than startup path (double click on a midi file for eg)
             if (commandlinePath != "")

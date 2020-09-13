@@ -213,6 +213,8 @@
     <Compile Include="Lrc\NeteaseMusic.cs" />
     <Compile Include="Lrc\SharedFramework.cs" />
     <Compile Include="Lrc\Time.cs" />
+    <Compile Include="Mru\MruList.cs" />
+    <Compile Include="Mru\RegistryTools.cs" />
     <Compile Include="Pages\ABCnotation\Midi.cs" />
     <Compile Include="Pages\ABCnotation\TextPlayer\FrmTextPlayer.cs">
       <SubType>Form</SubType>

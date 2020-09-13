@@ -117,45 +117,27 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="mnuFileNew.Text" xml:space="preserve">
+    <value>&amp;Nouveau</value>
+  </data>
+  <data name="mnuFileOpen.Text" xml:space="preserve">
+    <value>&amp;Ouvrir</value>
+  </data>
+  <data name="mnuFileEdit.Text" xml:space="preserve">
+    <value>&amp;Editer</value>
+  </data>
+  <data name="MnuFileRecentFiles.Text" xml:space="preserve">
+    <value>Fichiers récents</value>
+  </data>
+  <data name="mnuFileQuit.Text" xml:space="preserve">
+    <value>&amp;Quitter</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>54, 20</value>
   </data>
   <data name="mnuFile.Text" xml:space="preserve">
     <value>&amp;Fichier</value>
-  </data>
-  <data name="mnuFileNew.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 22</value>
-  </data>
-  <data name="mnuFileNew.Text" xml:space="preserve">
-    <value>&amp;Nouveau</value>
-  </data>
-  <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 22</value>
-  </data>
-  <data name="mnuFileOpen.Text" xml:space="preserve">
-    <value>&amp;Ouvrir</value>
-  </data>
-  <data name="mnuFileEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 22</value>
-  </data>
-  <data name="mnuFileEdit.Text" xml:space="preserve">
-    <value>&amp;Editer</value>
-  </data>
-  <data name="MnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>119, 6</value>
-  </data>
-  <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 22</value>
-  </data>
-  <data name="mnuFileQuit.Text" xml:space="preserve">
-    <value>&amp;Quitter</value>
-  </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>70, 20</value>
-  </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>&amp;Affichage</value>
   </data>
   <data name="mnuEditSearch.Size" type="System.Drawing.Size, System.Drawing">
     <value>360, 22</value>
@@ -193,14 +175,11 @@
   <data name="MnuEditGuitarTraining.Text" xml:space="preserve">
     <value>Guitare</value>
   </data>
-  <data name="mnuTools.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 20</value>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>70, 20</value>
   </data>
-  <data name="mnuTools.Text" xml:space="preserve">
-    <value>&amp;Outils</value>
-  </data>
-  <data name="mnuToolsMngtFiles.Text" xml:space="preserve">
-    <value>Gérer mes fichiers</value>
+  <data name="mnuEdit.Text" xml:space="preserve">
+    <value>&amp;Affichage</value>
   </data>
   <data name="mnuToolsMngtFilesDeleteEmptyDirs.Size" type="System.Drawing.Size, System.Drawing">
     <value>377, 22</value>
@@ -253,20 +232,23 @@
   <data name="mnuToolsMngtFilesSearchSameNameInASingleDirectory.Text" xml:space="preserve">
     <value>Rechercher noms identiques dans un répertoire</value>
   </data>
+  <data name="mnuToolsMngtFiles.Text" xml:space="preserve">
+    <value>Gérer mes fichiers</value>
+  </data>
+  <data name="mnuTools.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 20</value>
+  </data>
+  <data name="mnuTools.Text" xml:space="preserve">
+    <value>&amp;Outils</value>
+  </data>
   <data name="mnuMidiInputDevice.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>174, 22</value>
   </data>
   <data name="mnuMidiOutputDevice.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>174, 22</value>
   </data>
   <data name="MnuMidiSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>170, 6</value>
-  </data>
-  <data name="MnuMidiExternal.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
-  </data>
-  <data name="MnuMidiExternal.Text" xml:space="preserve">
-    <value>Instrument externe</value>
+    <value>171, 6</value>
   </data>
   <data name="MnuMidiExternalPlay.Size" type="System.Drawing.Size, System.Drawing">
     <value>130, 22</value>
@@ -280,23 +262,29 @@
   <data name="MnuMidiExternalRecord.Text" xml:space="preserve">
     <value>Enregistrer</value>
   </data>
-  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>43, 20</value>
+  <data name="MnuMidiExternal.Size" type="System.Drawing.Size, System.Drawing">
+    <value>174, 22</value>
   </data>
-  <data name="mnuHelp.Text" xml:space="preserve">
-    <value>&amp;Aide</value>
+  <data name="MnuMidiExternal.Text" xml:space="preserve">
+    <value>Instrument externe</value>
   </data>
   <data name="MnuHelpCheckNewVersion.Size" type="System.Drawing.Size, System.Drawing">
-    <value>200, 22</value>
+    <value>199, 22</value>
   </data>
   <data name="MnuHelpCheckNewVersion.Text" xml:space="preserve">
     <value>Vérifier nouvelle version</value>
   </data>
   <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
-    <value>200, 22</value>
+    <value>199, 22</value>
   </data>
   <data name="mnuHelpAbout.Text" xml:space="preserve">
     <value>A propos de Karaboss</value>
+  </data>
+  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 20</value>
+  </data>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Aide</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
