@@ -270,6 +270,9 @@
   <data name="&gt;&gt;pnlBottom.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="btnDeleteAllLyrics.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
   <data name="btnDeleteAllLyrics.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -585,6 +588,9 @@
   <data name="&gt;&gt;btnDelete.ZOrder" xml:space="preserve">
     <value>10</value>
   </data>
+  <data name="btnPlay.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
   <data name="btnPlay.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -641,6 +647,9 @@
   </data>
   <data name="&gt;&gt;btnView.ZOrder" xml:space="preserve">
     <value>12</value>
+  </data>
+  <data name="btnSave.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="btnSave.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>

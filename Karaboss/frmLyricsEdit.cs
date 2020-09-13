@@ -305,7 +305,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void DgView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            int val = 0;
+            int val = 0;            
 
             // If first col is edited (TICKS)
             if (dgView.CurrentCell.ColumnIndex == COL_TICKS)
@@ -389,33 +389,32 @@ namespace Karaboss
                     {
                         case "text":
                             break;
-                        case "par":
+                        case "par":                            
                             dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TEXT].Value = "\\";
                             break;
-                        case "cr":
+                        case "cr":                            
                             dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TEXT].Value = "/";
                             break;
                         default:
+                            dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TYPE].Value = "text";
                             break;
-                    }
-
-                    ColorSepRows();
+                    }                    
                 }
 
             }
             else  if (dgView.CurrentCell.ColumnIndex == dgView.Columns.Count - 1)
             {
-                // If last col is edited
+                // COL TEXT
 
                 if (dgView.CurrentCell.Value == null)
                     dgView.CurrentCell.Value = "";
 
                 if (dgView.CurrentCell.Value.ToString() == "/")
-                {
+                {                    
                     dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TYPE].Value = "cr";
                 }
                 else if (dgView.CurrentCell.Value.ToString() == "\\")
-                {
+                {                    
                     dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TYPE].Value = "par";
                 }
                 else 
@@ -437,17 +436,26 @@ namespace Karaboss
                             val = Convert.ToInt32(dgView.Rows[dgView.CurrentCell.RowIndex - 1].Cells[COL_TICKS].Value);
                         dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TICKS].Value = val;
                     }
-                }
+                }                
             }
 
             //Load modification into local list of lyrics
             LoadModifiedLyrics();
             PopulateTextBox(localplLyrics);
 
+            // Modify height of cells according to durations
+            HeightsToDurations();
+
+            // Color separators
+            ColorSepRows();
+
+
+
             // File was modified
             FileModified();
             
         }
+                     
 
         /// <summary>
         /// Display current line in textbox
@@ -467,9 +475,15 @@ namespace Karaboss
                     {                        
                         foreach (DataGridViewCell C in dgView.SelectedCells)
                         {
-                            if (C.ColumnIndex != 0)
-                                C.Value = "";
-                        }                        
+                            if (C.ColumnIndex != 0)                            
+                                C.Value = "";                            
+                        }
+                        //Load modification into local list of lyrics
+                        LoadModifiedLyrics();
+                        PopulateTextBox(localplLyrics);
+
+                        // File was modified
+                        FileModified();
                         break;
                     }
             }
@@ -932,6 +946,7 @@ namespace Karaboss
             LoadModifiedLyrics();
             PopulateTextBox(localplLyrics);
 
+            // Modify height of cells according to durations
             HeightsToDurations();
 
             // Color separators
@@ -1023,7 +1038,7 @@ namespace Karaboss
         }
         
         /// <summary>
-        /// Delete a row
+        /// Delete a single row
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -2685,7 +2700,7 @@ namespace Karaboss
 
                 
 
-                if (iParagraph == 0 || iParagraph == plElement.Length - Paragraph.Length)
+                if (iParagraph == 0 || (plElement.Length > Paragraph.Length && iParagraph == plElement.Length - Paragraph.Length))
                 {
 
                     tx += "\r\n\r\n";
@@ -2697,7 +2712,7 @@ namespace Karaboss
                             reste = plElement.Substring(0, iParagraph);
                     }
                 }
-                else if (iLineFeed == 0 || iLineFeed == plElement.Length - LineFeed.Length)
+                else if (iLineFeed == 0 || (plElement.Length > LineFeed.Length && iLineFeed == plElement.Length - LineFeed.Length))
                 {
                     tx += "\r\n";
                     if (plElement.Length > LineFeed.Length)
@@ -3114,6 +3129,7 @@ namespace Karaboss
             // Insert new message
             track.Insert(currentTick, mtMsg);
         }
+
 
 
 

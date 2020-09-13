@@ -3598,7 +3598,7 @@ namespace Karaboss
                 myLyric.melodytracknum = melodytracknum;
                 myLyric.lyricstracknum = melodytracknum;
             } 
-            else if (myLyric.lyricstracknum != melodytracknum)
+            else if (myLyric.lyricstracknum != melodytracknum && melodytracknum != -1)
             {
                 // FAB 02/07/20
                 foreach (Track T in sequence1.tracks)
@@ -3608,7 +3608,10 @@ namespace Karaboss
                 }
                 //sequence1.tracks[myLyric.melodytracknum].deleteLyrics();
                 //sequence1.tracks[myLyric.melodytracknum].Lyrics.Clear();
+                
                 myLyric.lyricstracknum = melodytracknum;
+                
+
             }
 
             if (myLyric == null)
@@ -3660,13 +3663,16 @@ namespace Karaboss
             DisplayLyricsForm();
 
             int tracknum = myLyric.lyricstracknum;
-            Track track = sequence1.tracks[tracknum];
+            if (tracknum != -1)
+            {
+                Track track = sequence1.tracks[tracknum];
 
-            // supprime tous les messages text & lyric
-            track.deleteLyrics();
+                // supprime tous les messages text & lyric
+                track.deleteLyrics();
 
-            // Insert all lyric events
-            InsTrkEvents(tracknum);
+                // Insert all lyric events
+                InsTrkEvents(tracknum);
+            }
 
             // Refresh display of lyrics
             if (bRefreshDisplay || myLyric.lyrictype == CLyric.LyricTypes.Lyric) {                

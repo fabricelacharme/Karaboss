@@ -135,7 +135,7 @@
             this.dText});
             this.dgView.Name = "dgView";
             this.dgView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgView_CellEndEdit);
-            this.dgView.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgView_CellEnter);
+            this.dgView.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgView_CellEnter);            
             this.dgView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DgView_KeyDown);
             this.dgView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DgView_MouseDown);
             // 
@@ -202,6 +202,7 @@
             // 
             // btnDeleteAllLyrics
             // 
+            this.btnDeleteAllLyrics.Image = global::Karaboss.Properties.Resources.Action_playlist_delete24;
             resources.ApplyResources(this.btnDeleteAllLyrics, "btnDeleteAllLyrics");
             this.btnDeleteAllLyrics.Name = "btnDeleteAllLyrics";
             this.toolTip1.SetToolTip(this.btnDeleteAllLyrics, resources.GetString("btnDeleteAllLyrics.ToolTip"));
@@ -293,6 +294,7 @@
             // 
             // btnPlay
             // 
+            this.btnPlay.Image = global::Karaboss.Properties.Resources.control_play_blue;
             resources.ApplyResources(this.btnPlay, "btnPlay");
             this.btnPlay.Name = "btnPlay";
             this.toolTip1.SetToolTip(this.btnPlay, resources.GetString("btnPlay.ToolTip"));
@@ -309,6 +311,7 @@
             // 
             // btnSave
             // 
+            this.btnSave.Image = global::Karaboss.Properties.Resources.Action_File_Save_icon;
             resources.ApplyResources(this.btnSave, "btnSave");
             this.btnSave.Name = "btnSave";
             this.toolTip1.SetToolTip(this.btnSave, resources.GetString("btnSave.ToolTip"));
