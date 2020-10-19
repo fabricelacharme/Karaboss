@@ -747,7 +747,11 @@ namespace Karaboss.xplorer
                 newfileName = newfileName.Replace("( )", "");
                 newfileName = newfileName.Replace("()", "");
 
-                
+                newfileName = newfileName.Replace("(+)", "");
+                newfileName = newfileName.Replace("(X)", "");
+                newfileName = newfileName.Replace("[INSTRUMENTAL]", "");
+
+
                 newfileName = newfileName.Trim();
 
                 //every first letter to upper case

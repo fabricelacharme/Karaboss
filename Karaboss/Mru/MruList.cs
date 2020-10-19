@@ -101,6 +101,11 @@ namespace Karaboss.Mru
         // Add a file to the list, rearranging if necessary.
         public void AddFile(string file_name)
         {
+            #region gard
+            if (file_name == null)
+                return;
+            #endregion
+
             // Remove the file from the list.
             RemoveFileInfo(file_name);
 
