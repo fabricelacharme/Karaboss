@@ -757,17 +757,37 @@ namespace Karaboss.xplorer
                 //every first letter to upper case
                 newfileName = ToTitleCase(newfileName) + fileExtension;
 
+                // RElace "The"
+                if (newfileName.IndexOf(" The.mid") > 0)
+                {
+                    newfileName = newfileName.Replace(" The.mid", ".mid");
+                }
+                if (newfileName.IndexOf(" the.mid") > 0)
+                {
+                    newfileName = newfileName.Replace(" the.mid", ".mid");
+                }
+
+
+
                 // Replace "toto K.mid" by "toto.kar"
                 if (newfileName.IndexOf(" K.mid") > 0)
                 {
                     newfileName = newfileName.Replace(" K.mid", ".kar");
                 }
 
+                if (newfileName.IndexOf(" [K] The.mid") > 0)
+                {
+                    newfileName = newfileName.Replace(" [K] The.mid", ".kar");
+                }
                 if (newfileName.IndexOf(" [K].mid") > 0)
                 {
                     newfileName = newfileName.Replace(" [K].mid", ".kar");
                 }
 
+                if (newfileName.IndexOf(" (K) The.mid") > 0)
+                {
+                    newfileName = newfileName.Replace(" (K) The.mid", ".kar");
+                }
                 if (newfileName.IndexOf(" (K).mid") > 0)
                 {
                     newfileName = newfileName.Replace(" (K).mid", ".kar");
