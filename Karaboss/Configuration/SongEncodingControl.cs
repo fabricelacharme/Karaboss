@@ -64,6 +64,7 @@ namespace Karaboss.Configuration
             dataSource.Add(new Encoding() { Name = "Chinese", Value = "cn" });
             dataSource.Add(new Encoding() { Name = "Japanese", Value = "jp" });
             dataSource.Add(new Encoding() { Name = "Korean", Value = "kr" });
+            dataSource.Add(new Encoding() { Name = "Vietnamese", Value = "vn" });
 
             //Setup data binding
             this.m_langCB.DataSource = dataSource;

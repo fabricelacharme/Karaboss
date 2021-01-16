@@ -374,13 +374,18 @@ namespace Sanford.Multimedia.Midi
                     break;
 
                 case "Japanese":
-                    Encoding japanese = Encoding.GetEncoding("932");
+                    Encoding japanese = Encoding.GetEncoding("shift_jis");
                     sy = japanese.GetString(data);
                     break;
 
                 case "Korean":
                     Encoding korean = Encoding.GetEncoding("ks_c_5601-1987");
                     sy = korean.GetString(data);
+                    break;
+                
+                case "Vietnamese":
+                    Encoding vietnamese = Encoding.GetEncoding("windows-1258");
+                    sy = vietnamese.GetString(data);
                     break;
 
                 default:
@@ -479,13 +484,18 @@ namespace Sanford.Multimedia.Midi
                     break;
 
                 case "Japanese":
-                    Encoding japanese = Encoding.GetEncoding("932");
+                    Encoding japanese = Encoding.GetEncoding("shift_jis");
                     sy = japanese.GetString(data);
                     break;
 
                 case "Korean":
                     Encoding korean = Encoding.GetEncoding("ks_c_5601-1987");
                     sy = korean.GetString(data);
+                    break;
+
+                case "Vietnamese":
+                    Encoding vietnamese = Encoding.GetEncoding("windows-1258");
+                    sy = vietnamese.GetString(data);
                     break;
 
                 default:

@@ -3761,7 +3761,36 @@ namespace Karaboss
                         currentElement = currentCR + plLyrics[idx].Element;
 
                         // Transforme en byte la nouvelle chaine
-                        byte[] newdata = Encoding.Default.GetBytes(currentElement);                       
+                        // ERROR FAB 16-01-2021 : must tyake into accout encoding selected by end user !!!
+                        byte[] newdata; // = Encoding.Default.GetBytes(currentElement);
+                        
+                        switch (OpenMidiFileOptions.TextEncoding)
+                        {
+                            case "Ascii":
+                                //sy = System.Text.Encoding.Default.GetString(data);
+                                newdata = Encoding.Default.GetBytes(currentElement);
+                                break;
+                            case "Chinese":
+                                Encoding chinese = Encoding.GetEncoding("gb2312");
+                                newdata = chinese.GetBytes(currentElement);
+                                break;
+                            case "Japanese":
+                                Encoding japanese = Encoding.GetEncoding("shift_jis");
+                                newdata = japanese.GetBytes(currentElement);
+                                break;
+                            case "Korean":
+                                Encoding korean = Encoding.GetEncoding("ks_c_5601-1987");
+                                newdata = korean.GetBytes(currentElement);
+                                break;
+                            case "Vietnamese":
+                                Encoding vietnamese = Encoding.GetEncoding("windows-1258");
+                                newdata = vietnamese.GetBytes(currentElement);
+                                break;
+                            default:
+                                newdata = Encoding.Default.GetBytes(currentElement);
+                                break;
+                        }
+                        //byte[] newdata = Encoding.Default.GetBytes(currentElement);                       
 
                         MetaMessage mtMsg;
 
