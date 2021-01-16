@@ -767,10 +767,15 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Play-Music-icon.png" />
+    <None Include="Resources\save.png" />
+    <None Include="Resources\save.bmp" />
     <None Include="Resources\mml.ico" />
     <None Include="Resources\m.ico" />
     <None Include="Resources\a.ico" />
     <None Include="Resources\abc.ico" />
+    <None Include="Resources\floppy-icon.png" />
+    <None Include="Resources\delete-icon.png" />
     <Content Include="Resources\Ico\mml.ico" />
     <None Include="Resources\Media-Controls-Skip-To-Start-icon.png" />
     <None Include="Resources\Media-Controls-Skip-To-End-icon.png" />

@@ -823,6 +823,16 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap delete_icon {
+            get {
+                object obj = ResourceManager.GetObject("delete_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap diese {
             get {
                 object obj = ResourceManager.GetObject("diese", resourceCulture);
@@ -836,6 +846,16 @@ namespace Karaboss.Properties {
         internal static System.Drawing.Bitmap erase {
             get {
                 object obj = ResourceManager.GetObject("erase", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap floppy_icon {
+            get {
+                object obj = ResourceManager.GetObject("floppy_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1229,6 +1249,16 @@ namespace Karaboss.Properties {
         internal static System.Drawing.Bitmap picture_add {
             get {
                 object obj = ResourceManager.GetObject("picture_add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Play_Music_icon {
+            get {
+                object obj = ResourceManager.GetObject("Play_Music_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
