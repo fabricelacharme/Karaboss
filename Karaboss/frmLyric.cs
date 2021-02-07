@@ -458,6 +458,8 @@ namespace Karaboss
 
         /// <summary>
         /// Load song in picturebox control
+        ///  1/4 = LineFeed
+        ///  1/2 = Paragraph
         /// </summary>
         public void LoadSong(List<plLyric> plLyrics)
         {            
@@ -468,9 +470,6 @@ namespace Karaboss
                 lyrics += plLyrics[i].Element; 
             }
 
-            // FAB 12/09/2020
-            //lyrics = lyrics.Replace("\\", "\r\n\r\n");
-            //lyrics = lyrics.Replace("/", "\r\n");
 
             List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
             foreach (plLyric plL in plLyrics)
