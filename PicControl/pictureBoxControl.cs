@@ -84,9 +84,16 @@ namespace PicControl
             public int TicksOn { get; set; }
             public int TicksOff { get; set; }            
         }
-        
+
 
         #region properties
+
+        #region Internal lyrics separators
+
+        private string _InternalSepLines = "¼";                
+        private string _InternalSepParagraphs = "½";        
+        
+        #endregion
 
         public ImageLayout imgLayout { get; set; }       
         public Image m_CurrentImage { get; set; }
@@ -684,13 +691,12 @@ namespace PicControl
         {           
             string tx = string.Empty;
 
-            // |10|9|8|7|6|5|4|3|2|1|0|
-            //tx = "|";           
+            // 10|9|8|7|6|5|4|3|2|1|0|                     
             for (int i = sec; i >= 0; i--)
             {
-                tx += i.ToString() + "¼";
+                tx += i.ToString() + _InternalSepLines;
             }
-            tx += "/";
+            
 
             List<plLyric> plLyrics = StoreDemoText(tx);
             
@@ -722,15 +728,16 @@ namespace PicControl
         private List<plLyric> StoreDemoText(string tx, int ticks = 0)
         {
             // replace spaces and carriage return 
-            // tata toto¼titi tutu devient
-            // tata¼ toto/ titi¼ tutu¼ devient
-            // tata], toto[, titi], tutu
+            // tata toto<cr>titi tutu devient
+            // tata toto titi<cr>' ' tutu devient
+            // tata]toto<cr>[,titi],tutu
 
             // protect spaces, replaced by ']' + space
-            string S = tx.Replace(" ", "] ");
+            string m_ProtectSpace = "¾";
+            string S = tx.Replace(" ", m_ProtectSpace + " ");
 
-            // '¼' = Carriage return, replaced by '¼' + space
-            S = S.Replace("¼", "¼ ");
+            // _InternalSepLines = replaced by _InternalSepLines + space
+            S = S.Replace(_InternalSepLines, _InternalSepLines + " ");
 
             // Split syllabes by spaces
             string[] strLyricSyllabes = S.Split(new Char[] { ' ' });
@@ -749,14 +756,14 @@ namespace PicControl
             for (int i = 0; i < strLyricSyllabes.Length; i++)
             {
                 sx = strLyricSyllabes[i];
-                sx = sx.Replace("]", " ");    // retrieve spaces
+                sx = sx.Replace(m_ProtectSpace, " ");    // retrieve spaces
 
                 plElement = sx;
                 plTime = ticks + (i + 1) * 10;        // time each 10 ticks
 
-                if (sx.Length > 1 && sx.Substring(sx.Length - 1, 1) == "¼")
+                if (sx.Length > 1 && sx.Substring(sx.Length - 1, 1) == _InternalSepLines)
                 {
-                    // chaine Fini par ¼
+                    // String ended byr _InternalSepLines
                     string reste = sx.Substring(0, sx.Length - 1);
                     
                     plType = plLyric.Types.Text;
@@ -764,13 +771,13 @@ namespace PicControl
                     plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
 
                     plType =  plLyric.Types.LineFeed;
-                    plElement = "¼";
+                    plElement = _InternalSepLines;
                     plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
 
                 }
                 else
                 {
-                    if (sx == "¼")
+                    if (sx == _InternalSepLines)
                         plType = plLyric.Types.LineFeed;
                     else
                         plType = plLyric.Types.Text;
@@ -814,16 +821,16 @@ namespace PicControl
             pboxWnd.SizeMode = PictureBoxSizeMode.Zoom;
 
             // Default text
-            string tx = "Lorem ipsum dolor sit amet,¼";
-            tx += "consectetur adipisicing elit,¼";
-            tx += "sed do eiusmod tempor incididunt¼";
-            tx += "ut labore et dolore magna aliqua.¼";
-            tx += "Ut enim ad minim veniam,¼";
-            tx += "quis nostrud exercitation ullamco¼";
-            tx += "laboris nisi ut aliquip¼";
-            tx += "ex ea commodo consequat.¼";
-            tx += "Duis aute irure dolor in reprehenderit¼";
-            tx += "in voluptate velit esse cillum dolore¼";
+            string tx = "Lorem ipsum dolor sit amet," + _InternalSepLines;
+            tx += "consectetur adipisicing elit," + _InternalSepLines;
+            tx += "sed do eiusmod tempor incididunt" + _InternalSepLines;
+            tx += "ut labore et dolore magna aliqua." + _InternalSepLines;
+            tx += "Ut enim ad minim veniam," + _InternalSepLines;
+            tx += "quis nostrud exercitation ullamco" + _InternalSepLines;
+            tx += "laboris nisi ut aliquip" + _InternalSepLines;
+            tx += "ex ea commodo consequat." + _InternalSepLines;
+            tx += "Duis aute irure dolor in reprehenderit" + _InternalSepLines;
+            tx += "in voluptate velit esse cillum dolore" + _InternalSepLines;
             tx += "eu fugiat nulla pariatur.";
 
             List<plLyric> plLyrics = StoreDemoText(tx);
@@ -882,11 +889,11 @@ namespace PicControl
             string lyr = string.Empty;
                      
             // pour texte normal
-            lyr = ly.Replace("½", "¼");
+            lyr = ly.Replace(_InternalSepParagraphs, _InternalSepLines);
 
             // TO BE MODIFIED
-
-            string[] strLyricsLines = lyr.Split(new Char[] { '¼' }, StringSplitOptions.RemoveEmptyEntries);  
+            char ChrSepLines = Convert.ToChar(_InternalSepLines);
+            string[] strLyricsLines = lyr.Split(new Char[] { ChrSepLines }, StringSplitOptions.RemoveEmptyEntries);  
 
             for (int i = 0; i < strLyricsLines.Length; i++)
             {

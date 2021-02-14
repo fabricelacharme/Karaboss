@@ -157,6 +157,15 @@ namespace Karaboss
 
         #region private decl
 
+        #region External lyrics separators
+
+        private string m_SepLine = "/";
+        private string m_SepParagraph = "\\";
+
+        #endregion
+
+
+
         private int TempoDelta = 100;
         private int TempoOrig = 0;        
         
@@ -257,6 +266,10 @@ namespace Karaboss
 
             NumInstance = numinstance;
 
+            // Load saved line and paragraph separators
+            m_SepLine = Karaclass.m_SepLine;
+            m_SepParagraph = Karaclass.m_SepParagraph;
+
             songRoot = songsDir;
 
             MIDIfileFullPath = FileName;
@@ -264,8 +277,7 @@ namespace Karaboss
             MIDIfilePath = Path.GetDirectoryName(FileName);
 
             this.MouseWheel += new MouseEventHandler(FrmPlayer_MouseWheel);
-
-            //outDeviceID = outputDeviceID;
+            
             outDevice = outputDevice;           
 
             // If true, launch player
@@ -3740,14 +3752,14 @@ namespace Karaboss
                 if (plLyrics[idx].Type == plLyric.Types.LineFeed)
                 {                                        
                     if (myLyric.lyrictype == CLyric.LyricTypes.Text)
-                        currentCR = "/";
+                        currentCR = m_SepLine;
                     else
                         currentCR = "\r";                    
                 }
                 else if (plLyrics[idx].Type == plLyric.Types.Paragraph)
                 {                                        
                     if (myLyric.lyrictype == CLyric.LyricTypes.Text)
-                        currentCR = "\\";
+                        currentCR = m_SepParagraph;
                     else
                         currentCR = "\r\r";                    
                 }

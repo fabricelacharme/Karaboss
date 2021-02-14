@@ -391,65 +391,7 @@ namespace Karaboss.playlists
                     itemsToAdd.Add(CreateItem(file, fileName, KaraokeSinger, Duration));
                 }
                                 
-                listView.Items.AddRange(itemsToAdd.ToArray());
-
-                #region delete
-                /*
-                for (int i = 0; i < pl.Songs.Count; i++)
-                {                   
-                    file = pl.Songs[i].File;
-                    fileName = pl.Songs[i].Song;
-                    KaraokeSinger = pl.Songs[i].KaraokeSinger;
-
-                    if (File.Exists(file))
-                    {
-                        // The file exists
-                        FileInfo finfo = new FileInfo(file);
-                        //path must be like "file:///c:/users/a453868/Music/karaoke/sasin";
-                        fullname = "file:///" + file.Replace("\\", "/");
-                        FlShell.ShellItem shitem = new FlShell.ShellItem(fullname);
-                        fType = shitem.TypeName;
-                        fileSize = finfo.Length;
-                        if (fileSize > 1024)
-                            fSize = string.Format("{0: #,### Ko}", fileSize / 1024);
-                        else
-                            fSize = string.Format("{0: ##0 Bytes}", fileSize);
-
-                        Duration = pl.Songs[i].Length;
-                        item = new ListViewItem(new[] { fileName, KaraokeSinger, Duration, fSize, File.GetLastWriteTime(file).ToString("dd/MM/yyyy HH:mm"), fType })
-                        {
-                            // false = Authorize change color for subitems
-                            UseItemStyleForSubItems = false
-                        };
-                        item.SubItems[2].ForeColor = Color.Gray;
-                        item.SubItems[3].ForeColor = Color.Gray;
-                        item.SubItems[4].ForeColor = Color.Gray;
-                        item.SubItems[5].ForeColor = Color.Gray;
-                        // Put the full path in the tag
-                        item.Tag = finfo.FullName;
-                        // Icon
-                        item.ImageIndex = FlShell.SystemImageListManager.GetIconIndex(shitem, false);
-                    }
-                    else
-                    {
-                        // the file no more exists
-                        item = new ListViewItem(new[] { fileName, KaraokeSinger, "???", "???", "???", "???" }) {
-                            ForeColor = Color.Red,
-                            // false = Authorize change color for subitems
-                            UseItemStyleForSubItems = false,
-                        };
-
-                        item.SubItems[2].ForeColor = Color.Gray;
-                        item.SubItems[3].ForeColor = Color.Gray;
-                        item.SubItems[4].ForeColor = Color.Gray;
-                        item.SubItems[5].ForeColor = Color.Gray;
-                        item.Tag = file;
-                    }
-                    // Finally add the listviewitem               
-                    listView.Items.Add(item);
-                }
-                */
-                #endregion delete
+                listView.Items.AddRange(itemsToAdd.ToArray());                
             }
             catch (Exception ee)
             {

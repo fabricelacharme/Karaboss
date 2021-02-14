@@ -546,34 +546,11 @@ namespace Karaboss
                 searchControl.Visible = false;
 
                 string path = Path.GetDirectoryName(FullPath);
-                
+
+                //path must be like "file:///c:/users/a453868/Music/karaoke/sasin";
                 path = "file:///" + path.Replace("\\", "/");
                 string file = Path.GetFileName(FullPath);
                 xplorerControl.Navigate(path, file);
-
-
-                /*
-                string path = Path.GetDirectoryName(filename);
-                //path must be like "file:///c:/users/a453868/Music/karaoke/sasin";
-                path = "file:///" + path.Replace("\\", "/");
-                xplorerControl.Navigate(path, filename);                
-
-                xplorerControl.Visible = true;
-                playlistsControl.Visible = false;
-                searchControl.Visible = false;
-                connectedControl.Visible = false;
-                pnlFileInfos.Visible = true;
-
-                ShowPlayEditButtons(true);
-
-                //xplorerControl.Refresh();
-                xplorerControl.RefreshContents(filename);
-
-                tssLeft.Text = xplorerControl.CurrentFolder;
-                tssMiddle.Text = xplorerControl.CurrentContent;
-
-                InitDisplayMidiFileInfos(xplorerControl.SelectedFile);
-                */
 
                 // Add the file to the MRU list.
                 MyMruList.AddFile(FullPath);

@@ -37,12 +37,10 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
-using PicControl;
 using System.IO;
 using System.Text.RegularExpressions;
 using Karaboss.Resources.Localization;
 using Karaboss.Lrc.SharedFramework;
-using Karaboss.Resources.Localization;
 
 
 namespace Karaboss
@@ -65,6 +63,21 @@ namespace Karaboss
        
 
         frmPlayer frmPlayer;
+
+        #region Internal lyrics separators
+
+        private string _InternalSepLines = "¼";
+        private string _InternalSepParagraphs = "½";
+
+        #endregion
+
+
+        #region External lyrics separators
+
+        private string m_SepLine = "/";
+        private string m_SepParagraph = "\\";
+        
+        #endregion
 
         private bool bfilemodified = false;
 
@@ -112,6 +125,10 @@ namespace Karaboss
             MIDIfileName = fileName;
             sequence1 = sequence;
             UpdateMidiTimes();
+
+            // Load saved line and paragraph separators
+            m_SepLine = Karaclass.m_SepLine;
+            m_SepParagraph = Karaclass.m_SepParagraph;
 
             // Load list of tracks
             LoadTracks(sequence1);
@@ -390,10 +407,10 @@ namespace Karaboss
                         case "text":
                             break;
                         case "par":                            
-                            dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TEXT].Value = "\\";
+                            dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TEXT].Value = m_SepParagraph;
                             break;
                         case "cr":                            
-                            dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TEXT].Value = "/";
+                            dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TEXT].Value =m_SepLine;
                             break;
                         default:
                             dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TYPE].Value = "text";
@@ -409,11 +426,11 @@ namespace Karaboss
                 if (dgView.CurrentCell.Value == null)
                     dgView.CurrentCell.Value = "";
 
-                if (dgView.CurrentCell.Value.ToString() == "/")
+                if (dgView.CurrentCell.Value.ToString() == m_SepLine)
                 {                    
                     dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TYPE].Value = "cr";
                 }
-                else if (dgView.CurrentCell.Value.ToString() == "\\")
+                else if (dgView.CurrentCell.Value.ToString() == m_SepParagraph)
                 {                    
                     dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TYPE].Value = "par";
                 }
@@ -578,10 +595,10 @@ namespace Karaboss
                     switch (plType)
                     {
                         case plLyric.Types.LineFeed:                            
-                            plElement = "/";
+                            plElement = m_SepLine;
                             break;
                         case plLyric.Types.Paragraph:                            
-                            plElement = "\\";
+                            plElement = m_SepParagraph;
                             break;
                         default:
                             break;
@@ -635,11 +652,11 @@ namespace Karaboss
                             {
                                 case plLyric.Types.LineFeed:
                                     sNote = "";
-                                    plElement = "/";
+                                    plElement = m_SepLine;
                                     break;
                                 case plLyric.Types.Paragraph:
                                     sNote = "";
-                                    plElement = "\\";
+                                    plElement = m_SepParagraph;
                                     break;
                                 default:
                                     break;
@@ -662,11 +679,11 @@ namespace Karaboss
                         {
                             case plLyric.Types.LineFeed:
                                 sNote = "";
-                                plElement = "/";
+                                plElement = m_SepLine;
                                 break;
                             case plLyric.Types.Paragraph:
                                 sNote = "";
-                                plElement = "\\";
+                                plElement = m_SepParagraph;
                                 break;
                             default:
                                 break;
@@ -935,9 +952,9 @@ namespace Karaboss
             }
 
             if (sep == "cr")
-                plElement = "/";
+                plElement = m_SepLine;
             else
-                plElement = "\\";
+                plElement = m_SepParagraph;
 
             // time, type, note, text, text
             dgView.Rows.Insert(Row, plTicksOn, plRealTime, sep, "", plElement);
@@ -1944,12 +1961,12 @@ namespace Karaboss
                         {
                             // insert <CR>;
                             plType = "cr";
-                            plElement = "/";
+                            plElement = m_SepLine;
                         }
                         else
                         {
                             plType = "par";
-                            plElement = "\\";
+                            plElement = m_SepParagraph;
                         }
 
                         if (dgView.Rows[i].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_TICKS].Value.ToString()))
@@ -2281,61 +2298,7 @@ namespace Karaboss
                                     c = c.Replace("\r", "");
                                     c = c.Replace(" ", "_");
 
-                                    oCell.Value = c;
-
-                                    #region deleteme
-                                    /*
-                                    if (c.StartsWith(Karaclass.m_SepLine) || c.StartsWith(Karaclass.m_SepParagraph))
-                                    {
-                                        if (c.StartsWith(Karaclass.m_SepLine))
-                                        {
-                                            // 1. insert <CR>;
-                                            plType = "cr";
-                                            plElement = "/";
-                                        }
-                                        else
-                                        {
-                                            plType = "par";
-                                            plElement = "\\";
-                                        }
-
-                                        if (dgView.Rows[iRow].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[iRow].Cells[COL_TICKS].Value.ToString()))
-                                        {
-                                            plTicksOn = Convert.ToInt32(dgView.Rows[iRow].Cells[COL_TICKS].Value);
-                                            plRealTime = TicksToTime(plTicksOn);
-                                        }
-                                        if (dgView.Rows[iRow].Cells[COL_NOTE].Value == null)
-                                            dgView.Rows[iRow].Cells[COL_NOTE].Value = 0;
-
-                                        plNote = 0;
-                                        strplnote = dgView.Rows[iRow].Cells[COL_NOTE].Value.ToString();
-                                        if (IsNumeric(strplnote))
-                                            plNote = Convert.ToInt32(strplnote);
-
-                                        
-
-                                        // Insert new row
-                                        dgView.Rows.Insert(iRow, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);
-
-                                        iRow++;
-                                        oCell = dgView[iCol + i, iRow];
-
-                                        // 2. Write line after
-                                        // Remove the character "/"
-                                        c = c.Substring(1, c.Length - 1);                                        
-
-                                        oCell.Value = c;
-
-
-                                    }
-                                    else
-                                    {                                       
-                                        oCell.Value = c;
-                                    }
-                                    */
-                                    #endregion
-
-
+                                    oCell.Value = c;                              
                                 }
                             }
                             else
@@ -2618,9 +2581,9 @@ namespace Karaboss
                     if (dgView.Rows[row].Cells[COL_TEXT].Value != null)
                     {
                         if (plType == plLyric.Types.LineFeed)
-                            plElement = "¼";
+                            plElement = _InternalSepLines;
                         else if (plType == plLyric.Types.Paragraph)
-                            plElement = "½";
+                            plElement = _InternalSepParagraphs;
                         else
                             plElement = dgView.Rows[row].Cells[COL_TEXT].Value.ToString();
                     }
@@ -2675,13 +2638,9 @@ namespace Karaboss
         /// <param name="lLyrics"></param>
         private void PopulateTextBox(List<plLyric> lLyrics)
         {
-            string plElement = string.Empty;
-            //plLyric.Types plType = plLyric.Types.Text;
-            string tx = string.Empty;
-
-            string Paragraph = "½";
-            int iParagraph = -1;
-            string LineFeed = "¼";
+            string plElement = string.Empty;            
+            string tx = string.Empty;            
+            int iParagraph = -1;            
             int iLineFeed = -1;
             string reste = string.Empty;
 
@@ -2689,36 +2648,27 @@ namespace Karaboss
             {
                 // Affiche les blancs
                 plElement = lLyrics[i].Element;
+                iParagraph = plElement.LastIndexOf(_InternalSepParagraphs);
+                iLineFeed = plElement.LastIndexOf(_InternalSepLines);                
 
-
-                //plElement = plElement.Replace("\\", "\r\n\r\n");   // Paragraph
-                //plElement = plElement.Replace("/", "\r\n");        // LineFeed
-
-
-                iParagraph = plElement.LastIndexOf(Paragraph);
-                iLineFeed = plElement.LastIndexOf(LineFeed);
-
-                
-
-                if (iParagraph == 0 || (plElement.Length > Paragraph.Length && iParagraph == plElement.Length - Paragraph.Length))
+                if (iParagraph == 0 || (plElement.Length > _InternalSepParagraphs.Length && iParagraph == plElement.Length - _InternalSepParagraphs.Length))
                 {
-
                     tx += "\r\n\r\n";
-                    if (plElement.Length > Paragraph.Length)
+                    if (plElement.Length > _InternalSepParagraphs.Length)
                     {
                         if (iParagraph == 0)
-                            reste = plElement.Substring(Paragraph.Length, plElement.Length - Paragraph.Length);
+                            reste = plElement.Substring(_InternalSepParagraphs.Length, plElement.Length - _InternalSepParagraphs.Length);
                         else
                             reste = plElement.Substring(0, iParagraph);
                     }
                 }
-                else if (iLineFeed == 0 || (plElement.Length > LineFeed.Length && iLineFeed == plElement.Length - LineFeed.Length))
+                else if (iLineFeed == 0 || (plElement.Length > _InternalSepLines.Length && iLineFeed == plElement.Length - _InternalSepLines.Length))
                 {
                     tx += "\r\n";
-                    if (plElement.Length > LineFeed.Length)
+                    if (plElement.Length > _InternalSepLines.Length)
                     {
                         if (iLineFeed == 0)
-                            reste = plElement.Substring(LineFeed.Length, plElement.Length - LineFeed.Length);
+                            reste = plElement.Substring(_InternalSepLines.Length, plElement.Length - _InternalSepLines.Length);
                         else
                             reste = plElement.Substring(0, iLineFeed);
                     }
@@ -2726,8 +2676,7 @@ namespace Karaboss
                 else
                 {
                     tx += plElement;
-                }
-                //plType = lLyrics[i].Type;                
+                }                             
             }
 
             txtResult.Text = tx;

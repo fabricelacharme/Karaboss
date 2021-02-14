@@ -65,6 +65,14 @@ namespace Karaboss
 
         #region properties
 
+
+        #region Internal lyrics separators
+
+        private string _InternalSepLines = "¼";        
+        private string _InternalSepParagraphs = "½";
+        
+        #endregion
+
         // Show balls
         private bool _bShowBalls = true;
         public bool bShowBalls
@@ -372,7 +380,7 @@ namespace Karaboss
         private void LoadKarOptions()
         {
             try
-            {
+            {                
                 _karaokeFont = Properties.Settings.Default.KaraokeFont;
                 pBox.KaraokeFont = _karaokeFont;
 
@@ -756,8 +764,8 @@ namespace Karaboss
         {
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             string file = path + "\\lyrics.txt";
-            lyrics = lyrics.Replace("½", "\r\n\r\n");
-            lyrics = lyrics.Replace("¼", "\r\n");
+            lyrics = lyrics.Replace(_InternalSepParagraphs, "\r\n\r\n");
+            lyrics = lyrics.Replace(_InternalSepLines, "\r\n");
             System.IO.File.WriteAllText(@file, lyrics);
             try
             {

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Fabrice Lacharme")]
 [assembly: AssemblyProduct("Karaboss")]
-[assembly: AssemblyCopyright("Copyright © Fabrice Lacharme 2020")]
+[assembly: AssemblyCopyright("Copyright © Fabrice Lacharme 2021")]
 [assembly: AssemblyTrademark("Fabrice Lacharme")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.0.7.3")]
-[assembly: AssemblyFileVersion("1.0.7.3")]
+[assembly: AssemblyVersion("1.0.7.4")]
+[assembly: AssemblyFileVersion("1.0.7.4")]

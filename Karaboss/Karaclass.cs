@@ -154,8 +154,7 @@ namespace Karaboss
                     fileName = _m_fileplaylistGroups;
                 }
                 else
-                {
-                    //fileName = Application.StartupPath + "\\" +defFileName;
+                {                    
                     string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
                     fileName = folder + "\\" + defFileName;
                     _m_fileplaylistGroups = fileName;
