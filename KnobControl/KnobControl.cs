@@ -1337,6 +1337,18 @@ namespace KnobControl
 
         #endregion
 
+        #region public functions
 
+        /// <summary>
+        /// Set Volume without event
+        /// </summary>
+        /// <param name="vol"></param>
+        public void SetValue(int vol)
+        {
+            _Value = vol;
+            // Redraw
+            Invalidate();
+        }
+        #endregion
     }
 }

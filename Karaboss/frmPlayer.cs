@@ -62,13 +62,22 @@ namespace Karaboss
         public CLyric myLyric;                
         private List<plLyric> plLyrics;
         // SlideShow directory
-        public string dirSlideShow;             
+        public string dirSlideShow;
 
         #endregion Lyrics declaration
 
+        // FAB 20/03/2021
+        private class _reglages
+        {
+            public int volume = 100;
+            public int pan = 64;
+            public int reverb = 64;
+        }
+        private List<_reglages> lstTrkReglages;
+        private _reglages TrkReglages;
 
         #region SheetMusic declarations
-             
+
         //private SheetMusic sheetmusic;                  /* The Control which displays the sheet music */
         private SheetMusic sheetmusic;
         private MidiOptions options;
@@ -323,6 +332,9 @@ namespace Karaboss
 
             // Reset plLyrics
             plLyrics = new List<plLyric>();
+
+            // Volume de chaque piste
+            lstTrkReglages = new List<_reglages>();
 
             // Zoom
             zoom = 1.0f;
@@ -1159,12 +1171,21 @@ namespace Karaboss
             }
 
             // Display track controls
+            lstTrkReglages = new List<_reglages>();
+
             for (int i = 0; i < nbTrk; i++)
-            {
+            {                
                 Track track = sequence1.tracks[i];
                 nbTrkNotes++;
                 // Add track control
                 AddTrackControl(track, i);
+
+                TrkReglages = new _reglages();
+                TrkReglages.volume = track.Volume;
+                TrkReglages.pan = track.Pan;
+                TrkReglages.reverb = track.Reverb;
+
+                lstTrkReglages.Add(TrkReglages);                
             }
 
             // Ajust height of panel according to number of controls
@@ -2014,6 +2035,7 @@ namespace Karaboss
                     if (pnlTracks.Controls[i].Tag != null)
                     {
                         ((TrkControl.TrackControl)pnlTracks.Controls[i]).LightOff();
+
                     }
                 }
             }
@@ -2039,7 +2061,27 @@ namespace Karaboss
                 SetStartVLinePos(0);
 
                 if (PlayerState == PlayerStates.Stopped)
+                {
                     ValideMenus(true);
+
+                    for (int i = 0; i < pnlTracks.Controls.Count; i++)
+                    {
+                        if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                        {
+                            if (pnlTracks.Controls[i].Tag != null)
+                            {
+                                TrkControl.TrackControl trkctrl = ((TrkControl.TrackControl)pnlTracks.Controls[i]);
+                                // Volume
+                                Track trk = sequence1.tracks[trkctrl.Track];
+                                trkctrl.SetVolume(trk.Volume);
+                                // Pan
+                                trkctrl.SetPan(trk.Pan);
+                                // Reverb
+                                trkctrl.SetReverb(trk.Reverb);
+                            }
+                        }
+                    }                   
+                }
 
             }
             else
@@ -4431,6 +4473,72 @@ namespace Karaboss
                 }
                 
             }
+            else if (e.Message.Command == ChannelCommand.Controller)
+            {                                                                     
+                ChannelMessage Msg = e.Message;                   
+                ControllerType ct = (ControllerType)Msg.Data1;
+                
+                   
+                if (ct == ControllerType.Volume)
+                {                    
+                    int vol = Msg.Data2;
+                    for (int i = 0; i < pnlTracks.Controls.Count; i++)
+                    {
+                        if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                        {
+                            if (pnlTracks.Controls[i].Tag != null)
+                            {
+                                string stag = pnlTracks.Controls[i].Tag.ToString();
+                                if (stag == sChannel)
+                                {
+                                    lstTrkReglages[i].volume = vol;                                        
+                                }
+                            }
+                        }                                
+                    }
+                }
+                else if (ct == ControllerType.Pan)
+                {
+                    int pan = Msg.Data2;
+                    for (int i = 0; i < pnlTracks.Controls.Count; i++)
+                    {
+                        if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                        {
+                            if (pnlTracks.Controls[i].Tag != null)
+                            {
+                                string stag = pnlTracks.Controls[i].Tag.ToString();
+                                if (stag == sChannel)
+                                {
+                                    lstTrkReglages[i].pan = pan;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (ct == ControllerType.EffectsLevel)
+                {
+                    int reverb = Msg.Data2;
+                    for (int i = 0; i < pnlTracks.Controls.Count; i++)
+                    {
+                        if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                        {
+                            if (pnlTracks.Controls[i].Tag != null)
+                            {
+                                string stag = pnlTracks.Controls[i].Tag.ToString();
+                                if (stag == sChannel)
+                                {
+                                    lstTrkReglages[i].reverb = reverb;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                else
+                {
+                    Debug.Print("controller: {0}", ct);
+                }
+            }
             
         }
 
@@ -4636,13 +4744,22 @@ namespace Karaboss
 
             
             // Light off all channels
+            // Display volume of tracks 
             for (int i = 0; i < pnlTracks.Controls.Count; i++)
             {
                 if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
                 {
                     if (pnlTracks.Controls[i].Tag != null)
-                    {
-                        ((TrkControl.TrackControl)pnlTracks.Controls[i]).LightOff();
+                    {                        
+                        TrkControl.TrackControl trkctrl = ((TrkControl.TrackControl)pnlTracks.Controls[i]);
+                        // Light Off
+                        trkctrl.LightOff();                                               
+                        // Volume
+                        trkctrl.SetVolume(lstTrkReglages[i].volume);
+                        // Pan
+                        trkctrl.SetPan(lstTrkReglages[i].pan);
+                        // Reverb
+                        trkctrl.SetReverb(lstTrkReglages[i].reverb);
                     }
                 }
             }
@@ -5354,7 +5471,7 @@ namespace Karaboss
 
                 Track track = sequence1.tracks[pTrack.Track];
                 track.RemoveReverb();
-                track.insertReverb(nChannel, pTrack.Pan);
+                track.insertReverb(nChannel, pTrack.Reverb);
 
                 FileModified();
             }
