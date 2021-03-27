@@ -71,7 +71,7 @@ namespace Karaboss
         {
             public int volume = 100;
             public int pan = 64;
-            public int reverb = 64;
+            public int reverb = 0;
         }
         private List<_reglages> lstTrkReglages;
         private _reglages TrkReglages;
@@ -409,17 +409,15 @@ namespace Karaboss
             if (sheetmusic != null)
                 bEditMode = sheetmusic.bEditMode;
 
-            if (sheetmusic != null)
-            {
+            if (sheetmusic != null)            
                 sheetmusic.Dispose();
-            }
-
-            
+                        
             options = GetMidiOptions(ScrollVert);
 
             // Staffs height
             iStaffHeight = 150;
 
+            #region create new sheet music
             sheetmusic = new SheetMusic(sequence1, options, iStaffHeight)
             {
                 bEditMode = bEditMode,
@@ -445,6 +443,7 @@ namespace Karaboss
 
             sheetmusic.SetZoom(zoom);
             sheetmusic.Parent = pnlScrollView;
+            #endregion
 
             BackColor = Color.White;
             pnlScrollView.BackColor = Color.White;
@@ -565,6 +564,24 @@ namespace Karaboss
 
 
         # region track stuff
+        /// <summary>
+        /// Reset all things related to tracks when the number of tracks evolve
+        /// </summary>
+        private void InitTracksStuff()
+        {
+            lstTrkReglages = new List<_reglages>();
+            int nbTrk = sequence1.tracks.Count;
+                     
+            for (int i = 0; i < nbTrk; i++)
+            {
+                Track track = sequence1.tracks[i];
+                TrkReglages = new _reglages();
+                TrkReglages.volume = track.Volume;
+                TrkReglages.pan = track.Pan;
+                TrkReglages.reverb = track.Reverb;
+                lstTrkReglages.Add(TrkReglages);
+            }
+        }
 
         /// <summary>
         /// Mouse move event => draw help grid to seize notes
@@ -1170,22 +1187,12 @@ namespace Karaboss
                 }
             }
 
-            // Display track controls
-            lstTrkReglages = new List<_reglages>();
-
             for (int i = 0; i < nbTrk; i++)
             {                
                 Track track = sequence1.tracks[i];
                 nbTrkNotes++;
                 // Add track control
                 AddTrackControl(track, i);
-
-                TrkReglages = new _reglages();
-                TrkReglages.volume = track.Volume;
-                TrkReglages.pan = track.Pan;
-                TrkReglages.reverb = track.Reverb;
-
-                lstTrkReglages.Add(TrkReglages);                
             }
 
             // Ajust height of panel according to number of controls
@@ -2497,6 +2504,9 @@ namespace Karaboss
                 // Display track controls             
                 DisplayTrackControls();
 
+                // Reset tracks stuff
+                InitTracksStuff();
+
                 // Recherche si des lyrics existent et affiche la forme frmLyric
                 mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
 
@@ -3053,6 +3063,9 @@ namespace Karaboss
             positionHScrollBarNew.Value = 0;
             positionHScrollBarNew.Maximum = _totalTicks;
 
+            // Reset tacks stuff
+            InitTracksStuff();
+
             // Create a new ShetMusic
             RedrawSheetMusic();
 
@@ -3097,6 +3110,9 @@ namespace Karaboss
 
             positionHScrollBarNew.Value = 0;
             positionHScrollBarNew.Maximum = _totalTicks;
+
+            // Reset tracks stuff
+            InitTracksStuff();
 
             // Create a new ShetMusic
             RedrawSheetMusic();
@@ -3150,6 +3166,9 @@ namespace Karaboss
                 // Add notes
                 float dur = 0.25f; // doubles croches
                 CreateTimeLineMelody(track, channel, dur);
+
+                // Reset tracks Stuff
+                InitTracksStuff();
 
                 RedrawSheetMusic();
                 SetScrollBarValues();
@@ -4264,6 +4283,9 @@ namespace Karaboss
                 
                 // Display track controls             
                 DisplayTrackControls();
+
+                // REset tracks Stuff
+                InitTracksStuff();
                 #endregion
 
 
@@ -4482,16 +4504,21 @@ namespace Karaboss
                 if (ct == ControllerType.Volume)
                 {                    
                     int vol = Msg.Data2;
+                    int j = -1;
+
                     for (int i = 0; i < pnlTracks.Controls.Count; i++)
                     {
                         if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
                         {
+                            j++;
                             if (pnlTracks.Controls[i].Tag != null)
                             {
                                 string stag = pnlTracks.Controls[i].Tag.ToString();
                                 if (stag == sChannel)
                                 {
-                                    lstTrkReglages[i].volume = vol;                                        
+                                    // Adjust volume for all tracks having this channel
+                                    lstTrkReglages[j].volume = vol;
+                                    //j++;
                                 }
                             }
                         }                                
@@ -4500,16 +4527,20 @@ namespace Karaboss
                 else if (ct == ControllerType.Pan)
                 {
                     int pan = Msg.Data2;
+                    int j = -1;
                     for (int i = 0; i < pnlTracks.Controls.Count; i++)
                     {
                         if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
                         {
+                            j++;
                             if (pnlTracks.Controls[i].Tag != null)
                             {
                                 string stag = pnlTracks.Controls[i].Tag.ToString();
                                 if (stag == sChannel)
                                 {
-                                    lstTrkReglages[i].pan = pan;
+                                    // Ajust pan for all tracks having this channel
+                                    lstTrkReglages[j].pan = pan;
+                                    //j++;
                                 }
                             }
                         }
@@ -4518,16 +4549,20 @@ namespace Karaboss
                 else if (ct == ControllerType.EffectsLevel)
                 {
                     int reverb = Msg.Data2;
+                    int j = -1;
                     for (int i = 0; i < pnlTracks.Controls.Count; i++)
                     {
                         if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
                         {
+                            j++;
                             if (pnlTracks.Controls[i].Tag != null)
                             {
                                 string stag = pnlTracks.Controls[i].Tag.ToString();
                                 if (stag == sChannel)
                                 {
-                                    lstTrkReglages[i].reverb = reverb;
+                                    // Ajust reverb for all tracks having this channel
+                                    lstTrkReglages[j].reverb = reverb;
+                                    //j++;
                                 }
                             }
                         }
@@ -4536,7 +4571,7 @@ namespace Karaboss
 
                 else
                 {
-                    Debug.Print("controller: {0}", ct);
+                    //Debug.Print("controller: {0}", ct);
                 }
             }
             
@@ -4742,24 +4777,30 @@ namespace Karaboss
 
             lblBeat.Text = beat.ToString() + "|" + sequence1.Numerator;
 
-            
             // Light off all channels
             // Display volume of tracks 
+            int j = -1;
             for (int i = 0; i < pnlTracks.Controls.Count; i++)
             {
                 if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
                 {
+                    j++;
                     if (pnlTracks.Controls[i].Tag != null)
                     {                        
-                        TrkControl.TrackControl trkctrl = ((TrkControl.TrackControl)pnlTracks.Controls[i]);
+                        TrkControl.TrackControl trkctrl = ((TrkControl.TrackControl)pnlTracks.Controls[i]);                       
                         // Light Off
-                        trkctrl.LightOff();                                               
+                        trkctrl.LightOff();
+
                         // Volume
-                        trkctrl.SetVolume(lstTrkReglages[i].volume);
+                        Track track = sequence1.tracks[pTrack.Track];
+                        //j = sequence1.tracks.IndexOf(track);
+
+                        trkctrl.SetVolume(lstTrkReglages[j].volume);                       
                         // Pan
-                        trkctrl.SetPan(lstTrkReglages[i].pan);
+                        trkctrl.SetPan(lstTrkReglages[j].pan);
                         // Reverb
-                        trkctrl.SetReverb(lstTrkReglages[i].reverb);
+                        trkctrl.SetReverb(lstTrkReglages[j].reverb);
+                        //j++;
                     }
                 }
             }
@@ -5445,8 +5486,11 @@ namespace Karaboss
                 Track track = sequence1.tracks[pTrack.Track];
                 track.RemoveVolume();
                 track.insertVolume(nChannel, v);
-            }
 
+                lstTrkReglages[sequence1.tracks.IndexOf(track)].volume = v;
+                track.Volume = v;
+                FileModified();
+            }
         }
 
         /// <summary>
@@ -5473,6 +5517,8 @@ namespace Karaboss
                 track.RemoveReverb();
                 track.insertReverb(nChannel, pTrack.Reverb);
 
+                lstTrkReglages[sequence1.tracks.IndexOf(track)].reverb = pTrack.Reverb;
+                track.Reverb = pTrack.Reverb;
                 FileModified();
             }
         }
@@ -5501,6 +5547,8 @@ namespace Karaboss
                 track.RemovePan();
                 track.insertPan(nChannel, pTrack.Pan);
 
+                lstTrkReglages[sequence1.tracks.IndexOf(track)].pan = pTrack.Pan;
+                track.Pan = pTrack.Pan;
                 FileModified();
             }
         }
@@ -5586,6 +5634,10 @@ namespace Karaboss
                     pTrack.Dispose();
 
                     DisplayTrackControls();
+
+                    // Reset tracks Stuff
+                    InitTracksStuff();
+
                     sheetmusic.Refresh();
 
                     SetStartVLinePos(0);
@@ -6014,6 +6066,10 @@ namespace Karaboss
 
                 // Create a new ShetMusic
                 DisplayTrackControls();
+
+                // Reset tracks stuff
+                InitTracksStuff();
+
                 RedrawSheetMusic();
                 FileModified();
 
@@ -6398,7 +6454,7 @@ namespace Karaboss
                 ProgramChange = programchange,
                 Volume = volume,
                 Pan = 64,
-                Reverb = 64,
+                Reverb = 0,
             };
 
             if (clef == 0)
@@ -6474,7 +6530,7 @@ namespace Karaboss
         private void InsertTrackControl(Track track, int trackindex)
         {
             TrkControl.TrackControl pTrack = CreateTrackControl(track, trackindex);
-            DisplayTrackControls();
+            //DisplayTrackControls();
         }
 
         /// <summary>
@@ -6656,13 +6712,10 @@ namespace Karaboss
             dr = TrackDialog.ShowDialog();
 
 
-            if (dr == DialogResult.Cancel)
-            {
+            if (dr == DialogResult.Cancel)            
                 return;
-            }
-
+            
             // Get infos from dialog
-
             clef = TrackDialog.cle;
             trackname = TrackDialog.TrackName;
             programchange = TrackDialog.ProgramChange;
@@ -6707,6 +6760,11 @@ namespace Karaboss
                     if (sequence1.tracks.Count == 1)
                         CreateNewMelody(track, channel, measures);
                 }
+
+                DisplayTrackControls();
+
+                // Reset tracks stuff
+                InitTracksStuff();
 
                 // Create a new ShetMusic
                 RedrawSheetMusic();
@@ -6753,7 +6811,7 @@ namespace Karaboss
 
             sequencer1.Sequence = sequence1;
 
-            MIDIfileName = null;
+            MIDIfileName = "New";
             MIDIfilePath = null;
             MIDIfileFullPath = null;
             

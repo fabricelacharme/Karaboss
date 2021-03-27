@@ -132,25 +132,27 @@ namespace Sanford.Multimedia.Midi.Score.UI
         {
             try
             {
-                Form fParent = (Form)findFormParent(sheetmusic);                
-                Point parentPoint = fParent.Location;
+                Form fParent = (Form)findFormParent(sheetmusic);
+                if (fParent != null)
+                {
+                    Point parentPoint = fParent.Location;
 
-                //int LocX = parentPoint.X + fParent.ClientSize.Width - this.Width - System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
-                int LocX = parentPoint.X + fParent.ClientSize.Width - this.Width - 10;
-                int LocY = parentPoint.Y + 104;
+                    //int LocX = parentPoint.X + fParent.ClientSize.Width - this.Width - System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
+                    int LocX = parentPoint.X + fParent.ClientSize.Width - this.Width - 10;
+                    int LocY = parentPoint.Y + 104;
 
-                Location = new Point(LocX, LocY);
+                    Location = new Point(LocX, LocY);
 
-                // Verify if this windows is visible in extended screens
-                Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
-                foreach (Screen screen in Screen.AllScreens)
-                    rect = Rectangle.Union(rect, screen.Bounds);
+                    // Verify if this windows is visible in extended screens
+                    Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
+                    foreach (Screen screen in Screen.AllScreens)
+                        rect = Rectangle.Union(rect, screen.Bounds);
 
-                if (Location.X > rect.Width)
-                    Location = new Point(0, Location.Y);
-                if (Location.Y > rect.Height)
-                    Location = new Point(Location.X, 0);
-
+                    if (Location.X > rect.Width)
+                        Location = new Point(0, Location.Y);
+                    if (Location.Y > rect.Height)
+                        Location = new Point(Location.X, 0);
+                }
             }
             catch (Exception ex)
             {
