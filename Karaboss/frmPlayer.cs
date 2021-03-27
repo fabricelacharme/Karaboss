@@ -493,7 +493,7 @@ namespace Karaboss
         /// <param name="staffnum"></param>
         private void PianoRoll_Required(object sender, EventArgs e, int staffnum)
         {            
-            DisplayPianoRoll(staffnum, MIDIfileFullPath);
+            DisplayPianoRoll(staffnum, MIDIfileFullPath, 0);
         }
 
         /// <summary>
@@ -738,7 +738,7 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <param name="staffnum"></param>
-        private void Track_DoubleClick(object sender, EventArgs e, int staffnum)
+        private void Track_DoubleClick(object sender, EventArgs e, int staffnum, float ticks)
         {
             #region guard
             if (PlayerState != PlayerStates.Stopped)
@@ -748,7 +748,7 @@ namespace Karaboss
             #endregion guard            
 
             // Launch PianoRoll Window in order to display this track
-            DisplayPianoRoll(staffnum, MIDIfileFullPath);
+            DisplayPianoRoll(staffnum, MIDIfileFullPath, ticks);
         }
 
         /// <summary>
@@ -2941,21 +2941,21 @@ namespace Karaboss
             if (sequence1.tracks.Count == 1)
                 tracknum = 0;
 
-            DisplayPianoRoll(tracknum, MIDIfileFullPath);
+            DisplayPianoRoll(tracknum, MIDIfileFullPath, 0);
         }
 
         /// <summary>
         /// Display the pianoRoll window
         /// </summary>
         /// <param name="tracknum"></param>
-        private void DisplayPianoRoll(int tracknum, string fileName)
+        private void DisplayPianoRoll(int tracknum, string fileName, float ticks)
         {                        
             if (Application.OpenForms["frmPianoRoll"] == null)
             {
                 frmPianoRoll = new frmPianoRoll(sequence1, tracknum, outDevice, fileName);
                 frmPianoRoll.Show();
                 frmPianoRoll.Refresh();
-                frmPianoRoll.StartupPosition();
+                frmPianoRoll.StartupPosition(ticks);
             }
         }
 

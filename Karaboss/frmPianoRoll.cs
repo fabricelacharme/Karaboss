@@ -1095,10 +1095,14 @@ namespace Karaboss
         /// <summary>
         /// Window and scrollbar startup position
         /// </summary>
-        public void StartupPosition()
+        public void StartupPosition(float ticks = 0)
         {                       
             int middleScroll = vScrollBar.Maximum / 2;
             vScrollBar.Value = middleScroll;
+
+            pianoRollControl1.OffsetX = Convert.ToInt32(ticks * pianoRollControl1.XScale);
+            tlControl1.OffsetX = pianoRollControl1.OffsetX;
+            hScrollBar.Value = pianoRollControl1.OffsetX;
         }
 
         private void FrmPianoRoll_Resize(object sender, EventArgs e)
@@ -1205,8 +1209,7 @@ namespace Karaboss
         private void UpdateFrmPlayer()
         {
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
-            {
-                
+            {                
                 frmPlayer = GetForm<frmPlayer>();
                 frmPlayer.RefreshDisplay();
                 frmPlayer.FileModified();
@@ -1356,8 +1359,7 @@ namespace Karaboss
             {
                 scrolling = true;
             }
-        }     
-
+        }            
 
         /// <summary>
         /// Event: playing midi file completed
@@ -1405,6 +1407,7 @@ namespace Karaboss
                 //pianoControl1.Send(message);
             }
         }
+        
 
         #endregion
 

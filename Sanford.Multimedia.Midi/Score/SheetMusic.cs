@@ -52,7 +52,7 @@ namespace Sanford.Multimedia.Midi.Score
         //public delegate void smMouseClickEventHandler(object sender, EventArgs e, int staffnum, int note, float ticks);
         //public event smMouseClickEventHandler OnSMMouseClick;
 
-        public delegate void smMouseDoubleClickEventHandler(object sender, EventArgs e, int staffnum);
+        public delegate void smMouseDoubleClickEventHandler(object sender, EventArgs e, int staffnum, float ticks);
         public event smMouseDoubleClickEventHandler OnSMMouseDoubleClick;
 
 
@@ -2891,12 +2891,27 @@ namespace Sanford.Multimedia.Midi.Score
         {
             if (OnSMMouseDoubleClick != null)
             {
+                int X = e.Location.X;
                 int Y = e.Location.Y;
+                X = Convert.ToInt32(X / zoom);
+                Y = Convert.ToInt32(Y / zoom);
+
+                Point pos = PointToClient(Control.MousePosition);
+                X = pos.X;
+                Y = pos.Y;
+                X = X + OffsetX;
+                float ticks = 0;
+
+
                 // Find the staff
                 int numstaff = GetStaffClicked(Y);
-                if (numstaff != -1)                
-                    OnSMMouseDoubleClick(this, e, numstaff);
-                
+                if (numstaff != -1)
+                {
+                    _selectedstaff = numstaff;
+                    // Find horizontal position                    
+                    ticks = this.staffs[_selectedstaff].PulseTimeForPoint(new Point(X, Y));
+                    OnSMMouseDoubleClick(this, e, numstaff, ticks);
+                }
             }
         }
 
