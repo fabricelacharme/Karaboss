@@ -294,12 +294,6 @@
     <Compile Include="frmTags.Designer.cs">
       <DependentUpon>frmTags.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmTest.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmTest.Designer.cs">
-      <DependentUpon>frmTest.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmLyric.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -586,9 +580,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmTags.resx">
       <DependentUpon>frmTags.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmTest.resx">
-      <DependentUpon>frmTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmLyric.resx">
       <DependentUpon>frmLyric.cs</DependentUpon>

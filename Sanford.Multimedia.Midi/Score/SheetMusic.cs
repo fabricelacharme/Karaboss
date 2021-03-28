@@ -2676,8 +2676,11 @@ namespace Sanford.Multimedia.Midi.Score
 
         #endregion
 
+
+        #region frmNoteEdit
+
         /// <summary>
-        /// Replace currentNote by n
+        /// frmNoteEdit - Replace currentNote by n
         /// </summary>
         /// <param name="n"></param>
         public void ModifyCurrentNote(MidiNote n, bool resetselection)
@@ -2697,7 +2700,10 @@ namespace Sanford.Multimedia.Midi.Score
             FileModified?.Invoke(this);
         }
 
-
+        /// <summary>
+        /// frmNoteEdit - Modify the velocity of a note
+        /// </summary>
+        /// <param name="Velocity"></param>
         public void ModifyVelocitySelectedNotes(int Velocity)
         {
             int numstaff = CurrentNote.numstaff;
@@ -2707,7 +2713,6 @@ namespace Sanford.Multimedia.Midi.Score
             {
                 _lstmidinotes.Add(n);
             }
-
 
             foreach (MidiNote mn in _lstmidinotes)
             {
@@ -2723,9 +2728,34 @@ namespace Sanford.Multimedia.Midi.Score
 
             // Raise event
             FileModified?.Invoke(this);
-
         }
 
+        #region Effects
+        /// <summary>
+        /// frmNoteEdit - set Pitch Bend to a note
+        /// </summary>
+        public void SetPitchBend()
+        {
+            int numstaff = CurrentNote.numstaff;
+            Track trk = sequence1.tracks[numstaff];
+            MidiNote mn = CurrentNote.midinote;
+            trk.SetPitchBend(mn.Channel, mn.Number, mn.StartTime, mn.EndTime);
+        }
+
+        /// <summary>
+        /// frmNoteEdit - Remove pitch bend to a note
+        /// </summary>
+        public void UnsetPitchBend()
+        {
+            int numstaff = CurrentNote.numstaff;
+            Track trk = sequence1.tracks[numstaff];
+            MidiNote mn = CurrentNote.midinote;
+            trk.UnsetPitchBend(mn.Channel, mn.Number, mn.StartTime, mn.EndTime);
+        }
+
+        #endregion
+
+        #endregion
 
         public void AddSelectedNote(MidiNote midinote)
         {          

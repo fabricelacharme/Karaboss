@@ -135,9 +135,7 @@ namespace Sanford.Multimedia.Midi.Score.UI
                 Form fParent = (Form)findFormParent(sheetmusic);
                 if (fParent != null)
                 {
-                    Point parentPoint = fParent.Location;
-
-                    //int LocX = parentPoint.X + fParent.ClientSize.Width - this.Width - System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
+                    Point parentPoint = fParent.Location;                    
                     int LocX = parentPoint.X + fParent.ClientSize.Width - this.Width - 10;
                     int LocY = parentPoint.Y + 104;
 
@@ -191,8 +189,6 @@ namespace Sanford.Multimedia.Midi.Score.UI
 
         #endregion
 
-
-      
 
 
         private void upDownNoteValue_ValueChanged(object sender, EventArgs e)
@@ -268,8 +264,24 @@ namespace Sanford.Multimedia.Midi.Score.UI
 
         }
 
+
         #endregion
 
-       
+
+        #region Effects
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                sheetmusic.SetPitchBend();
+            }
+            else
+            {
+                sheetmusic.UnsetPitchBend();
+            }
+        }
+
+
+        #endregion
     }
 }

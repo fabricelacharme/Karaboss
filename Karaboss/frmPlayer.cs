@@ -6921,10 +6921,7 @@ namespace Karaboss
             lblDotted.BackColor = Color.White;
             lblBemol.BackColor = Color.White;
             lblDiese.BackColor = Color.White;
-            lblBecarre.BackColor = Color.White;
-
-            // Hide panel modification notes
-            //CloseFrmNoteEdit();
+            lblBecarre.BackColor = Color.White;           
 
         }
        
@@ -6938,11 +6935,7 @@ namespace Karaboss
             if (PlayerState != PlayerStates.Stopped)
                 return;
 
-            DspEdit(!bEditScore);
-
-            // Makes form notes modification visible
-            //if (bEditScore)
-            //    ShowFrmNoteEdit();
+            DspEdit(!bEditScore);           
 
         }
  

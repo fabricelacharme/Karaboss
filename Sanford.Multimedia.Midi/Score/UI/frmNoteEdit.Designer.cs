@@ -45,8 +45,15 @@
             this.lblTrackNumber = new System.Windows.Forms.Label();
             this.lblSelection = new System.Windows.Forms.Label();
             this.btnDefVlocity = new System.Windows.Forms.Button();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.upDownNoteVelocity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.upDownNoteValue)).BeginInit();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnPnlNoteCancel
@@ -148,26 +155,55 @@
             this.btnDefVlocity.UseVisualStyleBackColor = true;
             this.btnDefVlocity.Click += new System.EventHandler(this.btnDefVlocity_Click);
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            resources.ApplyResources(this.tabControl1, "tabControl1");
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.btnDefVlocity);
+            this.tabPage1.Controls.Add(this.lblNoteValue);
+            this.tabPage1.Controls.Add(this.lblSelection);
+            this.tabPage1.Controls.Add(this.upDownNoteValue);
+            this.tabPage1.Controls.Add(this.lblTrackNumber);
+            this.tabPage1.Controls.Add(this.lblNoteString);
+            this.tabPage1.Controls.Add(this.btnPnlNoteCancel);
+            this.tabPage1.Controls.Add(this.lbNotelTime);
+            this.tabPage1.Controls.Add(this.btnPnlNoteOk);
+            this.tabPage1.Controls.Add(this.txtTime);
+            this.tabPage1.Controls.Add(this.upDownNoteVelocity);
+            this.tabPage1.Controls.Add(this.lblNoteTicks);
+            this.tabPage1.Controls.Add(this.lblNoteVelocity);
+            this.tabPage1.Controls.Add(this.txtTicks);
+            this.tabPage1.Controls.Add(this.txtDuration);
+            this.tabPage1.Controls.Add(this.lblNoteDuration);
+            resources.ApplyResources(this.tabPage1, "tabPage1");
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.checkBox1);
+            resources.ApplyResources(this.tabPage2, "tabPage2");
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            resources.ApplyResources(this.checkBox1, "checkBox1");
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // frmNoteEdit
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.btnDefVlocity);
-            this.Controls.Add(this.lblSelection);
-            this.Controls.Add(this.lblTrackNumber);
-            this.Controls.Add(this.btnPnlNoteCancel);
-            this.Controls.Add(this.btnPnlNoteOk);
-            this.Controls.Add(this.upDownNoteVelocity);
-            this.Controls.Add(this.lblNoteVelocity);
-            this.Controls.Add(this.txtDuration);
-            this.Controls.Add(this.lblNoteDuration);
-            this.Controls.Add(this.txtTicks);
-            this.Controls.Add(this.lblNoteTicks);
-            this.Controls.Add(this.txtTime);
-            this.Controls.Add(this.lbNotelTime);
-            this.Controls.Add(this.lblNoteString);
-            this.Controls.Add(this.upDownNoteValue);
-            this.Controls.Add(this.lblNoteValue);
+            this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -179,8 +215,12 @@
             this.Load += new System.EventHandler(this.frmNoteEdit_Load);
             ((System.ComponentModel.ISupportInitialize)(this.upDownNoteVelocity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.upDownNoteValue)).EndInit();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -202,5 +242,9 @@
         private System.Windows.Forms.Label lblTrackNumber;
         private System.Windows.Forms.Label lblSelection;
         private System.Windows.Forms.Button btnDefVlocity;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
