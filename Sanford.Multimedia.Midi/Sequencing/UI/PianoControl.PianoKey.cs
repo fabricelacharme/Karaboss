@@ -237,7 +237,48 @@ namespace Sanford.Multimedia.Midi.UI
                 else
                 {
                     // White notes
-                    e.Graphics.DrawRectangle(Pens.Black, 0, 0, Size.Width - 1, Size.Height - 1);
+                    //e.Graphics.DrawRectangle(Pens.Black, 0, 0, Size.Width - 1, Size.Height - 1);
+
+                    if (owner.Orientation == Orientation.Horizontal)
+                    {
+                        Pen pn = new Pen( Color.Black);                        
+                        pn.Width = 2;
+
+                        // Line vert left
+                        Point pt1 = new Point(0, 0);
+                        Point pt2 = new Point(0, Size.Height - 4);
+                        e.Graphics.DrawLine(pn, pt1, pt2);
+
+                        pt1 = new Point(0, Size.Height - 4);
+                        pt2 = new Point(4, Size.Height);
+                        e.Graphics.DrawLine(pn, pt1, pt2);
+
+
+                        // Line horz bottom
+                        pt1 = new Point(4, Size.Height);
+                        pt2 = new Point(Size.Width - 4, Size.Height);
+                        e.Graphics.DrawLine(pn, pt1, pt2);
+
+                        pt1 = new Point(Size.Width - 4, Size.Height);
+                        pt2 = new Point(Size.Width, Size.Height - 4);
+                        e.Graphics.DrawLine(pn, pt1, pt2);
+
+
+
+                        // Line vert right
+                        pt1 = new Point(Size.Width, Size.Height - 4);
+                        pt2 = new Point(Size.Width, 0);
+                        e.Graphics.DrawLine(pn, pt1, pt2);
+
+                        // Line horz top
+                        pt1 = new Point(Size.Width, 0);
+                        pt2 = new Point(0, 0);
+                        e.Graphics.DrawLine(pn, pt1, pt2);
+
+
+
+                    }
+
                 }
 
 
