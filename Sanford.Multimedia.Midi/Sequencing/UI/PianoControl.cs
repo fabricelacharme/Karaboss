@@ -488,9 +488,9 @@ namespace Sanford.Multimedia.Midi.UI
             int blackKeyHeight = 0;
             int whiteKeyWidth = 0;
             int whiteKeyHeight = 0;
-            int offset = 0;
+            //int offset = 0;
             int n = 0;
-            int w = 0;
+            //int w = 0;
             int h = 0;
 
             //totalheight = 0;

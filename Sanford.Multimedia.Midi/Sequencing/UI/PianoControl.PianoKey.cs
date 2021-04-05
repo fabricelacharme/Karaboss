@@ -175,10 +175,71 @@ namespace Sanford.Multimedia.Midi.UI
                 }
                 else
                 {
+                    // Color depending on whhite or black note
                     e.Graphics.FillRectangle(offBrush, 0, 0, Size.Width, Size.Height);
+                    
                 }
 
-                e.Graphics.DrawRectangle(Pens.Black, 0, 0, Size.Width - 1, Size.Height - 1);
+                // Draw contour
+                //e.Graphics.DrawRectangle(Pens.Black, 0, 0, Size.Width - 1, Size.Height - 1);
+
+                if (!on && NoteOffColor == Color.Black)
+                {
+
+                    // Draw 3D effect on black notes with gray lines and a gray rctangle
+                    if (owner.Orientation == Orientation.Vertical)
+                    {                        
+                        // Top horz line -3
+                        Point pt1 = new Point(0, 3);
+                        Point pt2 = new Point(Size.Width - 3, 3);
+                        e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                        // vert line on the right - 3
+                        pt1 = new Point(Size.Width - 3, 3);
+                        pt2 = new Point(Size.Width - 3, Size.Height - 5);
+                        e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                        // bottom line -3
+                        pt1 = new Point(0, Size.Height - 4);
+                        pt2 = new Point(Size.Width - 3, Size.Height - 4);
+                        e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                        // Gray Rectangle on the right
+                        Rectangle rect = new Rectangle(Size.Width - 2 - 12, 4, 12, Size.Height - 8);
+                        SolidBrush FillBrush = new SolidBrush(Color.DimGray);
+                        e.Graphics.FillRectangle(FillBrush, rect);                        
+                    }
+                    else
+                    {
+                        // left vert line +3 
+                        Point pt1 = new Point(3, 0);
+                        Point pt2 = new Point(3, Size.Height - 3);
+                        e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                        // Horz line bottom -3
+                        pt1 = new Point(3, Size.Height - 3);
+                        pt2 = new Point(Size.Width - 3, Size.Height - 3);
+                        e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                        // Right vert line -3
+                        pt1 = new Point(Size.Width - 3, 0);
+                        pt2 = new Point(Size.Width - 3, Size.Height - 3);
+                        e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                        // Gray rectangle at the bottom of the black note
+                        Rectangle rect = new Rectangle(4, Size.Height - 14, Size.Width - 7, 12);
+                        SolidBrush FillBrush = new SolidBrush(Color.DimGray);
+                        e.Graphics.FillRectangle(FillBrush, rect);
+
+                    }
+
+                }
+                else
+                {
+                    // White notes
+                    e.Graphics.DrawRectangle(Pens.Black, 0, 0, Size.Width - 1, Size.Height - 1);
+                }
+
 
                 // FAB: draw note letter only for C note
                 if (noteID % 12 == 0)
