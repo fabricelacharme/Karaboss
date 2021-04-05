@@ -494,22 +494,13 @@ namespace Sanford.Multimedia.Midi
 
                 byte[] data = new byte[ReadVariableLengthValue()];
                 Array.Copy(trackData, trackIndex, data, 0, data.Length);
-                
-                // Fab - 15/05/16 - Correct some eroneous times ...
-                if (data[0] == 6 && data[1] == 3)
-                {
-                    data[0] = 12;
-                    data[1] = 4;
-                }
+                              
                 newTrack.Insert(ticks, new MetaMessage(type, data));
 
-                string TimeSignature = data[0].ToString();
-                
-
+                string TimeSignature = data[0].ToString();                
 
                 newTrack.Numerator = data[0];
-                newTrack.Denominator = data[1];
-
+                newTrack.Denominator = (int)Math.Pow(2, data[1]); // denominator is a negative power of 2
 
                 trackIndex += data.Length;
 
@@ -571,13 +562,18 @@ namespace Sanford.Multimedia.Midi
                     break;
 
                 case "Japanese":
-                    Encoding japanese = Encoding.GetEncoding("932");
+                    Encoding japanese = Encoding.GetEncoding("shift_jis");
                     sy = japanese.GetString(data);
                     break;
 
                 case "Korean":
                     Encoding korean = Encoding.GetEncoding("ks_c_5601-1987");
                     sy = korean.GetString(data);
+                    break;
+
+                case "Vietnamese":
+                    Encoding vietnamese = Encoding.GetEncoding("windows-1258");
+                    sy = vietnamese.GetString(data);
                     break;
 
                 default:
@@ -587,7 +583,8 @@ namespace Sanford.Multimedia.Midi
             #endregion
 
             // Clean special characters
-            sy = CleanSpecialChars(sy);
+            if (sy.Trim() != string.Empty)
+                sy = CleanSpecialChars(sy);
 
             try
             {
@@ -602,40 +599,40 @@ namespace Sanford.Multimedia.Midi
                     #region extract data
 
                     string Paragraph1 = "\r\r";
-                    int iParagraph1 = sy.IndexOf(Paragraph1);
+                    int iParagraph1 = sy.LastIndexOf(Paragraph1);
                     string Paragraph2 = "\\";
-                    int iParagraph2 = sy.IndexOf(Paragraph2);
+                    int iParagraph2 = sy.LastIndexOf(Paragraph2);
 
                     string LineFeed1 = "\r";
-                    int iLineFeed1 = sy.IndexOf(LineFeed1);
+                    int iLineFeed1 = sy.LastIndexOf(LineFeed1);
                     string LineFeed2 = "/";
-                    int iLineFeed2 = sy.IndexOf(LineFeed2);
+                    int iLineFeed2 = sy.LastIndexOf(LineFeed2);
 
-                    if (iParagraph1 > -1)
+                    if (iParagraph1 == 0 || (sy.Length > Paragraph1.Length && iParagraph1 == sy.Length - Paragraph1.Length))
                     {
                         // single paragraph
                         // A forward slash "/" character marks the end of a "paragraph" of lyrics
-                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "\\", TicksOn = ticks });
-                        newTrack.TotalLyricsL += "\\";
+                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "½", TicksOn = ticks });
+                        newTrack.TotalLyricsL += "½";
 
                         if (sy.Length > Paragraph1.Length)
                         {
                             // Text
-                            if (iParagraph1 == 0)                                                            
-                                reste = sy.Substring(Paragraph1.Length, sy.Length - Paragraph1.Length);                           
-                            else                            
+                            if (iParagraph1 == 0)
+                                reste = sy.Substring(Paragraph1.Length, sy.Length - Paragraph1.Length);
+                            else
                                 reste = sy.Substring(0, iParagraph1);
-                            
+
                             newTrack.TotalLyricsL += reste;
                             newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
                         }
                     }
-                    else if (iParagraph2 > -1)
+                    else if (iParagraph2 == 0 || (sy.Length > Paragraph2.Length && iParagraph2 == sy.Length - Paragraph2.Length))
                     {
                         // single paragraph
                         // A forward slash "/" character marks the end of a "paragraph" of lyrics
-                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "\\", TicksOn = ticks });
-                        newTrack.TotalLyricsL += "\\";
+                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "½", TicksOn = ticks });
+                        newTrack.TotalLyricsL += "½";
 
                         if (sy.Length > Paragraph2.Length)
                         {
@@ -649,14 +646,14 @@ namespace Sanford.Multimedia.Midi
                             newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
                         }
                     }
-                    else if (iLineFeed1 > -1)
+                    else if (iLineFeed1 == 0 || (sy.Length > LineFeed1.Length && iLineFeed1 == sy.Length - LineFeed1.Length))
                     {
                         // Single linefeed
                         // A back slash "\" character marks the end of a line of lyrics
-                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "/", TicksOn = ticks });
-                        newTrack.TotalLyricsL += "/";
+                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "¼", TicksOn = ticks });
+                        newTrack.TotalLyricsL += "¼";
 
-                        if (sy.Length > 1)
+                        if (sy.Length > LineFeed1.Length)
                         {
                             // Text
                             if (iLineFeed1 == 0)
@@ -668,14 +665,14 @@ namespace Sanford.Multimedia.Midi
                             newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
                         }
                     }
-                    else if (iLineFeed2 > -1)
+                    else if (iLineFeed2 == 0 || (sy.Length > LineFeed2.Length && iLineFeed2 == sy.Length - LineFeed2.Length))
                     {
                         // Single linefeed
                         // A back slash "\" character marks the end of a line of lyrics
-                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "/", TicksOn = ticks });
-                        newTrack.TotalLyricsL += "/";
+                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "¼", TicksOn = ticks });
+                        newTrack.TotalLyricsL += "¼";
 
-                        if (sy.Length > 1)
+                        if (sy.Length > LineFeed2.Length)
                         {
                             // Text
                             if (iLineFeed2 == 0)
@@ -692,6 +689,13 @@ namespace Sanford.Multimedia.Midi
                         // no linefeed
                         newTrack.TotalLyricsL += sy;
                         newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = sy, TicksOn = ticks });
+                    }
+                    else if (sy == " ")
+                    {
+                        // Manage the space separator when lyrics are letter to letter
+                        newTrack.TotalLyricsL += "[]";                        
+                        newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = "[]", TicksOn = ticks });
+
                     }
                     #endregion                  
 
@@ -739,13 +743,18 @@ namespace Sanford.Multimedia.Midi
                     break;
 
                 case "Japanese":
-                    Encoding japanese = Encoding.GetEncoding("932");
+                    Encoding japanese = Encoding.GetEncoding("shift_jis");
                     sy = japanese.GetString(data);
                     break;
 
                 case "Korean":
                     Encoding korean = Encoding.GetEncoding("ks_c_5601-1987");
                     sy = korean.GetString(data);
+                    break;
+
+                case "Vietnamese":
+                    Encoding vietnamese = Encoding.GetEncoding("windows-1258");
+                    sy = vietnamese.GetString(data);
                     break;
 
                 default:
@@ -755,7 +764,8 @@ namespace Sanford.Multimedia.Midi
             #endregion
 
             // Clean special characters
-            sy = CleanSpecialChars(sy);           
+            if (sy.Trim() != string.Empty)
+                sy = CleanSpecialChars(sy);           
 
             try
             {
@@ -786,43 +796,89 @@ namespace Sanford.Multimedia.Midi
                         string reste = string.Empty;
 
                         #region extract data
+                        string Paragraph1 = "\r\r";
+                        int iParagraph1 = sy.LastIndexOf(Paragraph1);
+                        string Paragraph2 = "\\";
+                        int iParagraph2 = sy.LastIndexOf(Paragraph2);
 
-                        int iParagraph = sy.IndexOf('\\');
-                        int iLineFeed = sy.IndexOf('/');
+                        string LineFeed1 = "\r";
+                        int iLineFeed1 = sy.LastIndexOf(LineFeed1);
+                        string LineFeed2 = "/";
+                        int iLineFeed2 = sy.LastIndexOf(LineFeed2);
 
-                        if (iParagraph > -1)
+                       
+
+                        if (iParagraph1 == 0 || (sy.Length > Paragraph1.Length && iParagraph1 == sy.Length - Paragraph1.Length))
                         {
                             // single paragraph
-                            // A forward slash "/" character marks the end of a "paragraph" of lyrics
-                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "\\", TicksOn = ticks });
-                            newTrack.TotalLyricsT += "\\";
+                            // A double forward slash "\\" character marks the end of a "paragraph" of lyrics
+                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "½", TicksOn = ticks });
+                            newTrack.TotalLyricsT += "½";
 
-                            if (sy.Length > 1)
+                            if (sy.Length > Paragraph1.Length)
                             {
                                 // Text
-                                if (iParagraph == 0)
-                                    reste = sy.Substring(1, sy.Length - 1);
+                                if (iParagraph1 == 0)
+                                    reste = sy.Substring(1, sy.Length - Paragraph1.Length);
                                 else
-                                    reste = sy.Substring(0, iParagraph);
+                                    reste = sy.Substring(0, iParagraph1);
 
                                 newTrack.TotalLyricsT += reste;
                                 newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
                             }
                         }
-                        else if (iLineFeed > -1)
+                        else if (iParagraph2 == 0 || (sy.Length > Paragraph2.Length && iParagraph2 == sy.Length - Paragraph2.Length))
                         {
-                            // Single linefeed
-                            // A back slash "\" character marks the end of a line of lyrics
-                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "/", TicksOn = ticks });
-                            newTrack.TotalLyricsT += "/";
+                            // single paragraph
+                            // A double forward slash "\\" character marks the end of a "paragraph" of lyrics
+                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = "½", TicksOn = ticks });
+                            newTrack.TotalLyricsT += "½";
 
-                            if (sy.Length > 1)
+                            if (sy.Length > Paragraph2.Length)
                             {
                                 // Text
-                                if (iLineFeed == 0)
-                                    reste = sy.Substring(1, sy.Length - 1);
+                                if (iParagraph2 == 0)
+                                    reste = sy.Substring(1, sy.Length - Paragraph2.Length);
                                 else
-                                    reste = sy.Substring(0, iLineFeed);
+                                    reste = sy.Substring(0, iParagraph2);
+
+                                newTrack.TotalLyricsT += reste;
+                                newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
+                            }
+                        }
+                        else if (iLineFeed1 == 0 || (sy.Length > LineFeed1.Length && iLineFeed1 == sy.Length - LineFeed1.Length))
+                        {
+                            // Single linefeed
+                            // A back slash "/" character marks the end of a line of lyrics
+                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "¼", TicksOn = ticks });
+                            newTrack.TotalLyricsT += "¼";
+
+                            if (sy.Length > LineFeed1.Length)
+                            {
+                                // Linefeed at the begining
+                                if (iLineFeed1 == 0)
+                                    reste = sy.Substring(1, sy.Length - LineFeed1.Length);
+                                else
+                                    reste = sy.Substring(0, iLineFeed1);
+
+                                newTrack.TotalLyricsT += reste;
+                                newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
+                            }
+                        }
+                        else if (iLineFeed2 == 0 || (sy.Length > LineFeed2.Length && iLineFeed2 == sy.Length - LineFeed2.Length))
+                        {
+                            // Single linefeed
+                            // A back slash "/" character marks the end of a line of lyrics
+                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "¼", TicksOn = ticks });
+                            newTrack.TotalLyricsT += "¼";
+
+                            if (sy.Length > LineFeed2.Length)
+                            {
+                                // Linefeed at the begining
+                                if (iLineFeed2 == 0)
+                                    reste = sy.Substring(1, sy.Length - LineFeed2.Length);
+                                else
+                                    reste = sy.Substring(0, iLineFeed2);
 
                                 newTrack.TotalLyricsT += reste;
                                 newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
@@ -833,7 +889,7 @@ namespace Sanford.Multimedia.Midi
                             // no linefeed
                             newTrack.TotalLyricsT += sy;
                             newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = sy, TicksOn = ticks });
-                        }
+                        }                       
 
                         #endregion
                       
@@ -854,6 +910,152 @@ namespace Sanford.Multimedia.Midi
         /// <returns></returns>
         private string CleanSpecialChars(string sy)
         {
+            //byte[] l = Encoding.Default.GetBytes(sy);
+            //sy = Encoding.UTF8.GetString(l);
+
+            // FAB 12/04/2019 - UTF8 encoding
+            sy = sy.Replace("Ã©", "é");
+            sy = sy.Replace("Ã¨", "è");
+            sy = sy.Replace("â€™", "’");
+
+            sy = sy.Replace("Ã§", "ç");
+            sy = sy.Replace("Ã‡", "Ç");
+
+            sy = sy.Replace("Ãª", "ê");
+            sy = sy.Replace("Ã¢", "â");
+            sy = sy.Replace("Ã´", "ô");
+            sy = sy.Replace("Ã ", "à");
+            sy = sy.Replace("Ã¦", "æ");
+            sy = sy.Replace("Å“", "œ");
+            sy = sy.Replace("Ã®", "î");
+            sy = sy.Replace("à®", "î");
+
+            sy = sy.Replace("Ã»", "û");
+            sy = sy.Replace("Ãº", "ú");
+            sy = sy.Replace("Ã¹", "ù");
+
+            sy = sy.Replace("â€”", "—");
+            
+
+            /*
+            var dictionary = new Dictionary<string, string>()
+            {
+                {"Ã¡", "á"},
+                {"Ã€", "À"},
+                {"Ã¤", "ä"},
+                {"Ã„", "Ä"},
+                {"Ã£", "ã"},
+                {"Ã¥", "å"},
+                {"Ã…", "Å"},
+                {"Ã¦", "æ"},
+                {"Ã†", "Æ"},
+                {"Ã§", "ç"},
+                {"Ã‡", "Ç"},
+                {"Ã©", "é"},
+                {"Ã‰", "É"},
+                {"Ã¨", "è"},
+                {"Ãˆ", "È"},
+                {"Ãª", "ê"},
+                {"ÃŠ", "Ê"},                
+                {"Ã«", "ë"},
+                {"Ã‹", "Ë"},
+                {"Ã-­­", "í"},
+                {"Ã", "Í"},
+                {"Ã¬", "ì"},
+                {"ÃŒ", "Ì"},                
+                {"Ã®", "î"},
+                {"ÃŽ", "Î"},                
+                {"Ã¯", "ï"},                                
+                {"Ã±", "ñ"},
+                {"Ã‘", "Ñ"},                
+                {"Ã³", "ó"},
+                {"Ã“", "Ó"},
+                {"Ã²", "ò"},
+                {"Ã’", "Ò"},
+                {"Ã´", "ô"},
+                {"Ã”", "Ô"},
+                {"Ã¶", "ö"},
+                {"Ã–", "Ö"},
+                {"Ãµ", "õ"},
+                {"Ã•", "Õ"},
+                {"Ã¸", "ø"},
+                {"Ã˜", "Ø"},
+                {"Å“", "œ"},
+                {"Å’", "Œ"},
+                {"ÃŸ", "ß"},
+                {"Ãº", "ú"},
+                {"Ãš", "Ú"},
+                {"Ã¹", "ù"},
+                {"Ã™", "Ù"},
+                {"Ã»", "û"},
+                {"Ã›", "Û"},
+                {"Ã¼", "ü"},
+                {"Ãœ", "Ü"},                
+                {"â‚¬", "€"},
+                {"â€™", "’"},
+                {"â€š", "‚"},
+                {"Æ’", "ƒ"},
+                {"â€ž", "„"},
+                {"â€¦", "…"},
+                {"â€¡", "‡"},                
+                {"Ë†", "ˆ"},
+                {"â€°", "‰"},
+                {"Å ", "Š"},
+                {"â€¹", "‹"},
+                {"Å½", "Ž"},
+                {"â€˜", "‘"},
+                {"â€œ", "“"},
+                {"â€¢", "•"},
+                {"â€“", "–"},
+                {"â€”", "—"},
+                {"Ëœ", "˜"},                
+                {"â„¢", "™"},
+                {"Å¡", "š"},
+                {"â€º", "›"},
+                {"Å¾", "ž"},
+                {"Å¸", "Ÿ"},
+                {"Â¡", "¡"},
+                {"Â¢", "¢"},
+                {"Â£", "£"},
+                {"Â¤", "¤"},
+                {"Â¥", "¥"},
+                {"Â¦", "¦"},                
+                {"Â§", "§"},
+                {"Â¨", "¨"},
+                {"Â©", "©"},
+                {"Âª", "ª"},
+                {"Â«", "«"},
+                {"Â¬", "¬"},
+                {"Â®", "®"},
+                {"Â¯", "¯"},
+                {"Â°", "°"},
+                {"Â±", "±"},
+                {"Â²", "²"},                
+                {"Â³", "³"},
+                {"Â´", "´"},
+                {"Âµ", "µ"},
+                {"Â¶", "¶"},
+                {"Â·", "·"},
+                {"Â¸", "¸"},                
+                {"Â¹", "¹"},
+                {"Âº", "º"},
+                {"Â»", "»"},
+                {"Â¼", "¼"},
+                {"Â½", "½"},
+                {"Â¾", "¾"},                
+                {"Â¿", "¿"},                
+                {"â€", "†"},                                
+                {"Ã¢", "â"},
+                {"Ã‚", "Â"},
+                {"Ãƒ", "Ã"},                
+            };
+
+            if (dictionary.ContainsKey(sy))
+            {
+                sy = dictionary[sy];
+            }
+            */
+
             char[] arr;
             arr = sy.ToCharArray();
             int cv;

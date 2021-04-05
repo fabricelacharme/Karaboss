@@ -39,6 +39,8 @@
             this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
+            this.MnuFileRecentFiles = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuFileSep2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditSearch = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,6 +63,7 @@
             this.MnuToolsSep4 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuToolsMngtFilesSearchSameNameComparedToReference = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuToolsMngtFilesSearchSameNameInASingleDirectory = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuMidi = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMidiInputDevice = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMidiOutputDevice = new System.Windows.Forms.ToolStripMenuItem();
@@ -138,6 +141,8 @@
             this.mnuFileOpen,
             this.mnuFileEdit,
             this.MnuFileSep1,
+            this.MnuFileRecentFiles,
+            this.MnuFileSep2,
             this.mnuFileQuit});
             this.mnuFile.Name = "mnuFile";
             // 
@@ -163,6 +168,16 @@
             // 
             resources.ApplyResources(this.MnuFileSep1, "MnuFileSep1");
             this.MnuFileSep1.Name = "MnuFileSep1";
+            // 
+            // MnuFileRecentFiles
+            // 
+            resources.ApplyResources(this.MnuFileRecentFiles, "MnuFileRecentFiles");
+            this.MnuFileRecentFiles.Name = "MnuFileRecentFiles";
+            // 
+            // MnuFileSep2
+            // 
+            resources.ApplyResources(this.MnuFileSep2, "MnuFileSep2");
+            this.MnuFileSep2.Name = "MnuFileSep2";
             // 
             // mnuFileQuit
             // 
@@ -224,7 +239,8 @@
             this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuToolsOption,
             this.MnuToolsSep1,
-            this.mnuToolsMngtFiles});
+            this.mnuToolsMngtFiles,
+            this.toolStripMenuItem1});
             this.mnuTools.Name = "mnuTools";
             // 
             // mnuToolsOption
@@ -310,6 +326,11 @@
             resources.ApplyResources(this.mnuToolsMngtFilesSearchSameNameInASingleDirectory, "mnuToolsMngtFilesSearchSameNameInASingleDirectory");
             this.mnuToolsMngtFilesSearchSameNameInASingleDirectory.Name = "mnuToolsMngtFilesSearchSameNameInASingleDirectory";
             this.mnuToolsMngtFilesSearchSameNameInASingleDirectory.Click += new System.EventHandler(this.MnuToolsMngtFilesSearchSameNameInASingleDirectory_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            resources.ApplyResources(this.toolStripMenuItem1, "toolStripMenuItem1");
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             // 
             // mnuMidi
             // 
@@ -503,7 +524,7 @@
             // 
             resources.ApplyResources(this.searchControl, "searchControl");
             this.searchControl.Name = "searchControl";
-            this.searchControl.SongRoot = "C:\\Users\\a453868\\Music";
+            this.searchControl.SongRoot = "C:\\Users\\Fabrice\\Music";
             this.searchControl.SView = Karaboss.Search.SearchViewStyle.Author;
             // 
             // frmExplorer
@@ -599,5 +620,8 @@
         private System.Windows.Forms.ToolStripMenuItem MnuMidiExternalRecord;
         private System.Windows.Forms.ToolStripSeparator MnuToolsSep1;
         private System.Windows.Forms.ToolStripMenuItem MnuEditGuitarTraining;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem MnuFileRecentFiles;
+        private System.Windows.Forms.ToolStripSeparator MnuFileSep2;
     }
 }

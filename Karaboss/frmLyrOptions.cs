@@ -36,6 +36,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.IO;
+using System.Drawing.Text;
 
 namespace Karaboss
 {
@@ -45,6 +46,8 @@ namespace Karaboss
         private Karaclass.OptionsDisplay OptionDisplay;        
 
         private string bgOption = "Diaporama";
+        // Font
+        private Font _karaokeFont;
 
         // Text color
         private Color TxtNextColor;
@@ -76,8 +79,7 @@ namespace Karaboss
         
         public frmLyrOptions()
         {
-            InitializeComponent();
-
+            InitializeComponent();            
             LoadOptions();     
             SetOptions();
 
@@ -86,6 +88,7 @@ namespace Karaboss
 
 
         #region option form settings
+       
 
         /// <summary>
         /// Load stored options
@@ -94,6 +97,10 @@ namespace Karaboss
         {
             try
             {
+                _karaokeFont = Properties.Settings.Default.KaraokeFont;
+                pBox.KaraokeFont = _karaokeFont;
+                txtFont.Text = _karaokeFont.Name;
+                
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
 
@@ -223,6 +230,8 @@ namespace Karaboss
 
                 // Background type (Diaporama, Solidcolor, Transparent
                 Properties.Settings.Default.BackGroundOption = bgOption;
+
+                Properties.Settings.Default.KaraokeFont = _karaokeFont;
 
                 Properties.Settings.Default.TxtBackColor = TxtBackColor;
 
@@ -537,7 +546,9 @@ namespace Karaboss
                 frmLyric = GetForm<frmLyric>();
 
                 frmLyric.bShowBalls = Karaclass.m_DisplayBalls;
-                
+
+                frmLyric.KaraokeFont = _karaokeFont;
+
                 // Text colors                
                 frmLyric.TxtBackColor = TxtBackColor;
                                 
@@ -821,8 +832,36 @@ namespace Karaboss
 
 
 
+
+
         #endregion
 
-      
+        // Fonts
+       
+
+        private void BtnFonts_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Show the dialog.
+                fontDialog1.Font = _karaokeFont;
+
+                if (fontDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    txtFont.Text = fontDialog1.Font.Name;
+                    _karaokeFont = fontDialog1.Font;
+                    pBox.KaraokeFont = _karaokeFont;
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                _karaokeFont = new Font("Arial", this.Font.Size);
+
+            }
+        
+        }
     }
 }

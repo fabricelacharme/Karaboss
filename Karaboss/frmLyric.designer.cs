@@ -172,13 +172,16 @@
             // 
             // pBox
             // 
+            this.pBox.bColorContour = true;
             this.pBox.BeatDuration = 0;
             this.pBox.bTextBackGround = true;
+            this.pBox.CurrentTextPos = 2;
             this.pBox.CurrentTime = 3;
             this.pBox.DirSlideShow = null;
             resources.ApplyResources(this.pBox, "pBox");
             this.pBox.FreqDirSlideShow = 0;
             this.pBox.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pBox.KaraokeFont = new System.Drawing.Font("Segoe Print", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pBox.LyricsTimes = ((System.Collections.Generic.List<int>)(resources.GetObject("pBox.LyricsTimes")));
             this.pBox.LyricsWords = ((System.Collections.Generic.List<string>)(resources.GetObject("pBox.LyricsWords")));
             this.pBox.m_Alpha = 255;

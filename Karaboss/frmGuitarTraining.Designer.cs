@@ -31,11 +31,13 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmGuitarTraining));
             this.pnlTop = new System.Windows.Forms.Panel();
+            this.pnlAppName = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblVersion = new System.Windows.Forms.Label();
             this.pnlDisplay = new System.Windows.Forms.Panel();
             this.lblElapsed = new System.Windows.Forms.Label();
             this.lblPercent = new System.Windows.Forms.Label();
             this.lblDuration = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.lblTempo = new System.Windows.Forms.Label();
             this.btnTempoMinus = new System.Windows.Forms.Button();
             this.lblTempoValue = new System.Windows.Forms.Label();
@@ -45,11 +47,9 @@
             this.positionHScrollBar = new ColorSlider.ColorSlider();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlBottom = new System.Windows.Forms.Panel();
-            this.lblVersion = new System.Windows.Forms.Label();
-            this.pnlAppName = new System.Windows.Forms.Panel();
             this.pnlTop.SuspendLayout();
-            this.pnlDisplay.SuspendLayout();
             this.pnlAppName.SuspendLayout();
+            this.pnlDisplay.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlTop
@@ -69,6 +69,43 @@
             this.pnlTop.Name = "pnlTop";
             this.pnlTop.Size = new System.Drawing.Size(1135, 80);
             this.pnlTop.TabIndex = 4;
+            // 
+            // pnlAppName
+            // 
+            this.pnlAppName.Controls.Add(this.label1);
+            this.pnlAppName.Controls.Add(this.lblVersion);
+            this.pnlAppName.Location = new System.Drawing.Point(860, 3);
+            this.pnlAppName.Name = "pnlAppName";
+            this.pnlAppName.Size = new System.Drawing.Size(200, 31);
+            this.pnlAppName.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label1.Location = new System.Drawing.Point(9, 3);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(138, 25);
+            this.label1.TabIndex = 26;
+            this.label1.Text = "K A R A B O S S";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblVersion
+            // 
+            this.lblVersion.AutoSize = true;
+            this.lblVersion.BackColor = System.Drawing.Color.Transparent;
+            this.lblVersion.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVersion.ForeColor = System.Drawing.Color.White;
+            this.lblVersion.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lblVersion.Location = new System.Drawing.Point(146, 10);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(45, 17);
+            this.lblVersion.TabIndex = 37;
+            this.lblVersion.Text = "1.0.6.1";
+            this.lblVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pnlDisplay
             // 
@@ -120,20 +157,6 @@
             this.lblDuration.TabIndex = 7;
             this.lblDuration.Text = "00:00";
             this.lblDuration.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label1.Location = new System.Drawing.Point(9, 3);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(138, 25);
-            this.label1.TabIndex = 26;
-            this.label1.Text = "K A R A B O S S";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblTempo
             // 
@@ -220,16 +243,42 @@
             this.positionHScrollBar.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(140)))), ((int)(((byte)(180)))));
             this.positionHScrollBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
             this.positionHScrollBar.ForeColor = System.Drawing.Color.White;
-            this.positionHScrollBar.LargeChange = ((uint)(10u));
+            this.positionHScrollBar.LargeChange = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             this.positionHScrollBar.Location = new System.Drawing.Point(3, 40);
+            this.positionHScrollBar.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.positionHScrollBar.MouseWheelBarPartitions = 1;
             this.positionHScrollBar.Name = "positionHScrollBar";
-            this.positionHScrollBar.ScaleDivisions = 5;
-            this.positionHScrollBar.ScaleSubDivisions = 5;
+            this.positionHScrollBar.ScaleDivisions = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.ScaleSubDivisions = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.positionHScrollBar.ShowDivisionsText = true;
             this.positionHScrollBar.ShowSmallScale = false;
-            this.positionHScrollBar.Size = new System.Drawing.Size(600, 40);
-            this.positionHScrollBar.SmallChange = ((uint)(10u));
+            this.positionHScrollBar.Size = new System.Drawing.Size(600, 44);
+            this.positionHScrollBar.SmallChange = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             this.positionHScrollBar.TabIndex = 19;
             this.positionHScrollBar.TabStop = false;
             this.positionHScrollBar.Text = "colorSlider1";
@@ -241,7 +290,11 @@
             this.positionHScrollBar.TickAdd = 0F;
             this.positionHScrollBar.TickColor = System.Drawing.Color.White;
             this.positionHScrollBar.TickDivide = 0F;
-            this.positionHScrollBar.Value = 0;
+            this.positionHScrollBar.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.positionHScrollBar.ValueChanged += new System.EventHandler(this.positionHScrollBar_ValueChanged);
             this.positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.positionHScrollBar_Scroll);
             // 
@@ -253,29 +306,6 @@
             this.pnlBottom.Name = "pnlBottom";
             this.pnlBottom.Size = new System.Drawing.Size(1135, 412);
             this.pnlBottom.TabIndex = 5;
-            // 
-            // lblVersion
-            // 
-            this.lblVersion.AutoSize = true;
-            this.lblVersion.BackColor = System.Drawing.Color.Transparent;
-            this.lblVersion.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblVersion.ForeColor = System.Drawing.Color.White;
-            this.lblVersion.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblVersion.Location = new System.Drawing.Point(146, 10);
-            this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(45, 17);
-            this.lblVersion.TabIndex = 37;
-            this.lblVersion.Text = "1.0.6.1";
-            this.lblVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // pnlAppName
-            // 
-            this.pnlAppName.Controls.Add(this.label1);
-            this.pnlAppName.Controls.Add(this.lblVersion);
-            this.pnlAppName.Location = new System.Drawing.Point(860, 3);
-            this.pnlAppName.Name = "pnlAppName";
-            this.pnlAppName.Size = new System.Drawing.Size(200, 31);
-            this.pnlAppName.TabIndex = 0;
             // 
             // frmGuitarTraining
             // 
@@ -295,10 +325,10 @@
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmGuitarTraining_KeyUp);
             this.Resize += new System.EventHandler(this.frmGuitarTraining_Resize);
             this.pnlTop.ResumeLayout(false);
-            this.pnlDisplay.ResumeLayout(false);
-            this.pnlDisplay.PerformLayout();
             this.pnlAppName.ResumeLayout(false);
             this.pnlAppName.PerformLayout();
+            this.pnlDisplay.ResumeLayout(false);
+            this.pnlDisplay.PerformLayout();
             this.ResumeLayout(false);
 
         }

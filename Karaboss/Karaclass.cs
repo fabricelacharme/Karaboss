@@ -57,6 +57,11 @@ namespace Karaboss
         public static int m_TransposeAmount;    // transpose amount
         public static int m_Velocity;           // Velocity of new notes
 
+        public static string m_SepSyllabe;
+        public static string m_SepLine;
+        public static string m_SepParagraph;
+
+        public static bool m_SaveDefaultOutputDevice;   // Save default MIDI output device
 
         public enum OptionsDisplay
         {
@@ -149,8 +154,7 @@ namespace Karaboss
                     fileName = _m_fileplaylistGroups;
                 }
                 else
-                {
-                    //fileName = Application.StartupPath + "\\" +defFileName;
+                {                    
                     string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
                     fileName = folder + "\\" + defFileName;
                     _m_fileplaylistGroups = fileName;

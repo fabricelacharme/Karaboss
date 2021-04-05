@@ -213,6 +213,19 @@
     <Compile Include="Lrc\NeteaseMusic.cs" />
     <Compile Include="Lrc\SharedFramework.cs" />
     <Compile Include="Lrc\Time.cs" />
+    <Compile Include="Mru\MruList.cs" />
+    <Compile Include="Mru\RegistryTools.cs" />
+    <Compile Include="Pages\ABCnotation\Midi.cs" />
+    <Compile Include="Pages\ABCnotation\TextPlayer\FrmTextPlayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\ABCnotation\TextPlayer\FrmTextPlayer.Designer.cs">
+      <DependentUpon>FrmTextPlayer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ABCnotation\TextPlayer\IMidiPlayer.cs" />
+    <Compile Include="Pages\ABCnotation\TextPlayer\MidiDevice.cs" />
+    <Compile Include="Pages\ABCnotation\TextPlayer\PlayerABC.cs" />
+    <Compile Include="Pages\ABCnotation\TextPlayer\PlayerMML.cs" />
     <Compile Include="Pages\ConnectedControl\ListViewItemComparer.cs" />
     <Compile Include="Pages\ExplorerControl\KnownFolders.cs" />
     <Compile Include="Pages\ExplorerControl\xplorerControl.cs">
@@ -281,12 +294,6 @@
     <Compile Include="frmTags.Designer.cs">
       <DependentUpon>frmTags.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmTest.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmTest.Designer.cs">
-      <DependentUpon>frmTest.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmLyric.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -330,6 +337,9 @@
     <Compile Include="Pages\ConnectedControl\ConnectedControl.Designer.cs">
       <DependentUpon>ConnectedControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SearchControl\MyListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="PDF\Adler.cs" />
     <Compile Include="PDF\PDFWithImages.cs" />
     <Compile Include="Pages\PlaylistsControl\FrmNewPlaylist.cs">
@@ -364,6 +374,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\ABCResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ABCResource.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\Localization\Strings.Designer.cs" />
     <Compile Include="ListViewItemComparer.cs" />
     <Compile Include="Pages\SearchControl\SearchControl.cs">
@@ -381,12 +396,15 @@
     </Compile>
     <EmbeddedResource Include="Buttons\CheckButtonControl.resx">
       <DependentUpon>CheckButtonControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Buttons\MinusButtonControl.resx">
       <DependentUpon>MinusButtonControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Buttons\PlusButtonControl.resx">
       <DependentUpon>PlusButtonControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ConfigurationBaseControl.resx">
       <DependentUpon>ConfigurationBaseControl.cs</DependentUpon>
@@ -394,9 +412,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ConfigurationForm.en.resx">
       <DependentUpon>ConfigurationForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ConfigurationForm.fr.resx">
       <DependentUpon>ConfigurationForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ConfigurationForm.resx">
       <DependentUpon>ConfigurationForm.cs</DependentUpon>
@@ -404,6 +424,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\KaraokeControl.fr.resx">
       <DependentUpon>KaraokeControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\KaraokeControl.resx">
       <DependentUpon>KaraokeControl.cs</DependentUpon>
@@ -474,6 +495,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GuitarTraining\TextBlock.resx">
       <DependentUpon>TextBlock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ABCnotation\TextPlayer\FrmTextPlayer.resx">
+      <DependentUpon>FrmTextPlayer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\ConnectedControl\ConnectedControl.fr.resx">
       <DependentUpon>ConnectedControl.cs</DependentUpon>
@@ -557,9 +581,6 @@
     <EmbeddedResource Include="frmTags.resx">
       <DependentUpon>frmTags.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmTest.resx">
-      <DependentUpon>frmTest.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmLyric.resx">
       <DependentUpon>frmLyric.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -613,6 +634,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ABCResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ABCResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Localization\Strings.en.resx">
       <SubType>Designer</SubType>
@@ -716,6 +741,10 @@
       <Project>{744b9645-0703-4eea-86cd-e28b20774b90}</Project>
       <Name>SongLyrics.Api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TextPlayer\TextPlayer.csproj">
+      <Project>{5fff3b66-0f86-426a-8a7a-b60a145219ec}</Project>
+      <Name>TextPlayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\trkControl\TrkControl.csproj">
       <Project>{e04f332f-ff37-4680-9d38-7962eacd58c0}</Project>
       <Name>TrkControl</Name>
@@ -729,6 +758,16 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Play-Music-icon.png" />
+    <None Include="Resources\save.png" />
+    <None Include="Resources\save.bmp" />
+    <None Include="Resources\mml.ico" />
+    <None Include="Resources\m.ico" />
+    <None Include="Resources\a.ico" />
+    <None Include="Resources\abc.ico" />
+    <None Include="Resources\floppy-icon.png" />
+    <None Include="Resources\delete-icon.png" />
+    <Content Include="Resources\Ico\mml.ico" />
     <None Include="Resources\Media-Controls-Skip-To-Start-icon.png" />
     <None Include="Resources\Media-Controls-Skip-To-End-icon.png" />
     <None Include="Resources\Media-Controls-Rewind-icon.png" />
@@ -737,8 +776,6 @@
     <None Include="Resources\Media-Controls-Stop-icon.png" />
     <None Include="Resources\Media-Controls-Play-icon.png" />
     <None Include="Resources\triolet30.png" />
-    <None Include="Resources\triolet301.png" />
-    <None Include="Resources\triolet1.png" />
     <None Include="Resources\playlist-delete2-icon24.png" />
     <None Include="Resources\playlist-icon1.png" />
     <None Include="Resources\Play-icon24.png" />
@@ -803,8 +840,59 @@
     <None Include="Resources\Bouton-Cross-Red-32.png" />
     <None Include="Resources\Bouton-Check-Gray-32.png" />
     <None Include="Resources\Bouton-Cross-Gray-32.png" />
+    <Content Include="Pages\ABCnotation\Resources\cut.png" />
+    <Content Include="Pages\ABCnotation\Resources\logo.png" />
+    <Content Include="Pages\ABCnotation\Resources\LOMM.ico" />
+    <Content Include="Pages\ABCnotation\Resources\NewABC.txt" />
+    <Content Include="Pages\ABCnotation\Resources\page_copy.png" />
+    <Content Include="Pages\ABCnotation\Resources\page_paste.png" />
+    <Content Include="Pages\ABCnotation\Resources\resultset_next.png" />
+    <Content Include="Pages\ABCnotation\Resources\script_lightning.png" />
+    <Content Include="Pages\ABCnotation\Resources\script_save.png" />
+    <Content Include="Pages\ABCnotation\Resources\Separator.ico" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\add.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\arrow_branch.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\arrow_down.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\arrow_refresh.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\arrow_up.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\book_open.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\cog_add.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\cog_delete.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\cog_edit.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\comment.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\control_fastforward_blue.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\control_pause_blue.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\control_play_blue.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\control_stop_blue.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\cut.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\delete.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\help.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\layers.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\music.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\page_add.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\page_copy.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\page_delete.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\page_edit.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\page_paste.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\page_refresh.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\page_save.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\picture_add.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\plugin.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\readme.html" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\readme.txt" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\resultset_next.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\script_add.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\script_delete.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\script_edit.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\script_gear.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\script_link.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\table_multiple.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\textfield_add.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\wand.png" />
+    <Content Include="Pages\ABCnotation\Resources\SilkIcons\wrench.png" />
     <Content Include="Resources\Bouton-minus-palegreen-32.png" />
     <Content Include="Resources\Bouton-plus-palegreen-32.png" />
+    <Content Include="Resources\Ico\abc.ico" />
     <Content Include="Resources\Ico\kar.ico" />
     <Content Include="Resources\Ico\mid.ico" />
     <None Include="Resources\pointer.png" />

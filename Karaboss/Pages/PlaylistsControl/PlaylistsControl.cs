@@ -46,8 +46,9 @@ namespace Karaboss.playlists
     // Events
     public delegate void SelectedIndexChangedEventHandler(object sender, string fileName);
     public delegate void PlayMidiEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
+    public delegate void PlayTextEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
-    public delegate void NavigateToEventHandler(Object sender, string path);
+    public delegate void NavigateToEventHandler(Object sender, string path, string file);
 
 
     public partial class PlaylistsControl : UserControl
@@ -55,6 +56,7 @@ namespace Karaboss.playlists
         // Events
         public event SelectedIndexChangedEventHandler SelectedIndexChanged;
         public event PlayMidiEventHandler PlayMidi;
+        public event PlayTextEventHandler PlayText;
         public event PlayCDGEventHandler PlayCDG;
         public event NavigateToEventHandler NavigateTo;
 
@@ -119,7 +121,8 @@ namespace Karaboss.playlists
                     currentplaylistItem.Length = txtLength.Text;
                     //UpdateSong();
                     // Udpdate duration in the listview
-                    listView.Items[listView.SelectedIndices[0]].SubItems[2].Text = value;
+                    if (listView.Items.Count >= listView.SelectedIndices[0])
+                        listView.Items[listView.SelectedIndices[0]].SubItems[2].Text = value;
                     // currentPlaylist Duration
                     lblPlaylistDuration.Text = currentPlaylist.Duration;
                 }
@@ -360,7 +363,7 @@ namespace Karaboss.playlists
             string strExtension = string.Empty; //Extension d'un fichier            
             Cursor.Current = Cursors.WaitCursor;
             InitListView();
-            // Début peuplement
+            // Début peuplement           
             listView.BeginUpdate();
 
             try
@@ -370,74 +373,91 @@ namespace Karaboss.playlists
                 string fileName = string.Empty;
                 string KaraokeSinger = string.Empty;
                 string Duration = String.Empty;
-                long fileSize = 0;
-                string fSize = string.Empty;
-                string fType = string.Empty;
-                ListViewItem item;
+                //long fileSize = 0;
+                //string fSize = string.Empty;
+                //string fType = string.Empty;
+                //ListViewItem item;
+               
+                var itemsToAdd = new List<ListViewItem>();
+                // Optimization
+                listView.ListViewItemSorter = null;
 
                 for (int i = 0; i < pl.Songs.Count; i++)
-                {                   
+                {
                     file = pl.Songs[i].File;
                     fileName = pl.Songs[i].Song;
                     KaraokeSinger = pl.Songs[i].KaraokeSinger;
 
-                    if (File.Exists(file))
-                    {
-                        // The file exists
-                        FileInfo finfo = new FileInfo(file);
-                        //path must be like "file:///c:/users/a453868/Music/karaoke/sasin";
-                        fullname = "file:///" + file.Replace("\\", "/");
-                        FlShell.ShellItem shitem = new FlShell.ShellItem(fullname);
-                        fType = shitem.TypeName;
-                        fileSize = finfo.Length;
-                        if (fileSize > 1024)
-                            fSize = string.Format("{0: #,### Ko}", fileSize / 1024);
-                        else
-                            fSize = string.Format("{0: ##0 Bytes}", fileSize);
-
-                        Duration = pl.Songs[i].Length;
-                        item = new ListViewItem(new[] { fileName, KaraokeSinger, Duration, fSize, File.GetLastWriteTime(file).ToString("dd/MM/yyyy HH:mm"), fType })
-                        {
-                            // false = Authorize change color for subitems
-                            UseItemStyleForSubItems = false
-                        };
-                        item.SubItems[2].ForeColor = Color.Gray;
-                        item.SubItems[3].ForeColor = Color.Gray;
-                        item.SubItems[4].ForeColor = Color.Gray;
-                        item.SubItems[5].ForeColor = Color.Gray;
-                        // Put the full path in the tag
-                        item.Tag = finfo.FullName;
-                        // Icon
-                        item.ImageIndex = FlShell.SystemImageListManager.GetIconIndex(shitem, false);
-                    }
-                    else
-                    {
-                        // the file no more exists
-                        item = new ListViewItem(new[] { fileName, KaraokeSinger, "???", "???", "???", "???" }) {
-                            ForeColor = Color.Red,
-                            // false = Authorize change color for subitems
-                            UseItemStyleForSubItems = false,
-                        };
-
-                        item.SubItems[2].ForeColor = Color.Gray;
-                        item.SubItems[3].ForeColor = Color.Gray;
-                        item.SubItems[4].ForeColor = Color.Gray;
-                        item.SubItems[5].ForeColor = Color.Gray;
-                        item.Tag = file;
-                    }
-                    // Finally add the listviewitem               
-                    listView.Items.Add(item);
+                    itemsToAdd.Add(CreateItem(file, fileName, KaraokeSinger, Duration));
                 }
+                                
+                listView.Items.AddRange(itemsToAdd.ToArray());                
             }
             catch (Exception ee)
             {
                 Console.WriteLine("PopulateListview: the process failed: {0}", ee.ToString());
             }
 
-            // fin peuplement
+            // fin peuplement           
             listView.EndUpdate();
             Cursor.Current = Cursors.Default;
         }
+
+        private ListViewItem CreateItem(string file, string fileName, string KaraokeSinger, string Duration)
+        {
+            ListViewItem lvi;
+
+            if (File.Exists(file))
+            {
+                FileInfo finfo = new FileInfo(file);
+                //path must be like "file:///c:/users/a453868/Music/karaoke/sasin";
+                string fullname = "file:///" + file.Replace("\\", "/");
+                FlShell.ShellItem shitem = new FlShell.ShellItem(fullname);
+
+                string fType = shitem.TypeName;
+                long fileSize = finfo.Length;
+                string fSize;
+                if (fileSize > 1024)
+                    fSize = string.Format("{0: #,### Ko}", fileSize / 1024);
+                else
+                    fSize = string.Format("{0: ##0 Bytes}", fileSize);
+
+
+                lvi = new ListViewItem(new[] { fileName, KaraokeSinger, Duration, fSize, File.GetLastWriteTime(file).ToString("dd/MM/yyyy HH:mm"), fType })
+                {
+                    // false = Authorize change color for subitems
+                    UseItemStyleForSubItems = false
+                };
+                lvi.SubItems[2].ForeColor = Color.Gray;
+                lvi.SubItems[3].ForeColor = Color.Gray;
+                lvi.SubItems[4].ForeColor = Color.Gray;
+                lvi.SubItems[5].ForeColor = Color.Gray;
+                // Put the full path in the tag
+                lvi.Tag = finfo.FullName;
+                // Icon
+                lvi.ImageIndex = FlShell.SystemImageListManager.GetIconIndex(shitem, false);
+            }
+            else
+            {
+                // the file no more exists
+                lvi = new ListViewItem(new[] { fileName, KaraokeSinger, "???", "???", "???", "???" })
+                {
+                    ForeColor = Color.Red,
+                    // false = Authorize change color for subitems
+                    UseItemStyleForSubItems = false,
+                };
+
+                lvi.SubItems[2].ForeColor = Color.Gray;
+                lvi.SubItems[3].ForeColor = Color.Gray;
+                lvi.SubItems[4].ForeColor = Color.Gray;
+                lvi.SubItems[5].ForeColor = Color.Gray;
+                lvi.Tag = file;
+            }
+
+
+            return lvi;
+        }
+
 
         /// <summary>
         /// Selected index changed
@@ -576,27 +596,33 @@ namespace Karaboss.playlists
             }
         }
 
+        /// <summary>
+        /// Navigate to the folder of the selected file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MnuOpenFolder_Click(object sender, EventArgs e)
         {
             if (listView.SelectedIndices.Count == 0)
                 return;
 
             ListViewItem lvi = listView.SelectedItems[0];
-            string file = lvi.Tag.ToString();
+            string FullPath = lvi.Tag.ToString();
             
-            if (file == string.Empty)
+            if (FullPath == string.Empty)
             {
                 return;
             }
 
-            string path = Path.GetDirectoryName(file);
+            string path = Path.GetDirectoryName(FullPath);
             if (!Directory.Exists(path))
             {
                 MessageBox.Show("This path does not exists:" + "\n<" + path + ">", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
+            string file = Path.GetFileName(FullPath);
 
-            NavigateTo?.Invoke(this, path);
+            NavigateTo?.Invoke(this, path, file);            
         }
 
 
@@ -607,8 +633,7 @@ namespace Karaboss.playlists
             _itemDnD = (ListViewItem)e.Item;
             _itemPhantom = null;
             _itemCurrent = null;
-
-            //DoDragDrop(e.Item, DragDropEffects.Move);
+            
             DoDragDrop(listView.SelectedItems, DragDropEffects.Move);
         }
 
@@ -1400,9 +1425,7 @@ namespace Karaboss.playlists
                 PlaylistItem pli = GetPlaylistItem(songname);
 
                 if (pli == null)
-                    return;
-
-                //pli.Selected = true;
+                    return;             
 
                 // Check if this file exists
                 if (File.Exists(pli.File))
@@ -1411,12 +1434,46 @@ namespace Karaboss.playlists
                     //Check if other files exist
                     if (CheckAllPath(currentPlaylist) == true)
                     {
+                        // Raise event Play 
+                        bool bplay = true;
                         FileInfo fi = new FileInfo(pli.File);
-                        // Raise event Play                                                
-                        PlayMidi?.Invoke(this, fi, currentPlaylist, true);
+                        string file = fi.FullName;
+                        string ext = Path.GetExtension(file);
+                        switch (ext.ToLower())
+                        {
+                            case ".mid":
+                            case ".kar":
+                                {
+                                    PlayMidi?.Invoke(this, fi, currentPlaylist, bplay);
+                                    break;
+                                }
 
-                    }
-                        
+                            case ".zip":
+                            case ".cdg":
+                                {
+                                    PlayCDG?.Invoke(this, fi, bplay);
+                                    break;
+                                }
+
+                            case ".mml":
+                            case ".abc":
+                                {
+                                    PlayText?.Invoke(this, fi, currentPlaylist, bplay);
+                                    break;
+                                }
+
+                            default:
+                                try
+                                {
+                                    System.Diagnostics.Process.Start(@file);
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show(ex.Message);
+                                }
+                                break;
+                        }                                                                                              
+                    }                        
                 }
                 else
                 {
@@ -2271,6 +2328,13 @@ namespace Karaboss.playlists
                             break;
                         }
 
+                    case ".mml":
+                    case ".abc":
+                        {
+                            PlayText?.Invoke(this, new FileInfo(file), null, bplay);
+                            break;
+                        }
+
                     case ".zip":
                     case ".cdg":
                         {
@@ -2279,7 +2343,14 @@ namespace Karaboss.playlists
                         }
 
                     default:
-                        System.Diagnostics.Process.Start(@file);
+                        try
+                        {
+                            System.Diagnostics.Process.Start(@file);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
                         break;
                 }
             }
@@ -2541,7 +2612,6 @@ namespace Karaboss.playlists
 
 
         #endregion
-
 
 
         #region appearance

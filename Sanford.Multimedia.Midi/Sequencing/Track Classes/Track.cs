@@ -1260,7 +1260,18 @@ namespace Sanford.Multimedia.Midi
         {
             byte[] bytes = new byte[4];
             bytes[0] = Convert.ToByte(numerator);   // [nn] Numerator
-            bytes[1] = Convert.ToByte(denominator); // [dd] Denominator
+
+            int negativepowerof2 = 2;
+            try
+            {
+                negativepowerof2 = (int)(Math.Log(denominator) / Math.Log(2));
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+            }
+            bytes[1] = Convert.ToByte(negativepowerof2);    // [dd] Denominator negative power of 2
+            
             bytes[2] = Convert.ToByte(24);                  // [cc] MIDI ticks per metronome click
             bytes[3] = Convert.ToByte(8);                   // [bb] 32nd notes per MIDI quarter note
             MetaMessage metamessage = new MetaMessage(MetaType.TimeSignature, bytes);
@@ -1331,6 +1342,68 @@ namespace Sanford.Multimedia.Midi
         {
             ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, channel, (int)ControllerType.EffectsLevel, reverb);
             Insert(0, message);
+        }
+
+        public void SetPitchBend(int channel, int number, int starttime, int endtime)
+        {
+            // Up
+            int pitchBend = 16383;
+            if (pitchBend > 16383)
+                pitchBend = 16383;
+
+            int mask = 127;
+
+            ChannelMessageBuilder builder = new ChannelMessageBuilder();
+            ChannelMessage pitchBendMessage;
+
+            // Increase from 8192 to 13383 during the duration of the note
+            int step = 10;
+            int OffsetTime = (endtime - starttime) / step;
+            int offsetPitch = (16383 - 8192) / step;
+            pitchBend = 8192;
+            int t = starttime;
+            for (int i = 0; i < step -1 ; i++)
+            {
+                pitchBend += offsetPitch;
+                t += OffsetTime;
+
+                // Build pitch bend message;
+                builder.Command = ChannelCommand.PitchWheel;
+
+                // Unpack pitch bend value into two data bytes.
+                builder.Data1 = pitchBend & mask;
+                builder.Data2 = pitchBend >> 7;
+
+                // Build message.
+                builder.Build();
+                pitchBendMessage = builder.Result;
+                Insert(t, pitchBendMessage);
+            }
+
+           
+
+            
+            // Stop pitchbend
+            pitchBend = 0x2000; // No pitch = 8192
+            builder = new ChannelMessageBuilder();
+
+            // Build pitch bend message;
+            builder.Command = ChannelCommand.PitchWheel;
+
+            // Unpack pitch bend value into two data bytes.
+            builder.Data1 = pitchBend & mask;
+            builder.Data2 = pitchBend >> 7;
+
+            // Build message.
+            builder.Build();
+            pitchBendMessage = builder.Result;
+            Insert(endtime, pitchBendMessage);
+
+        }
+
+        public void UnsetPitchBend(int channel, int number, int starttime, int endtime)
+        {
+
         }
 
         #endregion channel command message

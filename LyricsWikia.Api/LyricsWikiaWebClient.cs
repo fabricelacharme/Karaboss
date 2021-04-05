@@ -13,8 +13,7 @@ namespace LyricsWikia.Api
             // FAB 02/10/17: set proxy
             IWebProxy iwpxy = WebRequest.GetSystemWebProxy();
             req.Proxy = iwpxy;
-            req.Proxy.Credentials = CredentialCache.DefaultCredentials;
-            
+            req.Proxy.Credentials = CredentialCache.DefaultCredentials;           
 
             req.KeepAlive = false;
             if (req != null)

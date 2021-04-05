@@ -218,11 +218,14 @@ namespace Karaboss
         /// <returns></returns>
         private int GetBPM(int tempo)
         {
+            // see http://midi.teragonaudio.com/tech/midifile/ppqn.htm
             const float kOneMinuteInMicroseconds = 60000000;
-            float kTimeSignatureNumerator = (float)sequence1.Numerator; 
-            float kTimeSignatureDenominator = (float)sequence1.Denominator;  
-                                                          
-            float BPM = (kOneMinuteInMicroseconds / (float)tempo) * (kTimeSignatureDenominator / 4.0f);
+            float kTimeSignatureNumerator = (float)sequence1.Numerator;
+            float kTimeSignatureDenominator = (float)sequence1.Denominator;
+
+            //float BPM = (kOneMinuteInMicroseconds / (float)tempo) * (kTimeSignatureDenominator / 4.0f);            
+            float BPM = kOneMinuteInMicroseconds / (float)tempo;
+
             return (int)BPM;
         }
 
@@ -521,18 +524,18 @@ namespace Karaboss
                 switch (PlayerState)
                 {
                     case PlayerStates.Playing:
-                        sequencer1.Position = e.NewValue - positionHScrollBar.Minimum;
+                        sequencer1.Position = e.NewValue - (int)positionHScrollBar.Minimum;
                         break;
                     case PlayerStates.Paused:
-                        sequencer1.Position = e.NewValue - positionHScrollBar.Minimum;
-                        vPianoRollControl1.OffsetY = Convert.ToInt32((e.NewValue - positionHScrollBar.Minimum) * vPianoRollControl1.yScale);
+                        sequencer1.Position = e.NewValue - (int)positionHScrollBar.Minimum;
+                        vPianoRollControl1.OffsetY = Convert.ToInt32((e.NewValue - (int)positionHScrollBar.Minimum) * vPianoRollControl1.yScale);
                         nbstop = 0;
-                        newstart = e.NewValue - positionHScrollBar.Minimum;
+                        newstart = e.NewValue - (int)positionHScrollBar.Minimum;
                         break;
                     case PlayerStates.Stopped:
-                        vPianoRollControl1.OffsetY = Convert.ToInt32((e.NewValue - positionHScrollBar.Minimum) * vPianoRollControl1.yScale);
+                        vPianoRollControl1.OffsetY = Convert.ToInt32((e.NewValue - (int)positionHScrollBar.Minimum) * vPianoRollControl1.yScale);
                         nbstop = 0;
-                        newstart = e.NewValue - positionHScrollBar.Minimum;
+                        newstart = e.NewValue - (int)positionHScrollBar.Minimum;
                         break;
                 }
                 positionHScrollBar.Parent.Focus();
@@ -555,8 +558,8 @@ namespace Karaboss
                 case PlayerStates.Paused:
                     break;
                 case PlayerStates.Stopped:
-                    vPianoRollControl1.OffsetY = Convert.ToInt32((positionHScrollBar.Value - positionHScrollBar.Minimum) * vPianoRollControl1.yScale);
-                    newstart = positionHScrollBar.Value - positionHScrollBar.Minimum;
+                    vPianoRollControl1.OffsetY = Convert.ToInt32((int)(positionHScrollBar.Value - positionHScrollBar.Minimum) * vPianoRollControl1.yScale);
+                    newstart = (int)(positionHScrollBar.Value - positionHScrollBar.Minimum);
                     double dpercent = 100 * newstart / (double)_totalTicks;
                     DisplayTimeElapse(dpercent);
 
@@ -661,10 +664,10 @@ namespace Karaboss
                     break;
                 case PlayerStates.Paused:                    
                 case PlayerStates.Stopped:
-                    int newvalue = Convert.ToInt32((value / vPianoRollControl1.yScale)) + positionHScrollBar.Minimum;
-                    if (newvalue > positionHScrollBar.Maximum) newvalue = positionHScrollBar.Maximum;
+                    int newvalue = Convert.ToInt32((value / vPianoRollControl1.yScale)) + (int)positionHScrollBar.Minimum;
+                    if (newvalue > positionHScrollBar.Maximum) newvalue = (int)positionHScrollBar.Maximum;
                     positionHScrollBar.Value = newvalue;
-                    newstart = positionHScrollBar.Value - positionHScrollBar.Minimum;                                        
+                    newstart = (int)(positionHScrollBar.Value - positionHScrollBar.Minimum); 
                     break;
             }
         }
@@ -688,8 +691,8 @@ namespace Karaboss
                     case PlayerStates.Paused:
                         break;
                     case PlayerStates.Stopped:                        
-                        int v = e.Delta / 120 * (positionHScrollBar.Maximum - positionHScrollBar.Minimum) / positionHScrollBar.MouseWheelBarPartitions;
-                        positionHScrollBar.Value = SetProperValue(positionHScrollBar.Value + v);                                                
+                        int v = e.Delta / 120 * (int)(positionHScrollBar.Maximum - positionHScrollBar.Minimum) / positionHScrollBar.MouseWheelBarPartitions;
+                        positionHScrollBar.Value = SetProperValue((int)positionHScrollBar.Value + v);                                                
                         break;
                 }
             }
@@ -697,8 +700,8 @@ namespace Karaboss
 
         private int SetProperValue(int val)
         {
-            if (val < positionHScrollBar.Minimum) return positionHScrollBar.Minimum;
-            else if (val > positionHScrollBar.Maximum) return positionHScrollBar.Maximum;
+            if (val < positionHScrollBar.Minimum) return (int)positionHScrollBar.Minimum;
+            else if (val > positionHScrollBar.Maximum) return (int)positionHScrollBar.Maximum;
             else return val;
         }
 

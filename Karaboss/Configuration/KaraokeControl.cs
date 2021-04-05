@@ -31,6 +31,7 @@
  */
 
 #endregion
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Karaboss.Configuration
@@ -43,13 +44,18 @@ namespace Karaboss.Configuration
         public KaraokeControl(string configName) : base(configName)
         {
             InitializeComponent();
-            populateValues();
+            populateValues();            
         }
 
         private void populateValues()
         {
             chkMuteMelody.Checked = Karaclass.m_MuteMelody;
             chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
+
+            txtSepSyllabe.Text = Karaclass.m_SepSyllabe;
+            txtSepLine.Text = Karaclass.m_SepLine;
+            txtSepParagraph.Text = Karaclass.m_SepParagraph;
+
         }
 
         public override void Restore()
@@ -61,11 +67,38 @@ namespace Karaboss.Configuration
             Karaclass.m_MuteMelody = chkMuteMelody.Checked;
             Karaclass.m_DisplayBalls = chkDisplayBalls.Checked;
 
+            Karaclass.m_SepSyllabe = txtSepSyllabe.Text;
+            Karaclass.m_SepLine = txtSepLine.Text;
+            Karaclass.m_SepParagraph = txtSepParagraph.Text;
+
             Properties.Settings.Default.MuteMelody = Karaclass.m_MuteMelody;
             Properties.Settings.Default.DisplayBalls = Karaclass.m_DisplayBalls;
+
+            Properties.Settings.Default.SepSyllabe = Karaclass.m_SepSyllabe;
+            Properties.Settings.Default.SepLine = Karaclass.m_SepLine;
+            Properties.Settings.Default.SepParagraph = Karaclass.m_SepParagraph;
+
             Properties.Settings.Default.Save();
 
         }
 
+        private void txtSepSyllabe_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (txtSepSyllabe.Text.Trim().Length != 1)
+                e.Cancel = true;
+        }
+
+        private void txtSepLine_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (txtSepLine.Text.Trim().Length != 1)
+                e.Cancel = true;
+        }
+
+        private void txtSepParagraph_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (txtSepParagraph.Text.Trim().Length != 1)
+                e.Cancel = true;
+
+        }
     }
 }

@@ -123,7 +123,7 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="btnPnlNoteCancel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>106, 162</value>
+    <value>108, 165</value>
   </data>
   <data name="btnPnlNoteCancel.Size" type="System.Drawing.Size, System.Drawing">
     <value>60, 23</value>
@@ -142,16 +142,16 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btnPnlNoteCancel.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;btnPnlNoteCancel.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>6</value>
   </data>
   <data name="btnPnlNoteOk.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnPnlNoteOk.Location" type="System.Drawing.Point, System.Drawing">
-    <value>34, 162</value>
+    <value>36, 165</value>
   </data>
   <data name="btnPnlNoteOk.Size" type="System.Drawing.Size, System.Drawing">
     <value>60, 23</value>
@@ -169,13 +169,13 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btnPnlNoteOk.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;btnPnlNoteOk.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>8</value>
   </data>
   <data name="upDownNoteVelocity.Location" type="System.Drawing.Point, System.Drawing">
-    <value>65, 126</value>
+    <value>67, 129</value>
   </data>
   <data name="upDownNoteVelocity.Size" type="System.Drawing.Size, System.Drawing">
     <value>45, 20</value>
@@ -190,10 +190,10 @@
     <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;upDownNoteVelocity.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;upDownNoteVelocity.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>10</value>
   </data>
   <data name="lblNoteVelocity.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -202,7 +202,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblNoteVelocity.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 130</value>
+    <value>13, 133</value>
   </data>
   <data name="lblNoteVelocity.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 13</value>
@@ -220,13 +220,13 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;lblNoteVelocity.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;lblNoteVelocity.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>12</value>
   </data>
   <data name="txtDuration.Location" type="System.Drawing.Point, System.Drawing">
-    <value>65, 101</value>
+    <value>67, 104</value>
   </data>
   <data name="txtDuration.Size" type="System.Drawing.Size, System.Drawing">
     <value>119, 20</value>
@@ -241,10 +241,10 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;txtDuration.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;txtDuration.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>14</value>
   </data>
   <data name="lblNoteDuration.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -253,7 +253,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblNoteDuration.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 105</value>
+    <value>13, 108</value>
   </data>
   <data name="lblNoteDuration.Size" type="System.Drawing.Size, System.Drawing">
     <value>47, 13</value>
@@ -271,13 +271,13 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;lblNoteDuration.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;lblNoteDuration.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>15</value>
   </data>
   <data name="txtTicks.Location" type="System.Drawing.Point, System.Drawing">
-    <value>65, 76</value>
+    <value>67, 79</value>
   </data>
   <data name="txtTicks.Size" type="System.Drawing.Size, System.Drawing">
     <value>119, 20</value>
@@ -292,10 +292,10 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;txtTicks.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;txtTicks.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>13</value>
   </data>
   <data name="lblNoteTicks.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -304,7 +304,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblNoteTicks.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 80</value>
+    <value>13, 83</value>
   </data>
   <data name="lblNoteTicks.Size" type="System.Drawing.Size, System.Drawing">
     <value>33, 13</value>
@@ -322,16 +322,16 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;lblNoteTicks.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;lblNoteTicks.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="txtTime.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
   <data name="txtTime.Location" type="System.Drawing.Point, System.Drawing">
-    <value>65, 51</value>
+    <value>67, 54</value>
   </data>
   <data name="txtTime.Size" type="System.Drawing.Size, System.Drawing">
     <value>119, 20</value>
@@ -346,10 +346,10 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;txtTime.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;txtTime.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>9</value>
   </data>
   <data name="lbNotelTime.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -358,7 +358,7 @@
     <value>NoControl</value>
   </data>
   <data name="lbNotelTime.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 55</value>
+    <value>13, 58</value>
   </data>
   <data name="lbNotelTime.Size" type="System.Drawing.Size, System.Drawing">
     <value>30, 13</value>
@@ -376,10 +376,10 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;lbNotelTime.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;lbNotelTime.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>7</value>
   </data>
   <data name="lblNoteString.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -388,7 +388,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblNoteString.Location" type="System.Drawing.Point, System.Drawing">
-    <value>120, 30</value>
+    <value>122, 33</value>
   </data>
   <data name="lblNoteString.Size" type="System.Drawing.Size, System.Drawing">
     <value>21, 13</value>
@@ -406,13 +406,13 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;lblNoteString.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;lblNoteString.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>5</value>
   </data>
   <data name="upDownNoteValue.Location" type="System.Drawing.Point, System.Drawing">
-    <value>65, 26</value>
+    <value>67, 29</value>
   </data>
   <data name="upDownNoteValue.Size" type="System.Drawing.Size, System.Drawing">
     <value>45, 20</value>
@@ -427,10 +427,10 @@
     <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;upDownNoteValue.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;upDownNoteValue.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>3</value>
   </data>
   <data name="lblNoteValue.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -439,7 +439,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblNoteValue.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 30</value>
+    <value>13, 33</value>
   </data>
   <data name="lblNoteValue.Size" type="System.Drawing.Size, System.Drawing">
     <value>30, 13</value>
@@ -457,16 +457,16 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;lblNoteValue.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;lblNoteValue.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>1</value>
   </data>
   <data name="lblTrackNumber.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="lblTrackNumber.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 5</value>
+    <value>13, 8</value>
   </data>
   <data name="lblTrackNumber.Size" type="System.Drawing.Size, System.Drawing">
     <value>57, 13</value>
@@ -484,13 +484,13 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;lblTrackNumber.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;lblTrackNumber.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="lblSelection.Location" type="System.Drawing.Point, System.Drawing">
-    <value>95, 5</value>
+    <value>97, 8</value>
   </data>
   <data name="lblSelection.Size" type="System.Drawing.Size, System.Drawing">
     <value>89, 13</value>
@@ -508,13 +508,13 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;lblSelection.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;lblSelection.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="btnDefVlocity.Location" type="System.Drawing.Point, System.Drawing">
-    <value>123, 125</value>
+    <value>125, 128</value>
   </data>
   <data name="btnDefVlocity.Size" type="System.Drawing.Size, System.Drawing">
     <value>61, 23</value>
@@ -532,9 +532,114 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btnDefVlocity.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;btnDefVlocity.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tabPage1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabPage1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabPage1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>196, 195</value>
+  </data>
+  <data name="tabPage1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="tabPage1.Text" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.Name" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.Parent" xml:space="preserve">
+    <value>tabControl1</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="checkBox1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBox1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 19</value>
+  </data>
+  <data name="checkBox1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 17</value>
+  </data>
+  <data name="checkBox1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="checkBox1.Text" xml:space="preserve">
+    <value>Pitch Bend</value>
+  </data>
+  <data name="&gt;&gt;checkBox1.Name" xml:space="preserve">
+    <value>checkBox1</value>
+  </data>
+  <data name="&gt;&gt;checkBox1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBox1.Parent" xml:space="preserve">
+    <value>tabPage2</value>
+  </data>
+  <data name="&gt;&gt;checkBox1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tabPage2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabPage2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabPage2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>196, 195</value>
+  </data>
+  <data name="tabPage2.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tabPage2.Text" xml:space="preserve">
+    <value>Effects</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.Name" xml:space="preserve">
+    <value>tabPage2</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.Parent" xml:space="preserve">
+    <value>tabControl1</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tabControl1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="tabControl1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="tabControl1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>204, 221</value>
+  </data>
+  <data name="tabControl1.TabIndex" type="System.Int32, mscorlib">
+    <value>43</value>
+  </data>
+  <data name="&gt;&gt;tabControl1.Name" xml:space="preserve">
+    <value>tabControl1</value>
+  </data>
+  <data name="&gt;&gt;tabControl1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabControl1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tabControl1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -544,7 +649,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>194, 191</value>
+    <value>204, 221</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>Manual</value>

@@ -803,13 +803,28 @@ namespace Sanford.Multimedia.Midi
                         Tempo = properties.Tempo;
                         Numerator = properties.Numerator;
                         Denominator = properties.Denominator;
-                        Orig_Tempo = Tempo;                        
+                        Orig_Tempo = Tempo;
+
+                        // FAB : determine time signature                    
+                        int quarternote = properties.Division;
+
+                        if (Tempo == 0)
+                        {
+                            Tempo = 500000; // 500,000 microseconds = 0.05 sec 
+                            properties.AddLog("No tempo found. Set tempo to default value 500000.");
+                        }
+                        if (Numerator == 0)
+                        {
+                            Numerator = 4; Denominator = 4;
+                            properties.AddLog("No Numerator found. Set Numerator & Denominator to default value 4/4.");
+                        }
 
                         // If we only have one track with multiple channels, then treat
                         // each channel as a separate track.
                         //if (this.Format == 0)
                         if (properties.Format == 0)
                         {
+                            
                             List<Track> thetracks = SplitChannels(newTracks[0], this.Tempo, this.Numerator, this.Denominator);
                             tracks = thetracks;
                             //this.Format = 1;        // FAB : peut pas forcer format to 1 ici ; Isbusy = true hu hu hu...
@@ -833,19 +848,7 @@ namespace Sanford.Multimedia.Midi
                             OrigFormat = 1;
                         }
 
-                        // FAB : determine time signature                    
-                        int quarternote = properties.Division;
-
-                        if (Tempo == 0)
-                        {
-                            Tempo = 500000; // 500,000 microseconds = 0.05 sec 
-                            properties.AddLog("No tempo found. Set tempo to default value 500000.");                                                     
-                        }
-                        if (Numerator == 0)
-                        {
-                            Numerator = 4; Denominator = 4;
-                            properties.AddLog("No Numerator found. Set Numerator & Denominator to default value 4/4.");
-                        }                                    
+                                             
                         
                         /*
                          * Here you can force Numerator & Denominator to another Value 

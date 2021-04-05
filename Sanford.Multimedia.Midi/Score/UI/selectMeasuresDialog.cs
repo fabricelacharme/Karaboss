@@ -37,9 +37,12 @@ namespace Sanford.Multimedia.Midi.Score.UI
             }
         }
 
-        public selectMeasuresDialog(decimal measureFrom)
+        public selectMeasuresDialog(decimal measureFrom, int maxi)
         {
             InitializeComponent();
+
+            if (maxi > updFrom.Maximum)
+                updFrom.Maximum = maxi; updTo.Maximum = maxi;
 
             updFrom.Value = measureFrom;
 

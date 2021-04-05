@@ -84,9 +84,16 @@ namespace PicControl
             public int TicksOn { get; set; }
             public int TicksOff { get; set; }            
         }
-        
+
 
         #region properties
+
+        #region Internal lyrics separators
+
+        private string _InternalSepLines = "¼";                
+        private string _InternalSepParagraphs = "½";        
+        
+        #endregion
 
         public ImageLayout imgLayout { get; set; }       
         public Image m_CurrentImage { get; set; }
@@ -296,6 +303,19 @@ namespace PicControl
 
         #region Text others
 
+        public Font KaraokeFont
+        {
+            get { return _karaokeFont; }
+            set
+            {
+                _karaokeFont = value;
+                // Redraw
+                //SetDimensions();
+                pboxWnd.Invalidate();
+            }
+        }
+
+
         /// <summary>
         /// Background color
         /// </summary>
@@ -401,6 +421,7 @@ namespace PicControl
         private int vOffset = 0;
         private int _lineHeight = 0;
 
+        private Font _karaokeFont;
         private int _linesHeight = 0;
         private int _nbLyricsLines = 0;
 
@@ -446,6 +467,8 @@ namespace PicControl
         public pictureBoxControl()
         {
             InitializeComponent();
+
+            _karaokeFont = new Font("Arial", this.Font.Size);
 
             #region Move form without title bar
             Application.AddMessageFilter(this);
@@ -587,7 +610,7 @@ namespace PicControl
             _currentTextPos = -1;
             pboxWnd.Invalidate();
         }
-
+        
         /// <summary>
         /// Load text of song
         /// </summary>
@@ -668,13 +691,12 @@ namespace PicControl
         {           
             string tx = string.Empty;
 
-            // |10|9|8|7|6|5|4|3|2|1|0|
-            //tx = "|";           
+            // 10|9|8|7|6|5|4|3|2|1|0|                     
             for (int i = sec; i >= 0; i--)
             {
-                tx += i.ToString() + "/";
+                tx += i.ToString() + _InternalSepLines;
             }
-            tx += "/";
+            
 
             List<plLyric> plLyrics = StoreDemoText(tx);
             
@@ -706,15 +728,16 @@ namespace PicControl
         private List<plLyric> StoreDemoText(string tx, int ticks = 0)
         {
             // replace spaces and carriage return 
-            // tata toto/titi tutu devient
-            // tata¼ toto/ titi¼ tutu¼ devient
-            // tata], toto[, titi], tutu
+            // tata toto<cr>titi tutu devient
+            // tata toto titi<cr>' ' tutu devient
+            // tata]toto<cr>[,titi],tutu
 
             // protect spaces, replaced by ']' + space
-            string S = tx.Replace(" ", "¼ ");
-            
-            // '|' = Carriage return, replaced by '[' + space
-            S = S.Replace("/", "/ ");
+            string m_ProtectSpace = "¾";
+            string S = tx.Replace(" ", m_ProtectSpace + " ");
+
+            // _InternalSepLines = replaced by _InternalSepLines + space
+            S = S.Replace(_InternalSepLines, _InternalSepLines + " ");
 
             // Split syllabes by spaces
             string[] strLyricSyllabes = S.Split(new Char[] { ' ' });
@@ -733,15 +756,14 @@ namespace PicControl
             for (int i = 0; i < strLyricSyllabes.Length; i++)
             {
                 sx = strLyricSyllabes[i];
-                sx = sx.Replace("¼", " ");    // spaces
-                //sx = sx.Replace("[", "/");   // carriage return
+                sx = sx.Replace(m_ProtectSpace, " ");    // retrieve spaces
 
                 plElement = sx;
                 plTime = ticks + (i + 1) * 10;        // time each 10 ticks
 
-                if (sx.Length > 1 && sx.Substring(sx.Length - 1, 1) == "/")
+                if (sx.Length > 1 && sx.Substring(sx.Length - 1, 1) == _InternalSepLines)
                 {
-                    // chaine Fini par \r
+                    // String ended byr _InternalSepLines
                     string reste = sx.Substring(0, sx.Length - 1);
                     
                     plType = plLyric.Types.Text;
@@ -749,13 +771,13 @@ namespace PicControl
                     plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
 
                     plType =  plLyric.Types.LineFeed;
-                    plElement = "/";
+                    plElement = _InternalSepLines;
                     plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
 
                 }
                 else
                 {
-                    if (sx == "/")
+                    if (sx == _InternalSepLines)
                         plType = plLyric.Types.LineFeed;
                     else
                         plType = plLyric.Types.Text;
@@ -765,9 +787,11 @@ namespace PicControl
             }
             return plLyrics;
         }
-        
+
         /// <summary>
         /// Set default values for demonstration purpose
+        /// 1/4 = LineFeed
+        /// 1/2 = Paragraph
         /// </summary>
         private void SetDefaultValues()
         {           
@@ -787,24 +811,26 @@ namespace PicControl
             m_Cancel = false;
             
             emSize = 4;
-            m_font = new Font("Arial", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            //m_font = new Font("Arial", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            m_font = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
             sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
 
-            pboxWnd.Font = new Font(Name = "Arial", emSize);            
+            //pboxWnd.Font = new Font(Name = "Arial", emSize);            
+            pboxWnd.Font = new Font(Name = _karaokeFont.Name, emSize);
             pboxWnd.SizeMode = PictureBoxSizeMode.Zoom;
 
             // Default text
-            string tx = "Lorem ipsum dolor sit amet,/";
-            tx += "consectetur adipisicing elit,/";
-            tx += "sed do eiusmod tempor incididunt/";
-            tx += "ut labore et dolore magna aliqua./";
-            tx += "Ut enim ad minim veniam,/";
-            tx += "quis nostrud exercitation ullamco/";
-            tx += "laboris nisi ut aliquip/";
-            tx += "ex ea commodo consequat./";
-            tx += "Duis aute irure dolor in reprehenderit/";
-            tx += "in voluptate velit esse cillum dolore/";
+            string tx = "Lorem ipsum dolor sit amet," + _InternalSepLines;
+            tx += "consectetur adipisicing elit," + _InternalSepLines;
+            tx += "sed do eiusmod tempor incididunt" + _InternalSepLines;
+            tx += "ut labore et dolore magna aliqua." + _InternalSepLines;
+            tx += "Ut enim ad minim veniam," + _InternalSepLines;
+            tx += "quis nostrud exercitation ullamco" + _InternalSepLines;
+            tx += "laboris nisi ut aliquip" + _InternalSepLines;
+            tx += "ex ea commodo consequat." + _InternalSepLines;
+            tx += "Duis aute irure dolor in reprehenderit" + _InternalSepLines;
+            tx += "in voluptate velit esse cillum dolore" + _InternalSepLines;
             tx += "eu fugiat nulla pariatur.";
 
             List<plLyric> plLyrics = StoreDemoText(tx);
@@ -814,9 +840,7 @@ namespace PicControl
             // Initial conditions
             _currentPosition = 30;
             currentLine = 1;
-            _currentTextPos = 2;
-            
-
+            _currentTextPos = 2;           
 
             pboxWnd.Invalidate();
         }
@@ -863,15 +887,13 @@ namespace PicControl
             */
 
             string lyr = string.Empty;
+                     
+            // pour texte normal
+            lyr = ly.Replace(_InternalSepParagraphs, _InternalSepLines);
 
-            lyr = ly.Replace("\\", "¼");    // '\' Paragraph
-            lyr = lyr.Replace("/", "¼");     // '/' Linefeed, line break
-
-            //lyr = lyr.Replace("\r\n", "¼");
-            //lyr = lyr.Replace("\r", "¼");
-            //lyr = lyr.Replace("\n", "¼");
-
-            string[] strLyricsLines = lyr.Split(new Char[] { '¼' }, StringSplitOptions.RemoveEmptyEntries);  
+            // TO BE MODIFIED
+            char ChrSepLines = Convert.ToChar(_InternalSepLines);
+            string[] strLyricsLines = lyr.Split(new Char[] { ChrSepLines }, StringSplitOptions.RemoveEmptyEntries);  
 
             for (int i = 0; i < strLyricsLines.Length; i++)
             {
@@ -925,8 +947,7 @@ namespace PicControl
                         tx = plLyrics[ind].Element;
                         tx = tx.Trim();
                         if (tx != "" && plLyrics[ind].Type != plLyric.Types.LineFeed && plLyrics[ind].Type != plLyric.Types.Paragraph)
-                        {
-
+                        {                            
                             // Si toutes les syllabes sont identiques dans la ligne (ex la la la la)
                             // , c'est faux .... lastpos reste à zéro
                             pos = strwrkline.IndexOf(tx, lastpos);
@@ -1095,7 +1116,8 @@ namespace PicControl
                 using (Graphics g = pboxWnd.CreateGraphics())
                 {
 
-                    m_font = new Font("Arial", femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    //m_font = new Font("Arial", femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
                     SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
                     ret = sz.Width;
@@ -1123,7 +1145,10 @@ namespace PicControl
                 {
 
                     if (femSize > 0)
-                        m_font = new Font("Arial", femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    {
+                        //m_font = new Font("Arial", femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                        m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    }
 
                     SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
                     ret = sz.Height;
@@ -1230,8 +1255,10 @@ namespace PicControl
                 if (inisize > 0)
                 {
                     emSize = g.DpiY * inisize / 72;
-                    m_font = new Font("Arial", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
-                    pboxWnd.Font = new Font(Name = "Arial", emSize);
+                    //m_font = new Font("Arial", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    m_font = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    //pboxWnd.Font = new Font(Name = "Arial", emSize);
+                    pboxWnd.Font = new Font(Name = _karaokeFont.Name, emSize);
 
                     // Vertical distance between lines
                     _lineHeight = (int)emSize + 10;

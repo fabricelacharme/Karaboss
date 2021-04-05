@@ -58,11 +58,20 @@ namespace Karaboss
         private HashSet<Control> controlsToMove = new HashSet<Control>();
         #endregion
 
+        private Font _karaokeFont;
         private string lyrics;
         private int currentTextPos = 0;
         private Point Mouselocation;
 
         #region properties
+
+
+        #region Internal lyrics separators
+
+        private string _InternalSepLines = "¼";        
+        private string _InternalSepParagraphs = "½";
+        
+        #endregion
 
         // Show balls
         private bool _bShowBalls = true;
@@ -75,6 +84,18 @@ namespace Karaboss
         }
 
         #region text characteristics
+
+        public Font KaraokeFont
+        {
+            get { return _karaokeFont; }
+            set
+            {
+                _karaokeFont = value;
+                // Redraw
+                pBox.KaraokeFont = _karaokeFont;
+            }
+        }
+
         private Karaclass.OptionsDisplay _OptionDisplay;
         /// <summary>
         /// Display lyrics option: top, Center, Bottom
@@ -359,7 +380,10 @@ namespace Karaboss
         private void LoadKarOptions()
         {
             try
-            {
+            {                
+                _karaokeFont = Properties.Settings.Default.KaraokeFont;
+                pBox.KaraokeFont = _karaokeFont;
+
                 // show balls
                 bShowBalls = Karaclass.m_DisplayBalls;
 
@@ -442,6 +466,8 @@ namespace Karaboss
 
         /// <summary>
         /// Load song in picturebox control
+        ///  1/4 = LineFeed
+        ///  1/2 = Paragraph
         /// </summary>
         public void LoadSong(List<plLyric> plLyrics)
         {            
@@ -452,8 +478,6 @@ namespace Karaboss
                 lyrics += plLyrics[i].Element; 
             }
 
-            lyrics = lyrics.Replace("\\", "\r\n\r\n");
-            lyrics = lyrics.Replace("/", "\r\n");
 
             List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
             foreach (plLyric plL in plLyrics)
@@ -731,12 +755,26 @@ namespace Karaboss
             frmLyrOptions.ShowDialog();
         }
 
+        /// <summary>
+        /// Export words in notepad
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnFrmWords_Click(object sender, EventArgs e)
         {
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             string file = path + "\\lyrics.txt";
+            lyrics = lyrics.Replace(_InternalSepParagraphs, "\r\n\r\n");
+            lyrics = lyrics.Replace(_InternalSepLines, "\r\n");
             System.IO.File.WriteAllText(@file, lyrics);
-            System.Diagnostics.Process.Start(@file);
+            try
+            {
+                System.Diagnostics.Process.Start(@file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void PnlWindow_Resize(object sender, EventArgs e)

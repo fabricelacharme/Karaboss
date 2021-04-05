@@ -264,12 +264,15 @@ namespace Karaboss
         /// <param name="tempo"></param>
         /// <returns></returns>
         private int GetBPM(int tempo)
-        {            
+        {
+            // see http://midi.teragonaudio.com/tech/midifile/ppqn.htm
             const float kOneMinuteInMicroseconds = 60000000;
-            float kTimeSignatureNumerator = (float)sequence1.Numerator; 
-            float kTimeSignatureDenominator = (float)sequence1.Denominator;  
-                                                                             
-            float BPM = (kOneMinuteInMicroseconds / (float)tempo) * (kTimeSignatureDenominator / 4.0f);
+            float kTimeSignatureNumerator = (float)sequence1.Numerator;
+            float kTimeSignatureDenominator = (float)sequence1.Denominator;
+
+            //float BPM = (kOneMinuteInMicroseconds / (float)tempo) * (kTimeSignatureDenominator / 4.0f);            
+            float BPM = kOneMinuteInMicroseconds / (float)tempo;
+
             return (int)BPM;
         }
 
@@ -1092,10 +1095,14 @@ namespace Karaboss
         /// <summary>
         /// Window and scrollbar startup position
         /// </summary>
-        public void StartupPosition()
+        public void StartupPosition(float ticks = 0)
         {                       
             int middleScroll = vScrollBar.Maximum / 2;
             vScrollBar.Value = middleScroll;
+
+            pianoRollControl1.OffsetX = Convert.ToInt32(ticks * pianoRollControl1.XScale);
+            tlControl1.OffsetX = pianoRollControl1.OffsetX;
+            hScrollBar.Value = pianoRollControl1.OffsetX;
         }
 
         private void FrmPianoRoll_Resize(object sender, EventArgs e)
@@ -1202,8 +1209,7 @@ namespace Karaboss
         private void UpdateFrmPlayer()
         {
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
-            {
-                
+            {                
                 frmPlayer = GetForm<frmPlayer>();
                 frmPlayer.RefreshDisplay();
                 frmPlayer.FileModified();
@@ -1329,10 +1335,10 @@ namespace Karaboss
                 switch (PlayerState)
                 {
                     case PlayerStates.Playing:
-                        sequencer1.Position = e.NewValue - positionHScrollBar.Minimum;
+                        sequencer1.Position = e.NewValue - (int)positionHScrollBar.Minimum;
                         break;
                     case PlayerStates.Paused:
-                        newstart = e.NewValue - positionHScrollBar.Minimum;
+                        newstart = e.NewValue - (int)positionHScrollBar.Minimum;
                         sequencer1.Position = newstart;
                         pianoRollControl1.OffsetX = Convert.ToInt32(newstart * pianoRollControl1.XScale);
                         tlControl1.OffsetX = pianoRollControl1.OffsetX;
@@ -1340,7 +1346,7 @@ namespace Karaboss
                         
                         break;
                     case PlayerStates.Stopped:
-                        newstart = e.NewValue - positionHScrollBar.Minimum;
+                        newstart = e.NewValue - (int)positionHScrollBar.Minimum;
                         pianoRollControl1.OffsetX = Convert.ToInt32(newstart * pianoRollControl1.XScale);
                         tlControl1.OffsetX = pianoRollControl1.OffsetX;
                         nbstop = 0;                        
@@ -1353,8 +1359,7 @@ namespace Karaboss
             {
                 scrolling = true;
             }
-        }     
-
+        }            
 
         /// <summary>
         /// Event: playing midi file completed
@@ -1402,6 +1407,7 @@ namespace Karaboss
                 //pianoControl1.Send(message);
             }
         }
+        
 
         #endregion
 

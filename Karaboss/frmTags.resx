@@ -513,7 +513,7 @@
     <value>75, 23</value>
   </data>
   <data name="btnSave.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
+    <value>12</value>
   </data>
   <data name="btnSave.Text" xml:space="preserve">
     <value>Save</value>
@@ -537,7 +537,7 @@
     <value>75, 23</value>
   </data>
   <data name="btnCancel.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
+    <value>13</value>
   </data>
   <data name="btnCancel.Text" xml:space="preserve">
     <value>Cancel</value>
@@ -619,7 +619,7 @@
     <value>51, 13</value>
   </data>
   <data name="label15.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
+    <value>10</value>
   </data>
   <data name="label15.Text" xml:space="preserve">
     <value>Copyright</value>
@@ -646,7 +646,7 @@
     <value>371, 39</value>
   </data>
   <data name="txtWTag.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
+    <value>11</value>
   </data>
   <data name="&gt;&gt;txtWTag.Name" xml:space="preserve">
     <value>txtWTag</value>
@@ -676,7 +676,7 @@
     <value>452, 13</value>
   </data>
   <data name="label14.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
+    <value>6</value>
   </data>
   <data name="label14.Text" xml:space="preserve">
     <value>@T Title of song, artist, sequencer (SEQ), ... Examples True Love Bing Crosby</value>
@@ -703,7 +703,7 @@
     <value>371, 62</value>
   </data>
   <data name="txtTTag.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
+    <value>7</value>
   </data>
   <data name="&gt;&gt;txtTTag.Name" xml:space="preserve">
     <value>txtTTag</value>
@@ -733,7 +733,7 @@
     <value>285, 13</value>
   </data>
   <data name="label13.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
+    <value>4</value>
   </data>
   <data name="label13.Text" xml:space="preserve">
     <value>@V The program version number. Generally 0100</value>
@@ -796,7 +796,7 @@
     <value>283, 13</value>
   </data>
   <data name="label11.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
+    <value>2</value>
   </data>
   <data name="label11.Text" xml:space="preserve">
     <value>@L language of the song. Example ENGL, FREN</value>
@@ -826,7 +826,7 @@
     <value>411, 13</value>
   </data>
   <data name="label10.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
+    <value>0</value>
   </data>
   <data name="label10.Text" xml:space="preserve">
     <value>@K Type of file / copyright information. Generally MIDI KARAOKE FILE</value>
@@ -874,7 +874,7 @@
     <value>371, 62</value>
   </data>
   <data name="txtITag.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+    <value>9</value>
   </data>
   <data name="&gt;&gt;txtITag.Name" xml:space="preserve">
     <value>txtITag</value>
@@ -919,7 +919,7 @@
     <value>371, 41</value>
   </data>
   <data name="txtKTag.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="&gt;&gt;txtKTag.Name" xml:space="preserve">
     <value>txtKTag</value>

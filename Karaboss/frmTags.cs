@@ -230,44 +230,69 @@ namespace Karaboss
             // @#Comment    Comment
 
             // Remove prev tags
+            foreach (Track t in sequence1.tracks)
+            {
+                t.RemoveTagsEvent("@#");
+                t.RemoveTagsEvent("@I");
+                t.RemoveTagsEvent("@K");
+                t.RemoveTagsEvent("@L");
+                t.RemoveTagsEvent("@T");
+                t.RemoveTagsEvent("@V");
+                t.RemoveTagsEvent("@W");
+            }
+
+
+            // 1 - tags new
             Track track = sequence1.tracks[0];
-            track.RemoveTagsEvent("@#");
 
-            string Comment = "@#Comment=" + sequence1.TagComment;
-            AddTag(Comment);
+            if (sequence1.TagComment != string.Empty)
+            {
+                string Comment = "@#Comment=" + sequence1.TagComment;
+                AddTag(Comment);
+            }
+            if (sequence1.TagEvaluation != string.Empty)
+            {
+                string Evaluation = "@#Evaluation=" + sequence1.TagEvaluation;
+                AddTag(Evaluation);
+            }
+            if (sequence1.TagGenre != string.Empty)
+            {
+                string Genre = "@#Genre=" + sequence1.TagGenre;
+                AddTag(Genre);
+            }
+            if (sequence1.TagEditor != string.Empty)
+            {
+                string Editor = "@#Editor=" + sequence1.TagEditor;
+                AddTag(Editor);
+            }
+            if (sequence1.TagDate != string.Empty)
+            {
+                string Date = "@#Date=" + sequence1.TagDate;
+                AddTag(Date);
+            }
+            if (sequence1.TagCopyright != string.Empty)
+            {
+                string Copyright = "@#Copyright=" + sequence1.TagCopyright;
+                AddTag(Copyright);
+            }
+            if (sequence1.TagAlbum != string.Empty)
+            {
+                string Album = "@#Album=" + sequence1.TagAlbum;
+                AddTag(Album);
+            }
+            if (sequence1.TagArtist != string.Empty)
+            {
+                string Artist = "@#Artist=" + sequence1.TagArtist;
+                AddTag(Artist);
+            }
+            if (sequence1.TagTitle != string.Empty)
+            {
+                string Title = "@#Title=" + sequence1.TagTitle;
+                AddTag(Title);
+            }
             
-            string Evaluation = "@#Evaluation=" + sequence1.TagEvaluation;
-            AddTag(Evaluation);
-
-            string Genre = "@#Genre=" + sequence1.TagGenre;
-            AddTag(Genre);
-
-            string Editor = "@#Editor=" + sequence1.TagEditor;
-            AddTag(Editor);
-
-            string Date = "@#Date=" + sequence1.TagDate;
-            AddTag(Date);
-
-            string Copyright = "@#Copyright=" + sequence1.TagCopyright;
-            AddTag(Copyright);
-
-            string Album = "@#Album=" + sequence1.TagAlbum;
-            AddTag(Album);
-
-            string Artist = "@#Artist=" + sequence1.TagArtist;
-            AddTag(Artist);
-
-            string Title = "@#Title=" + sequence1.TagTitle;
-            AddTag(Title);
-
-            // Classic Karaoke tags
-            string tx = string.Empty;
-            track.RemoveTagsEvent("@I");
-            track.RemoveTagsEvent("@K");
-            track.RemoveTagsEvent("@L");
-            track.RemoveTagsEvent("@T");
-            track.RemoveTagsEvent("@V");
-            track.RemoveTagsEvent("@W");
+            // 2 - Classic Karaoke tags
+            string tx = string.Empty;            
 
             for ( i = sequence1.ITag.Count - 1; i >= 0; i--)
             {
@@ -338,6 +363,6 @@ namespace Karaboss
             return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
         }
 
-        
+     
     }
 }

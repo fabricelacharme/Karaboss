@@ -517,6 +517,25 @@ namespace TrkControl
                 lblLight.BackColor = Color.Red;
         }
 
+
+        public void SetVolume(int vol)
+        {            
+            this.knobVolume.SetValue(vol);
+            lblVolume.Text = String.Format("{0}%", 100 * vol / knobVolume.Maximum);
+        }
+
+        public void SetPan(int pan)
+        {
+            this.knobPan.SetValue(pan);
+            lblPan.Text = String.Format("{0}%", 100 * (pan - 64) / knobPan.Maximum);
+        }
+        public void SetReverb(int reverb)
+        {
+            this.knobReverb.SetValue(reverb);
+            lblReverb.Text = String.Format("{0}%", 100 * reverb / knobReverb.Maximum);
+        }
+
+
         /// <summary>
         /// light off channel
         /// </summary>
@@ -841,6 +860,7 @@ namespace TrkControl
         {
             volume = knobVolume.Value;
             lblVolume.Text = String.Format("{0}%", 100 * volume / knobVolume.Maximum);
+            
             OnknobControlknobVolumeValueChanged?.Invoke(this);
         }
 

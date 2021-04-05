@@ -1084,6 +1084,20 @@ namespace Karaboss.Resources.Localization {
             {
                 return ResourceManager.GetString("NoMelodyTrack", resourceCulture);
             }
+        }        
+        internal static string MusicSubfolder
+        {
+            get
+            {
+                return ResourceManager.GetString("MusicSubfolder", resourceCulture);
+            }
+        }
+        internal static string DeleteAllLyrics
+        {
+            get
+            {
+                return ResourceManager.GetString("DeleteAllLyrics", resourceCulture);
+            }
         }
     }
 }

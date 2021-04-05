@@ -245,5 +245,62 @@
     <Setting Name="bColorContour" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="KaraokeFont" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">Arial Narrow, 8.25pt</Value>
+    </Setting>
+    <Setting Name="SepSyllabe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">*</Value>
+    </Setting>
+    <Setting Name="SepLine" Type="System.String" Scope="User">
+      <Value Profile="(Default)">/</Value>
+    </Setting>
+    <Setting Name="SepParagraph" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\</Value>
+    </Setting>
+    <Setting Name="FavoriteSongs" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FrmABCnotationSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">746, 618</Value>
+    </Setting>
+    <Setting Name="FrmABCnotationLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">100, 100</Value>
+    </Setting>
+    <Setting Name="FrmABCnotationAOT" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LoadABCAtStartup" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="TagsEdit" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="TagsPerform" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="HighlightABC" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Toolbars" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FrmTextPlayerLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="FrmTextPlayerMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="FrmTextPlayerSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">600, 600</Value>
+    </Setting>
+    <Setting Name="ShowTextEditor" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SaveDefaultOutputDevice" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DefaultOutputDevice" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

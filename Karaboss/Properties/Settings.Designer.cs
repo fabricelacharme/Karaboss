@@ -12,7 +12,7 @@ namespace Karaboss.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.4.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -995,6 +995,234 @@ namespace Karaboss.Properties {
             }
             set {
                 this["bColorContour"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Arial Narrow, 8.25pt")]
+        public global::System.Drawing.Font KaraokeFont {
+            get {
+                return ((global::System.Drawing.Font)(this["KaraokeFont"]));
+            }
+            set {
+                this["KaraokeFont"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("*")]
+        public string SepSyllabe {
+            get {
+                return ((string)(this["SepSyllabe"]));
+            }
+            set {
+                this["SepSyllabe"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("/")]
+        public string SepLine {
+            get {
+                return ((string)(this["SepLine"]));
+            }
+            set {
+                this["SepLine"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\")]
+        public string SepParagraph {
+            get {
+                return ((string)(this["SepParagraph"]));
+            }
+            set {
+                this["SepParagraph"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FavoriteSongs {
+            get {
+                return ((string)(this["FavoriteSongs"]));
+            }
+            set {
+                this["FavoriteSongs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("746, 618")]
+        public global::System.Drawing.Size FrmABCnotationSize {
+            get {
+                return ((global::System.Drawing.Size)(this["FrmABCnotationSize"]));
+            }
+            set {
+                this["FrmABCnotationSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Point FrmABCnotationLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["FrmABCnotationLocation"]));
+            }
+            set {
+                this["FrmABCnotationLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FrmABCnotationAOT {
+            get {
+                return ((bool)(this["FrmABCnotationAOT"]));
+            }
+            set {
+                this["FrmABCnotationAOT"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool LoadABCAtStartup {
+            get {
+                return ((bool)(this["LoadABCAtStartup"]));
+            }
+            set {
+                this["LoadABCAtStartup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TagsEdit {
+            get {
+                return ((string)(this["TagsEdit"]));
+            }
+            set {
+                this["TagsEdit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TagsPerform {
+            get {
+                return ((string)(this["TagsPerform"]));
+            }
+            set {
+                this["TagsPerform"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HighlightABC {
+            get {
+                return ((bool)(this["HighlightABC"]));
+            }
+            set {
+                this["HighlightABC"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Toolbars {
+            get {
+                return ((string)(this["Toolbars"]));
+            }
+            set {
+                this["Toolbars"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point FrmTextPlayerLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["FrmTextPlayerLocation"]));
+            }
+            set {
+                this["FrmTextPlayerLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FrmTextPlayerMaximized {
+            get {
+                return ((bool)(this["FrmTextPlayerMaximized"]));
+            }
+            set {
+                this["FrmTextPlayerMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600, 600")]
+        public global::System.Drawing.Size FrmTextPlayerSize {
+            get {
+                return ((global::System.Drawing.Size)(this["FrmTextPlayerSize"]));
+            }
+            set {
+                this["FrmTextPlayerSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowTextEditor {
+            get {
+                return ((bool)(this["ShowTextEditor"]));
+            }
+            set {
+                this["ShowTextEditor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SaveDefaultOutputDevice {
+            get {
+                return ((bool)(this["SaveDefaultOutputDevice"]));
+            }
+            set {
+                this["SaveDefaultOutputDevice"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int DefaultOutputDevice {
+            get {
+                return ((int)(this["DefaultOutputDevice"]));
+            }
+            set {
+                this["DefaultOutputDevice"] = value;
             }
         }
     }

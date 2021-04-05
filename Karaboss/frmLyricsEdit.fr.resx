@@ -137,7 +137,7 @@
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="txtResult.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
+    <value>16</value>
   </data>
   <data name="txtResult.Text" xml:space="preserve">
     <value>Hello World</value>
@@ -145,8 +145,20 @@
   <data name="txtResult.ToolTip" xml:space="preserve">
     <value />
   </data>
+  <data name="pnlBottom.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
   <data name="pnlBottom.ToolTip" xml:space="preserve">
     <value />
+  </data>
+  <data name="btnDeleteAllLyrics.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="btnDeleteAllLyrics.Text" xml:space="preserve">
+    <value>&amp;Supprimer les paroles</value>
+  </data>
+  <data name="btnInsertParagraph.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
   <data name="btnInsertParagraph.Text" xml:space="preserve">
     <value>Nouveau paragraphe (\)</value>
@@ -172,7 +184,7 @@
     <value>408, 3</value>
   </data>
   <data name="btnSpaceRight.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+    <value>11</value>
   </data>
   <data name="btnSpaceLeft.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -181,28 +193,40 @@
     <value>408, 36</value>
   </data>
   <data name="btnSpaceLeft.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+    <value>12</value>
+  </data>
+  <data name="optFormatLyrics.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
   </data>
   <data name="btnInsertText.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="btnInsertText.Text" xml:space="preserve">
     <value>Insérer une ligne</value>
   </data>
+  <data name="optFormatText.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
   <data name="btnDelete.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+    <value>4</value>
   </data>
   <data name="btnDelete.Text" xml:space="preserve">
     <value>&amp;Supprimer la ligne</value>
+  </data>
+  <data name="btnPlay.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
   </data>
   <data name="btnPlay.Text" xml:space="preserve">
     <value>&amp;Jouer à partir du curseur</value>
   </data>
   <data name="btnView.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
+    <value>5</value>
   </data>
   <data name="btnView.Text" xml:space="preserve">
     <value>&amp;Visualiser les paroles</value>
+  </data>
+  <data name="btnSave.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
   </data>
   <data name="btnSave.Text" xml:space="preserve">
     <value>&amp;Enregistrer</value>
@@ -217,34 +241,46 @@
     <value />
   </data>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>204, 22</value>
+    <value>214, 22</value>
   </data>
   <data name="mnuFileSave.Text" xml:space="preserve">
     <value>&amp;Enregistrer</value>
   </data>
   <data name="mnuFileSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>204, 22</value>
+    <value>214, 22</value>
   </data>
   <data name="mnuFileSaveAs.Text" xml:space="preserve">
     <value>Enregistrer &amp;sous</value>
   </data>
   <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>201, 6</value>
+    <value>211, 6</value>
+  </data>
+  <data name="mnuFileSaveAsLrcLines.Size" type="System.Drawing.Size, System.Drawing">
+    <value>116, 22</value>
   </data>
   <data name="mnuFileSaveAsLrcLines.Text" xml:space="preserve">
     <value>Lignes</value>
   </data>
+  <data name="mnuFileSaveAsLrcSyllabes.Size" type="System.Drawing.Size, System.Drawing">
+    <value>116, 22</value>
+  </data>
   <data name="mnuFileSaveAsLrc.Size" type="System.Drawing.Size, System.Drawing">
-    <value>204, 22</value>
+    <value>214, 22</value>
   </data>
   <data name="mnuFileSaveAsLrc.Text" xml:space="preserve">
     <value>Enregistrer au format .lrc</value>
   </data>
+  <data name="MnuSaveAsText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>214, 22</value>
+  </data>
+  <data name="MnuSaveAsText.Text" xml:space="preserve">
+    <value>Enregistrer au format texte</value>
+  </data>
   <data name="mnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>201, 6</value>
+    <value>211, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>204, 22</value>
+    <value>214, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
@@ -256,7 +292,7 @@
     <value>&amp;Fichier</value>
   </data>
   <data name="mnuEditLoadTrack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>259, 22</value>
+    <value>260, 22</value>
   </data>
   <data name="mnuEditLoadTrack.Text" xml:space="preserve">
     <value>&amp;Charger une piste</value>
@@ -265,10 +301,10 @@
     <value>Charger une piste contenant des notes pour synchroniser le texte.</value>
   </data>
   <data name="mnuEditSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>256, 6</value>
+    <value>257, 6</value>
   </data>
   <data name="mnuEditLoadMelodyText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>259, 22</value>
+    <value>260, 22</value>
   </data>
   <data name="mnuEditLoadMelodyText.Text" xml:space="preserve">
     <value>Charger un fichier texte (paroles)</value>
@@ -277,7 +313,7 @@
     <value>Charger un fichier texte (uniquement des paroles, pas de temps)</value>
   </data>
   <data name="mnuEditLoadLRCFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>259, 22</value>
+    <value>260, 22</value>
   </data>
   <data name="mnuEditLoadLRCFile.Text" xml:space="preserve">
     <value>Charge un fichier texte (format .lrc)</value>
@@ -292,7 +328,7 @@
     <value>&amp;Edition</value>
   </data>
   <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuHelpAbout.Text" xml:space="preserve">
     <value>A &amp;propos</value>

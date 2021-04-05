@@ -58,6 +58,7 @@ namespace Hqub.MusicBrainz.API.Entities
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return null;
             }
             //Image img = Image.FromStream(ms);            

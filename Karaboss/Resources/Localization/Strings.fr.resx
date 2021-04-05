@@ -306,4 +306,7 @@
   <data name="InsertLineBreak" xml:space="preserve">
     <value>Insérer un retour à la ligne</value>
   </data>
+  <data name="DeleteAllLyrics" xml:space="preserve">
+    <value>Attention, toutes les paroles vont être effacées de cette chanson. Voulez-vous continuer ?</value>
+  </data>
 </root>

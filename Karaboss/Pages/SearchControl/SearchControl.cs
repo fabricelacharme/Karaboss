@@ -55,14 +55,13 @@ namespace Karaboss.Search
         File,
     }
 
-
     // Events
     public delegate void SelectedIndexChangedEventHandler(object sender, string fileName);
     public delegate void PlayMidiEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void MidiInfoEventHandler();
     public delegate void ContentChangedEventHandler(object sender, string strContent);
-    public delegate void NavigateToEventHandler(Object sender, string path);            // Says to parent to navigate to this folder
+    public delegate void NavigateToEventHandler(Object sender, string path, string file);            // Says to parent to navigate to this folder
     public delegate void SongRootChangedEventHandler(Object sender, string path);                   // Warn aprent that song library has changed
     
 
@@ -168,7 +167,7 @@ namespace Karaboss.Search
             set
             {
                 m_View = value;
-                
+                listView.AllowDrop = (m_View == SearchViewStyle.Author ? true : false);
                 RecreateSearchView();
                
             }
@@ -200,7 +199,6 @@ namespace Karaboss.Search
 
             // initialize listview
             InitListview();
-
 
             if (_songroot == "C:\\\\" || Directory.Exists(_songroot) == false)
                 _songroot = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
@@ -460,19 +458,18 @@ namespace Karaboss.Search
         #endregion
 
 
+        #region ListView
+
         #region listview functions
 
         private void InitListview()
-        {
+        {            
             // Affichage mode détails
             listView.View = View.Details;
             // Autoriser l'édition in place
             listView.LabelEdit = true;
             // keep selection visible
-            listView.HideSelection = false;
-
-            // Associer imagelist            
-            //FlShell.SystemImageList.UseSystemImageList(listView);
+            listView.HideSelection = false;            
 
             listView.FullRowSelect = true;
 
@@ -515,8 +512,40 @@ namespace Karaboss.Search
             m_ShellListener.ItemRenamed += new FlShell.ShellItemChangeEventHandler(M_ShellListener_ItemRenamed);
             m_ShellListener.ItemUpdated += new FlShell.ShellItemEventHandler(M_ShellListener_ItemUpdated);
 
+            listView.GroupHeaderClick += new EventHandler<int>(ListView_GroupHeaderClick);
+
             // Associer imagelist            
             FlShell.SystemImageList.UseSystemImageList(listView);
+        }
+
+        /// <summary>
+        /// Click on a Group => navigate to the folder
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListView_GroupHeaderClick(object sender, int e)
+        {
+            int i = 0;
+            string path = string.Empty;
+
+            foreach (ListViewGroup lvg in listView.Groups)
+            {
+                //Console.Write("\n" + lvg.Header);
+                i = PropertyHelper.GetPrivatePropertyValue<int>(lvg, "ID");
+                if (i == e)
+                {
+                    path = lvg.Tag.ToString();                     
+                    if (!Directory.Exists(path))
+                    {
+                        MessageBox.Show("This path does not exists:" + "\n<" + path + ">", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
+                    string file = Path.GetFileName(path);
+
+                    NavigateTo?.Invoke(this, path, file);
+                    return;
+                }
+            }            
         }
 
         /// <summary>
@@ -524,9 +553,7 @@ namespace Karaboss.Search
         /// </summary>
         private void ResetListView()
         {                       
-            listView.Items.Clear();
-            // Associer imagelist            
-            //FlShell.SystemImageList.UseSystemImageList(listView);
+            listView.Items.Clear();            
         }
 
         /// <summary>
@@ -543,7 +570,7 @@ namespace Karaboss.Search
             if (m_View == SearchViewStyle.Author)
             {
                 listView.ShowGroups = true;
-                CreateSearchViewByGroups();
+                CreateSearchViewByGroups();                
             }
 
             listView.EndUpdate();
@@ -586,7 +613,6 @@ namespace Karaboss.Search
 
             try
             {
-
                 for (int i = 0; i < filesFound.Count; i++)
                 {
                     fullname = filesFound[i].FullName;
@@ -600,7 +626,7 @@ namespace Karaboss.Search
                     
                     switch (m_View)
                     {
-
+                        // View sorted by author
                         case SearchViewStyle.Author:
                             string sname = Path.GetFileNameWithoutExtension(fullname);
                             n = sname.IndexOf(" - ");
@@ -621,7 +647,6 @@ namespace Karaboss.Search
                     }
 
                     fType = shitem.TypeName;
-
                     fileSize = finfo.Length;
 
                     if (fileSize > 1024)
@@ -826,7 +851,6 @@ namespace Karaboss.Search
                 {
                     LoadPlaylists();
 
-
                     lvContextMenu = new ContextMenuStrip();
                     lvContextMenu.Items.Clear();
 
@@ -874,6 +898,11 @@ namespace Karaboss.Search
                     lvContextMenu.Show(listView, listView.PointToClient(Cursor.Position));
                 }
             }
+            else if (e.Button == MouseButtons.Left && SelectedFile != null)
+            {
+                //ListViewItem lvi = listView.SelectedItems[0]; 
+                //NavigateFolder(lvi);
+            }
         }
 
         private void MnuOpenFolder_Click(object sender, EventArgs e)
@@ -882,20 +911,29 @@ namespace Karaboss.Search
                 return;
 
             ListViewItem lvi = listView.SelectedItems[0];
-            string file = lvi.Tag.ToString();            
+            NavigateFolder(lvi);
+        }
 
-            if (file == string.Empty) {
-                return;
-            }
+        /// <summary>
+        /// Navigate to a folder
+        /// </summary>
+        /// <param name="lvi"></param>
+        private void NavigateFolder(ListViewItem lvi)
+        {
+            string FullPath = lvi.Tag.ToString();
 
-            string path = Path.GetDirectoryName(file);
+            if (FullPath == string.Empty)            
+                return;            
+
+            string path = Path.GetDirectoryName(FullPath);
             if (!Directory.Exists(path))
             {
-                MessageBox.Show("This path does not exists:" + "\n<" + path +">", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("This path does not exists:" + "\n<" + path + ">", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
+            string file = Path.GetFileName(FullPath);
 
-            NavigateTo?.Invoke(this, path);
+            NavigateTo?.Invoke(this, path, file);
         }
 
         private void MnuEditSearchlistItem_Click(object sender, EventArgs e)
@@ -918,6 +956,118 @@ namespace Karaboss.Search
                 listView.Items.Remove(eachItem);
             }
         }
+
+        /// <summary>
+        /// Cursor = hand when mouse is over a group, indcating that we can navigate to its folder
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListView_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (m_View != SearchViewStyle.Author)
+                return;
+
+            Point cp = listView.PointToClient(Cursor.Position);
+            ListViewItem itemOver = listView.GetItemAt(cp.X, cp.Y);            
+
+            if (itemOver != null)            
+                Cursor = Cursors.Default;                                
+            else
+               Cursor = Cursors.Hand;                                                     
+        }
+
+        private void ListView_MouseLeave(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+
+        #endregion
+
+
+        #region Drag Drop
+
+        // idea: possibility to drag & drop files from and to the search results area
+
+        private void ListView_ItemDrag(object sender, ItemDragEventArgs e)
+        {            
+            List<string> selection = new List<string>();
+            foreach (ListViewItem item in listView.SelectedItems)
+            {
+                //int imgIndex = item.ImageIndex;
+                selection.Add(item.Tag.ToString());
+                //selection.Add(item.Text);
+            }
+            DataObject data = new DataObject(DataFormats.FileDrop, selection.ToArray());
+            DoDragDrop(data, DragDropEffects.Move);
+        }
+
+        private void ListView_DragOver(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void ListView_DragLeave(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ListView_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void ListView_DragDrop(object sender, DragEventArgs e)
+        {
+            
+            Point cp = listView.PointToClient(new Point(e.X, e.Y));
+            ListViewItem itemOver = listView.GetItemAt(cp.X, cp.Y);            
+
+            if (itemOver == null)
+                return;
+
+            //Console.Write(itemOver.Text);
+            //Console.Write(itemOver.Tag);
+            string DestFile = itemOver.Tag.ToString();
+
+            if (DestFile == string.Empty)            
+                return;
+
+            string OrgPath = string.Empty;
+            string OrgFileName = string.Empty;
+            string DestPath = Path.GetDirectoryName(DestFile);
+            if (!Directory.Exists(DestPath))
+            {
+                MessageBox.Show("This path does not exists:" + "\n<" + DestPath + ">", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                // Note that you can have more than one file.
+                var Files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                
+                // Move each dragged file
+                foreach (var OrgFullFileName in Files)
+                {
+                    Console.WriteLine($"  File={OrgFullFileName}");
+                    OrgPath = Path.GetDirectoryName(OrgFullFileName);
+                    OrgFileName = Path.GetFileName(OrgFullFileName);
+
+                    // Files already exists ?
+                    try 
+                    {
+                        System.IO.File.Move(Path.Combine(OrgPath, OrgFileName), Path.Combine(DestPath, OrgFileName));
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }                    
+                }
+            }
+        }
+
+        #endregion
+
         #endregion
 
 
@@ -1425,6 +1575,8 @@ namespace Karaboss.Search
             string Artist = string.Empty;
             int n = 0;
             string file = string.Empty;
+            string fullpath = string.Empty;
+            string path = string.Empty;
 
             // Iterate through the items in myListView.
             foreach (ListViewItem item in listView.Items)
@@ -1432,9 +1584,9 @@ namespace Karaboss.Search
                 // Retrieve the text value for the column.
                 string subItemText = item.SubItems[column].Text;
 
-                file = item.Tag.ToString();
-                file = Path.GetFileName(file);
-
+                fullpath = item.Tag.ToString();
+                file = Path.GetFileName(fullpath);
+                path = Path.GetDirectoryName(fullpath);
 
                 // Bug if artist has a "-" in his name or if the song has also one ...
 
@@ -1450,7 +1602,13 @@ namespace Karaboss.Search
                     // subItemText value for the group header and Hashtable key.
                     if (!groups.Contains(Artist))
                     {
-                        groups.Add(Artist, new ListViewGroup(Artist, HorizontalAlignment.Left));
+                        ListViewGroup lvg = new ListViewGroup();
+                        lvg.Header = Artist;
+                        lvg.HeaderAlignment = HorizontalAlignment.Left;
+                        lvg.Tag = path;
+
+                        //groups.Add(Artist, new ListViewGroup(Artist, HorizontalAlignment.Left));
+                        groups.Add(Artist, lvg);
                     }
 
                 }              
@@ -1853,10 +2011,15 @@ namespace Karaboss.Search
                 txtSearch.Focus();
         }
 
-        #endregion      
+        #endregion
 
 
         #region menu
+        /// <summary>
+        /// Search results sorted by author
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MnuViewByAuthor_Click(object sender, EventArgs e)
         {
             SView = SearchViewStyle.Author;
@@ -1864,6 +2027,11 @@ namespace Karaboss.Search
             mnuViewByFile.Checked = false;
         }
 
+        /// <summary>
+        /// Search results sorted by file name
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MnuViewByFile_Click(object sender, EventArgs e)
         {
             SView = SearchViewStyle.File;
@@ -2039,6 +2207,10 @@ namespace Karaboss.Search
                 return dialogResult;
             }
         }
+
+
+
+
 
         #endregion
 
