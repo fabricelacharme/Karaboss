@@ -173,8 +173,6 @@ namespace Karaboss
 
         #endregion
 
-
-
         private int TempoDelta = 100;
         private int TempoOrig = 0;        
         
@@ -492,8 +490,9 @@ namespace Karaboss
         /// <param name="e"></param>
         /// <param name="staffnum"></param>
         private void PianoRoll_Required(object sender, EventArgs e, int staffnum)
-        {            
-            DisplayPianoRoll(staffnum, MIDIfileFullPath, 0);
+        {
+            float t = sequence1.GetLength() * (float)hScrollBar.Value / (float)hScrollBar.Maximum;
+            DisplayPianoRoll(staffnum, MIDIfileFullPath, t);
         }
 
         /// <summary>
@@ -2956,6 +2955,10 @@ namespace Karaboss
                 frmPianoRoll.Show();
                 frmPianoRoll.Refresh();
                 frmPianoRoll.StartupPosition(ticks);
+            }
+            else
+            {
+                frmPianoRoll.Close();
             }
         }
 
@@ -5742,7 +5745,6 @@ namespace Karaboss
 
         }
 
-
         private void UnsetMutedTracks()
         {
             for (int i = 0; i < pnlTracks.Controls.Count; i++)
@@ -5877,6 +5879,19 @@ namespace Karaboss
         }
 
         #endregion
+
+        /// <summary>
+        /// Display PianoRoll for this track
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="track"></param>
+        private void BtnPianoRollClickOneEvent(object sender, EventArgs e, int track)
+        {            
+            float t = sequence1.GetLength()* (float)hScrollBar.Value/(float)hScrollBar.Maximum;
+            DisplayPianoRoll(track, MIDIfileFullPath, t);
+        }
+
 
         /// <summary>
         /// Track Control: change instrument
@@ -6569,6 +6584,7 @@ namespace Karaboss
             pTrack.OntrkControlbtnDelClicked += new TrkControl.TrackControl.btnDelClickedEventHandler(BtnDelClickOneEvent);
             pTrack.OntrkControllblPatchChanged += new TrkControl.TrackControl.lblPatchChangedEventHandler(LstInstrumentClickOneEvent);
             pTrack.OntrkControllblChannelChanged += new TrkControl.TrackControl.lblChannelChangedEventHandler(LstChannelClickOneEvent);
+            pTrack.OntrkControlbtnPianoRollClicked += new TrkControl.TrackControl.btnPianoRollClickedEventHandler(BtnPianoRollClickOneEvent);
 
             // Knob buttons (volume, pan, reverb)
             pTrack.OnknobControlknobVolumeValueChanged += new TrkControl.TrackControl.knobVolumeValueChangedEventHandler(TrackBarVolumeChanged);
@@ -6592,6 +6608,7 @@ namespace Karaboss
             return pTrack;
         }
      
+
 
         /// <summary>
         /// Add a new track control 

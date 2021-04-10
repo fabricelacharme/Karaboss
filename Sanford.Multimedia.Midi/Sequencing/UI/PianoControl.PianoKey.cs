@@ -35,6 +35,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using Sanford.Multimedia;
 
@@ -52,7 +53,7 @@ namespace Sanford.Multimedia.Midi.UI
             private SolidBrush offBrush = new SolidBrush(Color.White);            
             private SolidBrush textBrush = new SolidBrush(Color.DimGray);
 
-            private Font fontNoteLetter; //= new Font("Arial", 8, FontStyle.Regular, GraphicsUnit.Pixel);
+            private Font fontNoteLetter; 
 
             private int noteID = 60;
             private string noteLetter = "C";
@@ -171,115 +172,152 @@ namespace Sanford.Multimedia.Midi.UI
             {
                 if(on)
                 {
+                    // NOTE PLAYED
                     e.Graphics.FillRectangle(onBrush, 0, 0, Size.Width, Size.Height);
+
+
+                    if (NoteOffColor == Color.White)
+                    {
+                        if (owner.Orientation == Orientation.Horizontal)
+                        {
+                            // Triangles
+                            Point[] DOWNLEFT = new Point[] { new Point(-1, Size.Height - 7), new Point(5, Size.Height - 1), new Point(-1, Size.Height - 1) };
+                            Point[] DOWNRIGHT = new Point[] { new Point(Size.Width - 5, Size.Height - 1), new Point(Size.Width, Size.Height - 7), new Point(Size.Width, Size.Height - 1) };
+
+                            using (SolidBrush brush = new SolidBrush(Color.Black))
+                            {
+                                e.Graphics.FillPolygon(brush, DOWNLEFT);
+                                e.Graphics.FillPolygon(brush, DOWNRIGHT);
+                            }
+                        }
+                        else
+                        {
+                            // Triangles
+                            Point[] RIGHTUP = new Point[] { new Point(Size.Width - 7, 0), new Point(Size.Width, 0), new Point(Size.Width, 5) };
+                            Point[] RIGHTDOWN = new Point[] { new Point(Size.Width - 7, Size.Height), new Point(Size.Width, Size.Height - 5), new Point(Size.Width, Size.Height) };
+
+                            using (SolidBrush brush = new SolidBrush(Color.Black))
+                            {
+                                e.Graphics.FillPolygon(brush, RIGHTUP);
+                                e.Graphics.FillPolygon(brush, RIGHTDOWN);
+                            }
+                        }
+                    }
+                    
                 }
                 else
                 {
-                    // Color depending on whhite or black note
-                    e.Graphics.FillRectangle(offBrush, 0, 0, Size.Width, Size.Height);
+                    // NOTE OFF
                     
+                    // Color depending on white or black note
+                    e.Graphics.FillRectangle(offBrush, 0, 0, Size.Width, Size.Height);
+
+                    // BLACK NOTES
+                    if (NoteOffColor == Color.Black)
+                    {
+                        // Draw 3D effect on black notes with gray lines and a gray rectangle
+
+                        int w = 12;
+                        // Vertical
+                        if (owner.Orientation == Orientation.Vertical)
+                        {
+                            // Top horz line -3
+                            Point pt1 = new Point(0, 3);
+                            Point pt2 = new Point(Size.Width - 3, 3);
+                            e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                            // vert line on the right - 3
+                            pt1 = new Point(Size.Width - 3, 3);
+                            pt2 = new Point(Size.Width - 3, Size.Height - 5);
+                            e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                            // bottom line -3
+                            pt1 = new Point(0, Size.Height - 4);
+                            pt2 = new Point(Size.Width - 3, Size.Height - 4);
+                            e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                            // Gray Rectangle on the right                           
+                            Rectangle rect = new Rectangle(Size.Width - 2 - w, 4, w, Size.Height - 8);
+                            SolidBrush FillBrush = new SolidBrush(Color.DimGray);
+                            e.Graphics.FillRectangle(FillBrush, rect);
+                        }
+                        else
+                        {
+                            // HORIZONTAL
+                            // left vert line +3 
+                            Point pt1 = new Point(3, 0);
+                            Point pt2 = new Point(3, Size.Height - 3);
+                            e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                            // Horz line bottom -3
+                            pt1 = new Point(3, Size.Height - 3);
+                            pt2 = new Point(Size.Width - 3, Size.Height - 3);
+                            e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                            // Right vert line -3
+                            pt1 = new Point(Size.Width - 3, 0);
+                            pt2 = new Point(Size.Width - 3, Size.Height - 3);
+                            e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                            // Gray rectangle at the bottom of the black note
+                            Rectangle rect = new Rectangle(4, Size.Height - 2 - w, Size.Width - 7, w);
+                            SolidBrush FillBrush = new SolidBrush(Color.DimGray);
+                            e.Graphics.FillRectangle(FillBrush, rect);
+
+                        }
+
+                    }
+                    else if (NoteOffColor == Color.White)
+                    {
+                        // WHITE NOTES
+                        //e.Graphics.DrawRectangle(Pens.Black, 0, 0, Size.Width - 1, Size.Height - 1);
+
+                        Pen pn = new Pen(Color.Black);
+                        pn.Width = 1;
+
+                        // HORIZONTAL
+                        if (owner.Orientation == Orientation.Horizontal)
+                        {
+                            e.Graphics.DrawRectangle(pn, 0, 0, Size.Width - 1, Size.Height - 1);
+
+                            // Triangles
+                            Point[] DOWNLEFT = new Point[] { new Point(-1, Size.Height - 7), new Point(5, Size.Height - 1), new Point(-1, Size.Height - 1) };
+                            Point[] DOWNRIGHT = new Point[] { new Point(Size.Width - 5, Size.Height - 1), new Point(Size.Width, Size.Height - 7), new Point(Size.Width, Size.Height - 1) };
+
+                            using (SolidBrush brush = new SolidBrush(Color.Black))
+                            {
+                                e.Graphics.FillPolygon(brush, DOWNLEFT);
+                                e.Graphics.FillPolygon(brush, DOWNRIGHT);
+                            }
+
+                        }
+                        else
+                        {
+                            // VERTICAL
+                            e.Graphics.DrawRectangle(Pens.Black, 0, 0, Size.Width - 1, Size.Height - 1);
+
+                            // Triangles
+                            Point[] RIGHTUP = new Point[] { new Point(Size.Width - 7, 0), new Point(Size.Width, 0), new Point(Size.Width, 5) };
+                            Point[] RIGHTDOWN = new Point[] { new Point(Size.Width - 7, Size.Height), new Point(Size.Width, Size.Height - 5), new Point(Size.Width, Size.Height) };
+
+                            using (SolidBrush brush = new SolidBrush(Color.Black))
+                            {
+                                e.Graphics.FillPolygon(brush, RIGHTUP);
+                                e.Graphics.FillPolygon(brush, RIGHTDOWN);
+                            }
+
+
+                        }
+
+                    }
+                   
                 }
 
                 // Draw contour
-                //e.Graphics.DrawRectangle(Pens.Black, 0, 0, Size.Width - 1, Size.Height - 1);
-
-                if (!on && NoteOffColor == Color.Black)
-                {
-
-                    // Draw 3D effect on black notes with gray lines and a gray rctangle
-                    if (owner.Orientation == Orientation.Vertical)
-                    {                        
-                        // Top horz line -3
-                        Point pt1 = new Point(0, 3);
-                        Point pt2 = new Point(Size.Width - 3, 3);
-                        e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
-
-                        // vert line on the right - 3
-                        pt1 = new Point(Size.Width - 3, 3);
-                        pt2 = new Point(Size.Width - 3, Size.Height - 5);
-                        e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
-
-                        // bottom line -3
-                        pt1 = new Point(0, Size.Height - 4);
-                        pt2 = new Point(Size.Width - 3, Size.Height - 4);
-                        e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
-
-                        // Gray Rectangle on the right
-                        Rectangle rect = new Rectangle(Size.Width - 2 - 12, 4, 12, Size.Height - 8);
-                        SolidBrush FillBrush = new SolidBrush(Color.DimGray);
-                        e.Graphics.FillRectangle(FillBrush, rect);                        
-                    }
-                    else
-                    {
-                        // left vert line +3 
-                        Point pt1 = new Point(3, 0);
-                        Point pt2 = new Point(3, Size.Height - 3);
-                        e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
-
-                        // Horz line bottom -3
-                        pt1 = new Point(3, Size.Height - 3);
-                        pt2 = new Point(Size.Width - 3, Size.Height - 3);
-                        e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
-
-                        // Right vert line -3
-                        pt1 = new Point(Size.Width - 3, 0);
-                        pt2 = new Point(Size.Width - 3, Size.Height - 3);
-                        e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
-
-                        // Gray rectangle at the bottom of the black note
-                        Rectangle rect = new Rectangle(4, Size.Height - 14, Size.Width - 7, 12);
-                        SolidBrush FillBrush = new SolidBrush(Color.DimGray);
-                        e.Graphics.FillRectangle(FillBrush, rect);
-
-                    }
-
-                }
-                else
-                {
-                    // White notes
-                    //e.Graphics.DrawRectangle(Pens.Black, 0, 0, Size.Width - 1, Size.Height - 1);
-
-                    if (owner.Orientation == Orientation.Horizontal)
-                    {
-                        Pen pn = new Pen( Color.Black);                        
-                        pn.Width = 2;
-
-                        // Line vert left
-                        Point pt1 = new Point(0, 0);
-                        Point pt2 = new Point(0, Size.Height - 4);
-                        e.Graphics.DrawLine(pn, pt1, pt2);
-
-                        pt1 = new Point(0, Size.Height - 4);
-                        pt2 = new Point(4, Size.Height);
-                        e.Graphics.DrawLine(pn, pt1, pt2);
+                e.Graphics.DrawRectangle(Pens.Black, 0, 0, Size.Width - 1, Size.Height - 1);
 
 
-                        // Line horz bottom
-                        pt1 = new Point(4, Size.Height);
-                        pt2 = new Point(Size.Width - 4, Size.Height);
-                        e.Graphics.DrawLine(pn, pt1, pt2);
-
-                        pt1 = new Point(Size.Width - 4, Size.Height);
-                        pt2 = new Point(Size.Width, Size.Height - 4);
-                        e.Graphics.DrawLine(pn, pt1, pt2);
-
-
-
-                        // Line vert right
-                        pt1 = new Point(Size.Width, Size.Height - 4);
-                        pt2 = new Point(Size.Width, 0);
-                        e.Graphics.DrawLine(pn, pt1, pt2);
-
-                        // Line horz top
-                        pt1 = new Point(Size.Width, 0);
-                        pt2 = new Point(0, 0);
-                        e.Graphics.DrawLine(pn, pt1, pt2);
-
-
-
-                    }
-
-                }
+         
 
 
                 // FAB: draw note letter only for C note
@@ -297,6 +335,8 @@ namespace Sanford.Multimedia.Midi.UI
                 }
                 base.OnPaint(e);
             }
+
+
 
             public string NoteLetter
             {

@@ -1101,8 +1101,11 @@ namespace Karaboss
             vScrollBar.Value = middleScroll;
 
             pianoRollControl1.OffsetX = Convert.ToInt32(ticks * pianoRollControl1.XScale);
-            tlControl1.OffsetX = pianoRollControl1.OffsetX;
-            hScrollBar.Value = pianoRollControl1.OffsetX;
+            if (pianoRollControl1.OffsetX >= hScrollBar.Minimum && pianoRollControl1.OffsetX <= hScrollBar.Maximum)
+            {
+                tlControl1.OffsetX = pianoRollControl1.OffsetX;
+                hScrollBar.Value = pianoRollControl1.OffsetX;
+            }
         }
 
         private void FrmPianoRoll_Resize(object sender, EventArgs e)

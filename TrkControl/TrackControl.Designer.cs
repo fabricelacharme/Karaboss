@@ -51,12 +51,14 @@
             this.btnInstrument = new System.Windows.Forms.Button();
             this.btnMut = new System.Windows.Forms.Button();
             this.lblTrackName = new System.Windows.Forms.Label();
+            this.btnPianoRoll = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.DimGray;
+            this.panel1.Controls.Add(this.btnPianoRoll);
             this.panel1.Controls.Add(this.lblReverb);
             this.panel1.Controls.Add(this.lblPan);
             this.panel1.Controls.Add(this.lblVolume);
@@ -154,7 +156,7 @@
             this.label3.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.label3.Location = new System.Drawing.Point(12, 80);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(48, 15);
+            this.label3.Size = new System.Drawing.Size(47, 15);
             this.label3.TabIndex = 16;
             this.label3.Text = "Volume";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -173,6 +175,7 @@
             this.knobReverb.PointerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
             this.knobReverb.ScaleColor = System.Drawing.Color.Black;
             this.knobReverb.ScaleDivisions = 11;
+            this.knobReverb.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.knobReverb.ScaleSubDivisions = 4;
             this.knobReverb.ShowLargeScale = false;
             this.knobReverb.ShowSmallScale = false;
@@ -198,6 +201,7 @@
             this.knobPan.PointerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
             this.knobPan.ScaleColor = System.Drawing.Color.Black;
             this.knobPan.ScaleDivisions = 8;
+            this.knobPan.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.knobPan.ScaleSubDivisions = 4;
             this.knobPan.ShowLargeScale = false;
             this.knobPan.ShowSmallScale = false;
@@ -223,7 +227,8 @@
             this.knobVolume.Name = "knobVolume";
             this.knobVolume.PointerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
             this.knobVolume.ScaleColor = System.Drawing.Color.Black;
-            this.knobVolume.ScaleDivisions = 1;
+            this.knobVolume.ScaleDivisions = 11;
+            this.knobVolume.ScaleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.knobVolume.ScaleSubDivisions = 1;
             this.knobVolume.ShowLargeScale = false;
             this.knobVolume.ShowSmallScale = false;
@@ -379,13 +384,24 @@
             this.lblTrackName.TextChanged += new System.EventHandler(this.lblTrackName_TextChanged);
             this.lblTrackName.DoubleClick += new System.EventHandler(this.lblTrackName_DoubleClick);
             // 
-            // trackControl
+            // btnPianoRoll
+            // 
+            this.btnPianoRoll.Image = global::TrkControl.Properties.Resources.piano;
+            this.btnPianoRoll.Location = new System.Drawing.Point(144, 87);
+            this.btnPianoRoll.Name = "btnPianoRoll";
+            this.btnPianoRoll.Size = new System.Drawing.Size(31, 23);
+            this.btnPianoRoll.TabIndex = 22;
+            this.btnPianoRoll.TabStop = false;
+            this.btnPianoRoll.UseVisualStyleBackColor = true;
+            this.btnPianoRoll.Click += new System.EventHandler(this.btnPianoRoll_Click);
+            // 
+            // TrackControl
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
-            this.Name = "trackControl";
+            this.Name = "TrackControl";
             this.Size = new System.Drawing.Size(177, 148);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.trackControl_KeyDown);
             this.panel1.ResumeLayout(false);
@@ -419,5 +435,6 @@
         private System.Windows.Forms.Label lblReverb;
         private System.Windows.Forms.Label lblPan;
         private System.Windows.Forms.Label lblVolume;
+        private System.Windows.Forms.Button btnPianoRoll;
     }
 }

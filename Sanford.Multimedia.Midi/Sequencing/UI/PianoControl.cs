@@ -502,35 +502,6 @@ namespace Sanford.Multimedia.Midi.UI
                 case Orientation.Horizontal:
                     #region horizontal
 
-                    #region oldcode
-                    /*
-                    whiteKeyWidth = Width / whiteKeyCount;
-                    blackKeyWidth = (int)(whiteKeyWidth * BlackKeyScale);       // Width of control divided by number of keys
-                    blackKeyHeight = (int)(Height * BlackKeyScale);             // black key width is 0.666 of white key width
-                    offset = whiteKeyWidth - blackKeyWidth / 2;                   
-
-                    while(n < keys.Length)
-                    {
-                        if(KeyTypeTable[keys[n].NoteID] == KeyType.White)
-                        {
-                            keys[n].Height = Height;
-                            keys[n].Width = whiteKeyWidth;
-                            keys[n].Location = new Point(w * whiteKeyWidth, 0);
-                            w++;
-                            n++;
-                        }
-                        else
-                        {
-                            keys[n].Height = blackKeyHeight;
-                            keys[n].Width = blackKeyWidth;
-                            keys[n].Location = new Point(offset + (w - 1) * whiteKeyWidth);
-                            keys[n].BringToFront();
-                            n++;
-                        }
-                    }
-                    */
-                    #endregion
-
                     whiteKeyWidth = 0;
 
                     blackKeyWidth = scale;
@@ -613,6 +584,7 @@ namespace Sanford.Multimedia.Midi.UI
                     blackKeyHeight = scale;
                     blackKeyWidth = (int)(Width * BlackKeyScale);
                     
+
                     while (n < keys.Length)
                     {
                         int note = keys[n].NoteID;                        
