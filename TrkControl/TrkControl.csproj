@@ -42,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NoSelectButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="NoSelectTrackBar.cs">
       <SubType>Component</SubType>
     </Compile>

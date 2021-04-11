@@ -33,14 +33,13 @@
 #endregion
 using System.Windows.Forms;
 
-
 namespace TrkControl
 {
-    class NoSelectTrackBar : TrackBar
+    class NoSelectButton : Button
     {
-        public NoSelectTrackBar()
+        public NoSelectButton()
         {
             SetStyle(ControlStyles.Selectable, false);
-        }           
+        }
     }
 }

@@ -40,18 +40,18 @@
             this.knobVolume = new KnobControl.KnobControl();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.btnSolo = new System.Windows.Forms.Button();
+            this.btnSolo = new NoSelectButton();                        //new System.Windows.Forms.Button();
             this.lstChannels = new System.Windows.Forms.ListBox();
             this.lblTrack = new System.Windows.Forms.Label();
-            this.btnDel = new System.Windows.Forms.Button();
+            this.btnDel = new NoSelectButton();                         //new System.Windows.Forms.Button();
             this.lstInstruments = new System.Windows.Forms.ListBox();
             this.lblChannel = new System.Windows.Forms.Label();
             this.lblLight = new System.Windows.Forms.Label();
             this.lblTrackLabel = new System.Windows.Forms.Label();
-            this.btnInstrument = new System.Windows.Forms.Button();
-            this.btnMut = new System.Windows.Forms.Button();
+            this.btnInstrument = new NoSelectButton();                  //new System.Windows.Forms.Button();
+            this.btnMut = new NoSelectButton();                         //new System.Windows.Forms.Button();
             this.lblTrackName = new System.Windows.Forms.Label();
-            this.btnPianoRoll = new System.Windows.Forms.Button();
+            this.btnPianoRoll = new NoSelectButton();                   //new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -414,16 +414,16 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lblTrackName;
-        private System.Windows.Forms.Button btnInstrument;
-        private System.Windows.Forms.Button btnMut;
+        private NoSelectButton btnInstrument;               //System.Windows.Forms.Button btnInstrument;
+        private NoSelectButton btnMut;                      //System.Windows.Forms.Button btnMut;
         private System.Windows.Forms.Label lblTrackLabel;
         private System.Windows.Forms.Label lblLight;
         private System.Windows.Forms.Label lblChannel;
         private System.Windows.Forms.ListBox lstInstruments;
-        private System.Windows.Forms.Button btnDel;
+        private NoSelectButton btnDel;                      //System.Windows.Forms.Button btnDel;
         private System.Windows.Forms.Label lblTrack;
         private System.Windows.Forms.ListBox lstChannels;
-        private System.Windows.Forms.Button btnSolo;
+        private NoSelectButton btnSolo;                     //System.Windows.Forms.Button btnSolo;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label5;
@@ -435,6 +435,6 @@
         private System.Windows.Forms.Label lblReverb;
         private System.Windows.Forms.Label lblPan;
         private System.Windows.Forms.Label lblVolume;
-        private System.Windows.Forms.Button btnPianoRoll;
+        private NoSelectButton btnPianoRoll;                //System.Windows.Forms.Button btnPianoRoll;
     }
 }
