@@ -261,6 +261,16 @@ namespace Karaboss
 
                 #endregion
 
+                // Piano
+                pnlPiano.Height = 150;
+                pnlPiano.Top = this.ClientSize.Height - pnlBottom.Height - pnlPiano.Height;                
+                pnlPiano.Width = this.ClientSize.Width;
+
+                // Scrollview
+                pnlScrollView.Top = pnlTop.Height;
+                pnlScrollView.Width = ClientSize.Width;
+                pnlScrollView.Height = ClientSize.Height - pnlTop.Height - pnlPiano.Height - pnlBottom.Height;
+
                 pianoControl1.Location = new Point(0, pnlRedPianoSep.Height);
                 pianoControl1.Orientation = Orientation.Horizontal;
                 pianoControl1.Size = new Size(pianoControl1.totalLength, pnlPiano.Height - pnlRedPianoSep.Height);
@@ -790,6 +800,12 @@ namespace Karaboss
         private void frmPianoTraining_Resize(object sender, EventArgs e)
         {
             positionHScrollBar.Width = pnlTop.Width - positionHScrollBar.Left - 40;
+
+            pnlPiano.Width = this.ClientSize.Width;
+            pnlPiano.Top = this.ClientSize.Height - pnlBottom.Height - pnlPiano.Height;
+
+            pnlScrollView.Width = ClientSize.Width;
+            pnlScrollView.Height = ClientSize.Height - pnlTop.Height - pnlPiano.Height - pnlBottom.Height;
         }
 
         /// <summary>

@@ -49,6 +49,7 @@
             this.BtnPlay = new System.Windows.Forms.Button();
             this.positionHScrollBar = new ColorSlider.ColorSlider();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.pnlBottom = new System.Windows.Forms.Panel();
             this.pnlScrollView.SuspendLayout();
             this.pnlPiano.SuspendLayout();
             this.pnlTop.SuspendLayout();
@@ -266,10 +267,17 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // pnlBottom
+            // 
+            this.pnlBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            resources.ApplyResources(this.pnlBottom, "pnlBottom");
+            this.pnlBottom.Name = "pnlBottom";
+            // 
             // frmPianoTraining
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.pnlBottom);
             this.Controls.Add(this.pnlScrollView);
             this.Controls.Add(this.pnlTop);
             this.Controls.Add(this.pnlPiano);
@@ -310,5 +318,6 @@
         private System.Windows.Forms.Label lblElapsed;
         private System.Windows.Forms.Label lblPercent;
         private System.Windows.Forms.Label lblDuration;
+        private System.Windows.Forms.Panel pnlBottom;
     }
 }
