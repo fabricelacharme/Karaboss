@@ -252,10 +252,29 @@ namespace Karaboss
                 positionHScrollBar.Maximum = totaltimemeasures + _measurelen;
                 positionHScrollBar.Minimum = _measurelen;
                 positionHScrollBar.TickStyle = TickStyle.TopLeft;
-                positionHScrollBar.ScaleDivisions = nbmeasures;
+
+                if (nbmeasures < 100)
+                    positionHScrollBar.ScaleDivisions = nbmeasures;
+                else
+                {
+                    int n = 2;
+                    while (!(nbmeasures % n == 0 && nbmeasures/n < 100))
+                    {
+                        n++;
+                        if (n >= nbmeasures)
+                            break;
+                    }
+                    if (n < nbmeasures)
+                        positionHScrollBar.ScaleDivisions = nbmeasures/n;
+                    else
+                        positionHScrollBar.ScaleDivisions = nbmeasures;
+                }
+
                 positionHScrollBar.TickDivide = _measurelen;
-                positionHScrollBar.SmallChange = (uint)nbmeasures;
-                positionHScrollBar.LargeChange = (uint)nbmeasures;
+                //positionHScrollBar.SmallChange = (uint)nbmeasures;
+                positionHScrollBar.SmallChange = (uint)positionHScrollBar.ScaleDivisions;
+                //positionHScrollBar.LargeChange = (uint)nbmeasures;
+                positionHScrollBar.LargeChange = (uint)positionHScrollBar.ScaleDivisions;
                 if (_measurelen > 0)
                     positionHScrollBar.MouseWheelBarPartitions = _measurelen;
 
@@ -263,12 +282,14 @@ namespace Karaboss
 
                 // Piano
                 pnlPiano.Height = 150;
-                pnlPiano.Top = this.ClientSize.Height - pnlBottom.Height - pnlPiano.Height;                
-                pnlPiano.Width = this.ClientSize.Width;
+                pnlPiano.Top = this.ClientSize.Height - pnlBottom.Height - pnlPiano.Height;
+                //pnlPiano.Width = this.ClientSize.Width;
+                pnlPiano.Width = pianoControl1.totalLength;
 
                 // Scrollview
                 pnlScrollView.Top = pnlTop.Height;
-                pnlScrollView.Width = ClientSize.Width;
+                //pnlScrollView.Width = ClientSize.Width;
+                pnlScrollView.Width = pnlPiano.Width;
                 pnlScrollView.Height = ClientSize.Height - pnlTop.Height - pnlPiano.Height - pnlBottom.Height;
 
                 pianoControl1.Location = new Point(0, pnlRedPianoSep.Height);
@@ -799,13 +820,27 @@ namespace Karaboss
 
         private void frmPianoTraining_Resize(object sender, EventArgs e)
         {
-            positionHScrollBar.Width = pnlTop.Width - positionHScrollBar.Left - 40;
-
-            pnlPiano.Width = this.ClientSize.Width;
+            
+            this.VerticalScroll.Visible = false;
+                      
+            pnlPiano.Width = pianoControl1.totalLength;
             pnlPiano.Top = this.ClientSize.Height - pnlBottom.Height - pnlPiano.Height;
 
-            pnlScrollView.Width = ClientSize.Width;
+            HorizontalScroll.Visible = pnlPiano.Width > ClientSize.Width;
+            positionHScrollBar.Width = pnlPiano.Width - positionHScrollBar.Left; ;
+
+            pnlScrollView.Top = pnlTop.Height;
+            pnlScrollView.Width = pnlPiano.Width;
             pnlScrollView.Height = ClientSize.Height - pnlTop.Height - pnlPiano.Height - pnlBottom.Height;
+
+            int l = pnlDisplay.Left + pnlDisplay.Width + 20;
+            if (l < ClientSize.Width/2)
+                BtnPlay.Left = ClientSize.Width/2;
+            else
+                BtnPlay.Left = l;
+
+            BtnStop.Left = BtnPlay.Left + BtnPlay.Width + 3;
+            lblKaraboss.Left = ClientSize.Width - lblKaraboss.Width - 3;
         }
 
         /// <summary>

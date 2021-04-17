@@ -3257,7 +3257,7 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Modify Tempo, not Dicision (read only)
+        /// Modify Tempo, not Division (read only)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -3275,32 +3275,43 @@ namespace Karaboss
             int tempo = ModifyTempoDialog.Tempo;
             int division = ModifyTempoDialog.Division;
 
-            ModTempo(tempo);
+            ModTempo(tempo, division);
             UpdateMidiTimes();
 
             FileModified();
             DisplayFileInfos();
         }
 
-        private void ModTempo(int tempo)
+        private void ModTempo(int tempo, int division)
         {
             // If no change => out
-            if (tempo == sequence1.Tempo)
+            if (tempo == sequence1.Tempo && division == sequence1.Division)
             {
                 return;
             }
-         
-            sequence1.Tempo = tempo;
-            
-            
-            sequence1.Time = new TimeSignature(sequence1.Numerator, sequence1.Denominator, sequence1.Division, sequence1.Tempo);
-            pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
 
-            foreach (Track trk in sequence1.tracks)
+            if (tempo != sequence1.Tempo)
             {
-                trk.RemoveTempoEvent();                
+                sequence1.Tempo = tempo;
+                sequence1.Time = new TimeSignature(sequence1.Numerator, sequence1.Denominator, sequence1.Division, sequence1.Tempo);
+                pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
+
+                foreach (Track trk in sequence1.tracks)
+                {
+                    trk.RemoveTempoEvent();
+                }
+                sequence1.tracks[0].insertTempo(tempo);
             }
-            sequence1.tracks[0].insertTempo(tempo);
+
+            // Plus compliqué qu'il n'y parait
+            // il faudrait modifier la durée des notes et leur start time
+            if (division != sequence1.Division)
+            {
+                sequence1.Division = division;
+                sequence1.Time = new TimeSignature(sequence1.Numerator, sequence1.Denominator, sequence1.Division, sequence1.Tempo);
+                pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
+
+            }
         }       
      
         /// <summary>
