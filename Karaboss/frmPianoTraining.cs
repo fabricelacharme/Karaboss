@@ -38,6 +38,12 @@ namespace Karaboss
         private string MIDIfilePath = string.Empty;
         private string MIDIfileFullPath = string.Empty;
 
+        private bool bAlltracks;
+        private int tracknum = -1;
+        private Track SingleTrack;
+        private int SingleTrackNumber;
+        private int SingleTrackChannel;
+
         /// <summary>
         /// Player status
         /// </summary>
@@ -80,7 +86,14 @@ namespace Karaboss
             resolution = 4;
 
             SetTitle(FileName);
-            
+
+            tracknum = -1;
+            // All tracks                      
+            SingleTrack = null;
+            SingleTrackNumber = -1;
+            SingleTrackChannel = -1;
+            bAlltracks = true;                        
+
         }
 
        
@@ -157,8 +170,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="fileName"></param>
         private void SetTitle(string fileName)
-        {
-            
+        {            
             Text = "Karaboss - " + Path.GetFileName(fileName);            
         }
 
@@ -522,7 +534,7 @@ namespace Karaboss
         {            
             LoadSequencer(sequence1);
             DrawControls();
-            
+            InitCbTracks();            
         }
 
         /// <summary>
@@ -611,12 +623,28 @@ namespace Karaboss
 
         private void HandleChannelMessagePlayed(object sender, ChannelMessageEventArgs e)
         {
+            #region Guard
             if (closing)
             {
                 return;
             }
-            outDevice.Send(e.Message);
-            pianoControl1.Send(e.Message);
+            #endregion
+
+            
+
+            if (bAlltracks)
+            {
+                outDevice.Send(e.Message);
+                pianoControl1.Send(e.Message);
+            } 
+            else
+            {
+                if (e.Message.MidiChannel == SingleTrackChannel)
+                {
+                    outDevice.Send(e.Message);
+                    pianoControl1.Send(e.Message);
+                }
+            }
         }
 
         private void HandleChased(object sender, ChasedEventArgs e)
@@ -996,8 +1024,68 @@ namespace Karaboss
         }
 
 
+
         #endregion
 
-       
+
+        #region CbTrack
+
+        private void InitCbTracks()
+        {
+            CbTracks.Items.Clear();
+            CbTracks.Items.Add("All tracks");
+            foreach (Track trk in sequence1.tracks)
+            {
+                CbTracks.Items.Add(trk.Name + " - " + MidiFile.PCtoInstrument(trk.ProgramChange));
+            }
+
+            CbTracks.SelectedIndex = 0;
+        }
+
+        private void CbTracks_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (vPianoRollControl1 == null)
+                return;
+
+            sequencer1.stopper.AllSoundOff();
+
+            tracknum = CbTracks.SelectedIndex;
+
+            // All track
+            if (tracknum == 0)
+            {
+                // All tracks                      
+                SingleTrack = null;
+                SingleTrackNumber = -1;
+                tracknum = -1;
+                SingleTrackChannel = -1;
+                bAlltracks = true;
+            }
+            else
+            {
+                // One track
+                if (tracknum > 0)
+                {
+                    tracknum = tracknum - 1;
+                    SingleTrack = sequence1.tracks[tracknum];
+                    SingleTrackNumber = tracknum;
+                    SingleTrackChannel = SingleTrack.MidiChannel;
+                    bAlltracks = false;
+                }
+            }
+            
+            // Track pour pianoRoll
+            if (tracknum != -1)
+            {
+                vPianoRollControl1.TrackNum = tracknum;                
+            }
+            else
+            {
+                vPianoRollControl1.TrackNum = -1;
+            }
+            CbTracks.Parent.Focus();
+        }
+
+        #endregion
     }
 }

@@ -14,7 +14,9 @@ namespace Sanford.Multimedia.Midi
 
         private ChannelChaser chaser = new ChannelChaser();
 
-        private ChannelStopper stopper = new ChannelStopper();
+        // FAB
+        //private ChannelStopper stopper = new ChannelStopper();
+        public ChannelStopper stopper = new ChannelStopper();
 
         private MidiInternalClock clock = new MidiInternalClock();
         private MidiInternalClock ori_clock = new MidiInternalClock();

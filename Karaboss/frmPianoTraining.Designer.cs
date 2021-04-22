@@ -39,6 +39,7 @@
             this.positionHScrollBar = new ColorSlider.ColorSlider();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlBottom = new System.Windows.Forms.Panel();
+            this.lblKaraboss = new System.Windows.Forms.Label();
             this.pnlDisplay = new System.Windows.Forms.Panel();
             this.lblElapsed = new System.Windows.Forms.Label();
             this.lblPercent = new System.Windows.Forms.Label();
@@ -49,7 +50,7 @@
             this.btnTempoPlus = new System.Windows.Forms.Button();
             this.BtnStop = new System.Windows.Forms.Button();
             this.BtnPlay = new System.Windows.Forms.Button();
-            this.lblKaraboss = new System.Windows.Forms.Label();
+            this.CbTracks = new System.Windows.Forms.ComboBox();
             this.pnlScrollView.SuspendLayout();
             this.pnlPiano.SuspendLayout();
             this.pnlTop.SuspendLayout();
@@ -176,6 +177,7 @@
             // pnlBottom
             // 
             this.pnlBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlBottom.Controls.Add(this.CbTracks);
             this.pnlBottom.Controls.Add(this.lblKaraboss);
             this.pnlBottom.Controls.Add(this.pnlDisplay);
             this.pnlBottom.Controls.Add(this.lblTempo);
@@ -186,6 +188,14 @@
             this.pnlBottom.Controls.Add(this.BtnPlay);
             resources.ApplyResources(this.pnlBottom, "pnlBottom");
             this.pnlBottom.Name = "pnlBottom";
+            // 
+            // lblKaraboss
+            // 
+            resources.ApplyResources(this.lblKaraboss, "lblKaraboss");
+            this.lblKaraboss.BackColor = System.Drawing.Color.Transparent;
+            this.lblKaraboss.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblKaraboss.ForeColor = System.Drawing.Color.White;
+            this.lblKaraboss.Name = "lblKaraboss";
             // 
             // pnlDisplay
             // 
@@ -266,13 +276,13 @@
             this.BtnPlay.UseVisualStyleBackColor = true;
             this.BtnPlay.Click += new System.EventHandler(this.BtnPlay_Click);
             // 
-            // lblKaraboss
+            // CbTracks
             // 
-            resources.ApplyResources(this.lblKaraboss, "lblKaraboss");
-            this.lblKaraboss.BackColor = System.Drawing.Color.Transparent;
-            this.lblKaraboss.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblKaraboss.ForeColor = System.Drawing.Color.White;
-            this.lblKaraboss.Name = "lblKaraboss";
+            this.CbTracks.FormattingEnabled = true;
+            resources.ApplyResources(this.CbTracks, "CbTracks");
+            this.CbTracks.Name = "CbTracks";
+            this.CbTracks.TabStop = false;
+            this.CbTracks.SelectedIndexChanged += new System.EventHandler(this.CbTracks_SelectedIndexChanged);
             // 
             // frmPianoTraining
             // 
@@ -321,5 +331,6 @@
         private System.Windows.Forms.Button BtnStop;
         private System.Windows.Forms.Button BtnPlay;
         private System.Windows.Forms.Label lblKaraboss;
+        private System.Windows.Forms.ComboBox CbTracks;
     }
 }

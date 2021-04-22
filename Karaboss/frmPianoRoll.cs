@@ -567,7 +567,7 @@ namespace Karaboss
             // Track pour pianoRoll
             if (tracknum != -1)
             {                
-                pianoRollControl1.TrackNum = tracknum;
+                pianoRollControl1.TrackNum = tracknum;                
             }
             else
             {
