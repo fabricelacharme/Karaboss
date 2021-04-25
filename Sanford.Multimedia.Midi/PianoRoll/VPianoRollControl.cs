@@ -668,7 +668,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             Font fontMeasure = new Font("Arial", 20, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontInterval = new Font("Arial", 15, FontStyle.Regular, GraphicsUnit.Pixel);
 
-            int pico = 1;
+            int pico = 2;
             
             do
             {
@@ -685,7 +685,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
 
                     if (step % (timespermeasure * resolution) == 0)        // every measure
                     {
-                        pico = 1;
+                        pico = 2;
                         // Display line
                         g.DrawLine(mesureSeparatorPen, p1, p2);
                         // Display measure number
