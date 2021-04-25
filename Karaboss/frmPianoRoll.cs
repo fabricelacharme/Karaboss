@@ -276,15 +276,6 @@ namespace Karaboss
             return (int)BPM;
         }
 
-        private void InitCbTracks()
-        {
-            CbTracks.Items.Clear();
-            CbTracks.Items.Add("All tracks");
-            foreach (Track trk in sequence1.tracks)
-            {                
-                CbTracks.Items.Add(trk.Name + " - " + MidiFile.PCtoInstrument(trk.ProgramChange));
-            }            
-        }
 
         /// <summary>
         /// Sets title of form
@@ -528,6 +519,26 @@ namespace Karaboss
 
         #region CbTracks
 
+
+        private void InitCbTracks()
+        {
+            int i = 1;
+            string N;
+            CbTracks.Items.Clear();
+            CbTracks.Items.Add("All tracks");
+            foreach (Track trk in sequence1.tracks)
+            {
+                N = "<NoName>";
+                if (trk.Name != null)
+                {
+                    if (trk.Name.Trim() != "")
+                        N = trk.Name.Trim();
+                }
+                CbTracks.Items.Add(i.ToString("00") + " " + "[" + trk.MidiChannel.ToString("00") + "]" + " - " + N + " - " + "(" + MidiFile.PCtoInstrument(trk.ProgramChange) + ")");
+                i++;
+            }
+        }
+
         /// <summary>
         /// Click on list of tracks = display selected track
         /// </summary>
@@ -537,6 +548,9 @@ namespace Karaboss
         {
             if (pianoRollControl1 == null)
                 return;
+
+            sequencer1.stopper.AllSoundOff();
+            pianoControl1.Reset();
 
             int tracknum = CbTracks.SelectedIndex;
 
@@ -1378,15 +1392,23 @@ namespace Karaboss
 
         private void HandleChannelMessagePlayed(object sender, ChannelMessageEventArgs e)
         {
+            #region Guard
             if (closing)
             {
                 return;
             }
-            outDevice.Send(e.Message);
+            #endregion
 
-            // Send to piano
-            if (bAlltracks || e.Message.MidiChannel == SingleTrackChannel)
+            if (bAlltracks)
+            {
+                outDevice.Send(e.Message);
                 pianoControl1.Send(e.Message);
+            }
+            else if (e.Message.MidiChannel == SingleTrackChannel)
+            {
+                outDevice.Send(e.Message);
+                pianoControl1.Send(e.Message);
+            }
         }
 
         private void HandleChased(object sender, ChasedEventArgs e)

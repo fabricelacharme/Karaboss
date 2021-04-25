@@ -736,20 +736,24 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         // Here is the code that draws the grid.
         private void DrawGrid(Graphics g, Rectangle clip)
         {
-            int beat = 0;
-            int timespermeasure = (4 * sequence1.Numerator) / sequence1.Denominator; // 4 si 4/4, 6 si 3/2, 8 si 4/2
-            //int interval = measure / 16;
+            int step = 0;
+            int timespermeasure;
+
+            timespermeasure = sequence1.Numerator;             // nombre de beats par mesures
+            float TimeUnit = Sequence1.Denominator;            // 2 = blanche, 4 = noire, 8 = croche, 16 = doucle croche, 32 triple croche
 
             Pen mesureSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF676767"), 1);
             Pen beatSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF585858"), 1);            
             Pen intervalSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF464646"), 1);
 
-            int quarter = sequence1.Time.Quarter; // noire
-            //int measure = sequence1.Time.Measure;
-
+            // quarter = durée d'une noire
+            int quarter = sequence1.Time.Quarter;
 
             float f_n = 0;
-            float f_increment = (float)quarter / (float)resolution;     // (1/resolution) de noire - par exemple 1/4 = 4 doubles croches => 960/4 = 240 ticks
+
+            // Increment of 1 TimeUnit, divided by the resolution, in ticks
+            float f_beat = (float)quarter * 4 / TimeUnit;
+            float f_increment = f_beat / resolution;
 
             do
             {
@@ -763,11 +767,11 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     Point p1 = new Point(x1, y1);
                     Point p2 = new Point(x2, y2);
 
-                    if (beat % (resolution * timespermeasure) == 0)        // every measure
+                    if (step % (resolution * timespermeasure) == 0)        // every measure
                     {
                         g.DrawLine(mesureSeparatorPen, p1, p2);
                     }
-                    else if (beat % resolution == 0)                        // every time or beat
+                    else if (step % resolution == 0)                        // every time or beat
                     {
                         g.DrawLine(beatSeparatorPen, p1, p2);
                     }
@@ -777,12 +781,10 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     }
                 }
 
-                beat++;
+                step++;
                 f_n += f_increment;
 
-            } while (f_n <= lastPosition);
-
-    
+            } while (f_n <= lastPosition);    
         }
 
         #endregion Canvas

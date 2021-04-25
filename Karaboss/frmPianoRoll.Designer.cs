@@ -82,7 +82,7 @@ namespace Karaboss
             this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTop.Location = new System.Drawing.Point(0, 0);
             this.pnlTop.Name = "pnlTop";
-            this.pnlTop.Size = new System.Drawing.Size(1075, 100);
+            this.pnlTop.Size = new System.Drawing.Size(1117, 100);
             this.pnlTop.TabIndex = 0;
             // 
             // pnlDisplay
@@ -144,7 +144,7 @@ namespace Karaboss
             this.label1.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label1.Location = new System.Drawing.Point(930, 3);
+            this.label1.Location = new System.Drawing.Point(967, 3);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(140, 27);
             this.label1.TabIndex = 30;
@@ -204,7 +204,7 @@ namespace Karaboss
             // CbResolution
             // 
             this.CbResolution.FormattingEnabled = true;
-            this.CbResolution.Location = new System.Drawing.Point(874, 3);
+            this.CbResolution.Location = new System.Drawing.Point(894, 3);
             this.CbResolution.Name = "CbResolution";
             this.CbResolution.Size = new System.Drawing.Size(50, 21);
             this.CbResolution.TabIndex = 21;
@@ -272,15 +272,41 @@ namespace Karaboss
             this.positionHScrollBar.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(140)))), ((int)(((byte)(180)))));
             this.positionHScrollBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
             this.positionHScrollBar.ForeColor = System.Drawing.Color.White;
-            this.positionHScrollBar.LargeChange = ((uint)(5u));
+            this.positionHScrollBar.LargeChange = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.positionHScrollBar.Location = new System.Drawing.Point(3, 40);
+            this.positionHScrollBar.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.positionHScrollBar.Name = "positionHScrollBar";
-            this.positionHScrollBar.ScaleDivisions = 10;
-            this.positionHScrollBar.ScaleSubDivisions = 5;
+            this.positionHScrollBar.ScaleDivisions = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.ScaleSubDivisions = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.positionHScrollBar.ShowDivisionsText = true;
             this.positionHScrollBar.ShowSmallScale = false;
             this.positionHScrollBar.Size = new System.Drawing.Size(812, 37);
-            this.positionHScrollBar.SmallChange = ((uint)(1u));
+            this.positionHScrollBar.SmallChange = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.positionHScrollBar.TabIndex = 16;
             this.positionHScrollBar.TabStop = false;
             this.positionHScrollBar.Text = "colorSlider1";
@@ -292,7 +318,11 @@ namespace Karaboss
             this.positionHScrollBar.TickAdd = 0F;
             this.positionHScrollBar.TickColor = System.Drawing.Color.White;
             this.positionHScrollBar.TickDivide = 0F;
-            this.positionHScrollBar.Value = 0;
+            this.positionHScrollBar.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.positionHScrollBar_Scroll);
             // 
             // lblNote
@@ -310,7 +340,7 @@ namespace Karaboss
             this.CbTracks.FormattingEnabled = true;
             this.CbTracks.Location = new System.Drawing.Point(671, 3);
             this.CbTracks.Name = "CbTracks";
-            this.CbTracks.Size = new System.Drawing.Size(200, 21);
+            this.CbTracks.Size = new System.Drawing.Size(220, 21);
             this.CbTracks.TabIndex = 2;
             this.CbTracks.TabStop = false;
             this.CbTracks.SelectedIndexChanged += new System.EventHandler(this.CbTracks_SelectedIndexChanged);
@@ -345,7 +375,7 @@ namespace Karaboss
             this.pnlMiddle.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMiddle.Location = new System.Drawing.Point(0, 100);
             this.pnlMiddle.Name = "pnlMiddle";
-            this.pnlMiddle.Size = new System.Drawing.Size(1075, 445);
+            this.pnlMiddle.Size = new System.Drawing.Size(1117, 445);
             this.pnlMiddle.TabIndex = 0;
             // 
             // pnlScrollView
@@ -371,7 +401,7 @@ namespace Karaboss
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(1075, 545);
+            this.ClientSize = new System.Drawing.Size(1117, 545);
             this.Controls.Add(this.pnlMiddle);
             this.Controls.Add(this.pnlTop);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

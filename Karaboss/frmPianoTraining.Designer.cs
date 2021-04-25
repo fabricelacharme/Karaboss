@@ -39,6 +39,7 @@
             this.positionHScrollBar = new ColorSlider.ColorSlider();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlBottom = new System.Windows.Forms.Panel();
+            this.CbTracks = new System.Windows.Forms.ComboBox();
             this.lblKaraboss = new System.Windows.Forms.Label();
             this.pnlDisplay = new System.Windows.Forms.Panel();
             this.lblElapsed = new System.Windows.Forms.Label();
@@ -50,7 +51,6 @@
             this.btnTempoPlus = new System.Windows.Forms.Button();
             this.BtnStop = new System.Windows.Forms.Button();
             this.BtnPlay = new System.Windows.Forms.Button();
-            this.CbTracks = new System.Windows.Forms.ComboBox();
             this.pnlScrollView.SuspendLayout();
             this.pnlPiano.SuspendLayout();
             this.pnlTop.SuspendLayout();
@@ -189,6 +189,14 @@
             resources.ApplyResources(this.pnlBottom, "pnlBottom");
             this.pnlBottom.Name = "pnlBottom";
             // 
+            // CbTracks
+            // 
+            this.CbTracks.FormattingEnabled = true;
+            resources.ApplyResources(this.CbTracks, "CbTracks");
+            this.CbTracks.Name = "CbTracks";
+            this.CbTracks.TabStop = false;
+            this.CbTracks.SelectedIndexChanged += new System.EventHandler(this.CbTracks_SelectedIndexChanged);
+            // 
             // lblKaraboss
             // 
             resources.ApplyResources(this.lblKaraboss, "lblKaraboss");
@@ -275,14 +283,6 @@
             this.BtnPlay.TabStop = false;
             this.BtnPlay.UseVisualStyleBackColor = true;
             this.BtnPlay.Click += new System.EventHandler(this.BtnPlay_Click);
-            // 
-            // CbTracks
-            // 
-            this.CbTracks.FormattingEnabled = true;
-            resources.ApplyResources(this.CbTracks, "CbTracks");
-            this.CbTracks.Name = "CbTracks";
-            this.CbTracks.TabStop = false;
-            this.CbTracks.SelectedIndexChanged += new System.EventHandler(this.CbTracks_SelectedIndexChanged);
             // 
             // frmPianoTraining
             // 

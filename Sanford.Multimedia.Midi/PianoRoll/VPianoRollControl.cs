@@ -640,26 +640,35 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
         // Here is the code that draws the grid.
         private void DrawGrid(Graphics g, Rectangle clip)
         {
-            int beat = 0;
-            int timespermeasure = (4 * sequence1.Numerator) / sequence1.Denominator; // 4 si 4/4, 6 si 3/2, 8 si 4/2
+            int step = 0;
+            int timespermeasure;
 
+            timespermeasure = sequence1.Numerator;             // nombre de beats par mesures
+            float TimeUnit = Sequence1.Denominator;            // 2 = blanche, 4 = noire, 8 = croche, 16 = doucle croche, 32 triple croche
+                      
             Pen mesureSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF676767"), 1);
             Pen beatSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF585858"), 1);
             Pen intervalSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF464646"), 1);
 
-            int quarter = sequence1.Time.Quarter; // noire            
-
-            float f_n = 0;
-            float f_increment = (float)quarter / (float)resolution;     // (1/resolution) de noire - par exemple 1/4 = 4 doubles croches => 960/4 = 240 ticks
+            // quarter = durée d'une noire
+            int quarter = sequence1.Time.Quarter;
+            
+            float f_n = 0;                       
+            
+            // Increment of 1 TimeUnit, divided by the resolution, in ticks
+            float f_beat = (float)quarter * 4 / TimeUnit;
+            float f_increment = f_beat / resolution;
 
             totalwidth = (int)((1 + highNoteID - lowNoteID) * xscale);
             int PH = pnlCanvas.Height;
 
             // Measure number display
-            int nbMeasure = 0;
+            int NumMeasure = 0;
             SolidBrush textBrush = new SolidBrush(Color.DimGray);
             Font fontNoteLetter = new Font("Arial", 20, FontStyle.Regular, GraphicsUnit.Pixel);
 
+            int pico = 0;
+            
             do
             {
                 int y1 = PH - (int)(f_n * yscale);
@@ -672,17 +681,20 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                     Point p1 = new Point(x1, y1);
                     Point p2 = new Point(x2, y2);
 
-                    if (beat % (resolution * timespermeasure) == 0)        // every measure
+                    if (step % (timespermeasure * resolution) == 0)        // every measure
                     {
+                        pico = 1;
                         // Display line
                         g.DrawLine(mesureSeparatorPen, p1, p2);
                         // Display measure number
-                        nbMeasure = 1 + Convert.ToInt32(f_n / measurelen);
-                        g.DrawString("Measure " + nbMeasure, fontNoteLetter, textBrush, p1.X + 5, p1.Y - fontNoteLetter.Height);                        
+                        NumMeasure = 1 + Convert.ToInt32(f_n / measurelen);
+                        g.DrawString("Measure " + NumMeasure, fontNoteLetter, textBrush, p1.X + 5, p1.Y - fontNoteLetter.Height);                        
                     }
-                    else if (beat % resolution == 0)                       // every time or beat
+                    else if (step % (resolution) == 0)                       // every time or beat
                     {
                         g.DrawLine(beatSeparatorPen, p1, p2);
+                        g.DrawString(NumMeasure + "." + pico, fontNoteLetter, textBrush, p1.X + 5, p1.Y - fontNoteLetter.Height);
+                        pico++;
                     }
                     else
                     {
@@ -690,8 +702,15 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                     }
                 }
 
-                beat++;
-                f_n += f_increment;
+                // increment = beat divisé par la resolution
+                // Tous les resolution, on a un beat
+                // tous les timepermeasure on a une nouvelle mesure 
+                //
+                // une mesure = timepermeasure * f_beat
+                // un beat = f_beat
+                // intermédiaire = increment
+                f_n += f_increment; 
+                step++;
 
             } while (f_n <= lastPosition);
 

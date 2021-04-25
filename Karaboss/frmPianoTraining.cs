@@ -629,21 +629,16 @@ namespace Karaboss
                 return;
             }
             #endregion
-
             
-
             if (bAlltracks)
             {
                 outDevice.Send(e.Message);
                 pianoControl1.Send(e.Message);
             } 
-            else
-            {
-                if (e.Message.MidiChannel == SingleTrackChannel)
-                {
-                    outDevice.Send(e.Message);
-                    pianoControl1.Send(e.Message);
-                }
+            else if (e.Message.MidiChannel == SingleTrackChannel)
+            { 
+                outDevice.Send(e.Message);
+                pianoControl1.Send(e.Message);                
             }
         }
 
@@ -861,7 +856,7 @@ namespace Karaboss
             pnlScrollView.Width = pnlPiano.Width;
             pnlScrollView.Height = ClientSize.Height - pnlTop.Height - pnlPiano.Height - pnlBottom.Height;
 
-            int l = pnlDisplay.Left + pnlDisplay.Width + 20;
+            int l = CbTracks.Left + CbTracks.Width + 20; //pnlDisplay.Left + pnlDisplay.Width + 20;
             if (l < ClientSize.Width/2)
                 BtnPlay.Left = ClientSize.Width/2;
             else
@@ -1032,11 +1027,20 @@ namespace Karaboss
 
         private void InitCbTracks()
         {
+            int i = 1;
+            string N;
             CbTracks.Items.Clear();
             CbTracks.Items.Add("All tracks");
             foreach (Track trk in sequence1.tracks)
             {
-                CbTracks.Items.Add(trk.Name + " - " + MidiFile.PCtoInstrument(trk.ProgramChange));
+                N = "<NoName>";
+                if (trk.Name != null)
+                {                    
+                    if (trk.Name.Trim() != "")
+                        N = trk.Name.Trim();
+                }
+                CbTracks.Items.Add( i.ToString("00") + " " + "[" + trk.MidiChannel.ToString("00") + "]" + " - " + N + " - " + "(" + MidiFile.PCtoInstrument(trk.ProgramChange) + ")");
+                i++;
             }
 
             CbTracks.SelectedIndex = 0;
@@ -1048,6 +1052,7 @@ namespace Karaboss
                 return;
 
             sequencer1.stopper.AllSoundOff();
+            pianoControl1.Reset();
 
             tracknum = CbTracks.SelectedIndex;
 
