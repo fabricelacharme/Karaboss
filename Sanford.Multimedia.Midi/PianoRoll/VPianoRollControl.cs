@@ -665,9 +665,10 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             // Measure number display
             int NumMeasure = 0;
             SolidBrush textBrush = new SolidBrush(Color.DimGray);
-            Font fontNoteLetter = new Font("Arial", 20, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font fontMeasure = new Font("Arial", 20, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font fontInterval = new Font("Arial", 15, FontStyle.Regular, GraphicsUnit.Pixel);
 
-            int pico = 0;
+            int pico = 1;
             
             do
             {
@@ -680,6 +681,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                 {
                     Point p1 = new Point(x1, y1);
                     Point p2 = new Point(x2, y2);
+                    
 
                     if (step % (timespermeasure * resolution) == 0)        // every measure
                     {
@@ -687,13 +689,14 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                         // Display line
                         g.DrawLine(mesureSeparatorPen, p1, p2);
                         // Display measure number
-                        NumMeasure = 1 + Convert.ToInt32(f_n / measurelen);
-                        g.DrawString("Measure " + NumMeasure, fontNoteLetter, textBrush, p1.X + 5, p1.Y - fontNoteLetter.Height);                        
+                        NumMeasure = 1 + (int)f_n / measurelen;
+                        g.DrawString("Measure " + NumMeasure, fontMeasure, textBrush, p1.X + 5, p1.Y - fontMeasure.Height);                        
                     }
                     else if (step % (resolution) == 0)                       // every time or beat
                     {
                         g.DrawLine(beatSeparatorPen, p1, p2);
-                        g.DrawString(NumMeasure + "." + pico, fontNoteLetter, textBrush, p1.X + 5, p1.Y - fontNoteLetter.Height);
+                        NumMeasure = 1 + (int)f_n / measurelen;
+                        g.DrawString(NumMeasure + "." + pico, fontInterval, textBrush, p1.X + 5, p1.Y - fontInterval.Height);
                         pico++;
                     }
                     else
