@@ -92,11 +92,14 @@ namespace Karaboss
             SingleTrack = null;
             SingleTrackNumber = -1;
             SingleTrackChannel = -1;
-            bAlltracks = true;                        
+            bAlltracks = true;
 
+
+            vPianoRollControl1.OnMouseMoved += new Sanford.Multimedia.Midi.VPianoRoll.MouseMoveEventHandler(vPianoRollControl1_MouseMove);
         }
 
-       
+      
+
 
         #region timer        
         private void ScrollView()
@@ -299,8 +302,7 @@ namespace Karaboss
                 pnlPiano.Width = pianoControl1.totalLength;
 
                 // Scrollview
-                pnlScrollView.Top = pnlTop.Height;
-                //pnlScrollView.Width = ClientSize.Width;
+                pnlScrollView.Top = pnlTop.Height;                
                 pnlScrollView.Width = pnlPiano.Width;
                 pnlScrollView.Height = ClientSize.Height - pnlTop.Height - pnlPiano.Height - pnlBottom.Height;
 
@@ -725,6 +727,15 @@ namespace Karaboss
                     break;
             }
         }
+
+
+        private void vPianoRollControl1_MouseMove(object sender, MouseEventArgs e)
+        {
+            int x = e.X;
+            int y = e.Y;
+            //pianoControl1.PressPianoKey
+        }
+
 
         #endregion
 

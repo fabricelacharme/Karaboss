@@ -41,13 +41,16 @@ using System.Windows.Forms;
 namespace Sanford.Multimedia.Midi.VPianoRoll
 {
 
-    public delegate void OffsetChangedEventHandler(object sender,  int value);
+    public delegate void OffsetChangedEventHandler(object sender,  int value);    
+    public delegate void MouseMoveEventHandler(object sender, MouseEventArgs e);
+    
 
     public partial class VPianoRollControl : Control
     {
 
         public event OffsetChangedEventHandler OffsetChanged;
-        
+        public event MouseMoveEventHandler OnMouseMoved;
+
         /// <summary>
         /// Double buffer panel
         /// </summary>
@@ -656,7 +659,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             float f_n = 0;                       
             
             // Increment of 1 TimeUnit, divided by the resolution, in ticks
-            float f_beat = (float)quarter * 4 / TimeUnit;
+            float f_beat = (float)quarter * 4 / TimeUnit;       
             float f_increment = f_beat / resolution;
 
             totalwidth = (int)((1 + highNoteID - lowNoteID) * xscale);
@@ -743,7 +746,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
 
         private void pnlCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (bMoveScore &&  e.Button == MouseButtons.Left)
+            if (bMoveScore && e.Button == MouseButtons.Left)
             {
                 Point mousePos = MousePosition;
                 if (mousePos == previousPosition)
@@ -759,6 +762,13 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
               
                 previousPosition = mousePos;                
             }
+            else
+            {
+                // Delegate the event to the caller
+                OnMouseMoved?.Invoke(this, e);
+
+            }
+
         }
 
         private void MovePanel(int Delta)

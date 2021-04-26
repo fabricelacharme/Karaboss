@@ -48,9 +48,12 @@ namespace Sanford.Multimedia.Midi.UI
             private PianoControl owner;
 
             private bool on = false;
+            private bool over = false;
 
             private SolidBrush onBrush = new SolidBrush(Color.SkyBlue);
-            private SolidBrush offBrush = new SolidBrush(Color.White);            
+            private SolidBrush offBrush = new SolidBrush(Color.White);
+            private SolidBrush overBrush = new SolidBrush(Color.LightGray);
+
             private SolidBrush textBrush = new SolidBrush(Color.DimGray);
 
             private Font fontNoteLetter; 
@@ -81,6 +84,7 @@ namespace Sanford.Multimedia.Midi.UI
 
                 #endregion
 
+                over = false;
                 on = true;
 
                 Invalidate();
@@ -112,6 +116,7 @@ namespace Sanford.Multimedia.Midi.UI
                 {
                     onBrush.Dispose();
                     offBrush.Dispose();
+                    overBrush.Dispose();
                 }
 
                 base.Dispose(disposing);
@@ -123,6 +128,11 @@ namespace Sanford.Multimedia.Midi.UI
                 {
                     PressPianoKey();
                 }
+                else
+                {
+                    over = true;
+                    Invalidate();
+                }
                                 
                 
                 base.OnMouseEnter(e);
@@ -133,6 +143,11 @@ namespace Sanford.Multimedia.Midi.UI
                 if(on)
                 {
                     ReleasePianoKey();
+                } 
+                else
+                {
+                    over = false;
+                    Invalidate();
                 }
 
                 base.OnMouseLeave(e);
@@ -170,12 +185,17 @@ namespace Sanford.Multimedia.Midi.UI
 
             protected override void OnPaint(PaintEventArgs e)
             {
-                if(on)
+                if (over)
+                {
+                    e.Graphics.FillRectangle(overBrush, 0, 0, Size.Width, Size.Height);
+                }
+                else if(on)
                 {
                     // NOTE PLAYED
                     e.Graphics.FillRectangle(onBrush, 0, 0, Size.Width, Size.Height);
 
-
+                    #region draw triangles
+                    // Triangles for white notes
                     if (NoteOffColor == Color.White)
                     {
                         if (owner.Orientation == Orientation.Horizontal)
@@ -203,9 +223,9 @@ namespace Sanford.Multimedia.Midi.UI
                             }
                         }
                     }
-                    
+                    #endregion
                 }
-                else
+                else 
                 {
                     // NOTE OFF
                     
@@ -309,16 +329,12 @@ namespace Sanford.Multimedia.Midi.UI
 
                         }
 
-                    }
-                   
+                    }                   
                 }
 
                 // Draw contour
                 e.Graphics.DrawRectangle(Pens.Black, 0, 0, Size.Width - 1, Size.Height - 1);
-
-
          
-
 
                 // FAB: draw note letter only for C note
                 if (noteID % 12 == 0)
