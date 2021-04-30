@@ -761,6 +761,8 @@ namespace Sanford.Multimedia.Midi.UI
                 keys[highNoteID - noteID].PressPianoKey();            
         }
 
+
+
         public void ReleasePianoKey(int noteID)
         {
             #region Require
@@ -778,6 +780,8 @@ namespace Sanford.Multimedia.Midi.UI
                 keys[highNoteID - noteID].ReleasePianoKey();            
         }
 
+        
+        
         public void PressPianoKey(Keys k)
         {
             if(!Focused)
@@ -869,10 +873,12 @@ namespace Sanford.Multimedia.Midi.UI
             }
         }
 
+
+
         public void Reset()
         {
             for (int i = 0; i < keys.Length; i++)
-            {
+            {                
                 keys[i].ReleasePianoKey();
                 keys[i].NoteOnColor = NoteOnColor;
             }

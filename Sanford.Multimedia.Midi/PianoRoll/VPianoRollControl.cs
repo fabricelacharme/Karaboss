@@ -42,7 +42,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
 {
 
     public delegate void OffsetChangedEventHandler(object sender,  int value);    
-    public delegate void MouseMoveEventHandler(object sender, MouseEventArgs e);
+    public delegate void MouseMoveEventHandler(object sender, int note, MouseEventArgs e);
     
 
     public partial class VPianoRollControl : Control
@@ -764,8 +764,12 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             }
             else
             {
+                int X = e.X;
+                int Y = e.Y + offsety;
+                int nnote = lowNoteID + X / (int)xscale;
+
                 // Delegate the event to the caller
-                OnMouseMoved?.Invoke(this, e);
+                OnMouseMoved?.Invoke(this, nnote, e);
 
             }
 

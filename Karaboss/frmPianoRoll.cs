@@ -143,6 +143,8 @@ namespace Karaboss
             this.KeyDown += new KeyEventHandler(FrmPianoRoll_KeyDown);
             this.KeyUp += new KeyEventHandler(FrmPianoRoll_KeyUp);
 
+            //PianoRollControl1.OnMouseMoved += new Sanford.Multimedia.Midi.VPianoRoll.MouseMoveEventHandler(PianoRollControl1_MouseMove);
+
             timer1.Interval = 20;
 
             // Sequence
@@ -468,6 +470,8 @@ namespace Karaboss
             pianoRollControl1.SequenceModified += new EventHandler(PianoRollControl1_SequenceModified);            
             pianoRollControl1.InfoNote += new InfoNoteEventHandler(PianoRollControl1_InfoNote);
 
+            pianoRollControl1.OnMouseMoved += new Sanford.Multimedia.Midi.PianoRoll.MouseMoveEventHandler(PianoRollControl1_MouseMove);
+
             // properties
             pianoRollControl1.Velocity = Karaclass.m_Velocity;
 
@@ -478,6 +482,8 @@ namespace Karaboss
 
             SetScrollBarValues();
         }
+
+      
 
         private void FinalizeControls()
         {
@@ -941,8 +947,15 @@ namespace Karaboss
 
         #endregion Edit
 
-  
+
         #region pianoRollControl
+
+        private void PianoRollControl1_MouseMove(object sender, int note, MouseEventArgs e)
+        {
+            pianoControl1.Reset();
+            pianoControl1.PressPianoKey(note);
+        }
+
 
         private void PianoRollControl1_MouseDownPlayNote(int starttime, int channel, int nnote, int duration, MouseEventArgs e)
         {

@@ -48,7 +48,7 @@ namespace Sanford.Multimedia.Midi.UI
             private PianoControl owner;
 
             private bool on = false;
-            private bool over = false;
+            private bool over = false;        
 
             private SolidBrush onBrush = new SolidBrush(Color.SkyBlue);
             private SolidBrush offBrush = new SolidBrush(Color.White);
@@ -91,6 +91,7 @@ namespace Sanford.Multimedia.Midi.UI
 
                 owner.OnPianoKeyDown(new PianoKeyEventArgs(noteID));
             }
+
 
             public void ReleasePianoKey()
             {
@@ -429,6 +430,8 @@ namespace Sanford.Multimedia.Midi.UI
                     return on;
                 }
             }
+
+
         }
     }
 }

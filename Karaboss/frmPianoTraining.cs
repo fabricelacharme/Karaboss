@@ -729,11 +729,13 @@ namespace Karaboss
         }
 
 
-        private void vPianoRollControl1_MouseMove(object sender, MouseEventArgs e)
+        private void vPianoRollControl1_MouseMove(object sender, int note, MouseEventArgs e)
         {
-            int x = e.X;
-            int y = e.Y;
-            //pianoControl1.PressPianoKey
+           
+            pianoControl1.Reset();
+            pianoControl1.PressPianoKey(note);
+           
+            
         }
 
 

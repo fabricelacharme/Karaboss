@@ -45,7 +45,8 @@ namespace Sanford.Multimedia.Midi.PianoRoll
     public delegate void MouseDownPlayNoteEventHandler(int starttime, int channel, int nnote, int duration, MouseEventArgs e);
     public delegate void MouseUpStopNoteEventHandler(int starttime, int channel, int nnote, int duration, MouseEventArgs e);
     public delegate void InfoNoteEventHandler(string tx);
-     
+    public delegate void MouseMoveEventHandler(object sender, int note, MouseEventArgs e);
+
     #endregion delegate
 
 
@@ -61,6 +62,8 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         public event EventHandler SequenceModified;
         public event EventHandler MyMouseDown;         // ahhhhhhhhhhhhhhhhhhhh
         public event EventHandler MyMouseUp;
+
+        public event MouseMoveEventHandler OnMouseMoved;
 
         #endregion
 
@@ -1391,6 +1394,9 @@ namespace Sanford.Multimedia.Midi.PianoRoll
 
                     displayNoteValue(nnote, nummeasure, timeinmeasure);
 
+                    // Delegate the event to the caller
+                    OnMouseMoved?.Invoke(this, nnote, e);
+
                     // Note exists => propose to delete with a cursor cross or modify with a vsplit
                     if (note != null)
                     {
@@ -1556,6 +1562,8 @@ namespace Sanford.Multimedia.Midi.PianoRoll
 
                     displayNoteValue(nnote, nummeasure, timeinmeasure);
 
+                    // Delegate the event to the caller
+                    OnMouseMoved?.Invoke(this, nnote, e);
 
                     // Note exists => propose to modify with a vsplit
                     if (note != null)
@@ -1737,6 +1745,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     pnlCanvas.Invalidate();
                     #endregion modify notes bound
                 }
+              
 
                 #endregion bEnterNotes = false
             }
