@@ -952,8 +952,8 @@ namespace Karaboss
 
         private void PianoRollControl1_MouseMove(object sender, int note, MouseEventArgs e)
         {
-            pianoControl1.Reset();
-            pianoControl1.PressPianoKey(note);
+            pianoControl1.ResetIsOver(note);
+            pianoControl1.IsOverPianoKey(note);
         }
 
 

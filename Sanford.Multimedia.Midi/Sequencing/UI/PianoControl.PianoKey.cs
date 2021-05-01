@@ -47,8 +47,26 @@ namespace Sanford.Multimedia.Midi.UI
         {
             private PianoControl owner;
 
+            // Key played
             private bool on = false;
-            private bool over = false;        
+            
+            // Mouse over
+            private bool over = false;            
+            public bool IsOver
+            {
+                get 
+                { 
+                    return over; 
+                }
+                set 
+                {
+                    if (over != value)
+                    {
+                        over = value;
+                        Invalidate();
+                    }
+                }
+            }
 
             private SolidBrush onBrush = new SolidBrush(Color.SkyBlue);
             private SolidBrush offBrush = new SolidBrush(Color.White);
@@ -188,9 +206,31 @@ namespace Sanford.Multimedia.Midi.UI
             {
                 if (over)
                 {
+                    // Mouse over
                     e.Graphics.FillRectangle(overBrush, 0, 0, Size.Width, Size.Height);
-                }
-                else if(on)
+
+                    #region draw triangles
+                    // Triangles for white notes
+                    if (NoteOffColor == Color.White)
+                    {
+                        if (owner.Orientation == Orientation.Horizontal)
+                        {
+                            // Triangles
+                            SolidBrush bbrush = new SolidBrush(Color.Black);
+                            e.Graphics.FillRectangle(bbrush, 1, Size.Height - 2, 1, 1);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, Size.Height - 2, 1, 1);
+                        }
+                        else
+                        {
+                            SolidBrush bbrush = new SolidBrush(Color.Black);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, 1, 1, 1);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, Size.Height - 2, 1, 1);
+                        }
+                    }                   
+                    #endregion
+
+                    }
+                    else if(on)
                 {
                     // NOTE PLAYED
                     e.Graphics.FillRectangle(onBrush, 0, 0, Size.Width, Size.Height);
@@ -202,26 +242,16 @@ namespace Sanford.Multimedia.Midi.UI
                         if (owner.Orientation == Orientation.Horizontal)
                         {
                             // Triangles
-                            Point[] DOWNLEFT = new Point[] { new Point(-1, Size.Height - 7), new Point(5, Size.Height - 1), new Point(-1, Size.Height - 1) };
-                            Point[] DOWNRIGHT = new Point[] { new Point(Size.Width - 5, Size.Height - 1), new Point(Size.Width, Size.Height - 7), new Point(Size.Width, Size.Height - 1) };
-
-                            using (SolidBrush brush = new SolidBrush(Color.Black))
-                            {
-                                e.Graphics.FillPolygon(brush, DOWNLEFT);
-                                e.Graphics.FillPolygon(brush, DOWNRIGHT);
-                            }
+                            SolidBrush bbrush = new SolidBrush(Color.Black);                            
+                            e.Graphics.FillRectangle(bbrush, 1, Size.Height - 2, 1, 1);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, Size.Height - 2, 1, 1);  
                         }
                         else
                         {
                             // Triangles
-                            Point[] RIGHTUP = new Point[] { new Point(Size.Width - 7, 0), new Point(Size.Width, 0), new Point(Size.Width, 5) };
-                            Point[] RIGHTDOWN = new Point[] { new Point(Size.Width - 7, Size.Height), new Point(Size.Width, Size.Height - 5), new Point(Size.Width, Size.Height) };
-
-                            using (SolidBrush brush = new SolidBrush(Color.Black))
-                            {
-                                e.Graphics.FillPolygon(brush, RIGHTUP);
-                                e.Graphics.FillPolygon(brush, RIGHTDOWN);
-                            }
+                            SolidBrush bbrush = new SolidBrush(Color.Black);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, 1, 1, 1);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, Size.Height - 2, 1, 1);  
                         }
                     }
                     #endregion
@@ -291,7 +321,6 @@ namespace Sanford.Multimedia.Midi.UI
                     else if (NoteOffColor == Color.White)
                     {
                         // WHITE NOTES
-                        //e.Graphics.DrawRectangle(Pens.Black, 0, 0, Size.Width - 1, Size.Height - 1);
 
                         Pen pn = new Pen(Color.Black);
                         pn.Width = 1;
@@ -301,32 +330,27 @@ namespace Sanford.Multimedia.Midi.UI
                         {
                             e.Graphics.DrawRectangle(pn, 0, 0, Size.Width - 1, Size.Height - 1);
 
-                            // Triangles
-                            Point[] DOWNLEFT = new Point[] { new Point(-1, Size.Height - 7), new Point(5, Size.Height - 1), new Point(-1, Size.Height - 1) };
-                            Point[] DOWNRIGHT = new Point[] { new Point(Size.Width - 5, Size.Height - 1), new Point(Size.Width, Size.Height - 7), new Point(Size.Width, Size.Height - 1) };
+                            #region draw triangles
 
-                            using (SolidBrush brush = new SolidBrush(Color.Black))
-                            {
-                                e.Graphics.FillPolygon(brush, DOWNLEFT);
-                                e.Graphics.FillPolygon(brush, DOWNRIGHT);
-                            }
-
+                            SolidBrush bbrush = new SolidBrush(Color.Black);
+                            e.Graphics.FillRectangle(bbrush, 1, Size.Height - 2, 1, 1);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, Size.Height - 2, 1, 1);
+  
+                            #endregion
                         }
                         else
                         {
                             // VERTICAL
                             e.Graphics.DrawRectangle(Pens.Black, 0, 0, Size.Width - 1, Size.Height - 1);
 
+                            #region draw triangles
+
                             // Triangles
-                            Point[] RIGHTUP = new Point[] { new Point(Size.Width - 7, 0), new Point(Size.Width, 0), new Point(Size.Width, 5) };
-                            Point[] RIGHTDOWN = new Point[] { new Point(Size.Width - 7, Size.Height), new Point(Size.Width, Size.Height - 5), new Point(Size.Width, Size.Height) };
-
-                            using (SolidBrush brush = new SolidBrush(Color.Black))
-                            {
-                                e.Graphics.FillPolygon(brush, RIGHTUP);
-                                e.Graphics.FillPolygon(brush, RIGHTDOWN);
-                            }
-
+                            SolidBrush bbrush = new SolidBrush(Color.Black);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, 1, 1, 1);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, Size.Height - 2, 1, 1);
+      
+                            #endregion
 
                         }
 

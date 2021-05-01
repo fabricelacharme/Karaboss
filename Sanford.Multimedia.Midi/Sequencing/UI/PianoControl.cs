@@ -761,7 +761,26 @@ namespace Sanford.Multimedia.Midi.UI
                 keys[highNoteID - noteID].PressPianoKey();            
         }
 
+        /// <summary>
+        /// Mouse is over a piano key
+        /// </summary>
+        /// <param name="noteID"></param>
+        public void IsOverPianoKey(int noteID)
+        {
+            #region Require
 
+            if (noteID < lowNoteID || noteID > highNoteID)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            #endregion
+
+            if (Orientation == Orientation.Horizontal)
+                keys[noteID - lowNoteID].IsOver = true;
+            else
+                keys[highNoteID - noteID].IsOver = true;
+        }
 
         public void ReleasePianoKey(int noteID)
         {
@@ -779,9 +798,7 @@ namespace Sanford.Multimedia.Midi.UI
             else
                 keys[highNoteID - noteID].ReleasePianoKey();            
         }
-
-        
-        
+               
         public void PressPianoKey(Keys k)
         {
             if(!Focused)
@@ -873,8 +890,6 @@ namespace Sanford.Multimedia.Midi.UI
             }
         }
 
-
-
         public void Reset()
         {
             for (int i = 0; i < keys.Length; i++)
@@ -884,6 +899,26 @@ namespace Sanford.Multimedia.Midi.UI
             }
         }
 
+        /// <summary>
+        /// Remove all is over painting
+        /// </summary>
+        public void ResetIsOver(int noteID)
+        {
+            
+            foreach (PianoKey k in keys)
+            {                
+                if (k.NoteID != noteID)
+                    k.IsOver = false;
+            }
+            
+
+             /* 
+            for (int i = 0; i < keys.Length; i++)
+            {
+                keys[i].IsOver = false;
+            }
+             */
+        }
 
         #endregion
 

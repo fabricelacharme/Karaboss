@@ -94,7 +94,6 @@ namespace Karaboss
             SingleTrackChannel = -1;
             bAlltracks = true;
 
-
             vPianoRollControl1.OnMouseMoved += new Sanford.Multimedia.Midi.VPianoRoll.MouseMoveEventHandler(vPianoRollControl1_MouseMove);
         }
 
@@ -264,6 +263,8 @@ namespace Karaboss
 
                 totaltimemeasures = nbmeasures * _measurelen;
 
+                // Music Cursor position
+                positionHScrollBar.Width = pianoControl1.totalLength - positionHScrollBar.Left; ;
                 positionHScrollBar.Maximum = totaltimemeasures + _measurelen;
                 positionHScrollBar.Minimum = _measurelen;
                 positionHScrollBar.TickStyle = TickStyle.TopLeft;
@@ -285,10 +286,8 @@ namespace Karaboss
                         positionHScrollBar.ScaleDivisions = nbmeasures;
                 }
 
-                positionHScrollBar.TickDivide = _measurelen;
-                //positionHScrollBar.SmallChange = (uint)nbmeasures;
-                positionHScrollBar.SmallChange = (uint)positionHScrollBar.ScaleDivisions;
-                //positionHScrollBar.LargeChange = (uint)nbmeasures;
+                positionHScrollBar.TickDivide = _measurelen;                
+                positionHScrollBar.SmallChange = (uint)positionHScrollBar.ScaleDivisions;                
                 positionHScrollBar.LargeChange = (uint)positionHScrollBar.ScaleDivisions;
                 if (_measurelen > 0)
                     positionHScrollBar.MouseWheelBarPartitions = _measurelen;
@@ -297,8 +296,7 @@ namespace Karaboss
 
                 // Piano
                 pnlPiano.Height = 150;
-                pnlPiano.Top = this.ClientSize.Height - pnlBottom.Height - pnlPiano.Height;
-                //pnlPiano.Width = this.ClientSize.Width;
+                pnlPiano.Top = this.ClientSize.Height - pnlBottom.Height - pnlPiano.Height;                
                 pnlPiano.Width = pianoControl1.totalLength;
 
                 // Scrollview
@@ -319,15 +317,21 @@ namespace Karaboss
                 vPianoRollControl1.Sequence1 = sequence1;
                 vPianoRollControl1.zoomy = zoomy;
                 pianoControl1.zoom = zoomx;
+                
                 vPianoRollControl1.xScale = pianoControl1.Scale;
                 vPianoRollControl1.OffsetChanged += new Sanford.Multimedia.Midi.VPianoRoll.OffsetChangedEventHandler(vPianoRollControl1_OffsetChanged);
+
+                // Bars
+                HorizontalScroll.Visible = pnlPiano.Width > ClientSize.Width;
+
             }
             catch (Exception ex)
             {
                 Console.Write(ex.Message);
             }
         }
-        
+
+
         #endregion
 
 
@@ -535,6 +539,7 @@ namespace Karaboss
         private void HandleLoadCompleted(object sender, AsyncCompletedEventArgs e)
         {            
             LoadSequencer(sequence1);
+            // Draw controls needs informations from the sequence
             DrawControls();
             InitCbTracks();            
         }
@@ -730,14 +735,12 @@ namespace Karaboss
 
 
         private void vPianoRollControl1_MouseMove(object sender, int note, MouseEventArgs e)
-        {
-           
-            pianoControl1.Reset();
-            pianoControl1.PressPianoKey(note);
-           
-            
+        {       
+            pianoControl1.ResetIsOver(note);
+            pianoControl1.IsOverPianoKey(note);
         }
 
+ 
 
         #endregion
 
@@ -863,7 +866,9 @@ namespace Karaboss
             pnlPiano.Top = this.ClientSize.Height - pnlBottom.Height - pnlPiano.Height;
 
             HorizontalScroll.Visible = pnlPiano.Width > ClientSize.Width;
-            positionHScrollBar.Width = pnlPiano.Width - positionHScrollBar.Left; ;
+            
+            // Music Cursor position
+            positionHScrollBar.Width = pnlPiano.Width - positionHScrollBar.Left; 
 
             pnlScrollView.Top = pnlTop.Height;
             pnlScrollView.Width = pnlPiano.Width;
