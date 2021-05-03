@@ -1680,14 +1680,19 @@ namespace Karaboss
                 if (!btnMute1.Checked)
                 {
                     // Play melody
-                    btnMute1.Checked = true;
-                    UnMuteTrack(myLyric.melodytracknum);
+                    btnMute1.Checked = true;                    
+                    UnMuteSomeTracks(sequence1.tracks[myLyric.melodytracknum].MidiChannel);
                 }
                 else
                 {
                     // Mute melody
-                    btnMute1.Checked = false;
-                    MuteTrack(myLyric.melodytracknum);
+                    btnMute1.Checked = false;                    
+                                       
+                    // Stop Channel : All notes off                                        
+                    sequencer1.stopper.AllSoundOff();
+
+                    // Mute other TrackControls having same channel
+                    MuteSomeTracks(sequence1.tracks[myLyric.melodytracknum].MidiChannel);
                 }              
 
                 this.Focus();
@@ -1974,80 +1979,16 @@ namespace Karaboss
             if (melodytracknum != -1 && (Karaclass.m_MuteMelody == true || (currentPlaylist != null && currentPlaylistItem.MelodyMute == true)))
             {
                 btnMute1.Checked = false;                
-                MuteTrack(melodytracknum);
+
+                // Stop Channel : All notes off                                        
+                sequencer1.stopper.AllSoundOff();
+
+                // Mute other TrackControls having same channel
+                MuteSomeTracks(sequence1.tracks[myLyric.melodytracknum].MidiChannel);
+
             }
         }
-
-        /// <summary>
-        /// Mute a track
-        /// </summary>
-        /// <param name="tracknum"></param>
-        private void MuteTrack(int tracknum) {
-            Track trackm = sequence1.tracks[tracknum];
-
-            int nChannel = trackm.MidiChannel;
-            string sChannel = nChannel.ToString();
-            
-            // Ne rien changer quand on MUTE !!!!!
-            // bloquer plutot le son
-
-            int c = (int)ControllerType.Volume;
-            int v = 0;
-            SendCC(nChannel, c, v);
-
-            // Met le volume à 0
-            for (int i = 0; i < pnlTracks.Controls.Count; i++)
-            {
-
-                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                {
-                    if (pnlTracks.Controls[i].Tag != null)
-                    {
-                        string stag = pnlTracks.Controls[i].Tag.ToString();
-                        if (stag == sChannel)
-                        {
-                            ((TrkControl.TrackControl)pnlTracks.Controls[i]).Muted = true;
-                            ((TrkControl.TrackControl)pnlTracks.Controls[i]).Volume = 0;
-                            
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Unmute a track
-        /// </summary>
-        /// <param name="tracknum"></param>
-        private void UnMuteTrack(int tracknum)
-        {
-            Track trackm = sequence1.tracks[tracknum];
-
-            int nChannel = trackm.MidiChannel;
-            string sChannel = nChannel.ToString();
-            int c = (int)ControllerType.Volume;
-            int v = 80;
-            SendCC(nChannel, c, v);
-
-            // Met le volume à 0
-            for (int i = 0; i < pnlTracks.Controls.Count; i++)
-            {
-
-                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                {
-                    if (pnlTracks.Controls[i].Tag != null)
-                    {
-                        string stag = pnlTracks.Controls[i].Tag.ToString();
-                        if (stag == sChannel)
-                        {
-                            ((TrkControl.TrackControl)pnlTracks.Controls[i]).Muted = false;
-                            ((TrkControl.TrackControl)pnlTracks.Controls[i]).Volume = 80;
-                            
-                        }
-                    }
-                }
-            }
-        }
+        
         #endregion
 
         /// <summary>
