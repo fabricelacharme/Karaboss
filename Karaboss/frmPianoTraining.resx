@@ -166,7 +166,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pnlScrollView.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="pnlRedPianoSep.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
@@ -235,7 +235,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pnlPiano.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="positionHScrollBar.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 6pt</value>
@@ -271,7 +271,7 @@
     <value>0, 0</value>
   </data>
   <data name="pnlTop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1011, 50</value>
+    <value>1213, 50</value>
   </data>
   <data name="pnlTop.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -286,11 +286,35 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pnlTop.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="trackBarX.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="trackBarX.Location" type="System.Drawing.Point, System.Drawing">
+    <value>879, 7</value>
+  </data>
+  <data name="trackBarX.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 45</value>
+  </data>
+  <data name="trackBarX.TabIndex" type="System.Int32, mscorlib">
+    <value>45</value>
+  </data>
+  <data name="&gt;&gt;trackBarX.Name" xml:space="preserve">
+    <value>trackBarX</value>
+  </data>
+  <data name="&gt;&gt;trackBarX.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TrackBar, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;trackBarX.Parent" xml:space="preserve">
+    <value>pnlBottom</value>
+  </data>
+  <data name="&gt;&gt;trackBarX.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="CbTracks.Location" type="System.Drawing.Point, System.Drawing">
     <value>518, 9</value>
   </data>
@@ -310,42 +334,6 @@
     <value>pnlBottom</value>
   </data>
   <data name="&gt;&gt;CbTracks.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="lblKaraboss.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblKaraboss.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 14.25pt</value>
-  </data>
-  <data name="lblKaraboss.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblKaraboss.Location" type="System.Drawing.Point, System.Drawing">
-    <value>863, 6</value>
-  </data>
-  <data name="lblKaraboss.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 27</value>
-  </data>
-  <data name="lblKaraboss.TabIndex" type="System.Int32, mscorlib">
-    <value>44</value>
-  </data>
-  <data name="lblKaraboss.Text" xml:space="preserve">
-    <value>K A R A B O S S</value>
-  </data>
-  <data name="lblKaraboss.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
-  </data>
-  <data name="&gt;&gt;lblKaraboss.Name" xml:space="preserve">
-    <value>lblKaraboss</value>
-  </data>
-  <data name="&gt;&gt;lblKaraboss.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblKaraboss.Parent" xml:space="preserve">
-    <value>pnlBottom</value>
-  </data>
-  <data name="&gt;&gt;lblKaraboss.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="lblElapsed.Font" type="System.Drawing.Font, System.Drawing">
@@ -636,6 +624,42 @@
   <data name="&gt;&gt;BtnPlay.ZOrder" xml:space="preserve">
     <value>8</value>
   </data>
+  <data name="lblKaraboss.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblKaraboss.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 14.25pt</value>
+  </data>
+  <data name="lblKaraboss.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblKaraboss.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1061, 7</value>
+  </data>
+  <data name="lblKaraboss.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 27</value>
+  </data>
+  <data name="lblKaraboss.TabIndex" type="System.Int32, mscorlib">
+    <value>44</value>
+  </data>
+  <data name="lblKaraboss.Text" xml:space="preserve">
+    <value>K A R A B O S S</value>
+  </data>
+  <data name="lblKaraboss.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;lblKaraboss.Name" xml:space="preserve">
+    <value>lblKaraboss</value>
+  </data>
+  <data name="&gt;&gt;lblKaraboss.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblKaraboss.Parent" xml:space="preserve">
+    <value>pnlBottom</value>
+  </data>
+  <data name="&gt;&gt;lblKaraboss.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
   <data name="pnlBottom.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Bottom</value>
   </data>
@@ -643,7 +667,7 @@
     <value>0, 411</value>
   </data>
   <data name="pnlBottom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1011, 40</value>
+    <value>1213, 40</value>
   </data>
   <data name="pnlBottom.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -658,6 +682,54 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pnlBottom.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="trackBarY.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="trackBarY.Location" type="System.Drawing.Point, System.Drawing">
+    <value>35, 168</value>
+  </data>
+  <data name="trackBarY.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
+    <value>Vertical</value>
+  </data>
+  <data name="trackBarY.Size" type="System.Drawing.Size, System.Drawing">
+    <value>45, 80</value>
+  </data>
+  <data name="trackBarY.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;trackBarY.Name" xml:space="preserve">
+    <value>trackBarY</value>
+  </data>
+  <data name="&gt;&gt;trackBarY.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TrackBar, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;trackBarY.Parent" xml:space="preserve">
+    <value>pnlRight</value>
+  </data>
+  <data name="&gt;&gt;trackBarY.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="pnlRight.Location" type="System.Drawing.Point, System.Drawing">
+    <value>788, 80</value>
+  </data>
+  <data name="pnlRight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 302</value>
+  </data>
+  <data name="pnlRight.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;pnlRight.Name" xml:space="preserve">
+    <value>pnlRight</value>
+  </data>
+  <data name="&gt;&gt;pnlRight.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlRight.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pnlRight.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -667,7 +739,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1011, 451</value>
+    <value>1213, 451</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -692,6 +764,9 @@
         AAAAAAAA//8AAIABAACAAQAAgAEAAIABAACAAQAAgAEAAIABAACAAQAAgAEAAIABAACAAQAAgAEAAIAB
         AACAAQAA//8AAA==
 </value>
+  </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>

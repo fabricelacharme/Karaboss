@@ -286,14 +286,29 @@ namespace Karaboss
                         positionHScrollBar.ScaleDivisions = nbmeasures;
                 }
 
-                positionHScrollBar.TickDivide = _measurelen;                
-                positionHScrollBar.SmallChange = (uint)positionHScrollBar.ScaleDivisions;                
-                positionHScrollBar.LargeChange = (uint)positionHScrollBar.ScaleDivisions;
+                positionHScrollBar.TickDivide = _measurelen;
+                //positionHScrollBar.SmallChange = (uint)positionHScrollBar.ScaleDivisions;                
+                //positionHScrollBar.LargeChange = (uint)positionHScrollBar.ScaleDivisions;
+
+                // Small change  = measurelen divided by resolution
+                positionHScrollBar.SmallChange = (uint)_measurelen/vPianoRollControl1.Resolution;
+                positionHScrollBar.LargeChange = (uint)_measurelen;
+
                 if (_measurelen > 0)
                     positionHScrollBar.MouseWheelBarPartitions = _measurelen;
 
                 #endregion
 
+
+                #region right
+
+                pnlRight.Width = 80;
+                //pnlRight.Dock = DockStyle.Right;
+                pnlRight.Left = pnlScrollView.Width;
+
+                #endregion
+
+                #region bottom
                 // Piano
                 pnlPiano.Height = 150;
                 pnlPiano.Top = this.ClientSize.Height - pnlBottom.Height - pnlPiano.Height;                
@@ -323,6 +338,8 @@ namespace Karaboss
 
                 // Bars
                 HorizontalScroll.Visible = pnlPiano.Width > ClientSize.Width;
+
+                #endregion
 
             }
             catch (Exception ex)
@@ -1107,6 +1124,34 @@ namespace Karaboss
                 vPianoRollControl1.TrackNum = -1;
             }
             CbTracks.Parent.Focus();
+        }
+
+        #endregion
+
+
+        #region trackbar
+        private void trackBarX_Scroll(object sender, EventArgs e)
+        {
+            
+            
+            zoomx = pianoControl1.zoom;
+            
+            zoomx = 1 + trackBarX.Value/(float)100;
+            pianoControl1.zoom = zoomx;
+            pianoControl1.Width = pianoControl1.totalLength;
+
+            vPianoRollControl1.xScale = pianoControl1.Scale;
+            vPianoRollControl1.Width = pianoControl1.Width;
+
+            pnlPiano.Width = pianoControl1.totalLength;
+            pnlScrollView.Width = pnlPiano.Width;
+
+            pnlRight.Left = pnlScrollView.Width;
+        }
+
+        private void trackBarY_Scroll(object sender, EventArgs e)
+        {
+
         }
 
         #endregion

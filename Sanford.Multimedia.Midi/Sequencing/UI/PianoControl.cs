@@ -771,7 +771,8 @@ namespace Sanford.Multimedia.Midi.UI
 
             if (noteID < lowNoteID || noteID > highNoteID)
             {
-                throw new ArgumentOutOfRangeException();
+                //throw new ArgumentOutOfRangeException();
+                return;
             }
 
             #endregion
