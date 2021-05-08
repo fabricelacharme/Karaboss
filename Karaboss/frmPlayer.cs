@@ -5684,10 +5684,14 @@ namespace Karaboss
         {
             lstChannels[nChannel].muted = true;
 
-            foreach (TrkControl.TrackControl T in pnlTracks.Controls)
+            foreach (Control C in pnlTracks.Controls)
             {
-                if (T.MidiChannel == nChannel)
-                    T.Muted = true;
+                if (C.GetType() == typeof(TrkControl.TrackControl))
+                {
+                    TrkControl.TrackControl T = (TrkControl.TrackControl)C;
+                    if (T.MidiChannel == nChannel)
+                        T.Muted = true;
+                }
             }
         }
 
@@ -5699,12 +5703,17 @@ namespace Karaboss
         {
             lstChannels[nChannel].muted = false;
 
-            // unmute all tracks having same channel            
-            foreach (TrkControl.TrackControl T in pnlTracks.Controls)
+            // unmute all tracks having same channel
+            foreach (Control C in pnlTracks.Controls)
             {
-                if (T.MidiChannel == nChannel)
-                    T.Muted = false;
-            }
+                if (C.GetType() == typeof(TrkControl.TrackControl))
+                {
+                    TrkControl.TrackControl T = (TrkControl.TrackControl)C;
+                    
+                    if (T.MidiChannel == nChannel)                                            
+                        T.Muted = false;                    
+                }
+            }          
         }
 
         /// <summary>
@@ -5719,10 +5728,14 @@ namespace Karaboss
             }
 
             // All tracks on                    
-            foreach (TrkControl.TrackControl T in pnlTracks.Controls)
+            foreach (Control C in pnlTracks.Controls)
             {
-                T.Solo = false;
-                T.Muted = false;
+                if (C.GetType() == typeof(TrkControl.TrackControl))
+                {
+                    TrkControl.TrackControl T = (TrkControl.TrackControl)C;
+                    T.Solo = false;
+                    T.Muted = false;
+                }
             }
         }
 
@@ -5737,9 +5750,7 @@ namespace Karaboss
         {
             if (sender is TrkControl.TrackControl pTrack)
             {
-                int nChannel = Convert.ToInt32(pTrack.MidiChannel);
-                //string sChannel = nChannel.ToString();
-
+                int nChannel = Convert.ToInt32(pTrack.MidiChannel);                
                 
                 if (pTrack.Solo == false)
                 {
@@ -5759,14 +5770,20 @@ namespace Karaboss
                             lstChannels[i].muted = false;
                     }
 
-                    foreach (TrkControl.TrackControl T in pnlTracks.Controls)
+                    
+                    foreach (Control C in pnlTracks.Controls)
                     {
-                        if (T.MidiChannel != nChannel)
+                        if (C.GetType() == typeof(TrkControl.TrackControl))
                         {
-                            T.Solo = false;
-                            T.Muted = true;
+                            TrkControl.TrackControl T = (TrkControl.TrackControl)C;
+                            if (T.MidiChannel != nChannel)
+                            {
+                                T.Solo = false;
+                                T.Muted = true;
+                            }
+
                         }
-                    }    
+                    }   
                 }
                 else
                 {
