@@ -31,12 +31,17 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPianoTraining));
             this.pnlScrollView = new System.Windows.Forms.Panel();
+            this.vScrollBarRoll = new System.Windows.Forms.VScrollBar();
+            this.vPianoRollControl1 = new Sanford.Multimedia.Midi.VPianoRoll.VPianoRollControl();
             this.pnlPiano = new System.Windows.Forms.Panel();
+            this.pianoControl1 = new Sanford.Multimedia.Midi.UI.PianoControl();
             this.pnlRedPianoSep = new System.Windows.Forms.Panel();
+            this.pnlLeftPiano = new System.Windows.Forms.Panel();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.positionHScrollBar = new ColorSlider.ColorSlider();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlBottom = new System.Windows.Forms.Panel();
+            this.colorSliderX = new ColorSlider.ColorSlider();
             this.CbTracks = new System.Windows.Forms.ComboBox();
             this.pnlDisplay = new System.Windows.Forms.Panel();
             this.lblElapsed = new System.Windows.Forms.Label();
@@ -50,38 +55,76 @@
             this.BtnPlay = new System.Windows.Forms.Button();
             this.lblKaraboss = new System.Windows.Forms.Label();
             this.pnlRight = new System.Windows.Forms.Panel();
-            this.trackBarY = new System.Windows.Forms.TrackBar();
-            this.vPianoRollControl1 = new Sanford.Multimedia.Midi.VPianoRoll.VPianoRollControl();
-            this.pianoControl1 = new Sanford.Multimedia.Midi.UI.PianoControl();
-            this.trackBarX = new System.Windows.Forms.TrackBar();
+            this.colorSliderY = new ColorSlider.ColorSlider();
+            this.pnlPianoroll = new System.Windows.Forms.Panel();
+            this.pnlLeftRoll = new System.Windows.Forms.Panel();
+            this.pnlMiddle = new System.Windows.Forms.Panel();
             this.pnlScrollView.SuspendLayout();
             this.pnlPiano.SuspendLayout();
             this.pnlTop.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.pnlDisplay.SuspendLayout();
             this.pnlRight.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarX)).BeginInit();
+            this.pnlPianoroll.SuspendLayout();
+            this.pnlMiddle.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlScrollView
             // 
-            this.pnlScrollView.Controls.Add(this.vPianoRollControl1);
             resources.ApplyResources(this.pnlScrollView, "pnlScrollView");
+            this.pnlScrollView.BackColor = System.Drawing.Color.Gray;
+            this.pnlScrollView.Controls.Add(this.vScrollBarRoll);
+            this.pnlScrollView.Controls.Add(this.vPianoRollControl1);
             this.pnlScrollView.Name = "pnlScrollView";
+            // 
+            // vScrollBarRoll
+            // 
+            resources.ApplyResources(this.vScrollBarRoll, "vScrollBarRoll");
+            this.vScrollBarRoll.Name = "vScrollBarRoll";
+            // 
+            // vPianoRollControl1
+            // 
+            this.vPianoRollControl1.HighNoteID = 108;
+            resources.ApplyResources(this.vPianoRollControl1, "vPianoRollControl1");
+            this.vPianoRollControl1.LowNoteID = 23;
+            this.vPianoRollControl1.Name = "vPianoRollControl1";
+            this.vPianoRollControl1.OffsetY = 0;
+            this.vPianoRollControl1.Resolution = 4;
+            this.vPianoRollControl1.Sequence1 = null;
+            this.vPianoRollControl1.TrackNum = -1;
+            this.vPianoRollControl1.xScale = 0.1D;
+            this.vPianoRollControl1.yScale = 0D;
             // 
             // pnlPiano
             // 
-            this.pnlPiano.Controls.Add(this.pnlRedPianoSep);
             this.pnlPiano.Controls.Add(this.pianoControl1);
+            this.pnlPiano.Controls.Add(this.pnlRedPianoSep);
+            this.pnlPiano.Controls.Add(this.pnlLeftPiano);
             resources.ApplyResources(this.pnlPiano, "pnlPiano");
             this.pnlPiano.Name = "pnlPiano";
+            // 
+            // pianoControl1
+            // 
+            resources.ApplyResources(this.pianoControl1, "pianoControl1");
+            this.pianoControl1.HighNoteID = 108;
+            this.pianoControl1.LowNoteID = 23;
+            this.pianoControl1.Name = "pianoControl1";
+            this.pianoControl1.NoteOnColor = System.Drawing.Color.SkyBlue;
+            this.pianoControl1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.pianoControl1.Scale = 20;
+            this.pianoControl1.Zoom = 1F;
             // 
             // pnlRedPianoSep
             // 
             this.pnlRedPianoSep.BackColor = System.Drawing.Color.Red;
             resources.ApplyResources(this.pnlRedPianoSep, "pnlRedPianoSep");
             this.pnlRedPianoSep.Name = "pnlRedPianoSep";
+            // 
+            // pnlLeftPiano
+            // 
+            this.pnlLeftPiano.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            resources.ApplyResources(this.pnlLeftPiano, "pnlLeftPiano");
+            this.pnlLeftPiano.Name = "pnlLeftPiano";
             // 
             // pnlTop
             // 
@@ -159,7 +202,7 @@
             // pnlBottom
             // 
             this.pnlBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.pnlBottom.Controls.Add(this.trackBarX);
+            this.pnlBottom.Controls.Add(this.colorSliderX);
             this.pnlBottom.Controls.Add(this.CbTracks);
             this.pnlBottom.Controls.Add(this.pnlDisplay);
             this.pnlBottom.Controls.Add(this.lblTempo);
@@ -171,6 +214,66 @@
             this.pnlBottom.Controls.Add(this.lblKaraboss);
             resources.ApplyResources(this.pnlBottom, "pnlBottom");
             this.pnlBottom.Name = "pnlBottom";
+            // 
+            // colorSliderX
+            // 
+            this.colorSliderX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.colorSliderX.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(87)))), ((int)(((byte)(94)))), ((int)(((byte)(110)))));
+            this.colorSliderX.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(60)))), ((int)(((byte)(74)))));
+            this.colorSliderX.BorderRoundRectSize = new System.Drawing.Size(1, 1);
+            resources.ApplyResources(this.colorSliderX, "colorSliderX");
+            this.colorSliderX.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
+            this.colorSliderX.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(130)))), ((int)(((byte)(208)))));
+            this.colorSliderX.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(140)))), ((int)(((byte)(180)))));
+            this.colorSliderX.ForeColor = System.Drawing.Color.White;
+            this.colorSliderX.LargeChange = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.colorSliderX.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.colorSliderX.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.colorSliderX.Name = "colorSliderX";
+            this.colorSliderX.ScaleDivisions = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.colorSliderX.ScaleSubDivisions = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.colorSliderX.ShowDivisionsText = false;
+            this.colorSliderX.ShowSmallScale = false;
+            this.colorSliderX.SmallChange = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.colorSliderX.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
+            this.colorSliderX.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
+            this.colorSliderX.ThumbRoundRectSize = new System.Drawing.Size(2, 2);
+            this.colorSliderX.ThumbSize = new System.Drawing.Size(7, 20);
+            this.colorSliderX.TickAdd = 0F;
+            this.colorSliderX.TickColor = System.Drawing.Color.White;
+            this.colorSliderX.TickDivide = 0F;
+            this.colorSliderX.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.colorSliderX.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.colorSliderX.ValueChanged += new System.EventHandler(this.colorSliderX_ValueChanged);
+            this.colorSliderX.Scroll += new System.Windows.Forms.ScrollEventHandler(this.colorSliderX_Scroll);
             // 
             // CbTracks
             // 
@@ -270,62 +373,98 @@
             // pnlRight
             // 
             this.pnlRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.pnlRight.Controls.Add(this.trackBarY);
+            this.pnlRight.Controls.Add(this.colorSliderY);
             resources.ApplyResources(this.pnlRight, "pnlRight");
             this.pnlRight.Name = "pnlRight";
             // 
-            // trackBarY
+            // colorSliderY
             // 
-            resources.ApplyResources(this.trackBarY, "trackBarY");
-            this.trackBarY.Maximum = 100;
-            this.trackBarY.Minimum = -100;
-            this.trackBarY.Name = "trackBarY";
-            this.trackBarY.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBarY.Scroll += new System.EventHandler(this.trackBarY_Scroll);
+            this.colorSliderY.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.colorSliderY.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(87)))), ((int)(((byte)(94)))), ((int)(((byte)(110)))));
+            this.colorSliderY.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(60)))), ((int)(((byte)(74)))));
+            this.colorSliderY.BorderRoundRectSize = new System.Drawing.Size(1, 1);
+            resources.ApplyResources(this.colorSliderY, "colorSliderY");
+            this.colorSliderY.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
+            this.colorSliderY.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(130)))), ((int)(((byte)(208)))));
+            this.colorSliderY.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(140)))), ((int)(((byte)(180)))));
+            this.colorSliderY.ForeColor = System.Drawing.Color.White;
+            this.colorSliderY.LargeChange = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.colorSliderY.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.colorSliderY.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.colorSliderY.Name = "colorSliderY";
+            this.colorSliderY.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.colorSliderY.ScaleDivisions = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.colorSliderY.ScaleSubDivisions = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.colorSliderY.ShowDivisionsText = false;
+            this.colorSliderY.ShowSmallScale = false;
+            this.colorSliderY.SmallChange = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.colorSliderY.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
+            this.colorSliderY.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
+            this.colorSliderY.ThumbRoundRectSize = new System.Drawing.Size(2, 2);
+            this.colorSliderY.ThumbSize = new System.Drawing.Size(20, 7);
+            this.colorSliderY.TickAdd = 0F;
+            this.colorSliderY.TickColor = System.Drawing.Color.White;
+            this.colorSliderY.TickDivide = 0F;
+            this.colorSliderY.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.colorSliderY.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.colorSliderY.Scroll += new System.Windows.Forms.ScrollEventHandler(this.colorSliderY_Scroll);
             // 
-            // vPianoRollControl1
+            // pnlPianoroll
             // 
-            resources.ApplyResources(this.vPianoRollControl1, "vPianoRollControl1");
-            this.vPianoRollControl1.HighNoteID = 108;
-            this.vPianoRollControl1.LowNoteID = 23;
-            this.vPianoRollControl1.Name = "vPianoRollControl1";
-            this.vPianoRollControl1.OffsetY = 0;
-            this.vPianoRollControl1.Resolution = 4;
-            this.vPianoRollControl1.Sequence1 = null;
-            this.vPianoRollControl1.TrackNum = -1;
-            this.vPianoRollControl1.xScale = 0.1D;
-            this.vPianoRollControl1.yScale = 0D;
+            this.pnlPianoroll.Controls.Add(this.pnlScrollView);
+            this.pnlPianoroll.Controls.Add(this.pnlLeftRoll);
+            resources.ApplyResources(this.pnlPianoroll, "pnlPianoroll");
+            this.pnlPianoroll.Name = "pnlPianoroll";
             // 
-            // pianoControl1
+            // pnlLeftRoll
             // 
-            this.pianoControl1.HighNoteID = 108;
-            resources.ApplyResources(this.pianoControl1, "pianoControl1");
-            this.pianoControl1.LowNoteID = 23;
-            this.pianoControl1.Name = "pianoControl1";
-            this.pianoControl1.NoteOnColor = System.Drawing.Color.SkyBlue;
-            this.pianoControl1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.pianoControl1.Scale = 20;
-            this.pianoControl1.zoom = 1F;
+            this.pnlLeftRoll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            resources.ApplyResources(this.pnlLeftRoll, "pnlLeftRoll");
+            this.pnlLeftRoll.Name = "pnlLeftRoll";
             // 
-            // trackBarX
+            // pnlMiddle
             // 
-            resources.ApplyResources(this.trackBarX, "trackBarX");
-            this.trackBarX.Maximum = 100;
-            this.trackBarX.Minimum = -100;
-            this.trackBarX.Name = "trackBarX";
-            this.trackBarX.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBarX.Value = 1;
-            this.trackBarX.Scroll += new System.EventHandler(this.trackBarX_Scroll);
+            this.pnlMiddle.Controls.Add(this.pnlPianoroll);
+            this.pnlMiddle.Controls.Add(this.pnlPiano);
+            resources.ApplyResources(this.pnlMiddle, "pnlMiddle");
+            this.pnlMiddle.Name = "pnlMiddle";
             // 
             // frmPianoTraining
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.pnlMiddle);
             this.Controls.Add(this.pnlRight);
             this.Controls.Add(this.pnlBottom);
-            this.Controls.Add(this.pnlScrollView);
             this.Controls.Add(this.pnlTop);
-            this.Controls.Add(this.pnlPiano);
             this.Name = "frmPianoTraining";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmPianoTraining_FormClosing);
             this.Load += new System.EventHandler(this.frmPianoTraining_Load);
@@ -340,9 +479,8 @@
             this.pnlDisplay.ResumeLayout(false);
             this.pnlDisplay.PerformLayout();
             this.pnlRight.ResumeLayout(false);
-            this.pnlRight.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarX)).EndInit();
+            this.pnlPianoroll.ResumeLayout(false);
+            this.pnlMiddle.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -371,7 +509,12 @@
         private System.Windows.Forms.Label lblKaraboss;
         private System.Windows.Forms.ComboBox CbTracks;
         private System.Windows.Forms.Panel pnlRight;
-        private System.Windows.Forms.TrackBar trackBarY;
-        private System.Windows.Forms.TrackBar trackBarX;
+        private System.Windows.Forms.Panel pnlPianoroll;
+        private System.Windows.Forms.Panel pnlLeftRoll;
+        private System.Windows.Forms.Panel pnlMiddle;
+        private System.Windows.Forms.Panel pnlLeftPiano;
+        private System.Windows.Forms.VScrollBar vScrollBarRoll;
+        private ColorSlider.ColorSlider colorSliderY;
+        private ColorSlider.ColorSlider colorSliderX;
     }
 }

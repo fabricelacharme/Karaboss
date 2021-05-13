@@ -499,7 +499,7 @@ namespace Karaboss
             pianoControl1.Scale = yScale;
 
             pianoRollControl1.zoomx = zoomx;
-            pianoControl1.zoom = zoomy;            
+            pianoControl1.Zoom = zoomy;            
             pianoControl1.Height = pianoControl1.totalLength;            
             pianoRollControl1.yScale = pianoControl1.Scale;
 
@@ -1072,9 +1072,9 @@ namespace Karaboss
 
                 float oldOffset = ((float)vScrollBar.Value / (float)vScrollBar.Maximum);
 
-                zoomy = pianoControl1.zoom;
+                zoomy = pianoControl1.Zoom;
                 zoomy += (e.Delta > 0 ? 0.1f : -0.1f);
-                pianoControl1.zoom = zoomy;
+                pianoControl1.Zoom = zoomy;
                 pianoControl1.Height = pianoControl1.totalLength;
 
                 pianoRollControl1.yScale = pianoControl1.Scale;
@@ -1300,7 +1300,7 @@ namespace Karaboss
                 pianoRollControl1.zoomx = zoomx;
                 tlControl1.zoom = zoomx;
 
-                pianoControl1.zoom = zoomy;
+                pianoControl1.Zoom = zoomy;
                 pianoControl1.Height = pianoControl1.totalLength;
 
                 pianoRollControl1.yScale = pianoControl1.Scale;

@@ -302,24 +302,32 @@ namespace Karaboss
 
                 #region right
 
-                pnlRight.Width = 80;
+                //pnlRight.Width = 80;
                 //pnlRight.Dock = DockStyle.Right;
-                pnlRight.Left = pnlScrollView.Width;
+                //pnlRight.Left = pnlScrollView.Width;
 
                 #endregion
+
+                #region  middle
+
+                //vPianoRollControl1.Dock = DockStyle.Fill;
+                vPianoRollControl1.Location = new Point(0, 0);
+
+                #endregion
+
 
                 #region bottom
                 // Piano
                 pnlPiano.Height = 150;
-                pnlPiano.Top = this.ClientSize.Height - pnlBottom.Height - pnlPiano.Height;                
-                pnlPiano.Width = pianoControl1.totalLength;
+                //pnlPiano.Top = this.ClientSize.Height - pnlBottom.Height - pnlPiano.Height;                
+                //pnlPiano.Width = pianoControl1.totalLength;
 
                 // Scrollview
-                pnlScrollView.Top = pnlTop.Height;                
-                pnlScrollView.Width = pnlPiano.Width;
-                pnlScrollView.Height = ClientSize.Height - pnlTop.Height - pnlPiano.Height - pnlBottom.Height;
+                //pnlScrollView.Top = pnlTop.Height;                
+                //pnlScrollView.Width = pnlPiano.Width;
+                //pnlScrollView.Height = ClientSize.Height - pnlTop.Height - pnlPiano.Height - pnlBottom.Height;
 
-                pianoControl1.Location = new Point(0, pnlRedPianoSep.Height);
+                //pianoControl1.Location = new Point(0, pnlRedPianoSep.Height);
                 pianoControl1.Orientation = Orientation.Horizontal;
                 pianoControl1.Size = new Size(pianoControl1.totalLength, pnlPiano.Height - pnlRedPianoSep.Height);
 
@@ -331,13 +339,13 @@ namespace Karaboss
                 pianoControl1.HighNoteID = vPianoRollControl1.HighNoteID = 108;
                 vPianoRollControl1.Sequence1 = sequence1;
                 vPianoRollControl1.zoomy = zoomy;
-                pianoControl1.zoom = zoomx;
+                pianoControl1.Zoom = zoomx;
                 
                 vPianoRollControl1.xScale = pianoControl1.Scale;
                 vPianoRollControl1.OffsetChanged += new Sanford.Multimedia.Midi.VPianoRoll.OffsetChangedEventHandler(vPianoRollControl1_OffsetChanged);
 
                 // Bars
-                HorizontalScroll.Visible = pnlPiano.Width > ClientSize.Width;
+                //HorizontalScroll.Visible = pnlPiano.Width > ClientSize.Width;
 
                 #endregion
 
@@ -879,17 +887,17 @@ namespace Karaboss
             
             this.VerticalScroll.Visible = false;
                       
-            pnlPiano.Width = pianoControl1.totalLength;
-            pnlPiano.Top = this.ClientSize.Height - pnlBottom.Height - pnlPiano.Height;
+            //pnlPiano.Width = pianoControl1.totalLength;
+            //pnlPiano.Top = this.ClientSize.Height - pnlBottom.Height - pnlPiano.Height;
 
-            HorizontalScroll.Visible = pnlPiano.Width > ClientSize.Width;
+            //HorizontalScroll.Visible = pnlPiano.Width > ClientSize.Width;
             
             // Music Cursor position
             positionHScrollBar.Width = pnlPiano.Width - positionHScrollBar.Left; 
 
-            pnlScrollView.Top = pnlTop.Height;
-            pnlScrollView.Width = pnlPiano.Width;
-            pnlScrollView.Height = ClientSize.Height - pnlTop.Height - pnlPiano.Height - pnlBottom.Height;
+            //pnlScrollView.Top = pnlTop.Height;
+            //pnlScrollView.Width = pnlPiano.Width;
+            //pnlScrollView.Height = ClientSize.Height - pnlTop.Height - pnlPiano.Height - pnlBottom.Height;
 
             int l = CbTracks.Left + CbTracks.Width + 20; //pnlDisplay.Left + pnlDisplay.Width + 20;
             if (l < ClientSize.Width/2)
@@ -898,7 +906,7 @@ namespace Karaboss
                 BtnPlay.Left = l;
 
             BtnStop.Left = BtnPlay.Left + BtnPlay.Width + 3;
-            lblKaraboss.Left = ClientSize.Width - lblKaraboss.Width - 3;
+            //lblKaraboss.Left = ClientSize.Width - lblKaraboss.Width - 3;
         }
 
         /// <summary>
@@ -1131,13 +1139,11 @@ namespace Karaboss
 
         #region trackbar
         private void trackBarX_Scroll(object sender, EventArgs e)
-        {
+        {                        
+            zoomx = pianoControl1.Zoom;
             
-            
-            zoomx = pianoControl1.zoom;
-            
-            zoomx = 1 + trackBarX.Value/(float)100;
-            pianoControl1.zoom = zoomx;
+            //zoomx = 1 + trackBarX.Value/(float)100;
+            pianoControl1.Zoom = zoomx;
             pianoControl1.Width = pianoControl1.totalLength;
 
             vPianoRollControl1.xScale = pianoControl1.Scale;
@@ -1155,5 +1161,33 @@ namespace Karaboss
         }
 
         #endregion
+
+        private void colorSliderX_Scroll(object sender, ScrollEventArgs e)
+        {
+         
+
+            //pnlPiano.Width = pianoControl1.totalLength;
+            //pnlScrollView.Width = pnlPiano.Width;
+
+            //pnlRight.Left = pnlScrollView.Width;
+        }
+
+        private void colorSliderY_Scroll(object sender, ScrollEventArgs e)
+        {
+
+        }
+
+        private void colorSliderX_ValueChanged(object sender, EventArgs e)
+        {
+            zoomx = pianoControl1.Zoom;
+
+            zoomx = (float)colorSliderX.Value / (float)50;
+            pianoControl1.Zoom = zoomx;
+            pianoControl1.Width = pianoControl1.totalLength;
+
+            vPianoRollControl1.xScale = pianoControl1.Scale;
+            vPianoRollControl1.Width = pianoControl1.Width;
+
+        }
     }
 }

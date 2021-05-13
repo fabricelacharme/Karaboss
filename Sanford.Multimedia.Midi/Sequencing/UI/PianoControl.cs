@@ -284,7 +284,7 @@ namespace Sanford.Multimedia.Midi.UI
         /// <summary>
         /// Sets or gets Zoom value
         /// </summary>
-        public float zoom
+        public float Zoom
         {
             get
             { return _zoom; }
