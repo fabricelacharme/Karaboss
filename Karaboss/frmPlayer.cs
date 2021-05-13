@@ -1689,7 +1689,7 @@ namespace Karaboss
                     btnMute1.Checked = false;                    
                                        
                     // Stop Channel : All notes off                                        
-                    sequencer1.stopper.AllSoundOff();
+                    sequencer1.AllSoundOff();
 
                     // Mute other TrackControls having same channel
                     MuteSomeTracks(sequence1.tracks[myLyric.melodytracknum].MidiChannel);
@@ -1981,7 +1981,7 @@ namespace Karaboss
                 btnMute1.Checked = false;                
 
                 // Stop Channel : All notes off                                        
-                sequencer1.stopper.AllSoundOff();
+                sequencer1.AllSoundOff();
 
                 // Mute other TrackControls having same channel
                 MuteSomeTracks(sequence1.tracks[myLyric.melodytracknum].MidiChannel);
@@ -5657,7 +5657,7 @@ namespace Karaboss
                 if (pTrack.Muted == false)
                 {
                     // Stop Channel : All notes off                                        
-                    sequencer1.stopper.AllSoundOff();                                        
+                    sequencer1.AllSoundOff();                                        
 
                     // Mute other TrackControls having same channel
                     MuteSomeTracks(nChannel);
@@ -5756,7 +5756,7 @@ namespace Karaboss
                 {
 
                     // Stop Channel : All notes off                                        
-                    sequencer1.stopper.AllSoundOff();
+                    sequencer1.AllSoundOff();
 
                     pTrack.Solo = true;
                     pTrack.Muted = false;

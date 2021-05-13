@@ -1086,7 +1086,7 @@ namespace Karaboss
             if (vPianoRollControl1 == null)
                 return;
 
-            sequencer1.stopper.AllSoundOff();
+            sequencer1.AllSoundOff();
             pianoControl1.Reset();
 
             tracknum = CbTracks.SelectedIndex;
