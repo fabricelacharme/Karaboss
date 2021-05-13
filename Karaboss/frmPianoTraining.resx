@@ -754,10 +754,10 @@
     <value>Microsoft Sans Serif, 6pt</value>
   </data>
   <data name="colorSliderY.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 321</value>
+    <value>0, 290</value>
   </data>
   <data name="colorSliderY.Size" type="System.Drawing.Size, System.Drawing">
-    <value>40, 40</value>
+    <value>40, 71</value>
   </data>
   <data name="colorSliderY.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>

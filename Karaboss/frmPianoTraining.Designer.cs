@@ -81,6 +81,8 @@
             // 
             resources.ApplyResources(this.vScrollBarRoll, "vScrollBarRoll");
             this.vScrollBarRoll.Name = "vScrollBarRoll";
+            this.vScrollBarRoll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBarRoll_Scroll);
+            this.vScrollBarRoll.ValueChanged += new System.EventHandler(this.vScrollBarRoll_ValueChanged);
             // 
             // vPianoRollControl1
             // 
@@ -227,12 +229,12 @@
             this.colorSliderX.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(140)))), ((int)(((byte)(180)))));
             this.colorSliderX.ForeColor = System.Drawing.Color.White;
             this.colorSliderX.LargeChange = new decimal(new int[] {
-            5,
+            1,
             0,
             0,
             0});
             this.colorSliderX.Maximum = new decimal(new int[] {
-            100,
+            20,
             0,
             0,
             0});
@@ -241,14 +243,15 @@
             0,
             0,
             0});
+            this.colorSliderX.MouseWheelBarPartitions = 20;
             this.colorSliderX.Name = "colorSliderX";
             this.colorSliderX.ScaleDivisions = new decimal(new int[] {
-            10,
+            1,
             0,
             0,
             0});
             this.colorSliderX.ScaleSubDivisions = new decimal(new int[] {
-            5,
+            1,
             0,
             0,
             0});
@@ -268,12 +271,11 @@
             this.colorSliderX.TickDivide = 0F;
             this.colorSliderX.TickStyle = System.Windows.Forms.TickStyle.None;
             this.colorSliderX.Value = new decimal(new int[] {
-            50,
+            10,
             0,
             0,
             0});
             this.colorSliderX.ValueChanged += new System.EventHandler(this.colorSliderX_ValueChanged);
-            this.colorSliderX.Scroll += new System.Windows.Forms.ScrollEventHandler(this.colorSliderX_Scroll);
             // 
             // CbTracks
             // 
@@ -389,12 +391,12 @@
             this.colorSliderY.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(140)))), ((int)(((byte)(180)))));
             this.colorSliderY.ForeColor = System.Drawing.Color.White;
             this.colorSliderY.LargeChange = new decimal(new int[] {
-            5,
+            1,
             0,
             0,
             0});
             this.colorSliderY.Maximum = new decimal(new int[] {
-            100,
+            1000,
             0,
             0,
             0});
@@ -403,15 +405,16 @@
             0,
             0,
             0});
+            this.colorSliderY.MouseWheelBarPartitions = 1000;
             this.colorSliderY.Name = "colorSliderY";
             this.colorSliderY.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.colorSliderY.ScaleDivisions = new decimal(new int[] {
-            10,
+            1,
             0,
             0,
             0});
             this.colorSliderY.ScaleSubDivisions = new decimal(new int[] {
-            5,
+            1,
             0,
             0,
             0});
@@ -431,11 +434,11 @@
             this.colorSliderY.TickDivide = 0F;
             this.colorSliderY.TickStyle = System.Windows.Forms.TickStyle.None;
             this.colorSliderY.Value = new decimal(new int[] {
-            50,
+            500,
             0,
             0,
             0});
-            this.colorSliderY.Scroll += new System.Windows.Forms.ScrollEventHandler(this.colorSliderY_Scroll);
+            this.colorSliderY.ValueChanged += new System.EventHandler(this.colorSliderY_ValueChanged);
             // 
             // pnlPianoroll
             // 
