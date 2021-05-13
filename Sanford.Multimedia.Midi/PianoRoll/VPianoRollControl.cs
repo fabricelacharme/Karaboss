@@ -64,9 +64,9 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                      System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
                      true);
             }
-        }
+        }       
         MyPanel pnlCanvas;
-
+        
 
         #region properties
 
@@ -327,15 +327,16 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
         //private ContextMenu prContextMenu;
 
         public VPianoRollControl()
-        {
-            
+        {            
+
             _zoomy = 1.0f;   // valeur de zoom
             resolution = 4;  // 4 incréments par noire
-            channel = 0;
+            channel = 0;    
 
-            pnlCanvas = new MyPanel();
+            pnlCanvas = new MyPanel();            
+            
             pnlCanvas.Location = new Point(0, 0);
-            pnlCanvas.Size = new Size(40, 40);
+            pnlCanvas.Size = new Size(40, 80);
             pnlCanvas.BackColor = Color.White;
             pnlCanvas.Dock = DockStyle.Fill;
 
@@ -356,7 +357,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             keysNumber = 1 + highNoteID - lowNoteID; // 128 or less               
         }
 
-      
+
 
         public void Redraw()
         {
@@ -440,7 +441,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             {
                 StrokePen = new Pen(Color.DarkGreen, 2);
                 FillBrush = new SolidBrush(Color.LightGreen);
-                duration = sequence1.Time.Quarter / 4;
+                //duration = sequence1.Time.Quarter / 4;
             }
             else
             {
@@ -515,9 +516,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             }
 
             rect = new Rectangle(X, Y, W, H);
-
-            //g.DrawRectangle(StrokePen, X, Y, W, H);
-            //g.FillRectangle(FillBrush, rect);
+            
             // Draw rectangles with rounded corners
             RectRoutines.DrawRoundedRectangle(g, StrokePen, rect, 5);
             RectRoutines.FillRoundedRectangle(g, FillBrush, rect, 5);
@@ -643,10 +642,9 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
         // Here is the code that draws the grid.
         private void DrawGrid(Graphics g, Rectangle clip)
         {
-            int step = 0;
-            int timespermeasure;
+            int step = 0;           
 
-            timespermeasure = sequence1.Numerator;             // nombre de beats par mesures
+            int timespermeasure = sequence1.Numerator;             // nombre de beats par mesures
             float TimeUnit = Sequence1.Denominator;            // 2 = blanche, 4 = noire, 8 = croche, 16 = doucle croche, 32 triple croche
                       
             Pen mesureSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF676767"), 1);
@@ -671,7 +669,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             Font fontMeasure = new Font("Arial", 20, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontInterval = new Font("Arial", 15, FontStyle.Regular, GraphicsUnit.Pixel);
 
-            int pico = 2;
+            int pico = 0;
             
             do
             {
@@ -687,27 +685,28 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                     
 
                     if (step % (timespermeasure * resolution) == 0)        // every measure
-                    {
-                        pico = 2;
+                    {                        
                         // Display line
                         g.DrawLine(mesureSeparatorPen, p1, p2);
                         // Display measure number
-                        NumMeasure = 1 + (int)f_n / measurelen;
+                        NumMeasure = 1 + (int)(f_n / measurelen);
                         g.DrawString("Measure " + NumMeasure, fontMeasure, textBrush, p1.X + 5, p1.Y - fontMeasure.Height);                        
                     }
                     else if (step % (resolution) == 0)                       // every time or beat
-                    {
+                    {                        
                         g.DrawLine(beatSeparatorPen, p1, p2);
-                        NumMeasure = 1 + (int)f_n / measurelen;
-                        g.DrawString(NumMeasure + "." + pico, fontInterval, textBrush, p1.X + 5, p1.Y - fontInterval.Height);
-                        pico++;
+                        
+                        NumMeasure = 1 + (int)(f_n / measurelen);                       
+                        pico = 1 + sequence1.Numerator - (int)((NumMeasure * measurelen - f_n) / (measurelen /sequence1.Numerator));
+
+                        g.DrawString(NumMeasure + "." + pico, fontInterval, textBrush, p1.X + 5, p1.Y - fontInterval.Height);                       
                     }
                     else
                     {
                         g.DrawLine(intervalSeparatorPen, p1, p2);          // every resolution
                     }
-                }
-
+                } 
+             
                 // increment = beat divisé par la resolution
                 // Tous les resolution, on a un beat
                 // tous les timepermeasure on a une nouvelle mesure 
@@ -722,9 +721,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
 
           
         }
-
-        #endregion Canvas
-     
+             
     
         private void pnlCanvas_MouseLeave(object sender, EventArgs e)
         {
@@ -774,6 +771,8 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             }
 
         }
+
+        #endregion Canvas
 
         private void MovePanel(int Delta)
         {
