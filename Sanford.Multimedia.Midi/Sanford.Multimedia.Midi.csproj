@@ -203,9 +203,6 @@
     <Compile Include="PianoRoll\VPianoRollControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="PianoRoll\VTimeLine.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Processing\ChannelChaser.cs" />
     <Compile Include="Clocks\IClock.cs">
       <SubType>Code</SubType>

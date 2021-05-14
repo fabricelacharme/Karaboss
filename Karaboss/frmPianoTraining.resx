@@ -127,7 +127,7 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="vScrollBarRoll.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1053, 0</value>
+    <value>1093, 0</value>
   </data>
   <data name="vScrollBarRoll.Size" type="System.Drawing.Size, System.Drawing">
     <value>17, 211</value>
@@ -175,10 +175,10 @@
     <value>Fill</value>
   </data>
   <data name="pnlScrollView.Location" type="System.Drawing.Point, System.Drawing">
-    <value>40, 0</value>
+    <value>0, 0</value>
   </data>
   <data name="pnlScrollView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1070, 211</value>
+    <value>1110, 211</value>
   </data>
   <data name="pnlScrollView.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -1005,18 +1005,6 @@
   <data name="&gt;&gt;pnlRight.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="&gt;&gt;pnlLeftRoll.Name" xml:space="preserve">
-    <value>pnlLeftRoll</value>
-  </data>
-  <data name="&gt;&gt;pnlLeftRoll.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlLeftRoll.Parent" xml:space="preserve">
-    <value>pnlPianoroll</value>
-  </data>
-  <data name="&gt;&gt;pnlLeftRoll.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="pnlPianoroll.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
@@ -1041,42 +1029,6 @@
   <data name="&gt;&gt;pnlPianoroll.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;vTimeLine1.Name" xml:space="preserve">
-    <value>vTimeLine1</value>
-  </data>
-  <data name="&gt;&gt;vTimeLine1.Type" xml:space="preserve">
-    <value>Sanford.Multimedia.Midi.PianoRoll.VTimeLine, Sanford.Multimedia.Midi, Version=6.1.0.4, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;vTimeLine1.Parent" xml:space="preserve">
-    <value>pnlLeftRoll</value>
-  </data>
-  <data name="&gt;&gt;vTimeLine1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="pnlLeftRoll.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Left</value>
-  </data>
-  <data name="pnlLeftRoll.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="pnlLeftRoll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>40, 211</value>
-  </data>
-  <data name="pnlLeftRoll.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;pnlLeftRoll.Name" xml:space="preserve">
-    <value>pnlLeftRoll</value>
-  </data>
-  <data name="&gt;&gt;pnlLeftRoll.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlLeftRoll.Parent" xml:space="preserve">
-    <value>pnlPianoroll</value>
-  </data>
-  <data name="&gt;&gt;pnlLeftRoll.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="pnlMiddle.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
@@ -1099,33 +1051,6 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pnlMiddle.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="vTimeLine1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="vTimeLine1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="vTimeLine1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>40, 211</value>
-  </data>
-  <data name="vTimeLine1.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="vTimeLine1.Text" xml:space="preserve">
-    <value>vTimeLine1</value>
-  </data>
-  <data name="&gt;&gt;vTimeLine1.Name" xml:space="preserve">
-    <value>vTimeLine1</value>
-  </data>
-  <data name="&gt;&gt;vTimeLine1.Type" xml:space="preserve">
-    <value>Sanford.Multimedia.Midi.PianoRoll.VTimeLine, Sanford.Multimedia.Midi, Version=6.1.0.4, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;vTimeLine1.Parent" xml:space="preserve">
-    <value>pnlLeftRoll</value>
-  </data>
-  <data name="&gt;&gt;vTimeLine1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

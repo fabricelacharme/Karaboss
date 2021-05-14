@@ -105,6 +105,7 @@ namespace Karaboss
         {
             int offset = Convert.ToInt32(sequencer1.Position * vPianoRollControl1.yScale);
             vPianoRollControl1.OffsetY = offset;
+            //vTimeLine1.OffsetY = offset;
         }
 
         /// <summary>
@@ -267,7 +268,7 @@ namespace Karaboss
 
                 #region positionHscrollBar
                 // Music Cursor position
-                positionHScrollBar.Left = pnlLeftRoll.Width;                
+                positionHScrollBar.Left = 40; //pnlLeftRoll.Width;                
                 positionHScrollBar.Width = pnlPiano.Width - positionHScrollBar.Left;
                 positionHScrollBar.Maximum = totaltimemeasures + _measurelen;
                 positionHScrollBar.Minimum = _measurelen;
@@ -350,8 +351,8 @@ namespace Karaboss
                 //HorizontalScroll.Visible = pnlPiano.Width > ClientSize.Width;
 
 
-                vTimeLine1.Sequence1 = sequence1;
-                vTimeLine1.zoomy = zoomy;
+                //vTimeLine1.Sequence1 = sequence1;
+                //vTimeLine1.zoomy = zoomy;
 
                 #endregion
 
@@ -766,7 +767,10 @@ namespace Karaboss
                     if (newvalue > positionHScrollBar.Maximum) newvalue = (int)positionHScrollBar.Maximum;
                     positionHScrollBar.Value = newvalue;
                     vScrollBarRoll.Value = newvalue;
-                    newstart = (int)(positionHScrollBar.Value - positionHScrollBar.Minimum); 
+                    newstart = (int)(positionHScrollBar.Value - positionHScrollBar.Minimum);
+
+                    //vTimeLine1.OffsetY = value;
+
                     break;
             }
         }
