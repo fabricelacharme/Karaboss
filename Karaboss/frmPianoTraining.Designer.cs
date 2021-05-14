@@ -59,6 +59,7 @@
             this.pnlPianoroll = new System.Windows.Forms.Panel();
             this.pnlLeftRoll = new System.Windows.Forms.Panel();
             this.pnlMiddle = new System.Windows.Forms.Panel();
+            this.vTimeLine1 = new Sanford.Multimedia.Midi.PianoRoll.VTimeLine();
             this.pnlScrollView.SuspendLayout();
             this.pnlPiano.SuspendLayout();
             this.pnlTop.SuspendLayout();
@@ -66,6 +67,7 @@
             this.pnlDisplay.SuspendLayout();
             this.pnlRight.SuspendLayout();
             this.pnlPianoroll.SuspendLayout();
+            this.pnlLeftRoll.SuspendLayout();
             this.pnlMiddle.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -450,6 +452,7 @@
             // pnlLeftRoll
             // 
             this.pnlLeftRoll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlLeftRoll.Controls.Add(this.vTimeLine1);
             resources.ApplyResources(this.pnlLeftRoll, "pnlLeftRoll");
             this.pnlLeftRoll.Name = "pnlLeftRoll";
             // 
@@ -459,6 +462,16 @@
             this.pnlMiddle.Controls.Add(this.pnlPiano);
             resources.ApplyResources(this.pnlMiddle, "pnlMiddle");
             this.pnlMiddle.Name = "pnlMiddle";
+            // 
+            // vTimeLine1
+            // 
+            this.vTimeLine1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            resources.ApplyResources(this.vTimeLine1, "vTimeLine1");
+            this.vTimeLine1.Name = "vTimeLine1";
+            this.vTimeLine1.OffsetY = 0;
+            this.vTimeLine1.Resolution = 4;
+            this.vTimeLine1.Sequence1 = null;
+            this.vTimeLine1.yScale = 0.1D;
             // 
             // frmPianoTraining
             // 
@@ -483,6 +496,7 @@
             this.pnlDisplay.PerformLayout();
             this.pnlRight.ResumeLayout(false);
             this.pnlPianoroll.ResumeLayout(false);
+            this.pnlLeftRoll.ResumeLayout(false);
             this.pnlMiddle.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -519,5 +533,6 @@
         private System.Windows.Forms.VScrollBar vScrollBarRoll;
         private ColorSlider.ColorSlider colorSliderY;
         private ColorSlider.ColorSlider colorSliderX;
+        private Sanford.Multimedia.Midi.PianoRoll.VTimeLine vTimeLine1;
     }
 }

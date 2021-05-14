@@ -316,16 +316,12 @@ namespace Karaboss
 
                 #region right
 
-                //pnlRight.Width = 80;
-                //pnlRight.Dock = DockStyle.Right;
-                //pnlRight.Left = pnlScrollView.Width;
-
                 #endregion
 
                 #region  middle
 
                 vPianoRollControl1.Dock = DockStyle.Fill;
-                //vPianoRollControl1.Location = new Point(0, 0);
+          
 
                 #endregion
 
@@ -333,15 +329,7 @@ namespace Karaboss
                 #region bottom
                 // Piano
                 pnlPiano.Height = 150;
-                //pnlPiano.Top = this.ClientSize.Height - pnlBottom.Height - pnlPiano.Height;                
-                //pnlPiano.Width = pianoControl1.totalLength;
-
-                // Scrollview
-                //pnlScrollView.Top = pnlTop.Height;                
-                //pnlScrollView.Width = pnlPiano.Width;
-                //pnlScrollView.Height = ClientSize.Height - pnlTop.Height - pnlPiano.Height - pnlBottom.Height;
-
-                //pianoControl1.Location = new Point(0, pnlRedPianoSep.Height);
+           
                 pianoControl1.Orientation = Orientation.Horizontal;
                 pianoControl1.Size = new Size(pianoControl1.totalLength, pnlPiano.Height - pnlRedPianoSep.Height);
 
@@ -360,6 +348,10 @@ namespace Karaboss
 
                 // Bars
                 //HorizontalScroll.Visible = pnlPiano.Width > ClientSize.Width;
+
+
+                vTimeLine1.Sequence1 = sequence1;
+                vTimeLine1.zoomy = zoomy;
 
                 #endregion
 
