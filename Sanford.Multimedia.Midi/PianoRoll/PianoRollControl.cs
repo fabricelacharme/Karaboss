@@ -92,6 +92,9 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         #region properties
 
         private int _TimeLineHeight = 40;
+        /// <summary>
+        /// Height of time line
+        /// </summary>
         public int TimeLineY
         {
             get
@@ -232,7 +235,8 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             set
             {
                 sequence1 = value;
-                measurelen = sequence1.Time.Measure;              
+                if (sequence1 != null && sequence1.Time != null)
+                    measurelen = sequence1.Time.Measure;
             }
         }
 
@@ -321,7 +325,8 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                 if (value != offsetx)
                 {
                     offsetx = value;
-                    OffsetChanged(this, offsetx);
+                    if (OffsetChanged != null)
+                        OffsetChanged(this, offsetx);
                     pnlCanvas.Invalidate();
                 }
             }
@@ -1056,7 +1061,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                         MyMouseDown(sender, e);
 
                     int X = e.X + offsetx;
-                    int Y = e.Y;
+                    int Y = e.Y - _TimeLineHeight;          // Offset for time line
                     int nnote = highNoteID - Y / yscale;
                     int starttime = (int)(X / xScale);
 
@@ -1135,6 +1140,8 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                         // Temps dans la mesure
                         int rest = starttime % measurelen;                        
                         float timeinmeasure = rest / sequence1.Time.Quarter;
+
+                        //timeinmeasure = sequence1.Numerator - (int)((nummeasure * measurelen - starttime) / (measurelen / sequence1.Numerator));
 
                         // fraction de temps
                         float ffraction = (float)sequence1.Time.Quarter / (float)resolution;                    // Lenght of the smallest division: Lenght of measure divided by the resolution
@@ -1276,6 +1283,8 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                         // Temps dans la mesure
                         int rest = starttime % measurelen;
                         int timeinmeasure = rest / sequence1.Time.Quarter;
+
+                        //timeinmeasure = sequence1.Numerator - (int)((nummeasure * measurelen - starttime) / (measurelen / sequence1.Numerator));
 
                         // fraction de temps
                         int fraction = sequence1.Time.Quarter / resolution;
@@ -1423,7 +1432,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     // Propose note Editing or deleting
                     #region cursor vsplit or vcross
                     int X = e.X + offsetx;
-                    int Y = e.Y - _TimeLineHeight;
+                    int Y = e.Y - _TimeLineHeight;      // Offset for time line
 
                     int nnote = highNoteID - Y / yscale;
                     int starttime = (int)(X / xScale);
@@ -1435,7 +1444,11 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     int nummeasure = 1 + starttime / measurelen;
                     // Temps dans la mesure
                     int rest = starttime % measurelen;
-                    int timeinmeasure = rest / sequence1.Time.Quarter;
+                    
+                    
+                    int timeinmeasure = 1 + rest / sequence1.Time.Quarter;
+
+                    timeinmeasure = sequence1.Numerator - (int)((nummeasure * measurelen - starttime) / (measurelen / sequence1.Numerator));
 
                     displayNoteValue(nnote, nummeasure, timeinmeasure);
 
@@ -1591,7 +1604,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     // Change cursor to vsplit if on bounds
                     #region cursor vsplit or vcross
                     int X = e.X + offsetx;
-                    int Y = e.Y - _TimeLineHeight;
+                    int Y = e.Y - _TimeLineHeight;      // Offset for time line
 
                     int nnote = highNoteID - Y / yscale;
                     int starttime = (int)(X / xScale);
@@ -1603,7 +1616,10 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     int nummeasure = 1 + starttime / measurelen;
                     // Temps dans la mesure
                     int rest = starttime % measurelen;
-                    int timeinmeasure = rest / sequence1.Time.Quarter;
+                    
+                    int timeinmeasure = 1 + rest / sequence1.Time.Quarter;
+
+                    timeinmeasure = sequence1.Numerator - (int)((nummeasure * measurelen - starttime) / (measurelen / sequence1.Numerator));
 
                     displayNoteValue(nnote, nummeasure, timeinmeasure);
 
@@ -1636,7 +1652,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     // Propose note Editing or deleting
                     #region note editing or deleting
                     int X = e.X + offsetx;
-                    int Y = e.Y;
+                    int Y = e.Y - TimeLineY;        // Offset for time line
 
                     int nnote = highNoteID - Y / yscale;
                     int starttime = (int)(X / xScale);
@@ -2130,8 +2146,8 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         #region vertical bar
         public void setTimeVLinePos(int pos)
         {
-            TimeVLine.Height = pnlCanvas.Height;
-            TimeVLine.Location = new Point(pos, 0);
+            TimeVLine.Height = pnlCanvas.Height - _TimeLineHeight;
+            TimeVLine.Location = new Point(pos, _TimeLineHeight);
         }        
         
         /// <summary>
@@ -2142,9 +2158,9 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         {
             TimeVLine = new Panel();
             TimeVLine.Enabled = false;
-            TimeVLine.Height = pnlCanvas.Height;
+            TimeVLine.Height = pnlCanvas.Height - _TimeLineHeight;
             TimeVLine.Width = 2;
-            TimeVLine.Location = new Point(pos, 0);
+            TimeVLine.Location = new Point(pos, _TimeLineHeight);
             TimeVLine.BackColor = Color.Red;
             pnlCanvas.Controls.Add(TimeVLine);
             TimeVLine.BringToFront();

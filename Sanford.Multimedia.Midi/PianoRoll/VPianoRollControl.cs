@@ -291,7 +291,8 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                 if (value != offsety)
                 {
                     offsety = value;
-                    OffsetChanged(this, offsety);
+                    if (OffsetChanged != null)
+                        OffsetChanged(this, offsety);
                     pnlCanvas.Invalidate();
                 }
             }
