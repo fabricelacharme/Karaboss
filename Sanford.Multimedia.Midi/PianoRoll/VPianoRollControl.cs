@@ -47,9 +47,11 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
 
     public partial class VPianoRollControl : Control
     {
-
+        #region events
         public event OffsetChangedEventHandler OffsetChanged;
         public event MouseMoveEventHandler OnMouseMoved;
+
+        #endregion
 
         /// <summary>
         /// Double buffer panel
@@ -64,8 +66,9 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                      System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
                      true);
             }
-        }       
-        MyPanel pnlCanvas;
+        }
+
+        public Point CurrentPoint;
 
 
         #region properties
@@ -122,13 +125,13 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
         }
     
 
-        private int totalwidth;
+        private int _totalwidth;
         /// <summary>
         /// Gets Width of control
         /// </summary>
         public int totalWidth
         {
-            get { return totalwidth; }
+            get { return _totalwidth; }
         }
 
         private float _zoomy = 1.0f;    // zoom for vertical
@@ -305,12 +308,11 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
         }
     
         #endregion properties
-
-        public Point CurrentPoint;
-        
-
+                
 
         #region private
+
+        private MyPanel pnlCanvas;
 
         // Notes : MIDI maxi = 0 to 127 (C0 to G9)
         // Not all 128 notes taken : 23 to 108 = 86 notes
@@ -319,40 +321,30 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
 
         private int measurelen = 0;
         private int keysNumber;
-        //private int curTrack = 0;
         private float lastPosition = 0;
         private Track track1;
         private int channel;        
         
-        //private MidiNote note;
-        //private MidiNote originNote;
-
         private Point aPos;
         private bool bMoveScore;
-       // private int MoveScoreDirection;
         private Point previousPosition;
         private int previousDelta;
-        //private Panel TimeVLine;
-
-        #endregion
-
 
         private static readonly string[] NotesTable =
         {
             "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "B#"
         };
 
-        //private ContextMenu prContextMenu;
+        #endregion
+        
 
         public VPianoRollControl()
         {            
-
             _zoomy = 1.0f;   // valeur de zoom
             resolution = 4;  // 4 incréments par noire
             channel = 0;    
 
-            pnlCanvas = new MyPanel();            
-            
+            pnlCanvas = new MyPanel();                        
             pnlCanvas.Location = new Point(0, 0);
             pnlCanvas.Size = new Size(40, 80);
             pnlCanvas.BackColor = Color.White;
@@ -571,14 +563,14 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             
             H = clip.Height;
             
-            totalwidth = (int)((1 + highNoteID - lowNoteID) * xscale);
+            _totalwidth = (int)((1 + highNoteID - lowNoteID) * xscale);
 
             // ==========================
             // Draw Timeline background color
             // ========================== 
             FillPen = new Pen(TimeLineColor);
             
-            // Gray rectangle
+            // Gray rectangle left
             g.DrawRectangle(FillPen, clip.X, clip.Y, w, H);
             rect = new Rectangle(clip.X, clip.Y, w, H);
             FillBrush = new SolidBrush(TimeLineColor);
@@ -590,12 +582,13 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             Point p2 = new Point(_TimeLineWidth - 2, H);
             g.DrawLine(FillPen, p1, p2);
 
+
             // ==========================
             // Draw Background color : grey
             // ==========================            
             FillPen = new Pen(whiteKeysColor);
-            g.DrawRectangle(FillPen, clip.X + w, clip.Y, totalwidth, H);
-            rect = new Rectangle(clip.X + w, clip.Y, totalwidth, H);
+            g.DrawRectangle(FillPen, clip.X + w, clip.Y, _totalwidth, H);
+            rect = new Rectangle(clip.X + w, clip.Y, _totalwidth, H);
             FillBrush = new SolidBrush(whiteKeysColor);
             g.FillRectangle(FillBrush, rect);
 
@@ -675,8 +668,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
         private void DrawGrid(Graphics g, Rectangle clip)
         {
             int step = 0;           
-            int w = _TimeLineWidth;  // bande verticale à gauche pour afficher les mesures et intervalles
-            //int blacklinew = 3;
+            int w = _TimeLineWidth;  // bande verticale à gauche pour afficher les mesures et intervalles            
 
             int timespermeasure = sequence1.Numerator;             // nombre de beats par mesures
             float TimeUnit = Sequence1.Denominator;            // 2 = blanche, 4 = noire, 8 = croche, 16 = doucle croche, 32 triple croche
@@ -695,7 +687,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             float f_beat = (float)quarter * 4 / TimeUnit;       
             float f_increment = f_beat / resolution;
 
-            totalwidth = w + (int)((1 + highNoteID - lowNoteID) * xscale);
+            _totalwidth = w + (int)((1 + highNoteID - lowNoteID) * xscale);
             int PH = pnlCanvas.Height;
 
             // Measure number display
@@ -703,7 +695,6 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             SolidBrush textBrush = new SolidBrush(Color.White);
             Font fontMeasure = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontInterval = new Font("Arial", 10, FontStyle.Regular, GraphicsUnit.Pixel);
-
             int pico = 0;
             
             do
@@ -711,7 +702,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                 int y1 = PH - (int)(f_n * yscale);
                 int y2 = y1;
                 int x1 = w;
-                int x2 = totalwidth;
+                int x2 = _totalwidth;
 
                 if (y1 >= clip.Y && y1 <= clip.Y + clip.Height)
                 {
@@ -736,7 +727,8 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
 
                     }
                     else if (step % (resolution) == 0)                       // every time or beat
-                    {                        
+                    {
+                        // Display line
                         g.DrawLine(beatSeparatorPen, p1, p2);
 
                         // Display beat number
@@ -827,7 +819,6 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             int newval = OffsetY + Delta;
             if (newval < 0) newval = 0;
             OffsetY = newval;
-            //OffsetChanged(this, newval);
         }
 
         private void ResetMovePanel()

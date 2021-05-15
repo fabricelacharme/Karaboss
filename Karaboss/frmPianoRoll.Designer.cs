@@ -32,48 +32,51 @@ namespace Karaboss
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPianoRoll));
             this.pnlTop = new System.Windows.Forms.Panel();
-            this.pnlDisplay = new System.Windows.Forms.Panel();
-            this.lblElapsed = new System.Windows.Forms.Label();
-            this.lblPercent = new System.Windows.Forms.Label();
-            this.lblDuration = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.lblTempo = new System.Windows.Forms.Label();
-            this.btnTempoMinus = new System.Windows.Forms.Button();
-            this.lblTempoValue = new System.Windows.Forms.Label();
-            this.btnTempoPlus = new System.Windows.Forms.Button();
             this.CbResolution = new System.Windows.Forms.ComboBox();
             this.lblEdit = new System.Windows.Forms.Label();
             this.lblSaisieNotes = new System.Windows.Forms.Label();
-            this.BtnStop = new System.Windows.Forms.Button();
-            this.BtnPlay = new System.Windows.Forms.Button();
             this.positionHScrollBar = new ColorSlider.ColorSlider();
             this.lblNote = new System.Windows.Forms.Label();
             this.CbTracks = new System.Windows.Forms.ComboBox();
             this.lblPointer = new System.Windows.Forms.Label();
             this.lblPen = new System.Windows.Forms.Label();
+            this.pnlDisplay = new System.Windows.Forms.Panel();
+            this.lblElapsed = new System.Windows.Forms.Label();
+            this.lblPercent = new System.Windows.Forms.Label();
+            this.lblDuration = new System.Windows.Forms.Label();
+            this.lblTempo = new System.Windows.Forms.Label();
+            this.btnTempoMinus = new System.Windows.Forms.Button();
+            this.lblTempoValue = new System.Windows.Forms.Label();
+            this.btnTempoPlus = new System.Windows.Forms.Button();
+            this.BtnStop = new System.Windows.Forms.Button();
+            this.BtnPlay = new System.Windows.Forms.Button();
             this.pnlMiddle = new System.Windows.Forms.Panel();
             this.pnlScrollView = new System.Windows.Forms.Panel();
+            this.pianoRollControl2 = new Sanford.Multimedia.Midi.PianoRoll.PianoRollControl();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlLeft = new System.Windows.Forms.Panel();
             this.pnlPiano = new System.Windows.Forms.Panel();
+            this.pnlPianoTop = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.pnlBottom = new System.Windows.Forms.Panel();
+            this.pianoControl2 = new Sanford.Multimedia.Midi.UI.PianoControl();
             this.pnlTop.SuspendLayout();
             this.pnlDisplay.SuspendLayout();
             this.pnlMiddle.SuspendLayout();
+            this.pnlScrollView.SuspendLayout();
+            this.pnlLeft.SuspendLayout();
+            this.pnlPiano.SuspendLayout();
+            this.pnlBottom.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlTop
             // 
             this.pnlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.pnlTop.Controls.Add(this.pnlDisplay);
             this.pnlTop.Controls.Add(this.label1);
-            this.pnlTop.Controls.Add(this.lblTempo);
-            this.pnlTop.Controls.Add(this.btnTempoMinus);
-            this.pnlTop.Controls.Add(this.lblTempoValue);
-            this.pnlTop.Controls.Add(this.btnTempoPlus);
             this.pnlTop.Controls.Add(this.CbResolution);
             this.pnlTop.Controls.Add(this.lblEdit);
             this.pnlTop.Controls.Add(this.lblSaisieNotes);
-            this.pnlTop.Controls.Add(this.BtnStop);
-            this.pnlTop.Controls.Add(this.BtnPlay);
             this.pnlTop.Controls.Add(this.positionHScrollBar);
             this.pnlTop.Controls.Add(this.lblNote);
             this.pnlTop.Controls.Add(this.CbTracks);
@@ -84,57 +87,6 @@ namespace Karaboss
             this.pnlTop.Name = "pnlTop";
             this.pnlTop.Size = new System.Drawing.Size(1117, 100);
             this.pnlTop.TabIndex = 0;
-            // 
-            // pnlDisplay
-            // 
-            this.pnlDisplay.BackColor = System.Drawing.Color.Black;
-            this.pnlDisplay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlDisplay.Controls.Add(this.lblElapsed);
-            this.pnlDisplay.Controls.Add(this.lblPercent);
-            this.pnlDisplay.Controls.Add(this.lblDuration);
-            this.pnlDisplay.Location = new System.Drawing.Point(384, 3);
-            this.pnlDisplay.Name = "pnlDisplay";
-            this.pnlDisplay.Size = new System.Drawing.Size(200, 32);
-            this.pnlDisplay.TabIndex = 37;
-            // 
-            // lblElapsed
-            // 
-            this.lblElapsed.BackColor = System.Drawing.Color.Transparent;
-            this.lblElapsed.Font = new System.Drawing.Font("Consolas", 12F);
-            this.lblElapsed.ForeColor = System.Drawing.Color.White;
-            this.lblElapsed.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblElapsed.Location = new System.Drawing.Point(1, 6);
-            this.lblElapsed.Name = "lblElapsed";
-            this.lblElapsed.Size = new System.Drawing.Size(60, 19);
-            this.lblElapsed.TabIndex = 2;
-            this.lblElapsed.Text = "00:00";
-            this.lblElapsed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblPercent
-            // 
-            this.lblPercent.AutoSize = true;
-            this.lblPercent.BackColor = System.Drawing.Color.Transparent;
-            this.lblPercent.Font = new System.Drawing.Font("Consolas", 8F);
-            this.lblPercent.ForeColor = System.Drawing.Color.White;
-            this.lblPercent.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblPercent.Location = new System.Drawing.Point(91, 10);
-            this.lblPercent.Name = "lblPercent";
-            this.lblPercent.Size = new System.Drawing.Size(19, 13);
-            this.lblPercent.TabIndex = 8;
-            this.lblPercent.Text = "0%";
-            // 
-            // lblDuration
-            // 
-            this.lblDuration.BackColor = System.Drawing.Color.Transparent;
-            this.lblDuration.Font = new System.Drawing.Font("Consolas", 12F);
-            this.lblDuration.ForeColor = System.Drawing.Color.White;
-            this.lblDuration.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblDuration.Location = new System.Drawing.Point(142, 6);
-            this.lblDuration.Name = "lblDuration";
-            this.lblDuration.Size = new System.Drawing.Size(60, 19);
-            this.lblDuration.TabIndex = 7;
-            this.lblDuration.Text = "00:00";
-            this.lblDuration.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label1
             // 
@@ -150,56 +102,6 @@ namespace Karaboss
             this.label1.TabIndex = 30;
             this.label1.Text = "K A R A B O S S";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblTempo
-            // 
-            this.lblTempo.BackColor = System.Drawing.Color.Black;
-            this.lblTempo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblTempo.ForeColor = System.Drawing.Color.White;
-            this.lblTempo.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblTempo.Location = new System.Drawing.Point(208, 3);
-            this.lblTempo.Name = "lblTempo";
-            this.lblTempo.Size = new System.Drawing.Size(165, 32);
-            this.lblTempo.TabIndex = 29;
-            this.lblTempo.Text = "Tempo: 750000 - BPM: 85";
-            this.lblTempo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnTempoMinus
-            // 
-            this.btnTempoMinus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
-            this.btnTempoMinus.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnTempoMinus.Location = new System.Drawing.Point(176, 3);
-            this.btnTempoMinus.Name = "btnTempoMinus";
-            this.btnTempoMinus.Size = new System.Drawing.Size(32, 32);
-            this.btnTempoMinus.TabIndex = 28;
-            this.btnTempoMinus.Text = "-";
-            this.btnTempoMinus.UseVisualStyleBackColor = true;
-            this.btnTempoMinus.Click += new System.EventHandler(this.btnTempoMinus_Click);
-            // 
-            // lblTempoValue
-            // 
-            this.lblTempoValue.BackColor = System.Drawing.Color.Black;
-            this.lblTempoValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblTempoValue.ForeColor = System.Drawing.Color.White;
-            this.lblTempoValue.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblTempoValue.Location = new System.Drawing.Point(112, 3);
-            this.lblTempoValue.Name = "lblTempoValue";
-            this.lblTempoValue.Size = new System.Drawing.Size(64, 32);
-            this.lblTempoValue.TabIndex = 27;
-            this.lblTempoValue.Text = "100%";
-            this.lblTempoValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnTempoPlus
-            // 
-            this.btnTempoPlus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
-            this.btnTempoPlus.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnTempoPlus.Location = new System.Drawing.Point(80, 3);
-            this.btnTempoPlus.Name = "btnTempoPlus";
-            this.btnTempoPlus.Size = new System.Drawing.Size(32, 32);
-            this.btnTempoPlus.TabIndex = 26;
-            this.btnTempoPlus.Text = "+";
-            this.btnTempoPlus.UseVisualStyleBackColor = true;
-            this.btnTempoPlus.Click += new System.EventHandler(this.btnTempoPlus_Click);
             // 
             // CbResolution
             // 
@@ -240,26 +142,6 @@ namespace Karaboss
             this.lblSaisieNotes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblSaisieNotes.Visible = false;
             this.lblSaisieNotes.Click += new System.EventHandler(this.lblSaisieNotes_Click);
-            // 
-            // BtnStop
-            // 
-            this.BtnStop.Image = global::Karaboss.Properties.Resources.Media_Controls_Stop_icon;
-            this.BtnStop.Location = new System.Drawing.Point(35, 3);
-            this.BtnStop.Name = "BtnStop";
-            this.BtnStop.Size = new System.Drawing.Size(32, 32);
-            this.BtnStop.TabIndex = 18;
-            this.BtnStop.UseVisualStyleBackColor = true;
-            this.BtnStop.Click += new System.EventHandler(this.BtnStop_Click);
-            // 
-            // BtnPlay
-            // 
-            this.BtnPlay.Image = global::Karaboss.Properties.Resources.Media_Controls_Play_icon;
-            this.BtnPlay.Location = new System.Drawing.Point(3, 3);
-            this.BtnPlay.Name = "BtnPlay";
-            this.BtnPlay.Size = new System.Drawing.Size(32, 32);
-            this.BtnPlay.TabIndex = 17;
-            this.BtnPlay.UseVisualStyleBackColor = true;
-            this.BtnPlay.Click += new System.EventHandler(this.BtnPlay_Click);
             // 
             // positionHScrollBar
             // 
@@ -367,34 +249,238 @@ namespace Karaboss
             this.lblPen.Visible = false;
             this.lblPen.Click += new System.EventHandler(this.LblPen_Click);
             // 
+            // pnlDisplay
+            // 
+            this.pnlDisplay.BackColor = System.Drawing.Color.Black;
+            this.pnlDisplay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlDisplay.Controls.Add(this.lblElapsed);
+            this.pnlDisplay.Controls.Add(this.lblPercent);
+            this.pnlDisplay.Controls.Add(this.lblDuration);
+            this.pnlDisplay.Location = new System.Drawing.Point(329, 8);
+            this.pnlDisplay.Name = "pnlDisplay";
+            this.pnlDisplay.Size = new System.Drawing.Size(200, 32);
+            this.pnlDisplay.TabIndex = 37;
+            // 
+            // lblElapsed
+            // 
+            this.lblElapsed.BackColor = System.Drawing.Color.Transparent;
+            this.lblElapsed.Font = new System.Drawing.Font("Consolas", 12F);
+            this.lblElapsed.ForeColor = System.Drawing.Color.White;
+            this.lblElapsed.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lblElapsed.Location = new System.Drawing.Point(1, 6);
+            this.lblElapsed.Name = "lblElapsed";
+            this.lblElapsed.Size = new System.Drawing.Size(60, 19);
+            this.lblElapsed.TabIndex = 2;
+            this.lblElapsed.Text = "00:00";
+            this.lblElapsed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblPercent
+            // 
+            this.lblPercent.AutoSize = true;
+            this.lblPercent.BackColor = System.Drawing.Color.Transparent;
+            this.lblPercent.Font = new System.Drawing.Font("Consolas", 8F);
+            this.lblPercent.ForeColor = System.Drawing.Color.White;
+            this.lblPercent.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lblPercent.Location = new System.Drawing.Point(91, 10);
+            this.lblPercent.Name = "lblPercent";
+            this.lblPercent.Size = new System.Drawing.Size(19, 13);
+            this.lblPercent.TabIndex = 8;
+            this.lblPercent.Text = "0%";
+            // 
+            // lblDuration
+            // 
+            this.lblDuration.BackColor = System.Drawing.Color.Transparent;
+            this.lblDuration.Font = new System.Drawing.Font("Consolas", 12F);
+            this.lblDuration.ForeColor = System.Drawing.Color.White;
+            this.lblDuration.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lblDuration.Location = new System.Drawing.Point(142, 6);
+            this.lblDuration.Name = "lblDuration";
+            this.lblDuration.Size = new System.Drawing.Size(60, 19);
+            this.lblDuration.TabIndex = 7;
+            this.lblDuration.Text = "00:00";
+            this.lblDuration.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblTempo
+            // 
+            this.lblTempo.BackColor = System.Drawing.Color.Black;
+            this.lblTempo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblTempo.ForeColor = System.Drawing.Color.White;
+            this.lblTempo.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lblTempo.Location = new System.Drawing.Point(158, 7);
+            this.lblTempo.Name = "lblTempo";
+            this.lblTempo.Size = new System.Drawing.Size(165, 32);
+            this.lblTempo.TabIndex = 29;
+            this.lblTempo.Text = "Tempo: 750000 - BPM: 85";
+            this.lblTempo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnTempoMinus
+            // 
+            this.btnTempoMinus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
+            this.btnTempoMinus.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnTempoMinus.Location = new System.Drawing.Point(120, 6);
+            this.btnTempoMinus.Name = "btnTempoMinus";
+            this.btnTempoMinus.Size = new System.Drawing.Size(32, 32);
+            this.btnTempoMinus.TabIndex = 28;
+            this.btnTempoMinus.Text = "-";
+            this.btnTempoMinus.UseVisualStyleBackColor = true;
+            this.btnTempoMinus.Click += new System.EventHandler(this.btnTempoMinus_Click);
+            // 
+            // lblTempoValue
+            // 
+            this.lblTempoValue.BackColor = System.Drawing.Color.Black;
+            this.lblTempoValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblTempoValue.ForeColor = System.Drawing.Color.White;
+            this.lblTempoValue.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lblTempoValue.Location = new System.Drawing.Point(50, 6);
+            this.lblTempoValue.Name = "lblTempoValue";
+            this.lblTempoValue.Size = new System.Drawing.Size(64, 32);
+            this.lblTempoValue.TabIndex = 27;
+            this.lblTempoValue.Text = "100%";
+            this.lblTempoValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnTempoPlus
+            // 
+            this.btnTempoPlus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
+            this.btnTempoPlus.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnTempoPlus.Location = new System.Drawing.Point(12, 5);
+            this.btnTempoPlus.Name = "btnTempoPlus";
+            this.btnTempoPlus.Size = new System.Drawing.Size(32, 32);
+            this.btnTempoPlus.TabIndex = 26;
+            this.btnTempoPlus.Text = "+";
+            this.btnTempoPlus.UseVisualStyleBackColor = true;
+            this.btnTempoPlus.Click += new System.EventHandler(this.btnTempoPlus_Click);
+            // 
+            // BtnStop
+            // 
+            this.BtnStop.Image = global::Karaboss.Properties.Resources.Media_Controls_Stop_icon;
+            this.BtnStop.Location = new System.Drawing.Point(596, 6);
+            this.BtnStop.Name = "BtnStop";
+            this.BtnStop.Size = new System.Drawing.Size(32, 32);
+            this.BtnStop.TabIndex = 18;
+            this.BtnStop.UseVisualStyleBackColor = true;
+            this.BtnStop.Click += new System.EventHandler(this.BtnStop_Click);
+            // 
+            // BtnPlay
+            // 
+            this.BtnPlay.Image = global::Karaboss.Properties.Resources.Media_Controls_Play_icon;
+            this.BtnPlay.Location = new System.Drawing.Point(558, 5);
+            this.BtnPlay.Name = "BtnPlay";
+            this.BtnPlay.Size = new System.Drawing.Size(32, 32);
+            this.BtnPlay.TabIndex = 17;
+            this.BtnPlay.UseVisualStyleBackColor = true;
+            this.BtnPlay.Click += new System.EventHandler(this.BtnPlay_Click);
+            // 
             // pnlMiddle
             // 
             this.pnlMiddle.BackColor = System.Drawing.Color.White;
             this.pnlMiddle.Controls.Add(this.pnlScrollView);
-            this.pnlMiddle.Controls.Add(this.pnlPiano);
+            this.pnlMiddle.Controls.Add(this.panel1);
+            this.pnlMiddle.Controls.Add(this.pnlLeft);
             this.pnlMiddle.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMiddle.Location = new System.Drawing.Point(0, 100);
             this.pnlMiddle.Name = "pnlMiddle";
-            this.pnlMiddle.Size = new System.Drawing.Size(1117, 445);
+            this.pnlMiddle.Size = new System.Drawing.Size(1117, 405);
             this.pnlMiddle.TabIndex = 0;
             // 
             // pnlScrollView
             // 
+            this.pnlScrollView.BackColor = System.Drawing.Color.Gray;
+            this.pnlScrollView.Controls.Add(this.pianoRollControl2);
+            this.pnlScrollView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlScrollView.Location = new System.Drawing.Point(100, 0);
             this.pnlScrollView.Name = "pnlScrollView";
-            this.pnlScrollView.Size = new System.Drawing.Size(200, 100);
+            this.pnlScrollView.Size = new System.Drawing.Size(977, 405);
             this.pnlScrollView.TabIndex = 0;
+            // 
+            // pianoRollControl2
+            // 
+            this.pianoRollControl2.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pianoRollControl2.HighNoteID = 108;
+            this.pianoRollControl2.Location = new System.Drawing.Point(93, 87);
+            this.pianoRollControl2.LowNoteID = 23;
+            this.pianoRollControl2.Name = "pianoRollControl2";
+            this.pianoRollControl2.NotesEdition = false;
+            this.pianoRollControl2.OffsetX = 0;
+            this.pianoRollControl2.Resolution = 4;            
+            this.pianoRollControl2.Size = new System.Drawing.Size(169, 163);
+            this.pianoRollControl2.TabIndex = 0;
+            this.pianoRollControl2.Text = "pianoRollControl2";
+            this.pianoRollControl2.TimeLineY = 40;
+            this.pianoRollControl2.TrackNum = -1;
+            this.pianoRollControl2.Velocity = 100;
+            this.pianoRollControl2.yScale = 0;
+            this.pianoRollControl2.zoomx = 1F;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel1.Location = new System.Drawing.Point(1077, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(40, 405);
+            this.panel1.TabIndex = 2;
+            // 
+            // pnlLeft
+            // 
+            this.pnlLeft.Controls.Add(this.pnlPiano);
+            this.pnlLeft.Controls.Add(this.pnlPianoTop);
+            this.pnlLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlLeft.Location = new System.Drawing.Point(0, 0);
+            this.pnlLeft.Name = "pnlLeft";
+            this.pnlLeft.Size = new System.Drawing.Size(100, 405);
+            this.pnlLeft.TabIndex = 1;
             // 
             // pnlPiano
             // 
-            this.pnlPiano.Location = new System.Drawing.Point(0, 0);
+            this.pnlPiano.Controls.Add(this.pianoControl2);
+            this.pnlPiano.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlPiano.Location = new System.Drawing.Point(0, 40);
             this.pnlPiano.Name = "pnlPiano";
-            this.pnlPiano.Size = new System.Drawing.Size(100, 100);
+            this.pnlPiano.Size = new System.Drawing.Size(100, 365);
             this.pnlPiano.TabIndex = 0;
+            // 
+            // pnlPianoTop
+            // 
+            this.pnlPianoTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlPianoTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlPianoTop.Location = new System.Drawing.Point(0, 0);
+            this.pnlPianoTop.Name = "pnlPianoTop";
+            this.pnlPianoTop.Size = new System.Drawing.Size(100, 40);
+            this.pnlPianoTop.TabIndex = 1;
             // 
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // pnlBottom
+            // 
+            this.pnlBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlBottom.Controls.Add(this.pnlDisplay);
+            this.pnlBottom.Controls.Add(this.btnTempoPlus);
+            this.pnlBottom.Controls.Add(this.lblTempoValue);
+            this.pnlBottom.Controls.Add(this.lblTempo);
+            this.pnlBottom.Controls.Add(this.BtnStop);
+            this.pnlBottom.Controls.Add(this.btnTempoMinus);
+            this.pnlBottom.Controls.Add(this.BtnPlay);
+            this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlBottom.Location = new System.Drawing.Point(0, 505);
+            this.pnlBottom.Name = "pnlBottom";
+            this.pnlBottom.Size = new System.Drawing.Size(1117, 40);
+            this.pnlBottom.TabIndex = 1;
+            // 
+            // pianoControl2
+            // 
+            this.pianoControl2.HighNoteID = 108;
+            this.pianoControl2.Location = new System.Drawing.Point(12, 63);
+            this.pianoControl2.LowNoteID = 23;
+            this.pianoControl2.Name = "pianoControl2";
+            this.pianoControl2.NoteOnColor = System.Drawing.Color.SkyBlue;
+            this.pianoControl2.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.pianoControl2.Scale = 20;
+            this.pianoControl2.Size = new System.Drawing.Size(67, 194);
+            this.pianoControl2.TabIndex = 0;
+            this.pianoControl2.Text = "pianoControl2";
+            this.pianoControl2.Zoom = 1F;
             // 
             // frmPianoRoll
             // 
@@ -403,6 +489,7 @@ namespace Karaboss
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1117, 545);
             this.Controls.Add(this.pnlMiddle);
+            this.Controls.Add(this.pnlBottom);
             this.Controls.Add(this.pnlTop);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmPianoRoll";
@@ -417,6 +504,10 @@ namespace Karaboss
             this.pnlDisplay.ResumeLayout(false);
             this.pnlDisplay.PerformLayout();
             this.pnlMiddle.ResumeLayout(false);
+            this.pnlScrollView.ResumeLayout(false);
+            this.pnlLeft.ResumeLayout(false);
+            this.pnlPiano.ResumeLayout(false);
+            this.pnlBottom.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -448,5 +539,11 @@ namespace Karaboss
         private System.Windows.Forms.Label lblElapsed;
         private System.Windows.Forms.Label lblPercent;
         private System.Windows.Forms.Label lblDuration;
+        private System.Windows.Forms.Panel pnlBottom;
+        private System.Windows.Forms.Panel pnlLeft;
+        private System.Windows.Forms.Panel pnlPianoTop;
+        private System.Windows.Forms.Panel panel1;
+        private Sanford.Multimedia.Midi.PianoRoll.PianoRollControl pianoRollControl2;
+        private Sanford.Multimedia.Midi.UI.PianoControl pianoControl2;
     }
 }
