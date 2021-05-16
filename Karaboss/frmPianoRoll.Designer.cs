@@ -37,10 +37,10 @@ namespace Karaboss
             this.lblEdit = new System.Windows.Forms.Label();
             this.lblSaisieNotes = new System.Windows.Forms.Label();
             this.positionHScrollBar = new ColorSlider.ColorSlider();
-            this.lblNote = new System.Windows.Forms.Label();
             this.CbTracks = new System.Windows.Forms.ComboBox();
             this.lblPointer = new System.Windows.Forms.Label();
             this.lblPen = new System.Windows.Forms.Label();
+            this.lblNote = new System.Windows.Forms.Label();
             this.pnlDisplay = new System.Windows.Forms.Panel();
             this.lblElapsed = new System.Windows.Forms.Label();
             this.lblPercent = new System.Windows.Forms.Label();
@@ -52,25 +52,25 @@ namespace Karaboss
             this.BtnStop = new System.Windows.Forms.Button();
             this.BtnPlay = new System.Windows.Forms.Button();
             this.pnlMiddle = new System.Windows.Forms.Panel();
+            this.pnlCenter = new System.Windows.Forms.Panel();
             this.pnlScrollView = new System.Windows.Forms.Panel();
+            this.pianoRollControl2 = new Sanford.Multimedia.Midi.PianoRoll.PianoRollControl();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.pnlLeft = new System.Windows.Forms.Panel();
             this.pnlPiano = new System.Windows.Forms.Panel();
+            this.pianoControl2 = new Sanford.Multimedia.Midi.UI.PianoControl();
             this.pnlPianoTop = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlBottom = new System.Windows.Forms.Panel();
-            this.pnlCenter = new System.Windows.Forms.Panel();
-            this.pianoRollControl2 = new Sanford.Multimedia.Midi.PianoRoll.PianoRollControl();
-            this.pianoControl2 = new Sanford.Multimedia.Midi.UI.PianoControl();
             this.pnlTop.SuspendLayout();
             this.pnlDisplay.SuspendLayout();
             this.pnlMiddle.SuspendLayout();
+            this.pnlCenter.SuspendLayout();
             this.pnlScrollView.SuspendLayout();
             this.pnlLeft.SuspendLayout();
             this.pnlPiano.SuspendLayout();
             this.pnlPianoTop.SuspendLayout();
             this.pnlBottom.SuspendLayout();
-            this.pnlCenter.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlTop
@@ -207,19 +207,8 @@ namespace Karaboss
             0,
             0,
             0});
+            this.positionHScrollBar.ValueChanged += new System.EventHandler(this.positionHScrollBar_ValueChanged);
             this.positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.positionHScrollBar_Scroll);
-            // 
-            // lblNote
-            // 
-            this.lblNote.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.lblNote.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblNote.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNote.ForeColor = System.Drawing.Color.White;
-            this.lblNote.Location = new System.Drawing.Point(0, 0);
-            this.lblNote.Name = "lblNote";
-            this.lblNote.Size = new System.Drawing.Size(100, 19);
-            this.lblNote.TabIndex = 4;
-            this.lblNote.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CbTracks
             // 
@@ -252,6 +241,18 @@ namespace Karaboss
             this.lblPen.TabIndex = 0;
             this.lblPen.Visible = false;
             this.lblPen.Click += new System.EventHandler(this.LblPen_Click);
+            // 
+            // lblNote
+            // 
+            this.lblNote.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.lblNote.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblNote.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNote.ForeColor = System.Drawing.Color.White;
+            this.lblNote.Location = new System.Drawing.Point(0, 0);
+            this.lblNote.Name = "lblNote";
+            this.lblNote.Size = new System.Drawing.Size(100, 19);
+            this.lblNote.TabIndex = 4;
+            this.lblNote.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pnlDisplay
             // 
@@ -386,6 +387,16 @@ namespace Karaboss
             this.pnlMiddle.Size = new System.Drawing.Size(1117, 405);
             this.pnlMiddle.TabIndex = 0;
             // 
+            // pnlCenter
+            // 
+            this.pnlCenter.BackColor = System.Drawing.Color.Gray;
+            this.pnlCenter.Controls.Add(this.pnlScrollView);
+            this.pnlCenter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlCenter.Location = new System.Drawing.Point(100, 0);
+            this.pnlCenter.Name = "pnlCenter";
+            this.pnlCenter.Size = new System.Drawing.Size(977, 405);
+            this.pnlCenter.TabIndex = 1;
+            // 
             // pnlScrollView
             // 
             this.pnlScrollView.BackColor = System.Drawing.Color.Black;
@@ -394,6 +405,27 @@ namespace Karaboss
             this.pnlScrollView.Name = "pnlScrollView";
             this.pnlScrollView.Size = new System.Drawing.Size(291, 240);
             this.pnlScrollView.TabIndex = 0;
+            // 
+            // pianoRollControl2
+            // 
+            this.pianoRollControl2.BackColor = System.Drawing.Color.Gray;
+            this.pianoRollControl2.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pianoRollControl2.HighNoteID = 108;
+            this.pianoRollControl2.Location = new System.Drawing.Point(0, 0);
+            this.pianoRollControl2.LowNoteID = 23;
+            this.pianoRollControl2.Name = "pianoRollControl2";
+            this.pianoRollControl2.NotesEdition = false;
+            this.pianoRollControl2.OffsetX = 0;
+            this.pianoRollControl2.Resolution = 4;
+            this.pianoRollControl2.Sequence1 = null;
+            this.pianoRollControl2.Size = new System.Drawing.Size(206, 240);
+            this.pianoRollControl2.TabIndex = 0;
+            this.pianoRollControl2.Text = "pianoRollControl2";
+            this.pianoRollControl2.TimeLineY = 40;
+            this.pianoRollControl2.TrackNum = -1;
+            this.pianoRollControl2.Velocity = 100;
+            this.pianoRollControl2.yScale = 20;
+            this.pianoRollControl2.zoomx = 1F;
             // 
             // pnlRight
             // 
@@ -422,6 +454,20 @@ namespace Karaboss
             this.pnlPiano.Name = "pnlPiano";
             this.pnlPiano.Size = new System.Drawing.Size(91, 224);
             this.pnlPiano.TabIndex = 0;
+            // 
+            // pianoControl2
+            // 
+            this.pianoControl2.HighNoteID = 108;
+            this.pianoControl2.Location = new System.Drawing.Point(12, 9);
+            this.pianoControl2.LowNoteID = 23;
+            this.pianoControl2.Name = "pianoControl2";
+            this.pianoControl2.NoteOnColor = System.Drawing.Color.SkyBlue;
+            this.pianoControl2.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.pianoControl2.Scale = 20;
+            this.pianoControl2.Size = new System.Drawing.Size(67, 200);
+            this.pianoControl2.TabIndex = 0;
+            this.pianoControl2.Text = "pianoControl2";
+            this.pianoControl2.Zoom = 1F;
             // 
             // pnlPianoTop
             // 
@@ -453,51 +499,6 @@ namespace Karaboss
             this.pnlBottom.Size = new System.Drawing.Size(1117, 40);
             this.pnlBottom.TabIndex = 1;
             // 
-            // pnlCenter
-            // 
-            this.pnlCenter.BackColor = System.Drawing.Color.Gray;
-            this.pnlCenter.Controls.Add(this.pnlScrollView);
-            this.pnlCenter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlCenter.Location = new System.Drawing.Point(100, 0);
-            this.pnlCenter.Name = "pnlCenter";
-            this.pnlCenter.Size = new System.Drawing.Size(977, 405);
-            this.pnlCenter.TabIndex = 1;
-            // 
-            // pianoRollControl2
-            // 
-            this.pianoRollControl2.BackColor = System.Drawing.Color.Gray;
-            this.pianoRollControl2.Cursor = System.Windows.Forms.Cursors.Default;
-            this.pianoRollControl2.HighNoteID = 108;
-            this.pianoRollControl2.Location = new System.Drawing.Point(0, 0);
-            this.pianoRollControl2.LowNoteID = 23;
-            this.pianoRollControl2.Name = "pianoRollControl2";
-            this.pianoRollControl2.NotesEdition = false;
-            this.pianoRollControl2.OffsetX = 0;
-            this.pianoRollControl2.Resolution = 4;
-            this.pianoRollControl2.Sequence1 = null;
-            this.pianoRollControl2.Size = new System.Drawing.Size(206, 240);
-            this.pianoRollControl2.TabIndex = 0;
-            this.pianoRollControl2.Text = "pianoRollControl2";
-            this.pianoRollControl2.TimeLineY = 40;
-            this.pianoRollControl2.TrackNum = -1;
-            this.pianoRollControl2.Velocity = 100;
-            this.pianoRollControl2.yScale = 20;
-            this.pianoRollControl2.zoomx = 1F;
-            // 
-            // pianoControl2
-            // 
-            this.pianoControl2.HighNoteID = 108;
-            this.pianoControl2.Location = new System.Drawing.Point(12, 9);
-            this.pianoControl2.LowNoteID = 23;
-            this.pianoControl2.Name = "pianoControl2";
-            this.pianoControl2.NoteOnColor = System.Drawing.Color.SkyBlue;
-            this.pianoControl2.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.pianoControl2.Scale = 20;
-            this.pianoControl2.Size = new System.Drawing.Size(67, 200);
-            this.pianoControl2.TabIndex = 0;
-            this.pianoControl2.Text = "pianoControl2";
-            this.pianoControl2.Zoom = 1F;
-            // 
             // frmPianoRoll
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -520,12 +521,12 @@ namespace Karaboss
             this.pnlDisplay.ResumeLayout(false);
             this.pnlDisplay.PerformLayout();
             this.pnlMiddle.ResumeLayout(false);
+            this.pnlCenter.ResumeLayout(false);
             this.pnlScrollView.ResumeLayout(false);
             this.pnlLeft.ResumeLayout(false);
             this.pnlPiano.ResumeLayout(false);
             this.pnlPianoTop.ResumeLayout(false);
             this.pnlBottom.ResumeLayout(false);
-            this.pnlCenter.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

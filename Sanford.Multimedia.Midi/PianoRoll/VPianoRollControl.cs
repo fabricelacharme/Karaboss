@@ -149,7 +149,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             {
                 if (sequence1 != null && sequence1.Time != null)
                 {
-                    yscale = (value * 20.0 / sequence1.Time.Quarter);
+                    _yscale = (value * 20.0 / sequence1.Time.Quarter);
                     lastPosition = sequence1.GetLength();
                     //Entier immédiatement suppérieur au nombre à virgule flottante
                     int nbmeasures = Convert.ToInt32(Math.Ceiling(lastPosition / sequence1.Time.Measure));
@@ -157,40 +157,27 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                     lastPosition = 4 * ((float)sequence1.Numerator / sequence1.Denominator) * nbmeasures;
                     lastPosition = lastPosition * sequence1.Division;
 
-                    if ((int)(lastPosition * yscale) > 50)
+                    if ((int)(lastPosition * _yscale) > 50)
                     {
                         _zoomy = value;
-                        yscale = (_zoomy * 20.0 / sequence1.Time.Quarter);
-                        maxstafflength = (int)(lastPosition * yscale);
+                        _yscale = (_zoomy * 20.0 / sequence1.Time.Quarter);
+                        maxstafflength = (int)(lastPosition * _yscale);
                         pnlCanvas.Invalidate();
                     }
                 }
             }
         }
 
-        private double xscale = 1.0 / 10;
+        private double _xscale = 1.0 / 10;
         /// <summary>
         /// Gets horizontal unit
         /// </summary>
         public double xScale {
-            get { return xscale; }
-            set { xscale = value; }
-        }
-
-        private double yscale = 1.0 / 10;
-        /// <summary>
-        /// Gets or sets vertical unit
-        /// </summary>
-        public double yScale
-        {
-            get
-            {
-                return yscale;
-            }
-            set
-            {
-                yscale = value;
-                if (sequence1 != null && keysNumber > 0 && yscale > 0)
+            get { return _xscale; }
+            set 
+            { 
+                _xscale = value;
+                if (sequence1 != null && keysNumber > 0 && _yscale > 0)
                 {
                     // Width of control must be a multiple of measures
                     lastPosition = sequence1.GetLength();
@@ -201,8 +188,38 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                     lastPosition = lastPosition * sequence1.Division;
 
                     // a quarter note is 20 units wide
-                    yscale = (_zoomy * 20.0 / sequence1.Time.Quarter);
-                    maxstafflength = (int)(lastPosition * yscale);
+                    _yscale = (_zoomy * 20.0 / sequence1.Time.Quarter);
+                    maxstafflength = (int)(lastPosition * _yscale);
+
+                    pnlCanvas.Invalidate();
+                }
+
+            }
+        }
+
+        private double _yscale = 1.0 / 10;
+        /// <summary>
+        /// Gets or sets vertical unit
+        /// </summary>
+        public double yScale
+        {
+            get { return _yscale; }
+            set
+            {
+                _yscale = value;
+                if (sequence1 != null && keysNumber > 0 && _yscale > 0)
+                {
+                    // Width of control must be a multiple of measures
+                    lastPosition = sequence1.GetLength();
+                    //Entier immédiatement suppérieur au nombre à virgule flottante
+                    int nbmeasures = Convert.ToInt32(Math.Ceiling(lastPosition / sequence1.Time.Measure));
+
+                    lastPosition = 4 * ((float)sequence1.Numerator / sequence1.Denominator) * nbmeasures;
+                    lastPosition = lastPosition * sequence1.Division;
+
+                    // a quarter note is 20 units wide
+                    _yscale = (_zoomy * 20.0 / sequence1.Time.Quarter);
+                    maxstafflength = (int)(lastPosition * _yscale);
 
                     pnlCanvas.Invalidate();
                 }
@@ -277,26 +294,37 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                     pnlCanvas.Invalidate();
                 }
             }
-        } 
+        }
 
-        private int offsety = 0;
+        private int _offsetx = 0;
+
+        public int OffsetX
+        {
+            get { return _offsetx; }
+            set { _offsetx = value; }
+        }
+
+
+        private int _offsety = 0;
         /// <summary>
         /// Gets or sets horizontal offset
         /// </summary>
         public int OffsetY
         {
-            get { return offsety; }
+            get { return _offsety; }
             set
             {
-                if (value != offsety)
+                if (value != _offsety)
                 {
-                    offsety = value;
+                    _offsety = value;
                     if (OffsetChanged != null)
-                        OffsetChanged(this, offsety);
+                        OffsetChanged(this, _offsety);
                     pnlCanvas.Invalidate();
                 }
             }
         }
+
+
 
         private int maxstafflength;
         /// <summary>
@@ -369,12 +397,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
         }
 
 
-
-        public void Redraw()
-        {
-            pnlCanvas.Invalidate();
-        }
-
+        #region draw notes
 
         /// <summary>
         /// Draw all notes visible in the clip
@@ -394,8 +417,8 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                 for (int i = 0; i < track1.Notes.Count; i++)
                 {
                     MidiNote nnote = track1.Notes[i];
-                    Y = (int)(PH - nnote.StartTime * yscale);
-                    H = (int)(nnote.Duration * yscale);
+                    Y = (int)(PH - nnote.StartTime * _yscale);
+                    H = (int)(nnote.Duration * _yscale);
 
                     // draw note if note ends after begining of clip and if note begins before end of clip
                     if (Y + H >= clip.Y && (Y - H) <= clip.Y + clip.Height)
@@ -414,8 +437,8 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                     for (int i = 0; i < track.Notes.Count; i++)
                     {
                         MidiNote nnote = track.Notes[i];
-                        Y = (int)(PH - nnote.StartTime * yscale);
-                        H = (int)(nnote.Duration * yscale);
+                        Y = (int)(PH - nnote.StartTime * _yscale);
+                        H = (int)(nnote.Duration * _yscale);
                         // draw note if note ends before begining of clip and if note begins before end of clip
                         if (Y + H >= clip.Y && (Y - H) <= clip.Y + clip.Height)
                             MakeNoteRectangle(g, nnote.Number, nnote.StartTime, nnote.Duration, nnote.Channel);
@@ -440,11 +463,11 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             Pen StrokePen;
             int PH = pnlCanvas.Height;
 
-            int X = (int)((noteNumber - lowNoteID) * xscale);           // X = notenumber - 23 (graves à gauche aigues à droite)                      
-            int Y = (int)(PH - (startTime + duration) * yscale);     // hauteur - starttime            
+            int X = (int)((noteNumber - lowNoteID) * _xscale);           // X = notenumber - 23 (graves à gauche aigues à droite)                      
+            int Y = (int)(PH - (startTime + duration) * _yscale);     // hauteur - starttime            
 
-            int W = (int)xscale;
-            int H = (int)(duration * yscale);
+            int W = (int)_xscale;
+            int H = (int)(duration * _yscale);
             
             Rectangle rectn = new Rectangle(X, Y, W, H);
                       
@@ -537,8 +560,18 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             StrokePen.Dispose();
         }
 
+        #endregion
 
-        #region Canvas
+
+        #region draw Canvas
+
+        /// <summary>
+        /// Redraw Canvas
+        /// </summary>
+        public void Redraw()
+        {
+            pnlCanvas.Invalidate();
+        }
 
         // The NoteBackgroundCanvas is used for drawing the horizontal lines that divide each of the 128 MIDI notes.
         // We will also shade the lines that represent "black notes" on the piano slightly. 
@@ -564,7 +597,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             
             H = clip.Height;
             
-            _totalwidth = (int)((1 + highNoteID - lowNoteID) * xscale);
+            _totalwidth = (int)((1 + highNoteID - lowNoteID) * _xscale);
 
             // ==========================
             // Draw Timeline background color
@@ -609,24 +642,24 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                     FillBrush = new SolidBrush(blackKeysColor);
                     FillPen = new Pen(blackKeysColor);
 
-                    W = (int)xscale;
+                    W = (int)_xscale;
 
                     g.DrawRectangle(FillPen, w, clip.Y, W, H);
                     rect = new Rectangle(w, clip.Y, W, H);
                     g.FillRectangle(FillBrush, rect);                    
                 }
-                w += (int)xscale;
+                w += (int)_xscale;
             }
 
 
             // =================================
-            // Draw vertical lines each xscale
+            // Draw vertical lines each _xscale
             // =================================
             w = _TimeLineWidth;
 
             for (int note = highNoteID; note >= lowNoteID; note--)
             {
-                w += (int)xscale;
+                w += (int)_xscale;
 
                 if (w >= clip.X && w <= clip.X + clip.Width)
                 {
@@ -645,7 +678,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
 
             for (int note = highNoteID; note >= lowNoteID; note--)
             {
-                w += (int)xscale;
+                w += (int)_xscale;
 
                 if ((note % 12 == 0) // C
                 || (note % 12 == 7)) // F      devrait être 5 car en fait 7 c'est G ?????
@@ -688,7 +721,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             float f_beat = (float)quarter * 4 / TimeUnit;       
             float f_increment = f_beat / resolution;
 
-            _totalwidth = w + (int)((1 + highNoteID - lowNoteID) * xscale);
+            _totalwidth = w + (int)((1 + highNoteID - lowNoteID) * _xscale);
             int PH = pnlCanvas.Height;
 
             // Measure number display
@@ -700,7 +733,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             
             do
             {
-                int y1 = PH - (int)(f_n * yscale);
+                int y1 = PH - (int)(f_n * _yscale);
                 int y2 = y1;
                 int x1 = w;
                 int x2 = _totalwidth;
@@ -761,8 +794,11 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
 
           
         }
-             
-    
+
+        #endregion draw canvas
+
+
+        #region canvas events
         private void pnlCanvas_MouseLeave(object sender, EventArgs e)
         {
             this.Capture = false;
@@ -802,30 +838,14 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             else
             {
                 int X = e.X - _TimeLineWidth;
-                int Y = e.Y + offsety;
-                int nnote = lowNoteID + X / (int)xscale;
+                int Y = e.Y + _offsety;
+                int nnote = lowNoteID + X / (int)_xscale;
 
                 // Delegate the event to the caller
                 OnMouseMoved?.Invoke(this, nnote, e);
 
             }
 
-        }
-
-        #endregion Canvas
-
-        private void MovePanel(int Delta)
-        {
-            previousDelta = Delta;
-            int newval = OffsetY + Delta;
-            if (newval < 0) newval = 0;
-            OffsetY = newval;
-        }
-
-        private void ResetMovePanel()
-        {
-            previousDelta = 0;
-            aPos = PointToClient(Control.MousePosition);            
         }
 
         private void pnlCanvas_MouseUp(object sender, MouseEventArgs e)
@@ -838,27 +858,23 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             }
         }
 
-
-
-        #region events
-
         /// <summary>
         /// Paint event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void pnlCanvas_Paint(object sender, PaintEventArgs e)
-        {            
+        {
             Rectangle clip =
                 new Rectangle(
-                e.ClipRectangle.X,                
-                 - offsety,
+                e.ClipRectangle.X,
+                 -_offsety,
                 e.ClipRectangle.Width,
                 e.ClipRectangle.Height);
 
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            g.TranslateTransform(0, -clip.Y);            
+            g.TranslateTransform(0, -clip.Y);
 
             if (sequence1 != null)
             {
@@ -874,10 +890,32 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                     DrawGrid(g, clip);
                     DrawNotes(g, clip);
                 }
-                g.TranslateTransform(0, clip.Y);                
+                g.TranslateTransform(0, clip.Y);
             }
         }
 
+        #endregion Canvas events
+
+
+        #region move panel
+        private void MovePanel(int Delta)
+        {
+            previousDelta = Delta;
+            int newval = OffsetY + Delta;
+            if (newval < 0) newval = 0;
+            OffsetY = newval;
+        }
+
+        private void ResetMovePanel()
+        {
+            previousDelta = 0;
+            aPos = PointToClient(Control.MousePosition);            
+        }
+
+        #endregion
+
+
+        #region protected events
 
         protected override void OnResize(EventArgs e)
         {
@@ -902,6 +940,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
 
         #endregion events
     
+
 
         private Rectangle GetVisibleRectangle(Control c)
         {

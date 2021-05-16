@@ -170,12 +170,12 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             {
                 if (sequence1 != null)
                 {
-                    xScale = (value * 20.0 / sequence1.Time.Quarter);
-                    if ((int)(lastPosition * xScale) > 50)
+                    _xscale = (value * 20.0 / sequence1.Time.Quarter);
+                    if ((int)(lastPosition * _xscale) > 50)
                     {
                         _zoomx = value;
-                        xScale = (_zoomx * 20.0 / sequence1.Time.Quarter);                        
-                        maxstaffwidth = (int)(lastPosition * xScale);
+                        _xscale = (_zoomx * 20.0 / sequence1.Time.Quarter);                        
+                        _maxstaffwidth = (int)(lastPosition * _xscale);
                         selRect = new Rectangle();
                         pnlCanvas.Invalidate();
                     }
@@ -183,27 +183,16 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             }
         }
 
-        private double xScale = 1.0 / 10;
+        private double _xscale = 1.0 / 10;
         /// <summary>
         /// Gets horizontal unit
         /// </summary>
-        public double XScale { get { return xScale; } }
-                
-        private int yscale;
-        /// <summary>
-        /// Gets or sets vertocal unit
-        /// </summary>
-        public int yScale
-        {
-            get
-            {
-                return yscale;
-            }
+        public double xScale { 
+            get { return _xscale; } 
             set
             {
-                yscale = value;
-
-                if (sequence1 != null && keysNumber > 0 && yscale > 0)
+                _xscale = value;
+                if (sequence1 != null && keysNumber > 0 && _yscale > 0)
                 {
                     // Width of control must be a multiple of measures
                     lastPosition = sequence1.GetLength();
@@ -214,9 +203,38 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     lastPosition = lastPosition * sequence1.Division;
 
                     // a quarter note is 20 units wide
-                    xScale = (_zoomx * 20.0 / sequence1.Time.Quarter);
-                    
-                    maxstaffwidth = (int)(lastPosition * xScale);                   
+                    _xscale = (_zoomx * 20.0 / sequence1.Time.Quarter);
+
+                    _maxstaffwidth = (int)(lastPosition * _xscale);
+                    pnlCanvas.Invalidate();
+                }
+            }
+        }
+                
+        private int _yscale;
+        /// <summary>
+        /// Gets or sets vertical unit
+        /// </summary>
+        public int yScale
+        {
+            get { return _yscale; }
+            set 
+            { 
+                _yscale = value;
+                if (sequence1 != null && keysNumber > 0 && _yscale > 0)
+                {
+                    // Width of control must be a multiple of measures
+                    lastPosition = sequence1.GetLength();
+                    //Entier immédiatement suppérieur au nombre à virgule flottante
+                    int nummeasure = Convert.ToInt32(Math.Ceiling(lastPosition / sequence1.Time.Measure));
+
+                    lastPosition = 4 * ((float)sequence1.Numerator / sequence1.Denominator) * nummeasure;
+                    lastPosition = lastPosition * sequence1.Division;
+
+                    // a quarter note is 20 units wide
+                    _xscale = (_zoomx * 20.0 / sequence1.Time.Quarter);
+
+                    _maxstaffwidth = (int)(lastPosition * _xscale);
                     pnlCanvas.Invalidate();
                 }
             }
@@ -313,32 +331,48 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         }
 
         
-        private int offsetx = 0;
+        private int _offsetx = 0;
         /// <summary>
         /// Gets or sets horizontal offset
         /// </summary>
         public int OffsetX
         {
-            get { return offsetx; }
+            get { return _offsetx; }
             set
             {
-                if (value != offsetx)
+                if (value != _offsetx)
                 {
-                    offsetx = value;
+                    _offsetx = value;
                     if (OffsetChanged != null)
-                        OffsetChanged(this, offsetx);
+                        OffsetChanged(this, _offsetx);
                     pnlCanvas.Invalidate();
                 }
             }
         }
 
-        private int maxstaffwidth;
+        private int _offsety = 0;
+        
+        public int OffsetY
+        {
+            get { return _offsety; }
+            set 
+            {
+                if (value != _offsety)
+                {
+                    _offsety = value;
+                    pnlCanvas.Invalidate();
+                }
+            }
+        }
+
+
+        private int _maxstaffwidth;
         /// <summary>
         /// Gets Length of score
         /// </summary>
         public int maxStaffWidth
         {
-            get { return maxstaffwidth; }
+            get { return _maxstaffwidth; }
 
         }
 
@@ -444,12 +478,10 @@ namespace Sanford.Multimedia.Midi.PianoRoll
 
             keysNumber = 1 + highNoteID - lowNoteID; // 128 or less               
         }
-        
-        public void Redraw()
-        {            
-            pnlCanvas.Invalidate();
-        }
-        
+           
+
+        #region draw notes
+
         /// <summary>
         /// Draw all notes visible in the clip
         /// </summary>
@@ -466,8 +498,8 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                 for (int i = 0; i < track1.Notes.Count; i++)
                 {
                     MidiNote nnote = track1.Notes[i];
-                    X = (int)(nnote.StartTime * xScale);
-                    W = (int)(nnote.Duration * xScale);
+                    X = (int)(nnote.StartTime * _xscale);
+                    W = (int)(nnote.Duration * _xscale);
 
                     // draw note if note ends after begining of clip and if note begins before end of clip
                     if ((X + W) >= clip.X && X <= clip.X + clip.Width)
@@ -486,8 +518,8 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     for (int i = 0; i < track.Notes.Count; i++)
                     {
                         MidiNote nnote = track.Notes[i];
-                        X = (int)(nnote.StartTime * xScale);
-                        W = (int)(nnote.Duration * xScale);
+                        X = (int)(nnote.StartTime * _xscale);
+                        W = (int)(nnote.Duration * _xscale);
                         // draw note if note ends before begining of clip and if note begins before end of clip
                         if ((X + W) >= clip.X && X <= clip.X + clip.Width)
                             MakeNoteRectangle(g, nnote.Number, nnote.StartTime, nnote.Duration, nnote.Channel);
@@ -518,11 +550,11 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             SolidBrush FillBrush;
             Pen StrokePen;
 
-            int X = (int)(startTime * xScale);            
-            int Y = _TimeLineHeight + (highNoteID - noteNumber) * yscale;  //127 - notenumber
+            int X = (int)(startTime * _xscale);            
+            int Y = _TimeLineHeight + (highNoteID - noteNumber) * _yscale;  //127 - notenumber
 
-            int W = (int)(duration * xScale);
-            int H = yscale;
+            int W = (int)(duration * _xscale);
+            int H = _yscale;
 
             Rectangle rectn = new Rectangle(X, Y, W, H);
 
@@ -646,7 +678,18 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             StrokePen.Dispose();
         }
 
-        #region Canvas
+        #endregion
+
+
+        #region Draw Canvas
+
+        /// <summary>
+        /// Redraw Canvas
+        /// </summary>
+        public void Redraw()
+        {
+            pnlCanvas.Invalidate();
+        }
 
 
         // The NoteBackgroundCanvas is used for drawing the horizontal lines that divide each of the 128 MIDI notes.
@@ -660,6 +703,9 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             
             Rectangle rect;
 
+            Point p1;
+            Point p2;
+
             Color TimeLineColor = System.Drawing.ColorTranslator.FromHtml("#FF313131");
             Color blackKeysColor = System.Drawing.ColorTranslator.FromHtml("#FF313131");
             Color whiteKeysColor = System.Drawing.ColorTranslator.FromHtml("#FF3b3b3b");
@@ -671,30 +717,34 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             int H = 0;
             int W = 0; // Width of scores
             
-            if (clip.Width > maxstaffwidth)
-                W = maxstaffwidth;
+            
+            if (clip.Width > _maxstaffwidth)
+                W = _maxstaffwidth;
             else
                 W = clip.Width;
            
-            _totalheight = (1 + highNoteID - lowNoteID) * yscale;
+            _totalheight = (1 + highNoteID - lowNoteID) * _yscale;
+
 
             // ==========================
             // Draw Timeline background color
+            // Dessiner en dernier
             // ========================== 
+            
             FillPen = new Pen(TimeLineColor);
-
+            
             // Gray rectangle
-            g.DrawRectangle(FillPen, clip.X, clip.Y, W, h);
-            rect = new Rectangle(clip.X, clip.Y, W, h);
+            //g.DrawRectangle(FillPen, clip.X, clip.Y - _offsety, W, h);
+            //rect = new Rectangle(clip.X, clip.Y - _offsety, W, h);
             FillBrush = new SolidBrush(TimeLineColor);
-            g.FillRectangle(FillBrush, rect);
-
+            //g.FillRectangle(FillBrush, rect);
+            
             // Black line separator
             FillPen = new Pen(Color.Black, 3);
-            Point p1 = new Point(clip.X, _TimeLineHeight - 2);
-            Point p2 = new Point(W, _TimeLineHeight - 2);
-            g.DrawLine(FillPen, p1, p2);
-
+            //p1 = new Point(clip.X, _TimeLineHeight - 2 - _offsety);
+            //p2 = new Point(W, _TimeLineHeight - 2 - _offsety);
+            //g.DrawLine(FillPen, p1, p2);
+            
 
             // ==========================
             // Background color : grey
@@ -704,7 +754,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             rect = new Rectangle(clip.X, clip.Y + h, W, _totalheight);
             FillBrush = new SolidBrush(whiteKeysColor);
             g.FillRectangle(FillBrush, rect);
-
+            
 
             // ===================================
             // Draw black areas for # & b notes
@@ -722,24 +772,24 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     FillBrush = new SolidBrush(blackKeysColor);
                     FillPen = new Pen(blackKeysColor);
 
-                    H = yscale;
+                    H = _yscale;
 
                     g.DrawRectangle(FillPen, clip.X, h, W, H);                        
                     rect = new Rectangle(clip.X, h, W, H);
                     g.FillRectangle(FillBrush, rect);                    
                 }       
-                h += yscale;
+                h += _yscale;
             }
 
             
             // =================================
-            // Draw horizontal lines each yscale
+            // Draw horizontal lines each _yscale
             // =================================
             h = _TimeLineHeight;            
 
             for (int note = highNoteID; note >= lowNoteID; note--)
             {                                               
-                h += yscale;
+                h += _yscale;
 
                 if (h >= clip.Y && h <= clip.Y + clip.Height)
                 {                    
@@ -749,9 +799,9 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     g.DrawLine(SeparatorPen, p1, p2);
                 }
             }
-            
+
             // Height of the control
-            _totalheight = h;         
+            _totalheight = h;             
         }
 
         // On top of the background canvas comes the GridCanvas. 
@@ -762,11 +812,9 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         private void DrawGrid(Graphics g, Rectangle clip)
         {
             int step = 0;
-            int h = _TimeLineHeight;  // bande horizontale en haut pour afficher les mesures et intervalles
+            int h = _TimeLineHeight;  // bande horizontale en haut pour afficher les mesures et intervalles            
 
-            int timespermeasure;            
-
-            timespermeasure = sequence1.Numerator;             // nombre de beats par mesures
+            int timespermeasure = sequence1.Numerator;             // nombre de beats par mesures
             float TimeUnit = Sequence1.Denominator;            // 2 = blanche, 4 = noire, 8 = croche, 16 = doucle croche, 32 triple croche
 
             Pen TicksPen = new Pen(Color.White);
@@ -777,7 +825,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             // quarter = durée d'une noire
             int quarter = sequence1.Time.Quarter;
 
-            _totalheight = h + (int)((1 + highNoteID - lowNoteID) * yscale);
+            _totalheight = h + (int)((1 + highNoteID - lowNoteID) * _yscale);
 
             float f_n = 0;
 
@@ -794,7 +842,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
 
             do
             {
-                int x1 = (int)(f_n * xScale);
+                int x1 = (int)(f_n * _xscale);
                 int x2 = x1;
                 int y1 = h;
                 int y2 = _totalheight;
@@ -810,11 +858,11 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                         g.DrawLine(mesureSeparatorPen, p1, p2);
 
                         // Display measure number
-                        Point p1pico = new Point(x1, _TimeLineHeight - 14);
-                        Point p2pico = new Point(x1, _TimeLineHeight - 1);
-                        g.DrawLine(TicksPen, p1pico, p2pico);
-                        NumMeasure = 1 + (int)(f_n / measurelen);
-                        g.DrawString(NumMeasure.ToString(), fontMeasure, textBrush, p1.X - 5, 7);
+                        //Point p1pico = new Point(x1, _TimeLineHeight - 14 - _offsety);
+                        //Point p2pico = new Point(x1, _TimeLineHeight - 1 - _offsety);
+                        //g.DrawLine(TicksPen, p1pico, p2pico);
+                        //NumMeasure = 1 + (int)(f_n / measurelen);
+                        //g.DrawString(NumMeasure.ToString(), fontMeasure, textBrush, p1.X - 5, 7 - _offsety);
 
                     }
                     else if (step % resolution == 0)                        // every time or beat
@@ -823,12 +871,12 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                         g.DrawLine(beatSeparatorPen, p1, p2);
 
                         // Display beat number
-                        Point p1pico = new Point(x1, _TimeLineHeight - 5);
-                        Point p2pico = new Point(x1, _TimeLineHeight - 1);
-                        g.DrawLine(TicksPen, p1pico, p2pico);
-                        NumMeasure = 1 + (int)(f_n / measurelen);
-                        pico = 1 + sequence1.Numerator - (int)((NumMeasure * measurelen - f_n) / (measurelen / sequence1.Numerator));
-                        g.DrawString(NumMeasure + "." + pico, fontInterval, textBrush, p1.X - 5, 7);
+                        //Point p1pico = new Point(x1, _TimeLineHeight - 5 - _offsety);
+                        //Point p2pico = new Point(x1, _TimeLineHeight - 1 - _offsety);
+                        //g.DrawLine(TicksPen, p1pico, p2pico);
+                        //NumMeasure = 1 + (int)(f_n / measurelen);
+                        //pico = 1 + sequence1.Numerator - (int)((NumMeasure * measurelen - f_n) / (measurelen / sequence1.Numerator));
+                        //g.DrawString(NumMeasure + "." + pico, fontInterval, textBrush, p1.X - 5, 7 - _offsety);
 
                     }
                     else
@@ -843,7 +891,195 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             } while (f_n <= lastPosition);    
         }
 
+
+        private void DrawTimeLine(Graphics g, Rectangle clip)
+        {
+            SolidBrush FillBrush;
+            Pen FillPen;
+            Color TimeLineColor = System.Drawing.ColorTranslator.FromHtml("#FF313131");
+            Rectangle rect;
+
+            Point p1;
+            Point p2;
+
+            int h = _TimeLineHeight;  // bande horizontale en haut pour afficher les mesures et intervalles
+            int H = 0;
+            int W = 0; // Width of scores
+
+            if (clip.Width > _maxstaffwidth)
+                W = _maxstaffwidth;
+            else
+                W = clip.Width;
+
+            //_totalheight = (1 + highNoteID - lowNoteID) * _yscale;
+
+            W = clip.Width;
+
+            // ==========================
+            // Draw Timeline background color
+            // Dessiner en dernier
+            // ========================== 
+            FillPen = new Pen(TimeLineColor);
+
+            // Gray rectangle
+            g.DrawRectangle(FillPen, clip.X, clip.Y , W, h);
+            rect = new Rectangle(clip.X, clip.Y , W, h);
+            FillBrush = new SolidBrush(TimeLineColor);
+            g.FillRectangle(FillBrush, rect);
+
+            // Black line separator
+            FillPen = new Pen(Color.Black, 3);
+            p1 = new Point(clip.X, clip.Y + _TimeLineHeight - 2 );
+            p2 = new Point(clip.X + W, clip.Y +  _TimeLineHeight - 2);
+            g.DrawLine(FillPen, p1, p2);
+
+
+
+
+            int step = 0;            
+            int timespermeasure = sequence1.Numerator;
+            float TimeUnit = Sequence1.Denominator;            // 2 = blanche, 4 = noire, 8 = croche, 16 = doucle croche, 32 triple croche
+            Pen TicksPen = new Pen(Color.White);
+            Pen mesureSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF676767"), 1);
+            Pen beatSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF585858"), 1);
+            Pen intervalSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF464646"), 1);
+
+            // quarter = durée d'une noire
+            int quarter = sequence1.Time.Quarter;
+            _totalheight = h + (int)((1 + highNoteID - lowNoteID) * _yscale);
+            float f_n = 0;
+
+            // Increment of 1 TimeUnit, divided by the resolution, in ticks
+            float f_beat = (float)quarter * 4 / TimeUnit;
+            float f_increment = f_beat / resolution;
+
+            // Measure number display
+            int NumMeasure = 0;
+            SolidBrush textBrush = new SolidBrush(Color.White);
+            Font fontMeasure = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font fontInterval = new Font("Arial", 10, FontStyle.Regular, GraphicsUnit.Pixel);
+            int pico = 0;
+
+            do
+            {
+                int x1 = (int)(f_n * _xscale);
+                int x2 = x1;
+                int y1 = h;
+                int y2 = _totalheight;
+
+                if (x1 >= clip.X && x1 <= clip.X + clip.Width)
+                {
+                    p1 = new Point(x1, y1);
+                    p2 = new Point(x2, y2);
+
+                    if (step % (resolution * timespermeasure) == 0)        // every measure
+                    {
+                        // Display line
+                        //g.DrawLine(mesureSeparatorPen, p1, p2);
+
+                        // Display measure number
+                        Point p1pico = new Point(x1, _TimeLineHeight - 14 - _offsety);
+                        Point p2pico = new Point(x1, _TimeLineHeight - 1 - _offsety);
+                        g.DrawLine(TicksPen, p1pico, p2pico);
+                        NumMeasure = 1 + (int)(f_n / measurelen);
+                        g.DrawString(NumMeasure.ToString(), fontMeasure, textBrush, p1.X - 5, 7 - _offsety);
+
+                    }
+                    else if (step % resolution == 0)                        // every time or beat
+                    {
+                        // Display line
+                        //g.DrawLine(beatSeparatorPen, p1, p2);
+
+                        // Display beat number
+                        Point p1pico = new Point(x1, _TimeLineHeight - 5 - _offsety);
+                        Point p2pico = new Point(x1, _TimeLineHeight - 1 - _offsety);
+                        g.DrawLine(TicksPen, p1pico, p2pico);
+                        NumMeasure = 1 + (int)(f_n / measurelen);
+                        pico = 1 + sequence1.Numerator - (int)((NumMeasure * measurelen - f_n) / (measurelen / sequence1.Numerator));
+                        g.DrawString(NumMeasure + "." + pico, fontInterval, textBrush, p1.X - 5, 7 - _offsety);
+
+                    }
+                    else
+                    {
+                        //g.DrawLine(intervalSeparatorPen, p1, p2);  // every resolution
+                    }
+                }
+
+                step++;
+                f_n += f_increment;
+
+            } while (f_n <= lastPosition);
+
+
+        }
+
         #endregion Canvas
+
+
+        #region Canvas events
+
+        /// <summary>
+        /// Paint event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pnlCanvas_Paint(object sender, PaintEventArgs e)
+        {
+            Rectangle clip =
+                new Rectangle((int)(_offsetx),
+                (int)(e.ClipRectangle.Y),
+                (int)(e.ClipRectangle.Width),
+                (int)(e.ClipRectangle.Height));
+
+            Graphics g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            g.TranslateTransform(-clip.X, 0);
+
+            if (sequence1 != null)
+            {
+
+                CreateBackgroundCanvas(g, clip);
+                DrawGrid(g, clip);
+                DrawTimeLine(g, clip);
+                DrawNotes(g, clip);
+                /*
+                if (Parent.GetType() == typeof(Panel))
+                {
+                    CreateBackgroundCanvas(g, clip);
+                    DrawGrid(g, clip);
+                    DrawTimeLine(g, clip);
+                    DrawNotes(g, clip);
+                }
+                else
+                {
+                    CreateBackgroundCanvas(g, clip);
+                    DrawGrid(g, clip);
+                    DrawTimeLine(g, clip);
+                    DrawNotes(g, clip);
+                }
+                */
+                g.TranslateTransform(clip.X, 0);
+
+                if (selectingNote == true)
+                {
+                    // Draw the current rectangle
+                    Point pos = PointToClient(Control.MousePosition);
+                    using (Pen pen = new Pen(Brushes.White))
+                    {
+                        pen.DashStyle = DashStyle.Dot;
+                        g.DrawLine(pen, aPos.X, aPos.Y, pos.X, aPos.Y);
+                        g.DrawLine(pen, pos.X, aPos.Y, pos.X, pos.Y);
+                        g.DrawLine(pen, pos.X, pos.Y, aPos.X, pos.Y);
+                        g.DrawLine(pen, aPos.X, pos.Y, aPos.X, aPos.Y);
+                    }
+                }
+                setTimeVLinePos(0);
+            }
+        }
+
+
+        #endregion
 
 
         #region Keyboard
@@ -1060,10 +1296,10 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     if (MyMouseDown != null)
                         MyMouseDown(sender, e);
 
-                    int X = e.X + offsetx;
+                    int X = e.X + _offsetx;
                     int Y = e.Y - _TimeLineHeight;          // Offset for time line
-                    int nnote = highNoteID - Y / yscale;
-                    int starttime = (int)(X / xScale);
+                    int nnote = highNoteID - Y / _yscale;
+                    int starttime = (int)(X / _xscale);
 
                     note = FindNote(nnote, starttime);
 
@@ -1115,7 +1351,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
 
                             // Record the start point
                             aPos = PointToClient(Control.MousePosition);
-                            aPos.X = aPos.X + offsetx;
+                            aPos.X = aPos.X + _offsetx;
 
                             selectNote(originNote);
                             pnlCanvas.Invalidate();
@@ -1172,10 +1408,10 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     if (MyMouseDown != null)
                         MyMouseDown(sender, e);
 
-                    int X = e.X + offsetx;
+                    int X = e.X + _offsetx;
                     int Y = e.Y;
-                    int nnote = highNoteID - Y / yscale;
-                    int starttime = (int)(X / xScale);
+                    int nnote = highNoteID - Y / _yscale;
+                    int starttime = (int)(X / _xscale);
 
                     note = FindNote(nnote, starttime);
 
@@ -1237,7 +1473,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
 
                             // Record the start point
                             aPos = PointToClient(Control.MousePosition);
-                            aPos.X = aPos.X + offsetx;
+                            aPos.X = aPos.X + _offsetx;
 
                             selectNote(originNote);
                             pnlCanvas.Invalidate();
@@ -1369,7 +1605,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                 Point cltPos = PointToClient(Control.MousePosition);
                 int X = cltPos.X + OffsetX;
 
-                int tickstarget = (int)(X / xScale);
+                int tickstarget = (int)(X / _xscale);
 
                 // Numéro de mesure cible                
                 int NumMeasure = 1 + Convert.ToInt32(tickstarget) / measurelen;
@@ -1431,11 +1667,11 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                 {
                     // Propose note Editing or deleting
                     #region cursor vsplit or vcross
-                    int X = e.X + offsetx;
+                    int X = e.X + _offsetx;
                     int Y = e.Y - _TimeLineHeight;      // Offset for time line
 
-                    int nnote = highNoteID - Y / yscale;
-                    int starttime = (int)(X / xScale);
+                    int nnote = highNoteID - Y / _yscale;
+                    int starttime = (int)(X / _xscale);
 
                     note = FindNote(nnote, starttime);
                     
@@ -1482,8 +1718,8 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     #region draw note
                     Cursor = Cursors.Hand;
 
-                    int X = e.X + offsetx;
-                    int endtime = (int)(X / xScale);
+                    int X = e.X + _offsetx;
+                    int endtime = (int)(X / _xscale);
 
                     int delta = endtime - newNote.StartTime;
                     float ffraction = sequence1.Time.Quarter / (float)resolution;
@@ -1505,14 +1741,14 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     #region drag note
                     Cursor = Cursors.Hand;
 
-                    int X = e.X + offsetx;
+                    int X = e.X + _offsetx;
 
-                    float deltastarttime = ((X - aPos.X) / (float)xScale);
+                    float deltastarttime = ((X - aPos.X) / (float)_xscale);
                     float ffraction = (float)sequence1.Time.Quarter / (float)resolution;
                     int nbFractions = (int)(deltastarttime / ffraction);
 
                     int Y = e.Y;
-                    int number = highNoteID - Y / yscale;
+                    int number = highNoteID - Y / _yscale;
                     newNote.Number = number;
 
 
@@ -1541,7 +1777,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     #region modify note bounds
                     Cursor = Cursors.VSplit;
 
-                    int X = (int)((e.X + offsetx)/xScale);
+                    int X = (int)((e.X + _offsetx)/_xscale);
 
                     if (EditMode == editmode.left)
                     {
@@ -1603,11 +1839,11 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                 {
                     // Change cursor to vsplit if on bounds
                     #region cursor vsplit or vcross
-                    int X = e.X + offsetx;
+                    int X = e.X + _offsetx;
                     int Y = e.Y - _TimeLineHeight;      // Offset for time line
 
-                    int nnote = highNoteID - Y / yscale;
-                    int starttime = (int)(X / xScale);
+                    int nnote = highNoteID - Y / _yscale;
+                    int starttime = (int)(X / _xscale);
 
                     note = FindNote(nnote, starttime);
 
@@ -1651,11 +1887,11 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                 {
                     // Propose note Editing or deleting
                     #region note editing or deleting
-                    int X = e.X + offsetx;
+                    int X = e.X + _offsetx;
                     int Y = e.Y - TimeLineY;        // Offset for time line
 
-                    int nnote = highNoteID - Y / yscale;
-                    int starttime = (int)(X / xScale);
+                    int nnote = highNoteID - Y / _yscale;
+                    int starttime = (int)(X / _xscale);
 
                     note = FindNote(nnote, starttime);
 
@@ -1684,8 +1920,8 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                 {
                     // Continue to draw new note
                     #region drawnote
-                    int X = e.X + offsetx;
-                    int starttime = (int)(X / xScale);
+                    int X = e.X + _offsetx;
+                    int starttime = (int)(X / _xscale);
                     int delta = starttime - newNote.StartTime;
                     float ffraction = (float)sequence1.Time.Quarter / (float)resolution;
                     int nbFractions = (int)(delta / ffraction);
@@ -1720,14 +1956,14 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                 {
                     // we are dragging the note "note"
                     #region drag note
-                    int X = e.X + offsetx;
+                    int X = e.X + _offsetx;
 
-                    float deltastarttime = (X - aPos.X) / (float)xScale;
+                    float deltastarttime = (X - aPos.X) / (float)_xscale;
                     float ffraction = (float)sequence1.Time.Quarter / (float)resolution;
                     int nbFractions = (int)(deltastarttime / ffraction);
 
                     int Y = e.Y;
-                    int number = highNoteID - Y / yscale;
+                    int number = highNoteID - Y / _yscale;
                     newNote.Number = number;
 
                     // Sometimes StartTime of original note is not on the grid: 
@@ -1755,7 +1991,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     #region modify notes bound
                     Cursor = Cursors.VSplit;
 
-                    int X = (int)((e.X + offsetx) / xScale);
+                    int X = (int)((e.X + _offsetx) / _xscale);
 
                     if (EditMode == editmode.left)
                     {
@@ -1853,7 +2089,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                 int w = Math.Abs(aPos.X - pos.X);
                 int h = Math.Abs(aPos.Y - pos.Y);
 
-                x = x + offsetx;
+                x = x + _offsetx;
 
                 selRect = new Rectangle(x, y, w, h);
 
@@ -1968,10 +2204,10 @@ namespace Sanford.Multimedia.Midi.PianoRoll
 
                 foreach (MidiNote n in track1.Notes)
                 {
-                    int X = (int)(n.StartTime * xScale);
-                    int Y = (highNoteID - n.Number) * yscale; 
-                    int W = (int)(n.Duration * xScale);
-                    int H = yscale;
+                    int X = (int)(n.StartTime * _xscale);
+                    int Y = (highNoteID - n.Number) * _yscale; 
+                    int W = (int)(n.Duration * _xscale);
+                    int H = _yscale;
                     Rectangle rectn = new Rectangle(X, Y, W, H);
 
                     if (selRect.Contains(rectn))
@@ -1989,10 +2225,10 @@ namespace Sanford.Multimedia.Midi.PianoRoll
 
         private void selectNote(MidiNote n)
         {            
-            int x = (int)(n.StartTime * xScale);
-            int y = (highNoteID - n.Number) * yscale;  //127 - notenumber
-            int w = (int)(n.Duration * xScale);
-            int h = yscale;
+            int x = (int)(n.StartTime * _xscale);
+            int y = (highNoteID - n.Number) * _yscale;  //127 - notenumber
+            int w = (int)(n.Duration * _xscale);
+            int h = _yscale;
             selRect = new Rectangle(x, y, w, h);
 
             detectSelectedNotes();
@@ -2042,58 +2278,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         #endregion Mouse
 
 
-        #region events
-
-        /// <summary>
-        /// Paint event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void pnlCanvas_Paint(object sender, PaintEventArgs e)
-        {
-            Rectangle clip =
-                new Rectangle((int)(offsetx),
-                (int)(e.ClipRectangle.Y),
-                (int)(e.ClipRectangle.Width),
-                (int)(e.ClipRectangle.Height));
-
-            Graphics g = e.Graphics;                    
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
-            g.TranslateTransform(-clip.X, 0);
-
-            if (sequence1 != null)
-            {
-                if (Parent.GetType() == typeof(Panel))
-                {                    
-                    CreateBackgroundCanvas(g, clip);
-                    DrawGrid(g, clip);
-                    DrawNotes(g, clip);                 
-                }
-                else
-                {
-                    CreateBackgroundCanvas(g, clip);
-                    DrawGrid(g, clip);
-                    DrawNotes(g, clip);
-                }
-                g.TranslateTransform(clip.X, 0);
-
-                if (selectingNote == true)
-                {
-                    // Draw the current rectangle
-                    Point pos = PointToClient(Control.MousePosition);
-                    using (Pen pen = new Pen(Brushes.White))
-                    {
-                        pen.DashStyle = DashStyle.Dot;
-                        g.DrawLine(pen, aPos.X, aPos.Y, pos.X, aPos.Y);
-                        g.DrawLine(pen, pos.X, aPos.Y, pos.X, pos.Y);
-                        g.DrawLine(pen, pos.X, pos.Y, aPos.X, pos.Y);
-                        g.DrawLine(pen, aPos.X, pos.Y, aPos.X, aPos.Y);
-                    }
-                }               
-                setTimeVLinePos(0);                
-            }
-        }
+        #region Protected events
     
         protected override void OnResize(EventArgs e)
         {            
@@ -2140,14 +2325,14 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             InfoNote?.Invoke(tx);
         }
 
-        #endregion events
+        #endregion Protected events
 
 
         #region vertical bar
         public void setTimeVLinePos(int pos)
         {
             TimeVLine.Height = pnlCanvas.Height - _TimeLineHeight;
-            TimeVLine.Location = new Point(pos, _TimeLineHeight);
+            TimeVLine.Location = new Point(pos, _TimeLineHeight - _offsety);
         }        
         
         /// <summary>
