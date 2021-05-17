@@ -702,7 +702,6 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             Pen FillPen;
             
             Rectangle rect;
-
             Point p1;
             Point p2;
 
@@ -723,28 +722,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             else
                 W = clip.Width;
            
-            _totalheight = (1 + highNoteID - lowNoteID) * _yscale;
-
-
-            // ==========================
-            // Draw Timeline background color
-            // Dessiner en dernier
-            // ========================== 
-            
-            FillPen = new Pen(TimeLineColor);
-            
-            // Gray rectangle
-            //g.DrawRectangle(FillPen, clip.X, clip.Y - _offsety, W, h);
-            //rect = new Rectangle(clip.X, clip.Y - _offsety, W, h);
-            FillBrush = new SolidBrush(TimeLineColor);
-            //g.FillRectangle(FillBrush, rect);
-            
-            // Black line separator
-            FillPen = new Pen(Color.Black, 3);
-            //p1 = new Point(clip.X, _TimeLineHeight - 2 - _offsety);
-            //p2 = new Point(W, _TimeLineHeight - 2 - _offsety);
-            //g.DrawLine(FillPen, p1, p2);
-            
+            _totalheight = (1 + highNoteID - lowNoteID) * _yscale;            
 
             // ==========================
             // Background color : grey
@@ -817,7 +795,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             int timespermeasure = sequence1.Numerator;             // nombre de beats par mesures
             float TimeUnit = Sequence1.Denominator;            // 2 = blanche, 4 = noire, 8 = croche, 16 = doucle croche, 32 triple croche
 
-            Pen TicksPen = new Pen(Color.White);
+            //Pen TicksPen = new Pen(Color.White);
             Pen mesureSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF676767"), 1);
             Pen beatSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF585858"), 1);            
             Pen intervalSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF464646"), 1);
@@ -832,13 +810,6 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             // Increment of 1 TimeUnit, divided by the resolution, in ticks
             float f_beat = (float)quarter * 4 / TimeUnit;
             float f_increment = f_beat / resolution;
-
-            // Measure number display
-            int NumMeasure = 0;
-            SolidBrush textBrush = new SolidBrush(Color.White);
-            Font fontMeasure = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel);
-            Font fontInterval = new Font("Arial", 10, FontStyle.Regular, GraphicsUnit.Pixel);
-            int pico = 0;
 
             do
             {
@@ -856,28 +827,11 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     {
                         // Display line
                         g.DrawLine(mesureSeparatorPen, p1, p2);
-
-                        // Display measure number
-                        //Point p1pico = new Point(x1, _TimeLineHeight - 14 - _offsety);
-                        //Point p2pico = new Point(x1, _TimeLineHeight - 1 - _offsety);
-                        //g.DrawLine(TicksPen, p1pico, p2pico);
-                        //NumMeasure = 1 + (int)(f_n / measurelen);
-                        //g.DrawString(NumMeasure.ToString(), fontMeasure, textBrush, p1.X - 5, 7 - _offsety);
-
                     }
                     else if (step % resolution == 0)                        // every time or beat
                     {
                         // Display line
                         g.DrawLine(beatSeparatorPen, p1, p2);
-
-                        // Display beat number
-                        //Point p1pico = new Point(x1, _TimeLineHeight - 5 - _offsety);
-                        //Point p2pico = new Point(x1, _TimeLineHeight - 1 - _offsety);
-                        //g.DrawLine(TicksPen, p1pico, p2pico);
-                        //NumMeasure = 1 + (int)(f_n / measurelen);
-                        //pico = 1 + sequence1.Numerator - (int)((NumMeasure * measurelen - f_n) / (measurelen / sequence1.Numerator));
-                        //g.DrawString(NumMeasure + "." + pico, fontInterval, textBrush, p1.X - 5, 7 - _offsety);
-
                     }
                     else
                     {
@@ -891,7 +845,11 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             } while (f_n <= lastPosition);    
         }
 
-
+        /// <summary>
+        /// Draw Time Line at position 0
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="clip"></param>
         private void DrawTimeLine(Graphics g, Rectangle clip)
         {
             SolidBrush FillBrush;
@@ -905,13 +863,6 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             int h = _TimeLineHeight;  // bande horizontale en haut pour afficher les mesures et intervalles
             int H = 0;
             int W = 0; // Width of scores
-
-            if (clip.Width > _maxstaffwidth)
-                W = _maxstaffwidth;
-            else
-                W = clip.Width;
-
-            //_totalheight = (1 + highNoteID - lowNoteID) * _yscale;
 
             W = clip.Width;
 
@@ -933,16 +884,13 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             p2 = new Point(clip.X + W, clip.Y +  _TimeLineHeight - 2);
             g.DrawLine(FillPen, p1, p2);
 
-
-
-
+            // ----------------------------------
+            // Draw Ticks
+            // ----------------------------------
             int step = 0;            
             int timespermeasure = sequence1.Numerator;
             float TimeUnit = Sequence1.Denominator;            // 2 = blanche, 4 = noire, 8 = croche, 16 = doucle croche, 32 triple croche
             Pen TicksPen = new Pen(Color.White);
-            Pen mesureSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF676767"), 1);
-            Pen beatSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF585858"), 1);
-            Pen intervalSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF464646"), 1);
 
             // quarter = durée d'une noire
             int quarter = sequence1.Time.Quarter;
@@ -954,7 +902,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             float f_increment = f_beat / resolution;
 
             // Measure number display
-            int NumMeasure = 0;
+            int NumMeasure;
             SolidBrush textBrush = new SolidBrush(Color.White);
             Font fontMeasure = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontInterval = new Font("Arial", 10, FontStyle.Regular, GraphicsUnit.Pixel);
@@ -974,9 +922,6 @@ namespace Sanford.Multimedia.Midi.PianoRoll
 
                     if (step % (resolution * timespermeasure) == 0)        // every measure
                     {
-                        // Display line
-                        //g.DrawLine(mesureSeparatorPen, p1, p2);
-
                         // Display measure number
                         Point p1pico = new Point(x1, _TimeLineHeight - 14 - _offsety);
                         Point p2pico = new Point(x1, _TimeLineHeight - 1 - _offsety);
@@ -987,9 +932,6 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     }
                     else if (step % resolution == 0)                        // every time or beat
                     {
-                        // Display line
-                        //g.DrawLine(beatSeparatorPen, p1, p2);
-
                         // Display beat number
                         Point p1pico = new Point(x1, _TimeLineHeight - 5 - _offsety);
                         Point p2pico = new Point(x1, _TimeLineHeight - 1 - _offsety);
@@ -997,20 +939,13 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                         NumMeasure = 1 + (int)(f_n / measurelen);
                         pico = 1 + sequence1.Numerator - (int)((NumMeasure * measurelen - f_n) / (measurelen / sequence1.Numerator));
                         g.DrawString(NumMeasure + "." + pico, fontInterval, textBrush, p1.X - 5, 7 - _offsety);
-
-                    }
-                    else
-                    {
-                        //g.DrawLine(intervalSeparatorPen, p1, p2);  // every resolution
-                    }
+                    }                    
                 }
 
                 step++;
                 f_n += f_increment;
 
             } while (f_n <= lastPosition);
-
-
         }
 
         #endregion Canvas

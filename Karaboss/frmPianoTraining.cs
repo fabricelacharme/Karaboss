@@ -15,6 +15,9 @@ namespace Karaboss
         private int TempoOrig = 0;
         private int TempoDelta = 100;
 
+        private bool bShowVScrollBar = false;
+        private bool bShowHScrollBar = false;
+
         // Midifile characteristics
         private double _duration = 0;  // en secondes
         private int _totalTicks = 0;
@@ -96,9 +99,7 @@ namespace Karaboss
 
             vPianoRollControl1.OnMouseMoved += new Sanford.Multimedia.Midi.VPianoRoll.MouseMoveEventHandler(vPianoRollControl1_MouseMove);
         }
-
-      
-
+     
 
         #region timer        
         private void ScrollView()
@@ -345,9 +346,11 @@ namespace Karaboss
                 pianoControl1.Zoom = zoomx;
                 
                 vPianoRollControl1.xScale = pianoControl1.Scale;
-                vPianoRollControl1.OffsetChanged += new Sanford.Multimedia.Midi.VPianoRoll.OffsetChangedEventHandler(vPianoRollControl1_OffsetChanged);               
+                vPianoRollControl1.OffsetChanged += new Sanford.Multimedia.Midi.VPianoRoll.OffsetChangedEventHandler(vPianoRollControl1_OffsetChanged);
 
                 #endregion
+
+                SetScrollBarValues();
 
             }
             catch (Exception ex)
@@ -540,6 +543,43 @@ namespace Karaboss
 
 
         #region positionHScrollBar
+
+        private void SetScrollBarValues()
+        {
+            if (pnlScrollView == null || vPianoRollControl1 == null)
+                return;
+
+            // Width of pianoRollControl
+            int W = vPianoRollControl1.totalWidth;
+            // Display width
+            int wMiddle = pnlScrollView.Width;
+
+            bool bShowHScrollBarIndetermined = false;
+
+            // If display width > pianoRollControl width => remove horizontal scrollbar
+            if (wMiddle > W + vScrollBarRoll.Width)
+                bShowHScrollBar = false;
+            else if (wMiddle < W)
+                bShowHScrollBar = true;
+            else
+                bShowHScrollBarIndetermined = true;
+
+            bool bShowVScrollBarIndetermined = false;
+
+            // If display height > pianoRollControl height => remove vertical scrollbar
+            if (vPianoRollControl1.maxStaffLength > pnlScrollView.Height)
+                bShowVScrollBar = true;
+            else if (vPianoRollControl1.maxStaffLength < pnlScrollView.Height)
+                bShowVScrollBar = false;
+            else
+                bShowVScrollBarIndetermined = true;
+
+
+            vScrollBarRoll.Visible = bShowVScrollBar;
+            hScrollBarRoll.Visible = bShowHScrollBar;
+
+        }
+
 
         private void positionHScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
@@ -937,6 +977,8 @@ namespace Karaboss
 
             BtnStop.Left = BtnPlay.Left + BtnPlay.Width + 3;
             //lblKaraboss.Left = ClientSize.Width - lblKaraboss.Width - 3;
+
+            SetScrollBarValues();
         }
 
         /// <summary>

@@ -416,6 +416,7 @@ namespace Karaboss
             this.pianoRollControl2.Name = "pianoRollControl2";
             this.pianoRollControl2.NotesEdition = false;
             this.pianoRollControl2.OffsetX = 0;
+            this.pianoRollControl2.OffsetY = 0;
             this.pianoRollControl2.Resolution = 4;
             this.pianoRollControl2.Sequence1 = null;
             this.pianoRollControl2.Size = new System.Drawing.Size(206, 240);
@@ -424,6 +425,7 @@ namespace Karaboss
             this.pianoRollControl2.TimeLineY = 40;
             this.pianoRollControl2.TrackNum = -1;
             this.pianoRollControl2.Velocity = 100;
+            this.pianoRollControl2.xScale = 0.1D;
             this.pianoRollControl2.yScale = 20;
             this.pianoRollControl2.zoomx = 1F;
             // 
@@ -438,6 +440,7 @@ namespace Karaboss
             // 
             // pnlLeft
             // 
+            this.pnlLeft.BackColor = System.Drawing.Color.Gray;
             this.pnlLeft.Controls.Add(this.pnlPiano);
             this.pnlLeft.Controls.Add(this.pnlPianoTop);
             this.pnlLeft.Dock = System.Windows.Forms.DockStyle.Left;

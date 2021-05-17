@@ -58,6 +58,7 @@
             this.colorSliderY = new ColorSlider.ColorSlider();
             this.pnlPianoroll = new System.Windows.Forms.Panel();
             this.pnlMiddle = new System.Windows.Forms.Panel();
+            this.hScrollBarRoll = new System.Windows.Forms.HScrollBar();
             this.pnlScrollView.SuspendLayout();
             this.pnlPiano.SuspendLayout();
             this.pnlTop.SuspendLayout();
@@ -72,6 +73,7 @@
             // 
             resources.ApplyResources(this.pnlScrollView, "pnlScrollView");
             this.pnlScrollView.BackColor = System.Drawing.Color.Gray;
+            this.pnlScrollView.Controls.Add(this.hScrollBarRoll);
             this.pnlScrollView.Controls.Add(this.vScrollBarRoll);
             this.pnlScrollView.Controls.Add(this.vPianoRollControl1);
             this.pnlScrollView.Name = "pnlScrollView";
@@ -89,9 +91,11 @@
             resources.ApplyResources(this.vPianoRollControl1, "vPianoRollControl1");
             this.vPianoRollControl1.LowNoteID = 23;
             this.vPianoRollControl1.Name = "vPianoRollControl1";
+            this.vPianoRollControl1.OffsetX = 0;
             this.vPianoRollControl1.OffsetY = 0;
             this.vPianoRollControl1.Resolution = 4;
             this.vPianoRollControl1.Sequence1 = null;
+            this.vPianoRollControl1.TimeLineX = 40;
             this.vPianoRollControl1.TrackNum = -1;
             this.vPianoRollControl1.xScale = 0.1D;
             this.vPianoRollControl1.yScale = 0D;
@@ -452,6 +456,11 @@
             resources.ApplyResources(this.pnlMiddle, "pnlMiddle");
             this.pnlMiddle.Name = "pnlMiddle";
             // 
+            // hScrollBarRoll
+            // 
+            resources.ApplyResources(this.hScrollBarRoll, "hScrollBarRoll");
+            this.hScrollBarRoll.Name = "hScrollBarRoll";
+            // 
             // frmPianoTraining
             // 
             resources.ApplyResources(this, "$this");
@@ -510,5 +519,6 @@
         private System.Windows.Forms.VScrollBar vScrollBarRoll;
         private ColorSlider.ColorSlider colorSliderY;
         private ColorSlider.ColorSlider colorSliderX;
+        private System.Windows.Forms.HScrollBar hScrollBarRoll;
     }
 }

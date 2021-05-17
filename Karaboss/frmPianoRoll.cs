@@ -50,7 +50,6 @@ namespace Karaboss
 
         private int TempoDelta = 100;
         private int TempoOrig = 0;
-      
 
         private int resolution = 4;
         private int yScale = 20;
@@ -119,14 +118,10 @@ namespace Karaboss
         private Sequencer sequencer1 = new Sequencer();
         private Sequence sequence1 = new Sequence();
 
-        // Creation dynamique de controles       
-        //Panel pnlHScroll;               // panel horizontal
-        //Panel pnlTimeLeft;
-        //Panel pnlTimeLine;        
+        // Creation dynamique de controles           
         VScrollBar vScrollBar;
         HScrollBar hScrollBar;
-        //PianoControl pianoControl2;
-        //PianoRollControl pianoRollControl3;        
+
         #endregion
 
 
@@ -646,7 +641,7 @@ namespace Karaboss
             if (bShowVScrollBar == false)
             {
                 vScrollBar.Visible = false;
-                pnlPiano.Top = 40;
+                pnlPiano.Top = pianoRollControl2.TimeLineY;
                 pnlScrollView.Top = 0;
             }
             else
@@ -1050,16 +1045,6 @@ namespace Karaboss
                 // Adjust scrollbars values
                 SetScrollBarValues();
 
-                /*
-                if (bShowVScrollBar)
-                {
-                    float newOffset = oldOffset * vScrollBar.Maximum;
-                    if (newOffset >= 0 && newOffset < vScrollBar.Maximum)
-                    {
-                        vScrollBar.Value = (int)newOffset;
-                    }
-                }
-                */
             }            
             else if (rectPianoRoll.Contains(PpianoRoll))
             {
@@ -1072,39 +1057,13 @@ namespace Karaboss
                     case PlayerStates.Paused:
                         break;
                     case PlayerStates.Stopped:
-
-                        /*
-                        int v = e.Delta / 120 * (int)(positionHScrollBar.Maximum - positionHScrollBar.Minimum) / positionHScrollBar.MouseWheelBarPartitions;
-                        positionHScrollBar.Value = SetProperValue((int)positionHScrollBar.Value + v);
-                        hScrollBar.Value = (int)positionHScrollBar.Value;
-                        */
                         zoomx += (e.Delta > 0 ? 0.1f : -0.1f);
                         pianoRollControl2.zoomx = zoomx;
                         // Adjust scrollbar values
                         SetScrollBarValues();
                         break;
                 }
-            
-                
-                /*
-                float oldOffset = ((float)hScrollBar.Value/(float)hScrollBar.Maximum);
-
-                zoomx += (e.Delta > 0 ? 0.1f : -0.1f);                                
-                pianoRollControl2.zoomx = zoomx;
-                           
-                // Adjust scrollbar values
-                SetScrollBarValues();                
-
-                if (bShowHScrollBar)
-                {
-                    float newOffset = oldOffset * hScrollBar.Maximum;
-                    if (newOffset >= 0 && newOffset < hScrollBar.Maximum)
-                    {
-                        hScrollBar.Value = (int)newOffset;
-                    }
-                }
-                */
-
+                            
             }
         }
 
@@ -1120,16 +1079,17 @@ namespace Karaboss
         /// </summary>
         public void StartupPosition(float ticks = 0)
         {                       
-            /*
-            int middleScroll = vScrollBar.Maximum / 2;
-            vScrollBar.Value = middleScroll;
+            
+            //int middleScroll = vScrollBar.Maximum / 2;
+            //vScrollBar.Value = middleScroll;
 
             pianoRollControl2.OffsetX = Convert.ToInt32(ticks * pianoRollControl2.xScale);
             if (pianoRollControl2.OffsetX >= hScrollBar.Minimum && pianoRollControl2.OffsetX <= hScrollBar.Maximum)
-            {                
+            {
                 //hScrollBar.Value = pianoRollControl2.OffsetX;
+                positionHScrollBar.Value = (uint)ticks;
             }
-            */
+            
         }
 
         private void FrmPianoRoll_Resize(object sender, EventArgs e)
