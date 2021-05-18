@@ -340,6 +340,7 @@ namespace Karaboss
                 pianoControl1.PianoKeyUp += new EventHandler<PianoKeyEventArgs>(PianoControl1_PianoKeyUp);
 
                 // Notes du piano
+
                 pianoControl1.LowNoteID = vPianoRollControl1.LowNoteID = 23;
                 pianoControl1.HighNoteID = vPianoRollControl1.HighNoteID = 108;
                 vPianoRollControl1.Sequence1 = sequence1;
