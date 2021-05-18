@@ -31,7 +31,8 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPianoTraining));
             this.pnlScrollView = new System.Windows.Forms.Panel();
-            this.vScrollBarRoll = new System.Windows.Forms.VScrollBar();
+            this.hScrollBar = new System.Windows.Forms.HScrollBar();
+            this.vScrollBar = new System.Windows.Forms.VScrollBar();
             this.vPianoRollControl1 = new Sanford.Multimedia.Midi.VPianoRoll.VPianoRollControl();
             this.pnlPiano = new System.Windows.Forms.Panel();
             this.pianoControl1 = new Sanford.Multimedia.Midi.UI.PianoControl();
@@ -58,7 +59,6 @@
             this.colorSliderY = new ColorSlider.ColorSlider();
             this.pnlPianoroll = new System.Windows.Forms.Panel();
             this.pnlMiddle = new System.Windows.Forms.Panel();
-            this.hScrollBarRoll = new System.Windows.Forms.HScrollBar();
             this.pnlScrollView.SuspendLayout();
             this.pnlPiano.SuspendLayout();
             this.pnlTop.SuspendLayout();
@@ -73,17 +73,21 @@
             // 
             resources.ApplyResources(this.pnlScrollView, "pnlScrollView");
             this.pnlScrollView.BackColor = System.Drawing.Color.Gray;
-            this.pnlScrollView.Controls.Add(this.hScrollBarRoll);
-            this.pnlScrollView.Controls.Add(this.vScrollBarRoll);
+            this.pnlScrollView.Controls.Add(this.vScrollBar);
             this.pnlScrollView.Controls.Add(this.vPianoRollControl1);
             this.pnlScrollView.Name = "pnlScrollView";
             // 
-            // vScrollBarRoll
+            // hScrollBar
             // 
-            resources.ApplyResources(this.vScrollBarRoll, "vScrollBarRoll");
-            this.vScrollBarRoll.Name = "vScrollBarRoll";
-            this.vScrollBarRoll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBarRoll_Scroll);
-            this.vScrollBarRoll.ValueChanged += new System.EventHandler(this.vScrollBarRoll_ValueChanged);
+            resources.ApplyResources(this.hScrollBar, "hScrollBar");
+            this.hScrollBar.Name = "hScrollBar";
+            // 
+            // vScrollBar
+            // 
+            resources.ApplyResources(this.vScrollBar, "vScrollBar");
+            this.vScrollBar.Name = "vScrollBar";
+            this.vScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBarRoll_Scroll);
+            this.vScrollBar.ValueChanged += new System.EventHandler(this.vScrollBarRoll_ValueChanged);
             // 
             // vPianoRollControl1
             // 
@@ -102,6 +106,8 @@
             // 
             // pnlPiano
             // 
+            this.pnlPiano.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlPiano.Controls.Add(this.hScrollBar);
             this.pnlPiano.Controls.Add(this.pianoControl1);
             this.pnlPiano.Controls.Add(this.pnlRedPianoSep);
             this.pnlPiano.Controls.Add(this.pnlLeftPiano);
@@ -110,8 +116,8 @@
             // 
             // pianoControl1
             // 
-            resources.ApplyResources(this.pianoControl1, "pianoControl1");
             this.pianoControl1.HighNoteID = 108;
+            resources.ApplyResources(this.pianoControl1, "pianoControl1");
             this.pianoControl1.LowNoteID = 23;
             this.pianoControl1.Name = "pianoControl1";
             this.pianoControl1.NoteOnColor = System.Drawing.Color.SkyBlue;
@@ -456,11 +462,6 @@
             resources.ApplyResources(this.pnlMiddle, "pnlMiddle");
             this.pnlMiddle.Name = "pnlMiddle";
             // 
-            // hScrollBarRoll
-            // 
-            resources.ApplyResources(this.hScrollBarRoll, "hScrollBarRoll");
-            this.hScrollBarRoll.Name = "hScrollBarRoll";
-            // 
             // frmPianoTraining
             // 
             resources.ApplyResources(this, "$this");
@@ -516,9 +517,9 @@
         private System.Windows.Forms.Panel pnlPianoroll;
         private System.Windows.Forms.Panel pnlMiddle;
         private System.Windows.Forms.Panel pnlLeftPiano;
-        private System.Windows.Forms.VScrollBar vScrollBarRoll;
+        private System.Windows.Forms.VScrollBar vScrollBar;
         private ColorSlider.ColorSlider colorSliderY;
         private ColorSlider.ColorSlider colorSliderX;
-        private System.Windows.Forms.HScrollBar hScrollBarRoll;
+        private System.Windows.Forms.HScrollBar hScrollBar;
     }
 }

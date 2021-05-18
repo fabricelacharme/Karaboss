@@ -489,8 +489,8 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         /// <param name="clip"></param>
         private void DrawNotes(Graphics g, Rectangle clip)
         {
-            int X = 0;
-            int W = 0;
+            int X;
+            int W;
             // if one track
             if (track1 != null)
             {

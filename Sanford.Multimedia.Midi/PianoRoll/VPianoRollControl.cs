@@ -463,7 +463,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             Pen StrokePen;
             int PH = pnlCanvas.Height;
 
-            int X = (int)((noteNumber - lowNoteID) * _xscale);           // X = notenumber - 23 (graves à gauche aigues à droite)                      
+            int X = TimeLineX + (int)((noteNumber - lowNoteID) * _xscale);           // X = notenumber - 23 (graves à gauche aigues à droite)                      
             int Y = (int)(PH - (startTime + duration) * _yscale);     // hauteur - starttime            
 
             int W = (int)_xscale;

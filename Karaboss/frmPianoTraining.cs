@@ -154,7 +154,7 @@ namespace Karaboss
                     if (PlayerState == PlayerStates.Playing && sequencer1.Position < positionHScrollBar.Maximum - positionHScrollBar.Minimum)
                     {                        
                         positionHScrollBar.Value = sequencer1.Position + positionHScrollBar.Minimum;
-                        vScrollBarRoll.Value = sequencer1.Position + vScrollBarRoll.Minimum;
+                        vScrollBar.Value = sequencer1.Position + vScrollBar.Minimum;
                     }
                 }
                 catch (Exception ex)
@@ -305,11 +305,11 @@ namespace Karaboss
 
                 #region vScrollRoll
 
-                vScrollBarRoll.Maximum = _totalTicks + 2 * _measurelen; 
-                vScrollBarRoll.Minimum = _measurelen;
-                vScrollBarRoll.SmallChange = _measurelen / vPianoRollControl1.Resolution;
-                vScrollBarRoll.LargeChange = _measurelen;
-                vScrollBarRoll.Value = _measurelen;
+                vScrollBar.Maximum = _totalTicks + 2 * _measurelen; 
+                vScrollBar.Minimum = _measurelen;
+                vScrollBar.SmallChange = _measurelen / vPianoRollControl1.Resolution;
+                vScrollBar.LargeChange = _measurelen;
+                vScrollBar.Value = _measurelen;
 
                 #endregion
 
@@ -330,10 +330,11 @@ namespace Karaboss
 
                 #region bottom
                 // Piano
-                pnlPiano.Height = 150;
+                pnlPiano.Height = 167;
            
                 pianoControl1.Orientation = Orientation.Horizontal;
-                pianoControl1.Size = new Size(pianoControl1.totalLength, pnlPiano.Height - pnlRedPianoSep.Height);
+                
+   
 
                 pianoControl1.PianoKeyDown += new EventHandler<PianoKeyEventArgs>(PianoControl1_PianoKeyDown);
                 pianoControl1.PianoKeyUp += new EventHandler<PianoKeyEventArgs>(PianoControl1_PianoKeyUp);
@@ -344,7 +345,11 @@ namespace Karaboss
                 vPianoRollControl1.Sequence1 = sequence1;
                 vPianoRollControl1.zoomy = zoomy;
                 pianoControl1.Zoom = zoomx;
-                
+
+                pianoControl1.Size = new Size(pianoControl1.totalLength, pnlPiano.Height - pnlRedPianoSep.Height);
+                pianoControl1.BringToFront();
+                pianoControl1.Dock = DockStyle.Fill;
+
                 vPianoRollControl1.xScale = pianoControl1.Scale;
                 vPianoRollControl1.OffsetChanged += new Sanford.Multimedia.Midi.VPianoRoll.OffsetChangedEventHandler(vPianoRollControl1_OffsetChanged);
 
@@ -495,7 +500,7 @@ namespace Karaboss
                     {
                         pianoControl1.Reset();
                         positionHScrollBar.Value = newstart + positionHScrollBar.Minimum;
-                        vScrollBarRoll.Value = (int)positionHScrollBar.Value;
+                        vScrollBar.Value = (int)positionHScrollBar.Value;
                         vPianoRollControl1.OffsetY = Convert.ToInt32(newstart * vPianoRollControl1.yScale);
                         // left key was hit one time
                         nbstop = 1;
@@ -529,7 +534,7 @@ namespace Karaboss
                 DisplayTimeElapse(0);
 
                 positionHScrollBar.Value = positionHScrollBar.Minimum;
-                vScrollBarRoll.Value = vScrollBarRoll.Minimum;
+                vScrollBar.Value = vScrollBar.Minimum;
                 vPianoRollControl1.OffsetY = 0;
                 laststart = 0;              
             }
@@ -557,13 +562,9 @@ namespace Karaboss
             bool bShowHScrollBarIndetermined = false;
 
             // If display width > pianoRollControl width => remove horizontal scrollbar
-            if (wMiddle > W + vScrollBarRoll.Width)
-                bShowHScrollBar = false;
-            else if (wMiddle < W)
-                bShowHScrollBar = true;
-            else
-                bShowHScrollBarIndetermined = true;
+            bShowHScrollBar = pianoControl1.totalLength > pnlPiano.Width;
 
+           
             bool bShowVScrollBarIndetermined = false;
 
             // If display height > pianoRollControl height => remove vertical scrollbar
@@ -575,8 +576,8 @@ namespace Karaboss
                 bShowVScrollBarIndetermined = true;
 
 
-            vScrollBarRoll.Visible = bShowVScrollBar;
-            hScrollBarRoll.Visible = bShowHScrollBar;
+            vScrollBar.Visible = bShowVScrollBar;
+            hScrollBar.Visible = bShowHScrollBar;
 
         }
 
@@ -627,8 +628,8 @@ namespace Karaboss
                     newstart = (int)(positionHScrollBar.Value - positionHScrollBar.Minimum);
                     vPianoRollControl1.OffsetY = Convert.ToInt32(newstart * vPianoRollControl1.yScale);
 
-                    if (positionHScrollBar.Value < vScrollBarRoll.Maximum)
-                        vScrollBarRoll.Value = (int)positionHScrollBar.Value;
+                    if (positionHScrollBar.Value < vScrollBar.Maximum)
+                        vScrollBar.Value = (int)positionHScrollBar.Value;
 
                     double dpercent = 100 * newstart / (double)_totalTicks;
                     DisplayTimeElapse(dpercent);
@@ -807,7 +808,7 @@ namespace Karaboss
                     int newvalue = Convert.ToInt32((value / vPianoRollControl1.yScale)) + (int)positionHScrollBar.Minimum;
                     if (newvalue > positionHScrollBar.Maximum) newvalue = (int)positionHScrollBar.Maximum;
                     positionHScrollBar.Value = newvalue;
-                    vScrollBarRoll.Value = newvalue;
+                    vScrollBar.Value = newvalue;
                     newstart = (int)(positionHScrollBar.Value - positionHScrollBar.Minimum);
                     break;
             }
@@ -845,11 +846,17 @@ namespace Karaboss
                 pianoControl1.Zoom = zoomx;
                 pianoControl1.Width = pianoControl1.totalLength;
 
+                pianoControl1.Refresh();
+
                 vPianoRollControl1.xScale = pianoControl1.Scale;
                 vPianoRollControl1.Width = pianoControl1.Width;     // FAB : ne faut-il pas rajouter largeur de la timeline ?????
 
                 // Adjust heights
-                pnlPiano.Width = pnlScrollView.Width = pianoControl1.totalLength; 
+                pnlPiano.Width = pnlScrollView.Width = pianoControl1.totalLength;
+
+                
+                // Adjust scrollbars values
+                SetScrollBarValues();
 
             }
             else if (rectPianoRoll.Contains(PpianoRoll))
@@ -864,9 +871,7 @@ namespace Karaboss
                     case PlayerStates.Stopped:                        
                         int v = e.Delta / 120 * (int)(positionHScrollBar.Maximum - positionHScrollBar.Minimum) / positionHScrollBar.MouseWheelBarPartitions;
                         positionHScrollBar.Value = SetProperValue((int)positionHScrollBar.Value + v);
-
-                        vScrollBarRoll.Value = (int)positionHScrollBar.Value;
-                        
+                        vScrollBar.Value = (int)positionHScrollBar.Value;                        
                         break;
                 }
             }
@@ -1242,20 +1247,20 @@ namespace Karaboss
 
         private void vScrollBarRoll_ValueChanged(object sender, EventArgs e)
         {
-            if (vScrollBarRoll.Value > positionHScrollBar.Maximum)
-                vScrollBarRoll.Value = (int)positionHScrollBar.Maximum;
+            if (vScrollBar.Value > positionHScrollBar.Maximum)
+                vScrollBar.Value = (int)positionHScrollBar.Maximum;
             
-            positionHScrollBar.Value = vScrollBarRoll.Value;
+            positionHScrollBar.Value = vScrollBar.Value;
         }
 
         private void vScrollBarRoll_Scroll(object sender, ScrollEventArgs e)
         {
             if (e.Type == ScrollEventType.EndScroll)
             {
-                if (vScrollBarRoll.Value > positionHScrollBar.Maximum)
-                    vScrollBarRoll.Value = (int)positionHScrollBar.Maximum;
+                if (vScrollBar.Value > positionHScrollBar.Maximum)
+                    vScrollBar.Value = (int)positionHScrollBar.Maximum;
 
-                positionHScrollBar.Value = vScrollBarRoll.Value;
+                positionHScrollBar.Value = vScrollBar.Value;
             }
         }
 
