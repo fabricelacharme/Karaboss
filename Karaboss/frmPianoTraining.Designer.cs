@@ -31,11 +31,9 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPianoTraining));
             this.pnlScrollView = new System.Windows.Forms.Panel();
-            this.hScrollBar = new System.Windows.Forms.HScrollBar();
             this.vScrollBar = new System.Windows.Forms.VScrollBar();
-            this.vPianoRollControl1 = new Sanford.Multimedia.Midi.VPianoRoll.VPianoRollControl();
+            this.hScrollBar = new System.Windows.Forms.HScrollBar();
             this.pnlPiano = new System.Windows.Forms.Panel();
-            this.pianoControl1 = new Sanford.Multimedia.Midi.UI.PianoControl();
             this.pnlRedPianoSep = new System.Windows.Forms.Panel();
             this.pnlLeftPiano = new System.Windows.Forms.Panel();
             this.pnlTop = new System.Windows.Forms.Panel();
@@ -57,15 +55,15 @@
             this.lblKaraboss = new System.Windows.Forms.Label();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.colorSliderY = new ColorSlider.ColorSlider();
-            this.pnlPianoroll = new System.Windows.Forms.Panel();
             this.pnlMiddle = new System.Windows.Forms.Panel();
+            this.vPianoRollControl1 = new Sanford.Multimedia.Midi.VPianoRoll.VPianoRollControl();
+            this.pianoControl1 = new Sanford.Multimedia.Midi.UI.PianoControl();
             this.pnlScrollView.SuspendLayout();
             this.pnlPiano.SuspendLayout();
             this.pnlTop.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.pnlDisplay.SuspendLayout();
             this.pnlRight.SuspendLayout();
-            this.pnlPianoroll.SuspendLayout();
             this.pnlMiddle.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -77,11 +75,6 @@
             this.pnlScrollView.Controls.Add(this.vPianoRollControl1);
             this.pnlScrollView.Name = "pnlScrollView";
             // 
-            // hScrollBar
-            // 
-            resources.ApplyResources(this.hScrollBar, "hScrollBar");
-            this.hScrollBar.Name = "hScrollBar";
-            // 
             // vScrollBar
             // 
             resources.ApplyResources(this.vScrollBar, "vScrollBar");
@@ -89,41 +82,21 @@
             this.vScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBarRoll_Scroll);
             this.vScrollBar.ValueChanged += new System.EventHandler(this.vScrollBarRoll_ValueChanged);
             // 
-            // vPianoRollControl1
+            // hScrollBar
             // 
-            this.vPianoRollControl1.HighNoteID = 108;
-            resources.ApplyResources(this.vPianoRollControl1, "vPianoRollControl1");
-            this.vPianoRollControl1.LowNoteID = 23;
-            this.vPianoRollControl1.Name = "vPianoRollControl1";
-            this.vPianoRollControl1.OffsetX = 0;
-            this.vPianoRollControl1.OffsetY = 0;
-            this.vPianoRollControl1.Resolution = 4;
-            this.vPianoRollControl1.Sequence1 = null;
-            this.vPianoRollControl1.TimeLineX = 40;
-            this.vPianoRollControl1.TrackNum = -1;
-            this.vPianoRollControl1.xScale = 0.1D;
-            this.vPianoRollControl1.yScale = 0D;
+            resources.ApplyResources(this.hScrollBar, "hScrollBar");
+            this.hScrollBar.Name = "hScrollBar";
+            this.hScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar_Scroll);
             // 
             // pnlPiano
             // 
-            this.pnlPiano.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.pnlPiano.Controls.Add(this.hScrollBar);
+            this.pnlPiano.BackColor = System.Drawing.Color.Yellow;
             this.pnlPiano.Controls.Add(this.pianoControl1);
+            this.pnlPiano.Controls.Add(this.hScrollBar);
             this.pnlPiano.Controls.Add(this.pnlRedPianoSep);
             this.pnlPiano.Controls.Add(this.pnlLeftPiano);
             resources.ApplyResources(this.pnlPiano, "pnlPiano");
             this.pnlPiano.Name = "pnlPiano";
-            // 
-            // pianoControl1
-            // 
-            this.pianoControl1.HighNoteID = 108;
-            resources.ApplyResources(this.pianoControl1, "pianoControl1");
-            this.pianoControl1.LowNoteID = 23;
-            this.pianoControl1.Name = "pianoControl1";
-            this.pianoControl1.NoteOnColor = System.Drawing.Color.SkyBlue;
-            this.pianoControl1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.pianoControl1.Scale = 20;
-            this.pianoControl1.Zoom = 1F;
             // 
             // pnlRedPianoSep
             // 
@@ -449,18 +422,40 @@
             0});
             this.colorSliderY.ValueChanged += new System.EventHandler(this.colorSliderY_ValueChanged);
             // 
-            // pnlPianoroll
-            // 
-            this.pnlPianoroll.Controls.Add(this.pnlScrollView);
-            resources.ApplyResources(this.pnlPianoroll, "pnlPianoroll");
-            this.pnlPianoroll.Name = "pnlPianoroll";
-            // 
             // pnlMiddle
             // 
-            this.pnlMiddle.Controls.Add(this.pnlPianoroll);
+            this.pnlMiddle.Controls.Add(this.pnlScrollView);
             this.pnlMiddle.Controls.Add(this.pnlPiano);
             resources.ApplyResources(this.pnlMiddle, "pnlMiddle");
             this.pnlMiddle.Name = "pnlMiddle";
+            // 
+            // vPianoRollControl1
+            // 
+            this.vPianoRollControl1.BackColor = System.Drawing.Color.Yellow;
+            this.vPianoRollControl1.HighNoteID = 108;
+            resources.ApplyResources(this.vPianoRollControl1, "vPianoRollControl1");
+            this.vPianoRollControl1.LowNoteID = 23;
+            this.vPianoRollControl1.Name = "vPianoRollControl1";
+            this.vPianoRollControl1.OffsetX = 0;
+            this.vPianoRollControl1.OffsetY = 0;
+            this.vPianoRollControl1.Resolution = 4;
+            this.vPianoRollControl1.Sequence1 = null;
+            this.vPianoRollControl1.TimeLineX = 40;
+            this.vPianoRollControl1.TrackNum = -1;
+            this.vPianoRollControl1.xScale = 0.1D;
+            this.vPianoRollControl1.yScale = 0D;
+            // 
+            // pianoControl1
+            // 
+            this.pianoControl1.BackColor = System.Drawing.Color.Silver;
+            this.pianoControl1.HighNoteID = 108;
+            resources.ApplyResources(this.pianoControl1, "pianoControl1");
+            this.pianoControl1.LowNoteID = 23;
+            this.pianoControl1.Name = "pianoControl1";
+            this.pianoControl1.NoteOnColor = System.Drawing.Color.SkyBlue;
+            this.pianoControl1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.pianoControl1.Scale = 20;
+            this.pianoControl1.Zoom = 1F;
             // 
             // frmPianoTraining
             // 
@@ -484,7 +479,6 @@
             this.pnlDisplay.ResumeLayout(false);
             this.pnlDisplay.PerformLayout();
             this.pnlRight.ResumeLayout(false);
-            this.pnlPianoroll.ResumeLayout(false);
             this.pnlMiddle.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -514,7 +508,6 @@
         private System.Windows.Forms.Label lblKaraboss;
         private System.Windows.Forms.ComboBox CbTracks;
         private System.Windows.Forms.Panel pnlRight;
-        private System.Windows.Forms.Panel pnlPianoroll;
         private System.Windows.Forms.Panel pnlMiddle;
         private System.Windows.Forms.Panel pnlLeftPiano;
         private System.Windows.Forms.VScrollBar vScrollBar;

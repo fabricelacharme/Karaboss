@@ -301,7 +301,14 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
         public int OffsetX
         {
             get { return _offsetx; }
-            set { _offsetx = value; }
+            set 
+            {
+                if (value != _offsetx)
+                {
+                    _offsetx = value;
+                    pnlCanvas.Invalidate();
+                }
+            }
         }
 
 
@@ -463,7 +470,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             Pen StrokePen;
             int PH = pnlCanvas.Height;
 
-            int X = TimeLineX + (int)((noteNumber - lowNoteID) * _xscale);           // X = notenumber - 23 (graves à gauche aigues à droite)                      
+            int X = TimeLineX + (int)((noteNumber - lowNoteID) * _xscale) + _offsetx;           // X = notenumber - 23 (graves à gauche aigues à droite)                      
             int Y = (int)(PH - (startTime + duration) * _yscale);     // hauteur - starttime            
 
             int W = (int)_xscale;
@@ -839,23 +846,29 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                     p2 = new Point(x2, y2);
 
                     if (step % (timespermeasure * resolution) == 0)        // every measure
-                    {                       
+                    {
                         // Display measure number
-                        Point p1pico = new Point(_TimeLineWidth - 14 - _offsetx, y1);
-                        Point p2pico = new Point(_TimeLineWidth - 1 - _offsetx, y2);
+                        //Point p1pico = new Point(_TimeLineWidth - 14 - _offsetx, y1);
+                        Point p1pico = new Point(_TimeLineWidth - 14, y1);
+                        //Point p2pico = new Point(_TimeLineWidth - 1 - _offsetx, y2);
+                        Point p2pico = new Point(_TimeLineWidth - 1, y2);
                         g.DrawLine(TicksPen, p1pico, p2pico);
-                        NumMeasure = 1 + (int)(f_n / measurelen);                        
-                        g.DrawString(NumMeasure.ToString(), fontMeasure, textBrush, p1.X + 5 - w - _offsetx, p1.Y - fontMeasure.Height - 2);
+                        NumMeasure = 1 + (int)(f_n / measurelen);
+                        //g.DrawString(NumMeasure.ToString(), fontMeasure, textBrush, p1.X + 5 - w - _offsetx, p1.Y - fontMeasure.Height - 2);
+                        g.DrawString(NumMeasure.ToString(), fontMeasure, textBrush, p1.X + 5 - w, p1.Y - fontMeasure.Height - 2);
                     }
                     else if (step % (resolution) == 0)                       // every time or beat
-                    {                      
+                    {
                         // Display beat number
-                        Point p1pico = new Point(_TimeLineWidth - 5 - _offsetx, y1);
-                        Point p2pico = new Point(_TimeLineWidth - 1 - _offsetx, y2);
+                        //Point p1pico = new Point(_TimeLineWidth - 5 - _offsetx, y1);
+                        Point p1pico = new Point(_TimeLineWidth - 5, y1);
+                        //Point p2pico = new Point(_TimeLineWidth - 1 - _offsetx, y2);
+                        Point p2pico = new Point(_TimeLineWidth - 1, y2);
                         g.DrawLine(TicksPen, p1pico, p2pico);
                         NumMeasure = 1 + (int)(f_n / measurelen);
                         pico = 1 + sequence1.Numerator - (int)((NumMeasure * measurelen - f_n) / (measurelen / sequence1.Numerator));
-                        g.DrawString(NumMeasure + "." + pico, fontInterval, textBrush, p1.X + 5 - w - _offsetx, p1.Y - fontInterval.Height - 2);
+                        //g.DrawString(NumMeasure + "." + pico, fontInterval, textBrush, p1.X + 5 - w - _offsetx, p1.Y - fontInterval.Height - 2);
+                        g.DrawString(NumMeasure + "." + pico, fontInterval, textBrush, p1.X + 5 - w, p1.Y - fontInterval.Height - 2);
                     }
                 }
                 // increment = beat divisé par la resolution
@@ -958,8 +971,10 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             {
                 CreateBackgroundCanvas(g, clip);
                 DrawGrid(g, clip);
-                DrawTimeLine(g, clip);
+                
                 DrawNotes(g, clip);
+                DrawTimeLine(g, clip);
+
                 /*
                 if (Parent.GetType() == typeof(Panel))
                 {

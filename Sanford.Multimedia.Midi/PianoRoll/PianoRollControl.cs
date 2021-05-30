@@ -271,12 +271,13 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             set
             {
                 if (value != tracknum)
-                {
-                    tracknum = value;
-                    if (sequence1 != null && tracknum != -1)
+                {                    
+                    if (sequence1 != null && value != -1)
                     {
-                        if (tracknum < sequence1.tracks.Count)
+                        
+                        if (value < sequence1.tracks.Count)
                         {
+                            tracknum = value;
                             track1 = sequence1.tracks[tracknum];
                             channel = track1.MidiChannel;
                         }
@@ -976,8 +977,11 @@ namespace Sanford.Multimedia.Midi.PianoRoll
 
                 CreateBackgroundCanvas(g, clip);
                 DrawGrid(g, clip);
-                DrawTimeLine(g, clip);
+                
                 DrawNotes(g, clip);
+
+                DrawTimeLine(g, clip);
+
                 /*
                 if (Parent.GetType() == typeof(Panel))
                 {
@@ -1344,7 +1348,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                         MyMouseDown(sender, e);
 
                     int X = e.X + _offsetx;
-                    int Y = e.Y;
+                    int Y = e.Y - _TimeLineHeight;
                     int nnote = highNoteID - Y / _yscale;
                     int starttime = (int)(X / _xscale);
 
@@ -1682,7 +1686,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     float ffraction = (float)sequence1.Time.Quarter / (float)resolution;
                     int nbFractions = (int)(deltastarttime / ffraction);
 
-                    int Y = e.Y;
+                    int Y = e.Y - _TimeLineHeight;
                     int number = highNoteID - Y / _yscale;
                     newNote.Number = number;
 
@@ -1897,7 +1901,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     float ffraction = (float)sequence1.Time.Quarter / (float)resolution;
                     int nbFractions = (int)(deltastarttime / ffraction);
 
-                    int Y = e.Y;
+                    int Y = e.Y - _TimeLineHeight;
                     int number = highNoteID - Y / _yscale;
                     newNote.Number = number;
 
