@@ -106,7 +106,7 @@
             // 
             // pnlPiano
             // 
-            this.pnlPiano.BackColor = System.Drawing.Color.Yellow;
+            this.pnlPiano.BackColor = System.Drawing.Color.Gray;
             this.pnlPiano.Controls.Add(this.pianoControl1);
             this.pnlPiano.Controls.Add(this.hScrollBar);
             this.pnlPiano.Controls.Add(this.pnlRedPianoSep);

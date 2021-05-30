@@ -404,15 +404,16 @@ namespace Karaboss
             hScrollBar.Visible = bShowHScrollBar;
 
             if (hScrollBar.Visible)
-            {                
-                hScrollBar.Maximum = 40 +  Math.Abs(pianoControl1.totalLength - pnlPiano.Width);
-                pianoControl1.Height = pnlPiano.Height - pnlRedPianoSep.Height- hScrollBar.Height;
+            {
+
+                hScrollBar.SmallChange = pianoControl1.totalLength / 20;
+                hScrollBar.LargeChange = pianoControl1.totalLength / 10;
+                hScrollBar.Maximum = pianoControl1.totalLength - pnlPiano.Width + (int)(1.2*hScrollBar.LargeChange);
                 
+                pianoControl1.Height = pnlPiano.Height - pnlRedPianoSep.Height- hScrollBar.Height;
                 pianoControl1.Left = pnlLeftPiano.Width - hScrollBar.Value;
                 pnlScrollView.Left = -hScrollBar.Value;
                 vPianoRollControl1.OffsetX = -hScrollBar.Value;
-
-
             }
             else
             {
@@ -420,7 +421,6 @@ namespace Karaboss
                 pianoControl1.Left = pnlLeftPiano.Width;
                 pnlScrollView.Left = 0;
                 vPianoRollControl1.OffsetX = 0;
-
             }
 
 
