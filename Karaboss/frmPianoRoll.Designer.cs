@@ -36,7 +36,6 @@ namespace Karaboss
             this.CbResolution = new System.Windows.Forms.ComboBox();
             this.lblEdit = new System.Windows.Forms.Label();
             this.lblSaisieNotes = new System.Windows.Forms.Label();
-            this.positionHScrollBar = new ColorSlider.ColorSlider();
             this.CbTracks = new System.Windows.Forms.ComboBox();
             this.lblPointer = new System.Windows.Forms.Label();
             this.lblPen = new System.Windows.Forms.Label();
@@ -54,14 +53,15 @@ namespace Karaboss
             this.pnlMiddle = new System.Windows.Forms.Panel();
             this.pnlCenter = new System.Windows.Forms.Panel();
             this.pnlScrollView = new System.Windows.Forms.Panel();
-            this.pianoRollControl2 = new Sanford.Multimedia.Midi.PianoRoll.PianoRollControl();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.pnlLeft = new System.Windows.Forms.Panel();
             this.pnlPiano = new System.Windows.Forms.Panel();
-            this.pianoControl2 = new Sanford.Multimedia.Midi.UI.PianoControl();
             this.pnlPianoTop = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlBottom = new System.Windows.Forms.Panel();
+            this.pianoRollControl2 = new Sanford.Multimedia.Midi.PianoRoll.PianoRollControl();
+            this.pianoControl2 = new Sanford.Multimedia.Midi.UI.PianoControl();
+            this.positionHScrollBar = new ColorSlider.ColorSlider();
             this.pnlTop.SuspendLayout();
             this.pnlDisplay.SuspendLayout();
             this.pnlMiddle.SuspendLayout();
@@ -145,71 +145,6 @@ namespace Karaboss
             this.lblSaisieNotes.Visible = false;
             this.lblSaisieNotes.Click += new System.EventHandler(this.lblSaisieNotes_Click);
             // 
-            // positionHScrollBar
-            // 
-            this.positionHScrollBar.BackColor = System.Drawing.Color.Transparent;
-            this.positionHScrollBar.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(87)))), ((int)(((byte)(94)))), ((int)(((byte)(110)))));
-            this.positionHScrollBar.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(60)))), ((int)(((byte)(74)))));
-            this.positionHScrollBar.BorderRoundRectSize = new System.Drawing.Size(8, 8);
-            this.positionHScrollBar.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
-            this.positionHScrollBar.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(130)))), ((int)(((byte)(208)))));
-            this.positionHScrollBar.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(140)))), ((int)(((byte)(180)))));
-            this.positionHScrollBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
-            this.positionHScrollBar.ForeColor = System.Drawing.Color.White;
-            this.positionHScrollBar.LargeChange = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.positionHScrollBar.Location = new System.Drawing.Point(3, 40);
-            this.positionHScrollBar.Maximum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.positionHScrollBar.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.positionHScrollBar.Name = "positionHScrollBar";
-            this.positionHScrollBar.ScaleDivisions = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.positionHScrollBar.ScaleSubDivisions = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.positionHScrollBar.ShowDivisionsText = true;
-            this.positionHScrollBar.ShowSmallScale = false;
-            this.positionHScrollBar.Size = new System.Drawing.Size(812, 37);
-            this.positionHScrollBar.SmallChange = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.positionHScrollBar.TabIndex = 16;
-            this.positionHScrollBar.TabStop = false;
-            this.positionHScrollBar.Text = "colorSlider1";
-            this.positionHScrollBar.ThumbImage = global::Karaboss.Properties.Resources.BTN_Thumb_Blue;
-            this.positionHScrollBar.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
-            this.positionHScrollBar.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
-            this.positionHScrollBar.ThumbRoundRectSize = new System.Drawing.Size(16, 16);
-            this.positionHScrollBar.ThumbSize = new System.Drawing.Size(16, 16);
-            this.positionHScrollBar.TickAdd = 0F;
-            this.positionHScrollBar.TickColor = System.Drawing.Color.White;
-            this.positionHScrollBar.TickDivide = 0F;
-            this.positionHScrollBar.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.positionHScrollBar.ValueChanged += new System.EventHandler(this.positionHScrollBar_ValueChanged);
-            this.positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.positionHScrollBar_Scroll);
-            // 
             // CbTracks
             // 
             this.CbTracks.FormattingEnabled = true;
@@ -261,7 +196,7 @@ namespace Karaboss
             this.pnlDisplay.Controls.Add(this.lblElapsed);
             this.pnlDisplay.Controls.Add(this.lblPercent);
             this.pnlDisplay.Controls.Add(this.lblDuration);
-            this.pnlDisplay.Location = new System.Drawing.Point(329, 8);
+            this.pnlDisplay.Location = new System.Drawing.Point(400, 7);
             this.pnlDisplay.Name = "pnlDisplay";
             this.pnlDisplay.Size = new System.Drawing.Size(200, 32);
             this.pnlDisplay.TabIndex = 37;
@@ -311,7 +246,7 @@ namespace Karaboss
             this.lblTempo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblTempo.ForeColor = System.Drawing.Color.White;
             this.lblTempo.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblTempo.Location = new System.Drawing.Point(158, 7);
+            this.lblTempo.Location = new System.Drawing.Point(235, 7);
             this.lblTempo.Name = "lblTempo";
             this.lblTempo.Size = new System.Drawing.Size(165, 32);
             this.lblTempo.TabIndex = 29;
@@ -322,7 +257,7 @@ namespace Karaboss
             // 
             this.btnTempoMinus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.btnTempoMinus.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnTempoMinus.Location = new System.Drawing.Point(120, 6);
+            this.btnTempoMinus.Location = new System.Drawing.Point(196, 6);
             this.btnTempoMinus.Name = "btnTempoMinus";
             this.btnTempoMinus.Size = new System.Drawing.Size(32, 32);
             this.btnTempoMinus.TabIndex = 28;
@@ -336,7 +271,7 @@ namespace Karaboss
             this.lblTempoValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblTempoValue.ForeColor = System.Drawing.Color.White;
             this.lblTempoValue.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblTempoValue.Location = new System.Drawing.Point(50, 6);
+            this.lblTempoValue.Location = new System.Drawing.Point(132, 6);
             this.lblTempoValue.Name = "lblTempoValue";
             this.lblTempoValue.Size = new System.Drawing.Size(64, 32);
             this.lblTempoValue.TabIndex = 27;
@@ -347,7 +282,7 @@ namespace Karaboss
             // 
             this.btnTempoPlus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.btnTempoPlus.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnTempoPlus.Location = new System.Drawing.Point(12, 5);
+            this.btnTempoPlus.Location = new System.Drawing.Point(100, 5);
             this.btnTempoPlus.Name = "btnTempoPlus";
             this.btnTempoPlus.Size = new System.Drawing.Size(32, 32);
             this.btnTempoPlus.TabIndex = 26;
@@ -358,7 +293,7 @@ namespace Karaboss
             // BtnStop
             // 
             this.BtnStop.Image = global::Karaboss.Properties.Resources.Media_Controls_Stop_icon;
-            this.BtnStop.Location = new System.Drawing.Point(596, 6);
+            this.BtnStop.Location = new System.Drawing.Point(683, 6);
             this.BtnStop.Name = "BtnStop";
             this.BtnStop.Size = new System.Drawing.Size(32, 32);
             this.BtnStop.TabIndex = 18;
@@ -368,7 +303,7 @@ namespace Karaboss
             // BtnPlay
             // 
             this.BtnPlay.Image = global::Karaboss.Properties.Resources.Media_Controls_Play_icon;
-            this.BtnPlay.Location = new System.Drawing.Point(558, 5);
+            this.BtnPlay.Location = new System.Drawing.Point(645, 5);
             this.BtnPlay.Name = "BtnPlay";
             this.BtnPlay.Size = new System.Drawing.Size(32, 32);
             this.BtnPlay.TabIndex = 17;
@@ -406,29 +341,6 @@ namespace Karaboss
             this.pnlScrollView.Size = new System.Drawing.Size(291, 240);
             this.pnlScrollView.TabIndex = 0;
             // 
-            // pianoRollControl2
-            // 
-            this.pianoRollControl2.BackColor = System.Drawing.Color.Gray;
-            this.pianoRollControl2.Cursor = System.Windows.Forms.Cursors.Default;
-            this.pianoRollControl2.HighNoteID = 108;
-            this.pianoRollControl2.Location = new System.Drawing.Point(0, 0);
-            this.pianoRollControl2.LowNoteID = 23;
-            this.pianoRollControl2.Name = "pianoRollControl2";
-            this.pianoRollControl2.NotesEdition = false;
-            this.pianoRollControl2.OffsetX = 0;
-            this.pianoRollControl2.OffsetY = 0;
-            this.pianoRollControl2.Resolution = 4;
-            this.pianoRollControl2.Sequence1 = null;
-            this.pianoRollControl2.Size = new System.Drawing.Size(206, 240);
-            this.pianoRollControl2.TabIndex = 0;
-            this.pianoRollControl2.Text = "pianoRollControl2";
-            this.pianoRollControl2.TimeLineY = 40;
-            this.pianoRollControl2.TrackNum = -1;
-            this.pianoRollControl2.Velocity = 100;
-            this.pianoRollControl2.xScale = 0.1D;
-            this.pianoRollControl2.yScale = 20;
-            this.pianoRollControl2.zoomx = 1F;
-            // 
             // pnlRight
             // 
             this.pnlRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
@@ -457,20 +369,6 @@ namespace Karaboss
             this.pnlPiano.Name = "pnlPiano";
             this.pnlPiano.Size = new System.Drawing.Size(91, 224);
             this.pnlPiano.TabIndex = 0;
-            // 
-            // pianoControl2
-            // 
-            this.pianoControl2.HighNoteID = 108;
-            this.pianoControl2.Location = new System.Drawing.Point(12, 9);
-            this.pianoControl2.LowNoteID = 23;
-            this.pianoControl2.Name = "pianoControl2";
-            this.pianoControl2.NoteOnColor = System.Drawing.Color.SkyBlue;
-            this.pianoControl2.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.pianoControl2.Scale = 20;
-            this.pianoControl2.Size = new System.Drawing.Size(67, 200);
-            this.pianoControl2.TabIndex = 0;
-            this.pianoControl2.Text = "pianoControl2";
-            this.pianoControl2.Zoom = 1F;
             // 
             // pnlPianoTop
             // 
@@ -501,6 +399,108 @@ namespace Karaboss
             this.pnlBottom.Name = "pnlBottom";
             this.pnlBottom.Size = new System.Drawing.Size(1117, 40);
             this.pnlBottom.TabIndex = 1;
+            // 
+            // pianoRollControl2
+            // 
+            this.pianoRollControl2.BackColor = System.Drawing.Color.Gray;
+            this.pianoRollControl2.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pianoRollControl2.HighNoteID = 108;
+            this.pianoRollControl2.Location = new System.Drawing.Point(0, 0);
+            this.pianoRollControl2.LowNoteID = 23;
+            this.pianoRollControl2.Name = "pianoRollControl2";
+            this.pianoRollControl2.NotesEdition = false;
+            this.pianoRollControl2.OffsetX = 0;
+            this.pianoRollControl2.OffsetY = 0;
+            this.pianoRollControl2.Resolution = 4;
+            this.pianoRollControl2.Sequence1 = null;
+            this.pianoRollControl2.Size = new System.Drawing.Size(206, 240);
+            this.pianoRollControl2.TabIndex = 0;
+            this.pianoRollControl2.Text = "pianoRollControl2";
+            this.pianoRollControl2.TimeLineY = 40;
+            this.pianoRollControl2.TrackNum = -1;
+            this.pianoRollControl2.Velocity = 100;
+            this.pianoRollControl2.xScale = 0.1D;
+            this.pianoRollControl2.yScale = 20;
+            this.pianoRollControl2.zoomx = 1F;
+            // 
+            // pianoControl2
+            // 
+            this.pianoControl2.HighNoteID = 108;
+            this.pianoControl2.Location = new System.Drawing.Point(12, 9);
+            this.pianoControl2.LowNoteID = 23;
+            this.pianoControl2.Name = "pianoControl2";
+            this.pianoControl2.NoteOnColor = System.Drawing.Color.SkyBlue;
+            this.pianoControl2.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.pianoControl2.Scale = 20;
+            this.pianoControl2.Size = new System.Drawing.Size(67, 200);
+            this.pianoControl2.TabIndex = 0;
+            this.pianoControl2.Text = "pianoControl2";
+            this.pianoControl2.Zoom = 1F;
+            // 
+            // positionHScrollBar
+            // 
+            this.positionHScrollBar.BackColor = System.Drawing.Color.Transparent;
+            this.positionHScrollBar.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(87)))), ((int)(((byte)(94)))), ((int)(((byte)(110)))));
+            this.positionHScrollBar.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(60)))), ((int)(((byte)(74)))));
+            this.positionHScrollBar.BorderRoundRectSize = new System.Drawing.Size(8, 8);
+            this.positionHScrollBar.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
+            this.positionHScrollBar.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(130)))), ((int)(((byte)(208)))));
+            this.positionHScrollBar.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(140)))), ((int)(((byte)(180)))));
+            this.positionHScrollBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
+            this.positionHScrollBar.ForeColor = System.Drawing.Color.White;
+            this.positionHScrollBar.LargeChange = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.Location = new System.Drawing.Point(3, 32);
+            this.positionHScrollBar.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.Name = "positionHScrollBar";
+            this.positionHScrollBar.ScaleDivisions = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.ScaleSubDivisions = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.ShowDivisionsText = true;
+            this.positionHScrollBar.ShowSmallScale = false;
+            this.positionHScrollBar.Size = new System.Drawing.Size(812, 65);
+            this.positionHScrollBar.SmallChange = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.TabIndex = 16;
+            this.positionHScrollBar.TabStop = false;
+            this.positionHScrollBar.Text = "colorSlider1";
+            this.positionHScrollBar.ThumbImage = global::Karaboss.Properties.Resources.BTN_Thumb_Blue;
+            this.positionHScrollBar.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
+            this.positionHScrollBar.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
+            this.positionHScrollBar.ThumbRoundRectSize = new System.Drawing.Size(16, 16);
+            this.positionHScrollBar.ThumbSize = new System.Drawing.Size(16, 16);
+            this.positionHScrollBar.TickAdd = 0F;
+            this.positionHScrollBar.TickColor = System.Drawing.Color.White;
+            this.positionHScrollBar.TickDivide = 0F;
+            this.positionHScrollBar.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.ValueChanged += new System.EventHandler(this.positionHScrollBar_ValueChanged);
+            this.positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.positionHScrollBar_Scroll);
             // 
             // frmPianoRoll
             // 

@@ -269,7 +269,7 @@ namespace Karaboss
 
                 #region positionHscrollBar
                 // Music Cursor position
-                positionHScrollBar.Left = 40; //pnlLeftRoll.Width;                
+                positionHScrollBar.Left = pnlLeftPiano.Width;                
                 positionHScrollBar.Width = pnlPiano.Width - positionHScrollBar.Left;
                 positionHScrollBar.Maximum = totaltimemeasures + _measurelen;
                 positionHScrollBar.Minimum = _measurelen;

@@ -331,6 +331,7 @@ namespace Karaboss
             // ----------------------------------
             // posisitionHScrollBar
             // ----------------------------------
+            positionHScrollBar.Left = pnlPianoTop.Width;
             positionHScrollBar.Maximum = totaltimemeasures + _measurelen;
             positionHScrollBar.Minimum = _measurelen;
             positionHScrollBar.TickStyle = TickStyle.TopLeft;
