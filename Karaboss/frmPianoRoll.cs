@@ -358,7 +358,7 @@ namespace Karaboss
             pianoControl2.HighNoteID = pianoRollControl2.HighNoteID = 108;  // 108            
 
 
-            pianoControl2.Size = new Size(leftWidth, pianoControl2.totalLength);           
+            pianoControl2.Size = new Size(leftWidth, pianoControl2.TotalLength);           
             pianoControl2.PianoKeyDown += new EventHandler<PianoKeyEventArgs>(pianoControl2_PianoKeyDown);
             pianoControl2.PianoKeyUp += new EventHandler<PianoKeyEventArgs>(pianoControl2_PianoKeyUp);
 
@@ -368,7 +368,7 @@ namespace Karaboss
             pnlPiano.Top = pnlPianoTop.Height;
             pnlPiano.Left = 0;
             pnlPiano.Width = leftWidth;
-            pnlPiano.Height = pianoControl2.totalLength;
+            pnlPiano.Height = pianoControl2.TotalLength;
 
             #endregion left
 
@@ -1033,14 +1033,14 @@ namespace Karaboss
                 zoomy = pianoControl2.Zoom;
                 zoomy += (e.Delta > 0 ? 0.1f : -0.1f);
                 pianoControl2.Zoom = zoomy;
-                pianoControl2.Height = pianoControl2.totalLength;
+                pianoControl2.Height = pianoControl2.TotalLength;
 
                 pianoRollControl2.yScale = pianoControl2.Scale;
                 pianoRollControl2.Height =  pianoControl2.Height + pianoRollControl2.TimeLineY;
 
                 // Adjust heights                
-                pnlPiano.Height = pianoControl2.totalLength;
-                pnlScrollView.Height = pianoControl2.totalLength + pianoRollControl2.TimeLineY;
+                pnlPiano.Height = pianoControl2.TotalLength;
+                pnlScrollView.Height = pianoControl2.TotalLength + pianoRollControl2.TimeLineY;
 
                 
                 // Adjust scrollbars values
@@ -1258,15 +1258,15 @@ namespace Karaboss
                 pianoRollControl2.zoomx = zoomx;                
 
                 pianoControl2.Zoom = zoomy;
-                pianoControl2.Height = pianoControl2.totalLength;
+                pianoControl2.Height = pianoControl2.TotalLength;
 
                 pianoRollControl2.yScale = pianoControl2.Scale;
                 pianoRollControl2.Height = pianoControl2.Height + pianoRollControl2.TimeLineY;
 
                 // Adjust heights
                 //pnlPiano.Height = pnlScrollView.Height = pianoControl2.totalLength;
-                pnlPiano.Height = pianoControl2.totalLength;
-                pnlScrollView.Height = pianoControl2.totalLength + pianoRollControl2.TimeLineY;
+                pnlPiano.Height = pianoControl2.TotalLength;
+                pnlScrollView.Height = pianoControl2.TotalLength + pianoRollControl2.TimeLineY;
 
                 // Adjust scrollbars values
                 SetScrollBarValues();

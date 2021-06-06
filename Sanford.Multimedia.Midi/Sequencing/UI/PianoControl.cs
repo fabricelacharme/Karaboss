@@ -234,7 +234,7 @@ namespace Sanford.Multimedia.Midi.UI
             }
         }
 
-        private int scale = 20; //FAB : Unit of vertical
+        private int _scale = 20; //FAB : Unit of vertical
         /// <summary>
         /// Sets or gets unit of vertical
         /// </summary>
@@ -242,21 +242,21 @@ namespace Sanford.Multimedia.Midi.UI
         {
             get
             {
-                return scale;
+                return _scale;
             }
             set
             {
-                scale = value;
+                _scale = value;
             }
         }
        
 
-        private int totallength = 0;
-        public int totalLength
+        private int _totallength = 0;
+        public int TotalLength
         {
             get
             {
-                return totallength;
+                return _totallength;
             }
         }
 
@@ -302,7 +302,7 @@ namespace Sanford.Multimedia.Midi.UI
                 if (newvalue > 0)
                 {
                     _zoom = value;    
-                    scale = newvalue;      // scale must be pair for the pianoRollControl (?)
+                    _scale = newvalue;      // scale must be pair for the pianoRollControl (?)
 
                     //Invalidate();
                     InitializePianoKeys();
@@ -341,7 +341,7 @@ namespace Sanford.Multimedia.Midi.UI
             // Orientation Default value in constructor            
             _orientation = Orientation.Vertical;
 
-            scale = 20;
+            _scale = 20;
 
             CreatePianoKeys();
             InitializePianoKeys();
@@ -477,7 +477,7 @@ namespace Sanford.Multimedia.Midi.UI
         {
             #region Guard
 
-            if(keys.Length == 0)
+            if (keys.Length == 0)
             {
                 return;
             }
@@ -492,19 +492,20 @@ namespace Sanford.Multimedia.Midi.UI
             int n = 0;
             //int w = 0;
             int h = 0;
+            int tt = 0;
 
             //totalheight = 0;
-            totallength = 0;
+            _totallength = 0;
 
             // FAB: allow vertical orientation 
             switch (_orientation)
-            {                 
+            {
                 case Orientation.Horizontal:
                     #region horizontal
 
                     whiteKeyWidth = 0;
 
-                    blackKeyWidth = scale;
+                    blackKeyWidth = _scale;
                     blackKeyHeight = (int)(Height * BlackKeyScale);
 
                     while (n < keys.Length)
@@ -518,11 +519,11 @@ namespace Sanford.Multimedia.Midi.UI
                                 if ((note % 12 == 0)
                                    || (note % 12 == 5))
                                 {
-                                    whiteKeyWidth = scale;
+                                    whiteKeyWidth = _scale;
                                 }
                                 else
                                 {
-                                    whiteKeyWidth = 3 * scale / 2;
+                                    whiteKeyWidth = 3 * _scale / 2;
                                 }
                             }
                             else if (note == lowNoteID)
@@ -530,21 +531,21 @@ namespace Sanford.Multimedia.Midi.UI
                                 if ((note % 12 == 4)
                                     || (note % 12 == 11))
                                 {
-                                    whiteKeyWidth = scale;
+                                    whiteKeyWidth = _scale;
                                 }
                                 else
-                                    whiteKeyWidth = 3 * scale / 2;
+                                    whiteKeyWidth = 3 * _scale / 2;
                             }
                             else if ((note % 12 == 0)
                                 || (note % 12 == 4)
                                 || (note % 12 == 5)
                                 || (note % 12 == 11))
                             {
-                                whiteKeyWidth = 3 * scale / 2;
+                                whiteKeyWidth = 3 * _scale / 2;
                             }
                             else
                             {
-                                whiteKeyWidth = 2 * scale;
+                                whiteKeyWidth = 2 * _scale;
                             }
 
 
@@ -552,55 +553,54 @@ namespace Sanford.Multimedia.Midi.UI
                             keys[n].Width = whiteKeyWidth;
                             keys[n].Location = new Point(h, 0);
                             h += whiteKeyWidth;
+                            tt += whiteKeyWidth + 1;
                             n++;
                         }
                         else
                         {
-                            keys[n].Width = scale;
+                            keys[n].Width = _scale;
                             keys[n].Height = blackKeyHeight;
 
                             if (note == highNoteID)
                             {
                                 keys[n].Location = new Point(0, 0);
-                                h = scale / 2;
+                                h = _scale / 2;
                             }
                             else
-                                keys[n].Location = new Point(h - scale / 2, 0);
+                                keys[n].Location = new Point(h - _scale / 2, 0);
 
 
                             keys[n].BringToFront();
                             n++;
                         }
                     }
-
-
                     #endregion horizontal
-                    break;                
+                    break;
 
                 case Orientation.Vertical:
                     #region vertical
-                    whiteKeyHeight = 0;                    
-                    
-                    blackKeyHeight = scale;
+                    whiteKeyHeight = 0;
+
+                    blackKeyHeight = _scale;
                     blackKeyWidth = (int)(Width * BlackKeyScale);
-                    
+
 
                     while (n < keys.Length)
                     {
-                        int note = keys[n].NoteID;                        
+                        int note = keys[n].NoteID;
 
-                        if(KeyTypeTable[note] == KeyType.White)
+                        if (KeyTypeTable[note] == KeyType.White)
                         {
                             if (note == highNoteID)
                             {
                                 if ((note % 12 == 0)
                                    || (note % 12 == 5))
                                 {
-                                    whiteKeyHeight = scale;
+                                    whiteKeyHeight = _scale;
                                 }
                                 else
                                 {
-                                    whiteKeyHeight = 3 * scale / 2;
+                                    whiteKeyHeight = 3 * _scale / 2;
                                 }
                             }
                             else if (note == lowNoteID)
@@ -608,52 +608,62 @@ namespace Sanford.Multimedia.Midi.UI
                                 if ((note % 12 == 4)
                                     || (note % 12 == 11))
                                 {
-                                    whiteKeyHeight = scale;
+                                    whiteKeyHeight = _scale;
                                 }
                                 else
-                                    whiteKeyHeight = 3 * scale / 2;
+                                    whiteKeyHeight = 3 * _scale / 2;
                             }
                             else if ((note % 12 == 0)
                                 || (note % 12 == 4)
                                 || (note % 12 == 5)
-                                || (note % 12 == 11) )
+                                || (note % 12 == 11))
                             {
-                                whiteKeyHeight = 3 * scale / 2;
+                                whiteKeyHeight = 3 * _scale / 2;
                             }
                             else
                             {
-                                whiteKeyHeight = 2 * scale;
+                                whiteKeyHeight = 2 * _scale;
                             }
-                            
-                            
+
+
                             keys[n].Width = Width;
                             keys[n].Height = whiteKeyHeight;
                             keys[n].Location = new Point(0, h);
                             h += whiteKeyHeight;
-                            n++;                                                        
+                            n++;
                         }
                         else
                         {
-                            keys[n].Height = scale;
+                            keys[n].Height = _scale;
                             keys[n].Width = blackKeyWidth;
 
                             if (note == highNoteID)
                             {
                                 keys[n].Location = new Point(0, 0);
-                                h = scale / 2;
+                                h = _scale / 2;
                             }
                             else
-                                keys[n].Location = new Point(0, h - scale / 2);
+                                keys[n].Location = new Point(0, h - _scale / 2);
 
-                            
+
                             keys[n].BringToFront();
-                            n++;                            
+                            n++;
                         }
                     }
                     #endregion vertical
                     break;
-            }            
-            totallength = keys.Length * scale;
+            }
+
+            
+            switch (_orientation)
+            {
+                case Orientation.Horizontal:
+                    _totallength = tt;
+                    break;
+                case Orientation.Vertical:
+                    _totallength = keys.Length * _scale;
+                    break;
+            }
         }
 
         private Color ChannelColor(int channel)

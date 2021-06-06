@@ -316,14 +316,9 @@ namespace Karaboss
                 #endregion
 
 
-                #region right
-
-                #endregion
-
                 #region  middle
 
                 vPianoRollControl1.Dock = DockStyle.Fill;
-
 
                 #endregion
 
@@ -349,7 +344,7 @@ namespace Karaboss
                 pianoControl1.Zoom = zoomx;
 
                 //pianoControl1.Size = new Size(pianoControl1.totalLength, pnlPiano.Height); // - pnlRedPianoSep.Height);
-                pianoControl1.Width = pianoControl1.totalLength;
+                pianoControl1.Width = pianoControl1.TotalLength;
                 pianoControl1.Height = pnlPiano.Height;
 
                 //pianoControl1.Top = pnlRedPianoSep.Height;
@@ -386,7 +381,7 @@ namespace Karaboss
             bool bShowHScrollBarIndetermined = false;
 
             // If display width > pianoRollControl width => remove horizontal scrollbar
-            bShowHScrollBar = pianoControl1.totalLength > pnlPiano.Width;
+            bShowHScrollBar = pianoControl1.TotalLength > pnlPiano.Width;
 
 
             bool bShowVScrollBarIndetermined = false;
@@ -406,12 +401,14 @@ namespace Karaboss
             if (hScrollBar.Visible)
             {
 
-                hScrollBar.SmallChange = pianoControl1.totalLength / 20;
-                hScrollBar.LargeChange = pianoControl1.totalLength / 10;
-                hScrollBar.Maximum = pianoControl1.totalLength - pnlPiano.Width + (int)(1.2*hScrollBar.LargeChange);
+                hScrollBar.SmallChange = pianoControl1.Width / 20;
+                hScrollBar.LargeChange = pianoControl1.Width / 10;
+                hScrollBar.Maximum = pianoControl1.Width - pnlPiano.Width + (int)(hScrollBar.LargeChange); //+ (int)(1.2*hScrollBar.LargeChange);
                 
                 pianoControl1.Height = pnlPiano.Height - pnlRedPianoSep.Height- hScrollBar.Height;
                 pianoControl1.Left = pnlLeftPiano.Width - hScrollBar.Value;
+                pianoControl1.Refresh();
+
                 pnlScrollView.Left = -hScrollBar.Value;
                 vPianoRollControl1.OffsetX = -hScrollBar.Value;
             }
@@ -419,6 +416,8 @@ namespace Karaboss
             {
                 pianoControl1.Height = pnlPiano.Height - pnlRedPianoSep.Height;
                 pianoControl1.Left = pnlLeftPiano.Width;
+                pianoControl1.Refresh();
+
                 pnlScrollView.Left = 0;
                 vPianoRollControl1.OffsetX = 0;
             }
@@ -891,7 +890,7 @@ namespace Karaboss
                 zoomx = pianoControl1.Zoom;
                 zoomx += (e.Delta > 0 ? 0.1f : -0.1f);
                 pianoControl1.Zoom = zoomx;
-                pianoControl1.Width = pianoControl1.totalLength;
+                pianoControl1.Width = pianoControl1.TotalLength;
 
                 pianoControl1.Refresh();
 
@@ -899,7 +898,7 @@ namespace Karaboss
                 vPianoRollControl1.Width = pianoControl1.Width;     // FAB : ne faut-il pas rajouter largeur de la timeline ?????
 
                 // Adjust Widths
-                pnlPiano.Width = pnlScrollView.Width = pianoControl1.totalLength;
+                pnlPiano.Width = pnlScrollView.Width = pianoControl1.TotalLength;
                 
                 // Adjust scrollbars values
                 SetScrollBarValues();
@@ -1270,13 +1269,13 @@ namespace Karaboss
             zoomx = 1 + 0.1f * delta;                       
 
             pianoControl1.Zoom = zoomx;
-            pianoControl1.Width = pianoControl1.totalLength;
+            pianoControl1.Width = pianoControl1.TotalLength;
 
             vPianoRollControl1.xScale = pianoControl1.Scale;
             vPianoRollControl1.Width = pianoControl1.Width;
 
             // Adjust wIDTH
-            pnlPiano.Width = pnlScrollView.Width = pianoControl1.totalLength;
+            pnlPiano.Width = pnlScrollView.Width = pianoControl1.TotalLength;
         }
         
 
