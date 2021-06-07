@@ -198,41 +198,11 @@
   <data name="&gt;&gt;pnlScrollView.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="hScrollBar.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="hScrollBar.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="hScrollBar.Location" type="System.Drawing.Point, System.Drawing">
-    <value>40, 150</value>
-  </data>
-  <data name="hScrollBar.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1070, 17</value>
-  </data>
-  <data name="hScrollBar.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="hScrollBar.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;hScrollBar.Name" xml:space="preserve">
-    <value>hScrollBar</value>
-  </data>
-  <data name="&gt;&gt;hScrollBar.Type" xml:space="preserve">
-    <value>System.Windows.Forms.HScrollBar, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;hScrollBar.Parent" xml:space="preserve">
-    <value>pnlPiano</value>
-  </data>
-  <data name="&gt;&gt;hScrollBar.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="pianoControl1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>40, 5</value>
+    <value>64, 11</value>
   </data>
   <data name="pianoControl1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>415, 145</value>
+    <value>500, 145</value>
   </data>
   <data name="pianoControl1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -274,7 +244,7 @@
     <value>pnlPiano</value>
   </data>
   <data name="&gt;&gt;pnlRedPianoSep.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>1</value>
   </data>
   <data name="pnlLeftPiano.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Left</value>
@@ -298,7 +268,7 @@
     <value>pnlPiano</value>
   </data>
   <data name="&gt;&gt;pnlLeftPiano.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>2</value>
   </data>
   <data name="pnlPiano.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Bottom</value>

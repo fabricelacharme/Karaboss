@@ -246,7 +246,11 @@ namespace Sanford.Multimedia.Midi.UI
             }
             set
             {
-                _scale = value;
+                if (value != _scale)
+                {
+                    _scale = value;
+                    Invalidate();
+                }
             }
         }
        
@@ -658,7 +662,8 @@ namespace Sanford.Multimedia.Midi.UI
             switch (_orientation)
             {
                 case Orientation.Horizontal:
-                    _totallength = tt;
+                    _totallength = tt - 10;
+                    Width = _totallength;
                     break;
                 case Orientation.Vertical:
                     _totallength = keys.Length * _scale;
@@ -901,6 +906,11 @@ namespace Sanford.Multimedia.Midi.UI
             }
         }
 
+
+        public void Redraw()
+        {
+            Invalidate();
+        }
         public void Reset()
         {
             for (int i = 0; i < keys.Length; i++)
