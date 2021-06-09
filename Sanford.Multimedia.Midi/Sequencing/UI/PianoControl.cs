@@ -93,8 +93,10 @@ namespace Sanford.Multimedia.Midi.UI
         #region private
 
         // Not all 128 notes taken : 21 to 109 = 88 notes
-        private const int DefaultLowNoteID = 23;    // 23
+        private const int DefaultLowNoteID = 21;    // 23
         private const int DefaultHighNoteID = 108;   // 108
+
+
         //private const int DefaultLowNoteID = 0;         // CO = lowest note
         //private const int DefaultHighNoteID = 127;      // G9 = highest note
 
@@ -518,6 +520,7 @@ namespace Sanford.Multimedia.Midi.UI
 
                         if (KeyTypeTable[note] == KeyType.White)
                         {
+                            // WHITE NOTES
                             if (note == highNoteID)
                             {
                                 if ((note % 12 == 0)
@@ -561,7 +564,8 @@ namespace Sanford.Multimedia.Midi.UI
                             n++;
                         }
                         else
-                        {
+                        {                            
+                            // BLACK NOTES
                             keys[n].Width = _scale;
                             keys[n].Height = blackKeyHeight;
 
@@ -661,8 +665,8 @@ namespace Sanford.Multimedia.Midi.UI
             
             switch (_orientation)
             {
-                case Orientation.Horizontal:
-                    _totallength = tt - 10;
+                case Orientation.Horizontal:                    
+                    _totallength = tt - 13;    // si lownoteid = 23  => soustraire 12 ????, si lownoteid = 21 => 13
                     Width = _totallength;
                     break;
                 case Orientation.Vertical:

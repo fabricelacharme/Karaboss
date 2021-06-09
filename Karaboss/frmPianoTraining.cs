@@ -358,7 +358,7 @@ namespace Karaboss
                 pianoControl1.PianoKeyUp += new EventHandler<PianoKeyEventArgs>(PianoControl1_PianoKeyUp);
 
                 // Notes du piano
-                pianoControl1.LowNoteID = vPianoRollControl1.LowNoteID = 23;
+                pianoControl1.LowNoteID = vPianoRollControl1.LowNoteID = 21;  //23
                 pianoControl1.HighNoteID = vPianoRollControl1.HighNoteID = 108;
                 vPianoRollControl1.Sequence1 = sequence1;
                 vPianoRollControl1.zoomy = zoomy;
@@ -420,9 +420,9 @@ namespace Karaboss
             {
 
                 hScrollBar.SmallChange = pianoControl1.Width / 20;
-                hScrollBar.LargeChange = pianoControl1.Width / 10;
-                hScrollBar.Maximum = pianoControl1.Width - pnlPiano.Width + hScrollBar.LargeChange - 2; //+ (int)(1.2*hScrollBar.LargeChange);
-                
+                hScrollBar.LargeChange = pianoControl1.Width / 10;                
+                hScrollBar.Maximum = pianoControl1.Width - pnlPiano.Width + hScrollBar.LargeChange;
+
                 pianoControl1.Height = pnlPiano.Height - pnlRedPianoSep.Height- hScrollBar.Height;
                 
                 // Offset
@@ -1326,8 +1326,8 @@ namespace Karaboss
             }
         }
 
+
         #endregion
 
- 
     }
 }
