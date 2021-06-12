@@ -42,17 +42,11 @@ namespace BallsControl
     {
         PictureBox P;
 
-        #region Private Variables
-        //private Color _ballColor;
-        //private Color _defColor;
-        //private Color _fixColor;
-        //private Color _lightColor;
+        #region Private Variables 
         private int _totalballs;
 
         private int _x;
         private int _y;
-        //private int _height;
-        //private int _width;
         private int _speed;
         #endregion
 
@@ -141,17 +135,13 @@ namespace BallsControl
 
         }
 
-     
-
-
         public void MoveBall( int pos)
         {
             // only LEFT direction                       
             if (pos > 13)
                 _x = pos;
             else
-                _x = -40;
-                
+                _x = -40;                
         }
 
         public void Delete(BallsWnd pbox)

@@ -37,9 +37,16 @@
             this.pianoControl1 = new Sanford.Multimedia.Midi.UI.PianoControl();
             this.pnlRedPianoSep = new System.Windows.Forms.Panel();
             this.pnlLeftPiano = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblKaraboss = new System.Windows.Forms.Label();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.positionHScrollBar = new ColorSlider.ColorSlider();
-            this.lblKaraboss = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlBottom = new System.Windows.Forms.Panel();
             this.colorSliderX = new ColorSlider.ColorSlider();
@@ -57,13 +64,6 @@
             this.pnlRight = new System.Windows.Forms.Panel();
             this.colorSliderY = new ColorSlider.ColorSlider();
             this.pnlMiddle = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.pnlScrollView.SuspendLayout();
             this.pnlPiano.SuspendLayout();
             this.pnlLeftPiano.SuspendLayout();
@@ -91,7 +91,7 @@
             // 
             // vPianoRollControl1
             // 
-            this.vPianoRollControl1.BackColor = System.Drawing.Color.Yellow;
+            this.vPianoRollControl1.BackColor = System.Drawing.Color.Gray;
             this.vPianoRollControl1.HighNoteID = 108;
             resources.ApplyResources(this.vPianoRollControl1, "vPianoRollControl1");
             this.vPianoRollControl1.LowNoteID = 23;
@@ -107,7 +107,7 @@
             // 
             // pnlPiano
             // 
-            this.pnlPiano.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.pnlPiano.BackColor = System.Drawing.Color.Gray;
             this.pnlPiano.Controls.Add(this.pianoControl1);
             this.pnlPiano.Controls.Add(this.pnlRedPianoSep);
             this.pnlPiano.Controls.Add(this.pnlLeftPiano);
@@ -116,8 +116,8 @@
             // 
             // pianoControl1
             // 
-            this.pianoControl1.BackColor = System.Drawing.Color.DarkCyan;
-            this.pianoControl1.HighNoteID = 108;
+            this.pianoControl1.BackColor = System.Drawing.Color.Gray;
+            this.pianoControl1.HighNoteID = 42;
             resources.ApplyResources(this.pianoControl1, "pianoControl1");
             this.pianoControl1.LowNoteID = 21;
             this.pianoControl1.Name = "pianoControl1";
@@ -145,6 +145,70 @@
             this.pnlLeftPiano.Controls.Add(this.lblKaraboss);
             resources.ApplyResources(this.pnlLeftPiano, "pnlLeftPiano");
             this.pnlLeftPiano.Name = "pnlLeftPiano";
+            // 
+            // label7
+            // 
+            resources.ApplyResources(this.label7, "label7");
+            this.label7.BackColor = System.Drawing.Color.Transparent;
+            this.label7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label7.ForeColor = System.Drawing.Color.White;
+            this.label7.Name = "label7";
+            // 
+            // label6
+            // 
+            resources.ApplyResources(this.label6, "label6");
+            this.label6.BackColor = System.Drawing.Color.Transparent;
+            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label6.ForeColor = System.Drawing.Color.White;
+            this.label6.Name = "label6";
+            // 
+            // label5
+            // 
+            this.label5.BackColor = System.Drawing.Color.Transparent;
+            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.label5, "label5");
+            this.label5.ForeColor = System.Drawing.Color.White;
+            this.label5.Name = "label5";
+            // 
+            // label4
+            // 
+            resources.ApplyResources(this.label4, "label4");
+            this.label4.BackColor = System.Drawing.Color.Transparent;
+            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label4.ForeColor = System.Drawing.Color.White;
+            this.label4.Name = "label4";
+            // 
+            // label3
+            // 
+            resources.ApplyResources(this.label3, "label3");
+            this.label3.BackColor = System.Drawing.Color.Transparent;
+            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Name = "label3";
+            // 
+            // label2
+            // 
+            resources.ApplyResources(this.label2, "label2");
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Name = "label2";
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Name = "label1";
+            // 
+            // lblKaraboss
+            // 
+            resources.ApplyResources(this.lblKaraboss, "lblKaraboss");
+            this.lblKaraboss.BackColor = System.Drawing.Color.Transparent;
+            this.lblKaraboss.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblKaraboss.ForeColor = System.Drawing.Color.White;
+            this.lblKaraboss.Name = "lblKaraboss";
             // 
             // pnlTop
             // 
@@ -214,14 +278,6 @@
             0});
             this.positionHScrollBar.ValueChanged += new System.EventHandler(this.positionHScrollBar_ValueChanged);
             this.positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.positionHScrollBar_Scroll);
-            // 
-            // lblKaraboss
-            // 
-            resources.ApplyResources(this.lblKaraboss, "lblKaraboss");
-            this.lblKaraboss.BackColor = System.Drawing.Color.Transparent;
-            this.lblKaraboss.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblKaraboss.ForeColor = System.Drawing.Color.White;
-            this.lblKaraboss.Name = "lblKaraboss";
             // 
             // timer1
             // 
@@ -459,66 +515,11 @@
             // 
             // pnlMiddle
             // 
+            this.pnlMiddle.BackColor = System.Drawing.Color.Gray;
             this.pnlMiddle.Controls.Add(this.pnlScrollView);
             this.pnlMiddle.Controls.Add(this.pnlPiano);
             resources.ApplyResources(this.pnlMiddle, "pnlMiddle");
             this.pnlMiddle.Name = "pnlMiddle";
-            // 
-            // label1
-            // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Name = "label1";
-            // 
-            // label2
-            // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Name = "label2";
-            // 
-            // label3
-            // 
-            resources.ApplyResources(this.label3, "label3");
-            this.label3.BackColor = System.Drawing.Color.Transparent;
-            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Name = "label3";
-            // 
-            // label4
-            // 
-            resources.ApplyResources(this.label4, "label4");
-            this.label4.BackColor = System.Drawing.Color.Transparent;
-            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Name = "label4";
-            // 
-            // label5
-            // 
-            this.label5.BackColor = System.Drawing.Color.Transparent;
-            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.label5, "label5");
-            this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Name = "label5";
-            // 
-            // label6
-            // 
-            resources.ApplyResources(this.label6, "label6");
-            this.label6.BackColor = System.Drawing.Color.Transparent;
-            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Name = "label6";
-            // 
-            // label7
-            // 
-            resources.ApplyResources(this.label7, "label7");
-            this.label7.BackColor = System.Drawing.Color.Transparent;
-            this.label7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Name = "label7";
             // 
             // frmPianoTraining
             // 

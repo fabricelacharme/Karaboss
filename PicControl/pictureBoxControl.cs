@@ -1199,10 +1199,11 @@ namespace PicControl
                 long inisize = (long)pboxWnd.Font.Size;
                 femsize = g.DpiY * inisize / 72;
                 
-                float textSize = MeasureString(S, femsize);                
-                long comp = (long)(0.9*pboxWnd.ClientSize.Width);
-                
-                
+                float textSize = MeasureString(S, femsize);
+                //long comp = (long)(0.9*pboxWnd.ClientSize.Width);
+                long comp = (long)(0.98 * pboxWnd.ClientSize.Width);
+
+
                 // Texte trop large
                 if (textSize > comp)
                 {
@@ -1254,10 +1255,8 @@ namespace PicControl
 
                 if (inisize > 0)
                 {
-                    emSize = g.DpiY * inisize / 72;
-                    //m_font = new Font("Arial", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
-                    m_font = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
-                    //pboxWnd.Font = new Font(Name = "Arial", emSize);
+                    emSize = g.DpiY * inisize / 72;                    
+                    m_font = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);                    
                     pboxWnd.Font = new Font(Name = _karaokeFont.Name, emSize);
 
                     // Vertical distance between lines

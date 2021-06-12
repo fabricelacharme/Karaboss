@@ -65,6 +65,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                      System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
                      System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
                      true);
+                BackColor = Color.Gray;
             }
         }
 
@@ -383,7 +384,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             pnlCanvas = new MyPanel();                        
             pnlCanvas.Location = new Point(0, 0);
             pnlCanvas.Size = new Size(40, 80);
-            pnlCanvas.BackColor = Color.White;
+            //pnlCanvas.BackColor = Color.White;
             pnlCanvas.Dock = DockStyle.Fill;
 
             pnlCanvas.Paint += new PaintEventHandler(pnlCanvas_Paint);
@@ -974,21 +975,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                 
                 DrawNotes(g, clip);
                 DrawTimeLine(g, clip);
-
-                /*
-                if (Parent.GetType() == typeof(Panel))
-                {
-                    CreateBackgroundCanvas(g, clip);
-                    DrawGrid(g, clip);
-                    DrawNotes(g, clip);
-                }
-                else
-                {
-                    CreateBackgroundCanvas(g, clip);
-                    DrawGrid(g, clip);
-                    DrawNotes(g, clip);
-                }
-                */
+ 
                 g.TranslateTransform(0, clip.Y);
             }
         }

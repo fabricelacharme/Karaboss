@@ -1282,6 +1282,7 @@ namespace Karaboss
         private void colorSliderX_ValueChanged(object sender, EventArgs e)
         {
 
+            
             int delta = (int)colorSliderX.Value - (int)colorSliderX.Maximum/2;
             zoomx = 1 + 0.1f * delta;                       
 
