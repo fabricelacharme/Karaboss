@@ -957,19 +957,21 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
         /// <param name="e"></param>
         private void pnlCanvas_Paint(object sender, PaintEventArgs e)
         {
-            Rectangle clip =
+            if (sequence1 != null)
+            {
+                
+                Rectangle clip =
                 new Rectangle(
                 e.ClipRectangle.X,
                  -_offsety,
                 e.ClipRectangle.Width,
                 e.ClipRectangle.Height);
 
-            Graphics g = e.Graphics;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            g.TranslateTransform(0, -clip.Y);
+                Graphics g = e.Graphics;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                g.TranslateTransform(0, -clip.Y);
 
-            if (sequence1 != null)
-            {
+                
                 CreateBackgroundCanvas(g, clip);
                 DrawGrid(g, clip);
                 

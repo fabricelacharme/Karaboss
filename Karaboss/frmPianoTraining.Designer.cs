@@ -49,7 +49,8 @@
             this.positionHScrollBar = new ColorSlider.ColorSlider();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlBottom = new System.Windows.Forms.Panel();
-            this.colorSliderX = new ColorSlider.ColorSlider();
+            this.BtnMinusX = new System.Windows.Forms.Button();
+            this.BtnPlusX = new System.Windows.Forms.Button();
             this.CbTracks = new System.Windows.Forms.ComboBox();
             this.pnlDisplay = new System.Windows.Forms.Panel();
             this.lblElapsed = new System.Windows.Forms.Label();
@@ -62,7 +63,8 @@
             this.BtnStop = new System.Windows.Forms.Button();
             this.BtnPlay = new System.Windows.Forms.Button();
             this.pnlRight = new System.Windows.Forms.Panel();
-            this.colorSliderY = new ColorSlider.ColorSlider();
+            this.BtnMinusY = new System.Windows.Forms.Button();
+            this.BtnPlusY = new System.Windows.Forms.Button();
             this.pnlMiddle = new System.Windows.Forms.Panel();
             this.pnlScrollView.SuspendLayout();
             this.pnlPiano.SuspendLayout();
@@ -286,7 +288,8 @@
             // pnlBottom
             // 
             this.pnlBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.pnlBottom.Controls.Add(this.colorSliderX);
+            this.pnlBottom.Controls.Add(this.BtnMinusX);
+            this.pnlBottom.Controls.Add(this.BtnPlusX);
             this.pnlBottom.Controls.Add(this.CbTracks);
             this.pnlBottom.Controls.Add(this.pnlDisplay);
             this.pnlBottom.Controls.Add(this.lblTempo);
@@ -298,65 +301,21 @@
             resources.ApplyResources(this.pnlBottom, "pnlBottom");
             this.pnlBottom.Name = "pnlBottom";
             // 
-            // colorSliderX
+            // BtnMinusX
             // 
-            this.colorSliderX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.colorSliderX.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(87)))), ((int)(((byte)(94)))), ((int)(((byte)(110)))));
-            this.colorSliderX.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(60)))), ((int)(((byte)(74)))));
-            this.colorSliderX.BorderRoundRectSize = new System.Drawing.Size(1, 1);
-            resources.ApplyResources(this.colorSliderX, "colorSliderX");
-            this.colorSliderX.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
-            this.colorSliderX.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(130)))), ((int)(((byte)(208)))));
-            this.colorSliderX.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(140)))), ((int)(((byte)(180)))));
-            this.colorSliderX.ForeColor = System.Drawing.Color.White;
-            this.colorSliderX.LargeChange = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.colorSliderX.Maximum = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.colorSliderX.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.colorSliderX.MouseWheelBarPartitions = 20;
-            this.colorSliderX.Name = "colorSliderX";
-            this.colorSliderX.ScaleDivisions = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.colorSliderX.ScaleSubDivisions = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.colorSliderX.ShowDivisionsText = false;
-            this.colorSliderX.ShowSmallScale = false;
-            this.colorSliderX.SmallChange = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.colorSliderX.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
-            this.colorSliderX.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
-            this.colorSliderX.ThumbRoundRectSize = new System.Drawing.Size(2, 2);
-            this.colorSliderX.ThumbSize = new System.Drawing.Size(7, 20);
-            this.colorSliderX.TickAdd = 0F;
-            this.colorSliderX.TickColor = System.Drawing.Color.White;
-            this.colorSliderX.TickDivide = 0F;
-            this.colorSliderX.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.colorSliderX.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.colorSliderX.ValueChanged += new System.EventHandler(this.colorSliderX_ValueChanged);
+            resources.ApplyResources(this.BtnMinusX, "BtnMinusX");
+            this.BtnMinusX.Name = "BtnMinusX";
+            this.BtnMinusX.TabStop = false;
+            this.BtnMinusX.UseVisualStyleBackColor = true;
+            this.BtnMinusX.Click += new System.EventHandler(this.BtnMinusX_Click);
+            // 
+            // BtnPlusX
+            // 
+            resources.ApplyResources(this.BtnPlusX, "BtnPlusX");
+            this.BtnPlusX.Name = "BtnPlusX";
+            this.BtnPlusX.TabStop = false;
+            this.BtnPlusX.UseVisualStyleBackColor = true;
+            this.BtnPlusX.Click += new System.EventHandler(this.BtnPlusX_Click);
             // 
             // CbTracks
             // 
@@ -448,70 +407,26 @@
             // pnlRight
             // 
             this.pnlRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.pnlRight.Controls.Add(this.colorSliderY);
+            this.pnlRight.Controls.Add(this.BtnMinusY);
+            this.pnlRight.Controls.Add(this.BtnPlusY);
             resources.ApplyResources(this.pnlRight, "pnlRight");
             this.pnlRight.Name = "pnlRight";
             // 
-            // colorSliderY
+            // BtnMinusY
             // 
-            this.colorSliderY.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.colorSliderY.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(87)))), ((int)(((byte)(94)))), ((int)(((byte)(110)))));
-            this.colorSliderY.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(60)))), ((int)(((byte)(74)))));
-            this.colorSliderY.BorderRoundRectSize = new System.Drawing.Size(1, 1);
-            resources.ApplyResources(this.colorSliderY, "colorSliderY");
-            this.colorSliderY.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
-            this.colorSliderY.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(130)))), ((int)(((byte)(208)))));
-            this.colorSliderY.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(140)))), ((int)(((byte)(180)))));
-            this.colorSliderY.ForeColor = System.Drawing.Color.White;
-            this.colorSliderY.LargeChange = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.colorSliderY.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.colorSliderY.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.colorSliderY.MouseWheelBarPartitions = 1000;
-            this.colorSliderY.Name = "colorSliderY";
-            this.colorSliderY.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.colorSliderY.ScaleDivisions = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.colorSliderY.ScaleSubDivisions = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.colorSliderY.ShowDivisionsText = false;
-            this.colorSliderY.ShowSmallScale = false;
-            this.colorSliderY.SmallChange = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.colorSliderY.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
-            this.colorSliderY.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
-            this.colorSliderY.ThumbRoundRectSize = new System.Drawing.Size(2, 2);
-            this.colorSliderY.ThumbSize = new System.Drawing.Size(20, 7);
-            this.colorSliderY.TickAdd = 0F;
-            this.colorSliderY.TickColor = System.Drawing.Color.White;
-            this.colorSliderY.TickDivide = 0F;
-            this.colorSliderY.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.colorSliderY.Value = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-            this.colorSliderY.ValueChanged += new System.EventHandler(this.colorSliderY_ValueChanged);
+            resources.ApplyResources(this.BtnMinusY, "BtnMinusY");
+            this.BtnMinusY.Name = "BtnMinusY";
+            this.BtnMinusY.TabStop = false;
+            this.BtnMinusY.UseVisualStyleBackColor = true;
+            this.BtnMinusY.Click += new System.EventHandler(this.BtnMinusY_Click);
+            // 
+            // BtnPlusY
+            // 
+            resources.ApplyResources(this.BtnPlusY, "BtnPlusY");
+            this.BtnPlusY.Name = "BtnPlusY";
+            this.BtnPlusY.TabStop = false;
+            this.BtnPlusY.UseVisualStyleBackColor = true;
+            this.BtnPlusY.Click += new System.EventHandler(this.BtnPlusY_Click);
             // 
             // pnlMiddle
             // 
@@ -576,8 +491,6 @@
         private System.Windows.Forms.Panel pnlMiddle;
         private System.Windows.Forms.Panel pnlLeftPiano;
         private System.Windows.Forms.VScrollBar vScrollBar;
-        private ColorSlider.ColorSlider colorSliderY;
-        private ColorSlider.ColorSlider colorSliderX;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
@@ -585,5 +498,9 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button BtnMinusX;
+        private System.Windows.Forms.Button BtnPlusX;
+        private System.Windows.Forms.Button BtnMinusY;
+        private System.Windows.Forms.Button BtnPlusY;
     }
 }

@@ -418,7 +418,6 @@ namespace Karaboss
 
             if (hScrollBar!= null &&  hScrollBar.Visible)
             {
-
                 hScrollBar.SmallChange = pianoControl1.Width / 20;
                 hScrollBar.LargeChange = pianoControl1.Width / 10;                
                 hScrollBar.Maximum = pianoControl1.Width - pnlPiano.Width + hScrollBar.LargeChange;
@@ -913,10 +912,10 @@ namespace Karaboss
 
                 zoomx = pianoControl1.Zoom;
                 zoomx += (e.Delta > 0 ? 0.1f : -0.1f);
+                
                 pianoControl1.Zoom = zoomx;
-
-                vPianoRollControl1.xScale = pianoControl1.Scale;                               
-
+                vPianoRollControl1.xScale = pianoControl1.Scale;
+                
                 // Adjust scrollbars values
                 SetScrollBarValues();
 
@@ -1043,7 +1042,17 @@ namespace Karaboss
                 BtnPlay.Left = l;
 
             BtnStop.Left = BtnPlay.Left + BtnPlay.Width + 3;
-            //lblKaraboss.Left = ClientSize.Width - lblKaraboss.Width - 3;
+
+
+            BtnPlusX.Left = pnlRight.Left - BtnPlusX.Width;
+            BtnMinusX.Left = BtnPlusX.Left - BtnMinusX.Width + 1;
+
+            BtnMinusY.Left = 0;
+            BtnPlusY.Left = 0;
+
+            BtnMinusY.Top = pnlRight.Height - BtnMinusY.Height;
+            BtnPlusY.Top = BtnMinusY.Top - BtnPlusY.Height + 1;
+
 
             SetScrollBarValues();
         }
@@ -1278,35 +1287,26 @@ namespace Karaboss
 
         #region trackbar
            
-
+        /*
         private void colorSliderX_ValueChanged(object sender, EventArgs e)
-        {
-
-            
+        {            
             int delta = (int)colorSliderX.Value - (int)colorSliderX.Maximum/2;
             zoomx = 1 + 0.1f * delta;                       
 
             pianoControl1.Zoom = zoomx;
-            pianoControl1.Width = pianoControl1.TotalLength;
-
             vPianoRollControl1.xScale = pianoControl1.Scale;
-            vPianoRollControl1.Width = pianoControl1.TotalLength;
-
-            // Adjust wIDTH
-            pnlPiano.Width = pnlScrollView.Width = pianoControl1.TotalLength;
+            SetScrollBarValues();
         }
         
 
         private void colorSliderY_ValueChanged(object sender, EventArgs e)
         {
-
             int delta = (int)colorSliderY.Value - (int)colorSliderY.Maximum/2;
             zoomy = 10 + 0.1f * delta;
 
             vPianoRollControl1.zoomy = zoomy;
-
         }
-
+        */
 
         private void vScrollBarRoll_ValueChanged(object sender, EventArgs e)
         {
@@ -1328,7 +1328,38 @@ namespace Karaboss
         }
 
 
+
         #endregion
 
+        private void BtnPlusX_Click(object sender, EventArgs e)
+        {
+            zoomx += 0.1f;
+            
+            pianoControl1.Zoom = zoomx;
+            vPianoRollControl1.xScale = pianoControl1.Scale;
+
+            SetScrollBarValues();
+        }
+
+        private void BtnMinusX_Click(object sender, EventArgs e)
+        {
+            zoomx -= 0.1f;
+            pianoControl1.Zoom = zoomx;
+            vPianoRollControl1.xScale = pianoControl1.Scale;
+
+            SetScrollBarValues();
+        }
+
+        private void BtnPlusY_Click(object sender, EventArgs e)
+        {
+            zoomy += 0.4f;
+            vPianoRollControl1.zoomy = zoomy;
+        }
+
+        private void BtnMinusY_Click(object sender, EventArgs e)
+        {
+            zoomy -= 0.2f;
+            vPianoRollControl1.zoomy = zoomy;
+        }
     }
 }
