@@ -1078,19 +1078,19 @@ namespace Karaboss
         /// <summary>
         /// Window and scrollbar startup position
         /// </summary>
-        public void StartupPosition(float ticks = 0)
-        {                       
-            
-            //int middleScroll = vScrollBar.Maximum / 2;
-            //vScrollBar.Value = middleScroll;
-
-            pianoRollControl2.OffsetX = Convert.ToInt32(ticks * pianoRollControl2.xScale);
-            if (pianoRollControl2.OffsetX >= hScrollBar.Minimum && pianoRollControl2.OffsetX <= hScrollBar.Maximum)
+        public void StartupPosition(float ticks = 0, int note = 0)
+        {
+            // VERTICAL
+            if (note > 0)
             {
-                //hScrollBar.Value = pianoRollControl2.OffsetX;
-                positionHScrollBar.Value = (uint)ticks;
+                float y = (note - pianoControl2.LowNoteID) / (float)(pianoControl2.HighNoteID - pianoControl2.LowNoteID);
+                int middleScroll = (int)(y * vScrollBar.Maximum);
+                vScrollBar.Value = vScrollBar.Maximum - middleScroll;
             }
-            
+
+            // HORIZONTAL            
+            if ((uint)ticks > positionHScrollBar.Minimum  && (uint)ticks < positionHScrollBar.Maximum)
+                positionHScrollBar.Value = (uint)ticks;
         }
 
         private void FrmPianoRoll_Resize(object sender, EventArgs e)
@@ -1103,8 +1103,7 @@ namespace Karaboss
             {
                 if (bShowVScrollBar)
                     vW = vScrollBar.Width;
-
-                //pnlScrollView.Width = pnlMiddle.Width -vW;
+                
                 pnlScrollView.Height = pnlPiano.Height + pianoRollControl2.TimeLineY;
                 pnlScrollView.Width = pnlCenter.Width;
                 pianoRollControl2.Width = pnlScrollView.Width;                

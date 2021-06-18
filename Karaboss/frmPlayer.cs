@@ -2919,10 +2919,12 @@ namespace Karaboss
         {                        
             if (Application.OpenForms["frmPianoRoll"] == null)
             {
+                int note = sheetmusic.CurrentNote.midinote.Number;          
+                
                 frmPianoRoll = new frmPianoRoll(sequence1, tracknum, outDevice, fileName);
                 frmPianoRoll.Show();
                 frmPianoRoll.Refresh();
-                frmPianoRoll.StartupPosition(ticks);
+                frmPianoRoll.StartupPosition(ticks, note);
             }
             else
             {
