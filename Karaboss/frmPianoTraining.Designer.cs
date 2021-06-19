@@ -37,14 +37,6 @@
             this.pianoControl1 = new Sanford.Multimedia.Midi.UI.PianoControl();
             this.pnlRedPianoSep = new System.Windows.Forms.Panel();
             this.pnlLeftPiano = new System.Windows.Forms.Panel();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.lblKaraboss = new System.Windows.Forms.Label();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.positionHScrollBar = new ColorSlider.ColorSlider();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -60,12 +52,22 @@
             this.btnTempoMinus = new System.Windows.Forms.Button();
             this.lblTempoValue = new System.Windows.Forms.Label();
             this.btnTempoPlus = new System.Windows.Forms.Button();
-            this.BtnStop = new System.Windows.Forms.Button();
-            this.BtnPlay = new System.Windows.Forms.Button();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.BtnMinusY = new System.Windows.Forms.Button();
             this.BtnPlusY = new System.Windows.Forms.Button();
             this.pnlMiddle = new System.Windows.Forms.Panel();
+            this.BtnPlay = new Karaboss.NoSelectButton();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.BtnStop = new Karaboss.NoSelectButton();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
             this.pnlScrollView.SuspendLayout();
             this.pnlPiano.SuspendLayout();
             this.pnlLeftPiano.SuspendLayout();
@@ -74,6 +76,7 @@
             this.pnlDisplay.SuspendLayout();
             this.pnlRight.SuspendLayout();
             this.pnlMiddle.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlScrollView
@@ -137,80 +140,9 @@
             // pnlLeftPiano
             // 
             this.pnlLeftPiano.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.pnlLeftPiano.Controls.Add(this.label7);
-            this.pnlLeftPiano.Controls.Add(this.label6);
-            this.pnlLeftPiano.Controls.Add(this.label5);
-            this.pnlLeftPiano.Controls.Add(this.label4);
-            this.pnlLeftPiano.Controls.Add(this.label3);
-            this.pnlLeftPiano.Controls.Add(this.label2);
-            this.pnlLeftPiano.Controls.Add(this.label1);
-            this.pnlLeftPiano.Controls.Add(this.lblKaraboss);
+            this.pnlLeftPiano.Controls.Add(this.panel1);
             resources.ApplyResources(this.pnlLeftPiano, "pnlLeftPiano");
             this.pnlLeftPiano.Name = "pnlLeftPiano";
-            // 
-            // label7
-            // 
-            resources.ApplyResources(this.label7, "label7");
-            this.label7.BackColor = System.Drawing.Color.Transparent;
-            this.label7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Name = "label7";
-            // 
-            // label6
-            // 
-            resources.ApplyResources(this.label6, "label6");
-            this.label6.BackColor = System.Drawing.Color.Transparent;
-            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Name = "label6";
-            // 
-            // label5
-            // 
-            this.label5.BackColor = System.Drawing.Color.Transparent;
-            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.label5, "label5");
-            this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Name = "label5";
-            // 
-            // label4
-            // 
-            resources.ApplyResources(this.label4, "label4");
-            this.label4.BackColor = System.Drawing.Color.Transparent;
-            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Name = "label4";
-            // 
-            // label3
-            // 
-            resources.ApplyResources(this.label3, "label3");
-            this.label3.BackColor = System.Drawing.Color.Transparent;
-            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Name = "label3";
-            // 
-            // label2
-            // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Name = "label2";
-            // 
-            // label1
-            // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Name = "label1";
-            // 
-            // lblKaraboss
-            // 
-            resources.ApplyResources(this.lblKaraboss, "lblKaraboss");
-            this.lblKaraboss.BackColor = System.Drawing.Color.Transparent;
-            this.lblKaraboss.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblKaraboss.ForeColor = System.Drawing.Color.White;
-            this.lblKaraboss.Name = "lblKaraboss";
             // 
             // pnlTop
             // 
@@ -288,6 +220,8 @@
             // pnlBottom
             // 
             this.pnlBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlBottom.Controls.Add(this.BtnStop);
+            this.pnlBottom.Controls.Add(this.BtnPlay);
             this.pnlBottom.Controls.Add(this.BtnMinusX);
             this.pnlBottom.Controls.Add(this.BtnPlusX);
             this.pnlBottom.Controls.Add(this.CbTracks);
@@ -296,8 +230,6 @@
             this.pnlBottom.Controls.Add(this.btnTempoMinus);
             this.pnlBottom.Controls.Add(this.lblTempoValue);
             this.pnlBottom.Controls.Add(this.btnTempoPlus);
-            this.pnlBottom.Controls.Add(this.BtnStop);
-            this.pnlBottom.Controls.Add(this.BtnPlay);
             resources.ApplyResources(this.pnlBottom, "pnlBottom");
             this.pnlBottom.Name = "pnlBottom";
             // 
@@ -319,8 +251,8 @@
             // 
             // CbTracks
             // 
-            this.CbTracks.FormattingEnabled = true;
             resources.ApplyResources(this.CbTracks, "CbTracks");
+            this.CbTracks.FormattingEnabled = true;
             this.CbTracks.Name = "CbTracks";
             this.CbTracks.TabStop = false;
             this.CbTracks.SelectedIndexChanged += new System.EventHandler(this.CbTracks_SelectedIndexChanged);
@@ -386,24 +318,6 @@
             this.btnTempoPlus.UseVisualStyleBackColor = true;
             this.btnTempoPlus.Click += new System.EventHandler(this.btnTempoPlus_Click);
             // 
-            // BtnStop
-            // 
-            this.BtnStop.Image = global::Karaboss.Properties.Resources.Media_Controls_Stop_icon;
-            resources.ApplyResources(this.BtnStop, "BtnStop");
-            this.BtnStop.Name = "BtnStop";
-            this.BtnStop.TabStop = false;
-            this.BtnStop.UseVisualStyleBackColor = true;
-            this.BtnStop.Click += new System.EventHandler(this.BtnStop_Click);
-            // 
-            // BtnPlay
-            // 
-            this.BtnPlay.Image = global::Karaboss.Properties.Resources.Media_Controls_Play_icon;
-            resources.ApplyResources(this.BtnPlay, "BtnPlay");
-            this.BtnPlay.Name = "BtnPlay";
-            this.BtnPlay.TabStop = false;
-            this.BtnPlay.UseVisualStyleBackColor = true;
-            this.BtnPlay.Click += new System.EventHandler(this.BtnPlay_Click);
-            // 
             // pnlRight
             // 
             this.pnlRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
@@ -436,6 +350,106 @@
             resources.ApplyResources(this.pnlMiddle, "pnlMiddle");
             this.pnlMiddle.Name = "pnlMiddle";
             // 
+            // BtnPlay
+            // 
+            this.BtnPlay.FlatAppearance.BorderSize = 0;
+            this.BtnPlay.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.BtnPlay.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.BtnPlay, "BtnPlay");
+            this.BtnPlay.Image = global::Karaboss.Properties.Resources.btn_black_play;
+            this.BtnPlay.Name = "BtnPlay";
+            this.BtnPlay.TabStop = false;
+            this.toolTip1.SetToolTip(this.BtnPlay, resources.GetString("BtnPlay.ToolTip"));
+            this.BtnPlay.UseVisualStyleBackColor = false;
+            this.BtnPlay.Click += new System.EventHandler(this.BtnPlay_Click);
+            this.BtnPlay.MouseLeave += new System.EventHandler(this.BtnPlay_MouseLeave);
+            this.BtnPlay.MouseHover += new System.EventHandler(this.BtnPlay_MouseHover);
+            // 
+            // BtnStop
+            // 
+            this.BtnStop.FlatAppearance.BorderSize = 0;
+            this.BtnStop.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.BtnStop.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.BtnStop, "BtnStop");
+            this.BtnStop.Image = global::Karaboss.Properties.Resources.btn_black_stop;
+            this.BtnStop.Name = "BtnStop";
+            this.BtnStop.TabStop = false;
+            this.toolTip1.SetToolTip(this.BtnStop, resources.GetString("BtnStop.ToolTip"));
+            this.BtnStop.UseVisualStyleBackColor = false;
+            this.BtnStop.Click += new System.EventHandler(this.BtnStop_Click);
+            this.BtnStop.MouseLeave += new System.EventHandler(this.BtnStop_MouseLeave);
+            this.BtnStop.MouseHover += new System.EventHandler(this.BtnStop_MouseHover);
+            // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.label14);
+            this.panel1.Controls.Add(this.label13);
+            this.panel1.Controls.Add(this.label12);
+            this.panel1.Controls.Add(this.label11);
+            this.panel1.Controls.Add(this.label10);
+            this.panel1.Controls.Add(this.label9);
+            this.panel1.Controls.Add(this.label8);
+            this.panel1.Controls.Add(this.label15);
+            resources.ApplyResources(this.panel1, "panel1");
+            this.panel1.Name = "panel1";
+            // 
+            // label15
+            // 
+            resources.ApplyResources(this.label15, "label15");
+            this.label15.BackColor = System.Drawing.Color.Transparent;
+            this.label15.ForeColor = System.Drawing.Color.White;
+            this.label15.Name = "label15";
+            // 
+            // label8
+            // 
+            resources.ApplyResources(this.label8, "label8");
+            this.label8.BackColor = System.Drawing.Color.Transparent;
+            this.label8.ForeColor = System.Drawing.Color.White;
+            this.label8.Name = "label8";
+            // 
+            // label9
+            // 
+            resources.ApplyResources(this.label9, "label9");
+            this.label9.BackColor = System.Drawing.Color.Transparent;
+            this.label9.ForeColor = System.Drawing.Color.White;
+            this.label9.Name = "label9";
+            // 
+            // label10
+            // 
+            resources.ApplyResources(this.label10, "label10");
+            this.label10.BackColor = System.Drawing.Color.Transparent;
+            this.label10.ForeColor = System.Drawing.Color.White;
+            this.label10.Name = "label10";
+            // 
+            // label11
+            // 
+            resources.ApplyResources(this.label11, "label11");
+            this.label11.BackColor = System.Drawing.Color.Transparent;
+            this.label11.ForeColor = System.Drawing.Color.White;
+            this.label11.Name = "label11";
+            // 
+            // label12
+            // 
+            resources.ApplyResources(this.label12, "label12");
+            this.label12.BackColor = System.Drawing.Color.Transparent;
+            this.label12.ForeColor = System.Drawing.Color.White;
+            this.label12.Name = "label12";
+            // 
+            // label13
+            // 
+            resources.ApplyResources(this.label13, "label13");
+            this.label13.BackColor = System.Drawing.Color.Transparent;
+            this.label13.ForeColor = System.Drawing.Color.White;
+            this.label13.Name = "label13";
+            // 
+            // label14
+            // 
+            resources.ApplyResources(this.label14, "label14");
+            this.label14.BackColor = System.Drawing.Color.Transparent;
+            this.label14.ForeColor = System.Drawing.Color.White;
+            this.label14.Name = "label14";
+            // 
             // frmPianoTraining
             // 
             resources.ApplyResources(this, "$this");
@@ -453,13 +467,14 @@
             this.pnlScrollView.ResumeLayout(false);
             this.pnlPiano.ResumeLayout(false);
             this.pnlLeftPiano.ResumeLayout(false);
-            this.pnlLeftPiano.PerformLayout();
             this.pnlTop.ResumeLayout(false);
             this.pnlBottom.ResumeLayout(false);
             this.pnlDisplay.ResumeLayout(false);
             this.pnlDisplay.PerformLayout();
             this.pnlRight.ResumeLayout(false);
             this.pnlMiddle.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -483,24 +498,26 @@
         private System.Windows.Forms.Button btnTempoMinus;
         private System.Windows.Forms.Label lblTempoValue;
         private System.Windows.Forms.Button btnTempoPlus;
-        private System.Windows.Forms.Button BtnStop;
-        private System.Windows.Forms.Button BtnPlay;
-        private System.Windows.Forms.Label lblKaraboss;
         private System.Windows.Forms.ComboBox CbTracks;
         private System.Windows.Forms.Panel pnlRight;
         private System.Windows.Forms.Panel pnlMiddle;
         private System.Windows.Forms.Panel pnlLeftPiano;
         private System.Windows.Forms.VScrollBar vScrollBar;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button BtnMinusX;
         private System.Windows.Forms.Button BtnPlusX;
         private System.Windows.Forms.Button BtnMinusY;
         private System.Windows.Forms.Button BtnPlusY;
+        private NoSelectButton BtnPlay;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private NoSelectButton BtnStop;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label15;
     }
 }

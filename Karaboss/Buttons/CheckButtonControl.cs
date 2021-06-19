@@ -10,6 +10,9 @@ using System.Windows.Forms;
 
 namespace Karaboss.Buttons
 {
+    /* Boutons utilisés pour le player de Karaboss
+     * 
+     */
     public partial class CheckButtonControl : UserControl
     {
         private Image CheckedButton() => Properties.Resources.Bouton_Check_PaleGreen_32;

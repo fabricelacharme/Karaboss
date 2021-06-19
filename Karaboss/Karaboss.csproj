@@ -103,6 +103,12 @@
     <Compile Include="Buttons\MinusButtonControl.Designer.cs">
       <DependentUpon>MinusButtonControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Buttons\PlayButtonControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Buttons\PlayButtonControl.Designer.cs">
+      <DependentUpon>PlayButtonControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Buttons\PlusButtonControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -401,6 +407,9 @@
     <EmbeddedResource Include="Buttons\MinusButtonControl.resx">
       <DependentUpon>MinusButtonControl.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Buttons\PlayButtonControl.resx">
+      <DependentUpon>PlayButtonControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Buttons\PlusButtonControl.resx">
       <DependentUpon>PlusButtonControl.cs</DependentUpon>
