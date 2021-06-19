@@ -1460,10 +1460,7 @@ namespace Karaboss
 
                 hScrollBar.SmallChange = SC;
                 hScrollBar.LargeChange = LC;
-
             }
-
-
         }
 
 
@@ -5836,11 +5833,9 @@ namespace Karaboss
         /// <param name="e"></param>
         /// <param name="track"></param>
         private void BtnPianoRollClickOneEvent(object sender, EventArgs e, int track)
-        {
-            //float t = sequence1.GetLength()* (float)hScrollBar.Value/(float)hScrollBar.Maximum;
-            //float t = (float)hScrollBar.Value;
-            float t = sheetmusic.OffsetX;
-
+        {            
+            float max = sequence1.GetLength();
+            float t = max * (sheetmusic.OffsetX + pnlScrollView.Width/2) / (float)sheetmusic.MaxStaffWidth;           
             DisplayPianoRoll(track, MIDIfileFullPath, t);
         }
 

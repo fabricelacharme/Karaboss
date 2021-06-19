@@ -49,9 +49,6 @@ namespace Sanford.Multimedia.Midi.Score
         public delegate void smMouseUpEventHandler(object sender, EventArgs e, int staffnum, int note, float ticks);
         public event smMouseUpEventHandler OnSMMouseUp;
 
-        //public delegate void smMouseClickEventHandler(object sender, EventArgs e, int staffnum, int note, float ticks);
-        //public event smMouseClickEventHandler OnSMMouseClick;
-
         public delegate void smMouseDoubleClickEventHandler(object sender, EventArgs e, int staffnum, float ticks);
         public event smMouseDoubleClickEventHandler OnSMMouseDoubleClick;
 
@@ -4240,33 +4237,7 @@ namespace Sanford.Multimedia.Midi.Score
 
         }
 
-        /*
-        public void PnlScroll(int currentPulseTime)
-        {
-            Panel pnlScrollview = (Panel)this.Parent;
-            Point scrollPos = pnlScrollview.AutoScrollPosition;
-            // The scroll position is in negative coordinates for some reason 
-            scrollPos.X = -scrollPos.X;
-            scrollPos.Y = -scrollPos.Y;
-
-            Point newPos = scrollPos;
-
-            //nbMeasures 
-            // measurelen
-            int W = this.Width;
-            int X = (W * currentPulseTime) / seqlength;            
-
-            int x_view = pnlScrollview.Width / 2;
-            int delta = X - x_view;
-
-            if (delta > 0)
-            {
-                // Scroll if > W/2
-                newPos = new Point(delta, scrollPos.Y);
-                pnlScrollview.AutoScrollPosition = newPos;
-            }
-        }
-        */
+      
 
         #endregion scroll
 
