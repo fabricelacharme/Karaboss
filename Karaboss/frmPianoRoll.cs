@@ -808,7 +808,7 @@ namespace Karaboss
             }
         }
 
-
+        /*
         private void LblPointer_Click(object sender, EventArgs e)
         {
             if (EditStatus == Editstatus.Arrow)
@@ -823,8 +823,8 @@ namespace Karaboss
                 pianoRollControl2.NotesEdition = false;
                 Cursor = Cursors.Default;
 
-                lblPen.BackColor = Color.White;
-                lblPointer.BackColor = Color.Red;
+                //lblPen.BackColor = Color.White;
+                //lblPointer.BackColor = Color.Red;
             }
         }
 
@@ -842,11 +842,11 @@ namespace Karaboss
                 pianoRollControl2.NotesEdition = true;
                 Cursor = Cursors.Hand;
 
-                lblPen.BackColor = Color.Red;
-                lblPointer.BackColor = Color.White;
+                //lblPen.BackColor = Color.Red;
+                //lblPointer.BackColor = Color.White;
             }
         }
-   
+         */
 
         private void CbResolution_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1439,14 +1439,12 @@ namespace Karaboss
 
         private void BtnPlay_Click(object sender, EventArgs e)
         {
-            PlayPauseMusic();
-            BtnPlay.Parent.Focus();
+            PlayPauseMusic();            
         }
 
         private void BtnStop_Click(object sender, EventArgs e)
         {
-            StopMusic();
-            BtnStop.Parent.Focus();
+            StopMusic();            
         }
 
         private void BtnStatus()
@@ -1455,42 +1453,27 @@ namespace Karaboss
             switch (PlayerState)
             {
                 case PlayerStates.Playing:
-                    BtnPlay.Image = Properties.Resources.Media_Controls_Play_icon;
-                    //btnStop.Image = Properties.Resources.btn_black_stop;
+                    BtnPlay.Image = Properties.Resources.btn_green_play;
+                    BtnStop.Image = Properties.Resources.btn_black_stop;
                     BtnPlay.Enabled = true;  // to allow pause
                     BtnStop.Enabled = true;  // to allow stop 
-                    //lblStatus.Text = "Playing";
-                    //lblStatus.ForeColor = Color.LightGreen;
-                    //SetStartVLinePos(0);
-                    //sldMainTempo.Enabled = false;       // tempo change not allowed
-                    //sldTranspose.Enabled = false;       // Transpose not allowed
-                    //btnStartRec.Enabled = false;
                     break;
 
                 case PlayerStates.Paused:
-                    BtnPlay.Image = Properties.Resources.Media_Controls_Pause_icon;
+                    BtnPlay.Image = Properties.Resources.btn_red_pause;
                     BtnPlay.Enabled = true;  // to allow play
                     BtnStop.Enabled = true;  // to allow stop
-
-                    //lblStatus.Text = "Paused";
-                    //lblStatus.ForeColor = Color.Yellow;
                     break;
 
                 case PlayerStates.Stopped:
-                    BtnPlay.Image = Properties.Resources.Media_Controls_Play_icon;
+                    BtnPlay.Image = Properties.Resources.btn_black_play;
                     BtnPlay.Enabled = true;   // to allow play
                     if (newstart == 0)
                     {
-                        //btnStop.Image = Properties.Resources.btn_red_stop;
+                        BtnStop.Image = Properties.Resources.btn_red_stop;
                     }
                     else
                         BtnStop.Enabled = true;   // to enable real stop because stop point not at the beginning of the song 
-                    //lblStatus.Text = "Stopped";
-                    //lblStatus.ForeColor = Color.Red;
-                    //sldMainTempo.Enabled = true;        // Tempo change allowed
-                    //sldTranspose.Enabled = true;        // Transpose allowed
-                    //btnStartRec.Enabled = true;
-                    //VuMasterPeakVolume.Level = 0;
                     break;
 
                 
@@ -1823,9 +1806,39 @@ namespace Karaboss
 
 
 
+
         #endregion
 
-    
+        private void BtnPlay_MouseHover(object sender, EventArgs e)
+        {
+            if (PlayerState == PlayerStates.Stopped)
+                BtnPlay.Image = Properties.Resources.btn_blue_play;
+            else if (PlayerState == PlayerStates.Paused)
+                BtnPlay.Image = Properties.Resources.btn_blue_pause;
+            else if (PlayerState == PlayerStates.Playing)
+                BtnPlay.Image = Properties.Resources.btn_blue_play;
+        }
+
+        private void BtnPlay_MouseLeave(object sender, EventArgs e)
+        {
+            if (PlayerState == PlayerStates.Stopped)
+                BtnPlay.Image = Properties.Resources.btn_black_play;
+            else if (PlayerState == PlayerStates.Paused)
+                BtnPlay.Image = Properties.Resources.btn_red_pause;
+            else if (PlayerState == PlayerStates.Playing)
+                BtnPlay.Image = Properties.Resources.btn_green_play;
+        }
+
+        private void BtnStop_MouseHover(object sender, EventArgs e)
+        {
+            if (PlayerState == PlayerStates.Playing || PlayerState == PlayerStates.Paused)
+                BtnStop.Image = Properties.Resources.btn_blue_stop;
+        }
+
+        private void BtnStop_MouseLeave(object sender, EventArgs e)
+        {
+            BtnStop.Image = Properties.Resources.btn_black_stop;
+        }
     }
 
   

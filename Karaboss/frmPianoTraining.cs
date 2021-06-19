@@ -1308,28 +1308,7 @@ namespace Karaboss
         #endregion
 
 
-        #region trackbar
-           
-        /*
-        private void colorSliderX_ValueChanged(object sender, EventArgs e)
-        {            
-            int delta = (int)colorSliderX.Value - (int)colorSliderX.Maximum/2;
-            zoomx = 1 + 0.1f * delta;                       
-
-            pianoControl1.Zoom = zoomx;
-            vPianoRollControl1.xScale = pianoControl1.Scale;
-            SetScrollBarValues();
-        }
-        
-
-        private void colorSliderY_ValueChanged(object sender, EventArgs e)
-        {
-            int delta = (int)colorSliderY.Value - (int)colorSliderY.Maximum/2;
-            zoomy = 10 + 0.1f * delta;
-
-            vPianoRollControl1.zoomy = zoomy;
-        }
-        */
+        #region trackbar             
 
         private void vScrollBarRoll_ValueChanged(object sender, EventArgs e)
         {
