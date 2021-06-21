@@ -808,45 +808,7 @@ namespace Karaboss
             }
         }
 
-        /*
-        private void LblPointer_Click(object sender, EventArgs e)
-        {
-            if (EditStatus == Editstatus.Arrow)
-            {
-                // None selection
-                DisableEditButtons();
-            }
-            else
-            {
-                // Pointer selection
-                EditStatus = Editstatus.Arrow;
-                pianoRollControl2.NotesEdition = false;
-                Cursor = Cursors.Default;
 
-                //lblPen.BackColor = Color.White;
-                //lblPointer.BackColor = Color.Red;
-            }
-        }
-
-        private void LblPen_Click(object sender, EventArgs e)
-        {
-            if (EditStatus == Editstatus.Pen)
-            {
-                // None selection
-                DisableEditButtons();
-            }                
-            else
-            {
-                // Pen selection
-                EditStatus = Editstatus.Pen;
-                pianoRollControl2.NotesEdition = true;
-                Cursor = Cursors.Hand;
-
-                //lblPen.BackColor = Color.Red;
-                //lblPointer.BackColor = Color.White;
-            }
-        }
-         */
 
         private void CbResolution_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1804,11 +1766,10 @@ namespace Karaboss
 
         }
 
-
-
-
         #endregion
 
+
+        #region boutons
         private void BtnPlay_MouseHover(object sender, EventArgs e)
         {
             if (PlayerState == PlayerStates.Stopped)
@@ -1839,10 +1800,8 @@ namespace Karaboss
         {
             BtnStop.Image = Properties.Resources.btn_black_stop;
         }
+
+        #endregion
+    
     }
-
-  
-
-
-
 }

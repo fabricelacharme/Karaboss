@@ -763,7 +763,7 @@ namespace Karaboss
             LoadSequencer(sequence1);
             // Draw controls needs informations from the sequence
             DrawControls();
-            InitCbTracks();            
+            InitCbTracks();
         }
 
         /// <summary>

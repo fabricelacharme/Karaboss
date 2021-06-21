@@ -70,6 +70,13 @@ namespace Karaboss
         private int nbGuitar = 0;
         private int nbBass = 0;
 
+        private bool bAlltracks;
+        private int tracknum = -1;
+        private Track SingleTrack;
+        private int SingleTrackNumber;
+        private int SingleTrackChannel;
+
+
         /// <summary>
         /// Player status
         /// </summary>
@@ -113,6 +120,14 @@ namespace Karaboss
             outDevice = outdeviceGuitar;            
 
             SetTitle(FileName);
+
+            tracknum = -1;
+            // All tracks                      
+            SingleTrack = null;
+            SingleTrackNumber = -1;
+            SingleTrackChannel = -1;
+            bAlltracks = true;
+
         }
 
         /// <summary>
@@ -433,12 +448,12 @@ namespace Karaboss
             InstrumentInfo ii;
             InfoTrackPanel pnlLeft;
 
-            pnlBottom.BackColor = System.Drawing.ColorTranslator.FromHtml("#1d1d1d");
+            pnlMiddle.BackColor = System.Drawing.ColorTranslator.FromHtml("#1d1d1d");
             dicGuitar.Clear();
             dicBass.Clear();
 
             // Remove all controls (InfoTrac, GuitarControl, BassControl
-            pnlBottom.Controls.Clear();
+            pnlMiddle.Controls.Clear();
 
             
 
@@ -470,7 +485,7 @@ namespace Karaboss
                                 };
 
                                 pnlLeft.OnRemoveTrack += new InfoTrackPanel.RemoveTrackEventHandler(Display_RemoveTrack);
-                                pnlBottom.Controls.Add(pnlLeft);
+                                pnlMiddle.Controls.Add(pnlLeft);
 
 
                                 // Add a guitar control
@@ -479,7 +494,7 @@ namespace Karaboss
                                 GC.Left = pnlLeft.Width;
                                 GC.Top = Y;
                                 GC.Width = Width - leftWith - 40;
-                                pnlBottom.Controls.Add(GC);
+                                pnlMiddle.Controls.Add(GC);
 
                                 // Add control to dictionary
                                 dicGuitar.Add("All Guitars", GC);
@@ -501,7 +516,7 @@ namespace Karaboss
                                     Channel = string.Format("Channel: {0}", -1),
                                 };
                                 pnlLeft.OnRemoveTrack += new InfoTrackPanel.RemoveTrackEventHandler(Display_RemoveTrack);
-                                pnlBottom.Controls.Add(pnlLeft);
+                                pnlMiddle.Controls.Add(pnlLeft);
 
                                 // Add a bass control
                                 BassControl BC = new BassControl();
@@ -509,7 +524,7 @@ namespace Karaboss
                                 BC.Left = pnlLeft.Width;
                                 BC.Top = Y;
                                 BC.Width = Width - leftWith - 40;
-                                pnlBottom.Controls.Add(BC);
+                                pnlMiddle.Controls.Add(BC);
 
                                 // Add control to dictionary
                                 dicBass.Add("All Bass", BC);
@@ -555,7 +570,7 @@ namespace Karaboss
                                 };
 
                                 pnlLeft.OnRemoveTrack += new InfoTrackPanel.RemoveTrackEventHandler(Display_RemoveTrack);
-                                pnlBottom.Controls.Add(pnlLeft);
+                                pnlMiddle.Controls.Add(pnlLeft);
 
                                 // Add a guitar control
                                 GuitarControl GC = new GuitarControl();
@@ -563,7 +578,7 @@ namespace Karaboss
                                 GC.Left = pnlLeft.Width;
                                 GC.Top = Y;
                                 GC.Width = Width - leftWith - 40;
-                                pnlBottom.Controls.Add(GC);
+                                pnlMiddle.Controls.Add(GC);
 
                                 // Add control to dictionary
                                 dicGuitar.Add(ii.Name, GC);
@@ -606,7 +621,7 @@ namespace Karaboss
                                     Channel = string.Format("Channel: {0}", ii.Channel),
                                 };
                                 pnlLeft.OnRemoveTrack += new InfoTrackPanel.RemoveTrackEventHandler(Display_RemoveTrack);
-                                pnlBottom.Controls.Add(pnlLeft);
+                                pnlMiddle.Controls.Add(pnlLeft);
 
                                 // Add a bass control
                                 BassControl BC = new BassControl();
@@ -614,7 +629,7 @@ namespace Karaboss
                                 BC.Left = pnlLeft.Width;
                                 BC.Top = Y;
                                 BC.Width = Width - leftWith - 40;
-                                pnlBottom.Controls.Add(BC);
+                                pnlMiddle.Controls.Add(BC);
 
                                 // Add control to dictionary
                                 dicBass.Add(ii.Name, BC);
@@ -659,7 +674,7 @@ namespace Karaboss
         private void ClearInstruments()
         {
             dicChannel.Clear();            
-            foreach (Control item in pnlBottom.Controls)
+            foreach (Control item in pnlMiddle.Controls)
             {
                 if (item.GetType() == typeof(GuitarControl))
                 {
@@ -683,8 +698,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void BtnPlay_Click(object sender, EventArgs e)
         {
-            PlayPauseMusic();
-            BtnPlay.Parent.Focus();
+            PlayPauseMusic();            
         }
 
         /// <summary>
@@ -694,8 +708,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void BtnStop_Click(object sender, EventArgs e)
         {
-            StopMusic();
-            BtnStop.Parent.Focus();
+            StopMusic();            
         }
 
         /// <summary>
@@ -716,24 +729,24 @@ namespace Karaboss
             switch (PlayerState)
             {
                 case PlayerStates.Playing:
-                    BtnPlay.Image = Properties.Resources.Media_Controls_Play_icon;
+                    BtnPlay.Image = Properties.Resources.btn_green_play;
+                    BtnStop.Image = Properties.Resources.btn_black_stop;
                     BtnPlay.Enabled = true;  // to allow pause
                     BtnStop.Enabled = true;  // to allow stop 
-
                     break;
 
                 case PlayerStates.Paused:
-                    BtnPlay.Image = Properties.Resources.Media_Controls_Pause_icon;
+                    BtnPlay.Image = Properties.Resources.btn_red_pause;
                     BtnPlay.Enabled = true;  // to allow play
                     BtnStop.Enabled = true;  // to allow stop
                     break;
 
                 case PlayerStates.Stopped:
-                    BtnPlay.Image = Properties.Resources.Media_Controls_Play_icon;
+                    BtnPlay.Image = Properties.Resources.btn_black_play;
                     BtnPlay.Enabled = true;   // to allow play
                     if (newstart == 0)
                     {
-                        //btnStop.Image = Properties.Resources.btn_red_stop;
+                        BtnStop.Image = Properties.Resources.btn_red_stop;
                     }
                     else
                         BtnStop.Enabled = true;   // to enable real stop because stop point not at the beginning of the song 
@@ -893,6 +906,7 @@ namespace Karaboss
             LoadSequencer(sequence1);
             AnalyseInstruments();
             DrawControls();
+            InitCbTracks();
         }
 
         /// <summary>
@@ -1037,11 +1051,26 @@ namespace Karaboss
 
         private void HandleChannelMessagePlayed(object sender, ChannelMessageEventArgs e)
         {
+            #region Guard
             if (closing)
             {
                 return;
             }
-            outDevice.Send(e.Message);
+            #endregion
+
+            //outDevice.Send(e.Message);
+
+            if (bAlltracks)
+            {
+                outDevice.Send(e.Message);
+                //pianoControl1.Send(e.Message);
+            }
+            else if (e.Message.MidiChannel == SingleTrackChannel)
+            {
+                outDevice.Send(e.Message);
+                //pianoControl1.Send(e.Message);
+            }
+
 
             // ProgramChange modifié en cours de route pour un Channel
             // Met à jour un dictionnaire des ProgramChange
@@ -1320,7 +1349,7 @@ namespace Karaboss
 
             try
             {                
-                foreach (Control item in pnlBottom.Controls)
+                foreach (Control item in pnlMiddle.Controls)
                 {
                     if (item.GetType() == typeof(GuitarControl))
                     {
@@ -1504,6 +1533,115 @@ namespace Karaboss
             if (TempoDelta < 400)
                 TempoDelta += 10;
             ModTempo();
+        }
+
+        #endregion
+
+
+        #region CbTrack
+
+        private void InitCbTracks()
+        {
+            int i = 1;
+            string N;
+            CbTracks.Items.Clear();
+            CbTracks.Items.Add("All tracks");
+            foreach (Track trk in sequence1.tracks)
+            {
+                N = "<NoName>";
+                if (trk.Name != null)
+                {
+                    if (trk.Name.Trim() != "")
+                        N = trk.Name.Trim();
+                }
+                CbTracks.Items.Add(i.ToString("00") + " " + "[" + trk.MidiChannel.ToString("00") + "]" + " - " + N + " - " + "(" + MidiFile.PCtoInstrument(trk.ProgramChange) + ")");
+                i++;
+            }
+
+            CbTracks.SelectedIndex = 0;
+        }
+
+        private void CbTracks_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //if (vPianoRollControl1 == null)
+            //    return;
+
+            sequencer1.AllSoundOff();
+            //pianoControl1.Reset();
+
+            tracknum = CbTracks.SelectedIndex;
+
+            // All track
+            if (tracknum == 0)
+            {
+                // All tracks                      
+                SingleTrack = null;
+                SingleTrackNumber = -1;
+                tracknum = -1;
+                SingleTrackChannel = -1;
+                bAlltracks = true;
+            }
+            else
+            {
+                // One track
+                if (tracknum > 0)
+                {
+                    tracknum = tracknum - 1;
+                    SingleTrack = sequence1.tracks[tracknum];
+                    SingleTrackNumber = tracknum;
+                    SingleTrackChannel = SingleTrack.MidiChannel;
+                    bAlltracks = false;
+                }
+            }
+
+            // Track pour pianoRoll
+            if (tracknum != -1)
+            {
+                //vPianoRollControl1.TrackNum = tracknum;
+            }
+            else
+            {
+                //vPianoRollControl1.TrackNum = -1;
+            }
+            CbTracks.Parent.Focus();
+        }
+
+        #endregion
+
+
+        #region boutons
+        private void BtnPlay_MouseHover(object sender, EventArgs e)
+        {
+            if (PlayerState == PlayerStates.Stopped)
+                BtnPlay.Image = Properties.Resources.btn_blue_play;
+            else if (PlayerState == PlayerStates.Paused)
+                BtnPlay.Image = Properties.Resources.btn_blue_pause;
+            else if (PlayerState == PlayerStates.Playing)
+                BtnPlay.Image = Properties.Resources.btn_blue_play;
+
+        }
+
+        private void BtnPlay_MouseLeave(object sender, EventArgs e)
+        {
+            if (PlayerState == PlayerStates.Stopped)
+                BtnPlay.Image = Properties.Resources.btn_black_play;
+            else if (PlayerState == PlayerStates.Paused)
+                BtnPlay.Image = Properties.Resources.btn_red_pause;
+            else if (PlayerState == PlayerStates.Playing)
+                BtnPlay.Image = Properties.Resources.btn_green_play;
+
+        }
+
+        private void BtnStop_MouseHover(object sender, EventArgs e)
+        {
+            if (PlayerState == PlayerStates.Playing || PlayerState == PlayerStates.Paused)
+                BtnStop.Image = Properties.Resources.btn_blue_stop;
+
+        }
+
+        private void BtnStop_MouseLeave(object sender, EventArgs e)
+        {
+            BtnStop.Image = Properties.Resources.btn_black_stop;
         }
 
         #endregion
