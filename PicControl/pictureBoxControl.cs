@@ -480,12 +480,13 @@ namespace PicControl
             m_Alpha = 255;
             imgLayout = ImageLayout.Stretch;
             
+            
             this.SetStyle(
                   System.Windows.Forms.ControlStyles.UserPaint |
                   System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
                   System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
                   true);       
-
+            
             SetDefaultValues();
         }
 

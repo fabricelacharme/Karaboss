@@ -31,7 +31,8 @@ namespace Karaboss.GuitarTraining
         Pen FirstFretPenColor = new Pen(Color.Black);
         
         // Other frets
-        SolidBrush FretFillColor = new SolidBrush(Color.DarkGray); //new SolidBrush(Color.Gold);
+        //SolidBrush FretFillColor = new SolidBrush(Color.DarkGray);
+        SolidBrush FretFillColor = new SolidBrush(Color.Gold);
         Pen FretPenColor = new Pen(Color.DarkGray); //new Pen(Color.Gold);
 
 
@@ -68,7 +69,13 @@ namespace Karaboss.GuitarTraining
         public GuitarControl()
         {
             InitializeComponent();
-
+            /*
+            this.SetStyle(
+               System.Windows.Forms.ControlStyles.UserPaint |
+               System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
+               System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
+               true);
+            */
             CordHeight = 1;
             CordColor = Color.DarkGray;
             CordPen = new Pen(CordColor, CordHeight);
