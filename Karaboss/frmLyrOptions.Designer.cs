@@ -296,7 +296,7 @@
             // 
             // pictContour
             // 
-            this.pictContour.BackColor = System.Drawing.Color.White;
+            this.pictContour.BackColor = System.Drawing.Color.Black;
             resources.ApplyResources(this.pictContour, "pictContour");
             this.pictContour.Name = "pictContour";
             this.pictContour.TabStop = false;

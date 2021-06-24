@@ -797,7 +797,7 @@ namespace PicControl
         private void SetDefaultValues()
         {           
             txtBackColor = Color.Black;     
-            txtContourColor = Color.White;
+            txtContourColor = Color.Black;
             txtNextColor = Color.White;
             txtBeforeColor = Color.YellowGreen;
             txtHighlightColor = Color.Red;
@@ -1198,7 +1198,7 @@ namespace PicControl
                 femsize = g.DpiX * inisize / 72;
 
                 float textSize = MeasureString(S, femsize);
-                long comp = (long)(0.9*pboxWnd.ClientSize.Width);                
+                long comp = (long)(0.95*pboxWnd.ClientSize.Width);                
 
                 // Texte trop large
                 if (textSize > comp)
@@ -1232,7 +1232,7 @@ namespace PicControl
                 float totaltextHeight;
                 totaltextHeight = _txtNbLines * (textHeight + 10);                
 
-                long compHeight = (long)(0.9*pboxWnd.ClientSize.Height);
+                long compHeight = (long)(0.95*pboxWnd.ClientSize.Height);
                 
                 if (totaltextHeight > compHeight)
                 {
