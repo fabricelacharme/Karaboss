@@ -473,8 +473,7 @@ namespace Sanford.Multimedia.Midi.Score
         public void Draw(Graphics g, Rectangle clip, Rectangle selRect, Pen pen)
         {
             int xpos = SheetMusic.LeftMargin + 5;
-            int yy = ytop + SheetMusic.LineWidth;
-            //int yy = ytop;
+            int yy = ytop + SheetMusic.LineWidth;            
 
             /* Draw the left side Clef symbol */
             g.TranslateTransform(xpos, 0);

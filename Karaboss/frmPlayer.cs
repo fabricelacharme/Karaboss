@@ -72,9 +72,19 @@ namespace Karaboss
             public int volume = 100;
             public int pan = 64;
             public int reverb = 0;
+            public int channel = 0;
+            public bool muted = false;
         }
         private List<_reglages> lstTrkReglages;
         private _reglages TrkReglages;
+
+        private class _channels
+        {
+            public bool muted = false;
+
+        }
+        private List<_channels> lstChannels;
+        private _channels ChannelReglages;
 
         #region SheetMusic declarations
 
@@ -172,8 +182,6 @@ namespace Karaboss
         private string m_SepParagraph = "\\";
 
         #endregion
-
-
 
         private int TempoDelta = 100;
         private int TempoOrig = 0;        
@@ -335,6 +343,7 @@ namespace Karaboss
 
             // Volume de chaque piste
             lstTrkReglages = new List<_reglages>();
+            lstChannels = new List<_channels>();
 
             // Zoom
             zoom = 1.0f;
@@ -492,8 +501,9 @@ namespace Karaboss
         /// <param name="e"></param>
         /// <param name="staffnum"></param>
         private void PianoRoll_Required(object sender, EventArgs e, int staffnum)
-        {            
-            DisplayPianoRoll(staffnum, MIDIfileFullPath, 0);
+        {
+            float t = sequence1.GetLength() * (float)hScrollBar.Value / (float)hScrollBar.Maximum;
+            DisplayPianoRoll(staffnum, MIDIfileFullPath, t);
         }
 
         /// <summary>
@@ -579,7 +589,17 @@ namespace Karaboss
                 TrkReglages.volume = track.Volume;
                 TrkReglages.pan = track.Pan;
                 TrkReglages.reverb = track.Reverb;
+                TrkReglages.muted = false;
+                TrkReglages.channel = track.MidiChannel;
                 lstTrkReglages.Add(TrkReglages);
+            }
+
+            // Mute Channel
+            for (int i = 0; i < 16; i++)
+            {
+                ChannelReglages = new _channels();
+                ChannelReglages.muted = false;
+                lstChannels.Add(ChannelReglages);
             }
         }
 
@@ -1039,6 +1059,12 @@ namespace Karaboss
             sldMainVolume.LargeChange = 13;
             sldMainVolume.MouseWheelBarPartitions = 10;
 
+            sldMainVolume.Left = 249;
+            sldMainVolume.Top = 25;
+            sldMainVolume.Width = 24;
+            sldMainVolume.Height = 80;
+
+
             lblMainVolume.Text = String.Format("{0}%", 100 * sldMainVolume.Value / sldMainVolume.Maximum);
 
             #endregion
@@ -1440,10 +1466,7 @@ namespace Karaboss
 
                 hScrollBar.SmallChange = SC;
                 hScrollBar.LargeChange = LC;
-
             }
-
-
         }
 
 
@@ -1660,14 +1683,19 @@ namespace Karaboss
                 if (!btnMute1.Checked)
                 {
                     // Play melody
-                    btnMute1.Checked = true;
-                    UnMuteTrack(myLyric.melodytracknum);
+                    btnMute1.Checked = true;                    
+                    UnMuteSomeTracks(sequence1.tracks[myLyric.melodytracknum].MidiChannel);
                 }
                 else
                 {
                     // Mute melody
-                    btnMute1.Checked = false;
-                    MuteTrack(myLyric.melodytracknum);
+                    btnMute1.Checked = false;                    
+                                       
+                    // Stop Channel : All notes off                                        
+                    sequencer1.AllSoundOff();
+
+                    // Mute other TrackControls having same channel
+                    MuteSomeTracks(sequence1.tracks[myLyric.melodytracknum].MidiChannel);
                 }              
 
                 this.Focus();
@@ -1954,74 +1982,16 @@ namespace Karaboss
             if (melodytracknum != -1 && (Karaclass.m_MuteMelody == true || (currentPlaylist != null && currentPlaylistItem.MelodyMute == true)))
             {
                 btnMute1.Checked = false;                
-                MuteTrack(melodytracknum);
+
+                // Stop Channel : All notes off                                        
+                sequencer1.AllSoundOff();
+
+                // Mute other TrackControls having same channel
+                MuteSomeTracks(sequence1.tracks[myLyric.melodytracknum].MidiChannel);
+
             }
         }
-
-        /// <summary>
-        /// Mute a track
-        /// </summary>
-        /// <param name="tracknum"></param>
-        private void MuteTrack(int tracknum) {
-            Track trackm = sequence1.tracks[tracknum];
-
-            int nChannel = trackm.MidiChannel;
-            string sChannel = nChannel.ToString();
-            int c = (int)ControllerType.Volume;
-            int v = 0;
-            SendCC(nChannel, c, v);
-
-            // Met le volume à 0
-            for (int i = 0; i < pnlTracks.Controls.Count; i++)
-            {
-
-                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                {
-                    if (pnlTracks.Controls[i].Tag != null)
-                    {
-                        string stag = pnlTracks.Controls[i].Tag.ToString();
-                        if (stag == sChannel)
-                        {
-                            ((TrkControl.TrackControl)pnlTracks.Controls[i]).Volume = 0;
-                            ((TrkControl.TrackControl)pnlTracks.Controls[i]).Muted = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Unmute a track
-        /// </summary>
-        /// <param name="tracknum"></param>
-        private void UnMuteTrack(int tracknum)
-        {
-            Track trackm = sequence1.tracks[tracknum];
-
-            int nChannel = trackm.MidiChannel;
-            string sChannel = nChannel.ToString();
-            int c = (int)ControllerType.Volume;
-            int v = 80;
-            SendCC(nChannel, c, v);
-
-            // Met le volume à 0
-            for (int i = 0; i < pnlTracks.Controls.Count; i++)
-            {
-
-                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                {
-                    if (pnlTracks.Controls[i].Tag != null)
-                    {
-                        string stag = pnlTracks.Controls[i].Tag.ToString();
-                        if (stag == sChannel)
-                        {
-                            ((TrkControl.TrackControl)pnlTracks.Controls[i]).Volume = 80;
-                            ((TrkControl.TrackControl)pnlTracks.Controls[i]).Muted = false;
-                        }
-                    }
-                }
-            }
-        }
+        
         #endregion
 
         /// <summary>
@@ -2952,10 +2922,16 @@ namespace Karaboss
         {                        
             if (Application.OpenForms["frmPianoRoll"] == null)
             {
+                int note = sheetmusic.CurrentNote.midinote.Number;          
+                
                 frmPianoRoll = new frmPianoRoll(sequence1, tracknum, outDevice, fileName);
                 frmPianoRoll.Show();
                 frmPianoRoll.Refresh();
-                frmPianoRoll.StartupPosition(ticks);
+                frmPianoRoll.StartupPosition(ticks, note);
+            }
+            else
+            {
+                frmPianoRoll.Close();
             }
         }
 
@@ -3254,7 +3230,7 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Modify Tempo, not Dicision (read only)
+        /// Modify Tempo, not Division (read only)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -3272,32 +3248,43 @@ namespace Karaboss
             int tempo = ModifyTempoDialog.Tempo;
             int division = ModifyTempoDialog.Division;
 
-            ModTempo(tempo);
+            ModTempo(tempo, division);
             UpdateMidiTimes();
 
             FileModified();
             DisplayFileInfos();
         }
 
-        private void ModTempo(int tempo)
+        private void ModTempo(int tempo, int division)
         {
             // If no change => out
-            if (tempo == sequence1.Tempo)
+            if (tempo == sequence1.Tempo && division == sequence1.Division)
             {
                 return;
             }
-         
-            sequence1.Tempo = tempo;
-            
-            
-            sequence1.Time = new TimeSignature(sequence1.Numerator, sequence1.Denominator, sequence1.Division, sequence1.Tempo);
-            pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
 
-            foreach (Track trk in sequence1.tracks)
+            if (tempo != sequence1.Tempo)
             {
-                trk.RemoveTempoEvent();                
+                sequence1.Tempo = tempo;
+                sequence1.Time = new TimeSignature(sequence1.Numerator, sequence1.Denominator, sequence1.Division, sequence1.Tempo);
+                pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
+
+                foreach (Track trk in sequence1.tracks)
+                {
+                    trk.RemoveTempoEvent();
+                }
+                sequence1.tracks[0].insertTempo(tempo);
             }
-            sequence1.tracks[0].insertTempo(tempo);
+
+            // Plus compliqué qu'il n'y parait
+            // il faudrait modifier la durée des notes et leur start time
+            if (division != sequence1.Division)
+            {
+                sequence1.Division = division;
+                sequence1.Time = new TimeSignature(sequence1.Numerator, sequence1.Denominator, sequence1.Division, sequence1.Tempo);
+                pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
+
+            }
         }       
      
         /// <summary>
@@ -4451,10 +4438,14 @@ namespace Karaboss
                 return;
             }
 
-            outDevice.Send(e.Message);
+            //outDevice.Send(e.Message);
 
             int nChannel = e.Message.MidiChannel;
             string sChannel = nChannel.ToString();
+
+            if (!lstChannels[nChannel].muted)
+                outDevice.Send(e.Message);
+
 
             
             if (e.Message.Command == ChannelCommand.NoteOn)
@@ -4568,11 +4559,12 @@ namespace Karaboss
                         }
                     }
                 }
-
+                /*
                 else
                 {
-                    //Debug.Print("controller: {0}", ct);
+                    Debug.Print("controller: {0}", ct);
                 }
+                */
             }
             
         }
@@ -4655,8 +4647,8 @@ namespace Karaboss
                         ScrollTimeBar(maintenant);
                         GetPeakVolume();
                         // Mute muted tracks
-                        if (bMuted)
-                            CheckMutedTracks();
+                        //if (bMuted)
+                        //    CheckMutedTracks();
                         // Volume of tracks
                         if (bVolumed)
                             CheckVolumedTracks();                       
@@ -5489,6 +5481,8 @@ namespace Karaboss
 
                 lstTrkReglages[sequence1.tracks.IndexOf(track)].volume = v;
                 track.Volume = v;
+                
+                //if (!pTrack.Muted)
                 FileModified();
             }
         }
@@ -5667,105 +5661,87 @@ namespace Karaboss
 
                 if (pTrack.Muted == false)
                 {
-                    // Stop Channel : All notes off
-                    pTrack.Muted = true;
+                    // Stop Channel : All notes off                                        
+                    sequencer1.AllSoundOff();                                        
 
-                    // Flag indicating that Mute must be checked
-                    bMuted = true;
-
-                    int c = (int)ControllerType.Volume;
-                    int v = 0;
-                    SendCC(nChannel, c, v);
-
-                    // Mute toutes les tracks de même channel
-                    for (int i = 0; i < pnlTracks.Controls.Count; i++)
-                    {
-
-                        if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                        {
-                            if (pnlTracks.Controls[i].Tag != null)
-                            {
-                                string stag = pnlTracks.Controls[i].Tag.ToString();
-                                if (stag == sChannel)
-                                {
-                                    //((TrkControl.trackControl)pnlTracks.Controls[i]).Volume = 0;
-                                    ((TrkControl.TrackControl)pnlTracks.Controls[i]).Muted = true;
-                                }
-                            }
-                        }
-                    }
-
+                    // Mute other TrackControls having same channel
+                    MuteSomeTracks(nChannel);
+      
                 }
                 else
                 {
-                    // Restart channel : play again
-                    pTrack.Muted = false;
+                    // Restart channel : play again                    
+                                        
+                    // Unmute other TrackControls having same channel
+                    UnMuteSomeTracks(nChannel);
 
-                    int c = (int)ControllerType.Volume;
-                    //int v = 90;
-                    int v = pTrack.Volume;
 
-                    SendCC(nChannel, c, v);
+                }
+            }
+        }
 
-                    // unmute all tracks having same channel
-                    UnMuteSomeTracks(sChannel);
+
+        /// <summary>
+        /// Mute all tracks having the same channel
+        /// </summary>
+        /// <param name="nChannel"></param>
+        private void MuteSomeTracks(int nChannel)
+        {
+            lstChannels[nChannel].muted = true;
+
+            foreach (Control C in pnlTracks.Controls)
+            {
+                if (C.GetType() == typeof(TrkControl.TrackControl))
+                {
+                    TrkControl.TrackControl T = (TrkControl.TrackControl)C;
+                    if (T.MidiChannel == nChannel)
+                        T.Muted = true;
                 }
             }
         }
 
         /// <summary>
-        /// Mute channel if Mute required
+        /// unmute all tracks having channel sChannel
         /// </summary>
-        private void CheckMutedTracks()
+        /// <param name="sChannel"></param>
+        private void UnMuteSomeTracks(int nChannel)
         {
-            bool bfound = false;
-            for (int i = 0; i < pnlTracks.Controls.Count; i++)
+            lstChannels[nChannel].muted = false;
+
+            // unmute all tracks having same channel
+            foreach (Control C in pnlTracks.Controls)
             {
-                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                if (C.GetType() == typeof(TrkControl.TrackControl))
                 {
-                    TrkControl.TrackControl trkCtrl = (TrkControl.TrackControl)pnlTracks.Controls[i];
-
-                    if (trkCtrl.Muted == true)
-                    {
-                        if (trkCtrl.Tag != null)
-                        {
-                            bfound = true;
-                            int nChannel = Convert.ToInt32(pnlTracks.Controls[i].Tag);
-                            int c = (int)ControllerType.Volume;
-                            int v = 0;
-                            SendCC(nChannel, c, v);
-                        }
-                    }
+                    TrkControl.TrackControl T = (TrkControl.TrackControl)C;
+                    
+                    if (T.MidiChannel == nChannel)                                            
+                        T.Muted = false;                    
                 }
-            }
-            bMuted = bfound;
-
+            }          
         }
 
-
-        private void UnsetMutedTracks()
+        /// <summary>
+        /// Unmute all tracks
+        /// </summary>
+        private void UnMuteAllTracks()
         {
-            for (int i = 0; i < pnlTracks.Controls.Count; i++)
+
+            for (int i = 0; i < lstChannels.Count; i++)
             {
-                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                lstChannels[i].muted = false;
+            }
+
+            // All tracks on                    
+            foreach (Control C in pnlTracks.Controls)
+            {
+                if (C.GetType() == typeof(TrkControl.TrackControl))
                 {
-                    TrkControl.TrackControl trkCtrl = (TrkControl.TrackControl)pnlTracks.Controls[i];
-
-                    if (trkCtrl.Muted == true)
-                    {
-                        if (trkCtrl.Tag != null)
-                        {
-                            trkCtrl.Muted = false;
-
-                            int nChannel = Convert.ToInt32(trkCtrl.Tag);
-                            int c = (int)ControllerType.Volume;
-                            int v = trkCtrl.Volume;
-                            SendCC(nChannel, c, v);
-                        }
-                    }
+                    TrkControl.TrackControl T = (TrkControl.TrackControl)C;
+                    T.Solo = false;
+                    T.Muted = false;
                 }
             }
-            
         }
 
 
@@ -5779,71 +5755,49 @@ namespace Karaboss
         {
             if (sender is TrkControl.TrackControl pTrack)
             {
-                int nChannel = Convert.ToInt32(pTrack.MidiChannel);
-                string sChannel = nChannel.ToString();
-
+                int nChannel = Convert.ToInt32(pTrack.MidiChannel);                
+                
                 if (pTrack.Solo == false)
-                {                    
-                    MuteAlltracks();
+                {
 
-                    // this track plays, other tracks sounds off
+                    // Stop Channel : All notes off                                        
+                    sequencer1.AllSoundOff();
+
                     pTrack.Solo = true;
                     pTrack.Muted = false;
 
-                    int c = (int)ControllerType.Volume;
-                    int v = pTrack.Volume;
-                    SendCC(nChannel, c, v);
+                    // Mute all channels <> nChannel
+                    for (int i = 0; i < lstChannels.Count; i++)
+                    {
+                        if (i != nChannel)
+                            lstChannels[i].muted = true;
+                        else
+                            lstChannels[i].muted = false;
+                    }
 
-                    // unmute all tracks having same channel
-                    UnMuteSomeTracks(sChannel);
+                    
+                    foreach (Control C in pnlTracks.Controls)
+                    {
+                        if (C.GetType() == typeof(TrkControl.TrackControl))
+                        {
+                            TrkControl.TrackControl T = (TrkControl.TrackControl)C;
+                            if (T.MidiChannel != nChannel)
+                            {
+                                T.Solo = false;
+                                T.Muted = true;
+                            }
+
+                        }
+                    }   
                 }
                 else
-                {                    
-                    // All tracks on
-                    pTrack.Solo = false;
-                    UnsetMutedTracks();
+                {
+                    UnMuteAllTracks();                    
                 }
             }
         }
 
-        private void MuteAlltracks()
-        {
-            for (int i = 0; i < pnlTracks.Controls.Count; i++)
-            {
-                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                {
-                    TrkControl.TrackControl trackCtrl = (TrkControl.TrackControl)pnlTracks.Controls[i];
-                    trackCtrl.Solo = false;
-                    trackCtrl.Muted = true;
-                }
-            }
-            CheckMutedTracks();
-        }
-       
-        /// <summary>
-        /// unmute all tracks having channel sChannel
-        /// </summary>
-        /// <param name="sChannel"></param>
-        private void UnMuteSomeTracks(string sChannel)
-        {
-            // unmute all tracks having same channel
-            for (int i = 0; i < pnlTracks.Controls.Count; i++)
-            {
-                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                {
-                    TrkControl.TrackControl trackCtrl = (TrkControl.TrackControl)pnlTracks.Controls[i];
-
-                    if (trackCtrl.Tag != null)
-                    {
-                        string stag = trackCtrl.Tag.ToString();
-                        if (stag == sChannel)
-                        {
-                            trackCtrl.Muted = false;
-                        }
-                    }
-                }
-            }
-        }
+        
 
 
         private void CheckVolumedTracks()
@@ -5877,6 +5831,20 @@ namespace Karaboss
         }
 
         #endregion
+
+        /// <summary>
+        /// Display PianoRoll for this track
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="track"></param>
+        private void BtnPianoRollClickOneEvent(object sender, EventArgs e, int track)
+        {            
+            float max = sequence1.GetLength();
+            float t = max * (sheetmusic.OffsetX + pnlScrollView.Width/2) / (float)sheetmusic.MaxStaffWidth;           
+            DisplayPianoRoll(track, MIDIfileFullPath, t);
+        }
+
 
         /// <summary>
         /// Track Control: change instrument
@@ -6569,6 +6537,7 @@ namespace Karaboss
             pTrack.OntrkControlbtnDelClicked += new TrkControl.TrackControl.btnDelClickedEventHandler(BtnDelClickOneEvent);
             pTrack.OntrkControllblPatchChanged += new TrkControl.TrackControl.lblPatchChangedEventHandler(LstInstrumentClickOneEvent);
             pTrack.OntrkControllblChannelChanged += new TrkControl.TrackControl.lblChannelChangedEventHandler(LstChannelClickOneEvent);
+            pTrack.OntrkControlbtnPianoRollClicked += new TrkControl.TrackControl.btnPianoRollClickedEventHandler(BtnPianoRollClickOneEvent);
 
             // Knob buttons (volume, pan, reverb)
             pTrack.OnknobControlknobVolumeValueChanged += new TrkControl.TrackControl.knobVolumeValueChangedEventHandler(TrackBarVolumeChanged);
@@ -6592,6 +6561,7 @@ namespace Karaboss
             return pTrack;
         }
      
+
 
         /// <summary>
         /// Add a new track control 

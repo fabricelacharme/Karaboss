@@ -14,8 +14,8 @@ namespace Sanford.Multimedia.Midi
 
         private ChannelChaser chaser = new ChannelChaser();
 
-        private ChannelStopper stopper = new ChannelStopper();
-
+        
+        private ChannelStopper stopper = new ChannelStopper();        
         private MidiInternalClock clock = new MidiInternalClock();
         private MidiInternalClock ori_clock = new MidiInternalClock();
 
@@ -248,6 +248,15 @@ namespace Sanford.Multimedia.Midi
                 stopper.AllSoundOff();
             }
         }
+
+        /// <summary>
+        /// FAB 12/05/2021
+        /// </summary>
+        public void AllSoundOff()
+        {
+            stopper.AllSoundOff();
+        }
+
 
         protected virtual void OnPlayingCompleted(EventArgs e)
         {

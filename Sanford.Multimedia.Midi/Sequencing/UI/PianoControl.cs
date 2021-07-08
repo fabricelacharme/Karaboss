@@ -93,8 +93,10 @@ namespace Sanford.Multimedia.Midi.UI
         #region private
 
         // Not all 128 notes taken : 21 to 109 = 88 notes
-        private const int DefaultLowNoteID = 23;    // 23
+        private const int DefaultLowNoteID = 21;    // 23
         private const int DefaultHighNoteID = 108;   // 108
+
+
         //private const int DefaultLowNoteID = 0;         // CO = lowest note
         //private const int DefaultHighNoteID = 127;      // G9 = highest note
 
@@ -234,7 +236,7 @@ namespace Sanford.Multimedia.Midi.UI
             }
         }
 
-        private int scale = 20; //FAB : Unit of vertical
+        private int _scale = 20; //FAB : Unit of vertical
         /// <summary>
         /// Sets or gets unit of vertical
         /// </summary>
@@ -242,21 +244,25 @@ namespace Sanford.Multimedia.Midi.UI
         {
             get
             {
-                return scale;
+                return _scale;
             }
             set
             {
-                scale = value;
+                if (value != _scale)
+                {
+                    _scale = value;
+                    Invalidate();
+                }
             }
         }
        
 
-        private int totallength = 0;
-        public int totalLength
+        private int _totallength = 0;
+        public int TotalLength
         {
             get
             {
-                return totallength;
+                return _totallength;
             }
         }
 
@@ -284,7 +290,7 @@ namespace Sanford.Multimedia.Midi.UI
         /// <summary>
         /// Sets or gets Zoom value
         /// </summary>
-        public float zoom
+        public float Zoom
         {
             get
             { return _zoom; }
@@ -302,7 +308,7 @@ namespace Sanford.Multimedia.Midi.UI
                 if (newvalue > 0)
                 {
                     _zoom = value;    
-                    scale = newvalue;      // scale must be pair for the pianoRollControl (?)
+                    _scale = newvalue;      // scale must be pair for the pianoRollControl (?)
 
                     //Invalidate();
                     InitializePianoKeys();
@@ -341,7 +347,7 @@ namespace Sanford.Multimedia.Midi.UI
             // Orientation Default value in constructor            
             _orientation = Orientation.Vertical;
 
-            scale = 20;
+            _scale = 20;
 
             CreatePianoKeys();
             InitializePianoKeys();
@@ -477,7 +483,7 @@ namespace Sanford.Multimedia.Midi.UI
         {
             #region Guard
 
-            if(keys.Length == 0)
+            if (keys.Length == 0)
             {
                 return;
             }
@@ -488,53 +494,104 @@ namespace Sanford.Multimedia.Midi.UI
             int blackKeyHeight = 0;
             int whiteKeyWidth = 0;
             int whiteKeyHeight = 0;
-            int offset = 0;
+            //int offset = 0;
             int n = 0;
-            int w = 0;
+            //int w = 0;
             int h = 0;
+            int tt = 0;
 
             //totalheight = 0;
-            totallength = 0;
+            _totallength = 0;
 
             // FAB: allow vertical orientation 
             switch (_orientation)
-            {                 
+            {
                 case Orientation.Horizontal:
                     #region horizontal
 
-                    #region oldcode
-                    /*
-                    whiteKeyWidth = Width / whiteKeyCount;
-                    blackKeyWidth = (int)(whiteKeyWidth * BlackKeyScale);       // Width of control divided by number of keys
-                    blackKeyHeight = (int)(Height * BlackKeyScale);             // black key width is 0.666 of white key width
-                    offset = whiteKeyWidth - blackKeyWidth / 2;                   
+                    whiteKeyWidth = 0;
 
-                    while(n < keys.Length)
+                    blackKeyWidth = _scale;
+                    blackKeyHeight = (int)(Height * BlackKeyScale);
+
+                    while (n < keys.Length)
                     {
-                        if(KeyTypeTable[keys[n].NoteID] == KeyType.White)
+                        int note = keys[n].NoteID;
+
+                        if (KeyTypeTable[note] == KeyType.White)
                         {
+                            // WHITE NOTES
+                            if (note == highNoteID)
+                            {
+                                if ((note % 12 == 0)
+                                   || (note % 12 == 5))
+                                {
+                                    whiteKeyWidth = _scale;
+                                }
+                                else
+                                {
+                                    whiteKeyWidth = 3 * _scale / 2;
+                                }
+                            }
+                            else if (note == lowNoteID)
+                            {
+                                if ((note % 12 == 4)
+                                    || (note % 12 == 11))
+                                {
+                                    whiteKeyWidth = _scale;
+                                }
+                                else
+                                    whiteKeyWidth = 3 * _scale / 2;
+                            }
+                            else if ((note % 12 == 0)
+                                || (note % 12 == 4)
+                                || (note % 12 == 5)
+                                || (note % 12 == 11))
+                            {
+                                whiteKeyWidth = 3 * _scale / 2;
+                            }
+                            else
+                            {
+                                whiteKeyWidth = 2 * _scale;
+                            }
+
+
                             keys[n].Height = Height;
                             keys[n].Width = whiteKeyWidth;
-                            keys[n].Location = new Point(w * whiteKeyWidth, 0);
-                            w++;
+                            keys[n].Location = new Point(h, 0);
+                            h += whiteKeyWidth;
+                            tt += whiteKeyWidth + 1;
                             n++;
                         }
                         else
-                        {
+                        {                            
+                            // BLACK NOTES
+                            keys[n].Width = _scale;
                             keys[n].Height = blackKeyHeight;
-                            keys[n].Width = blackKeyWidth;
-                            keys[n].Location = new Point(offset + (w - 1) * whiteKeyWidth);
+
+                            if (note == highNoteID)
+                            {
+                                keys[n].Location = new Point(0, 0);
+                                h = _scale / 2;
+                            }
+                            else
+                                keys[n].Location = new Point(h - _scale / 2, 0);
+
+
                             keys[n].BringToFront();
                             n++;
                         }
                     }
-                    */
-                    #endregion
+                    #endregion horizontal
+                    break;
 
-                    whiteKeyWidth = 0;
+                case Orientation.Vertical:
+                    #region vertical
+                    whiteKeyHeight = 0;
 
-                    blackKeyWidth = scale;
-                    blackKeyHeight = (int)(Height * BlackKeyScale);
+                    blackKeyHeight = _scale;
+                    blackKeyWidth = (int)(Width * BlackKeyScale);
+
 
                     while (n < keys.Length)
                     {
@@ -547,11 +604,11 @@ namespace Sanford.Multimedia.Midi.UI
                                 if ((note % 12 == 0)
                                    || (note % 12 == 5))
                                 {
-                                    whiteKeyWidth = scale;
+                                    whiteKeyHeight = _scale;
                                 }
                                 else
                                 {
-                                    whiteKeyWidth = 3 * scale / 2;
+                                    whiteKeyHeight = 3 * _scale / 2;
                                 }
                             }
                             else if (note == lowNoteID)
@@ -559,129 +616,63 @@ namespace Sanford.Multimedia.Midi.UI
                                 if ((note % 12 == 4)
                                     || (note % 12 == 11))
                                 {
-                                    whiteKeyWidth = scale;
+                                    whiteKeyHeight = _scale;
                                 }
                                 else
-                                    whiteKeyWidth = 3 * scale / 2;
+                                    whiteKeyHeight = 3 * _scale / 2;
                             }
                             else if ((note % 12 == 0)
                                 || (note % 12 == 4)
                                 || (note % 12 == 5)
                                 || (note % 12 == 11))
                             {
-                                whiteKeyWidth = 3 * scale / 2;
+                                whiteKeyHeight = 3 * _scale / 2;
                             }
                             else
                             {
-                                whiteKeyWidth = 2 * scale;
+                                whiteKeyHeight = 2 * _scale;
                             }
 
 
-                            keys[n].Height = Height;
-                            keys[n].Width = whiteKeyWidth;
-                            keys[n].Location = new Point(h, 0);
-                            h += whiteKeyWidth;
-                            n++;
-                        }
-                        else
-                        {
-                            keys[n].Width = scale;
-                            keys[n].Height = blackKeyHeight;
-
-                            if (note == highNoteID)
-                            {
-                                keys[n].Location = new Point(0, 0);
-                                h = scale / 2;
-                            }
-                            else
-                                keys[n].Location = new Point(h - scale / 2, 0);
-
-
-                            keys[n].BringToFront();
-                            n++;
-                        }
-                    }
-
-
-                    #endregion horizontal
-                    break;                
-
-                case Orientation.Vertical:
-                    #region vertical
-                    whiteKeyHeight = 0;                    
-                    
-                    blackKeyHeight = scale;
-                    blackKeyWidth = (int)(Width * BlackKeyScale);
-                    
-                    while (n < keys.Length)
-                    {
-                        int note = keys[n].NoteID;                        
-
-                        if(KeyTypeTable[note] == KeyType.White)
-                        {
-                            if (note == highNoteID)
-                            {
-                                if ((note % 12 == 0)
-                                   || (note % 12 == 5))
-                                {
-                                    whiteKeyHeight = scale;
-                                }
-                                else
-                                {
-                                    whiteKeyHeight = 3 * scale / 2;
-                                }
-                            }
-                            else if (note == lowNoteID)
-                            {
-                                if ((note % 12 == 4)
-                                    || (note % 12 == 11))
-                                {
-                                    whiteKeyHeight = scale;
-                                }
-                                else
-                                    whiteKeyHeight = 3 * scale / 2;
-                            }
-                            else if ((note % 12 == 0)
-                                || (note % 12 == 4)
-                                || (note % 12 == 5)
-                                || (note % 12 == 11) )
-                            {
-                                whiteKeyHeight = 3 * scale / 2;
-                            }
-                            else
-                            {
-                                whiteKeyHeight = 2 * scale;
-                            }
-                            
-                            
                             keys[n].Width = Width;
                             keys[n].Height = whiteKeyHeight;
                             keys[n].Location = new Point(0, h);
                             h += whiteKeyHeight;
-                            n++;                                                        
+                            n++;
                         }
                         else
                         {
-                            keys[n].Height = scale;
+                            keys[n].Height = _scale;
                             keys[n].Width = blackKeyWidth;
 
                             if (note == highNoteID)
                             {
                                 keys[n].Location = new Point(0, 0);
-                                h = scale / 2;
+                                h = _scale / 2;
                             }
                             else
-                                keys[n].Location = new Point(0, h - scale / 2);
+                                keys[n].Location = new Point(0, h - _scale / 2);
 
-                            
+
                             keys[n].BringToFront();
-                            n++;                            
+                            n++;
                         }
                     }
                     #endregion vertical
                     break;
-            }            
-            totallength = keys.Length * scale;
+            }
+
+            
+            switch (_orientation)
+            {
+                case Orientation.Horizontal:                    
+                    _totallength = tt - 13;    // si lownoteid = 23  => soustraire 12 ????, si lownoteid = 21 => 13
+                    Width = _totallength;
+                    break;
+                case Orientation.Vertical:
+                    _totallength = keys.Length * _scale;
+                    break;
+            }
         }
 
         private Color ChannelColor(int channel)
@@ -789,6 +780,28 @@ namespace Sanford.Multimedia.Midi.UI
                 keys[highNoteID - noteID].PressPianoKey();            
         }
 
+        /// <summary>
+        /// Mouse is over a piano key
+        /// </summary>
+        /// <param name="noteID"></param>
+        public void IsOverPianoKey(int noteID)
+        {
+            #region Require
+
+            if (noteID < lowNoteID || noteID > highNoteID)
+            {
+                //throw new ArgumentOutOfRangeException();
+                return;
+            }
+
+            #endregion
+
+            if (Orientation == Orientation.Horizontal)
+                keys[noteID - lowNoteID].IsOver = true;
+            else
+                keys[highNoteID - noteID].IsOver = true;
+        }
+
         public void ReleasePianoKey(int noteID)
         {
             #region Require
@@ -805,7 +818,7 @@ namespace Sanford.Multimedia.Midi.UI
             else
                 keys[highNoteID - noteID].ReleasePianoKey();            
         }
-
+               
         public void PressPianoKey(Keys k)
         {
             if(!Focused)
@@ -897,15 +910,40 @@ namespace Sanford.Multimedia.Midi.UI
             }
         }
 
+
+        public void Redraw()
+        {
+            Invalidate();
+        }
         public void Reset()
         {
             for (int i = 0; i < keys.Length; i++)
-            {
+            {                
                 keys[i].ReleasePianoKey();
                 keys[i].NoteOnColor = NoteOnColor;
             }
         }
 
+        /// <summary>
+        /// Remove all is over painting
+        /// </summary>
+        public void ResetIsOver(int noteID)
+        {
+            
+            foreach (PianoKey k in keys)
+            {                
+                if (k.NoteID != noteID)
+                    k.IsOver = false;
+            }
+            
+
+             /* 
+            for (int i = 0; i < keys.Length; i++)
+            {
+                keys[i].IsOver = false;
+            }
+             */
+        }
 
         #endregion
 

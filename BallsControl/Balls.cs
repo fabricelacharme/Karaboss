@@ -131,11 +131,12 @@ namespace BallsControl
         {
             InitializeComponent();
 
+            
             this.SetStyle(
                   System.Windows.Forms.ControlStyles.UserPaint |
                   System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
                   System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
-                  true);
+                  true);            
 
             #region Move form without title bar
             Application.AddMessageFilter(this);
@@ -349,6 +350,7 @@ namespace BallsControl
                 }
             }
         }
+     
 
         private void picWnd_Painted(PaintEventArgs e)
         {

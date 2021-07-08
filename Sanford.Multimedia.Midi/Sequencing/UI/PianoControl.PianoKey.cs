@@ -35,6 +35,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using Sanford.Multimedia;
 
@@ -46,13 +47,34 @@ namespace Sanford.Multimedia.Midi.UI
         {
             private PianoControl owner;
 
+            // Key played
             private bool on = false;
+            
+            // Mouse over
+            private bool over = false;            
+            public bool IsOver
+            {
+                get 
+                { 
+                    return over; 
+                }
+                set 
+                {
+                    if (over != value)
+                    {
+                        over = value;
+                        Invalidate();
+                    }
+                }
+            }
 
             private SolidBrush onBrush = new SolidBrush(Color.SkyBlue);
-            private SolidBrush offBrush = new SolidBrush(Color.White);            
+            private SolidBrush offBrush = new SolidBrush(Color.White);
+            private SolidBrush overBrush = new SolidBrush(Color.LightGray);
+
             private SolidBrush textBrush = new SolidBrush(Color.DimGray);
 
-            private Font fontNoteLetter; //= new Font("Arial", 8, FontStyle.Regular, GraphicsUnit.Pixel);
+            private Font fontNoteLetter; 
 
             private int noteID = 60;
             private string noteLetter = "C";
@@ -80,12 +102,14 @@ namespace Sanford.Multimedia.Midi.UI
 
                 #endregion
 
+                over = false;
                 on = true;
 
                 Invalidate();
 
                 owner.OnPianoKeyDown(new PianoKeyEventArgs(noteID));
             }
+
 
             public void ReleasePianoKey()
             {
@@ -111,6 +135,7 @@ namespace Sanford.Multimedia.Midi.UI
                 {
                     onBrush.Dispose();
                     offBrush.Dispose();
+                    overBrush.Dispose();
                 }
 
                 base.Dispose(disposing);
@@ -122,6 +147,11 @@ namespace Sanford.Multimedia.Midi.UI
                 {
                     PressPianoKey();
                 }
+                else
+                {
+                    over = true;
+                    Invalidate();
+                }
                                 
                 
                 base.OnMouseEnter(e);
@@ -132,6 +162,11 @@ namespace Sanford.Multimedia.Midi.UI
                 if(on)
                 {
                     ReleasePianoKey();
+                } 
+                else
+                {
+                    over = false;
+                    Invalidate();
                 }
 
                 base.OnMouseLeave(e);
@@ -169,16 +204,162 @@ namespace Sanford.Multimedia.Midi.UI
 
             protected override void OnPaint(PaintEventArgs e)
             {
-                if(on)
+                if (over)
                 {
+                    // Mouse over
+                    e.Graphics.FillRectangle(overBrush, 0, 0, Size.Width, Size.Height);
+
+                    #region draw triangles
+                    // Triangles for white notes
+                    if (NoteOffColor == Color.White)
+                    {
+                        if (owner.Orientation == Orientation.Horizontal)
+                        {
+                            // Triangles
+                            SolidBrush bbrush = new SolidBrush(Color.Black);
+                            e.Graphics.FillRectangle(bbrush, 1, Size.Height - 2, 1, 1);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, Size.Height - 2, 1, 1);
+                        }
+                        else
+                        {
+                            SolidBrush bbrush = new SolidBrush(Color.Black);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, 1, 1, 1);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, Size.Height - 2, 1, 1);
+                        }
+                    }                   
+                    #endregion
+
+                    }
+                    else if(on)
+                {
+                    // NOTE PLAYED
                     e.Graphics.FillRectangle(onBrush, 0, 0, Size.Width, Size.Height);
+
+                    #region draw triangles
+                    // Triangles for white notes
+                    if (NoteOffColor == Color.White)
+                    {
+                        if (owner.Orientation == Orientation.Horizontal)
+                        {
+                            // Triangles
+                            SolidBrush bbrush = new SolidBrush(Color.Black);                            
+                            e.Graphics.FillRectangle(bbrush, 1, Size.Height - 2, 1, 1);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, Size.Height - 2, 1, 1);  
+                        }
+                        else
+                        {
+                            // Triangles
+                            SolidBrush bbrush = new SolidBrush(Color.Black);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, 1, 1, 1);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, Size.Height - 2, 1, 1);  
+                        }
+                    }
+                    #endregion
                 }
-                else
+                else 
                 {
+                    // NOTE OFF
+                    
+                    // Color depending on white or black note
                     e.Graphics.FillRectangle(offBrush, 0, 0, Size.Width, Size.Height);
+
+                    // BLACK NOTES
+                    if (NoteOffColor == Color.Black)
+                    {
+                        // Draw 3D effect on black notes with gray lines and a gray rectangle
+
+                        int w = 12;
+                        // Vertical
+                        if (owner.Orientation == Orientation.Vertical)
+                        {
+                            // Top horz line -3
+                            Point pt1 = new Point(0, 3);
+                            Point pt2 = new Point(Size.Width - 3, 3);
+                            e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                            // vert line on the right - 3
+                            pt1 = new Point(Size.Width - 3, 3);
+                            pt2 = new Point(Size.Width - 3, Size.Height - 5);
+                            e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                            // bottom line -3
+                            pt1 = new Point(0, Size.Height - 4);
+                            pt2 = new Point(Size.Width - 3, Size.Height - 4);
+                            e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                            // Gray Rectangle on the right                           
+                            Rectangle rect = new Rectangle(Size.Width - 2 - w, 4, w, Size.Height - 8);
+                            SolidBrush FillBrush = new SolidBrush(Color.DimGray);
+                            e.Graphics.FillRectangle(FillBrush, rect);
+                        }
+                        else
+                        {
+                            // HORIZONTAL
+                            // left vert line +3 
+                            Point pt1 = new Point(3, 0);
+                            Point pt2 = new Point(3, Size.Height - 3);
+                            e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                            // Horz line bottom -3
+                            pt1 = new Point(3, Size.Height - 3);
+                            pt2 = new Point(Size.Width - 3, Size.Height - 3);
+                            e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                            // Right vert line -3
+                            pt1 = new Point(Size.Width - 3, 0);
+                            pt2 = new Point(Size.Width - 3, Size.Height - 3);
+                            e.Graphics.DrawLine(Pens.Gray, pt1, pt2);
+
+                            // Gray rectangle at the bottom of the black note
+                            Rectangle rect = new Rectangle(4, Size.Height - 2 - w, Size.Width - 7, w);
+                            SolidBrush FillBrush = new SolidBrush(Color.DimGray);
+                            e.Graphics.FillRectangle(FillBrush, rect);
+
+                        }
+
+                    }
+                    else if (NoteOffColor == Color.White)
+                    {
+                        // WHITE NOTES
+
+                        Pen pn = new Pen(Color.Black);
+                        pn.Width = 1;
+
+                        // HORIZONTAL
+                        if (owner.Orientation == Orientation.Horizontal)
+                        {
+                            e.Graphics.DrawRectangle(pn, 0, 0, Size.Width - 1, Size.Height - 1);
+
+                            #region draw triangles
+
+                            SolidBrush bbrush = new SolidBrush(Color.Black);
+                            e.Graphics.FillRectangle(bbrush, 1, Size.Height - 2, 1, 1);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, Size.Height - 2, 1, 1);
+  
+                            #endregion
+                        }
+                        else
+                        {
+                            // VERTICAL
+                            e.Graphics.DrawRectangle(Pens.Black, 0, 0, Size.Width - 1, Size.Height - 1);
+
+                            #region draw triangles
+
+                            // Triangles
+                            SolidBrush bbrush = new SolidBrush(Color.Black);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, 1, 1, 1);
+                            e.Graphics.FillRectangle(bbrush, Size.Width - 2, Size.Height - 2, 1, 1);
+      
+                            #endregion
+
+                        }
+
+                    }                   
                 }
 
+                // Draw contour
                 e.Graphics.DrawRectangle(Pens.Black, 0, 0, Size.Width - 1, Size.Height - 1);
+         
 
                 // FAB: draw note letter only for C note
                 if (noteID % 12 == 0)
@@ -195,6 +376,8 @@ namespace Sanford.Multimedia.Midi.UI
                 }
                 base.OnPaint(e);
             }
+
+
 
             public string NoteLetter
             {
@@ -271,6 +454,8 @@ namespace Sanford.Multimedia.Midi.UI
                     return on;
                 }
             }
+
+
         }
     }
 }

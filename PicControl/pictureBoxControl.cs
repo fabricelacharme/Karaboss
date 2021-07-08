@@ -480,12 +480,13 @@ namespace PicControl
             m_Alpha = 255;
             imgLayout = ImageLayout.Stretch;
             
+            
             this.SetStyle(
                   System.Windows.Forms.ControlStyles.UserPaint |
                   System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
                   System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
                   true);       
-
+            
             SetDefaultValues();
         }
 
@@ -796,7 +797,7 @@ namespace PicControl
         private void SetDefaultValues()
         {           
             txtBackColor = Color.Black;     
-            txtContourColor = Color.White;
+            txtContourColor = Color.Black;
             txtNextColor = Color.White;
             txtBeforeColor = Color.YellowGreen;
             txtHighlightColor = Color.Red;
@@ -810,8 +811,7 @@ namespace PicControl
             freqSlideShow = 5 * 1000;
             m_Cancel = false;
             
-            emSize = 4;
-            //m_font = new Font("Arial", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            emSize = 4;            
             m_font = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
             sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
@@ -1114,9 +1114,7 @@ namespace PicControl
             if (line != "")
             {
                 using (Graphics g = pboxWnd.CreateGraphics())
-                {
-
-                    //m_font = new Font("Arial", femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                {                    
                     m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
                     SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
@@ -1144,11 +1142,8 @@ namespace PicControl
                 using (Graphics g = pboxWnd.CreateGraphics())
                 {
 
-                    if (femSize > 0)
-                    {
-                        //m_font = new Font("Arial", femSize, FontStyle.Regular, GraphicsUnit.Pixel);
-                        m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
-                    }
+                    if (femSize > 0)                                            
+                        m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);                    
 
                     SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
                     ret = sz.Height;
@@ -1177,11 +1172,13 @@ namespace PicControl
                 }
             }
 
+            /*
             if (max > 60)
             {
                 max = 60;
                 tx = String.Empty.PadRight(max, 'X');
             }
+            */
             return tx;
         }
 
@@ -1197,12 +1194,12 @@ namespace PicControl
                 float femsize;
 
                 long inisize = (long)pboxWnd.Font.Size;
-                femsize = g.DpiY * inisize / 72;
-                
-                float textSize = MeasureString(S, femsize);                
-                long comp = (long)(0.9*pboxWnd.ClientSize.Width);
-                
-                
+                //femsize = g.DpiY * inisize / 72;
+                femsize = g.DpiX * inisize / 72;
+
+                float textSize = MeasureString(S, femsize);
+                long comp = (long)(0.95*pboxWnd.ClientSize.Width);                
+
                 // Texte trop large
                 if (textSize > comp)
                 {
@@ -1211,7 +1208,7 @@ namespace PicControl
                         inisize = inisize - 1;
                         if (inisize > 0)
                         {                            
-                            femsize = g.DpiY * inisize / 72;                            
+                            femsize = g.DpiX * inisize / 72;                            
                             textSize = MeasureString(S, femsize);
                         }
                     } while (textSize > comp && inisize > 0);
@@ -1221,7 +1218,7 @@ namespace PicControl
                     do
                     {
                         inisize = inisize + 1;                        
-                        femsize = g.DpiY * inisize / 72;                        
+                        femsize = g.DpiX * inisize / 72;                        
                         textSize = MeasureString(S, femsize);
                     } while (textSize < comp);
                 }
@@ -1235,7 +1232,7 @@ namespace PicControl
                 float totaltextHeight;
                 totaltextHeight = _txtNbLines * (textHeight + 10);                
 
-                long compHeight = (long)(0.9*pboxWnd.ClientSize.Height);
+                long compHeight = (long)(0.95*pboxWnd.ClientSize.Height);
                 
                 if (totaltextHeight > compHeight)
                 {
@@ -1254,10 +1251,8 @@ namespace PicControl
 
                 if (inisize > 0)
                 {
-                    emSize = g.DpiY * inisize / 72;
-                    //m_font = new Font("Arial", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
-                    m_font = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
-                    //pboxWnd.Font = new Font(Name = "Arial", emSize);
+                    emSize = g.DpiY * inisize / 72;                    
+                    m_font = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);                    
                     pboxWnd.Font = new Font(Name = _karaokeFont.Name, emSize);
 
                     // Vertical distance between lines

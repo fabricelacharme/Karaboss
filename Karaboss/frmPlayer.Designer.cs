@@ -850,7 +850,6 @@ namespace Karaboss
             0});
             this.sldMainVolume.Name = "sldMainVolume";
             this.sldMainVolume.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.sldMainVolume.Padding = 0;
             this.sldMainVolume.ScaleDivisions = new decimal(new int[] {
             13,
             0,
@@ -1128,6 +1127,7 @@ namespace Karaboss
             // 
             this.sequence1.Copyright = null;
             this.sequence1.Denominator = 0;
+            this.sequence1.Division = 24;
             this.sequence1.Format = 1;
             this.sequence1.ITag = null;
             this.sequence1.KTag = null;

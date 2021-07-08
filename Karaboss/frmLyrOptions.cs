@@ -205,12 +205,11 @@ namespace Karaboss
                 TxtBackColor = Color.White;
                 TxtNextColor = Color.Black;
                 TxtHighlightColor = Color.Red;
-                TxtBeforeColor = Color.Cyan;
-                TxtContourColor = Color.DarkTurquoise;
+                TxtBeforeColor = Color.YellowGreen;
+                TxtContourColor = Color.Black;
                 NbLines = 3;
                 bColorContour = true;
-
-                //dirSlideShow = Application.StartupPath + "\\slideshow";
+                
                 dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName) + "\\slideshow";
 
                 freqSlideShow = 10;

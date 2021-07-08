@@ -32,58 +32,197 @@ namespace Karaboss
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPianoRoll));
             this.pnlTop = new System.Windows.Forms.Panel();
+            this.positionHScrollBar = new ColorSlider.ColorSlider();
+            this.CbResolution = new System.Windows.Forms.ComboBox();
+            this.lblEdit = new System.Windows.Forms.Label();
+            this.lblSaisieNotes = new System.Windows.Forms.Label();
+            this.CbTracks = new System.Windows.Forms.ComboBox();
+            this.lblNote = new System.Windows.Forms.Label();
             this.pnlDisplay = new System.Windows.Forms.Panel();
             this.lblElapsed = new System.Windows.Forms.Label();
             this.lblPercent = new System.Windows.Forms.Label();
             this.lblDuration = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.lblTempo = new System.Windows.Forms.Label();
             this.btnTempoMinus = new System.Windows.Forms.Button();
             this.lblTempoValue = new System.Windows.Forms.Label();
             this.btnTempoPlus = new System.Windows.Forms.Button();
-            this.CbResolution = new System.Windows.Forms.ComboBox();
-            this.lblEdit = new System.Windows.Forms.Label();
-            this.lblSaisieNotes = new System.Windows.Forms.Label();
-            this.BtnStop = new System.Windows.Forms.Button();
-            this.BtnPlay = new System.Windows.Forms.Button();
-            this.positionHScrollBar = new ColorSlider.ColorSlider();
-            this.lblNote = new System.Windows.Forms.Label();
-            this.CbTracks = new System.Windows.Forms.ComboBox();
-            this.lblPointer = new System.Windows.Forms.Label();
-            this.lblPen = new System.Windows.Forms.Label();
             this.pnlMiddle = new System.Windows.Forms.Panel();
+            this.pnlCenter = new System.Windows.Forms.Panel();
             this.pnlScrollView = new System.Windows.Forms.Panel();
+            this.pianoRollControl2 = new Sanford.Multimedia.Midi.PianoRoll.PianoRollControl();
+            this.pnlRight = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.pnlLeft = new System.Windows.Forms.Panel();
             this.pnlPiano = new System.Windows.Forms.Panel();
+            this.pianoControl2 = new Sanford.Multimedia.Midi.UI.PianoControl();
+            this.pnlPianoTop = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.pnlBottom = new System.Windows.Forms.Panel();
+            this.BtnStop = new Karaboss.NoSelectButton();
+            this.BtnPlay = new Karaboss.NoSelectButton();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.pnlTop.SuspendLayout();
             this.pnlDisplay.SuspendLayout();
             this.pnlMiddle.SuspendLayout();
+            this.pnlCenter.SuspendLayout();
+            this.pnlScrollView.SuspendLayout();
+            this.pnlRight.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.pnlLeft.SuspendLayout();
+            this.pnlPiano.SuspendLayout();
+            this.pnlPianoTop.SuspendLayout();
+            this.pnlBottom.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlTop
             // 
             this.pnlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.pnlTop.Controls.Add(this.pnlDisplay);
-            this.pnlTop.Controls.Add(this.label1);
-            this.pnlTop.Controls.Add(this.lblTempo);
-            this.pnlTop.Controls.Add(this.btnTempoMinus);
-            this.pnlTop.Controls.Add(this.lblTempoValue);
-            this.pnlTop.Controls.Add(this.btnTempoPlus);
-            this.pnlTop.Controls.Add(this.CbResolution);
-            this.pnlTop.Controls.Add(this.lblEdit);
-            this.pnlTop.Controls.Add(this.lblSaisieNotes);
-            this.pnlTop.Controls.Add(this.BtnStop);
-            this.pnlTop.Controls.Add(this.BtnPlay);
             this.pnlTop.Controls.Add(this.positionHScrollBar);
-            this.pnlTop.Controls.Add(this.lblNote);
-            this.pnlTop.Controls.Add(this.CbTracks);
-            this.pnlTop.Controls.Add(this.lblPointer);
-            this.pnlTop.Controls.Add(this.lblPen);
             this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTop.Location = new System.Drawing.Point(0, 0);
             this.pnlTop.Name = "pnlTop";
-            this.pnlTop.Size = new System.Drawing.Size(1075, 100);
+            this.pnlTop.Size = new System.Drawing.Size(1149, 50);
             this.pnlTop.TabIndex = 0;
+            // 
+            // positionHScrollBar
+            // 
+            this.positionHScrollBar.BackColor = System.Drawing.Color.Transparent;
+            this.positionHScrollBar.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(87)))), ((int)(((byte)(94)))), ((int)(((byte)(110)))));
+            this.positionHScrollBar.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(60)))), ((int)(((byte)(74)))));
+            this.positionHScrollBar.BorderRoundRectSize = new System.Drawing.Size(8, 8);
+            this.positionHScrollBar.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
+            this.positionHScrollBar.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(130)))), ((int)(((byte)(208)))));
+            this.positionHScrollBar.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(140)))), ((int)(((byte)(180)))));
+            this.positionHScrollBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
+            this.positionHScrollBar.ForeColor = System.Drawing.Color.White;
+            this.positionHScrollBar.LargeChange = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.Location = new System.Drawing.Point(100, 5);
+            this.positionHScrollBar.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.Name = "positionHScrollBar";
+            this.positionHScrollBar.ScaleDivisions = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.ScaleSubDivisions = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.ShowDivisionsText = true;
+            this.positionHScrollBar.ShowSmallScale = false;
+            this.positionHScrollBar.Size = new System.Drawing.Size(812, 44);
+            this.positionHScrollBar.SmallChange = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.TabIndex = 16;
+            this.positionHScrollBar.TabStop = false;
+            this.positionHScrollBar.Text = "colorSlider1";
+            this.positionHScrollBar.ThumbImage = global::Karaboss.Properties.Resources.BTN_Thumb_Blue;
+            this.positionHScrollBar.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
+            this.positionHScrollBar.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
+            this.positionHScrollBar.ThumbRoundRectSize = new System.Drawing.Size(16, 16);
+            this.positionHScrollBar.ThumbSize = new System.Drawing.Size(16, 16);
+            this.positionHScrollBar.TickAdd = 0F;
+            this.positionHScrollBar.TickColor = System.Drawing.Color.White;
+            this.positionHScrollBar.TickDivide = 0F;
+            this.positionHScrollBar.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.positionHScrollBar.ValueChanged += new System.EventHandler(this.positionHScrollBar_ValueChanged);
+            this.positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.positionHScrollBar_Scroll);
+            // 
+            // CbResolution
+            // 
+            this.CbResolution.FormattingEnabled = true;
+            this.CbResolution.Location = new System.Drawing.Point(1087, 16);
+            this.CbResolution.Name = "CbResolution";
+            this.CbResolution.Size = new System.Drawing.Size(50, 21);
+            this.CbResolution.TabIndex = 21;
+            this.CbResolution.TabStop = false;
+            this.toolTip1.SetToolTip(this.CbResolution, "Resolution");
+            this.CbResolution.SelectedIndexChanged += new System.EventHandler(this.CbResolution_SelectedIndexChanged);
+            // 
+            // lblEdit
+            // 
+            this.lblEdit.BackColor = System.Drawing.Color.White;
+            this.lblEdit.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lblEdit.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.lblEdit.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lblEdit.Location = new System.Drawing.Point(1001, 11);
+            this.lblEdit.Name = "lblEdit";
+            this.lblEdit.Size = new System.Drawing.Size(30, 30);
+            this.lblEdit.TabIndex = 20;
+            this.lblEdit.Text = "Edit";
+            this.lblEdit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.toolTip1.SetToolTip(this.lblEdit, "Edit");
+            this.lblEdit.Visible = false;
+            this.lblEdit.Click += new System.EventHandler(this.lblEdit_Click);
+            // 
+            // lblSaisieNotes
+            // 
+            this.lblSaisieNotes.BackColor = System.Drawing.Color.White;
+            this.lblSaisieNotes.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lblSaisieNotes.Font = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.lblSaisieNotes.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lblSaisieNotes.Location = new System.Drawing.Point(1037, 11);
+            this.lblSaisieNotes.Name = "lblSaisieNotes";
+            this.lblSaisieNotes.Size = new System.Drawing.Size(30, 30);
+            this.lblSaisieNotes.TabIndex = 19;
+            this.lblSaisieNotes.Text = "N";
+            this.lblSaisieNotes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.toolTip1.SetToolTip(this.lblSaisieNotes, "Enter notes");
+            this.lblSaisieNotes.Visible = false;
+            this.lblSaisieNotes.Click += new System.EventHandler(this.lblSaisieNotes_Click);
+            // 
+            // CbTracks
+            // 
+            this.CbTracks.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CbTracks.FormattingEnabled = true;
+            this.CbTracks.Location = new System.Drawing.Point(609, 16);
+            this.CbTracks.Name = "CbTracks";
+            this.CbTracks.Size = new System.Drawing.Size(240, 23);
+            this.CbTracks.TabIndex = 2;
+            this.CbTracks.TabStop = false;
+            this.toolTip1.SetToolTip(this.CbTracks, "Select track to edit");
+            this.CbTracks.SelectedIndexChanged += new System.EventHandler(this.CbTracks_SelectedIndexChanged);
+            // 
+            // lblNote
+            // 
+            this.lblNote.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.lblNote.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblNote.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNote.ForeColor = System.Drawing.Color.White;
+            this.lblNote.Location = new System.Drawing.Point(0, 0);
+            this.lblNote.Name = "lblNote";
+            this.lblNote.Size = new System.Drawing.Size(100, 19);
+            this.lblNote.TabIndex = 4;
+            this.lblNote.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pnlDisplay
             // 
@@ -92,7 +231,7 @@ namespace Karaboss
             this.pnlDisplay.Controls.Add(this.lblElapsed);
             this.pnlDisplay.Controls.Add(this.lblPercent);
             this.pnlDisplay.Controls.Add(this.lblDuration);
-            this.pnlDisplay.Location = new System.Drawing.Point(384, 3);
+            this.pnlDisplay.Location = new System.Drawing.Point(400, 11);
             this.pnlDisplay.Name = "pnlDisplay";
             this.pnlDisplay.Size = new System.Drawing.Size(200, 32);
             this.pnlDisplay.TabIndex = 37;
@@ -136,28 +275,13 @@ namespace Karaboss
             this.lblDuration.Text = "00:00";
             this.lblDuration.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label1.Location = new System.Drawing.Point(930, 3);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(140, 27);
-            this.label1.TabIndex = 30;
-            this.label1.Text = "K A R A B O S S";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // lblTempo
             // 
             this.lblTempo.BackColor = System.Drawing.Color.Black;
             this.lblTempo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblTempo.ForeColor = System.Drawing.Color.White;
             this.lblTempo.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblTempo.Location = new System.Drawing.Point(208, 3);
+            this.lblTempo.Location = new System.Drawing.Point(235, 11);
             this.lblTempo.Name = "lblTempo";
             this.lblTempo.Size = new System.Drawing.Size(165, 32);
             this.lblTempo.TabIndex = 29;
@@ -168,7 +292,7 @@ namespace Karaboss
             // 
             this.btnTempoMinus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.btnTempoMinus.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnTempoMinus.Location = new System.Drawing.Point(176, 3);
+            this.btnTempoMinus.Location = new System.Drawing.Point(196, 11);
             this.btnTempoMinus.Name = "btnTempoMinus";
             this.btnTempoMinus.Size = new System.Drawing.Size(32, 32);
             this.btnTempoMinus.TabIndex = 28;
@@ -182,7 +306,7 @@ namespace Karaboss
             this.lblTempoValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblTempoValue.ForeColor = System.Drawing.Color.White;
             this.lblTempoValue.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblTempoValue.Location = new System.Drawing.Point(112, 3);
+            this.lblTempoValue.Location = new System.Drawing.Point(132, 11);
             this.lblTempoValue.Name = "lblTempoValue";
             this.lblTempoValue.Size = new System.Drawing.Size(64, 32);
             this.lblTempoValue.TabIndex = 27;
@@ -193,7 +317,7 @@ namespace Karaboss
             // 
             this.btnTempoPlus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.btnTempoPlus.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnTempoPlus.Location = new System.Drawing.Point(80, 3);
+            this.btnTempoPlus.Location = new System.Drawing.Point(100, 11);
             this.btnTempoPlus.Name = "btnTempoPlus";
             this.btnTempoPlus.Size = new System.Drawing.Size(32, 32);
             this.btnTempoPlus.TabIndex = 26;
@@ -201,178 +325,312 @@ namespace Karaboss
             this.btnTempoPlus.UseVisualStyleBackColor = true;
             this.btnTempoPlus.Click += new System.EventHandler(this.btnTempoPlus_Click);
             // 
-            // CbResolution
-            // 
-            this.CbResolution.FormattingEnabled = true;
-            this.CbResolution.Location = new System.Drawing.Point(874, 3);
-            this.CbResolution.Name = "CbResolution";
-            this.CbResolution.Size = new System.Drawing.Size(50, 21);
-            this.CbResolution.TabIndex = 21;
-            this.CbResolution.TabStop = false;
-            this.CbResolution.SelectedIndexChanged += new System.EventHandler(this.CbResolution_SelectedIndexChanged);
-            // 
-            // lblEdit
-            // 
-            this.lblEdit.BackColor = System.Drawing.Color.White;
-            this.lblEdit.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblEdit.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.lblEdit.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblEdit.Location = new System.Drawing.Point(596, 3);
-            this.lblEdit.Name = "lblEdit";
-            this.lblEdit.Size = new System.Drawing.Size(30, 30);
-            this.lblEdit.TabIndex = 20;
-            this.lblEdit.Text = "Edit";
-            this.lblEdit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblEdit.Visible = false;
-            this.lblEdit.Click += new System.EventHandler(this.lblEdit_Click);
-            // 
-            // lblSaisieNotes
-            // 
-            this.lblSaisieNotes.BackColor = System.Drawing.Color.White;
-            this.lblSaisieNotes.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblSaisieNotes.Font = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.lblSaisieNotes.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblSaisieNotes.Location = new System.Drawing.Point(628, 3);
-            this.lblSaisieNotes.Name = "lblSaisieNotes";
-            this.lblSaisieNotes.Size = new System.Drawing.Size(30, 30);
-            this.lblSaisieNotes.TabIndex = 19;
-            this.lblSaisieNotes.Text = "N";
-            this.lblSaisieNotes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblSaisieNotes.Visible = false;
-            this.lblSaisieNotes.Click += new System.EventHandler(this.lblSaisieNotes_Click);
-            // 
-            // BtnStop
-            // 
-            this.BtnStop.Image = global::Karaboss.Properties.Resources.Media_Controls_Stop_icon;
-            this.BtnStop.Location = new System.Drawing.Point(35, 3);
-            this.BtnStop.Name = "BtnStop";
-            this.BtnStop.Size = new System.Drawing.Size(32, 32);
-            this.BtnStop.TabIndex = 18;
-            this.BtnStop.UseVisualStyleBackColor = true;
-            this.BtnStop.Click += new System.EventHandler(this.BtnStop_Click);
-            // 
-            // BtnPlay
-            // 
-            this.BtnPlay.Image = global::Karaboss.Properties.Resources.Media_Controls_Play_icon;
-            this.BtnPlay.Location = new System.Drawing.Point(3, 3);
-            this.BtnPlay.Name = "BtnPlay";
-            this.BtnPlay.Size = new System.Drawing.Size(32, 32);
-            this.BtnPlay.TabIndex = 17;
-            this.BtnPlay.UseVisualStyleBackColor = true;
-            this.BtnPlay.Click += new System.EventHandler(this.BtnPlay_Click);
-            // 
-            // positionHScrollBar
-            // 
-            this.positionHScrollBar.BackColor = System.Drawing.Color.Transparent;
-            this.positionHScrollBar.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(87)))), ((int)(((byte)(94)))), ((int)(((byte)(110)))));
-            this.positionHScrollBar.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(60)))), ((int)(((byte)(74)))));
-            this.positionHScrollBar.BorderRoundRectSize = new System.Drawing.Size(8, 8);
-            this.positionHScrollBar.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
-            this.positionHScrollBar.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(130)))), ((int)(((byte)(208)))));
-            this.positionHScrollBar.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(140)))), ((int)(((byte)(180)))));
-            this.positionHScrollBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
-            this.positionHScrollBar.ForeColor = System.Drawing.Color.White;
-            this.positionHScrollBar.LargeChange = ((uint)(5u));
-            this.positionHScrollBar.Location = new System.Drawing.Point(3, 40);
-            this.positionHScrollBar.Name = "positionHScrollBar";
-            this.positionHScrollBar.ScaleDivisions = 10;
-            this.positionHScrollBar.ScaleSubDivisions = 5;
-            this.positionHScrollBar.ShowDivisionsText = true;
-            this.positionHScrollBar.ShowSmallScale = false;
-            this.positionHScrollBar.Size = new System.Drawing.Size(812, 37);
-            this.positionHScrollBar.SmallChange = ((uint)(1u));
-            this.positionHScrollBar.TabIndex = 16;
-            this.positionHScrollBar.TabStop = false;
-            this.positionHScrollBar.Text = "colorSlider1";
-            this.positionHScrollBar.ThumbImage = global::Karaboss.Properties.Resources.BTN_Thumb_Blue;
-            this.positionHScrollBar.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
-            this.positionHScrollBar.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
-            this.positionHScrollBar.ThumbRoundRectSize = new System.Drawing.Size(16, 16);
-            this.positionHScrollBar.ThumbSize = new System.Drawing.Size(16, 16);
-            this.positionHScrollBar.TickAdd = 0F;
-            this.positionHScrollBar.TickColor = System.Drawing.Color.White;
-            this.positionHScrollBar.TickDivide = 0F;
-            this.positionHScrollBar.Value = 0;
-            this.positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.positionHScrollBar_Scroll);
-            // 
-            // lblNote
-            // 
-            this.lblNote.BackColor = System.Drawing.Color.White;
-            this.lblNote.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNote.Location = new System.Drawing.Point(0, 80);
-            this.lblNote.Name = "lblNote";
-            this.lblNote.Size = new System.Drawing.Size(100, 19);
-            this.lblNote.TabIndex = 4;
-            this.lblNote.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // CbTracks
-            // 
-            this.CbTracks.FormattingEnabled = true;
-            this.CbTracks.Location = new System.Drawing.Point(671, 3);
-            this.CbTracks.Name = "CbTracks";
-            this.CbTracks.Size = new System.Drawing.Size(200, 21);
-            this.CbTracks.TabIndex = 2;
-            this.CbTracks.TabStop = false;
-            this.CbTracks.SelectedIndexChanged += new System.EventHandler(this.CbTracks_SelectedIndexChanged);
-            // 
-            // lblPointer
-            // 
-            this.lblPointer.BackColor = System.Drawing.Color.Red;
-            this.lblPointer.Image = global::Karaboss.Properties.Resources.pointer;
-            this.lblPointer.Location = new System.Drawing.Point(783, 64);
-            this.lblPointer.Name = "lblPointer";
-            this.lblPointer.Size = new System.Drawing.Size(32, 32);
-            this.lblPointer.TabIndex = 1;
-            this.lblPointer.Visible = false;
-            this.lblPointer.Click += new System.EventHandler(this.LblPointer_Click);
-            // 
-            // lblPen
-            // 
-            this.lblPen.BackColor = System.Drawing.Color.White;
-            this.lblPen.Image = global::Karaboss.Properties.Resources.pencil;
-            this.lblPen.Location = new System.Drawing.Point(745, 65);
-            this.lblPen.Name = "lblPen";
-            this.lblPen.Size = new System.Drawing.Size(32, 32);
-            this.lblPen.TabIndex = 0;
-            this.lblPen.Visible = false;
-            this.lblPen.Click += new System.EventHandler(this.LblPen_Click);
-            // 
             // pnlMiddle
             // 
-            this.pnlMiddle.BackColor = System.Drawing.Color.White;
-            this.pnlMiddle.Controls.Add(this.pnlScrollView);
-            this.pnlMiddle.Controls.Add(this.pnlPiano);
+            this.pnlMiddle.BackColor = System.Drawing.Color.Red;
+            this.pnlMiddle.Controls.Add(this.pnlCenter);
+            this.pnlMiddle.Controls.Add(this.pnlRight);
+            this.pnlMiddle.Controls.Add(this.pnlLeft);
             this.pnlMiddle.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlMiddle.Location = new System.Drawing.Point(0, 100);
+            this.pnlMiddle.Location = new System.Drawing.Point(0, 50);
             this.pnlMiddle.Name = "pnlMiddle";
-            this.pnlMiddle.Size = new System.Drawing.Size(1075, 445);
+            this.pnlMiddle.Size = new System.Drawing.Size(1149, 441);
             this.pnlMiddle.TabIndex = 0;
+            // 
+            // pnlCenter
+            // 
+            this.pnlCenter.BackColor = System.Drawing.Color.Gray;
+            this.pnlCenter.Controls.Add(this.pnlScrollView);
+            this.pnlCenter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlCenter.Location = new System.Drawing.Point(100, 0);
+            this.pnlCenter.Name = "pnlCenter";
+            this.pnlCenter.Size = new System.Drawing.Size(1009, 441);
+            this.pnlCenter.TabIndex = 1;
             // 
             // pnlScrollView
             // 
-            this.pnlScrollView.Location = new System.Drawing.Point(100, 0);
+            this.pnlScrollView.BackColor = System.Drawing.Color.Black;
+            this.pnlScrollView.Controls.Add(this.pianoRollControl2);
+            this.pnlScrollView.Location = new System.Drawing.Point(20, 9);
             this.pnlScrollView.Name = "pnlScrollView";
-            this.pnlScrollView.Size = new System.Drawing.Size(200, 100);
+            this.pnlScrollView.Size = new System.Drawing.Size(291, 240);
             this.pnlScrollView.TabIndex = 0;
+            // 
+            // pianoRollControl2
+            // 
+            this.pianoRollControl2.BackColor = System.Drawing.Color.Gray;
+            this.pianoRollControl2.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pianoRollControl2.HighNoteID = 108;
+            this.pianoRollControl2.Location = new System.Drawing.Point(0, 0);
+            this.pianoRollControl2.LowNoteID = 23;
+            this.pianoRollControl2.Name = "pianoRollControl2";
+            this.pianoRollControl2.NotesEdition = false;
+            this.pianoRollControl2.OffsetX = 0;
+            this.pianoRollControl2.OffsetY = 0;
+            this.pianoRollControl2.Resolution = 4;
+            this.pianoRollControl2.Sequence1 = null;
+            this.pianoRollControl2.Size = new System.Drawing.Size(206, 240);
+            this.pianoRollControl2.TabIndex = 0;
+            this.pianoRollControl2.Text = "pianoRollControl2";
+            this.pianoRollControl2.TimeLineY = 40;
+            this.pianoRollControl2.TrackNum = -1;
+            this.pianoRollControl2.Velocity = 100;
+            this.pianoRollControl2.xScale = 0.1D;
+            this.pianoRollControl2.yScale = 20;
+            this.pianoRollControl2.zoomx = 1F;
+            // 
+            // pnlRight
+            // 
+            this.pnlRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlRight.Controls.Add(this.panel1);
+            this.pnlRight.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlRight.Location = new System.Drawing.Point(1109, 0);
+            this.pnlRight.Name = "pnlRight";
+            this.pnlRight.Size = new System.Drawing.Size(40, 441);
+            this.pnlRight.TabIndex = 2;
+            // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.label14);
+            this.panel1.Controls.Add(this.label13);
+            this.panel1.Controls.Add(this.label12);
+            this.panel1.Controls.Add(this.label11);
+            this.panel1.Controls.Add(this.label10);
+            this.panel1.Controls.Add(this.label9);
+            this.panel1.Controls.Add(this.label8);
+            this.panel1.Controls.Add(this.label15);
+            this.panel1.Location = new System.Drawing.Point(5, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(31, 146);
+            this.panel1.TabIndex = 52;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.BackColor = System.Drawing.Color.Transparent;
+            this.label14.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.label14.ForeColor = System.Drawing.Color.White;
+            this.label14.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label14.Location = new System.Drawing.Point(5, 121);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(15, 17);
+            this.label14.TabIndex = 66;
+            this.label14.Text = "S";
+            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.BackColor = System.Drawing.Color.Transparent;
+            this.label13.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.label13.ForeColor = System.Drawing.Color.White;
+            this.label13.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label13.Location = new System.Drawing.Point(5, 104);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(15, 17);
+            this.label13.TabIndex = 65;
+            this.label13.Text = "S";
+            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.BackColor = System.Drawing.Color.Transparent;
+            this.label12.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.label12.ForeColor = System.Drawing.Color.White;
+            this.label12.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label12.Location = new System.Drawing.Point(4, 87);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(18, 17);
+            this.label12.TabIndex = 64;
+            this.label12.Text = "O";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.BackColor = System.Drawing.Color.Transparent;
+            this.label11.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.label11.ForeColor = System.Drawing.Color.White;
+            this.label11.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label11.Location = new System.Drawing.Point(5, 70);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(15, 17);
+            this.label11.TabIndex = 63;
+            this.label11.Text = "B";
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.BackColor = System.Drawing.Color.Transparent;
+            this.label10.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.label10.ForeColor = System.Drawing.Color.White;
+            this.label10.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label10.Location = new System.Drawing.Point(5, 53);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(16, 17);
+            this.label10.TabIndex = 62;
+            this.label10.Text = "A";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.BackColor = System.Drawing.Color.Transparent;
+            this.label9.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.label9.ForeColor = System.Drawing.Color.White;
+            this.label9.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label9.Location = new System.Drawing.Point(5, 36);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(16, 17);
+            this.label9.TabIndex = 61;
+            this.label9.Text = "R";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.BackColor = System.Drawing.Color.Transparent;
+            this.label8.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.label8.ForeColor = System.Drawing.Color.White;
+            this.label8.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label8.Location = new System.Drawing.Point(5, 19);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(16, 17);
+            this.label8.TabIndex = 60;
+            this.label8.Text = "A";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.BackColor = System.Drawing.Color.Transparent;
+            this.label15.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.label15.ForeColor = System.Drawing.Color.White;
+            this.label15.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label15.Location = new System.Drawing.Point(5, 2);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(16, 17);
+            this.label15.TabIndex = 59;
+            this.label15.Text = "K";
+            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pnlLeft
+            // 
+            this.pnlLeft.BackColor = System.Drawing.Color.Gray;
+            this.pnlLeft.Controls.Add(this.pnlPiano);
+            this.pnlLeft.Controls.Add(this.pnlPianoTop);
+            this.pnlLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlLeft.Location = new System.Drawing.Point(0, 0);
+            this.pnlLeft.Name = "pnlLeft";
+            this.pnlLeft.Size = new System.Drawing.Size(100, 441);
+            this.pnlLeft.TabIndex = 1;
             // 
             // pnlPiano
             // 
-            this.pnlPiano.Location = new System.Drawing.Point(0, 0);
+            this.pnlPiano.BackColor = System.Drawing.Color.Gold;
+            this.pnlPiano.Controls.Add(this.pianoControl2);
+            this.pnlPiano.Location = new System.Drawing.Point(3, 46);
             this.pnlPiano.Name = "pnlPiano";
-            this.pnlPiano.Size = new System.Drawing.Size(100, 100);
+            this.pnlPiano.Size = new System.Drawing.Size(91, 224);
             this.pnlPiano.TabIndex = 0;
+            // 
+            // pianoControl2
+            // 
+            this.pianoControl2.HighNoteID = 108;
+            this.pianoControl2.Location = new System.Drawing.Point(12, 9);
+            this.pianoControl2.LowNoteID = 23;
+            this.pianoControl2.Name = "pianoControl2";
+            this.pianoControl2.NoteOnColor = System.Drawing.Color.SkyBlue;
+            this.pianoControl2.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.pianoControl2.Scale = 20;
+            this.pianoControl2.Size = new System.Drawing.Size(67, 200);
+            this.pianoControl2.TabIndex = 0;
+            this.pianoControl2.Text = "pianoControl2";
+            this.pianoControl2.Zoom = 1F;
+            // 
+            // pnlPianoTop
+            // 
+            this.pnlPianoTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlPianoTop.Controls.Add(this.lblNote);
+            this.pnlPianoTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlPianoTop.Location = new System.Drawing.Point(0, 0);
+            this.pnlPianoTop.Name = "pnlPianoTop";
+            this.pnlPianoTop.Size = new System.Drawing.Size(100, 40);
+            this.pnlPianoTop.TabIndex = 1;
             // 
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // pnlBottom
+            // 
+            this.pnlBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlBottom.Controls.Add(this.BtnStop);
+            this.pnlBottom.Controls.Add(this.CbResolution);
+            this.pnlBottom.Controls.Add(this.BtnPlay);
+            this.pnlBottom.Controls.Add(this.lblSaisieNotes);
+            this.pnlBottom.Controls.Add(this.lblEdit);
+            this.pnlBottom.Controls.Add(this.pnlDisplay);
+            this.pnlBottom.Controls.Add(this.btnTempoPlus);
+            this.pnlBottom.Controls.Add(this.lblTempoValue);
+            this.pnlBottom.Controls.Add(this.CbTracks);
+            this.pnlBottom.Controls.Add(this.lblTempo);
+            this.pnlBottom.Controls.Add(this.btnTempoMinus);
+            this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlBottom.Location = new System.Drawing.Point(0, 491);
+            this.pnlBottom.Name = "pnlBottom";
+            this.pnlBottom.Size = new System.Drawing.Size(1149, 54);
+            this.pnlBottom.TabIndex = 1;
+            // 
+            // BtnStop
+            // 
+            this.BtnStop.FlatAppearance.BorderSize = 0;
+            this.BtnStop.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.BtnStop.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.BtnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnStop.Image = global::Karaboss.Properties.Resources.btn_black_stop;
+            this.BtnStop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.BtnStop.Location = new System.Drawing.Point(905, 2);
+            this.BtnStop.Name = "BtnStop";
+            this.BtnStop.Size = new System.Drawing.Size(50, 50);
+            this.BtnStop.TabIndex = 52;
+            this.BtnStop.TabStop = false;
+            this.toolTip1.SetToolTip(this.BtnStop, "Stop");
+            this.BtnStop.UseVisualStyleBackColor = false;
+            this.BtnStop.Click += new System.EventHandler(this.BtnStop_Click);
+            this.BtnStop.MouseLeave += new System.EventHandler(this.BtnStop_MouseLeave);
+            this.BtnStop.MouseHover += new System.EventHandler(this.BtnStop_MouseHover);
+            // 
+            // BtnPlay
+            // 
+            this.BtnPlay.FlatAppearance.BorderSize = 0;
+            this.BtnPlay.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.BtnPlay.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.BtnPlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnPlay.Image = global::Karaboss.Properties.Resources.btn_black_play;
+            this.BtnPlay.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.BtnPlay.Location = new System.Drawing.Point(854, 1);
+            this.BtnPlay.Name = "BtnPlay";
+            this.BtnPlay.Size = new System.Drawing.Size(50, 50);
+            this.BtnPlay.TabIndex = 51;
+            this.BtnPlay.TabStop = false;
+            this.toolTip1.SetToolTip(this.BtnPlay, "Play/pause");
+            this.BtnPlay.UseVisualStyleBackColor = false;
+            this.BtnPlay.Click += new System.EventHandler(this.BtnPlay_Click);
+            this.BtnPlay.MouseLeave += new System.EventHandler(this.BtnPlay_MouseLeave);
+            this.BtnPlay.MouseHover += new System.EventHandler(this.BtnPlay_MouseHover);
             // 
             // frmPianoRoll
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(1075, 545);
+            this.ClientSize = new System.Drawing.Size(1149, 545);
             this.Controls.Add(this.pnlMiddle);
+            this.Controls.Add(this.pnlBottom);
             this.Controls.Add(this.pnlTop);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmPianoRoll";
@@ -383,10 +641,18 @@ namespace Karaboss
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmPianoRoll_KeyUp);
             this.Resize += new System.EventHandler(this.FrmPianoRoll_Resize);
             this.pnlTop.ResumeLayout(false);
-            this.pnlTop.PerformLayout();
             this.pnlDisplay.ResumeLayout(false);
             this.pnlDisplay.PerformLayout();
             this.pnlMiddle.ResumeLayout(false);
+            this.pnlCenter.ResumeLayout(false);
+            this.pnlScrollView.ResumeLayout(false);
+            this.pnlRight.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.pnlLeft.ResumeLayout(false);
+            this.pnlPiano.ResumeLayout(false);
+            this.pnlPianoTop.ResumeLayout(false);
+            this.pnlBottom.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -395,16 +661,12 @@ namespace Karaboss
         #endregion
 
         private System.Windows.Forms.Panel pnlTop;
-        private System.Windows.Forms.Label lblPen;
-        private System.Windows.Forms.Label lblPointer;
         private System.Windows.Forms.ComboBox CbTracks;
         private System.Windows.Forms.Label lblNote;
         private System.Windows.Forms.Panel pnlMiddle;
         private System.Windows.Forms.Panel pnlPiano;
         private System.Windows.Forms.Panel pnlScrollView;
-        private System.Windows.Forms.Button BtnPlay;
         private ColorSlider.ColorSlider positionHScrollBar;
-        private System.Windows.Forms.Button BtnStop;
         private System.Windows.Forms.Label lblEdit;
         private System.Windows.Forms.Label lblSaisieNotes;
         private System.Windows.Forms.Timer timer1;
@@ -413,10 +675,28 @@ namespace Karaboss
         private System.Windows.Forms.Button btnTempoMinus;
         private System.Windows.Forms.Label lblTempoValue;
         private System.Windows.Forms.Button btnTempoPlus;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel pnlDisplay;
         private System.Windows.Forms.Label lblElapsed;
         private System.Windows.Forms.Label lblPercent;
         private System.Windows.Forms.Label lblDuration;
+        private System.Windows.Forms.Panel pnlBottom;
+        private System.Windows.Forms.Panel pnlLeft;
+        private System.Windows.Forms.Panel pnlPianoTop;
+        private System.Windows.Forms.Panel pnlRight;
+        private Sanford.Multimedia.Midi.PianoRoll.PianoRollControl pianoRollControl2;
+        private Sanford.Multimedia.Midi.UI.PianoControl pianoControl2;
+        private System.Windows.Forms.Panel pnlCenter;
+        private NoSelectButton BtnStop;
+        private NoSelectButton BtnPlay;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

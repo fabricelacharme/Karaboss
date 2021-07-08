@@ -81,7 +81,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="TxtContourColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">White</Value>
+      <Value Profile="(Default)">Black</Value>
     </Setting>
     <Setting Name="freqSlideShow" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>

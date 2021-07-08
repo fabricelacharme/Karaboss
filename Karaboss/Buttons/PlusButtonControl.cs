@@ -10,6 +10,9 @@ using System.Windows.Forms;
 
 namespace Karaboss.Buttons
 {
+    /* Boutons utilisés pour le player de Karaboss
+     * 
+     */
     public partial class PlusButtonControl : UserControl
     {
         private Image Button() => Properties.Resources.Bouton_plus_palegreen_32;

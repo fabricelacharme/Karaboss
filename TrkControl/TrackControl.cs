@@ -87,6 +87,9 @@ namespace TrkControl
         public event lblTrackNameChangedEventHandler OntrkControllblTrackNameChanged;
 
 
+        public delegate void btnPianoRollClickedEventHandler(object sender, EventArgs e, int track);
+        public event btnPianoRollClickedEventHandler OntrkControlbtnPianoRollClicked;
+
         #endregion Declare Delegate
 
         private TextBox editbox = new TextBox();
@@ -589,6 +592,16 @@ namespace TrkControl
                 OntrkControlbtnDelClicked?.Invoke(this, e, track);
         }
 
+        /// <summary>
+        /// Display or hide pianoroll
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnPianoRoll_Click(object sender, EventArgs e)
+        {
+            OntrkControlbtnPianoRollClicked?.Invoke(this, e, track);
+        }
+
         #endregion
 
 
@@ -1019,8 +1032,9 @@ namespace TrkControl
         {
             this.OnDragLeave(e);
         }
-        
+
         #endregion
 
+    
     }
 }

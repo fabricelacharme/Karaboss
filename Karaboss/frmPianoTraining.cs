@@ -12,8 +12,14 @@ namespace Karaboss
     {
 
         #region private decl        
+        private HScrollBar hScrollBar;
+        //private VScrollBar vScrollbar;
+
         private int TempoOrig = 0;
         private int TempoDelta = 100;
+
+        private bool bShowVScrollBar = false;
+        private bool bShowHScrollBar = false;
 
         // Midifile characteristics
         private double _duration = 0;  // en secondes
@@ -38,6 +44,12 @@ namespace Karaboss
         private string MIDIfilePath = string.Empty;
         private string MIDIfileFullPath = string.Empty;
 
+        private bool bAlltracks;
+        private int tracknum = -1;
+        private Track SingleTrack;
+        private int SingleTrackNumber;
+        private int SingleTrackChannel;
+
         /// <summary>
         /// Player status
         /// </summary>
@@ -45,7 +57,8 @@ namespace Karaboss
         {
             Playing,
             Paused,
-            Stopped,        
+            Stopped,   
+            WaitingPaused,
         }
         private PlayerStates PlayerState;
 
@@ -80,16 +93,24 @@ namespace Karaboss
             resolution = 4;
 
             SetTitle(FileName);
-            
-        }
 
-       
+            tracknum = -1;
+            // All tracks                      
+            SingleTrack = null;
+            SingleTrackNumber = -1;
+            SingleTrackChannel = -1;
+            bAlltracks = true;
+
+            vPianoRollControl1.OnMouseMoved += new Sanford.Multimedia.Midi.VPianoRoll.MouseMoveEventHandler(vPianoRollControl1_MouseMove);
+        }
+     
 
         #region timer        
         private void ScrollView()
         {
             int offset = Convert.ToInt32(sequencer1.Position * vPianoRollControl1.yScale);
             vPianoRollControl1.OffsetY = offset;
+            
         }
 
         /// <summary>
@@ -131,19 +152,20 @@ namespace Karaboss
                         break;                        
                 }
 
-                #region position hscrollbar
+                #region position vscrollbar
                 try
                 {
                     if (PlayerState == PlayerStates.Playing && sequencer1.Position < positionHScrollBar.Maximum - positionHScrollBar.Minimum)
                     {                        
                         positionHScrollBar.Value = sequencer1.Position + positionHScrollBar.Minimum;
+                        vScrollBar.Value = sequencer1.Position + vScrollBar.Minimum;
                     }
                 }
                 catch (Exception ex)
                 {
                     Console.Write("Error positionHScrollBarNew.Value - " + ex.Message);
                 }
-                #endregion position hscrollbar
+                #endregion position vscrollbar
             }
         }
 
@@ -157,8 +179,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="fileName"></param>
         private void SetTitle(string fileName)
-        {
-            
+        {            
             Text = "Karaboss - " + Path.GetFileName(fileName);            
         }
 
@@ -177,7 +198,7 @@ namespace Karaboss
                 this.sequencer1.Chased += new System.EventHandler<Sanford.Multimedia.Midi.ChasedEventArgs>(this.HandleChased);
                 this.sequencer1.Stopped += new System.EventHandler<Sanford.Multimedia.Midi.StoppedEventArgs>(this.HandleStopped);
 
-                UpdateMidiTimes();                               
+                UpdateMidiTimes();                
 
                 TempoOrig = _tempo;
                 lblTempo.Text = string.Format("Tempo: {0} - BPM: {1}", _tempo, _bpm);
@@ -210,6 +231,7 @@ namespace Karaboss
             if (sequence1.Time != null)
                 _measurelen = sequence1.Time.Measure;
         }
+   
 
         /// <summary>
         /// Calculate BPM
@@ -249,40 +271,192 @@ namespace Karaboss
 
                 totaltimemeasures = nbmeasures * _measurelen;
 
+                #region positionHscrollBar
+                // Music Cursor position
+                positionHScrollBar.Left = pnlLeftPiano.Width;                
+                positionHScrollBar.Width = pnlPiano.Width - positionHScrollBar.Left;
                 positionHScrollBar.Maximum = totaltimemeasures + _measurelen;
                 positionHScrollBar.Minimum = _measurelen;
                 positionHScrollBar.TickStyle = TickStyle.TopLeft;
-                positionHScrollBar.ScaleDivisions = nbmeasures;
+
+                if (nbmeasures < 100)
+                    positionHScrollBar.ScaleDivisions = nbmeasures;
+                else
+                {
+                    int n = 2;
+                    while (!(nbmeasures % n == 0 && nbmeasures/n < 100))
+                    {
+                        n++;
+                        if (n >= nbmeasures)
+                            break;
+                    }
+                    if (n < nbmeasures)
+                        positionHScrollBar.ScaleDivisions = nbmeasures/n;
+                    else
+                        positionHScrollBar.ScaleDivisions = nbmeasures;
+                }
+
                 positionHScrollBar.TickDivide = _measurelen;
-                positionHScrollBar.SmallChange = (uint)nbmeasures;
-                positionHScrollBar.LargeChange = (uint)nbmeasures;
+                // Small change  = measurelen divided by resolution
+                positionHScrollBar.SmallChange = (uint)_measurelen/vPianoRollControl1.Resolution;
+                positionHScrollBar.LargeChange = (uint)_measurelen;
+
                 if (_measurelen > 0)
                     positionHScrollBar.MouseWheelBarPartitions = _measurelen;
 
                 #endregion
 
-                pianoControl1.Location = new Point(0, pnlRedPianoSep.Height);
-                pianoControl1.Orientation = Orientation.Horizontal;
-                pianoControl1.Size = new Size(pianoControl1.totalLength, pnlPiano.Height - pnlRedPianoSep.Height);
 
+                #region vScrollRoll
+
+                vScrollBar.Maximum = _totalTicks + 2 * _measurelen; 
+                vScrollBar.Minimum = _measurelen;
+                vScrollBar.SmallChange = _measurelen / vPianoRollControl1.Resolution;
+                vScrollBar.LargeChange = _measurelen;
+                vScrollBar.Value = _measurelen;
+
+                #endregion
+
+                #endregion
+
+
+                #region  middle
+                /*
+                vScrollbar = new VScrollBar()
+                {
+                    Parent = pnlScrollView,
+                    Top = 0,
+                    Left = pnlScrollView.Width - Width,
+                    Height = 200,
+                    Minimum = 0,
+                };
+                pnlScrollView.Controls.Add(vScrollBar);
+                vScrollBar.BringToFront();
+                vScrollBar.Dock = DockStyle.Right;
+                */
+
+
+                vPianoRollControl1.Dock = DockStyle.Fill;
+
+                #endregion
+
+
+                #region bottom
+
+                hScrollBar = new HScrollBar()
+                {
+                    Parent = pnlPiano,
+                    Top = 0,
+                    Left = 0,
+                    Minimum = 0,
+                };
+
+                pnlPiano.Controls.Add(hScrollBar);
+                hScrollBar.BringToFront();
+                hScrollBar.Dock = DockStyle.Bottom;
+
+
+                hScrollBar.Scroll += new ScrollEventHandler(hScrollBar_Scroll);
+                hScrollBar.ValueChanged += new EventHandler(hScrollBar_ValueChanged);
+
+                hScrollBar.Visible = false;
+                hScrollBar.Maximum = Math.Abs(pnlPiano.Width - pianoControl1.TotalLength);
+                hScrollBar.Minimum = 0;
+                hScrollBar.Value = hScrollBar.Minimum;
+
+                // Piano
+                pianoControl1.Left = 0;
+                pianoControl1.Top = pnlRedPianoSep.Height;
+
+                pnlPiano.Height = 167;           
+                pianoControl1.Orientation = Orientation.Horizontal;                
                 pianoControl1.PianoKeyDown += new EventHandler<PianoKeyEventArgs>(PianoControl1_PianoKeyDown);
                 pianoControl1.PianoKeyUp += new EventHandler<PianoKeyEventArgs>(PianoControl1_PianoKeyUp);
 
                 // Notes du piano
-                pianoControl1.LowNoteID = vPianoRollControl1.LowNoteID = 23;
+                pianoControl1.LowNoteID = vPianoRollControl1.LowNoteID = 21;  //23
                 pianoControl1.HighNoteID = vPianoRollControl1.HighNoteID = 108;
                 vPianoRollControl1.Sequence1 = sequence1;
                 vPianoRollControl1.zoomy = zoomy;
-                pianoControl1.zoom = zoomx;
+                pianoControl1.Zoom = zoomx;
+
+              
+                //pianoControl1.Width = pianoControl1.TotalLength;
+                pianoControl1.Height = pnlPiano.Height;
+
+              
+
                 vPianoRollControl1.xScale = pianoControl1.Scale;
                 vPianoRollControl1.OffsetChanged += new Sanford.Multimedia.Midi.VPianoRoll.OffsetChangedEventHandler(vPianoRollControl1_OffsetChanged);
+
+                #endregion
+
+                SetScrollBarValues();
+
             }
             catch (Exception ex)
             {
                 Console.Write(ex.Message);
             }
         }
-        
+
+
+        private void SetScrollBarValues()
+        {
+            if (pnlScrollView == null || vPianoRollControl1 == null)
+                return;
+
+            // Width of pianoRollControl
+            int W = vPianoRollControl1.totalWidth;
+            // Display width
+            int wMiddle = pnlScrollView.Width;
+
+            bool bShowHScrollBarIndetermined = false;
+
+            // If display width > pianoRollControl width => remove horizontal scrollbar
+            bShowHScrollBar = pianoControl1.TotalLength > pnlPiano.Width;
+
+
+            bool bShowVScrollBarIndetermined = false;
+
+            // If display height > pianoRollControl height => remove vertical scrollbar
+            if (vPianoRollControl1.maxStaffLength > pnlScrollView.Height)
+                bShowVScrollBar = true;
+            else if (vPianoRollControl1.maxStaffLength < pnlScrollView.Height)
+                bShowVScrollBar = false;
+            else
+                bShowVScrollBarIndetermined = true;
+
+
+            vScrollBar.Visible = bShowVScrollBar;
+            if (hScrollBar != null)
+                hScrollBar.Visible = bShowHScrollBar;
+
+            if (hScrollBar!= null &&  hScrollBar.Visible)
+            {
+                hScrollBar.SmallChange = pianoControl1.Width / 20;
+                hScrollBar.LargeChange = pianoControl1.Width / 10;                
+                hScrollBar.Maximum = pianoControl1.Width - pnlPiano.Width + hScrollBar.LargeChange;
+
+                pianoControl1.Height = pnlPiano.Height - pnlRedPianoSep.Height- hScrollBar.Height;
+                
+                // Offset
+                pianoControl1.Left = pnlLeftPiano.Width - hScrollBar.Value;                                
+                vPianoRollControl1.OffsetX = -hScrollBar.Value;
+                
+            }
+            else
+            {
+                pianoControl1.Height = pnlPiano.Height - pnlRedPianoSep.Height;
+                
+                // Offset
+                pianoControl1.Left = pnlLeftPiano.Width;                                
+                vPianoRollControl1.OffsetX = 0;
+            }
+
+            pianoControl1.Refresh();
+        }
+
         #endregion
 
 
@@ -291,13 +465,13 @@ namespace Karaboss
         private void BtnPlay_Click(object sender, EventArgs e)
         {
             PlayPauseMusic();
-            BtnPlay.Parent.Focus();
+            //BtnPlay1.Parent.Focus();
         }
 
         private void BtnStop_Click(object sender, EventArgs e)
         {
             StopMusic();
-            BtnStop.Parent.Focus();
+            //BtnStop1.Parent.Focus();
         }
 
         /// <summary>
@@ -315,29 +489,36 @@ namespace Karaboss
             switch (PlayerState)
             {
                 case PlayerStates.Playing:
-                    BtnPlay.Image = Properties.Resources.Media_Controls_Play_icon;                    
+                    BtnPlay.Image = Properties.Resources.btn_green_play;
+                    BtnStop.Image = Properties.Resources.btn_black_stop;
                     BtnPlay.Enabled = true;  // to allow pause
                     BtnStop.Enabled = true;  // to allow stop 
                     
                     break;
 
                 case PlayerStates.Paused:
-                    BtnPlay.Image = Properties.Resources.Media_Controls_Pause_icon;
+                    BtnPlay.Image = Properties.Resources.btn_red_pause;
                     BtnPlay.Enabled = true;  // to allow play
                     BtnStop.Enabled = true;  // to allow stop
                     break;
 
                 case PlayerStates.Stopped:
-                    BtnPlay.Image = Properties.Resources.Media_Controls_Play_icon;
+                    BtnPlay.Image = Properties.Resources.btn_black_play;
                     BtnPlay.Enabled = true;   // to allow play
                     if (newstart == 0)
                     {
-                        //btnStop.Image = Properties.Resources.btn_red_stop;
+                        BtnStop.Image = Properties.Resources.btn_red_stop;
                     }
                     else
                         BtnStop.Enabled = true;   // to enable real stop because stop point not at the beginning of the song 
                     break;
-               
+
+                case PlayerStates.WaitingPaused:
+                    BtnPlay.Image = Properties.Resources.btn_red_pause;
+                    BtnPlay.Enabled = true;  // to allow play
+                    BtnStop.Enabled = true;   // to allow stop
+                    break;
+
                 default:
                     break;
             }
@@ -418,7 +599,9 @@ namespace Karaboss
                     {
                         pianoControl1.Reset();
                         positionHScrollBar.Value = newstart + positionHScrollBar.Minimum;
+                        vScrollBar.Value = (int)positionHScrollBar.Value;
                         vPianoRollControl1.OffsetY = Convert.ToInt32(newstart * vPianoRollControl1.yScale);
+                        // left key was hit one time
                         nbstop = 1;
                     }
                 }
@@ -441,7 +624,8 @@ namespace Karaboss
         {
             // Buttons play & stop 
             BtnStatus();
-            //sheetmusic.BPlaying = false;
+
+            pianoControl1.Reset();
 
             // Stopped to begining of score
             if (newstart <= 0)
@@ -449,8 +633,8 @@ namespace Karaboss
                 DisplayTimeElapse(0);
 
                 positionHScrollBar.Value = positionHScrollBar.Minimum;
+                vScrollBar.Value = vScrollBar.Minimum;
                 vPianoRollControl1.OffsetY = 0;
-                pianoControl1.Reset();              
                 laststart = 0;              
             }
             else
@@ -460,6 +644,93 @@ namespace Karaboss
         }
 
         #endregion
+
+
+        #region hScrollBar
+
+        private void hScrollBar_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (e.Type == ScrollEventType.EndScroll)
+            {                                
+                // Offset
+                pianoControl1.Left = pnlLeftPiano.Width - hScrollBar.Value;               
+                vPianoRollControl1.OffsetX = -hScrollBar.Value;
+
+                pnlLeftPiano.BringToFront();
+                hScrollBar.BringToFront();
+                pnlRedPianoSep.BringToFront();
+
+            }
+        }
+
+
+        private void hScrollBar_ValueChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        #endregion
+
+
+        #region positionHScrollBar
+
+        private void positionHScrollBar_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (e.Type == ScrollEventType.EndScroll)
+            {
+                switch (PlayerState)
+                {
+                    case PlayerStates.Playing:
+                        sequencer1.Position = e.NewValue - (int)positionHScrollBar.Minimum;
+                        break;
+                    case PlayerStates.Paused:
+                        newstart = e.NewValue - (int)positionHScrollBar.Minimum;
+                        sequencer1.Position = newstart;
+                        vPianoRollControl1.OffsetY = Convert.ToInt32(newstart * vPianoRollControl1.yScale);
+                        nbstop = 0;
+
+                        break;
+                    case PlayerStates.Stopped:
+                        newstart = e.NewValue - (int)positionHScrollBar.Minimum;
+                        vPianoRollControl1.OffsetY = Convert.ToInt32(newstart * vPianoRollControl1.yScale);
+                        nbstop = 0;
+
+                        break;
+                }
+                positionHScrollBar.Parent.Focus();
+                scrolling = false;
+            }
+            else
+            {
+                scrolling = true;
+            }
+        }
+
+        private void positionHScrollBar_ValueChanged(object sender, EventArgs e)
+        {
+            if (scrolling) return;
+
+            switch (PlayerState)
+            {
+                case PlayerStates.Playing:
+                    break;
+                case PlayerStates.Paused:
+                    break;
+                case PlayerStates.Stopped:
+                    newstart = (int)(positionHScrollBar.Value - positionHScrollBar.Minimum);
+                    vPianoRollControl1.OffsetY = Convert.ToInt32(newstart * vPianoRollControl1.yScale);
+
+                    if (positionHScrollBar.Value < vScrollBar.Maximum)
+                        vScrollBar.Value = (int)positionHScrollBar.Value;
+
+                    double dpercent = 100 * newstart / (double)_totalTicks;
+                    DisplayTimeElapse(dpercent);
+                    break;
+            }
+        }
+
+        #endregion
+
 
         #region handle messages
 
@@ -490,8 +761,9 @@ namespace Karaboss
         private void HandleLoadCompleted(object sender, AsyncCompletedEventArgs e)
         {            
             LoadSequencer(sequence1);
+            // Draw controls needs informations from the sequence
             DrawControls();
-            
+            InitCbTracks();
         }
 
         /// <summary>
@@ -517,56 +789,6 @@ namespace Karaboss
         }
 
 
-        private void positionHScrollBar_Scroll(object sender, ScrollEventArgs e)
-        {
-            if (e.Type == ScrollEventType.EndScroll)
-            {
-                switch (PlayerState)
-                {
-                    case PlayerStates.Playing:
-                        sequencer1.Position = e.NewValue - (int)positionHScrollBar.Minimum;
-                        break;
-                    case PlayerStates.Paused:
-                        sequencer1.Position = e.NewValue - (int)positionHScrollBar.Minimum;
-                        vPianoRollControl1.OffsetY = Convert.ToInt32((e.NewValue - (int)positionHScrollBar.Minimum) * vPianoRollControl1.yScale);
-                        nbstop = 0;
-                        newstart = e.NewValue - (int)positionHScrollBar.Minimum;
-                        break;
-                    case PlayerStates.Stopped:
-                        vPianoRollControl1.OffsetY = Convert.ToInt32((e.NewValue - (int)positionHScrollBar.Minimum) * vPianoRollControl1.yScale);
-                        nbstop = 0;
-                        newstart = e.NewValue - (int)positionHScrollBar.Minimum;
-                        break;
-                }
-                positionHScrollBar.Parent.Focus();
-                scrolling = false;
-            }
-            else
-            {
-                scrolling = true;
-            }
-        }
-
-        private void positionHScrollBar_ValueChanged(object sender, EventArgs e)
-        {
-            if (scrolling) return;
-
-            switch (PlayerState)
-            {
-                case PlayerStates.Playing:                    
-                    break;
-                case PlayerStates.Paused:
-                    break;
-                case PlayerStates.Stopped:
-                    vPianoRollControl1.OffsetY = Convert.ToInt32((int)(positionHScrollBar.Value - positionHScrollBar.Minimum) * vPianoRollControl1.yScale);
-                    newstart = (int)(positionHScrollBar.Value - positionHScrollBar.Minimum);
-                    double dpercent = 100 * newstart / (double)_totalTicks;
-                    DisplayTimeElapse(dpercent);
-
-                    break;
-            }
-        }
-
         /// <summary>
         /// Event: playing midi file completed
         /// </summary>
@@ -580,12 +802,23 @@ namespace Karaboss
 
         private void HandleChannelMessagePlayed(object sender, ChannelMessageEventArgs e)
         {
+            #region Guard
             if (closing)
             {
                 return;
             }
-            outDevice.Send(e.Message);
-            pianoControl1.Send(e.Message);
+            #endregion
+            
+            if (bAlltracks)
+            {
+                outDevice.Send(e.Message);
+                pianoControl1.Send(e.Message);
+            } 
+            else if (e.Message.MidiChannel == SingleTrackChannel)
+            { 
+                outDevice.Send(e.Message);
+                pianoControl1.Send(e.Message);                
+            }
         }
 
         private void HandleChased(object sender, ChasedEventArgs e)
@@ -667,10 +900,20 @@ namespace Karaboss
                     int newvalue = Convert.ToInt32((value / vPianoRollControl1.yScale)) + (int)positionHScrollBar.Minimum;
                     if (newvalue > positionHScrollBar.Maximum) newvalue = (int)positionHScrollBar.Maximum;
                     positionHScrollBar.Value = newvalue;
-                    newstart = (int)(positionHScrollBar.Value - positionHScrollBar.Minimum); 
+                    vScrollBar.Value = newvalue;
+                    newstart = (int)(positionHScrollBar.Value - positionHScrollBar.Minimum);
                     break;
             }
         }
+
+
+        private void vPianoRollControl1_MouseMove(object sender, int note, MouseEventArgs e)
+        {       
+            pianoControl1.ResetIsOver(note);
+            pianoControl1.IsOverPianoKey(note);
+        }
+
+ 
 
         #endregion
 
@@ -679,11 +922,30 @@ namespace Karaboss
 
         private void FrmPianoTraining_MouseWheel(object sender, MouseEventArgs e)
         {
-            Point PpianoRoll = pnlScrollView.PointToClient(Cursor.Position);            
+
+            Point PpianoRoll = pnlScrollView.PointToClient(Cursor.Position);
+            Point Ppiano = pnlPiano.PointToClient(Cursor.Position);
+                       
             Rectangle rectPianoRoll = new Rectangle(0, 0, pnlScrollView.Width, pnlScrollView.Height);
-            
-            if (rectPianoRoll.Contains(PpianoRoll))
+            Rectangle rectPiano = new Rectangle(0, 0, pnlPiano.Width, pnlPiano.Height);
+
+            if (rectPiano.Contains(Ppiano))
             {
+                // If Mouse over piano                
+
+                zoomx = pianoControl1.Zoom;
+                zoomx += (e.Delta > 0 ? 0.1f : -0.1f);
+                
+                pianoControl1.Zoom = zoomx;
+                vPianoRollControl1.xScale = pianoControl1.Scale;
+                
+                // Adjust scrollbars values
+                SetScrollBarValues();
+
+            }
+            else if (rectPianoRoll.Contains(PpianoRoll))
+            {
+                // if mouse over piano roll
                 switch (PlayerState)
                 {
                     case PlayerStates.Playing:
@@ -692,7 +954,8 @@ namespace Karaboss
                         break;
                     case PlayerStates.Stopped:                        
                         int v = e.Delta / 120 * (int)(positionHScrollBar.Maximum - positionHScrollBar.Minimum) / positionHScrollBar.MouseWheelBarPartitions;
-                        positionHScrollBar.Value = SetProperValue((int)positionHScrollBar.Value + v);                                                
+                        positionHScrollBar.Value = SetProperValue((int)positionHScrollBar.Value + v);
+                        vScrollBar.Value = (int)positionHScrollBar.Value;                        
                         break;
                 }
             }
@@ -788,8 +1051,33 @@ namespace Karaboss
         
 
         private void frmPianoTraining_Resize(object sender, EventArgs e)
-        {
-            positionHScrollBar.Width = pnlTop.Width - positionHScrollBar.Left - 40;
+        {            
+            this.VerticalScroll.Visible = false;
+                                      
+            // Music Cursor position
+            positionHScrollBar.Width = pnlPiano.Width - positionHScrollBar.Left; 
+
+
+            int l = CbTracks.Left + CbTracks.Width + 20; //pnlDisplay.Left + pnlDisplay.Width + 20;
+            if (l < ClientSize.Width/2)
+                BtnPlay.Left = ClientSize.Width/2;
+            else
+                BtnPlay.Left = l;
+
+            BtnStop.Left = BtnPlay.Left + BtnPlay.Width + 3;
+
+
+            BtnPlusX.Left = pnlRight.Left - BtnPlusX.Width;
+            BtnMinusX.Left = BtnPlusX.Left - BtnMinusX.Width + 1;
+
+            BtnMinusY.Left = 0;
+            BtnPlusY.Left = 0;
+
+            BtnMinusY.Top = pnlRight.Height - BtnMinusY.Height;
+            BtnPlusY.Top = BtnMinusY.Top - BtnPlusY.Height + 1;
+
+
+            SetScrollBarValues();
         }
 
         /// <summary>
@@ -945,8 +1233,171 @@ namespace Karaboss
         }
 
 
+
         #endregion
 
-       
+
+        #region CbTrack
+
+        private void InitCbTracks()
+        {
+            int i = 1;
+            string N;
+            CbTracks.Items.Clear();
+            CbTracks.Items.Add("All tracks");
+            foreach (Track trk in sequence1.tracks)
+            {
+                N = "<NoName>";
+                if (trk.Name != null)
+                {                    
+                    if (trk.Name.Trim() != "")
+                        N = trk.Name.Trim();
+                }
+                CbTracks.Items.Add( i.ToString("00") + " " + "[" + trk.MidiChannel.ToString("00") + "]" + " - " + N + " - " + "(" + MidiFile.PCtoInstrument(trk.ProgramChange) + ")");
+                i++;
+            }
+
+            CbTracks.SelectedIndex = 0;
+        }
+
+        private void CbTracks_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (vPianoRollControl1 == null)
+                return;
+
+            sequencer1.AllSoundOff();
+            pianoControl1.Reset();
+
+            tracknum = CbTracks.SelectedIndex;
+
+            // All track
+            if (tracknum == 0)
+            {
+                // All tracks                      
+                SingleTrack = null;
+                SingleTrackNumber = -1;
+                tracknum = -1;
+                SingleTrackChannel = -1;
+                bAlltracks = true;
+            }
+            else
+            {
+                // One track
+                if (tracknum > 0)
+                {
+                    tracknum = tracknum - 1;
+                    SingleTrack = sequence1.tracks[tracknum];
+                    SingleTrackNumber = tracknum;
+                    SingleTrackChannel = SingleTrack.MidiChannel;
+                    bAlltracks = false;
+                }
+            }
+            
+            // Track pour pianoRoll
+            if (tracknum != -1)
+            {
+                vPianoRollControl1.TrackNum = tracknum;                
+            }
+            else
+            {
+                vPianoRollControl1.TrackNum = -1;
+            }
+            CbTracks.Parent.Focus();
+        }
+
+        #endregion
+
+
+        #region trackbar             
+
+        private void vScrollBarRoll_ValueChanged(object sender, EventArgs e)
+        {
+            if (vScrollBar.Value > positionHScrollBar.Maximum)
+                vScrollBar.Value = (int)positionHScrollBar.Maximum;
+            
+            positionHScrollBar.Value = vScrollBar.Value;
+        }
+
+        private void vScrollBarRoll_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (e.Type == ScrollEventType.EndScroll)
+            {
+                if (vScrollBar.Value > positionHScrollBar.Maximum)
+                    vScrollBar.Value = (int)positionHScrollBar.Maximum;
+
+                positionHScrollBar.Value = vScrollBar.Value;
+            }
+        }
+
+
+
+        #endregion
+
+
+        #region boutons
+        private void BtnPlusX_Click(object sender, EventArgs e)
+        {
+            zoomx += 0.1f;
+            
+            pianoControl1.Zoom = zoomx;
+            vPianoRollControl1.xScale = pianoControl1.Scale;
+
+            SetScrollBarValues();
+        }
+
+        private void BtnMinusX_Click(object sender, EventArgs e)
+        {
+            zoomx -= 0.1f;
+            pianoControl1.Zoom = zoomx;
+            vPianoRollControl1.xScale = pianoControl1.Scale;
+
+            SetScrollBarValues();
+        }
+
+        private void BtnPlusY_Click(object sender, EventArgs e)
+        {
+            zoomy += 0.4f;
+            vPianoRollControl1.zoomy = zoomy;
+        }
+
+        private void BtnMinusY_Click(object sender, EventArgs e)
+        {
+            zoomy -= 0.2f;
+            vPianoRollControl1.zoomy = zoomy;
+        }
+
+        private void BtnPlay_MouseHover(object sender, EventArgs e)
+        {
+            if (PlayerState == PlayerStates.Stopped)
+                BtnPlay.Image = Properties.Resources.btn_blue_play;
+            else if (PlayerState == PlayerStates.Paused)
+                BtnPlay.Image = Properties.Resources.btn_blue_pause;
+            else if (PlayerState == PlayerStates.Playing)
+                BtnPlay.Image = Properties.Resources.btn_blue_play;
+
+        }
+
+        private void BtnPlay_MouseLeave(object sender, EventArgs e)
+        {
+            if (PlayerState == PlayerStates.Stopped)
+                BtnPlay.Image = Properties.Resources.btn_black_play;
+            else if (PlayerState == PlayerStates.Paused)
+                BtnPlay.Image = Properties.Resources.btn_red_pause;
+            else if (PlayerState == PlayerStates.Playing)
+                BtnPlay.Image = Properties.Resources.btn_green_play;
+        }
+
+        private void BtnStop_MouseHover(object sender, EventArgs e)
+        {
+            if (PlayerState == PlayerStates.Playing || PlayerState == PlayerStates.Paused)
+                BtnStop.Image = Properties.Resources.btn_blue_stop;
+        }
+
+        private void BtnStop_MouseLeave(object sender, EventArgs e)
+        {
+            BtnStop.Image = Properties.Resources.btn_black_stop;
+        }
+
+        #endregion
     }
 }

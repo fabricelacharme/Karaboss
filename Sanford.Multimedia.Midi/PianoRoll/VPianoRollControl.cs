@@ -41,13 +41,18 @@ using System.Windows.Forms;
 namespace Sanford.Multimedia.Midi.VPianoRoll
 {
 
-    public delegate void OffsetChangedEventHandler(object sender,  int value);
+    public delegate void OffsetChangedEventHandler(object sender,  int value);    
+    public delegate void MouseMoveEventHandler(object sender, int note, MouseEventArgs e);
+    
 
     public partial class VPianoRollControl : Control
     {
-
+        #region events
         public event OffsetChangedEventHandler OffsetChanged;
-        
+        public event MouseMoveEventHandler OnMouseMoved;
+
+        #endregion
+
         /// <summary>
         /// Double buffer panel
         /// </summary>
@@ -60,12 +65,31 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                      System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
                      System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
                      true);
+                BackColor = Color.Gray;
             }
         }
-        MyPanel pnlCanvas;
+
+        public Point CurrentPoint;
 
 
         #region properties
+
+        private int _TimeLineWidth = 40;
+        public int TimeLineX
+        {
+            get
+            {
+                return _TimeLineWidth;
+            }
+            set
+            {
+                if (value > 0 && value != _TimeLineWidth)
+                {
+                    _TimeLineWidth = value;
+                    pnlCanvas.Invalidate();
+                }
+            }
+        }
 
         private int lowNoteID = DefaultLowNoteID;
         /// <summary>
@@ -102,13 +126,13 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
         }
     
 
-        private int totalwidth;
+        private int _totalwidth;
         /// <summary>
         /// Gets Width of control
         /// </summary>
         public int totalWidth
         {
-            get { return totalwidth; }
+            get { return _totalwidth; }
         }
 
         private float _zoomy = 1.0f;    // zoom for vertical
@@ -126,7 +150,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             {
                 if (sequence1 != null && sequence1.Time != null)
                 {
-                    yscale = (value * 20.0 / sequence1.Time.Quarter);
+                    _yscale = (value * 20.0 / sequence1.Time.Quarter);
                     lastPosition = sequence1.GetLength();
                     //Entier immédiatement suppérieur au nombre à virgule flottante
                     int nbmeasures = Convert.ToInt32(Math.Ceiling(lastPosition / sequence1.Time.Measure));
@@ -134,40 +158,27 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                     lastPosition = 4 * ((float)sequence1.Numerator / sequence1.Denominator) * nbmeasures;
                     lastPosition = lastPosition * sequence1.Division;
 
-                    if ((int)(lastPosition * yscale) > 50)
+                    if ((int)(lastPosition * _yscale) > 50)
                     {
                         _zoomy = value;
-                        yscale = (_zoomy * 20.0 / sequence1.Time.Quarter);
-                        maxstafflength = (int)(lastPosition * yscale);
+                        _yscale = (_zoomy * 20.0 / sequence1.Time.Quarter);
+                        maxstafflength = (int)(lastPosition * _yscale);
                         pnlCanvas.Invalidate();
                     }
                 }
             }
         }
 
-        private double xscale = 1.0 / 10;
+        private double _xscale = 1.0 / 10;
         /// <summary>
         /// Gets horizontal unit
         /// </summary>
         public double xScale {
-            get { return xscale; }
-            set { xscale = value; }
-        }
-
-        private double yscale = 1.0 / 10;
-        /// <summary>
-        /// Gets or sets vertical unit
-        /// </summary>
-        public double yScale
-        {
-            get
-            {
-                return yscale;
-            }
-            set
-            {
-                yscale = value;
-                if (sequence1 != null && keysNumber > 0 && yscale > 0)
+            get { return _xscale; }
+            set 
+            { 
+                _xscale = value;
+                if (sequence1 != null && keysNumber > 0 && _yscale > 0)
                 {
                     // Width of control must be a multiple of measures
                     lastPosition = sequence1.GetLength();
@@ -178,8 +189,38 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                     lastPosition = lastPosition * sequence1.Division;
 
                     // a quarter note is 20 units wide
-                    yscale = (_zoomy * 20.0 / sequence1.Time.Quarter);
-                    maxstafflength = (int)(lastPosition * yscale);
+                    _yscale = (_zoomy * 20.0 / sequence1.Time.Quarter);
+                    maxstafflength = (int)(lastPosition * _yscale);
+
+                    pnlCanvas.Invalidate();
+                }
+
+            }
+        }
+
+        private double _yscale = 1.0 / 10;
+        /// <summary>
+        /// Gets or sets vertical unit
+        /// </summary>
+        public double yScale
+        {
+            get { return _yscale; }
+            set
+            {
+                _yscale = value;
+                if (sequence1 != null && keysNumber > 0 && _yscale > 0)
+                {
+                    // Width of control must be a multiple of measures
+                    lastPosition = sequence1.GetLength();
+                    //Entier immédiatement suppérieur au nombre à virgule flottante
+                    int nbmeasures = Convert.ToInt32(Math.Ceiling(lastPosition / sequence1.Time.Measure));
+
+                    lastPosition = 4 * ((float)sequence1.Numerator / sequence1.Denominator) * nbmeasures;
+                    lastPosition = lastPosition * sequence1.Division;
+
+                    // a quarter note is 20 units wide
+                    _yscale = (_zoomy * 20.0 / sequence1.Time.Quarter);
+                    maxstafflength = (int)(lastPosition * _yscale);
 
                     pnlCanvas.Invalidate();
                 }
@@ -254,24 +295,44 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                     pnlCanvas.Invalidate();
                 }
             }
-        } 
+        }
 
-        private int offsety = 0;
+        private int _offsetx = 0;
+
+        public int OffsetX
+        {
+            get { return _offsetx; }
+            set 
+            {
+                if (value != _offsetx)
+                {
+                    _offsetx = value;
+                    pnlCanvas.Invalidate();
+                }
+            }
+        }
+
+
+        private int _offsety = 0;
         /// <summary>
         /// Gets or sets horizontal offset
         /// </summary>
         public int OffsetY
         {
-            get { return offsety; }
+            get { return _offsety; }
             set
             {
-                if (value != offsety)
+                if (value != _offsety)
                 {
-                    offsety = value;
+                    _offsety = value;
+                    if (OffsetChanged != null)
+                        OffsetChanged(this, _offsety);
                     pnlCanvas.Invalidate();
                 }
             }
         }
+
+
 
         private int maxstafflength;
         /// <summary>
@@ -284,12 +345,11 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
         }
     
         #endregion properties
-
-        public Point CurrentPoint;
-        
-
+                
 
         #region private
+
+        private MyPanel pnlCanvas;
 
         // Notes : MIDI maxi = 0 to 127 (C0 to G9)
         // Not all 128 notes taken : 23 to 108 = 86 notes
@@ -298,42 +358,33 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
 
         private int measurelen = 0;
         private int keysNumber;
-        //private int curTrack = 0;
         private float lastPosition = 0;
         private Track track1;
         private int channel;        
         
-        //private MidiNote note;
-        //private MidiNote originNote;
-
         private Point aPos;
         private bool bMoveScore;
-       // private int MoveScoreDirection;
         private Point previousPosition;
         private int previousDelta;
-        //private Panel TimeVLine;
-
-        #endregion
-
 
         private static readonly string[] NotesTable =
         {
             "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "B#"
         };
 
-        //private ContextMenu prContextMenu;
+        #endregion
+        
 
         public VPianoRollControl()
-        {
-            
+        {            
             _zoomy = 1.0f;   // valeur de zoom
             resolution = 4;  // 4 incréments par noire
-            channel = 0;
+            channel = 0;    
 
-            pnlCanvas = new MyPanel();
+            pnlCanvas = new MyPanel();                        
             pnlCanvas.Location = new Point(0, 0);
-            pnlCanvas.Size = new Size(40, 40);
-            pnlCanvas.BackColor = Color.White;
+            pnlCanvas.Size = new Size(40, 80);
+            //pnlCanvas.BackColor = Color.White;
             pnlCanvas.Dock = DockStyle.Fill;
 
             pnlCanvas.Paint += new PaintEventHandler(pnlCanvas_Paint);
@@ -353,13 +404,8 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             keysNumber = 1 + highNoteID - lowNoteID; // 128 or less               
         }
 
-      
 
-        public void Redraw()
-        {
-            pnlCanvas.Invalidate();
-        }
-
+        #region draw notes
 
         /// <summary>
         /// Draw all notes visible in the clip
@@ -379,8 +425,8 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                 for (int i = 0; i < track1.Notes.Count; i++)
                 {
                     MidiNote nnote = track1.Notes[i];
-                    Y = (int)(PH - nnote.StartTime * yscale);
-                    H = (int)(nnote.Duration * yscale);
+                    Y = (int)(PH - nnote.StartTime * _yscale);
+                    H = (int)(nnote.Duration * _yscale);
 
                     // draw note if note ends after begining of clip and if note begins before end of clip
                     if (Y + H >= clip.Y && (Y - H) <= clip.Y + clip.Height)
@@ -399,8 +445,8 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                     for (int i = 0; i < track.Notes.Count; i++)
                     {
                         MidiNote nnote = track.Notes[i];
-                        Y = (int)(PH - nnote.StartTime * yscale);
-                        H = (int)(nnote.Duration * yscale);
+                        Y = (int)(PH - nnote.StartTime * _yscale);
+                        H = (int)(nnote.Duration * _yscale);
                         // draw note if note ends before begining of clip and if note begins before end of clip
                         if (Y + H >= clip.Y && (Y - H) <= clip.Y + clip.Height)
                             MakeNoteRectangle(g, nnote.Number, nnote.StartTime, nnote.Duration, nnote.Channel);
@@ -425,11 +471,11 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             Pen StrokePen;
             int PH = pnlCanvas.Height;
 
-            int X = (int)((noteNumber - lowNoteID) * xscale);           // X = notenumber - 23 (graves à gauche aigues à droite)                      
-            int Y = (int)(PH - (startTime + duration) * yscale);     // hauteur - starttime            
+            int X = TimeLineX + (int)((noteNumber - lowNoteID) * _xscale) + _offsetx;           // X = notenumber - 23 (graves à gauche aigues à droite)                      
+            int Y = (int)(PH - (startTime + duration) * _yscale);     // hauteur - starttime            
 
-            int W = (int)xscale;
-            int H = (int)(duration * yscale);
+            int W = (int)_xscale;
+            int H = (int)(duration * _yscale);
             
             Rectangle rectn = new Rectangle(X, Y, W, H);
                       
@@ -437,7 +483,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             {
                 StrokePen = new Pen(Color.DarkGreen, 2);
                 FillBrush = new SolidBrush(Color.LightGreen);
-                duration = sequence1.Time.Quarter / 4;
+                //duration = sequence1.Time.Quarter / 4;
             }
             else
             {
@@ -512,9 +558,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             }
 
             rect = new Rectangle(X, Y, W, H);
-
-            //g.DrawRectangle(StrokePen, X, Y, W, H);
-            //g.FillRectangle(FillBrush, rect);
+            
             // Draw rectangles with rounded corners
             RectRoutines.DrawRoundedRectangle(g, StrokePen, rect, 5);
             RectRoutines.FillRoundedRectangle(g, FillBrush, rect, 5);
@@ -524,8 +568,18 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             StrokePen.Dispose();
         }
 
+        #endregion
 
-        #region Canvas
+
+        #region draw Canvas
+
+        /// <summary>
+        /// Redraw Canvas
+        /// </summary>
+        public void Redraw()
+        {
+            pnlCanvas.Invalidate();
+        }
 
         // The NoteBackgroundCanvas is used for drawing the horizontal lines that divide each of the 128 MIDI notes.
         // We will also shade the lines that represent "black notes" on the piano slightly. 
@@ -537,31 +591,30 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             Pen FillPen;
 
             Rectangle rect;
+            Point p1;
+            Point p2;
 
-            Color blackKeysColor = Color.DimGray;
-            Color whiteKeysColor = Color.Gray;
+            Color TimeLineColor = System.Drawing.ColorTranslator.FromHtml("#FF313131");
+            Color blackKeysColor = System.Drawing.ColorTranslator.FromHtml("#FF313131");
+            Color whiteKeysColor = System.Drawing.ColorTranslator.FromHtml("#FF3b3b3b");
 
-            blackKeysColor = System.Drawing.ColorTranslator.FromHtml("#FF313131");
-            whiteKeysColor = System.Drawing.ColorTranslator.FromHtml("#FF3b3b3b");
             Pen SeparatorPen = new Pen(blackKeysColor, 1);
-            Pen GroupNotesPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF676767"), 1);
+            Pen GroupNotesPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF676767"), 1);            
 
-            int w = 0;
+            int w = _TimeLineWidth;  // bande verticale à gauche pour afficher les mesures et intervalles
             int H = 0; // Length of scores
             int W = 0; 
-            //if (clip.Height > maxstafflength)
-            //    H = maxstafflength;
-            //else
-                H = clip.Height;
             
-            totalwidth = (int)((1 + highNoteID - lowNoteID) * xscale);
+            H = clip.Height;
+            
+            _totalwidth = (int)((1 + highNoteID - lowNoteID) * _xscale);
 
             // ==========================
-            // Backgroud color : grey
+            // Draw Background color : grey
             // ==========================            
             FillPen = new Pen(whiteKeysColor);
-            g.DrawRectangle(FillPen, clip.X, clip.Y, totalwidth, H);
-            rect = new Rectangle(clip.X, clip.Y, totalwidth, H);
+            g.DrawRectangle(FillPen, clip.X + w, clip.Y, _totalwidth, H);
+            rect = new Rectangle(clip.X + w, clip.Y, _totalwidth, H);
             FillBrush = new SolidBrush(whiteKeysColor);
             g.FillRectangle(FillBrush, rect);
 
@@ -581,29 +634,29 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
                     FillBrush = new SolidBrush(blackKeysColor);
                     FillPen = new Pen(blackKeysColor);
 
-                    W = (int)xscale;
+                    W = (int)_xscale;
 
                     g.DrawRectangle(FillPen, w, clip.Y, W, H);
                     rect = new Rectangle(w, clip.Y, W, H);
                     g.FillRectangle(FillBrush, rect);                    
                 }
-                w += (int)xscale;
+                w += (int)_xscale;
             }
 
 
             // =================================
-            // Draw vertical lines each xscale
+            // Draw vertical lines each _xscale
             // =================================
-            w = 0;
+            w = _TimeLineWidth;
 
             for (int note = highNoteID; note >= lowNoteID; note--)
             {
-                w += (int)xscale;
+                w += (int)_xscale;
 
                 if (w >= clip.X && w <= clip.X + clip.Width)
                 {
-                    Point p1 = new Point(w, clip.Y);
-                    Point p2 = new Point(w, H);
+                    p1 = new Point(w, clip.Y);
+                    p2 = new Point(w, H);
 
                     g.DrawLine(SeparatorPen, p1, p2);
                 }
@@ -613,19 +666,19 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             // Draw vertical lines to separate groups of notes 
             // C, D, E - F G A B
             // ==================================================
-            w = 0;
+            w = _TimeLineWidth;
 
             for (int note = highNoteID; note >= lowNoteID; note--)
             {
-                w += (int)xscale;
+                w += (int)_xscale;
 
                 if ((note % 12 == 0) // C
                 || (note % 12 == 7)) // F      devrait être 5 car en fait 7 c'est G ?????
                 {
                     if (w >= clip.X && w <= clip.X + clip.Width)
                     {
-                        Point p1 = new Point(w, clip.Y);
-                        Point p2 = new Point(w, H);
+                        p1 = new Point(w, clip.Y);
+                        p2 = new Point(w, H);
 
                         g.DrawLine(GroupNotesPen, p1, p2);
                     }
@@ -634,73 +687,210 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
         }
 
         // On top of the background canvas comes the GridCanvas. 
-        // This contains the vertical lines showing where each measure and beat start.
+        // This contains the horizontal lines showing where each measure and beat start.
         // We can't draw this until we have loaded the MIDI events because we need to know how many MIDI ticks are in each quarter note,
         // and also we need to know how many grid lines to draw. 
         // Here is the code that draws the grid.
         private void DrawGrid(Graphics g, Rectangle clip)
         {
-            int beat = 0;
-            int timespermeasure = (4 * sequence1.Numerator) / sequence1.Denominator; // 4 si 4/4, 6 si 3/2, 8 si 4/2
+            int step = 0;           
+            int w = _TimeLineWidth;  // bande verticale à gauche pour afficher les mesures et intervalles            
 
+            int timespermeasure = sequence1.Numerator;             // nombre de beats par mesures
+            float TimeUnit = Sequence1.Denominator;            // 2 = blanche, 4 = noire, 8 = croche, 16 = doucle croche, 32 triple croche
+
+            Pen TicksPen = new Pen(Color.White);
             Pen mesureSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF676767"), 1);
             Pen beatSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF585858"), 1);
             Pen intervalSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF464646"), 1);
 
-            int quarter = sequence1.Time.Quarter; // noire            
+            // quarter = durée d'une noire
+            int quarter = sequence1.Time.Quarter;
+            
+            float f_n = 0;                       
+            
+            // Increment of 1 TimeUnit, divided by the resolution, in ticks
+            float f_beat = (float)quarter * 4 / TimeUnit;       
+            float f_increment = f_beat / resolution;
 
-            float f_n = 0;
-            float f_increment = (float)quarter / (float)resolution;     // (1/resolution) de noire - par exemple 1/4 = 4 doubles croches => 960/4 = 240 ticks
-
-            totalwidth = (int)((1 + highNoteID - lowNoteID) * xscale);
+            _totalwidth = w + (int)((1 + highNoteID - lowNoteID) * _xscale);
             int PH = pnlCanvas.Height;
-
-            // Measure number display
-            int nbMeasure = 0;
-            SolidBrush textBrush = new SolidBrush(Color.DimGray);
-            Font fontNoteLetter = new Font("Arial", 20, FontStyle.Regular, GraphicsUnit.Pixel);
-
+            
+            SolidBrush textBrush = new SolidBrush(Color.White);
+            
             do
             {
-                int y1 = PH - (int)(f_n * yscale);
+                int y1 = PH - (int)(f_n * _yscale);
                 int y2 = y1;
-                int x1 = 0;
-                int x2 = totalwidth;
+                int x1 = w;
+                int x2 = _totalwidth;
 
                 if (y1 >= clip.Y && y1 <= clip.Y + clip.Height)
                 {
                     Point p1 = new Point(x1, y1);
                     Point p2 = new Point(x2, y2);
 
-                    if (beat % (resolution * timespermeasure) == 0)        // every measure
-                    {
+                    if (step % (timespermeasure * resolution) == 0)        // every measure
+                    {                        
                         // Display line
                         g.DrawLine(mesureSeparatorPen, p1, p2);
-                        // Display measure number
-                        nbMeasure = 1 + Convert.ToInt32(f_n / measurelen);
-                        g.DrawString("Measure " + nbMeasure, fontNoteLetter, textBrush, p1.X + 5, p1.Y - fontNoteLetter.Height);                        
                     }
-                    else if (beat % resolution == 0)                       // every time or beat
+                    else if (step % (resolution) == 0)                       // every time or beat
                     {
+                        // Display line
                         g.DrawLine(beatSeparatorPen, p1, p2);
                     }
                     else
                     {
                         g.DrawLine(intervalSeparatorPen, p1, p2);          // every resolution
                     }
-                }
-
-                beat++;
-                f_n += f_increment;
+                } 
+             
+                // increment = beat divisé par la resolution
+                // Tous les resolution, on a un beat
+                // tous les timepermeasure on a une nouvelle mesure 
+                //
+                // une mesure = timepermeasure * f_beat
+                // un beat = f_beat
+                // intermédiaire = increment
+                f_n += f_increment; 
+                step++;
 
             } while (f_n <= lastPosition);
 
           
         }
 
-        #endregion Canvas
-     
-    
+        /// <summary>
+        /// Draw Time Line at position 0
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="clip"></param>
+        private void DrawTimeLine(Graphics g, Rectangle clip)
+        {
+            SolidBrush FillBrush;
+            Pen FillPen;
+
+            Rectangle rect;
+
+            Color TimeLineColor = System.Drawing.ColorTranslator.FromHtml("#FF313131");
+            Color blackKeysColor = System.Drawing.ColorTranslator.FromHtml("#FF313131");
+            Color whiteKeysColor = System.Drawing.ColorTranslator.FromHtml("#FF3b3b3b");
+
+            Pen SeparatorPen = new Pen(blackKeysColor, 1);
+            Pen GroupNotesPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF676767"), 1);
+
+            int w = _TimeLineWidth;  // bande verticale à gauche pour afficher les mesures et intervalles
+            int H = 0; // Length of scores
+            int W = 0;
+
+            H = clip.Height;
+
+            _totalwidth = (int)((1 + highNoteID - lowNoteID) * _xscale);
+
+            // ==========================
+            // Draw Timeline background color
+            // ========================== 
+            FillPen = new Pen(TimeLineColor);
+
+            // Gray rectangle left
+            g.DrawRectangle(FillPen, clip.X, clip.Y, w, H);
+            rect = new Rectangle(clip.X, clip.Y, w, H);
+            FillBrush = new SolidBrush(TimeLineColor);
+            g.FillRectangle(FillBrush, rect);
+
+            // Black line separator
+            FillPen = new Pen(Color.Black, 3);
+            Point p1 = new Point(_TimeLineWidth - 2, clip.Y);
+            Point p2 = new Point(_TimeLineWidth - 2, H);
+            g.DrawLine(FillPen, p1, p2);
+
+
+            int step = 0;            
+            int timespermeasure = sequence1.Numerator;             // nombre de beats par mesures
+            float TimeUnit = Sequence1.Denominator;            // 2 = blanche, 4 = noire, 8 = croche, 16 = doucle croche, 32 triple croche
+
+            Pen TicksPen = new Pen(Color.White);
+            Pen mesureSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF676767"), 1);
+            Pen beatSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF585858"), 1);
+            Pen intervalSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF464646"), 1);
+
+            // quarter = durée d'une noire
+            int quarter = sequence1.Time.Quarter;
+
+            float f_n = 0;
+
+            // Increment of 1 TimeUnit, divided by the resolution, in ticks
+            float f_beat = (float)quarter * 4 / TimeUnit;
+            float f_increment = f_beat / resolution;
+
+            _totalwidth = w + (int)((1 + highNoteID - lowNoteID) * _xscale);
+            int PH = pnlCanvas.Height;
+
+            // Measure number display
+            int NumMeasure = 0;
+            SolidBrush textBrush = new SolidBrush(Color.White);
+            Font fontMeasure = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font fontInterval = new Font("Arial", 10, FontStyle.Regular, GraphicsUnit.Pixel);
+            int pico = 0;
+
+            do
+            {
+                int y1 = PH - (int)(f_n * _yscale);
+                int y2 = y1;
+                int x1 = w;
+                int x2 = _totalwidth;
+
+                if (y1 >= clip.Y && y1 <= clip.Y + clip.Height)
+                {
+                    p1 = new Point(x1, y1);
+                    p2 = new Point(x2, y2);
+
+                    if (step % (timespermeasure * resolution) == 0)        // every measure
+                    {
+                        // Display measure number
+                        //Point p1pico = new Point(_TimeLineWidth - 14 - _offsetx, y1);
+                        Point p1pico = new Point(_TimeLineWidth - 14, y1);
+                        //Point p2pico = new Point(_TimeLineWidth - 1 - _offsetx, y2);
+                        Point p2pico = new Point(_TimeLineWidth - 1, y2);
+                        g.DrawLine(TicksPen, p1pico, p2pico);
+                        NumMeasure = 1 + (int)(f_n / measurelen);
+                        //g.DrawString(NumMeasure.ToString(), fontMeasure, textBrush, p1.X + 5 - w - _offsetx, p1.Y - fontMeasure.Height - 2);
+                        g.DrawString(NumMeasure.ToString(), fontMeasure, textBrush, p1.X + 5 - w, p1.Y - fontMeasure.Height - 2);
+                    }
+                    else if (step % (resolution) == 0)                       // every time or beat
+                    {
+                        // Display beat number
+                        //Point p1pico = new Point(_TimeLineWidth - 5 - _offsetx, y1);
+                        Point p1pico = new Point(_TimeLineWidth - 5, y1);
+                        //Point p2pico = new Point(_TimeLineWidth - 1 - _offsetx, y2);
+                        Point p2pico = new Point(_TimeLineWidth - 1, y2);
+                        g.DrawLine(TicksPen, p1pico, p2pico);
+                        NumMeasure = 1 + (int)(f_n / measurelen);
+                        pico = 1 + sequence1.Numerator - (int)((NumMeasure * measurelen - f_n) / (measurelen / sequence1.Numerator));
+                        //g.DrawString(NumMeasure + "." + pico, fontInterval, textBrush, p1.X + 5 - w - _offsetx, p1.Y - fontInterval.Height - 2);
+                        g.DrawString(NumMeasure + "." + pico, fontInterval, textBrush, p1.X + 5 - w, p1.Y - fontInterval.Height - 2);
+                    }
+                }
+                // increment = beat divisé par la resolution
+                // Tous les resolution, on a un beat
+                // tous les timepermeasure on a une nouvelle mesure 
+                //
+                // une mesure = timepermeasure * f_beat
+                // un beat = f_beat
+                // intermédiaire = increment
+                f_n += f_increment;
+                step++;
+
+            } while (f_n <= lastPosition);
+
+        }
+
+
+        #endregion draw canvas
+
+
+        #region canvas events
         private void pnlCanvas_MouseLeave(object sender, EventArgs e)
         {
             this.Capture = false;
@@ -721,7 +911,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
 
         private void pnlCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (bMoveScore &&  e.Button == MouseButtons.Left)
+            if (bMoveScore && e.Button == MouseButtons.Left)
             {
                 Point mousePos = MousePosition;
                 if (mousePos == previousPosition)
@@ -737,21 +927,17 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
               
                 previousPosition = mousePos;                
             }
-        }
+            else
+            {
+                int X = e.X - _TimeLineWidth;
+                int Y = e.Y + _offsety;
+                int nnote = lowNoteID + X / (int)_xscale;
 
-        private void MovePanel(int Delta)
-        {
-            previousDelta = Delta;
-            int newval = OffsetY + Delta;
-            if (newval < 0) newval = 0;
-            OffsetY = newval;
-            OffsetChanged(this, newval);
-        }
+                // Delegate the event to the caller
+                OnMouseMoved?.Invoke(this, nnote, e);
 
-        private void ResetMovePanel()
-        {
-            previousDelta = 0;
-            aPos = PointToClient(Control.MousePosition);            
+            }
+
         }
 
         private void pnlCanvas_MouseUp(object sender, MouseEventArgs e)
@@ -764,46 +950,60 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
             }
         }
 
-
-
-        #region events
-
         /// <summary>
         /// Paint event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void pnlCanvas_Paint(object sender, PaintEventArgs e)
-        {            
-            Rectangle clip =
+        {
+            if (sequence1 != null)
+            {
+                
+                Rectangle clip =
                 new Rectangle(
-                e.ClipRectangle.X,                
-                 - offsety,
+                e.ClipRectangle.X,
+                 -_offsety,
                 e.ClipRectangle.Width,
                 e.ClipRectangle.Height);
 
-            Graphics g = e.Graphics;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            g.TranslateTransform(0, -clip.Y);            
+                Graphics g = e.Graphics;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                g.TranslateTransform(0, -clip.Y);
 
-            if (sequence1 != null)
-            {
-                if (Parent.GetType() == typeof(Panel))
-                {
-                    CreateBackgroundCanvas(g, clip);
-                    DrawGrid(g, clip);
-                    DrawNotes(g, clip);
-                }
-                else
-                {
-                    CreateBackgroundCanvas(g, clip);
-                    DrawGrid(g, clip);
-                    DrawNotes(g, clip);
-                }
-                g.TranslateTransform(0, clip.Y);                
+                
+                CreateBackgroundCanvas(g, clip);
+                DrawGrid(g, clip);
+                
+                DrawNotes(g, clip);
+                DrawTimeLine(g, clip);
+ 
+                g.TranslateTransform(0, clip.Y);
             }
         }
 
+        #endregion Canvas events
+
+
+        #region move panel
+        private void MovePanel(int Delta)
+        {
+            previousDelta = Delta;
+            int newval = OffsetY + Delta;
+            if (newval < 0) newval = 0;
+            OffsetY = newval;
+        }
+
+        private void ResetMovePanel()
+        {
+            previousDelta = 0;
+            aPos = PointToClient(Control.MousePosition);            
+        }
+
+        #endregion
+
+
+        #region protected events
 
         protected override void OnResize(EventArgs e)
         {
@@ -828,6 +1028,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
 
         #endregion events
     
+
 
         private Rectangle GetVisibleRectangle(Control c)
         {
