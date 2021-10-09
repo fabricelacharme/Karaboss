@@ -139,6 +139,7 @@ namespace Sanford.Multimedia.Midi
                             Write((SysRealtimeMessage)e.MidiMessage);
                             break;
 
+                        
                     }
                 }
                 #endregion
@@ -183,7 +184,8 @@ namespace Sanford.Multimedia.Midi
                 }
                 else if (message.Command == ChannelCommand.PitchWheel)
                 {
-
+                    // Track
+                    stream.WriteLine(string.Format("{0}, {1}, Pitch_bend_c, {2}, {3}, 0", trackid, ticks, channel, message.Data1));
                 }
             }
         }

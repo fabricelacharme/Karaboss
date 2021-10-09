@@ -2385,6 +2385,10 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuFileExportMidiToText_Click(object sender, EventArgs e)
         {
+            if (MIDIfilePath == null)
+                return;
+                //MIDIfilePath = CreateNewMidiFile.DefaultDirectory;
+
             string name = Path.GetFileNameWithoutExtension(MIDIfileName) + " (Dump)";
             string file = string.Empty;
             int suffix = 0;
@@ -6757,6 +6761,9 @@ namespace Karaboss
             // Show sequencer even if bSequencerAlwaysOn is set to False
             bForceShowSequencer = true;
 
+            // Initialize tags
+            MidiTags.ResetTags();
+
             // Create new sequence
             sequence1 = new Sequence(division) {
                 Format = 1,
@@ -6765,6 +6772,8 @@ namespace Karaboss
                 Tempo = tempo,
                 Time = new TimeSignature(numerator, denominator, division, tempo),
             };
+
+            sequence1.CloneTags();
 
             pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
 
@@ -6782,7 +6791,7 @@ namespace Karaboss
             sequencer1.Sequence = sequence1;
 
             MIDIfileName = "New";
-            MIDIfilePath = null;
+            MIDIfilePath = CreateNewMidiFile.DefaultDirectory; ;
             MIDIfileFullPath = null;
             
             // FAB

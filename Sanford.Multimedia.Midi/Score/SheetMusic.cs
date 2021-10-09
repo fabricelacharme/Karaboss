@@ -2728,6 +2728,16 @@ namespace Sanford.Multimedia.Midi.Score
         }
 
         #region Effects
+        
+        public bool IsPitchBend(int channel, int starttime, int endtime)
+        {
+            int numstaff = CurrentNote.numstaff;
+            Track trk = sequence1.tracks[numstaff];
+            MidiNote mn = CurrentNote.midinote;
+            return trk.IsPitchBend(mn.Channel, mn.Number, mn.StartTime, mn.EndTime);
+
+        }
+        
         /// <summary>
         /// frmNoteEdit - set Pitch Bend to a note
         /// </summary>
@@ -2747,7 +2757,7 @@ namespace Sanford.Multimedia.Midi.Score
             int numstaff = CurrentNote.numstaff;
             Track trk = sequence1.tracks[numstaff];
             MidiNote mn = CurrentNote.midinote;
-            trk.UnsetPitchBend(mn.Channel, mn.Number, mn.StartTime, mn.EndTime);
+            trk.RemovePitchBend(mn.Channel, mn.Number, mn.StartTime, mn.EndTime);
         }
 
         #endregion

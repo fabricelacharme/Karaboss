@@ -77,6 +77,8 @@ namespace Sanford.Multimedia.Midi.Score.UI
             txtTicks.Text = n.StartTime.ToString();
             txtDuration.Text = n.Duration.ToString();
             upDownNoteVelocity.Value = n.Velocity;
+
+            checkBox1.Checked = sheetmusic.IsPitchBend(n.Channel, n.StartTime, n.EndTime);
         }
 
         private void sheetmusic_SelectionChanged(List<MidiNote> lstMidiNotes)

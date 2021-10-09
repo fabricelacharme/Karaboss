@@ -421,15 +421,22 @@ namespace Sanford.Multimedia.Midi
             #endregion
 
 
-            FileStream fstream = new FileStream(dumpFileName, FileMode.Create,
-                FileAccess.Write, FileShare.None);
-
-            StreamWriter stream = new StreamWriter(fstream);
-
-            using (stream)
+            try
             {
-                DumpWriter dumpwriter = new DumpWriter(this, fileName);                
-                dumpwriter.Write(stream);
+                FileStream fstream = new FileStream(dumpFileName, FileMode.Create,
+                    FileAccess.Write, FileShare.None);
+
+                StreamWriter stream = new StreamWriter(fstream);
+
+                using (stream)
+                {
+                    DumpWriter dumpwriter = new DumpWriter(this, fileName);
+                    dumpwriter.Write(stream);
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
 
         }

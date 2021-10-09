@@ -1344,17 +1344,36 @@ namespace Sanford.Multimedia.Midi
             Insert(0, message);
         }
 
+        #region pitchbend
+        
+        public bool IsPitchBend(int channel, int number, int starttime, int endtime)
+        {
+            return findPitchBend(channel, starttime, endtime) != -1;
+
+        }
+        
         public void SetPitchBend(int channel, int number, int starttime, int endtime)
         {
-            // Up
-            int pitchBend = 16383;
-            if (pitchBend > 16383)
-                pitchBend = 16383;
+            RemovePitchBend(channel, number, starttime, endtime);
+            
+            int pitchBend;
+            int mask;
 
-            int mask = 127;
+            endtime = endtime - 1;
 
             ChannelMessageBuilder builder = new ChannelMessageBuilder();
             ChannelMessage pitchBendMessage;
+
+            // Build pitch bend message;
+            builder.Command = ChannelCommand.PitchWheel;
+            builder.MidiChannel = channel;            
+            
+             // Start Pitchbend
+            pitchBend = 16383;
+            if (pitchBend > 16383)
+                pitchBend = 16383;
+
+            mask = 127;
 
             // Increase from 8192 to 13383 during the duration of the note
             int step = 10;
@@ -1372,7 +1391,7 @@ namespace Sanford.Multimedia.Midi
 
                 // Unpack pitch bend value into two data bytes.
                 builder.Data1 = pitchBend & mask;
-                builder.Data2 = pitchBend >> 7;
+                builder.Data2 = pitchBend >> 7;                
 
                 // Build message.
                 builder.Build();
@@ -1380,15 +1399,14 @@ namespace Sanford.Multimedia.Midi
                 Insert(t, pitchBendMessage);
             }
 
-           
-
-            
+            #region stop pitchbend                       
             // Stop pitchbend
             pitchBend = 0x2000; // No pitch = 8192
             builder = new ChannelMessageBuilder();
 
             // Build pitch bend message;
             builder.Command = ChannelCommand.PitchWheel;
+            builder.MidiChannel = channel;
 
             // Unpack pitch bend value into two data bytes.
             builder.Data1 = pitchBend & mask;
@@ -1398,13 +1416,106 @@ namespace Sanford.Multimedia.Midi
             builder.Build();
             pitchBendMessage = builder.Result;
             Insert(endtime, pitchBendMessage);
-
+            #endregion
         }
 
-        public void UnsetPitchBend(int channel, int number, int starttime, int endtime)
+        private int findPitchBend(int channel, int starttime, int endtime)
         {
+            int id = 0;
+            MidiEvent current = GetMidiEvent(0);
 
+            while (current.AbsoluteTicks <= endtime)
+            {
+                IMidiMessage a = current.MidiMessage;
+
+                if (current.AbsoluteTicks < starttime)
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                        id++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion
+                }
+                else if (a.MessageType == MessageType.Channel)
+                {
+                    ChannelMessage Msg = (ChannelMessage)current.MidiMessage;                                       
+                    ChannelCommand cc = Msg.Command;
+
+                    if (Msg.MidiChannel == channel)
+                    {                        
+                        if (cc == ChannelCommand.PitchWheel)
+                        {
+                            return id;
+                        }
+                        else
+                        {
+                            #region next
+                            if (current.Next != null)
+                            {
+                                current = current.Next;
+                                id++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            #endregion next      
+                        }
+
+                    }
+                    else
+                    {
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                            id++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion next      
+                    }
+
+                }
+                else
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                        id++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion next      
+                }
+            }
+            return -1;
         }
+
+        public void RemovePitchBend(int channel, int number, int starttime, int endtime)
+        {
+            endtime = endtime - 1;
+            int i = findPitchBend(channel, starttime, endtime);
+
+            while (i != -1)
+            {
+                RemoveAt(i);
+                i = findPitchBend(channel, starttime, endtime);
+            }
+        }
+
+        #endregion pitchbend
 
         #endregion channel command message
 
@@ -1452,78 +1563,7 @@ namespace Sanford.Multimedia.Midi
                         break;
                     }
                     #endregion previous
-                }
-
-                #region old code
-                // Old Code : move only notes => but problem with lyrics and probably other things
-                // Est-ce bien une note ?
-                /*
-                IMidiMessage a = current.MidiMessage;
-                if (a.MessageType == MessageType.Channel)
-                {
-
-                    ChannelCommand b = ChannelMessage.UnpackCommand(a.Status);
-
-                    int n = a.Data1;
-
-                    if (b == ChannelCommand.NoteOn)
-                    {
-                        Move(current, current.AbsoluteTicks + offset);
-                        #region previous
-                        if (current.Previous != null)
-                        {
-                            current = current.Previous;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                        #endregion previous
-                    }
-                    else if (b == ChannelCommand.NoteOff)
-                    {
-                        Move(current, current.AbsoluteTicks + offset);
-                        #region previous
-                        if (current.Previous != null)
-                        {
-                            current = current.Previous;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                        #endregion previous
-                    }
-                    else
-                    {
-                        #region previous
-                        if (current.Previous != null)
-                        {
-                            current = current.Previous;                            
-                        }
-                        else
-                        {
-                            break;
-                        }
-                        #endregion previous
-                    }
-                }
-                else
-                {
-                    #region previous
-                    if (current.Previous != null)
-                    {
-                        current = current.Previous;
-                        
-                    }
-                    else
-                    {
-                        break;
-                    }
-                    #endregion previous
-                }
-                */
-                #endregion
+                }              
 
             }
 

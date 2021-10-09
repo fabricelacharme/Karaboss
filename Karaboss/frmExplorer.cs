@@ -1071,6 +1071,9 @@ namespace Karaboss
             if (fpath == null)
                 return;
 
+            // No Playlist
+            // * Edit or play a midi file
+            // * Create a new midi file
             if (pl == null)
             {
                 // edit or play a midi file
