@@ -56,6 +56,8 @@ namespace Karaboss.Configuration
             txtSepLine.Text = Karaclass.m_SepLine;
             txtSepParagraph.Text = Karaclass.m_SepParagraph;
 
+            chkShowParagraph.Checked = Karaclass.m_ShowParagraph;
+
         }
 
         public override void Restore()
@@ -78,6 +80,8 @@ namespace Karaboss.Configuration
             Properties.Settings.Default.SepLine = Karaclass.m_SepLine;
             Properties.Settings.Default.SepParagraph = Karaclass.m_SepParagraph;
 
+            Properties.Settings.Default.bShowParagraph = Karaclass.m_ShowParagraph;
+
             Properties.Settings.Default.Save();
 
         }
@@ -99,6 +103,16 @@ namespace Karaboss.Configuration
             if (txtSepParagraph.Text.Trim().Length != 1)
                 e.Cancel = true;
 
+        }
+
+        private void chkDisplayBalls_CheckedChanged(object sender, System.EventArgs e)
+        {
+
+        }
+
+        private void chkShowParagraph_CheckedChanged(object sender, System.EventArgs e)
+        {
+            Karaclass.m_ShowParagraph = chkShowParagraph.Checked;
         }
     }
 }

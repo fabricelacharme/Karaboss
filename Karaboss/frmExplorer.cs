@@ -672,6 +672,7 @@ namespace Karaboss
             Karaclass.m_SepLine = Properties.Settings.Default.SepLine;
             Karaclass.m_SepSyllabe = Properties.Settings.Default.SepSyllabe;
             Karaclass.m_SepParagraph = Properties.Settings.Default.SepParagraph;
+            Karaclass.m_ShowParagraph = Properties.Settings.Default.bShowParagraph;
 
             Karaclass.m_SaveDefaultOutputDevice = Properties.Settings.Default.SaveDefaultOutputDevice;
 

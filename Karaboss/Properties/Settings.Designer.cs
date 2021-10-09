@@ -1225,5 +1225,17 @@ namespace Karaboss.Properties {
                 this["DefaultOutputDevice"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool bShowParagraph {
+            get {
+                return ((bool)(this["bShowParagraph"]));
+            }
+            set {
+                this["bShowParagraph"] = value;
+            }
+        }
     }
 }

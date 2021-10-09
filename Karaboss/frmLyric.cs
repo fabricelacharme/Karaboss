@@ -383,6 +383,7 @@ namespace Karaboss
             {                
                 _karaokeFont = Properties.Settings.Default.KaraokeFont;
                 pBox.KaraokeFont = _karaokeFont;
+                pBox.bShowParagraphs = Karaclass.m_ShowParagraph;
 
                 // show balls
                 bShowBalls = Karaclass.m_DisplayBalls;

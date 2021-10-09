@@ -45,6 +45,9 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.txtSepParagraph = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.lblShowParagraph = new System.Windows.Forms.Label();
+            this.chkShowParagraph = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // lblMuteMelody
@@ -68,6 +71,7 @@
             resources.ApplyResources(this.chkDisplayBalls, "chkDisplayBalls");
             this.chkDisplayBalls.Name = "chkDisplayBalls";
             this.chkDisplayBalls.UseVisualStyleBackColor = true;
+            this.chkDisplayBalls.CheckedChanged += new System.EventHandler(this.chkDisplayBalls_CheckedChanged);
             // 
             // label1
             // 
@@ -132,10 +136,30 @@
             this.txtSepParagraph.Name = "txtSepParagraph";
             this.txtSepParagraph.Validating += new System.ComponentModel.CancelEventHandler(this.txtSepParagraph_Validating);
             // 
+            // label9
+            // 
+            resources.ApplyResources(this.label9, "label9");
+            this.label9.Name = "label9";
+            // 
+            // lblShowParagraph
+            // 
+            resources.ApplyResources(this.lblShowParagraph, "lblShowParagraph");
+            this.lblShowParagraph.Name = "lblShowParagraph";
+            // 
+            // chkShowParagraph
+            // 
+            resources.ApplyResources(this.chkShowParagraph, "chkShowParagraph");
+            this.chkShowParagraph.Name = "chkShowParagraph";
+            this.chkShowParagraph.UseVisualStyleBackColor = true;
+            this.chkShowParagraph.CheckedChanged += new System.EventHandler(this.chkShowParagraph_CheckedChanged);
+            // 
             // KaraokeControl
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.lblShowParagraph);
+            this.Controls.Add(this.chkShowParagraph);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.txtSepParagraph);
@@ -174,5 +198,8 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtSepParagraph;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label lblShowParagraph;
+        private System.Windows.Forms.CheckBox chkShowParagraph;
     }
 }

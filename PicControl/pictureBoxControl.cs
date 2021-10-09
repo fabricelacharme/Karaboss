@@ -100,6 +100,8 @@ namespace PicControl
         public Rectangle m_DisplayRectangle { get; set; }
         public int m_Alpha { get; set; }
 
+
+
         /// <summary>
         /// Display lyrics option: top, Center, Bottom
         /// </summary>
@@ -129,6 +131,7 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
+
 
 
         public bool IsBusy
@@ -348,6 +351,15 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
+
+        // Show a blank line between paragraphs
+        private bool _bshowparagraphs = true;
+        public bool bShowParagraphs
+        {
+            get { return _bshowparagraphs; }
+            set { _bshowparagraphs = value; }
+        }
+
         #endregion
 
         /// <summary>
@@ -885,20 +897,35 @@ namespace PicControl
             *
             * Dash characters at the end of syllables are removed by the Karaoke viewer/player program, and the syllables are joined together. 
             */
-
+            
             string lyr = string.Empty;
-                     
-            // pour texte normal
-            lyr = ly.Replace(_InternalSepParagraphs, _InternalSepLines);
+
+            // Display a blanck line between paragraphs
+            if (_bshowparagraphs)
+            {
+                // Replace double new lines by new paragraph
+                lyr = ly.Replace(_InternalSepLines + _InternalSepLines,  _InternalSepParagraphs);
+                // Replace new paragraph by newline + new paragraph + new line
+                lyr = lyr.Replace(_InternalSepParagraphs, _InternalSepLines + _InternalSepParagraphs + _InternalSepLines);
+            }
+            else
+            {
+                lyr = ly.Replace(_InternalSepParagraphs, _InternalSepLines);
+            }
 
             // TO BE MODIFIED
             char ChrSepLines = Convert.ToChar(_InternalSepLines);
-            string[] strLyricsLines = lyr.Split(new Char[] { ChrSepLines }, StringSplitOptions.RemoveEmptyEntries);  
+            string[] strLyricsLines = lyr.Split(new Char[] { ChrSepLines }, StringSplitOptions.RemoveEmptyEntries);
 
             for (int i = 0; i < strLyricsLines.Length; i++)
             {
                 tx = strLyricsLines[i].Trim();
-                if (tx != "")
+                if (_bshowparagraphs && tx == _InternalSepParagraphs)
+                {
+                    // new paragraph = empty line (space)
+                    lstLyricsLines.Add(" ");
+                }
+                else if (tx != "")
                 {
                     lstLyricsLines.Add(tx);
                 }
