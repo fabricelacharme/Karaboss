@@ -301,6 +301,9 @@ namespace Sanford.Multimedia.Midi
             if (note == null)
                 return -1;
 
+            // Delete pitchBend ?
+            //RemovePitchBend(note.Channel, note.StartTime, note.EndTime);
+
             bool bfound = false;
             // Search index of noteOn & noteOff
             int i = GetEventPositionFromTicks(note.Number, note.StartTime, note.Duration);
@@ -1346,20 +1349,23 @@ namespace Sanford.Multimedia.Midi
 
         #region pitchbend
         
-        public bool IsPitchBend(int channel, int number, int starttime, int endtime)
+        public bool IsPitchBend(int channel, int starttime, int endtime)
         {
             return findPitchBend(channel, starttime, endtime) != -1;
 
         }
         
-        public void SetPitchBend(int channel, int number, int starttime, int endtime)
+        public void SetPitchBend(int channel, int number, int starttime, int endtime, int pitchBend)
         {
-            RemovePitchBend(channel, number, starttime, endtime);
-            
-            int pitchBend;
-            int mask;
+            // No pitch = 8192
+            // 2 demi tons =  16383 ?
+            int mask = 127;
+            int ipitchBend;
 
-            endtime = endtime - 1;
+            RemovePitchBend(channel, starttime, endtime);
+                        
+           
+            //endtime = endtime - 1;
 
             ChannelMessageBuilder builder = new ChannelMessageBuilder();
             ChannelMessage pitchBendMessage;
@@ -1368,30 +1374,29 @@ namespace Sanford.Multimedia.Midi
             builder.Command = ChannelCommand.PitchWheel;
             builder.MidiChannel = channel;            
             
-             // Start Pitchbend
-            pitchBend = 16383;
+             // Start Pitchbend           
             if (pitchBend > 16383)
                 pitchBend = 16383;
 
-            mask = 127;
+            //mask = 127;
 
             // Increase from 8192 to 13383 during the duration of the note
-            int step = 10;
-            int OffsetTime = (endtime - starttime) / step;
-            int offsetPitch = (16383 - 8192) / step;
-            pitchBend = 8192;
+            int steps = 10;
+            int OffsetTime = (endtime - starttime) / steps;
+            int offsetPitch = (pitchBend - 8192) / steps;
+            ipitchBend = 8192;
             int t = starttime;
-            for (int i = 0; i < step -1 ; i++)
+            for (int i = 0; i < steps ; i++)
             {
-                pitchBend += offsetPitch;
+                ipitchBend += offsetPitch;
                 t += OffsetTime;
 
                 // Build pitch bend message;
                 builder.Command = ChannelCommand.PitchWheel;
 
                 // Unpack pitch bend value into two data bytes.
-                builder.Data1 = pitchBend & mask;
-                builder.Data2 = pitchBend >> 7;                
+                builder.Data1 = ipitchBend & mask;
+                builder.Data2 = ipitchBend >> 7;                
 
                 // Build message.
                 builder.Build();
@@ -1399,7 +1404,24 @@ namespace Sanford.Multimedia.Midi
                 Insert(t, pitchBendMessage);
             }
 
+
+
             #region stop pitchbend                       
+            
+            // Stop pitchbend
+            StopPitchBend(channel, endtime);
+
+
+            #endregion
+        }
+
+        private void StopPitchBend(int channel, int time)
+        {
+            ChannelMessageBuilder builder = new ChannelMessageBuilder();
+            ChannelMessage pitchBendMessage;
+            int pitchBend;
+            int mask = 127;
+
             // Stop pitchbend
             pitchBend = 0x2000; // No pitch = 8192
             builder = new ChannelMessageBuilder();
@@ -1415,9 +1437,9 @@ namespace Sanford.Multimedia.Midi
             // Build message.
             builder.Build();
             pitchBendMessage = builder.Result;
-            Insert(endtime, pitchBendMessage);
-            #endregion
+            Insert(time, pitchBendMessage);
         }
+
 
         private int findPitchBend(int channel, int starttime, int endtime)
         {
@@ -1503,9 +1525,9 @@ namespace Sanford.Multimedia.Midi
             return -1;
         }
 
-        public void RemovePitchBend(int channel, int number, int starttime, int endtime)
+        public void RemovePitchBend(int channel, int starttime, int endtime)
         {
-            endtime = endtime - 1;
+            //endtime = endtime - 1;
             int i = findPitchBend(channel, starttime, endtime);
 
             while (i != -1)

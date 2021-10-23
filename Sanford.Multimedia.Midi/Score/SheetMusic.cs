@@ -1759,11 +1759,11 @@ namespace Sanford.Multimedia.Midi.Score
                     // Insert measure                    
                     ToolStripMenuItem menuInsertMeasure = new ToolStripMenuItem(Strings.InsertMeasure);
                     smContextMenu.Items.Add(menuInsertMeasure);
-
+                    // -> this track
                     ToolStripMenuItem menuInsertMeasureThisTrack = new ToolStripMenuItem(Strings.ThisTrack);
                     menuInsertMeasure.DropDownItems.Add(menuInsertMeasureThisTrack);
                     menuInsertMeasureThisTrack.Click += new System.EventHandler(this.MnuInsertMeasureThisTrack_Click);
-
+                    // -> all tracks
                     ToolStripMenuItem menuInsertMeasureAllTracks = new ToolStripMenuItem(Strings.AllTracks);
                     menuInsertMeasure.DropDownItems.Add(menuInsertMeasureAllTracks);
                     menuInsertMeasureAllTracks.Click += new System.EventHandler(this.MnuInsertMeasureAllTracks_Click);
@@ -1775,11 +1775,11 @@ namespace Sanford.Multimedia.Midi.Score
                     // Delete measure
                     ToolStripMenuItem menuDeleteMeasure = new ToolStripMenuItem(Strings.DeleteMeasure);
                     smContextMenu.Items.Add(menuDeleteMeasure);
-
+                    // -> this track
                     ToolStripMenuItem menuDeleteMeasureThisTrack = new ToolStripMenuItem(Strings.ThisTrack);
                     menuDeleteMeasure.DropDownItems.Add(menuDeleteMeasureThisTrack);
                     menuDeleteMeasureThisTrack.Click += new System.EventHandler(this.MnuDeleteMeasureThisTrack_Click);
-
+                    // -> all tracks
                     ToolStripMenuItem menuDeleteMeasureAllTracks = new ToolStripMenuItem(Strings.AllTracks);
                     menuDeleteMeasure.DropDownItems.Add(menuDeleteMeasureAllTracks);
                     menuDeleteMeasureAllTracks.Click += new System.EventHandler(this.MnuDeleteMeasureAllTracks_Click);
@@ -1787,29 +1787,68 @@ namespace Sanford.Multimedia.Midi.Score
                     menuDeleteMeasure.ShortcutKeyDisplayString = "Ctrl+D";
 
 
-
+                    // Sep 1
                     ToolStripSeparator menusep1 = new ToolStripSeparator();
                     smContextMenu.Items.Add(menusep1);
 
-                    // Insert time
+
+                    // Insert 1 time
                     ToolStripMenuItem menuInsertTime = new ToolStripMenuItem(Strings.InsertOneTime);
                     smContextMenu.Items.Add(menuInsertTime);
-                    menuInsertTime.Click += new System.EventHandler(this.MnuInsertTime_Click);
+                    // -> this track
+                    ToolStripMenuItem menuInsertTimeThisTrack = new ToolStripMenuItem(Strings.ThisTrack);
+                    menuInsertTime.DropDownItems.Add(menuInsertTimeThisTrack);
+                    menuInsertTimeThisTrack.Click += new System.EventHandler(this.MnuInsertTimeThisTrack_Click);
+                    // -> all tracks
+                    ToolStripMenuItem menuInsertTimeAllTracks = new ToolStripMenuItem(Strings.AllTracks);
+                    menuInsertTime.DropDownItems.Add(menuInsertTimeAllTracks);
+                    menuInsertTimeAllTracks.Click += new System.EventHandler(this.MnuInsertTimeAllTracks_Click);
+
                     
+
+                    // Insert 1/2 time
                     ToolStripMenuItem menuInsertHalfTime = new ToolStripMenuItem(Strings.InsertHalfTime);
                     smContextMenu.Items.Add(menuInsertHalfTime);
-                    menuInsertHalfTime.Click += new EventHandler(this.MnuInsertHalfTime_Click);
+                    // -> this track
+                    ToolStripMenuItem menuInsertHalfTimeThisTrack = new ToolStripMenuItem(Strings.ThisTrack);
+                    menuInsertHalfTime.DropDownItems.Add(menuInsertHalfTimeThisTrack);
+                    menuInsertHalfTimeThisTrack.Click += new System.EventHandler(this.MnuInsertHalfTimeThisTrack_Click);
+                    // -> all tracks
+                    ToolStripMenuItem menuInsertHalfTimeAllTracks = new ToolStripMenuItem(Strings.AllTracks);
+                    menuInsertHalfTime.DropDownItems.Add(menuInsertHalfTimeAllTracks);
+                    menuInsertHalfTimeAllTracks.Click += new System.EventHandler(this.MnuInsertHalfTimeAllTracks_Click);
+                    
 
 
-                    // Delete time
+                    // Delete 1 time
                     ToolStripMenuItem menuDeleteTime = new ToolStripMenuItem(Strings.DeleteOneTime);
                     smContextMenu.Items.Add(menuDeleteTime);
-                    menuDeleteTime.Click += new System.EventHandler(this.MnuDeleteTime_Click);
+                    // -> this track
+                    ToolStripMenuItem menuDeleteTimeThisTrack = new ToolStripMenuItem(Strings.ThisTrack);
+                    menuDeleteTime.DropDownItems.Add(menuDeleteTimeThisTrack);
+                    menuDeleteTimeThisTrack.Click += new System.EventHandler(this.MnuDeleteTimeThisTrack_Click);
+                    // -> all tracks
+                    ToolStripMenuItem menuDeleteTimeAllTracks = new ToolStripMenuItem(Strings.AllTracks);
+                    menuDeleteTime.DropDownItems.Add(menuDeleteTimeAllTracks);
+                    menuDeleteTimeAllTracks.Click += new System.EventHandler(this.MnuDeleteTimeAllTracks_Click);
 
-                    ToolStripMenuItem menuDeletetHalfTime = new ToolStripMenuItem(Strings.DeleteHalfTime);
-                    smContextMenu.Items.Add(menuDeletetHalfTime);
-                    menuDeletetHalfTime.Click += new EventHandler(this.MnuDeletetHalfTime_Click);
 
+                    // Delete 1/2 time 
+                    ToolStripMenuItem menuDeleteHalfTime = new ToolStripMenuItem(Strings.DeleteHalfTime);
+                    smContextMenu.Items.Add(menuDeleteHalfTime);
+                    // -> this track
+                    ToolStripMenuItem menuDeleteHalfTimeThisTrack = new ToolStripMenuItem(Strings.ThisTrack);
+                    menuDeleteHalfTime.DropDownItems.Add(menuDeleteHalfTimeThisTrack);
+                    menuDeleteHalfTimeThisTrack.Click += new System.EventHandler(this.MnuDeleteHalfTimeThisTrack_Click);
+                    // -> all tracks
+                    ToolStripMenuItem menuDeleteHalfTimeAllTracks = new ToolStripMenuItem(Strings.AllTracks);
+                    menuDeleteHalfTime.DropDownItems.Add(menuDeleteHalfTimeAllTracks);
+                    menuDeleteHalfTimeAllTracks.Click += new System.EventHandler(this.MnuDeleteHalfTimeAllTracks_Click);
+
+
+
+
+                    // Sep 2
                     ToolStripSeparator menusep2 = new ToolStripSeparator();
                     smContextMenu.Items.Add(menusep2);
 
@@ -2296,19 +2335,39 @@ namespace Sanford.Multimedia.Midi.Score
             }
         }
 
-        private void MnuDeleteTime_Click(object sender, EventArgs e)
+        private void MnuDeleteTimeThisTrack_Click(object sender, EventArgs e)
         {
             int dur = sequence1.Division;
-            DeleteTime(dur);
+            DeleteTimeThisTrack(dur);
         }
 
-        private void MnuInsertTime_Click(object sender, EventArgs e)
+        private void MnuDeleteTimeAllTracks_Click(object sender, EventArgs e)
         {
             int dur = sequence1.Division;
-            InsertTime(dur);
+            DeleteTimeAllTracks(dur);
         }
 
-        private void InsertTime(int dur)
+
+
+        private void MnuInsertTimeThisTrack_Click(object sender, EventArgs e)
+        {
+            int dur = sequence1.Division;
+            InsertTimeThisTrack(dur);
+        }
+
+        /// <summary>
+        /// Insert 1 time to all tracks
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuInsertTimeAllTracks_Click(object sender, EventArgs e)
+        {
+            int dur = sequence1.Division;
+            InsertTimeAllTracks(dur);
+        }
+
+
+        private void InsertTimeThisTrack(int dur)
         {
             int Y = selectedY;
             Y = Convert.ToInt32(Y / zoom);
@@ -2333,11 +2392,39 @@ namespace Sanford.Multimedia.Midi.Score
 
         }
 
+        private void InsertTimeAllTracks(int dur)
+        {
+            int Y = selectedY;
+            Y = Convert.ToInt32(Y / zoom);
+
+            if (_selectedstaff != -1 && CurrentNote.numstaff == _selectedstaff)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                int startticks = (int)CurrentNote.midinote.StartTime;
+
+                foreach (Track track in sequence1.tracks)
+                {
+                    track.insertMeasure(startticks + 1, dur);
+                }
+
+                this.Refresh();
+
+                // Raise event
+                FileModified?.Invoke(this);
+                WidthChanged?.Invoke(maxstaffwidth);
+
+                Cursor.Current = Cursors.Default;
+            }
+
+        }
+
+
         /// <summary>
         /// Delete time starting from currentnote
         /// </summary>
         /// <param name="dur"></param>
-        private void DeleteTime(int dur)
+        private void DeleteTimeThisTrack(int dur)
         {
             int Y = selectedY;
             Y = Convert.ToInt32(Y / zoom);
@@ -2361,17 +2448,59 @@ namespace Sanford.Multimedia.Midi.Score
             }
         }
 
-        private void MnuDeletetHalfTime_Click(object sender, EventArgs e)
+
+        private void DeleteTimeAllTracks(int dur)
         {
-            int dur = sequence1.Division / 2;
-            DeleteTime(dur);
+            int Y = selectedY;
+            Y = Convert.ToInt32(Y / zoom);
+
+            if (_selectedstaff != -1 && CurrentNote.numstaff == _selectedstaff)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                int startticks = (int)CurrentNote.midinote.StartTime;
+                
+                foreach (Track track in sequence1.tracks)
+                {
+                    track.deleteMeasure(startticks + 1, dur);
+                }
+                
+                this.Refresh();
+
+                // Raise event
+                FileModified?.Invoke(this);
+                WidthChanged?.Invoke(maxstaffwidth);
+
+                Cursor.Current = Cursors.Default;
+            }
         }
 
-        private void MnuInsertHalfTime_Click(object sender, EventArgs e)
+        private void MnuDeleteHalfTimeThisTrack_Click(object sender, EventArgs e)
         {
             int dur = sequence1.Division / 2;
-            InsertTime(dur);
+            DeleteTimeThisTrack(dur);
         }
+
+        private void MnuDeleteHalfTimeAllTracks_Click(object sender, EventArgs e)
+        {
+            int dur = sequence1.Division / 2;
+            DeleteTimeAllTracks(dur);
+        }
+
+
+        private void MnuInsertHalfTimeThisTrack_Click(object sender, EventArgs e)
+        {
+            int dur = sequence1.Division / 2;
+            InsertTimeThisTrack(dur);
+        }
+
+        private void MnuInsertHalfTimeAllTracks_Click(object sender, EventArgs e)
+        {
+            int dur = sequence1.Division / 2;
+            InsertTimeAllTracks(dur);
+        }
+
+
 
         /// <summary>
         /// Menu: paste notes
@@ -2734,19 +2863,21 @@ namespace Sanford.Multimedia.Midi.Score
             int numstaff = CurrentNote.numstaff;
             Track trk = sequence1.tracks[numstaff];
             MidiNote mn = CurrentNote.midinote;
-            return trk.IsPitchBend(mn.Channel, mn.Number, mn.StartTime, mn.EndTime);
+            return trk.IsPitchBend(mn.Channel, mn.StartTime, mn.EndTime);
 
         }
         
         /// <summary>
         /// frmNoteEdit - set Pitch Bend to a note
         /// </summary>
-        public void SetPitchBend()
+        public void SetPitchBend(int pitchBend)
         {
+            // No pitch = 8192
+
             int numstaff = CurrentNote.numstaff;
             Track trk = sequence1.tracks[numstaff];
             MidiNote mn = CurrentNote.midinote;
-            trk.SetPitchBend(mn.Channel, mn.Number, mn.StartTime, mn.EndTime);
+            trk.SetPitchBend(mn.Channel, mn.Number, mn.StartTime, mn.EndTime, pitchBend);
         }
 
         /// <summary>
@@ -2757,7 +2888,7 @@ namespace Sanford.Multimedia.Midi.Score
             int numstaff = CurrentNote.numstaff;
             Track trk = sequence1.tracks[numstaff];
             MidiNote mn = CurrentNote.midinote;
-            trk.RemovePitchBend(mn.Channel, mn.Number, mn.StartTime, mn.EndTime);
+            trk.RemovePitchBend(mn.Channel, mn.StartTime, mn.EndTime);
         }
 
         #endregion
