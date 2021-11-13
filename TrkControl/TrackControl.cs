@@ -35,12 +35,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using KnobControl;
 
 namespace TrkControl
 {
 
-    
+
 
     public partial class TrackControl : UserControl
     {
@@ -50,6 +49,10 @@ namespace TrkControl
         // Control click
         public delegate void TrackControlClickEventHandler(object sender);
         public event TrackControlClickEventHandler OntrkControlClick;
+
+        // Minimize or Maximize track
+        public delegate void btnMaximizeClickedEventHandler(object sender, EventArgs e, bool bmaximized);
+        public event btnMaximizeClickedEventHandler OntrkControlbtnMaximizeClicked;
 
         // Mute channel button
         public delegate void btnMutClickedEventHandler(object sender, EventArgs e, int patch);
@@ -95,7 +98,38 @@ namespace TrkControl
         private TextBox editbox = new TextBox();
         bool doEdit = false;
 
+
         #region properties
+        private Color ColorEditOn = ColorTranslator.FromHtml("#2d89ef");  // Color.LightSteelBlue;  //#00aba9
+        private Color ColorEditOff = ColorTranslator.FromHtml("#2b5797"); //Color.DimGray;     //#2b5797
+        private Color ColorMutedOn = ColorTranslator.FromHtml("#ee1111");  //Color.Red;         // #ee1111
+        private Color ColorMutedOff = ColorTranslator.FromHtml("#2d89ef"); //Color.RoyalBlue;   // #2d89ef
+        private Color ColorSoloOn = ColorTranslator.FromHtml("#00a300"); //Color.Yellow;        //#00a300
+        private Color ColorSoloOff = ColorTranslator.FromHtml("#99b433"); //Color.Green;        // #99b433
+
+
+        private bool bmaximized = true;
+        public bool bMaximized
+        {
+            get { return bmaximized; }
+            set 
+            {
+                bmaximized = value;
+                pnlBottom.Visible = bmaximized;
+                if (bmaximized)
+                {
+                    btnMaximized.Text = "-";                    
+                    this.Height = 148;
+                }
+                else
+                {
+                    btnMaximized.Text = "+";
+                    this.Height = 23;
+                }
+
+            }
+        }
+
 
         private bool muted;
         public bool Muted {
@@ -105,9 +139,9 @@ namespace TrkControl
             {
                 muted = value;
                 if (muted)
-                { btnMut.BackColor = Color.Red; }
+                { btnMut.BackColor = ColorMutedOn; } //Color.Red
                 else
-                { btnMut.BackColor = Color.RoyalBlue; }
+                { btnMut.BackColor = ColorMutedOff; } //Color.RoyalBlue
 
             }
         }
@@ -120,12 +154,12 @@ namespace TrkControl
                 solo = value;
                 if (solo)
                 {
-                    btnSolo.BackColor = Color.Yellow;
+                    btnSolo.BackColor = ColorSoloOn;  //Color.Yellow;
                     btnSolo.ForeColor = Color.Black;
                 }
                 else
                 {
-                    btnSolo.BackColor = Color.Green;
+                    btnSolo.BackColor = ColorSoloOff; //Color.Green;
                     btnSolo.ForeColor = Color.White;
                 }
 
@@ -253,12 +287,12 @@ namespace TrkControl
             set { selected = value;
                 if (selected)
                 {
-                    panel1.BackColor = Color.LightSteelBlue;
+                    pnlBottom.BackColor = ColorEditOn; //Color.LightSteelBlue;
 
                 }
                 else
                 {
-                    panel1.BackColor = Color.DimGray;
+                    pnlBottom.BackColor = ColorEditOff; //Color.DimGray;
                 }
             }
         }
@@ -1033,8 +1067,19 @@ namespace TrkControl
             this.OnDragLeave(e);
         }
 
+
         #endregion
 
-    
+
+        #region Window
+
+        private void btnMaximized_Click(object sender, EventArgs e)
+        {
+            bMaximized = !bMaximized;
+
+            OntrkControlbtnMaximizeClicked?.Invoke(this, e, bmaximized);
+        }
+
+        #endregion
     }
 }

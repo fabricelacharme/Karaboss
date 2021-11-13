@@ -37,13 +37,11 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
-using Sanford.Multimedia.Midi.UI;
 using System.Diagnostics;
 using System.Linq;
 using Sanford.Multimedia.Midi.Score;
 using Karaboss.Resources.Localization;
 using System.IO;
-using PicControl;
 using System.Text.RegularExpressions;
 using System.Text;
 
@@ -5984,6 +5982,18 @@ namespace Karaboss
             }
         }
 
+        #region Maximize, Minimize Track Control
+        /// <summary>
+        /// Maximize or minimize track control
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="bmaximized"></param>
+        private void BtnMaximizedClickOneEvent(object sender, EventArgs e, bool bmaximized)
+        {
+            
+        }
+        #endregion
 
         #region drag drop track control
 
@@ -6536,6 +6546,7 @@ namespace Karaboss
             pTrack.Track = trackindex;
 
             pTrack.OntrkControlClick += new TrkControl.TrackControl.TrackControlClickEventHandler(TrackControl_Click);
+            pTrack.OntrkControlbtnMaximizeClicked += new TrkControl.TrackControl.btnMaximizeClickedEventHandler(BtnMaximizedClickOneEvent);
             pTrack.OntrkControlbtnMutClicked += new TrkControl.TrackControl.btnMutClickedEventHandler(BtnMutClickOneEvent);
             pTrack.OntrkControlbtnSoloClicked += new TrkControl.TrackControl.btnSoloClickedEventHandler(BtnSoloClickOneEvent);
             pTrack.OntrkControlbtnDelClicked += new TrkControl.TrackControl.btnDelClickedEventHandler(BtnDelClickOneEvent);
@@ -6564,7 +6575,9 @@ namespace Karaboss
 
             return pTrack;
         }
+
      
+
 
 
         /// <summary>
