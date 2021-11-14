@@ -67,7 +67,20 @@ namespace Sanford.Multimedia.Midi.Score
 
         #endregion Create Delegate Reference         
 
-        
+        #region Reglages
+        private class _reglages
+        {
+            public int volume = 100;
+            public int pan = 64;
+            public int reverb = 0;
+            public int channel = 0;
+            public bool muted = false;
+            public bool maximized = true;
+        }
+        private List<_reglages> lstTrkReglages;
+        private _reglages TrkReglages;
+        #endregion
+
         public class CurrNote
         {
             public int numstaff;
@@ -76,8 +89,6 @@ namespace Sanford.Multimedia.Midi.Score
         };
 
         #region properties
-
-        //public const int staffH = 150; // Each staff is 100 pixel height
 
         private int _selectedstaff = -1;
         /// <summary>
@@ -107,11 +118,18 @@ namespace Sanford.Multimedia.Midi.Score
             }
         }
 
-        private int _staffh = 150;
-        public int StaffH
+        private int _staffhminimized = 25;
+        public int StaffHMinimized
         {
-            get { return _staffh; }
-            set { _staffh = value; }
+            get { return _staffhminimized; }
+            set { _staffhminimized = value; }
+        }
+
+        private int _staffhmaximized = 150;
+        public int StaffHMaximized
+        {
+            get { return _staffhmaximized; }
+            set { _staffhmaximized = value; }
         }
 
         // Offset of Horizontal scrollbar
@@ -381,9 +399,12 @@ namespace Sanford.Multimedia.Midi.Score
         {            
             // Tableau des notes de 0 à 127
             InitAllNotes();
-            
+
+            // Réglages tracks
+            InitTracksStuff();
+
             zoom = 1.0f;
-            _staffh = staffHeight;
+            _staffhmaximized = staffHeight;
 
             SetColors(options.colors, options.shadeColor, options.shade2Color);
             pen = new Pen(Color.Black, 1);
@@ -495,8 +516,41 @@ namespace Sanford.Multimedia.Midi.Score
             {                
                 // Width of sheetmusic control
                 maxstaffwidth = staffs[0].Width;
-            }           
-           
+            }
+
+            // Staff maximized/minimized
+            for (int tracknum = 0; tracknum < AllTracks.Count; tracknum++)
+            {
+                staffs[tracknum].Maximized = lstTrkReglages[tracknum].maximized;
+                if (lstTrkReglages[tracknum].maximized)                
+                    staffs[tracknum].Height = _staffhmaximized;                                    
+                else
+                    staffs[tracknum].Height = _staffhminimized;
+            }
+
+        }
+
+
+        /// <summary>
+        /// Reset all things related to tracks when the number of tracks evolve
+        /// </summary>
+        private void InitTracksStuff()
+        {
+            lstTrkReglages = new List<_reglages>();
+            int nbTrk = sequence1.tracks.Count;
+
+            for (int i = 0; i < nbTrk; i++)
+            {
+                Track track = sequence1.tracks[i];
+                TrkReglages = new _reglages();
+                TrkReglages.maximized = true;
+                TrkReglages.volume = track.Volume;
+                TrkReglages.pan = track.Pan;
+                TrkReglages.reverb = track.Reverb;
+                TrkReglages.muted = false;
+                TrkReglages.channel = track.MidiChannel;
+                lstTrkReglages.Add(TrkReglages);
+            }          
         }
 
         public void Redraw()
@@ -555,6 +609,9 @@ namespace Sanford.Multimedia.Midi.Score
             for (int tracknum = 0; tracknum < AllTracks.Count; tracknum++)
             {
                 Track track = sequence1.tracks[AllTracks[tracknum]];
+                
+                // Réglages maximized/minimized
+                lstTrkReglages[tracknum].maximized = track.Maximized;
 
                 // List of clef by measures
                 clefs = new ClefMeasures(track.Notes, time.Measure, track.Clef);
@@ -586,6 +643,19 @@ namespace Sanford.Multimedia.Midi.Score
 
                 // FAB : à corriger
                 CreateAllBeamedChords(symbols, time);
+
+                
+                // Height of staffs maximized or minimized
+                for (int tracknum = 0; tracknum < AllTracks.Count; tracknum++) 
+                {
+                    staffs[tracknum].Maximized = lstTrkReglages[tracknum].maximized;
+
+                    if (lstTrkReglages[tracknum].maximized)
+                        staffs[tracknum].Height = _staffhmaximized;
+                    else
+                        staffs[tracknum].Height = _staffhminimized;
+
+                }
             }
 
             if (lyrics != null && staffs != null)
@@ -1091,7 +1161,10 @@ namespace Sanford.Multimedia.Midi.Score
                 {
                     width = SheetMusic.PageWidth;
                 }
-                Staff staff = new Staff(symbols.GetRange(startindex, range), key, options, _staffh ,track, totaltracks);
+
+                // Tenir compte de Maximized/minimized pour track
+                Staff staff = new Staff(symbols.GetRange(startindex, range), key, options, _staffhmaximized ,track, totaltracks);
+                //Staff staff = new Staff(symbols.GetRange(startindex, range), key, options, _staffhminimized, track, totaltracks);
                 thestaffs.Add(staff);
                 startindex = endindex + 1;
             }
@@ -1527,13 +1600,18 @@ namespace Sanford.Multimedia.Midi.Score
                 }
                 else
                 {
-                    g.TranslateTransform(-clip.X, ypos);
+                    // Draw only if maximized
+                    if (staff.Maximized)
+                    {
+                        g.TranslateTransform(-clip.X, ypos);
 
-                    // Dessine la portée  
-                    staff.Draw(g, clip, selRect, pen);
+                        // Dessine la portée  
+                        staff.Draw(g, clip, selRect, pen);
 
-                    g.TranslateTransform(clip.X, -ypos);
+                        g.TranslateTransform(clip.X, -ypos);
+                    }
                 }
+                
                 ypos += staff.Height;                                
             }           
 
@@ -1551,7 +1629,7 @@ namespace Sanford.Multimedia.Midi.Score
                 int numstaff = GetStaffClicked(pos.Y);
 
                 if (numstaff != _selectedstaff)                                                        
-                    pos.Y = _staffh + _selectedstaff * _staffh;
+                    pos.Y = _staffhmaximized + _selectedstaff * _staffhmaximized;
                 
 
                 using (Pen pen = new Pen(Brushes.Black))
@@ -2016,7 +2094,7 @@ namespace Sanford.Multimedia.Midi.Score
                         int ynote = 0;
 
                         // FAB
-                        int ytop = _staffh / 3; //33;
+                        int ytop = _staffhmaximized / 3; //33;
 
                         int lw = SheetMusic.LineWidth;
                         int ls = SheetMusic.LineSpace;
@@ -2042,7 +2120,7 @@ namespace Sanford.Multimedia.Midi.Score
                         // GRID Déplacement vert
                         // ---------------------------------
                         int staffheight = 5 * lw + 4 * ls;
-                        int topstaff = ytop + numstaff * _staffh;
+                        int topstaff = ytop + numstaff * _staffhmaximized;
                         topstaff = Convert.ToInt32(topstaff * zoom);
 
                         int yh = topstaff - staffheight;
@@ -2160,7 +2238,7 @@ namespace Sanford.Multimedia.Midi.Score
                         // Must stay in the first staff selected
                         int numstaff = GetStaffClicked(e.Y);
                         if (numstaff != _selectedstaff)
-                            pos.Y = _staffh + _selectedstaff * _staffh;
+                            pos.Y = _staffhmaximized + _selectedstaff * _staffhmaximized;
 
                         int x = Math.Min(aPos.X, pos.X);
                         int y = Math.Min(aPos.Y, pos.Y);
@@ -2946,7 +3024,7 @@ namespace Sanford.Multimedia.Midi.Score
         /// <returns></returns>       
         private int GetStaffClicked(int Y)
         {                
-            return Y/_staffh;           
+            return Y/_staffhmaximized;           
         }
 
         /// <summary>
@@ -2962,7 +3040,7 @@ namespace Sanford.Multimedia.Midi.Score
             Staff staff = this.staffs[numstaff];
 
             // épaisseur pour une note = 3 pixels
-            // Hauteur staff = 100 (StaffH)
+            // Hauteur staff = 150 (StaffHMaximized)
             // L'offset de 23 est purement spéculatif
             int offset = 0;
             Clef clef;
@@ -2973,23 +3051,15 @@ namespace Sanford.Multimedia.Midi.Score
                 clef = staff.Clef;
             
             if (clef == Clef.Treble)
-            {
-                // Z CITY
-                //offset = 23;      // pour 100
-                //offset = 12;      // pour 150
-                //offset = 1;        // pour 200
-                
-                offset = 23 - 11 * (_staffh - 100) / 50;
+            {                
+                offset = 23 - 11 * (_staffhmaximized - 100) / 50;
             }
             else
             {
-                // Z CITY
-                //offset = 11;      // pour 100
-                //offset = 0;         // pour 150
-                offset = 11 - 11 * (_staffh - 100) / 50;
+                offset = 11 - 11 * (_staffhmaximized - 100) / 50;
             }
                         
-            Ystaff = (offset + ((numstaff + 1) * _staffh - Y) / 3);            
+            Ystaff = (offset + ((numstaff + 1) * _staffhmaximized - Y) / 3);            
             
             if (Ystaff > 0 && Ystaff < AllNotes.Length)
                 note = AllNotes[Ystaff];          

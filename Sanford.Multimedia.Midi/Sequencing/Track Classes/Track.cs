@@ -2505,6 +2505,14 @@ namespace Sanford.Multimedia.Midi
             set { pan = value; }
         }
 
+
+        private bool maximized = true;
+        public bool Maximized
+        {
+            get { return maximized; }
+            set { maximized = value; }
+        }
+
         #region lyrics
 
         //FAB: 29/05/2014

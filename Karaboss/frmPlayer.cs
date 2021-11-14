@@ -72,6 +72,7 @@ namespace Karaboss
             public int reverb = 0;
             public int channel = 0;
             public bool muted = false;
+            public bool maximized = true;
         }
         private List<_reglages> lstTrkReglages;
         private _reglages TrkReglages;
@@ -209,8 +210,8 @@ namespace Karaboss
         private Playlist currentPlaylist;
         private PlaylistItem currentPlaylistItem;        
                         
-        private int iStaffHeight; // = SheetMusic.staffH;
-        
+        private int iStaffHeightMaximized = 150; // = SheetMusic.staffH; 148 en réalité
+        private int iStaffHeightMinimized = 25;  // 23 en réalité
         
         // Dimensions
         private int leftWidth = 179;
@@ -421,11 +422,8 @@ namespace Karaboss
                         
             options = GetMidiOptions(ScrollVert);
 
-            // Staffs height
-            iStaffHeight = 150;
-
             #region create new sheet music
-            sheetmusic = new SheetMusic(sequence1, options, iStaffHeight)
+            sheetmusic = new SheetMusic(sequence1, options, iStaffHeightMaximized)
             {
                 bEditMode = bEditMode,
                 Velocity = Karaclass.m_Velocity,
@@ -457,7 +455,7 @@ namespace Karaboss
             
             if ( ScrollVert == false)
             {
-                pnlTracks.Height = sequence1.tracks.Count * iStaffHeight * Convert.ToInt32(zoom);
+                pnlTracks.Height = sequence1.tracks.Count * iStaffHeightMaximized * Convert.ToInt32(zoom);
                 pnlScrollView.Height = pnlTracks.Height;
             }
             else
@@ -539,7 +537,7 @@ namespace Karaboss
 
 
             // Dimensions            
-            pnlTracks.Height = sequence1.tracks.Count * iStaffHeight * Convert.ToInt32(zoom);
+            pnlTracks.Height = sequence1.tracks.Count * iStaffHeightMaximized * Convert.ToInt32(zoom);
             pnlScrollView.Height = pnlTracks.Height;
 
             SetStartVLinePos(0);
@@ -584,6 +582,7 @@ namespace Karaboss
             {
                 Track track = sequence1.tracks[i];
                 TrkReglages = new _reglages();
+                TrkReglages.maximized = track.Maximized;
                 TrkReglages.volume = track.Volume;
                 TrkReglages.pan = track.Pan;
                 TrkReglages.reverb = track.Reverb;
@@ -1220,7 +1219,7 @@ namespace Karaboss
             }
 
             // Ajust height of panel according to number of controls
-            pnlTracks.Height = sequence1.tracks.Count * iStaffHeight * Convert.ToInt32(zoom);
+            pnlTracks.Height = sequence1.tracks.Count * iStaffHeightMaximized * Convert.ToInt32(zoom);
 
             pnlScrollView.Height = pnlTracks.Height;
 
@@ -4439,7 +4438,6 @@ namespace Karaboss
             {
                 return;
             }
-
             //outDevice.Send(e.Message);
 
             int nChannel = e.Message.MidiChannel;
@@ -4467,7 +4465,6 @@ namespace Karaboss
                         }
                     }
                 }
-                
             }
             else if (e.Message.Command == ChannelCommand.NoteOff)
             {
@@ -4510,8 +4507,7 @@ namespace Karaboss
                                 if (stag == sChannel)
                                 {
                                     // Adjust volume for all tracks having this channel
-                                    lstTrkReglages[j].volume = vol;
-                                    //j++;
+                                    lstTrkReglages[j].volume = vol;                                    
                                 }
                             }
                         }                                
@@ -4532,8 +4528,7 @@ namespace Karaboss
                                 if (stag == sChannel)
                                 {
                                     // Ajust pan for all tracks having this channel
-                                    lstTrkReglages[j].pan = pan;
-                                    //j++;
+                                    lstTrkReglages[j].pan = pan;                                    
                                 }
                             }
                         }
@@ -4554,8 +4549,7 @@ namespace Karaboss
                                 if (stag == sChannel)
                                 {
                                     // Ajust reverb for all tracks having this channel
-                                    lstTrkReglages[j].reverb = reverb;
-                                    //j++;
+                                    lstTrkReglages[j].reverb = reverb;                                    
                                 }
                             }
                         }
@@ -5788,7 +5782,6 @@ namespace Karaboss
                                 T.Solo = false;
                                 T.Muted = true;
                             }
-
                         }
                     }   
                 }
@@ -5798,10 +5791,7 @@ namespace Karaboss
                 }
             }
         }
-
         
-
-
         private void CheckVolumedTracks()
         {
             bool bfound = false;
@@ -5810,9 +5800,7 @@ namespace Karaboss
                 if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
                 {
                     TrkControl.TrackControl trackCtrl = (TrkControl.TrackControl)pnlTracks.Controls[i];
-
                     int volume = trackCtrl.Volume;
-
                     int j = trackCtrl.Track;
 
                     if (volume != sequence1.tracks[j].Volume )
@@ -5991,7 +5979,21 @@ namespace Karaboss
         /// <param name="bmaximized"></param>
         private void BtnMaximizedClickOneEvent(object sender, EventArgs e, bool bmaximized)
         {
-            
+            if (sender is TrkControl.TrackControl pTrack)
+            {
+                Track track = sequence1.tracks[pTrack.Track];
+                int i = sequence1.tracks.IndexOf(track);
+                lstTrkReglages[i].maximized = !lstTrkReglages[i].maximized;
+                track.Maximized = lstTrkReglages[i].maximized;
+
+                // Redraw all: tracks and SheetMusic according to height of tracks
+                RedrawTrackControls2();
+
+                // Refresh SheetMusic                
+                RefreshDisplay();
+
+               
+            }
         }
         #endregion
 
@@ -6511,8 +6513,7 @@ namespace Karaboss
         /// <param name="trackindex"></param>
         private void InsertTrackControl(Track track, int trackindex)
         {
-            TrkControl.TrackControl pTrack = CreateTrackControl(track, trackindex);
-            //DisplayTrackControls();
+            TrkControl.TrackControl pTrack = CreateTrackControl(track, trackindex);            
         }
 
         /// <summary>
@@ -6575,10 +6576,7 @@ namespace Karaboss
 
             return pTrack;
         }
-
-     
-
-
+    
 
         /// <summary>
         /// Add a new track control 
@@ -6601,7 +6599,7 @@ namespace Karaboss
 
             TrkControl.TrackControl pTrack = CreateTrackControl(track, trackindex);
 
-            int yloc = yOffset + j * iStaffHeight;
+            int yloc = yOffset + j * iStaffHeightMaximized;
 
             yloc = Convert.ToInt32(yloc*zoom);
 
@@ -6612,6 +6610,9 @@ namespace Karaboss
             
         }
 
+        /// <summary>
+        /// Redraw track controls
+        /// </summary>
         public void RedrawTrackControls()
         {            
             for (int i = 0; i < pnlTracks.Controls.Count; i++)
@@ -6630,6 +6631,31 @@ namespace Karaboss
             }                                   
         }
      
+        private void RedrawTrackControls2()
+        {
+            int yloc = 0;
+            int h = 0;
+
+            for (int i = 0; i < pnlTracks.Controls.Count; i++)
+            {
+                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                {
+                    if (pnlTracks.Controls[i].Tag != null)
+                    {
+                        TrkControl.TrackControl trkC = ((TrkControl.TrackControl)pnlTracks.Controls[i]);
+                        
+
+                        yloc = h;
+                        yloc = Convert.ToInt32(yloc * zoom);
+                        trkC.Location = new Point(trkC.Location.X, yloc);
+
+                        h += trkC.Height;
+                    }
+                }
+            }
+        }
+
+
         /// <summary>
         /// Common for new track
         /// </summary>

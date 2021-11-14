@@ -104,8 +104,9 @@ namespace TrkControl
         private Color ColorEditOff = ColorTranslator.FromHtml("#2b5797"); //Color.DimGray;     //#2b5797
         private Color ColorMutedOn = ColorTranslator.FromHtml("#ee1111");  //Color.Red;         // #ee1111
         private Color ColorMutedOff = ColorTranslator.FromHtml("#2d89ef"); //Color.RoyalBlue;   // #2d89ef
-        private Color ColorSoloOn = ColorTranslator.FromHtml("#00a300"); //Color.Yellow;        //#00a300
-        private Color ColorSoloOff = ColorTranslator.FromHtml("#99b433"); //Color.Green;        // #99b433
+        private Color ColorSoloOn = ColorTranslator.FromHtml("#ffc40d"); //Color.Yellow;        //#00a300
+        private Color ColorSoloOff = ColorTranslator.FromHtml("#00a300"); //Color.Green;        // #99b433
+        private Color ColorLightOn = ColorTranslator.FromHtml("#ee1111"); //Color.Red; 
 
 
         private bool bmaximized = true;
@@ -551,7 +552,7 @@ namespace TrkControl
         public void LightOn()
         {
             if (!this.Muted)
-                lblLight.BackColor = Color.Red;
+                lblLight.BackColor = ColorLightOn; //Color.Red;
         }
 
 
