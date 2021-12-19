@@ -1308,9 +1308,14 @@ namespace Sanford.Multimedia.Midi
                 byte[] data = new byte[ReadVariableLengthValue() + 1];
                 data[0] = (byte)SysExType.Continuation;
 
-                Array.Copy(trackData, trackIndex, data, 1, data.Length - 1);
-                newTrack.Insert(ticks, new SysExMessage(data));
-
+                if (trackData.Length <= data.Length)
+                {
+                    Array.Copy(trackData, trackIndex, data, 1, data.Length - 1);
+                    newTrack.Insert(ticks, new SysExMessage(data));
+                } else
+                {
+                    Console.Write("Error Sanford.Multimedia.Midi");
+                }
                 trackIndex += data.Length - 1;
             }
         }
