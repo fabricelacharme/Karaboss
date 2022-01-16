@@ -32,6 +32,7 @@
 
 #endregion
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Sanford.Multimedia.Midi.Score.UI
@@ -39,6 +40,14 @@ namespace Sanford.Multimedia.Midi.Score.UI
     public partial class frmNewMidiFile : Form
     {
 
+        private List<decimal> NumeratorList = new List<decimal>() { 2, 3, 4, 6, 9, 12 };
+        
+        private List<decimal> DenominatorList = new List<decimal>() { 1, 2, 4, 8, 16, 32, 64 };
+        private bool NumDoChange = true; // used for not looping in changeValue event
+        private bool DenomDoChange = true; // used for not looping in changeValue event
+
+        private decimal NumeratorValue = 4;
+        private decimal DenominatorValue = 4;
         public int Numerator
         {
             get
@@ -66,11 +75,17 @@ namespace Sanford.Multimedia.Midi.Score.UI
             { return Convert.ToInt32(this.updMeasures.Value); }
         }
         
-        public frmNewMidiFile(int numerator, int denominator, int division, int tempo, int measures)
+        public frmNewMidiFile(int inumerator, int idenominator, int division, int tempo, int measures)
         {
             InitializeComponent();
-            updNumerator.Value = Convert.ToDecimal(numerator);
-            updDenominator.Value = Convert.ToDecimal(denominator);
+
+            updNumerator.Maximum = NumeratorList[NumeratorList.Count - 1];
+            updNumerator.Minimum = NumeratorList[0];
+            updDenominator.Maximum = DenominatorList[DenominatorList.Count - 1];
+            updDenominator.Minimum = DenominatorList[0];
+
+            updNumerator.Value = Convert.ToDecimal(inumerator);
+            updDenominator.Value = Convert.ToDecimal(idenominator);
             txtDivision.Text = division.ToString();
             txtTempo.Text = tempo.ToString();
             updMeasures.Value = Convert.ToDecimal(measures);
@@ -83,6 +98,96 @@ namespace Sanford.Multimedia.Midi.Score.UI
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void updNumerator_ValueChanged(object sender, EventArgs e)
+        {
+            // if the event is calling from this event (when set .value) do nothing
+            if (NumDoChange == false) return;
+
+            decimal cv = updNumerator.Value;
+
+            // if no change (possible?) do nothing
+            if (cv == NumeratorValue) return;
+
+            // if the value IS on array do nothing
+            if (NumeratorList.Contains(cv))
+            {
+                NumeratorValue = cv;
+                return;
+            }
+
+            // if precedent value is 8 and up arrow pressed
+            // the current value is 9 so i search the index in array of
+            // value -1 and i take next element
+            if (cv > NumeratorValue) {                           //  up arrow
+                int ix = NumeratorList.IndexOf(cv - 1) + 1;
+                if (ix >= NumeratorList.Count) return;
+
+                //ix = Array.IndexOf(NumeratorList, cv - 1) + 1;   //  get next element
+                NumDoChange = false;                             //  stop ValueChanged event 
+                updNumerator.Value = NumeratorList[ix];          //  here start a call to this event
+                NumDoChange = true;                              //  reset ValueChange event on
+            }
+
+            // the same but precedent element
+            if (cv < NumeratorValue) {                             // ' down arrow pressed
+                int ix = NumeratorList.IndexOf(cv + 1) - 1;
+                if (ix < 0) return;
+
+                //ix = Array.IndexOf(NumeratorList, cv + 1) - 1;
+                NumDoChange = false;
+                updNumerator.Value = NumeratorList[ix];
+                NumDoChange = true;
+            }
+            NumeratorValue = updNumerator.Value;
+            
+        }
+
+        private void updDenominator_ValueChanged(object sender, EventArgs e)
+        {
+            // if the event is calling from this event (when set .value) do nothing
+            if (DenomDoChange == false) return;
+
+            decimal cv = updDenominator.Value;
+
+            // if no change (possible?) do nothing
+            if (cv == DenominatorValue) return;
+
+            // if the value IS on array do nothing
+            if (DenominatorList.Contains(cv))
+            {
+                DenominatorValue = cv;
+                return;
+            }
+
+            // if precedent value is 8 and up arrow pressed
+            // the current value is 9 so i search the index in array of
+            // value -1 and i take next element
+            if (cv > DenominatorValue)
+            {                           //  up arrow
+                int ix = DenominatorList.IndexOf(cv - 1) + 1;
+                if (ix >= DenominatorList.Count) return;
+
+                //ix = Array.IndexOf(NumeratorList, cv - 1) + 1;   //  get next element
+                DenomDoChange = false;                             //  stop ValueChanged event 
+                updDenominator.Value = DenominatorList[ix];          //  here start a call to this event
+                DenomDoChange = true;                              //  reset ValueChange event on
+            }
+
+            // the same but precedent element
+            if (cv < DenominatorValue)
+            {                             // ' down arrow pressed
+                int ix = DenominatorList.IndexOf(cv + 1) - 1;
+                if (ix < 0) return;
+
+                //ix = Array.IndexOf(NumeratorList, cv + 1) - 1;
+                DenomDoChange = false;
+                updDenominator.Value = DenominatorList[ix];
+                DenomDoChange = true;
+            }
+            DenominatorValue = updDenominator.Value;
 
         }
     }
