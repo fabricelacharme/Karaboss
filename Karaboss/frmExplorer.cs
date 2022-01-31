@@ -1620,8 +1620,8 @@ namespace Karaboss
         {
             int numerator = 4;
             int denominator = 4;
-            int division = 960;
-            int tempo = 750000;
+            int division = 480;
+            int tempo = 500000;
             int measures = 35;
 
             // Display dialog windows new midi file

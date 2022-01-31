@@ -63,10 +63,15 @@ namespace Sanford.Multimedia.Midi.Score.UI
             get
             { return Convert.ToInt32(this.txtDivision.Text); }
         }
+
+
+        private bool TempoDoChange = true;        
+        private float _bpm;
+        private float _tempo;
         public int Tempo
         {
             get
-            { return Convert.ToInt32(this.txtTempo.Text); }
+            { return Convert.ToInt32(_tempo); }
         }        
 
         public int Measures
@@ -87,6 +92,7 @@ namespace Sanford.Multimedia.Midi.Score.UI
             updNumerator.Value = Convert.ToDecimal(inumerator);
             updDenominator.Value = Convert.ToDecimal(idenominator);
             txtDivision.Text = division.ToString();
+            _tempo = tempo;
             txtTempo.Text = tempo.ToString();
             updMeasures.Value = Convert.ToDecimal(measures);
         }
@@ -190,5 +196,69 @@ namespace Sanford.Multimedia.Midi.Score.UI
             DenominatorValue = updDenominator.Value;
 
         }
+   
+
+
+        private bool IsNumeric(string input)
+        {
+            int test;
+            return int.TryParse(input, out test);
+        }
+        private void txtTempo_TextChanged(object sender, EventArgs e)
+        {
+            if (TempoDoChange == false) return;
+
+            if (IsNumeric(this.txtTempo.Text))
+            {
+                if (Convert.ToInt32(this.txtTempo.Text) > 0)
+                {
+                    const float kOneMinuteInMicroseconds = 60000000;
+                    _tempo = float.Parse(this.txtTempo.Text);
+                    _bpm = Convert.ToInt32(kOneMinuteInMicroseconds / _tempo);                    
+                    
+                    TempoDoChange = false;
+                    txtBpm.Text = _bpm.ToString();                    
+                    TempoDoChange = true;
+
+                }
+            }            
+        }
+
+        private void txtBpm_TextChanged(object sender, EventArgs e)
+        {
+            if (TempoDoChange == false) return;
+
+            if (IsNumeric(this.txtBpm.Text))
+            {
+                if (Convert.ToInt32(this.txtBpm.Text) > 0)
+                {
+                    const float kOneMinuteInMicroseconds = 60000000;
+                    float _bpm = float.Parse(this.txtBpm.Text);
+                    _tempo = Convert.ToInt32(kOneMinuteInMicroseconds / _bpm);
+                    
+                    TempoDoChange = false;
+                    txtTempo.Text = _tempo.ToString();
+                    TempoDoChange = true;
+                }
+            }
+        }
+
+
+        private void txtTempo_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+        }
+
+        private void txtDivision_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+        }
+        private void txtBpm_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+        }
+
+ 
+
     }
 }
