@@ -591,9 +591,9 @@ namespace Sanford.Multimedia.Midi
                 if (sy != string.Empty)
                 {
                     // Elimine caractères bizarres dans certains fichiers    
-                    sy = cleanLyric(sy);                    
+                    sy = cleanLyric(sy);
 
-                    string s = sy.Trim();
+                    string s = sy.Trim();                                      
                     string reste = string.Empty;
 
                     #region extract data
@@ -607,6 +607,19 @@ namespace Sanford.Multimedia.Midi
                     int iLineFeed1 = sy.LastIndexOf(LineFeed1);
                     string LineFeed2 = "/";
                     int iLineFeed2 = sy.LastIndexOf(LineFeed2);
+
+                    // FAB 12/02/2022
+                    // the human imagination is far beyond what an unfortunate computer program can predict
+                    // Sometime linefeed is not at the beginning or end of string, but inside....
+                    // Something like " /blabla"
+                    if (iLineFeed2 > 0)
+                    {
+                        sy = sy.Remove(iLineFeed2, 1);
+                        sy = LineFeed2 + sy;
+                        iLineFeed2 = 0;
+                    }
+
+
 
                     if (iParagraph1 == 0 || (sy.Length > Paragraph1.Length && iParagraph1 == sy.Length - Paragraph1.Length))
                     {
