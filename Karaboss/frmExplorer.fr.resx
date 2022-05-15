@@ -117,68 +117,98 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="mnuFileNew.Size" type="System.Drawing.Size, System.Drawing">
+    <value>165, 22</value>
+  </data>
   <data name="mnuFileNew.Text" xml:space="preserve">
     <value>&amp;Nouveau</value>
+  </data>
+  <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
+    <value>165, 22</value>
   </data>
   <data name="mnuFileOpen.Text" xml:space="preserve">
     <value>&amp;Ouvrir</value>
   </data>
+  <data name="mnuFileEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>165, 22</value>
+  </data>
   <data name="mnuFileEdit.Text" xml:space="preserve">
     <value>&amp;Editer</value>
+  </data>
+  <data name="MnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>162, 6</value>
+  </data>
+  <data name="MnuFileRecentFiles.Size" type="System.Drawing.Size, System.Drawing">
+    <value>165, 22</value>
   </data>
   <data name="MnuFileRecentFiles.Text" xml:space="preserve">
     <value>Fichiers récents</value>
   </data>
+  <data name="MnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>162, 6</value>
+  </data>
+  <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>165, 22</value>
+  </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>54, 20</value>
   </data>
   <data name="mnuFile.Text" xml:space="preserve">
     <value>&amp;Fichier</value>
   </data>
-  <data name="mnuEditSearch.Size" type="System.Drawing.Size, System.Drawing">
-    <value>360, 22</value>
+  <data name="mnuEditRenameAll.Text" xml:space="preserve">
+    <value>Tout renommer (F3)</value>
   </data>
-  <data name="mnuEditSearch.Text" xml:space="preserve">
-    <value>Rechercher...</value>
-  </data>
-  <data name="mnuEditExplore.Size" type="System.Drawing.Size, System.Drawing">
-    <value>360, 22</value>
-  </data>
-  <data name="mnuEditExplore.Text" xml:space="preserve">
-    <value>Fichiers</value>
-  </data>
-  <data name="mnuEditPlaylist.Size" type="System.Drawing.Size, System.Drawing">
-    <value>360, 22</value>
-  </data>
-  <data name="mnuEditPlaylist.Text" xml:space="preserve">
-    <value>Listes de lecture</value>
-  </data>
-  <data name="MnuEditConnected.Size" type="System.Drawing.Size, System.Drawing">
-    <value>360, 22</value>
-  </data>
-  <data name="MnuEditConnected.Text" xml:space="preserve">
-    <value>Rechercher des artistes, chansons et paroles sur le web</value>
-  </data>
-  <data name="MnuEditPianoTraining.Size" type="System.Drawing.Size, System.Drawing">
-    <value>360, 22</value>
-  </data>
-  <data name="MnuEditPianoTraining.Text" xml:space="preserve">
-    <value>Piano</value>
-  </data>
-  <data name="MnuEditGuitarTraining.Size" type="System.Drawing.Size, System.Drawing">
-    <value>360, 22</value>
-  </data>
-  <data name="MnuEditGuitarTraining.Text" xml:space="preserve">
-    <value>Guitare</value>
+  <data name="mnuEditReplaceAll.Text" xml:space="preserve">
+    <value>Tout remplacer (F4)</value>
   </data>
   <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>70, 20</value>
+    <value>56, 20</value>
   </data>
   <data name="mnuEdit.Text" xml:space="preserve">
+    <value>&amp;Edition</value>
+  </data>
+  <data name="mnuDisplaySearch.Size" type="System.Drawing.Size, System.Drawing">
+    <value>322, 22</value>
+  </data>
+  <data name="mnuDisplaySearch.Text" xml:space="preserve">
+    <value>Rechercher...</value>
+  </data>
+  <data name="mnuDisplayExplore.Size" type="System.Drawing.Size, System.Drawing">
+    <value>322, 22</value>
+  </data>
+  <data name="mnuDisplayExplore.Text" xml:space="preserve">
+    <value>Explorateur</value>
+  </data>
+  <data name="mnuDisplayPlaylist.Size" type="System.Drawing.Size, System.Drawing">
+    <value>322, 22</value>
+  </data>
+  <data name="MnuDisplayConnected.Size" type="System.Drawing.Size, System.Drawing">
+    <value>322, 22</value>
+  </data>
+  <data name="MnuDisplayConnected.Text" xml:space="preserve">
+    <value>Trouver  artistes, chansons &amp;&amp; paroles sur le web</value>
+  </data>
+  <data name="MnuDisplayPianoTraining.Size" type="System.Drawing.Size, System.Drawing">
+    <value>322, 22</value>
+  </data>
+  <data name="MnuDisplayPianoTraining.Text" xml:space="preserve">
+    <value>Entrainement au piano</value>
+  </data>
+  <data name="MnuDisplayGuitarTraining.Size" type="System.Drawing.Size, System.Drawing">
+    <value>322, 22</value>
+  </data>
+  <data name="MnuDisplayGuitarTraining.Text" xml:space="preserve">
+    <value>Entrainement à la guitare</value>
+  </data>
+  <data name="mnuDisplay.Size" type="System.Drawing.Size, System.Drawing">
+    <value>70, 20</value>
+  </data>
+  <data name="mnuDisplay.Text" xml:space="preserve">
     <value>&amp;Affichage</value>
   </data>
   <data name="mnuToolsMngtFilesDeleteEmptyDirs.Size" type="System.Drawing.Size, System.Drawing">
@@ -3305,5 +3335,9 @@
         AAAAAAAAAAAAAADwDwAAwAMAAIABAACAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA
         AQAAgAEAAMADAADwDwAA
 </value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>Inherit</value>
   </data>
 </root>

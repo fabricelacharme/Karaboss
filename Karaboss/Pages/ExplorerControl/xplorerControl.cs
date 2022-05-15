@@ -205,6 +205,9 @@ namespace Karaboss.xplorer
         {
             shellListView.RefreshContents(fullPath);
         }
+        
+
+
 
         #endregion
 

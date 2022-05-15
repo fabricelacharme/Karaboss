@@ -33,7 +33,7 @@
             this.tssLeft = new System.Windows.Forms.ToolStripStatusLabel();
             this.tssMiddle = new System.Windows.Forms.ToolStripStatusLabel();
             this.tssRight = new System.Windows.Forms.ToolStripStatusLabel();
-            this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.mnuExplorer = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileNew = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,12 +43,15 @@
             this.MnuFileSep2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuEditSearch = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuEditExplore = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuEditPlaylist = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuEditConnected = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuEditPianoTraining = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuEditGuitarTraining = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEditRenameAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEditReplaceAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDisplay = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDisplaySearch = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDisplayExplore = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDisplayPlaylist = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuDisplayConnected = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuDisplayPianoTraining = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuDisplayGuitarTraining = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuToolsOption = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuToolsSep1 = new System.Windows.Forms.ToolStripSeparator();
@@ -92,7 +95,7 @@
             this.playlistsControl = new Karaboss.playlists.PlaylistsControl();
             this.searchControl = new Karaboss.Search.SearchControl();
             this.statusBar.SuspendLayout();
-            this.menuStrip.SuspendLayout();
+            this.mnuExplorer.SuspendLayout();
             this.pnlFileInfos.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -122,16 +125,17 @@
             resources.ApplyResources(this.tssRight, "tssRight");
             this.tssRight.Name = "tssRight";
             // 
-            // menuStrip
+            // mnuExplorer
             // 
-            resources.ApplyResources(this.menuStrip, "menuStrip");
-            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            resources.ApplyResources(this.mnuExplorer, "mnuExplorer");
+            this.mnuExplorer.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFile,
             this.mnuEdit,
+            this.mnuDisplay,
             this.mnuTools,
             this.mnuMidi,
             this.mnuHelp});
-            this.menuStrip.Name = "menuStrip";
+            this.mnuExplorer.Name = "mnuExplorer";
             // 
             // mnuFile
             // 
@@ -189,49 +193,69 @@
             // 
             resources.ApplyResources(this.mnuEdit, "mnuEdit");
             this.mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuEditSearch,
-            this.mnuEditExplore,
-            this.mnuEditPlaylist,
-            this.MnuEditConnected,
-            this.MnuEditPianoTraining,
-            this.MnuEditGuitarTraining});
+            this.mnuEditRenameAll,
+            this.mnuEditReplaceAll});
             this.mnuEdit.Name = "mnuEdit";
             // 
-            // mnuEditSearch
+            // mnuEditRenameAll
             // 
-            resources.ApplyResources(this.mnuEditSearch, "mnuEditSearch");
-            this.mnuEditSearch.Name = "mnuEditSearch";
-            this.mnuEditSearch.Click += new System.EventHandler(this.MnuSearch_Click);
+            resources.ApplyResources(this.mnuEditRenameAll, "mnuEditRenameAll");
+            this.mnuEditRenameAll.Name = "mnuEditRenameAll";
+            this.mnuEditRenameAll.Click += new System.EventHandler(this.mnuEditRenameAll_Click);
             // 
-            // mnuEditExplore
+            // mnuEditReplaceAll
             // 
-            resources.ApplyResources(this.mnuEditExplore, "mnuEditExplore");
-            this.mnuEditExplore.Name = "mnuEditExplore";
-            this.mnuEditExplore.Click += new System.EventHandler(this.MnuEditExplore_Click);
+            resources.ApplyResources(this.mnuEditReplaceAll, "mnuEditReplaceAll");
+            this.mnuEditReplaceAll.Name = "mnuEditReplaceAll";
+            this.mnuEditReplaceAll.Click += new System.EventHandler(this.mnuEditReplaceAll_Click);
             // 
-            // mnuEditPlaylist
+            // mnuDisplay
             // 
-            resources.ApplyResources(this.mnuEditPlaylist, "mnuEditPlaylist");
-            this.mnuEditPlaylist.Name = "mnuEditPlaylist";
-            this.mnuEditPlaylist.Click += new System.EventHandler(this.MnuEditPlaylist_Click);
+            resources.ApplyResources(this.mnuDisplay, "mnuDisplay");
+            this.mnuDisplay.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuDisplaySearch,
+            this.mnuDisplayExplore,
+            this.mnuDisplayPlaylist,
+            this.MnuDisplayConnected,
+            this.MnuDisplayPianoTraining,
+            this.MnuDisplayGuitarTraining});
+            this.mnuDisplay.Name = "mnuDisplay";
             // 
-            // MnuEditConnected
+            // mnuDisplaySearch
             // 
-            resources.ApplyResources(this.MnuEditConnected, "MnuEditConnected");
-            this.MnuEditConnected.Name = "MnuEditConnected";
-            this.MnuEditConnected.Click += new System.EventHandler(this.MnuEditConnected_Click);
+            resources.ApplyResources(this.mnuDisplaySearch, "mnuDisplaySearch");
+            this.mnuDisplaySearch.Name = "mnuDisplaySearch";
+            this.mnuDisplaySearch.Click += new System.EventHandler(this.MnuDisplaySearch_Click);
             // 
-            // MnuEditPianoTraining
+            // mnuDisplayExplore
             // 
-            resources.ApplyResources(this.MnuEditPianoTraining, "MnuEditPianoTraining");
-            this.MnuEditPianoTraining.Name = "MnuEditPianoTraining";
-            this.MnuEditPianoTraining.Click += new System.EventHandler(this.MnuEditPianoTraining_Click);
+            resources.ApplyResources(this.mnuDisplayExplore, "mnuDisplayExplore");
+            this.mnuDisplayExplore.Name = "mnuDisplayExplore";
+            this.mnuDisplayExplore.Click += new System.EventHandler(this.MnuDisplayExplore_Click);
             // 
-            // MnuEditGuitarTraining
+            // mnuDisplayPlaylist
             // 
-            resources.ApplyResources(this.MnuEditGuitarTraining, "MnuEditGuitarTraining");
-            this.MnuEditGuitarTraining.Name = "MnuEditGuitarTraining";
-            this.MnuEditGuitarTraining.Click += new System.EventHandler(this.MnuEditGuitarTraining_Click);
+            resources.ApplyResources(this.mnuDisplayPlaylist, "mnuDisplayPlaylist");
+            this.mnuDisplayPlaylist.Name = "mnuDisplayPlaylist";
+            this.mnuDisplayPlaylist.Click += new System.EventHandler(this.MnuDisplayPlaylist_Click);
+            // 
+            // MnuDisplayConnected
+            // 
+            resources.ApplyResources(this.MnuDisplayConnected, "MnuDisplayConnected");
+            this.MnuDisplayConnected.Name = "MnuDisplayConnected";
+            this.MnuDisplayConnected.Click += new System.EventHandler(this.MnuDisplayConnected_Click);
+            // 
+            // MnuDisplayPianoTraining
+            // 
+            resources.ApplyResources(this.MnuDisplayPianoTraining, "MnuDisplayPianoTraining");
+            this.MnuDisplayPianoTraining.Name = "MnuDisplayPianoTraining";
+            this.MnuDisplayPianoTraining.Click += new System.EventHandler(this.MnuDisplayPianoTraining_Click);
+            // 
+            // MnuDisplayGuitarTraining
+            // 
+            resources.ApplyResources(this.MnuDisplayGuitarTraining, "MnuDisplayGuitarTraining");
+            this.MnuDisplayGuitarTraining.Name = "MnuDisplayGuitarTraining";
+            this.MnuDisplayGuitarTraining.Click += new System.EventHandler(this.MnuDisplayGuitarTraining_Click);
             // 
             // mnuTools
             // 
@@ -403,6 +427,7 @@
             // 
             this.sequence1.Copyright = null;
             this.sequence1.Denominator = 0;
+            this.sequence1.Division = 24;
             this.sequence1.Format = 1;
             this.sequence1.ITag = null;
             this.sequence1.KTag = null;
@@ -539,16 +564,16 @@
             this.Controls.Add(this.playlistsControl);
             this.Controls.Add(this.searchControl);
             this.Controls.Add(this.statusBar);
-            this.Controls.Add(this.menuStrip);
-            this.MainMenuStrip = this.menuStrip;
+            this.Controls.Add(this.mnuExplorer);
+            this.MainMenuStrip = this.mnuExplorer;
             this.Name = "frmExplorer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmExplorer_FormClosing);
             this.Load += new System.EventHandler(this.FrmExplorer_Load);
             this.Resize += new System.EventHandler(this.FrmExplorer_Resize);
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();
-            this.menuStrip.ResumeLayout(false);
-            this.menuStrip.PerformLayout();
+            this.mnuExplorer.ResumeLayout(false);
+            this.mnuExplorer.PerformLayout();
             this.pnlFileInfos.ResumeLayout(false);
             this.pnlFileInfos.PerformLayout();
             this.ResumeLayout(false);
@@ -558,19 +583,19 @@
 
         #endregion
         private System.Windows.Forms.StatusStrip statusBar;
-        private System.Windows.Forms.MenuStrip menuStrip;
+        private System.Windows.Forms.MenuStrip mnuExplorer;
         private System.Windows.Forms.ToolStripMenuItem mnuFile;
         private System.Windows.Forms.ToolStripMenuItem mnuFileEdit;
         private System.Windows.Forms.ToolStripMenuItem mnuFileNew;
         private System.Windows.Forms.ToolStripMenuItem mnuFileOpen;
         private System.Windows.Forms.ToolStripMenuItem mnuFileQuit;
 
-        private System.Windows.Forms.ToolStripMenuItem mnuEdit;
-        private System.Windows.Forms.ToolStripMenuItem mnuEditPlaylist;
+        private System.Windows.Forms.ToolStripMenuItem mnuDisplay;
+        private System.Windows.Forms.ToolStripMenuItem mnuDisplayPlaylist;
 
         private System.Windows.Forms.ToolStripMenuItem mnuTools;
         private System.Windows.Forms.ToolStripMenuItem mnuToolsOption;
-        private System.Windows.Forms.ToolStripMenuItem mnuEditSearch;
+        private System.Windows.Forms.ToolStripMenuItem mnuDisplaySearch;
 
         private System.Windows.Forms.ToolStripMenuItem mnuMidi;
         private System.Windows.Forms.ToolStripMenuItem mnuMidiInputDevice;
@@ -597,7 +622,7 @@
         private System.Windows.Forms.ToolStripStatusLabel tssLeft;
         private System.Windows.Forms.ToolStripStatusLabel tssMiddle;
         private System.Windows.Forms.ToolStripStatusLabel tssRight;
-        private System.Windows.Forms.ToolStripMenuItem mnuEditExplore;
+        private System.Windows.Forms.ToolStripMenuItem mnuDisplayExplore;
         private System.Windows.Forms.Panel pnlFileInfos;
         private System.Windows.Forms.Label lblDuration;
         private System.Windows.Forms.Label lblFormat;
@@ -610,8 +635,8 @@
         private System.Windows.Forms.Label lblKtags;
         private System.Windows.Forms.Label lblLyrics;
         private Pages.ConnectedControl connectedControl;
-        private System.Windows.Forms.ToolStripMenuItem MnuEditConnected;
-        private System.Windows.Forms.ToolStripMenuItem MnuEditPianoTraining;
+        private System.Windows.Forms.ToolStripMenuItem MnuDisplayConnected;
+        private System.Windows.Forms.ToolStripMenuItem MnuDisplayPianoTraining;
         private System.Windows.Forms.ToolStripMenuItem MnuHelpCheckNewVersion;
         private System.Windows.Forms.ToolStripSeparator MnuFileSep1;
         private System.Windows.Forms.ToolStripSeparator MnuMidiSep1;
@@ -619,9 +644,12 @@
         private System.Windows.Forms.ToolStripMenuItem MnuMidiExternalPlay;
         private System.Windows.Forms.ToolStripMenuItem MnuMidiExternalRecord;
         private System.Windows.Forms.ToolStripSeparator MnuToolsSep1;
-        private System.Windows.Forms.ToolStripMenuItem MnuEditGuitarTraining;
+        private System.Windows.Forms.ToolStripMenuItem MnuDisplayGuitarTraining;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem MnuFileRecentFiles;
         private System.Windows.Forms.ToolStripSeparator MnuFileSep2;
+        private System.Windows.Forms.ToolStripMenuItem mnuEdit;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditRenameAll;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditReplaceAll;
     }
 }

@@ -152,6 +152,7 @@ namespace Karaboss
             searchControl.Visible = false;            
             playlistsControl.Visible = false;
             xplorerControl.Visible = true;
+            
             connectedControl.Visible = false;
                         
             // Load saved configuration
@@ -170,7 +171,8 @@ namespace Karaboss
 
             // Display controls on the form
             ResizeElements();
-           
+            
+
             // Manage arguments when launched by double clicking on a file in the Windows Explorer            
             if (args.Length > 0)
             {                
@@ -238,6 +240,7 @@ namespace Karaboss
             xplorerControl.Navigate(songRootUri);
 
             xplorerControl.Visible = true;
+            
             playlistsControl.Visible = false;
             searchControl.Visible = false;
             connectedControl.Visible = false;
@@ -245,7 +248,7 @@ namespace Karaboss
 
             ShowPlayEditButtons(true);            
 
-            xplorerControl.Refresh();
+            xplorerControl.Refresh();            
 
             tssLeft.Text = xplorerControl.CurrentFolder;
             tssMiddle.Text = xplorerControl.CurrentContent;
@@ -276,6 +279,7 @@ namespace Karaboss
             playlistsControl.Visible = false;
             connectedControl.Visible = false;
             pnlFileInfos.Visible = true;
+            mnuEdit.Visible = false;
 
             ShowPlayEditButtons(true);
 
@@ -310,6 +314,7 @@ namespace Karaboss
             searchControl.Visible = false;
             connectedControl.Visible = false;
             pnlFileInfos.Visible = true;
+            mnuEdit.Visible = true;
 
             ShowPlayEditButtons(true);
 
@@ -337,6 +342,7 @@ namespace Karaboss
             searchControl.Visible = false;
             connectedControl.Visible = false;
             pnlFileInfos.Visible = true;
+            mnuEdit.Visible = false;
 
             ShowPlayEditButtons(true);
 
@@ -350,6 +356,7 @@ namespace Karaboss
             xplorerControl.Visible = false;
             playlistsControl.Visible = false;
             searchControl.Visible = false;
+            mnuEdit.Visible = false;
 
             ShowPlayEditButtons(false);
 
@@ -431,6 +438,8 @@ namespace Karaboss
         /// <param name="e"></param>
         private void SideBarControl_DisplayPianoTraining(object sender, EventArgs e)
         {
+            
+
             DisplayPianoTraining();
         }
 
@@ -1475,8 +1484,8 @@ namespace Karaboss
         private void ResizeElements()
         {            
             sideBarControl.Left = 0;
-            sideBarControl.Top = menuStrip.Height;
-            sideBarControl.Height = ClientSize.Height - menuStrip.Height - statusBar.Height;
+            sideBarControl.Top = mnuExplorer.Height;
+            sideBarControl.Height = ClientSize.Height - mnuExplorer.Height - statusBar.Height;
 
             //int W = ClientSize.Width - sideBarControl.Width - 17;
             int W = ClientSize.Width - sideBarControl.Width;
@@ -1494,7 +1503,7 @@ namespace Karaboss
             searchControl.Left = sideBarControl.Width;
             connectedControl.Left = sideBarControl.Width;
 
-            xplorerControl.Top = menuStrip.Height;
+            xplorerControl.Top = mnuExplorer.Height;
             playlistsControl.Top = xplorerControl.Top;
             searchControl.Top = xplorerControl.Top;
             connectedControl.Top = xplorerControl.Top;
@@ -1504,10 +1513,10 @@ namespace Karaboss
             searchControl.Width = xplorerControl.Width;
             connectedControl.Width = W;
 
-            xplorerControl.Height = ClientSize.Height - menuStrip.Height - pnlFileInfos.Height - statusBar.Height;
+            xplorerControl.Height = ClientSize.Height - mnuExplorer.Height - pnlFileInfos.Height - statusBar.Height;
             playlistsControl.Height = xplorerControl.Height;
             searchControl.Height = xplorerControl.Height;
-            connectedControl.Height = ClientSize.Height - menuStrip.Height - statusBar.Height;
+            connectedControl.Height = ClientSize.Height - mnuExplorer.Height - statusBar.Height;
 
             // Labels MIDI, K, I, T, W            
             int totalW = W - lblKtags.Left;
@@ -1658,8 +1667,22 @@ namespace Karaboss
 
         #endregion
 
+        #region menu Edit
 
-        #region menu edit
+        private void mnuEditRenameAll_Click(object sender, EventArgs e)
+        {
+            xplorerControl.RenameAllQuestion();
+        }
+
+        private void mnuEditReplaceAll_Click(object sender, EventArgs e)
+        {
+            xplorerControl.ReplaceAllQuestion();
+        }        
+
+        #endregion
+
+
+        #region menu Display
 
 
         /// <summary>
@@ -1667,7 +1690,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MnuSearch_Click(object sender, EventArgs e)
+        private void MnuDisplaySearch_Click(object sender, EventArgs e)
         {
             searchControl.Visible = true;
             playlistsControl.Visible = false;
@@ -1682,7 +1705,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MnuEditExplore_Click(object sender, EventArgs e)
+        private void MnuDisplayExplore_Click(object sender, EventArgs e)
         {
             searchControl.Visible = false;
             xplorerControl.Visible = true;
@@ -1698,7 +1721,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MnuEditPlaylist_Click(object sender, EventArgs e)
+        private void MnuDisplayPlaylist_Click(object sender, EventArgs e)
         {
             playlistsControl.Visible = true;
             xplorerControl.Visible = false;
@@ -1713,7 +1736,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MnuEditConnected_Click(object sender, EventArgs e)
+        private void MnuDisplayConnected_Click(object sender, EventArgs e)
         {
             searchControl.Visible = false;            
             xplorerControl.Visible = false;
@@ -1728,7 +1751,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MnuEditPianoTraining_Click(object sender, EventArgs e)
+        private void MnuDisplayPianoTraining_Click(object sender, EventArgs e)
         {
             DisplayPianoTraining();
         }
@@ -1738,7 +1761,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MnuEditGuitarTraining_Click(object sender, EventArgs e)
+        private void MnuDisplayGuitarTraining_Click(object sender, EventArgs e)
         {
             DisplayGuitarTraining();
         }
@@ -2440,6 +2463,8 @@ namespace Karaboss
                 inDevice = null;
             }
         }
+
+
 
         #endregion
 
