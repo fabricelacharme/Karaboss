@@ -51,6 +51,7 @@ using ComTypes = System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using FlShell.Resources.Localization;
 using System.Threading;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace FlShell
 {
@@ -881,32 +882,28 @@ namespace FlShell
         }
 
         /// <summary>
-        /// Convert file size to Byte, Kb, Mb, Gb (not yet Tb lol)
+        /// Convert file size to Byte, Kb, Mb, Gb, Tb
         /// </summary>
         /// <param name="sizeInBytes"></param>
         /// <returns></returns>
         private string FileSizeToString(long sizeInBytes)
-        {            
-            if (sizeInBytes >= 1073741824)
+        {
+            string[] sizes = { "Bytes", "Ko", "Mo", "Go", "To", "Po" };
+            double len = sizeInBytes;
+            int order = 0;
+            while (len >= 1024 && order < sizes.Length - 1)
             {
-                double sizeInGB = sizeInBytes / Math.Pow(1024, 3);
-                return Math.Round(sizeInGB, 2) + " Go";
+                order++;
+                len = len / 1024;
             }
 
-            if (sizeInBytes >= 1048576)
-            {
-                double sizeInMB = sizeInBytes / Math.Pow(1024, 2);
-                return Math.Round(sizeInMB, 2) + " Mo";
-            }
-
-            if (sizeInBytes >= 1024)
-            {
-                double sizeInKB = sizeInBytes / Math.Pow(1024, 1);
-                return Math.Round(sizeInKB, 0) + " Ko";
-            }
-
-            //No conversion needed
-            return sizeInBytes + " Bytes";
+            // Adjust the format string to your preferences. For example "{0:0.#}{1}" would
+            // show a single decimal place, and no space.
+            // Take upper size
+            len = Math.Ceiling(len);
+            string result = String.Format("{0:0} {1}", len, sizes[order]);
+            return result;
+            
         }
 
         #endregion
