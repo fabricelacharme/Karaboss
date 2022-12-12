@@ -46,8 +46,7 @@
             this.btnScan = new System.Windows.Forms.Button();
             this.lblSearchDir = new System.Windows.Forms.Label();
             this.txtSearchDir = new System.Windows.Forms.TextBox();
-            //this.listView = new System.Windows.Forms.ListView();
-            this.listView = new MyListView();
+            this.listView = new Karaboss.Search.MyListView();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnRemoveFromSearch = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
