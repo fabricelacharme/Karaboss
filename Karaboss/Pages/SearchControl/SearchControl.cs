@@ -136,6 +136,9 @@ namespace Karaboss.Search
         Button btnClear;
         Button btnSearchDir;
 
+      
+        ToolTip MyToolTip;
+
         #region properties
         private string _songroot;
         public string SongRoot
@@ -197,10 +200,12 @@ namespace Karaboss.Search
         // Constructor
         public SearchControl()
         {
-            InitializeComponent();
+            InitializeComponent();  
 
             // initialize listview
             InitListview();
+
+            MyToolTip = new ToolTip();
 
             if (_songroot == "C:\\\\" || Directory.Exists(_songroot) == false)
                 _songroot = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
@@ -1086,7 +1091,7 @@ namespace Karaboss.Search
             };
             
             txtSearch.Controls.Add(btnSearch);
-
+            this.MyToolTip.SetToolTip(this.btnSearch, "Search");
             btnSearch.Click += new EventHandler(btnSearch_Click);
 
             // Send EM_SETMARGINS to prevent text from disappearing underneath the button
@@ -1096,10 +1101,12 @@ namespace Karaboss.Search
             {
                 Size = new Size(25, txtSearch.ClientSize.Height + 2),
                 Location = new Point(txtSearch.ClientSize.Width - 50, -1),
-                Cursor = Cursors.Default,
-                Image = Properties.Resources.delete_icon,
+                Cursor = Cursors.Default,                       
+                
+                Image = Properties.Resources.cross_icon,
             };
             txtSearch.Controls.Add(btnClear);
+            this.MyToolTip.SetToolTip(this.btnClear, "Clear");
             btnClear.Click += new EventHandler(btnClear_Click);
 
 
@@ -1110,8 +1117,10 @@ namespace Karaboss.Search
                 Image = Properties.Resources.Action_Folder_icon,
             };
             txtSearchDir.Controls.Add(btnSearchDir);
-
+            this.MyToolTip.SetToolTip(this.btnSearchDir, "Select new location");
             btnSearchDir.Click += new EventHandler(BtnSearchDir_Click);
+
+            this.MyToolTip.SetToolTip(this.btnScan, "Reindex files");
 
             // Send EM_SETMARGINS to prevent text from disappearing underneath the button
             SendMessage(txtSearch.Handle, 0xd3, (IntPtr)2, (IntPtr)(btnSearchDir.Width << 16));
