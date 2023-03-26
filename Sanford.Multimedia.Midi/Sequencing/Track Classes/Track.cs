@@ -1590,14 +1590,21 @@ namespace Sanford.Multimedia.Midi
 
             // offset also the list of notes
             for (int i = notes.Count - 1; i >= 0; i--)
-            {                
-                notes[i].StartTime = notes[i].StartTime + offset;                
+            {
+                if (notes[i].StartTime >= starttime)
+                {
+                    notes[i].StartTime = notes[i].StartTime + offset;
+                }
             }
 
             for (int i = this.Lyrics.Count - 1; i >= 0; i--)
             {
-                Lyrics[i].TicksOn = Lyrics[i].TicksOn + offset;                
+                if (Lyrics[i].TicksOn >= starttime)
+                {
+                    Lyrics[i].TicksOn = Lyrics[i].TicksOn + offset;
+                }
             }
+
         }
 
         #endregion
