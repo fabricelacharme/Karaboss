@@ -35,6 +35,7 @@
 using System;
 using System.Diagnostics;
 using System.Collections.Generic; //Lists
+using System.Diagnostics.Eventing.Reader;
 
 namespace Sanford.Multimedia.Midi
 {
@@ -1552,58 +1553,138 @@ namespace Sanford.Multimedia.Midi
 
             MidiEvent current = GetMidiEvent(Count - 1);
 
-            while (current.AbsoluteTicks >= starttime)
+            if (offset > 0)
             {
-
-                if (current != endOfTrackMidiEvent)
+                while (current.AbsoluteTicks >= starttime)
                 {
-                    // New code : move all events
-                    Move(current, current.AbsoluteTicks + offset);
-
-                    #region previous
-                    if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
+                    if (current != endOfTrackMidiEvent)
                     {
-                        current = current.Previous;
+                        // New code : move all events
+                        Move(current, current.AbsoluteTicks + offset);
+
+                        #region previous
+                        if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
+                        {
+                            current = current.Previous;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion previous
                     }
                     else
                     {
-                        break;
+                        #region previous
+                        if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
+                        {
+                            current = current.Previous;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion previous
                     }
-                    #endregion previous
+
                 }
-                else
+
+                // offset also the list of notes
+                for (int i = notes.Count - 1; i >= 0; i--)
                 {
-                    #region previous
-                    if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
+                    if (notes[i].StartTime >= starttime)
                     {
-                        current = current.Previous;
+                        notes[i].StartTime = notes[i].StartTime + offset;
+                    }
+                }
+
+                for (int i = this.Lyrics.Count - 1; i >= 0; i--)
+                {
+                    if (Lyrics[i].TicksOn >= starttime)
+                    {
+                        Lyrics[i].TicksOn = Lyrics[i].TicksOn + offset;
+                    }
+                }
+            }
+            else if (offset < 0)
+            {
+                // delete notes in notes & events from starttime to starttime - Offset
+                List<MidiNote> delnotes = new List<MidiNote>();
+                for (int i = 0; i < notes.Count; i++)
+                {
+                    if (notes[i].StartTime >= starttime && notes[i].StartTime < starttime - offset)
+                    {
+                        delnotes.Add(notes[i]);
+                    }
+                }
+                for (int i = 0; i < delnotes.Count; i++)
+                {
+                    deleteNote(delnotes[i].Number, delnotes[i].StartTime);
+                }
+
+                // negative offset all notes from end to > starttime - offset 
+                #region negative offset
+
+                current = GetMidiEvent(0);
+                while (current.AbsoluteTicks <= Length)
+                {
+                    if (current.AbsoluteTicks >= starttime - offset)
+                    {
+
+                        // new code : delete all the events, not only the notes
+
+                        Move(current, current.AbsoluteTicks + offset);
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion
                     }
                     else
                     {
-                        break;
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion next
                     }
-                    #endregion previous
+
                 }
 
-            }
+                #endregion negative offset
 
 
-            // offset also the list of notes
-            for (int i = notes.Count - 1; i >= 0; i--)
-            {
-                if (notes[i].StartTime >= starttime)
+                // offset also the list of notes
+                for (int i = 0; i < notes.Count; i++)
                 {
-                    notes[i].StartTime = notes[i].StartTime + offset;
+                    if (notes[i].StartTime >= starttime - offset)
+                    {
+                        notes[i].StartTime = notes[i].StartTime + offset;
+                    }
                 }
+
+                for (int i = 0; i < Lyrics.Count; i++)
+                {
+                    if (Lyrics[i].TicksOn >= starttime - offset)
+                    {
+                        Lyrics[i].TicksOn = Lyrics[i].TicksOn + offset;
+                    }
+                }
+
+
             }
 
-            for (int i = this.Lyrics.Count - 1; i >= 0; i--)
-            {
-                if (Lyrics[i].TicksOn >= starttime)
-                {
-                    Lyrics[i].TicksOn = Lyrics[i].TicksOn + offset;
-                }
-            }
+
 
         }
 
@@ -1677,7 +1758,7 @@ namespace Sanford.Multimedia.Midi
         }
 
         /// <summary>
-        /// Delete a measure in the tack
+        /// Delete a measure in the track
         /// </summary>
         /// <param name="starttime"></param>
         /// <param name="offset"></param>
