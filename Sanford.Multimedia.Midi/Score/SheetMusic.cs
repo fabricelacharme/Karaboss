@@ -1924,6 +1924,11 @@ namespace Sanford.Multimedia.Midi.Score
                     menuDeleteHalfTimeAllTracks.Click += new System.EventHandler(this.MnuDeleteHalfTimeAllTracks_Click);
 
 
+                    // Offset start times of all notes                    
+                    ToolStripMenuItem menuOffsetNotes = new ToolStripMenuItem("Offset start times");
+                    smContextMenu.Items.Add(menuOffsetNotes);
+                    menuOffsetNotes.Click += new EventHandler(this.MnuOffsetNotes_Click);
+
 
 
                     // Sep 2
@@ -2876,6 +2881,30 @@ namespace Sanford.Multimedia.Midi.Score
 
                 Invalidate();                
             }
+        }
+
+
+        private void MnuOffsetNotes_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = new DialogResult();
+            UI.ModifyStartTimesDialog ModifyStartTimesDialog = new UI.ModifyStartTimesDialog();
+            dr = ModifyStartTimesDialog.ShowDialog();
+
+            if (dr == System.Windows.Forms.DialogResult.Cancel)
+                return;
+
+            int StartTime = ModifyStartTimesDialog.StartTime;
+            int Offset = ModifyStartTimesDialog.Offset;
+            Track track = sequence1.tracks[_selectedstaff];
+            track.OffsetStartTimes(StartTime, Offset);
+
+            this.Refresh();
+
+            // Raise event
+            FileModified?.Invoke(this);
+            WidthChanged?.Invoke(maxstaffwidth);
+
+            Cursor.Current = Cursors.Default;
         }
 
         #endregion

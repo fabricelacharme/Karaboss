@@ -252,6 +252,12 @@
     <Compile Include="Score\UI\ChangeTimeSignature.Designer.cs">
       <DependentUpon>ChangeTimeSignature.cs</DependentUpon>
     </Compile>
+    <Compile Include="Score\UI\ModifyStartTimesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Score\UI\ModifyStartTimesDialog.Designer.cs">
+      <DependentUpon>ModifyStartTimesDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Score\UI\frmNoteEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -395,6 +401,9 @@
     <EmbeddedResource Include="Score\UI\frmNoteEdit.resx">
       <DependentUpon>frmNoteEdit.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Score\UI\ModifyStartTimesDialog.resx">
+      <DependentUpon>ModifyStartTimesDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\modifyTempoDialog.resx">
       <DependentUpon>modifyTempoDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -421,6 +430,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\selectMeasuresDialog.resx">
       <DependentUpon>selectMeasuresDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\zoomDialog.resx">
       <DependentUpon>zoomDialog.cs</DependentUpon>

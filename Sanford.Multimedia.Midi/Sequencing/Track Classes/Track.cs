@@ -1541,6 +1541,67 @@ namespace Sanford.Multimedia.Midi
 
         #endregion channel command message
 
+        #region start times
+
+        /// <summary>
+        /// Offset start times off all notes
+        /// </summary>
+        /// <param name="offset"></param>
+        public void OffsetStartTimes(int starttime, int offset)
+        {
+
+            MidiEvent current = GetMidiEvent(Count - 1);
+
+            while (current.AbsoluteTicks >= starttime)
+            {
+
+                if (current != endOfTrackMidiEvent)
+                {
+                    // New code : move all events
+                    Move(current, current.AbsoluteTicks + offset);
+
+                    #region previous
+                    if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
+                    {
+                        current = current.Previous;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion previous
+                }
+                else
+                {
+                    #region previous
+                    if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
+                    {
+                        current = current.Previous;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion previous
+                }
+
+            }
+
+
+            // offset also the list of notes
+            for (int i = notes.Count - 1; i >= 0; i--)
+            {                
+                notes[i].StartTime = notes[i].StartTime + offset;                
+            }
+
+            for (int i = this.Lyrics.Count - 1; i >= 0; i--)
+            {
+                Lyrics[i].TicksOn = Lyrics[i].TicksOn + offset;                
+            }
+        }
+
+        #endregion
+
         #region measures
 
         /// <summary>
