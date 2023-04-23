@@ -90,9 +90,9 @@ namespace Sanford.Multimedia.Midi.Resources {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Delete measure.
         /// </summary>
-        internal static string DeleteMeasure {
+        internal static string DeleteMeasures {
             get {
-                return ResourceManager.GetString("DeleteMeasure", resourceCulture);
+                return ResourceManager.GetString("DeleteMeasures", resourceCulture);
             }
         }
         
@@ -117,9 +117,9 @@ namespace Sanford.Multimedia.Midi.Resources {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Insert measure.
         /// </summary>
-        internal static string InsertMeasure {
+        internal static string InsertMeasures {
             get {
-                return ResourceManager.GetString("InsertMeasure", resourceCulture);
+                return ResourceManager.GetString("InsertMeasures", resourceCulture);
             }
         }
         
@@ -129,6 +129,15 @@ namespace Sanford.Multimedia.Midi.Resources {
         internal static string InsertOneTime {
             get {
                 return ResourceManager.GetString("InsertOneTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Offset start times of notes.
+        /// </summary>
+        internal static string OffsetStartTimesOfNotes {
+            get {
+                return ResourceManager.GetString("OffsetStartTimesOfNotes", resourceCulture);
             }
         }
         

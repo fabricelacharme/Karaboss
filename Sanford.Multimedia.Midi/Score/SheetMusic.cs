@@ -1833,7 +1833,7 @@ namespace Sanford.Multimedia.Midi.Score
                     smContextMenu = new ContextMenuStrip();
                     smContextMenu.Items.Clear();
 
-
+                    /*
                     // Insert measure                    
                     ToolStripMenuItem menuInsertMeasure = new ToolStripMenuItem(Strings.InsertMeasure);
                     smContextMenu.Items.Add(menuInsertMeasure);
@@ -1847,9 +1847,23 @@ namespace Sanford.Multimedia.Midi.Score
                     menuInsertMeasureAllTracks.Click += new System.EventHandler(this.MnuInsertMeasureAllTracks_Click);
                     menuInsertMeasureAllTracks.ShortcutKeys = Keys.Control | Keys.I;     // Shortcut.CtrlI;
                     menuInsertMeasure.ShortcutKeyDisplayString = "Ctrl+I";
+                    */
 
+                    // IMPROVEMENT 230423 Insert Measures
+                    ToolStripMenuItem menuInsertMeasures = new ToolStripMenuItem(Strings.InsertMeasures);
+                    smContextMenu.Items.Add(menuInsertMeasures);
+                    menuInsertMeasures.Click += new EventHandler(this.MnuInsertMeasures_Click);
+                    menuInsertMeasures.ShortcutKeys = Keys.Control | Keys.I;     // Shortcut.CtrlI;
+                    menuInsertMeasures.ShortcutKeyDisplayString = "Ctrl+I";
 
+                    // Delete measures
+                    ToolStripMenuItem menuDeleteMeasures = new ToolStripMenuItem(Strings.DeleteMeasures);
+                    smContextMenu.Items.Add(menuDeleteMeasures);
+                    menuDeleteMeasures.Click += new EventHandler(this.MnuDeleteMeasures_Click);
+                    menuDeleteMeasures.ShortcutKeys = Keys.Control | Keys.D;     // Shortcut.CtrlD;
+                    menuDeleteMeasures.ShortcutKeyDisplayString = "Ctrl+D";
 
+                    /*
                     // Delete measure
                     ToolStripMenuItem menuDeleteMeasure = new ToolStripMenuItem(Strings.DeleteMeasure);
                     smContextMenu.Items.Add(menuDeleteMeasure);
@@ -1863,6 +1877,7 @@ namespace Sanford.Multimedia.Midi.Score
                     menuDeleteMeasureAllTracks.Click += new System.EventHandler(this.MnuDeleteMeasureAllTracks_Click);
                     menuDeleteMeasureAllTracks.ShortcutKeys = Keys.Control | Keys.D;     // Shortcut.CtrlD;
                     menuDeleteMeasure.ShortcutKeyDisplayString = "Ctrl+D";
+                    */
 
 
                     // Sep 1
@@ -1925,7 +1940,8 @@ namespace Sanford.Multimedia.Midi.Score
 
 
                     // Offset start times of all notes                    
-                    ToolStripMenuItem menuOffsetNotes = new ToolStripMenuItem("Offset start times");
+                    //ToolStripMenuItem menuOffsetNotes = new ToolStripMenuItem("Offset start times");
+                    ToolStripMenuItem menuOffsetNotes = new ToolStripMenuItem(Strings.OffsetStartTimesOfNotes);
                     smContextMenu.Items.Add(menuOffsetNotes);
                     menuOffsetNotes.Click += new EventHandler(this.MnuOffsetNotes_Click);
 
@@ -1986,7 +2002,11 @@ namespace Sanford.Multimedia.Midi.Score
                 }
             }
         }
-      
+
+ 
+
+
+
         /// <summary>
         /// Event: mouse up = note stopped
         /// </summary>
@@ -2266,6 +2286,150 @@ namespace Sanford.Multimedia.Midi.Score
         #region Menus
 
         /// <summary>
+        /// Menu: Insert several measures in current track or all tracks
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void MnuInsertMeasures_Click(object sender, EventArgs e)
+        {
+            aPos = PointToClient(Control.MousePosition);
+            int X = aPos.X;
+            int Y = aPos.Y;
+
+            X = X + OffsetX;
+            X = Convert.ToInt32(X / zoom);
+
+            // Click on menu can be located on wrong staff if menu is very long           
+            Y = selectedY;
+
+            if (_selectedstaff != -1)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                Staff staff = this.staffs[_selectedstaff];
+
+                if (X < 0) X = -X;
+
+                int ticks = staff.PulseTimeForPoint(new Point(X, Y));
+
+                // Numéro de mesure de départ par défaut
+                decimal MeasureFrom = 1 + Convert.ToInt32(ticks / measurelen);
+                
+
+                // Display Dialog form                
+                DialogResult dr = new DialogResult();               
+                UI.frmInsertMeasuresDialog InsertMeasuresDialog = new UI.frmInsertMeasuresDialog(MeasureFrom);
+                dr = InsertMeasuresDialog.ShowDialog();
+
+                if (dr == System.Windows.Forms.DialogResult.Cancel)
+                    return;
+
+                // Select all measures ?
+                bool bAllTracks = InsertMeasuresDialog.bAllTracks;
+                MeasureFrom = InsertMeasuresDialog.startMeasure - 1;
+                decimal nbMeasures = InsertMeasuresDialog.nbMeasures;
+                int startticks = (int)MeasureFrom * measurelen;
+
+                if (bAllTracks)
+                {
+                    foreach (Track track in sequence1.tracks)
+                    {
+                        track.insertMeasure(startticks, (int)nbMeasures*measurelen);
+                    }
+                    
+                }
+                else
+                {
+                    Track track = sequence1.tracks[_selectedstaff];
+                    track.insertMeasure(startticks, (int)nbMeasures*measurelen);
+                }
+
+                this.Refresh();
+
+                // Raise event
+                FileModified?.Invoke(this);
+                WidthChanged?.Invoke(maxstaffwidth);
+
+                Cursor.Current = Cursors.Default;                                  
+
+                Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Menu: Delete several measueres in current track or all tracks
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void MnuDeleteMeasures_Click(object sender, EventArgs e)
+        {
+            aPos = PointToClient(Control.MousePosition);
+            int X = aPos.X;
+            int Y = aPos.Y;
+
+            X = X + OffsetX;
+            X = Convert.ToInt32(X / zoom);
+
+            // Click on menu can be located on wrong staff if menu is very long           
+            Y = selectedY;
+
+            if (_selectedstaff != -1)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                Staff staff = this.staffs[_selectedstaff];
+
+                if (X < 0) X = -X;
+
+                int ticks = staff.PulseTimeForPoint(new Point(X, Y));
+
+                // Numéro de mesure de départ par défaut
+                decimal MeasureFrom = 1 + Convert.ToInt32(ticks / measurelen);
+
+
+                // Display Dialog form                
+                DialogResult dr = new DialogResult();
+                UI.frmDeleteMeasuresDialog DeleteMeasuresDialog = new UI.frmDeleteMeasuresDialog(MeasureFrom);
+                dr = DeleteMeasuresDialog.ShowDialog();
+
+                if (dr == System.Windows.Forms.DialogResult.Cancel)
+                    return;
+
+                // Select all measures ?
+                bool bAllTracks = DeleteMeasuresDialog.bAllTracks;
+                MeasureFrom = DeleteMeasuresDialog.startMeasure - 1;
+                decimal nbMeasures = DeleteMeasuresDialog.nbMeasures;
+                int startticks = (int)MeasureFrom * measurelen;
+
+                if (bAllTracks)
+                {
+                    foreach (Track track in sequence1.tracks)
+                    {
+                        track.deleteMeasure(startticks, (int)nbMeasures * measurelen);
+                    }
+                }
+                else
+                {
+                    Track track = sequence1.tracks[_selectedstaff];
+                    track.deleteMeasure(startticks, (int)nbMeasures * measurelen);
+                }
+
+                this.Refresh();
+
+                // Raise event
+                FileModified?.Invoke(this);
+                WidthChanged?.Invoke(maxstaffwidth);
+
+                Cursor.Current = Cursors.Default;
+
+                Invalidate();
+            }
+        }
+
+        /*
+        /// <summary>
         /// Menu: insert a measure in a track
         /// </summary>
         /// <param name="sender"></param>
@@ -2417,6 +2581,7 @@ namespace Sanford.Multimedia.Midi.Score
                 Cursor.Current = Cursors.Default;
             }
         }
+        */
 
         private void MnuDeleteTimeThisTrack_Click(object sender, EventArgs e)
         {

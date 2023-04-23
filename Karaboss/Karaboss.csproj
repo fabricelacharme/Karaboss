@@ -654,7 +654,9 @@
     <EmbeddedResource Include="Resources\Localization\Strings.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Localization\Strings.fr.resx" />
+    <EmbeddedResource Include="Resources\Localization\Strings.fr.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Pages\SearchControl\SearchControl.de.resx">
       <DependentUpon>SearchControl.cs</DependentUpon>
     </EmbeddedResource>

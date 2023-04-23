@@ -117,40 +117,54 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AllTracks" xml:space="preserve">
-    <value>All tracks</value>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="label2.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
   </data>
-  <data name="Copy" xml:space="preserve">
-    <value>Copy</value>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Nombre de mesures à insérer</value>
   </data>
-  <data name="DeleteHalfTime" xml:space="preserve">
-    <value>Delete 1/2 time</value>
+  <data name="label1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
   </data>
-  <data name="DeleteMeasures" xml:space="preserve">
-    <value>Delete measure</value>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Insérer des mesures vides</value>
   </data>
-  <data name="DeleteOneTime" xml:space="preserve">
-    <value>Delete 1 time</value>
+  <data name="updNumberMeasures.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
-  <data name="InsertHalfTime" xml:space="preserve">
-    <value>Insert 1/2 time</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="radioButtonThisTrack.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 17</value>
   </data>
-  <data name="InsertMeasures" xml:space="preserve">
-    <value>Insert measure</value>
+  <data name="radioButtonThisTrack.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
   </data>
-  <data name="InsertOneTime" xml:space="preserve">
-    <value>Insert 1 time</value>
+  <data name="radioButtonThisTrack.Text" xml:space="preserve">
+    <value>Cette piste</value>
   </data>
-  <data name="OffsetStartTimesOfNotes" xml:space="preserve">
-    <value>Offset start times of notes</value>
+  <data name="radioButtonAllTracks.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 17</value>
   </data>
-  <data name="Paste" xml:space="preserve">
-    <value>Paste</value>
+  <data name="radioButtonAllTracks.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
   </data>
-  <data name="SelectMeasures" xml:space="preserve">
-    <value>Select measures</value>
+  <data name="radioButtonAllTracks.Text" xml:space="preserve">
+    <value>Toutes les pistes</value>
   </data>
-  <data name="ThisTrack" xml:space="preserve">
-    <value>This track</value>
+  <data name="updStartMeasure.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>137, 13</value>
+  </data>
+  <data name="label3.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>Insérer à partir de la mesure</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Karaboss : Insérer des mesures</value>
   </data>
 </root>

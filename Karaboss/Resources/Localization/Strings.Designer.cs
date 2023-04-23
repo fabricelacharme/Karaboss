@@ -1015,11 +1015,11 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("SungBy", resourceCulture);
             }
         }
-        internal static string InsertMeasure
+        internal static string InsertMeasures
         {
             get
             {
-                return ResourceManager.GetString("InsertMeasure", resourceCulture);
+                return ResourceManager.GetString("InsertMeasures", resourceCulture);
             }
         }
         internal static string ThisTrack
@@ -1036,11 +1036,11 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("AllTracks", resourceCulture);
             }
         }
-        internal static string DeleteMeasure
+        internal static string DeleteMeasures
         {
             get
             {
-                return ResourceManager.GetString("DeleteMeasure", resourceCulture);
+                return ResourceManager.GetString("DeleteMeasures", resourceCulture);
             }
         }
         internal static string InsertOneTime
@@ -1099,5 +1099,13 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("DeleteAllLyrics", resourceCulture);
             }
         }
+        internal static string OffsetStartTimesOfNotes
+        {
+            get
+            {
+                return ResourceManager.GetString("OffsetStartTimesOfNotes", resourceCulture);                
+            }
+        }
+
     }
 }

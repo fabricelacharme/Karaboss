@@ -252,6 +252,18 @@
     <Compile Include="Score\UI\ChangeTimeSignature.Designer.cs">
       <DependentUpon>ChangeTimeSignature.cs</DependentUpon>
     </Compile>
+    <Compile Include="Score\UI\DeleteMeasuresDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Score\UI\DeleteMeasuresDialog.Designer.cs">
+      <DependentUpon>DeleteMeasuresDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Score\UI\InsertMeasuresDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Score\UI\InsertMeasuresDialog.Designer.cs">
+      <DependentUpon>InsertMeasuresDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Score\UI\ModifyStartTimesDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -379,11 +391,16 @@
     <EmbeddedResource Include="ImportExport\UI\frmSelectTrack.resx">
       <DependentUpon>frmSelectTrack.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Strings.en.resx" />
-    <EmbeddedResource Include="Resources\Strings.fr.resx" />
+    <EmbeddedResource Include="Resources\Strings.en.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Strings.fr.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Score\TlControl.resx">
       <DependentUpon>TlControl.cs</DependentUpon>
@@ -395,11 +412,23 @@
     <EmbeddedResource Include="Score\UI\ChangeTimeSignature.resx">
       <DependentUpon>ChangeTimeSignature.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Score\UI\DeleteMeasuresDialog.fr.resx">
+      <DependentUpon>DeleteMeasuresDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\frmNoteEdit.fr.resx">
       <DependentUpon>frmNoteEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\frmNoteEdit.resx">
       <DependentUpon>frmNoteEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Score\UI\DeleteMeasuresDialog.resx">
+      <DependentUpon>DeleteMeasuresDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Score\UI\InsertMeasuresDialog.fr.resx">
+      <DependentUpon>InsertMeasuresDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Score\UI\InsertMeasuresDialog.resx">
+      <DependentUpon>InsertMeasuresDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\ModifyStartTimesDialog.resx">
       <DependentUpon>ModifyStartTimesDialog.cs</DependentUpon>
