@@ -2791,13 +2791,16 @@ namespace Sanford.Multimedia.Midi.Score
                 Y = Convert.ToInt32(Y / zoom);
 
                 int noteMeasure = 0;
-                int numstaff = GetStaffClicked(Y);
+                int destnumstaff = GetStaffClicked(Y);
 
-                if (numstaff != -1)
+                if (destnumstaff != -1)
                 {
+                    
+
+                    
                     Cursor.Current = Cursors.WaitCursor;
                     if (X < 0) X = -X;
-                    ticks = staffs[numstaff].PulseTimeForPoint(new Point(X, Y));
+                    ticks = staffs[destnumstaff].PulseTimeForPoint(new Point(X, Y));
 
                     // Numéro de mesure                 
                     int NumMeasure = 1 + Convert.ToInt32(ticks) / measurelen;
@@ -2805,10 +2808,10 @@ namespace Sanford.Multimedia.Midi.Score
                     // delta measures                    
                     int deltaticks = Convert.ToInt32((NumMeasure - NumMeasureorg) * measurelen);  // ticks du début de mesure
 
-                    Track track = sequence1.tracks[numstaff];
+                    Track desttrack = sequence1.tracks[destnumstaff];
 
                     // Copy all events
-                    track.CopyEvents(srcstarttime, srcendtime, srcstarttime + deltaticks);
+                    desttrack.CopyEvents(srcstarttime, srcendtime, srcstarttime + deltaticks);
 
                     /*
                     // Copy notes
@@ -2829,14 +2832,14 @@ namespace Sanford.Multimedia.Midi.Score
                     */
 
                     // Refresh track notes
-                    track.ExtractNotes();
+                    desttrack.ExtractNotes();
 
                     this.Refresh();
                     // Redraw selected notes in red
-                    RestoreSelectedNotes(numstaff);
+                    RestoreSelectedNotes(destnumstaff);
 
                     MidiNote nn = _selnotes[_selnotes.Count - 1];
-                    UpdateCurrentNote(numstaff, nn.Number, nn.StartTime, false);
+                    UpdateCurrentNote(destnumstaff, nn.Number, nn.StartTime, false);
 
                     // Raise Event
                     FileModified?.Invoke(this);
