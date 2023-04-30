@@ -2760,18 +2760,23 @@ namespace Sanford.Multimedia.Midi.Score
             if (bReadyToPaste)
             {
                 float ticks = sequence1.GetLength();
+                float srcstarttime = sequence1.GetLength();
+                float srcendtime = 0;
 
-                // first tick of the copied notes
+                // first tick and last tick of the copied notes
                 MidiNote note;
                 for (int i = 0; i < _selnotes.Count; i++)
                 {
                     note = _selnotes[i];
-                    if (note.StartTime < ticks)
-                        ticks = note.StartTime;
-                }
+                    if (note.StartTime < srcstarttime)
+                        srcstarttime = note.StartTime;
 
+                    if (note.EndTime > srcendtime)
+                        srcendtime = note.EndTime;
+                }
+                
                 // measure of copy
-                int NumMeasureorg = 1 + Convert.ToInt32(ticks) / measurelen;
+                int NumMeasureorg = 1 + Convert.ToInt32(srcstarttime) / measurelen;
 
 
                 // Destination paste
@@ -2802,6 +2807,11 @@ namespace Sanford.Multimedia.Midi.Score
 
                     Track track = sequence1.tracks[numstaff];
 
+                    // Copy all events
+                    track.CopyEvents(srcstarttime, srcendtime, srcstarttime + deltaticks);
+
+                    /*
+                    // Copy notes
                     foreach (MidiNote n in _selnotes)
                     {
                         // Create new notes having the channel of the target track in case the paste is done on two different tracks!                        
@@ -2816,6 +2826,11 @@ namespace Sanford.Multimedia.Midi.Score
                     if (track.Notes.Count > 1)
                         track.Notes.Sort(track.Notes[0]);
                     
+                    */
+
+                    // Refresh track notes
+                    track.ExtractNotes();
+
                     this.Refresh();
                     // Redraw selected notes in red
                     RestoreSelectedNotes(numstaff);

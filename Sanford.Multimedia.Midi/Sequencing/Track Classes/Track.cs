@@ -854,6 +854,32 @@ namespace Sanford.Multimedia.Midi
 
                         NoteOff(lsnotes ,channel, number, ticks);
                     }
+
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion  
+
+                }
+                else
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion  
+
                 }
             }
 
@@ -1362,11 +1388,15 @@ namespace Sanford.Multimedia.Midi
             // 2 demi tons =  16383 ?
             int mask = 127;
             int ipitchBend;
+            int endPitchTime = 0;
 
             RemovePitchBend(channel, starttime, endtime);
                         
-           
-            //endtime = endtime - 1;
+           if (endtime > 2)
+                endPitchTime = endtime - 2;
+
+            if (endtime <= starttime)
+                return;
 
             ChannelMessageBuilder builder = new ChannelMessageBuilder();
             ChannelMessage pitchBendMessage;
@@ -1383,7 +1413,7 @@ namespace Sanford.Multimedia.Midi
 
             // Increase from 8192 to 13383 during the duration of the note
             int steps = 10;
-            int OffsetTime = (endtime - starttime) / steps;
+            int OffsetTime = (endPitchTime - starttime) / steps;
             int offsetPitch = (pitchBend - 8192) / steps;
             ipitchBend = 8192;
             int t = starttime;
@@ -1410,7 +1440,7 @@ namespace Sanford.Multimedia.Midi
             #region stop pitchbend                       
             
             // Stop pitchbend
-            StopPitchBend(channel, endtime);
+            StopPitchBend(channel, endPitchTime);
 
 
             #endregion
@@ -1541,6 +1571,51 @@ namespace Sanford.Multimedia.Midi
         #endregion pitchbend
 
         #endregion channel command message
+
+
+        #region copy events
+        public void CopyEvents(float srcstarttime, float srcendtime, float deststarttime)
+        {
+            float delta = 0;
+            MidiEvent current = GetMidiEvent(Count - 1);
+            while (current.AbsoluteTicks >= srcstarttime)
+            {
+                if (current != endOfTrackMidiEvent && current.AbsoluteTicks <= srcendtime)
+                {
+                    delta = current.AbsoluteTicks - srcstarttime;
+                    Insert((int)deststarttime + (int)delta, current.MidiMessage);
+                    
+
+                    #region previous
+                    if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
+                    {
+                        current = current.Previous;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion previous
+                }
+                else
+                {
+                    #region previous
+                    if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
+                    {
+                        current = current.Previous;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion previous
+                }
+
+            }
+        }
+
+
+        #endregion
 
         #region start times
 
