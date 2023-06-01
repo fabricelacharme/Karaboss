@@ -305,13 +305,22 @@ namespace PicControl
         #endregion Textcolor       
 
         #region Text others
-        
+
+
+        private bool _bdemo = false;
+        public bool bDemo
+        {
+            get { return _bdemo; }
+            set { _bdemo = value; }
+        }
+
         // Lyrics : converts characters to uppercase
         private bool _bforceuppercase;
         public bool bforceUppercase {
             get { return _bforceuppercase; }
             set { _bforceuppercase = value;
-                pboxWnd.Invalidate();
+                if (_bdemo)
+                    LoadDemoText();
             }
         
         }
@@ -650,6 +659,7 @@ namespace PicControl
 
                 for (int i = 0; i < plLyrics.Count; i++)
                 {
+                    // Force uppercase
                     if (_bforceuppercase)
                         plLyrics[i].Element = plLyrics[i].Element.ToUpper();
 
@@ -845,6 +855,7 @@ namespace PicControl
             pboxWnd.Font = new Font(Name = _karaokeFont.Name, emSize);
             pboxWnd.SizeMode = PictureBoxSizeMode.Zoom;
 
+            /*
             // Default text
             string tx = "Lorem ipsum dolor sit amet," + _InternalSepLines;
             tx += "consectetur adipisicing elit," + _InternalSepLines;
@@ -858,9 +869,13 @@ namespace PicControl
             tx += "in voluptate velit esse cillum dolore" + _InternalSepLines;
             tx += "eu fugiat nulla pariatur.";
 
+            if (_bforceuppercase)
+                tx = tx.ToUpper();
+
             List<plLyric> plLyrics = StoreDemoText(tx);
                         
             LoadSong(plLyrics, true);
+            */
 
             // Initial conditions
             _currentPosition = 30;
@@ -868,6 +883,30 @@ namespace PicControl
             _currentTextPos = 2;           
 
             pboxWnd.Invalidate();
+        }
+
+        public void LoadDemoText()
+        {
+            // Default text
+            string tx = "Lorem ipsum dolor sit amet," + _InternalSepLines;
+            tx += "consectetur adipisicing elit," + _InternalSepLines;
+            tx += "sed do eiusmod tempor incididunt" + _InternalSepLines;
+            tx += "ut labore et dolore magna aliqua." + _InternalSepLines;
+            tx += "Ut enim ad minim veniam," + _InternalSepLines;
+            tx += "quis nostrud exercitation ullamco" + _InternalSepLines;
+            tx += "laboris nisi ut aliquip" + _InternalSepLines;
+            tx += "ex ea commodo consequat." + _InternalSepLines;
+            tx += "Duis aute irure dolor in reprehenderit" + _InternalSepLines;
+            tx += "in voluptate velit esse cillum dolore" + _InternalSepLines;
+            tx += "eu fugiat nulla pariatur.";
+
+            if (_bforceuppercase)
+                tx = tx.ToUpper();
+
+            List<plLyric> plLyrics = StoreDemoText(tx);
+
+            LoadSong(plLyrics, true);
+
         }
 
         /// <summary>
@@ -2078,7 +2117,7 @@ namespace PicControl
             // draw text
             #region draw text
 
-            if (lstLyricsLines.Count == 0)
+            if (lstLyricsLines is null || lstLyricsLines.Count == 0)
                 return;
 
             try

@@ -87,6 +87,8 @@ namespace Karaboss
             SetOptions();
 
             pBox.SetBackground(dirSlideShow);
+            pBox.bDemo = true;
+            pBox.LoadDemoText();
         }
 
 
@@ -106,8 +108,7 @@ namespace Karaboss
 
                 // Force Uppercase
                 bForceUppercase = Karaclass.m_ForceUppercase;
-                chkTextUppercase.Checked = bForceUppercase;
-                pBox.bforceUppercase = bForceUppercase;
+              
 
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
@@ -250,6 +251,9 @@ namespace Karaboss
                 Properties.Settings.Default.bColorContour = bColorContour;
                 Properties.Settings.Default.TxtContourColor = TxtContourColor;
 
+                // Force Uppercase
+                Properties.Settings.Default.bForceUppercase = bForceUppercase;
+
                 Properties.Settings.Default.TxtNbLines = NbLines;
 
                 dirSlideShow = txtSlideShow.Text.Trim();
@@ -319,6 +323,9 @@ namespace Karaboss
                 pictHighlight.BackColor = TxtHighlightColor;
                 pictNext.BackColor = TxtNextColor;
 
+                // Force uppercase
+                chkTextUppercase.Checked = bForceUppercase;
+                pBox.bforceUppercase = bForceUppercase;
 
                 // picturebox            
                 pBox.FreqDirSlideShow = freqSlideShow;
@@ -564,6 +571,9 @@ namespace Karaboss
 
                 frmLyric.bColorContour = bColorContour;
                 frmLyric.TxtContourColor = TxtContourColor;
+
+                // force uppercase
+                frmLyric.bForceUppercase = bForceUppercase;
 
                 NbLines = Convert.ToInt32(UpDownNbLines.Value);
                 frmLyric.TxtNbLines = NbLines;
