@@ -682,6 +682,7 @@ namespace Karaboss
             Karaclass.m_SepSyllabe = Properties.Settings.Default.SepSyllabe;
             Karaclass.m_SepParagraph = Properties.Settings.Default.SepParagraph;
             Karaclass.m_ShowParagraph = Properties.Settings.Default.bShowParagraph;
+            Karaclass.m_ForceUppercase = Properties.Settings.Default.bForceUppercase;
 
             Karaclass.m_SaveDefaultOutputDevice = Properties.Settings.Default.SaveDefaultOutputDevice;
 

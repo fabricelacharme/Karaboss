@@ -48,6 +48,9 @@
             this.label9 = new System.Windows.Forms.Label();
             this.lblShowParagraph = new System.Windows.Forms.Label();
             this.chkShowParagraph = new System.Windows.Forms.CheckBox();
+            this.lblforceUppercase = new System.Windows.Forms.Label();
+            this.chkForceUppercase = new System.Windows.Forms.CheckBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblMuteMelody
@@ -153,10 +156,30 @@
             this.chkShowParagraph.UseVisualStyleBackColor = true;
             this.chkShowParagraph.CheckedChanged += new System.EventHandler(this.chkShowParagraph_CheckedChanged);
             // 
+            // lblforceUppercase
+            // 
+            resources.ApplyResources(this.lblforceUppercase, "lblforceUppercase");
+            this.lblforceUppercase.Name = "lblforceUppercase";
+            // 
+            // chkForceUppercase
+            // 
+            resources.ApplyResources(this.chkForceUppercase, "chkForceUppercase");
+            this.chkForceUppercase.Name = "chkForceUppercase";
+            this.chkForceUppercase.UseVisualStyleBackColor = true;
+            this.chkForceUppercase.CheckedChanged += new System.EventHandler(this.chkForceUppercase_CheckedChanged);
+            // 
+            // label10
+            // 
+            resources.ApplyResources(this.label10, "label10");
+            this.label10.Name = "label10";
+            // 
             // KaraokeControl
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.lblforceUppercase);
+            this.Controls.Add(this.chkForceUppercase);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.lblShowParagraph);
             this.Controls.Add(this.chkShowParagraph);
@@ -201,5 +224,8 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label lblShowParagraph;
         private System.Windows.Forms.CheckBox chkShowParagraph;
+        private System.Windows.Forms.Label lblforceUppercase;
+        private System.Windows.Forms.CheckBox chkForceUppercase;
+        private System.Windows.Forms.Label label10;
     }
 }

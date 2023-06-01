@@ -70,7 +70,7 @@ namespace PicControl
         private string strCurrentImage; // current image to insure that random will provide a different one
         private int rndIter = 0;
 
-        
+
         public class plLyric
         {
             public enum Types
@@ -82,7 +82,7 @@ namespace PicControl
             public Types Type { get; set; }
             public string Element { get; set; }
             public int TicksOn { get; set; }
-            public int TicksOff { get; set; }            
+            public int TicksOff { get; set; }
         }
 
 
@@ -90,12 +90,12 @@ namespace PicControl
 
         #region Internal lyrics separators
 
-        private string _InternalSepLines = "¼";                
-        private string _InternalSepParagraphs = "½";        
-        
+        private string _InternalSepLines = "¼";
+        private string _InternalSepParagraphs = "½";
+
         #endregion
 
-        public ImageLayout imgLayout { get; set; }       
+        public ImageLayout imgLayout { get; set; }
         public Image m_CurrentImage { get; set; }
         public Rectangle m_DisplayRectangle { get; set; }
         public int m_Alpha { get; set; }
@@ -126,7 +126,7 @@ namespace PicControl
         private bool _bTextBackGround = true;
         public bool bTextBackGround
         {
-            get { return _bTextBackGround;}
+            get { return _bTextBackGround; }
             set { _bTextBackGround = value;
                 pboxWnd.Invalidate();
             }
@@ -144,7 +144,7 @@ namespace PicControl
                     return false;
             }
         }
-        
+
         public List<string> LyricsWords { get; set; }  // Liste non dégrossie des syllabes
         public List<int> LyricsTimes { get; set; }     // Liste non dégrossie des temps
 
@@ -156,7 +156,7 @@ namespace PicControl
             }
             set
             {
-                slyrics = value;                                
+                slyrics = value;
             }
         }
 
@@ -167,11 +167,11 @@ namespace PicControl
             { return _currentPosition; }
             set
             {
-                _currentPosition = value;                
+                _currentPosition = value;
             }
         }
 
-        
+
         private int _beatDuration = 0;
         public int BeatDuration
         {
@@ -179,8 +179,8 @@ namespace PicControl
             set { _beatDuration = value; }
         }
 
-        public int _currentTextPos;        
-        public int CurrentTextPos 
+        public int _currentTextPos;
+        public int CurrentTextPos
         {
             get
             { return _currentTextPos; }
@@ -188,7 +188,7 @@ namespace PicControl
             {
                 _currentTextPos = value;
             }
-        }                     
+        }
 
         /// <summary>
         /// Transparency color
@@ -249,7 +249,7 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
-        
+
         /// <summary>
         /// Text to sing color
         /// </summary>
@@ -263,7 +263,7 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
-        
+
         /// <summary>
         /// Text sung color
         /// </summary>
@@ -305,6 +305,16 @@ namespace PicControl
         #endregion Textcolor       
 
         #region Text others
+        
+        // Lyrics : converts characters to uppercase
+        private bool _bforceuppercase;
+        public bool bforceUppercase {
+            get { return _bforceuppercase; }
+            set { _bforceuppercase = value;
+                pboxWnd.Invalidate();
+            }
+        
+        }
 
         public Font KaraokeFont
         {
@@ -640,6 +650,9 @@ namespace PicControl
 
                 for (int i = 0; i < plLyrics.Count; i++)
                 {
+                    if (_bforceuppercase)
+                        plLyrics[i].Element = plLyrics[i].Element.ToUpper();
+
                     lyrics += plLyrics[i].Element;
                 }
 

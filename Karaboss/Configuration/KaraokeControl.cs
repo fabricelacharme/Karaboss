@@ -57,6 +57,7 @@ namespace Karaboss.Configuration
             txtSepParagraph.Text = Karaclass.m_SepParagraph;
 
             chkShowParagraph.Checked = Karaclass.m_ShowParagraph;
+            chkForceUppercase.Checked = Karaclass.m_ForceUppercase;
 
         }
 
@@ -81,6 +82,7 @@ namespace Karaboss.Configuration
             Properties.Settings.Default.SepParagraph = Karaclass.m_SepParagraph;
 
             Properties.Settings.Default.bShowParagraph = Karaclass.m_ShowParagraph;
+            Properties.Settings.Default.bForceUppercase = Karaclass.m_ForceUppercase;
 
             Properties.Settings.Default.Save();
 
@@ -113,6 +115,11 @@ namespace Karaboss.Configuration
         private void chkShowParagraph_CheckedChanged(object sender, System.EventArgs e)
         {
             Karaclass.m_ShowParagraph = chkShowParagraph.Checked;
+        }
+
+        private void chkForceUppercase_CheckedChanged(object sender, System.EventArgs e)
+        {
+            Karaclass.m_ForceUppercase = chkForceUppercase.Checked;
         }
     }
 }

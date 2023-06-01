@@ -72,6 +72,7 @@
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
             this.btnFonts = new System.Windows.Forms.Button();
             this.txtFont = new System.Windows.Forms.TextBox();
+            this.chkTextUppercase = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -361,6 +362,8 @@
             this.pBox.BackColor = System.Drawing.Color.Black;
             this.pBox.bColorContour = true;
             this.pBox.BeatDuration = 0;
+            this.pBox.bforceUppercase = false;
+            this.pBox.bShowParagraphs = true;
             this.pBox.bTextBackGround = true;
             this.pBox.CurrentTextPos = 2;
             this.pBox.CurrentTime = 30;
@@ -400,10 +403,20 @@
             resources.ApplyResources(this.txtFont, "txtFont");
             this.txtFont.Name = "txtFont";
             // 
+            // chkTextUppercase
+            // 
+            resources.ApplyResources(this.chkTextUppercase, "chkTextUppercase");
+            this.chkTextUppercase.Checked = true;
+            this.chkTextUppercase.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTextUppercase.Name = "chkTextUppercase";
+            this.chkTextUppercase.UseVisualStyleBackColor = true;
+            this.chkTextUppercase.CheckedChanged += new System.EventHandler(this.chkTextUppercase_CheckedChanged);
+            // 
             // frmLyrOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkTextUppercase);
             this.Controls.Add(this.txtFont);
             this.Controls.Add(this.btnFonts);
             this.Controls.Add(this.label7);
@@ -508,5 +521,6 @@
         private System.Windows.Forms.FontDialog fontDialog1;
         private System.Windows.Forms.Button btnFonts;
         private System.Windows.Forms.TextBox txtFont;
+        private System.Windows.Forms.CheckBox chkTextUppercase;
     }
 }

@@ -85,6 +85,15 @@ namespace Karaboss
 
         #region text characteristics
 
+        // Force Uppercase
+        private bool _bForceUppercase = false;
+        public bool bForceUppercase
+        {
+            get { return _bForceUppercase; }
+            set { _bForceUppercase = value;}
+        }
+
+
         public Font KaraokeFont
         {
             get { return _karaokeFont; }
@@ -385,6 +394,11 @@ namespace Karaboss
                 pBox.KaraokeFont = _karaokeFont;
                 pBox.bShowParagraphs = Karaclass.m_ShowParagraph;
 
+
+                // Force Uppercase
+                _bForceUppercase = Karaclass.m_ForceUppercase;
+
+
                 // show balls
                 bShowBalls = Karaclass.m_DisplayBalls;
 
@@ -493,6 +507,8 @@ namespace Karaboss
             }
 
             // Load song
+            // Force Uppercase
+            pBox.bforceUppercase = _bForceUppercase;
             pBox.LoadSong(pcLyrics);
             
             //Initial position

@@ -60,6 +60,9 @@ namespace Karaboss
         private Color TxtBackColor;
 
 
+        // Forece Uppercase
+        private bool bForceUppercase = false;
+
         // Contour color
         private bool bColorContour = true;
         private Color TxtContourColor;
@@ -100,7 +103,12 @@ namespace Karaboss
                 _karaokeFont = Properties.Settings.Default.KaraokeFont;
                 pBox.KaraokeFont = _karaokeFont;
                 txtFont.Text = _karaokeFont.Name;
-                
+
+                // Force Uppercase
+                bForceUppercase = Karaclass.m_ForceUppercase;
+                chkTextUppercase.Checked = bForceUppercase;
+                pBox.bforceUppercase = bForceUppercase;
+
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
 
@@ -316,7 +324,6 @@ namespace Karaboss
                 pBox.FreqDirSlideShow = freqSlideShow;
                 pBox.TxtNbLines = NbLines;
                 pBox.CurrentTime = 30;
-
 
 
                 pBox.TxtBackColor = TxtBackColor;
@@ -827,16 +834,7 @@ namespace Karaboss
         {            
             pBox.bTextBackGround = chkTextBackground.Checked;
         }
-
-
-
-
-
-
-        #endregion
-
-        // Fonts
-       
+             
 
         private void BtnFonts_Click(object sender, EventArgs e)
         {
@@ -862,5 +860,20 @@ namespace Karaboss
             }
         
         }
+
+        /// <summary>
+        /// Forece Uppercase
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkTextUppercase_CheckedChanged(object sender, EventArgs e)
+        {
+            bForceUppercase = chkTextUppercase.Checked;
+            pBox.bforceUppercase = bForceUppercase;
+            Karaclass.m_ForceUppercase = bForceUppercase;
+        }
+
+        #endregion
+
     }
 }

@@ -126,10 +126,10 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="m_applyBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>488, 8</value>
+    <value>566, 9</value>
   </data>
   <data name="m_applyBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+    <value>90, 27</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="m_applyBtn.TabIndex" type="System.Int32, mscorlib">
@@ -157,10 +157,10 @@
     <value>System</value>
   </data>
   <data name="m_restoreBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>400, 8</value>
+    <value>460, 9</value>
   </data>
   <data name="m_restoreBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+    <value>90, 27</value>
   </data>
   <data name="m_restoreBtn.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -184,10 +184,10 @@
     <value>Bottom</value>
   </data>
   <data name="m_restoreApplyPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>168, 381</value>
+    <value>202, 448</value>
   </data>
   <data name="m_restoreApplyPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>584, 40</value>
+    <value>680, 46</value>
   </data>
   <data name="m_restoreApplyPanel.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -211,7 +211,7 @@
     <value>0, 0</value>
   </data>
   <data name="m_optionsTV.Size" type="System.Drawing.Size, System.Drawing">
-    <value>168, 421</value>
+    <value>202, 494</value>
   </data>
   <data name="m_optionsTV.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -235,7 +235,7 @@
     <value>0, 0</value>
   </data>
   <data name="m_optionsPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>168, 421</value>
+    <value>202, 494</value>
   </data>
   <data name="m_optionsPanel.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -259,10 +259,10 @@
     <value>System</value>
   </data>
   <data name="m_cancelBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>656, 16</value>
+    <value>767, 18</value>
   </data>
   <data name="m_cancelBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+    <value>90, 27</value>
   </data>
   <data name="m_cancelBtn.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -289,10 +289,10 @@
     <value>System</value>
   </data>
   <data name="m_okBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>568, 16</value>
+    <value>662, 18</value>
   </data>
   <data name="m_okBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+    <value>90, 27</value>
   </data>
   <data name="m_okBtn.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -316,10 +316,10 @@
     <value>Bottom</value>
   </data>
   <data name="m_okCancelPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 424</value>
+    <value>0, 497</value>
   </data>
   <data name="m_okCancelPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>752, 48</value>
+    <value>882, 56</value>
   </data>
   <data name="m_okCancelPanel.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -340,10 +340,10 @@
     <value>Fill</value>
   </data>
   <data name="m_mainPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>168, 32</value>
+    <value>202, 37</value>
   </data>
   <data name="m_mainPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>584, 349</value>
+    <value>680, 411</value>
   </data>
   <data name="m_mainPanel.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -364,10 +364,10 @@
     <value>Bottom</value>
   </data>
   <data name="m_separatorGB.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 421</value>
+    <value>0, 494</value>
   </data>
   <data name="m_separatorGB.Size" type="System.Drawing.Size, System.Drawing">
-    <value>752, 3</value>
+    <value>882, 3</value>
   </data>
   <data name="m_separatorGB.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -388,10 +388,10 @@
     <value>Microsoft Sans Serif, 9.75pt, style=Bold</value>
   </data>
   <data name="m_configLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 8</value>
+    <value>10, 9</value>
   </data>
   <data name="m_configLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>472, 16</value>
+    <value>566, 19</value>
   </data>
   <data name="m_configLabel.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -412,10 +412,10 @@
     <value>Top</value>
   </data>
   <data name="m_headPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>168, 0</value>
+    <value>202, 0</value>
   </data>
   <data name="m_headPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>584, 32</value>
+    <value>680, 37</value>
   </data>
   <data name="m_headPanel.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -436,10 +436,10 @@
     <value>Top</value>
   </data>
   <data name="m_upperSeparatorGB.Location" type="System.Drawing.Point, System.Drawing">
-    <value>168, 32</value>
+    <value>202, 37</value>
   </data>
   <data name="m_upperSeparatorGB.Size" type="System.Drawing.Size, System.Drawing">
-    <value>584, 4</value>
+    <value>680, 5</value>
   </data>
   <data name="m_upperSeparatorGB.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -460,10 +460,10 @@
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleBaseSize" type="System.Drawing.Size, System.Drawing">
-    <value>5, 13</value>
+    <value>6, 15</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>752, 472</value>
+    <value>882, 553</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -592,7 +592,7 @@
 </value>
   </data>
   <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
-    <value>750, 480</value>
+    <value>900, 554</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>
