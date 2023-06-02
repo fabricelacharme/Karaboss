@@ -138,6 +138,10 @@
             resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
             // 
+            // folderBrowserDialog1
+            // 
+            resources.ApplyResources(this.folderBrowserDialog1, "folderBrowserDialog1");
+            // 
             // txtSlideShow
             // 
             resources.ApplyResources(this.txtSlideShow, "txtSlideShow");
@@ -187,6 +191,7 @@
             // 
             // cbSizeMode
             // 
+            resources.ApplyResources(this.cbSizeMode, "cbSizeMode");
             this.cbSizeMode.FormattingEnabled = true;
             this.cbSizeMode.Items.AddRange(new object[] {
             resources.GetString("cbSizeMode.Items"),
@@ -194,7 +199,6 @@
             resources.GetString("cbSizeMode.Items2"),
             resources.GetString("cbSizeMode.Items3"),
             resources.GetString("cbSizeMode.Items4")});
-            resources.ApplyResources(this.cbSizeMode, "cbSizeMode");
             this.cbSizeMode.Name = "cbSizeMode";
             this.cbSizeMode.SelectedIndexChanged += new System.EventHandler(this.CbSizeMode_SelectedIndexChanged);
             // 
@@ -268,69 +272,69 @@
             // 
             // pnlBalls
             // 
+            resources.ApplyResources(this.pnlBalls, "pnlBalls");
             this.pnlBalls.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.pnlBalls.Controls.Add(this.pictureBox2);
             this.pnlBalls.Controls.Add(this.pictureBox1);
-            resources.ApplyResources(this.pnlBalls, "pnlBalls");
             this.pnlBalls.Name = "pnlBalls";
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = global::Karaboss.Properties.Resources.ball;
             resources.ApplyResources(this.pictureBox2, "pictureBox2");
+            this.pictureBox2.Image = global::Karaboss.Properties.Resources.ball;
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.TabStop = false;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::Karaboss.Properties.Resources.ball;
             resources.ApplyResources(this.pictureBox1, "pictureBox1");
+            this.pictureBox1.Image = global::Karaboss.Properties.Resources.ball;
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.TabStop = false;
             // 
             // pictBackColor
             // 
-            this.pictBackColor.BackColor = System.Drawing.Color.Black;
             resources.ApplyResources(this.pictBackColor, "pictBackColor");
+            this.pictBackColor.BackColor = System.Drawing.Color.Black;
             this.pictBackColor.Name = "pictBackColor";
             this.pictBackColor.TabStop = false;
             // 
             // pictContour
             // 
-            this.pictContour.BackColor = System.Drawing.Color.Black;
             resources.ApplyResources(this.pictContour, "pictContour");
+            this.pictContour.BackColor = System.Drawing.Color.Black;
             this.pictContour.Name = "pictContour";
             this.pictContour.TabStop = false;
             // 
             // pictNext
             // 
-            this.pictNext.BackColor = System.Drawing.Color.White;
             resources.ApplyResources(this.pictNext, "pictNext");
+            this.pictNext.BackColor = System.Drawing.Color.White;
             this.pictNext.Name = "pictNext";
             this.pictNext.TabStop = false;
             // 
             // pictHighlight
             // 
-            this.pictHighlight.BackColor = System.Drawing.Color.Red;
             resources.ApplyResources(this.pictHighlight, "pictHighlight");
+            this.pictHighlight.BackColor = System.Drawing.Color.Red;
             this.pictHighlight.Name = "pictHighlight";
             this.pictHighlight.TabStop = false;
             // 
             // pictBefore
             // 
-            this.pictBefore.BackColor = System.Drawing.Color.LightGreen;
             resources.ApplyResources(this.pictBefore, "pictBefore");
+            this.pictBefore.BackColor = System.Drawing.Color.LightGreen;
             this.pictBefore.Name = "pictBefore";
             this.pictBefore.TabStop = false;
             // 
             // cbOptionsTextDisplay
             // 
+            resources.ApplyResources(this.cbOptionsTextDisplay, "cbOptionsTextDisplay");
             this.cbOptionsTextDisplay.FormattingEnabled = true;
             this.cbOptionsTextDisplay.Items.AddRange(new object[] {
             resources.GetString("cbOptionsTextDisplay.Items"),
             resources.GetString("cbOptionsTextDisplay.Items1"),
             resources.GetString("cbOptionsTextDisplay.Items2")});
-            resources.ApplyResources(this.cbOptionsTextDisplay, "cbOptionsTextDisplay");
             this.cbOptionsTextDisplay.Name = "cbOptionsTextDisplay";
             this.cbOptionsTextDisplay.SelectedIndexChanged += new System.EventHandler(this.cbOptionsTextDisplay_SelectedIndexChanged);
             // 
@@ -359,8 +363,10 @@
             // 
             // pBox
             // 
+            resources.ApplyResources(this.pBox, "pBox");
             this.pBox.BackColor = System.Drawing.Color.Black;
             this.pBox.bColorContour = true;
+            this.pBox.bDemo = false;
             this.pBox.BeatDuration = 0;
             this.pBox.bforceUppercase = false;
             this.pBox.bShowParagraphs = true;
@@ -371,7 +377,6 @@
             this.pBox.FreqDirSlideShow = 0;
             this.pBox.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pBox.KaraokeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            resources.ApplyResources(this.pBox, "pBox");
             this.pBox.LyricsTimes = ((System.Collections.Generic.List<int>)(resources.GetObject("pBox.LyricsTimes")));
             this.pBox.LyricsWords = ((System.Collections.Generic.List<string>)(resources.GetObject("pBox.LyricsWords")));
             this.pBox.m_Alpha = 255;

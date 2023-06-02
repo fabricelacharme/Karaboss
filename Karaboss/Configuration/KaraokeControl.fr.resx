@@ -178,4 +178,13 @@
   <data name="lblShowParagraph.Text" xml:space="preserve">
     <value>Montrer les paragraphes</value>
   </data>
+  <data name="lblforceUppercase.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 13</value>
+  </data>
+  <data name="lblforceUppercase.Text" xml:space="preserve">
+    <value>Mettre en majuscules</value>
+  </data>
+  <data name="label10.Text" xml:space="preserve">
+    <value>Convertit les paroles en majuscules pour améliorer la lecture.</value>
+  </data>
 </root>
