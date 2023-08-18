@@ -1458,6 +1458,7 @@ namespace FlShell
                 case Keys.F3:
                 case Keys.F4:
                 case Keys.F6:
+                case Keys.F7:
                     // FAB: rename all, replace all
                     lvFunctionKeyClicked(this, e.KeyCode, e.KeyData); //F3 rename all, F4, replace all (Karaboss function keys)
                     break;

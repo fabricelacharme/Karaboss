@@ -153,7 +153,7 @@ namespace Karaboss.xplorer
             shellListView.lvContentChanged += new FlShell.ContentChangedEvenHandler(ShellListView_ContentChanged);
             shellListView.SelectedIndexChanged += new FlShell.SelectedIndexChangedEventHandler(ShellListView_SelectedIndexChanged);
                        
-            // F3, F4, F6            
+            // F3, F4, F6, F7            
             shellListView.lvFunctionKeyClicked += new FlShell.lvFunctionKeyEventHandler(ShellListView_lvFunctionKeyClicked);
             shellListView.SenKeyToParent += new FlShell.SenKeyToParentHandler(shellListView_SendKeyToParent);
 
@@ -293,6 +293,10 @@ namespace Karaboss.xplorer
                     InvertAuthor();
                     break;
 
+                case Keys.F7:
+                    InvertAuthorAndSong();
+                    break;
+
                 default:
                     break;
             }
@@ -342,6 +346,67 @@ namespace Karaboss.xplorer
 
         #region invert author and song
 
+        /// <summary>
+        /// Rename files like "song - author.mid" to "author - song.mid"
+        /// </summary>
+        private void InvertAuthorAndSong()
+        {
+            if (treeView.SelectedFolder != null && treeView.SelectedFolder.IsFolder)
+            {
+                string tx = string.Empty;
+                tx = "This function replace the format\n'song - author.mid'\nto the format\n'author - song.mid'.\n\n";
+                tx += "Continue?";
+
+                if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                    return;
+
+                string physicalPath = this.treeView.SelectedFolder.FileSystemPath;
+
+                string filename = string.Empty;
+                string author = string.Empty;
+                string song = string.Empty;
+                string extension = string.Empty;
+                string newfileName = string.Empty;
+                string oldFileName = string.Empty;
+
+                try
+                {
+                    FlShell.ShellItem[] fls = shellListView.SelectedItems;
+                    if (fls.Length > 0)
+                    {
+                        foreach (FlShell.ShellItem f in fls)
+                        {
+                            string file = f.FileSystemPath;
+                            oldFileName = Path.GetFileName(file);
+                            filename = Path.GetFileNameWithoutExtension(file);
+                            extension = Path.GetExtension(file);
+
+                            if (filename.IndexOf("-") > 0)
+                            {
+                                author = filename.Substring(filename.IndexOf("-") + 1).Trim();
+                                if (author.Length > 1)
+                                {
+                                    song = filename.Substring(0, filename.IndexOf("-")).Trim();
+                                    newfileName = author + " - " + song + extension;
+                                    newfileName = GetUniqueFileName(Path.Combine(physicalPath, newfileName));
+
+                                    RenameFile(oldFileName, newfileName, physicalPath);
+                                }
+                            }
+                        }
+                    }                   
+                    RefreshContents();
+                }
+                catch (Exception er)
+                {
+                    Console.WriteLine("The process failed: {0}", er.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Rename files like "song (author).mid" to "author - song.mid"
+        /// </summary>
         private void InvertAuthor()
         {
             if (treeView.SelectedFolder != null && treeView.SelectedFolder.IsFolder)
