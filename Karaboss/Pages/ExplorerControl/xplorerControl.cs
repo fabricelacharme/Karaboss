@@ -383,10 +383,10 @@ namespace Karaboss.xplorer
 
                             if (filename.IndexOf("-") > 0)
                             {
-                                author = filename.Substring(filename.IndexOf("-") + 1).Trim();
+                                author = filename.Substring(filename.LastIndexOf("-") + 1).Trim();
                                 if (author.Length > 1)
                                 {
-                                    song = filename.Substring(0, filename.IndexOf("-")).Trim();
+                                    song = filename.Substring(0, filename.LastIndexOf("-")).Trim();
                                     newfileName = author + " - " + song + extension;
                                     newfileName = GetUniqueFileName(Path.Combine(physicalPath, newfileName));
 
