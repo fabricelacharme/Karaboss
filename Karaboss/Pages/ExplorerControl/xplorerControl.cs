@@ -649,11 +649,15 @@ namespace Karaboss.xplorer
                 string[] files = Directory.GetFiles(physicalPath);
                 foreach (string file in files)
                 {
+                    
                     // apply format
                     oldFileName = Path.GetFileName(file);
-                    newfileName = pfx + " - " + oldFileName;
-                    // rewrite it
-                    RenameFile(oldFileName, newfileName, physicalPath);
+                    if (oldFileName != "Desktop.ini")
+                    {
+                        newfileName = pfx + " - " + oldFileName;
+                        // rewrite it
+                        RenameFile(oldFileName, newfileName, physicalPath);
+                    }
                 }
             }
             catch (Exception er)
