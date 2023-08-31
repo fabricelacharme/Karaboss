@@ -4422,7 +4422,7 @@ namespace Karaboss
         {
             try
             {               
-                if (e.ProgressPercentage <= progressBarPlayer.Maximum)
+                if (e.ProgressPercentage >= progressBarPlayer.Minimum && e.ProgressPercentage <= progressBarPlayer.Maximum)
                     progressBarPlayer.Value = e.ProgressPercentage;
             }
             catch (Exception ex)

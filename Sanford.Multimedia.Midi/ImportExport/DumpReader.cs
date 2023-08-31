@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Sanford.Multimedia.Midi
 {
@@ -29,6 +30,10 @@ namespace Sanford.Multimedia.Midi
         private string TrackName = "Track1";
         private string InstrumentName = "AcousticGrandPiano";
         private int ProgramChange = 0;
+
+        private int ControlChangeData1 = 0;
+        private int ControlChangeData2 = 0;
+
         private int Volume = 0;
         private int Pan = 0;
         private int Reverb = 0;
@@ -96,6 +101,8 @@ namespace Sanford.Multimedia.Midi
                     {
                         newNotes = new List<MidiNote>();
                         currenttrack++;
+                        if (currenttrack > 0)
+                            CreateTrack();
                     }
                     else if (array.Contains("Title_t"))
                     {
@@ -108,7 +115,7 @@ namespace Sanford.Multimedia.Midi
                     else if (array.Contains("Program_c"))
                     {
                         ReadProgramChange(array);
-                        CreateTrack();
+                        //CreateTrack();
                     }
                     else if (array.Contains("Note_on_c"))
                     {
@@ -117,6 +124,10 @@ namespace Sanford.Multimedia.Midi
                     else if (array.Contains("Note_off_c"))
                     {
                         StopMidiNote(array);
+                    }
+                    else if (array.Contains("Control_c"))
+                    {
+                        ReadControlChange(array);
                     }
                     else if (array.Contains("Lyric_t"))
                     {
@@ -197,6 +208,45 @@ namespace Sanford.Multimedia.Midi
             // Track, Time, Program_c, Channel, Program_num            
             Channel = Convert.ToInt32(ar[3]);
             ProgramChange = Convert.ToInt32(ar[4]);
+            
+        }
+
+        private void ReadControlChange(string[] ar)
+        {
+            if (ar.Length != 6)
+                throw new ArgumentException("ControlChange Length");
+            // Track, Time, Control_c, Channel, Data1, Data2
+            int ticks = Convert.ToInt32(ar[1]);
+            Channel = Convert.ToInt32(ar[3]);
+            ControlChangeData1 = Convert.ToInt32(ar[4]);
+            ControlChangeData2 = Convert.ToInt32(ar[5]);
+
+            // 7 Volume
+            // 10 Pan
+            // 11 Fader
+            // 91 Reverb
+            // 93 chorus   
+            switch (ControlChangeData1)
+            {
+                case 7:                    
+                    Volume = ControlChangeData2;
+                    newTracks[currenttrack-1].Volume = Volume;
+                    break;
+                case 10:
+                    Pan = ControlChangeData2;
+                    newTracks[currenttrack-1].Pan = Pan;
+                    break;
+                case 91:
+                    Reverb = ControlChangeData2;
+                    newTracks[currenttrack-1].Reverb = Reverb;
+                    break;
+                default:
+                    ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
+                    newTracks[currenttrack-1].Insert(ticks, message);
+                    break;
+            }
+
+
         }
 
         private void ReadMetaLyric(string[] ar)
@@ -253,7 +303,6 @@ namespace Sanford.Multimedia.Midi
                 Pan = Pan,
                 Reverb = Reverb,
             };
-
 
             ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, track.MidiChannel, track.ProgramChange, 0);
             track.Insert(0, message);
