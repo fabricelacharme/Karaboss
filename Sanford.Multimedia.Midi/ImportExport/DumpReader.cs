@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace Sanford.Multimedia.Midi
 {
@@ -114,8 +115,7 @@ namespace Sanford.Multimedia.Midi
                     }
                     else if (array.Contains("Program_c"))
                     {
-                        ReadProgramChange(array);
-                        //CreateTrack();
+                        ReadProgramChange(array);                        
                     }
                     else if (array.Contains("Note_on_c"))
                     {
@@ -128,6 +128,10 @@ namespace Sanford.Multimedia.Midi
                     else if (array.Contains("Control_c"))
                     {
                         ReadControlChange(array);
+                    }
+                    else if (array.Contains("Pitch_bend_c"))
+                    {
+                        ReadPitchBend(array);
                     }
                     else if (array.Contains("Lyric_t"))
                     {
@@ -184,15 +188,20 @@ namespace Sanford.Multimedia.Midi
         #endregion
 
 
-        #region Track
+        #region Tracks
         private void ReadTrackName(string[] ar)
         {
             if (ar.Length != 4)
                 throw new ArgumentException("TrackName Length");
-            // Track, Time, Title_t, Text
+            // Track, Time, Title_t, Text            
             TrackName = ar[3];
             if (currenttrack > 0)
+            {
                 newTracks[currenttrack - 1].Name = TrackName;
+                byte[] bytes = System.Text.Encoding.ASCII.GetBytes(TrackName);
+                MetaMessage message = new MetaMessage(MetaType.TrackName, bytes);
+                newTracks[currenttrack - 1].Insert(0, message);
+            }
         }
 
         private void ReadInstrumentName(string[] ar)
@@ -210,12 +219,16 @@ namespace Sanford.Multimedia.Midi
         {
             if (ar.Length != 5)
                 throw new ArgumentException("ProgramChange Length");
-            // Track, Time, Program_c, Channel, Program_num            
+            // Track, Time, Program_c, Channel, Program_num
+            int ticks = Convert.ToInt32(ar[1]);
             Channel = Convert.ToInt32(ar[3]);
             ProgramChange = Convert.ToInt32(ar[4]);
             if (currenttrack > 0)
+            {
                 newTracks[currenttrack - 1].ProgramChange = ProgramChange;
-
+                ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, Channel, ProgramChange);
+                newTracks[currenttrack - 1].Insert(ticks, message);
+            }
 
         }
 
@@ -223,6 +236,7 @@ namespace Sanford.Multimedia.Midi
         {
             if (ar.Length != 6)
                 throw new ArgumentException("ControlChange Length");
+
             // Track, Time, Control_c, Channel, Data1, Data2
             int ticks = Convert.ToInt32(ar[1]);
             Channel = Convert.ToInt32(ar[3]);
@@ -254,6 +268,20 @@ namespace Sanford.Multimedia.Midi
                     break;
             }
 
+
+        }
+
+        private void ReadPitchBend(string[] ar)
+        {
+            // Track, Time, Pitch_bend_c, Channel, Data1
+            if (ar.Length != 5)
+                throw new ArgumentException("PitchBend Length");
+
+            int ticks = Convert.ToInt32(ar[1]);
+            int PitchBendData1= Convert.ToInt32(ar[4]);
+            Channel = Convert.ToInt32(ar[3]);
+            ChannelMessage message = new ChannelMessage(ChannelCommand.PitchWheel, Channel, PitchBendData1);
+            newTracks[currenttrack - 1].Insert(ticks, message);
 
         }
 
