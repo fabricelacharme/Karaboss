@@ -35,7 +35,7 @@ namespace Sanford.Multimedia.Midi
         private int ControlChangeData2 = 0;
 
         private int Volume = 0;
-        private int Pan = 0;
+        private int Pan = 64;
         private int Reverb = 0;
 
         MidiNote n;
@@ -191,6 +191,8 @@ namespace Sanford.Multimedia.Midi
                 throw new ArgumentException("TrackName Length");
             // Track, Time, Title_t, Text
             TrackName = ar[3];
+            if (currenttrack > 0)
+                newTracks[currenttrack - 1].Name = TrackName;
         }
 
         private void ReadInstrumentName(string[] ar)
@@ -198,7 +200,10 @@ namespace Sanford.Multimedia.Midi
             if (ar.Length != 4)
                 throw new ArgumentException("ProgramChange Length");
             // Track, Time, Instrument_name_t, Text
-            InstrumentName = ar[2];
+            InstrumentName = ar[3];
+            if (currenttrack > 0)
+                newTracks[currenttrack - 1].InstrumentName = InstrumentName;
+
         }
 
         private void ReadProgramChange(string[] ar)
@@ -208,7 +213,10 @@ namespace Sanford.Multimedia.Midi
             // Track, Time, Program_c, Channel, Program_num            
             Channel = Convert.ToInt32(ar[3]);
             ProgramChange = Convert.ToInt32(ar[4]);
-            
+            if (currenttrack > 0)
+                newTracks[currenttrack - 1].ProgramChange = ProgramChange;
+
+
         }
 
         private void ReadControlChange(string[] ar)
