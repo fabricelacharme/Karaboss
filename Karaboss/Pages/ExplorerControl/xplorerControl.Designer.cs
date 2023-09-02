@@ -37,7 +37,6 @@
             this.forwardButton = new System.Windows.Forms.ToolStripButton();
             this.upButton = new System.Windows.Forms.ToolStripButton();
             this.btnDownloads = new System.Windows.Forms.ToolStripButton();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.lvToolbar = new System.Windows.Forms.ToolStrip();
             this.BtnNewMidiFile = new System.Windows.Forms.ToolStripButton();
             this.btnPlay = new System.Windows.Forms.ToolStripButton();
@@ -75,7 +74,6 @@
             // 
             // splitContainerFiles.Panel2
             // 
-            this.splitContainerFiles.Panel2.Controls.Add(this.toolStrip1);
             this.splitContainerFiles.Panel2.Controls.Add(this.shellListView);
             this.splitContainerFiles.Panel2.Controls.Add(this.lvToolbar);
             this.splitContainerFiles.TabStop = false;
@@ -133,11 +131,6 @@
             resources.ApplyResources(this.btnDownloads, "btnDownloads");
             this.btnDownloads.Name = "btnDownloads";
             this.btnDownloads.Click += new System.EventHandler(this.BtnDownloads_Click);
-            // 
-            // toolStrip1
-            // 
-            resources.ApplyResources(this.toolStrip1, "toolStrip1");
-            this.toolStrip1.Name = "toolStrip1";
             // 
             // lvToolbar
             // 
@@ -293,7 +286,6 @@
         private FlShell.ShellListView shellListView;
         private System.Windows.Forms.ToolStripButton btnDownloads;
         private System.Windows.Forms.ToolStripButton BtnNewMidiFile;
-        private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripDropDownButton mnuRename;
         private System.Windows.Forms.ToolStripMenuItem mnuRenameFiles;
         private System.Windows.Forms.ToolStripMenuItem mnuInvertAuthorSong;
