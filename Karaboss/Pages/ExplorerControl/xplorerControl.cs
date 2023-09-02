@@ -1181,14 +1181,25 @@ namespace Karaboss.xplorer
             InvokePlayEdit(false);
         }
 
+    
         /// <summary>
-        /// Rename files 
+        /// Rename files using upper directory F6
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void NamingButton_Click(object sender, EventArgs e)
+        private void mnuRenameFiles_Click(object sender, EventArgs e)
         {
             RenameAllQuestion();
+        }
+
+        /// <summary>
+        /// Invert author and song F7
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuInvertAuthorSong_Click(object sender, EventArgs e)
+        {
+            InvertAuthorAndSong();
         }
 
         /// <summary>
@@ -1553,6 +1564,8 @@ namespace Karaboss.xplorer
             string fName = Karaclass.M_filePlaylistGroups;
             PlGroupHelper.Save(fName, PlGroup);                        
         }
+
+
 
 
 

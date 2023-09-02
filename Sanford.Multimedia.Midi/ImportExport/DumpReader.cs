@@ -189,6 +189,12 @@ namespace Sanford.Multimedia.Midi
 
 
         #region Tracks
+        
+        /// <summary>
+        /// Name of the track
+        /// </summary>
+        /// <param name="ar"></param>
+        /// <exception cref="ArgumentException"></exception>
         private void ReadTrackName(string[] ar)
         {
             if (ar.Length != 4)
@@ -204,10 +210,16 @@ namespace Sanford.Multimedia.Midi
             }
         }
 
+        /// <summary>
+        /// Name of the instrument
+        /// </summary>
+        /// <param name="ar"></param>
+        /// <exception cref="ArgumentException"></exception>
         private void ReadInstrumentName(string[] ar)
         {
             if (ar.Length != 4)
                 throw new ArgumentException("ProgramChange Length");
+
             // Track, Time, Instrument_name_t, Text
             InstrumentName = ar[3];
             if (currenttrack > 0)
@@ -215,6 +227,11 @@ namespace Sanford.Multimedia.Midi
 
         }
 
+        /// <summary>
+        /// Program change
+        /// </summary>
+        /// <param name="ar"></param>
+        /// <exception cref="ArgumentException"></exception>
         private void ReadProgramChange(string[] ar)
         {
             if (ar.Length != 5)
