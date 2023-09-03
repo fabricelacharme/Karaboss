@@ -402,6 +402,7 @@ namespace Karaboss
 
         private void BtnLaunch_Click(object sender, EventArgs e)
         {
+            // Check if not a subdirectory is selected
             if (StartPrepare())
             {
                 btnLaunch.Enabled = false;
