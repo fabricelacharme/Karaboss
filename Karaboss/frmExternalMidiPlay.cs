@@ -224,20 +224,20 @@ namespace Karaboss
 
         #region midi values
 
-        private int _bpm = 0;           // 60000000 / _tempo
-        private double _duration = 0;  // en secondes
+        //private int _bpm = 0;           // 60000000 / _tempo
+        //private double _duration = 0;  // en secondes
         private int _totalTicks = 0;
         private int _tempo = 0;
         private int _division = 0;      // ticks per beat - ex 96
         private int _ppqn = 0;          // idem _division (sequence1.Division)
         private int _measurelen = 0;
-        private int _TempoOrig = 0;
+        //private int _TempoOrig = 0;
         private int _TempoDelta = 100;
         #endregion
 
 
         #region Time counter
-        float _maintenant = 0;
+        //float _maintenant = 0;
         float _startTime = 0;
         DateTime _StartTime;
 

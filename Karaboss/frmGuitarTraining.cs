@@ -52,9 +52,9 @@ namespace Karaboss
 
         private int resolution = 4;
         private int _measurelen = 0;
-        private int xScale = 20;
-        private float zoomx = 1.0f;
-        private float zoomy = 1.0f;
+        //private int xScale = 20;
+        //private float zoomx = 1.0f;
+        //private float zoomy = 1.0f;
         private bool scrolling = false;
         private bool closing = false;
         private int newstart = 0;
@@ -1365,7 +1365,7 @@ namespace Karaboss
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }            
         }
 

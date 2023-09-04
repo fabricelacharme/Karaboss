@@ -773,7 +773,7 @@ namespace Karaboss.Search
                         catch (Exception ex)
                         {
                             // Sometime the file does not respect the format "author - song", so listView.Items[e.Item].Group.Header is null
-                            MessageBox.Show("Rename not done, unable to find the author of this song.", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            MessageBox.Show("Rename not done, unable to find the author of this song." + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             e.CancelEdit = true;
                             return;
                         }
@@ -1067,7 +1067,7 @@ namespace Karaboss.Search
                     }
                     catch (Exception ex)
                     {
-
+                        MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }                    
                 }
             }

@@ -72,7 +72,7 @@ namespace Karaboss
         private int _measurelen = 0;
 
         private int mesurelen = 80;        
-        private int _timeLineHeight = 40;        
+        //private int _timeLineHeight = 40;        
         private int leftWidth = 100;
         private bool bShowVScrollBar = false;
         private bool bShowHScrollBar = false;
@@ -1236,6 +1236,7 @@ namespace Karaboss
             {
                 zoomx = 1.0f;
                 zoomy = 1.0f;
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
         }

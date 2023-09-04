@@ -1995,9 +1995,8 @@ namespace Karaboss
             
             string referencepath = songRoot;
             string selectedpath = xplorerControl.SelectedFolder.FileSystemPath;
-            
 
-            frmTools fTool = new frmTools(referencepath, selectedpath, "SearchMD5Doubles");
+            frmToools fTool = new frmToools(referencepath, selectedpath, "SearchMD5Doubles");            
             fTool.ShowDialog();
                           
         }
@@ -2013,7 +2012,7 @@ namespace Karaboss
             string selectedpath = xplorerControl.SelectedFolder.FileSystemPath;
             string referencepath = selectedpath;
 
-            frmTools fTool = new frmTools(referencepath, selectedpath, "SearchMD5Doubles");
+            frmToools fTool = new frmToools(referencepath, selectedpath, "SearchMD5Doubles");
             fTool.ShowDialog();
             
         }
@@ -2025,7 +2024,7 @@ namespace Karaboss
             string selectedpath = xplorerControl.SelectedFolder.FileSystemPath;
 
 
-            frmTools fTool = new frmTools(referencepath, selectedpath, "SearchSizeDoubles");
+            frmToools fTool = new frmToools(referencepath, selectedpath, "SearchSizeDoubles");
             fTool.ShowDialog();
             
         }
@@ -2036,7 +2035,7 @@ namespace Karaboss
             string selectedpath = xplorerControl.SelectedFolder.FileSystemPath;
             string referencepath = selectedpath;
 
-            frmTools fTool = new frmTools(referencepath, selectedpath, "SearchSizeDoubles");
+            frmToools fTool = new frmToools(referencepath, selectedpath, "SearchSizeDoubles");
             fTool.ShowDialog();
             
         }
@@ -2049,7 +2048,7 @@ namespace Karaboss
             string selectedpath = xplorerControl.SelectedFolder.FileSystemPath;
 
 
-            frmTools fTool = new frmTools(referencepath, selectedpath, "SearchNameDoubles");
+            frmToools fTool = new frmToools(referencepath, selectedpath, "SearchNameDoubles");
             fTool.ShowDialog();
             
         }
@@ -2060,7 +2059,7 @@ namespace Karaboss
             string selectedpath = xplorerControl.SelectedFolder.FileSystemPath;
             string referencepath = selectedpath;
 
-            frmTools fTool = new frmTools(referencepath, selectedpath, "SearchNameDoubles");
+            frmToools fTool = new frmToools(referencepath, selectedpath, "SearchNameDoubles");
             fTool.ShowDialog();
             
         }

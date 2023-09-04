@@ -45,7 +45,7 @@ using System.Windows.Forms;
 
 namespace Karaboss
 {
-    public partial class frmTools : Form
+    public partial class frmToools : Form
     {
 
         public class MFile
@@ -201,7 +201,7 @@ namespace Karaboss
         #endregion
 
 
-        public frmTools(string refpath, string selpath, string SMode)
+        public frmToools(string refpath, string selpath, string SMode)
         {
             InitializeComponent();
 

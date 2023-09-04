@@ -211,7 +211,7 @@ namespace Karaboss
         private PlaylistItem currentPlaylistItem;        
                         
         private int iStaffHeightMaximized = 150; // = SheetMusic.staffH; 148 en réalité
-        private int iStaffHeightMinimized = 25;  // 23 en réalité
+        //private int iStaffHeightMinimized = 25;  // 23 en réalité
         
         // Dimensions
         private int leftWidth = 179;
