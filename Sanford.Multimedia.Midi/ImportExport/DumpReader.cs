@@ -901,8 +901,12 @@ namespace Sanford.Multimedia.Midi
                 Time = new TimeSignature(Numerator, Denominator, Division, Tempo),
             };
 
-            // Tracks to sequence            
-            sequence.tracks = newTracks;
+            // Tracks to sequence
+             for (int i = 0; i < newTracks.Count; i++)
+            {
+                sequence.Add(newTracks[i]);
+            }
+            //sequence.tracks = newTracks;
             
             // Insert Tempo in track 0
             if (sequence.tracks.Count > 0)
