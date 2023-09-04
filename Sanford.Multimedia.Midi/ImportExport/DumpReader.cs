@@ -228,7 +228,7 @@ namespace Sanford.Multimedia.Midi
         }
 
         /// <summary>
-        /// Program change
+        /// Program change Program_c
         /// </summary>
         /// <param name="ar"></param>
         /// <exception cref="ArgumentException"></exception>
@@ -249,6 +249,11 @@ namespace Sanford.Multimedia.Midi
 
         }
 
+        /// <summary>
+        /// Control Change Control_c
+        /// </summary>
+        /// <param name="ar"></param>
+        /// <exception cref="ArgumentException"></exception>
         private void ReadControlChange(string[] ar)
         {
             if (ar.Length != 6)
@@ -265,6 +270,7 @@ namespace Sanford.Multimedia.Midi
             // 11 Fader
             // 91 Reverb
             // 93 chorus   
+            
             switch (ControlChangeData1)
             {
                 case 7:                    
@@ -280,10 +286,13 @@ namespace Sanford.Multimedia.Midi
                     newTracks[currenttrack-1].Reverb = Reverb;
                     break;
                 default:
-                    ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
-                    newTracks[currenttrack-1].Insert(ticks, message);
+                    //ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
+                    //newTracks[currenttrack-1].Insert(ticks, message);
                     break;
             }
+            
+            ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
+            newTracks[currenttrack - 1].Insert(ticks, message);
 
 
         }
