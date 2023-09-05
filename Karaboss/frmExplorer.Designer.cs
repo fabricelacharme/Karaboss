@@ -43,7 +43,9 @@
             this.MnuFileSep2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEditRename = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditRenameAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.invertAuthorAndSongToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditReplaceAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDisplay = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDisplaySearch = new System.Windows.Forms.ToolStripMenuItem();
@@ -101,33 +103,32 @@
             // 
             // statusBar
             // 
-            resources.ApplyResources(this.statusBar, "statusBar");
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tssLeft,
             this.tssMiddle,
             this.tssRight});
+            resources.ApplyResources(this.statusBar, "statusBar");
             this.statusBar.Name = "statusBar";
             // 
             // tssLeft
             // 
-            resources.ApplyResources(this.tssLeft, "tssLeft");
             this.tssLeft.Name = "tssLeft";
+            resources.ApplyResources(this.tssLeft, "tssLeft");
             // 
             // tssMiddle
             // 
-            resources.ApplyResources(this.tssMiddle, "tssMiddle");
             this.tssMiddle.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.tssMiddle.Name = "tssMiddle";
+            resources.ApplyResources(this.tssMiddle, "tssMiddle");
             this.tssMiddle.Spring = true;
             // 
             // tssRight
             // 
-            resources.ApplyResources(this.tssRight, "tssRight");
             this.tssRight.Name = "tssRight";
+            resources.ApplyResources(this.tssRight, "tssRight");
             // 
             // mnuExplorer
             // 
-            resources.ApplyResources(this.mnuExplorer, "mnuExplorer");
             this.mnuExplorer.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFile,
             this.mnuEdit,
@@ -135,11 +136,11 @@
             this.mnuTools,
             this.mnuMidi,
             this.mnuHelp});
+            resources.ApplyResources(this.mnuExplorer, "mnuExplorer");
             this.mnuExplorer.Name = "mnuExplorer";
             // 
             // mnuFile
             // 
-            resources.ApplyResources(this.mnuFile, "mnuFile");
             this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFileNew,
             this.mnuFileOpen,
@@ -149,69 +150,83 @@
             this.MnuFileSep2,
             this.mnuFileQuit});
             this.mnuFile.Name = "mnuFile";
+            resources.ApplyResources(this.mnuFile, "mnuFile");
             // 
             // mnuFileNew
             // 
-            resources.ApplyResources(this.mnuFileNew, "mnuFileNew");
             this.mnuFileNew.Name = "mnuFileNew";
+            resources.ApplyResources(this.mnuFileNew, "mnuFileNew");
             this.mnuFileNew.Click += new System.EventHandler(this.MnuFileNew_Click);
             // 
             // mnuFileOpen
             // 
-            resources.ApplyResources(this.mnuFileOpen, "mnuFileOpen");
             this.mnuFileOpen.Name = "mnuFileOpen";
+            resources.ApplyResources(this.mnuFileOpen, "mnuFileOpen");
             this.mnuFileOpen.Click += new System.EventHandler(this.MnuFileOpen_Click);
             // 
             // mnuFileEdit
             // 
-            resources.ApplyResources(this.mnuFileEdit, "mnuFileEdit");
             this.mnuFileEdit.Name = "mnuFileEdit";
+            resources.ApplyResources(this.mnuFileEdit, "mnuFileEdit");
             this.mnuFileEdit.Click += new System.EventHandler(this.MnuFileEdit_Click);
             // 
             // MnuFileSep1
             // 
-            resources.ApplyResources(this.MnuFileSep1, "MnuFileSep1");
             this.MnuFileSep1.Name = "MnuFileSep1";
+            resources.ApplyResources(this.MnuFileSep1, "MnuFileSep1");
             // 
             // MnuFileRecentFiles
             // 
-            resources.ApplyResources(this.MnuFileRecentFiles, "MnuFileRecentFiles");
             this.MnuFileRecentFiles.Name = "MnuFileRecentFiles";
+            resources.ApplyResources(this.MnuFileRecentFiles, "MnuFileRecentFiles");
             // 
             // MnuFileSep2
             // 
-            resources.ApplyResources(this.MnuFileSep2, "MnuFileSep2");
             this.MnuFileSep2.Name = "MnuFileSep2";
+            resources.ApplyResources(this.MnuFileSep2, "MnuFileSep2");
             // 
             // mnuFileQuit
             // 
-            resources.ApplyResources(this.mnuFileQuit, "mnuFileQuit");
             this.mnuFileQuit.Name = "mnuFileQuit";
+            resources.ApplyResources(this.mnuFileQuit, "mnuFileQuit");
             this.mnuFileQuit.Click += new System.EventHandler(this.MnuFileQuit_Click);
             // 
             // mnuEdit
             // 
-            resources.ApplyResources(this.mnuEdit, "mnuEdit");
             this.mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuEditRenameAll,
+            this.mnuEditRename,
             this.mnuEditReplaceAll});
             this.mnuEdit.Name = "mnuEdit";
+            resources.ApplyResources(this.mnuEdit, "mnuEdit");
+            // 
+            // mnuEditRename
+            // 
+            this.mnuEditRename.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuEditRenameAll,
+            this.invertAuthorAndSongToolStripMenuItem});
+            this.mnuEditRename.Name = "mnuEditRename";
+            resources.ApplyResources(this.mnuEditRename, "mnuEditRename");
             // 
             // mnuEditRenameAll
             // 
-            resources.ApplyResources(this.mnuEditRenameAll, "mnuEditRenameAll");
             this.mnuEditRenameAll.Name = "mnuEditRenameAll";
+            resources.ApplyResources(this.mnuEditRenameAll, "mnuEditRenameAll");
             this.mnuEditRenameAll.Click += new System.EventHandler(this.mnuEditRenameAll_Click);
+            // 
+            // invertAuthorAndSongToolStripMenuItem
+            // 
+            this.invertAuthorAndSongToolStripMenuItem.Name = "invertAuthorAndSongToolStripMenuItem";
+            resources.ApplyResources(this.invertAuthorAndSongToolStripMenuItem, "invertAuthorAndSongToolStripMenuItem");
+            this.invertAuthorAndSongToolStripMenuItem.Click += new System.EventHandler(this.mnuInvertAuthorSong_Click);
             // 
             // mnuEditReplaceAll
             // 
-            resources.ApplyResources(this.mnuEditReplaceAll, "mnuEditReplaceAll");
             this.mnuEditReplaceAll.Name = "mnuEditReplaceAll";
+            resources.ApplyResources(this.mnuEditReplaceAll, "mnuEditReplaceAll");
             this.mnuEditReplaceAll.Click += new System.EventHandler(this.mnuEditReplaceAll_Click);
             // 
             // mnuDisplay
             // 
-            resources.ApplyResources(this.mnuDisplay, "mnuDisplay");
             this.mnuDisplay.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuDisplaySearch,
             this.mnuDisplayExplore,
@@ -220,67 +235,67 @@
             this.MnuDisplayPianoTraining,
             this.MnuDisplayGuitarTraining});
             this.mnuDisplay.Name = "mnuDisplay";
+            resources.ApplyResources(this.mnuDisplay, "mnuDisplay");
             // 
             // mnuDisplaySearch
             // 
-            resources.ApplyResources(this.mnuDisplaySearch, "mnuDisplaySearch");
             this.mnuDisplaySearch.Name = "mnuDisplaySearch";
+            resources.ApplyResources(this.mnuDisplaySearch, "mnuDisplaySearch");
             this.mnuDisplaySearch.Click += new System.EventHandler(this.MnuDisplaySearch_Click);
             // 
             // mnuDisplayExplore
             // 
-            resources.ApplyResources(this.mnuDisplayExplore, "mnuDisplayExplore");
             this.mnuDisplayExplore.Name = "mnuDisplayExplore";
+            resources.ApplyResources(this.mnuDisplayExplore, "mnuDisplayExplore");
             this.mnuDisplayExplore.Click += new System.EventHandler(this.MnuDisplayExplore_Click);
             // 
             // mnuDisplayPlaylist
             // 
-            resources.ApplyResources(this.mnuDisplayPlaylist, "mnuDisplayPlaylist");
             this.mnuDisplayPlaylist.Name = "mnuDisplayPlaylist";
+            resources.ApplyResources(this.mnuDisplayPlaylist, "mnuDisplayPlaylist");
             this.mnuDisplayPlaylist.Click += new System.EventHandler(this.MnuDisplayPlaylist_Click);
             // 
             // MnuDisplayConnected
             // 
-            resources.ApplyResources(this.MnuDisplayConnected, "MnuDisplayConnected");
             this.MnuDisplayConnected.Name = "MnuDisplayConnected";
+            resources.ApplyResources(this.MnuDisplayConnected, "MnuDisplayConnected");
             this.MnuDisplayConnected.Click += new System.EventHandler(this.MnuDisplayConnected_Click);
             // 
             // MnuDisplayPianoTraining
             // 
-            resources.ApplyResources(this.MnuDisplayPianoTraining, "MnuDisplayPianoTraining");
             this.MnuDisplayPianoTraining.Name = "MnuDisplayPianoTraining";
+            resources.ApplyResources(this.MnuDisplayPianoTraining, "MnuDisplayPianoTraining");
             this.MnuDisplayPianoTraining.Click += new System.EventHandler(this.MnuDisplayPianoTraining_Click);
             // 
             // MnuDisplayGuitarTraining
             // 
-            resources.ApplyResources(this.MnuDisplayGuitarTraining, "MnuDisplayGuitarTraining");
             this.MnuDisplayGuitarTraining.Name = "MnuDisplayGuitarTraining";
+            resources.ApplyResources(this.MnuDisplayGuitarTraining, "MnuDisplayGuitarTraining");
             this.MnuDisplayGuitarTraining.Click += new System.EventHandler(this.MnuDisplayGuitarTraining_Click);
             // 
             // mnuTools
             // 
-            resources.ApplyResources(this.mnuTools, "mnuTools");
             this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuToolsOption,
             this.MnuToolsSep1,
             this.mnuToolsMngtFiles,
             this.toolStripMenuItem1});
             this.mnuTools.Name = "mnuTools";
+            resources.ApplyResources(this.mnuTools, "mnuTools");
             // 
             // mnuToolsOption
             // 
-            resources.ApplyResources(this.mnuToolsOption, "mnuToolsOption");
             this.mnuToolsOption.Name = "mnuToolsOption";
+            resources.ApplyResources(this.mnuToolsOption, "mnuToolsOption");
             this.mnuToolsOption.Click += new System.EventHandler(this.MnuToolsOption_Click);
             // 
             // MnuToolsSep1
             // 
-            resources.ApplyResources(this.MnuToolsSep1, "MnuToolsSep1");
             this.MnuToolsSep1.Name = "MnuToolsSep1";
+            resources.ApplyResources(this.MnuToolsSep1, "MnuToolsSep1");
             // 
             // mnuToolsMngtFiles
             // 
-            resources.ApplyResources(this.mnuToolsMngtFiles, "mnuToolsMngtFiles");
             this.mnuToolsMngtFiles.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuToolsMngtFilesDeleteEmptyDirs,
             this.MnuToolsSep2,
@@ -293,134 +308,135 @@
             this.mnuToolsMngtFilesSearchSameNameComparedToReference,
             this.mnuToolsMngtFilesSearchSameNameInASingleDirectory});
             this.mnuToolsMngtFiles.Name = "mnuToolsMngtFiles";
+            resources.ApplyResources(this.mnuToolsMngtFiles, "mnuToolsMngtFiles");
             // 
             // mnuToolsMngtFilesDeleteEmptyDirs
             // 
-            resources.ApplyResources(this.mnuToolsMngtFilesDeleteEmptyDirs, "mnuToolsMngtFilesDeleteEmptyDirs");
             this.mnuToolsMngtFilesDeleteEmptyDirs.Name = "mnuToolsMngtFilesDeleteEmptyDirs";
+            resources.ApplyResources(this.mnuToolsMngtFilesDeleteEmptyDirs, "mnuToolsMngtFilesDeleteEmptyDirs");
             this.mnuToolsMngtFilesDeleteEmptyDirs.Click += new System.EventHandler(this.MnuToolsMngtFilesDeleteEmptyDirs_Click);
             // 
             // MnuToolsSep2
             // 
-            resources.ApplyResources(this.MnuToolsSep2, "MnuToolsSep2");
             this.MnuToolsSep2.Name = "MnuToolsSep2";
+            resources.ApplyResources(this.MnuToolsSep2, "MnuToolsSep2");
             // 
             // mnuToolsMngtFilesSearchDoubles
             // 
-            resources.ApplyResources(this.mnuToolsMngtFilesSearchDoubles, "mnuToolsMngtFilesSearchDoubles");
             this.mnuToolsMngtFilesSearchDoubles.Name = "mnuToolsMngtFilesSearchDoubles";
+            resources.ApplyResources(this.mnuToolsMngtFilesSearchDoubles, "mnuToolsMngtFilesSearchDoubles");
             this.mnuToolsMngtFilesSearchDoubles.Click += new System.EventHandler(this.MnuToolsMngtFilesSearchDoubles_Click);
             // 
             // mnuToolsMngtFilesSearchDoublesSingle
             // 
-            resources.ApplyResources(this.mnuToolsMngtFilesSearchDoublesSingle, "mnuToolsMngtFilesSearchDoublesSingle");
             this.mnuToolsMngtFilesSearchDoublesSingle.Name = "mnuToolsMngtFilesSearchDoublesSingle";
+            resources.ApplyResources(this.mnuToolsMngtFilesSearchDoublesSingle, "mnuToolsMngtFilesSearchDoublesSingle");
             this.mnuToolsMngtFilesSearchDoublesSingle.Click += new System.EventHandler(this.MnuToolsMngtFilesSearchDoublesSingle_Click);
             // 
             // MnuToolsSep3
             // 
-            resources.ApplyResources(this.MnuToolsSep3, "MnuToolsSep3");
             this.MnuToolsSep3.Name = "MnuToolsSep3";
+            resources.ApplyResources(this.MnuToolsSep3, "MnuToolsSep3");
             // 
             // mnuToolsMngtFilesSearchSameSizeComparedToReference
             // 
-            resources.ApplyResources(this.mnuToolsMngtFilesSearchSameSizeComparedToReference, "mnuToolsMngtFilesSearchSameSizeComparedToReference");
             this.mnuToolsMngtFilesSearchSameSizeComparedToReference.Name = "mnuToolsMngtFilesSearchSameSizeComparedToReference";
+            resources.ApplyResources(this.mnuToolsMngtFilesSearchSameSizeComparedToReference, "mnuToolsMngtFilesSearchSameSizeComparedToReference");
             this.mnuToolsMngtFilesSearchSameSizeComparedToReference.Click += new System.EventHandler(this.MnuToolsMngtFilesSearchSameSizeComparedToReference_Click);
             // 
             // mnuToolsMngtFilesSearchSameSizeInASingleDirectory
             // 
-            resources.ApplyResources(this.mnuToolsMngtFilesSearchSameSizeInASingleDirectory, "mnuToolsMngtFilesSearchSameSizeInASingleDirectory");
             this.mnuToolsMngtFilesSearchSameSizeInASingleDirectory.Name = "mnuToolsMngtFilesSearchSameSizeInASingleDirectory";
+            resources.ApplyResources(this.mnuToolsMngtFilesSearchSameSizeInASingleDirectory, "mnuToolsMngtFilesSearchSameSizeInASingleDirectory");
             this.mnuToolsMngtFilesSearchSameSizeInASingleDirectory.Click += new System.EventHandler(this.MnuToolsMngtFilesSearchSameSizeInASingleDirectory_Click);
             // 
             // MnuToolsSep4
             // 
-            resources.ApplyResources(this.MnuToolsSep4, "MnuToolsSep4");
             this.MnuToolsSep4.Name = "MnuToolsSep4";
+            resources.ApplyResources(this.MnuToolsSep4, "MnuToolsSep4");
             // 
             // mnuToolsMngtFilesSearchSameNameComparedToReference
             // 
-            resources.ApplyResources(this.mnuToolsMngtFilesSearchSameNameComparedToReference, "mnuToolsMngtFilesSearchSameNameComparedToReference");
             this.mnuToolsMngtFilesSearchSameNameComparedToReference.Name = "mnuToolsMngtFilesSearchSameNameComparedToReference";
+            resources.ApplyResources(this.mnuToolsMngtFilesSearchSameNameComparedToReference, "mnuToolsMngtFilesSearchSameNameComparedToReference");
             this.mnuToolsMngtFilesSearchSameNameComparedToReference.Click += new System.EventHandler(this.MnuToolsMngtFilesSearchSameNameComparedToReference_Click);
             // 
             // mnuToolsMngtFilesSearchSameNameInASingleDirectory
             // 
-            resources.ApplyResources(this.mnuToolsMngtFilesSearchSameNameInASingleDirectory, "mnuToolsMngtFilesSearchSameNameInASingleDirectory");
             this.mnuToolsMngtFilesSearchSameNameInASingleDirectory.Name = "mnuToolsMngtFilesSearchSameNameInASingleDirectory";
+            resources.ApplyResources(this.mnuToolsMngtFilesSearchSameNameInASingleDirectory, "mnuToolsMngtFilesSearchSameNameInASingleDirectory");
             this.mnuToolsMngtFilesSearchSameNameInASingleDirectory.Click += new System.EventHandler(this.MnuToolsMngtFilesSearchSameNameInASingleDirectory_Click);
             // 
             // toolStripMenuItem1
             // 
-            resources.ApplyResources(this.toolStripMenuItem1, "toolStripMenuItem1");
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            resources.ApplyResources(this.toolStripMenuItem1, "toolStripMenuItem1");
             // 
             // mnuMidi
             // 
-            resources.ApplyResources(this.mnuMidi, "mnuMidi");
             this.mnuMidi.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuMidiInputDevice,
             this.mnuMidiOutputDevice,
             this.MnuMidiSep1,
             this.MnuMidiExternal});
             this.mnuMidi.Name = "mnuMidi";
+            resources.ApplyResources(this.mnuMidi, "mnuMidi");
             // 
             // mnuMidiInputDevice
             // 
-            resources.ApplyResources(this.mnuMidiInputDevice, "mnuMidiInputDevice");
             this.mnuMidiInputDevice.Name = "mnuMidiInputDevice";
+            resources.ApplyResources(this.mnuMidiInputDevice, "mnuMidiInputDevice");
             this.mnuMidiInputDevice.Click += new System.EventHandler(this.MnuMidiInputDevice_Click);
             // 
             // mnuMidiOutputDevice
             // 
-            resources.ApplyResources(this.mnuMidiOutputDevice, "mnuMidiOutputDevice");
             this.mnuMidiOutputDevice.Name = "mnuMidiOutputDevice";
+            resources.ApplyResources(this.mnuMidiOutputDevice, "mnuMidiOutputDevice");
             this.mnuMidiOutputDevice.Click += new System.EventHandler(this.MnuMidiOutputDevice_Click);
             // 
             // MnuMidiSep1
             // 
-            resources.ApplyResources(this.MnuMidiSep1, "MnuMidiSep1");
             this.MnuMidiSep1.Name = "MnuMidiSep1";
+            resources.ApplyResources(this.MnuMidiSep1, "MnuMidiSep1");
             // 
             // MnuMidiExternal
             // 
-            resources.ApplyResources(this.MnuMidiExternal, "MnuMidiExternal");
             this.MnuMidiExternal.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MnuMidiExternalPlay,
             this.MnuMidiExternalRecord});
             this.MnuMidiExternal.Name = "MnuMidiExternal";
+            resources.ApplyResources(this.MnuMidiExternal, "MnuMidiExternal");
             // 
             // MnuMidiExternalPlay
             // 
-            resources.ApplyResources(this.MnuMidiExternalPlay, "MnuMidiExternalPlay");
             this.MnuMidiExternalPlay.Name = "MnuMidiExternalPlay";
+            resources.ApplyResources(this.MnuMidiExternalPlay, "MnuMidiExternalPlay");
             this.MnuMidiExternalPlay.Click += new System.EventHandler(this.MnuMidiExternalPlay_Click);
             // 
             // MnuMidiExternalRecord
             // 
-            resources.ApplyResources(this.MnuMidiExternalRecord, "MnuMidiExternalRecord");
             this.MnuMidiExternalRecord.Name = "MnuMidiExternalRecord";
+            resources.ApplyResources(this.MnuMidiExternalRecord, "MnuMidiExternalRecord");
             this.MnuMidiExternalRecord.Click += new System.EventHandler(this.MnuMidiExternalRecord_Click);
             // 
             // mnuHelp
             // 
-            resources.ApplyResources(this.mnuHelp, "mnuHelp");
             this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MnuHelpCheckNewVersion,
             this.mnuHelpAbout});
             this.mnuHelp.Name = "mnuHelp";
+            resources.ApplyResources(this.mnuHelp, "mnuHelp");
             // 
             // MnuHelpCheckNewVersion
             // 
-            resources.ApplyResources(this.MnuHelpCheckNewVersion, "MnuHelpCheckNewVersion");
             this.MnuHelpCheckNewVersion.Name = "MnuHelpCheckNewVersion";
+            resources.ApplyResources(this.MnuHelpCheckNewVersion, "MnuHelpCheckNewVersion");
             this.MnuHelpCheckNewVersion.Click += new System.EventHandler(this.MnuHelpCheckNewVersion_Click);
             // 
             // mnuHelpAbout
             // 
-            resources.ApplyResources(this.mnuHelpAbout, "mnuHelpAbout");
             this.mnuHelpAbout.Name = "mnuHelpAbout";
+            resources.ApplyResources(this.mnuHelpAbout, "mnuHelpAbout");
             this.mnuHelpAbout.Click += new System.EventHandler(this.MnuHelpAbout_Click);
             // 
             // sequence1
@@ -456,7 +472,6 @@
             // 
             // pnlFileInfos
             // 
-            resources.ApplyResources(this.pnlFileInfos, "pnlFileInfos");
             this.pnlFileInfos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(244)))), ((int)(((byte)(255)))));
             this.pnlFileInfos.Controls.Add(this.lblLyrics);
             this.pnlFileInfos.Controls.Add(this.lblWtags);
@@ -468,6 +483,7 @@
             this.pnlFileInfos.Controls.Add(this.lblDuration);
             this.pnlFileInfos.Controls.Add(this.lblFormat);
             this.pnlFileInfos.Controls.Add(this.lblTracks);
+            resources.ApplyResources(this.pnlFileInfos, "pnlFileInfos");
             this.pnlFileInfos.Name = "pnlFileInfos";
             // 
             // lblLyrics
@@ -522,8 +538,8 @@
             // 
             // sideBarControl
             // 
-            resources.ApplyResources(this.sideBarControl, "sideBarControl");
             this.sideBarControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
+            resources.ApplyResources(this.sideBarControl, "sideBarControl");
             this.sideBarControl.Name = "sideBarControl";
             this.sideBarControl.TabStop = false;
             this.sideBarControl.ToolTipTextHome = "home";
@@ -549,7 +565,7 @@
             // 
             resources.ApplyResources(this.searchControl, "searchControl");
             this.searchControl.Name = "searchControl";
-            this.searchControl.SongRoot = "C:\\Users\\Fabrice\\Music";
+            this.searchControl.SongRoot = "C:\\Users\\A453868\\Music";
             this.searchControl.SView = Karaboss.Search.SearchViewStyle.Author;
             // 
             // frmExplorer
@@ -649,7 +665,9 @@
         private System.Windows.Forms.ToolStripMenuItem MnuFileRecentFiles;
         private System.Windows.Forms.ToolStripSeparator MnuFileSep2;
         private System.Windows.Forms.ToolStripMenuItem mnuEdit;
-        private System.Windows.Forms.ToolStripMenuItem mnuEditRenameAll;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditRename;
         private System.Windows.Forms.ToolStripMenuItem mnuEditReplaceAll;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditRenameAll;
+        private System.Windows.Forms.ToolStripMenuItem invertAuthorAndSongToolStripMenuItem;
     }
 }

@@ -352,6 +352,11 @@ namespace Karaboss
 
         private void SideBarControl_DisplayConnected(object sender, EventArgs e)
         {
+            DisplayConnected();
+        }
+
+        private void DisplayConnected()
+        {
             connectedControl.Visible = true;
             xplorerControl.Visible = false;
             playlistsControl.Visible = false;
@@ -437,9 +442,7 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void SideBarControl_DisplayPianoTraining(object sender, EventArgs e)
-        {
-            
-
+        {            
             DisplayPianoTraining();
         }
 
@@ -1670,15 +1673,35 @@ namespace Karaboss
 
         #region menu Edit
 
+        /// <summary>
+        /// Rename files using upper directory (F3)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuEditRenameAll_Click(object sender, EventArgs e)
         {
             xplorerControl.RenameAllQuestion();
         }
 
+        /// <summary>
+        /// Replace (F4)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuEditReplaceAll_Click(object sender, EventArgs e)
         {
             xplorerControl.ReplaceAllQuestion();
-        }        
+        }
+
+        /// <summary>
+        /// invert singer and song (F7)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuInvertAuthorSong_Click(object sender, EventArgs e)
+        {
+            xplorerControl.InvertAuthorAndSong();
+        }
 
         #endregion
 
@@ -1739,12 +1762,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuDisplayConnected_Click(object sender, EventArgs e)
         {
-            searchControl.Visible = false;            
-            xplorerControl.Visible = false;
-            playlistsControl.Visible = false;
-            connectedControl.Visible = true;
-
-
+            DisplayConnected();
         }
 
         /// <summary>
@@ -2468,5 +2486,6 @@ namespace Karaboss
 
         #endregion
 
+       
     }
 }

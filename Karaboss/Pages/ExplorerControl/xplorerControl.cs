@@ -349,7 +349,7 @@ namespace Karaboss.xplorer
         /// <summary>
         /// Rename files like "song - author.mid" to "author - song.mid"
         /// </summary>
-        private void InvertAuthorAndSong()
+        public void InvertAuthorAndSong()
         {
             if (treeView.SelectedFolder != null && treeView.SelectedFolder.IsFolder)
             {
@@ -532,7 +532,7 @@ namespace Karaboss.xplorer
         #region rename all
 
         /// <summary>
-        /// Ask confirmation to rename all files
+        /// Ask confirmation to rename all files (F3)
         /// </summary>
         public void RenameAllQuestion()
         {
@@ -977,7 +977,7 @@ namespace Karaboss.xplorer
         #region Replace All
 
         /// <summary>
-        /// Ask confirmation to search & replace in all files
+        /// Ask confirmation to search & replace in all files (F4)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

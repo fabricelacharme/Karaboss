@@ -44,7 +44,7 @@ namespace Karaboss
             this.mnuSaveAsPDF = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuFileSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnufileProperties = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuFileSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.MnuFileSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditAddLyrics = new System.Windows.Forms.ToolStripMenuItem();
@@ -144,6 +144,7 @@ namespace Karaboss
             this.sequence1 = new Sanford.Multimedia.Midi.Sequence();
             this.sequencer1 = new Sanford.Multimedia.Midi.Sequencer();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.MnuFileSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.pnlDisplay.SuspendLayout();
@@ -167,15 +168,16 @@ namespace Karaboss
             this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFileNew,
             this.mnuFileOpen,
-            this.MnuFileImportMidiFromText,
             this.MnuFileSeparator1,
             this.mnuFileSave,
             this.mnuFileSaveAs,
-            this.MnuFileExportMidiToText,
             this.mnuSaveAsPDF,
             this.MnuFileSeparator2,
-            this.mnufileProperties,
+            this.MnuFileImportMidiFromText,
+            this.MnuFileExportMidiToText,
             this.MnuFileSeparator3,
+            this.mnufileProperties,
+            this.MnuFileSeparator4,
             this.mnuFileQuit});
             this.mnuFile.Name = "mnuFile";
             resources.ApplyResources(this.mnuFile, "mnuFile");
@@ -238,10 +240,10 @@ namespace Karaboss
             resources.ApplyResources(this.mnufileProperties, "mnufileProperties");
             this.mnufileProperties.Click += new System.EventHandler(this.MnufileProperties_Click);
             // 
-            // MnuFileSeparator3
+            // MnuFileSeparator4
             // 
-            this.MnuFileSeparator3.Name = "MnuFileSeparator3";
-            resources.ApplyResources(this.MnuFileSeparator3, "MnuFileSeparator3");
+            this.MnuFileSeparator4.Name = "MnuFileSeparator4";
+            resources.ApplyResources(this.MnuFileSeparator4, "MnuFileSeparator4");
             // 
             // mnuFileQuit
             // 
@@ -1164,6 +1166,11 @@ namespace Karaboss
             this.sequencer1.Chased += new System.EventHandler<Sanford.Multimedia.Midi.ChasedEventArgs>(this.HandleChased);
             this.sequencer1.Stopped += new System.EventHandler<Sanford.Multimedia.Midi.StoppedEventArgs>(this.HandleStopped);
             // 
+            // MnuFileSeparator3
+            // 
+            this.MnuFileSeparator3.Name = "MnuFileSeparator3";
+            resources.ApplyResources(this.MnuFileSeparator3, "MnuFileSeparator3");
+            // 
             // frmPlayer
             // 
             resources.ApplyResources(this, "$this");
@@ -1252,7 +1259,7 @@ namespace Karaboss
         private System.Windows.Forms.ToolStripMenuItem mnuDisplayPianoRoll;
         private System.Windows.Forms.Button btnStartRec;
         private System.Windows.Forms.ToolStripMenuItem mnufileProperties;
-        private System.Windows.Forms.ToolStripSeparator MnuFileSeparator3;
+        private System.Windows.Forms.ToolStripSeparator MnuFileSeparator4;
         private System.Windows.Forms.Panel TimeVLine;
         private System.Windows.Forms.Panel TimeStartVLine;
         private System.Windows.Forms.ToolStripMenuItem mnuMidiModifyTempo;
@@ -1308,6 +1315,7 @@ namespace Karaboss
         private Buttons.CheckButtonControl btnMute1;
         private System.Windows.Forms.Label lblMuteMelody;
         private System.Windows.Forms.Label lblRecord;
+        private System.Windows.Forms.ToolStripSeparator MnuFileSeparator3;
     }
 }
 
