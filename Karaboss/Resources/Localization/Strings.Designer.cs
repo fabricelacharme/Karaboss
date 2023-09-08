@@ -1106,6 +1106,12 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("OffsetStartTimesOfNotes", resourceCulture);                
             }
         }
-
+        internal static string SubDirectoryForbiden
+        {
+            get
+            {
+                return ResourceManager.GetString("SubDirectoryForbiden", resourceCulture);
+            }
+        }
     }
 }

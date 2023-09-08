@@ -492,4 +492,7 @@
   <data name="OffsetStartTimesOfNotes" xml:space="preserve">
     <value>Offset start times of notes</value>
   </data>
+  <data name="SubDirectoryForbiden" xml:space="preserve">
+    <value>Path cannot be a sub directory because all files will be doubles!</value>
+  </data>
 </root>

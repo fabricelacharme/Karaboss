@@ -312,4 +312,7 @@
   <data name="OffsetStartTimesOfNotes" xml:space="preserve">
     <value>Décaler les notes</value>
   </data>
+  <data name="SubDirectoryForbiden" xml:space="preserve">
+    <value>Le dossier ne peut être un sous-répertoire sinon tous les fichiers seront des doubles !</value>
+  </data>
 </root>

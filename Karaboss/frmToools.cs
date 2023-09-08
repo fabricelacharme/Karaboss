@@ -42,6 +42,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Karaboss.Resources.Localization;
 
 namespace Karaboss
 {
@@ -430,7 +431,7 @@ namespace Karaboss
         {
             if (referencepath != selectedpath && (referencepath.IndexOf(selectedpath) == 0 || selectedpath.IndexOf(referencepath) == 0))
             {
-                string tx = "Path cannot be a sub directory because all files will be doubles!";
+                string tx = Karaboss.Resources.Localization.Strings.SubDirectoryForbiden; // "Path cannot be a sub directory because all files will be doubles!";
                 MessageBox.Show(tx);
                 return false;
             }
