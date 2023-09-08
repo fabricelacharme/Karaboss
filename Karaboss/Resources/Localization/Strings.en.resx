@@ -492,4 +492,22 @@
   <data name="SubDirectoryForbiden" xml:space="preserve">
     <value>Path cannot be a sub directory because all files will be doubles!</value>
   </data>
+  <data name="SearchMD5Doubles" xml:space="preserve">
+    <value>Search MD5 doubles</value>
+  </data>
+  <data name="SearchMD5DoublesL1" xml:space="preserve">
+    <value>This function will search for double files using their MD5 value in your default songs directory:</value>
+  </data>
+  <data name="SearchMD5DoublesL2" xml:space="preserve">
+    <value>and the directory that you have selected:</value>
+  </data>
+  <data name="SearchMD5DoublesL3" xml:space="preserve">
+    <value>If double files are found, you will have the choice, either to display them, either to moved them from the selected directory to a directory called 'Doubles' under this directory.</value>
+  </data>
+  <data name="SearchMD5DoublesSel" xml:space="preserve">
+    <value>This function will search for double files using their MD5 value in the selected directory</value>
+  </data>
+  <data name="SearchRecursively" xml:space="preserve">
+    <value>Searching recursively files in path</value>
+  </data>
 </root>

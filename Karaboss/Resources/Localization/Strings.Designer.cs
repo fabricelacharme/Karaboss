@@ -1113,5 +1113,47 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("SubDirectoryForbiden", resourceCulture);
             }
         }
+        internal static string SearchRecursively
+        {
+            get
+            {
+                return ResourceManager.GetString("SearchRecursively", resourceCulture);
+            }
+        }
+        internal static string SearchMD5Doubles
+        {
+            get
+            {
+                return ResourceManager.GetString("SearchMD5Doubles", resourceCulture);
+            }
+        }
+        internal static string SearchMD5DoublesL1
+        {
+            get
+            {
+                return ResourceManager.GetString("SearchMD5DoublesL1", resourceCulture);
+            }
+        }
+        internal static string SearchMD5DoublesL2
+        {
+            get
+            {
+                return ResourceManager.GetString("SearchMD5DoublesL2", resourceCulture);
+            }
+        }
+        internal static string SearchMD5DoublesL3
+        {
+            get
+            {
+                return ResourceManager.GetString("SearchMD5DoublesL3", resourceCulture);
+            }
+        }
+        internal static string SearchMD5DoublesSel
+        {
+            get
+            {
+                return ResourceManager.GetString("SearchMD5DoublesSel", resourceCulture);
+            }
+        }
     }
 }

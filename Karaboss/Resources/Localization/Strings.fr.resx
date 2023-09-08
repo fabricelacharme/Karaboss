@@ -315,4 +315,22 @@
   <data name="SubDirectoryForbiden" xml:space="preserve">
     <value>Le dossier ne peut être un sous-répertoire sinon tous les fichiers seront des doubles !</value>
   </data>
+  <data name="SearchMD5Doubles" xml:space="preserve">
+    <value>Recherche de doubles (MD5)</value>
+  </data>
+  <data name="SearchMD5DoublesL1" xml:space="preserve">
+    <value>Cette fonction va rechercher les fichiers en double en utilisant leur empreinte MD5 dans votre bibliothèque par défaut :</value>
+  </data>
+  <data name="SearchMD5DoublesL2" xml:space="preserve">
+    <value>et le dossier que vous avez sélectionné :</value>
+  </data>
+  <data name="SearchMD5DoublesL3" xml:space="preserve">
+    <value>Si des doubles sont trouvés, vous aurez le choix, soit de les afficher, soit de les déplacer du dossier sélectionné vers un sous dossier appelé 'doubles'</value>
+  </data>
+  <data name="SearchMD5DoublesSel" xml:space="preserve">
+    <value>Cette fonction va rechercher les fichiers en double en utilisant leur empreinte MD5 dans le dossier sélectionné.</value>
+  </data>
+  <data name="SearchRecursively" xml:space="preserve">
+    <value>Recherche récursive dans le dossier</value>
+  </data>
 </root>

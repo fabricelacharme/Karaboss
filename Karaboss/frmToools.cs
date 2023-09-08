@@ -93,10 +93,11 @@ namespace Karaboss
                 string song = string.Empty;
                 long size = 0;
                 string md5 = string.Empty;
-
+                string tx = string.Empty;
 
                 // Get all files recursively in path
-                state.task = "Searching recursively files in path " + path;
+                tx = Karaboss.Resources.Localization.Strings.SearchRecursively;
+                state.task = tx + " " + path;
                 state.LinesCounted = 0;
                 worker.ReportProgress(0, state);
 
@@ -213,6 +214,7 @@ namespace Karaboss
             SearchMode = SMode;
 
             btnCancel.Enabled = false;
+            string item = string.Empty;
 
             // Explanation of what the function does
             switch (SearchMode) {
@@ -221,24 +223,42 @@ namespace Karaboss
                     if (referencepath != selectedpath)
                     {
                         // Case of search doubles in another directory and compare to reference directory
-                        string tx = BOLD0 + "Search MD5 doubles" + BOLD1 + CR + CR;
-                        tx += "This function will search for double files using their MD5 value in your default songs directory:" + CR;
+                        item = Karaboss.Resources.Localization.Strings.SearchMD5Doubles;
+                        string tx = BOLD0 + item + BOLD1 + CR + CR;
+
+                        // This function will search for double files using their MD5 value in your default songs directory:
+                        item = Karaboss.Resources.Localization.Strings.SearchMD5DoublesL1;
+                        tx += item + CR;
+                        
                         tx += BOLD0 + referencepath.Replace('\\','/') + BOLD1 + CR + CR;
-                        tx += "and the directory that you have selected:" + CR;
+
+                        // and the directory that you have selected:
+                        item = Karaboss.Resources.Localization.Strings.SearchMD5DoublesL2;
+                        tx += item + CR;
+                        
                         tx += BOLD0 + selectedpath.Replace('\\', '/') + BOLD1 + CR + CR;
-                        tx += "If double files are found, you will have the choice, either to display them";
-                        tx += ", either to moved them from the selected directory ";
-                        tx += "to a directory called 'Doubles' under it.";
+
+                        // If double files are found, you will have the choice, either to display them, either to moved them from the selected directory to a directory called 'Doubles' under this directory.
+                        item = Karaboss.Resources.Localization.Strings.SearchMD5DoublesL3;
+                        tx += item;
+                        
                         Rtfexplanation = tx;
                     }
                     else
                     {
                         // Case of search doubles in a single directory
-                        string tx = BOLD0 + "Search MD5 doubles" + BOLD1 + CR + CR;
-                        tx += "This function will search for double files using their MD5 value in the selected directory" + CR;
+                        item = Karaboss.Resources.Localization.Strings.SearchMD5Doubles;
+                        string tx = BOLD0 + item + BOLD1 + CR + CR;
+
+                        // This function will search for double files using their MD5 value in the selected directory
+                        item = Karaboss.Resources.Localization.Strings.SearchMD5DoublesSel;
+                        tx += item + CR;
+
                         tx += BOLD0 + selectedpath.Replace('\\', '/') + BOLD1 + CR + CR;
-                        tx += "If double files are found, you will have the choice, either to display them, either to moved them from the selected directory ";
-                        tx += "to a directory called 'Doubles' under this directory.";
+
+                        item = Karaboss.Resources.Localization.Strings.SearchMD5DoublesL3;
+                        tx += item;
+                        
                         Rtfexplanation = tx;
 
                     }
