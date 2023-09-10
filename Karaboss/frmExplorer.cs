@@ -2181,6 +2181,7 @@ namespace Karaboss
             if ((xplorerControl.SelectedFolder != null) && xplorerControl.SelectedFolder.IsFolder)
             {
                 string tx = string.Empty;
+                string item = string.Empty;
                 string fullpath = xplorerControl.SelectedFolder.FileSystemPath;
                 iNbDelete = 0;
 
@@ -2190,11 +2191,13 @@ namespace Karaboss
 
                     if (fullpath != "")
                     {
-                        tx = "This function will delete all empty directories starting from\n";
+                        item = Karaboss.Resources.Localization.Strings.SearchEmptyDirs;
+                        tx = item + "\n";
                         tx += "<" + fullpath + ">\n\n";
-                        tx += "Continue?";
+                        item = Karaboss.Resources.Localization.Strings.Continue;
+                        tx += item;
 
-                        if (MessageBox.Show(tx, "Karaboss - Delete directories", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                        if (MessageBox.Show(tx, "Karaboss - Delete empty directories", MessageBoxButtons.OKCancel) == DialogResult.OK)
                         {
                             Cursor = Cursors.WaitCursor;
                             bQuestionDelete = false;

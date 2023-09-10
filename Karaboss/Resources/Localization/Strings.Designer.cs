@@ -1155,5 +1155,40 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("SearchMD5DoublesSel", resourceCulture);
             }
         }
+        internal static string SearchEmptyDirs
+        {
+            get
+            {
+                return ResourceManager.GetString("SearchEmptyDirs", resourceCulture);
+            }
+        }
+        internal static string Continue
+        {
+            get
+            {
+                return ResourceManager.GetString("Continue", resourceCulture);
+            }
+        }
+        internal static string CreateNewFolder
+        {
+            get
+            {
+                return ResourceManager.GetString("CreateNewFolder", resourceCulture);
+            }
+        }
+        internal static string DeleteFolderAndPlaylists
+        {
+            get
+            {
+                return ResourceManager.GetString("DeleteFolderAndPlaylists", resourceCulture);
+            }
+        }
+        internal static string DeletePlaylist
+        {
+            get
+            {
+                return ResourceManager.GetString("DeletePlaylist", resourceCulture);
+            }
+        }
     }
 }

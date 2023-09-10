@@ -510,4 +510,19 @@
   <data name="SearchRecursively" xml:space="preserve">
     <value>Searching recursively files in path</value>
   </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continue?</value>
+  </data>
+  <data name="CreateNewFolder" xml:space="preserve">
+    <value>Create a new folder</value>
+  </data>
+  <data name="DeleteFolderAndPlaylists" xml:space="preserve">
+    <value>Delete folder and all its playlists</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Delete playlist</value>
+  </data>
+  <data name="SearchEmptyDirs" xml:space="preserve">
+    <value>This function will delete all empty directories starting from</value>
+  </data>
 </root>

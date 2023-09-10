@@ -333,4 +333,19 @@
   <data name="SearchRecursively" xml:space="preserve">
     <value>Recherche récursive dans le dossier</value>
   </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continuer ?</value>
+  </data>
+  <data name="CreateNewFolder" xml:space="preserve">
+    <value>Créer un nouveau dossier</value>
+  </data>
+  <data name="DeleteFolderAndPlaylists" xml:space="preserve">
+    <value>Supprimer le dossier et toutes ses playlists</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Supprimer la playlist</value>
+  </data>
+  <data name="SearchEmptyDirs" xml:space="preserve">
+    <value>Cette fonction va supprimer tous les dossier vides à partir de </value>
+  </data>
 </root>

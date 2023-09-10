@@ -1150,14 +1150,14 @@ namespace Karaboss.playlists
                 tvContextMenu.Items.Add(menusep1);
 
                 // Menu create a folder
-                ToolStripMenuItem menuCreateNewPlGroup = new ToolStripMenuItem("Create a new folder");
+                ToolStripMenuItem menuCreateNewPlGroup = new ToolStripMenuItem(Strings.CreateNewFolder);
                 tvContextMenu.Items.Add(menuCreateNewPlGroup);
                 menuCreateNewPlGroup.Click += new System.EventHandler(MnuCreatePlaylistGroup_Click);
                 menuCreateNewPlGroup.Image = Karaboss.Properties.Resources.Action_folder241;
 
 
                 // Menu delete a folder
-                ToolStripMenuItem menuDeletePlGroup = new ToolStripMenuItem("Delete folder and all its playlists");
+                ToolStripMenuItem menuDeletePlGroup = new ToolStripMenuItem(Strings.DeleteFolderAndPlaylists);
                 tvContextMenu.Items.Add(menuDeletePlGroup);
                 menuDeletePlGroup.Click += new System.EventHandler(MnuDeletePlaylistGroup_Click);
                 menuDeletePlGroup.ShortcutKeys = Keys.Delete;
@@ -1174,7 +1174,7 @@ namespace Karaboss.playlists
 
 
                 // Menu delete playlist                
-                ToolStripMenuItem menuDelete = new ToolStripMenuItem("Delete playlist");
+                ToolStripMenuItem menuDelete = new ToolStripMenuItem(Strings.DeletePlaylist);
                 tvContextMenu.Items.Add(menuDelete);
                 menuDelete.Click += new System.EventHandler(MnutvDeletePlaylist_Click);
                 menuDelete.ShortcutKeys = Keys.Delete;
