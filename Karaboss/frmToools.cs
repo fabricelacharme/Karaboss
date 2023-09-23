@@ -42,16 +42,36 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using Karaboss.Resources.Localization;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace Karaboss
 {
     public partial class frmToools : Form
     {
-
+        /// <summary>
+        /// Class for MD5 Files (MFile)
+        /// </summary>
+        [Serializable]
         public class MFile
         {
-            
+            /// <summary>
+            /// An empty ctor is needed for serialization.
+            /// </summary>
+            public MFile()
+            {
+
+            }
+
+            /// <summary>
+            /// MD5 file
+            /// </summary>
+            /// <param name="path"></param>
+            /// <param name="filename"></param>
+            /// <param name="song"></param>
+            /// <param name="md5"></param>
+            /// <param name="size"></param>
             public MFile(string path, string filename, string song ,string md5, long size)
             {
                 this._path = path;              // Full path
@@ -59,8 +79,7 @@ namespace Karaboss
                 this._song = song;              // only song
                 this._md5 = md5;
                 this._size = size;
-            }
-            
+            }            
 
             public string _path { get; set; }
             public string _filename { get; set; }
@@ -69,6 +88,9 @@ namespace Karaboss
             public long _size { get; set; }
         }
 
+        /// <summary>
+        /// List of MD5 files
+        /// </summary>
         public class MyCollection
         {
             public class CurrentState
@@ -79,12 +101,12 @@ namespace Karaboss
                 public string task;
             }
 
+            // List of MFile
             public List<MFile> lstMyFiles;
             public string path;
          
             public void Create(BackgroundWorker worker, DoWorkEventArgs e)
             {
-
                 // Initialize the variables.
                 CurrentState state = new CurrentState();
 
@@ -105,7 +127,7 @@ namespace Karaboss
                 .Where(file => file.ToLower().EndsWith("mid") || file.ToLower().EndsWith("kar"))
                 .ToList();
 
-                // Report the final count values. 
+                // Report the final count values 
                 state.task = lstf.Count + " files found in path " + path;               
                 state.LinesCounted = lstf.Count;
                 worker.ReportProgress(0, state);
@@ -132,7 +154,7 @@ namespace Karaboss
                         filename = fi.Name.ToLower();
 
                         int pos = filename.IndexOf("- ") + 2;
-                        if (pos > 0)
+                        if (pos > 1)
                             song = filename.Substring(pos);
                         else
                             song = filename;
@@ -178,6 +200,7 @@ namespace Karaboss
 
 
         #region declarations
+        private string refMD5fileName;
         private string referencepath;
         private string selectedpath;
         private string Rtfexplanation =string.Empty;
@@ -210,7 +233,12 @@ namespace Karaboss
             rtBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
             referencepath = refpath.Trim().ToLower();
-            selectedpath = selpath.Trim().ToLower(); ;
+            selectedpath = selpath.Trim().ToLower();
+
+            // path to md5 library
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            refMD5fileName = path + "\\mylibrarymd5.xml";
+
             SearchMode = SMode;
 
             btnCancel.Enabled = false;
@@ -381,7 +409,11 @@ namespace Karaboss
                 if (Context == "get files for reference")
                 {
                     listRefFiles = MC.lstMyFiles;
-                    
+
+                    // sauver ListRefFiles dans un fichier pour ne pas avoir à refaire cette recherche
+                    if (selectedpath != referencepath)
+                        SaveScanFiles(refMD5fileName);
+
                     // Suite
                     if (selectedpath != referencepath)
                     {
@@ -406,7 +438,7 @@ namespace Karaboss
 
         #endregion getLstFiles
 
-        #endregion
+        #endregion Backgroundwortker
 
    
         private void DisplayExplanation(string tx)
@@ -421,8 +453,14 @@ namespace Karaboss
 
         #region buttons
 
+        /// <summary>
+        /// Launch 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnLaunch_Click(object sender, EventArgs e)
-        {
+        {           
+            // No recent md5 file found => recreate it again
             // Check if not a subdirectory is selected
             if (StartPrepare())
             {
@@ -431,7 +469,7 @@ namespace Karaboss
                 btnQuit.Enabled = false;
 
                 StartJob(referencepath, selectedpath);
-            }
+            }            
         }
 
         private void BtnCancel_Click(object sender, EventArgs e)
@@ -447,6 +485,32 @@ namespace Karaboss
 
         #endregion
         
+        /// <summary>
+        /// Check date of collection, if recent propose to skip
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckFileDate()
+        {
+            FileInfo fi = new FileInfo(refMD5fileName);
+            if (fi.Exists)
+            {
+                var diffOfDates = DateTime.Now - fi.CreationTime;
+                if (diffOfDates.Days == 0)
+                {
+                    string strQuestion = "You've recently scanned your library - do you want to skip this step?";
+                    if (MessageBox.Show(strQuestion, "Karaboss", MessageBoxButtons.YesNo,MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        return false;
+                    }
+                }                
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Ask to end user to launch
+        /// </summary>
+        /// <returns></returns>
         private bool StartPrepare()
         {
             if (referencepath != selectedpath && (referencepath.IndexOf(selectedpath) == 0 || selectedpath.IndexOf(referencepath) == 0))
@@ -468,8 +532,32 @@ namespace Karaboss
 
         private void StartJob(string refpath, string selpath)
         {
-            Context = "get files for reference";            
-            StartThread_getCollection(refpath);
+            bool bScanMD5 = true;
+            
+            // Check date of collection
+            // If recent, keep it ?
+            if (referencepath != selectedpath)
+            {
+                bScanMD5 = CheckFileDate();
+            }
+
+            // si 2 dossier différents et si on n'a pas besoin de scanner
+            // ou bien un seul dossier
+            if (bScanMD5)
+            {
+                Context = "get files for reference";
+                StartThread_getCollection(refpath);
+            } 
+            else
+            {
+                // 2 dossiers différents et on passe directement au sanc du 2eme dossier
+                // Garnir la variable listRefFiles avec le fichier xml
+                listRefFiles = LoadScanFiles(refMD5fileName);
+
+                // Passer au scan de l'autre dossier directement
+                Context = "get files for selected";
+                StartThread_getCollection(selectedpath);
+            }
         }
 
         private void SuiteJob()
@@ -734,7 +822,16 @@ namespace Karaboss
    
         private void MoveDoublesQuestion(string refpath, string selpath)
         {
-            int nb = lstDoubles.Count;
+            int nb;
+            
+            if (refpath != selpath)
+            {
+                nb = lstDoubles.Count;
+            } else
+            {
+                nb = lstDoubles.Count/2;
+            }
+            
             string tx = string.Empty;
             string question = string.Empty;
 
@@ -918,7 +1015,57 @@ namespace Karaboss
 
         #endregion
 
+        #region save load xml files
 
+        /// <summary>
+        /// Save xml file md5 scanned
+        /// </summary>
+        /// <param name="fileName"></param>
+        private void SaveScanFiles(string fileName)
+        {
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(List<MFile>));
+                TextWriter textWriter = new StreamWriter(@fileName);
+                serializer.Serialize(textWriter, MC.lstMyFiles);
+                textWriter.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        /// <summary>
+        /// Load xml file containing all files of the library
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        private List<MFile> LoadScanFiles(string fileName)
+        {
+            List<MFile> pls;
+            // Open file containing all MD5 files "playlists.xml"
+            try
+            {
+                using (var fs = new FileStream(fileName, FileMode.OpenOrCreate))
+                {
+                    XmlSerializer xml = new XmlSerializer(typeof(List<MFile>));
+                    if (fs.Length > 0)
+                        pls = (List<MFile>)xml.Deserialize(fs);
+                    else
+                        pls = new List<MFile>();
+                }
+                return pls;
+            }
+            catch (Exception enn)
+            {
+
+                Console.Write("Error loading Scan Files" + enn.Message);
+                //return null;
+                return new List<MFile>();
+            }
+        }
+        #endregion
 
     }
 }
