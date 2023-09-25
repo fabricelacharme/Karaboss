@@ -399,7 +399,7 @@ namespace Karaboss
             }
             else
             {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK);
+                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
 
         }
@@ -431,7 +431,7 @@ namespace Karaboss
             }
             else
             {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK);
+                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
 
         }
@@ -461,7 +461,7 @@ namespace Karaboss
 
             if (filename == null || filename == "" || !File.Exists(filename) || !Karaclass.IsMidiExtension(filename))
             {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK);
+                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -511,7 +511,7 @@ namespace Karaboss
 
             if (filename == null || filename == "" || !File.Exists(filename) || !Karaclass.IsMidiExtension(filename))
             {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK);
+                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -574,7 +574,7 @@ namespace Karaboss
                 MyMruList.RemoveFile(FullPath);
 
                 // Tell the user what happened.
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -993,7 +993,7 @@ namespace Karaboss
             {
                 if (File.Exists(fpath) == false)
                 {
-                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK);                    
+                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);                    
                     return;
                 }
             }
@@ -1030,7 +1030,7 @@ namespace Karaboss
                 // Launch an existing file                    
                 if (File.Exists(fpath) == false)
                 {
-                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK);
+                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -1095,7 +1095,7 @@ namespace Karaboss
                     // Launch an existing file                    
                     if (File.Exists(fpath) == false)
                     {
-                        MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK);
+                        MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }                  
                 }
@@ -1112,7 +1112,7 @@ namespace Karaboss
                 // Launch an existing file                    
                 if (File.Exists(fpath) == false)
                 {
-                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK);
+                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -1332,7 +1332,7 @@ namespace Karaboss
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     break;
             }
@@ -1368,7 +1368,7 @@ namespace Karaboss
             frmMessageBox frmQ = new frmMessageBox
             {
                 Msg = Strings.QuitApplication,
-                Title = Application.ProductName
+                Title = Application.ProductName              
             };
             frmQ.ShowDialog();
 
@@ -1580,7 +1580,7 @@ namespace Karaboss
                 SelectPlayer(filename, true);
             }
             else
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK);            
+                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);            
         }
 
 
@@ -1612,7 +1612,7 @@ namespace Karaboss
                 //DisplayMidiPlayer(filename, null, false);            
                 SelectPlayer(filename, false);
             else
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK);
+                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             
         }
 
@@ -1867,7 +1867,7 @@ namespace Karaboss
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1893,7 +1893,7 @@ namespace Karaboss
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1946,28 +1946,28 @@ namespace Karaboss
             }
             catch (WebException exp)
             {
-                MessageBox.Show("Can not find the specified resource. " + exp.Message);
+                MessageBox.Show("Can not find the specified resource. " + exp.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 bHasError = true;
             }
             catch (XmlException exp)
             {
                 bHasError = true;
-                MessageBox.Show("Download the upgrade file error. " + exp.Message);
+                MessageBox.Show("Download the upgrade file error. " + exp.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (NotSupportedException exp)
             {
                 bHasError = true;
-                MessageBox.Show("Upgrade address configuration error. " + exp.Message);
+                MessageBox.Show("Upgrade address configuration error. " + exp.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (ArgumentException exp)
             {
                 bHasError = true;
-                MessageBox.Show("Download the upgrade file error. " + exp.Message);
+                MessageBox.Show("Download the upgrade file error. " + exp.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception exp)
             {
                 bHasError = true;
-                MessageBox.Show("An error occurred during the upgrade process. " + exp.Message);
+                MessageBox.Show("An error occurred during the upgrade process. " + exp.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -2154,7 +2154,7 @@ namespace Karaboss
 
         private void OnApplyClicked(object sender, EventArgs e)
         {
-            MessageBox.Show("New settings applied sucessful");
+            MessageBox.Show("New settings applied sucessful", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
 
@@ -2197,7 +2197,7 @@ namespace Karaboss
                         item = Karaboss.Resources.Localization.Strings.Continue;
                         tx += item;
 
-                        if (MessageBox.Show(tx, "Karaboss - Delete empty directories", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                        if (MessageBox.Show(tx, "Karaboss - Delete empty directories", MessageBoxButtons.OKCancel,MessageBoxIcon.Question) == DialogResult.OK)
                         {
                             Cursor = Cursors.WaitCursor;
                             bQuestionDelete = false;
@@ -2216,7 +2216,7 @@ namespace Karaboss
 
                 tx = "Delete of Empty directories done.\n";
                 tx += iNbDelete + " directories deleted.";
-                MessageBox.Show(tx);
+                MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
             
@@ -2248,7 +2248,7 @@ namespace Karaboss
 
                             tx = "Warning, you have choosen to delete directories, the first one is\n";
                             tx += directory + "\n\nContinue?";
-                            if (MessageBox.Show(tx, "Karaboss - Delete directories", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                            if (MessageBox.Show(tx, "Karaboss - Delete directories", MessageBoxButtons.OKCancel,MessageBoxIcon.Question) == DialogResult.OK)
                             {                            
                                 bAbortDelete = false;
                                 try

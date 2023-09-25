@@ -400,9 +400,9 @@ namespace Karaboss
             // This event handler is called when the background thread finishes.
             // This method runs on the main thread.
             if (e.Error != null)
-                MessageBox.Show("Error: " + e.Error.Message);
+                MessageBox.Show("Error: " + e.Error.Message,"Karaboss",MessageBoxButtons.OK,MessageBoxIcon.Error);
             else if (e.Cancelled)
-                MessageBox.Show("Collection generation canceled.");
+                MessageBox.Show("Collection generation canceled.","Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Information);
             else
             {
                 // Finished generation list of files
@@ -516,14 +516,14 @@ namespace Karaboss
             if (referencepath != selectedpath && (referencepath.IndexOf(selectedpath) == 0 || selectedpath.IndexOf(referencepath) == 0))
             {
                 string tx = Karaboss.Resources.Localization.Strings.SubDirectoryForbiden; // "Path cannot be a sub directory because all files will be doubles!";
-                MessageBox.Show(tx);
+                MessageBox.Show(tx,"Karaboss",MessageBoxButtons.OK,MessageBoxIcon.Error);
                 return false;
             }
 
             // Convert to plain text
             string Explanation = rtBox.Text;            
 
-            if (MessageBox.Show(Explanation, "Karaboss", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            if (MessageBox.Show(Explanation, "Karaboss", MessageBoxButtons.OKCancel,MessageBoxIcon.Information) == DialogResult.OK)
             {
                 return true;
             }
@@ -851,7 +851,7 @@ namespace Karaboss
                     tx += refpath;
                 }
 
-                MessageBox.Show(tx);
+                MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -864,7 +864,7 @@ namespace Karaboss
             question = tx;              
             
 
-            if (MessageBox.Show(question, "Karaboss - Doubles", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(question, "Karaboss - Doubles", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 string fullpath = CreateFolder(selpath, "Doubles");
                 if (fullpath != null)
@@ -932,7 +932,7 @@ namespace Karaboss
             string tx = nbmoved + " files were moved to\n" + path;
             if (notmoved > 0)
                 tx += "\n" + notmoved + " files were not moved due to errors.";
-            MessageBox.Show(tx);
+            MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         }
 
@@ -964,7 +964,7 @@ namespace Karaboss
             catch (Exception ex)
             {
                 //Console.Write(ex.Message);
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }
@@ -1008,7 +1008,7 @@ namespace Karaboss
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
