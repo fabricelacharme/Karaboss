@@ -763,8 +763,11 @@ namespace FlShell
 
                 while (e.MoveNext())
                 {
-                    items.Add(CreateItem(e.Current));
-                    f++;
+                    if (!e.Current.IsHidden)
+                    {
+                        items.Add(CreateItem(e.Current));
+                        f++;
+                    }
                 }
 
                 //Console.Write("");
