@@ -259,6 +259,9 @@ namespace Sanford.Multimedia.Midi
             if (ar.Length != 6)
                 throw new ArgumentException("ControlChange Length");
 
+            if (currenttrack == 0)
+                return;
+
             // Track, Time, Control_c, Channel, Data1, Data2
             int ticks = Convert.ToInt32(ar[1]);
             Channel = Convert.ToInt32(ar[3]);
