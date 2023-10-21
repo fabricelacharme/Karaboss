@@ -44,6 +44,10 @@ using Karaboss.Resources.Localization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Text;
+using MusicXml;
+using System.Runtime.InteropServices.ComTypes;
+using System.Xml;
+using Karaboss.Lrc.SharedFramework;
 
 namespace Karaboss
 {
@@ -2428,8 +2432,7 @@ namespace Karaboss
                 string lyrics = string.Empty;
 
                 // Load file
-                Sequence seq;
-                //Sequence seq = sequence1.ReadDump(fileName);
+                Sequence seq;                
 
                 FileStream fstream = new FileStream(fileName, FileMode.Open,
                     FileAccess.Read, FileShare.None);
@@ -2494,7 +2497,99 @@ namespace Karaboss
                 DisplayFileInfos();
                 DisplayLyricsInfos();
             }
-        }        
+        }
+
+        /// <summary>
+        /// Import a MusicXml file to Midi
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuFileImportMusicXml_Click(object sender, EventArgs e)
+        {
+            openMidiFileDialog.Title = "Open MusicXml file";
+            openMidiFileDialog.DefaultExt = "xml";
+            openMidiFileDialog.Filter = "MusicXml files|*.xml|All files|*.*";
+            openMidiFileDialog.InitialDirectory = MIDIfilePath;
+
+            if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = openMidiFileDialog.FileName;
+                string lyrics = string.Empty;
+
+                var score = MusicXmlParser.GetScore(fileName);
+
+                // Load file                
+                MusicXmlReader M = new MusicXmlReader();
+                Sequence seq = M.Read(score);
+
+                if (seq == null)
+                {
+                    MessageBox.Show("Invalid MusicXml file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                sequence1 = seq;
+                bHasLyrics = sequence1.HasLyrics;
+                if (bHasLyrics)
+                    lyrics = ExtractLyrics();
+
+                laststart = 0;
+                // Remove all MIDI events after last note
+                sequence1.Clean();
+
+                ResetSequencer();
+
+                sequencer1.Sequence = sequence1;
+                UpdateMidiTimes();
+                DisplaySongDuration();
+
+                positionHScrollBarNew.Value = 0;
+                positionHScrollBarNew.Maximum = _totalTicks;
+
+                // ----------------------------------------------------------------
+                // Display Scores on panel pnlScrollView
+                // ----------------------------------------------------------------
+                DisplayScores();
+
+                // Display song duration
+                DisplaySongDuration();
+
+                // Display track controls             
+                DisplayTrackControls();
+
+                // Reset tracks stuff
+                InitTracksStuff();
+
+                // Recherche si des lyrics existent et affiche la forme frmLyric
+                mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
+
+                if (bKaraokeAlwaysOn && bHasLyrics)
+                    DisplayLyricsForm();
+
+                // Display log file
+                if (sequence1.Log != "")
+                {
+                    //MessageBox.Show(sequence1.Log, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    lblChangesInfos.Text = sequence1.Log;
+                }
+
+                DisplayFileInfos();
+                DisplayLyricsInfos();
+            }
+
+
+
+        }
+    
+            /// <summary>
+            /// Export Midi to MusicXml format file
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
+            private void MnuFileExportToMusicXml_Click(object sender, EventArgs e)
+        {
+
+        }
+
 
         #endregion
 
@@ -7890,11 +7985,10 @@ namespace Karaboss
                 btnMute1.Checked = true;
             }
             
-        }        
+        }
+
 
         #endregion
-
-       
     }
 
 }
