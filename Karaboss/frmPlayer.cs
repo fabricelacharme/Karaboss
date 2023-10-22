@@ -38,16 +38,16 @@ using System.Drawing;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
 using System.Diagnostics;
-using System.Linq;
 using Sanford.Multimedia.Midi.Score;
 using Karaboss.Resources.Localization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Text;
 using MusicXml;
-using System.Runtime.InteropServices.ComTypes;
+using MusicXml.Domain;
+using System.Linq;
 using System.Xml;
-using Karaboss.Lrc.SharedFramework;
+using System.Xml.Linq;
 
 namespace Karaboss
 {
@@ -2516,11 +2516,19 @@ namespace Karaboss
                 string fileName = openMidiFileDialog.FileName;
                 string lyrics = string.Empty;
 
-                var score = MusicXmlParser.GetScore(fileName);
+
+                System.Xml.Linq.XDocument doc = XDocument.Load(fileName);
+                Score myscore = Score.Create(doc);
+
+                //return;
+
+                //var score = MusicXmlParser.GetScore(fileName);
+
+                    
 
                 // Load file                
                 MusicXmlReader M = new MusicXmlReader();
-                Sequence seq = M.Read(score);
+                Sequence seq = M.Read(myscore);
 
                 if (seq == null)
                 {
@@ -3924,26 +3932,26 @@ namespace Karaboss
                         {
                             case "Ascii":
                                 //sy = System.Text.Encoding.Default.GetString(data);
-                                newdata = Encoding.Default.GetBytes(currentElement);
+                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
                                 break;
                             case "Chinese":
-                                Encoding chinese = Encoding.GetEncoding("gb2312");
+                                System.Text.Encoding chinese = System.Text.Encoding.GetEncoding("gb2312");
                                 newdata = chinese.GetBytes(currentElement);
                                 break;
                             case "Japanese":
-                                Encoding japanese = Encoding.GetEncoding("shift_jis");
+                                System.Text.Encoding japanese = System.Text.Encoding.GetEncoding("shift_jis");
                                 newdata = japanese.GetBytes(currentElement);
                                 break;
                             case "Korean":
-                                Encoding korean = Encoding.GetEncoding("ks_c_5601-1987");
+                                System.Text.Encoding korean = System.Text.Encoding.GetEncoding("ks_c_5601-1987");
                                 newdata = korean.GetBytes(currentElement);
                                 break;
                             case "Vietnamese":
-                                Encoding vietnamese = Encoding.GetEncoding("windows-1258");
+                                System.Text.Encoding vietnamese = System.Text.Encoding.GetEncoding("windows-1258");
                                 newdata = vietnamese.GetBytes(currentElement);
                                 break;
                             default:
-                                newdata = Encoding.Default.GetBytes(currentElement);
+                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
                                 break;
                         }
                         //byte[] newdata = Encoding.Default.GetBytes(currentElement);                       
@@ -6537,11 +6545,11 @@ namespace Karaboss
             };
 
             if (clef == 0)
-                track.Clef = Clef.Treble;
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Treble;
             else if (clef == 1)
-                track.Clef = Clef.Bass;
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Bass;
             else
-                track.Clef = Clef.None;
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.None;
 
             // Tempo : 
             //ex tempo = 750000;
@@ -7586,12 +7594,12 @@ namespace Karaboss
 
             if (lblTreble.BackColor == Color.Red)
             {
-                track.Clef = Clef.None;
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.None;
                 lblTreble.BackColor = Color.White;
             }
             else
             {
-                track.Clef = Clef.Treble;
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Treble;
                 lblBass.BackColor = Color.White;
                 lblTreble.BackColor = Color.Red;
             }
@@ -7608,12 +7616,12 @@ namespace Karaboss
 
             if (lblBass.BackColor == Color.Red)
             {
-                track.Clef = Clef.None;
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.None;
                 lblBass.BackColor = Color.White;
             }
             else
             {
-                track.Clef = Clef.Bass;
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Bass;
                 lblTreble.BackColor = Color.White;
                 lblBass.BackColor = Color.Red;
             }
@@ -7629,12 +7637,12 @@ namespace Karaboss
             Track track = sequence1.tracks[tracknum];
 
             // Select key
-            if (track.Clef == Clef.Bass)
+            if (track.Clef == Sanford.Multimedia.Midi.Score.Clef.Bass)
             {
                 lblBass.BackColor = Color.Red;
                 lblTreble.BackColor = Color.White;
             }
-            else if (track.Clef == Clef.Treble)
+            else if (track.Clef == Sanford.Multimedia.Midi.Score.Clef.Treble)
             {
                 lblTreble.BackColor = Color.Red;
                 lblBass.BackColor = Color.White;

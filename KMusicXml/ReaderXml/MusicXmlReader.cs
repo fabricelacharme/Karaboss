@@ -61,10 +61,10 @@ namespace MusicXml
             
 
             // List of tracks
-            List<Part> Parts = SC.Parts;
+            List<Part> Parts = SC.PartList;
 
             // Init sequence
-            ReadHeader(1,480,SC.Parts.Count);
+            ReadHeader(1,480,SC.PartList.Count);
 
             // Foreach track
             foreach (Part part in Parts)

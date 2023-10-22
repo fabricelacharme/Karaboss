@@ -16,5 +16,16 @@ namespace MusicXml.Domain
 		public List<MeasureElement> MeasureElements { get; internal set; }
 		
 		public MeasureAttributes Attributes { get; internal set; }
-	}
+
+
+        public List<string> Notes { get; set; } = new List<string>();
+
+        public List<int> Durations { get; set; } = new List<int>();
+        public int Tempo { get; set; } // key = measure, value = tempo
+        public int Number { get; set; }
+
+
+
+    }
+
 }
