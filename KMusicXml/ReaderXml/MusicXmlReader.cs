@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,34 @@ namespace MusicXml
 {
     public class MusicXmlReader
     {
+        private Track track = new Track();
+        private List<Track> newTracks;
+        private List<MidiNote> newNotes;
+
+        private StreamReader stream;
+
         private Sequence sequence;
+        private int Format = 1;
+        private int Numerator = 4;
+        private int Denominator = 4;
+        private int Division = 24;
+        private int Tempo = 500000;
+
+
+        private int currenttrack = -1;
+        private int Channel = 0;
+        private string TrackName = "Track1";
+        private string InstrumentName = "AcousticGrandPiano";
+        private int ProgramChange = 1;
+
+        private int ControlChangeData1 = 0;
+        private int ControlChangeData2 = 0;
+
+        private int Volume = 0;
+        private int Pan = 64;
+        private int Reverb = 0;
+
+        MidiNote n;
 
         // Constructor
         public MusicXmlReader() 
@@ -25,39 +53,53 @@ namespace MusicXml
         /// <param name="SC"></param>
         /// <returns></returns>
         public Sequence Read(MusicXml.Domain.Score SC) 
-        { 
-            //Debug.Print(SC.ToString());
-            String Name = null;
+        {                         
             string Id = null;
             
             Identification Identification = SC.Identification;
             String MovementTitle = SC.MovementTitle;
             
+
             // List of tracks
             List<Part> Parts = SC.Parts;
+
+            // Init sequence
+            ReadHeader(1,480,SC.Parts.Count);
+
+            // Foreach track
             foreach (Part part in Parts)
             {
-                Name = part.Name.Trim();
+                TrackName = part.Name.Trim();
                 Id = part.Id.Trim();
-                int MidiChannel = part.MidiChannel;
-                int MidiProgram = part.MidiProgram;
-                int Volume = part.Volume;
-                int Pan = part.Pan;
+                Channel = part.MidiChannel;
+                ProgramChange = part.MidiProgram;
+                Volume = part.Volume;
+                Pan = part.Pan;
+
+                // Create track
+                CreateTrack();
 
                 List<Measure> Measures = part.Measures;
                 foreach (Measure measure in Measures)
                 {
                     decimal W = measure.Width;
+
                     MeasureAttributes measureAttributes = measure.Attributes;
                     if (measureAttributes != null)
                     {
-                        int division = measureAttributes.Divisions;
+                        if (measureAttributes.Divisions > 0)
+                            Division = measureAttributes.Divisions;
                         Time t = measureAttributes.Time;
                         Clef clef = measureAttributes.Clef;
-                        Key key = measureAttributes.Key;                        
+                        Key key = measureAttributes.Key;
+
+                        if (measureAttributes.Time.Tempo > 0)
+                            Tempo = measureAttributes.Time.Tempo;
                     }
 
                     List<MeasureElement> lstME = measure.MeasureElements;   
+
+                    // For each measure
                     foreach (MeasureElement measureElement in lstME)
                     {
                         object obj = measureElement.Element;
@@ -66,6 +108,7 @@ namespace MusicXml
                         switch (metype)
                         {
                             case MeasureElementType.Backup:break;
+                            
                             case MeasureElementType.Note: 
                                 Note note = (Note)obj;
                                 string accidental = note.Accidental;
@@ -77,22 +120,117 @@ namespace MusicXml
                                 Lyric lyric = note.Lyric;
                                 string ntype = note.Type;
                                 int duration = note.Duration;
-
+                                // Create note
+                                CreateMidiNote(note);
                                 break;
+
                             case MeasureElementType.Forward:break;                               
 
                         }
                     }
 
                 }
-                
-
             }
+
+            CreateSequence();
 
             return sequence;
         }
 
+        // =================================================================================================
 
+        #region tracks
+
+        private void ReadHeader(int format, int div, int tracks)
+        {
+            // Midi format
+            Format = format;
+            // Tracks Count
+            newTracks = new List<Track>(tracks);
+            // Division
+            Division = div;
+        }
+
+        private void ReadTimeSignature(int numerator, int denominator)
+        {
+            // Track, Time, Time_signature, Num, Denom, Click, NotesQ
+            Numerator = numerator;
+            Denominator = denominator;
+        }
+
+        /// <summary>
+        /// Create new track and add it to the list newtracks
+        /// </summary>
+        private void CreateTrack()
+        {
+            track = new Track()
+            {
+                MidiChannel = Channel,
+                Name = TrackName,
+                InstrumentName = InstrumentName,
+                ProgramChange = ProgramChange,
+                Volume = Volume,
+                Pan = Pan,
+                Reverb = Reverb,
+            };
+
+            ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, track.MidiChannel, track.ProgramChange, 0);
+            track.Insert(0, message);
+
+            newTracks.Add(track);
+        }
+
+
+
+        #endregion tracks
+
+
+        #region notes
+
+        private void CreateMidiNote(Note n)
+        {
+
+           
+        }
+
+        #endregion notes
+
+        #region sequence
+
+        /// <summary>
+        /// Create sequence
+        /// </summary>
+        private void CreateSequence()
+        {
+            // Create new sequence
+            sequence = new Sequence(Division)
+            {
+                Format = Format,
+                OrigFormat = 1,
+                Numerator = Numerator,
+                Denominator = Denominator,
+                Tempo = Tempo,
+                Time = new TimeSignature(Numerator, Denominator, Division, Tempo),
+            };
+
+            // Tracks to sequence
+            for (int i = 0; i < newTracks.Count; i++)
+            {
+                sequence.Add(newTracks[i]);
+            }
+            //sequence.tracks = newTracks;
+
+            // Insert Tempo in track 0
+            if (sequence.tracks.Count > 0)
+                sequence.tracks[0].insertTempo(Tempo);
+
+            // Tags to sequence
+            sequence.CloneTags();
+
+
+        }
+
+        #endregion sequence
 
     }
 }

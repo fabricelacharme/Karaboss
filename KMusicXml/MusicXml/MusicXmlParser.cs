@@ -1,5 +1,6 @@
 using MusicXml.Domain;
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -34,6 +35,7 @@ namespace MusicXml
 
 			score.Identification = GetIdentification(document);
 			
+			// part-lis is the list of tracks
 			var partNodes = document.SelectNodes("score-partwise/part-list/score-part");
 			
 			if (partNodes != null)
@@ -70,12 +72,10 @@ namespace MusicXml
                         var partPan = PartMidiInstrumentNode.SelectSingleNode("pan");
                         if (partPan != null)
                             part.Pan = Convert.ToInt32(partPan.InnerText);
-
-
                     }
 
 
-
+					// 
                     var measuresXpath = string.Format("//part[@id='{0}']/measure", part.Id);
 
 					var measureNodes = partNode.SelectNodes(measuresXpath);
@@ -94,6 +94,8 @@ namespace MusicXml
 									measure.Width = w;
 							}
 
+
+							// <attributes>
 							var attributesNode = measureNode.SelectSingleNode("attributes");
 
 							if (attributesNode != null)
@@ -124,7 +126,18 @@ namespace MusicXml
 								measure.Attributes.Clef = GetClef(attributesNode);
 							}
 
-							var childNodes = measureNode.ChildNodes;
+
+                            // Division
+                            var tempoNode = measureNode.SelectSingleNode("sound");
+							if (tempoNode != null) 
+							{
+								measure.Attributes.Time.Tempo = Convert.ToInt32(tempoNode.InnerText);
+
+							}
+
+
+
+                            var childNodes = measureNode.ChildNodes;
 
 							foreach (XmlNode node in childNodes)
 							{
@@ -143,6 +156,37 @@ namespace MusicXml
 								{
 									measureElement = new MeasureElement {Type = MeasureElementType.Forward, Element = GetForwardElement(node)};
 								}
+								else if (node.Name == "direction")
+								{
+									// FAB : Try to catch Tempo
+									var childdirectionNodes = node.ChildNodes;
+									foreach (XmlNode cnode in childdirectionNodes)
+									{
+										if (cnode.Name == "sound")
+										{
+											try
+											{
+												string s = cnode.OuterXml;
+												string b = "tempo=";
+												if (s.Contains(b))
+												{
+													s = s.Replace("<", "");
+													s = s.Replace("/>", "");
+													s = s.Replace("\"", "");
+													int i = s.IndexOf(b);
+													s = s.Substring(i + b.Length).Trim();
+
+													measure.Attributes.Time.Tempo = Convert.ToInt32(s);
+												}
+											}
+											catch (Exception err)
+											{
+												Console.Write(err.Message);
+											}
+                                        }                                        											
+                                    }
+									
+                                }
 
 								if (measureElement != null)
 									measure.MeasureElements.Add(measureElement);

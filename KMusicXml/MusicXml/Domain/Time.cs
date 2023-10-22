@@ -1,3 +1,5 @@
+using Sanford.Multimedia.Midi;
+
 namespace MusicXml.Domain
 {
 	public enum TimeSymbol
@@ -11,6 +13,9 @@ namespace MusicXml.Domain
 		{
 			Beats = 0;
 			Mode = string.Empty;
+
+			// Fab
+			Tempo = 0;
 		}
 
 		public int Beats { get; internal set; }
@@ -19,5 +24,9 @@ namespace MusicXml.Domain
 		public string Mode { get; internal set; }
 		
 		public TimeSymbol Symbol { get; internal set; }
-	}
+
+        // Fab
+        public int Tempo { get; internal set; }
+
+    }
 }
