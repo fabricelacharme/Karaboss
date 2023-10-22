@@ -83,16 +83,11 @@ namespace MusicXml.Domain
             _part.Volume = (int?)partlistElement.Descendants("volume").FirstOrDefault() ?? 80;
             _part.Pan = (int?)partlistElement.Descendants("pan").FirstOrDefault() ?? 0;
 
-            //var measuresXpath = string.Format("part id=\"{0}\"", _part.Id);
+            
             String measuresXpath = string.Format("//part[@id='{0}']/measure", _part.Id);
             XNode N =  doc.XPathSelectElement(measuresXpath);
 
-            //N.Document.Element
-
-            //IEnumerable<XElement> xelist = doc.Descendants(partItems);
-            //var xelist = doc.Descendants(measuresXpath);
-
-            //GetPartDetails(doc, N.Document.Element, _part);
+            
             int tempo = 100;
 
             foreach (var partElement in doc.Descendants("part"))

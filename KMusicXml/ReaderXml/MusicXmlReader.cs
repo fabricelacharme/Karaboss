@@ -97,6 +97,8 @@ namespace MusicXml
                             Tempo = measureAttributes.Time.Tempo;
                     }
 
+                   
+                    
                     List<MeasureElement> lstME = measure.MeasureElements;   
 
                     // For each measure
@@ -189,8 +191,12 @@ namespace MusicXml
 
         private void CreateMidiNote(Note n)
         {
+            int starttime = 180;
 
-           
+            MidiNote note = new MidiNote(starttime, Channel, n.Pitch.Octave, n.Duration, n.Pitch.Alter, false);
+            newNotes.Add(note);
+
+
         }
 
         #endregion notes
