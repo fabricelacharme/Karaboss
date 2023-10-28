@@ -100,6 +100,11 @@ namespace MusicXml.Domain
                     {
                         Measure curMeasure = new Measure();
 
+                        // Fab
+                        curMeasure.Attributes = new MeasureAttributes();
+                                                                 
+
+                        // Measure number
                         curMeasure.Number = int.Parse(measureElement.Attribute("number").Value);
 
                         int curTempo = (int?)doc.Descendants("measure")

@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Runtime.ExceptionServices;
 
 namespace TextPlayer.ABC {
     // http://abcnotation.com/wiki/abc:standard:v2.1#introduction
@@ -1047,7 +1048,21 @@ namespace TextPlayer.ABC {
         public double Volume { get { return volume; } }
         public override TimeSpan Duration { get { return duration; } }
         private List<string> tokens { get { return tunes[selectedTune].Tokens; } }
-        private TimeSpan duration { get { return tunes[selectedTune].Duration; } }
+        private TimeSpan duration { 
+            get 
+            {
+                try
+                {
+                    return tunes[selectedTune].Duration;
+                }
+                catch (Exception e)
+                {
+                    Console.Write(e.ToString());
+                    return TimeSpan.Zero;
+                }
+             }         
+         }
+
         internal override ValidationSettings validationSettings { get { return settings; } }
         /// <summary>
         /// If set to true LotroAutoDetect.IsLotroMarker is called with lines in ABC files, if this function returns

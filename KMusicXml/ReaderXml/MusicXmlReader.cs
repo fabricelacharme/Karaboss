@@ -14,7 +14,7 @@ namespace MusicXml
     {
         private Track track = new Track();
         private List<Track> newTracks;
-        private List<MidiNote> newNotes;
+        private List<MidiNote> newNotes = new List<MidiNote>();
 
         private StreamReader stream;
 
@@ -66,6 +66,12 @@ namespace MusicXml
             // Init sequence
             ReadHeader(1,480,SC.PartList.Count);
 
+            // Calcul longueur mesure
+            float mult = 4.0f / Denominator;
+            int MeasureLength = Division * Numerator;
+            MeasureLength = Convert.ToInt32(MeasureLength * mult);
+            
+
             // Foreach track
             foreach (Part part in Parts)
             {
@@ -79,14 +85,60 @@ namespace MusicXml
                 // Create track
                 CreateTrack();
 
+
+                List<string> Notes = new List<string>() { "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#" };
+                List<int> NotesValues = new List<int>() { 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 };
+
                 List<Measure> Measures = part.Measures;
                 foreach (Measure measure in Measures)
                 {
                     decimal W = measure.Width;
 
+                    int offset = 0;
+                    foreach (string n in measure.Notes)
+                    {
+                        // NOTE_E4
+                        if (n != "NOTE_REST")
+                        {
+                            if (n.IndexOf("S") == -1 &&  n.IndexOf("#") == -1)
+                            {
+                                string letter = n.Replace("NOTE_", "").Substring(0, 1);     //E
+                                int octave = Convert.ToInt32(n.Substring(n.Length - 1, 1));  //4
+                                
+                                int duration = measure.Durations[measure.Notes.IndexOf(n)];
+                                
+                                int notenumber = (21 + Notes.IndexOf(letter)) + 12*(octave - 1);                                
+                                
+                                int starttime = offset + measure.Number * MeasureLength;
+
+                                MidiNote note = new MidiNote(starttime, Channel, notenumber, duration, 80, false);
+                                newNotes.Add(note);
+                                track.addNote(note,false);
+                                offset += duration;
+                            }
+                            else if (n.IndexOf("S") >0)
+                            {
+                                string letter = n.Replace("NOTE_", "").Substring(0, 1) + "#";     //E#
+                                int octave = Convert.ToInt32(n.Substring(n.Length - 1, 1));  //4
+                                int duration = measure.Durations[measure.Notes.IndexOf(n)];
+                                int notenumber = (21 + Notes.IndexOf(letter)) + 12 * (octave - 1);
+
+                                int starttime = offset + measure.Number * MeasureLength;
+
+                                MidiNote note = new MidiNote(starttime, Channel, notenumber, duration, 80, false);
+                                newNotes.Add(note);
+                                track.addNote(note, false);
+                                offset += duration;
+
+                            }
+                        }
+                    }
+
+                   /*
+                    
                     MeasureAttributes measureAttributes = measure.Attributes;
                     if (measureAttributes != null)
-                    {
+                    {                        
                         if (measureAttributes.Divisions > 0)
                             Division = measureAttributes.Divisions;
                         Time t = measureAttributes.Time;
@@ -94,10 +146,8 @@ namespace MusicXml
                         Key key = measureAttributes.Key;
 
                         if (measureAttributes.Time.Tempo > 0)
-                            Tempo = measureAttributes.Time.Tempo;
-                    }
-
-                   
+                            Tempo = measureAttributes.Time.Tempo;                        
+                    }                   
                     
                     List<MeasureElement> lstME = measure.MeasureElements;   
 
@@ -130,6 +180,9 @@ namespace MusicXml
 
                         }
                     }
+                   */
+
+
 
                 }
             }

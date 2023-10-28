@@ -48,6 +48,7 @@ using MusicXml.Domain;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using static Karaboss.Pages.ABCnotation.MyMidi;
 
 namespace Karaboss
 {
@@ -2114,6 +2115,35 @@ namespace Karaboss
                 return;
             }
 
+            CreateNewMidiFile.Numerator = MidiFileDialog.Numerator;
+            CreateNewMidiFile.Denominator = MidiFileDialog.Denominator;
+            CreateNewMidiFile.Division = MidiFileDialog.Division;
+            CreateNewMidiFile.Tempo = MidiFileDialog.Tempo;
+            CreateNewMidiFile.Measures = MidiFileDialog.Measures;
+
+            // Fab 27/10/2023
+            // Display Dialog for new track
+            string trackname = "Track1";
+            int programchange = 0;
+            int channel = 0;
+            decimal trkindex = 0;
+            int clef = 0;
+
+            dr = new DialogResult();
+            Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog TrackDialog = new Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog(trackname, programchange, channel, trkindex, clef);
+            dr = TrackDialog.ShowDialog();
+
+            // TODO : if we are creating a new file, 
+            if (dr == DialogResult.Cancel)
+                return;
+
+            CreateNewMidiFile.trackname = TrackDialog.TrackName;
+            CreateNewMidiFile.programchange = TrackDialog.ProgramChange;
+            CreateNewMidiFile.channel = TrackDialog.MidiChannel;
+            CreateNewMidiFile.trkindex = trkindex;
+            CreateNewMidiFile.clef = TrackDialog.cle;
+
+
             // Ferme le formulaire frmLyric
             if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
             {
@@ -2133,13 +2163,8 @@ namespace Karaboss
             plLyrics.Clear();
             myLyric = null;          
 
-            numerator = MidiFileDialog.Numerator;
-            denominator = MidiFileDialog.Denominator;
-            division = MidiFileDialog.Division;
-            tempo = MidiFileDialog.Tempo;
-            measures = MidiFileDialog.Measures;
-
-            NewMidiFile(numerator, denominator, division, tempo, measures);
+            // Create a new Midi File with above parameters
+            NewMidiFile();            
         }        
         
         /// <summary>
@@ -5098,8 +5123,8 @@ namespace Karaboss
             }
             else
             {
-                // A new file must be created                                              
-                NewMidiFile(CreateNewMidiFile.Numerator, CreateNewMidiFile.Denominator, CreateNewMidiFile.Division, CreateNewMidiFile.Tempo, CreateNewMidiFile.Measures);
+                // A new file must be created                                                              
+                NewMidiFile();
             }
         }
 
@@ -6827,7 +6852,7 @@ namespace Karaboss
             Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog TrackDialog = new Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog(trackname, programchange, channel, trkindex, clef);
             dr = TrackDialog.ShowDialog();
 
-
+            // TODO : if we are creating a new file, 
             if (dr == DialogResult.Cancel)            
                 return;
             
@@ -6838,6 +6863,8 @@ namespace Karaboss
             string instrumentname = TrackDialog.InstrumentName;
             channel = TrackDialog.MidiChannel;
             int tindex = Convert.ToInt32(TrackDialog.trackindex);  // index of new track
+
+
             int volume = 79;
             sequence1.Format = 1;
 
@@ -6896,10 +6923,10 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Create a new midi file
+        /// Create a new midi file from the explorer or from the player
         /// </summary>
-        private void NewMidiFile(int numerator, int denominator, int division, int tempo, int measures)
-        {            
+        private void NewMidiFile()
+        {
             // Show sequencer even if bSequencerAlwaysOn is set to False
             bForceShowSequencer = true;
 
@@ -6907,12 +6934,13 @@ namespace Karaboss
             MidiTags.ResetTags();
 
             // Create new sequence
-            sequence1 = new Sequence(division) {
+            sequence1 = new Sequence(CreateNewMidiFile.Division)
+            {
                 Format = 1,
-                Numerator = numerator,
-                Denominator = denominator,
-                Tempo = tempo,
-                Time = new TimeSignature(numerator, denominator, division, tempo),
+                Numerator = CreateNewMidiFile.Numerator,
+                Denominator = CreateNewMidiFile.Denominator,
+                Tempo = CreateNewMidiFile.Tempo,
+                Time = new TimeSignature(CreateNewMidiFile.Numerator, CreateNewMidiFile.Denominator, CreateNewMidiFile.Division, CreateNewMidiFile.Tempo),
             };
 
             sequence1.CloneTags();
@@ -6920,9 +6948,41 @@ namespace Karaboss
             pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
 
             DrawControls();
-            
-            // Dialog to add a new track
-            NewTrack(measures);
+
+            #region add track
+           
+            // Add track to sequence
+            int volume = 79;
+            sequence1.Format = 1;
+            Track track = AddTrack(CreateNewMidiFile.trackname, CreateNewMidiFile.instrumentname, CreateNewMidiFile.channel, CreateNewMidiFile.programchange, volume, sequence1.Tempo, sequence1.Time, CreateNewMidiFile.clef);
+
+            // Add track control
+            int trackindex = sequence1.tracks.Count - 1;
+            AddTrackControl(track, trackindex);
+
+            // Add a little melody
+            if (sequence1.tracks.Count == 1)
+                CreateNewMelody(track, CreateNewMidiFile.channel, CreateNewMidiFile.Measures);
+
+            DisplayTrackControls();
+
+            // Reset tracks stuff
+            InitTracksStuff();
+
+            // Create a new ShetMusic
+            RedrawSheetMusic();
+
+            SetScrollBarValues();
+
+            FileModified();
+
+            // Set Current Note on new track
+            int numstrack = sequence1.tracks.Count - 1;
+            sheetmusic.UpdateCurrentNote(numstrack, 60, 0, true);
+
+
+            #endregion addtrack
+
 
             UpdateMidiTimes();
             DisplaySongDuration();
@@ -6935,12 +6995,15 @@ namespace Karaboss
             MIDIfileName = "New";
             MIDIfilePath = CreateNewMidiFile.DefaultDirectory; ;
             MIDIfileFullPath = null;
-            
+
             // FAB
             SetTitle("New.mid");
 
-            PlayerState = PlayerStates.Stopped;                       
+            PlayerState = PlayerStates.Stopped;
+
         }
+
+  
 
         #endregion new song
 
