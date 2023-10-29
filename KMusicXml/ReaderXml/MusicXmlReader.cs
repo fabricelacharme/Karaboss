@@ -90,18 +90,23 @@ namespace MusicXml
             MeasureLength = Convert.ToInt32(MeasureLength * mult);
 
             int firstmeasure = 10;
+            
+            // For each track
             foreach (Part part in Parts)
             {
                 if (part.Measures[0].Number < firstmeasure)
                     firstmeasure = part.Measures[0].Number;
             }
 
-                // Foreach track
-                foreach (Part part in Parts)
+            // For each track
+            foreach (Part part in Parts)
             {
                 TrackName = part.Name.Trim();
                 Id = part.Id.Trim();
                 Channel = part.MidiChannel;
+                if (Channel > 15)
+                    break;
+
                 ProgramChange = part.MidiProgram;
                 Volume = part.Volume;
                 Pan = part.Pan;
@@ -109,19 +114,21 @@ namespace MusicXml
                 // Create track
                 CreateTrack();
 
-
+                
                 // https://www.inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies
                 List<string> Notes = new List<string>() { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
 
-                List<Measure> Measures = part.Measures;
-                
-                // Search for first measure number
+                List<Measure> Measures = part.Measures;                               
 
-
+                // For each measure
                 foreach (Measure measure in Measures)
                 {
                     decimal W = measure.Width;
                     int notenumber = 0;
+
+                    
+                    #region methode 1
+                    /*
                     int offset = 0;
                     foreach (string n in measure.Notes)
                     {
@@ -185,25 +192,35 @@ namespace MusicXml
                             }
                         }
                     }
+                    */
+                    #endregion methode 1
 
-                   /*
                     
-                    MeasureAttributes measureAttributes = measure.Attributes;
-                    if (measureAttributes != null)
-                    {                        
-                        if (measureAttributes.Divisions > 0)
-                            Division = measureAttributes.Divisions;
-                        Time t = measureAttributes.Time;
-                        Clef clef = measureAttributes.Clef;
-                        Key key = measureAttributes.Key;
 
-                        if (measureAttributes.Time.Tempo > 0)
-                            Tempo = measureAttributes.Time.Tempo;                        
-                    }                   
+                    /*
+
+                     MeasureAttributes measureAttributes = measure.Attributes;
+                     if (measureAttributes != null)
+                     {                        
+                         if (measureAttributes.Divisions > 0)
+                             Division = measureAttributes.Divisions;
+                         Time t = measureAttributes.Time;
+                         Clef clef = measureAttributes.Clef;
+                         Key key = measureAttributes.Key;
+
+                         if (measureAttributes.Time.Tempo > 0)
+                             Tempo = measureAttributes.Time.Tempo;                        
+                     }                   
+                     */
+
+
+                    #region methode 2
+                    List<MeasureElement> lstME = measure.MeasureElements;
                     
-                    List<MeasureElement> lstME = measure.MeasureElements;   
+                    // Manage the start time of notes
+                    int timeline = 0;
 
-                    // For each measure
+                    // For each measureElement in current measure
                     foreach (MeasureElement measureElement in lstME)
                     {
                         object obj = measureElement.Element;
@@ -211,7 +228,11 @@ namespace MusicXml
 
                         switch (metype)
                         {
-                            case MeasureElementType.Backup:break;
+                            case MeasureElementType.Backup:
+                                Console.WriteLine("backup");
+                                Backup bkp = (Backup)obj;
+                                timeline -= bkp.Duration;
+                                break;
                             
                             case MeasureElementType.Note: 
                                 Note note = (Note)obj;
@@ -223,18 +244,52 @@ namespace MusicXml
                                 int voice = note.Voice;
                                 Lyric lyric = note.Lyric;
                                 string ntype = note.Type;
-                                int duration = note.Duration;
+                                
+                                if (note.IsRest)
+                                {
+                                    timeline += note.Duration;
+                                    break;
+                                }
+
+
+                                note.Duration = (int)(note.Duration * multcoeff);
+
+                                int starttime = 0;
+                                if (firstmeasure > 0)
+                                    starttime = timeline + (measure.Number - 1) * MeasureLength;
+                                else
+                                    starttime = timeline + measure.Number * MeasureLength;
+
+                                
+
+                                int octave = note.Pitch.Octave;
+                                string letter = note.Pitch.Step.ToString();
+                                notenumber = 12 + Notes.IndexOf(letter) + 12 * octave;
+
+                                if (note.Pitch.Alter != 0)
+                                {
+                                    int alter = note.Pitch.Alter;
+                                    notenumber += alter;
+                                }
+
+
                                 // Create note
-                                CreateMidiNote(note);
+                                CreateMidiNote(note, notenumber, starttime);
+
+                                if (!note.IsChordTone)
+                                    timeline += note.Duration;
+
                                 break;
 
-                            case MeasureElementType.Forward:break;                               
+                            case MeasureElementType.Forward:
+                                Console.WriteLine("forward");
+                                break;                               
 
                         }
                     }
-                   */
 
 
+                    #endregion methode 2
 
                 }
             }
@@ -294,14 +349,20 @@ namespace MusicXml
 
         #region notes
 
-        private void CreateMidiNote(Note n)
+        private void CreateMidiNote(Note n, int v, int st)
         {
-            int starttime = 180;
-
-            MidiNote note = new MidiNote(starttime, Channel, n.Pitch.Octave, n.Duration, n.Pitch.Alter, false);
-            newNotes.Add(note);
-
-
+            if (v < 21)
+                return;
+            try
+            {
+                MidiNote note = new MidiNote(st, Channel, v, n.Duration, 80, false);
+                newNotes.Add(note);
+                track.addNote(note, false);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
 
         #endregion notes

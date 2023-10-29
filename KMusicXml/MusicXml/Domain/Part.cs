@@ -257,13 +257,28 @@ namespace MusicXml.Domain
                         #endregion backup
 
 
-                        #region forward
-                        // TODO
-                        #endregion forward
+                        #region forward                        
+                        var forwards = measureElement.Descendants("forward")
+                        .Select(n => new
+                        {
+                            duration = n.Descendants("duration").FirstOrDefault()
+                        });
 
-                        #region direction
-                        // TODO
-                        #endregion dirextion
+                        foreach (var fwd in forwards)
+                        {
+                            if (fwd.duration != null)
+                            {
+                                MeasureElement trucmeasureElement = null;
+                                var forward = new Forward();
+                                forward.Duration = int.Parse(fwd.duration.Value);
+
+                                trucmeasureElement = new MeasureElement { Type = MeasureElementType.Forward, Element = forward };
+                                if (trucmeasureElement != null)
+                                    curMeasure.MeasureElements.Add(trucmeasureElement);
+                            }
+                        }
+
+                        #endregion forward
 
 
                         _part.Measures.Add(curMeasure);
