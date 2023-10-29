@@ -156,7 +156,7 @@ namespace MusicXml
                                 }
 
                             }
-                            else if (n.IndexOf("S") >0)
+                            else if (n.IndexOf("S") > 0)
                             {
                                 try
                                 {

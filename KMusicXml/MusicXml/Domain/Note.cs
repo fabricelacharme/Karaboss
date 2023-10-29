@@ -11,6 +11,9 @@ namespace MusicXml.Domain
 			Voice = -1;
 			Staff = -1;
 			IsChordTone = false;
+
+			// Fab
+			Pitch = new Pitch();
 		}
 
 		public string Type { get; internal set; }

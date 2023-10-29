@@ -114,6 +114,8 @@ namespace MusicXml.Domain
                         // Measure number
                         curMeasure.Number = int.Parse(measureElement.Attribute("number").Value);
 
+                        #region tempo
+                        // TEMPO
                         try
                         {
                             int curTempo = (int?)doc.Descendants("measure")
@@ -126,15 +128,16 @@ namespace MusicXml.Domain
                         }
                         catch (Exception ex)
                         {
+                            Console.WriteLine(ex.ToString());
                             curMeasure.Tempo = tempo * 10000;
                         }
-                        
+                        #endregion tempo
 
 
-                        //_part.Numerator = (int?)partlistElement.Descendants("beats").FirstOrDefault() ?? 4;
-                        //_part.Denominator = (int?)partlistElement.Descendants("beat-type").FirstOrDefault() ?? 4;
-
-
+                        #region notes
+                        // ==================================
+                        // NOTES
+                        // ==================================
                         var pitches = measureElement.Descendants("note")
                                       .Select(n => new
                                       {
@@ -142,21 +145,38 @@ namespace MusicXml.Domain
                                           step = n.Descendants("step").FirstOrDefault(),
                                           alter = n.Descendants("alter").FirstOrDefault(),
                                           octave = n.Descendants("octave").FirstOrDefault(),
-                                          duration = n.Descendants("duration").FirstOrDefault()
+                                          duration = n.Descendants("duration").FirstOrDefault(),
+                                          chord = n.Descendants("chord").FirstOrDefault(),
+                                          voice = n.Descendants("voice").FirstOrDefault(),
+                                          staff = n.Descendants("staff").FirstOrDefault()
                                       });
+
+                        
 
                         foreach (var pitch in pitches)
                         {
+                            
+                            var note = new Note();
+                            MeasureElement trucmeasureElement = null;
+
+                            if (pitch.staff != null)
+                                note.Staff = int.Parse(pitch.staff.Value);
+
+                            if (pitch.voice != null)
+                                note.Voice = int.Parse(pitch.voice.Value);
+
                             string rest = "";
                             if (pitch.rest != null)
                             {
                                 rest = "REST";
+                                note.IsRest = true;
                             }
 
                             string step = "";
                             if (pitch.step != null)
                             {
                                 step = pitch.step.Value;
+                                note.Pitch.Step = step[0];
                             }
 
                             string accidental = "";
@@ -165,35 +185,92 @@ namespace MusicXml.Domain
                                 switch (int.Parse(pitch.alter.Value))
                                 {
                                     case 1:
-                                        accidental = "S";
+                                        accidental = "S";                                        
                                         break;
                                     case -1:
-                                        accidental = "F";
+                                        accidental = "F";                                        
                                         break;
                                     default:
                                         break;
                                 }
+                                note.Pitch.Alter = int.Parse(pitch.alter.Value);
                             }
+                            note.Accidental = accidental;
+                            
 
                             string octave = "";
                             if (pitch.octave != null)
                             {
                                 octave = pitch.octave.Value;
+                                note.Pitch.Octave = int.Parse(octave);
                             }
 
                             int duration = 1;
                             if (pitch.duration != null)
                             {
                                 duration = int.Parse(pitch.duration.Value);
+                                note.Duration = duration;
+                            }
+
+                            if (pitch.chord != null)
+                            {
+                                note.IsChordTone = true;
                             }
 
                             curMeasure.Notes.Add("NOTE_" + rest + step + accidental + octave);
 
                             curMeasure.Durations.Add(duration);
+
+                            trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
+                            if (trucmeasureElement != null)
+                                curMeasure.MeasureElements.Add(trucmeasureElement);                                                        
                         }
+                        #endregion notes
+
+
+                        #region backup
+                        /*
+                         *  voir https://www.w3.org/2021/06/musicxml40/tutorial/midi-compatible-part/
+                         *  backup et forward
+                         * 
+                         */
+                        var backups = measureElement.Descendants("backup")
+                        .Select(n => new
+                        {
+                            duration = n.Descendants("duration").FirstOrDefault()
+                        });
+                        
+                        foreach (var bkp in backups)
+                        {
+                            if (bkp.duration != null)
+                            {
+                                MeasureElement trucmeasureElement = null;
+                                var backup = new Backup();
+                                backup.Duration = int.Parse(bkp.duration.Value);
+
+                                trucmeasureElement = new MeasureElement { Type = MeasureElementType.Backup, Element = backup };
+                                if (trucmeasureElement != null)
+                                    curMeasure.MeasureElements.Add(trucmeasureElement);
+                            }
+                        }
+
+                        #endregion backup
+
+
+                        #region forward
+                        // TODO
+                        #endregion forward
+
+                        #region direction
+                        // TODO
+                        #endregion dirextion
+
 
                         _part.Measures.Add(curMeasure);
                     }
+
+          
+
 
                     string iddd = partElement.Attributes("id").FirstOrDefault()?.Value;
                     if (iddd == null)
