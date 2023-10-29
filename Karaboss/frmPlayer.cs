@@ -1287,9 +1287,7 @@ namespace Karaboss
         /// Display informations on midi file
         /// </summary>
         private void DisplayFileInfos()
-        {            
-            //DisplayTimeElapse(0);
-
+        {                        
             // BEAT
             beat = 1;
            
@@ -6998,6 +6996,9 @@ namespace Karaboss
 
             // FAB
             SetTitle("New.mid");
+
+            // Display midi file infos
+            DisplayFileInfos();
 
             PlayerState = PlayerStates.Stopped;
 

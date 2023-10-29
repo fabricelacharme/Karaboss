@@ -54,7 +54,10 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// The minimum pulses per quarter note value.
         /// </summary>
-        public const int PpqnMinValue = 24;
+        //public const int PpqnMinValue = 24;
+        
+        // FAB 29/10/2023
+        public const int PpqnMinValue = 1;
 
         // The number of microseconds per millisecond.
         private const int MicrosecondsPerMillisecond = 1000;

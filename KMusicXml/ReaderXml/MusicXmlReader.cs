@@ -64,7 +64,12 @@ namespace MusicXml
             List<Part> Parts = SC.PartList;
 
             // Init sequence
-            ReadHeader(1,480,SC.PartList.Count);
+            newTracks = new List<Track>(Parts.Count);
+            Division = Parts[0].Division;
+            Tempo = Parts[0].Measures[0].Tempo;
+            Format = 1;
+            //ReadHeader(1,480,SC.PartList.Count);
+
 
             // Calcul longueur mesure
             float mult = 4.0f / Denominator;
@@ -109,7 +114,7 @@ namespace MusicXml
                                 
                                 int notenumber = (21 + Notes.IndexOf(letter)) + 12*(octave - 1);                                
                                 
-                                int starttime = offset + measure.Number * MeasureLength;
+                                int starttime = offset + (measure.Number - 1) * MeasureLength;
 
                                 MidiNote note = new MidiNote(starttime, Channel, notenumber, duration, 80, false);
                                 newNotes.Add(note);
@@ -271,6 +276,10 @@ namespace MusicXml
                 Tempo = Tempo,
                 Time = new TimeSignature(Numerator, Denominator, Division, Tempo),
             };
+
+            // FAB
+            if (sequence.Division == 0)
+                sequence.Division = 1;
 
             // Tracks to sequence
             for (int i = 0; i < newTracks.Count; i++)

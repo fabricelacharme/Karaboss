@@ -827,8 +827,7 @@ namespace Sanford.Multimedia.Midi
                         }
 
                         // If we only have one track with multiple channels, then treat
-                        // each channel as a separate track.
-                        //if (this.Format == 0)
+                        // each channel as a separate track.                        
                         if (properties.Format == 0)
                         {
                             
