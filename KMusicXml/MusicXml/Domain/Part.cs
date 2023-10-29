@@ -114,13 +114,21 @@ namespace MusicXml.Domain
                         // Measure number
                         curMeasure.Number = int.Parse(measureElement.Attribute("number").Value);
 
-                        int curTempo = (int?)doc.Descendants("measure")
-                            .Where(m => int.Parse(m.Attribute("number").Value) == curMeasure.Number)
-                            .Descendants("sound")
-                            ?.FirstOrDefault(s => s.Attribute("tempo") != null)
-                            ?.Attribute("tempo") ?? tempo;
-                        tempo = curTempo;
-                        curMeasure.Tempo = curTempo * 10000;
+                        try
+                        {
+                            int curTempo = (int?)doc.Descendants("measure")
+                                .Where(m => int.Parse(m.Attribute("number").Value) == curMeasure.Number)
+                                .Descendants("sound")
+                                ?.FirstOrDefault(s => s.Attribute("tempo") != null)
+                                ?.Attribute("tempo") ?? tempo;
+                            tempo = curTempo;
+                            curMeasure.Tempo = curTempo * 10000;
+                        }
+                        catch (Exception ex)
+                        {
+                            curMeasure.Tempo = tempo * 10000;
+                        }
+                        
 
 
                         //_part.Numerator = (int?)partlistElement.Descendants("beats").FirstOrDefault() ?? 4;

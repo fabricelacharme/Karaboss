@@ -2551,12 +2551,10 @@ namespace Karaboss
                     return;
                 }
 
+                
+                string fileTitle = Path.GetFileName(fileName);
+
                 Score myscore = Score.Create(doc);
-
-                //return;
-
-                //var score = MusicXmlParser.GetScore(fileName);
-
                     
 
                 // Load file                
@@ -2615,6 +2613,10 @@ namespace Karaboss
 
                 DisplayFileInfos();
                 DisplayLyricsInfos();
+
+                // FAB
+                SetTitle(fileTitle);
+
             }
 
 
