@@ -108,7 +108,9 @@ namespace MusicXml
 
                 // Create track
                 CreateTrack();
-                
+
+
+                // https://www.inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies
                 List<string> Notes = new List<string>() { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
 
                 List<Measure> Measures = part.Measures;
