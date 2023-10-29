@@ -55,6 +55,7 @@ namespace MusicXml
         public Sequence Read(MusicXml.Domain.Score SC) 
         {                         
             string Id = null;
+            double multcoeff = 1;       // Mutiply everything in order to have Division >= 24
             
             Identification Identification = SC.Identification;
             String MovementTitle = SC.MovementTitle;
@@ -65,20 +66,38 @@ namespace MusicXml
 
             // Init sequence
             newTracks = new List<Track>(Parts.Count);
+            
             Division = Parts[0].Division;
+            if (Division == 0)
+                Division = 24;
+
+            if (Division < 24) 
+            {
+                Division = 24;
+                multcoeff = 24 / Parts[0].Division;
+            }
+            
             Tempo = Parts[0].Measures[0].Tempo;
             Format = 1;
-            //ReadHeader(1,480,SC.PartList.Count);
 
+            Numerator = Parts[0].Numerator;
+            Denominator = Parts[0].Denominator;
 
             // Calcul longueur mesure
             float mult = 4.0f / Denominator;
             int MeasureLength = Division * Numerator;
+            //MeasureLength = Convert.ToInt32(MeasureLength * mult * multcoeff);
             MeasureLength = Convert.ToInt32(MeasureLength * mult);
-            
 
-            // Foreach track
+            int firstmeasure = 10;
             foreach (Part part in Parts)
+            {
+                if (part.Measures[0].Number < firstmeasure)
+                    firstmeasure = part.Measures[0].Number;
+            }
+
+                // Foreach track
+                foreach (Part part in Parts)
             {
                 TrackName = part.Name.Trim();
                 Id = part.Id.Trim();
@@ -89,16 +108,18 @@ namespace MusicXml
 
                 // Create track
                 CreateTrack();
-
-
-                List<string> Notes = new List<string>() { "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#" };
-                List<int> NotesValues = new List<int>() { 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 };
+                
+                List<string> Notes = new List<string>() { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
 
                 List<Measure> Measures = part.Measures;
+                
+                // Search for first measure number
+
+
                 foreach (Measure measure in Measures)
                 {
                     decimal W = measure.Width;
-
+                    int notenumber = 0;
                     int offset = 0;
                     foreach (string n in measure.Notes)
                     {
@@ -107,34 +128,58 @@ namespace MusicXml
                         {
                             if (n.IndexOf("S") == -1 &&  n.IndexOf("#") == -1)
                             {
-                                string letter = n.Replace("NOTE_", "").Substring(0, 1);     //E
-                                int octave = Convert.ToInt32(n.Substring(n.Length - 1, 1));  //4
-                                
-                                int duration = measure.Durations[measure.Notes.IndexOf(n)];
-                                
-                                int notenumber = (21 + Notes.IndexOf(letter)) + 12*(octave - 1);                                
-                                
-                                int starttime = offset + (measure.Number - 1) * MeasureLength;
+                                try
+                                {
+                                    string letter = n.Replace("NOTE_", "").Substring(0, 1);     //E
 
-                                MidiNote note = new MidiNote(starttime, Channel, notenumber, duration, 80, false);
-                                newNotes.Add(note);
-                                track.addNote(note,false);
-                                offset += duration;
+                                    int octave = Convert.ToInt32(n.Substring(n.Length - 1, 1));  //4
+                                    int duration = (int)(measure.Durations[measure.Notes.IndexOf(n)] * multcoeff);
+                                                                        
+                                    notenumber = 12 + Notes.IndexOf(letter) + 12*octave;
+
+                                    int starttime = 0;
+                                    if (firstmeasure > 0)
+                                        starttime = offset + (measure.Number - 1) * MeasureLength;
+                                    else
+                                        starttime = offset + measure.Number * MeasureLength;
+
+                                    MidiNote note = new MidiNote(starttime, Channel, notenumber, duration, 80, false);
+                                    newNotes.Add(note);
+                                    track.addNote(note, false);
+                                    offset += duration;
+                                }
+                                catch (Exception e)
+                                {
+
+                                }
+
                             }
                             else if (n.IndexOf("S") >0)
                             {
-                                string letter = n.Replace("NOTE_", "").Substring(0, 1) + "#";     //E#
-                                int octave = Convert.ToInt32(n.Substring(n.Length - 1, 1));  //4
-                                int duration = measure.Durations[measure.Notes.IndexOf(n)];
-                                int notenumber = (21 + Notes.IndexOf(letter)) + 12 * (octave - 1);
+                                try
+                                {
+                                    string letter = n.Replace("NOTE_", "").Substring(0, 1) + "#";     //E#
+                                    int octave = Convert.ToInt32(n.Substring(n.Length - 1, 1));  //4
+                                    int duration = (int)(measure.Durations[measure.Notes.IndexOf(n)] * multcoeff);
 
-                                int starttime = offset + measure.Number * MeasureLength;
+                                    notenumber = (21 + Notes.IndexOf(letter)) + 12 * octave;
 
-                                MidiNote note = new MidiNote(starttime, Channel, notenumber, duration, 80, false);
-                                newNotes.Add(note);
-                                track.addNote(note, false);
-                                offset += duration;
+                                    int starttime = 0;
+                                    if (firstmeasure > 0)
+                                        starttime = offset + (measure.Number - 1) * MeasureLength;
+                                    else
+                                        starttime = offset + measure.Number * MeasureLength;
 
+
+                                    MidiNote note = new MidiNote(starttime, Channel, notenumber, duration, 80, false);
+                                    newNotes.Add(note);
+                                    track.addNote(note, false);
+                                    offset += duration;
+                                }
+                                catch (Exception e)
+                                {
+
+                                }
                             }
                         }
                     }

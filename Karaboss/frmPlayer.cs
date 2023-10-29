@@ -2539,8 +2539,18 @@ namespace Karaboss
                 string fileName = openMidiFileDialog.FileName;
                 string lyrics = string.Empty;
 
+                System.Xml.Linq.XDocument doc;
 
-                System.Xml.Linq.XDocument doc = XDocument.Load(fileName);
+                try
+                {
+                    doc = XDocument.Load(fileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Invalid MusicXml file\n" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 Score myscore = Score.Create(doc);
 
                 //return;

@@ -60,6 +60,8 @@ namespace MusicXml.Domain
         public int Volume { get; internal set; }
         public int Pan { get; internal set; }
 
+        public int Numerator { get; internal set; }
+        public int Denominator { get; internal set; }
 
         public Part()
 		{
@@ -83,7 +85,7 @@ namespace MusicXml.Domain
             _part.Volume = (int?)partlistElement.Descendants("volume").FirstOrDefault() ?? 80;
             _part.Pan = (int?)partlistElement.Descendants("pan").FirstOrDefault() ?? 0;
 
-            
+
             String measuresXpath = string.Format("//part[@id='{0}']/measure", _part.Id);
             XNode N =  doc.XPathSelectElement(measuresXpath);
 
@@ -95,7 +97,12 @@ namespace MusicXml.Domain
                 string idd = partElement.Attributes("id").FirstOrDefault()?.Value;
                 if (idd == _part.Id)
                 {
-                    _part.Division = (int?)partElement.Descendants("divisions").FirstOrDefault() ?? 4;
+                    _part.Division = (int?)partElement.Descendants("divisions").FirstOrDefault() ?? 24;
+
+                    XElement ptime = partElement.Descendants("time").FirstOrDefault();
+                    _part.Numerator = (int?)ptime.Descendants("beats").FirstOrDefault() ?? 4;
+                    _part.Denominator = (int?)ptime.Descendants("beat-type").FirstOrDefault() ?? 4;
+
                     foreach (var measureElement in partElement.Descendants("measure"))
                     {
                         Measure curMeasure = new Measure();
@@ -113,7 +120,11 @@ namespace MusicXml.Domain
                             ?.FirstOrDefault(s => s.Attribute("tempo") != null)
                             ?.Attribute("tempo") ?? tempo;
                         tempo = curTempo;
-                        curMeasure.Tempo = curTempo;
+                        curMeasure.Tempo = curTempo * 10000;
+
+
+                        //_part.Numerator = (int?)partlistElement.Descendants("beats").FirstOrDefault() ?? 4;
+                        //_part.Denominator = (int?)partlistElement.Descendants("beat-type").FirstOrDefault() ?? 4;
 
 
                         var pitches = measureElement.Descendants("note")

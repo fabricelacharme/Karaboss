@@ -227,8 +227,11 @@ namespace Sanford.Multimedia.Midi
         public int addNote(MidiNote note, bool bCheckDistance = true)
         {
 
+            // FAb 30/10/2023
+            /*
             if (note.Duration < 10)
                 return 0;
+            */
 
             // Do not add if exists already
             if (findMidiNote(note.Number, note.StartTime) != null)
