@@ -55,8 +55,7 @@ namespace MusicXml
         public Sequence Read(MusicXml.Domain.Score SC) 
         {                         
             string Id = null;
-            double multcoeff = 1;       // Mutiply everything in order to have Division >= 24
-            
+                        
             Identification Identification = SC.Identification;
             String MovementTitle = SC.MovementTitle;
             
@@ -67,45 +66,30 @@ namespace MusicXml
             // Init sequence
             newTracks = new List<Track>(Parts.Count);
 
-            /*
-             *  Attention, certaines partitions ont une division différente pour chaque piste !!!
-             *  Exemple BeetAnGeSample.xml
-             *  Part 1 : division 24
-             *  Part 2 : division 96
-             *  
-             *  Conclusion, il fait gérer chaque piste séparément
-             */
-            
-            
-            Division = Parts[0].Division;
-            if (Division == 0)
-                Division = 24;
-
-            if (Division < 24) 
-            {
-                Division = 24;
-                multcoeff = 24 / Parts[0].Division;
-            }
-            
             Tempo = Parts[0].Measures[0].Tempo;
             Format = 1;
 
             Numerator = Parts[0].Numerator;
             Denominator = Parts[0].Denominator;
 
-            // Calcul longueur mesure
-            float mult = 4.0f / Denominator;
-            int MeasureLength = Division * Numerator;
-            //MeasureLength = Convert.ToInt32(MeasureLength * mult * multcoeff);
-            MeasureLength = Convert.ToInt32(MeasureLength * mult);
 
-            int firstmeasure = 10;
-            
-            // For each track
+            int firstmeasure = 10;            
+            // Search for First measure
             foreach (Part part in Parts)
             {
                 if (part.Measures[0].Number < firstmeasure)
                     firstmeasure = part.Measures[0].Number;
+            }
+
+            // Search common Division for all parts
+            int commondivision = Parts[0].Division;
+            if (commondivision < 24)
+                commondivision = 24;
+
+            foreach (Part part in Parts)
+            {
+                 if (part.Division > commondivision)
+                    commondivision = part.Division;
             }
 
             // For each track
@@ -120,6 +104,28 @@ namespace MusicXml
                 ProgramChange = part.MidiProgram;
                 Volume = part.Volume;
                 Pan = part.Pan;
+
+                /*
+                 *  Attention, certaines partitions ont une division différente pour chaque piste !!!
+                 *  Exemple BeetAnGeSample.xml
+                 *  Part 1 : division 24
+                 *  Part 2 : division 96
+                 *  
+                 *  Conclusion, il fait gérer chaque piste séparément
+                 */
+                double multcoeff = 1;       // Mutiply everything in order to have common Division
+                Division = part.Division;
+                if (Division != commondivision)
+                {
+                    Division = commondivision;
+                    multcoeff = (double)commondivision/part.Division;  //commondivision / part.Division;
+                }
+
+                // Calcul longueur mesure
+                float mult = 4.0f / Denominator;
+                int MeasureLength = Division * Numerator;
+                MeasureLength = Convert.ToInt32(MeasureLength * mult);
+
 
                 // Create track
                 CreateTrack();
@@ -207,25 +213,25 @@ namespace MusicXml
 
 
 
-            /*
+                    /*
 
-             MeasureAttributes measureAttributes = measure.Attributes;
-             if (measureAttributes != null)
-             {                        
-                 if (measureAttributes.Divisions > 0)
-                     Division = measureAttributes.Divisions;
-                 Time t = measureAttributes.Time;
-                 Clef clef = measureAttributes.Clef;
-                 Key key = measureAttributes.Key;
+                     MeasureAttributes measureAttributes = measure.Attributes;
+                     if (measureAttributes != null)
+                     {                        
+                         if (measureAttributes.Divisions > 0)
+                             Division = measureAttributes.Divisions;
+                         Time t = measureAttributes.Time;
+                         Clef clef = measureAttributes.Clef;
+                         Key key = measureAttributes.Key;
 
-                 if (measureAttributes.Time.Tempo > 0)
-                     Tempo = measureAttributes.Time.Tempo;                        
-             }                   
-             */
+                         if (measureAttributes.Time.Tempo > 0)
+                             Tempo = measureAttributes.Time.Tempo;                        
+                     }                   
+                     */
 
 
-            #region methode 2
-            List<MeasureElement> lstME = measure.MeasureElements;
+                    #region methode 2
+                    List<MeasureElement> lstME = measure.MeasureElements;
                     
                     // Manage the start time of notes
                     int timeline = 0;

@@ -2563,14 +2563,14 @@ namespace Karaboss
 
                 // Load file                
                 MusicXmlReader M = new MusicXmlReader();
-                Sequence seq = M.Read(myscore);
+                sequence1 = M.Read(myscore);
 
-                if (seq == null)
+                if (sequence1 == null)
                 {
                     MessageBox.Show("Invalid MusicXml file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                sequence1 = seq;
+                //sequence1 = seq;
                 bHasLyrics = sequence1.HasLyrics;
                 if (bHasLyrics)
                     lyrics = ExtractLyrics();
