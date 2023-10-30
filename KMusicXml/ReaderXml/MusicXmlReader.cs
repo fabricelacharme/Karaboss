@@ -349,10 +349,14 @@ namespace MusicXml
                 Volume = Volume,
                 Pan = Pan,
                 Reverb = Reverb,
+                Numerator = Numerator,
+                Denominator = Denominator
             };
 
             ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, track.MidiChannel, track.ProgramChange, 0);
             track.Insert(0, message);
+           
+            track.insertTimesignature(Numerator, Denominator);
 
             newTracks.Add(track);
         }

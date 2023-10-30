@@ -367,10 +367,14 @@ namespace Sanford.Multimedia.Midi
                 Volume = Volume,
                 Pan = Pan,
                 Reverb = Reverb,
+                Denominator = Denominator,
+                Numerator = Numerator
             };
 
             ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, track.MidiChannel, track.ProgramChange, 0);
             track.Insert(0, message);
+
+            track.insertTimesignature(Numerator, Denominator);
 
             newTracks.Add(track);
         }
