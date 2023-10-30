@@ -2537,8 +2537,15 @@ namespace Karaboss
             if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string fileName = openMidiFileDialog.FileName;
-                string lyrics = string.Empty;
+                
+                MIDIfilePath = Path.GetDirectoryName(fileName);
+                
+                string fExt = Path.GetExtension(fileName);             // Extension
+                string fName = Path.GetFileNameWithoutExtension(fileName);    // name without extension
+                MIDIfileName = fName + ".mid";
+                MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
 
+                string lyrics = string.Empty;
                 System.Xml.Linq.XDocument doc;
 
                 try
@@ -2549,10 +2556,7 @@ namespace Karaboss
                 {
                     MessageBox.Show("Invalid MusicXml file\n" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
-                }
-
-                
-                string fileTitle = Path.GetFileName(fileName);
+                }               
 
                 Score myscore = Score.Create(doc);
                     
@@ -2614,8 +2618,10 @@ namespace Karaboss
                 DisplayFileInfos();
                 DisplayLyricsInfos();
 
-                // FAB
-                SetTitle(fileTitle);
+                // Display title
+                SetTitle(MIDIfileName);
+                // File is new
+                FileModified();
 
             }
 

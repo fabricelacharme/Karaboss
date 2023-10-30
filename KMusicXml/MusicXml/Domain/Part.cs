@@ -109,10 +109,26 @@ namespace MusicXml.Domain
 
                         // Fab
                         curMeasure.Attributes = new MeasureAttributes();
-                                                                 
+
 
                         // Measure number
-                        curMeasure.Number = int.Parse(measureElement.Attribute("number").Value);
+                        try
+                        {
+                            curMeasure.Number = int.Parse(measureElement.Attribute("number").Value);
+                        }
+                        catch (Exception e)
+                        {
+                            
+                            /* 
+                             * TODO
+                             * Sometimes number = X1
+                             * case of repeat 
+                             * 
+                             * 
+                             * 
+                            */
+                            break;
+                        }
 
                         #region tempo
                         // TEMPO
@@ -234,7 +250,7 @@ namespace MusicXml.Domain
                          *  backup et forward
                          * 
                          */
-                        var backups = measureElement.Descendants("backup")
+                            var backups = measureElement.Descendants("backup")
                         .Select(n => new
                         {
                             duration = n.Descendants("duration").FirstOrDefault()

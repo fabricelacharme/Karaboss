@@ -66,6 +66,16 @@ namespace MusicXml
 
             // Init sequence
             newTracks = new List<Track>(Parts.Count);
+
+            /*
+             *  Attention, certaines partitions ont une division différente pour chaque piste !!!
+             *  Exemple BeetAnGeSample.xml
+             *  Part 1 : division 24
+             *  Part 2 : division 96
+             *  
+             *  Conclusion, il fait gérer chaque piste séparément
+             */
+            
             
             Division = Parts[0].Division;
             if (Division == 0)
@@ -193,29 +203,29 @@ namespace MusicXml
                         }
                     }
                     */
-                    #endregion methode 1
-
-                    
-
-                    /*
-
-                     MeasureAttributes measureAttributes = measure.Attributes;
-                     if (measureAttributes != null)
-                     {                        
-                         if (measureAttributes.Divisions > 0)
-                             Division = measureAttributes.Divisions;
-                         Time t = measureAttributes.Time;
-                         Clef clef = measureAttributes.Clef;
-                         Key key = measureAttributes.Key;
-
-                         if (measureAttributes.Time.Tempo > 0)
-                             Tempo = measureAttributes.Time.Tempo;                        
-                     }                   
-                     */
+#endregion methode 1
 
 
-                    #region methode 2
-                    List<MeasureElement> lstME = measure.MeasureElements;
+
+            /*
+
+             MeasureAttributes measureAttributes = measure.Attributes;
+             if (measureAttributes != null)
+             {                        
+                 if (measureAttributes.Divisions > 0)
+                     Division = measureAttributes.Divisions;
+                 Time t = measureAttributes.Time;
+                 Clef clef = measureAttributes.Clef;
+                 Key key = measureAttributes.Key;
+
+                 if (measureAttributes.Time.Tempo > 0)
+                     Tempo = measureAttributes.Time.Tempo;                        
+             }                   
+             */
+
+
+            #region methode 2
+            List<MeasureElement> lstME = measure.MeasureElements;
                     
                     // Manage the start time of notes
                     int timeline = 0;
@@ -229,9 +239,9 @@ namespace MusicXml
                         switch (metype)
                         {
                             case MeasureElementType.Backup:
-                                Console.WriteLine("backup");
+                                //Console.WriteLine("backup");
                                 Backup bkp = (Backup)obj;
-                                timeline -= bkp.Duration;
+                                timeline -= (int)(bkp.Duration * multcoeff);
                                 break;
                             
                             case MeasureElementType.Note: 
@@ -244,22 +254,20 @@ namespace MusicXml
                                 int voice = note.Voice;
                                 Lyric lyric = note.Lyric;
                                 string ntype = note.Type;
-                                
+
+                                note.Duration = (int)(note.Duration * multcoeff);
+
                                 if (note.IsRest)
                                 {
                                     timeline += note.Duration;
                                     break;
-                                }
-
-
-                                note.Duration = (int)(note.Duration * multcoeff);
+                                }                                
 
                                 int starttime = 0;
                                 if (firstmeasure > 0)
                                     starttime = timeline + (measure.Number - 1) * MeasureLength;
                                 else
                                     starttime = timeline + measure.Number * MeasureLength;
-
                                 
 
                                 int octave = note.Pitch.Octave;
@@ -272,7 +280,6 @@ namespace MusicXml
                                     notenumber += alter;
                                 }
 
-
                                 // Create note
                                 CreateMidiNote(note, notenumber, starttime);
 
@@ -283,6 +290,8 @@ namespace MusicXml
 
                             case MeasureElementType.Forward:
                                 Console.WriteLine("forward");
+                                Forward fwd = (Forward)obj;
+                                timeline += (int)(fwd.Duration * multcoeff);
                                 break;                               
 
                         }
