@@ -44,6 +44,9 @@ namespace MusicXml.Domain
             }
         }
 
+        public int Staves { get; set; }  // included 2nd track
+        public int Staff { get; set; }   // Staff number
+        public int Voice { get; set; }  // voice
         public int Division { get; set; }
         public Dictionary<int, int> Tempos { get; set; } // key = measure, value = tempo
 
@@ -71,8 +74,135 @@ namespace MusicXml.Domain
 			MidiProgram = 1;
 			Volume = 80;
 			Pan = 0;
+            
 		}
 
+        /// <summary>
+        /// Clone existing Part
+        /// </summary>
+        /// <param name="part"></param>
+        /// <returns></returns>
+        public static Part Clone(Part part)
+        {
+            Part _part = new Part();
+
+            _part.Id = part.Id;
+            _part.MidiChannel = part.MidiChannel;
+            _part.MidiProgram = part.MidiProgram;
+            _part.Volume = part.Volume;
+            _part.Pan = part.Pan;
+
+            _part.Numerator = part.Numerator;
+            _part.Denominator = part.Denominator;
+            _part.Division = part.Division;
+            
+            return _part;
+        }
+
+
+        public static Part CreateList(XDocument doc, XElement partlistElement)
+        {
+            Part _part = new Part();
+
+            string id = partlistElement.Attributes("id").FirstOrDefault()?.Value;
+            _part.Id = id;
+
+            _part.MidiChannel = (int?)partlistElement.Descendants("midi-channel").FirstOrDefault() ?? 1;
+            _part.MidiProgram = (int?)partlistElement.Descendants("midi-program").FirstOrDefault() ?? 1;
+            _part.Volume = (int?)partlistElement.Descendants("volume").FirstOrDefault() ?? 80;
+            _part.Pan = (int?)partlistElement.Descendants("pan").FirstOrDefault() ?? 0;
+
+            int tempo = 100;
+
+            foreach (var partElement in doc.Descendants("part"))
+            {
+                // Check if goof Id for this part
+                string idd = partElement.Attributes("id").FirstOrDefault()?.Value;
+                if (idd == _part.Id)
+                {
+
+                    // Is there a 2nd track included in this part?
+                    _part.Staves = (int?)partElement.Descendants("staves").FirstOrDefault() ?? 1;
+
+                    _part.Division = (int?)partElement.Descendants("divisions").FirstOrDefault() ?? 24;
+
+                    XElement ptime = partElement.Descendants("time").FirstOrDefault();
+                    _part.Numerator = (int?)ptime.Descendants("beats").FirstOrDefault() ?? 4;
+                    _part.Denominator = (int?)ptime.Descendants("beat-type").FirstOrDefault() ?? 4;
+
+                    // Check we are in the good track
+                    int initcurrentvoice = 1;
+                    int currentvoice = 1;
+
+                    foreach (var measureElement in partElement.Descendants("measure"))
+                    {
+
+                        // Stop if 'staves' element
+                        if (currentvoice != initcurrentvoice)
+                            break;
+
+                        Measure curMeasure = new Measure();
+
+                        // Attributes containing everything
+                        curMeasure.Attributes = new MeasureAttributes();
+
+                        #region measure number (to be improved)
+                        // ===================================
+                        // Measure number
+                        // ===================================
+                        try
+                        {
+                            curMeasure.Number = int.Parse(measureElement.Attribute("number").Value);
+                        }
+                        catch (Exception e)
+                        {
+
+                            /* 
+                             * TODO
+                             * Sometimes number = X1
+                             * case of repeat 
+                             * 
+                             * 
+                             * 
+                            */
+                            break;
+                        }
+                        #endregion measure number
+
+                        #region tempo
+                        // TEMPO
+                        try
+                        {
+                            int curTempo = (int?)doc.Descendants("measure")
+                                .Where(m => int.Parse(m.Attribute("number").Value) == curMeasure.Number)
+                                .Descendants("sound")
+                                ?.FirstOrDefault(s => s.Attribute("tempo") != null)
+                                ?.Attribute("tempo") ?? tempo;
+                            tempo = curTempo;
+                            curMeasure.Tempo = curTempo * 10000;
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                            curMeasure.Tempo = tempo * 10000;
+                        }
+                        #endregion tempo
+
+
+                    }
+                }
+            }
+            
+            return _part;   
+        }
+
+
+        /// <summary>
+        /// Load everything about a part
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="partlistElement"></param>
+        /// <returns></returns>
         public static Part CreateInit(XDocument doc, XElement partlistElement)
         {
             Part _part = new Part();
@@ -85,33 +215,54 @@ namespace MusicXml.Domain
             _part.Volume = (int?)partlistElement.Descendants("volume").FirstOrDefault() ?? 80;
             _part.Pan = (int?)partlistElement.Descendants("pan").FirstOrDefault() ?? 0;
 
-
-            String measuresXpath = string.Format("//part[@id='{0}']/measure", _part.Id);
-            XNode N =  doc.XPathSelectElement(measuresXpath);
-
+            //String measuresXpath = string.Format("//part[@id='{0}']/measure", _part.Id);
+            //XNode N =  doc.XPathSelectElement(measuresXpath);
             
             int tempo = 100;
 
             foreach (var partElement in doc.Descendants("part"))
             {
+                // Check if goof Id for this part
                 string idd = partElement.Attributes("id").FirstOrDefault()?.Value;
                 if (idd == _part.Id)
                 {
+                    
+                    // Is there a 2nd track included in this part?
+                    _part.Staves = (int?)partElement.Descendants("staves").FirstOrDefault() ?? 1;
+
                     _part.Division = (int?)partElement.Descendants("divisions").FirstOrDefault() ?? 24;
 
                     XElement ptime = partElement.Descendants("time").FirstOrDefault();
                     _part.Numerator = (int?)ptime.Descendants("beats").FirstOrDefault() ?? 4;
                     _part.Denominator = (int?)ptime.Descendants("beat-type").FirstOrDefault() ?? 4;
 
+                    XElement pnote = partElement.Descendants("note").FirstOrDefault();
+                    int v = (int?)pnote.Descendants("voice").FirstOrDefault() ?? -1;
+                    if (v != -1 & _part.Voice == 0)
+                        _part.Voice = v;
+                    v = (int?)pnote.Descendants("staff").FirstOrDefault() ?? -1;
+                    if (v != -1 && _part.Staff == 0)
+                        _part.Staff = v;
+
+                    
+                    // Check we are in the good track
+                    //int currentvoice = _part.Voice;
+
                     foreach (var measureElement in partElement.Descendants("measure"))
                     {
+                        // Stop if 'staves' element
+                        //if (currentvoice != _part.Voice)
+                        //    break;
+
                         Measure curMeasure = new Measure();
 
-                        // Fab
+                        // Attributes containing everything
                         curMeasure.Attributes = new MeasureAttributes();
 
-
+                        #region measure number (to be improved)
+                        // ===================================
                         // Measure number
+                        // ===================================
                         try
                         {
                             curMeasure.Number = int.Parse(measureElement.Attribute("number").Value);
@@ -129,6 +280,7 @@ namespace MusicXml.Domain
                             */
                             break;
                         }
+                        #endregion measure number
 
                         #region tempo
                         // TEMPO
@@ -179,7 +331,11 @@ namespace MusicXml.Domain
                                 note.Staff = int.Parse(pitch.staff.Value);
 
                             if (pitch.voice != null)
+                            {
                                 note.Voice = int.Parse(pitch.voice.Value);
+                                if (note.Voice != _part.Voice)
+                                    break;
+                            }
 
                             string rest = "";
                             if (pitch.rest != null)
@@ -233,13 +389,16 @@ namespace MusicXml.Domain
                                 note.IsChordTone = true;
                             }
 
+                            
+
                             curMeasure.Notes.Add("NOTE_" + rest + step + accidental + octave);
 
                             curMeasure.Durations.Add(duration);
 
                             trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
                             if (trucmeasureElement != null)
-                                curMeasure.MeasureElements.Add(trucmeasureElement);                                                        
+                                curMeasure.MeasureElements.Add(trucmeasureElement);      
+                            
                         }
                         #endregion notes
 
@@ -325,9 +484,10 @@ namespace MusicXml.Domain
             return _part;
         }
 
-      
 
+        #region deleteme
 
+        /*
         public static Part Create(XDocument doc, XElement partElement)
         {
             Part _part = new Part();
@@ -514,6 +674,9 @@ namespace MusicXml.Domain
 
             return _part;
         }
+        */
+        
+        #endregion deleteme
 
     }
 }

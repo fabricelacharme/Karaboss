@@ -141,8 +141,9 @@ namespace MusicXml
                 {
                     decimal W = measure.Width;
                     int notenumber = 0;
+                    bool bincrement = false; // augmenter timeline faux au début de la mesure
 
-                    
+
                     #region methode 1
                     /*
                     int offset = 0;
@@ -209,7 +210,7 @@ namespace MusicXml
                         }
                     }
                     */
-#endregion methode 1
+                    #endregion methode 1
 
 
 
@@ -239,6 +240,8 @@ namespace MusicXml
                     // For each measureElement in current measure
                     foreach (MeasureElement measureElement in lstME)
                     {
+                        
+
                         object obj = measureElement.Element;
                         MeasureElementType metype = measureElement.Type;
 
@@ -267,7 +270,15 @@ namespace MusicXml
                                 {
                                     timeline += note.Duration;
                                     break;
-                                }                                
+                                }
+
+                                if (bincrement && !note.IsChordTone)
+                                    timeline += note.Duration;
+                                if (note.IsChordTone)
+                                {
+                                    bincrement = true;
+                                }
+
 
                                 int starttime = 0;
                                 if (firstmeasure > 0)
@@ -289,8 +300,9 @@ namespace MusicXml
                                 // Create note
                                 CreateMidiNote(note, notenumber, starttime);
 
-                                if (!note.IsChordTone)
-                                    timeline += note.Duration;
+                                
+                                // Check if next note is chord, to prevent timeline increment
+                                   
 
                                 break;
 

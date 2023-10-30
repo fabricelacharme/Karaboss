@@ -25,7 +25,19 @@ namespace MusicXml.Domain
             foreach (var partlistElement in doc.Descendants("score-part"))
             {
                 _score.PartList.Add(Part.CreateInit(doc, partlistElement));
+                
+                /*
+                // Check if a part contains 2 tracks
+                Part _part = _score.PartList[_score.PartList.Count - 1];
+                if (_part.Staves > 1)
+                {
+                    Part _cpart = Part.Clone(_part);
+                    _score.PartList.Add(_cpart);
+                }
+                */
             }
+
+            
 
             /*
             foreach (var partElement in doc.Descendants("part"))
