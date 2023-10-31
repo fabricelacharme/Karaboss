@@ -333,8 +333,8 @@ namespace MusicXml.Domain
                             if (pitch.voice != null)
                             {
                                 note.Voice = int.Parse(pitch.voice.Value);
-                                if (note.Voice != _part.Voice)
-                                    break;
+                                //if (note.Voice != _part.Voice)
+                                //    break;
                             }
 
                             string rest = "";

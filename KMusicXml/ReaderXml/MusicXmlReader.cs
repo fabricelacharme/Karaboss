@@ -141,9 +141,8 @@ namespace MusicXml
                 {
                     decimal W = measure.Width;
                     int notenumber = 0;
-                    bool bincrement = false; // augmenter timeline faux au début de la mesure
-
-
+                    
+                   
                     #region methode 1
                     /*
                     int offset = 0;
@@ -213,7 +212,6 @@ namespace MusicXml
                     #endregion methode 1
 
 
-
                     /*
 
                      MeasureAttributes measureAttributes = measure.Attributes;
@@ -236,6 +234,7 @@ namespace MusicXml
                     
                     // Manage the start time of notes
                     int timeline = 0;
+                    int offset = 0;
 
                     // For each measureElement in current measure
                     foreach (MeasureElement measureElement in lstME)
@@ -272,20 +271,21 @@ namespace MusicXml
                                     break;
                                 }
 
-                                if (bincrement && !note.IsChordTone)
-                                    timeline += note.Duration;
                                 if (note.IsChordTone)
-                                {
-                                    bincrement = true;
-                                }
+                                    offset = 0;
 
+                                // Take into account previous note
+                                timeline += offset;
 
                                 int starttime = 0;
                                 if (firstmeasure > 0)
                                     starttime = timeline + (measure.Number - 1) * MeasureLength;
                                 else
                                     starttime = timeline + measure.Number * MeasureLength;
-                                
+
+                                // For the next note (if not chord)
+                                offset = note.Duration;
+
 
                                 int octave = note.Pitch.Octave;
                                 string letter = note.Pitch.Step.ToString();
