@@ -12,7 +12,10 @@ namespace MusicXml
 {
     public class MusicXmlReader
     {
-        private Track track = new Track();
+        // 2 tracks can be create for the same part
+        private Track track1 = new Track();
+        private Track track2 = new Track();
+        
         private List<Track> newTracks;
         private List<MidiNote> newNotes = new List<MidiNote>();
 
@@ -128,6 +131,7 @@ namespace MusicXml
 
 
                 // Create track
+                // TODO : create 2 tracks sometimes 
                 CreateTrack();
 
                 
@@ -352,7 +356,7 @@ namespace MusicXml
         /// </summary>
         private void CreateTrack()
         {
-            track = new Track()
+            track1 = new Track()
             {
                 MidiChannel = Channel,
                 Name = TrackName,
@@ -365,12 +369,12 @@ namespace MusicXml
                 Denominator = Denominator
             };
 
-            ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, track.MidiChannel, track.ProgramChange, 0);
-            track.Insert(0, message);
+            ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, track1.MidiChannel, track1.ProgramChange, 0);
+            track1.Insert(0, message);
            
-            track.insertTimesignature(Numerator, Denominator);
+            track1.insertTimesignature(Numerator, Denominator);
 
-            newTracks.Add(track);
+            newTracks.Add(track1);
         }
 
 
@@ -380,15 +384,25 @@ namespace MusicXml
 
         #region notes
 
+        /// <summary>
+        /// Create a MIDI note in the current rack
+        /// </summary>
+        /// <param name="n"></param>
+        /// <param name="v"></param>
+        /// <param name="st"></param>
         private void CreateMidiNote(Note n, int v, int st)
         {
+            
             if (v < 21)
                 return;
+            
+            // TODO : the note may be created in a second track
+            // if 2 tracks in the same Part (piano left & right for ex)
             try
             {
                 MidiNote note = new MidiNote(st, Channel, v, n.Duration, 80, false);
                 newNotes.Add(note);
-                track.addNote(note, false);
+                track1.addNote(note, false);
             }
             catch (Exception e)
             {

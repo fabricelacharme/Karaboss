@@ -333,6 +333,7 @@ namespace MusicXml.Domain
                             if (pitch.voice != null)
                             {
                                 note.Voice = int.Parse(pitch.voice.Value);
+                                // TODO : Notes belonging to another track in the same part
                                 //if (note.Voice != _part.Voice)
                                 //    break;
                             }
