@@ -1259,7 +1259,12 @@ namespace Karaboss.xplorer
                             PlayText?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
-
+                    case ".musicxml":
+                    case ".xml":
+                        {
+                            PlayXml?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
                     default:
                         try
                         {

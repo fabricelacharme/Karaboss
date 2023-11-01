@@ -220,7 +220,13 @@ namespace MusicXml
                                     CreateMidiNote1(note, notenumber, starttime);                                
                                 else                                                                                                                                           
                                     CreateMidiNote2(note, notenumber, starttime);
-                                                                                             
+                                
+                                if (note.Lyric.Text != null)
+                                {
+                                    CreateLyric(note, starttime);
+                                }
+
+
                                 break;
 
 
@@ -349,6 +355,86 @@ namespace MusicXml
         }
         #endregion notes
 
+
+        #region lyrics
+        private void CreateLyric(Note n, int t)
+        {
+            try
+            {
+                string currentElement = n.Lyric.Text;
+                byte[] newdata;
+                switch (OpenMidiFileOptions.TextEncoding)
+                {
+                    case "Ascii":
+                        //sy = System.Text.Encoding.Default.GetString(data);
+                        newdata = System.Text.Encoding.Default.GetBytes(currentElement);
+                        break;
+                    case "Chinese":
+                        System.Text.Encoding chinese = System.Text.Encoding.GetEncoding("gb2312");
+                        newdata = chinese.GetBytes(currentElement);
+                        break;
+                    case "Japanese":
+                        System.Text.Encoding japanese = System.Text.Encoding.GetEncoding("shift_jis");
+                        newdata = japanese.GetBytes(currentElement);
+                        break;
+                    case "Korean":
+                        System.Text.Encoding korean = System.Text.Encoding.GetEncoding("ks_c_5601-1987");
+                        newdata = korean.GetBytes(currentElement);
+                        break;
+                    case "Vietnamese":
+                        System.Text.Encoding vietnamese = System.Text.Encoding.GetEncoding("windows-1258");
+                        newdata = vietnamese.GetBytes(currentElement);
+                        break;
+                    default:
+                        newdata = System.Text.Encoding.Default.GetBytes(currentElement);
+                        break;
+                }
+                
+                MetaMessage mtMsg;
+                // si lyrics de type lyrics
+                mtMsg = new MetaMessage(MetaType.Lyric, newdata);
+
+                
+                switch (n.Lyric.Syllabic)
+                {
+                    case Syllabic.Begin: break;
+                    case Syllabic.Single:
+                        currentElement += " ";
+                        break;
+                    case Syllabic.End:
+                        currentElement += " ";
+                        break;
+                    case Syllabic.None: break;
+                        
+                }
+                // Update Track.Lyrics List
+                Track.Lyric L = new Track.Lyric()
+                {
+                    Element = currentElement,
+                    TicksOn = t,
+                    Type = Track.Lyric.Types.Text,
+                };
+
+                // Insert new message
+                if (n.Staff <= 1)
+                {
+                    track1.Insert(t, mtMsg);
+                    track1.Lyrics.Add(L);
+                    track1.TotalLyricsL += currentElement;
+                }
+                else
+                {
+                    track2.Insert(t, mtMsg);
+                    track2.Lyrics.Add(L);
+                    track2.TotalLyricsL += currentElement;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+        #endregion lyrics
 
         #region sequence
 

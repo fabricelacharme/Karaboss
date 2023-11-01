@@ -166,67 +166,14 @@ namespace MusicXml.Domain
                                         curMeasure.Tempo = curTempo;                                        
                                         _part.Tempo = curTempo;
                                     }
-
                                 }
                             }                            
                             else if (childnode.Name == "note")
-                            {                               
-                                var rest = childnode.Descendants("rest").FirstOrDefault();
-                                var step = childnode.Descendants("step").FirstOrDefault();
-                                var alter = childnode.Descendants("alter").FirstOrDefault();
-                                var octave = childnode.Descendants("octave").FirstOrDefault();
-                                var duration = childnode.Descendants("duration").FirstOrDefault();
-                                var chord = childnode.Descendants("chord").FirstOrDefault();
-                                var voice = childnode.Descendants("voice").FirstOrDefault();
-                                var staff = childnode.Descendants("staff").FirstOrDefault();
+                            {
+                                // Get notes information
+                                Note note = GetNote(childnode);       
 
-                                Note note = new Note();
-                                if (staff != null)
-                                    note.Staff = int.Parse(staff.Value);
-
-                                if (voice != null)                                
-                                    note.Voice = int.Parse(voice.Value);
-                                                                
-                                if (rest != null)                                
-                                    note.IsRest = true;
-
-                                string stp = "";
-                                if (step != null)
-                                {
-                                    stp = step.Value;
-                                    note.Pitch.Step = stp[0];
-                                }
-
-                                string accidental = "";
-                                if (alter != null)
-                                {
-                                    switch (int.Parse(alter.Value))
-                                    {
-                                        case 1:
-                                            accidental = "S";
-                                            break;
-                                        case -1:
-                                            accidental = "F";
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                    note.Pitch.Alter = int.Parse(alter.Value);
-                                }
-                                note.Accidental = accidental;
-                                
-                                if (octave != null)                                
-                                    note.Pitch.Octave = int.Parse(octave.Value);                                
-                                
-                                if (duration != null)
-                                    note.Duration = int.Parse(duration.Value);
-                                
-
-                                if (chord != null)
-                                {
-                                    note.IsChordTone = true;
-                                }
-
+                                // Create new element
                                 MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
                                 curMeasure.MeasureElements.Add(trucmeasureElement);
 
@@ -262,210 +209,7 @@ namespace MusicXml.Domain
 
                         _part.Measures.Add(curMeasure);
                     }
-
-
-                    #region deleteme
-                    /*
-                    // For each measure, search for notes and backup, forward elements
-                    foreach (var measureElement in partElement.Descendants("measure"))
-                    {
-                        Measure curMeasure = new Measure();
-
-                        // Attributes containing everything
-                        curMeasure.Attributes = new MeasureAttributes();
-
-                        #region measure number (to be improved)
-                        // ===================================
-                        // Measure number
-                        // ===================================
-                        try
-                        {
-                            curMeasure.Number = int.Parse(measureElement.Attribute("number").Value);
-                        }
-                        catch (Exception e)
-                        {
-                            
-                           
-                            break;
-                        }
-                        #endregion measure number
-
-                        #region tempo
-                        // TEMPO
-                        try
-                        {
-                            int curTempo = (int?)doc.Descendants("measure")
-                                .Where(m => int.Parse(m.Attribute("number").Value) == curMeasure.Number)
-                                .Descendants("sound")
-                                ?.FirstOrDefault(s => s.Attribute("tempo") != null)
-                                ?.Attribute("tempo") ?? tempo;
-                            tempo = curTempo;
-                            curMeasure.Tempo = curTempo * 10000;
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.ToString());
-                            curMeasure.Tempo = tempo * 10000;
-                        }
-                        #endregion tempo
-                      
-                        #region notes
-                        // ==================================
-                        // NOTES
-                        // ==================================
-                        var pitches = measureElement.Descendants("note")
-                                      .Select(n => new
-                                      {
-                                          rest = n.Descendants("rest").FirstOrDefault(),
-                                          step = n.Descendants("step").FirstOrDefault(),
-                                          alter = n.Descendants("alter").FirstOrDefault(),
-                                          octave = n.Descendants("octave").FirstOrDefault(),
-                                          duration = n.Descendants("duration").FirstOrDefault(),
-                                          chord = n.Descendants("chord").FirstOrDefault(),
-                                          voice = n.Descendants("voice").FirstOrDefault(),
-                                          staff = n.Descendants("staff").FirstOrDefault()
-                                      });
-
-                        
-
-                        foreach (var pitch in pitches)
-                        {
-                            
-                            var note = new Note();
-                            MeasureElement trucmeasureElement = null;
-
-                            if (pitch.staff != null)
-                                note.Staff = int.Parse(pitch.staff.Value);
-
-                            if (pitch.voice != null)
-                            {
-                                note.Voice = int.Parse(pitch.voice.Value);
-                                // TODO : Notes belonging to another track in the same part
-                                //if (note.Voice != _part.Voice)
-                                //    break;
-                            }
-
-                            string rest = "";
-                            if (pitch.rest != null)
-                            {
-                                rest = "REST";
-                                note.IsRest = true;
-                            }
-
-                            string step = "";
-                            if (pitch.step != null)
-                            {
-                                step = pitch.step.Value;
-                                note.Pitch.Step = step[0];
-                            }
-
-                            string accidental = "";
-                            if (pitch.alter != null)
-                            {
-                                switch (int.Parse(pitch.alter.Value))
-                                {
-                                    case 1:
-                                        accidental = "S";                                        
-                                        break;
-                                    case -1:
-                                        accidental = "F";                                        
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                note.Pitch.Alter = int.Parse(pitch.alter.Value);
-                            }
-                            note.Accidental = accidental;
-                            
-
-                            string octave = "";
-                            if (pitch.octave != null)
-                            {
-                                octave = pitch.octave.Value;
-                                note.Pitch.Octave = int.Parse(octave);
-                            }
-
-                            int duration = 1;
-                            if (pitch.duration != null)
-                            {
-                                duration = int.Parse(pitch.duration.Value);
-                                note.Duration = duration;
-                            }
-
-                            if (pitch.chord != null)
-                            {
-                                note.IsChordTone = true;
-                            }
-
-                            
-
-                            curMeasure.Notes.Add("NOTE_" + rest + step + accidental + octave);
-
-                            curMeasure.Durations.Add(duration);
-
-                            trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
-                            if (trucmeasureElement != null)
-                                curMeasure.MeasureElements.Add(trucmeasureElement);      
-                            
-                        }
-                        #endregion notes
-
-
-                        #region backup
-                            var backups = measureElement.Descendants("backup")
-                        .Select(n => new
-                        {
-                            duration = n.Descendants("duration").FirstOrDefault()
-                        });
-                        
-                        foreach (var bkp in backups)
-                        {
-                            if (bkp.duration != null)
-                            {
-                                MeasureElement trucmeasureElement = null;
-                                var backup = new Backup();
-                                backup.Duration = int.Parse(bkp.duration.Value);
-
-                                trucmeasureElement = new MeasureElement { Type = MeasureElementType.Backup, Element = backup };
-                                if (trucmeasureElement != null)
-                                    curMeasure.MeasureElements.Add(trucmeasureElement);
-                            }
-                        }
-
-                        #endregion backup
-
-
-                        #region forward                        
-                        var forwards = measureElement.Descendants("forward")
-                        .Select(n => new
-                        {
-                            duration = n.Descendants("duration").FirstOrDefault()
-                        });
-
-                        foreach (var fwd in forwards)
-                        {
-                            if (fwd.duration != null)
-                            {
-                                MeasureElement trucmeasureElement = null;
-                                var forward = new Forward();
-                                forward.Duration = int.Parse(fwd.duration.Value);
-
-                                trucmeasureElement = new MeasureElement { Type = MeasureElementType.Forward, Element = forward };
-                                if (trucmeasureElement != null)
-                                    curMeasure.MeasureElements.Add(trucmeasureElement);
-                            }
-                        }
-
-                        #endregion forward
-
-
-                        _part.Measures.Add(curMeasure);
-                    }
-                    */
-                    #endregion deleteme
-
-                    
-
+                                
                     string iddd = partElement.Attributes("id").FirstOrDefault()?.Value;
                     if (iddd == null)
                     {
@@ -478,10 +222,7 @@ namespace MusicXml.Domain
                     {
                         name = "NO NAME";
                     }
-
-
                     _part.Name = name;
-
 
                 }
             }
@@ -489,7 +230,109 @@ namespace MusicXml.Domain
             _part.Raw = partlistElement.ToString();
             return _part;
         }
+
+
+        private static Note GetNote(XElement node)
+        {
+            var rest = node.Descendants("rest").FirstOrDefault();
+            var step = node.Descendants("step").FirstOrDefault();
+            var alter = node.Descendants("alter").FirstOrDefault();
+            var octave = node.Descendants("octave").FirstOrDefault();
+            var duration = node.Descendants("duration").FirstOrDefault();
+            var chord = node.Descendants("chord").FirstOrDefault();
+            var voice = node.Descendants("voice").FirstOrDefault();
+            var staff = node.Descendants("staff").FirstOrDefault();
+
+            Note note = new Note();
+
+            if (staff != null)
+                note.Staff = int.Parse(staff.Value);
+
+            if (voice != null)
+                note.Voice = int.Parse(voice.Value);
+
+            if (rest != null)
+                note.IsRest = true;
+
+            string stp = "";
+            if (step != null)
+            {
+                stp = step.Value;
+                note.Pitch.Step = stp[0];
+            }
+
+            string accidental = "";
+            if (alter != null)
+            {
+                switch (int.Parse(alter.Value))
+                {
+                    case 1:
+                        accidental = "S";
+                        break;
+                    case -1:
+                        accidental = "F";
+                        break;
+                    default:
+                        break;
+                }
+                note.Pitch.Alter = int.Parse(alter.Value);
+            }
+            note.Accidental = accidental;
+
+            if (octave != null)
+                note.Pitch.Octave = int.Parse(octave.Value);
+
+            if (duration != null)
+                note.Duration = int.Parse(duration.Value);
+
+            if (chord != null)            
+                note.IsChordTone = true;
+
+            note.Lyric = GetLyric(node);
+
+            return note;
+        }
       
+        private static Lyric GetLyric(XElement node)
+        {
+            var lyric = new Lyric();
+
+            var lyrics = node.Descendants("lyric").FirstOrDefault();
+            if (lyrics != null)
+            {
+                var syllabicNode = lyrics.Descendants("syllabic").FirstOrDefault();
+                var syllabicText = string.Empty;
+
+                if (syllabicNode != null)
+                    syllabicText = syllabicNode.Value;
+
+                switch (syllabicText)
+                {
+                    case "":
+                        lyric.Syllabic = Syllabic.None;
+                        break;
+                    case "begin":
+                        lyric.Syllabic = Syllabic.Begin;
+                        break;
+                    case "single":
+                        lyric.Syllabic = Syllabic.Single;
+                        break;
+                    case "end":
+                        lyric.Syllabic = Syllabic.End;
+                        break;
+                    case "middle":
+                        lyric.Syllabic = Syllabic.Middle;
+                        break;
+                }
+
+                var textNode = node.Descendants("text").FirstOrDefault();
+                if (textNode != null)
+                    lyric.Text = textNode.Value;
+
+            }
+
+            return lyric;
+        }
 
     }
 }

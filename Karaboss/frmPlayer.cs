@@ -5151,7 +5151,7 @@ namespace Karaboss
                     // Play a single MIDI file
                     LoadAsyncFile(MIDIfileFullPath);
                 }
-                else if (ext == ".xml" || ext == "musicxml.")
+                else if (ext == ".xml" || ext == ".musicxml")
                 {
                     if (LoadXmlFile(MIDIfileFullPath,false))
                     {
