@@ -8,7 +8,7 @@ namespace MusicXml.Domain
 		{
 			Type = string.Empty;
 			Duration = -1;
-			Voice = -1;
+			Voice = 1;
 			Staff = -1;
 			IsChordTone = false;
 

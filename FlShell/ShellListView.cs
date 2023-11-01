@@ -64,6 +64,8 @@ namespace FlShell
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
     // Play abc, mml file
     public delegate void PlayTextEventHandler(object sender, FileInfo fi, bool bplay);
+    // Play musicxml, xml file
+    public delegate void PlayXmlEventHandler(object sender, FileInfo fi, bool bplay);
     // Playlists management
     public delegate void AddToPlaylistByNameHandler(object sender, ShellItem[] fls, string plname, string key = null, bool newPlaylist = false);
     // Display number of directories and files
@@ -90,6 +92,7 @@ namespace FlShell
         public event PlayMidiEventHandler PlayMidi;
         public event PlayCDGEventHandler PlayCDG;
         public event PlayTextEventHandler PlayText;
+        public event PlayXmlEventHandler PlayXml;
         public event AddToPlaylistByNameHandler AddToPlaylist;
         
         // Send Key to parent
@@ -1635,14 +1638,18 @@ namespace FlShell
                             PlayCDG?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
-
                     case ".mml":
                     case ".abc":
                         {
                             PlayText?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
-
+                    case ".musicxml":
+                    case ".xml":
+                        {
+                            PlayXml?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
                     default:
                         try
                         {

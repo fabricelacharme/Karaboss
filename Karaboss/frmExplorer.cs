@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2018 Fabrice Lacharme
+/* Copyright (c) 2023 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -134,6 +134,7 @@ namespace Karaboss
             xplorerControl.PlayMidi += new xplorer.PlayMidiEventHandler(Global_xPlayMidi);
             xplorerControl.PlayCDG += new xplorer.PlayCDGEventHandler(Global_PlayCDG);
             xplorerControl.PlayText += new xplorer.PlayTextEventHandler(Global_xPlayText);
+            xplorerControl.PlayXml += new xplorer.PlayXmlEventHandler(Global_xPlayXml);
             xplorerControl.LvContentChanged += new xplorer.ContentChangedEventHandler(Xplorer_ContentChanged);
             xplorerControl.CreateNewMidiFile += new xplorer.CreateNewMidiFileEventHandler(Xplorer_CreateNewMidiFile);
 
@@ -661,10 +662,7 @@ namespace Karaboss
 
             // Cas de la première fois (string empty)
             if (inipath == null || inipath == "" || inipath == "C:\\\\" || Directory.Exists(inipath) == false)
-                inipath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-
-            //if (songRoot == null || songRoot == "" || songRoot == "C:\\\\" || Directory.Exists(songRoot) == false)
-            //    songRoot = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+                inipath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);        ;
 
             return inipath;
         }
@@ -962,6 +960,12 @@ namespace Karaboss
             DisplayTextPlayer(fi.FullName, null, bplay);
         }
 
+        private void Global_xPlayXml(object sender, FileInfo fi, bool bplay)
+        {
+            DisplayMidiPlayer(fi.FullName, null, bplay);
+        }
+
+
         // Specific explorerControl
 
         private void Global_PlayCDG(object sender, FileInfo fi, bool bplay)
@@ -980,6 +984,10 @@ namespace Karaboss
             DisplayTextPlayer(fi.FullName, pl, bplay);
         }
 
+        private void Global_PlayXml(object sender, FileInfo fi, Playlist pl, bool bplay)
+        {
+            DisplayMidiPlayer(fi.FullName, pl, bplay);
+        }
 
 
         /// <summary>
@@ -1159,6 +1167,58 @@ namespace Karaboss
 
         }        
 
+        /// <summary>
+        /// Load a musicxml file
+        /// </summary>
+        /// <param name="fpath"></param>
+        /// <param name="pl"></param>
+        /// <param name="bPlayNow"></param>
+        private void DisplayXmlPlayer(string fpath, Playlist pl, bool bPlayNow)
+        {
+            if (fpath == null)
+                return;
+            if (File.Exists(fpath) == false)
+            {
+                MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            // Launch player with a Playlist                               
+            Cursor.Current = Cursors.WaitCursor;
+
+            #region Close Windows
+            // ferme le formulaire frmPianoTraining
+            if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmPianoTraining"].Close();
+            }
+
+            // ferme le formulaire frmGuitarTraining
+            if (Application.OpenForms.OfType<frmGuitarTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmGuitarTraining"].Close();
+            }
+
+            // Ferme le formulaire FrmTextPlayer
+            if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
+            {
+                Application.OpenForms["FrmTextPlayer"].Close();
+            }
+            #endregion
+
+            // Affiche le formulaire frmPlay 
+            if (Application.OpenForms["frmPlayer"] != null)
+                Application.OpenForms["frmPlayer"].Close();
+
+            ResetOutPutDevice();
+
+            // Add the file to the MRU list.
+            MyMruList.AddFile(fpath);
+
+            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice, songRoot);
+            frmPlayer.Show();
+            frmPlayer.Activate();
+
+        }
 
         #endregion Players
 
@@ -1325,7 +1385,20 @@ namespace Karaboss
                         DisplayTextPlayer(cmdpath, null, bPlayNow);
                         break;
                     }
-
+                case ".musicxml":
+                case ".xml":
+                    {
+                        /*
+                        * For xml, 2 cases :
+                        * either a classic xml file => System.Diagnostics.Process.Start(cmdpath)
+                        * 
+                        * either a musicxml file
+                        * - transform xml to midi file
+                        * - launch player
+                        */
+                        DisplayXmlPlayer(cmdpath, null, bPlayNow);
+                        break;
+                    }
                 default:
                     try
                     {

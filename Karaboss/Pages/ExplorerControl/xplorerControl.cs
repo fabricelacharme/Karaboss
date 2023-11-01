@@ -49,6 +49,7 @@ namespace Karaboss.xplorer
     public delegate void PlayMidiEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void PlayTextEventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayXmlEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void ContentChangedEventHandler(object sender, string strContent, string strPath);
     public delegate void CreateNewMidiFileEventHandler(object sender);
 
@@ -61,6 +62,7 @@ namespace Karaboss.xplorer
         public event PlayMidiEventHandler PlayMidi;
         public event PlayCDGEventHandler PlayCDG;
         public event PlayTextEventHandler PlayText;
+        public event PlayXmlEventHandler PlayXml;
         public event ContentChangedEventHandler LvContentChanged;
         public event CreateNewMidiFileEventHandler CreateNewMidiFile;
         
@@ -150,6 +152,7 @@ namespace Karaboss.xplorer
             shellListView.PlayMidi += new FlShell.PlayMidiEventHandler(ShellListView_PlayMidi);
             shellListView.PlayCDG += new FlShell.PlayCDGEventHandler(ShellListView_PlayCDG);
             shellListView.PlayText += new FlShell.PlayTextEventHandler(ShellListView_PlayText);
+            shellListView.PlayXml += new FlShell.PlayXmlEventHandler(ShellListView_PlayXml);
             shellListView.lvContentChanged += new FlShell.ContentChangedEvenHandler(ShellListView_ContentChanged);
             shellListView.SelectedIndexChanged += new FlShell.SelectedIndexChangedEventHandler(ShellListView_SelectedIndexChanged);
                        
@@ -239,7 +242,13 @@ namespace Karaboss.xplorer
         {
             PlayText?.Invoke(this, fi, bplay);
         }
-        
+
+        private void ShellListView_PlayXml(object sender, FileInfo fi, bool bplay)
+        {
+            PlayXml?.Invoke(this, fi, bplay);
+        }
+
+
         private void ShellListView_AddToPlaylist(object sender, FlShell.ShellItem[] fls, string plname, string key, bool bnewPlaylist)
         {
             if (bnewPlaylist == true)

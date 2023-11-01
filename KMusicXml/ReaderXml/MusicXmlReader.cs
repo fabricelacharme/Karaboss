@@ -69,17 +69,22 @@ namespace MusicXml
             // Init sequence
             newTracks = new List<Track>(Parts.Count);
 
-            Tempo = Parts[0].Measures[0].Tempo;
+
+            Tempo = Parts[0].Tempo;
             Format = 1;
 
             Numerator = Parts[0].Numerator;
             Denominator = Parts[0].Denominator;
 
 
-            int firstmeasure = 10;            
-            // Search for First measure
+            int firstmeasure = 10;
+            
+            // Search for First measure & tempo max
             foreach (Part part in Parts)
             {
+                if (part.Tempo > Tempo)
+                    Tempo = part.Tempo;
+                
                 if (part.Measures[0].Number < firstmeasure)
                     firstmeasure = part.Measures[0].Number;
             }
@@ -144,8 +149,7 @@ namespace MusicXml
 
                 // Manage the start time of notes
                 int timeline = 0;
-                int offset = 0;
-                int currentvoice = 1;
+                int offset = 0;                
                 int starttime = 0;
 
                 // For each measure
@@ -156,28 +160,25 @@ namespace MusicXml
 
                     #region methode 2
                     List<MeasureElement> lstME = measure.MeasureElements;
-                                       
-                    
-
-
+                                                           
                     // For each measureElement in current measure
                     foreach (MeasureElement measureElement in lstME)
                     {
                         
-
                         object obj = measureElement.Element;
                         MeasureElementType metype = measureElement.Type;
 
                         switch (metype)
                         {
-                            case MeasureElementType.Backup:
-                                //Console.WriteLine("backup");
+                            case MeasureElementType.Backup:                               
                                 Backup bkp = (Backup)obj;                                
                                 timeline -= (int)(bkp.Duration * multcoeff);
                                 break;
                             
+
                             case MeasureElementType.Note: 
                                 Note note = (Note)obj;
+                                
                                 string accidental = note.Accidental;
                                 int staff = note.Staff;
                                 bool isrest = note.IsRest;
@@ -186,7 +187,7 @@ namespace MusicXml
                                 int voice = note.Voice;
                                 Lyric lyric = note.Lyric;
                                 string ntype = note.Type;
-
+                                
                                 note.Duration = (int)(note.Duration * multcoeff);
 
                                 if (note.IsRest)
@@ -195,36 +196,15 @@ namespace MusicXml
                                     break;
                                 }
 
-                                if (note.IsChordTone)                                                                     
-                                    offset = 0;
-
-                                // change staff
-                                if (note.Voice > 1 && currentvoice == 1)
-                                {
-                                    currentvoice = note.Voice;
-                                    timeline = 0;
-                                    offset = 0;
-                                }
-
-                                currentvoice = note.Voice;
-                                    
-
-
                                 // Take into account previous note                                
-                                timeline += offset;
-
-                                starttime = timeline;
-                                /*
-                                if (firstmeasure > 0)
-                                    starttime = timeline + (measure.Number - 1) * MeasureLength;
-                                else
-                                    starttime = timeline + measure.Number * MeasureLength;
-                                */
+                                if (note.IsChordTone)
+                                    offset = 0;
+                                timeline += offset;                                                               
 
                                 // For the next note (if not chord)
                                 offset = note.Duration;
 
-
+                                starttime = timeline;
                                 int octave = note.Pitch.Octave;
                                 string letter = note.Pitch.Step.ToString();
                                 notenumber = 12 + Notes.IndexOf(letter) + 12 * octave;
@@ -235,31 +215,22 @@ namespace MusicXml
                                     notenumber += alter;
                                 }
 
-                                //CreateMidiNote1(note, notenumber, starttime);
-
-                                
-                                if (note.Voice == 1)
-                                {
-                                    // Create note
-                                    CreateMidiNote1(note, notenumber, starttime);
-                                }
-                                else
-                                {                                                                       
-                                    //Create note
+                                // Create note
+                                if (note.Staff <= 1)                                                                    
+                                    CreateMidiNote1(note, notenumber, starttime);                                
+                                else                                                                                                                                           
                                     CreateMidiNote2(note, notenumber, starttime);
-                                }                                
-                                
+                                                                                             
                                 break;
 
-                            case MeasureElementType.Forward:
-                                Console.WriteLine("forward");
+
+                            case MeasureElementType.Forward:                                
                                 Forward fwd = (Forward)obj;
                                 timeline += (int)(fwd.Duration * multcoeff);
                                 break;                               
 
                         }
                     }
-
 
                     #endregion methode 2
 
@@ -274,23 +245,6 @@ namespace MusicXml
         // =================================================================================================
 
         #region tracks
-
-        private void ReadHeader(int format, int div, int tracks)
-        {
-            // Midi format
-            Format = format;
-            // Tracks Count
-            newTracks = new List<Track>(tracks);
-            // Division
-            Division = div;
-        }
-
-        private void ReadTimeSignature(int numerator, int denominator)
-        {
-            // Track, Time, Time_signature, Num, Denom, Click, NotesQ
-            Numerator = numerator;
-            Denominator = denominator;
-        }
 
         /// <summary>
         /// Create new track and add it to the list newtracks
@@ -395,6 +349,7 @@ namespace MusicXml
         }
         #endregion notes
 
+
         #region sequence
 
         /// <summary>
@@ -421,8 +376,7 @@ namespace MusicXml
             for (int i = 0; i < newTracks.Count; i++)
             {
                 sequence.Add(newTracks[i]);
-            }
-            //sequence.tracks = newTracks;
+            }            
 
             // Insert Tempo in track 0
             if (sequence.tracks.Count > 0)
@@ -430,8 +384,6 @@ namespace MusicXml
 
             // Tags to sequence
             sequence.CloneTags();
-
-
         }
 
         #endregion sequence
