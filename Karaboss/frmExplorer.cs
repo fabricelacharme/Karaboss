@@ -758,7 +758,7 @@ namespace Karaboss
 
                 // load file and display MIDI infos
                 CurrentPath = fileName;
-                LoadAsyncXmlFile(fileName);
+                LoadAsyncXmlFile(fileName, true);
             }
             else
             {
@@ -793,14 +793,13 @@ namespace Karaboss
             }
         }
 
-        public void LoadAsyncXmlFile(string fileName)
+        public void LoadAsyncXmlFile(string fileName, bool silenceMode = false)
         {
             try
             {
                 if (fileName != "\\")
-                {
-                    //MusicXmlReader MXmlReader = new MusicXmlReader();
-                    MXmlReader.LoadXmlAsync(fileName);
+                {                    
+                    MXmlReader.LoadXmlAsync(fileName, silenceMode);
                 }
             }
             catch (Exception ex)
@@ -927,8 +926,11 @@ namespace Karaboss
             int i;
             string cr = Environment.NewLine;
 
-            sequence1 = MXmlReader.seq;
-            sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+            if (MXmlReader.seq != null)
+            {
+                sequence1 = MXmlReader.seq;
+                sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+            }
 
             // Remove all MIDI events after last note
             sequence1.Clean();
@@ -1101,7 +1103,7 @@ namespace Karaboss
 
         private void Global_xPlayXml(object sender, FileInfo fi, bool bplay)
         {
-            DisplayMidiPlayer(fi.FullName, null, bplay);
+            DisplayXmlPlayer(fi.FullName, null, bplay);
         }
 
 
@@ -1125,7 +1127,7 @@ namespace Karaboss
 
         private void Global_PlayXml(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
-            DisplayMidiPlayer(fi.FullName, pl, bplay);
+            DisplayXmlPlayer(fi.FullName, pl, bplay);
         }
 
 
@@ -1321,6 +1323,21 @@ namespace Karaboss
                 MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            // File can be an xml file but not in musicxml format
+            if (MXmlReader.Read(fpath) == null)
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start(fpath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                } 
+                return;
+            }
+
             // Launch player with a Playlist                               
             Cursor.Current = Cursors.WaitCursor;
 
@@ -1353,7 +1370,7 @@ namespace Karaboss
             // Add the file to the MRU list.
             MyMruList.AddFile(fpath);
 
-            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice, songRoot);
+            Form frmPlayer = new frmPlayer(NumInstance, fpath, null, bPlayNow, outDevice, songRoot);
             frmPlayer.Show();
             frmPlayer.Activate();
 

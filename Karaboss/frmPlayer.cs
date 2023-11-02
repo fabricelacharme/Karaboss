@@ -50,6 +50,7 @@ namespace Karaboss
 
     public partial class frmPlayer : Form
     {
+        MusicXmlReader MXmlReader = new MusicXmlReader();
 
         public bool bfilemodified = false;
 
@@ -2377,6 +2378,25 @@ namespace Karaboss
             }            
         }
 
+        public void LoadAsyncXmlFile(string fileName)
+        {
+            try
+            {
+                progressBarPlayer.Visible = true;
+
+                ResetSequencer();
+                if (fileName != "\\")
+                {
+                    MXmlReader.LoadXmlAsync(fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+
+        }
+
         /// <summary>
         /// Save the midi file
         /// </summary>
@@ -4456,6 +4476,201 @@ namespace Karaboss
             }
         }      
 
+        private void HandleLoadXmlCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            progressBarPlayer.Value = 0;
+            progressBarPlayer.Visible = false;
+
+            MIDIfilePath = Path.GetDirectoryName(MIDIfileFullPath);
+
+            string fExt = Path.GetExtension(MIDIfileFullPath);             // Extension
+            string fName = Path.GetFileNameWithoutExtension(MIDIfileFullPath);    // name without extension
+            MIDIfileName = fName + ".mid";
+            MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
+
+            string lyrics = string.Empty;
+
+            sequence1 = MXmlReader.seq;
+            sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+
+
+            bHasLyrics = sequence1.HasLyrics;
+            if (bHasLyrics)
+                lyrics = ExtractLyrics();
+
+            laststart = 0;
+            // Remove all MIDI events after last note
+            sequence1.Clean();
+
+            ResetSequencer();
+
+            sequencer1.Sequence = sequence1;
+            UpdateMidiTimes();
+            DisplaySongDuration();
+
+            positionHScrollBarNew.Value = 0;
+            positionHScrollBarNew.Maximum = _totalTicks;
+
+            // ----------------------------------------------------------------
+            // Display Scores on panel pnlScrollView
+            // ----------------------------------------------------------------
+            DisplayScores();
+
+            // Display song duration
+            DisplaySongDuration();
+
+            // Display track controls             
+            DisplayTrackControls();
+
+            // Reset tracks stuff
+            InitTracksStuff();
+
+            // Recherche si des lyrics existent et affiche la forme frmLyric
+            mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
+
+            if (bKaraokeAlwaysOn && bHasLyrics)
+                DisplayLyricsForm();
+
+            // Display log file
+            if (sequence1.Log != "")
+            {
+                //MessageBox.Show(sequence1.Log, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                lblChangesInfos.Text = sequence1.Log;
+            }
+
+            DisplayFileInfos();
+            DisplayLyricsInfos();
+
+            // Display title
+            SetTitle(MIDIfileName);
+
+            // Lance immédiatement la lecture du morceau                
+            if (bPlayNow)
+                PlayPauseMusic();
+
+
+
+            /*
+            if (MXmlReader.seq == null)
+                return;
+
+            string lyrics = string.Empty;
+            this.Cursor = Cursors.Arrow;
+            mnuFileOpen.Enabled = true;
+            progressBarPlayer.Value = 0;
+            progressBarPlayer.Visible = false;
+
+            // Reset settings made for previous song
+            ResetPlaySettings();
+
+            if (frmLoading != null)
+                frmLoading.Dispose();
+            loading = false;
+
+            sequence1 = MXmlReader.seq;
+            sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+
+            if (e.Error == null && e.Cancelled == false)
+            {
+                laststart = 0;
+
+                // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
+                sequence1.Format = 1;
+
+                bHasLyrics = sequence1.HasLyrics;
+                if (bHasLyrics)
+                {
+                    lyrics = ExtractLyrics();
+
+                    
+                     // Bug when format is 0, Karaboss change the format to 1.
+                     // If the file contains lyrics (not text), they are lost when the file is saved
+                     // Workaround is to rewrite the lyrics                    
+                    if (sequence1.OrigFormat == 0)
+                    {
+                        if (myLyric.lyrictype == CLyric.LyricTypes.Lyric)
+                        {
+                            int tracknum = myLyric.lyricstracknum;
+                            Track track = sequence1.tracks[tracknum];
+
+                            // supprime tous les messages text & lyric
+                            track.deleteLyrics();
+
+                            // Insert all lyric events
+                            InsTrkEvents(tracknum);
+                        }
+                    }
+                }
+
+                // Remove all MIDI events after last note
+                sequence1.Clean();
+                UpdateMidiTimes();
+
+                #region displays controls
+
+                positionHScrollBarNew.Value = 0;
+                positionHScrollBarNew.Maximum = _totalTicks;
+
+                // ----------------------------------------------------------------
+                // Display Scores on panel pnlScrollView
+                // ----------------------------------------------------------------
+                DisplayScores();
+
+                // Display song duration
+                DisplaySongDuration();
+
+                // Display track controls             
+                DisplayTrackControls();
+
+                // REset tracks Stuff
+                InitTracksStuff();
+                #endregion
+
+
+                #region display lyrics
+
+                // Recherche si des lyrics existent et affiche la forme frmLyric
+                mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
+
+                // Display log file
+                if (sequence1.Log != "")
+                    lblChangesInfos.Text = sequence1.Log;
+
+                DisplayFileInfos();
+                DisplayLyricsInfos();
+                #endregion
+
+                // PLAYLIST
+                if (currentPlaylist != null)
+                {
+                    // Highlight current song in the playlist
+                    UpdatePlayListsForm(currentPlaylistItem.Song);
+
+                    // play asap, pause, countdown
+                    performPlaylistChainingChoice();
+                }
+                else
+                {
+                    // SINGLE FILE
+
+                    // Lance immédiatement la lecture du morceau                
+                    if (bPlayNow)
+                        PlayPauseMusic();
+                    else
+                    {
+                        if (bKaraokeAlwaysOn && bHasLyrics)
+                            DisplayLyricsForm();
+                    }
+                }
+            }
+            else
+            {
+                if (e.Error != null)
+                    MessageBox.Show(e.Error.Message);
+            }
+            */
+        }
+
         /// <summary>
         /// Event: save midi file terminated
         /// </summary>
@@ -5093,11 +5308,12 @@ namespace Karaboss
                     sequence1.LoadProgressChanged += HandleLoadProgressChanged;
                     sequence1.LoadCompleted += HandleLoadCompleted;
 
+                    MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
 
                     // ==========================================================================
                     // Chargement du fichier midi selectionné depuis frmExplorer
                     // ==========================================================================
-                                     
+
                     ResetMidiFile();
 
                     // ACTIONS TO PERFORM
@@ -5134,11 +5350,15 @@ namespace Karaboss
                 }
                 else if (ext == ".xml" || ext == ".musicxml")
                 {
+                    /*
                     if (LoadXmlFile(MIDIfileFullPath,false))
                     {
                         if (bPlayNow)
                             PlayPauseMusic();
                     }
+                    */
+                    LoadAsyncXmlFile(MIDIfileFullPath);
+
                 }
             }
             else

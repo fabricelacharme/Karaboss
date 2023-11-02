@@ -74,6 +74,8 @@ namespace MusicXml
             loadXmlWorker.WorkerReportsProgress = true;
         }
 
+        bool bSilenceMode = false;
+
         /// <summary>
         /// load async xmlmusic
         /// </summary>
@@ -81,7 +83,7 @@ namespace MusicXml
         /// <exception cref="ObjectDisposedException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public void LoadXmlAsync(string fileName)
+        public void LoadXmlAsync(string fileName, bool silenceMode = false)
         {
             #region Require
 
@@ -99,7 +101,7 @@ namespace MusicXml
             }
 
             #endregion
-
+            bSilenceMode |= silenceMode;
             loadXmlWorker.RunWorkerAsync(fileName);
         }
 
@@ -169,7 +171,8 @@ namespace MusicXml
             }
             catch (Exception ex)
             {                
-                MessageBox.Show("Invalid MusicXml file\n" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (!bSilenceMode) 
+                    MessageBox.Show("Invalid MusicXml file\n" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
             Score myscore = Score.Create(doc);
