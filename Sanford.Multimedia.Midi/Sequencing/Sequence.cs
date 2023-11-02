@@ -55,13 +55,13 @@ namespace Sanford.Multimedia.Midi
         //private List<Track> tracks = new List<Track>();
         // FAB : Modified in public List
         public List<Track> tracks = new List<Track>();
-               
+
         // The Sequence's MIDI file properties.
         private MidiFileProperties properties = new MidiFileProperties();
-
         private BackgroundWorker loadWorker = new BackgroundWorker();
-
         private BackgroundWorker saveWorker = new BackgroundWorker();
+
+       
 
         private ISite site = null;
 
@@ -72,11 +72,8 @@ namespace Sanford.Multimedia.Midi
         #region Events
 
         public event EventHandler<AsyncCompletedEventArgs> LoadCompleted;
-
         public event ProgressChangedEventHandler LoadProgressChanged;
-
         public event EventHandler<AsyncCompletedEventArgs> SaveCompleted;
-
         public event ProgressChangedEventHandler SaveProgressChanged;
 
         #endregion
@@ -89,7 +86,7 @@ namespace Sanford.Multimedia.Midi
         public Sequence()
         {
             InitializeBackgroundWorkers();
-        }        
+        }
 
         /// <summary>
         /// Initializes a new instance of the Sequence class with the specified division.
@@ -101,15 +98,15 @@ namespace Sanford.Multimedia.Midi
         {
             properties.Division = division;
             properties.Format = 1;
-            
+
             //FAB
             properties.Tempo = 0;
-            properties.Orig_Tempo = 0;            
+            properties.Orig_Tempo = 0;
             properties.Numerator = 0;
             properties.Denominator = 0;
             properties.Quarternote = division;
 
-            properties.ResetLog();            
+            properties.ResetLog();
             InitializeBackgroundWorkers();
         }
 
@@ -145,13 +142,15 @@ namespace Sanford.Multimedia.Midi
             saveWorker.ProgressChanged += new ProgressChangedEventHandler(OnSaveProgressChanged);
             saveWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnSaveCompleted);
             saveWorker.WorkerReportsProgress = true;
-        }        
+
+          
+
+
+        }
 
         #endregion
 
         #region Methods
-
- 
 
         /// <summary>
         /// Loads a MIDI file into the Sequence.
@@ -163,15 +162,15 @@ namespace Sanford.Multimedia.Midi
         {
             #region Require
 
-            if(disposed)
+            if (disposed)
             {
                 throw new ObjectDisposedException("Sequence");
             }
-            else if(IsBusy)
+            else if (IsBusy)
             {
                 throw new InvalidOperationException();
             }
-            else if(fileName == null)
+            else if (fileName == null)
             {
                 throw new ArgumentNullException("fileName");
             }
@@ -181,7 +180,7 @@ namespace Sanford.Multimedia.Midi
             FileStream stream = new FileStream(fileName, FileMode.Open,
                 FileAccess.Read, FileShare.Read);
 
-            using(stream)
+            using (stream)
             {
                 MidiFileProperties newProperties = new MidiFileProperties();
                 TrackReader reader = new TrackReader();
@@ -189,7 +188,7 @@ namespace Sanford.Multimedia.Midi
 
                 newProperties.Read(stream);
 
-                for(int i = 0; i < newProperties.TrackCount; i++)
+                for (int i = 0; i < newProperties.TrackCount; i++)
                 {
                     reader.Read(stream);
                     newTracks.Add(reader.Track);
@@ -228,7 +227,7 @@ namespace Sanford.Multimedia.Midi
                     numer = 4; denom = 4;
                 }
 
-                timesig = new TimeSignature(numer, denom, quarternote, tempo);                
+                timesig = new TimeSignature(numer, denom, quarternote, tempo);
             }
 
             #region Ensure
@@ -293,15 +292,15 @@ namespace Sanford.Multimedia.Midi
         {
             #region Require
 
-            if(disposed)
+            if (disposed)
             {
                 throw new ObjectDisposedException("Sequence");
             }
-            else if(IsBusy)
+            else if (IsBusy)
             {
                 throw new InvalidOperationException();
             }
-            else if(fileName == null)
+            else if (fileName == null)
             {
                 throw new ArgumentNullException("fileName");
             }
@@ -312,11 +311,14 @@ namespace Sanford.Multimedia.Midi
 
         }
 
+ 
+
+
         public void LoadAsyncCancel()
         {
             #region Require
 
-            if(disposed)
+            if (disposed)
             {
                 throw new ObjectDisposedException("Sequence");
             }
@@ -336,11 +338,11 @@ namespace Sanford.Multimedia.Midi
         {
             #region Require
 
-            if(disposed)
+            if (disposed)
             {
                 throw new ObjectDisposedException("Sequence");
             }
-            else if(fileName == null)
+            else if (fileName == null)
             {
                 throw new ArgumentNullException("fileName");
             }
@@ -350,13 +352,13 @@ namespace Sanford.Multimedia.Midi
             FileStream stream = new FileStream(fileName, FileMode.Create,
                 FileAccess.Write, FileShare.None);
 
-            using(stream)
+            using (stream)
             {
                 properties.Write(stream);
 
                 TrackWriter writer = new TrackWriter();
 
-                foreach(Track trk in tracks)
+                foreach (Track trk in tracks)
                 {
                     writer.Track = trk;
                     writer.Write(stream);
@@ -368,15 +370,15 @@ namespace Sanford.Multimedia.Midi
         {
             #region Require
 
-            if(disposed)
+            if (disposed)
             {
                 throw new ObjectDisposedException("Sequence");
             }
-            else if(IsBusy)
+            else if (IsBusy)
             {
                 throw new InvalidOperationException();
             }
-            else if(fileName == null)
+            else if (fileName == null)
             {
                 throw new ArgumentNullException("fileName");
             }
@@ -390,7 +392,7 @@ namespace Sanford.Multimedia.Midi
         {
             #region Require
 
-            if(disposed)
+            if (disposed)
             {
                 throw new ObjectDisposedException("Sequence");
             }
@@ -434,43 +436,13 @@ namespace Sanford.Multimedia.Midi
                     dumpwriter.Write(stream);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
-        /*
-        /// <summary>
-        /// FAB: Create a sequence from a text file
-        /// </summary>
-        /// <param name="dumpFileName"></param>
-        public Sequence ReadDump(string dumpFileName)
-        {
-            #region Require
-            if (disposed)
-            {
-                throw new ObjectDisposedException("Sequence");
-            }
-            else if (dumpFileName == null)
-            {
-                throw new ArgumentNullException("dumpFileName");
-            }
-            #endregion
 
-            FileStream fstream = new FileStream(dumpFileName, FileMode.Open,
-                FileAccess.Read, FileShare.None);
-
-            StreamReader stream = new StreamReader(fstream);
-
-            using (stream)
-            {
-                DumpReader dumpreader = new DumpReader();
-                return dumpreader.Read(stream);
-            }
-        }
-        */
 
         /// <summary>
         /// Gets the length in ticks of the Sequence.
@@ -486,7 +458,7 @@ namespace Sanford.Multimedia.Midi
         {
             #region Require
 
-            if(disposed)
+            if (disposed)
             {
                 throw new ObjectDisposedException("Sequence");
             }
@@ -495,9 +467,9 @@ namespace Sanford.Multimedia.Midi
 
             int length = 0;
 
-            foreach(Track t in this)
+            foreach (Track t in this)
             {
-                if(t.Length > length)
+                if (t.Length > length)
                 {
                     length = t.Length;
                 }
@@ -556,7 +528,7 @@ namespace Sanford.Multimedia.Midi
             int maxticks = 0;
             int tck = 0;
             foreach (Track t in this)
-            {                
+            {
                 if (t.Notes.Count > 0)
                     tck = t.Notes[t.Notes.Count - 1].EndTime;
 
@@ -660,7 +632,7 @@ namespace Sanford.Multimedia.Midi
                 Track track = new Track();
 
                 if (t.MidiChannel != 9)
-                {                    
+                {
                     if (t.Notes.Count > 0)
                     {
                         // Copy all avents and change note value
@@ -685,7 +657,7 @@ namespace Sanford.Multimedia.Midi
                                 //int velocity = m.Data2;
 
                                 if (cmd == ChannelCommand.NoteOn || cmd == ChannelCommand.NoteOff)
-                                {                                                                        
+                                {
                                     ChannelMessage message = new ChannelMessage(cmd, channel, number, velocity);
                                     track.Insert(ticks, message);
                                 }
@@ -742,7 +714,7 @@ namespace Sanford.Multimedia.Midi
         {
             LoadProgressChanged?.Invoke(this, e);
         }
-
+      
 
         /// <summary>
         /// Load track by loadworker
@@ -767,12 +739,12 @@ namespace Sanford.Multimedia.Midi
                     newProperties.Read(stream);
 
                     float percentage;
-                    
+
                     // Initialize tags
                     MidiTags.ResetTags();
 
                     for (int i = 0; i < newProperties.TrackCount && !loadWorker.CancellationPending; i++)
-                    {                                                                        
+                    {
                         reader.Read(stream);
 
                         // FAB : MTRK not found in TrackReader.cs FindTrack()
@@ -785,7 +757,7 @@ namespace Sanford.Multimedia.Midi
                         if (newProperties.Tempo == 0)
                         {
                             newProperties.Tempo = reader.Track.Tempo;
-                        }   
+                        }
                         if (newProperties.Numerator == 0)
                         {
                             newProperties.Numerator = reader.Track.Numerator;
@@ -797,7 +769,7 @@ namespace Sanford.Multimedia.Midi
                         percentage = (i + 1f) / newProperties.TrackCount;
                         loadWorker.ReportProgress((int)(100 * percentage));
                     }
-                    
+
                     // All tracks have been read
                     if (loadWorker.CancellationPending)
                     {
@@ -830,7 +802,6 @@ namespace Sanford.Multimedia.Midi
                         // each channel as a separate track.                        
                         if (properties.Format == 0)
                         {
-                            
                             List<Track> thetracks = SplitChannels(newTracks[0], this.Tempo, this.Numerator, this.Denominator);
                             tracks = thetracks;
                             //this.Format = 1;        // FAB : peut pas forcer format to 1 ici ; Isbusy = true hu hu hu...
@@ -840,13 +811,11 @@ namespace Sanford.Multimedia.Midi
                             //newProperties.OrigFormat = 0;
                             properties.AddLog("Switched format from 0 to 1.");
 
-
                             // ? mieux ?
                             //newProperties.Format = 1;
                             //newProperties.TrackCount = tracks.Count;
                             properties.Format = 1;
                             properties.TrackCount = tracks.Count;
-                            
                         }
                         else
                         {
@@ -854,14 +823,10 @@ namespace Sanford.Multimedia.Midi
                             OrigFormat = 1;
                         }
 
-                                             
-                        
                         /*
-                         * Here you can force Numerator & Denominator to another Value 
-                         * 
-                         * 
-                         */
-                        // Uncomment
+                         * Here you can force Numerator & Denominator to another Value                                                   
+                         *
+                         * Uncomment following lines
                         /*    
                         if (Numerator == 12 && Denominator == 3)
                         {
@@ -896,7 +861,7 @@ namespace Sanford.Multimedia.Midi
                             }
                         }
                         Log = properties.Log;
-                        
+
                         // Tags to sequence
                         CloneTags();
                     }
@@ -905,15 +870,12 @@ namespace Sanford.Multimedia.Midi
             catch (Exception ee)
             {
                 // FAB TODO : how to cancel loading?
-
                 Console.Write(ee.ToString());
                 e.Cancel = true;
-                
-
             }
-            
         }
-
+   
+    
         
         /// <summary>
         /// FAB: Split the given track into multiple tracks, separating each
@@ -1581,6 +1543,9 @@ namespace Sanford.Multimedia.Midi
                 return loadWorker.IsBusy || saveWorker.IsBusy;
             }
         }
+
+      
+
 
         /// <summary>
         /// FAB - Tempo

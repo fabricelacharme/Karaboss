@@ -1365,6 +1365,8 @@ namespace FlShell
                     {
                         case ".mid":
                         case ".kar":
+                        case ".xml":
+                        case ".musicxml":
                             SelectedIndexChanged?.Invoke(this, file);
                             break;
                         default:

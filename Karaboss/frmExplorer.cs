@@ -48,12 +48,16 @@ using System.Xml;
 using Karaboss.Pages.ABCnotation;
 using Karaboss.Mru;
 using static Karaboss.Pages.ABCnotation.MyMidi;
+using System.Linq.Expressions;
+using MusicXml;
 
 namespace Karaboss
 {
 
     public partial class frmExplorer : Form
     {
+
+        MusicXmlReader MXmlReader = new MusicXmlReader();
 
         #region configuration
         private ConfigurationForm m_configurationForm;
@@ -747,6 +751,15 @@ namespace Karaboss
                 CurrentPath = fileName;
                 LoadAsyncMidiFile(fileName);
             }
+            else if (Karaclass.IsXmlExtension(fileName) && MidiInfos.busy == false)
+            {
+                MidiInfos.busy = true;                
+                ResetMidiFile();
+
+                // load file and display MIDI infos
+                CurrentPath = fileName;
+                LoadAsyncXmlFile(fileName);
+            }
             else
             {
                 MidiInfos.Clear();
@@ -780,6 +793,22 @@ namespace Karaboss
             }
         }
 
+        public void LoadAsyncXmlFile(string fileName)
+        {
+            try
+            {
+                if (fileName != "\\")
+                {
+                    //MusicXmlReader MXmlReader = new MusicXmlReader();
+                    MXmlReader.LoadXmlAsync(fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+        
 
         /// <summary>
         /// Event: sequence loaded
@@ -889,9 +918,119 @@ namespace Karaboss
 
             // Allow new search Midi file infos
             MidiInfos.busy = false;
+            
         }
         
-        
+        private void HandleLoadXmlCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            string tx = string.Empty;
+            int i;
+            string cr = Environment.NewLine;
+
+            sequence1 = MXmlReader.seq;
+            sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+
+            // Remove all MIDI events after last note
+            sequence1.Clean();
+
+            // song duration
+            #region song duration
+            double ppqn = sequence1.Division;
+            double totalticks = sequence1.GetLength();
+            double tempo = sequence1.Tempo;
+            double duration = tempo * (totalticks / ppqn) / 1000000; //seconds
+
+            int Min = (int)(duration / 60);
+            int Sec = (int)(duration - (Min * 60));
+
+
+            MidiInfos.Tracks = sequence1.tracks.Count;
+            MidiInfos.Format = sequence1.OrigFormat;
+            MidiInfos.Duration = string.Format("{0:00}:{1:00}", Min, Sec);
+            MidiInfos.Lyrics = sequence1.HasLyrics;
+            #endregion
+
+            // Karaoke tags
+            #region tags
+            if (sequence1.KTag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.KTag.Count; i++)
+                {
+                    tx += sequence1.KTag[i] + cr;
+                }
+                MidiInfos.KTags = tx;
+            }
+
+            // Version
+            if (sequence1.VTag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.VTag.Count; i++)
+                {
+                    tx += sequence1.VTag[i] + cr;
+                }
+                MidiInfos.VTags = tx;
+            }
+
+            // Lang
+            if (sequence1.LTag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.LTag.Count; i++)
+                {
+                    tx += sequence1.LTag[i] + cr;
+                }
+                MidiInfos.LTags = tx;
+            }
+
+            // Copyright of karaoke
+            if (sequence1.WTag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.WTag.Count; i++)
+                {
+                    tx += sequence1.WTag[i] + cr;
+                }
+                MidiInfos.WTags = tx;
+            }
+
+            // Song infos
+            if (sequence1.TTag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.TTag.Count; i++)
+                {
+                    tx += sequence1.TTag[i].Replace('\n', ' ').Replace('\r', ' ') + cr;
+                }
+                MidiInfos.TTags = tx;
+            }
+
+            // Infos
+            if (sequence1.ITag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.ITag.Count; i++)
+                {
+                    tx += sequence1.ITag[i].Replace('\n', ' ').Replace('\r', ' ') + cr;
+                }
+                MidiInfos.ITags = tx;
+            }
+
+            #endregion
+
+            // display infos on bottom panel
+            DisplayMidiLabels();
+
+            if (playlistsControl.Visible)
+                playlistsControl.SelectedFileLength = MidiInfos.Duration;
+
+            // Allow new search Midi file infos
+         
+            MidiInfos.busy = false;
+        }
+
+
         /// <summary>
         /// Display Midi information on bottom panel
         /// </summary> 
@@ -1228,6 +1367,7 @@ namespace Karaboss
         protected override void OnLoad(EventArgs e)
         {
             sequence1.LoadCompleted += HandleLoadCompleted;
+            MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
 
             // Set message on splash windows because the loading of sound fonts takes a very long time
             // if a big file is used

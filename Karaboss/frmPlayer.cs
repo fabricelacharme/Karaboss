@@ -42,13 +42,8 @@ using Sanford.Multimedia.Midi.Score;
 using Karaboss.Resources.Localization;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Text;
 using MusicXml;
-using MusicXml.Domain;
 using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using static Karaboss.Pages.ABCnotation.MyMidi;
 
 namespace Karaboss
 {
@@ -2556,25 +2551,10 @@ namespace Karaboss
             MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
 
             string lyrics = string.Empty;
-            System.Xml.Linq.XDocument doc;
-
-            try
-            {
-                doc = XDocument.Load(fileName);
-            }
-            catch (Exception ex)
-            {
-                if (!bsilentmode)
-                    MessageBox.Show("Invalid MusicXml file\n" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
-            Score myscore = Score.Create(doc);
-
-
-            // Load file                
+          
+            // Load xml file                
             MusicXmlReader M = new MusicXmlReader();
-            sequence1 = M.Read(myscore);
+            sequence1 = M.Read(fileName);
 
             if (sequence1 == null)
             {
@@ -2582,7 +2562,8 @@ namespace Karaboss
                     MessageBox.Show("Invalid MusicXml file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-            //sequence1 = seq;
+
+            
             bHasLyrics = sequence1.HasLyrics;
             if (bHasLyrics)
                 lyrics = ExtractLyrics();

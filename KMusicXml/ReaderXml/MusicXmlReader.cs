@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Windows.Forms;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using MusicXml.Domain;
 using Sanford.Multimedia.Midi;
 
@@ -12,7 +15,18 @@ namespace MusicXml
 {
     public class MusicXmlReader
     {
+        private BackgroundWorker loadXmlWorker = new BackgroundWorker();
+
+        // xmlmusic
+        public event EventHandler<AsyncCompletedEventArgs> LoadXmlCompleted;
+        public event ProgressChangedEventHandler LoadXmlProgressChanged;
+
+        private bool disposed = false;
+
+        
         // 2 tracks can be create for the same part
+        public Sequence seq = new Sequence();
+
         private Track track1 = new Track();
         private Track track2 = new Track();
         
@@ -47,15 +61,129 @@ namespace MusicXml
         // Constructor
         public MusicXmlReader() 
         {
+            InitializeBackgroundWorkers();
             MidiTags.ResetTags();
         }
+
+        private void InitializeBackgroundWorkers()
+        {
+            // xmlmusic
+            loadXmlWorker.DoWork += new DoWorkEventHandler(LoadXmlDoWork);
+            loadXmlWorker.ProgressChanged += new ProgressChangedEventHandler(OnLoadXmlProgressChanged);
+            loadXmlWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnLoadXmlCompleted);
+            loadXmlWorker.WorkerReportsProgress = true;
+        }
+
+        /// <summary>
+        /// load async xmlmusic
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <exception cref="ObjectDisposedException"></exception>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        public void LoadXmlAsync(string fileName)
+        {
+            #region Require
+
+            if (disposed)
+            {
+                throw new ObjectDisposedException("Sequence");
+            }
+            else if (IsXmlBusy)
+            {
+                throw new InvalidOperationException();
+            }
+            else if (fileName == null)
+            {
+                throw new ArgumentNullException("fileName");
+            }
+
+            #endregion
+
+            loadXmlWorker.RunWorkerAsync(fileName);
+        }
+
+        #region xmlmusic
+        private void OnLoadXmlCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            LoadXmlCompleted?.Invoke(this, new AsyncCompletedEventArgs(e.Error, e.Cancelled, null));
+        }
+
+        private void OnLoadXmlProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            LoadXmlProgressChanged?.Invoke(this, e);
+        }
+
+        #endregion xmlmusic
+
+        /// <summary>
+        /// Load xmlmusic track by LoadXmlWorker
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LoadXmlDoWork(object sender, DoWorkEventArgs e)
+        {
+            string fileName = (string)e.Argument;
+
+            try
+            {
+                FileStream stream = new FileStream(fileName, FileMode.Open,
+                    FileAccess.Read, FileShare.Read);
+
+                using (stream)
+                {
+                    // Your stuff
+                    seq = Read(fileName);
+                }
+            }
+            catch (Exception ee)
+            {
+                Console.Write(ee.ToString());
+                e.Cancel = true;
+                
+            }
+        }
+
+
+        /// <summary>
+        /// xmlmusic
+        /// </summary>
+        public bool IsXmlBusy
+        {
+            get
+            {
+                return loadXmlWorker.IsBusy;
+            }
+        }
+
+
+
+        public Sequence Read(string fileName)
+        {
+            System.Xml.Linq.XDocument doc;
+
+            // Create Score
+            try
+            {
+                doc = XDocument.Load(fileName);
+            }
+            catch (Exception ex)
+            {                
+                MessageBox.Show("Invalid MusicXml file\n" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+            Score myscore = Score.Create(doc);
+
+            return Load(myscore);
+        }
+
 
         /// <summary>
         /// Read MusicXml score and convert to Midi
         /// </summary>
         /// <param name="SC"></param>
         /// <returns></returns>
-        public Sequence Read(MusicXml.Domain.Score SC) 
+        public Sequence Load(MusicXml.Domain.Score SC) 
         {                         
             string Id = null;
                         

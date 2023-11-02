@@ -103,6 +103,7 @@
             // 
             // statusBar
             // 
+            this.statusBar.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tssLeft,
             this.tssMiddle,
@@ -129,6 +130,7 @@
             // 
             // mnuExplorer
             // 
+            this.mnuExplorer.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.mnuExplorer.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFile,
             this.mnuEdit,
@@ -565,7 +567,7 @@
             // 
             resources.ApplyResources(this.searchControl, "searchControl");
             this.searchControl.Name = "searchControl";
-            this.searchControl.SongRoot = "C:\\Users\\Fabrice\\OneDrive\\Music";
+            this.searchControl.SongRoot = "C:\\Users\\A453868\\Music";
             this.searchControl.SView = Karaboss.Search.SearchViewStyle.Author;
             // 
             // frmExplorer

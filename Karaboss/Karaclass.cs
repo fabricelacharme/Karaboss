@@ -191,7 +191,22 @@ namespace Karaboss
             return false;
         }
 
-    
+        public static bool IsXmlExtension(string f)
+        {
+            if (f == null || f == "")
+                return false;
+
+            string[] exts = new string[] { ".xml", ".xmlmusic" };
+
+            f = f.ToLower();
+            foreach (string ext in exts)
+            {
+
+                if (f.EndsWith(ext, StringComparison.Ordinal))
+                    return true;
+            }
+            return false;
+        }
 
         public static string plTypeToString(plLyric.Types plType)
         {
@@ -391,7 +406,7 @@ namespace Karaboss
         public string VTags = "";
         public string WTags = "";
         public bool busy = false;
-
+        
         public void Clear()
         {
             Tracks = 0;
