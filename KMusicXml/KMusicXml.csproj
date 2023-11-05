@@ -44,7 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="MusicXml\Domain\Backup.cs" />
     <Compile Include="MusicXml\Domain\Clef.cs" />
     <Compile Include="MusicXml\Domain\Encoding.cs" />

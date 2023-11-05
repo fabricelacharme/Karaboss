@@ -245,6 +245,8 @@ namespace Karaboss.xplorer
 
         private void ShellListView_PlayXml(object sender, FileInfo fi, bool bplay)
         {
+            Cursor.Current = Cursors.WaitCursor;
+            Application.DoEvents();
             PlayXml?.Invoke(this, fi, bplay);
         }
 

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("KMusicXml")]
-[assembly: AssemblyDescription("musicxml library")]
+[assembly: AssemblyTitle("KMusicTxt")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Fabrice Lacharme")]
-[assembly: AssemblyProduct("KMusicXml")]
-[assembly: AssemblyCopyright("Copyright ©  Fabrice Lacharme 2023")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("KMusicTxt")]
+[assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Le GUID suivant est pour l'ID de la typelib si ce projet est exposé à COM
-[assembly: Guid("75119527-7313-46c8-8a38-824802628ec8")]
+[assembly: Guid("c46fa4ac-ea1d-4a85-85a8-7cc98ad9aa0f")]
 
 // Les informations de version pour un assembly se composent des quatre valeurs suivantes :
 //

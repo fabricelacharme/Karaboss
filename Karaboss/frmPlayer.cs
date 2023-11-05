@@ -5350,13 +5350,8 @@ namespace Karaboss
                 }
                 else if (ext == ".xml" || ext == ".musicxml")
                 {
-                    /*
-                    if (LoadXmlFile(MIDIfileFullPath,false))
-                    {
-                        if (bPlayNow)
-                            PlayPauseMusic();
-                    }
-                    */
+                    Cursor.Current = Cursors.WaitCursor;
+                    Application.DoEvents();
                     LoadAsyncXmlFile(MIDIfileFullPath);
 
                 }

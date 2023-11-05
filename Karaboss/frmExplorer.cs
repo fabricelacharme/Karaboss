@@ -1340,6 +1340,7 @@ namespace Karaboss
 
             // Launch player with a Playlist                               
             Cursor.Current = Cursors.WaitCursor;
+            Application.DoEvents();
 
             #region Close Windows
             // ferme le formulaire frmPianoTraining
@@ -1361,7 +1362,7 @@ namespace Karaboss
             }
             #endregion
 
-            // Affiche le formulaire frmPlay 
+            // Close form frmPlay 
             if (Application.OpenForms["frmPlayer"] != null)
                 Application.OpenForms["frmPlayer"].Close();
 

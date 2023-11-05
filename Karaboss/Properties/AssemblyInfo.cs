@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Fabrice Lacharme")]
 [assembly: AssemblyProduct("Karaboss")]
-[assembly: AssemblyCopyright("Copyright © Fabrice Lacharme 2022")]
+[assembly: AssemblyCopyright("Copyright © Fabrice Lacharme 2023")]
 [assembly: AssemblyTrademark("Fabrice Lacharme")]
 [assembly: AssemblyCulture("")]
 

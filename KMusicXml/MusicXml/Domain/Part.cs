@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -78,7 +79,7 @@ namespace MusicXml.Domain
 			Pan = 80;            
 		}
 
-   
+
 
         /// <summary>
         /// Create each part
@@ -95,7 +96,23 @@ namespace MusicXml.Domain
 
             _part.MidiChannel = (int?)partlistElement.Descendants("midi-channel").FirstOrDefault() ?? 1;
             _part.MidiProgram = (int?)partlistElement.Descendants("midi-program").FirstOrDefault() ?? 1;
-            _part.Volume = (int?)partlistElement.Descendants("volume").FirstOrDefault() ?? 80;
+
+            //_part.Volume = (int?)partlistElement.Descendants("volume").FirstOrDefault() ?? 80;
+            int vol = 80;
+            string volu;
+            if (partlistElement.Descendants("volume").FirstOrDefault() != null) 
+            { 
+                volu = partlistElement.Descendants("volume").FirstOrDefault().Value;
+                if (volu.IndexOf(".") > 0 || volu.IndexOf(",") > 0)
+                {
+                    vol = ConvertStringValue(volu);
+                }
+                else
+                    vol = Convert.ToInt32(volu);
+            }
+            _part.Volume = vol;
+
+
             _part.Pan = (int?)partlistElement.Descendants("pan").FirstOrDefault() ?? 0;
             _part.Pan += 65;
           
@@ -231,6 +248,15 @@ namespace MusicXml.Domain
             return _part;
         }
 
+
+        private static int ConvertStringValue(string value)
+        {
+            var comma = (NumberFormatInfo)CultureInfo.InstalledUICulture.NumberFormat.Clone();
+            value = value.Replace(".", comma.NumberDecimalSeparator);
+
+            return Convert.ToInt32(Convert.ToDouble(value));
+           
+        }
 
         private static Note GetNote(XElement node)
         {

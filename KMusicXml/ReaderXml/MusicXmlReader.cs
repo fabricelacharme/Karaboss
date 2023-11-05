@@ -57,6 +57,7 @@ namespace MusicXml
         private int Reverb = 0;
 
         MidiNote n;
+        private int lyricLengh = 0; // Length of lyrics
 
         // Constructor
         public MusicXmlReader() 
@@ -289,7 +290,7 @@ namespace MusicXml
                     decimal W = measure.Width;
                     int notenumber = 0;                                       
 
-                    #region methode 2
+                    #region Extract all
                     List<MeasureElement> lstME = measure.MeasureElements;
                                                            
                     // For each measureElement in current measure
@@ -354,10 +355,8 @@ namespace MusicXml
                                 
                                 if (note.Lyric.Text != null)
                                 {
-                                    CreateLyric(note, starttime);
+                                    CreateLyric(note, starttime);                                    
                                 }
-
-
                                 break;
 
 
@@ -369,7 +368,7 @@ namespace MusicXml
                         }
                     }
 
-                    #endregion methode 2
+                    #endregion Extract all
 
                 }
             }
@@ -492,8 +491,40 @@ namespace MusicXml
         {
             try
             {
+                bool bCutPossible = false;
+                bool blineFeed = false;
                 string currentElement = n.Lyric.Text;
                 byte[] newdata;
+
+
+                switch (n.Lyric.Syllabic)
+                {
+                    case Syllabic.Begin: break;
+
+                    case Syllabic.Single:
+                        currentElement += " ";
+                        bCutPossible = true;
+                        break;
+
+                    case Syllabic.End:
+                        currentElement += " ";
+                        bCutPossible = true;
+                        break;
+
+                    case Syllabic.None: break;
+                }
+
+                // Check if linefeed has to be added
+                if (lyricLengh > 30 && bCutPossible)
+                {
+                    blineFeed = true;
+                    //currentElement = "\r" + currentElement;
+                    lyricLengh = 0;
+                }
+                else
+                    lyricLengh += currentElement.Length;
+
+                // Text encoding
                 switch (OpenMidiFileOptions.TextEncoding)
                 {
                     case "Ascii":
@@ -521,23 +552,11 @@ namespace MusicXml
                         break;
                 }
                 
+                // Message
                 MetaMessage mtMsg;
                 // si lyrics de type lyrics
                 mtMsg = new MetaMessage(MetaType.Lyric, newdata);
-
-                
-                switch (n.Lyric.Syllabic)
-                {
-                    case Syllabic.Begin: break;
-                    case Syllabic.Single:
-                        currentElement += " ";
-                        break;
-                    case Syllabic.End:
-                        currentElement += " ";
-                        break;
-                    case Syllabic.None: break;
-                        
-                }
+                           
                 // Update Track.Lyrics List
                 Track.Lyric L = new Track.Lyric()
                 {
@@ -545,8 +564,8 @@ namespace MusicXml
                     TicksOn = t,
                     Type = Track.Lyric.Types.Text,
                 };
-
-                // Insert new message
+                                
+                // Insert new message in track
                 if (n.Staff <= 1)
                 {
                     track1.Insert(t, mtMsg);
@@ -559,6 +578,64 @@ namespace MusicXml
                     track2.Lyrics.Add(L);
                     track2.TotalLyricsL += currentElement;
                 }
+
+                if (blineFeed)
+                {
+                    currentElement = "¼";
+
+                    // Text encoding
+                    switch (OpenMidiFileOptions.TextEncoding)
+                    {
+                        case "Ascii":
+                            //sy = System.Text.Encoding.Default.GetString(data);
+                            newdata = System.Text.Encoding.Default.GetBytes(currentElement);
+                            break;
+                        case "Chinese":
+                            System.Text.Encoding chinese = System.Text.Encoding.GetEncoding("gb2312");
+                            newdata = chinese.GetBytes(currentElement);
+                            break;
+                        case "Japanese":
+                            System.Text.Encoding japanese = System.Text.Encoding.GetEncoding("shift_jis");
+                            newdata = japanese.GetBytes(currentElement);
+                            break;
+                        case "Korean":
+                            System.Text.Encoding korean = System.Text.Encoding.GetEncoding("ks_c_5601-1987");
+                            newdata = korean.GetBytes(currentElement);
+                            break;
+                        case "Vietnamese":
+                            System.Text.Encoding vietnamese = System.Text.Encoding.GetEncoding("windows-1258");
+                            newdata = vietnamese.GetBytes(currentElement);
+                            break;
+                        default:
+                            newdata = System.Text.Encoding.Default.GetBytes(currentElement);
+                            break;
+                    }
+
+                    mtMsg = new MetaMessage(MetaType.Lyric, newdata);
+
+                    L = new Track.Lyric()
+                    {
+                        Element = currentElement,
+                        TicksOn = t,
+                        Type = Track.Lyric.Types.LineFeed,
+                    };
+
+                    if (n.Staff <= 1)
+                    {
+                        track1.Insert(t, mtMsg);
+                        track1.Lyrics.Add(L);
+                        track1.TotalLyricsL += currentElement;
+                    }
+                    else
+                    {
+                        track2.Insert(t, mtMsg);
+                        track2.Lyrics.Add(L);
+                        track2.TotalLyricsL += currentElement;
+                    }
+
+                }
+             
+
             }
             catch (Exception e)
             {
