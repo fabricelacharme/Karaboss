@@ -619,8 +619,6 @@ namespace Sanford.Multimedia.Midi
                         iLineFeed2 = 0;
                     }
 
-
-
                     if (iParagraph1 == 0 || (sy.Length > Paragraph1.Length && iParagraph1 == sy.Length - Paragraph1.Length))
                     {
                         // single paragraph

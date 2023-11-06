@@ -579,6 +579,9 @@ namespace MusicXml
                     track2.TotalLyricsL += currentElement;
                 }
 
+                // ======================
+                // Manage linefeeds
+                // ======================
                 if (blineFeed)
                 {
                     currentElement = "¼";

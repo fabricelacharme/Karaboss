@@ -43,6 +43,7 @@ using Karaboss.Resources.Localization;
 using System.IO;
 using System.Text.RegularExpressions;
 using MusicXml;
+using MusicTxt;
 using System.Linq;
 
 namespace Karaboss
@@ -51,6 +52,7 @@ namespace Karaboss
     public partial class frmPlayer : Form
     {
         MusicXmlReader MXmlReader = new MusicXmlReader();
+        MusicTxtReader MTxtReader = new MusicTxtReader();
 
         public bool bfilemodified = false;
 
@@ -1888,6 +1890,8 @@ namespace Karaboss
         /// </summary>
         public void FirstPlaySong(int ticks)
         {
+            if (sheetmusic == null) return;
+
             try
             {                               
                 nbstop = 0;                             
@@ -2378,6 +2382,10 @@ namespace Karaboss
             }            
         }
 
+        /// <summary>
+        /// Load async a XML file
+        /// </summary>
+        /// <param name="fileName"></param>
         public void LoadAsyncXmlFile(string fileName)
         {
             try
@@ -2394,7 +2402,31 @@ namespace Karaboss
             {
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
+        }
 
+        /// <summary>
+        /// Load async a TXT file
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void LoadAsyncTxtFile(string fileName)
+        {
+            try
+            {
+                progressBarPlayer.Visible = true;
+
+                ResetSequencer();
+                if (fileName != "\\")
+                {
+                    MTxtReader = new MusicTxtReader();
+                    MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
+
+                    MTxtReader.LoadTxtAsync(fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
         }
 
         /// <summary>
@@ -3822,13 +3854,11 @@ namespace Karaboss
                 {
                     T.deleteLyrics();
                     T.Lyrics.Clear();
-                }
-                //sequence1.tracks[myLyric.melodytracknum].deleteLyrics();
-                //sequence1.tracks[myLyric.melodytracknum].Lyrics.Clear();
+                }                
+                myLyric.lyricstracknum = melodytracknum;     
                 
-                myLyric.lyricstracknum = melodytracknum;
-                
-
+                // Tags associated to the sequence have been deleted
+                restoreSequenceTags();
             }
 
             if (myLyric == null)
@@ -3889,6 +3919,10 @@ namespace Karaboss
 
                 // Insert all lyric events
                 InsTrkEvents(tracknum);
+
+                // REstore tags
+                //restoreSequenceTags();
+
             }
 
             // Refresh display of lyrics
@@ -3899,6 +3933,75 @@ namespace Karaboss
             // File was modified
             FileModified();
         }
+
+        #region restore sequence tags
+        /// <summary>
+        /// Rewrite tags level sequence
+        /// </summary>
+        private void restoreSequenceTags()
+        {
+            string tx = string.Empty;
+            int i;
+
+            for (i = sequence1.ITag.Count - 1; i >= 0; i--)
+            {
+                tx = "@I" + sequence1.ITag[i];
+                AddTag(tx);
+            }
+            for (i = sequence1.KTag.Count - 1; i >= 0; i--)
+            {
+                tx = "@K" + sequence1.KTag[i];
+                AddTag(tx);
+            }
+            for (i = sequence1.LTag.Count - 1; i >= 0; i--)
+            {
+                tx = "@L" + sequence1.LTag[i];
+                AddTag(tx);
+            }
+            for (i = sequence1.TTag.Count - 1; i >= 0; i--)
+            {
+                tx = "@T" + sequence1.TTag[i];
+                AddTag(tx);
+            }
+            for (i = sequence1.VTag.Count - 1; i >= 0; i--)
+            {
+                tx = "@V" + sequence1.VTag[i];
+                AddTag(tx);
+            }
+            for (i = sequence1.WTag.Count - 1; i >= 0; i--)
+            {
+                tx = "@W" + sequence1.WTag[i];
+                AddTag(tx);
+            }
+
+        }
+
+        /// <summary>
+        /// Insert Tag at tick 0
+        /// </summary>
+        /// <param name="strTag"></param>
+        private void AddTag(string strTag)
+        {
+            Track track = sequence1.tracks[0];
+            int currentTick = 0;
+            string currentElement = strTag;
+
+            // Transforme en byte la nouvelle chaine
+            byte[] newdata = new byte[currentElement.Length];
+            for (int u = 0; u < newdata.Length; u++)
+            {
+                newdata[u] = (byte)currentElement[u];
+            }
+
+            MetaMessage mtMsg;
+
+            mtMsg = new MetaMessage(MetaType.Text, newdata);
+
+            // Insert new message
+            track.Insert(currentTick, mtMsg);
+        }
+
+        #endregion restore sequence tags
 
         /// <summary>
         /// Erase all lyrics
@@ -4671,6 +4774,81 @@ namespace Karaboss
             */
         }
 
+
+        private void HandleLoadTxtCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            progressBarPlayer.Value = 0;
+            progressBarPlayer.Visible = false;
+
+            MIDIfilePath = Path.GetDirectoryName(MIDIfileFullPath);
+
+            string fExt = Path.GetExtension(MIDIfileFullPath);             // Extension
+            string fName = Path.GetFileNameWithoutExtension(MIDIfileFullPath);    // name without extension
+            MIDIfileName = fName + ".mid";
+            MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
+
+            string lyrics = string.Empty;
+
+            sequence1 = MTxtReader.seq;
+            sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+
+
+            bHasLyrics = sequence1.HasLyrics;
+            if (bHasLyrics)
+                lyrics = ExtractLyrics();
+
+            laststart = 0;
+            // Remove all MIDI events after last note
+            sequence1.Clean();
+
+            ResetSequencer();
+
+            sequencer1.Sequence = sequence1;
+            UpdateMidiTimes();
+            DisplaySongDuration();
+
+            positionHScrollBarNew.Value = 0;
+            positionHScrollBarNew.Maximum = _totalTicks;
+
+            // ----------------------------------------------------------------
+            // Display Scores on panel pnlScrollView
+            // ----------------------------------------------------------------
+            DisplayScores();
+
+            // Display song duration
+            DisplaySongDuration();
+
+            // Display track controls             
+            DisplayTrackControls();
+
+            // Reset tracks stuff
+            InitTracksStuff();
+
+            // Recherche si des lyrics existent et affiche la forme frmLyric
+            mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
+
+            if (bKaraokeAlwaysOn && bHasLyrics)
+                DisplayLyricsForm();
+
+            // Display log file
+            if (sequence1.Log != "")
+            {
+                //MessageBox.Show(sequence1.Log, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                lblChangesInfos.Text = sequence1.Log;
+            }
+
+            DisplayFileInfos();
+            DisplayLyricsInfos();
+
+            // Display title
+            SetTitle(MIDIfileName);
+
+            // Lance immédiatement la lecture du morceau                
+            if (bPlayNow)
+                PlayPauseMusic();
+
+        }
+
         /// <summary>
         /// Event: save midi file terminated
         /// </summary>
@@ -5226,6 +5404,8 @@ namespace Karaboss
         /// <param name="e"></param>
         private void FrmPlayer_MouseWheel(object sender, MouseEventArgs e)
         {
+            if (sheetmusic == null) return;
+
             int newvalue = 0;
             int W = sheetmusic.MaxStaffWidth;
 
@@ -5309,6 +5489,7 @@ namespace Karaboss
                     sequence1.LoadCompleted += HandleLoadCompleted;
 
                     MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
+                    MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
 
                     // ==========================================================================
                     // Chargement du fichier midi selectionné depuis frmExplorer
@@ -5353,7 +5534,12 @@ namespace Karaboss
                     Cursor.Current = Cursors.WaitCursor;
                     Application.DoEvents();
                     LoadAsyncXmlFile(MIDIfileFullPath);
-
+                }
+                else if (ext == ".txt")
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                    Application.DoEvents();
+                    LoadAsyncTxtFile(MIDIfileFullPath);
                 }
             }
             else

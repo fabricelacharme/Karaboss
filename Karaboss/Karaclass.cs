@@ -208,6 +208,24 @@ namespace Karaboss
             return false;
         }
 
+        public static bool IsTxtExtension(string f)
+        {
+            if (f == null || f == "")
+                return false;
+
+            string[] exts = new string[] { ".txt" };
+
+            f = f.ToLower();
+            foreach (string ext in exts)
+            {
+
+                if (f.EndsWith(ext, StringComparison.Ordinal))
+                    return true;
+            }
+            return false;
+        }
+
+
         public static string plTypeToString(plLyric.Types plType)
         {
             switch (plType)

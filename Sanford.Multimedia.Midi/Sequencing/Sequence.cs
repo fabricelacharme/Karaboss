@@ -141,11 +141,7 @@ namespace Sanford.Multimedia.Midi
             saveWorker.DoWork += new DoWorkEventHandler(SaveDoWork);
             saveWorker.ProgressChanged += new ProgressChangedEventHandler(OnSaveProgressChanged);
             saveWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnSaveCompleted);
-            saveWorker.WorkerReportsProgress = true;
-
-          
-
-
+            saveWorker.WorkerReportsProgress = true;          
         }
 
         #endregion
@@ -310,8 +306,6 @@ namespace Sanford.Multimedia.Midi
             loadWorker.RunWorkerAsync(fileName);
 
         }
-
- 
 
 
         public void LoadAsyncCancel()

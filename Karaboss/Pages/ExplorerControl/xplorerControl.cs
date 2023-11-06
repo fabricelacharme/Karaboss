@@ -48,7 +48,8 @@ namespace Karaboss.xplorer
     public delegate void SelectedIndexChangedEventHandler(object sender, string fileName);   
     public delegate void PlayMidiEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
-    public delegate void PlayTextEventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayAbcEventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayTxtEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void PlayXmlEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void ContentChangedEventHandler(object sender, string strContent, string strPath);
     public delegate void CreateNewMidiFileEventHandler(object sender);
@@ -61,7 +62,8 @@ namespace Karaboss.xplorer
         public event SelectedIndexChangedEventHandler SelectedIndexChanged;        
         public event PlayMidiEventHandler PlayMidi;
         public event PlayCDGEventHandler PlayCDG;
-        public event PlayTextEventHandler PlayText;
+        public event PlayAbcEventHandler PlayAbc;
+        public event PlayTxtEventHandler PlayTxt;
         public event PlayXmlEventHandler PlayXml;
         public event ContentChangedEventHandler LvContentChanged;
         public event CreateNewMidiFileEventHandler CreateNewMidiFile;
@@ -151,7 +153,8 @@ namespace Karaboss.xplorer
             shellListView.AddToPlaylist += new FlShell.AddToPlaylistByNameHandler(ShellListView_AddToPlaylist);
             shellListView.PlayMidi += new FlShell.PlayMidiEventHandler(ShellListView_PlayMidi);
             shellListView.PlayCDG += new FlShell.PlayCDGEventHandler(ShellListView_PlayCDG);
-            shellListView.PlayText += new FlShell.PlayTextEventHandler(ShellListView_PlayText);
+            shellListView.PlayAbc += new FlShell.PlayAbcEventHandler(ShellListView_PlayAbc);
+            shellListView.PlayTxt += new FlShell.PlayTxtEventHandler(ShellListView_PlayTxt);
             shellListView.PlayXml += new FlShell.PlayXmlEventHandler(ShellListView_PlayXml);
             shellListView.lvContentChanged += new FlShell.ContentChangedEvenHandler(ShellListView_ContentChanged);
             shellListView.SelectedIndexChanged += new FlShell.SelectedIndexChangedEventHandler(ShellListView_SelectedIndexChanged);
@@ -238,9 +241,14 @@ namespace Karaboss.xplorer
             PlayMidi?.Invoke(this, fi, bplay);
         }
         
-        private void ShellListView_PlayText(object sender, FileInfo fi, bool bplay)
+        private void ShellListView_PlayAbc(object sender, FileInfo fi, bool bplay)
         {
-            PlayText?.Invoke(this, fi, bplay);
+            PlayAbc?.Invoke(this, fi, bplay);
+        }
+
+        private void ShellListView_PlayTxt(object sender, FileInfo fi, bool bplay)
+        {
+            PlayTxt?.Invoke(this, fi, bplay);
         }
 
         private void ShellListView_PlayXml(object sender, FileInfo fi, bool bplay)
@@ -1258,13 +1266,18 @@ namespace Karaboss.xplorer
                     case ".abc":
                     case ".mml":
                         {
-                            PlayText?.Invoke(this, new FileInfo(file), bplay);
+                            PlayAbc?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
                     case ".musicxml":
                     case ".xml":
                         {
                             PlayXml?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
+                    case ".txt":
+                        {
+                            PlayTxt?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
                     default:

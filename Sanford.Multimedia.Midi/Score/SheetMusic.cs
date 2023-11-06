@@ -4536,6 +4536,8 @@ namespace Sanford.Multimedia.Midi.Score
 
         public void ScrollTo(int currentPulseTime, int prevPulseTime)
         {            
+            if (staffs == null) return;
+
             try
             {
                 x_shade = 0;

@@ -63,9 +63,11 @@ namespace FlShell
     // Play CDG file
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
     // Play abc, mml file
-    public delegate void PlayTextEventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayAbcEventHandler(object sender, FileInfo fi, bool bplay);
     // Play musicxml, xml file
     public delegate void PlayXmlEventHandler(object sender, FileInfo fi, bool bplay);
+    // Play txt file
+    public delegate void PlayTxtEventHandler(object sender, FileInfo fi, bool bplay);
     // Playlists management
     public delegate void AddToPlaylistByNameHandler(object sender, ShellItem[] fls, string plname, string key = null, bool newPlaylist = false);
     // Display number of directories and files
@@ -91,7 +93,8 @@ namespace FlShell
         public event SelectedIndexChangedEventHandler SelectedIndexChanged;
         public event PlayMidiEventHandler PlayMidi;
         public event PlayCDGEventHandler PlayCDG;
-        public event PlayTextEventHandler PlayText;
+        public event PlayAbcEventHandler PlayAbc;
+        public event PlayTxtEventHandler PlayTxt;
         public event PlayXmlEventHandler PlayXml;
         public event AddToPlaylistByNameHandler AddToPlaylist;
         
@@ -1352,6 +1355,11 @@ namespace FlShell
 
         #region Events
 
+        /// <summary>
+        /// List all files taken into account
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ListView_SelectedItemChanged(object sender, EventArgs e)
         {
             //if (SelectedItems.Length > 0)
@@ -1367,6 +1375,7 @@ namespace FlShell
                         case ".kar":
                         case ".xml":
                         case ".musicxml":
+                        case ".txt":
                             SelectedIndexChanged?.Invoke(this, file);
                             break;
                         default:
@@ -1643,13 +1652,18 @@ namespace FlShell
                     case ".mml":
                     case ".abc":
                         {
-                            PlayText?.Invoke(this, new FileInfo(file), bplay);
+                            PlayAbc?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
                     case ".musicxml":
                     case ".xml":
                         {
                             PlayXml?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
+                    case ".txt":
+                        {
+                            PlayTxt?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
                     default:

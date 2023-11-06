@@ -54,6 +54,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextPlayer", "TextPlayer\Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KMusicXml", "KMusicXml\KMusicXml.csproj", "{75119527-7313-46C8-8A38-824802628EC8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KMusicTxt", "KMusicTxt\KMusicTxt.csproj", "{EE194AC1-0D74-4A84-84D6-C9BE8CED2C10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -205,6 +207,12 @@ Global
 		{75119527-7313-46C8-8A38-824802628EC8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{75119527-7313-46C8-8A38-824802628EC8}.Travis|Any CPU.ActiveCfg = Debug|Any CPU
 		{75119527-7313-46C8-8A38-824802628EC8}.Travis|Any CPU.Build.0 = Debug|Any CPU
+		{EE194AC1-0D74-4A84-84D6-C9BE8CED2C10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE194AC1-0D74-4A84-84D6-C9BE8CED2C10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE194AC1-0D74-4A84-84D6-C9BE8CED2C10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE194AC1-0D74-4A84-84D6-C9BE8CED2C10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE194AC1-0D74-4A84-84D6-C9BE8CED2C10}.Travis|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE194AC1-0D74-4A84-84D6-C9BE8CED2C10}.Travis|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
