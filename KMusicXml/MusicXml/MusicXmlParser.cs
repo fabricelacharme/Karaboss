@@ -106,6 +106,8 @@ namespace MusicXml
 								if (divisionsNode != null)
 									measure.Attributes.Divisions = Convert.ToInt32(divisionsNode.InnerText);
 
+								
+								// CLE !!!!
 								var keyNode = attributesNode.SelectSingleNode("key");
 
 								if (keyNode != null)

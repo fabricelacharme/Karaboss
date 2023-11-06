@@ -196,7 +196,7 @@ namespace Karaboss
             if (f == null || f == "")
                 return false;
 
-            string[] exts = new string[] { ".xml", ".xmlmusic" };
+            string[] exts = new string[] { ".xml", ".musicxml" };
 
             f = f.ToLower();
             foreach (string ext in exts)

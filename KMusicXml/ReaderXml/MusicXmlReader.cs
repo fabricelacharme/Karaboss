@@ -160,7 +160,11 @@ namespace MusicXml
         }
 
 
-
+        /// <summary>
+        /// Create a score objetc
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         public Sequence Read(string fileName)
         {
             System.Xml.Linq.XDocument doc;
@@ -288,7 +292,20 @@ namespace MusicXml
                 foreach (Measure measure in Measures)
                 {
                     decimal W = measure.Width;
-                    int notenumber = 0;                                       
+                    int notenumber = 0;
+
+                    Key k = measure.Attributes.Key;
+                    int fif = k.Fifths;
+                    string mod = k.Mode;
+
+                    
+                    // *************** TAKE INTO ACCOUNT THOSE THINGS !!!!! ***************
+                    /*
+                    if (fif != 0)
+                    {
+                        Console.WriteLine(fif.ToString());
+                    }
+                    */
 
                     #region Extract all
                     List<MeasureElement> lstME = measure.MeasureElements;
@@ -301,7 +318,8 @@ namespace MusicXml
                         MeasureElementType metype = measureElement.Type;
 
                         switch (metype)
-                        {
+                        {                            
+                            
                             case MeasureElementType.Backup:                               
                                 Backup bkp = (Backup)obj;                                
                                 timeline -= (int)(bkp.Duration * multcoeff);

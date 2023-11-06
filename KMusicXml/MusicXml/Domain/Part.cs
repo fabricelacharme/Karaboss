@@ -97,6 +97,7 @@ namespace MusicXml.Domain
             _part.MidiChannel = (int?)partlistElement.Descendants("midi-channel").FirstOrDefault() ?? 1;
             _part.MidiProgram = (int?)partlistElement.Descendants("midi-program").FirstOrDefault() ?? 1;
 
+            // VOLUME
             //_part.Volume = (int?)partlistElement.Descendants("volume").FirstOrDefault() ?? 80;
             int vol = 80;
             string volu;
@@ -144,11 +145,34 @@ namespace MusicXml.Domain
                         _part.Staff = v;
 
 
+
                     var measuresXpath = string.Format("//part[@id='{0}']/measure", _part.Id);
                     var measureNodes = doc.XPathSelectElements(measuresXpath);                    
                     foreach ( XElement measureNode in measureNodes )
                     {                        
                         Measure curMeasure = new Measure();
+
+                        // Attributes containing everything
+                        curMeasure.Attributes = new MeasureAttributes();
+
+                        // ATTIBUTES / KEY
+                        XElement pkey = partElement.Descendants("key").FirstOrDefault();
+                        if (pkey != null)
+                        {
+                            curMeasure.Attributes.Key = new Key();
+
+                            XElement fif = pkey.Descendants("fifths").FirstOrDefault();
+                            if (fif != null)                            
+                                curMeasure.Attributes.Key.Fifths = Convert.ToInt32(fif.Value);
+                            
+                            XElement mod = pkey.Descendants("mode").FirstOrDefault();
+                            if (mod != null)
+                                curMeasure.Attributes.Key.Mode = mod.Value.ToString();
+
+                        }
+
+
+                        
 
                         #region measure number
                         /* 
@@ -159,9 +183,7 @@ namespace MusicXml.Domain
                         */
                         try
                         {
-                            curMeasure.Number = int.Parse(measureNode.Attribute("number").Value);
-                            // Attributes containing everything
-                            curMeasure.Attributes = new MeasureAttributes();
+                            curMeasure.Number = int.Parse(measureNode.Attribute("number").Value);                            
                         }
                         catch (Exception ex)
                         {
