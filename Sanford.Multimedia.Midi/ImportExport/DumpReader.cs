@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Sanford.Multimedia.Midi
 {
@@ -29,8 +28,12 @@ namespace Sanford.Multimedia.Midi
         private string TrackName = "Track1";
         private string InstrumentName = "AcousticGrandPiano";
         private int ProgramChange = 0;
+
+        private int ControlChangeData1 = 0;
+        private int ControlChangeData2 = 0;
+
         private int Volume = 0;
-        private int Pan = 0;
+        private int Pan = 64;
         private int Reverb = 0;
 
         MidiNote n;
@@ -96,6 +99,8 @@ namespace Sanford.Multimedia.Midi
                     {
                         newNotes = new List<MidiNote>();
                         currenttrack++;
+                        if (currenttrack > 0)
+                            CreateTrack();
                     }
                     else if (array.Contains("Title_t"))
                     {
@@ -107,8 +112,7 @@ namespace Sanford.Multimedia.Midi
                     }
                     else if (array.Contains("Program_c"))
                     {
-                        ReadProgramChange(array);
-                        CreateTrack();
+                        ReadProgramChange(array);                        
                     }
                     else if (array.Contains("Note_on_c"))
                     {
@@ -117,6 +121,14 @@ namespace Sanford.Multimedia.Midi
                     else if (array.Contains("Note_off_c"))
                     {
                         StopMidiNote(array);
+                    }
+                    else if (array.Contains("Control_c"))
+                    {
+                        ReadControlChange(array);
+                    }
+                    else if (array.Contains("Pitch_bend_c"))
+                    {
+                        ReadPitchBend(array);
                     }
                     else if (array.Contains("Lyric_t"))
                     {
@@ -173,30 +185,130 @@ namespace Sanford.Multimedia.Midi
         #endregion
 
 
-        #region Track
+        #region Tracks
+        
+        /// <summary>
+        /// Name of the track
+        /// </summary>
+        /// <param name="ar"></param>
+        /// <exception cref="ArgumentException"></exception>
         private void ReadTrackName(string[] ar)
         {
             if (ar.Length != 4)
                 throw new ArgumentException("TrackName Length");
-            // Track, Time, Title_t, Text
+            // Track, Time, Title_t, Text            
             TrackName = ar[3];
+            if (currenttrack > 0)
+            {
+                newTracks[currenttrack - 1].Name = TrackName;
+                byte[] bytes = System.Text.Encoding.ASCII.GetBytes(TrackName);
+                MetaMessage message = new MetaMessage(MetaType.TrackName, bytes);
+                newTracks[currenttrack - 1].Insert(0, message);
+            }
         }
 
+        /// <summary>
+        /// Name of the instrument
+        /// </summary>
+        /// <param name="ar"></param>
+        /// <exception cref="ArgumentException"></exception>
         private void ReadInstrumentName(string[] ar)
         {
             if (ar.Length != 4)
                 throw new ArgumentException("ProgramChange Length");
+
             // Track, Time, Instrument_name_t, Text
-            InstrumentName = ar[2];
+            InstrumentName = ar[3];
+            if (currenttrack > 0)
+                newTracks[currenttrack - 1].InstrumentName = InstrumentName;
+
         }
 
+        /// <summary>
+        /// Program change Program_c
+        /// </summary>
+        /// <param name="ar"></param>
+        /// <exception cref="ArgumentException"></exception>
         private void ReadProgramChange(string[] ar)
         {
             if (ar.Length != 5)
                 throw new ArgumentException("ProgramChange Length");
-            // Track, Time, Program_c, Channel, Program_num            
+            // Track, Time, Program_c, Channel, Program_num
+            int ticks = Convert.ToInt32(ar[1]);
             Channel = Convert.ToInt32(ar[3]);
             ProgramChange = Convert.ToInt32(ar[4]);
+            if (currenttrack > 0)
+            {
+                newTracks[currenttrack - 1].ProgramChange = ProgramChange;
+                ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, Channel, ProgramChange);
+                newTracks[currenttrack - 1].Insert(ticks, message);
+            }
+
+        }
+
+        /// <summary>
+        /// Control Change Control_c
+        /// </summary>
+        /// <param name="ar"></param>
+        /// <exception cref="ArgumentException"></exception>
+        private void ReadControlChange(string[] ar)
+        {
+            if (ar.Length != 6)
+                throw new ArgumentException("ControlChange Length");
+
+            if (currenttrack == 0)
+                return;
+
+            // Track, Time, Control_c, Channel, Data1, Data2
+            int ticks = Convert.ToInt32(ar[1]);
+            Channel = Convert.ToInt32(ar[3]);
+            ControlChangeData1 = Convert.ToInt32(ar[4]);
+            ControlChangeData2 = Convert.ToInt32(ar[5]);
+
+            // 7 Volume
+            // 10 Pan
+            // 11 Fader
+            // 91 Reverb
+            // 93 chorus   
+            
+            switch (ControlChangeData1)
+            {
+                case 7:                    
+                    Volume = ControlChangeData2;
+                    newTracks[currenttrack-1].Volume = Volume;
+                    break;
+                case 10:
+                    Pan = ControlChangeData2;
+                    newTracks[currenttrack-1].Pan = Pan;
+                    break;
+                case 91:
+                    Reverb = ControlChangeData2;
+                    newTracks[currenttrack-1].Reverb = Reverb;
+                    break;
+                default:
+                    //ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
+                    //newTracks[currenttrack-1].Insert(ticks, message);
+                    break;
+            }
+            
+            ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
+            newTracks[currenttrack - 1].Insert(ticks, message);
+
+
+        }
+
+        private void ReadPitchBend(string[] ar)
+        {
+            // Track, Time, Pitch_bend_c, Channel, Data1
+            if (ar.Length != 5)
+                throw new ArgumentException("PitchBend Length");
+
+            int ticks = Convert.ToInt32(ar[1]);
+            int PitchBendData1= Convert.ToInt32(ar[4]);
+            Channel = Convert.ToInt32(ar[3]);
+            ChannelMessage message = new ChannelMessage(ChannelCommand.PitchWheel, Channel, PitchBendData1);
+            newTracks[currenttrack - 1].Insert(ticks, message);
+
         }
 
         private void ReadMetaLyric(string[] ar)
@@ -252,11 +364,14 @@ namespace Sanford.Multimedia.Midi
                 Volume = Volume,
                 Pan = Pan,
                 Reverb = Reverb,
+                Denominator = Denominator,
+                Numerator = Numerator
             };
-
 
             ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, track.MidiChannel, track.ProgramChange, 0);
             track.Insert(0, message);
+
+            track.insertTimesignature(Numerator, Denominator);
 
             newTracks.Add(track);
         }
@@ -790,8 +905,12 @@ namespace Sanford.Multimedia.Midi
                 Time = new TimeSignature(Numerator, Denominator, Division, Tempo),
             };
 
-            // Tracks to sequence            
-            sequence.tracks = newTracks;
+            // Tracks to sequence
+             for (int i = 0; i < newTracks.Count; i++)
+            {
+                sequence.Add(newTracks[i]);
+            }
+            //sequence.tracks = newTracks;
             
             // Insert Tempo in track 0
             if (sequence.tracks.Count > 0)

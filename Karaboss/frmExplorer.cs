@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2018 Fabrice Lacharme
+/* Copyright (c) 2023 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -32,7 +32,6 @@
 
 #endregion
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -47,12 +46,17 @@ using System.Net;
 using System.Xml;
 using Karaboss.Pages.ABCnotation;
 using Karaboss.Mru;
+using MusicXml;
+using MusicTxt;
 
 namespace Karaboss
 {
 
     public partial class frmExplorer : Form
     {
+
+        MusicXmlReader MXmlReader = new MusicXmlReader();
+        MusicTxtReader MTxtReader = new MusicTxtReader();
 
         #region configuration
         private ConfigurationForm m_configurationForm;
@@ -132,7 +136,9 @@ namespace Karaboss
             xplorerControl.SelectedIndexChanged += new xplorer.SelectedIndexChangedEventHandler(Global_SelectedIndexChanged);            
             xplorerControl.PlayMidi += new xplorer.PlayMidiEventHandler(Global_xPlayMidi);
             xplorerControl.PlayCDG += new xplorer.PlayCDGEventHandler(Global_PlayCDG);
-            xplorerControl.PlayText += new xplorer.PlayTextEventHandler(Global_xPlayText);
+            xplorerControl.PlayAbc += new xplorer.PlayAbcEventHandler(Global_xPlayAbc);
+            xplorerControl.PlayXml += new xplorer.PlayXmlEventHandler(Global_xPlayXml);
+            xplorerControl.PlayTxt += new xplorer.PlayTxtEventHandler(Global_xPlayTxt);
             xplorerControl.LvContentChanged += new xplorer.ContentChangedEventHandler(Xplorer_ContentChanged);
             xplorerControl.CreateNewMidiFile += new xplorer.CreateNewMidiFileEventHandler(Xplorer_CreateNewMidiFile);
 
@@ -143,7 +149,9 @@ namespace Karaboss
             playlistsControl.SelectedIndexChanged += new playlists.SelectedIndexChangedEventHandler(Global_SelectedIndexChanged);
             playlistsControl.PlayMidi += new playlists.PlayMidiEventHandler(Global_PlayMidi);
             playlistsControl.PlayCDG += new playlists.PlayCDGEventHandler(Global_PlayCDG);
-            playlistsControl.PlayText += new playlists.PlayTextEventHandler(Global_PlayText);
+            playlistsControl.PlayAbc += new playlists.PlayAbcEventHandler(Global_PlayAbc);
+            playlistsControl.PlayXml += new playlists.PlayXmlEventHandler(Global_PlayXml);
+            playlistsControl.PlayTxt += new playlists.PlayTxtEventHandler(Global_PlayTxt);
             playlistsControl.NavigateTo += new playlists.NavigateToEventHandler(Item_NavigateTo);
             #endregion
 
@@ -152,6 +160,7 @@ namespace Karaboss
             searchControl.Visible = false;            
             playlistsControl.Visible = false;
             xplorerControl.Visible = true;
+            
             connectedControl.Visible = false;
                         
             // Load saved configuration
@@ -170,7 +179,8 @@ namespace Karaboss
 
             // Display controls on the form
             ResizeElements();
-           
+            
+
             // Manage arguments when launched by double clicking on a file in the Windows Explorer            
             if (args.Length > 0)
             {                
@@ -238,6 +248,7 @@ namespace Karaboss
             xplorerControl.Navigate(songRootUri);
 
             xplorerControl.Visible = true;
+            
             playlistsControl.Visible = false;
             searchControl.Visible = false;
             connectedControl.Visible = false;
@@ -245,7 +256,7 @@ namespace Karaboss
 
             ShowPlayEditButtons(true);            
 
-            xplorerControl.Refresh();
+            xplorerControl.Refresh();            
 
             tssLeft.Text = xplorerControl.CurrentFolder;
             tssMiddle.Text = xplorerControl.CurrentContent;
@@ -276,6 +287,7 @@ namespace Karaboss
             playlistsControl.Visible = false;
             connectedControl.Visible = false;
             pnlFileInfos.Visible = true;
+            mnuEdit.Visible = false;
 
             ShowPlayEditButtons(true);
 
@@ -310,6 +322,7 @@ namespace Karaboss
             searchControl.Visible = false;
             connectedControl.Visible = false;
             pnlFileInfos.Visible = true;
+            mnuEdit.Visible = true;
 
             ShowPlayEditButtons(true);
 
@@ -337,6 +350,7 @@ namespace Karaboss
             searchControl.Visible = false;
             connectedControl.Visible = false;
             pnlFileInfos.Visible = true;
+            mnuEdit.Visible = false;
 
             ShowPlayEditButtons(true);
 
@@ -346,10 +360,16 @@ namespace Karaboss
 
         private void SideBarControl_DisplayConnected(object sender, EventArgs e)
         {
+            DisplayConnected();
+        }
+
+        private void DisplayConnected()
+        {
             connectedControl.Visible = true;
             xplorerControl.Visible = false;
             playlistsControl.Visible = false;
             searchControl.Visible = false;
+            mnuEdit.Visible = false;
 
             ShowPlayEditButtons(false);
 
@@ -387,7 +407,7 @@ namespace Karaboss
             }
             else
             {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK);
+                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
 
         }
@@ -419,7 +439,7 @@ namespace Karaboss
             }
             else
             {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK);
+                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
 
         }
@@ -430,7 +450,7 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void SideBarControl_DisplayPianoTraining(object sender, EventArgs e)
-        {
+        {            
             DisplayPianoTraining();
         }
 
@@ -449,7 +469,7 @@ namespace Karaboss
 
             if (filename == null || filename == "" || !File.Exists(filename) || !Karaclass.IsMidiExtension(filename))
             {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK);
+                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -499,7 +519,7 @@ namespace Karaboss
 
             if (filename == null || filename == "" || !File.Exists(filename) || !Karaclass.IsMidiExtension(filename))
             {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK);
+                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -562,7 +582,7 @@ namespace Karaboss
                 MyMruList.RemoveFile(FullPath);
 
                 // Tell the user what happened.
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -648,10 +668,7 @@ namespace Karaboss
 
             // Cas de la première fois (string empty)
             if (inipath == null || inipath == "" || inipath == "C:\\\\" || Directory.Exists(inipath) == false)
-                inipath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-
-            //if (songRoot == null || songRoot == "" || songRoot == "C:\\\\" || Directory.Exists(songRoot) == false)
-            //    songRoot = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+                inipath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);        ;
 
             return inipath;
         }
@@ -672,6 +689,8 @@ namespace Karaboss
             Karaclass.m_SepLine = Properties.Settings.Default.SepLine;
             Karaclass.m_SepSyllabe = Properties.Settings.Default.SepSyllabe;
             Karaclass.m_SepParagraph = Properties.Settings.Default.SepParagraph;
+            Karaclass.m_ShowParagraph = Properties.Settings.Default.bShowParagraph;
+            Karaclass.m_ForceUppercase = Properties.Settings.Default.bForceUppercase;
 
             Karaclass.m_SaveDefaultOutputDevice = Properties.Settings.Default.SaveDefaultOutputDevice;
 
@@ -734,6 +753,24 @@ namespace Karaboss
                 CurrentPath = fileName;
                 LoadAsyncMidiFile(fileName);
             }
+            else if (Karaclass.IsXmlExtension(fileName) && MidiInfos.busy == false)
+            {
+                MidiInfos.busy = true;                
+                ResetMidiFile();
+
+                // load file and display MIDI infos
+                CurrentPath = fileName;
+                LoadAsyncXmlFile(fileName, true);
+            }
+            else if (Karaclass.IsTxtExtension(fileName) && MidiInfos.busy == false)
+            {
+                MidiInfos.busy = true;
+                ResetMidiFile();
+
+                // load file and display MIDI infos
+                CurrentPath = fileName;
+                LoadAsyncTxtFile(fileName, true);
+            }
             else
             {
                 MidiInfos.Clear();
@@ -767,9 +804,41 @@ namespace Karaboss
             }
         }
 
+        public void LoadAsyncXmlFile(string fileName, bool silenceMode = false)
+        {
+            try
+            {
+                if (fileName != "\\")
+                {                    
+                    MXmlReader.LoadXmlAsync(fileName, silenceMode);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        public void LoadAsyncTxtFile(string fileName, bool silenceMode = false)
+        {
+            try
+            {
+                if (fileName != "\\")
+                {
+                    MTxtReader = new MusicTxtReader();
+                    MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
+                    MTxtReader.LoadTxtAsync(fileName, silenceMode);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
 
         /// <summary>
-        /// Event: sequence loaded
+        /// Event: Midi sequence loaded
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -876,9 +945,249 @@ namespace Karaboss
 
             // Allow new search Midi file infos
             MidiInfos.busy = false;
+            
         }
         
-        
+        /// <summary>
+        /// Event: XML music sequence loaded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleLoadXmlCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            string tx = string.Empty;
+            int i;
+            string cr = Environment.NewLine;
+
+            if (MXmlReader.seq != null)
+            {
+                sequence1 = MXmlReader.seq;
+                sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+            }
+
+            // Remove all MIDI events after last note
+            sequence1.Clean();
+
+            // song duration
+            #region song duration
+            double ppqn = sequence1.Division;
+            double totalticks = sequence1.GetLength();
+            double tempo = sequence1.Tempo;
+            double duration = tempo * (totalticks / ppqn) / 1000000; //seconds
+
+            int Min = (int)(duration / 60);
+            int Sec = (int)(duration - (Min * 60));
+
+
+            MidiInfos.Tracks = sequence1.tracks.Count;
+            MidiInfos.Format = sequence1.OrigFormat;
+            MidiInfos.Duration = string.Format("{0:00}:{1:00}", Min, Sec);
+            MidiInfos.Lyrics = sequence1.HasLyrics;
+            #endregion
+
+            // Karaoke tags
+            #region tags
+            if (sequence1.KTag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.KTag.Count; i++)
+                {
+                    tx += sequence1.KTag[i] + cr;
+                }
+                MidiInfos.KTags = tx;
+            }
+
+            // Version
+            if (sequence1.VTag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.VTag.Count; i++)
+                {
+                    tx += sequence1.VTag[i] + cr;
+                }
+                MidiInfos.VTags = tx;
+            }
+
+            // Lang
+            if (sequence1.LTag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.LTag.Count; i++)
+                {
+                    tx += sequence1.LTag[i] + cr;
+                }
+                MidiInfos.LTags = tx;
+            }
+
+            // Copyright of karaoke
+            if (sequence1.WTag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.WTag.Count; i++)
+                {
+                    tx += sequence1.WTag[i] + cr;
+                }
+                MidiInfos.WTags = tx;
+            }
+
+            // Song infos
+            if (sequence1.TTag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.TTag.Count; i++)
+                {
+                    tx += sequence1.TTag[i].Replace('\n', ' ').Replace('\r', ' ') + cr;
+                }
+                MidiInfos.TTags = tx;
+            }
+
+            // Infos
+            if (sequence1.ITag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.ITag.Count; i++)
+                {
+                    tx += sequence1.ITag[i].Replace('\n', ' ').Replace('\r', ' ') + cr;
+                }
+                MidiInfos.ITags = tx;
+            }
+
+            #endregion
+
+            // display infos on bottom panel
+            DisplayMidiLabels();
+
+            if (playlistsControl.Visible)
+                playlistsControl.SelectedFileLength = MidiInfos.Duration;
+
+            // Allow new search Midi file infos
+         
+            MidiInfos.busy = false;
+        }
+
+        /// <summary>
+        /// Event: TXT dump sequence loaded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleLoadTxtCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            string tx = string.Empty;
+            int i;
+            string cr = Environment.NewLine;
+
+            if (MTxtReader.seq == null)
+            {
+                MidiInfos.Clear();
+                DisplayMidiLabels();
+                MidiInfos.busy = false;
+                return;
+            }
+                        
+            sequence1 = MTxtReader.seq;
+            sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+            
+
+            // Remove all MIDI events after last note
+            sequence1.Clean();
+
+            // song duration
+            #region song duration
+            double ppqn = sequence1.Division;
+            double totalticks = sequence1.GetLength();
+            double tempo = sequence1.Tempo;
+            double duration = tempo * (totalticks / ppqn) / 1000000; //seconds
+
+            int Min = (int)(duration / 60);
+            int Sec = (int)(duration - (Min * 60));
+
+
+            MidiInfos.Tracks = sequence1.tracks.Count;
+            MidiInfos.Format = sequence1.OrigFormat;
+            MidiInfos.Duration = string.Format("{0:00}:{1:00}", Min, Sec);
+            MidiInfos.Lyrics = sequence1.HasLyrics;
+            #endregion
+
+            // Karaoke tags
+            #region tags
+            if (sequence1.KTag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.KTag.Count; i++)
+                {
+                    tx += sequence1.KTag[i] + cr;
+                }
+                MidiInfos.KTags = tx;
+            }
+
+            // Version
+            if (sequence1.VTag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.VTag.Count; i++)
+                {
+                    tx += sequence1.VTag[i] + cr;
+                }
+                MidiInfos.VTags = tx;
+            }
+
+            // Lang
+            if (sequence1.LTag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.LTag.Count; i++)
+                {
+                    tx += sequence1.LTag[i] + cr;
+                }
+                MidiInfos.LTags = tx;
+            }
+
+            // Copyright of karaoke
+            if (sequence1.WTag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.WTag.Count; i++)
+                {
+                    tx += sequence1.WTag[i] + cr;
+                }
+                MidiInfos.WTags = tx;
+            }
+
+            // Song infos
+            if (sequence1.TTag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.TTag.Count; i++)
+                {
+                    tx += sequence1.TTag[i].Replace('\n', ' ').Replace('\r', ' ') + cr;
+                }
+                MidiInfos.TTags = tx;
+            }
+
+            // Infos
+            if (sequence1.ITag != null)
+            {
+                tx = "";
+                for (i = 0; i < sequence1.ITag.Count; i++)
+                {
+                    tx += sequence1.ITag[i].Replace('\n', ' ').Replace('\r', ' ') + cr;
+                }
+                MidiInfos.ITags = tx;
+            }
+
+            #endregion
+
+            // display infos on bottom panel
+            DisplayMidiLabels();
+
+            if (playlistsControl.Visible)
+                playlistsControl.SelectedFileLength = MidiInfos.Duration;
+
+            // Allow new search Midi file infos
+
+            MidiInfos.busy = false;
+        }
+
         /// <summary>
         /// Display Midi information on bottom panel
         /// </summary> 
@@ -942,12 +1251,23 @@ namespace Karaboss
             DisplayMidiPlayer(fi.FullName, null, bplay);
         }
 
-        private void Global_xPlayText(object sender, FileInfo fi, bool bplay)
+        private void Global_xPlayAbc(object sender, FileInfo fi, bool bplay)
         {
-            DisplayTextPlayer(fi.FullName, null, bplay);
+            DisplayAbcPlayer(fi.FullName, null, bplay);
         }
 
-        // Specific explorerControl
+        private void Global_xPlayXml(object sender, FileInfo fi, bool bplay)
+        {
+            DisplayXmlPlayer(fi.FullName, null, bplay);
+        }
+        private void Global_xPlayTxt(object sender, FileInfo fi, bool bplay)
+        {
+            DisplayTxtPlayer(fi.FullName, null, bplay);
+        }
+
+
+        // Specific playlist
+        // Launch a file from playlist, not from explorer
 
         private void Global_PlayCDG(object sender, FileInfo fi, bool bplay)
         {
@@ -960,11 +1280,20 @@ namespace Karaboss
             DisplayMidiPlayer(fi.FullName, pl, bplay);
         }
 
-        private void Global_PlayText(object sender, FileInfo fi, Playlist pl, bool bplay)
+        private void Global_PlayAbc(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
-            DisplayTextPlayer(fi.FullName, pl, bplay);
+            DisplayAbcPlayer(fi.FullName, pl, bplay);
         }
 
+        private void Global_PlayXml(object sender, FileInfo fi, Playlist pl, bool bplay)
+        {
+            DisplayXmlPlayer(fi.FullName, pl, bplay);
+        }
+
+        private void Global_PlayTxt(object sender, FileInfo fi, Playlist pl, bool bplay)
+        {
+            DisplayTxtPlayer(fi.FullName, pl, bplay);
+        }
 
 
         /// <summary>
@@ -979,7 +1308,7 @@ namespace Karaboss
             {
                 if (File.Exists(fpath) == false)
                 {
-                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK);                    
+                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);                    
                     return;
                 }
             }
@@ -1005,7 +1334,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="filename"></param>
         /// <param name="bPlayNow"></param>
-        private void DisplayTextPlayer(string fpath, Playlist pl, bool bPlayNow)
+        private void DisplayAbcPlayer(string fpath, Playlist pl, bool bPlayNow)
         {
             if (fpath == null)
                 return;
@@ -1016,7 +1345,7 @@ namespace Karaboss
                 // Launch an existing file                    
                 if (File.Exists(fpath) == false)
                 {
-                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK);
+                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -1070,6 +1399,9 @@ namespace Karaboss
             if (fpath == null)
                 return;
 
+            // No Playlist
+            // * Edit or play a midi file
+            // * Create a new midi file
             if (pl == null)
             {
                 // edit or play a midi file
@@ -1078,7 +1410,7 @@ namespace Karaboss
                     // Launch an existing file                    
                     if (File.Exists(fpath) == false)
                     {
-                        MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK);
+                        MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }                  
                 }
@@ -1095,7 +1427,7 @@ namespace Karaboss
                 // Launch an existing file                    
                 if (File.Exists(fpath) == false)
                 {
-                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK);
+                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -1141,6 +1473,146 @@ namespace Karaboss
 
         }        
 
+        /// <summary>
+        /// Load a musicxml file
+        /// </summary>
+        /// <param name="fpath"></param>
+        /// <param name="pl"></param>
+        /// <param name="bPlayNow"></param>
+        private void DisplayXmlPlayer(string fpath, Playlist pl, bool bPlayNow)
+        {
+            if (fpath == null)
+                return;
+            if (File.Exists(fpath) == false)
+            {
+                MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // File can be an xml file but not in musicxml format
+            if (MXmlReader.Read(fpath) == null)
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start(fpath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                } 
+                return;
+            }
+
+            // Launch player with a Playlist                               
+            Cursor.Current = Cursors.WaitCursor;
+            Application.DoEvents();
+
+            #region Close Windows
+            // ferme le formulaire frmPianoTraining
+            if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmPianoTraining"].Close();
+            }
+
+            // ferme le formulaire frmGuitarTraining
+            if (Application.OpenForms.OfType<frmGuitarTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmGuitarTraining"].Close();
+            }
+
+            // Ferme le formulaire FrmTextPlayer
+            if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
+            {
+                Application.OpenForms["FrmTextPlayer"].Close();
+            }
+            #endregion
+
+            // Close form frmPlay 
+            if (Application.OpenForms["frmPlayer"] != null)
+                Application.OpenForms["frmPlayer"].Close();
+
+            ResetOutPutDevice();
+
+            // Add the file to the MRU list.
+            MyMruList.AddFile(fpath);
+
+            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice, songRoot);
+            frmPlayer.Show();
+            frmPlayer.Activate();
+
+        }
+
+        /// <summary>
+        /// Load a txt music file
+        /// </summary>
+        /// <param name="fpath"></param>
+        /// <param name="pl"></param>
+        /// <param name="bPlayNow"></param>
+        private void DisplayTxtPlayer(string fpath, Playlist pl, bool bPlayNow)
+        {
+            if (fpath == null)
+                return;
+            if (File.Exists(fpath) == false)
+            {
+                MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            MTxtReader = new MusicTxtReader();
+            MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
+
+            // File can be an txt file but not in musicxml format
+            if (MTxtReader.Read(fpath) == null)
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start(fpath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                return;
+            }
+
+            // Launch player with a Playlist                               
+            Cursor.Current = Cursors.WaitCursor;
+            Application.DoEvents();
+
+            #region Close Windows
+            // ferme le formulaire frmPianoTraining
+            if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmPianoTraining"].Close();
+            }
+
+            // ferme le formulaire frmGuitarTraining
+            if (Application.OpenForms.OfType<frmGuitarTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmGuitarTraining"].Close();
+            }
+
+            // Ferme le formulaire FrmTextPlayer
+            if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
+            {
+                Application.OpenForms["FrmTextPlayer"].Close();
+            }
+            #endregion
+
+            // Close form frmPlay 
+            if (Application.OpenForms["frmPlayer"] != null)
+                Application.OpenForms["frmPlayer"].Close();
+
+            ResetOutPutDevice();
+
+            // Add the file to the MRU list.
+            MyMruList.AddFile(fpath);
+
+            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice, songRoot);
+            frmPlayer.Show();
+            frmPlayer.Activate();
+
+        }
 
         #endregion Players
 
@@ -1150,6 +1622,8 @@ namespace Karaboss
         protected override void OnLoad(EventArgs e)
         {
             sequence1.LoadCompleted += HandleLoadCompleted;
+            MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
+            MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
 
             // Set message on splash windows because the loading of sound fonts takes a very long time
             // if a big file is used
@@ -1304,10 +1778,36 @@ namespace Karaboss
                 case ".mml":
                 case ".abc":
                     {
-                        DisplayTextPlayer(cmdpath, null, bPlayNow);
+                        DisplayAbcPlayer(cmdpath, null, bPlayNow);
                         break;
                     }
-
+                case ".musicxml":
+                case ".xml":
+                    {
+                        /*
+                        * For xml, 2 cases :
+                        * either a classic xml file => System.Diagnostics.Process.Start(cmdpath)
+                        * 
+                        * either a musicxml file
+                        * - transform xml to midi file
+                        * - launch player
+                        */
+                        DisplayXmlPlayer(cmdpath, null, bPlayNow);
+                        break;
+                    }
+                case ".txt":
+                    {
+                        /*
+                        * For xml, 2 cases :
+                        * either a classic txt file => System.Diagnostics.Process.Start(cmdpath)
+                        * 
+                        * either a musicxml file
+                        * - transform txt to midi file
+                        * - launch player
+                        */
+                        DisplayTxtPlayer(cmdpath, null, bPlayNow);
+                        break;
+                    }
                 default:
                     try
                     {
@@ -1315,7 +1815,7 @@ namespace Karaboss
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     break;
             }
@@ -1351,7 +1851,7 @@ namespace Karaboss
             frmMessageBox frmQ = new frmMessageBox
             {
                 Msg = Strings.QuitApplication,
-                Title = Application.ProductName
+                Title = Application.ProductName              
             };
             frmQ.ShowDialog();
 
@@ -1471,8 +1971,8 @@ namespace Karaboss
         private void ResizeElements()
         {            
             sideBarControl.Left = 0;
-            sideBarControl.Top = menuStrip.Height;
-            sideBarControl.Height = ClientSize.Height - menuStrip.Height - statusBar.Height;
+            sideBarControl.Top = mnuExplorer.Height;
+            sideBarControl.Height = ClientSize.Height - mnuExplorer.Height - statusBar.Height;
 
             //int W = ClientSize.Width - sideBarControl.Width - 17;
             int W = ClientSize.Width - sideBarControl.Width;
@@ -1490,7 +1990,7 @@ namespace Karaboss
             searchControl.Left = sideBarControl.Width;
             connectedControl.Left = sideBarControl.Width;
 
-            xplorerControl.Top = menuStrip.Height;
+            xplorerControl.Top = mnuExplorer.Height;
             playlistsControl.Top = xplorerControl.Top;
             searchControl.Top = xplorerControl.Top;
             connectedControl.Top = xplorerControl.Top;
@@ -1500,10 +2000,10 @@ namespace Karaboss
             searchControl.Width = xplorerControl.Width;
             connectedControl.Width = W;
 
-            xplorerControl.Height = ClientSize.Height - menuStrip.Height - pnlFileInfos.Height - statusBar.Height;
+            xplorerControl.Height = ClientSize.Height - mnuExplorer.Height - pnlFileInfos.Height - statusBar.Height;
             playlistsControl.Height = xplorerControl.Height;
             searchControl.Height = xplorerControl.Height;
-            connectedControl.Height = ClientSize.Height - menuStrip.Height - statusBar.Height;
+            connectedControl.Height = ClientSize.Height - mnuExplorer.Height - statusBar.Height;
 
             // Labels MIDI, K, I, T, W            
             int totalW = W - lblKtags.Left;
@@ -1563,7 +2063,7 @@ namespace Karaboss
                 SelectPlayer(filename, true);
             }
             else
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK);            
+                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);            
         }
 
 
@@ -1595,7 +2095,7 @@ namespace Karaboss
                 //DisplayMidiPlayer(filename, null, false);            
                 SelectPlayer(filename, false);
             else
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK);
+                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             
         }
 
@@ -1616,8 +2116,8 @@ namespace Karaboss
         {
             int numerator = 4;
             int denominator = 4;
-            int division = 960;
-            int tempo = 750000;
+            int division = 480;
+            int tempo = 500000;
             int measures = 35;
 
             // Display dialog windows new midi file
@@ -1636,7 +2136,29 @@ namespace Karaboss
             CreateNewMidiFile.Tempo = MidiFileDialog.Tempo;
             CreateNewMidiFile.Measures = MidiFileDialog.Measures;
             CreateNewMidiFile.DefaultDirectory = this.xplorerControl.CurrentFolder;
-           
+
+
+            // Test fab
+            string trackname = "Track1";
+            int programchange = 0;
+            int channel = 0;
+            decimal trkindex = 0;
+            int clef = 0;
+
+            dr = new DialogResult();
+            Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog TrackDialog = new Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog(trackname, programchange, channel, trkindex, clef);
+            dr = TrackDialog.ShowDialog();
+
+            // TODO : if we are creating a new file, 
+            if (dr == DialogResult.Cancel)
+                return;
+
+            CreateNewMidiFile.trackname = TrackDialog.TrackName;
+            CreateNewMidiFile.programchange = TrackDialog.ProgramChange;
+            CreateNewMidiFile.channel = TrackDialog.MidiChannel;
+            CreateNewMidiFile.trkindex = trkindex;
+            CreateNewMidiFile.clef = TrackDialog.cle;
+
             DisplayMidiPlayer("new file", null, false);
         }              
 
@@ -1654,8 +2176,42 @@ namespace Karaboss
 
         #endregion
 
+        #region menu Edit
 
-        #region menu edit
+        /// <summary>
+        /// Rename files using upper directory (F3)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuEditRenameAll_Click(object sender, EventArgs e)
+        {
+            xplorerControl.RenameAllQuestion();
+        }
+
+        /// <summary>
+        /// Replace (F4)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuEditReplaceAll_Click(object sender, EventArgs e)
+        {
+            xplorerControl.ReplaceAllQuestion();
+        }
+
+        /// <summary>
+        /// invert singer and song (F7)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuInvertAuthorSong_Click(object sender, EventArgs e)
+        {
+            xplorerControl.InvertAuthorAndSong();
+        }
+
+        #endregion
+
+
+        #region menu Display
 
 
         /// <summary>
@@ -1663,7 +2219,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MnuSearch_Click(object sender, EventArgs e)
+        private void MnuDisplaySearch_Click(object sender, EventArgs e)
         {
             searchControl.Visible = true;
             playlistsControl.Visible = false;
@@ -1678,7 +2234,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MnuEditExplore_Click(object sender, EventArgs e)
+        private void MnuDisplayExplore_Click(object sender, EventArgs e)
         {
             searchControl.Visible = false;
             xplorerControl.Visible = true;
@@ -1694,7 +2250,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MnuEditPlaylist_Click(object sender, EventArgs e)
+        private void MnuDisplayPlaylist_Click(object sender, EventArgs e)
         {
             playlistsControl.Visible = true;
             xplorerControl.Visible = false;
@@ -1709,14 +2265,9 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MnuEditConnected_Click(object sender, EventArgs e)
+        private void MnuDisplayConnected_Click(object sender, EventArgs e)
         {
-            searchControl.Visible = false;            
-            xplorerControl.Visible = false;
-            playlistsControl.Visible = false;
-            connectedControl.Visible = true;
-
-
+            DisplayConnected();
         }
 
         /// <summary>
@@ -1724,7 +2275,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MnuEditPianoTraining_Click(object sender, EventArgs e)
+        private void MnuDisplayPianoTraining_Click(object sender, EventArgs e)
         {
             DisplayPianoTraining();
         }
@@ -1734,7 +2285,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MnuEditGuitarTraining_Click(object sender, EventArgs e)
+        private void MnuDisplayGuitarTraining_Click(object sender, EventArgs e)
         {
             DisplayGuitarTraining();
         }
@@ -1821,7 +2372,7 @@ namespace Karaboss
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1847,7 +2398,7 @@ namespace Karaboss
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1900,28 +2451,28 @@ namespace Karaboss
             }
             catch (WebException exp)
             {
-                MessageBox.Show("Can not find the specified resource. " + exp.Message);
+                MessageBox.Show("Can not find the specified resource. " + exp.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 bHasError = true;
             }
             catch (XmlException exp)
             {
                 bHasError = true;
-                MessageBox.Show("Download the upgrade file error. " + exp.Message);
+                MessageBox.Show("Download the upgrade file error. " + exp.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (NotSupportedException exp)
             {
                 bHasError = true;
-                MessageBox.Show("Upgrade address configuration error. " + exp.Message);
+                MessageBox.Show("Upgrade address configuration error. " + exp.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (ArgumentException exp)
             {
                 bHasError = true;
-                MessageBox.Show("Download the upgrade file error. " + exp.Message);
+                MessageBox.Show("Download the upgrade file error. " + exp.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception exp)
             {
                 bHasError = true;
-                MessageBox.Show("An error occurred during the upgrade process. " + exp.Message);
+                MessageBox.Show("An error occurred during the upgrade process. " + exp.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -1967,9 +2518,8 @@ namespace Karaboss
             
             string referencepath = songRoot;
             string selectedpath = xplorerControl.SelectedFolder.FileSystemPath;
-            
 
-            frmTools fTool = new frmTools(referencepath, selectedpath, "SearchMD5Doubles");
+            frmToools fTool = new frmToools(referencepath, selectedpath, "SearchMD5Doubles");            
             fTool.ShowDialog();
                           
         }
@@ -1985,7 +2535,7 @@ namespace Karaboss
             string selectedpath = xplorerControl.SelectedFolder.FileSystemPath;
             string referencepath = selectedpath;
 
-            frmTools fTool = new frmTools(referencepath, selectedpath, "SearchMD5Doubles");
+            frmToools fTool = new frmToools(referencepath, selectedpath, "SearchMD5Doubles");
             fTool.ShowDialog();
             
         }
@@ -1997,7 +2547,7 @@ namespace Karaboss
             string selectedpath = xplorerControl.SelectedFolder.FileSystemPath;
 
 
-            frmTools fTool = new frmTools(referencepath, selectedpath, "SearchSizeDoubles");
+            frmToools fTool = new frmToools(referencepath, selectedpath, "SearchSizeDoubles");
             fTool.ShowDialog();
             
         }
@@ -2008,7 +2558,7 @@ namespace Karaboss
             string selectedpath = xplorerControl.SelectedFolder.FileSystemPath;
             string referencepath = selectedpath;
 
-            frmTools fTool = new frmTools(referencepath, selectedpath, "SearchSizeDoubles");
+            frmToools fTool = new frmToools(referencepath, selectedpath, "SearchSizeDoubles");
             fTool.ShowDialog();
             
         }
@@ -2021,7 +2571,7 @@ namespace Karaboss
             string selectedpath = xplorerControl.SelectedFolder.FileSystemPath;
 
 
-            frmTools fTool = new frmTools(referencepath, selectedpath, "SearchNameDoubles");
+            frmToools fTool = new frmToools(referencepath, selectedpath, "SearchNameDoubles");
             fTool.ShowDialog();
             
         }
@@ -2032,7 +2582,7 @@ namespace Karaboss
             string selectedpath = xplorerControl.SelectedFolder.FileSystemPath;
             string referencepath = selectedpath;
 
-            frmTools fTool = new frmTools(referencepath, selectedpath, "SearchNameDoubles");
+            frmToools fTool = new frmToools(referencepath, selectedpath, "SearchNameDoubles");
             fTool.ShowDialog();
             
         }
@@ -2109,7 +2659,7 @@ namespace Karaboss
 
         private void OnApplyClicked(object sender, EventArgs e)
         {
-            MessageBox.Show("New settings applied sucessful");
+            MessageBox.Show("New settings applied sucessful", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
 
@@ -2136,6 +2686,7 @@ namespace Karaboss
             if ((xplorerControl.SelectedFolder != null) && xplorerControl.SelectedFolder.IsFolder)
             {
                 string tx = string.Empty;
+                string item = string.Empty;
                 string fullpath = xplorerControl.SelectedFolder.FileSystemPath;
                 iNbDelete = 0;
 
@@ -2145,11 +2696,13 @@ namespace Karaboss
 
                     if (fullpath != "")
                     {
-                        tx = "This function will delete all empty directories starting from\n";
+                        item = Karaboss.Resources.Localization.Strings.SearchEmptyDirs;
+                        tx = item + "\n";
                         tx += "<" + fullpath + ">\n\n";
-                        tx += "Continue?";
+                        item = Karaboss.Resources.Localization.Strings.Continue;
+                        tx += item;
 
-                        if (MessageBox.Show(tx, "Karaboss - Delete directories", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                        if (MessageBox.Show(tx, "Karaboss - Delete empty directories", MessageBoxButtons.OKCancel,MessageBoxIcon.Question) == DialogResult.OK)
                         {
                             Cursor = Cursors.WaitCursor;
                             bQuestionDelete = false;
@@ -2168,7 +2721,7 @@ namespace Karaboss
 
                 tx = "Delete of Empty directories done.\n";
                 tx += iNbDelete + " directories deleted.";
-                MessageBox.Show(tx);
+                MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
             
@@ -2200,7 +2753,7 @@ namespace Karaboss
 
                             tx = "Warning, you have choosen to delete directories, the first one is\n";
                             tx += directory + "\n\nContinue?";
-                            if (MessageBox.Show(tx, "Karaboss - Delete directories", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                            if (MessageBox.Show(tx, "Karaboss - Delete directories", MessageBoxButtons.OKCancel,MessageBoxIcon.Question) == DialogResult.OK)
                             {                            
                                 bAbortDelete = false;
                                 try
@@ -2437,7 +2990,10 @@ namespace Karaboss
             }
         }
 
+
+
         #endregion
 
+       
     }
 }

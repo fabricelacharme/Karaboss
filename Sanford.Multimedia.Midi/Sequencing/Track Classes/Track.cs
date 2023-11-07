@@ -35,6 +35,8 @@
 using System;
 using System.Diagnostics;
 using System.Collections.Generic; //Lists
+using System.Diagnostics.Eventing.Reader;
+using System.Windows.Markup;
 
 namespace Sanford.Multimedia.Midi
 {
@@ -226,8 +228,11 @@ namespace Sanford.Multimedia.Midi
         public int addNote(MidiNote note, bool bCheckDistance = true)
         {
 
+            // FAb 30/10/2023
+            /*
             if (note.Duration < 10)
                 return 0;
+            */
 
             // Do not add if exists already
             if (findMidiNote(note.Number, note.StartTime) != null)
@@ -300,6 +305,9 @@ namespace Sanford.Multimedia.Midi
             MidiNote note = findMidiNote(number, ticks);
             if (note == null)
                 return -1;
+
+            // Delete pitchBend ?
+            //RemovePitchBend(note.Channel, note.StartTime, note.EndTime);
 
             bool bfound = false;
             // Search index of noteOn & noteOff
@@ -850,6 +858,32 @@ namespace Sanford.Multimedia.Midi
 
                         NoteOff(lsnotes ,channel, number, ticks);
                     }
+
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion  
+
+                }
+                else
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion  
+
                 }
             }
 
@@ -1344,35 +1378,60 @@ namespace Sanford.Multimedia.Midi
             Insert(0, message);
         }
 
-        public void SetPitchBend(int channel, int number, int starttime, int endtime)
+        #region pitchbend
+        
+        public bool IsPitchBend(int channel, int starttime, int endtime)
         {
-            // Up
-            int pitchBend = 16383;
-            if (pitchBend > 16383)
-                pitchBend = 16383;
+            return findPitchBend(channel, starttime, endtime) != -1;
 
+        }
+        
+        public void SetPitchBend(int channel, int number, int starttime, int endtime, int pitchBend)
+        {
+            // No pitch = 8192
+            // 2 demi tons =  16383 ?
             int mask = 127;
+            int ipitchBend;
+            int endPitchTime = 0;
+
+            RemovePitchBend(channel, starttime, endtime);
+                        
+           if (endtime > 2)
+                endPitchTime = endtime - 2;
+
+            if (endtime <= starttime)
+                return;
 
             ChannelMessageBuilder builder = new ChannelMessageBuilder();
             ChannelMessage pitchBendMessage;
 
+            // Build pitch bend message;
+            builder.Command = ChannelCommand.PitchWheel;
+            builder.MidiChannel = channel;            
+            
+             // Start Pitchbend           
+            if (pitchBend > 16383)
+                pitchBend = 16383;
+
+            //mask = 127;
+
             // Increase from 8192 to 13383 during the duration of the note
-            int step = 10;
-            int OffsetTime = (endtime - starttime) / step;
-            int offsetPitch = (16383 - 8192) / step;
-            pitchBend = 8192;
+            int steps = 10;
+            int OffsetTime = (endPitchTime - starttime) / steps;
+            int offsetPitch = (pitchBend - 8192) / steps;
+            ipitchBend = 8192;
             int t = starttime;
-            for (int i = 0; i < step -1 ; i++)
+            for (int i = 0; i < steps ; i++)
             {
-                pitchBend += offsetPitch;
+                ipitchBend += offsetPitch;
                 t += OffsetTime;
 
                 // Build pitch bend message;
                 builder.Command = ChannelCommand.PitchWheel;
 
                 // Unpack pitch bend value into two data bytes.
-                builder.Data1 = pitchBend & mask;
-                builder.Data2 = pitchBend >> 7;
+                builder.Data1 = ipitchBend & mask;
+                builder.Data2 = ipitchBend >> 7;                
 
                 // Build message.
                 builder.Build();
@@ -1380,15 +1439,31 @@ namespace Sanford.Multimedia.Midi
                 Insert(t, pitchBendMessage);
             }
 
-           
 
+
+            #region stop pitchbend                       
             
+            // Stop pitchbend
+            StopPitchBend(channel, endPitchTime);
+
+
+            #endregion
+        }
+
+        private void StopPitchBend(int channel, int time)
+        {
+            ChannelMessageBuilder builder = new ChannelMessageBuilder();
+            ChannelMessage pitchBendMessage;
+            int pitchBend;
+            int mask = 127;
+
             // Stop pitchbend
             pitchBend = 0x2000; // No pitch = 8192
             builder = new ChannelMessageBuilder();
 
             // Build pitch bend message;
             builder.Command = ChannelCommand.PitchWheel;
+            builder.MidiChannel = channel;
 
             // Unpack pitch bend value into two data bytes.
             builder.Data1 = pitchBend & mask;
@@ -1397,16 +1472,302 @@ namespace Sanford.Multimedia.Midi
             // Build message.
             builder.Build();
             pitchBendMessage = builder.Result;
-            Insert(endtime, pitchBendMessage);
-
+            Insert(time, pitchBendMessage);
         }
 
-        public void UnsetPitchBend(int channel, int number, int starttime, int endtime)
+
+        private int findPitchBend(int channel, int starttime, int endtime)
         {
+            int id = 0;
+            MidiEvent current = GetMidiEvent(0);
 
+            while (current.AbsoluteTicks <= endtime)
+            {
+                IMidiMessage a = current.MidiMessage;
+
+                if (current.AbsoluteTicks < starttime)
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                        id++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion
+                }
+                else if (a.MessageType == MessageType.Channel)
+                {
+                    ChannelMessage Msg = (ChannelMessage)current.MidiMessage;                                       
+                    ChannelCommand cc = Msg.Command;
+
+                    if (Msg.MidiChannel == channel)
+                    {                        
+                        if (cc == ChannelCommand.PitchWheel)
+                        {
+                            return id;
+                        }
+                        else
+                        {
+                            #region next
+                            if (current.Next != null)
+                            {
+                                current = current.Next;
+                                id++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            #endregion next      
+                        }
+
+                    }
+                    else
+                    {
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                            id++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion next      
+                    }
+
+                }
+                else
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                        id++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion next      
+                }
+            }
+            return -1;
         }
+
+        public void RemovePitchBend(int channel, int starttime, int endtime)
+        {
+            //endtime = endtime - 1;
+            int i = findPitchBend(channel, starttime, endtime);
+
+            while (i != -1)
+            {
+                RemoveAt(i);
+                i = findPitchBend(channel, starttime, endtime);
+            }
+        }
+
+        #endregion pitchbend
 
         #endregion channel command message
+
+
+        #region copy events
+        public void CopyEvents(float srcstarttime, float srcendtime, float deststarttime)
+        {
+            float delta = 0;
+            MidiEvent current = GetMidiEvent(Count - 1);
+            while (current.AbsoluteTicks >= srcstarttime)
+            {
+                if (current != endOfTrackMidiEvent && current.AbsoluteTicks <= srcendtime)
+                {
+                    delta = current.AbsoluteTicks - srcstarttime;
+                    Insert((int)deststarttime + (int)delta, current.MidiMessage);
+                    
+
+                    #region previous
+                    if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
+                    {
+                        current = current.Previous;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion previous
+                }
+                else
+                {
+                    #region previous
+                    if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
+                    {
+                        current = current.Previous;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion previous
+                }
+
+            }
+        }
+
+
+        #endregion
+
+        #region start times
+
+        /// <summary>
+        /// Offset start times off all notes
+        /// </summary>
+        /// <param name="offset"></param>
+        public void OffsetStartTimes(int starttime, int offset)
+        {
+
+            MidiEvent current = GetMidiEvent(Count - 1);
+
+            if (offset > 0)
+            {
+                while (current.AbsoluteTicks >= starttime)
+                {
+                    if (current != endOfTrackMidiEvent)
+                    {
+                        // New code : move all events
+                        Move(current, current.AbsoluteTicks + offset);
+
+                        #region previous
+                        if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
+                        {
+                            current = current.Previous;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion previous
+                    }
+                    else
+                    {
+                        #region previous
+                        if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
+                        {
+                            current = current.Previous;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion previous
+                    }
+
+                }
+
+                // offset also the list of notes
+                for (int i = notes.Count - 1; i >= 0; i--)
+                {
+                    if (notes[i].StartTime >= starttime)
+                    {
+                        notes[i].StartTime = notes[i].StartTime + offset;
+                    }
+                }
+
+                for (int i = this.Lyrics.Count - 1; i >= 0; i--)
+                {
+                    if (Lyrics[i].TicksOn >= starttime)
+                    {
+                        Lyrics[i].TicksOn = Lyrics[i].TicksOn + offset;
+                    }
+                }
+            }
+            else if (offset < 0)
+            {
+                // delete notes in notes & events from starttime to starttime - Offset
+                List<MidiNote> delnotes = new List<MidiNote>();
+                for (int i = 0; i < notes.Count; i++)
+                {
+                    if (notes[i].StartTime >= starttime && notes[i].StartTime < starttime - offset)
+                    {
+                        delnotes.Add(notes[i]);
+                    }
+                }
+                for (int i = 0; i < delnotes.Count; i++)
+                {
+                    deleteNote(delnotes[i].Number, delnotes[i].StartTime);
+                }
+
+                // negative offset all notes from end to > starttime - offset 
+                #region negative offset
+
+                current = GetMidiEvent(0);
+                while (current.AbsoluteTicks <= Length)
+                {
+                    if (current.AbsoluteTicks >= starttime - offset)
+                    {
+
+                        // new code : delete all the events, not only the notes
+
+                        Move(current, current.AbsoluteTicks + offset);
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion
+                    }
+                    else
+                    {
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion next
+                    }
+
+                }
+
+                #endregion negative offset
+
+
+                // offset also the list of notes
+                for (int i = 0; i < notes.Count; i++)
+                {
+                    if (notes[i].StartTime >= starttime - offset)
+                    {
+                        notes[i].StartTime = notes[i].StartTime + offset;
+                    }
+                }
+
+                for (int i = 0; i < Lyrics.Count; i++)
+                {
+                    if (Lyrics[i].TicksOn >= starttime - offset)
+                    {
+                        Lyrics[i].TicksOn = Lyrics[i].TicksOn + offset;
+                    }
+                }
+
+
+            }
+
+
+
+        }
+
+        #endregion
 
         #region measures
 
@@ -1452,78 +1813,7 @@ namespace Sanford.Multimedia.Midi
                         break;
                     }
                     #endregion previous
-                }
-
-                #region old code
-                // Old Code : move only notes => but problem with lyrics and probably other things
-                // Est-ce bien une note ?
-                /*
-                IMidiMessage a = current.MidiMessage;
-                if (a.MessageType == MessageType.Channel)
-                {
-
-                    ChannelCommand b = ChannelMessage.UnpackCommand(a.Status);
-
-                    int n = a.Data1;
-
-                    if (b == ChannelCommand.NoteOn)
-                    {
-                        Move(current, current.AbsoluteTicks + offset);
-                        #region previous
-                        if (current.Previous != null)
-                        {
-                            current = current.Previous;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                        #endregion previous
-                    }
-                    else if (b == ChannelCommand.NoteOff)
-                    {
-                        Move(current, current.AbsoluteTicks + offset);
-                        #region previous
-                        if (current.Previous != null)
-                        {
-                            current = current.Previous;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                        #endregion previous
-                    }
-                    else
-                    {
-                        #region previous
-                        if (current.Previous != null)
-                        {
-                            current = current.Previous;                            
-                        }
-                        else
-                        {
-                            break;
-                        }
-                        #endregion previous
-                    }
-                }
-                else
-                {
-                    #region previous
-                    if (current.Previous != null)
-                    {
-                        current = current.Previous;
-                        
-                    }
-                    else
-                    {
-                        break;
-                    }
-                    #endregion previous
-                }
-                */
-                #endregion
+                }              
 
             }
 
@@ -1547,7 +1837,7 @@ namespace Sanford.Multimedia.Midi
         }
 
         /// <summary>
-        /// Delete a measure in the tack
+        /// Delete a measure in the track
         /// </summary>
         /// <param name="starttime"></param>
         /// <param name="offset"></param>
@@ -2443,6 +2733,14 @@ namespace Sanford.Multimedia.Midi
             set { pan = value; }
         }
 
+
+        private bool maximized = true;
+        public bool Maximized
+        {
+            get { return maximized; }
+            set { maximized = value; }
+        }
+
         #region lyrics
 
         //FAB: 29/05/2014
@@ -2548,8 +2846,10 @@ namespace Sanford.Multimedia.Midi
 
                 if(value < 0)
                 {
-                    throw new ArgumentOutOfRangeException("EndOfTrackOffset", value,
-                        "End of track offset out of range.");
+                    Console.WriteLine("ERROR: End of track offset out of range");
+                    //throw new ArgumentOutOfRangeException("EndOfTrackOffset", value,
+                    //    "End of track offset out of range.");
+                    value = 0;
                 }
 
                 #endregion

@@ -60,6 +60,9 @@ namespace Karaboss
         private Color TxtBackColor;
 
 
+        // Forece Uppercase
+        private bool bForceUppercase = false;
+
         // Contour color
         private bool bColorContour = true;
         private Color TxtContourColor;
@@ -84,6 +87,8 @@ namespace Karaboss
             SetOptions();
 
             pBox.SetBackground(dirSlideShow);
+            pBox.bDemo = true;
+            pBox.LoadDemoText();
         }
 
 
@@ -100,7 +105,11 @@ namespace Karaboss
                 _karaokeFont = Properties.Settings.Default.KaraokeFont;
                 pBox.KaraokeFont = _karaokeFont;
                 txtFont.Text = _karaokeFont.Name;
-                
+
+                // Force Uppercase
+                bForceUppercase = Karaclass.m_ForceUppercase;
+              
+
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
 
@@ -242,6 +251,9 @@ namespace Karaboss
                 Properties.Settings.Default.bColorContour = bColorContour;
                 Properties.Settings.Default.TxtContourColor = TxtContourColor;
 
+                // Force Uppercase
+                Properties.Settings.Default.bForceUppercase = bForceUppercase;
+
                 Properties.Settings.Default.TxtNbLines = NbLines;
 
                 dirSlideShow = txtSlideShow.Text.Trim();
@@ -311,12 +323,14 @@ namespace Karaboss
                 pictHighlight.BackColor = TxtHighlightColor;
                 pictNext.BackColor = TxtNextColor;
 
+                // Force uppercase
+                chkTextUppercase.Checked = bForceUppercase;
+                pBox.bforceUppercase = bForceUppercase;
 
                 // picturebox            
                 pBox.FreqDirSlideShow = freqSlideShow;
                 pBox.TxtNbLines = NbLines;
                 pBox.CurrentTime = 30;
-
 
 
                 pBox.TxtBackColor = TxtBackColor;
@@ -557,6 +571,9 @@ namespace Karaboss
 
                 frmLyric.bColorContour = bColorContour;
                 frmLyric.TxtContourColor = TxtContourColor;
+
+                // force uppercase
+                frmLyric.bForceUppercase = bForceUppercase;
 
                 NbLines = Convert.ToInt32(UpDownNbLines.Value);
                 frmLyric.TxtNbLines = NbLines;
@@ -827,16 +844,7 @@ namespace Karaboss
         {            
             pBox.bTextBackGround = chkTextBackground.Checked;
         }
-
-
-
-
-
-
-        #endregion
-
-        // Fonts
-       
+             
 
         private void BtnFonts_Click(object sender, EventArgs e)
         {
@@ -862,5 +870,20 @@ namespace Karaboss
             }
         
         }
+
+        /// <summary>
+        /// Forece Uppercase
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkTextUppercase_CheckedChanged(object sender, EventArgs e)
+        {
+            bForceUppercase = chkTextUppercase.Checked;
+            pBox.bforceUppercase = bForceUppercase;
+            Karaclass.m_ForceUppercase = bForceUppercase;
+        }
+
+        #endregion
+
     }
 }

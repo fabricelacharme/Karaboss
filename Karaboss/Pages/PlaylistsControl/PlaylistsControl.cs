@@ -46,7 +46,9 @@ namespace Karaboss.playlists
     // Events
     public delegate void SelectedIndexChangedEventHandler(object sender, string fileName);
     public delegate void PlayMidiEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
-    public delegate void PlayTextEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
+    public delegate void PlayAbcEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
+    public delegate void PlayTxtEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
+    public delegate void PlayXmlEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void NavigateToEventHandler(Object sender, string path, string file);
 
@@ -56,7 +58,9 @@ namespace Karaboss.playlists
         // Events
         public event SelectedIndexChangedEventHandler SelectedIndexChanged;
         public event PlayMidiEventHandler PlayMidi;
-        public event PlayTextEventHandler PlayText;
+        public event PlayAbcEventHandler PlayAbc;
+        public event PlayTxtEventHandler PlayTxt;
+        public event PlayXmlEventHandler PlayXml;
         public event PlayCDGEventHandler PlayCDG;
         public event NavigateToEventHandler NavigateTo;
 
@@ -1150,14 +1154,14 @@ namespace Karaboss.playlists
                 tvContextMenu.Items.Add(menusep1);
 
                 // Menu create a folder
-                ToolStripMenuItem menuCreateNewPlGroup = new ToolStripMenuItem("Create a new folder");
+                ToolStripMenuItem menuCreateNewPlGroup = new ToolStripMenuItem(Strings.CreateNewFolder);
                 tvContextMenu.Items.Add(menuCreateNewPlGroup);
                 menuCreateNewPlGroup.Click += new System.EventHandler(MnuCreatePlaylistGroup_Click);
                 menuCreateNewPlGroup.Image = Karaboss.Properties.Resources.Action_folder241;
 
 
                 // Menu delete a folder
-                ToolStripMenuItem menuDeletePlGroup = new ToolStripMenuItem("Delete folder and all its playlists");
+                ToolStripMenuItem menuDeletePlGroup = new ToolStripMenuItem(Strings.DeleteFolderAndPlaylists);
                 tvContextMenu.Items.Add(menuDeletePlGroup);
                 menuDeletePlGroup.Click += new System.EventHandler(MnuDeletePlaylistGroup_Click);
                 menuDeletePlGroup.ShortcutKeys = Keys.Delete;
@@ -1174,7 +1178,7 @@ namespace Karaboss.playlists
 
 
                 // Menu delete playlist                
-                ToolStripMenuItem menuDelete = new ToolStripMenuItem("Delete playlist");
+                ToolStripMenuItem menuDelete = new ToolStripMenuItem(Strings.DeletePlaylist);
                 tvContextMenu.Items.Add(menuDelete);
                 menuDelete.Click += new System.EventHandler(MnutvDeletePlaylist_Click);
                 menuDelete.ShortcutKeys = Keys.Delete;
@@ -1458,10 +1462,20 @@ namespace Karaboss.playlists
                             case ".mml":
                             case ".abc":
                                 {
-                                    PlayText?.Invoke(this, fi, currentPlaylist, bplay);
+                                    PlayAbc?.Invoke(this, fi, currentPlaylist, bplay);
                                     break;
                                 }
-
+                            case ".txt":
+                                {
+                                    PlayTxt?.Invoke(this, fi, currentPlaylist, bplay);
+                                    break;
+                                }
+                            case ".musicxml":
+                            case ".xml":
+                                {
+                                    PlayXml?.Invoke(this, fi, currentPlaylist, bplay);
+                                    break;
+                                }
                             default:
                                 try
                                 {
@@ -2331,17 +2345,26 @@ namespace Karaboss.playlists
                     case ".mml":
                     case ".abc":
                         {
-                            PlayText?.Invoke(this, new FileInfo(file), null, bplay);
+                            PlayAbc?.Invoke(this, new FileInfo(file), null, bplay);
                             break;
                         }
-
+                    case ".musicxml":
+                    case ".xml":
+                        {
+                            PlayXml?.Invoke(this, new FileInfo(file), null, bplay);
+                            break;
+                        }
+                    case ".txt":
+                        {
+                            PlayTxt?.Invoke(this, new FileInfo(file), null, bplay);
+                            break;
+                        }
                     case ".zip":
                     case ".cdg":
                         {
                             PlayCDG?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
-
                     default:
                         try
                         {

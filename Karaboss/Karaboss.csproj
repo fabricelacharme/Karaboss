@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Karaboss</RootNamespace>
     <AssemblyName>Karaboss</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -88,6 +88,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AudioManager.cs" />
@@ -318,11 +319,11 @@
     <Compile Include="frmExplorer.Designer.cs">
       <DependentUpon>frmExplorer.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmTools.cs">
+    <Compile Include="frmToools.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmTools.Designer.cs">
-      <DependentUpon>frmTools.cs</DependentUpon>
+    <Compile Include="frmToools.Designer.cs">
+      <DependentUpon>frmToools.cs</DependentUpon>
     </Compile>
     <Compile Include="MP3GPlayer\frmCDGWindow.cs">
       <SubType>Form</SubType>
@@ -537,6 +538,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmLyricsEdit.fr.resx">
       <DependentUpon>frmLyricsEdit.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmLyricsEdit.resx">
       <DependentUpon>frmLyricsEdit.cs</DependentUpon>
@@ -602,11 +604,11 @@
       <DependentUpon>frmExplorer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmTools.fr.resx">
-      <DependentUpon>frmTools.cs</DependentUpon>
+    <EmbeddedResource Include="frmToools.fr.resx">
+      <DependentUpon>frmToools.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmTools.resx">
-      <DependentUpon>frmTools.cs</DependentUpon>
+    <EmbeddedResource Include="frmToools.resx">
+      <DependentUpon>frmToools.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MP3GPlayer\frmCDGWindow.resx">
       <DependentUpon>frmCDGWindow.cs</DependentUpon>
@@ -654,7 +656,9 @@
     <EmbeddedResource Include="Resources\Localization\Strings.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Localization\Strings.fr.resx" />
+    <EmbeddedResource Include="Resources\Localization\Strings.fr.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Pages\SearchControl\SearchControl.de.resx">
       <DependentUpon>SearchControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -705,6 +709,14 @@
     <ProjectReference Include="..\Hqub.MusicBrainz.API\Hqub.MusicBrainz.API.csproj">
       <Project>{77832ded-eefe-4db9-94af-b0be02cec356}</Project>
       <Name>Hqub.MusicBrainz.API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KMusicTxt\KMusicTxt.csproj">
+      <Project>{ee194ac1-0d74-4a84-84d6-c9be8ced2c10}</Project>
+      <Name>KMusicTxt</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KMusicXml\KMusicXml.csproj">
+      <Project>{75119527-7313-46c8-8a38-824802628ec8}</Project>
+      <Name>KMusicXml</Name>
     </ProjectReference>
     <ProjectReference Include="..\knobControl\KnobControl.csproj">
       <Project>{04123f59-331d-4582-be0d-721feab6050f}</Project>
@@ -776,6 +788,8 @@
     <None Include="Resources\abc.ico" />
     <None Include="Resources\floppy-icon.png" />
     <None Include="Resources\delete-icon.png" />
+    <None Include="Resources\cross_icon.bmp" />
+    <None Include="Resources\cross_icon.png" />
     <Content Include="Resources\Ico\mml.ico" />
     <None Include="Resources\Media-Controls-Skip-To-Start-icon.png" />
     <None Include="Resources\Media-Controls-Skip-To-End-icon.png" />

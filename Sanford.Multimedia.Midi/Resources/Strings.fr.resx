@@ -126,8 +126,8 @@
   <data name="DeleteHalfTime" xml:space="preserve">
     <value>Supprimer 1/2 temps</value>
   </data>
-  <data name="DeleteMeasure" xml:space="preserve">
-    <value>Supprimer 1 mesure</value>
+  <data name="DeleteMeasures" xml:space="preserve">
+    <value>Supprimer des mesures</value>
   </data>
   <data name="DeleteOneTime" xml:space="preserve">
     <value>Supprimer 1 temps</value>
@@ -135,11 +135,14 @@
   <data name="InsertHalfTime" xml:space="preserve">
     <value>Insérer 1/2 temps</value>
   </data>
-  <data name="InsertMeasure" xml:space="preserve">
-    <value>Insérer 1 measure</value>
+  <data name="InsertMeasures" xml:space="preserve">
+    <value>Insérer des mesures</value>
   </data>
   <data name="InsertOneTime" xml:space="preserve">
     <value>Insérer 1 temps</value>
+  </data>
+  <data name="OffsetStartTimesOfNotes" xml:space="preserve">
+    <value>Décaler les notes</value>
   </data>
   <data name="Paste" xml:space="preserve">
     <value>Coller</value>

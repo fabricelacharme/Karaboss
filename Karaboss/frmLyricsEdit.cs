@@ -111,7 +111,7 @@ namespace Karaboss
         // Midifile characteristics
         private double _duration = 0;  // en secondes
         private int _totalTicks = 0;
-        private int _bpm = 0;
+        //private int _bpm = 0;
         private double _ppqn;
         private int _tempo;
         private int _measurelen;
@@ -2270,9 +2270,9 @@ namespace Karaboss
                 string c = string.Empty;
 
                 string plType = string.Empty;
-                int plTicksOn = 0;
+                //int plTicksOn = 0;
                 string plRealTime = string.Empty;
-                int plNote = 0;
+                //int plNote = 0;
                 string strplnote = string.Empty;
                 string plElement = string.Empty;
 

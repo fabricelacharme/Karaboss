@@ -48,7 +48,9 @@ namespace Karaboss.xplorer
     public delegate void SelectedIndexChangedEventHandler(object sender, string fileName);   
     public delegate void PlayMidiEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
-    public delegate void PlayTextEventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayAbcEventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayTxtEventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayXmlEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void ContentChangedEventHandler(object sender, string strContent, string strPath);
     public delegate void CreateNewMidiFileEventHandler(object sender);
 
@@ -60,7 +62,9 @@ namespace Karaboss.xplorer
         public event SelectedIndexChangedEventHandler SelectedIndexChanged;        
         public event PlayMidiEventHandler PlayMidi;
         public event PlayCDGEventHandler PlayCDG;
-        public event PlayTextEventHandler PlayText;
+        public event PlayAbcEventHandler PlayAbc;
+        public event PlayTxtEventHandler PlayTxt;
+        public event PlayXmlEventHandler PlayXml;
         public event ContentChangedEventHandler LvContentChanged;
         public event CreateNewMidiFileEventHandler CreateNewMidiFile;
         
@@ -149,11 +153,13 @@ namespace Karaboss.xplorer
             shellListView.AddToPlaylist += new FlShell.AddToPlaylistByNameHandler(ShellListView_AddToPlaylist);
             shellListView.PlayMidi += new FlShell.PlayMidiEventHandler(ShellListView_PlayMidi);
             shellListView.PlayCDG += new FlShell.PlayCDGEventHandler(ShellListView_PlayCDG);
-            shellListView.PlayText += new FlShell.PlayTextEventHandler(ShellListView_PlayText);
+            shellListView.PlayAbc += new FlShell.PlayAbcEventHandler(ShellListView_PlayAbc);
+            shellListView.PlayTxt += new FlShell.PlayTxtEventHandler(ShellListView_PlayTxt);
+            shellListView.PlayXml += new FlShell.PlayXmlEventHandler(ShellListView_PlayXml);
             shellListView.lvContentChanged += new FlShell.ContentChangedEvenHandler(ShellListView_ContentChanged);
             shellListView.SelectedIndexChanged += new FlShell.SelectedIndexChangedEventHandler(ShellListView_SelectedIndexChanged);
                        
-            // F3, F4, F6            
+            // F3, F4, F6, F7            
             shellListView.lvFunctionKeyClicked += new FlShell.lvFunctionKeyEventHandler(ShellListView_lvFunctionKeyClicked);
             shellListView.SenKeyToParent += new FlShell.SenKeyToParentHandler(shellListView_SendKeyToParent);
 
@@ -205,6 +211,9 @@ namespace Karaboss.xplorer
         {
             shellListView.RefreshContents(fullPath);
         }
+        
+
+
 
         #endregion
 
@@ -232,11 +241,24 @@ namespace Karaboss.xplorer
             PlayMidi?.Invoke(this, fi, bplay);
         }
         
-        private void ShellListView_PlayText(object sender, FileInfo fi, bool bplay)
+        private void ShellListView_PlayAbc(object sender, FileInfo fi, bool bplay)
         {
-            PlayText?.Invoke(this, fi, bplay);
+            PlayAbc?.Invoke(this, fi, bplay);
         }
-        
+
+        private void ShellListView_PlayTxt(object sender, FileInfo fi, bool bplay)
+        {
+            PlayTxt?.Invoke(this, fi, bplay);
+        }
+
+        private void ShellListView_PlayXml(object sender, FileInfo fi, bool bplay)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            Application.DoEvents();
+            PlayXml?.Invoke(this, fi, bplay);
+        }
+
+
         private void ShellListView_AddToPlaylist(object sender, FlShell.ShellItem[] fls, string plname, string key, bool bnewPlaylist)
         {
             if (bnewPlaylist == true)
@@ -290,6 +312,10 @@ namespace Karaboss.xplorer
                     InvertAuthor();
                     break;
 
+                case Keys.F7:
+                    InvertAuthorAndSong();
+                    break;
+
                 default:
                     break;
             }
@@ -339,6 +365,67 @@ namespace Karaboss.xplorer
 
         #region invert author and song
 
+        /// <summary>
+        /// Rename files like "song - author.mid" to "author - song.mid"
+        /// </summary>
+        public void InvertAuthorAndSong()
+        {
+            if (treeView.SelectedFolder != null && treeView.SelectedFolder.IsFolder)
+            {
+                string tx = string.Empty;
+                tx = "This function replace the format\n'song - author.mid'\nto the format\n'author - song.mid'.\n\n";
+                tx += "Continue?";
+
+                if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                    return;
+
+                string physicalPath = this.treeView.SelectedFolder.FileSystemPath;
+
+                string filename = string.Empty;
+                string author = string.Empty;
+                string song = string.Empty;
+                string extension = string.Empty;
+                string newfileName = string.Empty;
+                string oldFileName = string.Empty;
+
+                try
+                {
+                    FlShell.ShellItem[] fls = shellListView.SelectedItems;
+                    if (fls.Length > 0)
+                    {
+                        foreach (FlShell.ShellItem f in fls)
+                        {
+                            string file = f.FileSystemPath;
+                            oldFileName = Path.GetFileName(file);
+                            filename = Path.GetFileNameWithoutExtension(file);
+                            extension = Path.GetExtension(file);
+
+                            if (filename.IndexOf("-") > 0)
+                            {
+                                author = filename.Substring(filename.LastIndexOf("-") + 1).Trim();
+                                if (author.Length > 1)
+                                {
+                                    song = filename.Substring(0, filename.LastIndexOf("-")).Trim();
+                                    newfileName = author + " - " + song + extension;
+                                    newfileName = GetUniqueFileName(Path.Combine(physicalPath, newfileName));
+
+                                    RenameFile(oldFileName, newfileName, physicalPath);
+                                }
+                            }
+                        }
+                    }                   
+                    RefreshContents();
+                }
+                catch (Exception er)
+                {
+                    Console.WriteLine("The process failed: {0}", er.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Rename files like "song (author).mid" to "author - song.mid"
+        /// </summary>
         private void InvertAuthor()
         {
             if (treeView.SelectedFolder != null && treeView.SelectedFolder.IsFolder)
@@ -464,7 +551,7 @@ namespace Karaboss.xplorer
         #region rename all
 
         /// <summary>
-        /// Ask confirmation to rename all files
+        /// Ask confirmation to rename all files (F3)
         /// </summary>
         public void RenameAllQuestion()
         {
@@ -581,11 +668,15 @@ namespace Karaboss.xplorer
                 string[] files = Directory.GetFiles(physicalPath);
                 foreach (string file in files)
                 {
+                    
                     // apply format
                     oldFileName = Path.GetFileName(file);
-                    newfileName = pfx + " - " + oldFileName;
-                    // rewrite it
-                    RenameFile(oldFileName, newfileName, physicalPath);
+                    if (oldFileName != "Desktop.ini")
+                    {
+                        newfileName = pfx + " - " + oldFileName;
+                        // rewrite it
+                        RenameFile(oldFileName, newfileName, physicalPath);
+                    }
                 }
             }
             catch (Exception er)
@@ -905,7 +996,7 @@ namespace Karaboss.xplorer
         #region Replace All
 
         /// <summary>
-        /// Ask confirmation to search & replace in all files
+        /// Ask confirmation to search & replace in all files (F4)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1109,14 +1200,25 @@ namespace Karaboss.xplorer
             InvokePlayEdit(false);
         }
 
+    
         /// <summary>
-        /// Rename files 
+        /// Rename files using upper directory F6
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void NamingButton_Click(object sender, EventArgs e)
+        private void mnuRenameFiles_Click(object sender, EventArgs e)
         {
             RenameAllQuestion();
+        }
+
+        /// <summary>
+        /// Invert author and song F7
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuInvertAuthorSong_Click(object sender, EventArgs e)
+        {
+            InvertAuthorAndSong();
         }
 
         /// <summary>
@@ -1164,10 +1266,20 @@ namespace Karaboss.xplorer
                     case ".abc":
                     case ".mml":
                         {
-                            PlayText?.Invoke(this, new FileInfo(file), bplay);
+                            PlayAbc?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
-
+                    case ".musicxml":
+                    case ".xml":
+                        {
+                            PlayXml?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
+                    case ".txt":
+                        {
+                            PlayTxt?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
                     default:
                         try
                         {
@@ -1481,6 +1593,8 @@ namespace Karaboss.xplorer
             string fName = Karaclass.M_filePlaylistGroups;
             PlGroupHelper.Save(fName, PlGroup);                        
         }
+
+
 
 
 

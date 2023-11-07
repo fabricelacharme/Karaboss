@@ -42,6 +42,8 @@
             this.updNumerator = new System.Windows.Forms.NumericUpDown();
             this.updDenominator = new System.Windows.Forms.NumericUpDown();
             this.lblTitle = new System.Windows.Forms.Label();
+            this.txtBpm = new System.Windows.Forms.TextBox();
+            this.lblBpm = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.updMeasures)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.updNumerator)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.updDenominator)).BeginInit();
@@ -49,16 +51,16 @@
             // 
             // btnCancel
             // 
-            resources.ApplyResources(this.btnCancel, "btnCancel");
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            resources.ApplyResources(this.btnCancel, "btnCancel");
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnOk
             // 
-            resources.ApplyResources(this.btnOk, "btnOk");
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+            resources.ApplyResources(this.btnOk, "btnOk");
             this.btnOk.Name = "btnOk";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
@@ -67,6 +69,7 @@
             // 
             resources.ApplyResources(this.txtDivision, "txtDivision");
             this.txtDivision.Name = "txtDivision";
+            this.txtDivision.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDivision_KeyPress);
             // 
             // lblDivision
             // 
@@ -77,6 +80,8 @@
             // 
             resources.ApplyResources(this.txtTempo, "txtTempo");
             this.txtTempo.Name = "txtTempo";
+            this.txtTempo.TextChanged += new System.EventHandler(this.txtTempo_TextChanged);
+            this.txtTempo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtTempo_KeyPress);
             // 
             // lblTempo
             // 
@@ -117,6 +122,7 @@
             0,
             0,
             0});
+            this.updNumerator.ValueChanged += new System.EventHandler(this.updNumerator_ValueChanged);
             // 
             // updDenominator
             // 
@@ -127,6 +133,7 @@
             0,
             0,
             0});
+            this.updDenominator.ValueChanged += new System.EventHandler(this.updDenominator_ValueChanged);
             // 
             // lblTitle
             // 
@@ -134,11 +141,25 @@
             this.lblTitle.ForeColor = System.Drawing.Color.RoyalBlue;
             this.lblTitle.Name = "lblTitle";
             // 
+            // txtBpm
+            // 
+            resources.ApplyResources(this.txtBpm, "txtBpm");
+            this.txtBpm.Name = "txtBpm";
+            this.txtBpm.TextChanged += new System.EventHandler(this.txtBpm_TextChanged);
+            this.txtBpm.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBpm_KeyPress);
+            // 
+            // lblBpm
+            // 
+            resources.ApplyResources(this.lblBpm, "lblBpm");
+            this.lblBpm.Name = "lblBpm";
+            // 
             // frmNewMidiFile
             // 
             this.AcceptButton = this.btnOk;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblBpm);
+            this.Controls.Add(this.txtBpm);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.updDenominator);
             this.Controls.Add(this.updNumerator);
@@ -179,5 +200,7 @@
         private System.Windows.Forms.NumericUpDown updNumerator;
         private System.Windows.Forms.NumericUpDown updDenominator;
         private System.Windows.Forms.Label lblTitle;
+        private System.Windows.Forms.TextBox txtBpm;
+        private System.Windows.Forms.Label lblBpm;
     }
 }

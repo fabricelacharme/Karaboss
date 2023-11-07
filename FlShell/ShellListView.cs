@@ -51,6 +51,7 @@ using ComTypes = System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using FlShell.Resources.Localization;
 using System.Threading;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace FlShell
 {
@@ -62,7 +63,11 @@ namespace FlShell
     // Play CDG file
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
     // Play abc, mml file
-    public delegate void PlayTextEventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayAbcEventHandler(object sender, FileInfo fi, bool bplay);
+    // Play musicxml, xml file
+    public delegate void PlayXmlEventHandler(object sender, FileInfo fi, bool bplay);
+    // Play txt file
+    public delegate void PlayTxtEventHandler(object sender, FileInfo fi, bool bplay);
     // Playlists management
     public delegate void AddToPlaylistByNameHandler(object sender, ShellItem[] fls, string plname, string key = null, bool newPlaylist = false);
     // Display number of directories and files
@@ -88,7 +93,9 @@ namespace FlShell
         public event SelectedIndexChangedEventHandler SelectedIndexChanged;
         public event PlayMidiEventHandler PlayMidi;
         public event PlayCDGEventHandler PlayCDG;
-        public event PlayTextEventHandler PlayText;
+        public event PlayAbcEventHandler PlayAbc;
+        public event PlayTxtEventHandler PlayTxt;
+        public event PlayXmlEventHandler PlayXml;
         public event AddToPlaylistByNameHandler AddToPlaylist;
         
         // Send Key to parent
@@ -762,8 +769,11 @@ namespace FlShell
 
                 while (e.MoveNext())
                 {
-                    items.Add(CreateItem(e.Current));
-                    f++;
+                    if (!e.Current.IsHidden)
+                    {
+                        items.Add(CreateItem(e.Current));
+                        f++;
+                    }
                 }
 
                 //Console.Write("");
@@ -881,32 +891,28 @@ namespace FlShell
         }
 
         /// <summary>
-        /// Convert file size to Byte, Kb, Mb, Gb (not yet Tb lol)
+        /// Convert file size to Byte, Kb, Mb, Gb, Tb
         /// </summary>
         /// <param name="sizeInBytes"></param>
         /// <returns></returns>
         private string FileSizeToString(long sizeInBytes)
-        {            
-            if (sizeInBytes >= 1073741824)
+        {
+            string[] sizes = { "Bytes", "Ko", "Mo", "Go", "To", "Po" };
+            double len = sizeInBytes;
+            int order = 0;
+            while (len >= 1024 && order < sizes.Length - 1)
             {
-                double sizeInGB = sizeInBytes / Math.Pow(1024, 3);
-                return Math.Round(sizeInGB, 2) + " Go";
+                order++;
+                len = len / 1024;
             }
 
-            if (sizeInBytes >= 1048576)
-            {
-                double sizeInMB = sizeInBytes / Math.Pow(1024, 2);
-                return Math.Round(sizeInMB, 2) + " Mo";
-            }
-
-            if (sizeInBytes >= 1024)
-            {
-                double sizeInKB = sizeInBytes / Math.Pow(1024, 1);
-                return Math.Round(sizeInKB, 0) + " Ko";
-            }
-
-            //No conversion needed
-            return sizeInBytes + " Bytes";
+            // Adjust the format string to your preferences. For example "{0:0.#}{1}" would
+            // show a single decimal place, and no space.
+            // Take upper size
+            len = Math.Ceiling(len);
+            string result = String.Format("{0:0} {1}", len, sizes[order]);
+            return result;
+            
         }
 
         #endregion
@@ -1349,6 +1355,11 @@ namespace FlShell
 
         #region Events
 
+        /// <summary>
+        /// List all files taken into account
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ListView_SelectedItemChanged(object sender, EventArgs e)
         {
             //if (SelectedItems.Length > 0)
@@ -1362,6 +1373,9 @@ namespace FlShell
                     {
                         case ".mid":
                         case ".kar":
+                        case ".xml":
+                        case ".musicxml":
+                        case ".txt":
                             SelectedIndexChanged?.Invoke(this, file);
                             break;
                         default:
@@ -1461,6 +1475,7 @@ namespace FlShell
                 case Keys.F3:
                 case Keys.F4:
                 case Keys.F6:
+                case Keys.F7:
                     // FAB: rename all, replace all
                     lvFunctionKeyClicked(this, e.KeyCode, e.KeyData); //F3 rename all, F4, replace all (Karaboss function keys)
                     break;
@@ -1634,14 +1649,23 @@ namespace FlShell
                             PlayCDG?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
-
                     case ".mml":
                     case ".abc":
                         {
-                            PlayText?.Invoke(this, new FileInfo(file), bplay);
+                            PlayAbc?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
-
+                    case ".musicxml":
+                    case ".xml":
+                        {
+                            PlayXml?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
+                    case ".txt":
+                        {
+                            PlayTxt?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
                     default:
                         try
                         {

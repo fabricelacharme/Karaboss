@@ -199,7 +199,7 @@
     <value>picBalls</value>
   </data>
   <data name="&gt;&gt;picBalls.Type" xml:space="preserve">
-    <value>BallsControl.Balls, BallsControl, Version=1.0.0.2, Culture=neutral, PublicKeyToken=null</value>
+    <value>BallsControl.Balls, BallsControl, Version=1.0.0.3, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;picBalls.Parent" xml:space="preserve">
     <value>pnlBalls</value>
@@ -237,7 +237,7 @@
   <data name="btnChangeWords.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DQAACw0B7QfALAAAAAd0SU1FB+ELCw8xBQx2YJcAAAHHSURBVEhL7dbNKwRxAMbx9f5ORInclLwflKIo
+        DAAACwwBP0AiyAAAAAd0SU1FB+ELCw8xBQx2YJcAAAHHSURBVEhL7dbNKwRxAMbx9f5ORInclLwflKIo
         pZQrB/kDXOREigMHJQd5OTg5SA44cOXiKlc37wmRl4Mc5C18n9n9bdMyY8ZuTp76tDu/nZlnZ5rfzARC
         KcManvDh4gbdSIDvqOQO2tEVjhzcwhROIQ2+oiPRxitoRPU3KtGDe5iyeaTDc3S6dCQqcYsKj2GKZAbx
         8BRtoFOjHblFv2s9e5HMwVOiKXoPfU4iDq7xWlSLU9iL7IbhGq3kpSgPm3i0eYUpOkAxHOO1SNH8SbJR
@@ -552,7 +552,7 @@
     <value>pBox</value>
   </data>
   <data name="&gt;&gt;pBox.Type" xml:space="preserve">
-    <value>PicControl.pictureBoxControl, PicControl, Version=1.0.0.5, Culture=neutral, PublicKeyToken=null</value>
+    <value>PicControl.pictureBoxControl, PicControl, Version=1.0.0.6, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pBox.Parent" xml:space="preserve">
     <value>panel1</value>

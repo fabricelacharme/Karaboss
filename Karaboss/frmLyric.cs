@@ -40,6 +40,7 @@ using PicControl;
 using System.Runtime.InteropServices;
 using System.Linq;
 using Karaboss.Resources.Localization;
+using static PicControl.pictureBoxControl;
 
 namespace Karaboss
 {
@@ -84,6 +85,21 @@ namespace Karaboss
         }
 
         #region text characteristics
+
+        // Force Uppercase
+        private List<plLyric> _plLyrics;
+
+        private bool _bForceUppercase = false;
+        public bool bForceUppercase
+        {
+            get { return _bForceUppercase; }
+            set { 
+                _bForceUppercase = value;
+                pBox.bforceUppercase = _bForceUppercase;
+                LoadSong(_plLyrics);
+            }
+        }
+
 
         public Font KaraokeFont
         {
@@ -383,6 +399,12 @@ namespace Karaboss
             {                
                 _karaokeFont = Properties.Settings.Default.KaraokeFont;
                 pBox.KaraokeFont = _karaokeFont;
+                pBox.bShowParagraphs = Karaclass.m_ShowParagraph;
+
+
+                // Force Uppercase
+                _bForceUppercase = Karaclass.m_ForceUppercase;
+
 
                 // show balls
                 bShowBalls = Karaclass.m_DisplayBalls;
@@ -470,7 +492,8 @@ namespace Karaboss
         ///  1/2 = Paragraph
         /// </summary>
         public void LoadSong(List<plLyric> plLyrics)
-        {            
+        {
+            _plLyrics = plLyrics;
             currentTextPos = 0;
             lyrics = "";
             for (int i = 0; i < plLyrics.Count; i++)
@@ -478,8 +501,7 @@ namespace Karaboss
                 lyrics += plLyrics[i].Element; 
             }
 
-
-            List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
+            List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();           
             foreach (plLyric plL in plLyrics)
             {
                 pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric();
@@ -492,6 +514,8 @@ namespace Karaboss
             }
 
             // Load song
+            // Force Uppercase
+            pBox.bforceUppercase = _bForceUppercase;
             pBox.LoadSong(pcLyrics);
             
             //Initial position

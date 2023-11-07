@@ -666,7 +666,7 @@ namespace Sanford.Multimedia.Midi.Score
         public void DrawNotes(Graphics g, Pen pen, int ytop, WhiteNote topstaff, int tracknum, Rectangle selRect, int OffsetX)
         {
             pen.Width = 1;
-            int staffH = sheetmusic.StaffH;
+            int staffH = sheetmusic.StaffHMaximized;
 
 
             // If selection in progress

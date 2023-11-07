@@ -453,8 +453,8 @@
   <data name="DeleteHalfTime" xml:space="preserve">
     <value>Delete 1/2 time</value>
   </data>
-  <data name="DeleteMeasure" xml:space="preserve">
-    <value>Delete measure</value>
+  <data name="DeleteMeasures" xml:space="preserve">
+    <value>Delete measures</value>
   </data>
   <data name="DeleteOneTime" xml:space="preserve">
     <value>Delete 1 time</value>
@@ -462,8 +462,8 @@
   <data name="InsertHalfTime" xml:space="preserve">
     <value>Insert 1/2 time</value>
   </data>
-  <data name="InsertMeasure" xml:space="preserve">
-    <value>Insert measure</value>
+  <data name="InsertMeasures" xml:space="preserve">
+    <value>Insert measures</value>
   </data>
   <data name="InsertOneTime" xml:space="preserve">
     <value>Insert 1 time</value>
@@ -488,5 +488,44 @@
   </data>
   <data name="DeleteAllLyrics" xml:space="preserve">
     <value>Be careful, all the lyrics will be deleted from this song. Do you want to continue?</value>
+  </data>
+  <data name="OffsetStartTimesOfNotes" xml:space="preserve">
+    <value>Offset start times of notes</value>
+  </data>
+  <data name="SubDirectoryForbiden" xml:space="preserve">
+    <value>Path cannot be a sub directory because all files will be doubles!</value>
+  </data>
+  <data name="SearchMD5Doubles" xml:space="preserve">
+    <value>Search MD5 doubles</value>
+  </data>
+  <data name="SearchMD5DoublesL1" xml:space="preserve">
+    <value>This function will search for double files using their MD5 value in your default songs directory:</value>
+  </data>
+  <data name="SearchMD5DoublesL2" xml:space="preserve">
+    <value>and the directory that you have selected:</value>
+  </data>
+  <data name="SearchMD5DoublesL3" xml:space="preserve">
+    <value>If double files are found, you will have the choice, either to display them, either to moved them from the selected directory to a directory called 'Doubles' under this directory.</value>
+  </data>
+  <data name="SearchMD5DoublesSel" xml:space="preserve">
+    <value>This function will search for double files using their MD5 value in the selected directory</value>
+  </data>
+  <data name="SearchRecursively" xml:space="preserve">
+    <value>Searching recursively files in path</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continue?</value>
+  </data>
+  <data name="CreateNewFolder" xml:space="preserve">
+    <value>Create a new folder</value>
+  </data>
+  <data name="DeleteFolderAndPlaylists" xml:space="preserve">
+    <value>Delete folder and all its playlists</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Delete playlist</value>
+  </data>
+  <data name="SearchEmptyDirs" xml:space="preserve">
+    <value>This function will delete all empty directories starting from</value>
   </data>
 </root>

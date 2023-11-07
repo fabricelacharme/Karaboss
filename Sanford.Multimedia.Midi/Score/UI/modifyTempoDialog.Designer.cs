@@ -35,22 +35,26 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
             this.lblTitle = new System.Windows.Forms.Label();
+            this.lblBpm = new System.Windows.Forms.Label();
+            this.txtBpm = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // txtTempo
             // 
-            this.txtTempo.Location = new System.Drawing.Point(77, 86);
+            this.txtTempo.Location = new System.Drawing.Point(77, 59);
             this.txtTempo.Name = "txtTempo";
             this.txtTempo.Size = new System.Drawing.Size(60, 20);
             this.txtTempo.TabIndex = 14;
-            this.txtTempo.Text = "750000";
+            this.txtTempo.Text = "500000";
             this.txtTempo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtTempo.TextChanged += new System.EventHandler(this.txtTempo_TextChanged);
+            this.txtTempo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtTempo_KeyPress);
             // 
             // lblTempo
             // 
             this.lblTempo.AutoSize = true;
             this.lblTempo.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblTempo.Location = new System.Drawing.Point(28, 90);
+            this.lblTempo.Location = new System.Drawing.Point(28, 63);
             this.lblTempo.Name = "lblTempo";
             this.lblTempo.Size = new System.Drawing.Size(43, 13);
             this.lblTempo.TabIndex = 12;
@@ -58,18 +62,20 @@
             // 
             // txtDivision
             // 
-            this.txtDivision.Location = new System.Drawing.Point(197, 86);
+            this.txtDivision.Location = new System.Drawing.Point(197, 59);
             this.txtDivision.Name = "txtDivision";
             this.txtDivision.Size = new System.Drawing.Size(60, 20);
             this.txtDivision.TabIndex = 15;
-            this.txtDivision.Text = "960";
+            this.txtDivision.Text = "480";
             this.txtDivision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtDivision.TextChanged += new System.EventHandler(this.txtDivision_TextChanged);
+            this.txtDivision.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDivision_KeyPress);
             // 
             // lblDivision
             // 
             this.lblDivision.AutoSize = true;
             this.lblDivision.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblDivision.Location = new System.Drawing.Point(150, 90);
+            this.lblDivision.Location = new System.Drawing.Point(150, 63);
             this.lblDivision.Name = "lblDivision";
             this.lblDivision.Size = new System.Drawing.Size(47, 13);
             this.lblDivision.TabIndex = 13;
@@ -112,6 +118,27 @@
             this.lblTitle.Text = "Modify a score";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // lblBpm
+            // 
+            this.lblBpm.AutoSize = true;
+            this.lblBpm.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lblBpm.Location = new System.Drawing.Point(28, 95);
+            this.lblBpm.Name = "lblBpm";
+            this.lblBpm.Size = new System.Drawing.Size(31, 13);
+            this.lblBpm.TabIndex = 20;
+            this.lblBpm.Text = "Bpm:";
+            // 
+            // txtBpm
+            // 
+            this.txtBpm.Location = new System.Drawing.Point(75, 92);
+            this.txtBpm.Name = "txtBpm";
+            this.txtBpm.Size = new System.Drawing.Size(60, 20);
+            this.txtBpm.TabIndex = 19;
+            this.txtBpm.Text = "120";
+            this.txtBpm.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtBpm.TextChanged += new System.EventHandler(this.txtBpm_TextChanged);
+            this.txtBpm.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBpm_KeyPress);
+            // 
             // modifyTempoDialog
             // 
             this.AcceptButton = this.btnOk;
@@ -119,6 +146,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(284, 185);
+            this.Controls.Add(this.lblBpm);
+            this.Controls.Add(this.txtBpm);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.txtTempo);
             this.Controls.Add(this.lblTempo);
@@ -145,5 +174,7 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Label lblTitle;
+        private System.Windows.Forms.Label lblBpm;
+        private System.Windows.Forms.TextBox txtBpm;
     }
 }

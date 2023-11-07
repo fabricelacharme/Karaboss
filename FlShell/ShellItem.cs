@@ -879,6 +879,12 @@ namespace FlShell
             get { return m_ComInterface.GetAttributes(SFGAO.READONLY) != 0; }
         }
 
+        // FAB ADD 01/10/2023
+        public bool IsHidden
+        {
+            get { return m_ComInterface.GetAttributes(SFGAO.HIDDEN) !=0;  }
+        }
+
         // FAB ADD
         /// <summary>
         /// Get a value indicating whether the item can be renamed

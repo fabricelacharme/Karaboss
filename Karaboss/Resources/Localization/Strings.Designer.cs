@@ -1015,11 +1015,11 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("SungBy", resourceCulture);
             }
         }
-        internal static string InsertMeasure
+        internal static string InsertMeasures
         {
             get
             {
-                return ResourceManager.GetString("InsertMeasure", resourceCulture);
+                return ResourceManager.GetString("InsertMeasures", resourceCulture);
             }
         }
         internal static string ThisTrack
@@ -1036,11 +1036,11 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("AllTracks", resourceCulture);
             }
         }
-        internal static string DeleteMeasure
+        internal static string DeleteMeasures
         {
             get
             {
-                return ResourceManager.GetString("DeleteMeasure", resourceCulture);
+                return ResourceManager.GetString("DeleteMeasures", resourceCulture);
             }
         }
         internal static string InsertOneTime
@@ -1097,6 +1097,97 @@ namespace Karaboss.Resources.Localization {
             get
             {
                 return ResourceManager.GetString("DeleteAllLyrics", resourceCulture);
+            }
+        }
+        internal static string OffsetStartTimesOfNotes
+        {
+            get
+            {
+                return ResourceManager.GetString("OffsetStartTimesOfNotes", resourceCulture);                
+            }
+        }
+        internal static string SubDirectoryForbiden
+        {
+            get
+            {
+                return ResourceManager.GetString("SubDirectoryForbiden", resourceCulture);
+            }
+        }
+        internal static string SearchRecursively
+        {
+            get
+            {
+                return ResourceManager.GetString("SearchRecursively", resourceCulture);
+            }
+        }
+        internal static string SearchMD5Doubles
+        {
+            get
+            {
+                return ResourceManager.GetString("SearchMD5Doubles", resourceCulture);
+            }
+        }
+        internal static string SearchMD5DoublesL1
+        {
+            get
+            {
+                return ResourceManager.GetString("SearchMD5DoublesL1", resourceCulture);
+            }
+        }
+        internal static string SearchMD5DoublesL2
+        {
+            get
+            {
+                return ResourceManager.GetString("SearchMD5DoublesL2", resourceCulture);
+            }
+        }
+        internal static string SearchMD5DoublesL3
+        {
+            get
+            {
+                return ResourceManager.GetString("SearchMD5DoublesL3", resourceCulture);
+            }
+        }
+        internal static string SearchMD5DoublesSel
+        {
+            get
+            {
+                return ResourceManager.GetString("SearchMD5DoublesSel", resourceCulture);
+            }
+        }
+        internal static string SearchEmptyDirs
+        {
+            get
+            {
+                return ResourceManager.GetString("SearchEmptyDirs", resourceCulture);
+            }
+        }
+        internal static string Continue
+        {
+            get
+            {
+                return ResourceManager.GetString("Continue", resourceCulture);
+            }
+        }
+        internal static string CreateNewFolder
+        {
+            get
+            {
+                return ResourceManager.GetString("CreateNewFolder", resourceCulture);
+            }
+        }
+        internal static string DeleteFolderAndPlaylists
+        {
+            get
+            {
+                return ResourceManager.GetString("DeleteFolderAndPlaylists", resourceCulture);
+            }
+        }
+        internal static string DeletePlaylist
+        {
+            get
+            {
+                return ResourceManager.GetString("DeletePlaylist", resourceCulture);
             }
         }
     }

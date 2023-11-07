@@ -36,15 +36,18 @@ namespace Karaboss
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileNew = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuFileImportMidiFromText = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuFileSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileSave = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuFileExportMidiToText = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSaveAsPDF = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuFileSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnufileProperties = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuFileImportMidiFromText = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuFileExportMidiToText = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuFileSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.MnuFileImportMusicXml = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuFileSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnufileProperties = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuFileSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditAddLyrics = new System.Windows.Forms.ToolStripMenuItem();
@@ -167,15 +170,18 @@ namespace Karaboss
             this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFileNew,
             this.mnuFileOpen,
-            this.MnuFileImportMidiFromText,
             this.MnuFileSeparator1,
             this.mnuFileSave,
             this.mnuFileSaveAs,
-            this.MnuFileExportMidiToText,
             this.mnuSaveAsPDF,
             this.MnuFileSeparator2,
-            this.mnufileProperties,
+            this.MnuFileImportMidiFromText,
+            this.MnuFileExportMidiToText,
             this.MnuFileSeparator3,
+            this.MnuFileImportMusicXml,
+            this.MnuFileSeparator4,
+            this.mnufileProperties,
+            this.MnuFileSeparator5,
             this.mnuFileQuit});
             this.mnuFile.Name = "mnuFile";
             resources.ApplyResources(this.mnuFile, "mnuFile");
@@ -191,12 +197,6 @@ namespace Karaboss
             this.mnuFileOpen.Name = "mnuFileOpen";
             resources.ApplyResources(this.mnuFileOpen, "mnuFileOpen");
             this.mnuFileOpen.Click += new System.EventHandler(this.MnuFileOpen_Click);
-            // 
-            // MnuFileImportMidiFromText
-            // 
-            this.MnuFileImportMidiFromText.Name = "MnuFileImportMidiFromText";
-            resources.ApplyResources(this.MnuFileImportMidiFromText, "MnuFileImportMidiFromText");
-            this.MnuFileImportMidiFromText.Click += new System.EventHandler(this.MnuFileImportMidiFromText_Click);
             // 
             // MnuFileSeparator1
             // 
@@ -215,12 +215,6 @@ namespace Karaboss
             resources.ApplyResources(this.mnuFileSaveAs, "mnuFileSaveAs");
             this.mnuFileSaveAs.Click += new System.EventHandler(this.MnuFileSaveAs_Click);
             // 
-            // MnuFileExportMidiToText
-            // 
-            this.MnuFileExportMidiToText.Name = "MnuFileExportMidiToText";
-            resources.ApplyResources(this.MnuFileExportMidiToText, "MnuFileExportMidiToText");
-            this.MnuFileExportMidiToText.Click += new System.EventHandler(this.MnuFileExportMidiToText_Click);
-            // 
             // mnuSaveAsPDF
             // 
             this.mnuSaveAsPDF.Name = "mnuSaveAsPDF";
@@ -232,16 +226,44 @@ namespace Karaboss
             this.MnuFileSeparator2.Name = "MnuFileSeparator2";
             resources.ApplyResources(this.MnuFileSeparator2, "MnuFileSeparator2");
             // 
+            // MnuFileImportMidiFromText
+            // 
+            this.MnuFileImportMidiFromText.Name = "MnuFileImportMidiFromText";
+            resources.ApplyResources(this.MnuFileImportMidiFromText, "MnuFileImportMidiFromText");
+            this.MnuFileImportMidiFromText.Click += new System.EventHandler(this.MnuFileImportMidiFromText_Click);
+            // 
+            // MnuFileExportMidiToText
+            // 
+            this.MnuFileExportMidiToText.Name = "MnuFileExportMidiToText";
+            resources.ApplyResources(this.MnuFileExportMidiToText, "MnuFileExportMidiToText");
+            this.MnuFileExportMidiToText.Click += new System.EventHandler(this.MnuFileExportMidiToText_Click);
+            // 
+            // MnuFileSeparator3
+            // 
+            this.MnuFileSeparator3.Name = "MnuFileSeparator3";
+            resources.ApplyResources(this.MnuFileSeparator3, "MnuFileSeparator3");
+            // 
+            // MnuFileImportMusicXml
+            // 
+            this.MnuFileImportMusicXml.Name = "MnuFileImportMusicXml";
+            resources.ApplyResources(this.MnuFileImportMusicXml, "MnuFileImportMusicXml");
+            this.MnuFileImportMusicXml.Click += new System.EventHandler(this.MnuFileImportMusicXml_Click);
+            // 
+            // MnuFileSeparator4
+            // 
+            this.MnuFileSeparator4.Name = "MnuFileSeparator4";
+            resources.ApplyResources(this.MnuFileSeparator4, "MnuFileSeparator4");
+            // 
             // mnufileProperties
             // 
             this.mnufileProperties.Name = "mnufileProperties";
             resources.ApplyResources(this.mnufileProperties, "mnufileProperties");
             this.mnufileProperties.Click += new System.EventHandler(this.MnufileProperties_Click);
             // 
-            // MnuFileSeparator3
+            // MnuFileSeparator5
             // 
-            this.MnuFileSeparator3.Name = "MnuFileSeparator3";
-            resources.ApplyResources(this.MnuFileSeparator3, "MnuFileSeparator3");
+            this.MnuFileSeparator5.Name = "MnuFileSeparator5";
+            resources.ApplyResources(this.MnuFileSeparator5, "MnuFileSeparator5");
             // 
             // mnuFileQuit
             // 
@@ -1252,7 +1274,7 @@ namespace Karaboss
         private System.Windows.Forms.ToolStripMenuItem mnuDisplayPianoRoll;
         private System.Windows.Forms.Button btnStartRec;
         private System.Windows.Forms.ToolStripMenuItem mnufileProperties;
-        private System.Windows.Forms.ToolStripSeparator MnuFileSeparator3;
+        private System.Windows.Forms.ToolStripSeparator MnuFileSeparator5;
         private System.Windows.Forms.Panel TimeVLine;
         private System.Windows.Forms.Panel TimeStartVLine;
         private System.Windows.Forms.ToolStripMenuItem mnuMidiModifyTempo;
@@ -1308,6 +1330,9 @@ namespace Karaboss
         private Buttons.CheckButtonControl btnMute1;
         private System.Windows.Forms.Label lblMuteMelody;
         private System.Windows.Forms.Label lblRecord;
+        private System.Windows.Forms.ToolStripSeparator MnuFileSeparator3;
+        private System.Windows.Forms.ToolStripSeparator MnuFileSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem MnuFileImportMusicXml;
     }
 }
 

@@ -77,6 +77,8 @@ namespace Sanford.Multimedia.Midi.Score.UI
             txtTicks.Text = n.StartTime.ToString();
             txtDuration.Text = n.Duration.ToString();
             upDownNoteVelocity.Value = n.Velocity;
+
+            checkBox1.Checked = sheetmusic.IsPitchBend(n.Channel, n.StartTime, n.EndTime);
         }
 
         private void sheetmusic_SelectionChanged(List<MidiNote> lstMidiNotes)
@@ -271,9 +273,13 @@ namespace Sanford.Multimedia.Midi.Score.UI
         #region Effects
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
+            // No pitch = 8192
+            // 16383
+            int pitchBend = 16383;
+
             if (checkBox1.Checked)
             {
-                sheetmusic.SetPitchBend();
+                sheetmusic.SetPitchBend(pitchBend);
             }
             else
             {

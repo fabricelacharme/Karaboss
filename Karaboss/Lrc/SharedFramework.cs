@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace Karaboss.Lrc.SharedFramework
 {
@@ -60,7 +61,7 @@ namespace Karaboss.Lrc.SharedFramework
                 }
                 catch (Exception ex)
                 {
-                    
+                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
         }

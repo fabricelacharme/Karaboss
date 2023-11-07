@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Windows;
 
 namespace Sanford.Multimedia.Midi
 {
@@ -34,8 +36,6 @@ namespace Sanford.Multimedia.Midi
             this.stream = strm;
             int trackid = 0;
             bool bHeaderCreated = false;
-
-
             
             if (sequence.tracks[0].ContainsNotes == false)
             {
@@ -43,7 +43,6 @@ namespace Sanford.Multimedia.Midi
                 // Create header
                 //0, 0, Header, format, nTracks, division            
                 stream.WriteLine(string.Format("0, 0, Header, {0}, {1}, {2}", sequence.Format, sequence.tracks.Count, sequence.Division));
-
             }
             else  
             {
@@ -139,6 +138,7 @@ namespace Sanford.Multimedia.Midi
                             Write((SysRealtimeMessage)e.MidiMessage);
                             break;
 
+                        
                     }
                 }
                 #endregion
@@ -183,7 +183,17 @@ namespace Sanford.Multimedia.Midi
                 }
                 else if (message.Command == ChannelCommand.PitchWheel)
                 {
-
+                    // Track
+                    stream.WriteLine(string.Format("{0}, {1}, Pitch_bend_c, {2}, {3}", trackid, ticks, channel, message.Data1));
+                }
+                else if (message.Command == ChannelCommand.Controller)
+                {
+                    stream.WriteLine(string.Format("{0}, {1}, Control_c, {2}, {3}, {4}", trackid, ticks, channel, message.Data1, message.Data2));                    
+                    // 7 Volume
+                    // 10 Pan
+                    // 11 Fader
+                    // 91 Reverb
+                    // 93 chorus                                                          
                 }
             }
         }

@@ -37,21 +37,22 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
-using Sanford.Multimedia.Midi.UI;
 using System.Diagnostics;
-using System.Linq;
 using Sanford.Multimedia.Midi.Score;
 using Karaboss.Resources.Localization;
 using System.IO;
-using PicControl;
 using System.Text.RegularExpressions;
-using System.Text;
+using MusicXml;
+using MusicTxt;
+using System.Linq;
 
 namespace Karaboss
 {
 
     public partial class frmPlayer : Form
     {
+        MusicXmlReader MXmlReader = new MusicXmlReader();
+        MusicTxtReader MTxtReader = new MusicTxtReader();
 
         public bool bfilemodified = false;
 
@@ -74,6 +75,7 @@ namespace Karaboss
             public int reverb = 0;
             public int channel = 0;
             public bool muted = false;
+            public bool maximized = true;
         }
         private List<_reglages> lstTrkReglages;
         private _reglages TrkReglages;
@@ -211,8 +213,8 @@ namespace Karaboss
         private Playlist currentPlaylist;
         private PlaylistItem currentPlaylistItem;        
                         
-        private int iStaffHeight; // = SheetMusic.staffH;
-        
+        private int iStaffHeightMaximized = 150; // = SheetMusic.staffH; 148 en réalité
+        //private int iStaffHeightMinimized = 25;  // 23 en réalité
         
         // Dimensions
         private int leftWidth = 179;
@@ -423,11 +425,8 @@ namespace Karaboss
                         
             options = GetMidiOptions(ScrollVert);
 
-            // Staffs height
-            iStaffHeight = 150;
-
             #region create new sheet music
-            sheetmusic = new SheetMusic(sequence1, options, iStaffHeight)
+            sheetmusic = new SheetMusic(sequence1, options, iStaffHeightMaximized)
             {
                 bEditMode = bEditMode,
                 Velocity = Karaclass.m_Velocity,
@@ -459,7 +458,7 @@ namespace Karaboss
             
             if ( ScrollVert == false)
             {
-                pnlTracks.Height = sequence1.tracks.Count * iStaffHeight * Convert.ToInt32(zoom);
+                pnlTracks.Height = sequence1.tracks.Count * iStaffHeightMaximized * Convert.ToInt32(zoom);
                 pnlScrollView.Height = pnlTracks.Height;
             }
             else
@@ -541,7 +540,7 @@ namespace Karaboss
 
 
             // Dimensions            
-            pnlTracks.Height = sequence1.tracks.Count * iStaffHeight * Convert.ToInt32(zoom);
+            pnlTracks.Height = sequence1.tracks.Count * iStaffHeightMaximized * Convert.ToInt32(zoom);
             pnlScrollView.Height = pnlTracks.Height;
 
             SetStartVLinePos(0);
@@ -586,6 +585,7 @@ namespace Karaboss
             {
                 Track track = sequence1.tracks[i];
                 TrkReglages = new _reglages();
+                TrkReglages.maximized = track.Maximized;
                 TrkReglages.volume = track.Volume;
                 TrkReglages.pan = track.Pan;
                 TrkReglages.reverb = track.Reverb;
@@ -1222,7 +1222,7 @@ namespace Karaboss
             }
 
             // Ajust height of panel according to number of controls
-            pnlTracks.Height = sequence1.tracks.Count * iStaffHeight * Convert.ToInt32(zoom);
+            pnlTracks.Height = sequence1.tracks.Count * iStaffHeightMaximized * Convert.ToInt32(zoom);
 
             pnlScrollView.Height = pnlTracks.Height;
 
@@ -1285,9 +1285,7 @@ namespace Karaboss
         /// Display informations on midi file
         /// </summary>
         private void DisplayFileInfos()
-        {            
-            //DisplayTimeElapse(0);
-
+        {                        
             // BEAT
             beat = 1;
            
@@ -1892,6 +1890,8 @@ namespace Karaboss
         /// </summary>
         public void FirstPlaySong(int ticks)
         {
+            if (sheetmusic == null) return;
+
             try
             {                               
                 nbstop = 0;                             
@@ -1998,7 +1998,10 @@ namespace Karaboss
         /// Things to do at the end of a song
         /// </summary>
         private void AfterStopped()
-        {                                 
+        {
+            if (sheetmusic == null)
+                return;
+
             // Buttons play & stop 
             BtnStatus();            
             StopTimerBalls();                      
@@ -2113,6 +2116,35 @@ namespace Karaboss
                 return;
             }
 
+            CreateNewMidiFile.Numerator = MidiFileDialog.Numerator;
+            CreateNewMidiFile.Denominator = MidiFileDialog.Denominator;
+            CreateNewMidiFile.Division = MidiFileDialog.Division;
+            CreateNewMidiFile.Tempo = MidiFileDialog.Tempo;
+            CreateNewMidiFile.Measures = MidiFileDialog.Measures;
+
+            // Fab 27/10/2023
+            // Display Dialog for new track
+            string trackname = "Track1";
+            int programchange = 0;
+            int channel = 0;
+            decimal trkindex = 0;
+            int clef = 0;
+
+            dr = new DialogResult();
+            Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog TrackDialog = new Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog(trackname, programchange, channel, trkindex, clef);
+            dr = TrackDialog.ShowDialog();
+
+            // TODO : if we are creating a new file, 
+            if (dr == DialogResult.Cancel)
+                return;
+
+            CreateNewMidiFile.trackname = TrackDialog.TrackName;
+            CreateNewMidiFile.programchange = TrackDialog.ProgramChange;
+            CreateNewMidiFile.channel = TrackDialog.MidiChannel;
+            CreateNewMidiFile.trkindex = trkindex;
+            CreateNewMidiFile.clef = TrackDialog.cle;
+
+
             // Ferme le formulaire frmLyric
             if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
             {
@@ -2132,13 +2164,8 @@ namespace Karaboss
             plLyrics.Clear();
             myLyric = null;          
 
-            numerator = MidiFileDialog.Numerator;
-            denominator = MidiFileDialog.Denominator;
-            division = MidiFileDialog.Division;
-            tempo = MidiFileDialog.Tempo;
-            measures = MidiFileDialog.Measures;
-
-            NewMidiFile(numerator, denominator, division, tempo, measures);
+            // Create a new Midi File with above parameters
+            NewMidiFile();            
         }        
         
         /// <summary>
@@ -2151,7 +2178,8 @@ namespace Karaboss
 
             openMidiFileDialog.Title = "Open MIDI file";
             openMidiFileDialog.DefaultExt = "kar";
-            openMidiFileDialog.Filter = "Kar files|*.kar|MIDI files|*.mid|All files|*.*";
+            //openMidiFileDialog.Filter = "Kar files|*.kar|MIDI files|*.mid|All files|*.*";
+            openMidiFileDialog.Filter = "Kar files|*.kar|MIDI files|*.mid|Xml files|*.xml|MusicXml files|*.musicxml|Text files|*.txt|All files|*.*";
 
 
             if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
@@ -2166,7 +2194,9 @@ namespace Karaboss
                 sequence1.LoadProgressChanged += HandleLoadProgressChanged;
                 sequence1.LoadCompleted += HandleLoadCompleted;
 
-                LoadAsyncFile(fileName);                
+                //LoadAsyncFile(fileName);                
+                SelectFileToLoadAsync();
+
             }
         }
 
@@ -2356,6 +2386,53 @@ namespace Karaboss
         }
 
         /// <summary>
+        /// Load async a XML file
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void LoadAsyncXmlFile(string fileName)
+        {
+            try
+            {
+                progressBarPlayer.Visible = true;
+
+                ResetSequencer();
+                if (fileName != "\\")
+                {
+                    MXmlReader.LoadXmlAsync(fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        /// <summary>
+        /// Load async a TXT file
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void LoadAsyncTxtFile(string fileName)
+        {
+            try
+            {
+                progressBarPlayer.Visible = true;
+
+                ResetSequencer();
+                if (fileName != "\\")
+                {
+                    MTxtReader = new MusicTxtReader();
+                    MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
+
+                    MTxtReader.LoadTxtAsync(fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        /// <summary>
         /// Save the midi file
         /// </summary>
         /// <param name="fileName"></param>
@@ -2385,6 +2462,10 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuFileExportMidiToText_Click(object sender, EventArgs e)
         {
+            if (MIDIfilePath == null)
+                return;
+                //MIDIfilePath = CreateNewMidiFile.DefaultDirectory;
+
             string name = Path.GetFileNameWithoutExtension(MIDIfileName) + " (Dump)";
             string file = string.Empty;
             int suffix = 0;
@@ -2427,8 +2508,7 @@ namespace Karaboss
                 string lyrics = string.Empty;
 
                 // Load file
-                Sequence seq;
-                //Sequence seq = sequence1.ReadDump(fileName);
+                Sequence seq;                
 
                 FileStream fstream = new FileStream(fileName, FileMode.Open,
                     FileAccess.Read, FileShare.None);
@@ -2493,7 +2573,119 @@ namespace Karaboss
                 DisplayFileInfos();
                 DisplayLyricsInfos();
             }
-        }        
+        }
+
+        /// <summary>
+        /// Import a MusicXml file to Midi
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuFileImportMusicXml_Click(object sender, EventArgs e)
+        {
+            openMidiFileDialog.Title = "Open MusicXml file";
+            openMidiFileDialog.DefaultExt = "xml";
+            openMidiFileDialog.Filter = "Xml files|*.xml|MusicXml files|*.musicxml|All files|*.*";            
+            openMidiFileDialog.InitialDirectory = MIDIfilePath;
+
+            if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = openMidiFileDialog.FileName;
+
+                // Load xml file and display messages
+                LoadXmlFile(fileName, false);             
+            }
+        }
+        
+        private bool LoadXmlFile(string fileName, bool bsilentmode)
+        {
+            MIDIfilePath = Path.GetDirectoryName(fileName);
+
+            string fExt = Path.GetExtension(fileName);             // Extension
+            string fName = Path.GetFileNameWithoutExtension(fileName);    // name without extension
+            MIDIfileName = fName + ".mid";
+            MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
+
+            string lyrics = string.Empty;
+          
+            // Load xml file                
+            MusicXmlReader M = new MusicXmlReader();
+            sequence1 = M.Read(fileName);
+
+            if (sequence1 == null)
+            {
+                if (!bsilentmode)
+                    MessageBox.Show("Invalid MusicXml file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            
+            bHasLyrics = sequence1.HasLyrics;
+            if (bHasLyrics)
+                lyrics = ExtractLyrics();
+
+            laststart = 0;
+            // Remove all MIDI events after last note
+            sequence1.Clean();
+
+            ResetSequencer();
+
+            sequencer1.Sequence = sequence1;
+            UpdateMidiTimes();
+            DisplaySongDuration();
+
+            positionHScrollBarNew.Value = 0;
+            positionHScrollBarNew.Maximum = _totalTicks;
+
+            // ----------------------------------------------------------------
+            // Display Scores on panel pnlScrollView
+            // ----------------------------------------------------------------
+            DisplayScores();
+
+            // Display song duration
+            DisplaySongDuration();
+
+            // Display track controls             
+            DisplayTrackControls();
+
+            // Reset tracks stuff
+            InitTracksStuff();
+
+            // Recherche si des lyrics existent et affiche la forme frmLyric
+            mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
+
+            if (bKaraokeAlwaysOn && bHasLyrics)
+                DisplayLyricsForm();
+
+            // Display log file
+            if (sequence1.Log != "")
+            {
+                //MessageBox.Show(sequence1.Log, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                lblChangesInfos.Text = sequence1.Log;
+            }
+
+            DisplayFileInfos();
+            DisplayLyricsInfos();
+
+            // Display title
+            SetTitle(MIDIfileName);
+            
+            // File is new
+            if (bsilentmode)
+                FileModified();
+
+            return true;
+        }
+
+        /// <summary>
+        /// Export Midi to MusicXml format file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuFileExportToMusicXml_Click(object sender, EventArgs e)
+        {
+
+        }
+
 
         #endregion
 
@@ -3665,13 +3857,11 @@ namespace Karaboss
                 {
                     T.deleteLyrics();
                     T.Lyrics.Clear();
-                }
-                //sequence1.tracks[myLyric.melodytracknum].deleteLyrics();
-                //sequence1.tracks[myLyric.melodytracknum].Lyrics.Clear();
+                }                
+                myLyric.lyricstracknum = melodytracknum;     
                 
-                myLyric.lyricstracknum = melodytracknum;
-                
-
+                // Tags associated to the sequence have been deleted
+                restoreSequenceTags();
             }
 
             if (myLyric == null)
@@ -3732,6 +3922,10 @@ namespace Karaboss
 
                 // Insert all lyric events
                 InsTrkEvents(tracknum);
+
+                // REstore tags
+                //restoreSequenceTags();
+
             }
 
             // Refresh display of lyrics
@@ -3742,6 +3936,75 @@ namespace Karaboss
             // File was modified
             FileModified();
         }
+
+        #region restore sequence tags
+        /// <summary>
+        /// Rewrite tags level sequence
+        /// </summary>
+        private void restoreSequenceTags()
+        {
+            string tx = string.Empty;
+            int i;
+
+            for (i = sequence1.ITag.Count - 1; i >= 0; i--)
+            {
+                tx = "@I" + sequence1.ITag[i];
+                AddTag(tx);
+            }
+            for (i = sequence1.KTag.Count - 1; i >= 0; i--)
+            {
+                tx = "@K" + sequence1.KTag[i];
+                AddTag(tx);
+            }
+            for (i = sequence1.LTag.Count - 1; i >= 0; i--)
+            {
+                tx = "@L" + sequence1.LTag[i];
+                AddTag(tx);
+            }
+            for (i = sequence1.TTag.Count - 1; i >= 0; i--)
+            {
+                tx = "@T" + sequence1.TTag[i];
+                AddTag(tx);
+            }
+            for (i = sequence1.VTag.Count - 1; i >= 0; i--)
+            {
+                tx = "@V" + sequence1.VTag[i];
+                AddTag(tx);
+            }
+            for (i = sequence1.WTag.Count - 1; i >= 0; i--)
+            {
+                tx = "@W" + sequence1.WTag[i];
+                AddTag(tx);
+            }
+
+        }
+
+        /// <summary>
+        /// Insert Tag at tick 0
+        /// </summary>
+        /// <param name="strTag"></param>
+        private void AddTag(string strTag)
+        {
+            Track track = sequence1.tracks[0];
+            int currentTick = 0;
+            string currentElement = strTag;
+
+            // Transforme en byte la nouvelle chaine
+            byte[] newdata = new byte[currentElement.Length];
+            for (int u = 0; u < newdata.Length; u++)
+            {
+                newdata[u] = (byte)currentElement[u];
+            }
+
+            MetaMessage mtMsg;
+
+            mtMsg = new MetaMessage(MetaType.Text, newdata);
+
+            // Insert new message
+            track.Insert(currentTick, mtMsg);
+        }
+
+        #endregion restore sequence tags
 
         /// <summary>
         /// Erase all lyrics
@@ -3828,26 +4091,26 @@ namespace Karaboss
                         {
                             case "Ascii":
                                 //sy = System.Text.Encoding.Default.GetString(data);
-                                newdata = Encoding.Default.GetBytes(currentElement);
+                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
                                 break;
                             case "Chinese":
-                                Encoding chinese = Encoding.GetEncoding("gb2312");
+                                System.Text.Encoding chinese = System.Text.Encoding.GetEncoding("gb2312");
                                 newdata = chinese.GetBytes(currentElement);
                                 break;
                             case "Japanese":
-                                Encoding japanese = Encoding.GetEncoding("shift_jis");
+                                System.Text.Encoding japanese = System.Text.Encoding.GetEncoding("shift_jis");
                                 newdata = japanese.GetBytes(currentElement);
                                 break;
                             case "Korean":
-                                Encoding korean = Encoding.GetEncoding("ks_c_5601-1987");
+                                System.Text.Encoding korean = System.Text.Encoding.GetEncoding("ks_c_5601-1987");
                                 newdata = korean.GetBytes(currentElement);
                                 break;
                             case "Vietnamese":
-                                Encoding vietnamese = Encoding.GetEncoding("windows-1258");
+                                System.Text.Encoding vietnamese = System.Text.Encoding.GetEncoding("windows-1258");
                                 newdata = vietnamese.GetBytes(currentElement);
                                 break;
                             default:
-                                newdata = Encoding.Default.GetBytes(currentElement);
+                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
                                 break;
                         }
                         //byte[] newdata = Encoding.Default.GetBytes(currentElement);                       
@@ -4320,6 +4583,296 @@ namespace Karaboss
         }      
 
         /// <summary>
+        /// Event: end loading XML music file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleLoadXmlCompleted(object sender, AsyncCompletedEventArgs e)
+        {                               
+            if (MXmlReader.seq == null)
+                return;
+
+            string lyrics = string.Empty;
+            this.Cursor = Cursors.Arrow;
+            mnuFileOpen.Enabled = true;
+            progressBarPlayer.Value = 0;
+            progressBarPlayer.Visible = false;
+
+            // ====================================
+            // AJOUT par arraport au standard
+            // ====================================
+            MIDIfilePath = Path.GetDirectoryName(MIDIfileFullPath);
+            string fExt = Path.GetExtension(MIDIfileFullPath);             // Extension
+            string fName = Path.GetFileNameWithoutExtension(MIDIfileFullPath);    // name without extension
+            MIDIfileName = fName + ".mid";
+            MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
+            // fin ajout
+
+
+            // Reset settings made for previous song
+            ResetPlaySettings();
+
+            if (frmLoading != null)
+                frmLoading.Dispose();
+            loading = false;
+
+            sequence1 = MXmlReader.seq;
+            sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+
+            if (e.Error == null && e.Cancelled == false)
+            {
+                laststart = 0;
+
+                // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
+                sequence1.Format = 1;
+
+                bHasLyrics = sequence1.HasLyrics;
+                if (bHasLyrics)
+                {
+                    lyrics = ExtractLyrics();
+
+
+                        // Bug when format is 0, Karaboss change the format to 1.
+                        // If the file contains lyrics (not text), they are lost when the file is saved
+                        // Workaround is to rewrite the lyrics                    
+                    if (sequence1.OrigFormat == 0)
+                    {
+                        if (myLyric.lyrictype == CLyric.LyricTypes.Lyric)
+                        {
+                            int tracknum = myLyric.lyricstracknum;
+                            Track track = sequence1.tracks[tracknum];
+
+                            // supprime tous les messages text & lyric
+                            track.deleteLyrics();
+
+                            // Insert all lyric events
+                            InsTrkEvents(tracknum);
+                        }
+                    }
+                }
+
+                // Remove all MIDI events after last note
+                sequence1.Clean();
+
+                // ====================================
+                // AJOUT par rapport au standard
+                // ====================================
+                ResetSequencer();
+                sequencer1.Sequence = sequence1;
+                // fin ajout
+
+                UpdateMidiTimes();
+
+                #region displays controls
+
+                positionHScrollBarNew.Value = 0;
+                positionHScrollBarNew.Maximum = _totalTicks;
+
+                // ----------------------------------------------------------------
+                // Display Scores on panel pnlScrollView
+                // ----------------------------------------------------------------
+                DisplayScores();
+
+                // Display song duration
+                DisplaySongDuration();
+
+                // Display track controls             
+                DisplayTrackControls();
+
+                // REset tracks Stuff
+                InitTracksStuff();
+                #endregion
+
+
+                #region display lyrics
+
+                // Recherche si des lyrics existent et affiche la forme frmLyric
+                mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
+
+                // Display log file
+                if (sequence1.Log != "")
+                    lblChangesInfos.Text = sequence1.Log;
+
+                DisplayFileInfos();
+                DisplayLyricsInfos();
+                #endregion
+
+                // PLAYLIST
+                if (currentPlaylist != null)
+                {
+                    // Highlight current song in the playlist
+                    UpdatePlayListsForm(currentPlaylistItem.Song);
+
+                    // play asap, pause, countdown
+                    performPlaylistChainingChoice();
+                }
+                else
+                {
+                    // SINGLE FILE
+
+                    // Lance immédiatement la lecture du morceau                
+                    if (bPlayNow)
+                        PlayPauseMusic();
+                    else
+                    {
+                        if (bKaraokeAlwaysOn && bHasLyrics)
+                            DisplayLyricsForm();
+                    }
+                }
+            }
+            else
+            {
+                if (e.Error != null)
+                    MessageBox.Show(e.Error.Message);
+            }                
+        }
+
+        /// <summary>
+        /// End loading dump text file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleLoadTxtCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (MTxtReader.seq == null)
+                return;
+
+            string lyrics = string.Empty;
+            this.Cursor = Cursors.Arrow;
+            mnuFileOpen.Enabled = true;
+            progressBarPlayer.Value = 0;
+            progressBarPlayer.Visible = false;
+
+            // ====================================
+            // AJOUT par arraport au standard
+            // ====================================
+            MIDIfilePath = Path.GetDirectoryName(MIDIfileFullPath);
+            string fExt = Path.GetExtension(MIDIfileFullPath);             // Extension
+            string fName = Path.GetFileNameWithoutExtension(MIDIfileFullPath);    // name without extension
+            MIDIfileName = fName + ".mid";
+            MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
+            // fin ajout
+
+
+            // Reset settings made for previous song
+            ResetPlaySettings();
+
+            if (frmLoading != null)
+                frmLoading.Dispose();
+            loading = false;
+
+            sequence1 = MTxtReader.seq;
+            sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+
+            if (e.Error == null && e.Cancelled == false)
+            {
+                laststart = 0;
+
+                // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
+                sequence1.Format = 1;
+
+                bHasLyrics = sequence1.HasLyrics;
+                if (bHasLyrics)
+                {
+                    lyrics = ExtractLyrics();
+
+
+                    // Bug when format is 0, Karaboss change the format to 1.
+                    // If the file contains lyrics (not text), they are lost when the file is saved
+                    // Workaround is to rewrite the lyrics                    
+                    if (sequence1.OrigFormat == 0)
+                    {
+                        if (myLyric.lyrictype == CLyric.LyricTypes.Lyric)
+                        {
+                            int tracknum = myLyric.lyricstracknum;
+                            Track track = sequence1.tracks[tracknum];
+
+                            // supprime tous les messages text & lyric
+                            track.deleteLyrics();
+
+                            // Insert all lyric events
+                            InsTrkEvents(tracknum);
+                        }
+                    }
+                }
+
+                // Remove all MIDI events after last note
+                sequence1.Clean();
+
+                // ====================================
+                // AJOUT par rapport au standard
+                // ====================================
+                ResetSequencer();
+                sequencer1.Sequence = sequence1;
+                // fin ajout
+
+                UpdateMidiTimes();
+
+                #region displays controls
+
+                positionHScrollBarNew.Value = 0;
+                positionHScrollBarNew.Maximum = _totalTicks;
+
+                // ----------------------------------------------------------------
+                // Display Scores on panel pnlScrollView
+                // ----------------------------------------------------------------
+                DisplayScores();
+
+                // Display song duration
+                DisplaySongDuration();
+
+                // Display track controls             
+                DisplayTrackControls();
+
+                // REset tracks Stuff
+                InitTracksStuff();
+                #endregion
+
+
+                #region display lyrics
+
+                // Recherche si des lyrics existent et affiche la forme frmLyric
+                mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
+
+                // Display log file
+                if (sequence1.Log != "")
+                    lblChangesInfos.Text = sequence1.Log;
+
+                DisplayFileInfos();
+                DisplayLyricsInfos();
+                #endregion
+
+                // PLAYLIST
+                if (currentPlaylist != null)
+                {
+                    // Highlight current song in the playlist
+                    UpdatePlayListsForm(currentPlaylistItem.Song);
+
+                    // play asap, pause, countdown
+                    performPlaylistChainingChoice();
+                }
+                else
+                {
+                    // SINGLE FILE
+
+                    // Lance immédiatement la lecture du morceau                
+                    if (bPlayNow)
+                        PlayPauseMusic();
+                    else
+                    {
+                        if (bKaraokeAlwaysOn && bHasLyrics)
+                            DisplayLyricsForm();
+                    }
+                }
+            }
+            else
+            {
+                if (e.Error != null)
+                    MessageBox.Show(e.Error.Message);
+            }        
+        }
+
+        /// <summary>
         /// Event: save midi file terminated
         /// </summary>
         /// <param name="sender"></param>
@@ -4421,7 +4974,7 @@ namespace Karaboss
         {
             try
             {               
-                if (e.ProgressPercentage <= progressBarPlayer.Maximum)
+                if (e.ProgressPercentage >= progressBarPlayer.Minimum && e.ProgressPercentage <= progressBarPlayer.Maximum)
                     progressBarPlayer.Value = e.ProgressPercentage;
             }
             catch (Exception ex)
@@ -4437,7 +4990,6 @@ namespace Karaboss
             {
                 return;
             }
-
             //outDevice.Send(e.Message);
 
             int nChannel = e.Message.MidiChannel;
@@ -4465,7 +5017,6 @@ namespace Karaboss
                         }
                     }
                 }
-                
             }
             else if (e.Message.Command == ChannelCommand.NoteOff)
             {
@@ -4508,8 +5059,7 @@ namespace Karaboss
                                 if (stag == sChannel)
                                 {
                                     // Adjust volume for all tracks having this channel
-                                    lstTrkReglages[j].volume = vol;
-                                    //j++;
+                                    lstTrkReglages[j].volume = vol;                                    
                                 }
                             }
                         }                                
@@ -4530,8 +5080,7 @@ namespace Karaboss
                                 if (stag == sChannel)
                                 {
                                     // Ajust pan for all tracks having this channel
-                                    lstTrkReglages[j].pan = pan;
-                                    //j++;
+                                    lstTrkReglages[j].pan = pan;                                    
                                 }
                             }
                         }
@@ -4552,8 +5101,7 @@ namespace Karaboss
                                 if (stag == sChannel)
                                 {
                                     // Ajust reverb for all tracks having this channel
-                                    lstTrkReglages[j].reverb = reverb;
-                                    //j++;
+                                    lstTrkReglages[j].reverb = reverb;                                    
                                 }
                             }
                         }
@@ -4879,6 +5427,8 @@ namespace Karaboss
         /// <param name="e"></param>
         private void FrmPlayer_MouseWheel(object sender, MouseEventArgs e)
         {
+            if (sheetmusic == null) return;
+
             int newvalue = 0;
             int W = sheetmusic.MaxStaffWidth;
 
@@ -4961,11 +5511,13 @@ namespace Karaboss
                     sequence1.LoadProgressChanged += HandleLoadProgressChanged;
                     sequence1.LoadCompleted += HandleLoadCompleted;
 
+                    MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
+                    MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
 
                     // ==========================================================================
                     // Chargement du fichier midi selectionné depuis frmExplorer
                     // ==========================================================================
-                                     
+
                     ResetMidiFile();
 
                     // ACTIONS TO PERFORM
@@ -4986,21 +5538,45 @@ namespace Karaboss
         /// Select what to do on load: new score, play single file, or playlist 
         /// </summary>
         private void SelectActionOnLoad()
-        {
-            // Start to play a playlist
-            if (currentPlaylist != null)
+        {           
+            // Same for start a playlist or a single file (mid, xml, txt)
+            if (MIDIfileFullPath != null && MIDIfileFullPath != "")
             {
-                LoadAsyncFile(MIDIfileFullPath);
+                SelectFileToLoadAsync();
             }
-            else if (MIDIfileFullPath != null && MIDIfileFullPath != "")
+            else
+            {
+                // A new file must be created                                                              
+                NewMidiFile();
+            }
+        }
+
+        /// <summary>
+        /// Select loader according to extension (mid, xml, txt)
+        /// </summary>
+        private void SelectFileToLoadAsync()
+        {
+            string ext = Path.GetExtension(MIDIfileFullPath).ToLower();
+            if (ext == ".mid" || ext == ".kar")
             {
                 // Play a single MIDI file
                 LoadAsyncFile(MIDIfileFullPath);
             }
+            else if (ext == ".xml" || ext == ".musicxml")
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                Application.DoEvents();
+                LoadAsyncXmlFile(MIDIfileFullPath);
+            }
+            else if (ext == ".txt")
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                Application.DoEvents();
+                LoadAsyncTxtFile(MIDIfileFullPath);
+            }
             else
             {
-                // A new file must be created                                              
-                NewMidiFile(CreateNewMidiFile.Numerator, CreateNewMidiFile.Denominator, CreateNewMidiFile.Division, CreateNewMidiFile.Tempo, CreateNewMidiFile.Measures);
+                MessageBox.Show("Unknown extension");
             }
         }
 
@@ -5786,7 +6362,6 @@ namespace Karaboss
                                 T.Solo = false;
                                 T.Muted = true;
                             }
-
                         }
                     }   
                 }
@@ -5796,10 +6371,7 @@ namespace Karaboss
                 }
             }
         }
-
         
-
-
         private void CheckVolumedTracks()
         {
             bool bfound = false;
@@ -5808,9 +6380,7 @@ namespace Karaboss
                 if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
                 {
                     TrkControl.TrackControl trackCtrl = (TrkControl.TrackControl)pnlTracks.Controls[i];
-
                     int volume = trackCtrl.Volume;
-
                     int j = trackCtrl.Track;
 
                     if (volume != sequence1.tracks[j].Volume )
@@ -5980,6 +6550,32 @@ namespace Karaboss
             }
         }
 
+        #region Maximize, Minimize Track Control
+        /// <summary>
+        /// Maximize or minimize track control
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="bmaximized"></param>
+        private void BtnMaximizedClickOneEvent(object sender, EventArgs e, bool bmaximized)
+        {
+            if (sender is TrkControl.TrackControl pTrack)
+            {
+                Track track = sequence1.tracks[pTrack.Track];
+                int i = sequence1.tracks.IndexOf(track);
+                lstTrkReglages[i].maximized = !lstTrkReglages[i].maximized;
+                track.Maximized = lstTrkReglages[i].maximized;
+
+                // Redraw all: tracks and SheetMusic according to height of tracks
+                RedrawTrackControls2();
+
+                // Refresh SheetMusic                
+                RefreshDisplay();
+
+               
+            }
+        }
+        #endregion
 
         #region drag drop track control
 
@@ -6096,8 +6692,8 @@ namespace Karaboss
             MIDIfileName = currentPlaylistItem.Song;
             MIDIfileFullPath = currentPlaylistItem.File;
 
-            LoadAsyncFile(MIDIfileFullPath);
-
+            // Select which type a file it is
+            SelectFileToLoadAsync();            
         }
 
         /// <summary>
@@ -6240,7 +6836,7 @@ namespace Karaboss
             MIDIfileFullPath = currentPlaylistItem.File;
             ResetMidiFile();
 
-            LoadAsyncFile(MIDIfileFullPath);            
+            SelectFileToLoadAsync();                   
         }
 
 
@@ -6272,7 +6868,9 @@ namespace Karaboss
             PlayerState = PlayerStates.Playing;
             
             ResetMidiFile();
-            LoadAsyncFile(MIDIfileFullPath);            
+            
+            SelectFileToLoadAsync();
+                    
         }
 
         /// <summary>
@@ -6426,11 +7024,11 @@ namespace Karaboss
             };
 
             if (clef == 0)
-                track.Clef = Clef.Treble;
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Treble;
             else if (clef == 1)
-                track.Clef = Clef.Bass;
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Bass;
             else
-                track.Clef = Clef.None;
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.None;
 
             // Tempo : 
             //ex tempo = 750000;
@@ -6497,8 +7095,7 @@ namespace Karaboss
         /// <param name="trackindex"></param>
         private void InsertTrackControl(Track track, int trackindex)
         {
-            TrkControl.TrackControl pTrack = CreateTrackControl(track, trackindex);
-            //DisplayTrackControls();
+            TrkControl.TrackControl pTrack = CreateTrackControl(track, trackindex);            
         }
 
         /// <summary>
@@ -6532,6 +7129,7 @@ namespace Karaboss
             pTrack.Track = trackindex;
 
             pTrack.OntrkControlClick += new TrkControl.TrackControl.TrackControlClickEventHandler(TrackControl_Click);
+            pTrack.OntrkControlbtnMaximizeClicked += new TrkControl.TrackControl.btnMaximizeClickedEventHandler(BtnMaximizedClickOneEvent);
             pTrack.OntrkControlbtnMutClicked += new TrkControl.TrackControl.btnMutClickedEventHandler(BtnMutClickOneEvent);
             pTrack.OntrkControlbtnSoloClicked += new TrkControl.TrackControl.btnSoloClickedEventHandler(BtnSoloClickOneEvent);
             pTrack.OntrkControlbtnDelClicked += new TrkControl.TrackControl.btnDelClickedEventHandler(BtnDelClickOneEvent);
@@ -6560,8 +7158,7 @@ namespace Karaboss
 
             return pTrack;
         }
-     
-
+    
 
         /// <summary>
         /// Add a new track control 
@@ -6584,7 +7181,7 @@ namespace Karaboss
 
             TrkControl.TrackControl pTrack = CreateTrackControl(track, trackindex);
 
-            int yloc = yOffset + j * iStaffHeight;
+            int yloc = yOffset + j * iStaffHeightMaximized;
 
             yloc = Convert.ToInt32(yloc*zoom);
 
@@ -6595,6 +7192,9 @@ namespace Karaboss
             
         }
 
+        /// <summary>
+        /// Redraw track controls
+        /// </summary>
         public void RedrawTrackControls()
         {            
             for (int i = 0; i < pnlTracks.Controls.Count; i++)
@@ -6613,6 +7213,31 @@ namespace Karaboss
             }                                   
         }
      
+        private void RedrawTrackControls2()
+        {
+            int yloc = 0;
+            int h = 0;
+
+            for (int i = 0; i < pnlTracks.Controls.Count; i++)
+            {
+                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                {
+                    if (pnlTracks.Controls[i].Tag != null)
+                    {
+                        TrkControl.TrackControl trkC = ((TrkControl.TrackControl)pnlTracks.Controls[i]);
+                        
+
+                        yloc = h;
+                        yloc = Convert.ToInt32(yloc * zoom);
+                        trkC.Location = new Point(trkC.Location.X, yloc);
+
+                        h += trkC.Height;
+                    }
+                }
+            }
+        }
+
+
         /// <summary>
         /// Common for new track
         /// </summary>
@@ -6681,7 +7306,7 @@ namespace Karaboss
             Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog TrackDialog = new Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog(trackname, programchange, channel, trkindex, clef);
             dr = TrackDialog.ShowDialog();
 
-
+            // TODO : if we are creating a new file, 
             if (dr == DialogResult.Cancel)            
                 return;
             
@@ -6692,6 +7317,8 @@ namespace Karaboss
             string instrumentname = TrackDialog.InstrumentName;
             channel = TrackDialog.MidiChannel;
             int tindex = Convert.ToInt32(TrackDialog.trackindex);  // index of new track
+
+
             int volume = 79;
             sequence1.Format = 1;
 
@@ -6750,28 +7377,66 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Create a new midi file
+        /// Create a new midi file from the explorer or from the player
         /// </summary>
-        private void NewMidiFile(int numerator, int denominator, int division, int tempo, int measures)
-        {            
+        private void NewMidiFile()
+        {
             // Show sequencer even if bSequencerAlwaysOn is set to False
             bForceShowSequencer = true;
 
+            // Initialize tags
+            MidiTags.ResetTags();
+
             // Create new sequence
-            sequence1 = new Sequence(division) {
+            sequence1 = new Sequence(CreateNewMidiFile.Division)
+            {
                 Format = 1,
-                Numerator = numerator,
-                Denominator = denominator,
-                Tempo = tempo,
-                Time = new TimeSignature(numerator, denominator, division, tempo),
+                Numerator = CreateNewMidiFile.Numerator,
+                Denominator = CreateNewMidiFile.Denominator,
+                Tempo = CreateNewMidiFile.Tempo,
+                Time = new TimeSignature(CreateNewMidiFile.Numerator, CreateNewMidiFile.Denominator, CreateNewMidiFile.Division, CreateNewMidiFile.Tempo),
             };
+
+            sequence1.CloneTags();
 
             pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
 
             DrawControls();
-            
-            // Dialog to add a new track
-            NewTrack(measures);
+
+            #region add track
+           
+            // Add track to sequence
+            int volume = 79;
+            sequence1.Format = 1;
+            Track track = AddTrack(CreateNewMidiFile.trackname, CreateNewMidiFile.instrumentname, CreateNewMidiFile.channel, CreateNewMidiFile.programchange, volume, sequence1.Tempo, sequence1.Time, CreateNewMidiFile.clef);
+
+            // Add track control
+            int trackindex = sequence1.tracks.Count - 1;
+            AddTrackControl(track, trackindex);
+
+            // Add a little melody
+            if (sequence1.tracks.Count == 1)
+                CreateNewMelody(track, CreateNewMidiFile.channel, CreateNewMidiFile.Measures);
+
+            DisplayTrackControls();
+
+            // Reset tracks stuff
+            InitTracksStuff();
+
+            // Create a new ShetMusic
+            RedrawSheetMusic();
+
+            SetScrollBarValues();
+
+            FileModified();
+
+            // Set Current Note on new track
+            int numstrack = sequence1.tracks.Count - 1;
+            sheetmusic.UpdateCurrentNote(numstrack, 60, 0, true);
+
+
+            #endregion addtrack
+
 
             UpdateMidiTimes();
             DisplaySongDuration();
@@ -6782,14 +7447,20 @@ namespace Karaboss
             sequencer1.Sequence = sequence1;
 
             MIDIfileName = "New";
-            MIDIfilePath = null;
+            MIDIfilePath = CreateNewMidiFile.DefaultDirectory; ;
             MIDIfileFullPath = null;
-            
+
             // FAB
             SetTitle("New.mid");
 
-            PlayerState = PlayerStates.Stopped;                       
+            // Display midi file infos
+            DisplayFileInfos();
+
+            PlayerState = PlayerStates.Stopped;
+
         }
+
+  
 
         #endregion new song
 
@@ -6915,6 +7586,9 @@ namespace Karaboss
         /// <param name="status"></param>
         private void DspEdit(bool status)
         {
+            if (sheetmusic == null)
+                return;
+
             if (status == true)
             {
                 // Enter edit mode
@@ -7443,12 +8117,12 @@ namespace Karaboss
 
             if (lblTreble.BackColor == Color.Red)
             {
-                track.Clef = Clef.None;
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.None;
                 lblTreble.BackColor = Color.White;
             }
             else
             {
-                track.Clef = Clef.Treble;
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Treble;
                 lblBass.BackColor = Color.White;
                 lblTreble.BackColor = Color.Red;
             }
@@ -7465,12 +8139,12 @@ namespace Karaboss
 
             if (lblBass.BackColor == Color.Red)
             {
-                track.Clef = Clef.None;
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.None;
                 lblBass.BackColor = Color.White;
             }
             else
             {
-                track.Clef = Clef.Bass;
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Bass;
                 lblTreble.BackColor = Color.White;
                 lblBass.BackColor = Color.Red;
             }
@@ -7486,12 +8160,12 @@ namespace Karaboss
             Track track = sequence1.tracks[tracknum];
 
             // Select key
-            if (track.Clef == Clef.Bass)
+            if (track.Clef == Sanford.Multimedia.Midi.Score.Clef.Bass)
             {
                 lblBass.BackColor = Color.Red;
                 lblTreble.BackColor = Color.White;
             }
-            else if (track.Clef == Clef.Treble)
+            else if (track.Clef == Sanford.Multimedia.Midi.Score.Clef.Treble)
             {
                 lblTreble.BackColor = Color.Red;
                 lblBass.BackColor = Color.White;
@@ -7842,11 +8516,10 @@ namespace Karaboss
                 btnMute1.Checked = true;
             }
             
-        }        
+        }
+
 
         #endregion
-
-       
     }
 
 }

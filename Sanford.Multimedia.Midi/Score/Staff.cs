@@ -68,6 +68,7 @@ namespace Sanford.Multimedia.Midi.Score
             this.tracknum = tracknum;
             this.totaltracks = totaltracks;
             this.staffH = staffH;
+            Maximized = true;
             
             // FAB
             //showMeasures = (options.showMeasures && tracknum == 0);
@@ -86,8 +87,6 @@ namespace Sanford.Multimedia.Midi.Score
             this.Height = CalculateHeight();
             this.Height = staffH;
             
-
-
             CalculateStartEndTime();
             FullJustify();
         }
@@ -146,6 +145,11 @@ namespace Sanford.Multimedia.Midi.Score
             get { return clef; }
             set { clef = value; }
         }
+        
+        /// <summary>
+        /// Is staff maximized or minimized
+        /// </summary>
+        public bool Maximized { get; set; }
 
         #endregion properties
 

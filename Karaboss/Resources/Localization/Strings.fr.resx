@@ -276,8 +276,8 @@
   <data name="DeleteHalfTime" xml:space="preserve">
     <value>Supprimer 1/2 temps</value>
   </data>
-  <data name="DeleteMeasure" xml:space="preserve">
-    <value>Supprimer une mesure</value>
+  <data name="DeleteMeasures" xml:space="preserve">
+    <value>Supprimer des mesures</value>
   </data>
   <data name="DeleteOneTime" xml:space="preserve">
     <value>Supprimer 1 temps</value>
@@ -285,8 +285,8 @@
   <data name="InsertHalfTime" xml:space="preserve">
     <value>Insérer 1/2 temps</value>
   </data>
-  <data name="InsertMeasure" xml:space="preserve">
-    <value>Insérer une mesure</value>
+  <data name="InsertMeasures" xml:space="preserve">
+    <value>Insérer des mesure</value>
   </data>
   <data name="InsertOnetime" xml:space="preserve">
     <value>Insérer 1 temps</value>
@@ -308,5 +308,44 @@
   </data>
   <data name="DeleteAllLyrics" xml:space="preserve">
     <value>Attention, toutes les paroles vont être effacées de cette chanson. Voulez-vous continuer ?</value>
+  </data>
+  <data name="OffsetStartTimesOfNotes" xml:space="preserve">
+    <value>Décaler les notes</value>
+  </data>
+  <data name="SubDirectoryForbiden" xml:space="preserve">
+    <value>Le dossier ne peut être un sous-répertoire sinon tous les fichiers seront des doubles !</value>
+  </data>
+  <data name="SearchMD5Doubles" xml:space="preserve">
+    <value>Recherche de doubles (MD5)</value>
+  </data>
+  <data name="SearchMD5DoublesL1" xml:space="preserve">
+    <value>Cette fonction va rechercher les fichiers en double en utilisant leur empreinte MD5 dans votre bibliothèque par défaut :</value>
+  </data>
+  <data name="SearchMD5DoublesL2" xml:space="preserve">
+    <value>et le dossier que vous avez sélectionné :</value>
+  </data>
+  <data name="SearchMD5DoublesL3" xml:space="preserve">
+    <value>Si des doubles sont trouvés, vous aurez le choix, soit de les afficher, soit de les déplacer du dossier sélectionné vers un sous dossier appelé 'doubles'</value>
+  </data>
+  <data name="SearchMD5DoublesSel" xml:space="preserve">
+    <value>Cette fonction va rechercher les fichiers en double en utilisant leur empreinte MD5 dans le dossier sélectionné.</value>
+  </data>
+  <data name="SearchRecursively" xml:space="preserve">
+    <value>Recherche récursive dans le dossier</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continuer ?</value>
+  </data>
+  <data name="CreateNewFolder" xml:space="preserve">
+    <value>Créer un nouveau dossier</value>
+  </data>
+  <data name="DeleteFolderAndPlaylists" xml:space="preserve">
+    <value>Supprimer le dossier et toutes ses playlists</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Supprimer la playlist</value>
+  </data>
+  <data name="SearchEmptyDirs" xml:space="preserve">
+    <value>Cette fonction va supprimer tous les dossier vides à partir de </value>
   </data>
 </root>

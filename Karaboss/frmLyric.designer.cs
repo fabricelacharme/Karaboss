@@ -174,6 +174,7 @@
             // 
             this.pBox.bColorContour = true;
             this.pBox.BeatDuration = 0;
+            this.pBox.bShowParagraphs = true;
             this.pBox.bTextBackGround = true;
             this.pBox.CurrentTextPos = 2;
             this.pBox.CurrentTime = 3;

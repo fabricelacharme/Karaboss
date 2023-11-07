@@ -70,7 +70,7 @@ namespace PicControl
         private string strCurrentImage; // current image to insure that random will provide a different one
         private int rndIter = 0;
 
-        
+
         public class plLyric
         {
             public enum Types
@@ -82,7 +82,7 @@ namespace PicControl
             public Types Type { get; set; }
             public string Element { get; set; }
             public int TicksOn { get; set; }
-            public int TicksOff { get; set; }            
+            public int TicksOff { get; set; }
         }
 
 
@@ -90,15 +90,17 @@ namespace PicControl
 
         #region Internal lyrics separators
 
-        private string _InternalSepLines = "¼";                
-        private string _InternalSepParagraphs = "½";        
-        
+        private string _InternalSepLines = "¼";
+        private string _InternalSepParagraphs = "½";
+
         #endregion
 
-        public ImageLayout imgLayout { get; set; }       
+        public ImageLayout imgLayout { get; set; }
         public Image m_CurrentImage { get; set; }
         public Rectangle m_DisplayRectangle { get; set; }
         public int m_Alpha { get; set; }
+
+
 
         /// <summary>
         /// Display lyrics option: top, Center, Bottom
@@ -124,11 +126,12 @@ namespace PicControl
         private bool _bTextBackGround = true;
         public bool bTextBackGround
         {
-            get { return _bTextBackGround;}
+            get { return _bTextBackGround; }
             set { _bTextBackGround = value;
                 pboxWnd.Invalidate();
             }
         }
+
 
 
         public bool IsBusy
@@ -141,7 +144,7 @@ namespace PicControl
                     return false;
             }
         }
-        
+
         public List<string> LyricsWords { get; set; }  // Liste non dégrossie des syllabes
         public List<int> LyricsTimes { get; set; }     // Liste non dégrossie des temps
 
@@ -153,7 +156,7 @@ namespace PicControl
             }
             set
             {
-                slyrics = value;                                
+                slyrics = value;
             }
         }
 
@@ -164,11 +167,11 @@ namespace PicControl
             { return _currentPosition; }
             set
             {
-                _currentPosition = value;                
+                _currentPosition = value;
             }
         }
 
-        
+
         private int _beatDuration = 0;
         public int BeatDuration
         {
@@ -176,8 +179,8 @@ namespace PicControl
             set { _beatDuration = value; }
         }
 
-        public int _currentTextPos;        
-        public int CurrentTextPos 
+        public int _currentTextPos;
+        public int CurrentTextPos
         {
             get
             { return _currentTextPos; }
@@ -185,7 +188,7 @@ namespace PicControl
             {
                 _currentTextPos = value;
             }
-        }                     
+        }
 
         /// <summary>
         /// Transparency color
@@ -246,7 +249,7 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
-        
+
         /// <summary>
         /// Text to sing color
         /// </summary>
@@ -260,7 +263,7 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
-        
+
         /// <summary>
         /// Text sung color
         /// </summary>
@@ -302,6 +305,25 @@ namespace PicControl
         #endregion Textcolor       
 
         #region Text others
+
+
+        private bool _bdemo = false;
+        public bool bDemo
+        {
+            get { return _bdemo; }
+            set { _bdemo = value; }
+        }
+
+        // Lyrics : converts characters to uppercase
+        private bool _bforceuppercase;
+        public bool bforceUppercase {
+            get { return _bforceuppercase; }
+            set { _bforceuppercase = value;
+                if (_bdemo)
+                    LoadDemoText();
+            }
+        
+        }
 
         public Font KaraokeFont
         {
@@ -348,6 +370,15 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
+
+        // Show a blank line between paragraphs
+        private bool _bshowparagraphs = true;
+        public bool bShowParagraphs
+        {
+            get { return _bshowparagraphs; }
+            set { _bshowparagraphs = value; }
+        }
+
         #endregion
 
         /// <summary>
@@ -628,6 +659,10 @@ namespace PicControl
 
                 for (int i = 0; i < plLyrics.Count; i++)
                 {
+                    // Force uppercase
+                    if (_bforceuppercase)
+                        plLyrics[i].Element = plLyrics[i].Element.ToUpper();
+
                     lyrics += plLyrics[i].Element;
                 }
 
@@ -820,6 +855,7 @@ namespace PicControl
             pboxWnd.Font = new Font(Name = _karaokeFont.Name, emSize);
             pboxWnd.SizeMode = PictureBoxSizeMode.Zoom;
 
+            /*
             // Default text
             string tx = "Lorem ipsum dolor sit amet," + _InternalSepLines;
             tx += "consectetur adipisicing elit," + _InternalSepLines;
@@ -833,9 +869,13 @@ namespace PicControl
             tx += "in voluptate velit esse cillum dolore" + _InternalSepLines;
             tx += "eu fugiat nulla pariatur.";
 
+            if (_bforceuppercase)
+                tx = tx.ToUpper();
+
             List<plLyric> plLyrics = StoreDemoText(tx);
                         
             LoadSong(plLyrics, true);
+            */
 
             // Initial conditions
             _currentPosition = 30;
@@ -843,6 +883,30 @@ namespace PicControl
             _currentTextPos = 2;           
 
             pboxWnd.Invalidate();
+        }
+
+        public void LoadDemoText()
+        {
+            // Default text
+            string tx = "Lorem ipsum dolor sit amet," + _InternalSepLines;
+            tx += "consectetur adipisicing elit," + _InternalSepLines;
+            tx += "sed do eiusmod tempor incididunt" + _InternalSepLines;
+            tx += "ut labore et dolore magna aliqua." + _InternalSepLines;
+            tx += "Ut enim ad minim veniam," + _InternalSepLines;
+            tx += "quis nostrud exercitation ullamco" + _InternalSepLines;
+            tx += "laboris nisi ut aliquip" + _InternalSepLines;
+            tx += "ex ea commodo consequat." + _InternalSepLines;
+            tx += "Duis aute irure dolor in reprehenderit" + _InternalSepLines;
+            tx += "in voluptate velit esse cillum dolore" + _InternalSepLines;
+            tx += "eu fugiat nulla pariatur.";
+
+            if (_bforceuppercase)
+                tx = tx.ToUpper();
+
+            List<plLyric> plLyrics = StoreDemoText(tx);
+
+            LoadSong(plLyrics, true);
+
         }
 
         /// <summary>
@@ -885,20 +949,35 @@ namespace PicControl
             *
             * Dash characters at the end of syllables are removed by the Karaoke viewer/player program, and the syllables are joined together. 
             */
-
+            
             string lyr = string.Empty;
-                     
-            // pour texte normal
-            lyr = ly.Replace(_InternalSepParagraphs, _InternalSepLines);
+
+            // Display a blanck line between paragraphs
+            if (_bshowparagraphs)
+            {
+                // Replace double new lines by new paragraph
+                lyr = ly.Replace(_InternalSepLines + _InternalSepLines,  _InternalSepParagraphs);
+                // Replace new paragraph by newline + new paragraph + new line
+                lyr = lyr.Replace(_InternalSepParagraphs, _InternalSepLines + _InternalSepParagraphs + _InternalSepLines);
+            }
+            else
+            {
+                lyr = ly.Replace(_InternalSepParagraphs, _InternalSepLines);
+            }
 
             // TO BE MODIFIED
             char ChrSepLines = Convert.ToChar(_InternalSepLines);
-            string[] strLyricsLines = lyr.Split(new Char[] { ChrSepLines }, StringSplitOptions.RemoveEmptyEntries);  
+            string[] strLyricsLines = lyr.Split(new Char[] { ChrSepLines }, StringSplitOptions.RemoveEmptyEntries);
 
             for (int i = 0; i < strLyricsLines.Length; i++)
             {
                 tx = strLyricsLines[i].Trim();
-                if (tx != "")
+                if (_bshowparagraphs && tx == _InternalSepParagraphs)
+                {
+                    // new paragraph = empty line (space)
+                    lstLyricsLines.Add(" ");
+                }
+                else if (tx != "")
                 {
                     lstLyricsLines.Add(tx);
                 }
@@ -2038,7 +2117,7 @@ namespace PicControl
             // draw text
             #region draw text
 
-            if (lstLyricsLines.Count == 0)
+            if (lstLyricsLines is null || lstLyricsLines.Count == 0)
                 return;
 
             try

@@ -64,7 +64,7 @@ namespace Karaboss.Pages.ABCnotation
         private int filterIndex = 1;
         private bool? isLotroSong;
 
-        private bool closing = false;
+        //private bool closing = false;
         private bool bClosingRequired = false;        
         private bool loading = false; // loading file in progress
         public bool bfilemodified = false;
@@ -74,7 +74,7 @@ namespace Karaboss.Pages.ABCnotation
         private bool bPlayNow = false;
 
         // Dimensions
-        private int leftWidth = 179;
+        //private int leftWidth = 179;
         private int SimpleTextPlayerWidth = 850;
         private int SimpleTextPlayerHeight = 170;
 

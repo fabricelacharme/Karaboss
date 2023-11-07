@@ -509,6 +509,14 @@ namespace Sanford.Multimedia.Midi
         //private static int _measures;
         public static int Measures { get; set; }
 
+        // Fab 27/10/2023
+        public static string trackname { get; set; }
+        public static int programchange { get; set; }
+        public static int channel { get; set; }
+        public static decimal trkindex { get; set; }
+        public static int clef { get; set; }
+        public static string instrumentname { get; set; }
+
         /// <summary>
         /// Folder from which the creation was started in frmExplorer
         /// </summary>

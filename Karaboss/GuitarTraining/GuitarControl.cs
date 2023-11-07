@@ -339,7 +339,7 @@ namespace Karaboss.GuitarTraining
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             base.OnPaint(e);
         }

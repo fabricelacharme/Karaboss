@@ -60,6 +60,8 @@ namespace Karaboss
         public static string m_SepSyllabe;
         public static string m_SepLine;
         public static string m_SepParagraph;
+        public static bool m_ShowParagraph;     // Lyrics : Display a blanck line between paragraphs
+        public static bool m_ForceUppercase;    // Lyrics : converts every character to uppercase
 
         public static bool m_SaveDefaultOutputDevice;   // Save default MIDI output device
 
@@ -189,7 +191,40 @@ namespace Karaboss
             return false;
         }
 
-    
+        public static bool IsXmlExtension(string f)
+        {
+            if (f == null || f == "")
+                return false;
+
+            string[] exts = new string[] { ".xml", ".musicxml" };
+
+            f = f.ToLower();
+            foreach (string ext in exts)
+            {
+
+                if (f.EndsWith(ext, StringComparison.Ordinal))
+                    return true;
+            }
+            return false;
+        }
+
+        public static bool IsTxtExtension(string f)
+        {
+            if (f == null || f == "")
+                return false;
+
+            string[] exts = new string[] { ".txt" };
+
+            f = f.ToLower();
+            foreach (string ext in exts)
+            {
+
+                if (f.EndsWith(ext, StringComparison.Ordinal))
+                    return true;
+            }
+            return false;
+        }
+
 
         public static string plTypeToString(plLyric.Types plType)
         {
@@ -389,7 +424,7 @@ namespace Karaboss
         public string VTags = "";
         public string WTags = "";
         public bool busy = false;
-
+        
         public void Clear()
         {
             Tracks = 0;

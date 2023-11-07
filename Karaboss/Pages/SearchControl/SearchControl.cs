@@ -63,7 +63,7 @@ namespace Karaboss.Search
     public delegate void ContentChangedEventHandler(object sender, string strContent);
     public delegate void NavigateToEventHandler(Object sender, string path, string file);            // Says to parent to navigate to this folder
     public delegate void SongRootChangedEventHandler(Object sender, string path);                   // Warn aprent that song library has changed
-    
+
 
     public partial class SearchControl : UserControl
     {
@@ -131,8 +131,13 @@ namespace Karaboss.Search
         private bool bSearchSongOnly = false;
         private bool bChanged = false;
 
+        
         Button btnSearch;
+        Button btnClear;
         Button btnSearchDir;
+
+      
+        ToolTip MyToolTip;
 
         #region properties
         private string _songroot;
@@ -195,10 +200,12 @@ namespace Karaboss.Search
         // Constructor
         public SearchControl()
         {
-            InitializeComponent();
+            InitializeComponent();  
 
             // initialize listview
             InitListview();
+
+            MyToolTip = new ToolTip();
 
             if (_songroot == "C:\\\\" || Directory.Exists(_songroot) == false)
                 _songroot = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
@@ -766,7 +773,7 @@ namespace Karaboss.Search
                         catch (Exception ex)
                         {
                             // Sometime the file does not respect the format "author - song", so listView.Items[e.Item].Group.Header is null
-                            MessageBox.Show("Rename not done, unable to find the author of this song.", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            MessageBox.Show("Rename not done, unable to find the author of this song." + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             e.CancelEdit = true;
                             return;
                         }
@@ -1060,7 +1067,7 @@ namespace Karaboss.Search
                     }
                     catch (Exception ex)
                     {
-
+                        MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }                    
                 }
             }
@@ -1080,14 +1087,27 @@ namespace Karaboss.Search
                 Size = new Size(25, txtSearch.ClientSize.Height + 2),
                 Location = new Point(txtSearch.ClientSize.Width - 25, -1),
                 Cursor = Cursors.Default,
-                Image = Properties.Resources.Action_Search_icon,
+                Image = Properties.Resources.Action_Search_icon,                
             };
+            
             txtSearch.Controls.Add(btnSearch);
-
-            btnSearch.Click += new EventHandler(BtnSearch_Click);
+            this.MyToolTip.SetToolTip(this.btnSearch, "Search");
+            btnSearch.Click += new EventHandler(btnSearch_Click);
 
             // Send EM_SETMARGINS to prevent text from disappearing underneath the button
             SendMessage(txtSearch.Handle, 0xd3, (IntPtr)2, (IntPtr)(btnSearch.Width << 16));
+
+            btnClear = new Button()
+            {
+                Size = new Size(25, txtSearch.ClientSize.Height + 2),
+                Location = new Point(txtSearch.ClientSize.Width - 50, -1),
+                Cursor = Cursors.Default,                       
+                
+                Image = Properties.Resources.cross_icon,
+            };
+            txtSearch.Controls.Add(btnClear);
+            this.MyToolTip.SetToolTip(this.btnClear, "Clear");
+            btnClear.Click += new EventHandler(btnClear_Click);
 
 
             btnSearchDir = new Button() {
@@ -1097,8 +1117,10 @@ namespace Karaboss.Search
                 Image = Properties.Resources.Action_Folder_icon,
             };
             txtSearchDir.Controls.Add(btnSearchDir);
-
+            this.MyToolTip.SetToolTip(this.btnSearchDir, "Select new location");
             btnSearchDir.Click += new EventHandler(BtnSearchDir_Click);
+
+            this.MyToolTip.SetToolTip(this.btnScan, "Reindex files");
 
             // Send EM_SETMARGINS to prevent text from disappearing underneath the button
             SendMessage(txtSearch.Handle, 0xd3, (IntPtr)2, (IntPtr)(btnSearchDir.Width << 16));
@@ -1142,11 +1164,24 @@ namespace Karaboss.Search
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnSearch_Click(object sender, EventArgs e)
+        private void btnSearch_Click(object sender, EventArgs e)
         {
             BtnSearchMethod();
         }
-       
+
+        /// <summary>
+        /// Clear Search box
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            this.txtSearch.Clear();
+            txtSearch.Focus();
+        }
+
+
+
         /// <summary>
         /// Button: scan
         /// </summary>
