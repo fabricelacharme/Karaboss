@@ -838,7 +838,7 @@ namespace Karaboss
 
 
         /// <summary>
-        /// Event: sequence loaded
+        /// Event: Midi sequence loaded
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -948,6 +948,11 @@ namespace Karaboss
             
         }
         
+        /// <summary>
+        /// Event: XML music sequence loaded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void HandleLoadXmlCompleted(object sender, AsyncCompletedEventArgs e)
         {
             string tx = string.Empty;
@@ -1060,6 +1065,11 @@ namespace Karaboss
             MidiInfos.busy = false;
         }
 
+        /// <summary>
+        /// Event: TXT dump sequence loaded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void HandleLoadTxtCompleted(object sender, AsyncCompletedEventArgs e)
         {
             string tx = string.Empty;
@@ -1256,7 +1266,8 @@ namespace Karaboss
         }
 
 
-        // Specific explorerControl
+        // Specific playlist
+        // Launch a file from playlist, not from explorer
 
         private void Global_PlayCDG(object sender, FileInfo fi, bool bplay)
         {
@@ -1525,7 +1536,7 @@ namespace Karaboss
             // Add the file to the MRU list.
             MyMruList.AddFile(fpath);
 
-            Form frmPlayer = new frmPlayer(NumInstance, fpath, null, bPlayNow, outDevice, songRoot);
+            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice, songRoot);
             frmPlayer.Show();
             frmPlayer.Activate();
 
@@ -1597,7 +1608,7 @@ namespace Karaboss
             // Add the file to the MRU list.
             MyMruList.AddFile(fpath);
 
-            Form frmPlayer = new frmPlayer(NumInstance, fpath, null, bPlayNow, outDevice, songRoot);
+            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice, songRoot);
             frmPlayer.Show();
             frmPlayer.Activate();
 

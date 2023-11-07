@@ -240,6 +240,7 @@ namespace MusicXml
             foreach (Part part in Parts)
             {
                 TrackName = part.Name.Trim();
+                
                 Id = part.Id.Trim();
                 Channel = part.MidiChannel;
                 if (Channel > 15)
@@ -422,6 +423,9 @@ namespace MusicXml
             track1.Insert(0, message);
            
             track1.insertTimesignature(Numerator, Denominator);
+            track1.insertTrackname(TrackName);
+            track1.insertVolume(Channel, Volume);
+            track1.insertPan(Channel, Pan);            
 
             newTracks.Add(track1);
         }
@@ -448,6 +452,9 @@ namespace MusicXml
             track2.Insert(0, message);
 
             track2.insertTimesignature(Numerator, Denominator);
+            track2.insertTrackname(TrackName);
+            track2.insertVolume(Channel, Volume);
+            track2.insertPan(Channel, Pan);
 
             newTracks.Add(track2);
         }

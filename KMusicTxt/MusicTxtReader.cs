@@ -392,6 +392,12 @@ namespace MusicTxt
             */
             if (currenttrack >= 0 && currenttrack <= newTracks.Count)
             {
+                if (newTracks[currenttrack].MidiChannel != Channel)
+                {
+                    newTracks[currenttrack].ChangeChannel(newTracks[currenttrack].MidiChannel, Channel);
+                    newTracks[currenttrack].MidiChannel = Channel;
+                }
+                
                 newTracks[currenttrack].ProgramChange = ProgramChange;
                 ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, Channel, ProgramChange);
                 newTracks[currenttrack].Insert(ticks, message);
@@ -481,6 +487,12 @@ namespace MusicTxt
                     //ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
                     //newTracks[currenttrack-1].Insert(ticks, message);
                     break;
+            }
+
+            if (newTracks[currenttrack].MidiChannel != Channel)
+            {                
+                newTracks[currenttrack].ChangeChannel(newTracks[currenttrack].MidiChannel, Channel);
+                newTracks[currenttrack].MidiChannel = Channel;
             }
 
             ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
