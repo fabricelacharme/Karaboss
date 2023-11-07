@@ -45,7 +45,6 @@ namespace Karaboss
             this.MnuFileExportMidiToText = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuFileSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.MnuFileImportMusicXml = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuFileExportToMusicXml = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuFileSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.mnufileProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuFileSeparator5 = new System.Windows.Forms.ToolStripSeparator();
@@ -180,7 +179,6 @@ namespace Karaboss
             this.MnuFileExportMidiToText,
             this.MnuFileSeparator3,
             this.MnuFileImportMusicXml,
-            this.MnuFileExportToMusicXml,
             this.MnuFileSeparator4,
             this.mnufileProperties,
             this.MnuFileSeparator5,
@@ -250,12 +248,6 @@ namespace Karaboss
             this.MnuFileImportMusicXml.Name = "MnuFileImportMusicXml";
             resources.ApplyResources(this.MnuFileImportMusicXml, "MnuFileImportMusicXml");
             this.MnuFileImportMusicXml.Click += new System.EventHandler(this.MnuFileImportMusicXml_Click);
-            // 
-            // MnuFileExportToMusicXml
-            // 
-            this.MnuFileExportToMusicXml.Name = "MnuFileExportToMusicXml";
-            resources.ApplyResources(this.MnuFileExportToMusicXml, "MnuFileExportToMusicXml");
-            this.MnuFileExportToMusicXml.Click += new System.EventHandler(this.MnuFileExportToMusicXml_Click);
             // 
             // MnuFileSeparator4
             // 
@@ -1341,7 +1333,6 @@ namespace Karaboss
         private System.Windows.Forms.ToolStripSeparator MnuFileSeparator3;
         private System.Windows.Forms.ToolStripSeparator MnuFileSeparator4;
         private System.Windows.Forms.ToolStripMenuItem MnuFileImportMusicXml;
-        private System.Windows.Forms.ToolStripMenuItem MnuFileExportToMusicXml;
     }
 }
 

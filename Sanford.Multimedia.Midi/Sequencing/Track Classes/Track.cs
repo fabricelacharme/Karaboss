@@ -36,6 +36,7 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic; //Lists
 using System.Diagnostics.Eventing.Reader;
+using System.Windows.Markup;
 
 namespace Sanford.Multimedia.Midi
 {
@@ -2845,8 +2846,10 @@ namespace Sanford.Multimedia.Midi
 
                 if(value < 0)
                 {
-                    throw new ArgumentOutOfRangeException("EndOfTrackOffset", value,
-                        "End of track offset out of range.");
+                    Console.WriteLine("ERROR: End of track offset out of range");
+                    //throw new ArgumentOutOfRangeException("EndOfTrackOffset", value,
+                    //    "End of track offset out of range.");
+                    value = 0;
                 }
 
                 #endregion

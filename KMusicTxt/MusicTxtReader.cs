@@ -474,27 +474,32 @@ namespace MusicTxt
                 case 7:
                     Volume = ControlChangeData2;
                     newTracks[currenttrack].Volume = Volume;
+                    newTracks[currenttrack].insertVolume(Channel,Volume);
                     break;
                 case 10:
                     Pan = ControlChangeData2;
                     newTracks[currenttrack].Pan = Pan;
-                    break;
+                    newTracks[currenttrack].insertPan(Channel,Pan);
+                    break;                
                 case 91:
                     Reverb = ControlChangeData2;
                     newTracks[currenttrack].Reverb = Reverb;
+                    newTracks[currenttrack].insertReverb(Channel,Reverb);
                     break;
                 default:
-                    //ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
-                    //newTracks[currenttrack-1].Insert(ticks, message);
+                    //ChannelMessage msg = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
+                    //newTracks[currenttrack].Insert(ticks, msg);
                     break;
             }
 
+            // Change channel
             if (newTracks[currenttrack].MidiChannel != Channel)
             {                
                 newTracks[currenttrack].ChangeChannel(newTracks[currenttrack].MidiChannel, Channel);
                 newTracks[currenttrack].MidiChannel = Channel;
             }
 
+            // Insert all messages
             ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
             newTracks[currenttrack].Insert(ticks, message);
 
