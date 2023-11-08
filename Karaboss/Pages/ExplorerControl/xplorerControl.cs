@@ -1294,7 +1294,7 @@ namespace Karaboss.xplorer
             }
             else
             {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK);
+                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

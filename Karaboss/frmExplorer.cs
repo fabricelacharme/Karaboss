@@ -400,15 +400,11 @@ namespace Karaboss
                 filename = playlistsControl.SelectedFile;
             
 
-            if (filename != null && filename != "" && File.Exists(filename))
-            {
-                //DisplayMidiPlayer(filename, null, true);
-                SelectPlayer(filename, true);
-            }
-            else
-            {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
-            }
+            if (filename != null && filename != "" && File.Exists(filename))                            
+                SelectPlayer(filename, true);            
+            else                            
+                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
+            
 
         }
 
@@ -433,14 +429,11 @@ namespace Karaboss
                 filename = playlistsControl.SelectedFile;
             
 
-            if (filename != null && filename != "" && File.Exists(filename))
-            {                
-                SelectPlayer(filename, false);
-            }
-            else
-            {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
-            }
+            if (filename != null && filename != "" && File.Exists(filename))                            
+                SelectPlayer(filename, false);            
+            else                            
+                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
+            
 
         }
 
@@ -468,8 +461,8 @@ namespace Karaboss
                 filename = playlistsControl.SelectedFile;
 
             if (filename == null || filename == "" || !File.Exists(filename) || !Karaclass.IsMidiExtension(filename))
-            {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            {                
+                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -518,8 +511,8 @@ namespace Karaboss
                 filename = playlistsControl.SelectedFile;
 
             if (filename == null || filename == "" || !File.Exists(filename) || !Karaclass.IsMidiExtension(filename))
-            {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            {                
+                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2059,11 +2052,11 @@ namespace Karaboss
 
             if (filename != null && filename != "")
             {
-                //DisplayMidiPlayer(filename, null, true);
                 SelectPlayer(filename, true);
             }
-            else
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);            
+            else                            
+                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            
         }
 
 
@@ -2091,11 +2084,10 @@ namespace Karaboss
                     filename = playlistsControl.SelectedFile;
             }
 
-            if (filename != null && filename != "")
-                //DisplayMidiPlayer(filename, null, false);            
+            if (filename != null && filename != "")                   
                 SelectPlayer(filename, false);
             else
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             
         }
 

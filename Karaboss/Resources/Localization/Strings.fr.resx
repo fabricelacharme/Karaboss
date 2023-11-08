@@ -348,4 +348,7 @@
   <data name="SearchEmptyDirs" xml:space="preserve">
     <value>Cette fonction va supprimer tous les dossier vides à partir de </value>
   </data>
+  <data name="ErrorSelectFile" xml:space="preserve">
+    <value>Sélectionnez un fichier</value>
+  </data>
 </root>

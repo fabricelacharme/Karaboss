@@ -37,6 +37,7 @@ using System.Diagnostics;
 using System.Collections.Generic; //Lists
 using System.Diagnostics.Eventing.Reader;
 using System.Windows.Markup;
+using System.Linq.Expressions;
 
 namespace Sanford.Multimedia.Midi
 {
@@ -1581,19 +1582,53 @@ namespace Sanford.Multimedia.Midi
         public void CopyEvents(float srcstarttime, float srcendtime, float deststarttime)
         {
             float delta = 0;
-            MidiEvent current = GetMidiEvent(Count - 1);
+            MidiEvent current = GetMidiEvent(Count - 1);            
+            bool bFound = false;
+
             while (current.AbsoluteTicks >= srcstarttime)
             {
-                if (current != endOfTrackMidiEvent && current.AbsoluteTicks <= srcendtime)
+                
+                // Consider events inside srcstarttime and screndtime
+                if (current != endOfTrackMidiEvent && current.AbsoluteTicks>= srcstarttime && current.AbsoluteTicks <= srcendtime)
                 {
                     delta = current.AbsoluteTicks - srcstarttime;
-                    Insert((int)deststarttime + (int)delta, current.MidiMessage);
+
+                    // Do not insert if similar event exists in the target position!                    
+                    int position = (int)deststarttime + (int)delta;
+                    bFound = false;
+                    List<MidiEvent> melist = GetEventsFromTicks(position);
+                    foreach (MidiEvent me in melist)
+                    {
+                        //if (current.AbsoluteTicks + delta == me.AbsoluteTicks)
+                        //{
+                            //Search similar notes
+                            if (me.MidiMessage.MessageType == MessageType.Channel && current.MidiMessage.MessageType == MessageType.Channel)
+                            {
+                                IMidiMessage cmsg = current.MidiMessage;
+                                IMidiMessage emsg = me.MidiMessage;
+                                ChannelCommand ccc = ChannelMessage.UnpackCommand(cmsg.Status);
+                                ChannelCommand ecc = ChannelMessage.UnpackCommand(emsg.Status);
+
+                                // notes emsg.Data1 == cmsg.Data1
+                                // ChannelCommd ecc == ccc (noteon, noteoff)
+                                if (emsg.Data1 == cmsg.Data1 && ecc == ccc)
+                                {
+                                    bFound = true;
+                                    break;
+                                }
+
+                            }
+                        //}
+                    }
+                                        
+                    if (!bFound && current.MidiMessage.MessageType == MessageType.Channel)                        
+                        Insert((int)deststarttime + (int)delta, current.MidiMessage);
                     
 
                     #region previous
                     if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
                     {
-                        current = current.Previous;
+                        current = current.Previous;                        
                     }
                     else
                     {
@@ -1606,7 +1641,7 @@ namespace Sanford.Multimedia.Midi
                     #region previous
                     if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
                     {
-                        current = current.Previous;
+                        current = current.Previous;                        
                     }
                     else
                     {
@@ -1959,6 +1994,52 @@ namespace Sanford.Multimedia.Midi
 
         #endregion lyrics
 
+
+
+        public List<MidiEvent> GetEventsFromTicks(float ticks)
+        {
+            List<MidiEvent> midiEvents = new List<MidiEvent>();            
+            MidiEvent current = GetMidiEvent(0);
+
+            while (current.AbsoluteTicks <= Length)
+            {
+                if (current.AbsoluteTicks == ticks)
+                {
+                    midiEvents.Add(current);
+
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion next
+
+                }
+                else if (current.AbsoluteTicks > ticks)
+                {
+                    break;
+                }
+                else
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;                        
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion next
+                }
+            }
+
+            return midiEvents;
+        }
 
         /// <summary>
         /// FAB: Return index of Event from ticks
