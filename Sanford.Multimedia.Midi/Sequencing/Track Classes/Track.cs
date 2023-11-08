@@ -38,6 +38,9 @@ using System.Collections.Generic; //Lists
 using System.Diagnostics.Eventing.Reader;
 using System.Windows.Markup;
 using System.Linq.Expressions;
+using System.Windows.Forms;
+using System.Runtime.Remoting.Channels;
+using System.Threading;
 
 namespace Sanford.Multimedia.Midi
 {
@@ -1396,13 +1399,13 @@ namespace Sanford.Multimedia.Midi
             int endPitchTime = 0;
 
             RemovePitchBend(channel, starttime, endtime);
-                        
-           if (endtime > 2)
-                endPitchTime = endtime - 2;
+
+            if (endtime > 2)
+                 endPitchTime = endtime - 2;           
 
             if (endtime <= starttime)
                 return;
-
+  
             ChannelMessageBuilder builder = new ChannelMessageBuilder();
             ChannelMessage pitchBendMessage;
 
@@ -1412,9 +1415,7 @@ namespace Sanford.Multimedia.Midi
             
              // Start Pitchbend           
             if (pitchBend > 16383)
-                pitchBend = 16383;
-
-            //mask = 127;
+                pitchBend = 16383;            
 
             // Increase from 8192 to 13383 during the duration of the note
             int steps = 10;
@@ -1422,6 +1423,7 @@ namespace Sanford.Multimedia.Midi
             int offsetPitch = (pitchBend - 8192) / steps;
             ipitchBend = 8192;
             int t = starttime;
+            
             for (int i = 0; i < steps ; i++)
             {
                 ipitchBend += offsetPitch;
@@ -1439,14 +1441,11 @@ namespace Sanford.Multimedia.Midi
                 pitchBendMessage = builder.Result;
                 Insert(t, pitchBendMessage);
             }
-
-
-
-            #region stop pitchbend                       
             
+            #region stop pitchbend                       
+
             // Stop pitchbend
             StopPitchBend(channel, endPitchTime);
-
 
             #endregion
         }
@@ -2237,6 +2236,75 @@ namespace Sanford.Multimedia.Midi
                 }
 
                 current.Previous = newMidiEvent;
+            }
+
+            count++;
+
+            #region Invariant
+
+
+            // FAB perfs
+            //AssertValid();
+
+            #endregion
+        }
+
+        public void InsertLast(int position, IMidiMessage message)
+        {
+            #region Require
+
+            if (position < 0)
+            {
+                //throw new ArgumentOutOfRangeException("position", position, "IMidiMessage position out of range.");
+                position = this.Length;
+
+                Console.Write("\nERROR: IMidiMessage position out of range (Track.cs, Insert");
+
+            }
+            else if (message == null)
+            {
+                throw new ArgumentNullException("message");
+            }
+
+            #endregion            
+
+            MidiEvent newMidiEvent = new MidiEvent(this, position, message);
+
+            if (head == null)
+            {
+                head = newMidiEvent;
+                tail = newMidiEvent;
+            }
+            else if (position >= tail.AbsoluteTicks)
+            {
+                newMidiEvent.Previous = tail;
+                tail.Next = newMidiEvent;
+                tail = newMidiEvent;
+                endOfTrackMidiEvent.SetAbsoluteTicks(Length);
+                endOfTrackMidiEvent.Previous = tail;
+            }
+            else
+            {
+                MidiEvent current = tail;
+
+                while (current.AbsoluteTicks > position)
+                {
+                    current = current.Previous;
+                }
+
+                newMidiEvent.Next = current.Next;
+                newMidiEvent.Previous = current;
+
+                if (current.Next != null)
+                {
+                    current.Next.Previous = newMidiEvent;
+                }
+                else
+                {
+                    tail = newMidiEvent;
+                }
+
+                current.Next = newMidiEvent;
             }
 
             count++;
