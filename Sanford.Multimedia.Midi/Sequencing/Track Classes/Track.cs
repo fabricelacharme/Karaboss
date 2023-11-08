@@ -1579,6 +1579,13 @@ namespace Sanford.Multimedia.Midi
 
 
         #region copy events
+
+        /// <summary>
+        /// Copy events
+        /// </summary>
+        /// <param name="srcstarttime"></param>
+        /// <param name="srcendtime"></param>
+        /// <param name="deststarttime"></param>
         public void CopyEvents(float srcstarttime, float srcendtime, float deststarttime)
         {
             float delta = 0;
@@ -1586,9 +1593,8 @@ namespace Sanford.Multimedia.Midi
             bool bFound = false;
 
             while (current.AbsoluteTicks >= srcstarttime)
-            {
-                
-                // Consider events inside srcstarttime and screndtime
+            {                
+                // Consider events having their ticks inside srcstarttime and screndtime
                 if (current != endOfTrackMidiEvent && current.AbsoluteTicks>= srcstarttime && current.AbsoluteTicks <= srcendtime)
                 {
                     delta = current.AbsoluteTicks - srcstarttime;
@@ -1596,31 +1602,31 @@ namespace Sanford.Multimedia.Midi
                     // Do not insert if similar event exists in the target position!                    
                     int position = (int)deststarttime + (int)delta;
                     bFound = false;
+                    
+                    // List all events having this ticks
                     List<MidiEvent> melist = GetEventsFromTicks(position);
                     foreach (MidiEvent me in melist)
                     {
-                        //if (current.AbsoluteTicks + delta == me.AbsoluteTicks)
-                        //{
-                            //Search similar notes
-                            if (me.MidiMessage.MessageType == MessageType.Channel && current.MidiMessage.MessageType == MessageType.Channel)
+                        //Search Channel events having same values 
+                        if (me.MidiMessage.MessageType == MessageType.Channel && current.MidiMessage.MessageType == MessageType.Channel)
+                        {
+                            IMidiMessage cmsg = current.MidiMessage;
+                            IMidiMessage emsg = me.MidiMessage;
+                            ChannelCommand ccc = ChannelMessage.UnpackCommand(cmsg.Status);
+                            ChannelCommand ecc = ChannelMessage.UnpackCommand(emsg.Status);
+
+                            // notes values : emsg.Data1 == cmsg.Data1
+                            // ChannelCommd ecc == ccc (noteon, noteoff)
+                            if (emsg.Data1 == cmsg.Data1 && ecc == ccc)
                             {
-                                IMidiMessage cmsg = current.MidiMessage;
-                                IMidiMessage emsg = me.MidiMessage;
-                                ChannelCommand ccc = ChannelMessage.UnpackCommand(cmsg.Status);
-                                ChannelCommand ecc = ChannelMessage.UnpackCommand(emsg.Status);
-
-                                // notes emsg.Data1 == cmsg.Data1
-                                // ChannelCommd ecc == ccc (noteon, noteoff)
-                                if (emsg.Data1 == cmsg.Data1 && ecc == ccc)
-                                {
-                                    bFound = true;
-                                    break;
-                                }
-
+                                bFound = true;
+                                break;
                             }
-                        //}
+                        }                        
                     }
-                                        
+
+                    // Insert new event at target position (int)deststarttime + (int)delta
+                    // only if not found and if it is a Channel message
                     if (!bFound && current.MidiMessage.MessageType == MessageType.Channel)                        
                         Insert((int)deststarttime + (int)delta, current.MidiMessage);
                     
@@ -1995,7 +2001,11 @@ namespace Sanford.Multimedia.Midi
         #endregion lyrics
 
 
-
+        /// <summary>
+        /// Get all events at this position (ticks)
+        /// </summary>
+        /// <param name="ticks"></param>
+        /// <returns></returns>
         public List<MidiEvent> GetEventsFromTicks(float ticks)
         {
             List<MidiEvent> midiEvents = new List<MidiEvent>();            
@@ -2005,6 +2015,7 @@ namespace Sanford.Multimedia.Midi
             {
                 if (current.AbsoluteTicks == ticks)
                 {
+                    // Same position = ticks
                     midiEvents.Add(current);
 
                     #region next
@@ -2021,6 +2032,7 @@ namespace Sanford.Multimedia.Midi
                 }
                 else if (current.AbsoluteTicks > ticks)
                 {
+                    // position > ticks => exit
                     break;
                 }
                 else

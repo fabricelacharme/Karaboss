@@ -6,8 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
 
 namespace MusicTxt
@@ -52,8 +50,6 @@ namespace MusicTxt
         private int Reverb = 0;
 
         MidiNote n;
-
-
 
         public MusicTxtReader() 
         {
@@ -128,10 +124,8 @@ namespace MusicTxt
             string fileName = (string)e.Argument;
 
             try
-            {
-                //FileStream fstream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-                FileStream fstream = File.OpenRead(fileName); ;
-                
+            {                
+                FileStream fstream = File.OpenRead(fileName); ;                
                 StreamReader stream = new StreamReader(fstream);
 
                 using (stream)
@@ -328,16 +322,6 @@ namespace MusicTxt
             // Track, Time, Title_t, Text            
             TrackName = ar[3];
 
-            /*
-            if (currenttrack > 0 && currenttrack <= newTracks.Count)
-            {
-                newTracks[currenttrack - 1].Name = TrackName;
-                byte[] bytes = System.Text.Encoding.ASCII.GetBytes(TrackName);
-                MetaMessage message = new MetaMessage(MetaType.TrackName, bytes);
-                newTracks[currenttrack - 1].Insert(0, message);
-            }
-            */
-
             if (currenttrack >= 0 && currenttrack <= newTracks.Count)
             {
                 newTracks[currenttrack].Name = TrackName;
@@ -345,8 +329,6 @@ namespace MusicTxt
                 MetaMessage message = new MetaMessage(MetaType.TrackName, bytes);
                 newTracks[currenttrack].Insert(0, message);
             }
-
-
         }
 
         /// <summary>
@@ -361,10 +343,6 @@ namespace MusicTxt
 
             // Track, Time, Instrument_name_t, Text
             InstrumentName = ar[3];
-            /*
-            if (currenttrack > 0 && currenttrack <= newTracks.Count)
-                newTracks[currenttrack - 1].InstrumentName = InstrumentName;
-            */
             if (currenttrack >= 0 && currenttrack <= newTracks.Count)
                 newTracks[currenttrack].InstrumentName = InstrumentName;
         }
@@ -382,14 +360,7 @@ namespace MusicTxt
             int ticks = Convert.ToInt32(ar[1]);
             Channel = Convert.ToInt32(ar[3]);
             ProgramChange = Convert.ToInt32(ar[4]);
-            /*
-            if (currenttrack > 0 && currenttrack <= newTracks.Count)
-            {
-                newTracks[currenttrack - 1].ProgramChange = ProgramChange;
-                ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, Channel, ProgramChange);
-                newTracks[currenttrack - 1].Insert(ticks, message);
-            }
-            */
+
             if (currenttrack >= 0 && currenttrack <= newTracks.Count)
             {
                 if (newTracks[currenttrack].MidiChannel != Channel)
@@ -405,7 +376,7 @@ namespace MusicTxt
         }
 
         /// <summary>
-        /// Control Change Control_c
+        /// Control Change Control_c (volume, pan, fader, reverb, chorus)
         /// </summary>
         /// <param name="ar"></param>
         /// <exception cref="ArgumentException"></exception>
@@ -413,46 +384,6 @@ namespace MusicTxt
         {
             if (ar.Length != 6)
                 throw new ArgumentException("ControlChange Length");
-
-            /*
-            if (currenttrack == 0 || currenttrack > newTracks.Count)
-                return;
-
-            // Track, Time, Control_c, Channel, Data1, Data2
-            int ticks = Convert.ToInt32(ar[1]);
-            Channel = Convert.ToInt32(ar[3]);
-            ControlChangeData1 = Convert.ToInt32(ar[4]);
-            ControlChangeData2 = Convert.ToInt32(ar[5]);
-
-            // 7 Volume
-            // 10 Pan
-            // 11 Fader
-            // 91 Reverb
-            // 93 chorus   
-
-            switch (ControlChangeData1)
-            {
-                case 7:
-                    Volume = ControlChangeData2;
-                    newTracks[currenttrack - 1].Volume = Volume;                    
-                    break;
-                case 10:                    
-                    Pan = ControlChangeData2;
-                    newTracks[currenttrack - 1].Pan = Pan;                    
-                    break;
-                case 91:                    
-                    Reverb = ControlChangeData2;
-                    newTracks[currenttrack - 1].Reverb = Reverb;                    
-                    break;
-                default:
-                    //ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
-                    //newTracks[currenttrack-1].Insert(ticks, message);
-                    break;
-            }
-
-            ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
-            newTracks[currenttrack - 1].Insert(ticks, message);
-            */
 
             if (currenttrack < 0 || currenttrack > newTracks.Count)
                 return;
@@ -487,8 +418,6 @@ namespace MusicTxt
                     newTracks[currenttrack].insertReverb(Channel,Reverb);
                     break;
                 default:
-                    //ChannelMessage msg = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
-                    //newTracks[currenttrack].Insert(ticks, msg);
                     break;
             }
 
