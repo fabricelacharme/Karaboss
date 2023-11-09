@@ -35,6 +35,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace Sanford.Multimedia.Midi.Score.UI
 {
@@ -78,7 +79,26 @@ namespace Sanford.Multimedia.Midi.Score.UI
             txtDuration.Text = n.Duration.ToString();
             upDownNoteVelocity.Value = n.Velocity;
 
-            checkBox1.Checked = sheetmusic.IsPitchBend(n.Channel, n.StartTime, n.EndTime);
+            // Is ther a pitch bend ?
+            chkPitchBend.Checked = sheetmusic.IsPitchBend(n.Channel, n.StartTime, n.EndTime);
+            txtPitchBends.Text = string.Empty;
+            if (chkPitchBend.Checked )
+            {                
+                List<MidiEvent> pbEvents = sheetmusic.findPitchBendValues(n.Channel, n.StartTime, n.EndTime);
+                if (pbEvents != null)
+                {
+                    int v, ticks;
+                    txtPitchBends.Text = "Time" + "\t" + "Value" + "\r\n";
+                    txtPitchBends.Text += n.StartTime.ToString() + "\r\n";
+                    foreach (MidiEvent ev in pbEvents)
+                    {
+                        ticks = ev.AbsoluteTicks;
+                        v = ev.MidiMessage.Data2;
+                        txtPitchBends.Text += ticks + "\t"+ v.ToString() + "\r\n";
+                    }
+                    txtPitchBends.Text += n.EndTime.ToString();
+                }
+            }
         }
 
         private void sheetmusic_SelectionChanged(List<MidiNote> lstMidiNotes)
@@ -271,13 +291,19 @@ namespace Sanford.Multimedia.Midi.Score.UI
 
 
         #region Effects
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+
+        #endregion
+
+        #region pitchbend
+        decimal pitchbend;
+        private void chkPitchBend_CheckedChanged(object sender, EventArgs e)
         {
             // No pitch = 8192
             // 16383
+            /*
             int pitchBend = 16383;
 
-            if (checkBox1.Checked)
+            if (chkPitchBend.Checked)
             {
                 sheetmusic.SetPitchBend(pitchBend);
             }
@@ -285,9 +311,28 @@ namespace Sanford.Multimedia.Midi.Score.UI
             {
                 sheetmusic.UnsetPitchBend();
             }
+            */
         }
 
+        private void hsPitchBend_ValueChanged(object sender, EventArgs e)
+        {
+            pitchbend = 8192 + Convert.ToInt32(hsPitchBend.Value);
+            lblHsPitchBend.Text = (pitchbend - 8192).ToString();
+        }
 
-        #endregion
+        private void btnSetPitchBend_Click(object sender, EventArgs e)
+        {
+            sheetmusic.SetPitchBend(Convert.ToInt32(pitchbend));
+            chkPitchBend.Checked = true;
+        }
+
+        private void btnRemovePitchBend_Click(object sender, EventArgs e)
+        {
+            sheetmusic.UnsetPitchBend();
+            chkPitchBend.Checked = false;
+            txtPitchBends.Text = string.Empty;
+        }
+
+        #endregion pitchbend
     }
 }

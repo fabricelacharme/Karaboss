@@ -2462,15 +2462,31 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuFileExportMidiToText_Click(object sender, EventArgs e)
         {
+            ExportMidiToText();
+        }
+
+        /// <summary>
+        /// Dump Midi to text
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnDump_Click(object sender, EventArgs e)
+        {
+            ExportMidiToText();
+        }
+        private void ExportMidiToText()
+        {
             if (MIDIfilePath == null)
                 return;
-                //MIDIfilePath = CreateNewMidiFile.DefaultDirectory;
+            //MIDIfilePath = CreateNewMidiFile.DefaultDirectory;
 
             string name = Path.GetFileNameWithoutExtension(MIDIfileName) + " (Dump)";
             string file = string.Empty;
             int suffix = 0;
 
             file = string.Format("{0}\\{1}{2}", MIDIfilePath, name, ".txt");
+
+            /*
             if (File.Exists(file))
             {
                 do
@@ -2479,6 +2495,7 @@ namespace Karaboss
                 }
                 while (File.Exists(file));
             }
+            */
             sequence1.WriteDump(MIDIfileName, file);
             try
             {
@@ -8520,6 +8537,9 @@ namespace Karaboss
 
 
         #endregion
+
+
+
     }
 
 }

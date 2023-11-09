@@ -3157,6 +3157,15 @@ namespace Sanford.Multimedia.Midi.Score
 
         }
         
+        public List<MidiEvent> findPitchBendValues(int Channel, int StartTime, int EndTime)
+        {
+            int numstaff = CurrentNote.numstaff;
+            Track trk = sequence1.tracks[numstaff];
+            MidiNote mn = CurrentNote.midinote;
+            return trk.findPitchBendValues(mn.Channel, mn.StartTime, mn.EndTime);
+
+        }
+
         /// <summary>
         /// frmNoteEdit - set Pitch Bend to a note
         /// </summary>
