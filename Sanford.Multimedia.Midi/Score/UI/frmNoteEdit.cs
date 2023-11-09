@@ -45,7 +45,7 @@ namespace Sanford.Multimedia.Midi.Score.UI
         private int _tracknum;
         private List<MidiNote> _lstmidinotes;
         bool busy = false;
-
+        private MidiNote _note;
 
         public frmNoteEdit(SheetMusic SM)
         {
@@ -66,6 +66,8 @@ namespace Sanford.Multimedia.Midi.Score.UI
         {
             if (busy)
                 return;
+            
+            _note = n;
 
             // Convert note number to letter
             string[] Scale = { "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#" };
@@ -82,24 +84,34 @@ namespace Sanford.Multimedia.Midi.Score.UI
             // Is ther a pitch bend ?
             chkPitchBend.Checked = sheetmusic.IsPitchBend(n.Channel, n.StartTime, n.EndTime);
             txtPitchBends.Text = string.Empty;
-            if (chkPitchBend.Checked )
-            {                
-                List<MidiEvent> pbEvents = sheetmusic.findPitchBendValues(n.Channel, n.StartTime, n.EndTime);
-                if (pbEvents != null)
-                {
-                    int v, ticks;
-                    txtPitchBends.Text = "Time" + "\t" + "Value" + "\r\n";
-                    txtPitchBends.Text += n.StartTime.ToString() + "\r\n";
-                    foreach (MidiEvent ev in pbEvents)
-                    {
-                        ticks = ev.AbsoluteTicks;
-                        v = ev.MidiMessage.Data2;
-                        txtPitchBends.Text += ticks + "\t"+ v.ToString() + "\r\n";
-                    }
-                    txtPitchBends.Text += n.EndTime.ToString();
-                }
+            if (chkPitchBend.Checked )            
+                DisplayPitchBends(n);
+            else
+            {
+                pitchbend = 8192;
+                hsPitchBend.Value = 0;
+
             }
+            
         }
+
+        private void DisplayPitchBends(MidiNote n)
+        {
+            List<MidiEvent> pbEvents = sheetmusic.findPitchBendValues(n.Channel, n.StartTime, n.EndTime);
+            if (pbEvents != null)
+            {
+                int v, ticks;
+                txtPitchBends.Text = "Time" + "\t" + "Value" + "\r\n";
+                txtPitchBends.Text += n.StartTime.ToString() + "\r\n";
+                foreach (MidiEvent ev in pbEvents)
+                {
+                    ticks = ev.AbsoluteTicks;
+                    v = ev.MidiMessage.Data2;
+                    txtPitchBends.Text += ticks + "\t" + v.ToString() + "\r\n";
+                }
+                txtPitchBends.Text += n.EndTime.ToString();
+            }
+        } 
 
         private void sheetmusic_SelectionChanged(List<MidiNote> lstMidiNotes)
         {
@@ -322,15 +334,21 @@ namespace Sanford.Multimedia.Midi.Score.UI
 
         private void btnSetPitchBend_Click(object sender, EventArgs e)
         {
+            if (pitchbend == 8192)
+                return;
+
             sheetmusic.SetPitchBend(Convert.ToInt32(pitchbend));
             chkPitchBend.Checked = true;
+            DisplayPitchBends(_note);
         }
 
         private void btnRemovePitchBend_Click(object sender, EventArgs e)
         {
+            
             sheetmusic.UnsetPitchBend();
             chkPitchBend.Checked = false;
             txtPitchBends.Text = string.Empty;
+            hsPitchBend.Value = 0;
         }
 
         #endregion pitchbend

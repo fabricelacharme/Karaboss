@@ -1442,6 +1442,19 @@ namespace Sanford.Multimedia.Midi
             int t = starttime + (endtime - starttime) / 2;
 
             // Unpack pitch bend value into two data bytes.
+            builder.Data1 = ipitchBend & mask;
+            builder.Data2 = ipitchBend >> 7;
+
+            // Build message.
+            builder.Build();
+            pitchBendMessage = builder.Result;
+            InsertLast(t, pitchBendMessage);
+
+            /*
+            // 1 - Start pitchbend at the middle of duration
+            int t = starttime + (endtime - starttime) / 2;
+
+            // Unpack pitch bend value into two data bytes.
             builder.Data1 = (ipitchBend/2) & mask;
             builder.Data2 = (ipitchBend/2) >> 7;
 
@@ -1450,7 +1463,7 @@ namespace Sanford.Multimedia.Midi
             pitchBendMessage = builder.Result;
             InsertLast(t, pitchBendMessage);
 
-
+            
             // 2 - Start pitchbend at the middle of duration
             t = starttime + 5 * (endtime - starttime) / 8;
 
@@ -1488,6 +1501,7 @@ namespace Sanford.Multimedia.Midi
             builder.Build();
             pitchBendMessage = builder.Result;
             InsertLast(t, pitchBendMessage);
+            */
 
 
             // 5 - send pitchbend at the end, +1 after
