@@ -184,7 +184,9 @@ namespace Sanford.Multimedia.Midi
                 else if (message.Command == ChannelCommand.PitchWheel)
                 {
                     // Track
-                    stream.WriteLine(string.Format("{0}, {1}, Pitch_bend_c, {2}, {3}", trackid, ticks, channel, message.Data1));
+                    //stream.WriteLine(string.Format("{0}, {1}, Pitch_bend_c, {2}, {3}", trackid, ticks, channel, message.Data1));
+                    stream.WriteLine(string.Format("{0}, {1}, Pitch_bend_c, {2}, {3}", trackid, ticks, channel, message.Data2));
+
                 }
                 else if (message.Command == ChannelCommand.Controller)
                 {

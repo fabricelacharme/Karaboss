@@ -7,6 +7,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Windows.Forms;
+using System.Reflection;
+using System.Runtime.Remoting.Channels;
 
 namespace MusicTxt
 {
@@ -436,21 +438,33 @@ namespace MusicTxt
 
         private void ReadPitchBend(string[] ar)
         {
-            // Track, Time, Pitch_bend_c, Channel, Data1
+            // Track, Time, Pitch_bend_c, Channel, Data2
             if (ar.Length != 5)
                 throw new ArgumentException("PitchBend Length");
 
             int ticks = Convert.ToInt32(ar[1]);
-            int PitchBendData1 = Convert.ToInt32(ar[4]);
+            int PitchBend = Convert.ToInt32(ar[4]);            
             Channel = Convert.ToInt32(ar[3]);
-            ChannelMessage message = new ChannelMessage(ChannelCommand.PitchWheel, Channel, PitchBendData1);
-            
-            /*
-            newTracks[currenttrack - 1].Insert(ticks, message);
-            */
 
+            ChannelMessageBuilder builder = new ChannelMessageBuilder();
+            ChannelMessage pitchBendMessage;
+            int mask = 127;
+
+            // Build pitch bend message;
+            builder.Command = ChannelCommand.PitchWheel;
+            builder.MidiChannel = Channel;
+
+            builder.Data1 = 0;
+            builder.Data2 = PitchBend;
+
+            // Build message.
+            builder.Build();
+            pitchBendMessage = builder.Result;
+
+            //ChannelMessage message = new ChannelMessage(ChannelCommand.PitchWheel, Channel, PitchBend);
+            
             if (currenttrack >= 0 && currenttrack <= newTracks.Count)
-                newTracks[currenttrack].Insert(ticks, message);
+                newTracks[currenttrack].Insert(ticks, pitchBendMessage);
         }
 
         private void ReadMetaLyric(string[] ar)
