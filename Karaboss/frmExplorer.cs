@@ -955,7 +955,7 @@ namespace Karaboss
             if (MXmlReader.seq != null)
             {
                 sequence1 = MXmlReader.seq;
-                sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+                sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)                
             }
 
             // Remove all MIDI events after last note
