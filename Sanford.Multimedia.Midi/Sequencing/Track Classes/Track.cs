@@ -41,6 +41,7 @@ using System.Linq.Expressions;
 using System.Windows.Forms;
 using System.Runtime.Remoting.Channels;
 using System.Threading;
+using System.Reflection;
 
 namespace Sanford.Multimedia.Midi
 {
@@ -1412,6 +1413,86 @@ namespace Sanford.Multimedia.Midi
             int ipitchBend;
             int endPitchTime = 0;
 
+            if (endtime > 2)
+            {
+                // endPitchTime = endtime - 2;
+                endPitchTime = endtime - 1;
+            }
+
+            ipitchBend = pb;
+
+            RemovePitchBend(channel, starttime, endtime);
+            
+            // 1 - value 64 before note on    
+            StopPitchBend(channel, starttime);
+
+            ChannelMessageBuilder builder = new ChannelMessageBuilder();
+            ChannelMessage pitchBendMessage;
+            // Build pitch bend message;
+            builder.Command = ChannelCommand.PitchWheel;
+            builder.MidiChannel = channel;
+
+
+            // After note on, increment 1 to value, each 20 tickes until middle of duration
+            int timetomiddle = starttime + (endtime - starttime)/2;
+            int durationtomiddle = (endtime - starttime)/2;
+
+            builder.Data1 = ipitchBend & mask;
+            builder.Data2 = ipitchBend >> 7;
+            int steps = (builder.Data2 - 64);
+            
+            int deltatime = durationtomiddle / steps;
+            int value = 64;
+            int t = starttime;
+            for (int i = 0; i< steps; i++)
+            {
+                value++;
+                t += deltatime;                
+                builder.Data1 = 0;
+                builder.Data2 = value;
+
+                // Build message.
+                builder.Build();
+                pitchBendMessage = builder.Result;
+                InsertLast(t, pitchBendMessage);
+            }
+
+            // Debut plateau
+            t = timetomiddle;
+            builder.Data1 = pb & mask;
+            builder.Data2 = pb >> 7;
+            // Build message.
+            builder.Build();
+            pitchBendMessage = builder.Result;
+            InsertLast(t, pitchBendMessage);
+
+
+            // value 64 before note off    
+            StopPitchBend(channel, endtime);
+
+            // fin plateau, fin note
+            // Dans le code, il est aprés, mais Il sera inséré avant le value 64
+            t = endtime;
+            builder.Data1 = pb & mask;
+            builder.Data2 = pb >> 7;
+            // Build message.
+            builder.Build();
+            pitchBendMessage = builder.Result;
+            Insert(t, pitchBendMessage);
+
+            // puis le note off
+        }
+
+
+        public void SetPitchBend3(int channel, int number, int starttime, int endtime, int pb)
+        {
+            // No pitch = 8192 (0x2000)
+            // 2 demi tons up =  16383 
+            // 2 demi tons down = 0
+            int mask = 127;
+            int ipitchBend;
+            int endPitchTime = 0;
+
             ipitchBend = pb;
 
             RemovePitchBend(channel, starttime, endtime);
@@ -1631,7 +1712,7 @@ namespace Sanford.Multimedia.Midi
             // Build message.
             builder.Build();
             pitchBendMessage = builder.Result;
-            InsertLast(time, pitchBendMessage);
+            Insert(time, pitchBendMessage);
         }
 
         /// <summary>
@@ -2451,7 +2532,7 @@ namespace Sanford.Multimedia.Midi
         /// </param>
         /// <param name="message">
         /// The IMidiMessage to insert.
-        /// </param>
+        /// </param>       
         public void Insert(int position, IMidiMessage message)
         {
             #region Require
