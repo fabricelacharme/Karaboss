@@ -4635,6 +4635,7 @@ namespace Karaboss
 
             sequence1 = MXmlReader.seq;
             sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+            sequence1.LoadProgressChanged += HandleLoadProgressChanged;
 
             if (e.Error == null && e.Cancelled == false)
             {
@@ -4780,6 +4781,7 @@ namespace Karaboss
 
             sequence1 = MTxtReader.seq;
             sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+            sequence1.LoadProgressChanged += HandleLoadProgressChanged;
 
             if (e.Error == null && e.Cancelled == false)
             {
