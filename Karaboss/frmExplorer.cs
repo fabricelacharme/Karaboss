@@ -56,7 +56,7 @@ namespace Karaboss
     {
 
         MusicXmlReader MXmlReader = new MusicXmlReader();
-        MusicTxtReader MTxtReader = new MusicTxtReader();
+        MusicTxtReader MTxtReader; //= new MusicTxtReader();
 
         #region configuration
         private ConfigurationForm m_configurationForm;
@@ -818,7 +818,7 @@ namespace Karaboss
             {
                 if (fileName != "\\")
                 {
-                    MTxtReader = new MusicTxtReader();
+                    MTxtReader = new MusicTxtReader(fileName);
                     MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
                     MTxtReader.LoadTxtAsync(fileName, silenceMode);
                 }
@@ -1551,7 +1551,7 @@ namespace Karaboss
                 return;
             }
 
-            MTxtReader = new MusicTxtReader();
+            MTxtReader = new MusicTxtReader(fpath);
             MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
 
             // File can be an txt file but not in musicxml format
@@ -1616,7 +1616,7 @@ namespace Karaboss
         {
             sequence1.LoadCompleted += HandleLoadCompleted;
             MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
-            MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
+            //MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
 
             // Set message on splash windows because the loading of sound fonts takes a very long time
             // if a big file is used

@@ -52,7 +52,8 @@ namespace Karaboss
     public partial class frmPlayer : Form
     {
         MusicXmlReader MXmlReader = new MusicXmlReader();
-        MusicTxtReader MTxtReader = new MusicTxtReader();
+        MusicTxtReader MTxtReader; //= new MusicTxtReader();
+        MusicTxtWriter MTxtWriter;
 
         public bool bfilemodified = false;
 
@@ -2420,7 +2421,7 @@ namespace Karaboss
                 ResetSequencer();
                 if (fileName != "\\")
                 {
-                    MTxtReader = new MusicTxtReader();
+                    MTxtReader = new MusicTxtReader(fileName);
                     MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
 
                     MTxtReader.LoadTxtAsync(fileName);
@@ -2474,31 +2475,40 @@ namespace Karaboss
         {
             ExportMidiToText();
         }
+
+        /// <summary>
+        /// Save async midi dump to text file
+        /// </summary>
         private void ExportMidiToText()
         {
             if (MIDIfilePath == null)
                 return;
-            //MIDIfilePath = CreateNewMidiFile.DefaultDirectory;
 
             string name = Path.GetFileNameWithoutExtension(MIDIfileName) + " (Dump)";
             string file = string.Empty;
-            int suffix = 0;
-
             file = string.Format("{0}\\{1}{2}", MIDIfilePath, name, ".txt");
 
-            /*
-            if (File.Exists(file))
-            {
-                do
-                {
-                    file = string.Format("{0}\\{1} ({2}){3}", MIDIfilePath, name, ++suffix, ".txt");
-                }
-                while (File.Exists(file));
-            }
-            */
-            sequence1.WriteDump(MIDIfileName, file);
+            MusicTxtWriter MTxtWriter = new MusicTxtWriter(sequence1, file);
+            MTxtWriter.WriteTxtCompleted += MTxtWriter_WriteTxtCompleted;
+            MTxtWriter.WriteTxtProgressChanged += MTxtWriter_WriteTxtProgressChanged;
+            MTxtWriter.WriteTxtAsync(file);
+        }
+
+        private void MTxtWriter_WriteTxtProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Event: dump midi file completed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MTxtWriter_WriteTxtCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            string file = ((MusicTxtWriter)sender).fileName;            
             try
-            {
+            {                
                 System.Diagnostics.Process.Start(@file);
             }
             catch (Exception ex)
@@ -2506,6 +2516,7 @@ namespace Karaboss
                 MessageBox.Show(ex.Message);
             }
         }
+      
 
         /// <summary>
         /// Import a normalized text file
@@ -2513,6 +2524,26 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void MnuFileImportMidiFromText_Click(object sender, EventArgs e)
+        {
+            importMidiFileFromText();
+        }
+
+        private void importMidiFileFromText()
+        {
+            openMidiFileDialog.Title = "Open Text file";
+            openMidiFileDialog.DefaultExt = "txt";
+            openMidiFileDialog.Filter = "Text files|*.txt|All files|*.*";
+            openMidiFileDialog.InitialDirectory = MIDIfilePath;
+
+            if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = openMidiFileDialog.FileName;
+                LoadAsyncTxtFile(fileName);
+            }
+        }
+
+        /*
+        private void importMidiFileFromText2()
         {
             openMidiFileDialog.Title = "Open Text file";
             openMidiFileDialog.DefaultExt = "txt";
@@ -2525,7 +2556,7 @@ namespace Karaboss
                 string lyrics = string.Empty;
 
                 // Load file
-                Sequence seq;                
+                Sequence seq;
 
                 FileStream fstream = new FileStream(fileName, FileMode.Open,
                     FileAccess.Read, FileShare.None);
@@ -2544,7 +2575,7 @@ namespace Karaboss
 
                 sequence1 = seq;
                 bHasLyrics = sequence1.HasLyrics;
-                if (bHasLyrics)                
+                if (bHasLyrics)
                     lyrics = ExtractLyrics();
 
                 laststart = 0;
@@ -2591,6 +2622,7 @@ namespace Karaboss
                 DisplayLyricsInfos();
             }
         }
+        */
 
         /// <summary>
         /// Import a MusicXml file to Midi
@@ -3275,8 +3307,13 @@ namespace Karaboss
             if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string fileName = openMidiFileDialog.FileName;
-                TextTrackImporter trckI = new TextTrackImporter();
-                trckI.TrackSelected += new TextTrackImporter.TrackSelectedEventHandler(TextTrackImporter_TrackSelected);
+
+                //TextTrackImporter trckI = new TextTrackImporter();
+                //trckI.TrackSelected += new TextTrackImporter.TrackSelectedEventHandler(TextTrackImporter_TrackSelected);
+
+                MidiTrackTextImporter trckI = new MidiTrackTextImporter();
+                trckI.TrackSelected += new MidiTrackTextImporter.TrackSelectedEventHandler(TextTrackImporter_TrackSelected);
+
                 trckI.Read(fileName);
 
             }
@@ -4764,6 +4801,8 @@ namespace Karaboss
             // ====================================
             // AJOUT par arraport au standard
             // ====================================
+            MIDIfileFullPath = ((MusicTxtReader)sender).fileName;
+
             MIDIfilePath = Path.GetDirectoryName(MIDIfileFullPath);
             string fExt = Path.GetExtension(MIDIfileFullPath);             // Extension
             string fName = Path.GetFileNameWithoutExtension(MIDIfileFullPath);    // name without extension
@@ -4932,6 +4971,53 @@ namespace Karaboss
                     frmExplorer.RefreshExplorer();                    
                 }
 
+            }
+            else
+            {
+                MessageBox.Show(e.Error.Message);
+            }
+        }
+
+        /// <summary>
+        /// Ecent: Save Dump to text file terminated
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleSaveTxtCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+
+            if (progressBarPlayer != null)
+            {
+                try
+                {
+                    progressBarPlayer.Value = 0;
+                    progressBarPlayer.Visible = false;
+
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex.Message);
+                }
+
+            }
+
+            if (e.Error == null)
+            {
+                bfilemodified = false;
+                if (bClosingRequired == true)
+                {
+                    this.Close();
+                    return;
+                }
+
+                SetTitle(MIDIfileName);
+
+                // Active le formulaire frmExplorer
+                if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
+                {
+                    frmExplorer = GetForm<frmExplorer>();
+                    frmExplorer.RefreshExplorer();
+                }
             }
             else
             {
@@ -5531,7 +5617,7 @@ namespace Karaboss
                     sequence1.LoadCompleted += HandleLoadCompleted;
 
                     MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
-                    MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
+                    //MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
 
                     // ==========================================================================
                     // Chargement du fichier midi selectionné depuis frmExplorer

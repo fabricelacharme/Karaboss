@@ -131,10 +131,7 @@
     </Compile>
     <Compile Include="Device Classes\OutputDevice Classes\OutputDeviceBase.cs" />
     <Compile Include="ImportExport\CsvFormat.cs" />
-    <Compile Include="ImportExport\DumpReader.cs" />
-    <Compile Include="ImportExport\DumpWriter.cs" />
     <Compile Include="ImportExport\MidiTrackImporter.cs" />
-    <Compile Include="ImportExport\TextTrackImporter.cs" />
     <Compile Include="ImportExport\UI\frmSelectTrack.cs">
       <SubType>Form</SubType>
     </Compile>

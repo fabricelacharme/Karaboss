@@ -53,15 +53,18 @@ namespace MusicTxt
 
         MidiNote n;
 
-        public MusicTxtReader() 
+        public string fileName {  get; private set; }
+
+        public MusicTxtReader(string file) 
         {
+            fileName = file;
             InitializeBackgroundWorkers();
             MidiTags.ResetTags();
         }
 
         private void InitializeBackgroundWorkers()
         {
-            // xmlmusic
+            // txtmusic
             loadTxtWorker.DoWork += new DoWorkEventHandler(LoadTxtDoWork);
             loadTxtWorker.ProgressChanged += new ProgressChangedEventHandler(OnLoadTxtProgressChanged);
             loadTxtWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnLoadTxtCompleted);
@@ -117,7 +120,7 @@ namespace MusicTxt
 
 
         /// <summary>
-        /// Load xmlmusic track by LoadXmlWorker
+        /// Load text dump by LoadTxtWorker
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

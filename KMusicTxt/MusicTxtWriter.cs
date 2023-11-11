@@ -1,14 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using Sanford.Multimedia.Midi;
+using System;
+using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Windows;
 
-namespace Sanford.Multimedia.Midi
+namespace MusicTxt
 {
-    internal class DumpWriter
+    public class MusicTxtWriter
     {
+        private BackgroundWorker writeTxtWorker = new BackgroundWorker();
+
+        // txtmusic
+        public event EventHandler<AsyncCompletedEventArgs> WriteTxtCompleted;
+        public event ProgressChangedEventHandler WriteTxtProgressChanged;
+
+        private bool disposed = false;
+
         // The Track to write to the Stream.
         private Track track = new Track();
 
@@ -16,27 +22,114 @@ namespace Sanford.Multimedia.Midi
         private StreamWriter stream;
 
         // Running status.
-        private int runningStatus = 0;       
+        private int runningStatus = 0;
 
         private Sequence sequence;
         private string song;
+        public string fileName {  get; private set; }
 
-        public DumpWriter(Sequence seq, string file)
+        public MusicTxtWriter(Sequence seq, string file)
         {
+            InitializeBackgroundWorkers();
             sequence = seq;
+            fileName = file;
             song = Path.GetFileNameWithoutExtension(file);
         }
 
-        // usage : 
-        // string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        // StreamWriter outputFile = new StreamWriter(mydocpath + @"\WriteLines.txt")
+        private void InitializeBackgroundWorkers()
+        {
+            // xmlmusic
+            writeTxtWorker.DoWork += new DoWorkEventHandler(WriteTxtDoWork);
+            writeTxtWorker.ProgressChanged += new ProgressChangedEventHandler(OnWriteTxtProgressChanged);
+            writeTxtWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnWriteTxtCompleted);
+            writeTxtWorker.WorkerReportsProgress = true;
+        }
 
+        bool bSilenceMode = false;
+
+        public void WriteTxtAsync(string fileName, bool silenceMode = false)
+        {
+            #region Require
+
+            if (disposed)
+            {
+                throw new ObjectDisposedException("Sequence");
+            }
+            else if (IsTxtBusy)
+            {
+                throw new InvalidOperationException();
+            }
+            else if (fileName == null)
+            {
+                throw new ArgumentNullException("fileName");
+            }
+
+            #endregion
+            bSilenceMode |= silenceMode;
+            writeTxtWorker.RunWorkerAsync(fileName);
+        }
+
+        public bool IsTxtBusy
+        {
+            get
+            {
+                return writeTxtWorker.IsBusy;
+            }
+        }
+
+
+        #region txtmusic
+        private void OnWriteTxtCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            WriteTxtCompleted?.Invoke(this, new AsyncCompletedEventArgs(e.Error, e.Cancelled, null));
+        }
+
+        private void OnWriteTxtProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            WriteTxtProgressChanged?.Invoke(this, e);
+        }
+
+
+        /// <summary>
+        /// Dump by WriteTxtWorker
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WriteTxtDoWork(object sender, DoWorkEventArgs e)
+        {
+            string fileName = (string)e.Argument;
+
+            try
+            {
+                FileStream fstream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
+                StreamWriter stream = new StreamWriter(fstream);
+
+                using (stream)
+                {
+                    // Your stuff
+                    Write(stream);
+                }
+            }
+            catch (Exception ee)
+            {
+                Console.Write(ee.ToString());
+                e.Cancel = true;
+
+            }
+        }
+
+        #endregion txtmusic
+
+        /// <summary>
+        /// Dump sequence to text file
+        /// </summary>
+        /// <param name="strm"></param>
         public void Write(StreamWriter strm)
         {
             this.stream = strm;
             int trackid = 0;
             bool bHeaderCreated = false;
-            
+
             if (sequence.tracks[0].ContainsNotes == false)
             {
                 // first track has no notes
@@ -44,7 +137,7 @@ namespace Sanford.Multimedia.Midi
                 //0, 0, Header, format, nTracks, division            
                 stream.WriteLine(string.Format("0, 0, Header, {0}, {1}, {2}", sequence.Format, sequence.tracks.Count, sequence.Division));
             }
-            else  
+            else
             {
                 // If first track contains notes, create an empty track with header information (so tracks.count + 1)
 
@@ -70,14 +163,14 @@ namespace Sanford.Multimedia.Midi
                 bHeaderCreated = true;
             }
 
-            
+
 
             for (int i = 0; i < sequence.tracks.Count; i++)
             {
                 runningStatus = 0;
                 track = sequence.tracks[i];
 
-                trackid++;               
+                trackid++;
 
                 #region track informations
                 // Start new track
@@ -95,7 +188,7 @@ namespace Sanford.Multimedia.Midi
                     // Track, Time, Time_signature, Num, Denom, Click, NotesQ
                     // FAB: TO BE CHECKED
                     stream.WriteLine(string.Format("1, 0, Time_signature, {0}, {1}, {2}, {3}", sequence.Time.Numerator, sequence.Time.Denominator, 24, 8));
-                    stream.WriteLine(string.Format("1, 0, Tempo, {0}", sequence.Tempo));                    
+                    stream.WriteLine(string.Format("1, 0, Tempo, {0}", sequence.Tempo));
                     bHeaderCreated = true;
                 }
                 else
@@ -115,7 +208,7 @@ namespace Sanford.Multimedia.Midi
 
                 #region events
                 foreach (MidiEvent e in track.Iterator())
-                {                  
+                {
                     switch (e.MidiMessage.MessageType)
                     {
                         case MessageType.Channel:
@@ -138,7 +231,7 @@ namespace Sanford.Multimedia.Midi
                             Write((SysRealtimeMessage)e.MidiMessage);
                             break;
 
-                        
+
                     }
                 }
                 #endregion
@@ -165,9 +258,9 @@ namespace Sanford.Multimedia.Midi
         private void Write(ChannelMessage message, int trackid, int ticks, int channel)
         {
             if (runningStatus != message.Status)
-            {             
+            {
                 runningStatus = message.Status;
-            }            
+            }
 
             if (ChannelMessage.DataBytesPerType(message.Command) == 2)
             {
@@ -190,7 +283,7 @@ namespace Sanford.Multimedia.Midi
                 }
                 else if (message.Command == ChannelCommand.Controller)
                 {
-                    stream.WriteLine(string.Format("{0}, {1}, Control_c, {2}, {3}, {4}", trackid, ticks, channel, message.Data1, message.Data2));                    
+                    stream.WriteLine(string.Format("{0}, {1}, Control_c, {2}, {3}, {4}", trackid, ticks, channel, message.Data1, message.Data2));
                     // 7 Volume
                     // 10 Pan
                     // 11 Fader
@@ -247,9 +340,9 @@ namespace Sanford.Multimedia.Midi
                     // Replace byte value 13 (cr) by antislash
                     for (int i = 0; i < b.Length; i++)
                     {
-                        if (b[i] == 13) b[i] = 92; 
+                        if (b[i] == 13) b[i] = 92;
                     }
-                    
+
                     sy = System.Text.Encoding.Default.GetString(b);
                     // comma is the separator : remove all comma ?
                     //sy = sy.Replace(',', '-');
@@ -281,9 +374,9 @@ namespace Sanford.Multimedia.Midi
                 case MetaType.TimeSignature:
                     break;
                 case MetaType.TrackName:
-                    break;                    
+                    break;
             }
-            
+
 
 
         }
@@ -327,7 +420,9 @@ namespace Sanford.Multimedia.Midi
 
         #endregion
 
-        
-        
+
+
     }
+
 }
+
