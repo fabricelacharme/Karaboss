@@ -515,6 +515,8 @@ namespace MusicTxt
         /// </summary>
         private void CreateTrack()
         {
+            ResetValues();
+
             track = new Track()
             {
                 MidiChannel = Channel,
@@ -530,21 +532,31 @@ namespace MusicTxt
 
             ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, track.MidiChannel, track.ProgramChange, 0);
             track.Insert(0, message);
-
             track.insertTimesignature(Numerator, Denominator);
-
             newTracks.Add(track);
+
+            
         }
-        #endregion
+        
+        private void ResetValues()
+        {
+            Pan = 64;
+            Reverb = 0;
+            TrackName = "Track1";
+            InstrumentName = "AcousticGrandPiano";
+
+    }
+
+    #endregion
 
 
-        #region notes
+    #region notes
 
-        /// <summary>
-        /// Note_on_c = Note on event, but sometimes also a note off
-        /// </summary>
-        /// <param name="ar"></param>
-        private void StartMidiNote(string[] ar)
+    /// <summary>
+    /// Note_on_c = Note on event, but sometimes also a note off
+    /// </summary>
+    /// <param name="ar"></param>
+    private void StartMidiNote(string[] ar)
         {
             if (ar.Length != 6)
                 throw new ArgumentException("Note On Length");
