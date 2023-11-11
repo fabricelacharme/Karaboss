@@ -180,9 +180,29 @@ namespace MusicTxt
                 {
                     // first track has no notes
                     // header was not created
-                    // informations
-                    stream.WriteLine(string.Format("1, 0, Title_t, \"{0}\"", song));
-                    stream.WriteLine("1, 0, Text_t, \"Midi file dump made with Karaboss\"");
+                    // informations                    
+                    stream.WriteLine(string.Format("1, 0, Title_t, \"{0}\"", (track.Name == "" ? song : track.Name)));
+
+
+                    // Classic Karaoke Midi tags
+                    /*
+                    @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
+                    @L	(single) Language	FRAN, ENGL        
+                    @W	(multiple) Copyright (of Karaoke file, not song)        
+                    @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
+                    @I	Information  ex Date(of Karaoke file, not song)
+                    @V	(single) Version ex 0100 ?             
+                    */
+                    if (sequence.KTag.Count == 0)
+                        stream.WriteLine("1, 0, Text_t, \"@KMIDI KARAOKE FILE\"");
+                    if (sequence.VTag.Count == 0)
+                        stream.WriteLine("1, 0, Text_t, \"@V0100\"");
+                    if (sequence.TTag.Count == 0)
+                        stream.WriteLine(string.Format("1, 0, Text_t, \"@T{0}\"",song));
+
+                    if (sequence.ITag.Count == 0)
+                        stream.WriteLine("1, 0, Text_t, \"@IMidi file dump made with Karaboss\"");
+                    
                     stream.WriteLine("1, 0, Copyright_t, \"No copyright\"");
 
                     // Track, Time, Time_signature, Num, Denom, Click, NotesQ

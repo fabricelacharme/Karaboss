@@ -547,52 +547,52 @@ namespace MusicTxt
 
     }
 
-    #endregion
+        #endregion
 
 
-    #region notes
+        #region notes
 
-    /// <summary>
-    /// Note_on_c = Note on event, but sometimes also a note off
-    /// </summary>
-    /// <param name="ar"></param>
-    private void StartMidiNote(string[] ar)
-        {
-            if (ar.Length != 6)
-                throw new ArgumentException("Note On Length");
-
-            // format of line: Track, Time, Note_on_c, Channel, Note, Velocity
-            // format of Midinote: starttime, channel, notenumber, duration, velocity, selected
-            int velocity = Convert.ToInt32(ar[5]);
-
-            // velocity > 0 is a note on
-            if (velocity > 0)
+        /// <summary>
+        /// Note_on_c = Note on event, but sometimes also a note off
+        /// </summary>
+        /// <param name="ar"></param>
+        private void StartMidiNote(string[] ar)
             {
-                n = new MidiNote(Convert.ToInt32(ar[1]), Convert.ToInt32(ar[3]), Convert.ToInt32(ar[4]), 0, velocity, false);
-                newNotes.Add(n);
-            }
-            else
-            {
-                // Note_on_c & velocity = 0 can be a note off in some midi files !!!!
-                MidiNote no;
-                int ticks = Convert.ToInt32(ar[1]);
-                int notenumber = Convert.ToInt32(ar[4]);
-                if (newNotes.Count > 0)
+                if (ar.Length != 6)
+                    throw new ArgumentException("Note On Length");
+
+                // format of line: Track, Time, Note_on_c, Channel, Note, Velocity
+                // format of Midinote: starttime, channel, notenumber, duration, velocity, selected
+                int velocity = Convert.ToInt32(ar[5]);
+
+                // velocity > 0 is a note on
+                if (velocity > 0)
                 {
-                    for (int i = 0; i < newNotes.Count; i++)
+                    n = new MidiNote(Convert.ToInt32(ar[1]), Convert.ToInt32(ar[3]), Convert.ToInt32(ar[4]), 0, velocity, false);
+                    newNotes.Add(n);
+                }
+                else
+                {
+                    // Note_on_c & velocity = 0 can be a note off in some midi files !!!!
+                    MidiNote no;
+                    int ticks = Convert.ToInt32(ar[1]);
+                    int notenumber = Convert.ToInt32(ar[4]);
+                    if (newNotes.Count > 0)
                     {
-                        no = newNotes[i];
-                        if (no.Duration == 0 && no.Number == notenumber)
+                        for (int i = 0; i < newNotes.Count; i++)
                         {
-                            no.Duration = Convert.ToInt32(ar[1]) - n.StartTime;
-                            track.addNote(no, false);
-                            newNotes.RemoveAt(i);
-                            break;
+                            no = newNotes[i];
+                            if (no.Duration == 0 && no.Number == notenumber)
+                            {
+                                no.Duration = Convert.ToInt32(ar[1]) - n.StartTime;
+                                track.addNote(no, false);
+                                newNotes.RemoveAt(i);
+                                break;
+                            }
                         }
                     }
                 }
             }
-        }
 
         /// <summary>
         /// Note_off_c = Note off event

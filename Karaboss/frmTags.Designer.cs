@@ -108,6 +108,7 @@
             // 
             resources.ApplyResources(this.txtTitle, "txtTitle");
             this.txtTitle.Name = "txtTitle";
+            this.txtTitle.TextChanged += new System.EventHandler(this.Text_Changed);
             // 
             // txtArtist
             // 
@@ -208,6 +209,7 @@
             // 
             resources.ApplyResources(this.txtWTag, "txtWTag");
             this.txtWTag.Name = "txtWTag";
+            this.txtWTag.TextChanged += new System.EventHandler(this.Text_Changed);
             // 
             // label14
             // 
@@ -217,7 +219,8 @@
             // txtTTag
             // 
             resources.ApplyResources(this.txtTTag, "txtTTag");
-            this.txtTTag.Name = "txtTTag";            
+            this.txtTTag.Name = "txtTTag";
+            this.txtTTag.TextChanged += new System.EventHandler(this.Text_Changed);
             // 
             // label13
             // 
@@ -243,21 +246,25 @@
             // 
             resources.ApplyResources(this.txtVTag, "txtVTag");
             this.txtVTag.Name = "txtVTag";
+            this.txtVTag.TextChanged += new System.EventHandler(this.Text_Changed);
             // 
             // txtITag
             // 
             resources.ApplyResources(this.txtITag, "txtITag");
             this.txtITag.Name = "txtITag";
+            this.txtITag.TextChanged += new System.EventHandler(this.Text_Changed);
             // 
             // txtLTag
             // 
             resources.ApplyResources(this.txtLTag, "txtLTag");
             this.txtLTag.Name = "txtLTag";
+            this.txtLTag.TextChanged += new System.EventHandler(this.Text_Changed);
             // 
             // txtKTag
             // 
             resources.ApplyResources(this.txtKTag, "txtKTag");
-            this.txtKTag.Name = "txtKTag";            
+            this.txtKTag.Name = "txtKTag";
+            this.txtKTag.TextChanged += new System.EventHandler(this.Text_Changed);
             // 
             // tabPage1
             // 
@@ -293,7 +300,7 @@
             this.Controls.Add(this.btnCancel);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmTags";            
+            this.Name = "frmTags";
             this.tabControl1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
