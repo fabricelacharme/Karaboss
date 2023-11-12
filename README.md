@@ -19,8 +19,8 @@ The background of the screen can be modified (solid color, image, diaporama, tra
 ![GitHub Logo](/Gifs/en.karaokewindow.png)
 
 More complex, you can modify the scores, the lyrics or add lyrics to existing songs, because a small MIDI sequencer was added.
-
-Several extensions are added over time: a piano-roll, a virtal piano etc...
+![GitHub Logo](/Gifs/editor.png)
+Several extensions are added over time: a piano-roll, a virtual piano etc...
 
 
 The second part, reserved to people knowing music, is the midi sequencer.
