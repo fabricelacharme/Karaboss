@@ -36,6 +36,9 @@ namespace MusicTxt
             song = Path.GetFileNameWithoutExtension(file);
         }
 
+
+        #region backgroundworker
+
         private void InitializeBackgroundWorkers()
         {
             // xmlmusic
@@ -78,7 +81,7 @@ namespace MusicTxt
         }
 
 
-        #region txtmusic
+        
         private void OnWriteTxtCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             WriteTxtCompleted?.Invoke(this, new AsyncCompletedEventArgs(e.Error, e.Cancelled, null));
@@ -118,13 +121,119 @@ namespace MusicTxt
             }
         }
 
-        #endregion txtmusic
+        #endregion backgroundworker
 
         /// <summary>
         /// Dump sequence to text file
         /// </summary>
         /// <param name="strm"></param>
         public void Write(StreamWriter strm)
+        {
+            this.stream = strm;
+            int trackid = 0;
+
+            //0, 0, Header, format, nTracks, division            
+            stream.WriteLine(string.Format("0, 0, Header, {0}, {1}, {2}", sequence.Format, sequence.tracks.Count, sequence.Division));
+
+            for (int i = 0; i < sequence.tracks.Count; i++)
+            {
+                track = sequence.tracks[i];
+                trackid = i;
+
+                // Start new track
+                stream.WriteLine(string.Format("{0}, 0, Start_track", trackid));
+
+                // Name of track
+                stream.WriteLine(string.Format("1, 0, Title_t, \"{0}\"", (track.Name == "" ? song : track.Name)));
+
+                // Add sequence infos in first track
+                if (i == 0)
+                    AddSeqInfos();
+
+                // Track, Time, Title_t, Text
+                stream.WriteLine(string.Format("{0}, 0, Title_t, \"{1}\"", trackid, track.Name));
+
+                // Track, Time, Instrument_name_t, Text                
+                stream.WriteLine(string.Format("{0}, 0, Instrument_name_t, \"{1}\"", trackid, MidiFile.PCtoInstrument(track.ProgramChange)));
+
+                // Track, Time, Program_c, Channel, Program_num
+                stream.WriteLine(string.Format("{0}, 0, Program_c, {1}, {2}", trackid, track.MidiChannel, track.ProgramChange));
+
+                #region events
+                foreach (MidiEvent e in track.Iterator())
+                {
+                    switch (e.MidiMessage.MessageType)
+                    {
+                        case MessageType.Channel:
+                            Write((ChannelMessage)e.MidiMessage, trackid, e.AbsoluteTicks, track.MidiChannel);
+                            break;
+
+                        case MessageType.SystemExclusive:
+                            Write((SysExMessage)e.MidiMessage);
+                            break;
+
+                        case MessageType.Meta:
+                            Write((MetaMessage)e.MidiMessage, trackid, e.AbsoluteTicks);
+                            break;
+
+                        case MessageType.SystemCommon:
+                            Write((SysCommonMessage)e.MidiMessage);
+                            break;
+
+                        case MessageType.SystemRealtime:
+                            Write((SysRealtimeMessage)e.MidiMessage);
+                            break;
+                    }
+                }
+                #endregion events
+
+                //Track, Time, End_track
+                stream.WriteLine(string.Format("{0}, 0, End_track", trackid));
+            }
+
+            // Last record
+            // 0, 0, End_of_file
+            stream.WriteLine("0, 0, End_of_file");
+
+            // Close the stream
+            stream.Close();
+        }
+        
+        /// <summary>
+        /// Insert sequence information
+        /// </summary>
+        private void AddSeqInfos()
+        {
+            // Classic Karaoke Midi tags
+            /*
+            @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
+            @L	(single) Language	FRAN, ENGL        
+            @W	(multiple) Copyright (of Karaoke file, not song)        
+            @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
+            @I	Information  ex Date(of Karaoke file, not song)
+            @V	(single) Version ex 0100 ?             
+            */
+            if (sequence.KTag.Count == 0)
+                stream.WriteLine("1, 0, Text_t, \"@KMIDI KARAOKE FILE\"");
+            if (sequence.VTag.Count == 0)
+                stream.WriteLine("1, 0, Text_t, \"@V0100\"");
+            if (sequence.TTag.Count == 0)
+                stream.WriteLine(string.Format("1, 0, Text_t, \"@T{0}\"", song));
+
+            if (sequence.ITag.Count == 0)
+                stream.WriteLine("1, 0, Text_t, \"@IMidi file dump made with Karaboss\"");
+
+            stream.WriteLine("1, 0, Copyright_t, \"No copyright\"");
+
+            // Track, Time, Time_signature, Num, Denom, Click, NotesQ
+            // FAB: TO BE CHECKED
+            stream.WriteLine(string.Format("1, 0, Time_signature, {0}, {1}, {2}, {3}", sequence.Time.Numerator, sequence.Time.Denominator, 24, 8));
+            stream.WriteLine(string.Format("1, 0, Tempo, {0}", sequence.Tempo));
+        }
+
+        /*
+        // OLD CODE
+        public void Write2(StreamWriter strm)
         {
             this.stream = strm;
             int trackid = 0;
@@ -184,15 +293,13 @@ namespace MusicTxt
                     stream.WriteLine(string.Format("1, 0, Title_t, \"{0}\"", (track.Name == "" ? song : track.Name)));
 
 
-                    // Classic Karaoke Midi tags
-                    /*
-                    @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
-                    @L	(single) Language	FRAN, ENGL        
-                    @W	(multiple) Copyright (of Karaoke file, not song)        
-                    @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
-                    @I	Information  ex Date(of Karaoke file, not song)
-                    @V	(single) Version ex 0100 ?             
-                    */
+                    // Classic Karaoke Midi tags                    
+                    //@K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
+                    //@L	(single) Language	FRAN, ENGL        
+                    //@W	(multiple) Copyright (of Karaoke file, not song)        
+                    //@T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
+                    //@I	Information  ex Date(of Karaoke file, not song)
+                    //@V	(single) Version ex 0100 ?                                 
                     if (sequence.KTag.Count == 0)
                         stream.WriteLine("1, 0, Text_t, \"@KMIDI KARAOKE FILE\"");
                     if (sequence.VTag.Count == 0)
@@ -267,6 +374,10 @@ namespace MusicTxt
             // Close the stream
             stream.Close();
         }
+        */
+
+
+        #region write events
 
         /// <summary>
         /// Write notes
@@ -314,7 +425,6 @@ namespace MusicTxt
         }
 
 
-        #region other events
         private void Write(SysExMessage message)
         {
             // System exclusive message cancel running status.
@@ -438,7 +548,7 @@ namespace MusicTxt
             //trackData.Add((byte)message.Status);
         }
 
-        #endregion
+        #endregion write events
 
 
 
