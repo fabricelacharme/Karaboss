@@ -52,6 +52,7 @@ using System.Text;
 using FlShell.Resources.Localization;
 using System.Threading;
 using System.Runtime.InteropServices.ComTypes;
+using System.Windows.Forms.VisualStyles;
 
 namespace FlShell
 {
@@ -671,15 +672,29 @@ namespace FlShell
         void RecreateShellView(ShellItem folder, string FullPath = "")
         {
             Cursor.Current = Cursors.WaitCursor;
-            
+
             // Selected item
-            string tx = string.Empty;            
+            ListView.SelectedListViewItemCollection lsvi = new ListView.SelectedListViewItemCollection(m_ListView);
+            List<int> ls = new List<int>();
+
+            string tx = string.Empty;
             if (FullPath != "")
             {
                 tx = FullPath;
-            }          
-            else if (m_ListView.SelectedItems.Count > 0)                            
-                tx = m_ListView.SelectedItems[0].Text;               
+            }
+            else if (m_ListView.SelectedItems.Count > 0)
+            {
+                tx = m_ListView.SelectedItems[0].Text;
+                
+                lsvi = m_ListView.SelectedItems;
+                for (int i = 0; i < m_ListView.Items.Count; i++)
+                {
+                    if (m_ListView.Items[i].Selected)
+                    {
+                        ls.Add(i);
+                    }                    
+                }
+            }
                             
 
             m_ListView.BeginUpdate();
@@ -692,19 +707,18 @@ namespace FlShell
 
             // Performances: restore sorter
             m_ListView.ListViewItemSorter = lvwColumnSorter;
+            
+            // restore selected item
+            if (ls.Count > 0)
+            {
+                for (int i = 0; i < ls.Count; i++)
+                {
+                    m_ListView.Items[ls[i]].Selected = true;                    
+                }
+            }
 
             m_ListView.EndUpdate();
 
-            // restore selected item          
-            ListViewItem lvi = m_ListView.FindItemWithText(tx);
-            if (lvi != null)
-            {
-                //m_ListView.Select();
-                lvi.Focused = true;
-                lvi.Selected = true;
-                lvi.EnsureVisible();
-            }
-            
             Cursor.Current = Cursors.Default;
 
             OnNavigated();
@@ -2130,7 +2144,10 @@ namespace FlShell
         private void m_ShellListener_ItemRenamed(object sender, ShellItemChangeEventArgs e)
         {
             RefreshItem(e.OldItem, e.NewItem);
-            //Navigate(m_CurrentFolder);
+
+            // FAB 15/11/23
+            // Décoche ligne cochée           
+            Navigate(m_CurrentFolder);
 
         }
 
@@ -2139,15 +2156,20 @@ namespace FlShell
             
             if (m_CurrentFolder != null)
             {
-                
+
                 // FAB: 14/09/17 removed because folder content not updated when copy of several folders
                 // exit if item updated is not in the current folder
                 //if (e.Item.Parent != m_CurrentFolder)
-                //    return;
+                //    return;                
 
-                //CreateShellView(m_CurrentFolder);
-                if (e.Item.ToString() != "shell:///" && e.Item.FileSystemPath.IndexOf(m_CurrentFolder.FileSystemPath) >= 0)
-                    Navigate(m_CurrentFolder);
+                // FAB 15/11/23
+                // Décoche ligne cochée
+                RecreateShellView(m_CurrentFolder);
+
+                // FAB 15/11/23
+                // Coche lignes non cochées
+                //if (e.Item.ToString() != "shell:///" && e.Item.FileSystemPath.IndexOf(m_CurrentFolder.FileSystemPath) >= 0)
+                //    Navigate(m_CurrentFolder);
 
             }
 
@@ -2160,11 +2182,13 @@ namespace FlShell
             if (m_CurrentFolder != null)
             {
 
+                // FAB 15/11/23
+                // Coche lignes non cochées
                 // exit if item updated is not in the current folder
-                if (e.Item.Parent != m_CurrentFolder)
-                    return;
-
-                CreateShellView(m_CurrentFolder);
+                //if (e.Item.Parent != m_CurrentFolder)
+                //    return;
+                
+                RecreateShellView(m_CurrentFolder);
 
                 if (m_CreateNew)
                 {
@@ -2173,7 +2197,6 @@ namespace FlShell
                     ListViewItem lvi = FindItem(e.Item);
                     if (lvi != null)
                         lvi.BeginEdit();
-
                 }
             }
         }
