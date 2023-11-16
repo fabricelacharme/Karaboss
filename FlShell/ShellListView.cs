@@ -410,7 +410,7 @@ namespace FlShell
 
         #region Navigate
 
-        void Navigate(ShellItem folder, string item = "")
+        void Navigate(ShellItem folder, string item = "", bool bResetSelection = false)
         {        
             NavigatingEventArgs e = new NavigatingEventArgs(folder);
             Navigating?.Invoke(this, e);
@@ -422,7 +422,7 @@ namespace FlShell
                
                 try
                 {
-                    RecreateShellView(folder, item, true );
+                    RecreateShellView(folder, item, bResetSelection);
 
                     m_History.Add(folder);
                     OnNavigated();
@@ -703,15 +703,26 @@ namespace FlShell
             m_ListView.ListViewItemSorter = lvwColumnSorter;
             
             // restore selected item
-            if (!bresetselection && ls.Count > 0)
+            if (!bresetselection && ls.Count > 0 && m_ListView.Items.Count > 0)
             {
                 for (int i = 0; i < ls.Count; i++)
                 {
                     if (ls[i] < m_ListView.Items.Count)
-                        m_ListView.Items[ls[i]].Selected = true;                    
+                        m_ListView.Items[ls[i]].Selected = true;  
+                    else if (ls.Count == 1)
+                        m_ListView.Items[m_ListView.Items.Count - 1].Selected = true;
+
                 }
-                if (ifocused != -1 && ifocused < m_ListView.Items.Count)
-                    m_ListView.Items[ifocused].Focused = true;
+                if (ifocused != -1 && m_ListView.Items.Count > 0)
+                {
+                    int x = 0;
+                    if (ifocused < m_ListView.Items.Count)
+                        x = ifocused; 
+                    else
+                        x = m_ListView.Items.Count - 1;
+                    m_ListView.Items[x].Focused = true;
+                    m_ListView.Items[x].EnsureVisible();
+                }
             }
 
             m_ListView.EndUpdate();
@@ -2144,7 +2155,7 @@ namespace FlShell
 
             // FAB 15/11/23
             // Décoche ligne cochée           
-            Navigate(m_CurrentFolder);
+            Navigate(m_CurrentFolder, "", false);
 
         }
 
