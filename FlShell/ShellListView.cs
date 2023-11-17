@@ -422,6 +422,9 @@ namespace FlShell
                
                 try
                 {
+                    // Debug
+                    Console.WriteLine("folder: " + m_CurrentFolder.DisplayName);
+
                     RecreateShellView(folder, item, bResetSelection);
 
                     m_History.Add(folder);
@@ -673,8 +676,13 @@ namespace FlShell
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            // Selected item
-            ListView.SelectedListViewItemCollection lsvi = new ListView.SelectedListViewItemCollection(m_ListView);
+            
+            // Debug
+            Console.WriteLine("folder: " + folder.DisplayName);
+
+
+                // Selected item
+                ListView.SelectedListViewItemCollection lsvi = new ListView.SelectedListViewItemCollection(m_ListView);
             List<int> ls = new List<int>();
             int ifocused = -1;
 
@@ -2153,6 +2161,9 @@ namespace FlShell
         {
             RefreshItem(e.OldItem, e.NewItem);
 
+            // Debug
+            Console.WriteLine("m_ShellListener_ItemRenamed: " + m_CurrentFolder.DisplayName);
+
             // FAB 15/11/23
             // Décoche ligne cochée           
             Navigate(m_CurrentFolder, "", false);
@@ -2169,6 +2180,9 @@ namespace FlShell
                 // exit if item updated is not in the current folder
                 //if (e.Item.Parent != m_CurrentFolder)
                 //    return;                
+
+                // Debug
+                Console.WriteLine("m_ShellListener_ItemUpdated: " + m_CurrentFolder.DisplayName);
 
                 // FAB 15/11/23
                 // Décoche ligne cochée
@@ -2195,7 +2209,10 @@ namespace FlShell
                 // exit if item updated is not in the current folder
                 //if (e.Item.Parent != m_CurrentFolder)
                 //    return;
-                
+
+                // Debug
+                Console.WriteLine("m_ShellListener_ItemCreated: " + m_CurrentFolder.DisplayName);
+
                 RecreateShellView(m_CurrentFolder);
 
                 if (m_CreateNew)
