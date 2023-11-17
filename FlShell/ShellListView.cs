@@ -2159,14 +2159,19 @@ namespace FlShell
         #region ShellListener
         private void m_ShellListener_ItemRenamed(object sender, ShellItemChangeEventArgs e)
         {
-            RefreshItem(e.OldItem, e.NewItem);
-
-            // Debug
-            Console.WriteLine("m_ShellListener_ItemRenamed: " + m_CurrentFolder.DisplayName);
+            
 
             // FAB 15/11/23
-            // Décoche ligne cochée           
-            Navigate(m_CurrentFolder, "", false);
+            // Décoche ligne cochée
+            if (e.NewItem.ToString() != "shell:///" && e.NewItem.FileSystemPath.IndexOf(m_CurrentFolder.FileSystemPath) >= 0)
+            {
+                RefreshItem(e.OldItem, e.NewItem);
+
+                // Debug
+                Console.WriteLine("m_ShellListener_ItemRenamed: " + m_CurrentFolder.DisplayName);
+
+                Navigate(m_CurrentFolder, "", false);
+            }
 
         }
 
@@ -2182,7 +2187,7 @@ namespace FlShell
                 //    return;                
 
                 // Debug
-                Console.WriteLine("m_ShellListener_ItemUpdated: " + m_CurrentFolder.DisplayName);
+                Console.WriteLine("m_ShellListener_ItemUpdated: " + e.Item.FileSystemPath);
 
                 // FAB 15/11/23
                 // Décoche ligne cochée
@@ -2210,8 +2215,11 @@ namespace FlShell
                 //if (e.Item.Parent != m_CurrentFolder)
                 //    return;
 
+                if (e.Item.FileSystemPath == "")
+                    return;
+
                 // Debug
-                Console.WriteLine("m_ShellListener_ItemCreated: " + m_CurrentFolder.DisplayName);
+                Console.WriteLine("m_ShellListener_ItemCreated " + e.Item.FileSystemPath);
 
                 RecreateShellView(m_CurrentFolder);
 
