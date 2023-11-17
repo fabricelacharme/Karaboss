@@ -2186,17 +2186,21 @@ namespace FlShell
                 //if (e.Item.Parent != m_CurrentFolder)
                 //    return;                
 
-                // Debug
-                Console.WriteLine("m_ShellListener_ItemUpdated: " + e.Item.FileSystemPath);
-
-                // FAB 15/11/23
-                // Décoche ligne cochée
-                RecreateShellView(m_CurrentFolder);
 
                 // FAB 15/11/23
                 // Coche lignes non cochées
-                //if (e.Item.ToString() != "shell:///" && e.Item.FileSystemPath.IndexOf(m_CurrentFolder.FileSystemPath) >= 0)
-                //    Navigate(m_CurrentFolder);
+                if (e.Item.ToString() != "shell:///" && e.Item.FileSystemPath.IndexOf(m_CurrentFolder.FileSystemPath) >= 0)
+                {
+                    //    Navigate(m_CurrentFolder);
+
+                    // Debug
+                    Console.WriteLine("m_ShellListener_ItemUpdated: " + e.Item.FileSystemPath);
+
+                    // FAB 15/11/23
+                    // Décoche ligne cochée
+                    RecreateShellView(m_CurrentFolder);
+
+                }
 
             }
 
