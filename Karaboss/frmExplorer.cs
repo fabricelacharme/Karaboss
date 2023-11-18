@@ -226,7 +226,7 @@ namespace Karaboss
         }
 
         private void Xplorer_ContentChanged(object sender, string strContent, string strPath)
-        {
+        {            
             tssMiddle.Text = strContent;
             tssLeft.Text = strPath;
         }

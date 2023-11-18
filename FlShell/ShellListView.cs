@@ -53,6 +53,7 @@ using FlShell.Resources.Localization;
 using System.Threading;
 using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms.VisualStyles;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace FlShell
 {
@@ -143,7 +144,7 @@ namespace FlShell
 
             //m_allPlaylists = new List<string>();
             
-            m_ListView = new ListView();
+            m_ListView = new System.Windows.Forms.ListView();
 
             #region listview header
             ColumnHeader chName = new System.Windows.Forms.ColumnHeader();
@@ -423,7 +424,7 @@ namespace FlShell
                 try
                 {
                     // Debug
-                    Console.WriteLine("folder: " + m_CurrentFolder.DisplayName);
+                    //Console.WriteLine("folder: " + m_CurrentFolder.DisplayName);
 
                     RecreateShellView(folder, item, bResetSelection);
 
@@ -675,14 +676,12 @@ namespace FlShell
         void RecreateShellView(ShellItem folder, string FullPath = "",bool bresetselection = false)
         {
             Cursor.Current = Cursors.WaitCursor;
-
             
             // Debug
-            Console.WriteLine("folder: " + folder.DisplayName);
+            //Console.WriteLine("folder: " + folder.DisplayName);
 
-
-                // Selected item
-                ListView.SelectedListViewItemCollection lsvi = new ListView.SelectedListViewItemCollection(m_ListView);
+            // Selected item
+            System.Windows.Forms.ListView.SelectedListViewItemCollection lsvi = new System.Windows.Forms.ListView.SelectedListViewItemCollection(m_ListView);
             List<int> ls = new List<int>();
             int ifocused = -1;
 
@@ -698,7 +697,6 @@ namespace FlShell
                 }
             }
                             
-
             m_ListView.BeginUpdate();
             
             // Performances: remove sorter before adding items !!!!
@@ -707,6 +705,7 @@ namespace FlShell
 
             CreateShellView(folder);
 
+            
             // Performances: restore sorter
             m_ListView.ListViewItemSorter = lvwColumnSorter;
             
@@ -731,7 +730,7 @@ namespace FlShell
                     m_ListView.Items[x].Focused = true;
                     m_ListView.Items[x].EnsureVisible();
                 }
-            }
+            }            
 
             m_ListView.EndUpdate();
 
@@ -796,20 +795,21 @@ namespace FlShell
                 e = folder.GetEnumerator(SHCONTF.INCLUDEHIDDEN | SHCONTF.NONFOLDERS);
 
                 
-
                 while (e.MoveNext())
                 {
                     if (!e.Current.IsHidden)
                     {
                         items.Add(CreateItem(e.Current));
+                        // Debug
+                        //Console.WriteLine(e.Current.Text);
+
                         f++;
                     }
-                }
-
-                //Console.Write("");
+                }                
 
                 m_ListView.Items.AddRange(items.ToArray());
-
+                              
+                
                 string ct = d + " Directories " + f + " Files";
                 string pt = folder.FileSystemPath;
 
@@ -1227,6 +1227,11 @@ namespace FlShell
 
         }
 
+        /// <summary>
+        /// Refresh text of item
+        /// </summary>
+        /// <param name="OldItem"></param>
+        /// <param name="NewItem"></param>
         private void RefreshItem(ShellItem OldItem, ShellItem NewItem)
         {
             ListViewItem oldlvi = FindItem(OldItem);
@@ -1235,18 +1240,19 @@ namespace FlShell
                 m_ListView.BeginUpdate();
 
                 m_ListView.ListViewItemSorter = null;
-                oldlvi.Text = NewItem.Text;
+                
+                oldlvi.Text = NewItem.Text;                
+
                 oldlvi.ImageIndex = SystemImageListManager.GetIconIndex(NewItem, false);
                 oldlvi.Tag = NewItem;
                 
                 m_ListView.ListViewItemSorter = lvwColumnSorter;
-                m_ListView.EndUpdate();
-
-
+                               
+                m_ListView.EndUpdate();                
             }
             else
             {
-                Console.Write("\nOldItem " + OldItem.Text + " not found");
+                Console.WriteLine("\nOldItem " + OldItem.Text + " not found");
             }
         }
 
@@ -1602,41 +1608,47 @@ namespace FlShell
         }
 
         private void ListView_AfterLabelEdit(object sender, LabelEditEventArgs e)
-        {
-            ShellItem item = m_ListView.Items[e.Item].Tag as ShellItem;
+        {            
 
-            //if (e.Label != null && e.Label != String.Empty && SelectedItems.Length == 1)
+            ShellItem item = m_ListView.Items[e.Item].Tag as ShellItem;
+            
             if (e.Label != null && e.Label != String.Empty && m_ListView.SelectedItems.Count == 1)
             {
                 #region Rename One
 
-                m_CreateNew = false;
+                m_CreateNew = false;                
+                string NewName = e.Label.Trim();                         
 
-                string NewName = e.Label.Trim();
                 IntPtr newPidl = IntPtr.Zero;
                 try
                 {
-                    uint res = item.Parent.GetIShellFolder().SetNameOf(m_ListView.Handle, Shell32.ILFindLastID(item.Pidl), NewName, SHGDN.NORMAL, out newPidl);
+                    // When the newname is identical to an existing name, Windows proposes to rename again the file: toto => toto (2)
+                    uint res = item.Parent.GetIShellFolder().SetNameOf(m_ListView.Handle, Shell32.ILFindLastID(item.Pidl), NewName, SHGDN.NORMAL, out newPidl);       
                 }
                 catch (COMException ex)
                 {
                     // Ignore the exception raised when the user cancels
-                    // a delete operation.
+                    // a delete operation, or a change of name because duplicate.
                     if (ex.ErrorCode != unchecked((int)0x800704C7) &&
-                        ex.ErrorCode != unchecked((int)0x80270000))
+                        ex.ErrorCode != unchecked((int)0x80270000) && 
+                        ex.ErrorCode != unchecked((int)0x8000FFFF))
                     {
                         throw;
                     }
                     e.CancelEdit = true;
                 }
 
+                // Name was changed by Windows because of duplicate 
+                if (e.Label != m_ListView.Items[e.Item].Text)                
+                    e.CancelEdit = true;
+                
                 #endregion
             }
         }
 
         private void ListView_ItemMouseOver(object sender, ListViewItemMouseHoverEventArgs e)
-        {            
-            ToolTip tp = new ToolTip();
+        {
+            System.Windows.Forms.ToolTip tp = new System.Windows.Forms.ToolTip();
             tp.Show( ((ShellItem)e.Item.Tag).ToolTipText, m_ListView);                    
             
         }
@@ -2088,7 +2100,7 @@ namespace FlShell
                         AddToPlaylist?.Invoke(this, fls, string.Empty, null ,true);
                     }
 
-                    Console.Write(plname);
+                    //Console.Write(plname);
 
                 }
                 else if (command - m_CmdFirst == 18)
@@ -2160,18 +2172,21 @@ namespace FlShell
         private void m_ShellListener_ItemRenamed(object sender, ShellItemChangeEventArgs e)
         {
             
+            // BUUUUUUUG, en cas de doublon de fichier, pas de renommage
 
             // FAB 15/11/23
             // Décoche ligne cochée
-            if (e.NewItem.ToString() != "shell:///" && e.NewItem.FileSystemPath.IndexOf(m_CurrentFolder.FileSystemPath) >= 0)
-            {
-                RefreshItem(e.OldItem, e.NewItem);
+            //if (e.NewItem.ToString() != "shell:///" && e.NewItem.FileSystemPath.IndexOf(m_CurrentFolder.FileSystemPath) >= 0)
+            //{
+                //RefreshItem(e.OldItem, e.NewItem);
 
                 // Debug
-                Console.WriteLine("m_ShellListener_ItemRenamed: " + m_CurrentFolder.DisplayName);
-
+                //Console.WriteLine("m_ShellListener_ItemRenamed: " + m_CurrentFolder.DisplayName);
+            
                 Navigate(m_CurrentFolder, "", false);
-            }
+
+
+            //}
 
         }
 
@@ -2189,18 +2204,18 @@ namespace FlShell
 
                 // FAB 15/11/23
                 // Coche lignes non cochées
-                if (e.Item.ToString() != "shell:///" && e.Item.FileSystemPath.IndexOf(m_CurrentFolder.FileSystemPath) >= 0)
-                {
+                //if (e.Item.ToString() != "shell:///" && e.Item.FileSystemPath.IndexOf(m_CurrentFolder.FileSystemPath) >= 0)
+                //{
                     //    Navigate(m_CurrentFolder);
 
                     // Debug
-                    Console.WriteLine("m_ShellListener_ItemUpdated: " + e.Item.FileSystemPath);
+                    //Console.WriteLine("m_ShellListener_ItemUpdated: " + e.Item.FileSystemPath);
 
                     // FAB 15/11/23
                     // Décoche ligne cochée
                     RecreateShellView(m_CurrentFolder);
 
-                }
+                //}
 
             }
 
@@ -2223,7 +2238,7 @@ namespace FlShell
                     return;
 
                 // Debug
-                Console.WriteLine("m_ShellListener_ItemCreated " + e.Item.FileSystemPath);
+                //Console.WriteLine("m_ShellListener_ItemCreated " + e.Item.FileSystemPath);
 
                 RecreateShellView(m_CurrentFolder);
 
@@ -2458,7 +2473,7 @@ namespace FlShell
         #endregion
 
 
-        ListView m_ListView;
+        System.Windows.Forms.ListView m_ListView;       
         ListViewItem m_RightClickLvi;
         DragTarget m_DragTarget;        
         bool m_AllowDrop = false;

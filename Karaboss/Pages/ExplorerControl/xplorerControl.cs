@@ -227,7 +227,8 @@ namespace Karaboss.xplorer
         }
 
         private void ShellListView_ContentChanged(object sender, string strContent, string strPath)
-        {
+        {            
+            
             m_CurrentContent = strContent;
             LvContentChanged?.Invoke(this, strContent, strPath);
         }
