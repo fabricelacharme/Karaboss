@@ -256,6 +256,8 @@ namespace FlShell
             m_History = new ShellHistory();
             m_MultiSelect = true;
 
+            m_ResetSelection = true;
+
             Size = new Size(250, 200);
             SystemImageList.UseSystemImageList(m_ListView);
 
@@ -382,7 +384,7 @@ namespace FlShell
         /// </summary>
         public void RefreshContents(string FullPath = "")
         {                        
-            RecreateShellView(CurrentFolder, FullPath);
+            RecreateShellView(CurrentFolder);
         }
 
         #endregion
@@ -411,7 +413,7 @@ namespace FlShell
 
         #region Navigate
 
-        void Navigate(ShellItem folder, string item = "", bool bResetSelection = false)
+        void Navigate(ShellItem folder)
         {        
             NavigatingEventArgs e = new NavigatingEventArgs(folder);
             Navigating?.Invoke(this, e);
@@ -426,7 +428,7 @@ namespace FlShell
                     // Debug
                     //Console.WriteLine("folder: " + m_CurrentFolder.DisplayName);
 
-                    RecreateShellView(folder, item, bResetSelection);
+                    RecreateShellView(folder);
 
                     m_History.Add(folder);
                     OnNavigated();
@@ -467,7 +469,7 @@ namespace FlShell
         /// </exception>
         public void Navigate(string path, string file = "")
         {
-            Navigate(new ShellItem(path), file);
+            Navigate(new ShellItem(path));
         }
 
         /// <summary>
@@ -659,6 +661,7 @@ namespace FlShell
                 {
                     if (i.IsFolder)
                     {
+                        m_ResetSelection = true;
                         Navigate(i);
                         return true;
                     }
@@ -673,7 +676,7 @@ namespace FlShell
 
         #region create
 
-        void RecreateShellView(ShellItem folder, string FullPath = "",bool bresetselection = false)
+        void RecreateShellView(ShellItem folder)
         {
             Cursor.Current = Cursors.WaitCursor;
             
@@ -710,7 +713,7 @@ namespace FlShell
             m_ListView.ListViewItemSorter = lvwColumnSorter;
             
             // restore selected item
-            if (!bresetselection && ls.Count > 0 && m_ListView.Items.Count > 0)
+            if (!m_ResetSelection && ls.Count > 0 && m_ListView.Items.Count > 0)
             {
                 for (int i = 0; i < ls.Count; i++)
                 {
@@ -1075,6 +1078,7 @@ namespace FlShell
             {
                 if (value != m_CurrentFolder)
                 {
+                    m_ResetSelection = true;
                     Navigate(value);
                 }
             }
@@ -2171,19 +2175,19 @@ namespace FlShell
         #region ShellListener
         private void m_ShellListener_ItemRenamed(object sender, ShellItemChangeEventArgs e)
         {
-            
+
             // BUUUUUUUG, en cas de doublon de fichier, pas de renommage
 
             // FAB 15/11/23
             // Décoche ligne cochée
             //if (e.NewItem.ToString() != "shell:///" && e.NewItem.FileSystemPath.IndexOf(m_CurrentFolder.FileSystemPath) >= 0)
             //{
-                //RefreshItem(e.OldItem, e.NewItem);
+            //RefreshItem(e.OldItem, e.NewItem);
 
-                // Debug
-                //Console.WriteLine("m_ShellListener_ItemRenamed: " + m_CurrentFolder.DisplayName);
-            
-                Navigate(m_CurrentFolder, "", false);
+            // Debug
+            //Console.WriteLine("m_ShellListener_ItemRenamed: " + m_CurrentFolder.DisplayName);
+                m_ResetSelection = false;
+                Navigate(m_CurrentFolder);
 
 
             //}
@@ -2206,13 +2210,14 @@ namespace FlShell
                 // Coche lignes non cochées
                 //if (e.Item.ToString() != "shell:///" && e.Item.FileSystemPath.IndexOf(m_CurrentFolder.FileSystemPath) >= 0)
                 //{
-                    //    Navigate(m_CurrentFolder);
+                //    Navigate(m_CurrentFolder);
 
-                    // Debug
-                    //Console.WriteLine("m_ShellListener_ItemUpdated: " + e.Item.FileSystemPath);
+                // Debug
+                //Console.WriteLine("m_ShellListener_ItemUpdated: " + e.Item.FileSystemPath);
 
-                    // FAB 15/11/23
-                    // Décoche ligne cochée
+                // FAB 15/11/23
+                // Décoche ligne cochée
+                m_ResetSelection = false;
                     RecreateShellView(m_CurrentFolder);
 
                 //}
@@ -2492,6 +2497,8 @@ namespace FlShell
 
         bool m_CreateNew = false;
         ShellItem m_EditItem = null;
+
+        bool m_ResetSelection = true;
 
     }
 
