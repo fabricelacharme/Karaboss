@@ -205,7 +205,7 @@ namespace Karaboss.xplorer
         }
 
         /// <summary>
-        /// Refresh ontent of ShellListView
+        /// Refresh content of ShellListView
         /// </summary>
         /// <param name="fullPath"></param>
         public void RefreshContents(string fullPath = "")

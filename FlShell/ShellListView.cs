@@ -384,7 +384,8 @@ namespace FlShell
         /// </summary>
         public void RefreshContents(string FullPath = "")
         {                        
-            RecreateShellView(CurrentFolder);
+            RecreateShellView(CurrentFolder, FullPath);
+
         }
 
         #endregion
@@ -413,7 +414,7 @@ namespace FlShell
 
         #region Navigate
 
-        void Navigate(ShellItem folder)
+        void Navigate(ShellItem folder, string file = "")
         {        
             NavigatingEventArgs e = new NavigatingEventArgs(folder);
             Navigating?.Invoke(this, e);
@@ -428,7 +429,7 @@ namespace FlShell
                     // Debug
                     //Console.WriteLine("folder: " + m_CurrentFolder.DisplayName);
 
-                    RecreateShellView(folder);
+                    RecreateShellView(folder, file);
 
                     m_History.Add(folder);
                     OnNavigated();
@@ -469,7 +470,7 @@ namespace FlShell
         /// </exception>
         public void Navigate(string path, string file = "")
         {
-            Navigate(new ShellItem(path));
+            Navigate(new ShellItem(path), file);
         }
 
         /// <summary>
@@ -676,14 +677,15 @@ namespace FlShell
 
         #region create
 
-        void RecreateShellView(ShellItem folder)
+        void RecreateShellView(ShellItem folder, string file = "")
         {
             Cursor.Current = Cursors.WaitCursor;
-            
+
             // Debug
             //Console.WriteLine("folder: " + folder.DisplayName);
 
-            // Selected item
+            #region selected items
+            // Save selected items
             System.Windows.Forms.ListView.SelectedListViewItemCollection lsvi = new System.Windows.Forms.ListView.SelectedListViewItemCollection(m_ListView);
             List<int> ls = new List<int>();
             int ifocused = -1;
@@ -699,7 +701,8 @@ namespace FlShell
                         ifocused = i;
                 }
             }
-                            
+            #endregion selected items
+
             m_ListView.BeginUpdate();
             
             // Performances: remove sorter before adding items !!!!
@@ -711,29 +714,46 @@ namespace FlShell
             
             // Performances: restore sorter
             m_ListView.ListViewItemSorter = lvwColumnSorter;
-            
-            // restore selected item
-            if (!m_ResetSelection && ls.Count > 0 && m_ListView.Items.Count > 0)
-            {
-                for (int i = 0; i < ls.Count; i++)
-                {
-                    if (ls[i] < m_ListView.Items.Count)
-                        m_ListView.Items[ls[i]].Selected = true;  
-                    else if (ls.Count == 1)
-                        m_ListView.Items[m_ListView.Items.Count - 1].Selected = true;
 
-                }
-                if (ifocused != -1 && m_ListView.Items.Count > 0)
+            #region file or selected items
+            // Go to the file selected in the search page
+            if (file != "")
+            {
+                ListViewItem lvi = m_ListView.FindItemWithText(file);
+                if (lvi != null)
                 {
-                    int x = 0;
-                    if (ifocused < m_ListView.Items.Count)
-                        x = ifocused; 
-                    else
-                        x = m_ListView.Items.Count - 1;
-                    m_ListView.Items[x].Focused = true;
-                    m_ListView.Items[x].EnsureVisible();
+                    //m_ListView.Select();
+                    lvi.Focused = true;
+                    lvi.Selected = true;
+                    lvi.EnsureVisible();
                 }
-            }            
+            }
+            else
+            {
+                // restore selected item
+                if (!m_ResetSelection && ls.Count > 0 && m_ListView.Items.Count > 0)
+                {
+                    for (int i = 0; i < ls.Count; i++)
+                    {
+                        if (ls[i] < m_ListView.Items.Count)
+                            m_ListView.Items[ls[i]].Selected = true;
+                        else if (ls.Count == 1)
+                            m_ListView.Items[m_ListView.Items.Count - 1].Selected = true;
+
+                    }
+                    if (ifocused != -1 && m_ListView.Items.Count > 0)
+                    {
+                        int x = 0;
+                        if (ifocused < m_ListView.Items.Count)
+                            x = ifocused;
+                        else
+                            x = m_ListView.Items.Count - 1;
+                        m_ListView.Items[x].Focused = true;
+                        m_ListView.Items[x].EnsureVisible();
+                    }
+                }
+            }
+            #endregion selected items
 
             m_ListView.EndUpdate();
 
