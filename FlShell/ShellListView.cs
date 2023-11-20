@@ -1660,65 +1660,68 @@ namespace FlShell
                     e.CancelEdit = true;
                 }
             }
-                /*
-                if (e.Label != null && e.Label != String.Empty && m_ListView.SelectedItems.Count == 1)
+
+            #region delete me
+            /*
+            if (e.Label != null && e.Label != String.Empty && m_ListView.SelectedItems.Count == 1)
+            {
+                #region Rename One
+
+                m_CreateNew = false;                
+                string NewName = e.Label.Trim();                         
+
+                IntPtr newPidl = IntPtr.Zero;
+                try
                 {
-                    #region Rename One
-
-                    m_CreateNew = false;                
-                    string NewName = e.Label.Trim();                         
-
-                    IntPtr newPidl = IntPtr.Zero;
-                    try
-                    {
-                        // When the newname is identical to an existing name, Windows proposes to rename again the file: toto => toto (2)
-                        uint res = item.Parent.GetIShellFolder().SetNameOf(m_ListView.Handle, Shell32.ILFindLastID(item.Pidl), NewName, SHGDN.NORMAL, out newPidl);       
-                    }
-                    catch (COMException ex)
-                    {
-                        // Ignore the exception raised when the user cancels
-                        // a delete operation, or a change of name because duplicate.
-                        if (ex.ErrorCode != unchecked((int)0x800704C7) &&
-                            ex.ErrorCode != unchecked((int)0x80270000) && 
-                            ex.ErrorCode != unchecked((int)0x8000FFFF))
-                        {
-                            throw;
-                        }
-                        e.CancelEdit = true;
-                    }
-
-                    // Name was changed by Windows because of duplicate 
-                    if (e.Label != m_ListView.Items[e.Item].Text)                
-                        e.CancelEdit = true;
-
-                    #endregion
+                    // When the newname is identical to an existing name, Windows proposes to rename again the file: toto => toto (2)
+                    uint res = item.Parent.GetIShellFolder().SetNameOf(m_ListView.Handle, Shell32.ILFindLastID(item.Pidl), NewName, SHGDN.NORMAL, out newPidl);       
                 }
-                else if (e.Label != null && e.Label != String.Empty)
+                catch (COMException ex)
                 {
-                    //Folder creation                
-                    string NewName = e.Label.Trim();
-
-                    IntPtr newPidl = IntPtr.Zero;
-                    try
+                    // Ignore the exception raised when the user cancels
+                    // a delete operation, or a change of name because duplicate.
+                    if (ex.ErrorCode != unchecked((int)0x800704C7) &&
+                        ex.ErrorCode != unchecked((int)0x80270000) && 
+                        ex.ErrorCode != unchecked((int)0x8000FFFF))
                     {
-                        // When the newname is identical to an existing name, Windows proposes to rename again the file: toto => toto (2)
-                        uint res = item.Parent.GetIShellFolder().SetNameOf(m_ListView.Handle, Shell32.ILFindLastID(item.Pidl), NewName, SHGDN.NORMAL, out newPidl);
+                        throw;
                     }
-                    catch (COMException ex)
-                    {
-                        // Ignore the exception raised when the user cancels
-                        // a delete operation, or a change of name because duplicate.
-                        if (ex.ErrorCode != unchecked((int)0x800704C7) &&
-                            ex.ErrorCode != unchecked((int)0x80270000) &&
-                            ex.ErrorCode != unchecked((int)0x8000FFFF))
-                        {
-                            throw;
-                        }
-                        e.CancelEdit = true;
-                    }
+                    e.CancelEdit = true;
                 }
-                */
+
+                // Name was changed by Windows because of duplicate 
+                if (e.Label != m_ListView.Items[e.Item].Text)                
+                    e.CancelEdit = true;
+
+                #endregion
             }
+            else if (e.Label != null && e.Label != String.Empty)
+            {
+                //Folder creation                
+                string NewName = e.Label.Trim();
+
+                IntPtr newPidl = IntPtr.Zero;
+                try
+                {
+                    // When the newname is identical to an existing name, Windows proposes to rename again the file: toto => toto (2)
+                    uint res = item.Parent.GetIShellFolder().SetNameOf(m_ListView.Handle, Shell32.ILFindLastID(item.Pidl), NewName, SHGDN.NORMAL, out newPidl);
+                }
+                catch (COMException ex)
+                {
+                    // Ignore the exception raised when the user cancels
+                    // a delete operation, or a change of name because duplicate.
+                    if (ex.ErrorCode != unchecked((int)0x800704C7) &&
+                        ex.ErrorCode != unchecked((int)0x80270000) &&
+                        ex.ErrorCode != unchecked((int)0x8000FFFF))
+                    {
+                        throw;
+                    }
+                    e.CancelEdit = true;
+                }
+            }
+            */
+            #endregion delete me
+        }
 
         private void ListView_ItemMouseOver(object sender, ListViewItemMouseHoverEventArgs e)
         {
