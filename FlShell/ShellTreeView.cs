@@ -925,7 +925,7 @@ namespace FlShell
                     RefreshItem(parent);
 
             }
-
+            
             /*
             node = FindItem(e.OldItem, m_TreeView.Nodes[0]);
             if (node != null)

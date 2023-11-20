@@ -4,6 +4,7 @@ using System.Windows.Forms;
 
 namespace Sanford.Multimedia.Midi
 {
+    
     public class MidiTrackImporter
     {
         public delegate void TrackSelectedEventHandler(object sender, Track track);
@@ -56,5 +57,6 @@ namespace Sanford.Multimedia.Midi
             }
         }
         
-    }
+    }        
+
 }

@@ -37,6 +37,11 @@ using System.Diagnostics;
 using System.Collections.Generic; //Lists
 using System.Diagnostics.Eventing.Reader;
 using System.Windows.Markup;
+using System.Linq.Expressions;
+using System.Windows.Forms;
+using System.Runtime.Remoting.Channels;
+using System.Threading;
+using System.Reflection;
 
 namespace Sanford.Multimedia.Midi
 {
@@ -274,15 +279,13 @@ namespace Sanford.Multimedia.Midi
 
             // Insert Note on            
             ChannelMessage message = new ChannelMessage(ChannelCommand.NoteOn, note.Channel, note.Number, note.Velocity);
-            Insert(note.StartTime, message);
+            InsertLast(note.StartTime, message);
 
             // Insert Note off at ticksoff - 1 
-            // to avoid what ?
+            // to avoid what ? ovelapping with next note ?
             int ticksoff = note.StartTime + note.Duration;
-            message = new ChannelMessage(ChannelCommand.NoteOff, note.Channel, note.Number, 0);
-            //Insert(ticksoff - 10, message);
-            //Insert(ticksoff, message);
-            Insert(ticksoff - 1, message);
+            message = new ChannelMessage(ChannelCommand.NoteOff, note.Channel, note.Number, 0);            
+            InsertLast(ticksoff - 1, message);
 
             // Add note to list of notes
             notes.Add(note);
@@ -1380,24 +1383,127 @@ namespace Sanford.Multimedia.Midi
 
         #region pitchbend
         
+        /// <summary>
+        /// IS there any pitch bend here?
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="starttime"></param>
+        /// <param name="endtime"></param>
+        /// <returns></returns>
         public bool IsPitchBend(int channel, int starttime, int endtime)
         {
             return findPitchBend(channel, starttime, endtime) != -1;
 
         }
-        
-        public void SetPitchBend(int channel, int number, int starttime, int endtime, int pitchBend)
+
+        /// <summary>
+        /// Set pitchbend
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="number"></param>
+        /// <param name="starttime"></param>
+        /// <param name="endtime"></param>
+        /// <param name="pitchBend"></param>
+        public void SetPitchBend(int channel, int number, int starttime, int endtime, int pb)
         {
-            // No pitch = 8192
-            // 2 demi tons =  16383 ?
+            // No pitch = 8192 (0x2000)
+            // 2 demi tons up =  16383 
+            // 2 demi tons down = 0
             int mask = 127;
             int ipitchBend;
             int endPitchTime = 0;
 
+            if (endtime > 2)
+            {
+                // endPitchTime = endtime - 2;
+                endPitchTime = endtime - 1;
+            }
+
+            ipitchBend = pb;
+
             RemovePitchBend(channel, starttime, endtime);
-                        
-           if (endtime > 2)
-                endPitchTime = endtime - 2;
+            
+            // 1 - value 64 before note on    
+            StopPitchBend(channel, starttime);
+
+            ChannelMessageBuilder builder = new ChannelMessageBuilder();
+            ChannelMessage pitchBendMessage;
+            // Build pitch bend message;
+            builder.Command = ChannelCommand.PitchWheel;
+            builder.MidiChannel = channel;
+
+
+            // After note on, increment 1 to value, each 20 tickes until middle of duration
+            int timetomiddle = starttime + (endtime - starttime)/2;
+            int durationtomiddle = (endtime - starttime)/2;
+
+            builder.Data1 = ipitchBend & mask;
+            builder.Data2 = ipitchBend >> 7;
+            int steps = (builder.Data2 - 64);
+            
+            int deltatime = durationtomiddle / steps;
+            int value = 64;
+            int t = starttime;
+            for (int i = 0; i< steps; i++)
+            {
+                value++;
+                t += deltatime;                
+                builder.Data1 = 0;
+                builder.Data2 = value;
+
+                // Build message.
+                builder.Build();
+                pitchBendMessage = builder.Result;
+                InsertLast(t, pitchBendMessage);
+            }
+
+            // Debut plateau
+            t = timetomiddle;
+            builder.Data1 = pb & mask;
+            builder.Data2 = pb >> 7;
+            // Build message.
+            builder.Build();
+            pitchBendMessage = builder.Result;
+            InsertLast(t, pitchBendMessage);
+
+
+            // value 64 before note off    
+            StopPitchBend(channel, endtime);
+
+            // fin plateau, fin note
+            // Dans le code, il est aprés, mais Il sera inséré avant le value 64
+            t = endtime;
+            builder.Data1 = pb & mask;
+            builder.Data2 = pb >> 7;
+            // Build message.
+            builder.Build();
+            pitchBendMessage = builder.Result;
+            Insert(t, pitchBendMessage);
+
+            // puis le note off
+        }
+
+
+        public void SetPitchBend3(int channel, int number, int starttime, int endtime, int pb)
+        {
+            // No pitch = 8192 (0x2000)
+            // 2 demi tons up =  16383 
+            // 2 demi tons down = 0
+            int mask = 127;
+            int ipitchBend;
+            int endPitchTime = 0;
+
+            ipitchBend = pb;
+
+            RemovePitchBend(channel, starttime, endtime);
+
+            StopPitchBend(channel, starttime);
+
+            if (endtime > 2)
+            {
+                // endPitchTime = endtime - 2;
+                endPitchTime = endtime - 1;
+            }
 
             if (endtime <= starttime)
                 return;
@@ -1407,20 +1513,141 @@ namespace Sanford.Multimedia.Midi
 
             // Build pitch bend message;
             builder.Command = ChannelCommand.PitchWheel;
+            builder.MidiChannel = channel;
+
+            // Start Pitchbend           
+            if (ipitchBend > 16383)
+                ipitchBend = 16383;
+
+            // 1 - Start pitchbend at the middle of duration
+            int t = starttime + (endtime - starttime) / 2;
+
+            // Unpack pitch bend value into two data bytes.
+            builder.Data1 = ipitchBend & mask;
+            builder.Data2 = ipitchBend >> 7;
+
+            // Build message.
+            builder.Build();
+            pitchBendMessage = builder.Result;
+            InsertLast(t, pitchBendMessage);
+
+            /*
+            // 1 - Start pitchbend at the middle of duration
+            int t = starttime + (endtime - starttime) / 2;
+
+            // Unpack pitch bend value into two data bytes.
+            builder.Data1 = (ipitchBend/2) & mask;
+            builder.Data2 = (ipitchBend/2) >> 7;
+
+            // Build message.
+            builder.Build();
+            pitchBendMessage = builder.Result;
+            InsertLast(t, pitchBendMessage);
+
+            
+            // 2 - Start pitchbend at the middle of duration
+            t = starttime + 5 * (endtime - starttime) / 8;
+
+            // Unpack pitch bend value into two data bytes.
+            builder.Data1 = (5 * ipitchBend / 8) & mask;
+            builder.Data2 = (5 * ipitchBend / 8) >> 7;
+
+            // Build message.
+            builder.Build();
+            pitchBendMessage = builder.Result;
+            InsertLast(t, pitchBendMessage);
+
+
+            // 3 - intermédiaire
+            t = starttime + 6 * (endtime - starttime) / 8;
+
+            // Unpack pitch bend value into two data bytes.
+            builder.Data1 = (6 * ipitchBend / 8) & mask;
+            builder.Data2 = (6 * ipitchBend /8) >> 7;
+
+            // Build message.
+            builder.Build();
+            pitchBendMessage = builder.Result;
+            InsertLast(t, pitchBendMessage);
+
+
+            // 4 - intermédiaire
+            t = starttime + 7 * (endtime - starttime) / 8;
+
+            // Unpack pitch bend value into two data bytes.
+            builder.Data1 = ipitchBend & mask;
+            builder.Data2 = ipitchBend >> 7;
+
+            // Build message.
+            builder.Build();
+            pitchBendMessage = builder.Result;
+            InsertLast(t, pitchBendMessage);
+            */
+
+
+            // 5 - send pitchbend at the end, +1 after
+            t = endPitchTime + 1;
+
+            // Unpack pitch bend value into two data bytes.
+            builder.Data1 = ipitchBend & mask;
+            builder.Data2 = ipitchBend >> 7;
+
+            // Build message.
+            builder.Build();
+            pitchBendMessage = builder.Result;
+            InsertLast(t, pitchBendMessage);
+
+
+            #region stop pitchbend                       
+
+            // Stop pitchbend -1 after last pitch
+            StopPitchBend(channel, endPitchTime);
+            
+
+            #endregion
+        }
+        public void SetPitchBend2(int channel, int number, int starttime, int endtime, int pb)
+        {
+            // No pitch = 8192
+            // 2 demi tons =  16383 ?
+            int mask = 127;
+            int endPitchTime = 0;
+
+            int startpitchBend = 8192;
+            int endpitchBend = pb;
+            int ipitchBend = startpitchBend;
+
+            RemovePitchBend(channel, starttime, endtime);
+            StopPitchBend(channel, starttime);
+
+            if (endtime > 2)
+            {
+                //endPitchTime = endtime - 2;
+                endPitchTime = endtime - 1;
+            }
+
+            if (endtime <= starttime)
+                return;
+  
+            ChannelMessageBuilder builder = new ChannelMessageBuilder();
+            ChannelMessage pitchBendMessage;
+
+            // Build pitch bend message;
+            builder.Command = ChannelCommand.PitchWheel;
             builder.MidiChannel = channel;            
             
              // Start Pitchbend           
-            if (pitchBend > 16383)
-                pitchBend = 16383;
-
-            //mask = 127;
+            if (endpitchBend > 16383)
+                endpitchBend = 16383;
+            if (endpitchBend < 0)
+                endpitchBend = 0;
 
             // Increase from 8192 to 13383 during the duration of the note
             int steps = 10;
             int OffsetTime = (endPitchTime - starttime) / steps;
-            int offsetPitch = (pitchBend - 8192) / steps;
-            ipitchBend = 8192;
+            int offsetPitch = (endpitchBend - startpitchBend) / steps;            
             int t = starttime;
+            
             for (int i = 0; i < steps ; i++)
             {
                 ipitchBend += offsetPitch;
@@ -1439,13 +1666,25 @@ namespace Sanford.Multimedia.Midi
                 Insert(t, pitchBendMessage);
             }
 
+            #region last pitch
+            // 2 - send pitchbend at the end, +1 after
+            t = endPitchTime + 1;
 
+            // Unpack pitch bend value into two data bytes.
+            builder.Data1 = ipitchBend & mask;
+            builder.Data2 = ipitchBend >> 7;
+
+            // Build message.
+            builder.Build();
+            pitchBendMessage = builder.Result;
+            InsertLast(t, pitchBendMessage);
+            #endregion last pitch
 
             #region stop pitchbend                       
-            
+
             // Stop pitchbend
             StopPitchBend(channel, endPitchTime);
-
+            StopPitchBend(channel, endPitchTime + 1);
 
             #endregion
         }
@@ -1458,7 +1697,8 @@ namespace Sanford.Multimedia.Midi
             int mask = 127;
 
             // Stop pitchbend
-            pitchBend = 0x2000; // No pitch = 8192
+            //pitchBend = 0x2000; // No pitch = 8192
+            pitchBend = 8192;
             builder = new ChannelMessageBuilder();
 
             // Build pitch bend message;
@@ -1475,6 +1715,119 @@ namespace Sanford.Multimedia.Midi
             Insert(time, pitchBendMessage);
         }
 
+        /// <summary>
+        /// Find all pitchbend events in a fraction of time
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="starttime"></param>
+        /// <param name="endtime"></param>
+        /// <returns></returns>
+        public List<MidiEvent> findPitchBendValues(int channel, int starttime, int endtime)
+        {
+            List<MidiEvent> pbevents = new List<MidiEvent>();
+            int id = 0;
+            //int x,y;
+
+            // Start from 0
+            MidiEvent current = GetMidiEvent(0);
+
+            while (current.AbsoluteTicks <= endtime)
+            {
+                IMidiMessage a = current.MidiMessage;
+
+                if (current.AbsoluteTicks < starttime)
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                        id++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion
+                }
+                else if (current.AbsoluteTicks > endtime)
+                {
+                    break;
+                }
+                else if (a.MessageType == MessageType.Channel)
+                {
+                    ChannelMessage Msg = (ChannelMessage)current.MidiMessage;
+                    ChannelCommand cc = Msg.Command;
+
+                    if (Msg.MidiChannel == channel)
+                    {
+                        if (cc == ChannelCommand.PitchWheel)
+                        {
+                            
+                            //x = Msg.Data1;
+                            //y = Msg.Data2;
+                            pbevents.Add(current);
+
+                            #region next
+                            if (current.Next != null)
+                            {
+                                current = current.Next;
+                                id++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            #endregion next      
+                        }
+                        else
+                        {
+                            #region next
+                            if (current.Next != null)
+                            {
+                                current = current.Next;
+                                id++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            #endregion next      
+                        }
+
+                    }
+                    else
+                    {
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                            id++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion next      
+                    }
+
+                }
+                else
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                        id++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion next      
+                }
+            }
+            return pbevents;
+        }
 
         private int findPitchBend(int channel, int starttime, int endtime)
         {
@@ -1578,22 +1931,62 @@ namespace Sanford.Multimedia.Midi
 
 
         #region copy events
+
+        /// <summary>
+        /// Copy events
+        /// </summary>
+        /// <param name="srcstarttime"></param>
+        /// <param name="srcendtime"></param>
+        /// <param name="deststarttime"></param>
         public void CopyEvents(float srcstarttime, float srcendtime, float deststarttime)
         {
             float delta = 0;
-            MidiEvent current = GetMidiEvent(Count - 1);
+            MidiEvent current = GetMidiEvent(Count - 1);            
+            bool bFound = false;
+
             while (current.AbsoluteTicks >= srcstarttime)
-            {
-                if (current != endOfTrackMidiEvent && current.AbsoluteTicks <= srcendtime)
+            {                
+                // Consider events having their ticks inside srcstarttime and screndtime
+                if (current != endOfTrackMidiEvent && current.AbsoluteTicks>= srcstarttime && current.AbsoluteTicks <= srcendtime)
                 {
                     delta = current.AbsoluteTicks - srcstarttime;
-                    Insert((int)deststarttime + (int)delta, current.MidiMessage);
+
+                    // Do not insert if similar event exists in the target position!                    
+                    int position = (int)deststarttime + (int)delta;
+                    bFound = false;
+                    
+                    // List all events having this ticks
+                    List<MidiEvent> melist = GetEventsFromTicks(position);
+                    foreach (MidiEvent me in melist)
+                    {
+                        //Search Channel events having same values 
+                        if (me.MidiMessage.MessageType == MessageType.Channel && current.MidiMessage.MessageType == MessageType.Channel)
+                        {
+                            IMidiMessage cmsg = current.MidiMessage;
+                            IMidiMessage emsg = me.MidiMessage;
+                            ChannelCommand ccc = ChannelMessage.UnpackCommand(cmsg.Status);
+                            ChannelCommand ecc = ChannelMessage.UnpackCommand(emsg.Status);
+
+                            // notes values : emsg.Data1 == cmsg.Data1
+                            // ChannelCommd ecc == ccc (noteon, noteoff)
+                            if (emsg.Data1 == cmsg.Data1 && ecc == ccc)
+                            {
+                                bFound = true;
+                                break;
+                            }
+                        }                        
+                    }
+
+                    // Insert new event at target position (int)deststarttime + (int)delta
+                    // only if not found and if it is a Channel message
+                    if (!bFound && current.MidiMessage.MessageType == MessageType.Channel)                        
+                        Insert((int)deststarttime + (int)delta, current.MidiMessage);
                     
 
                     #region previous
                     if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
                     {
-                        current = current.Previous;
+                        current = current.Previous;                        
                     }
                     else
                     {
@@ -1606,7 +1999,7 @@ namespace Sanford.Multimedia.Midi
                     #region previous
                     if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
                     {
-                        current = current.Previous;
+                        current = current.Previous;                        
                     }
                     else
                     {
@@ -1961,6 +2354,58 @@ namespace Sanford.Multimedia.Midi
 
 
         /// <summary>
+        /// Get all events at this position (ticks)
+        /// </summary>
+        /// <param name="ticks"></param>
+        /// <returns></returns>
+        public List<MidiEvent> GetEventsFromTicks(float ticks)
+        {
+            List<MidiEvent> midiEvents = new List<MidiEvent>();            
+            MidiEvent current = GetMidiEvent(0);
+
+            while (current.AbsoluteTicks <= Length)
+            {
+                if (current.AbsoluteTicks == ticks)
+                {
+                    // Same position = ticks
+                    midiEvents.Add(current);
+
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion next
+
+                }
+                else if (current.AbsoluteTicks > ticks)
+                {
+                    // position > ticks => exit
+                    break;
+                }
+                else
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;                        
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion next
+                }
+            }
+
+            return midiEvents;
+        }
+
+        /// <summary>
         /// FAB: Return index of Event from ticks
         /// </summary>
         /// <param name="ticks"></param>
@@ -2087,7 +2532,7 @@ namespace Sanford.Multimedia.Midi
         /// </param>
         /// <param name="message">
         /// The IMidiMessage to insert.
-        /// </param>
+        /// </param>       
         public void Insert(int position, IMidiMessage message)
         {
             #region Require
@@ -2144,6 +2589,75 @@ namespace Sanford.Multimedia.Midi
                 }
 
                 current.Previous = newMidiEvent;
+            }
+
+            count++;
+
+            #region Invariant
+
+
+            // FAB perfs
+            //AssertValid();
+
+            #endregion
+        }
+
+        public void InsertLast(int position, IMidiMessage message)
+        {
+            #region Require
+
+            if (position < 0)
+            {
+                //throw new ArgumentOutOfRangeException("position", position, "IMidiMessage position out of range.");
+                position = this.Length;
+
+                Console.Write("\nERROR: IMidiMessage position out of range (Track.cs, Insert");
+
+            }
+            else if (message == null)
+            {
+                throw new ArgumentNullException("message");
+            }
+
+            #endregion            
+
+            MidiEvent newMidiEvent = new MidiEvent(this, position, message);
+
+            if (head == null)
+            {
+                head = newMidiEvent;
+                tail = newMidiEvent;
+            }
+            else if (position >= tail.AbsoluteTicks)
+            {
+                newMidiEvent.Previous = tail;
+                tail.Next = newMidiEvent;
+                tail = newMidiEvent;
+                endOfTrackMidiEvent.SetAbsoluteTicks(Length);
+                endOfTrackMidiEvent.Previous = tail;
+            }
+            else
+            {
+                MidiEvent current = tail;
+
+                while (current.AbsoluteTicks > position)
+                {
+                    current = current.Previous;
+                }
+
+                newMidiEvent.Next = current.Next;
+                newMidiEvent.Previous = current;
+
+                if (current.Next != null)
+                {
+                    current.Next.Previous = newMidiEvent;
+                }
+                else
+                {
+                    tail = newMidiEvent;
+                }
+
+                current.Next = newMidiEvent;
             }
 
             count++;

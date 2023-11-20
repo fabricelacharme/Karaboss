@@ -1398,8 +1398,12 @@ namespace FlShell
 
         static IShellItem CreateItemFromIDList(IntPtr pidl)
         {
-            return Shell32.SHCreateItemFromIDList(pidl,
-                typeof(IShellItem).GUID);
+            try
+            {
+                return Shell32.SHCreateItemFromIDList(pidl,
+                    typeof(IShellItem).GUID);
+            }
+            catch { return null; }
         }
 
         static IShellItem CreateItemFromParsingName(string path)

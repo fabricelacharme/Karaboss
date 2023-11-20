@@ -42,7 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MidiTrackTextImporter.cs" />
     <Compile Include="MusicTxtReader.cs" />
+    <Compile Include="MusicTxtWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

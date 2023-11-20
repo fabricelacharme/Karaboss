@@ -56,7 +56,7 @@ namespace Karaboss
     {
 
         MusicXmlReader MXmlReader = new MusicXmlReader();
-        MusicTxtReader MTxtReader = new MusicTxtReader();
+        MusicTxtReader MTxtReader; //= new MusicTxtReader();
 
         #region configuration
         private ConfigurationForm m_configurationForm;
@@ -226,7 +226,7 @@ namespace Karaboss
         }
 
         private void Xplorer_ContentChanged(object sender, string strContent, string strPath)
-        {
+        {            
             tssMiddle.Text = strContent;
             tssLeft.Text = strPath;
         }
@@ -400,15 +400,11 @@ namespace Karaboss
                 filename = playlistsControl.SelectedFile;
             
 
-            if (filename != null && filename != "" && File.Exists(filename))
-            {
-                //DisplayMidiPlayer(filename, null, true);
-                SelectPlayer(filename, true);
-            }
-            else
-            {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
-            }
+            if (filename != null && filename != "" && File.Exists(filename))                            
+                SelectPlayer(filename, true);            
+            else                            
+                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
+            
 
         }
 
@@ -433,14 +429,11 @@ namespace Karaboss
                 filename = playlistsControl.SelectedFile;
             
 
-            if (filename != null && filename != "" && File.Exists(filename))
-            {                
-                SelectPlayer(filename, false);
-            }
-            else
-            {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
-            }
+            if (filename != null && filename != "" && File.Exists(filename))                            
+                SelectPlayer(filename, false);            
+            else                            
+                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
+            
 
         }
 
@@ -468,8 +461,8 @@ namespace Karaboss
                 filename = playlistsControl.SelectedFile;
 
             if (filename == null || filename == "" || !File.Exists(filename) || !Karaclass.IsMidiExtension(filename))
-            {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            {                
+                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -518,8 +511,8 @@ namespace Karaboss
                 filename = playlistsControl.SelectedFile;
 
             if (filename == null || filename == "" || !File.Exists(filename) || !Karaclass.IsMidiExtension(filename))
-            {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            {                
+                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -825,7 +818,7 @@ namespace Karaboss
             {
                 if (fileName != "\\")
                 {
-                    MTxtReader = new MusicTxtReader();
+                    MTxtReader = new MusicTxtReader(fileName);
                     MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
                     MTxtReader.LoadTxtAsync(fileName, silenceMode);
                 }
@@ -962,7 +955,7 @@ namespace Karaboss
             if (MXmlReader.seq != null)
             {
                 sequence1 = MXmlReader.seq;
-                sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+                sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)                
             }
 
             // Remove all MIDI events after last note
@@ -1558,7 +1551,7 @@ namespace Karaboss
                 return;
             }
 
-            MTxtReader = new MusicTxtReader();
+            MTxtReader = new MusicTxtReader(fpath);
             MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
 
             // File can be an txt file but not in musicxml format
@@ -1623,7 +1616,7 @@ namespace Karaboss
         {
             sequence1.LoadCompleted += HandleLoadCompleted;
             MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
-            MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
+            //MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
 
             // Set message on splash windows because the loading of sound fonts takes a very long time
             // if a big file is used
@@ -2059,11 +2052,11 @@ namespace Karaboss
 
             if (filename != null && filename != "")
             {
-                //DisplayMidiPlayer(filename, null, true);
                 SelectPlayer(filename, true);
             }
-            else
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);            
+            else                            
+                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            
         }
 
 
@@ -2091,11 +2084,10 @@ namespace Karaboss
                     filename = playlistsControl.SelectedFile;
             }
 
-            if (filename != null && filename != "")
-                //DisplayMidiPlayer(filename, null, false);            
+            if (filename != null && filename != "")                   
                 SelectPlayer(filename, false);
             else
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             
         }
 

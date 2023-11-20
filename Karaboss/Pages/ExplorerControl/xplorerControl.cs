@@ -41,6 +41,7 @@ using System.Globalization;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Karaboss.Resources.Localization;
+using FlShell;
 
 namespace Karaboss.xplorer
 {
@@ -204,7 +205,7 @@ namespace Karaboss.xplorer
         }
 
         /// <summary>
-        /// Refresh ontent of ShellListView
+        /// Refresh content of ShellListView
         /// </summary>
         /// <param name="fullPath"></param>
         public void RefreshContents(string fullPath = "")
@@ -226,7 +227,8 @@ namespace Karaboss.xplorer
         }
 
         private void ShellListView_ContentChanged(object sender, string strContent, string strPath)
-        {
+        {            
+            
             m_CurrentContent = strContent;
             LvContentChanged?.Invoke(this, strContent, strPath);
         }
@@ -1021,6 +1023,13 @@ namespace Karaboss.xplorer
                     file = Path.GetFileName(fullpath);
 
                     string[] txvalues = new string[2];
+                    ShellItem sh = this.shellListView.SelectedItem;
+                    if (sh != null && !sh.IsFolder) 
+                    {                        
+                        string f = Path.GetFileNameWithoutExtension(sh.FileSystemPath);
+                        txvalues[0] = f;
+                    }
+                    
 
                     // Display dialg Search & replace
                     if (Prompt.ShowDialog("Karaboss - Replace", ref txvalues) == DialogResult.OK)
@@ -1101,10 +1110,13 @@ namespace Karaboss.xplorer
         /// </summary>
         private static class Prompt
         {
+            
+
             public static DialogResult ShowDialog(string caption, ref string[] value)
             {
                 int wd = 400;
                 int ht = 200;
+                
 
                 Form prompt = new Form()
                 {
@@ -1294,7 +1306,7 @@ namespace Karaboss.xplorer
             }
             else
             {
-                MessageBox.Show("Please select a file", "Karaboss", MessageBoxButtons.OK);
+                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

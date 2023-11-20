@@ -48,7 +48,12 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.btnRemovePitchBend = new System.Windows.Forms.Button();
+            this.btnSetPitchBend = new System.Windows.Forms.Button();
+            this.lblHsPitchBend = new System.Windows.Forms.Label();
+            this.hsPitchBend = new ColorSlider.ColorSlider();
+            this.chkPitchBend = new System.Windows.Forms.CheckBox();
+            this.txtPitchBends = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.upDownNoteVelocity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.upDownNoteValue)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -85,6 +90,7 @@
             // lblNoteVelocity
             // 
             resources.ApplyResources(this.lblNoteVelocity, "lblNoteVelocity");
+            this.lblNoteVelocity.ForeColor = System.Drawing.Color.White;
             this.lblNoteVelocity.Name = "lblNoteVelocity";
             // 
             // txtDuration
@@ -95,6 +101,7 @@
             // lblNoteDuration
             // 
             resources.ApplyResources(this.lblNoteDuration, "lblNoteDuration");
+            this.lblNoteDuration.ForeColor = System.Drawing.Color.White;
             this.lblNoteDuration.Name = "lblNoteDuration";
             // 
             // txtTicks
@@ -105,6 +112,7 @@
             // lblNoteTicks
             // 
             resources.ApplyResources(this.lblNoteTicks, "lblNoteTicks");
+            this.lblNoteTicks.ForeColor = System.Drawing.Color.White;
             this.lblNoteTicks.Name = "lblNoteTicks";
             // 
             // txtTime
@@ -115,11 +123,13 @@
             // lbNotelTime
             // 
             resources.ApplyResources(this.lbNotelTime, "lbNotelTime");
+            this.lbNotelTime.ForeColor = System.Drawing.Color.White;
             this.lbNotelTime.Name = "lbNotelTime";
             // 
             // lblNoteString
             // 
             resources.ApplyResources(this.lblNoteString, "lblNoteString");
+            this.lblNoteString.ForeColor = System.Drawing.Color.White;
             this.lblNoteString.Name = "lblNoteString";
             // 
             // upDownNoteValue
@@ -136,15 +146,18 @@
             // lblNoteValue
             // 
             resources.ApplyResources(this.lblNoteValue, "lblNoteValue");
+            this.lblNoteValue.ForeColor = System.Drawing.Color.White;
             this.lblNoteValue.Name = "lblNoteValue";
             // 
             // lblTrackNumber
             // 
             resources.ApplyResources(this.lblTrackNumber, "lblTrackNumber");
+            this.lblTrackNumber.ForeColor = System.Drawing.Color.White;
             this.lblTrackNumber.Name = "lblTrackNumber";
             // 
             // lblSelection
             // 
+            this.lblSelection.ForeColor = System.Drawing.Color.White;
             resources.ApplyResources(this.lblSelection, "lblSelection");
             this.lblSelection.Name = "lblSelection";
             // 
@@ -165,6 +178,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
             this.tabPage1.Controls.Add(this.btnDefVlocity);
             this.tabPage1.Controls.Add(this.lblNoteValue);
             this.tabPage1.Controls.Add(this.lblSelection);
@@ -183,21 +197,110 @@
             this.tabPage1.Controls.Add(this.lblNoteDuration);
             resources.ApplyResources(this.tabPage1, "tabPage1");
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.checkBox1);
+            this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.tabPage2.Controls.Add(this.txtPitchBends);
+            this.tabPage2.Controls.Add(this.btnRemovePitchBend);
+            this.tabPage2.Controls.Add(this.btnSetPitchBend);
+            this.tabPage2.Controls.Add(this.lblHsPitchBend);
+            this.tabPage2.Controls.Add(this.hsPitchBend);
+            this.tabPage2.Controls.Add(this.chkPitchBend);
             resources.ApplyResources(this.tabPage2, "tabPage2");
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // checkBox1
+            // btnRemovePitchBend
             // 
-            resources.ApplyResources(this.checkBox1, "checkBox1");
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            resources.ApplyResources(this.btnRemovePitchBend, "btnRemovePitchBend");
+            this.btnRemovePitchBend.Name = "btnRemovePitchBend";
+            this.btnRemovePitchBend.UseVisualStyleBackColor = true;
+            this.btnRemovePitchBend.Click += new System.EventHandler(this.btnRemovePitchBend_Click);
+            // 
+            // btnSetPitchBend
+            // 
+            resources.ApplyResources(this.btnSetPitchBend, "btnSetPitchBend");
+            this.btnSetPitchBend.Name = "btnSetPitchBend";
+            this.btnSetPitchBend.UseVisualStyleBackColor = true;
+            this.btnSetPitchBend.Click += new System.EventHandler(this.btnSetPitchBend_Click);
+            // 
+            // lblHsPitchBend
+            // 
+            resources.ApplyResources(this.lblHsPitchBend, "lblHsPitchBend");
+            this.lblHsPitchBend.ForeColor = System.Drawing.Color.White;
+            this.lblHsPitchBend.Name = "lblHsPitchBend";
+            // 
+            // hsPitchBend
+            // 
+            this.hsPitchBend.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.hsPitchBend.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(87)))), ((int)(((byte)(94)))), ((int)(((byte)(110)))));
+            this.hsPitchBend.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(60)))), ((int)(((byte)(74)))));
+            this.hsPitchBend.BorderRoundRectSize = new System.Drawing.Size(8, 8);
+            this.hsPitchBend.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
+            this.hsPitchBend.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(130)))), ((int)(((byte)(208)))));
+            this.hsPitchBend.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(140)))), ((int)(((byte)(180)))));
+            resources.ApplyResources(this.hsPitchBend, "hsPitchBend");
+            this.hsPitchBend.ForeColor = System.Drawing.Color.White;
+            this.hsPitchBend.LargeChange = new decimal(new int[] {
+            2048,
+            0,
+            0,
+            0});
+            this.hsPitchBend.Maximum = new decimal(new int[] {
+            8192,
+            0,
+            0,
+            0});
+            this.hsPitchBend.Minimum = new decimal(new int[] {
+            8192,
+            0,
+            0,
+            -2147483648});
+            this.hsPitchBend.MouseWheelBarPartitions = 16;
+            this.hsPitchBend.Name = "hsPitchBend";
+            this.hsPitchBend.ScaleDivisions = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.hsPitchBend.ScaleSubDivisions = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.hsPitchBend.ShowDivisionsText = false;
+            this.hsPitchBend.ShowSmallScale = true;
+            this.hsPitchBend.SmallChange = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
+            this.hsPitchBend.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
+            this.hsPitchBend.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
+            this.hsPitchBend.ThumbRoundRectSize = new System.Drawing.Size(16, 16);
+            this.hsPitchBend.ThumbSize = new System.Drawing.Size(12, 12);
+            this.hsPitchBend.TickAdd = 0F;
+            this.hsPitchBend.TickColor = System.Drawing.Color.White;
+            this.hsPitchBend.TickDivide = 0F;
+            this.hsPitchBend.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.hsPitchBend.ValueChanged += new System.EventHandler(this.hsPitchBend_ValueChanged);
+            // 
+            // chkPitchBend
+            // 
+            resources.ApplyResources(this.chkPitchBend, "chkPitchBend");
+            this.chkPitchBend.ForeColor = System.Drawing.Color.White;
+            this.chkPitchBend.Name = "chkPitchBend";
+            this.chkPitchBend.UseVisualStyleBackColor = true;
+            this.chkPitchBend.CheckedChanged += new System.EventHandler(this.chkPitchBend_CheckedChanged);
+            // 
+            // txtPitchBends
+            // 
+            resources.ApplyResources(this.txtPitchBends, "txtPitchBends");
+            this.txtPitchBends.Name = "txtPitchBends";
             // 
             // frmNoteEdit
             // 
@@ -245,6 +348,11 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox chkPitchBend;
+        private ColorSlider.ColorSlider hsPitchBend;
+        private System.Windows.Forms.Label lblHsPitchBend;
+        private System.Windows.Forms.Button btnRemovePitchBend;
+        private System.Windows.Forms.Button btnSetPitchBend;
+        private System.Windows.Forms.TextBox txtPitchBends;
     }
 }

@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
+using System.Reflection;
+using System.Runtime.Remoting.Channels;
 
 namespace MusicTxt
 {
@@ -53,17 +53,18 @@ namespace MusicTxt
 
         MidiNote n;
 
+        public string fileName {  get; private set; }
 
-
-        public MusicTxtReader() 
+        public MusicTxtReader(string file) 
         {
+            fileName = file;
             InitializeBackgroundWorkers();
             MidiTags.ResetTags();
         }
 
         private void InitializeBackgroundWorkers()
         {
-            // xmlmusic
+            // txtmusic
             loadTxtWorker.DoWork += new DoWorkEventHandler(LoadTxtDoWork);
             loadTxtWorker.ProgressChanged += new ProgressChangedEventHandler(OnLoadTxtProgressChanged);
             loadTxtWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnLoadTxtCompleted);
@@ -119,7 +120,7 @@ namespace MusicTxt
 
 
         /// <summary>
-        /// Load xmlmusic track by LoadXmlWorker
+        /// Load text dump by LoadTxtWorker
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -128,10 +129,8 @@ namespace MusicTxt
             string fileName = (string)e.Argument;
 
             try
-            {
-                //FileStream fstream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-                FileStream fstream = File.OpenRead(fileName); ;
-                
+            {                
+                FileStream fstream = File.OpenRead(fileName); ;                
                 StreamReader stream = new StreamReader(fstream);
 
                 using (stream)
@@ -328,16 +327,6 @@ namespace MusicTxt
             // Track, Time, Title_t, Text            
             TrackName = ar[3];
 
-            /*
-            if (currenttrack > 0 && currenttrack <= newTracks.Count)
-            {
-                newTracks[currenttrack - 1].Name = TrackName;
-                byte[] bytes = System.Text.Encoding.ASCII.GetBytes(TrackName);
-                MetaMessage message = new MetaMessage(MetaType.TrackName, bytes);
-                newTracks[currenttrack - 1].Insert(0, message);
-            }
-            */
-
             if (currenttrack >= 0 && currenttrack <= newTracks.Count)
             {
                 newTracks[currenttrack].Name = TrackName;
@@ -345,8 +334,6 @@ namespace MusicTxt
                 MetaMessage message = new MetaMessage(MetaType.TrackName, bytes);
                 newTracks[currenttrack].Insert(0, message);
             }
-
-
         }
 
         /// <summary>
@@ -361,10 +348,6 @@ namespace MusicTxt
 
             // Track, Time, Instrument_name_t, Text
             InstrumentName = ar[3];
-            /*
-            if (currenttrack > 0 && currenttrack <= newTracks.Count)
-                newTracks[currenttrack - 1].InstrumentName = InstrumentName;
-            */
             if (currenttrack >= 0 && currenttrack <= newTracks.Count)
                 newTracks[currenttrack].InstrumentName = InstrumentName;
         }
@@ -382,14 +365,7 @@ namespace MusicTxt
             int ticks = Convert.ToInt32(ar[1]);
             Channel = Convert.ToInt32(ar[3]);
             ProgramChange = Convert.ToInt32(ar[4]);
-            /*
-            if (currenttrack > 0 && currenttrack <= newTracks.Count)
-            {
-                newTracks[currenttrack - 1].ProgramChange = ProgramChange;
-                ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, Channel, ProgramChange);
-                newTracks[currenttrack - 1].Insert(ticks, message);
-            }
-            */
+
             if (currenttrack >= 0 && currenttrack <= newTracks.Count)
             {
                 if (newTracks[currenttrack].MidiChannel != Channel)
@@ -405,7 +381,7 @@ namespace MusicTxt
         }
 
         /// <summary>
-        /// Control Change Control_c
+        /// Control Change Control_c (volume, pan, fader, reverb, chorus)
         /// </summary>
         /// <param name="ar"></param>
         /// <exception cref="ArgumentException"></exception>
@@ -413,46 +389,6 @@ namespace MusicTxt
         {
             if (ar.Length != 6)
                 throw new ArgumentException("ControlChange Length");
-
-            /*
-            if (currenttrack == 0 || currenttrack > newTracks.Count)
-                return;
-
-            // Track, Time, Control_c, Channel, Data1, Data2
-            int ticks = Convert.ToInt32(ar[1]);
-            Channel = Convert.ToInt32(ar[3]);
-            ControlChangeData1 = Convert.ToInt32(ar[4]);
-            ControlChangeData2 = Convert.ToInt32(ar[5]);
-
-            // 7 Volume
-            // 10 Pan
-            // 11 Fader
-            // 91 Reverb
-            // 93 chorus   
-
-            switch (ControlChangeData1)
-            {
-                case 7:
-                    Volume = ControlChangeData2;
-                    newTracks[currenttrack - 1].Volume = Volume;                    
-                    break;
-                case 10:                    
-                    Pan = ControlChangeData2;
-                    newTracks[currenttrack - 1].Pan = Pan;                    
-                    break;
-                case 91:                    
-                    Reverb = ControlChangeData2;
-                    newTracks[currenttrack - 1].Reverb = Reverb;                    
-                    break;
-                default:
-                    //ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
-                    //newTracks[currenttrack-1].Insert(ticks, message);
-                    break;
-            }
-
-            ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
-            newTracks[currenttrack - 1].Insert(ticks, message);
-            */
 
             if (currenttrack < 0 || currenttrack > newTracks.Count)
                 return;
@@ -487,8 +423,6 @@ namespace MusicTxt
                     newTracks[currenttrack].insertReverb(Channel,Reverb);
                     break;
                 default:
-                    //ChannelMessage msg = new ChannelMessage(ChannelCommand.Controller, Channel, ControlChangeData1, ControlChangeData2);
-                    //newTracks[currenttrack].Insert(ticks, msg);
                     break;
             }
 
@@ -507,21 +441,33 @@ namespace MusicTxt
 
         private void ReadPitchBend(string[] ar)
         {
-            // Track, Time, Pitch_bend_c, Channel, Data1
+            // Track, Time, Pitch_bend_c, Channel, Data2
             if (ar.Length != 5)
                 throw new ArgumentException("PitchBend Length");
 
             int ticks = Convert.ToInt32(ar[1]);
-            int PitchBendData1 = Convert.ToInt32(ar[4]);
+            int PitchBend = Convert.ToInt32(ar[4]);            
             Channel = Convert.ToInt32(ar[3]);
-            ChannelMessage message = new ChannelMessage(ChannelCommand.PitchWheel, Channel, PitchBendData1);
-            
-            /*
-            newTracks[currenttrack - 1].Insert(ticks, message);
-            */
 
+            ChannelMessageBuilder builder = new ChannelMessageBuilder();
+            ChannelMessage pitchBendMessage;
+            int mask = 127;
+
+            // Build pitch bend message;
+            builder.Command = ChannelCommand.PitchWheel;
+            builder.MidiChannel = Channel;
+
+            builder.Data1 = 0;
+            builder.Data2 = PitchBend;
+
+            // Build message.
+            builder.Build();
+            pitchBendMessage = builder.Result;
+
+            //ChannelMessage message = new ChannelMessage(ChannelCommand.PitchWheel, Channel, PitchBend);
+            
             if (currenttrack >= 0 && currenttrack <= newTracks.Count)
-                newTracks[currenttrack].Insert(ticks, message);
+                newTracks[currenttrack].Insert(ticks, pitchBendMessage);
         }
 
         private void ReadMetaLyric(string[] ar)
@@ -569,6 +515,8 @@ namespace MusicTxt
         /// </summary>
         private void CreateTrack()
         {
+            ResetValues();
+
             track = new Track()
             {
                 MidiChannel = Channel,
@@ -584,11 +532,21 @@ namespace MusicTxt
 
             ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, track.MidiChannel, track.ProgramChange, 0);
             track.Insert(0, message);
-
             track.insertTimesignature(Numerator, Denominator);
-
             newTracks.Add(track);
+
+            
         }
+        
+        private void ResetValues()
+        {
+            Pan = 64;
+            Reverb = 0;
+            TrackName = "Track1";
+            InstrumentName = "AcousticGrandPiano";
+
+    }
+
         #endregion
 
 
@@ -599,42 +557,42 @@ namespace MusicTxt
         /// </summary>
         /// <param name="ar"></param>
         private void StartMidiNote(string[] ar)
-        {
-            if (ar.Length != 6)
-                throw new ArgumentException("Note On Length");
-
-            // format of line: Track, Time, Note_on_c, Channel, Note, Velocity
-            // format of Midinote: starttime, channel, notenumber, duration, velocity, selected
-            int velocity = Convert.ToInt32(ar[5]);
-
-            // velocity > 0 is a note on
-            if (velocity > 0)
             {
-                n = new MidiNote(Convert.ToInt32(ar[1]), Convert.ToInt32(ar[3]), Convert.ToInt32(ar[4]), 0, velocity, false);
-                newNotes.Add(n);
-            }
-            else
-            {
-                // Note_on_c & velocity = 0 can be a note off in some midi files !!!!
-                MidiNote no;
-                int ticks = Convert.ToInt32(ar[1]);
-                int notenumber = Convert.ToInt32(ar[4]);
-                if (newNotes.Count > 0)
+                if (ar.Length != 6)
+                    throw new ArgumentException("Note On Length");
+
+                // format of line: Track, Time, Note_on_c, Channel, Note, Velocity
+                // format of Midinote: starttime, channel, notenumber, duration, velocity, selected
+                int velocity = Convert.ToInt32(ar[5]);
+
+                // velocity > 0 is a note on
+                if (velocity > 0)
                 {
-                    for (int i = 0; i < newNotes.Count; i++)
+                    n = new MidiNote(Convert.ToInt32(ar[1]), Convert.ToInt32(ar[3]), Convert.ToInt32(ar[4]), 0, velocity, false);
+                    newNotes.Add(n);
+                }
+                else
+                {
+                    // Note_on_c & velocity = 0 can be a note off in some midi files !!!!
+                    MidiNote no;
+                    int ticks = Convert.ToInt32(ar[1]);
+                    int notenumber = Convert.ToInt32(ar[4]);
+                    if (newNotes.Count > 0)
                     {
-                        no = newNotes[i];
-                        if (no.Duration == 0 && no.Number == notenumber)
+                        for (int i = 0; i < newNotes.Count; i++)
                         {
-                            no.Duration = Convert.ToInt32(ar[1]) - n.StartTime;
-                            track.addNote(no, false);
-                            newNotes.RemoveAt(i);
-                            break;
+                            no = newNotes[i];
+                            if (no.Duration == 0 && no.Number == notenumber)
+                            {
+                                no.Duration = Convert.ToInt32(ar[1]) - n.StartTime;
+                                track.addNote(no, false);
+                                newNotes.RemoveAt(i);
+                                break;
+                            }
                         }
                     }
                 }
             }
-        }
 
         /// <summary>
         /// Note_off_c = Note off event

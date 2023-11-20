@@ -41,6 +41,7 @@ namespace Karaboss
     public partial class frmTags : Form
     {
         private Sequence sequence1;
+        private bool bModified = false;
         
         public frmTags(Sequence seq)
         {
@@ -52,7 +53,6 @@ namespace Karaboss
             DisplayTags();
 
         }
-
 
         private void DisplayTags()
         {
@@ -112,8 +112,7 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void BtnSave_Click(object sender, EventArgs e)
-        {
-            bool bModified = false;
+        {            
             string tx = string.Empty;
 
             sequence1.TagTitle = txtTitle.Text.Trim();
@@ -363,6 +362,9 @@ namespace Karaboss
             return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
         }
 
-     
+        private void Text_Changed(object sender, EventArgs e)
+        {
+            bModified = true;
+        }
     }
 }

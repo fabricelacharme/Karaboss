@@ -238,7 +238,7 @@ namespace FlShell
                                     new ShellItemChangeEventArgs(item1, item2));
                             }
                             break;
-
+                        
                         case SHCNE.NETSHARE:
                         case SHCNE.NETUNSHARE:
                             if (m_Parent.SharingChanged != null)

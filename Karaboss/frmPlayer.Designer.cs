@@ -121,6 +121,7 @@ namespace Karaboss
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.timer4 = new System.Windows.Forms.Timer(this.components);
             this.pnlTop = new System.Windows.Forms.Panel();
+            this.btnDump = new System.Windows.Forms.Button();
             this.lblHelp = new System.Windows.Forms.Label();
             this.lblBass = new System.Windows.Forms.Label();
             this.lblTreble = new System.Windows.Forms.Label();
@@ -944,6 +945,7 @@ namespace Karaboss
             // pnlTop
             // 
             this.pnlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlTop.Controls.Add(this.btnDump);
             this.pnlTop.Controls.Add(this.lblHelp);
             this.pnlTop.Controls.Add(this.lblBass);
             this.pnlTop.Controls.Add(this.lblTreble);
@@ -964,6 +966,13 @@ namespace Karaboss
             this.pnlTop.Controls.Add(this.lblGomme);
             resources.ApplyResources(this.pnlTop, "pnlTop");
             this.pnlTop.Name = "pnlTop";
+            // 
+            // btnDump
+            // 
+            resources.ApplyResources(this.btnDump, "btnDump");
+            this.btnDump.Name = "btnDump";
+            this.btnDump.UseVisualStyleBackColor = true;
+            this.btnDump.Click += new System.EventHandler(this.btnDump_Click);
             // 
             // lblHelp
             // 
@@ -1333,6 +1342,7 @@ namespace Karaboss
         private System.Windows.Forms.ToolStripSeparator MnuFileSeparator3;
         private System.Windows.Forms.ToolStripSeparator MnuFileSeparator4;
         private System.Windows.Forms.ToolStripMenuItem MnuFileImportMusicXml;
+        private System.Windows.Forms.Button btnDump;
     }
 }
 

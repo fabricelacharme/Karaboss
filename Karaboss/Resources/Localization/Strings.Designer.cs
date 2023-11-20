@@ -1190,5 +1190,12 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("DeletePlaylist", resourceCulture);
             }
         }
+        internal static string ErrorSelectFile
+        {
+            get
+            {
+                return ResourceManager.GetString("ErrorSelectFile", resourceCulture);
+            }
+        }
     }
 }

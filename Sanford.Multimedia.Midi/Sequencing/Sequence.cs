@@ -397,10 +397,8 @@ namespace Sanford.Multimedia.Midi
         }
 
 
-        /// <summary>
-        /// FAB: Dump a sequence to text file
-        /// </summary>
-        /// <param name="fileName"></param>
+        #region deleteme
+        /*
         public void WriteDump(string fileName, string dumpFileName)
         {
             #region Require
@@ -435,8 +433,8 @@ namespace Sanford.Multimedia.Midi
                 MessageBox.Show(ex.Message);
             }
         }
-
-
+        */
+        #endregion deleteme
 
         /// <summary>
         /// Gets the length in ticks of the Sequence.

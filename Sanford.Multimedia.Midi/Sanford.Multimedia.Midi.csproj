@@ -131,10 +131,7 @@
     </Compile>
     <Compile Include="Device Classes\OutputDevice Classes\OutputDeviceBase.cs" />
     <Compile Include="ImportExport\CsvFormat.cs" />
-    <Compile Include="ImportExport\DumpReader.cs" />
-    <Compile Include="ImportExport\DumpWriter.cs" />
     <Compile Include="ImportExport\MidiTrackImporter.cs" />
-    <Compile Include="ImportExport\TextTrackImporter.cs" />
     <Compile Include="ImportExport\UI\frmSelectTrack.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -489,6 +486,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ColorSlider\ColorSlider.csproj">
+      <Project>{16E224DC-7FF0-4908-8318-D6A3AC2E797A}</Project>
+      <Name>ColorSlider</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sanford.Collections\Sanford.Collections.csproj">
       <Project>{2cb17756-93fd-40d6-b675-4ddf3ad56a6b}</Project>
       <Name>Sanford.Collections</Name>

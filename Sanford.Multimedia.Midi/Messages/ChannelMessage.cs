@@ -586,7 +586,10 @@ namespace Sanford.Multimedia.Midi
         /// <returns>
         /// The number of bytes used for the specified ChannelCommand.
         /// </returns>
-        internal static int DataBytesPerType(ChannelCommand command)
+
+        // FAB 11/11/2023 internal => public (MusicTxtWriter)
+        // internal static int DataBytesPerType(ChannelCommand command)
+        public static int DataBytesPerType(ChannelCommand command)
         {
             int result;
 
