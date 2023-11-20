@@ -1668,6 +1668,30 @@ namespace FlShell
                 
                 #endregion
             }
+            else if (e.Label != null && e.Label != String.Empty)
+            {
+                //Folder creation                
+                string NewName = e.Label.Trim();
+
+                IntPtr newPidl = IntPtr.Zero;
+                try
+                {
+                    // When the newname is identical to an existing name, Windows proposes to rename again the file: toto => toto (2)
+                    uint res = item.Parent.GetIShellFolder().SetNameOf(m_ListView.Handle, Shell32.ILFindLastID(item.Pidl), NewName, SHGDN.NORMAL, out newPidl);
+                }
+                catch (COMException ex)
+                {
+                    // Ignore the exception raised when the user cancels
+                    // a delete operation, or a change of name because duplicate.
+                    if (ex.ErrorCode != unchecked((int)0x800704C7) &&
+                        ex.ErrorCode != unchecked((int)0x80270000) &&
+                        ex.ErrorCode != unchecked((int)0x8000FFFF))
+                    {
+                        throw;
+                    }
+                    e.CancelEdit = true;
+                }
+            }
         }
 
         private void ListView_ItemMouseOver(object sender, ListViewItemMouseHoverEventArgs e)
@@ -2207,7 +2231,7 @@ namespace FlShell
             // Debug
             //Console.WriteLine("m_ShellListener_ItemRenamed: " + m_CurrentFolder.DisplayName);
                 m_ResetSelection = false;
-                Navigate(m_CurrentFolder);
+                Navigate(m_CurrentFolder,e.NewItem.DisplayName);
 
 
             //}
@@ -2266,11 +2290,10 @@ namespace FlShell
                 //Console.WriteLine("m_ShellListener_ItemCreated " + e.Item.FileSystemPath);
 
                 RecreateShellView(m_CurrentFolder);
-
+                
                 if (m_CreateNew)
                 {
-                    m_EditItem = e.Item;
-
+                    m_EditItem = e.Item;                    
                     ListViewItem lvi = FindItem(e.Item);
                     if (lvi != null)
                         lvi.BeginEdit();
