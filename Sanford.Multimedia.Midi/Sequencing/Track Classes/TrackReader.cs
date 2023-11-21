@@ -786,6 +786,12 @@ namespace Sanford.Multimedia.Midi
                     // Elimine caractères bizarres dans certains fichiers    
                     sy = cleanLyric(sy);
                     
+
+                    //if (sy.IndexOf("%") > -1)
+                    //{
+                    //    Console.WriteLine("Accord ? " + sy);
+                    //}
+
                     // Tags
                     if (sy.Substring(0, 1) == "@" && ticks == 0)
                     {
@@ -1275,6 +1281,13 @@ namespace Sanford.Multimedia.Midi
             byte[] data = new byte[ReadVariableLengthValue() + 1];
             data[0] = (byte)SysExType.Start;
 
+            
+            //if (data[0] == 0xF0 && data[1] != 0x00)
+            //{
+            //    Console.WriteLine("Accord ?");
+            //}
+
+
             try
             {
                
@@ -1318,6 +1331,7 @@ namespace Sanford.Multimedia.Midi
             {
                 byte[] data = new byte[ReadVariableLengthValue() + 1];
                 data[0] = (byte)SysExType.Continuation;
+
 
                 if (trackData.Length <= data.Length)
                 {
