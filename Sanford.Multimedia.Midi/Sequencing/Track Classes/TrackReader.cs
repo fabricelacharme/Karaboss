@@ -787,10 +787,10 @@ namespace Sanford.Multimedia.Midi
                     sy = cleanLyric(sy);
                     
 
-                    //if (sy.IndexOf("%") > -1)
-                    //{
-                    //    Console.WriteLine("Accord ? " + sy);
-                    //}
+                    if (sy.IndexOf("%") > -1)
+                    {
+                        Console.WriteLine("Accord ? " + sy);
+                    }
 
                     // Tags
                     if (sy.Substring(0, 1) == "@" && ticks == 0)
@@ -1282,10 +1282,10 @@ namespace Sanford.Multimedia.Midi
             data[0] = (byte)SysExType.Start;
 
             
-            //if (data[0] == 0xF0 && data[1] != 0x00)
-            //{
-            //    Console.WriteLine("Accord ?");
-            //}
+            if (data[0] == 0xF0 && data[1] != 0x00)
+            {
+                Console.WriteLine("Accord ?");
+            }
 
 
             try

@@ -1659,6 +1659,10 @@ namespace FlShell
                     }
                     e.CancelEdit = true;
                 }
+
+                // Name was changed by Windows because of duplicate 
+                if (e.Label != m_ListView.Items[e.Item].Text)
+                    e.CancelEdit = true;
             }
 
             #region delete me
@@ -2259,8 +2263,9 @@ namespace FlShell
 
             // Debug
             //Console.WriteLine("m_ShellListener_ItemRenamed: " + m_CurrentFolder.DisplayName);
-                m_ResetSelection = false;
-                Navigate(m_CurrentFolder,e.NewItem.DisplayName);
+            
+            m_ResetSelection = false;
+            Navigate(m_CurrentFolder,e.NewItem.DisplayName);
 
 
             //}
