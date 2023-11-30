@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ChordsAnalyser;
 using Sanford.Multimedia.Midi;
 using Sanford.Multimedia.Midi.Score;
 
@@ -16,6 +17,9 @@ namespace ChordsAnalyser
 
         public ChordAnalyser(List<ChordSymbol> chords) 
         {
+            tests t = new tests();
+
+            
             foreach (ChordSymbol chord in chords)
             {
                 if (chord.Notes.Count > 1)
