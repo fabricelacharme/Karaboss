@@ -219,6 +219,12 @@ namespace Sanford.Multimedia.Midi.Score
         }
 
 
+        // List of chords for each track
+        private List<ChordSymbol>[] _lstchords;
+        public List<ChordSymbol>[] lstChords { 
+            get { return _lstchords; }
+         }
+
         #endregion
 
         #region private dec
@@ -456,6 +462,7 @@ namespace Sanford.Multimedia.Midi.Score
              * when we create the staffs.
              */
             List<MusicSymbol>[] symbols = new List<MusicSymbol>[numtracks];
+            _lstchords = new List<ChordSymbol>[numtracks];
 
             for (int tracknum = 0; tracknum < AllTracks.Count; tracknum++)
             {
@@ -466,6 +473,8 @@ namespace Sanford.Multimedia.Midi.Score
              
                 // FAB : à corriger
                 List<ChordSymbol> chords = CreateChords(track.Notes, mainkey, time, clefs, track.Clef);
+                _lstchords[tracknum] = chords;
+                
                 symbols[tracknum] = CreateSymbols(chords, clefs, time, lastStart, track.Clef);                
             }
 

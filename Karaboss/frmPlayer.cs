@@ -37,6 +37,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
+using ChordsAnalyser;
 using System.Diagnostics;
 using Sanford.Multimedia.Midi.Score;
 using Karaboss.Resources.Localization;
@@ -8624,10 +8625,26 @@ namespace Karaboss
         }
 
 
+
+
         #endregion
 
 
+        #region chords analysis
+        private void btnChords_Click(object sender, EventArgs e)
+        {
+            foreach (List<ChordSymbol> chords in sheetmusic.lstChords)
+            {
+                if (chords.Count > 0) 
+                {
+                    ChordAnalyser chan = new ChordAnalyser(chords);
+                    
 
+                }
+            }
+        }
+
+        #endregion
     }
 
 }

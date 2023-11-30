@@ -2277,7 +2277,7 @@ namespace FlShell
             //RefreshItem(e.OldItem, e.NewItem);
 
             // Debug
-            Console.WriteLine("m_ShellListener_ItemRenamed: " + m_CurrentFolder.DisplayName);
+            //Console.WriteLine("m_ShellListener_ItemRenamed: " + m_CurrentFolder.DisplayName);
             
             m_ResetSelection = false;
             Navigate(m_CurrentFolder,e.NewItem.DisplayName);
@@ -2306,7 +2306,7 @@ namespace FlShell
                 //    Navigate(m_CurrentFolder);
 
                 // Debug
-                Console.WriteLine("m_ShellListener_ItemUpdated: " + e.Item.FileSystemPath);
+                //Console.WriteLine("m_ShellListener_ItemUpdated: " + e.Item.FileSystemPath);
 
                 // FAB 15/11/23
                 // Décoche ligne cochée
@@ -2336,7 +2336,7 @@ namespace FlShell
                     return;
 
                 // Debug
-                Console.WriteLine("m_ShellListener_ItemCreated " + e.Item.FileSystemPath);
+                //Console.WriteLine("m_ShellListener_ItemCreated " + e.Item.FileSystemPath);
 
                 RecreateShellView(m_CurrentFolder);
                 

@@ -698,6 +698,10 @@
       <Project>{20f29fef-4cc3-4f38-8982-57dd80a8ee9e}</Project>
       <Name>BallsControl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ChordAnalyser\ChordAnalyser.csproj">
+      <Project>{038af1e8-fe5d-465d-bf42-cc322755bc42}</Project>
+      <Name>ChordAnalyser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ColorSlider\ColorSlider.csproj">
       <Project>{16e224dc-7ff0-4908-8318-d6a3ac2e797a}</Project>
       <Name>ColorSlider</Name>

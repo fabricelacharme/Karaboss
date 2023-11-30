@@ -56,6 +56,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KMusicXml", "KMusicXml\KMus
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KMusicTxt", "KMusicTxt\KMusicTxt.csproj", "{EE194AC1-0D74-4A84-84D6-C9BE8CED2C10}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChordAnalyser", "ChordAnalyser\ChordAnalyser.csproj", "{038AF1E8-FE5D-465D-BF42-CC322755BC42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -213,6 +215,12 @@ Global
 		{EE194AC1-0D74-4A84-84D6-C9BE8CED2C10}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EE194AC1-0D74-4A84-84D6-C9BE8CED2C10}.Travis|Any CPU.ActiveCfg = Debug|Any CPU
 		{EE194AC1-0D74-4A84-84D6-C9BE8CED2C10}.Travis|Any CPU.Build.0 = Debug|Any CPU
+		{038AF1E8-FE5D-465D-BF42-CC322755BC42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{038AF1E8-FE5D-465D-BF42-CC322755BC42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{038AF1E8-FE5D-465D-BF42-CC322755BC42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{038AF1E8-FE5D-465D-BF42-CC322755BC42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{038AF1E8-FE5D-465D-BF42-CC322755BC42}.Travis|Any CPU.ActiveCfg = Debug|Any CPU
+		{038AF1E8-FE5D-465D-BF42-CC322755BC42}.Travis|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
