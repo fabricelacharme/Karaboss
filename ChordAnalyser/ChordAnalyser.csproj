@@ -42,8 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChordAnalyser.cs" />
+    <Compile Include="core\keys.cs" />
+    <Compile Include="core\notes.cs" />
+    <Compile Include="core\scales.cs" />
     <Compile Include="tests.cs" />
-    <Compile Include="Value.cs" />
+    <Compile Include="core\value.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ChordsAnalyser.cvalue;
+using ChordsAnalyser.ckeys;
 
 namespace ChordsAnalyser
 {
@@ -10,7 +12,10 @@ namespace ChordsAnalyser
     {
         public tests()
         {
-            Value v = new Value();
+            cvalue.value v = new cvalue.value();
+            ckeys.nkeys k = new ckeys.nkeys();
+
+            Console.WriteLine(k.get_notes("F"));
 
             /*
               >>> round(dots(eighth), 6)
@@ -44,6 +49,9 @@ namespace ChordsAnalyser
             2.6666666666666665
             */
             Console.WriteLine(v.add(v.eighth, v.quarter));
+
+
+
         }
 
 

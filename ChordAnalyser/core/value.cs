@@ -1,13 +1,19 @@
-﻿using System;
+﻿#region license
+/*
+ * Based on https://github.com/bspaans/python-mingus/
+*/
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChordsAnalyser
+namespace ChordsAnalyser.cvalue
 {
-    public class Value
+    public class value
     {
 
         double longa = 0.25;
