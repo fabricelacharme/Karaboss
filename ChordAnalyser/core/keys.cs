@@ -13,7 +13,7 @@ namespace ChordsAnalyser.ckeys
     {
 
 
-        readonly List<(string,string)> keys = new List<(string, string)>() {
+        public static readonly List<(string,string)> keys = new List<(string, string)>() {
         ("Cb", "ab" ),  //  7 b
         ("Gb", "eb"),  //  6 b
         ("Db", "bb"),  //  5 b
