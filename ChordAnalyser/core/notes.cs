@@ -87,7 +87,7 @@ namespace ChordsAnalyser.cnotes
         /// </summary>
         /// <param name="note"></param>
         /// <returns></returns>
-        private int note_to_int(string note) {
+        public int note_to_int(string note) {
             int val;
             if (is_valid_note(note))
                 val = _note_dict[note.Substring(0, 1)];
@@ -177,7 +177,7 @@ namespace ChordsAnalyser.cnotes
         /// </summary>
         /// <param name="note"></param>
         /// <returns></returns>
-        private string augment(string note) {
+        public string augment(string note) {
             /*
             Examples:
             >>> augment('C')
@@ -196,7 +196,7 @@ namespace ChordsAnalyser.cnotes
         /// </summary>
         /// <param name="note"></param>
         /// <returns></returns>
-        private string diminish(string note)
+        public string diminish(string note)
         {
             /*
              Examples:

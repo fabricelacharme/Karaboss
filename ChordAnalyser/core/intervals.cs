@@ -9,8 +9,12 @@ using ChordsAnalyser.ckeys;
 namespace ChordAnalyser.cintervals
 {
     public class intervals
-    {                     
-        
+    {
+
+        notes notes = new notes();
+        nkeys nkeys = new nkeys();
+
+
         /// <summary>
         /// Return the note found at the interval starting from start_note in the
         ///given key.
@@ -18,7 +22,7 @@ namespace ChordAnalyser.cintervals
         /// <param name=""></param>
         /// <param name=""></param>
         /// <param name=""></param>
-        public List<string> interval(string key, string start_note, int interval) 
+        public string interval(string key, string start_note, int interval) 
         {
             /*
             Raise a KeyError exception if start_note is not a valid note.
@@ -27,14 +31,12 @@ namespace ChordAnalyser.cintervals
             >>> interval('C', 'D', 1)
             'E'
             */
-            notes notes = new notes();
-            nkeys nkeys = new nkeys();
 
             if (!notes.is_valid_note(start_note))                 
                 throw new KeyNotFoundException(string.Format("The start note '{0]' is not a valid note", start_note));
             
             List<string> notes_in_key = nkeys.get_notes(key);
-            int index;  
+            int index = 0;  
 
             foreach (string n in notes_in_key)
             {
@@ -45,7 +47,7 @@ namespace ChordAnalyser.cintervals
         }
 
 
-            private void unison(string note, key = null) {
+            private string unison(string note, string key = null) {
 
                 /*Return the unison of note.
                 Raise a KeyError exception if the note is not found in the given key.
@@ -61,7 +63,7 @@ namespace ChordAnalyser.cintervals
             }
 
 
-            private void second(note, key) {
+            private string second(string note, string key) {
                 /*Take the diatonic second of note in key.
 
                 Raise a KeyError exception if the note is not found in the given key.
@@ -76,7 +78,7 @@ namespace ChordAnalyser.cintervals
             }
 
 
-            private void third(note, key) {
+            private string third(string note, string key) {
                 /*Take the diatonic third of note in key.
 
                 Raise a KeyError exception if the note is not found in the given key.
@@ -91,7 +93,7 @@ namespace ChordAnalyser.cintervals
             }
 
 
-            private void fourth(note, key) {
+            private string fourth(string note, string key) {
                 /*Take the diatonic fourth of note in key.
 
                 Raise a KeyError exception if the note is not found in the given key.
@@ -106,7 +108,7 @@ namespace ChordAnalyser.cintervals
             }
 
 
-            private void fifth(note, key) {
+            private string fifth(string note, string key) {
                 /*Take the diatonic fifth of note in key.
 
                 Raise a KeyError exception if the note is not found in the given key.
@@ -121,7 +123,7 @@ namespace ChordAnalyser.cintervals
             }
 
 
-            private void sixth(note, key) {
+            private string sixth(string note, string key) {
                 /*Take the diatonic sixth of note in key.
 
                 Raise a KeyError exception if the note is not found in the given key.
@@ -136,7 +138,7 @@ namespace ChordAnalyser.cintervals
             }
 
 
-            private void seventh(note, key) {
+            private string seventh(string note, string key) {
                 /*Take the diatonic seventh of note in key.
 
                 Raise a KeyError exception if the note is not found in the given key.
@@ -151,121 +153,130 @@ namespace ChordAnalyser.cintervals
             }
 
 
-            private void minor_unison(note) {
+            private string minor_unison(string note) {
                 return notes.diminish(note);
             }
 
 
-            private void major_unison(note) {
+            private string major_unison(string note) {
                 return note;
             }
 
 
-            private void augmented_unison(note) {
+            private string augmented_unison(string note) {
                 return notes.augment(note);
             }
 
 
-            private void minor_second(note) {
-                sec = second(note[0], "C");
+            private string minor_second(string note) {
+                string sec = second(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, sec, 1);
             }
 
 
-            private void major_second(note) {
-                sec = second(note[0], "C");
+            private string major_second(string note) {
+                string sec = second(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, sec, 2);
             }
 
 
-            private void minor_third(note) {
-                trd = third(note[0], "C");
+            private string minor_third(string note) {
+                string trd = third(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, trd, 3);
             }
 
 
-            private void major_third(note) {
-                trd = third(note[0], "C");
+            private string major_third(string note) {
+                string trd = third(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, trd, 4);
             }
 
 
-            private void minor_fourth(note) {
-                frt = fourth(note[0], "C");
+            private string minor_fourth(string note) {
+                string frt = fourth(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, frt, 4);
             }
 
 
-            private void major_fourth(note) {
-                frt = fourth(note[0], "C");
+            private string major_fourth(string note) {
+                string frt = fourth(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, frt, 5);
             }
 
 
-            private void perfect_fourth(note) {
+            private string perfect_fourth(string note) {
                 return major_fourth(note);
             }
 
 
-            private void minor_fifth(note) {
-                fif = fifth(note[0], "C");
+            private string minor_fifth(string note) {
+                string fif = fifth(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, fif, 6);
             }
 
 
-            private void major_fifth(note) {
-                fif = fifth(note[0], "C");
+            private string major_fifth(string note) {
+                string fif = fifth(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, fif, 7);
             }
 
 
-            private void perfect_fifth(note) {
+            private string perfect_fifth(string note) {
                 return major_fifth(note);
             }
 
 
-            private void minor_sixth(note) {
-                sth = sixth(note[0], "C");
+            private string minor_sixth(string note) {
+                string sth = sixth(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, sth, 8);
             }
 
 
-            private void major_sixth(note) {
-                sth = sixth(note[0], "C");
+            private string major_sixth(string note) {
+                string sth = sixth(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, sth, 9);
             }
 
 
-            private void minor_seventh(note) {
-                sth = seventh(note[0], "C");
+            private string minor_seventh(string note) {
+                string sth = seventh(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, sth, 10);
             }
 
 
-            private void major_seventh(note) {
-                sth = seventh(note[0], "C");
+            private string major_seventh(string note) {
+            string sth = seventh(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, sth, 11);
             }
 
 
-            private void get_interval(note, interval, key= "C") {
-                /*Return the note an interval(in half notes) away from the given note.
+            private string get_interval(string note, int interval, string key= "C") {
+            /*Return the note an interval(in half notes) away from the given note.
 
-                This will produce mostly theoretical sound results, but you should use
-                the minor and major functions to work around the corner cases.
-                */
-                intervals = [(notes.note_to_int(key) + x) % 12 for x in [0, 2, 4, 5, 7, 9, 11]];
-                key_notes = keys.get_notes(key);
-                for (x in key_notes)
-                        if (x[0] == note[0])
-                            result = (intervals[key_notes.index(x)] + interval) % 12;
-                if (result in intervals)
-            return key_notes[intervals.index(result)] + note[1:];
-    else
-                return notes.diminish(key_notes[intervals.index((result + 1) % 12)] + note[1:]);
+            This will produce mostly theoretical sound results, but you should use
+            the minor and major functions to work around the corner cases.
+            */
+            List<int> intervals = new List<int>();
+            List<int> vals = new List<int>() { 0, 2, 4, 5, 7, 9, 1 };
+            foreach (int x in vals)
+            {
+                intervals.Add((notes.note_to_int(key) + x) % 12);
+            }
+            //intervals = [(notes.note_to_int(key) + x) % 12 for x in [0, 2, 4, 5, 7, 9, 11]];
+                
+                List<string> key_notes = nkeys.get_notes(key);
+            int result = 0;
+            foreach (string x in key_notes) {
+                if (x.Substring(0, 1) == note.Substring(0, 1))
+                    result = (intervals[key_notes.IndexOf(x)] + interval) % 12;
+            }
+             if (intervals.Contains(result))
+                return key_notes[intervals.IndexOf(result)] + note.Substring(1, note.Length - 1);
+            else
+                return notes.diminish(key_notes[intervals.IndexOf((result + 1) % 12)] + note.Substring(1, note.Length - 1));
         }
 
-        private void measure(note1, note2) {
+        private int measure(string note1, string note2) {
             /*Return an integer in the range of 0-11, determining the half note steps
             between note1 and note2.
 
@@ -275,7 +286,7 @@ namespace ChordAnalyser.cintervals
             >>> measure('D', 'C')
             10
             */
-            res = notes.note_to_int(note2) - notes.note_to_int(note1);
+            int res = notes.note_to_int(note2) - notes.note_to_int(note1);
             if (res < 0)
                 return 12 - res * -1;
             else
@@ -283,70 +294,75 @@ namespace ChordAnalyser.cintervals
         }
 
 
-        private void augment_or_diminish_until_the_interval_is_right(note1, note2, interval) {
+        private string augment_or_diminish_until_the_interval_is_right(string note1, string note2, int interval) 
+        {
             /*A helper function for the minor and major functions.
-
             You should probably not use this directly.
             */
-            cur = measure(note1, note2);
-            while (cur != interval)
+            int cur = measure(note1, note2);
+            while (cur != interval) {
                 if (cur > interval)
                     note2 = notes.diminish(note2);
                 else if (cur < interval)
                     note2 = notes.augment(note2);
-            cur = measure(note1, note2);
-
+                cur = measure(note1, note2);
+            }
             // We are practically done right now, but we need to be able to create the
             // minor seventh of Cb and get Bbb instead of B######### as the result
-            val = 0;
-            for (token in note2[1:])
-                if (token == "#")
+            int val = 0;
+            foreach (char token in note2.Substring(1,note2.Length - 1)) //note2[1:]
+            { 
+                if (token.ToString() == "#")
                     val += 1;
-                else if (token == "b")
+                else if (token.ToString() == "b")
                     val -= 1;
-
+            }
             // These are some checks to see if we have generated too much #'s or too much
             // b's. In these cases we need to convert #'s to b's and vice versa.
-            if (val > 6)
+            if (val > 6) {
                 val = val % 12;
-            val = -12 + val;
-    else if (val < -6)
+                val = -12 + val;
+            }
+            else if (val < -6) {
                 val = val % -12;
-            val = 12 + val;
+                val = 12 + val;
+            }
 
             // Rebuild the note
-            result = note2[0];
-            while (val > 0)
+            string result = note2[0].ToString();
+            while (val > 0) {
                 result = notes.augment(result);
-            val -= 1;
-            while (val < 0)
+                val -= 1;
+            }
+            while (val < 0) {
                 result = notes.diminish(result);
-            val += 1;
+                val += 1;
+            }
             return result;
         }
 
-        private void invert(interval) {
+        private List<string> invert(List<string> interval) {
             /*Invert an interval.
 
             Example:
             >>> invert(['C', 'E'])
             ['E', 'C']
             */
-            interval.reverse();
-            res = list(interval);
-            interval.reverse();
-            return res;
+            //interval.reverse();
+            //res = list(interval);
+            //interval.reverse();
+            return interval.Reverse(); //res;
         }
 
         private int get_val(string note)
         {
             /* Private function: count the value of accidentals.*/
             int r = 0;
-            foreach (string x in note[1:])
+            foreach (char x in note.Substring(1, note.Length - 1)) // note[1:]
             {
-                if (x == "b")
+                if (x.ToString() == "b")
                     r -= 1;
-                else if (x == "#")
+                else if (x.ToString() == "#")
                     r += 1;
             }
             return r;            
@@ -404,70 +420,71 @@ namespace ChordAnalyser.cintervals
             }
 
             // Other intervals
-            n1 = notes.fifths.index(note1[0]);
-            n2 = notes.fifths.index(note2[0]);
-            number_of_fifth_steps = n2 - n1;
+            int n1 = notes.fifths.IndexOf(note1[0].ToString());
+            int n2 = notes.fifths.IndexOf(note2[0].ToString());
+            int number_of_fifth_steps = n2 - n1;
             if (n2 < n1)
-                number_of_fifth_steps = len(notes.fifths) - n1 + n2;
+                number_of_fifth_steps = notes.fifths.Count - n1 + n2;
 
             // [name, shorthand_name, half notes for major version of this interval]
-            fifth_steps = [
-                ["unison", "1", 0],
-                ["fifth", "5", 7],
-                ["second", "2", 2],
-                ["sixth", "6", 9],
-                ["third", "3", 4],
-                ["seventh", "7", 11],
-                ["fourth", "4", 5],
-            ];
+            List<Tuple<string,string,int>> fifth_steps = new List<Tuple<string,string,int>> 
+            {
+                Tuple.Create("unison", "1", 0 ),
+                Tuple.Create("fifth", "5", 7 ),
+                Tuple.Create("second", "2", 2 ),
+                Tuple.Create("sixth", "6", 9 ),
+                Tuple.Create("third", "3", 4 ),
+                Tuple.Create("seventh", "7", 11 ),
+                Tuple.Create("fourth", "4", 5 ),
+            };
 
             // Count half steps between note1 and note2
-            half_notes = measure(note1, note2);
+            int half_notes = measure(note1, note2);
 
             // Get the proper list from the number of fifth steps
-            current = fifth_steps[number_of_fifth_steps];
+            Tuple<string,string,int> current = fifth_steps[number_of_fifth_steps];
 
             // maj = number of major steps for this interval
-            maj = current[2];
+            int maj = current.Item3;
 
             // if maj is equal to the half steps between note1 and note2 the interval is
             // major or perfect
             if (maj == half_notes)
             {
                 // Corner cases for perfect fifths and fourths
-                if (current[0] == "fifth")
+                if (current.Item1 == "fifth")
                 {
                     if (!shorthand)
                         return "perfect fifth";
                 }
-                else if (current[0] == "fourth")
+                else if (current.Item1 == "fourth")
                 {
                     if (!shorthand)
                         return "perfect fourth";
                     if (!shorthand)
-                        return "major " + current[0];
-                    return current[1];
+                        return "major " + current.Item1;
+                    return current.Item2;
                 }
             }
             else if (maj + 1 <= half_notes)
             {
                 // if maj + 1 is equal to half_notes, the interval is augmented.
                 if (!shorthand)
-                    return "augmented " + current[0];
-                return "#" * (half_notes - maj) + current[1];
+                    return "augmented " + current.Item1;
+                return "#" + (half_notes - maj) + current.Item2;
             }
             else if (maj - 1 == half_notes)
             {
                 // etc.
                 if (!shorthand)
-                    return "minor " + current[0];
-                return "b" + current[1];
+                    return "minor " + current.Item1;
+                return "b" + current.Item2;
             }
             else if (maj - 2 >= half_notes)
             {
                 if (!shorthand)
-                    return "diminished " + current[0];
-                return "b" * (maj - half_notes) + current[1];
+                    return "diminished " + current.Item1;
+                return "b" + (maj - half_notes) + current.Item2;
             }
         }
 
@@ -485,27 +502,29 @@ namespace ChordAnalyser.cintervals
             // warning should be a valid note.
             if (!notes.is_valid_note(note))
                 return false;
+           
 
             // [shorthand, interval function up, interval function down]
-            shorthand_lookup = [
-                ["1", major_unison, major_unison],
-                ["2", major_second, minor_seventh],
-                ["3", major_third, minor_sixth],
-                ["4", major_fourth, major_fifth],
-                ["5", major_fifth, major_fourth],
-                ["6", major_sixth, minor_third],
-                ["7", major_seventh, minor_second],
-            ];
+            List<Tuple<string, int, int>> shorthand_lookup = new List<Tuple<string, int, int>>
+            {
+                Tuple.Create("1", major_unison, major_unison),
+                Tuple.Create("2", major_second, minor_seventh),
+                Tuple.Create("3", major_third, minor_sixth),
+                Tuple.Create("4", major_fourth, major_fifth),
+                Tuple.Create("5", major_fifth, major_fourth),
+                Tuple.Create("6", major_sixth, minor_third),
+                Tuple.Create("7", major_seventh, minor_second),
+            };
 
             // Looking up last character in interval in shorthand_lookup and calling that
             // function.
             bool val = false;
-            foreach (shorthand in shorthand_lookup) {
-                if (shorthand[0] == interval[-1]) {
+            foreach (Tuple<string, int,int> shorthand in shorthand_lookup) {
+                if (shorthand.Item1 == interval.Substring(interval.Length,1)) {  //interval[-1]
                     if (up)
-                        val = shorthand[1](note);
+                        val = shorthand.Item1(note);
                     else
-                        val = shorthand[2](note);
+                        val = shorthand.Item2(note);
                 }
             }
             // warning Last character in interval should be 1-7
@@ -513,27 +532,28 @@ namespace ChordAnalyser.cintervals
                 return false;
 
             // Collect accidentals
-            foreach (string x in interval) {
-                if (x == "#")
+            string sval = string.Empty;
+            foreach (char x in interval) {
+                if (x.ToString() == "#")
                 {
                     if (up)
-                        val = notes.augment(val);
+                        sval = notes.augment(sval);
                     else
-                        val = notes.diminish(val);
+                        sval = notes.diminish(sval);
                 }
-                else if (x == "b")
+                else if (x.ToString() == "b")
                 {
                     if (up)
-                        val = notes.diminish(val);
+                        sval = notes.diminish(sval);
                     else
-                        val = notes.augment(val);
+                        sval = notes.augment(sval);
                 }
                 else
                     return val;
             }
         }
 
-        private bool is_consonant(int note1, int note2, bool include_fourths = true) {
+        private bool is_consonant(string note1, string note2, bool include_fourths = true) {
             /* Return True if the interval is consonant.
 
             A consonance is a harmony, chord, or interval considered stable, as
@@ -551,7 +571,7 @@ namespace ChordAnalyser.cintervals
         }
 
 
-        private bool is_perfect_consonant(int note1, int note2, bool include_fourths = true) {
+        private bool is_perfect_consonant(string note1, string note2, bool include_fourths = true) {
             /* Return True if the interval is a perfect consonant one.
 
             Perfect consonances are either unisons, perfect fourths or fifths, or
@@ -560,22 +580,23 @@ namespace ChordAnalyser.cintervals
             Perfect fourths are usually included as well, but are considered
             dissonant when used contrapuntal, which is why you can exclude them.
             */
-            dhalf = measure(note1, note2);
-            return (dhalf in [0, 7]) || (include_fourths && dhalf == 5);
+            int dhalf = measure(note1, note2);
+            return (dhalf >= 0 && dhalf <= 7) || (include_fourths && dhalf == 5);
         }
 
 
-        private bool is_imperfect_consonant(int note1, int note2) {
+        private bool is_imperfect_consonant(string note1, string note2) {
             /* Return True id the interval is an imperfect consonant one.
 
             Imperfect consonances are either minor or major thirds or minor or major
             sixths.
             */
-            return measure(note1, note2) in [3, 4, 8, 9];
+            int res = measure(note1, note2);
+            return (res == 3 || res == 4 || res == 8 || res == 9); // in [3, 4, 8, 9];
         }
 
 
-        private bool is_dissonant(int note1, int note2, bool include_fourths = false) {
+        private bool is_dissonant(string note1, string note2, bool include_fourths = false) {
             /* Return True if the insterval is dissonant.
 
             This function tests whether an interval is considered unstable,
