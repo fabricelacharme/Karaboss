@@ -16,8 +16,8 @@ namespace ChordsAnalyser.cnotes
 
     public class notes
     {
-        
-       
+               
+        public notes() { }
 
         public static Dictionary<string,int> _note_dict = new Dictionary<string,int>() { { "C", 0 }, { "D", 2 }, { "E", 4 }, { "F", 5 }, { "G", 7 }, { "A", 9 }, { "B", 11 } };
         public static List<string> fifths = new List<string>() { "F", "C", "G", "D", "A", "E", "B" };
@@ -70,7 +70,7 @@ namespace ChordsAnalyser.cnotes
         /// </summary>
         /// <param name="note"></param>
         /// <returns></returns>
-        private bool is_valid_note(string note) {            
+        public  bool is_valid_note(string note) {            
             if (!_note_dict.ContainsKey(note.Substring(0,1)))
                 return false;
             if (note.Length > 1) {                

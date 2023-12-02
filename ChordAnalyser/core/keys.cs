@@ -11,7 +11,7 @@ namespace ChordsAnalyser.ckeys
     
     public class nkeys
     {
-
+        public nkeys() { }
 
         public static readonly List<(string,string)> keys = new List<(string, string)>() {
         ("Cb", "ab" ),  //  7 b

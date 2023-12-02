@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using ChordsAnalyser.ckeys;
 
 namespace ChordsAnalyser.cscales
@@ -51,24 +52,24 @@ namespace ChordsAnalyser.cscales
     }
 
 
-    class _Scale 
+    public class _Scale
     {
         /*
         General class implementing general methods.
         Not to be used by the final user.
         */
-        string tonic { get; }
-        int octaves { get; }
-        string name { get; }
+        //string tonic;
+        //int octaves;
+        //string name;
 
-        _Scale(string note, int octaves)
+        _Scale(string inote, int ioctaves)
         {
-            if (note.All(char.IsLower))
-                throw new FormatException(string.Format("Unrecognised note '{0}'", note));
+            if (inote.All(char.IsLower))
+                throw new FormatException(string.Format("Unrecognised note '{0}'", inote));
 
 
-            this.tonic = note;
-            this.octaves = octaves;
+            tonic = inote;
+            octaves = ioctaves;
         }
 
         private string __repr__()
@@ -100,7 +101,7 @@ namespace ChordsAnalyser.cscales
             // Return the list of ascending notes.
             throw new NotImplementedException("");
         }
-        private List<string> descending() 
+        private List<string> descending()
         {
             // """Return the list of descending notes."""
             return (reversed(this.ascending()));
@@ -122,12 +123,12 @@ namespace ChordsAnalyser.cscales
             The direction of the scale is 'a' for ascending (default) and 'd'
             for descending.
             */
-            List<string> n = new List<string>();            
+            List<string> n = new List<string>();
 
             if (degree_number < 1)
                 throw new ArgumentOutOfRangeException(string.Format("degree '{0}' out of range", degree_number));
 
-            if (direction == "a") {                            
+            if (direction == "a") {
                 n = this.ascending();
                 n.RemoveAt(n.Count - 1);  //  [:-1];
                 return n[degree_number - 1];
@@ -143,13 +144,13 @@ namespace ChordsAnalyser.cscales
 
 
 
-    }
 
-    /// <summary>
-    /// The diatonic scale.
-    /// </summary>
-    /// <param name=""></param>
-    class Diatonic(_Scale) 
+
+        /// <summary>
+        /// The diatonic scale.
+        /// </summary>
+        /// <param name=""></param>
+        public class Diatonic() : this()
     {
         /*        
         Example:
@@ -157,25 +158,42 @@ namespace ChordsAnalyser.cscales
         Ascending:  C D E F G A B C
         Descending: C B A G F E D C
         */
+        int tonic { get; }
+        int octaves { get; }
+        string name { get; }
+        List<int> semitones { get; }
 
         string type = "diatonic";
 
-        ef __init__(self, note, semitones, octaves=1):
-        """Create the diatonic scale starting on the chosen note.
+        /// <summary>
+        /// """Create the diatonic scale starting on the chosen note.
+        /// </summary>
+        /// <param name="note"></param>
+        /// <param name="semitones"></param>
+        /// <param name="octaves"></param>
+        Diatonic(string inote, List<int> isemitones, int ioctaves = 1) {
+            /*
 
-        The second parameter is a tuple representing the position of
-        semitones.
-        """
-        super(Diatonic, self).__init__(note, octaves)
-        self.semitones = semitones
-        self.name = "{0} diatonic, semitones in {1}".format(self.tonic, self.semitones)
+            The second parameter is a tuple representing the position of
+            semitones.
+            */
 
-    def ascending(self):
-        notes = [self.tonic]
-        for n in range(1, 7):
-            if n in self.semitones:
-                notes.append(intervals.minor_second(notes[-1]))
-            else:
-                notes.append(intervals.major_second(notes[-1]))
-        return notes * self.octaves + [notes[0]]
+            this.semitones = isemitones;
+            this.name = string.Format("{0} diatonic, semitones in {1}", tonic, semitones);
+        }
+
+        private List<string> ascending()
+        {
+            int notes = tonic;
+            for (int n = 1; n < 7; n++) //in range(1, 7)) 
+            {
+                if (semitones.Contains(n))
+                    notes.Add(intervals.minor_second(notes[-1]));
+                else
+                    notes.Add(intervals.major_second(notes[-1]));
+            }
+            return notes * octaves + [notes[0]];
+        }
+
+    }
 }
