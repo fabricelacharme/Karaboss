@@ -138,7 +138,7 @@ namespace ChordsAnalyser.cintervals
             }
 
 
-            private string seventh(string note, string key) {
+            public string seventh(string note, string key) {
                 /*Take the diatonic seventh of note in key.
 
                 Raise a KeyError exception if the note is not found in the given key.
@@ -168,25 +168,25 @@ namespace ChordsAnalyser.cintervals
             }
 
 
-            private string minor_second(string note) {
+            public string minor_second(string note) {
                 string sec = second(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, sec, 1);
             }
 
 
-            private string major_second(string note) {
+            public string major_second(string note) {
                 string sec = second(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, sec, 2);
             }
 
 
-            private string minor_third(string note) {
+            public string minor_third(string note) {
                 string trd = third(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, trd, 3);
             }
 
 
-            private string major_third(string note) {
+            public string major_third(string note) {
                 string trd = third(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, trd, 4);
             }
@@ -204,24 +204,24 @@ namespace ChordsAnalyser.cintervals
             }
 
 
-            private string perfect_fourth(string note) {
+            public string perfect_fourth(string note) {
                 return major_fourth(note);
             }
 
 
-            private string minor_fifth(string note) {
+            public string minor_fifth(string note) {
                 string fif = fifth(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, fif, 6);
             }
 
 
-            private string major_fifth(string note) {
+            public string major_fifth(string note) {
                 string fif = fifth(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, fif, 7);
             }
 
 
-            private string perfect_fifth(string note) {
+            public string perfect_fifth(string note) {
                 return major_fifth(note);
             }
 
@@ -232,19 +232,19 @@ namespace ChordsAnalyser.cintervals
             }
 
 
-            private string major_sixth(string note) {
+            public string major_sixth(string note) {
                 string sth = sixth(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, sth, 9);
             }
 
 
-            private string minor_seventh(string note) {
+            public string minor_seventh(string note) {
                 string sth = seventh(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, sth, 10);
             }
 
 
-            private string major_seventh(string note) {
+            public string major_seventh(string note) {
             string sth = seventh(note.Substring(0,1), "C");
                 return augment_or_diminish_until_the_interval_is_right(note, sth, 11);
             }
@@ -368,7 +368,7 @@ namespace ChordsAnalyser.cintervals
             return r;            
         }
 
-        private string determine(string note1, string note2, bool shorthand = false) {
+        public  string determine(string note1, string note2, bool shorthand = false) {
             /* Name the interval between note1 and note2.
 
             Examples:

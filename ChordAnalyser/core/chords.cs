@@ -7,6 +7,7 @@ using ChordsAnalyser.cnotes;
 using ChordsAnalyser.ckeys;
 using ChordsAnalyser.cintervals;
 using ChordsAnalyser.cmt_exception;
+using System.Security.AccessControl;
 
 namespace ChordAnalyser.cchords
 {
@@ -94,8 +95,9 @@ namespace ChordAnalyser.cchords
 
         intervals intervals = new intervals();
         nkeys nkeys = new nkeys();
+        notes notes = new notes();
 
-        List<Tuple<string, string>> _triads_cache = new List<Tuple<string, string>>();
+        List<string> _triads_cache = new List<string>();
 
         //# A cache for composed sevenths
         List<Tuple<string, string>> _sevenths_cache = new List<Tuple<string, string>>();
@@ -103,8 +105,8 @@ namespace ChordAnalyser.cchords
         // Triads Augmented chords Suspended chords Sevenths
         // Sixths Ninths Elevenths Thirteenths Altered
         // Chords Special
-        List<Tuple<string,string>>  chord_shorthand_meaning = new List<Tuple<string, string>> 
-        {  
+        List<Tuple<string, string>> chord_shorthand_meaning = new List<Tuple<string, string>>
+        {
             Tuple.Create("m", " minor triad"),
             Tuple.Create("M", " major triad"),
             Tuple.Create("", " major triad"),
@@ -171,7 +173,7 @@ namespace ChordAnalyser.cchords
         }
 
 
-        public void triads(string key) {
+        public List<string> triads(string key) {
             /* Return all the triads in key.
 
             Implemented using a cache.
@@ -179,13 +181,13 @@ namespace ChordAnalyser.cchords
             if (_triads_cache.Contains(key))
                 return _triads_cache[key];
 
-            List<List<string>> res = new List<List<string>>();
-            
+            List<string> res = new List<string>();
+
             foreach (string x in nkeys.get_notes(key))
             {
                 res.Add(triad(x, key));
             }
-                        
+
             //res = [triad(x, key) for x in nkeys.get_notes(key)];
 
             _triads_cache[key] = res;
@@ -193,109 +195,119 @@ namespace ChordAnalyser.cchords
         }
 
 
-        public void major_triad(string note) {
+        public List<string> major_triad(string note) {
             /* Build a major triad on note.
 
             Example:
             >>> major_triad('C')
             ['C', 'E', 'G']
              */
-            return [note, intervals.major_third(note), intervals.perfect_fifth(note)];
+            return new List<string>() { note, intervals.major_third(note), intervals.perfect_fifth(note) };
         }
 
 
-        public void minor_triad(string note) {
+        public List<string> minor_triad(string note) {
             /* Build a minor triad on note.
 
             Example:
             >>> minor_triad('C')
             ['C', 'Eb', 'G']
              */
-            return [note, intervals.minor_third(note), intervals.perfect_fifth(note)];
+            return new List<string>() { note, intervals.minor_third(note), intervals.perfect_fifth(note)};
         }
 
 
-        public void diminished_triad(string note) {
+        public List<string> diminished_triad(string note) {
             /* Build a diminished triad on note.
 
             Example:
             >>> diminished_triad('C')
             ['C', 'Eb', 'Gb']
              */
-            return [note, intervals.minor_third(note), intervals.minor_fifth(note)];
+            return new List<string>() { note, intervals.minor_third(note), intervals.minor_fifth(note) };
         }
 
 
-        public void augmented_triad(string note) {
+        public List<string> augmented_triad(string note) {
             /* Build an augmented triad on note.
 
             Example:
             >>> augmented_triad('C')
             ['C', 'E', 'G#']
              */
-            return [
-                note,
-                intervals.major_third(note),
-                notes.augment(intervals.major_fifth(note)),
-            ];
+            return new List<string>() { note, intervals.major_third(note), notes.augment(intervals.major_fifth(note)) };
         }
 
 
-        public void seventh(string note, string key) {
+        public List<string> seventh(string note, string key) {
             /* Return the seventh chord on note in key.
 
             Example:
             >>> seventh('C', 'C')
             ['C', 'E', 'G', 'B']
              */
-            return triad(note, key) + [intervals.seventh(note, key)];
+            List<string> res = triad(note, key);
+            res.Add(intervals.seventh(note, key));
+            return res; //+ [intervals.seventh(note, key)];
         }
 
 
-        public void sevenths(key) {
+        public List<List<string>> sevenths(string key) {
             /* Return all the sevenths chords in key in a list. */
             if (_sevenths_cache.Contains(key))
                 return _sevenths_cache[key];
-            res = [seventh(x, key) for x in keys.get_notes(key)];
-    _sevenths_cache[key] = res;
-    return res;
+            
+            List<List<string>> res = new List<List<string>>();
+            foreach (string x in nkeys.get_notes(key))
+            {
+                res.Add(seventh(x, key));
+            }
+            //res = [seventh(x, key) for x in keys.get_notes(key)];
+            _sevenths_cache[key] = res;
+            return res;
         }
 
 
-        public void major_seventh(string note) {
+        public List<string> major_seventh(string note) {
             /* Build a major seventh on note.
 
             Example:
             >>> major_seventh('C')
             ['C', 'E', 'G', 'B']
              */
-            return major_triad(note) + [intervals.major_seventh(note)];
+            List<string> res = major_triad(note);
+            res.Add(intervals.major_seventh(note));
+            return res; //major_triad(note) + [intervals.major_seventh(note)];
         }
 
 
-        public void minor_seventh(string note) {
+        public List<string> minor_seventh(string note) {
             /* Build a minor seventh on note.
 
             Example:
             >>> minor_seventh('C')
             ['C', 'Eb', 'G', 'Bb']
              */
-            return minor_triad(note) + [intervals.minor_seventh(note)];
+            List<string> res = minor_triad(note);
+            res.Add(intervals.minor_seventh(note));
+            return res; // minor_triad(note) + [intervals.minor_seventh(note)];
         }
 
 
-        public void dominant_seventh(string note) {
+        public List<string> dominant_seventh(string note) {
             /* Build a dominant seventh on note.
 
             Example:
             >>> dominant_seventh('C')
             ['C', 'E', 'G', 'Bb']
              */
-            return major_triad(note) + [intervals.minor_seventh(note)];
+            List<string> res = major_triad(note);
+            res.Add(intervals.minor_seventh(note));
+            return res; // major_triad(note) + [intervals.minor_seventh(note)];
         }
 
 
-        public void half_diminished_seventh(string note) {
+        public List<string> half_diminished_seventh(string note) {
             /* Build a half diminished seventh(also known as "minor seventh flat
             five") chord on note.
 
@@ -303,11 +315,13 @@ namespace ChordAnalyser.cchords
             >>> half_diminished_seventh('C')
             ['C', 'Eb', 'Gb', 'Bb']
              */
-            return diminished_triad(note) + [intervals.minor_seventh(note)];
+            List<string> res = diminished_triad(note);
+            res.Add(intervals.minor_seventh(note));
+            return res; // diminished_triad(note) + [intervals.minor_seventh(note)];
         }
 
 
-        public void minor_seventh_flat_five(string note) {
+        public List<string> minor_seventh_flat_five(string note) {
             /* Build a minor seventh flat five(also known as "half diminished
             seventh") chord on note.
 
@@ -317,227 +331,256 @@ namespace ChordAnalyser.cchords
         }
 
 
-        public void diminished_seventh(string note) {
+        public List<string> diminished_seventh(string note) {
             /* Build a diminished seventh chord on note.
 
             Example:
             >>> diminished_seventh('C')
             ['C', 'Eb', 'Gb', 'Bbb']
              */
-            return diminished_triad(note) + [notes.diminish(intervals.minor_seventh(note))];
+            List<string> res = diminished_triad(note);
+            res.Add(notes.diminish(intervals.minor_seventh(note)));
+            return res; // diminished_triad(note) + [notes.diminish(intervals.minor_seventh(note))];
         }
 
 
-        public void minor_major_seventh(string note) {
+        public List<string> minor_major_seventh(string note) {
             /* Build a minor major seventh chord on note.
 
             Example:
             >>> minor_major_seventh('C')
             ['C', 'Eb', 'G', 'B']
              */
-            return minor_triad(note) + [intervals.major_seventh(note)];
+            List<string> res = minor_triad(note);
+            res.Add(intervals.major_seventh(note));
+            return res; // minor_triad(note) + [intervals.major_seventh(note)];
         }
 
 
-        public void minor_sixth(string note) {
+        public List<string> minor_sixth(string note) 
+        {
             /* Build a minor sixth chord on note.
 
             Example:
             >>> minor_sixth('C')
             ['C', 'Eb', 'G', 'A']
              */
-            return minor_triad(note) + [intervals.major_sixth(note)];
+            List<string> res = minor_triad(note);
+            res.Add(intervals.major_sixth(note));
+            return res; // minor_triad(note) + [intervals.major_sixth(note)];
         }
 
 
-        public void major_sixth(string note) {
+        public List<string> major_sixth(string note) {
             /* Build a major sixth chord on note.
 
             Example:
             >>> major_sixth('C')
             ['C', 'E', 'G', 'A']
              */
-            return major_triad(note) + [intervals.major_sixth(note)];
+            List<string> res = major_triad(note);
+            res.Add(intervals.major_sixth(note));
+            return res; // major_triad(note) + [intervals.major_sixth(note)];
         }
 
 
-        public void dominant_sixth(string note) {
+        public List<string> dominant_sixth(string note) {
             /* Build the altered chord 6/7 on note.
 
             Example:
             >>> dominant_sixth('C')
             ['C', 'E', 'G', 'A', 'Bb']
              */
-            return major_sixth(note) + [intervals.minor_seventh(note)];
+            List<string> res = major_sixth(note);
+            res.Add(intervals.minor_seventh(note));
+            return res; // major_sixth(note) + [intervals.minor_seventh(note)];
         }
 
 
-        public void sixth_ninth(string note) {
+        public List<string> sixth_ninth(string note) {
             /* Build the sixth/ninth chord on note.
 
             Example:
             >>> sixth_ninth('C')
             ['C', 'E', 'G', 'A', 'D']
              */
-            return major_sixth(note) + [intervals.major_second(note)];
+            List<string> res = major_sixth(note);
+            res.Add(intervals.major_second(note));
+            return res; // major_sixth(note) + [intervals.major_second(note)];
         }
 
 
-        public void minor_ninth(string note) {
+        public List<string> minor_ninth(string note) {
             /* Build a minor ninth chord on note.
 
             Example:
             >>> minor_ninth('C')
             ['C', 'Eb', 'G', 'Bb', 'D']
              */
-            return minor_seventh(note) + [intervals.major_second(note)];
+            List<string> res = minor_seventh(note);
+            res.Add(intervals.major_second(note));
+            return res; // minor_seventh(note) + [intervals.major_second(note)];
         }
 
 
-        public void major_ninth(string note) {
+        public List<string> major_ninth(string note) {
             /* Build a major ninth chord on note.
 
             Example:
             >>> major_ninth('C')
             ['C', 'E', 'G', 'B', 'D']
              */
-            return major_seventh(note) + [intervals.major_second(note)];
+            List<string> res = major_seventh(note);
+            res.Add(intervals.major_second(note));
+            return res; // major_seventh(note) + [intervals.major_second(note)];
         }
 
 
-        public void dominant_ninth(string note) {
+        public List<string> dominant_ninth(string note) {
             /* Build a dominant ninth chord on note.
 
             Example:
             >>> dominant_ninth('C')
             ['C', 'E', 'G', 'Bb', 'D']
              */
-            return dominant_seventh(note) + [intervals.major_second(note)];
+            List<string> res = dominant_seventh(note);
+            res.Add(intervals.major_second(note));
+            return res; // dominant_seventh(note) + [intervals.major_second(note)];
         }
 
 
-        public void dominant_flat_ninth(string note) {
+        public List<string> dominant_flat_ninth(string note) {
             /* Build a dominant flat ninth chord on note.
 
             Example:
             >>> dominant_flat_ninth('C')
             ['C', 'E', 'G', 'Bb', 'Db']
              */
-            res = dominant_ninth(note);
+            List<string> res = dominant_ninth(note);
             res[4] = intervals.minor_second(note);
             return res;
         }
 
 
-        public void dominant_sharp_ninth(string note) {
+        public List<string> dominant_sharp_ninth(string note) {
             /* Build a dominant sharp ninth chord on note.
 
             Example:
             >>> dominant_sharp_ninth('C')
             ['C', 'E', 'G', 'Bb', 'D#']
              */
-            res = dominant_ninth(note);
+            List<string> res = dominant_ninth(note);
             res[4] = notes.augment(intervals.major_second(note));
             return res;
         }
 
 
-        public void eleventh(string note) {
+        public List<string> eleventh(string note) {
             /* Build an eleventh chord on note.
 
             Example:
             >>> eleventh('C')
             ['C', 'G', 'Bb', 'F']
              */
-            return [
+            return new List<string>() {
                 note,
                 intervals.perfect_fifth(note),
                 intervals.minor_seventh(note),
                 intervals.perfect_fourth(note),
-            ];
+            };
         }
 
 
-        public void minor_eleventh(string note) {
+        public List<string> minor_eleventh(string note) {
             /* Build a minor eleventh chord on note.
 
             Example:
             >>> minor_eleventh('C')
             ['C', 'Eb', 'G', 'Bb', 'F']
              */
-            return minor_seventh(note) + [intervals.perfect_fourth(note)];
+            List<string> res = minor_seventh(note);
+            res.Add(intervals.perfect_fourth(note));
+            return res; // minor_seventh(note) + [intervals.perfect_fourth(note)];
         }
 
 
-        public void minor_thirteenth(string note) {
+        public List<string> minor_thirteenth(string note) {
             /* Build a minor thirteenth chord on note.
 
             Example:
             >>> minor_thirteenth('C')
             ['C', 'Eb', 'G', 'Bb', 'D', 'A']
              */
-            return minor_ninth(note) + [intervals.major_sixth(note)];
+            List<string> res = minor_ninth(note);
+            res.Add(intervals.major_sixth(note));
+            return res; // minor_ninth(note) + [intervals.major_sixth(note)];
         }
 
 
-        public void major_thirteenth(string note) {
+        public List<string> major_thirteenth(string note) {
             /* Build a major thirteenth chord on note.
 
             Example:
             >>> major_thirteenth('C')
             ['C', 'E', 'G', 'B', 'D', 'A']
              */
-            return major_ninth(note) + [intervals.major_sixth(note)];
+            List<string> res = major_ninth(note);
+            res.Add(intervals.major_sixth(note));
+            return res; // major_ninth(note) + [intervals.major_sixth(note)];
         }
 
 
-        public void dominant_thirteenth(string note) {
+        public List<string> dominant_thirteenth(string note) {
             /* Build a dominant thirteenth chord on note.
 
             Example:
             >>> dominant_thirteenth('C')
             ['C', 'E', 'G', 'Bb', 'D', 'A']
              */
-            return dominant_ninth(note) + [intervals.major_sixth(note)];
+            List<string> res = dominant_ninth(note);
+            res.Add(intervals.major_sixth(note));
+            return res; // dominant_ninth(note) + [intervals.major_sixth(note)];
         }
 
 
-        public void suspended_triad(string note) {
+        public List<string> suspended_triad(string note) {
             /* An alias for suspended_fourth_triad. */
             return suspended_fourth_triad(note);
         }
 
 
-        public void suspended_second_triad(string note) {
+        public List<string> suspended_second_triad(string note) {
             /* Build a suspended second triad on note.
 
             Example:
             >>> suspended_second_triad('C')
             ['C', 'D', 'G']
              */
-            return [note, intervals.major_second(note), intervals.perfect_fifth(note)];
+            return new List<string>() { note, intervals.major_second(note), intervals.perfect_fifth(note) }; // [note, intervals.major_second(note), intervals.perfect_fifth(note)];
         }
 
 
-        public void suspended_fourth_triad(string note) {
+        public List<string> suspended_fourth_triad(string note) {
             /* Build a suspended fourth triad on note.
 
             Example:
             >>> suspended_fourth_triad('C')
             ['C', 'F', 'G']
              */
-            return [note, intervals.perfect_fourth(note), intervals.perfect_fifth(note)];
+            return new List<string>() { note, intervals.perfect_fourth(note), intervals.perfect_fifth(note) };
         }
 
 
-        public void suspended_seventh(string note) {
+        public List<string> suspended_seventh(string note) {
             /* Build a suspended(flat) seventh chord on note.
 
             Example:
             >>> suspended_seventh('C')
             ['C', 'F', 'G', 'Bb']
              */
-            return suspended_fourth_triad(note) + [intervals.minor_seventh(note)];
+            List<string> res = suspended_fourth_triad(note);
+            res.Add(intervals.minor_seventh(note));
+            return res; // suspended_fourth_triad(note) + [intervals.minor_seventh(note)];
         }
 
 
@@ -1031,7 +1074,7 @@ namespace ChordAnalyser.cchords
                 return determine_polychords(chord, shorthand);
         }
 
-        public void determine_triad(List<string> triad, bool shorthand = false, bool no_inversions = false, string placeholder = null) {
+        public bool determine_triad(List<string> triad, bool shorthand = false, bool no_inversions = false, string placeholder = null) {
             /* Name the triad; return answers in a list.
 
             The third argument should not be given. If shorthand is True the answers
@@ -1047,282 +1090,294 @@ namespace ChordAnalyser.cchords
             ['C major sixth', 'A minor triad, first inversion']
             >>> determine_triad(['A', 'C', 'E'], True)
             ['Am', 'CM6']
-             */
+             
             if (triad.Count != 3)
                 //# warning: raise exception: not a triad
                 return false;
+            */
+            return triad.Count == 3;
         }
 
-    public void inversion_exhauster(List<string> triad, shorthand, tries, result) 
+        private List<string> add_result1(int tries, List<string> triad)
+        {
+            result.Add((tries, triad[0]));
+        }
+
+        public List<string> inversion_exhauster(List<string> triad, bool shorthand, int tries, result)
         {
             /* Run tries every inversion and save the result. */
-            intval1 = intervals.determine(triad[0], triad[1], True);
-            intval2 = intervals.determine(triad[0], triad[2], True);
+            string intval1 = intervals.determine(triad[0], triad[1], true);
+            string intval2 = intervals.determine(triad[0], triad[2], true);
 
-        public void add_result(short) {
-            result.append((short, tries, triad[0]))
+            List<string> result = new List<string>();
 
-        intval = intval1 + intval2
-        if intval == "25":
-            add_result("sus2")
-        else if ( intval == "3b7":
-            add_result("dom7")  # changed from just '7'
-        else if ( intval == "3b5":
-            add_result("7b5")  # why not b5?
-        else if ( intval == "35":
-            add_result("M")
-        else if ( intval == "3#5":
-            add_result("aug")
-        else if ( intval == "36":
-            add_result("M6")
-        else if ( intval == "37":
-            add_result("M7")
-        else if ( intval == "b3b5":
-            add_result("dim")
-        else if ( intval == "b35":
-            add_result("m")
-        else if ( intval == "b36":
-            add_result("m6")
-        else if ( intval == "b3b7":
-            add_result("m7")
-        else if ( intval == "b37":
-            add_result("m/M7")
-        else if ( intval == "45":
-            add_result("sus4")
-        else if ( intval == "5b7":
-            add_result("m7")
-        else if ( intval == "57":
-            add_result("M7")
-        if tries != 3 and not no_inversions:
-            return inversion_exhauster([triad[-1]] + triad[:-1], shorthand, tries + 1, result)
-        else
-            res = []
-            for r in result:
-                if shorthand:
-                    res.append(r[2] + r[0])
-                else
-                    res.append(r[2] + chord_shorthand_meaning[r[0]] + int_desc(r[1]))
-            return res
+            string intval = intval1 + intval2;
+            if (intval == "25")
+                add_result1("sus2");
+            else if (intval == "3b7")
+                add_result("dom7");  //# changed from just '7'
+            else if (intval == "3b5")
+                add_result1("7b5");  //# why not b5?
+            else if (intval == "35")
+                add_result1("M");
+            else if (intval == "3#5")
+                add_result1("aug");
+            else if (intval == "36")
+                add_result1("M6");
+            else if (intval == "37")
+                add_result1("M7");
+            else if (intval == "b3b5")
+                add_result1("dim");
+            else if (intval == "b35")
+                add_result1("m");
+            else if (intval == "b36")
+                add_result1("m6");
+            else if (intval == "b3b7")
+                add_result1("m7");
+            else if (intval == "b37")
+                add_result1("m/M7");
+            else if (intval == "45")
+                add_result1("sus4");
+            else if (intval == "5b7")
+                add_result1("m7");
+            else if (intval == "57")
+                add_result1("M7");
 
-    return inversion_exhauster(triad, shorthand, 1, [])
+            if (tries != 3 && !no_inversions)
+                return inversion_exhauster([triad[-1]] + triad[:-1], shorthand, tries + 1, result);
+            else
+            {
+                List<string> res = new List<string>();
+                foreach (string r in result)
+                {
+                    if (shorthand)
+                        res.Add(r[2] + r[0]);
+                    else
+                        res.Add(r[2] + chord_shorthand_meaning[r[0]] + int_desc(r[1]));
+                }
+                return res;
+            }
+
+            return inversion_exhauster(triad, shorthand, 1, []);
+        }
 
 
-public void determine_seventh(seventh, shorthand=False, no_inversion=False, no_polychords=False) {
-    /* Determine the type of seventh chord; return the results in a list,
-    ordered on inversions.
+        public bool determine_seventh(List<string> seventh, bool shorthand = false, bool no_inversion = false, bool no_polychords = false)
+        {
+            /* Determine the type of seventh chord; return the results in a list,
+            ordered on inversions.
 
-    This function expects seventh to be a list of 4 notes.
+            This function expects seventh to be a list of 4 notes.
 
-    If shorthand is set to True, results will be returned in chord shorthand
-    ('Cmin7', etc.); inversions will be dropped in that case.
+            If shorthand is set to True, results will be returned in chord shorthand
+            ('Cmin7', etc.); inversions will be dropped in that case.
 
-    Example:
-    >>> determine_seventh(['C', 'E', 'G', 'B'])
-    ['C major seventh', 'Em|CM']
-     */
-    if len(seventh) != 4:
-        # warning raise exception: seventh chord is not a seventh chord
-        return False
+            Example:
+            >>> determine_seventh(['C', 'E', 'G', 'B'])
+            ['C major seventh', 'Em|CM']
+             */
+            if (seventh.Count != 4)
+                //# warning raise exception: seventh chord is not a seventh chord
+                return false;
 
-    public void inversion_exhauster(seventh, shorthand, tries, result, polychords) {
-        /* Determine sevenths recursive functions. */
-        # Check whether the first three notes of seventh are part of some triad.
-        triads = determine_triad(seventh[:3], True, True)
+            public void inversion_exhauster(List<string> seventh, shorthand, int tries, result, polychords) {
+                /* Determine sevenths recursive functions. */
+                //# Check whether the first three notes of seventh are part of some triad.
+                bool triads = determine_triad(seventh[:3],true, true);
 
-        # Get the interval between the first and last note
-        intval3 = intervals.determine(seventh[0], seventh[3])
+            // Get the interval between the first and last note
+            string intval3 = intervals.determine(seventh[0], seventh[3]);
 
-        public void add_result(short, poly=False) {
-            /* Helper function. */
-            result.append((short, tries, seventh[0], poly))
+            public void add_result(short, bool poly = false) {
+                /* Helper function. */
+                result.append((short, tries, seventh[0], poly))
 
-        # Recognizing polychords
+        // Recognizing polychords
         if tries == 1 and not no_polychords:
-            polychords = polychords + determine_polychords(seventh, shorthand)
+                polychords = polychords + determine_polychords(seventh, shorthand)
 
-        # Recognizing sevenths
+        // Recognizing sevenths
         for triad in triads:
-            # Basic triads
-            triad = triad[len(seventh[0]) :]
-            if triad == "m":
-                if intval3 == "minor seventh":
-                    add_result("m7")
-                else if ( intval3 == "major seventh":
-                    add_result("m/M7")
-                else if ( intval3 == "major sixth":
-                    add_result("m6")
-            else if ( triad == "M":
-                if intval3 == "major seventh":
-                    add_result("M7")
-                else if ( intval3 == "minor seventh":
-                    add_result("7")
-                else if ( intval3 == "major sixth":
-                    add_result("M6")
-            else if ( triad == "dim":
-                if intval3 == "minor seventh":
-                    add_result("m7b5")
-                else if ( intval3 == "diminished seventh":
-                    add_result("dim7")
-            else if ( triad == "aug":
-                if intval3 == "minor seventh":
-                    add_result("m7+")
-                if intval3 == "major seventh":
-                    add_result("M7+")
-            else if ( triad == "sus4":
-                if intval3 == "minor seventh":
-                    add_result("sus47")
-                else if ( intval3 == "minor second":
-                    add_result("sus4b9")
-            else if ( triad == "m7":
+            // Basic triads
+            string triad = triad[len(seventh[0]) :];
+            if (triad == "m")
+                if (intval3 == "minor seventh")
+                    add_result("m7");
+                else if (intval3 == "major seventh")
+                    add_result("m/M7");
+                else if (intval3 == "major sixth")
+                    add_result("m6");
+                else if (triad == "M")
+                    if intval3 == "major seventh")
+                        add_result("M7");
+                    else if (intval3 == "minor seventh")
+                        add_result("7");
+                    else if (intval3 == "major sixth")
+                        add_result("M6");
+                    else if (triad == "dim")
+                        if (intval3 == "minor seventh")
+                            add_result("m7b5");
+                        else if (intval3 == "diminished seventh")
+                            add_result("dim7");
+                        else if (triad == "aug")
+                            if intval3 == "minor seventh")
+                                add_result("m7+");
+            if intval3 == "major seventh")
+                add_result("M7+");
+            else if (triad == "sus4")
+                if intval3 == "minor seventh")
+                    add_result("sus47");
+                else if (intval3 == "minor second")
+                    add_result("sus4b9");
+                else if (triad == "m7")
 
-                # Other
-                if intval3 == "perfect fourth":
-                    add_result("11")
-            else if ( triad == "7b5":
-                if intval3 == "minor seventh":
-                    add_result("7b5")
+                    // Other
+                    if (intval3 == "perfect fourth")
+                        add_result("11");
+                    else if (triad == "7b5")
+                        if (intval3 == "minor seventh")
+                            add_result("7b5");
 
-        if tries != 4 and not no_inversion:
-            return inversion_exhauster(
-                [seventh[-1]] + seventh[:-1], shorthand, tries + 1, result, polychords
-            )
-        else
-            # Return results
-            res = []
+            if (tries != 4 && !no_inversion)
+                return inversion_exhauster([seventh[-1]] + seventh[:-1], shorthand, tries + 1, result, polychords);
+            else
+                //# Return results
+                res = [];
 
-            # Reset seventh
-            seventh = [seventh[3]] + seventh[0:3]
-            for x in result:
-                if shorthand:
-                    res.append(x[2] + x[0])
+            // Reset seventh
+            seventh = [seventh[3]] + seventh[0:3];
+            for (x in result)
+                if (shorthand)
+                    res.append(x[2] + x[0]);
                 else
-                    res.append(x[2] + chord_shorthand_meaning[x[0]] + int_desc(x[1]))
-            return res + polychords
+                    res.append(x[2] + chord_shorthand_meaning[x[0]] + int_desc(x[1]));
+            return res + polychords;
 
-    return inversion_exhauster(seventh, shorthand, 1, [], [])
+            return inversion_exhauster(seventh, shorthand, 1, [], []);
+        }
+
+        public bool determine_extended_chord5(string chord, bool shorthand = false, bool no_inversions = false, bool no_polychords = false)
+        {
+            /* Determine the names of an extended chord. */
+            if (chord.Length != 5)
+                // warning raise exeption: not an extended chord
+                return false;
 
 
-public void determine_extended_chord5(chord, shorthand=False, no_inversions=False, no_polychords=False) {
-    /* Determine the names of an extended chord. */
-    if len(chord) != 5:
-        # warning raise exeption: not an extended chord
-        return False
+            void inversion_exhauster(string chord, bool shorthand, int tries, result, polychords) 
+            {
+                /* Recursive helper function. */
 
-    public void inversion_exhauster(chord, shorthand, tries, result, polychords) {
-        /* Recursive helper function. */
+                List<string> add_result()
+                {
+                    result.Add((tries, chord[0]));
+                }
 
-        public void add_result(short) {
-            result.append((short, tries, chord[0]))
+                triads = determine_triad(chord[:3], True, True);
+                sevenths = determine_seventh(chord[:4], True, True, True);
 
-        triads = determine_triad(chord[:3], True, True)
-        sevenths = determine_seventh(chord[:4], True, True, True)
+        //# Determine polychords
+        if (tries == 1 and not no_polychords)
+            polychords += determine_polychords(chord, shorthand);
 
-        # Determine polychords
-        if tries == 1 and not no_polychords:
-            polychords += determine_polychords(chord, shorthand)
-
-        intval4 = intervals.determine(chord[0], chord[4])
-        for seventh in sevenths:
+            intval4 = intervals.determine(chord[0], chord[4]);
+        for (seventh in sevenths)
             seventh = seventh[len(chord[0]) :]
             if seventh == "M7":
                 if intval4 == "major second":
                     add_result("M9")
-            else if ( seventh == "m7":
+            else if (seventh == "m7":
                 if intval4 == "major second":
                     add_result("m9")
-                else if ( intval4 == "perfect fourth":
+                else if (intval4 == "perfect fourth":
                     add_result("m11")
-            else if ( seventh == "7":
+            else if (seventh == "7":
                 if intval4 == "major second":
                     add_result("9")
-                else if ( intval4 == "minor second":
+                else if (intval4 == "minor second":
                     add_result("7b9")
-                else if ( intval4 == "augmented second":
+                else if (intval4 == "augmented second":
                     add_result("7#9")
-                else if ( intval4 == "minor third":
+                else if (intval4 == "minor third":
                     add_result("7b12")
-                else if ( intval4 == "augmented fourth":
+                else if (intval4 == "augmented fourth":
                     add_result("7#11")
-                else if ( intval4 == "major sixth":
+                else if (intval4 == "major sixth":
                     add_result("13")
-            else if ( seventh == "M6":
+            else if (seventh == "M6":
                 if intval4 == "major second":
                     add_result("6/9")
-                else if ( intval4 == "minor seventh":
+                else if (intval4 == "minor seventh":
                     add_result("6/7")
         if tries != 5 and not no_inversions:
-            return inversion_exhauster(
-                [chord[-1]] + chord[:-1], shorthand, tries + 1, result, polychords
-            )
+            return inversion_exhauster([chord[-1]] + chord[:-1], shorthand, tries + 1, result, polychords);
         else
-            res = []
-            for r in result:
-                if shorthand:
-                    res.append(r[2] + r[0])
+                res = [];
+            for (r in result)
+                if (shorthand)
+                    res.append(r[2] + r[0]);
                 else
-                    res.append(r[2] + chord_shorthand_meaning[r[0]] + int_desc(r[1]))
-            return res + polychords
+                    res.append(r[2] + chord_shorthand_meaning[r[0]] + int_desc(r[1]));
+            return res + polychords;
+        }
 
-    return inversion_exhauster(chord, shorthand, 1, [], [])
+            return inversion_exhauster(chord, shorthand, 1, [], []);
+        }
 
+        public void determine_extended_chord6(string chord, bool shorthand = false, bool no_inversions = false, bool no_polychords = false) {
+                /* Determine the names of an 6 note chord. */
+                if (chord.Length != 6)
+                    //# warning raise exeption: not an extended chord
+                    return false;
 
-public void determine_extended_chord6(chord, shorthand=False, no_inversions=False, no_polychords=False) {
-    /* Determine the names of an 6 note chord. */
-    if len(chord) != 6:
-        # warning raise exeption: not an extended chord
-        return False
+                void inversion_exhauster(string chord, bool shorthand, int tries, List<string> result, bool polychords)
+                {
+                    /* Recursive helper function */
 
-    public void inversion_exhauster(
-        chord,
-        shorthand,
-        tries,
-        result,
-        polychords,
-    ) {
-        /* Recursive helper function */
+                    // Determine polychords
+                    if (tries == 1 && !no_polychords)
+                        polychords += determine_polychords(chord, shorthand);
 
-        # Determine polychords
-        if tries == 1 and not no_polychords:
-            polychords += determine_polychords(chord, shorthand)
+                    void add_result()
+                    {
+                        result.Add((tries, chord[0]));
+                    }
 
-        public void add_result(short) {
-            result.append((short, tries, chord[0]))
-
-        ch = determine_extended_chord5(chord[:5], True, True, True)
-        intval5 = intervals.determine(chord[0], chord[5])
-        for c in ch:
-            c = c[len(chord[0]) :]
-            if c == "9":
-                if intval5 == "perfect fourth":
-                    add_result("11")
-                else if ( intval5 == "augmented fourth":
-                    add_result("7#11")
-                else if ( intval5 == "major sixth":
-                    add_result("13")
-            else if ( c == "m9":
-                if intval5 == "perfect fourth":
-                    add_result("m11")
-                else if ( intval5 == "major sixth":
-                    add_result("m13")
-            else if ( c == "M9":
-                if intval5 == "perfect fourth":
-                    add_result("M11")
-                else if ( intval5 == "major sixth":
-                    add_result("M13")
-        if tries != 6 and not no_inversions:
-            return inversion_exhauster(
-                [chord[-1]] + chord[:-1], shorthand, tries + 1, result, polychords
-            )
-        else
-            res = []
-            for r in result:
-                if shorthand:
-                    res.append(r[2] + r[0])
+                    string ch = determine_extended_chord5(chord[:5], true, true, true);
+            string intval5 = intervals.determine(chord[0], chord[5])
+        foreach (char c in ch)
+                c = c[len(chord[0]) :]
+            if (c == "9")
+                if (intval5 == "perfect fourth")
+                    add_result("11");
+                else if (intval5 == "augmented fourth")
+                    add_result("7#11");
+                else if (intval5 == "major sixth")
+                    add_result("13");
+                else if (c == "m9")
+                    if intval5 == "perfect fourth")
+                        add_result("m11");
+                    else if (intval5 == "major sixth")
+                        add_result("m13");
+                    else if (c == "M9")
+                        if (intval5 == "perfect fourth")
+                            add_result("M11");
+                        else if (intval5 == "major sixth")
+                            add_result("M13");
+            if (tries != 6 && !no_inversions)
+                return inversion_exhauster([chord[-1]] + chord[:-1], shorthand, tries + 1, result, polychords);
+            else
+                res = [];
+            for (r in result)
+                if (shorthand)
+                    res.Add(r[2] + r[0]);
                 else
-                    res.append(r[2] + chord_shorthand_meaning[r[0]] + int_desc(r[1]))
-            return res + polychords
+                    res.Add(r[2] + chord_shorthand_meaning[r[0]] + int_desc(r[1]));
+            return res + polychords;
+        }
 
-    return inversion_exhauster(chord, shorthand, 1, [], [])
+    return inversion_exhauster(chord, shorthand, 1, [], []);
+    }
 
 
 public void determine_extended_chord7(chord, shorthand=False, no_inversions=False, no_polychords=False) {
