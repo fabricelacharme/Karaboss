@@ -97,7 +97,7 @@ namespace ChordAnalyser.cchords
         nkeys nkeys = new nkeys();
         notes notes = new notes();
 
-        List<string> _triads_cache = new List<string>();
+        List<List<string>> _triads_cache = new List<List<string>>();
 
         //# A cache for composed sevenths
         List<Tuple<string, string>> _sevenths_cache = new List<Tuple<string, string>>();
@@ -173,15 +173,15 @@ namespace ChordAnalyser.cchords
         }
 
 
-        public List<string> triads(string key) {
+        public List<List<string>> triads(string key) {
             /* Return all the triads in key.
 
             Implemented using a cache.
-             */
+             */           
             if (_triads_cache.Contains(key))
                 return _triads_cache[key];
 
-            List<string> res = new List<string>();
+            List<List<string>> res = new List<List<string>>();
 
             foreach (string x in nkeys.get_notes(key))
             {
@@ -584,75 +584,85 @@ namespace ChordAnalyser.cchords
         }
 
 
-        public void suspended_fourth_ninth(string note) {
+        public List<string> suspended_fourth_ninth(string note) {
             /* Build a suspended fourth flat ninth chord on note.
 
             Example:
             >>> suspended_fourth_ninth('C')
             ['C', 'F', 'G', 'Db']
              */
-            return suspended_fourth_triad(note) + [intervals.minor_second(note)];
+            List<string> res = suspended_fourth_triad(note);
+            res.Add(intervals.minor_second(note));
+            return res; // suspended_fourth_triad(note) + [intervals.minor_second(note)];
         }
 
 
-        public void augmented_major_seventh(string note) {
+        public List<string> augmented_major_seventh(string note) {
             /* Build an augmented major seventh chord on note.
 
             Example:
             >>> augmented_major_seventh('C')
             ['C', 'E', 'G#', 'B']
              */
-            return augmented_triad(note) + [intervals.major_seventh(note)];
+            List<string> res = augmented_triad(note);
+            res.Add(intervals.major_seventh(note));
+            return res; // augmented_triad(note) + [intervals.major_seventh(note)];
         }
 
 
-        public void augmented_minor_seventh(string note) {
+        public List<string> augmented_minor_seventh(string note) {
             /* Build an augmented minor seventh chord on note.
 
             Example:
             >>> augmented_minor_seventh('C')
             ['C', 'E', 'G#', 'Bb']
              */
-            return augmented_triad(note) + [intervals.minor_seventh(note)];
+            List<string> res = augmented_triad(note);
+            res.Add(intervals.minor_seventh(note));
+            return res; // augmented_triad(note) + [intervals.minor_seventh(note)];
         }
 
 
-        public void dominant_flat_five(string note) {
+        public List<string> dominant_flat_five(string note) {
             /* Build a dominant flat five chord on note.
 
             Example:
             >>> dominant_flat_five('C')
             ['C', 'E', 'Gb', 'Bb']
              */
-            res = dominant_seventh(note);
+            List<string> res = dominant_seventh(note);
             res[2] = notes.diminish(res[2]);
             return res;
         }
 
 
-        public void lydian_dominant_seventh(string note) {
+        public List<string> lydian_dominant_seventh(string note) {
             /* Build the lydian dominant seventh(7#11) on note.
 
             Example:
             >>> lydian_dominant_seventh('C')
             ['C', 'E', 'G', 'Bb', 'F#']
              */
-            return dominant_seventh(note) + [notes.augment(intervals.perfect_fourth(note))];
+            List<string> res = dominant_seventh(note);
+            res.Add(notes.augment(intervals.perfect_fourth(note)));
+            return res; // dominant_seventh(note) + [notes.augment(intervals.perfect_fourth(note))];
         }
 
 
-        public void hendrix_chord(string note) {
+        public List<string> hendrix_chord(string note) {
             /* Build the famous Hendrix chord(7b12).
 
             Example:
             >>> hendrix_chord('C')
             ['C', 'E', 'G', 'Bb', 'Eb']
              */
-            return dominant_seventh(note) + [intervals.minor_third(note)];
+            List<string> res = dominant_seventh(note);
+            res.Add(intervals.minor_third(note));
+            return res; // dominant_seventh(note) + [intervals.minor_third(note)];
         }
 
 
-        public void tonic(key) {
+        public List<string> tonic(string key) {
             /* Return the tonic chord in key.
 
             Examples:
@@ -661,17 +671,18 @@ namespace ChordAnalyser.cchords
             >>> tonic('c')
             ['C', 'Eb', 'G']
              */
-            return triads(key)[0];
+            List<List<string>> res = triads(key);
+            return res[0];
         }
 
 
-        public void tonic7(key) {
+        public List<string> tonic7(string key) {
             /* Return the seventh chord in key. */
             return sevenths(key)[0];
         }
 
 
-        public void supertonic(key) {
+        public List<string> supertonic(string key) {
             /* Return the supertonic chord in key.
 
             Example:
@@ -682,13 +693,13 @@ namespace ChordAnalyser.cchords
         }
 
 
-        public void supertonic7(key) {
+        public List<string> supertonic7(string key) {
             /* Return the supertonic seventh chord in key. */
             return sevenths(key)[1];
         }
 
 
-        public void mediant(key) {
+        public List<string> mediant(string key) {
             /* Return the mediant chord in key.
 
             Example:
@@ -699,13 +710,13 @@ namespace ChordAnalyser.cchords
         }
 
 
-        public void mediant7(key) {
+        public List<string> mediant7(string key) {
             /* Returns the mediant seventh chord in key. */
             return sevenths(key)[2];
         }
 
 
-        public void subdominant(key) {
+        public List<string> subdominant(string key) {
             /* Return the subdominant chord in key.
 
             Example:
@@ -716,13 +727,13 @@ namespace ChordAnalyser.cchords
         }
 
 
-        public void subdominant7(key) {
+        public List<string> subdominant7(string key) {
             /* Return the subdominant seventh chord in key. */
             return sevenths(key)[3];
         }
 
 
-        public void dominant(key) {
+        public List<string> dominant(string key) {
             /* Return the dominant chord in key.
 
             Example:
@@ -733,13 +744,13 @@ namespace ChordAnalyser.cchords
         }
 
 
-        public void dominant7(key) {
+        public List<string> dominant7(string key) {
             /* Return the dominant seventh chord in key. */
             return sevenths(key)[4];
         }
 
 
-        public void submediant(key) {
+        public List<string> submediant(string key) {
             /* Return the submediant chord in key.
 
             Example:
@@ -750,13 +761,13 @@ namespace ChordAnalyser.cchords
         }
 
 
-        public void submediant7(key) {
+        public List<string> submediant7(string key) {
             /* Return the submediant seventh chord in key. */
             return sevenths(key)[5];
         }
 
 
-        public void subtonic(key) {
+        public List<string> subtonic(string key) {
             /* Return the subtonic chord in key.
 
             Example:
@@ -767,147 +778,165 @@ namespace ChordAnalyser.cchords
         }
 
 
-        public void subtonic7(key) {
+        public List<string> subtonic7(string key) {
             /* Return the subtonic seventh chord in key. */
             return sevenths(key)[6];
         }
 
 
-        public void I(key) {
+        public List<string> I(string key) {
             return tonic(key);
         }
 
 
-        public void I7(key) {
+        public List<string> I7(string key) {
             return tonic7(key);
         }
 
 
-        public void ii(key) {
+        public List<string> ii(string key) {
             return supertonic(key);
         }
 
 
-        public void II(key) {
+        public List<string> II(string key) {
             return supertonic(key);
         }
 
 
-        public void ii7(key) {
+        public List<string> ii7(string key) {
             return supertonic7(key);
         }
 
 
-        public void II7(key) {
+        public List<string> II7(string key) {
             return supertonic7(key);
         }
 
 
-        public void iii(key) {
+        public List<string> iii(string key) {
             return mediant(key);
         }
 
 
-        public void III(key) {
+        public List<string> III(string key) {
             return mediant(key);
         }
 
 
-        public void iii7(key) {
+        public List<string> iii7(string key) {
             return mediant7(key);
         }
 
 
-        public void III7(key) {
+        public List<string> III7(string key) {
             return mediant7(key);
         }
 
 
-        public void IV(key) {
+        public List<string> IV(string key) {
             return subdominant(key);
         }
 
 
-        public void IV7(key) {
+        public List<string> IV7(string key) {
             return subdominant7(key);
         }
 
 
-        public void V(key) {
+        public List<string> V(string key) {
             return dominant(key);
         }
 
 
-        public void V7(key) {
+        public List<string> V7(string key) {
             return dominant7(key);
         }
 
 
-        public void vi(key) {
+        public List<string> vi(string key) {
             return submediant(key);
         }
 
 
-        public void VI(key) {
+        public List<string> VI(string key) {
             return submediant(key);
         }
 
 
-        public void vi7(key) {
+        public List<string> vi7(string key) {
             return submediant7(key);
         }
 
 
-        public void VI7(key) {
+        public List<string> VI7(string key) {
             return submediant7(key);
         }
 
 
-        public void vii(key) {
+        public List<string> vii(string key) {
             return subtonic(key);
         }
 
 
-        public void VII(key) {
+        public List<string> VII(string key) {
             return subtonic(key);
         }
 
 
-        public void vii7(key) {
+        public List<string> vii7(string key) {
             return subtonic(key);
         }
 
 
-        public void VII7(key) {
+        public List<string> VII7(string key) {
             return subtonic7(key);
         }
 
 
-        public void invert(chord) {
+        public string invert(string chord) {
             /* Invert a given chord one time. */
-            return chord[1:] + [chord[0]];
+            return chord.Substring(1, chord.Length - 1) + chord.Substring(0,1);
+            //return chord[1:] + [chord[0]];
         }
 
 
-        public void first_inversion(chord) {
+        public string first_inversion(string chord) {
             /* Return the first inversion of a chord. */
             return invert(chord);
         }
 
 
-        public void second_inversion(chord) {
+        public string second_inversion(string chord) {
             /* Return the second inversion of chord. */
             return invert(invert(chord));
         }
 
 
-        public void third_inversion(chord) {
+        public string third_inversion(string chord) {
             /* Return the third inversion of chord. */
             return invert(invert(invert(chord)));
         }
 
+        /*
+        public List<string> from_shorthand(List<string> shorthand_string, string slash = null)
+        {
 
-        public List<string> from_shorthand(List<string> shorthand_string, string slash = null) {
+            if (shorthand_string == new List<string>() { "NC", "N.C." })
+                return new List<string>();
+
+            
+            // warning reduce??            
+            // List<string> res = new List<string>();
+            // foreach (string x in shorthand_string)
+            //    res.Add(from_shorthand(x));
+            // return res;
+            
+            return new List<string>();
+        }
+        */
+
+        public List<string> from_shorthand(string shorthand_string, string slash = null) {
             /* Take a chord written in shorthand and return the notes in the chord.
 
             The function can recognize triads, sevenths, sixths, ninths, elevenths,
@@ -959,8 +988,9 @@ namespace ChordAnalyser.cchords
 
             Special: '5', 'NC', 'hendrix'
              */
-            // warning reduce??
-            //if (isinstance(shorthand_string, list))
+
+            /*
+            // warning reduce??            
             if (shorthand_string is List<string>)
             {
                 List<string> res = new List<string>();
@@ -971,24 +1001,27 @@ namespace ChordAnalyser.cchords
 
             if (shorthand_string == new List<string>() { "NC", "N.C." })
                 return new List<string>();
+            */
 
             // Shrink shorthand_string to a format recognised by chord_shorthand
-            shorthand_string = shorthand_string.replace("min", "m");
-            shorthand_string = shorthand_string.replace("mi", "m");
-            shorthand_string = shorthand_string.replace("-", "m");
-            shorthand_string = shorthand_string.replace("maj", "M");
-            shorthand_string = shorthand_string.replace("ma", "M");
+            shorthand_string = shorthand_string.Replace("min", "m");
+            shorthand_string = shorthand_string.Replace("mi", "m");
+            shorthand_string = shorthand_string.Replace("-", "m");
+            shorthand_string = shorthand_string.Replace("maj", "M");
+            shorthand_string = shorthand_string.Replace("ma", "M");
 
             // Get the note name
-            if (!notes.is_valid_note(shorthand_string[0]))
-                raise NoteFormatError("Unrecognised note '%s' in chord '%s'" % (shorthand_string[0], shorthand_string));
-            string name = shorthand_string[0];
+            if (!notes.is_valid_note(shorthand_string[0].ToString()))
+                throw new FormatException(string.Format("Unrecognised note '{0}' in chord '{1}'", shorthand_string[0], shorthand_string));
+            
+            string name = shorthand_string[0].ToString();
 
             // Look for accidentals
-            for (n in shorthand_string[1:]) {
-                if (n == "#)
+            foreach (char n in shorthand_string.Substring(1, shorthand_string.Length - 1)) 
+            {
+                if (n.ToString() == "#")
                         name += n;
-                else if (n == "b")
+                else if (n.ToString() == "b")
                     name += n;
                 else
                     break;
@@ -996,14 +1029,20 @@ namespace ChordAnalyser.cchords
             // Look for slashes and polychords '|'
             int slash_index = -1;
             int s = 0;
-            string rest_of_string = shorthand_string[name.Length :];
+            string rest_of_string = shorthand_string.Substring(name.Length, shorthand_string.Length - name.Length); // [name.Length :];
+            
             foreach (char n in rest_of_string)
             {
                 if (n.ToString() == "/")
                     slash_index = s;
-                else if (n.ToString() == "|") {
+                else if (n.ToString() == "|") 
+                {
                     // Generate polychord
-                    return from_shorthand(shorthand_string[: name.Length + s], from_shorthand(shorthand_string[name.Length + s + 1 :]),);
+                    string a = shorthand_string.Substring(0, name.Length + s);
+                    string b = shorthand_string.Substring(name.Length + s + 1, shorthand_string.Length - (name.Length + s + 1));
+                    List<string> c = from_shorthand(a);
+                    c.Add(b);
+                    return c; //  [name.Length + s + 1 :]),);
                 }
                 s += 1;
             }
@@ -1011,40 +1050,31 @@ namespace ChordAnalyser.cchords
             // Generate slash chord
             if (slash_index != -1 && !new List<string> { "m/M7", "6/9", "6/7" }.Contains(rest_of_string))
             {
-                res = shorthand_string[: len(name) + slash_index];
-                return from_shorthand(shorthand_string[: name.Length + slash_index], shorthand_string[name.Length + slash_index + 1 :],);
+                string res = shorthand_string.Substring(0, name.Length + slash_index); //   [: len(name) + slash_index];
+                return from_shorthand(shorthand_string.Substring(0, name.Length + slash_index), shorthand_string.Substring(name.Length + slash_index + 1, shorthand_string.Length - (name.Length + slash_index + 1)));  //[name.Length + slash_index + 1 :],);
             }
 
             int shorthand_start = name.Length;
 
-            short_chord = shorthand_string[shorthand_start:];
-            if (short_chord in chord_shorthand) 
+            string short_chord = shorthand_string.Substring(shorthand_start, shorthand_string.Length - shorthand_start); //[shorthand_start:];
+            if (short_chord in chord_shorthand) { 
     {
                 string res = chord_shorthand[short_chord](name);
                 if (slash != null)
                 {
                     // Add slashed chords
-                    if (slash is six.string_types)
+                    if (slash is string)
                     {
                         if (notes.is_valid_note(slash))
-                            res = [slash] + res;
+                            res = slash + res;
                         else
-                            raise NoteFormatError("Unrecognised note '%s' in slash chord'%s'" % (slash, slash + shorthand_string));
+                            throw new FormatException(string.Format("Unrecognised note '{0}' in slash chord'{1}'", slash, slash + shorthand_string));
                     }
-                    else if (slash is List<string>)
-                    {
-                        // Add polychords
-                        r = slash;
-                        foreach (char n in res) {
-                            if (n != r[-1])
-                                r.Add(n);
-                        }
-                        return r;
-                    }
-                    return res
+                    
+                    return new List<string> { res };
                 }
                 else
-                    raise FormatError("Unknown shorthand: %s" % shorthand_string);
+                    throw new FormatException(string.Format("Unknown shorthand: {0]", shorthand_string));
             }
         }
 
