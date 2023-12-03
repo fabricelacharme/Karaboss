@@ -42,9 +42,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChordAnalyser.cs" />
+    <Compile Include="core\chords.cs" />
     <Compile Include="core\intervals.cs" />
     <Compile Include="core\keys.cs" />
+    <Compile Include="core\meter.cs" />
+    <Compile Include="core\mt_exceptions.cs" />
     <Compile Include="core\notes.cs" />
+    <Compile Include="core\progressions.cs" />
     <Compile Include="core\scales.cs" />
     <Compile Include="tests.cs" />
     <Compile Include="core\value.cs" />

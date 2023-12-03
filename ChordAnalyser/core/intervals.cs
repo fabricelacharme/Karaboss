@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ChordsAnalyser.cnotes;
 using ChordsAnalyser.ckeys;
 
-namespace ChordAnalyser.cintervals
+namespace ChordsAnalyser.cintervals
 {
     public class intervals
     {
@@ -78,7 +78,7 @@ namespace ChordAnalyser.cintervals
             }
 
 
-            private string third(string note, string key) {
+            public string third(string note, string key) {
                 /*Take the diatonic third of note in key.
 
                 Raise a KeyError exception if the note is not found in the given key.
@@ -108,7 +108,7 @@ namespace ChordAnalyser.cintervals
             }
 
 
-            private string fifth(string note, string key) {
+            public string fifth(string note, string key) {
                 /*Take the diatonic fifth of note in key.
 
                 Raise a KeyError exception if the note is not found in the given key.
