@@ -348,10 +348,9 @@ namespace ChordsAnalyser.cintervals
             >>> invert(['C', 'E'])
             ['E', 'C']
             */
-            //interval.reverse();
-            //res = list(interval);
-            //interval.reverse();
-            return interval.Reverse(); //res;
+            interval.Reverse();
+            return interval;
+            
         }
 
         private int get_val(string note)
@@ -486,10 +485,19 @@ namespace ChordsAnalyser.cintervals
                     return "diminished " + current.Item1;
                 return "b" + (maj - half_notes) + current.Item2;
             }
+
+            return null;
         }
 
-        private bool from_shorthand(string note, string interval, bool up = true) {
-            /* Return the note on interval up or down.
+        /// <summary>
+        /// Return the note on interval up or down. A TESTER !!!
+        /// </summary>
+        /// <param name="note"></param>
+        /// <param name="interval"></param>
+        /// <param name="up"></param>
+        /// <returns></returns>
+        private string from_shorthand(string note, string interval, bool up = true) {
+            /* 
 
             Examples:
             >>> from_shorthand('A', 'b3')
@@ -501,35 +509,35 @@ namespace ChordsAnalyser.cintervals
             */
             // warning should be a valid note.
             if (!notes.is_valid_note(note))
-                return false;
-           
+                return null;
 
-            // [shorthand, interval function up, interval function down]
-            List<Tuple<string, int, int>> shorthand_lookup = new List<Tuple<string, int, int>>
-            {
-                Tuple.Create("1", major_unison, major_unison),
-                Tuple.Create("2", major_second, minor_seventh),
-                Tuple.Create("3", major_third, minor_sixth),
-                Tuple.Create("4", major_fourth, major_fifth),
-                Tuple.Create("5", major_fifth, major_fourth),
-                Tuple.Create("6", major_sixth, minor_third),
-                Tuple.Create("7", major_seventh, minor_second),
+
+            // [shorthand, interval function up, interval function down]                                   
+            List<Tuple<string, Func<string, string>, Func<string, string>>> shorthand_lookup = new List<Tuple<string, Func<string, string>, Func<string, string>>>
+            {                
+                new Tuple<string, Func<string, string>, Func<string, string>>("1", major_unison, major_unison),
+                new Tuple<string, Func<string, string>, Func<string, string>>("2", major_second, minor_seventh),
+                new Tuple<string, Func<string, string>, Func<string, string>>("3", major_third, minor_sixth),
+                new Tuple<string, Func<string, string>, Func<string, string>>("4", major_fourth, major_fifth),
+                new Tuple<string, Func<string, string>, Func<string, string>>("5", major_fifth, major_fourth),
+                new Tuple<string, Func<string, string>, Func<string, string>>("6", major_sixth, minor_third),
+                new Tuple<string, Func<string, string>, Func<string, string>>("7", major_seventh, minor_second),
             };
 
             // Looking up last character in interval in shorthand_lookup and calling that
             // function.
-            bool val = false;
-            foreach (Tuple<string, int,int> shorthand in shorthand_lookup) {
-                if (shorthand.Item1 == interval.Substring(interval.Length,1)) {  //interval[-1]
-                    if (up)
-                        val = shorthand.Item1(note);
+            string val = string.Empty;
+            foreach (Tuple<string, Func<string, string>, Func<string, string>> shorthand in shorthand_lookup) {
+                if (shorthand.Item1 == interval.Substring(interval.Length - 1,1)) {  //interval[-1]
+                    if (up)                                       
+                        val = shorthand.Item2(note);                    
                     else
-                        val = shorthand.Item2(note);
+                        val = shorthand.Item3(note);
                 }
             }
             // warning Last character in interval should be 1-7
-            if (val == false)
-                return false;
+            if (val == string.Empty)
+                return null;
 
             // Collect accidentals
             string sval = string.Empty;
@@ -551,6 +559,7 @@ namespace ChordsAnalyser.cintervals
                 else
                     return val;
             }
+            return null;
         }
 
         private bool is_consonant(string note1, string note2, bool include_fourths = true) {
