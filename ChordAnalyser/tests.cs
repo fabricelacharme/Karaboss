@@ -15,6 +15,7 @@ namespace ChordsAnalyser
             cvalue.value v = new cvalue.value();
             ckeys.nkeys k = new ckeys.nkeys();
 
+
             Console.WriteLine(k.get_notes("F"));
 
             /*
