@@ -14,7 +14,7 @@ namespace ChordsAnalyser
         {
             cvalue.value v = new cvalue.value();
             ckeys.nkeys k = new ckeys.nkeys();
-
+            cintervals.intervals inter = new cintervals.intervals();
 
             Console.WriteLine(k.get_notes("F"));
 
