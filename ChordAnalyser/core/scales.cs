@@ -12,6 +12,8 @@ using System.Runtime.CompilerServices;
 using ChordsAnalyser.cintervals;
 using ChordsAnalyser.ckeys;
 using System.Management;
+using System.Runtime.ExceptionServices;
+using ChordsAnalyser.cnotes;
 
 namespace ChordsAnalyser.cscales
 {
@@ -25,7 +27,7 @@ namespace ChordsAnalyser.cscales
         /// </summary>
         /// <param name=""></param>
         /// <returns></returns>
-        private List<string> determine(List<string> notes) {
+        public List<string> determine(List<string> notes) {
             /*
             All major and minor scales are recognized.
 
@@ -51,10 +53,14 @@ namespace ChordsAnalyser.cscales
             {                
                 foreach (Type sc in subclasses)
                 {
-                    _Scale scale = (_Scale)sc;
+                    _Scale scale = (_Scale)sc;                    
+                    
+                    //Ionian io = new Ionian("a");
+                    //List<string> list = new Ionian("b").ascending();
+
+
                     if (scale.type == "major")
-                    {
-                        
+                    {                        
                         if (notes <= scale(key.Item1).ascending() || notes <= scale(key.Item1).descending())
                             res.Add(scale(key.Item1).name);
                     }
@@ -87,34 +93,32 @@ namespace ChordsAnalyser.cscales
                 if (note.All(char.IsLower))
                     throw new FormatException(string.Format("Unrecognised note '{0}'", note));
 
-
                 this.tonic = note;
                 this.octaves = octaves;
-
             }
 
-            private string __repr__()
+            public string __repr__()
             {
                 return "<Scale object ('{0}')>" + name;
             }
 
-            private string __str__()
+            public string __str__()
             {
                 return string.Format("Ascending:  {0}\nDescending: {1}", this.ascending(), this.descending());
             }
 
-            private bool __eq__(_Scale other) {
+            public bool __eq__(_Scale other) {
                 if (this.ascending() == other.ascending())
                     if (this.descending() == other.descending())
                         return true;
                 return false;
             }
 
-            private bool __ne__(_Scale other) {
+            public bool __ne__(_Scale other) {
                 return !this.__eq__(other);
             }
 
-            private int __len__() {
+            public int __len__() {
                 return this.ascending().Count;
             }
 
@@ -125,10 +129,10 @@ namespace ChordsAnalyser.cscales
             public List<string> descending()
             {
                 // """Return the list of descending notes."""
-                return (reversed(this.ascending()));
+                return reversed(this.ascending());
             }
 
-            private List<string> reversed(List<string> list)
+            public List<string> reversed(List<string> list)
             {
                 list.Reverse();
                 return list;
@@ -139,7 +143,7 @@ namespace ChordsAnalyser.cscales
             /// </summary>
             /// <param name="degree_number"></param>
             /// <param name="direction"></param>
-            private string degree(int degree_number, string direction = "a") {
+            public string degree(int degree_number, string direction = "a") {
                 /*
                 The direction of the scale is 'a' for ascending (default) and 'd'
                 for descending.
@@ -193,22 +197,19 @@ namespace ChordsAnalyser.cscales
             /// <param name="note"></param>
             /// <param name="semitones"></param>
             /// <param name="octaves"></param>
-            Diatonic(string note, List<int> semitons, int octaves = 1) : base(note,octaves)
+            public Diatonic(string note, List<int> semitons, int octaves = 1) : base(note,octaves)
             {
                 /*
-
                 The second parameter is a tuple representing the position of
                 semitones.
-                */
-                
+                */                
                 this.semitones = semitons;
                 this.octaves = octaves;
                 name = string.Format("{0} diatonic, semitones in {1}", tonic, semitones);
                 type = "diatonic";
-
             }
 
-            private List<string> ascending()
+            public new List<string> ascending()
             {
                 List<string> notes = new List<string> { tonic.ToString() };
 
@@ -221,11 +222,16 @@ namespace ChordsAnalyser.cscales
                         notes.Add(intervals.major_second(notes[-1]));
                 }
 
-                List<string> ll = new List<string>();
-                ll = notes;
-                ll.Add(octaves.ToString());
-                ll.Add(notes[0]);
-                return ll;
+                //return notes * self.octaves + [notes[0]]
+                // * = repeat
+                List<string> res = new List<string>();
+                for (int i = 0; i < octaves; i++)
+                {
+                    for (int j = 0; j < notes.Count; j++)
+                        res.Add(notes[j]);
+                }
+                res.Add(notes[0]);
+                return res;
             }
 
         }
@@ -236,7 +242,25 @@ namespace ChordsAnalyser.cscales
             public Ionian(string note, int octaves = 1) : base(note,octaves)
             {
                 type = "ancient";
+                name = string.Format("{0} ionian", tonic);
             }
+
+            public new List<string> ascending() {                                
+                List<string> notes = new Diatonic(tonic, new List<int>() { 3, 4, 5, 6 }).ascending();                
+                notes.RemoveAt(notes.Count - 1);
+
+                //return notes * self.octaves + [notes[0]]
+                // * = repeat
+                List<string> res = new List<string>();
+                for (int i = 0; i < octaves; i++)
+                {
+                    for (int j = 0; j < notes.Count; j++)
+                        res.Add(notes[j]);
+                }
+                res.Add(notes[0]);               
+                return res;                                
+            }
+
         }
 
 
@@ -245,6 +269,12 @@ namespace ChordsAnalyser.cscales
             public Dorian(string note, int octaves) : base(note,octaves)
             {
                 type = "ancient";
+            }
+
+            public new List<string> ascending()
+            {
+
+                return new List<string> { };
             }
         }
 
@@ -262,6 +292,12 @@ namespace ChordsAnalyser.cscales
             {
                 type = "ancient";
             }
+
+            public new List<string> ascending()
+            {
+
+                return new List<string> { };
+            }
         }
 
         public class Mixolydian : _Scale
@@ -269,6 +305,12 @@ namespace ChordsAnalyser.cscales
             public Mixolydian(string note, int octaves) : base(note, octaves)
             {
                 type = "ancient";
+            }
+
+            public new List<string> ascending()
+            {
+
+                return new List<string> { };
             }
         }
 
@@ -278,6 +320,12 @@ namespace ChordsAnalyser.cscales
             {
                 type = "ancient";
             }
+
+            public new List<string> ascending()
+            {
+
+                return new List<string> { };
+            }
         }
 
         public class Locrian : _Scale
@@ -285,6 +333,12 @@ namespace ChordsAnalyser.cscales
             public Locrian(string note, int octaves) : base(note, octaves)
             {
                 type = "ancient";
+            }
+
+            public new List<string> ascending()
+            {
+
+                return new List<string> { };
             }
         }
 
@@ -302,6 +356,12 @@ namespace ChordsAnalyser.cscales
             {
                 type = "major";
             }
+
+            public new List<string> ascending()
+            {
+
+                return new List<string> { };
+            }
         }
 
         public class NaturalMinor : _Scale
@@ -309,6 +369,12 @@ namespace ChordsAnalyser.cscales
             public NaturalMinor(string note, int octaves) : base(note, octaves)
             {
                 type = "minor";
+            }
+
+            public new List<string> ascending()
+            {
+
+                return new List<string> { };
             }
         }
 
@@ -318,6 +384,12 @@ namespace ChordsAnalyser.cscales
             {
                 type = "minor";
             }
+
+            public new List<string> ascending()
+            {
+
+                return new List<string> { };
+            }
         }
 
         public class MelodicMinor : _Scale
@@ -325,6 +397,12 @@ namespace ChordsAnalyser.cscales
             public MelodicMinor(string note, int octaves) : base(note, octaves)
             {
                 type = "minor";
+            }
+
+            public new List<string> ascending()
+            {
+
+                return new List<string> { };
             }
         }
 
@@ -334,6 +412,12 @@ namespace ChordsAnalyser.cscales
             {
                 type = "minor";
             }
+
+            public new List<string> ascending()
+            {
+
+                return new List<string> { };
+            }
         }
 
         public class MinorNeapolitan : _Scale
@@ -341,6 +425,12 @@ namespace ChordsAnalyser.cscales
             public MinorNeapolitan(string note, int octaves) : base(note, octaves)
             {
                 type = "minor";
+            }
+
+            public new List<string> ascending()
+            {
+
+                return new List<string> { };
             }
         }
 
@@ -350,6 +440,12 @@ namespace ChordsAnalyser.cscales
             {
                 type = "other";
             }
+
+            public new List<string> ascending()
+            {
+
+                return new List<string> { };
+            }
         }
 
         public class WholeTone : _Scale
@@ -358,6 +454,12 @@ namespace ChordsAnalyser.cscales
             {
                 type = "other";
             }
+
+            public new List<string> ascending()
+            {
+
+                return new List<string> { };
+            }
         }
 
         public class Octatonic : _Scale
@@ -365,6 +467,12 @@ namespace ChordsAnalyser.cscales
             public Octatonic(string note, int octaves) : base(note, octaves)
             {
                 type = "other";
+            }
+
+            public new List<string> ascending()
+            {
+
+                return new List<string> { };
             }
         }
 
