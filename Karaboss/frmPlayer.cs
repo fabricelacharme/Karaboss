@@ -8637,9 +8637,7 @@ namespace Karaboss
             {
                 if (chords.Count > 0) 
                 {
-                    ChordAnalyser chan = new ChordAnalyser(chords);
-                    
-
+                    ChordsAnalyser.ChordAnalyser chan = new ChordsAnalyser.ChordAnalyser(chords);                                        
                 }
             }
         }

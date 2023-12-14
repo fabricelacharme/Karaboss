@@ -15,6 +15,12 @@ namespace ChordsAnalyser
             cvalue.value v = new cvalue.value();
             ckeys.nkeys k = new ckeys.nkeys();
             cintervals.intervals inter = new cintervals.intervals();
+            cscales.scales sc = new cscales.scales();
+
+
+            // SCALES
+            sc.determine(new List<string>() {"A", "Bb", "E", "F#", "G"});
+
 
             Console.WriteLine(k.get_notes("F"));
 

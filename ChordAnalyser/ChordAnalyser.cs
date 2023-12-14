@@ -23,7 +23,7 @@ namespace ChordsAnalyser
 
         public ChordAnalyser(List<ChordSymbol> chords) 
         {
-            //tests t = new tests();
+            tests t = new tests();
 
             
             foreach (ChordSymbol chord in chords)

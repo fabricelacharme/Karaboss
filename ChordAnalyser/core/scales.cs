@@ -48,31 +48,30 @@ namespace ChordsAnalyser.cscales
 
 
             foreach ((string, string) key in nkeys.keys)
-            {                
-                foreach (Type sc in subclasses)
-                {
-                                
-                    _Scale scale = (_Scale)sc;
-                    
+            {
+                // major
+                Ionian io = new Ionian(key.Item1);
+                if (notes == io.ascending() || notes == io.descending())
+                    res.Add(io.name);
 
-                    Ionian io = new Ionian("a");
-                    //List<string> list = new Ionian("b").ascending();
-                    _Scale a = new _Scale("c", 2);
-                    
+                
+                // minor
+                NaturalMinor nm = new NaturalMinor(k.get_notes(key.Item2)[0],1);
+                if (notes == nm.ascending() || notes == nm.descending())
+                    res.Add(nm.name);
 
-                    if (scale.type == "major")
-                    {                        
-                        if (notes <= scale(key.Item1).ascending() || notes <= scale(key.Item1).descending())
-                            res.Add(scale(key.Item1).name);
-                    }
-                    else if (scale.type == "minor")
-                    {
-                        if (notes <= scale(k.get_notes(key.Item2)[0]).ascending() || notes <= scale(k.get_notes(key.Item2)[0]).descending()) 
-                            res.Add(scale(k.get_notes(key.Item2)[0]).name);
-                    }
-                }
+
             }
             return res;
+        }
+
+        private void traite(List<string> notes, _Scale cl)
+        {
+            if (cl.type == "major")
+            {
+                
+            }
+
         }
 
 
@@ -174,10 +173,13 @@ namespace ChordsAnalyser.cscales
                     throw new FormatException(string.Format("Unrecognised direction '{0}'", direction));
             }
 
+            /*
             public static explicit operator _Scale(Type v)
             {
-                throw new NotImplementedException();
+                //throw new NotImplementedException();
+                return null;
             }
+            */
 
             #endregion
         }
@@ -228,7 +230,7 @@ namespace ChordsAnalyser.cscales
                     if (semitones.Contains(n))
                         notes.Add(intervals.minor_second(notes[notes.Count - 1]));
                     else
-                        notes.Add(intervals.major_second(notes[-1]));
+                        notes.Add(intervals.major_second(notes[notes.Count - 1]));
                 }
 
                 //return notes * self.octaves + [notes[0]]
