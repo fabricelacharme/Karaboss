@@ -51,12 +51,14 @@ namespace ChordsAnalyser.cscales
             {                
                 foreach (Type sc in subclasses)
                 {
-                     _Scale scale = (_Scale)sc;
+                                
+                    _Scale scale = (_Scale)sc;
+                    
 
-
-                    //Ionian io = new Ionian("a");
+                    Ionian io = new Ionian("a");
                     //List<string> list = new Ionian("b").ascending();
-                   
+                    _Scale a = new _Scale("c", 2);
+                    
 
                     if (scale.type == "major")
                     {                        
@@ -74,7 +76,7 @@ namespace ChordsAnalyser.cscales
         }
 
 
-        public abstract class _Scale
+        public class _Scale
         {
             /*
             General class implementing general methods.
