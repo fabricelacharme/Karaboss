@@ -39,9 +39,7 @@ namespace ChordsAnalyser.cscales
             
             List<string> res = new List<string>();
 
-            //var subclasses = from assembly in AppDomain.CurrentDomain.GetAssemblies() from type in assembly.GetTypes() where type.IsSubclassOf(typeof(_Scale)) select type;
 
-            
             var subclasses =
                 from assembly in AppDomain.CurrentDomain.GetAssemblies()
                 from type in assembly.GetTypes()
@@ -53,11 +51,12 @@ namespace ChordsAnalyser.cscales
             {                
                 foreach (Type sc in subclasses)
                 {
-                    _Scale scale = (_Scale)sc;                    
-                    
+                     _Scale scale = (_Scale)sc;
+
+
                     //Ionian io = new Ionian("a");
                     //List<string> list = new Ionian("b").ascending();
-
+                   
 
                     if (scale.type == "major")
                     {                        
@@ -75,7 +74,7 @@ namespace ChordsAnalyser.cscales
         }
 
 
-        public class _Scale
+        public abstract class _Scale
         {
             /*
             General class implementing general methods.
@@ -87,7 +86,12 @@ namespace ChordsAnalyser.cscales
             public string type { get; set; }
 
 
-
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="note"></param>
+            /// <param name="octaves"></param>
+            /// <exception cref="FormatException"></exception>
             public _Scale(string note, int octaves)
             {
                 if (note.All(char.IsLower))
@@ -97,6 +101,7 @@ namespace ChordsAnalyser.cscales
                 this.octaves = octaves;
             }
 
+            #region methods
             public string __repr__()
             {
                 return "<Scale object ('{0}')>" + name;
@@ -171,6 +176,8 @@ namespace ChordsAnalyser.cscales
             {
                 throw new NotImplementedException();
             }
+
+            #endregion
         }
 
 
