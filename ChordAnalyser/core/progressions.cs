@@ -1,4 +1,4 @@
-﻿using ChordAnalyser.cchords;
+﻿using ChordsAnalyser.cchords;
 using ChordsAnalyser.cintervals;
 using ChordsAnalyser.cnotes;
 using System;

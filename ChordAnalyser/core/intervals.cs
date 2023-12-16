@@ -353,9 +353,10 @@ namespace ChordsAnalyser.cintervals
             
         }
 
+        /*
         private int get_val(string note)
         {
-            /* Private function: count the value of accidentals.*/
+            // Private function: count the value of accidentals.
             int r = 0;
             foreach (char x in note.Substring(1, note.Length - 1)) // note[1:]
             {
@@ -366,7 +367,7 @@ namespace ChordsAnalyser.cintervals
             }
             return r;            
         }
-
+        */
         public  string determine(string note1, string note2, bool shorthand = false) {
             /* Name the interval between note1 and note2.
 
@@ -390,6 +391,22 @@ namespace ChordsAnalyser.cintervals
             // Corner case for unisons ('A' and 'Ab', for instance)
             if (note1[0] == note2[0])
             {
+
+                int get_val(string note)
+                {
+                    // Private function: count the value of accidentals.
+                    int r = 0;
+                    foreach (char c in note.Substring(1, note.Length - 1)) // note[1:]
+                    {
+                        if (c.ToString() == "b")
+                            r -= 1;
+                        else if (c.ToString() == "#")
+                            r += 1;
+                    }
+                    return r;
+                }
+
+
                 int x = get_val(note1);
                 int y = get_val(note2);
                 if (x == y)
@@ -460,16 +477,20 @@ namespace ChordsAnalyser.cintervals
                 {
                     if (!shorthand)
                         return "perfect fourth";
-                    if (!shorthand)
-                        return "major " + current.Item1;
-                    return current.Item2;
                 }
+                
+                if (!shorthand)
+                    return "major " + current.Item1;
+                
+                return current.Item2;
+                
             }
             else if (maj + 1 <= half_notes)
             {
                 // if maj + 1 is equal to half_notes, the interval is augmented.
                 if (!shorthand)
                     return "augmented " + current.Item1;
+                
                 return "#" + (half_notes - maj) + current.Item2;
             }
             else if (maj - 1 == half_notes)
@@ -477,12 +498,14 @@ namespace ChordsAnalyser.cintervals
                 // etc.
                 if (!shorthand)
                     return "minor " + current.Item1;
+                
                 return "b" + current.Item2;
             }
             else if (maj - 2 >= half_notes)
             {
                 if (!shorthand)
                     return "diminished " + current.Item1;
+                
                 return "b" + (maj - half_notes) + current.Item2;
             }
 

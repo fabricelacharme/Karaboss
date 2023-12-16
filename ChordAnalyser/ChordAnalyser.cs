@@ -12,24 +12,27 @@ using System.Threading.Tasks;
 using ChordsAnalyser;
 using Sanford.Multimedia.Midi;
 using Sanford.Multimedia.Midi.Score;
-
+using ChordsAnalyser.cchords;
 
 namespace ChordsAnalyser
 {
     public class ChordAnalyser
     {
 
+        cchords.chords ch = new cchords.chords();
+
         public ChordAnalyser() { }  
 
         public ChordAnalyser(List<ChordSymbol> chords) 
         {
-            tests t = new tests();
+            //tests t = new tests();
 
-            
+            int x = 0;
             foreach (ChordSymbol chord in chords)
             {
                 if (chord.Notes.Count > 1)
                 {
+                    x++;
                     // Sort notes ascending
                     chord.Notes = SortNotes(chord.Notes);
 
@@ -39,10 +42,37 @@ namespace ChordsAnalyser
                         Console.WriteLine("Minor");
                     else
                         Console.WriteLine("Unable to guess major or minor");
+
+                    // Transpose to letters
+                    List<string> notes = TransposeToLetter(chord.Notes);
+
+                    List<string> res = ch.determine(notes);
+                    Console.WriteLine(res[0]);
+                    Console.WriteLine(x.ToString()) ;
                 }
+
+                
+
+
             }
             
             
+        }
+
+        private List<string> TransposeToLetter(List<MidiNote> chord)
+        {
+            List<string> letters = new List<string>() { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+            List<string> notes = new List<string>();
+            int n;
+            string l = string.Empty;
+            foreach (MidiNote note in chord)
+            {
+                n = note.Number;
+                n = n % 12;
+                l = letters[n];
+                notes.Add(l);
+            }
+            return notes;
         }
 
         private List<MidiNote> SortNotes(List<MidiNote> notes)

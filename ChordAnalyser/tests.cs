@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ChordsAnalyser.cvalue;
 using ChordsAnalyser.ckeys;
+using ChordsAnalyser.cchords;
 
 namespace ChordsAnalyser
 {
@@ -16,7 +17,7 @@ namespace ChordsAnalyser
             ckeys.nkeys k = new ckeys.nkeys();
             cintervals.intervals inter = new cintervals.intervals();
             cscales.scales sc = new cscales.scales();
-
+            cchords.chords ch = new cchords.chords();
 
             // SCALES
             sc.determine(new List<string>() {"A", "Bb", "E", "F#", "G"});

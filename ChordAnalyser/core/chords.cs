@@ -8,10 +8,9 @@ using ChordsAnalyser.ckeys;
 using ChordsAnalyser.cintervals;
 using ChordsAnalyser.cmt_exception;
 using System.Security.AccessControl;
-using ChordAnalyser.cchords;
 using System.Web;
 
-namespace ChordAnalyser.cchords
+namespace ChordsAnalyser.cchords
 {
     public class chords
     {
@@ -99,10 +98,12 @@ namespace ChordAnalyser.cchords
         nkeys nkeys = new nkeys();
         notes notes = new notes();
 
-        chords() 
+        public chords() 
         {
 
             init_chordshorhand();
+
+            init_chordshorthandmeaning();
         }
         
 
@@ -115,60 +116,62 @@ namespace ChordAnalyser.cchords
         // Triads Augmented chords Suspended chords Sevenths
         // Sixths Ninths Elevenths Thirteenths Altered
         // Chords Special
-        List<Tuple<string, string>> chord_shorthand_meaning = new List<Tuple<string, string>>
+        Dictionary<string,string> chord_shorthand_meaning = new Dictionary<string,string>();
+
+        private void init_chordshorthandmeaning()
         {
-            Tuple.Create("m", " minor triad"),
-            Tuple.Create("M", " major triad"),
-            Tuple.Create("", " major triad"),
-            Tuple.Create("dim", " diminished triad"),
-            Tuple.Create("aug", " augmented triad"),
-            Tuple.Create("+", " augmented triad"),
-            Tuple.Create("7#5", " augmented minor seventh"),
-            Tuple.Create("M7+5", " augmented minor seventh"),
-            Tuple.Create("M7+", " augmented major seventh"),
-            Tuple.Create("m7+", " augmented minor seventh"),
-            Tuple.Create("7+", " augmented major seventh"),
-            Tuple.Create("sus47", " suspended seventh"),
-            Tuple.Create("7sus4", " suspended seventh"),
-            Tuple.Create("sus4", " suspended fourth triad"),
-            Tuple.Create("sus2", " suspended second triad"),
-            Tuple.Create("sus", " suspended fourth triad"),
-            Tuple.Create("11", " eleventh"),
-            Tuple.Create("add11", " eleventh"),
-            Tuple.Create("sus4b9", " suspended fourth ninth"),
-            Tuple.Create("susb9", " suspended fourth ninth"),
-            Tuple.Create("m7", " minor seventh"),
-            Tuple.Create("M7", " major seventh"),
-            Tuple.Create("dom7", " dominant seventh"),
-            Tuple.Create("7", " dominant seventh"),
-            Tuple.Create("m7b5", " half diminished seventh"),
-            Tuple.Create("dim7", " diminished seventh"),
-            Tuple.Create("m/M7", " minor/major seventh"),
-            Tuple.Create("mM7", " minor/major seventh"),
-            Tuple.Create("m6", " minor sixth"),
-            Tuple.Create("M6", " major sixth"),
-            Tuple.Create("6", " major sixth"),
-            Tuple.Create("6/7", " dominant sixth"),
-            Tuple.Create("67", " dominant sixth"),
-            Tuple.Create("6/9", " sixth ninth"),
-            Tuple.Create("69", " sixth ninth"),
-            Tuple.Create("9", " dominant ninth"),
-            Tuple.Create("add9", " dominant ninth"),
-            Tuple.Create("7b9", " dominant flat ninth"),
-            Tuple.Create("7#9", " dominant sharp ninth"),
-            Tuple.Create("M9", " major ninth"),
-            Tuple.Create("m9", " minor ninth"),
-            Tuple.Create("7#11", " lydian dominant seventh"),
-            Tuple.Create("m11", " minor eleventh"),
-            Tuple.Create("M13", " major thirteenth"),
-            Tuple.Create("m13", " minor thirteenth"),
-            Tuple.Create("13", " dominant thirteenth"),
-            Tuple.Create("add13", " dominant thirteenth"),
-            Tuple.Create("7b5", " dominant flat five"),
-            Tuple.Create("hendrix", " hendrix chord"),
-            Tuple.Create("7b12", " hendrix chord"),
-            Tuple.Create("5", " perfect fifth"),
-        };
+            chord_shorthand_meaning.Add("m", " minor triad");
+            chord_shorthand_meaning.Add("M", " major triad");
+            chord_shorthand_meaning.Add("", " major triad");
+            chord_shorthand_meaning.Add("dim", " diminished triad");
+            chord_shorthand_meaning.Add("aug", " augmented triad");
+            chord_shorthand_meaning.Add("+", " augmented triad");
+            chord_shorthand_meaning.Add("7#5", " augmented minor seventh");
+            chord_shorthand_meaning.Add("M7+5", " augmented minor seventh");
+            chord_shorthand_meaning.Add("M7+", " augmented major seventh");
+            chord_shorthand_meaning.Add("m7+", " augmented minor seventh");
+            chord_shorthand_meaning.Add("7+", " augmented major seventh");
+            chord_shorthand_meaning.Add("sus47", " suspended seventh");
+            chord_shorthand_meaning.Add("7sus4", " suspended seventh");
+            chord_shorthand_meaning.Add("sus4", " suspended fourth triad");
+            chord_shorthand_meaning.Add("sus2", " suspended second triad");
+            chord_shorthand_meaning.Add("sus", " suspended fourth triad");
+            chord_shorthand_meaning.Add("11", " eleventh");
+            chord_shorthand_meaning.Add("add11", " eleventh");
+            chord_shorthand_meaning.Add("sus4b9", " suspended fourth ninth");
+            chord_shorthand_meaning.Add("susb9", " suspended fourth ninth");
+            chord_shorthand_meaning.Add("m7", " minor seventh");
+            chord_shorthand_meaning.Add("M7", " major seventh");
+            chord_shorthand_meaning.Add("dom7", " dominant seventh");
+            chord_shorthand_meaning.Add("7", " dominant seventh");
+            chord_shorthand_meaning.Add("m7b5", " half diminished seventh");
+            chord_shorthand_meaning.Add("dim7", " diminished seventh");
+            chord_shorthand_meaning.Add("m/M7", " minor/major seventh");
+            chord_shorthand_meaning.Add("mM7", " minor/major seventh");
+            chord_shorthand_meaning.Add("m6", " minor sixth");
+            chord_shorthand_meaning.Add("M6", " major sixth");
+            chord_shorthand_meaning.Add("6", " major sixth");
+            chord_shorthand_meaning.Add("6/7", " dominant sixth");
+            chord_shorthand_meaning.Add("67", " dominant sixth");
+            chord_shorthand_meaning.Add("6/9", " sixth ninth");
+            chord_shorthand_meaning.Add("69", " sixth ninth");
+            chord_shorthand_meaning.Add("9", " dominant ninth");
+            chord_shorthand_meaning.Add("add9", " dominant ninth");
+            chord_shorthand_meaning.Add("7b9", " dominant flat ninth");
+            chord_shorthand_meaning.Add("7#9", " dominant sharp ninth");
+            chord_shorthand_meaning.Add("M9", " major ninth");
+            chord_shorthand_meaning.Add("m9", " minor ninth");
+            chord_shorthand_meaning.Add("7#11", " lydian dominant seventh");
+            chord_shorthand_meaning.Add("m11", " minor eleventh");
+            chord_shorthand_meaning.Add("M13", " major thirteenth");
+            chord_shorthand_meaning.Add("m13", " minor thirteenth");
+            chord_shorthand_meaning.Add("13", " dominant thirteenth");
+            chord_shorthand_meaning.Add("add13", " dominant thirteenth");
+            chord_shorthand_meaning.Add("7b5", " dominant flat five");
+            chord_shorthand_meaning.Add("hendrix", " hendrix chord");
+            chord_shorthand_meaning.Add("7b12", " hendrix chord");
+            chord_shorthand_meaning.Add("5", " perfect fifth");
+        }
 
         public List<string> triad(string note, string key) {
             /* Return the triad on note in key as a list.
@@ -1155,7 +1158,7 @@ namespace ChordAnalyser.cchords
                 return new List<string>();
 
 
-            List<string> inversion_exhauster(int tries, List<string> result)
+            List<string> inversion_exhauster(int tries, List<(string,int,string)> result)
             {
                 /* Run tries every inversion and save the result. */
                 string intval1 = intervals.determine(triad[0], triad[1], true);
@@ -1163,9 +1166,7 @@ namespace ChordAnalyser.cchords
 
                 void add_result(string s)
                 {
-                    result.Add(s);
-                    result.Add(tries.ToString());
-                    result.Add(triad[0]);
+                    result.Add((s, tries, triad[0]));                   
                 }
 
                 string intval = intval1 + intval2;
@@ -1207,25 +1208,25 @@ namespace ChordAnalyser.cchords
                     ll.Add(triad[triad.Count - 1]);
                     for (int i = 0; i < triad.Count - 2; i++)
                         ll.Add(triad[i]);
-                    triad = ll;
+                    //triad = ll;
                     return inversion_exhauster(tries + 1, result);
                 }
                 else
                 {
                     List<string> res = new List<string>();
-                    foreach (string r in result)
+                    foreach ((string,int,string) r in result)
                     {
                         if (shorthand)
-                            res.Add(r[2].ToString() + r[0].ToString());
+                            res.Add(r.Item3.ToString() + r.Item1.ToString());
                         else
-                            res.Add(r[2].ToString() + chord_shorthand_meaning[r[0]] + int_desc(r[1]));
+                            res.Add(r.Item3 + chord_shorthand_meaning[r.Item1] + int_desc(r.Item2));
                     }
                     return res;
                 }
             }
         
 
-            return inversion_exhauster( 1, new List<string>());
+            return inversion_exhauster( 1, new List<(string,int,string)>());
         }
 
 
@@ -1247,7 +1248,7 @@ namespace ChordAnalyser.cchords
                 //# warning raise exception: seventh chord is not a seventh chord
                 return new List<string>();
 
-            List<string> inversion_exhauster(int tries, List<string> result, List<string> polychords)
+            List<string> inversion_exhauster(int tries, List<(string,int,string,bool)> result, List<string> polychords)
             {
                 /* Determine sevenths recursive functions. */
                 //# Check whether the first three notes of seventh are part of some triad.
@@ -1260,10 +1261,11 @@ namespace ChordAnalyser.cchords
 
                 void add_result(string s, bool poly = false) {
                     /* Helper function. */
-                    result.Add(s);
-                    result.Add(tries.ToString());
-                    result.Add(seventh[0]);
-                    result.Add(poly.ToString());                    
+                    result.Add((s,tries, seventh[0],poly));
+                    //result.Add(s);
+                    //result.Add(tries.ToString());
+                    //result.Add(seventh[0]);
+                    //result.Add(poly.ToString());                    
                 }
 
                 // Recognizing polychords
@@ -1349,11 +1351,11 @@ namespace ChordAnalyser.cchords
                     ll.Add(seventh[2]);
                     seventh = ll;
 
-                    foreach (string x in result) {
+                    foreach ((string,int,string,bool) x in result) {
                         if (shorthand)
-                            res.Add(x[2].ToString() + x[0].ToString());
+                            res.Add(x.Item3 + x.Item1);
                         else
-                            res.Add(x[2].ToString() + chord_shorthand_meaning[x[0]] + int_desc(x[1]));
+                            res.Add(x.Item3 + chord_shorthand_meaning[x.Item1] + int_desc(x.Item2));
                     }
                     foreach (string s in polychords)
                         res.Add(s);
@@ -1361,7 +1363,7 @@ namespace ChordAnalyser.cchords
                 }
             }
 
-            return inversion_exhauster(1, new List<string>(), new List<string>());
+            return inversion_exhauster(1, new List<(string,int,string,bool)>(), new List<string>());
         }
 
         public List<string> determine_extended_chord5(List<string> chord, bool shorthand = false, bool no_inversions = false, bool no_polychords = false)
@@ -1372,15 +1374,16 @@ namespace ChordAnalyser.cchords
                 return null;
 
 
-            List<string> inversion_exhauster(int tries, List<string> result, List<string> polychords)
+            List<string> inversion_exhauster(int tries, List<(string,int,string)> result, List<string> polychords)
             {
                 /* Recursive helper function. */
 
                 void add_result(string s)
                 {
-                    result.Add(s);
-                    result.Add(tries.ToString());
-                    result.Add(chord[0].ToString());
+                    result.Add((s, tries, chord[0]));
+                    //result.Add(s);
+                    //result.Add(tries.ToString());
+                    //result.Add(chord[0].ToString());
                 }
 
                 List<string> ch3 = new List<string>() { chord[0], chord[1], chord[2] };
@@ -1450,12 +1453,12 @@ namespace ChordAnalyser.cchords
                 else
                 {
                     List<string> res = new List<string>();
-                    foreach (string r in result)
+                    foreach ((string,int,string) r in result)
                     {
                         if (shorthand)
-                            res.Add(r[2].ToString() + r[0].ToString());
+                            res.Add(r.Item3 + r.Item1);
                         else
-                            res.Add(r[2].ToString() + chord_shorthand_meaning[r[0]] + int_desc(r[1]));
+                            res.Add(r.Item3 + chord_shorthand_meaning[r.Item1] + int_desc(r.Item2));
 
                     }
                     foreach (string s in polychords)
@@ -1464,7 +1467,7 @@ namespace ChordAnalyser.cchords
                 }
 
             }
-            return inversion_exhauster(1, new List<string>(), new List<string>());
+            return inversion_exhauster(1, new List<(string,int,string)>(), new List<string>());
         }
 
         public List<string> determine_extended_chord6(List<string> chord, bool shorthand = false, bool no_inversions = false, bool no_polychords = false)
@@ -1474,7 +1477,7 @@ namespace ChordAnalyser.cchords
                 //# warning raise exeption: not an extended chord
                 return new List<string>();
 
-            List<string> inversion_exhauster(int tries, List<string> result, List<string> polychords)
+            List<string> inversion_exhauster(int tries, List<(string,int,string)> result, List<string> polychords)
             {
                 /* Recursive helper function */
 
@@ -1488,9 +1491,10 @@ namespace ChordAnalyser.cchords
                 
                 void add_result(string s)
                 {
-                    result.Add(s);
-                    result.Add(tries.ToString());
-                    result.Add(chord[0]);                
+                    result.Add((s, tries, chord[0]));
+                    //result.Add(s);
+                    //result.Add(tries.ToString());
+                    //result.Add(chord[0]);                
                 }
 
                 List<string> ch5 = new List<string>() { chord[0], chord[1], chord[2], chord[3], chord[4] };
@@ -1536,12 +1540,12 @@ namespace ChordAnalyser.cchords
                 else
                 {
                     List<string> res = new List<string>();
-                    foreach (string r in result)
+                    foreach ((string,int,string) r in result)
                     {
                         if (shorthand)
-                            res.Add(r[2].ToString() + r[0].ToString());
+                            res.Add(r.Item3 + r.Item1);
                         else
-                            res.Add(r[2].ToString() + chord_shorthand_meaning[r[0]] + int_desc(r[1]));
+                            res.Add(r.Item3 + chord_shorthand_meaning[r.Item1] + int_desc(r.Item2));
                     }
 
                     foreach (string t in polychords)
@@ -1551,7 +1555,7 @@ namespace ChordAnalyser.cchords
                 }
             }
 
-            return inversion_exhauster( 1, new List<string>(), new List<string>());
+            return inversion_exhauster( 1, new List<(string,int,string)>(), new List<string>());
         }
 
 
@@ -1562,7 +1566,7 @@ namespace ChordAnalyser.cchords
                 //# warning raise exeption: not an extended chord
                 return new List<string>();
 
-            List<string> inversion_exhauster(int tries, List<string> result, List<string> polychords)
+            List<string> inversion_exhauster(int tries, List<(string,int,string)> result, List<string> polychords)
             {
                 /* Recursive helper function. */
                 // Determine polychords
@@ -1577,9 +1581,10 @@ namespace ChordAnalyser.cchords
 
                 void add_result(string s)
                 {
-                    result.Add(s);
-                    result.Add(tries.ToString());
-                    result.Add(chord[0]);
+                    result.Add((s, tries, chord[0]));
+                    //result.Add(s);
+                    //result.Add(tries.ToString());
+                    //result.Add(chord[0]);
 
                 }
 
@@ -1616,12 +1621,12 @@ namespace ChordAnalyser.cchords
                 {
                     List<string> res = new List<string>();
 
-                    foreach (string r in result)
+                    foreach ((string,int,string) r in result)
                     {
                         if (shorthand)
-                            res.Add(r[2].ToString() + r[0].ToString());
+                            res.Add(r.Item3 + r.Item1);
                         else
-                            res.Add(r[2].ToString() + chord_shorthand_meaning[r[0]] + int_desc(r[1]));
+                            res.Add(r.Item3 + chord_shorthand_meaning[r.Item1] + int_desc(r.Item2));
                     }
 
                     foreach (string t in polychords)
@@ -1630,7 +1635,7 @@ namespace ChordAnalyser.cchords
                 }
             }
 
-            return inversion_exhauster(1, new List<string>(), new List<string>());
+            return inversion_exhauster(1, new List<(string,int,string)>(), new List<string>());
         }
 
         public string int_desc(int tries)
@@ -1662,6 +1667,7 @@ namespace ChordAnalyser.cchords
              */
             List<string> polychords = new List<string>();
 
+            
             List<dynamic> function_list = new List<dynamic>
             {
                 new Func<List<string>>(() => determine_triad(new List<string>(), new bool(), new bool(), string.Empty)),
@@ -1670,6 +1676,16 @@ namespace ChordAnalyser.cchords
                 new Func<List<string>>(() => determine_extended_chord6(new List<string>(), new bool(), new bool(), new bool())),
                 new Func<List<string>>(() => determine_extended_chord7(new List<string>(), new bool(), new bool(), new bool()))
             };            
+            
+
+            /*
+            List<dynamic> function_list = new List<dynamic>();
+            function_list.Add(determine_triad(new List<string>(), new bool(), new bool(), string.Empty));
+            function_list.Add(determine_seventh(new List<string>(), new bool(), new bool(), new bool()));
+            function_list.Add(determine_extended_chord5(new List<string>(), new bool(), new bool(), new bool()));
+            function_list.Add(determine_extended_chord6(new List<string>(), new bool(), new bool(), new bool()));
+            function_list.Add(determine_extended_chord7(new List<string>(), new bool(), new bool(), new bool()));
+            */
 
             List<int> function_nr = new List<int>();
 
