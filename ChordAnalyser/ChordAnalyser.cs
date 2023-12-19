@@ -72,6 +72,9 @@ namespace ChordsAnalyser
                 l = letters[n];
                 notes.Add(l);
             }
+            
+            // BUG... if notes are not in the good order, chords are not recognized
+            // NO !!!! notes.Sort();
             return notes;
         }
 
