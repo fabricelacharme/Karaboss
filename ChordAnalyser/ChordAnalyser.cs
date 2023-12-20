@@ -79,8 +79,16 @@ namespace ChordsAnalyser
                         List<string> notesletters = TransposeToLetter(lroot);
 
                         List<string> res = ch.determine(notesletters);
-                        Console.WriteLine(res[0]);
-                        Console.WriteLine(x.ToString());
+
+                        if (res.Count > 0)
+                        {
+                            Console.WriteLine(res[0]);
+                            Console.WriteLine(x.ToString());
+                        }
+                        else
+                        {
+                            Console.WriteLine("ERREUR : Determine n'a pas trouvé d'accord");
+                        }
                     }
                     else
                     {

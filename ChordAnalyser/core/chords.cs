@@ -1136,7 +1136,7 @@ namespace ChordsAnalyser.cchords
                 return determine_polychords(chord, shorthand);
         }
 
-        public List<string> determine_triad(List<string> triad, bool shorthand = false, bool no_inversions = false, string placeholder = null) {
+        public List<string> determine_triad(List<string> triad, bool shorthand = false, bool no_inversions = false, bool placeholder = false) {
             /* Name the triad; return answers in a list.
 
             The third argument should not be given. If shorthand is True the answers
@@ -1278,7 +1278,7 @@ namespace ChordsAnalyser.cchords
                 foreach (string triad in triads)
                 {
                     // Basic triads
-                    string striad = triad.Substring(seventh[0].Length,triad.Length - 1); //[len(seventh[0]) :];
+                    string striad = triad.Substring(seventh[0].Length); //[len(seventh[0]) :];
                     
                     if (striad == "m") {
                         if (intval3 == "minor seventh")
@@ -1653,6 +1653,7 @@ namespace ChordsAnalyser.cchords
                 return null;
         }
 
+
         /// <summary>
         /// Determine the polychords in chord. A TESTER !!!!
         /// </summary>
@@ -1665,12 +1666,20 @@ namespace ChordsAnalyser.cchords
             This function can handle anything from polychords based on two triads to
             6 note extended chords.
              */
-            List<string> polychords = new List<string>();
+            List<string> polychords = new List<string>();            
 
-            
             List<dynamic> function_list = new List<dynamic>
             {
-                new Func<List<string>>(() => determine_triad(new List<string>(), new bool(), new bool(), string.Empty)),
+               new Func<List<string>, bool, bool,bool, List<string>> (determine_triad),
+               new Func<List<string>, bool, bool,bool, List<string>> (determine_seventh),
+               new Func<List<string>, bool, bool,bool, List<string>> (determine_extended_chord5),
+               new Func<List<string>, bool, bool,bool, List<string>> (determine_extended_chord6),
+               new Func<List<string>, bool, bool,bool, List<string>> (determine_extended_chord7),
+            };
+
+            List<dynamic> function_list2 = new List<dynamic>
+            {                
+                new Func<List<string>>(() => determine_triad(new List<string>(), new bool(), new bool(), new bool())),
                 new Func<List<string>>(() => determine_seventh(new List<string>(), new bool(), new bool(), new bool())),
                 new Func<List<string>>(() => determine_extended_chord5(new List<string>(), new bool(), new bool(), new bool())),
                 new Func<List<string>>(() => determine_extended_chord6(new List<string>(), new bool(), new bool(), new bool())),
@@ -1722,8 +1731,8 @@ namespace ChordsAnalyser.cchords
                     for (int i = chord.Count - (3 + f); i < chord.Count; i++)
                         s.Add(chord[i]);
                     
-                    foreach (string chord1 in function_list[f](s, true, true, true))
-                    {
+                    foreach (string chord1 in function_list[f](s, true, true, true))                      
+                        {
                         //for (chord2 in function_list[f2](chord[: f2 + 3], True, True, True)
                         List<string> ss = new List<string>();
                         for (int i = 0; i < f2 + 3; i++)
