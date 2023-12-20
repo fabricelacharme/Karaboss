@@ -21,8 +21,7 @@ namespace ChordsAnalyser
 
         cchords.chords ch = new cchords.chords();
 
-        static List<MidiNote[]> ln = new List<MidiNote[]>();
-        //static List<List<MidiNote>> ln = new List<List<MidiNote>>();
+        static List<MidiNote[]> ln = new List<MidiNote[]>();        
 
         public ChordAnalyser() { }  
 
@@ -37,37 +36,49 @@ namespace ChordsAnalyser
                 {
                     x++;
 
+                    // Sort notes ascending in each chord
+                    chord.Notes = SortNotes(chord.Notes);
+                    
+                    
+
+                    // Create a list only for permutations
                     MidiNote[] midiNotes = new MidiNote[chord.Notes.Count];
                     for (int i = 0; i < midiNotes.Length; i++)
                         midiNotes[i] = chord.Notes[i];
 
-                    //List<MidiNote> lnotes = chord.Notes;
-
                     //lnotes = lnotes.Distinct().ToList();                  
-
-                    // Sort notes ascending
-                    //chord.Notes = SortNotes(chord.Notes);
-
+                  
 
                     ln = new List<MidiNote[]>();                  
-                    // Build ln
+                    // Build ln = list of all combinations
                     Permute(midiNotes, 0, 2);
 
-                    //Remove duplicates
-                    //notes = notes.Distinct().ToList();
+                    List<List<int>> notes = new List<List<int>>();
+                    foreach (MidiNote[] arry in ln)
+                    {
+                        List<int> lll = new List<int>();
+                        for (int i =0; i < arry.Length; i++)
+                        {
+                            lll.Add(arry[i].Number);
+                        }
+                        notes.Add(lll);
+                    }
 
-                    // Changer les valeurs des notes dans ln
-                    ChangeNotesNumber();
+                    //Remove duplicates
+                    notes = RemoveDoubles(notes);
+
+                    // Minor the value of the notes of a chord and ensure that each note has a value greater than the previous one.
+                    notes = ChangeNotesNumber(notes);
 
                     // Search root note                    
-                    List<MidiNote> l = DetermineRoot();
+                    List<int> lroot = DetermineRoot(notes);
 
-                    if (l != null)
+                    if (lroot != null)
                     {
                         // Transpose to letters
-                        List<string> notes = TransposeToLetter(l);
+                        List<string> notesletters = TransposeToLetter(lroot);
 
-                        List<string> res = ch.determine(notes);
+                        List<string> res = ch.determine(notesletters);
                         Console.WriteLine(res[0]);
                         Console.WriteLine(x.ToString());
                     }
@@ -81,17 +92,45 @@ namespace ChordsAnalyser
             
         }
 
-        private List<string> TransposeToLetter(List<MidiNote> chord)
+
+        /// <summary>
+        /// Remove a note if in double inside a chord
+        /// If two C exists, remove one
+        /// </summary>
+        /// <param name="notes"></param>
+        /// <returns></returns>
+        private List<List<int>> RemoveDoubles(List<List<int>> lschords)
+        {
+            List<List<int>> res = new List<List<int>>();
+            int n = 0;
+            for (int j = 0; j < lschords.Count; j++)
+            {
+                List<int> lsnotes = lschords[j];
+                for (int i = 0; i < lsnotes.Count; i++)                
+                    lsnotes[i] = lsnotes[i] % 12;
+                
+                lsnotes = lsnotes.Distinct().ToList();
+                res.Add(lsnotes);
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// Retrieve note letter
+        /// </summary>
+        /// <param name="notes"></param>
+        /// <returns></returns>
+        private List<string> TransposeToLetter(List<int> notes)
         {
             List<string> letters = new List<string>() { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
-            List<string> letternotes = new List<string>();
-            int n;
+            List<string> letternotes = new List<string>();            
             string l = string.Empty;
-            foreach (MidiNote note in chord)
-            {
-                n = note.Number;
-                n = n % 12;
-                l = letters[n];
+            int x = 0;
+            foreach (int n in notes)
+            {                
+                x = n % 12;
+                l = letters[x];
                 letternotes.Add(l);
             }
             
@@ -99,12 +138,18 @@ namespace ChordsAnalyser
         }
 
 
+
+        /// <summary>
+        /// Get all combinations of a set of values
+        /// </summary>
+        /// <param name="arry"></param>
+        /// <param name="i"></param>
+        /// <param name="n"></param>
         static void Permute(MidiNote[] arry, int i, int n)
         {            
             int j;
             if (i == n)
-            {
-                //Console.WriteLine(string.Format("{0} {1} {2}", arry[0].Number, arry[1].Number, arry[2].Number));
+            {                
                 MidiNote[] m = new MidiNote[arry.Count()];
                 for (int x = 0; x < arry.Count();x++)
                     m[x] = arry[x];
@@ -129,19 +174,48 @@ namespace ChordsAnalyser
             b = tmp;
         }
 
+        /// <summary>
+        /// Minor the value of the notes of a chord and ensure that each note has a value greater than the previous one.
+        /// </summary>
+        /// <param name="ll"></param>
+        /// <returns></returns>
+        private List<List<int>> ChangeNotesNumber(List<List<int>> ll)
+        {            
+            int n;
+            int prevnumber = 0;
+            List<List<int>> res = new List<List<int>>();
 
-        private void ChangeNotesNumber()
-        {
-            foreach(MidiNote[] arry in ln) 
-            {
-                foreach (MidiNote m in arry)
+            for (int j = 0; j < ll.Count; j++)          
+            {               
+                List<int> lsnotes = ll[j];                
+                int t = lsnotes[0];
+                t = t % 12;
+                lsnotes[0] = t;
+                prevnumber = t;
+
+                for (int i = 1; i < lsnotes.Count; i++)
                 {
-                    m.Number = m.Number % 12;
+                    n = lsnotes[i] % 12;
+                    if (n < prevnumber)
+                    {
+                        while (n < prevnumber)
+                            n += 12;
+                    }
+                    lsnotes[i] = n;
+                    prevnumber = n;
                 }
+                res.Add(lsnotes);
             }
+            return res;
         }
 
-        private List<MidiNote> DetermineRoot()
+
+        /// <summary>
+        /// Select the chord existing in the proposed list
+        /// </summary>
+        /// <param name="lsnotes"></param>
+        /// <returns></returns>
+        private List<int> DetermineRoot(List<List<int>> lsnotes)
         {
             /* {0,1,2} => 1 - 0, 2 - 0 ET {0,2,1} ????
              * {1,2,0} => 2 - 1, 0 - 1 ET {1,0,2}
@@ -149,15 +223,11 @@ namespace ChordsAnalyser
              * 
              */
 
-            foreach (MidiNote[] arry in ln)
-            {
-                List<MidiNote> notes = new List<MidiNote>();
-                for (int x = 0; x < arry.Count(); x++)                
-                    notes.Add(arry[x]);
-                             
-                // Il faut mettre le number des notes dans le bon ordre                
-                if (IsMajorChord(notes) || IsMinorChord(notes))                    
-                    return notes;                    
+            foreach (List<int> chord in lsnotes)
+            {                                          
+                // this test needs that chord have only 3 notes
+                if (IsMajorChord(chord) || IsMinorChord(chord))                    
+                    return chord;                    
             }
             return null;  
         }
@@ -191,22 +261,22 @@ namespace ChordsAnalyser
             return l;
         }
 
-        static bool IsMajorChord(List<MidiNote> notes)
+        static bool IsMajorChord(List<int> notes)
         {
             // Un coup ça marche sans % 12, un coup avec
             // Si les number des notes sont dans le bon ordre, c'est bon 
             if (notes.Count < 3) return false;
             
             // A major chord consists of the root, major third, and perfect fifth
-            return (notes[1].Number - notes[0].Number == 4) && (notes[2].Number - notes[0].Number == 7);
+            return (notes[1] - notes[0] == 4) && (notes[2] - notes[0] == 7);
         }
 
-        static bool IsMinorChord(List<MidiNote> notes)
+        static bool IsMinorChord(List<int> notes)
         {
             if (notes.Count <3) return false;
 
             // A minor chord consists of the root, minor third, and perfect fifth
-            return (notes[1].Number - notes[0].Number == 3) && (notes[2].Number - notes[0].Number == 7);
+            return (notes[1] - notes[0] == 3) && (notes[2] - notes[0] == 7);
         }
 
 
