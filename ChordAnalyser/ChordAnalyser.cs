@@ -20,84 +20,137 @@ namespace ChordsAnalyser
     {
 
         cchords.chords ch = new cchords.chords();
+        static List<MidiNote[]> ln = new List<MidiNote[]>();
 
-        static List<MidiNote[]> ln = new List<MidiNote[]>();        
+        private Sequence sequence1 = new Sequence();
+        // Midifile characteristics
+        private double _duration = 0;  // en secondes
+        private int _totalTicks = 0;
+        private int _bpm = 0;
+        private double _ppqn;
+        private int _tempo;
+        private int _measurelen = 0;
+        private int NbMeasures;
 
-        public ChordAnalyser() { }  
+        public ChordAnalyser() { }
 
-        public ChordAnalyser(List<ChordSymbol> chords) 
+        public ChordAnalyser(SheetMusic sheetmusic, Sequence seq)
         {
-            //tests t = new tests();
+            sequence1 = seq;
+            UpdateMidiTimes();
 
-            int x = 0;
-            foreach (ChordSymbol chord in chords)
+            // For each track containing chords
+            foreach (List<ChordSymbol> chords in sheetmusic.lstChords) 
             {
-                if (chord.Notes.Count >= 3)
+                if (chords.Count > 0)
                 {
-                    x++;
-
-                    // Sort notes ascending in each chord
-                    chord.Notes = SortNotes(chord.Notes);
-                    
-                    
-
-                    // Create a list only for permutations
-                    MidiNote[] midiNotes = new MidiNote[chord.Notes.Count];
-                    for (int i = 0; i < midiNotes.Length; i++)
-                        midiNotes[i] = chord.Notes[i];
-
-                    //lnotes = lnotes.Distinct().ToList();                  
-                  
-
-                    ln = new List<MidiNote[]>();                  
-                    // Build ln = list of all combinations
-                    Permute(midiNotes, 0, 2);
-
-                    List<List<int>> notes = new List<List<int>>();
-                    foreach (MidiNote[] arry in ln)
+                    int x = 0;
+                    foreach (ChordSymbol chord in chords)
                     {
-                        List<int> lll = new List<int>();
-                        for (int i =0; i < arry.Length; i++)
+                        if (chord.Notes.Count >= 3)
                         {
-                            lll.Add(arry[i].Number);
+                            x++;
+
+                            int Measure = DetermineMeasure(chord);
+
+
+                            // Sort notes ascending in each chord
+                            chord.Notes = SortNotes(chord.Notes);
+
+
+
+                            // Create a list only for permutations
+                            MidiNote[] midiNotes = new MidiNote[chord.Notes.Count];
+                            for (int i = 0; i < midiNotes.Length; i++)
+                                midiNotes[i] = chord.Notes[i];
+
+                            //lnotes = lnotes.Distinct().ToList();                  
+
+
+                            ln = new List<MidiNote[]>();
+                            // Build ln = list of all combinations
+                            Permute(midiNotes, 0, 2);
+
+                            List<List<int>> notes = new List<List<int>>();
+                            foreach (MidiNote[] arry in ln)
+                            {
+                                List<int> lll = new List<int>();
+                                for (int i = 0; i < arry.Length; i++)
+                                {
+                                    lll.Add(arry[i].Number);
+                                }
+                                notes.Add(lll);
+                            }
+
+                            //Remove duplicates
+                            notes = RemoveDoubles(notes);
+
+                            // Minor the value of the notes of a chord and ensure that each note has a value greater than the previous one.
+                            notes = ChangeNotesNumber(notes);
+
+                            // Search root note                    
+                            List<int> lroot = DetermineRoot(notes);
+
+                            if (lroot != null)
+                            {
+                                // Transpose to letters
+                                List<string> notesletters = TransposeToLetter(lroot);
+
+                                List<string> res = ch.determine(notesletters);
+
+                                if (res.Count > 0)
+                                {
+                                    Console.WriteLine(res[0]);
+                                    Console.WriteLine(x.ToString());
+                                }
+                                else
+                                {
+                                    Console.WriteLine("ERREUR : Determine n'a pas trouvé d'accord");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Chord not found");
+                            }
                         }
-                        notes.Add(lll);
                     }
 
-                    //Remove duplicates
-                    notes = RemoveDoubles(notes);
-
-                    // Minor the value of the notes of a chord and ensure that each note has a value greater than the previous one.
-                    notes = ChangeNotesNumber(notes);
-
-                    // Search root note                    
-                    List<int> lroot = DetermineRoot(notes);
-
-                    if (lroot != null)
-                    {
-                        // Transpose to letters
-                        List<string> notesletters = TransposeToLetter(lroot);
-
-                        List<string> res = ch.determine(notesletters);
-
-                        if (res.Count > 0)
-                        {
-                            Console.WriteLine(res[0]);
-                            Console.WriteLine(x.ToString());
-                        }
-                        else
-                        {
-                            Console.WriteLine("ERREUR : Determine n'a pas trouvé d'accord");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Chord not found");
-                    }
-                }                
+                }
             }
-            
-            
+        }
+
+
+        /// <summary>
+        /// Upadate MIDI times
+        /// </summary>
+        private void UpdateMidiTimes()
+        {
+            _totalTicks = sequence1.GetLength();
+            _tempo = sequence1.Tempo;            
+            _ppqn = sequence1.Division;
+            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds            
+
+            if (sequence1.Time != null)
+            {
+                _measurelen = sequence1.Time.Measure;
+                NbMeasures = _totalTicks / _measurelen;
+            }
+        }
+
+        /// <summary>
+        /// In which measure is the chord
+        /// </summary>
+        /// <param name="chord"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private int DetermineMeasure(ChordSymbol chord)
+        {
+            int starttime = chord.StartTime;
+            int measurenumber = 0;
+
+            // Your code
+
+            return measurenumber;
         }
 
 
