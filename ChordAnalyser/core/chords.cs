@@ -1442,11 +1442,14 @@ namespace ChordsAnalyser.cchords
 
                 if (tries != 5 && !no_inversions)
                 {
-                    List<string> ll = new List<string>();
-                    ll.Add(chord[chord.Count - 1]);
-                    for (int i = 0; i < chord.Count -2; i++)
-                        ll.Add(chord[i]);                    
-                    chord = ll;
+                    // return inversion_exhauster([chord[-1]] + chord[:-1], shorthand, tries + 1, result, polychords)                    
+                    chord.Insert(0, chord[chord.Count - 1]);
+                    chord.RemoveAt(chord.Count - 1);
+                    //List<string> ll = new List<string>();
+                    //ll.Add(chord[chord.Count - 1]);
+                    //for (int i = 0; i < chord.Count -2; i++)
+                    //    ll.Add(chord[i]);                    
+                    //chord = ll;
 
                     return inversion_exhauster(tries + 1, result, polychords);
                 }

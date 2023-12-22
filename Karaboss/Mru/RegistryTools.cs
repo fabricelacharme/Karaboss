@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using Microsoft.Win32;
 
 namespace Karaboss.Mru
@@ -154,10 +155,12 @@ namespace Karaboss.Mru
             RegistryKey sub_key = reg_key.CreateSubKey(app_name);
             try
             {
-                sub_key.DeleteValue(name);
+                if (sub_key != null && sub_key.GetValue(name) != null)
+                    sub_key.DeleteValue(name);
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
             }
         }
     }

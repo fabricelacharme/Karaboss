@@ -8633,17 +8633,7 @@ namespace Karaboss
         #region chords analysis
         private void btnChords_Click(object sender, EventArgs e)
         {
-
-            ChordsAnalyser.ChordAnalyser chan = new ChordsAnalyser.ChordAnalyser(sheetmusic, sequence1);
-
-            // For each track containing chords
-            foreach (List<ChordSymbol> chords in sheetmusic.lstChords)
-            {
-                if (chords.Count > 0) 
-                {
-                    
-                }
-            }
+            ChordsAnalyser.ChordAnalyser chan = new ChordsAnalyser.ChordAnalyser(sheetmusic, sequence1);            
         }
 
         #endregion

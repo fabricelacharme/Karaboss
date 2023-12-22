@@ -39,6 +39,77 @@ namespace ChordsAnalyser
             sequence1 = seq;
             UpdateMidiTimes();
 
+            Dictionary <int, string> Gridchords = new Dictionary<int, string>(NbMeasures);
+
+            for (int i = 1; i <= NbMeasures; i++)
+                Gridchords[i] = "Chord not found";
+
+
+            // Search bass track
+            foreach (Track track in sequence1)
+            {
+                if (track.ContainsNotes)
+                {
+                    
+                    // Consider only bass tracks
+                    if (32 <= track.ProgramChange && track.ProgramChange <= 39) {
+                        Console.WriteLine("Name: " + track.Name + " - Instrument: " + track.InstrumentName);
+                        
+                        List<string> lsfirstnotes = new List<string>();
+                        int prevmeasure = 1;
+
+                        foreach (MidiNote note in track.Notes)
+                        {
+                            float st = GetTimeInMeasure(note.StartTime);
+
+                            // For the moment maximum is 2 chords per measure
+                            // one chord in first half
+                            // Second chord in second half
+
+                            int Measure = DetermineMeasure(note.StartTime);
+                            if (Measure != prevmeasure)
+                            {
+                                // Store results from previous measure
+                                
+                                // Remove doubles
+                                lsfirstnotes = lsfirstnotes.Distinct().ToList();
+
+                                if (lsfirstnotes.Count == 0)
+                                    Gridchords[prevmeasure] = "Chord not found";
+                                if (lsfirstnotes.Count <= 2)
+                                    Gridchords[prevmeasure] = lsfirstnotes[0];
+                                else if (lsfirstnotes.Count > 2)
+                                {
+                                    List<string> res = ch.determine(lsfirstnotes);
+                                    if (res.Count > 0)
+                                        Gridchords[prevmeasure] = res[0];
+                                    else
+                                    {
+                                        Console.WriteLine(string.Format("ERREUR : Determine n'a pas trouvé d'accord mesure {0}", prevmeasure));
+                                        Gridchords[prevmeasure] = string.Format("Chord not found {0}", lsfirstnotes.ToArray().ToString());
+                                    }
+                                }
+
+                                prevmeasure = Measure;
+                                lsfirstnotes = new List<string>();
+                            }
+
+                            // first half of measure
+                            if (st < sequence1.Denominator/2)                                                                                           
+                                lsfirstnotes.Add(TransposeToLetterNote(note.Number));                            
+                            else
+                            {
+                                // Second half of measure
+                            }
+
+                            
+
+                        }
+                    }
+                }
+
+            }
+
             // For each track containing chords
             foreach (List<ChordSymbol> chords in sheetmusic.lstChords) 
             {
@@ -51,7 +122,7 @@ namespace ChordsAnalyser
                         {
                             x++;
 
-                            int Measure = DetermineMeasure(chord);
+                            int Measure = DetermineMeasure(chord.StartTime);
 
 
                             // Sort notes ascending in each chord
@@ -62,9 +133,7 @@ namespace ChordsAnalyser
                             // Create a list only for permutations
                             MidiNote[] midiNotes = new MidiNote[chord.Notes.Count];
                             for (int i = 0; i < midiNotes.Length; i++)
-                                midiNotes[i] = chord.Notes[i];
-
-                            //lnotes = lnotes.Distinct().ToList();                  
+                                midiNotes[i] = chord.Notes[i];                            
 
 
                             ln = new List<MidiNote[]>();
@@ -94,19 +163,14 @@ namespace ChordsAnalyser
                             if (lroot != null)
                             {
                                 // Transpose to letters
-                                List<string> notesletters = TransposeToLetter(lroot);
+                                List<string> notesletters = TransposeToLetterChord(lroot);
 
-                                List<string> res = ch.determine(notesletters);
+                                List<string> res = ch.determine(notesletters);                                
 
-                                if (res.Count > 0)
-                                {
-                                    Console.WriteLine(res[0]);
-                                    Console.WriteLine(x.ToString());
-                                }
-                                else
-                                {
-                                    Console.WriteLine("ERREUR : Determine n'a pas trouvé d'accord");
-                                }
+                                if (res.Count > 0)                                
+                                    Gridchords[Measure] = res[0];                                
+                                else                                
+                                    Console.WriteLine("ERREUR : Determine n'a pas trouvé d'accord");                                
                             }
                             else
                             {
@@ -117,6 +181,21 @@ namespace ChordsAnalyser
 
                 }
             }
+
+            // display resluts
+            PublishResults(Gridchords); 
+
+            
+
+        }
+
+        private void PublishResults(Dictionary<int, string> dict)
+        {
+            
+            foreach (KeyValuePair<int, string> pair in dict)
+            {
+                Console.WriteLine(string.Format("{0} - {1}", pair.Key, pair.Value));
+            }            
         }
 
 
@@ -137,22 +216,32 @@ namespace ChordsAnalyser
             }
         }
 
+
         /// <summary>
         /// In which measure is the chord
         /// </summary>
         /// <param name="chord"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        private int DetermineMeasure(ChordSymbol chord)
+        private int DetermineMeasure(int ticks)
         {
-            int starttime = chord.StartTime;
-            int measurenumber = 0;
-
-            // Your code
-
-            return measurenumber;
+            return 1 + ticks / _measurelen;            
         }
 
+
+        /// <summary>
+        /// R*Get time inside measure
+        /// </summary>
+        /// <param name="ticks"></param>
+        /// <returns></returns>
+        public float GetTimeInMeasure(float ticks)
+        {
+            // Num measure
+            int nummeasure = Convert.ToInt32(ticks) / _measurelen;
+            // Temps dans la mesure
+            int rest = Convert.ToInt32(ticks) % _measurelen;
+            return (float)rest / sequence1.Time.Quarter;            
+        }
 
         /// <summary>
         /// Remove a note if in double inside a chord
@@ -178,11 +267,11 @@ namespace ChordsAnalyser
         }
 
         /// <summary>
-        /// Retrieve note letter
+        /// Retrieve notes letter for a chord
         /// </summary>
         /// <param name="notes"></param>
         /// <returns></returns>
-        private List<string> TransposeToLetter(List<int> notes)
+        private List<string> TransposeToLetterChord(List<int> notes)
         {
             List<string> letters = new List<string>() { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
             List<string> letternotes = new List<string>();            
@@ -193,11 +282,27 @@ namespace ChordsAnalyser
                 x = n % 12;
                 l = letters[x];
                 letternotes.Add(l);
-            }
-            
+            }            
             return letternotes;
         }
 
+        /// <summary>
+        /// Retrieve notes letter for a chord
+        /// </summary>
+        /// <param name="notes"></param>
+        /// <returns></returns>
+        private string TransposeToLetterNote(int n)
+        {
+            List<string> letters = new List<string>() { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
+            
+            string l = string.Empty;
+            int x = 0;
+                        
+            x = n % 12;
+            l = letters[x];
+                        
+            return l;
+        }
 
 
         /// <summary>
