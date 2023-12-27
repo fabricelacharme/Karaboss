@@ -1495,11 +1495,10 @@ namespace ChordsAnalyser.cchords
                 void add_result(string s)
                 {
                     result.Add((s, tries, chord[0]));
-                    //result.Add(s);
-                    //result.Add(tries.ToString());
-                    //result.Add(chord[0]);                
                 }
 
+                //ch = determine_extended_chord5(chord[:5], True, True, True)
+                //intval5 = intervals.determine(chord[0], chord[5])
                 List<string> ch5 = new List<string>() { chord[0], chord[1], chord[2], chord[3], chord[4] };
                 List<string> ch = determine_extended_chord5(ch5, true, true, true);
                 string intval5 = intervals.determine(chord[0], chord[5]);
@@ -1532,12 +1531,14 @@ namespace ChordsAnalyser.cchords
                 }
 
                 if (tries != 6 && !no_inversions) {
-                    
-                    List<string> ll = new List<string>();
-                    ll.Add(chord[chord.Count - 1]);
-                    for (int i = 0; i < chord.Count - 2; i++)
-                        ll.Add(chord[i]);
-                    chord = ll;
+                    // return inversion_exhauster([chord[-1]] + chord[:-1], shorthand, tries + 1, result, polychords)
+                    chord.Insert(0, chord[chord.Count - 1]);
+                    chord.RemoveAt(chord.Count - 1);
+                    //List<string> ll = new List<string>();
+                    //ll.Add(chord[chord.Count - 1]);
+                    //for (int i = 0; i < chord.Count - 2; i++)
+                    //    ll.Add(chord[i]);
+                    //chord = ll;
                     return inversion_exhauster(tries + 1, result, polychords);
                 }
                 else
@@ -1585,10 +1586,6 @@ namespace ChordsAnalyser.cchords
                 void add_result(string s)
                 {
                     result.Add((s, tries, chord[0]));
-                    //result.Add(s);
-                    //result.Add(tries.ToString());
-                    //result.Add(chord[0]);
-
                 }
 
                 List<string> ch6 = new List<string>() { chord[0], chord[1], chord[2], chord[3], chord[4], chord[5] };
@@ -1613,11 +1610,14 @@ namespace ChordsAnalyser.cchords
 
                 if (tries != 6)
                 {
-                    List<string> ll = new List<string>();
-                    ll.Add(chord[chord.Count - 1]);
-                    for (int i = 0; i < chord.Count - 2; i++)
-                        ll.Add(chord[i]);
-                    chord = ll;
+                    // return inversion_exhauster([chord[-1]] + chord[:-1], shorthand, tries + 1, result, polychords)
+                    chord.Insert(0, chord[chord.Count - 1]);
+                    chord.RemoveAt(chord.Count - 1);
+                    //List<string> ll = new List<string>();
+                    //ll.Add(chord[chord.Count - 1]);
+                    //for (int i = 0; i < chord.Count - 2; i++)
+                    //    ll.Add(chord[i]);
+                    //chord = ll;
                     return inversion_exhauster(tries + 1, result, polychords);
                 }
                 else
@@ -1741,7 +1741,7 @@ namespace ChordsAnalyser.cchords
                         for (int i = 0; i < f2 + 3; i++)
                             ss.Add(chord[i]);
                     
-                        foreach (string chord2 in function_list[f2](s, true, true, true))
+                        foreach (string chord2 in function_list[f2](ss, true, true, true))
                         {
                             polychords.Add(string.Format("{0}|{1}", chord1, chord2));
                         }
