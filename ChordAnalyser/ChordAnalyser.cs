@@ -13,6 +13,7 @@ using ChordsAnalyser;
 using Sanford.Multimedia.Midi;
 using Sanford.Multimedia.Midi.Score;
 using ChordsAnalyser.cchords;
+using ChordAnalyser.UI;
 
 namespace ChordsAnalyser
 {
@@ -64,7 +65,14 @@ namespace ChordsAnalyser
             SearchByNotes();
 
             // display resluts
-            PublishResults(Gridchords);            
+            PublishResults(Gridchords);      
+            
+
+            // Display form
+            frmDisplayChords frmDisplayChords= new frmDisplayChords(sequence1);
+            frmDisplayChords.Show();
+
+
         }
 
 
