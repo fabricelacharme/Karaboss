@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
+using static ChordsAnalyser.cscales.scales;
 
 namespace ChordAnalyser.UI
 {
@@ -79,7 +80,7 @@ namespace ChordAnalyser.UI
         }
 
 
-        private int _TimeLineHeight = 40;
+        private int _TimeLineHeight = 80;
         /// <summary>
         /// Height of time line
         /// </summary>
@@ -114,7 +115,7 @@ namespace ChordAnalyser.UI
             {
                 sequence1 = value;
                 if (sequence1 != null && sequence1.Time != null)
-                    measurelen = sequence1.Time.Measure;
+                    UpdateMidiTimes();
             }
         }
 
@@ -122,9 +123,17 @@ namespace ChordAnalyser.UI
 
 
         #region private
-        private MyPanel pnlCanvas;
+        private MyPanel pnlCanvas;        
 
-        private int measurelen = 0;
+        // Midifile characteristics
+        private double _duration = 0;  // en secondes
+        private int _totalTicks = 0;
+        private int _bpm = 0;
+        private double _ppqn;
+        private int _tempo;
+        private int _measurelen = 0;
+        private int NbMeasures;
+
 
         #endregion private
 
@@ -169,17 +178,25 @@ namespace ChordAnalyser.UI
 
         private void DrawGrid(Graphics g, Rectangle clip)
         {
+            int _MeasureSeparatorWidth = 4;
+            int _LinesWidth = 2;
+
+            Color blackKeysColor = System.Drawing.ColorTranslator.FromHtml("#FF313131");
+            Color TimeLineColor = Color.White;
+
+            Pen mesureSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF676767"), _MeasureSeparatorWidth);
+            Pen FillPen = new Pen(TimeLineColor, _LinesWidth);
+
             SolidBrush FillBrush;
-            Pen FillPen;
-            Color TimeLineColor = System.Drawing.ColorTranslator.FromHtml("#FF313131");
+            
             Rectangle rect;
 
             Point p1;
             Point p2;
 
-            int h = _TimeLineHeight;  // bande horizontale en haut pour afficher les mesures et intervalles
+            int h = 0;
             int H = 0;
-            int W = 0; // Width of scores
+            int W = 0; 
 
             W = clip.Width;
 
@@ -187,24 +204,60 @@ namespace ChordAnalyser.UI
             // Draw Timeline background color
             // Dessiner en dernier
             // ========================== 
-            FillPen = new Pen(TimeLineColor);
-
-            // Gray rectangle
-            g.DrawRectangle(FillPen, clip.X, clip.Y, W, h);
-            rect = new Rectangle(clip.X, clip.Y, W, h);
+            
+           
+            // White rectangle
+            g.DrawRectangle(FillPen, clip.X, clip.Y, clip.Width, _TimeLineHeight);
+            rect = new Rectangle(clip.X, clip.Y, clip.Width, _TimeLineHeight);
             FillBrush = new SolidBrush(TimeLineColor);
             g.FillRectangle(FillBrush, rect);
 
-            // Black line separator
-            FillPen = new Pen(Color.Black, 3);
-            p1 = new Point(clip.X, clip.Y + _TimeLineHeight - 2);
-            p2 = new Point(clip.X + W, clip.Y + _TimeLineHeight - 2);
-            g.DrawLine(FillPen, p1, p2);
 
+            // Draw measures
+            // 4 temps = 4 carrés gris
+            // Chaque mesure, une ligne verticale gris foncé
+            int x = 0;
+            FillPen = new Pen(Color.Gray, _LinesWidth);
+
+            for (int i = 0; i < NbMeasures; i++)
+            {
+                for (int j = 0;j < sequence1.Numerator; j++)
+                {                    
+                    g.DrawRectangle(FillPen, clip.X + x, clip.Y, _TimeLineHeight, _TimeLineHeight);
+                    x += _TimeLineHeight + (_LinesWidth - 1);
+
+                }
+
+                // Rectangle gris pour s&éparateur mesures
+                g.DrawRectangle(FillPen, clip.X + x, clip.Y, _MeasureSeparatorWidth + 2 * _LinesWidth, _TimeLineHeight);
+                rect = new Rectangle(clip.X + x, clip.Y, _MeasureSeparatorWidth + 2 * _LinesWidth, _TimeLineHeight);
+                FillBrush = new SolidBrush(Color.Gray);
+                g.FillRectangle(FillBrush, rect);
+
+                // Draw measure separator
+                p1 = new Point(x + 4, clip.Y);
+                p2 = new Point(x + 4, clip.Y + _TimeLineHeight);
+                g.DrawLine(mesureSeparatorPen, p1, p2);
+                x += _MeasureSeparatorWidth + 2 * _LinesWidth;
+            }
 
         }
 
 
+        private Rectangle GetVisibleRectangle(Control c)
+        {
+            // rectangle du controle en coordonnées écran
+            Rectangle rect = c.RectangleToScreen(c.ClientRectangle);
+            c = c.Parent;
+            while (c != null)
+            {
+                rect = Rectangle.Intersect(rect, c.RectangleToScreen(c.ClientRectangle));
+                c = c.Parent;
+            }
+            // rectangle en coordonnées relatives au client
+            rect = pnlCanvas.RectangleToClient(rect);
+            return rect;
+        }
 
         #endregion Draw Canvas
 
@@ -226,23 +279,7 @@ namespace ChordAnalyser.UI
 
 
         #endregion Protected events
-
-
-        private Rectangle GetVisibleRectangle(Control c)
-        {
-            // rectangle du controle en coordonnées écran
-            Rectangle rect = c.RectangleToScreen(c.ClientRectangle);
-            c = c.Parent;
-            while (c != null)
-            {
-                rect = Rectangle.Intersect(rect, c.RectangleToScreen(c.ClientRectangle));
-                c = c.Parent;
-            }
-            // rectangle en coordonnées relatives au client
-            rect = pnlCanvas.RectangleToClient(rect);
-            return rect;
-        }
-
+   
 
         #region Mouse
         private void pnlCanvas_MouseLeave(object sender, EventArgs e)
@@ -288,6 +325,27 @@ namespace ChordAnalyser.UI
         }
         #endregion Mouse
 
+
+        #region Midi
+
+        /// <summary>
+        /// Upadate MIDI times
+        /// </summary>
+        private void UpdateMidiTimes()
+        {
+            _totalTicks = sequence1.GetLength();
+            _tempo = sequence1.Tempo;
+            _ppqn = sequence1.Division;
+            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds            
+
+            if (sequence1.Time != null)
+            {
+                _measurelen = sequence1.Time.Measure;
+                NbMeasures = _totalTicks / _measurelen;
+            }
+        }
+
+        #endregion Midi
 
     }
 }
