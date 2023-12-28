@@ -1,5 +1,6 @@
 ﻿namespace ChordAnalyser.UI
 {
+    /*
     partial class ChordsControl
     {
         /// <summary> 
@@ -34,4 +35,5 @@
 
         #endregion
     }
+    */
 }

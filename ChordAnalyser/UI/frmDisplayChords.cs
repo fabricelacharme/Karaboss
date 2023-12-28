@@ -22,6 +22,7 @@ namespace ChordAnalyser.UI
         {
             InitializeComponent();
             this.sequence1 = seq;
+            
             DisplayChordControl();
 
         }
@@ -30,20 +31,23 @@ namespace ChordAnalyser.UI
         {
             // Panel Display
             pnlDisplay = new Panel();   
-            pnlDisplay.SuspendLayout();
-            pnlDisplay.BackColor = Color.FromArgb(70, 77, 95); // new Color(70; 77; 95);
-
-            pnlDisplay.Left = 0;
-            pnlDisplay.Top = 0;            
+            pnlDisplay.Location = new Point(0, 0);
+            pnlDisplay.Size = new Size(40, 40);
+            pnlDisplay.BackColor = Color.FromArgb(70, 77, 95);
             pnlDisplay.Dock = DockStyle.Fill;
             this.Controls.Add(pnlDisplay);
 
 
             // ChordControl
             chordAnalyserControl1 = new ChordsControl();
-            pnlDisplay.Controls.Add(chordAnalyserControl1);
+            chordAnalyserControl1.BackColor = Color.Red;
+            chordAnalyserControl1.Left = 0;
+            chordAnalyserControl1.Top = 0;
             chordAnalyserControl1.Dock = DockStyle.Fill;
 
+            chordAnalyserControl1.Sequence1 = sequence1;
+
+            pnlDisplay.Controls.Add(chordAnalyserControl1);
 
         }
 

@@ -795,8 +795,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
 
             int timespermeasure = sequence1.Numerator;             // nombre de beats par mesures
             float TimeUnit = Sequence1.Denominator;            // 2 = blanche, 4 = noire, 8 = croche, 16 = doucle croche, 32 triple croche
-
-            //Pen TicksPen = new Pen(Color.White);
+            
             Pen mesureSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF676767"), 1);
             Pen beatSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF585858"), 1);            
             Pen intervalSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF464646"), 1);
@@ -982,22 +981,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
 
                 DrawTimeLine(g, clip);
 
-                /*
-                if (Parent.GetType() == typeof(Panel))
-                {
-                    CreateBackgroundCanvas(g, clip);
-                    DrawGrid(g, clip);
-                    DrawTimeLine(g, clip);
-                    DrawNotes(g, clip);
-                }
-                else
-                {
-                    CreateBackgroundCanvas(g, clip);
-                    DrawGrid(g, clip);
-                    DrawTimeLine(g, clip);
-                    DrawNotes(g, clip);
-                }
-                */
+                
                 g.TranslateTransform(clip.X, 0);
 
                 if (selectingNote == true)
