@@ -34,9 +34,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(778, 270);
+            this.ClientSize = new System.Drawing.Size(778, 419);
             this.Name = "frmDisplayChords";
             this.Text = "Form1";
+            this.Resize += new System.EventHandler(this.frmDisplayChords_Resize);
             this.ResumeLayout(false);
 
         }

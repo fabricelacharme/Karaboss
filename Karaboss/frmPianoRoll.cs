@@ -696,22 +696,7 @@ namespace Karaboss
             {
                 int SC = W / 20;
                 int LC = W / 10;
-
-                // Width is limited to 65535                
-                //hScrollBar.Maximum = W - (wMiddle - vW) + LC;
-                //hScrollBar.SmallChange = SC;
-                //hScrollBar.LargeChange = LC;
-
-     
-                /*
-                // Aggrandissement horizontal de la fenetre => la scrollbar horizontale doit se positionner à droite 
-                if (W - hScrollBar.Value < wMiddle)
-                {
-                    v = hScrollBar.Maximum - hScrollBar.LargeChange;
-                    if (v >= 0)
-                        hScrollBar.Value = v;
-                }
-                */
+                
             }
         }
 

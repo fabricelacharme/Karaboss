@@ -16,6 +16,8 @@ namespace ChordAnalyser.UI
 
     #region delegate    
     public delegate void OffsetChangedEventHandler(object sender, int value);   
+    public delegate void WidthChangedEventHandler(object sender, int value);
+
     #endregion delegate
 
 
@@ -24,7 +26,7 @@ namespace ChordAnalyser.UI
 
         #region events
         public event OffsetChangedEventHandler OffsetChanged;
-
+        public event WidthChangedEventHandler WidthChanged;
 
         #endregion events
 
@@ -80,6 +82,27 @@ namespace ChordAnalyser.UI
         }
 
 
+        private int _maxstaffwidth;
+        /// <summary>
+        /// Gets Length of score
+        /// </summary>
+        public int maxStaffWidth
+        {
+            get { return _maxstaffwidth; }
+            set 
+            {                 
+                if (value != _maxstaffwidth)
+                {
+                    _maxstaffwidth = value;
+                    if(WidthChanged != null)
+                    {
+                        WidthChanged(this, _maxstaffwidth);
+                    }
+                }                    
+             }
+
+        }
+
         private int _TimeLineHeight = 80;
         /// <summary>
         /// Height of time line
@@ -115,7 +138,10 @@ namespace ChordAnalyser.UI
             {
                 sequence1 = value;
                 if (sequence1 != null && sequence1.Time != null)
+                {
                     UpdateMidiTimes();
+                    Redraw();
+                }
             }
         }
 
@@ -152,7 +178,8 @@ namespace ChordAnalyser.UI
             pnlCanvas.MouseDown += new MouseEventHandler(pnlCanvas_MouseDown);
             pnlCanvas.MouseUp += new MouseEventHandler(pnlCanvas_MouseUp);
             pnlCanvas.MouseMove += new MouseEventHandler(pnlCanvas_MouseMove);
-            pnlCanvas.MouseLeave += new EventHandler(pnlCanvas_MouseLeave);
+            pnlCanvas.MouseLeave += new EventHandler(pnlCanvas_MouseLeave);           
+
 
             this.Controls.Add(pnlCanvas);
 
@@ -164,6 +191,7 @@ namespace ChordAnalyser.UI
             this.SetStyle(ControlStyles.ResizeRedraw, true);
 
         }
+
 
         #region Draw Canvas
 
@@ -178,13 +206,13 @@ namespace ChordAnalyser.UI
 
         private void DrawGrid(Graphics g, Rectangle clip)
         {
-            int _MeasureSeparatorWidth = 4;
+            int _MeasureSeparatorWidth = 2;
             int _LinesWidth = 2;
 
             Color blackKeysColor = System.Drawing.ColorTranslator.FromHtml("#FF313131");
             Color TimeLineColor = Color.White;
 
-            Pen mesureSeparatorPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF676767"), _MeasureSeparatorWidth);
+            Pen mesureSeparatorPen = new Pen(Color.Black, _MeasureSeparatorWidth);
             Pen FillPen = new Pen(TimeLineColor, _LinesWidth);
 
             SolidBrush FillBrush;
@@ -204,45 +232,69 @@ namespace ChordAnalyser.UI
             // Draw Timeline background color
             // Dessiner en dernier
             // ========================== 
-            
-           
-            // White rectangle
-            g.DrawRectangle(FillPen, clip.X, clip.Y, clip.Width, _TimeLineHeight);
-            rect = new Rectangle(clip.X, clip.Y, clip.Width, _TimeLineHeight);
-            FillBrush = new SolidBrush(TimeLineColor);
-            g.FillRectangle(FillBrush, rect);
+            int x = 0;
+
+            // 1ere case noire en plus ce celles du morceau
+            //g.DrawRectangle(FillPen, clip.X, clip.Y, _TimeLineHeight, _TimeLineHeight);
+            g.DrawRectangle(FillPen, 0, 0, _TimeLineHeight, _TimeLineHeight);
+            //rect = new Rectangle(clip.X, clip.Y, _TimeLineHeight, _TimeLineHeight);
+            rect = new Rectangle(0, 0, _TimeLineHeight, _TimeLineHeight);
+            g.FillRectangle(new SolidBrush(Color.Black), rect);
+
+            x += _TimeLineHeight + (_LinesWidth - 1);
+
 
 
             // Draw measures
             // 4 temps = 4 carrés gris
             // Chaque mesure, une ligne verticale gris foncé
-            int x = 0;
+
             FillPen = new Pen(Color.Gray, _LinesWidth);
 
             for (int i = 0; i < NbMeasures; i++)
             {
-                for (int j = 0;j < sequence1.Numerator; j++)
-                {                    
-                    g.DrawRectangle(FillPen, clip.X + x, clip.Y, _TimeLineHeight, _TimeLineHeight);
+                // Dessine autant de cases que le numerateur
+                for (int j = 0; j < sequence1.Numerator; j++)
+                {
+                    //g.DrawRectangle(FillPen, clip.X + x, clip.Y, _TimeLineHeight, _TimeLineHeight);
+                    g.DrawRectangle(FillPen, x, 0, _TimeLineHeight, _TimeLineHeight);
                     x += _TimeLineHeight + (_LinesWidth - 1);
 
-                }
-
-                // Rectangle gris pour s&éparateur mesures
-                g.DrawRectangle(FillPen, clip.X + x, clip.Y, _MeasureSeparatorWidth + 2 * _LinesWidth, _TimeLineHeight);
-                rect = new Rectangle(clip.X + x, clip.Y, _MeasureSeparatorWidth + 2 * _LinesWidth, _TimeLineHeight);
-                FillBrush = new SolidBrush(Color.Gray);
-                g.FillRectangle(FillBrush, rect);
-
-                // Draw measure separator
-                p1 = new Point(x + 4, clip.Y);
-                p2 = new Point(x + 4, clip.Y + _TimeLineHeight);
-                g.DrawLine(mesureSeparatorPen, p1, p2);
-                x += _MeasureSeparatorWidth + 2 * _LinesWidth;
+                }                
             }
 
+            // Ligne noire sur la dernière case de chaque mesure
+            x = _TimeLineHeight + (_LinesWidth - 1); 
+            for (int i = 0; i < NbMeasures; i++)
+            {
+                p1 = new Point(x, clip.Y);
+                p2 = new Point(x, clip.Y + _TimeLineHeight);
+                g.DrawLine(mesureSeparatorPen, p1, p2);
+                x += sequence1.Numerator * (_TimeLineHeight + (_LinesWidth - 1));
+
+            }
+
+            maxStaffWidth = x;
+            Width = _maxstaffwidth;
         }
 
+
+        private void DrawNotes(Graphics g, Rectangle clip)
+        {
+            SolidBrush textBrush = new SolidBrush(Color.Red);
+            Font fontMeasure = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel);
+            int _LinesWidth = 2;
+            int x =_TimeLineHeight +(_LinesWidth - 1);
+            Point p1;            
+
+            for (int i = 0; i < NbMeasures * sequence1.Numerator; i++)
+            {
+                p1 = new Point(x + _TimeLineHeight / 2, _TimeLineHeight/2);                
+                g.DrawString(i.ToString(), fontMeasure, textBrush, p1.X , p1.Y);
+
+                x += _TimeLineHeight + (_LinesWidth - 1);
+            }
+        }
 
         private Rectangle GetVisibleRectangle(Control c)
         {
@@ -258,6 +310,7 @@ namespace ChordAnalyser.UI
             rect = pnlCanvas.RectangleToClient(rect);
             return rect;
         }
+
 
         #endregion Draw Canvas
 
@@ -276,10 +329,10 @@ namespace ChordAnalyser.UI
             base.Dispose(disposing);
         }
 
-
-
         #endregion Protected events
    
+
+
 
         #region Mouse
         private void pnlCanvas_MouseLeave(object sender, EventArgs e)
@@ -318,6 +371,8 @@ namespace ChordAnalyser.UI
             if (sequence1 != null)
             {
                 DrawGrid(g, clip);
+
+                DrawNotes(g, clip);
 
                 g.TranslateTransform(clip.X, 0);
 

@@ -52,6 +52,11 @@
     <Compile Include="core\notes.cs" />
     <Compile Include="core\progressions.cs" />
     <Compile Include="core\scales.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="tests.cs" />
     <Compile Include="core\value.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,15 +74,29 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ColorSlider\ColorSlider.csproj">
+      <Project>{16e224dc-7ff0-4908-8318-d6a3ac2e797a}</Project>
+      <Name>ColorSlider</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sanford.Multimedia.Midi\Sanford.Multimedia.Midi.csproj">
       <Project>{4269c72a-8d3a-4737-8f89-72eaa33ea9e1}</Project>
       <Name>Sanford.Multimedia.Midi</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\frmDisplayChords.resx">
       <DependentUpon>frmDisplayChords.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BTN_Thumb_Blue.bmp.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BTN_Thumb_Blue.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
