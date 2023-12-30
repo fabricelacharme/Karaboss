@@ -24,9 +24,18 @@ namespace ChordsAnalyser
         static List<MidiNote[]> lnMidiNote = new List<MidiNote[]>();
         static List<int[]> lnIntNote = new List<int[]>();
 
+
+        #region properties
+
+        //private static Dictionary<int, (string, string)> Gridchords;
+        public Dictionary<int, (string, string)> Gridchords { get; set; }
+
+        #endregion properties
+
+        #region private
         private Sequence sequence1 = new Sequence();
-        private SheetMusic sheetmusic;
-        private static Dictionary<int, (string,string)> Gridchords;
+        //private SheetMusic sheetmusic;
+        
 
 
         // Midifile characteristics
@@ -40,12 +49,15 @@ namespace ChordsAnalyser
 
         private string NoChord = "<Chord not found>";
 
+        #endregion private
+
         public ChordAnalyser() { }
 
-        public ChordAnalyser(SheetMusic sheetmus, Sequence seq)
+        //public ChordAnalyser(SheetMusic sheetmus, Sequence seq)
+        public ChordAnalyser(Sequence seq)
         {
             sequence1 = seq;
-            sheetmusic = sheetmus;
+            //sheetmusic = sheetmus;
 
             UpdateMidiTimes();
 
@@ -69,13 +81,13 @@ namespace ChordsAnalyser
             
 
             // Display form
-            frmDisplayChords frmDisplayChords= new frmDisplayChords(sequence1);
-            frmDisplayChords.Show();
+            //frmDisplayChords frmDisplayChords= new frmDisplayChords(sequence1);
+            //frmDisplayChords.Show();
 
 
         }
 
-
+        /*
         private void SearchByChord()
         {
             // For each track containing chords
@@ -177,6 +189,8 @@ namespace ChordsAnalyser
                 }
             }
         }
+        */
+
 
         private void SeartchByBass()
         {

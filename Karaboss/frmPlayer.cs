@@ -46,6 +46,7 @@ using System.Text.RegularExpressions;
 using MusicXml;
 using MusicTxt;
 using System.Linq;
+using ChordAnalyser.UI;
 
 namespace Karaboss
 {
@@ -8553,7 +8554,21 @@ namespace Karaboss
         #region chords analysis
         private void btnChords_Click(object sender, EventArgs e)
         {
-            ChordsAnalyser.ChordAnalyser chan = new ChordsAnalyser.ChordAnalyser(sheetmusic, sequence1);            
+
+            if (Application.OpenForms.OfType<frmDisplayChords>().Count() == 0)
+            {
+                try
+                {
+                    frmDisplayChords frmDisplayChords = new frmDisplayChords(sequence1);
+                    frmDisplayChords.Show();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            //ChordsAnalyser.ChordAnalyser chan = new ChordsAnalyser.ChordAnalyser(sheetmusic, sequence1);            
         }
 
         #endregion

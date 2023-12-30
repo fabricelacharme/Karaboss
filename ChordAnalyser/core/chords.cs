@@ -1505,8 +1505,10 @@ namespace ChordsAnalyser.cchords
 
 
                 foreach (string c in ch)
-                {                     
-                    string sc = c.Substring(chord[0].Length, c.Length - 1); //[len(chord[0]) :]
+                {
+                    //[len(chord[0]) :]
+                    string sc = c.Substring(chord[0].Length, c.Length - 1 - chord[0].Length); 
+
                     if (sc == "9") {
                         if (intval5 == "perfect fourth")
                             add_result("11");

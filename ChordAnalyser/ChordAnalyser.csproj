@@ -93,9 +93,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\BTN_Thumb_Blue.bmp.bmp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\BTN_Thumb_Blue.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
