@@ -99,8 +99,6 @@ namespace ChordAnalyser.UI
             chordAnalyserControl1.Location = new Point(0, 0);
             chordAnalyserControl1.WidthChanged += new WidthChangedEventHandler(chordAnalyserControl1_WidthChanged);
             pnlDisplay.Controls.Add(chordAnalyserControl1);
-            //chordAnalyserControl1.BringToFront();
-            //chordAnalyserControl1.Show();
 
             // positionHScrollBar
             positionHScrollBar = new ColorSlider.ColorSlider();
@@ -185,16 +183,22 @@ namespace ChordAnalyser.UI
 
         private void DisplayResults()
         {
-            ChordsAnalyser.ChordAnalyser chan = new ChordsAnalyser.ChordAnalyser(sequence1);
-            Dictionary<int, (string, string)> Gridchords = chan.Gridchords;
+            
+            // Display chods in the textbox
+            ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
+            Dictionary<int, (string, string)> Gridchords = Analyser.Gridchords;
 
             string res = string.Empty;
             foreach (KeyValuePair<int, (string, string)> pair in Gridchords)
             {
                 res += string.Format("{0} - {1}", pair.Key, pair.Value) + "\r\n";
             }
-
             txtOverview.Text = res;
+
+
+            // Display Chords in boxes
+            this.chordAnalyserControl1.Gridchords = Gridchords;
+
 
         }
 

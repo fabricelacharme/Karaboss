@@ -145,6 +145,9 @@ namespace ChordAnalyser.UI
             }
         }
 
+        public Dictionary<int, (string, string)> Gridchords { get; set; }
+
+
         #endregion properties
 
 
@@ -279,22 +282,7 @@ namespace ChordAnalyser.UI
         }
 
 
-        private void DrawNotes(Graphics g, Rectangle clip)
-        {
-            SolidBrush textBrush = new SolidBrush(Color.Red);
-            Font fontMeasure = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel);
-            int _LinesWidth = 2;
-            int x =_TimeLineHeight +(_LinesWidth - 1);
-            Point p1;            
-
-            for (int i = 0; i < NbMeasures * sequence1.Numerator; i++)
-            {
-                p1 = new Point(x + _TimeLineHeight / 2, _TimeLineHeight/2);                
-                g.DrawString(i.ToString(), fontMeasure, textBrush, p1.X , p1.Y);
-
-                x += _TimeLineHeight + (_LinesWidth - 1);
-            }
-        }
+ 
 
         private Rectangle GetVisibleRectangle(Control c)
         {
@@ -313,6 +301,72 @@ namespace ChordAnalyser.UI
 
 
         #endregion Draw Canvas
+
+
+        #region public
+
+        public void DisplayNotes()
+        {
+
+        }
+        private void DrawNotes(Graphics g, Rectangle clip)
+        {
+            SolidBrush textBrush = new SolidBrush(Color.Black);
+            Font fontMeasure = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel);
+            int _LinesWidth = 2;
+            int x = _TimeLineHeight + (_LinesWidth - 1);
+            Point p1;
+
+            /*
+            for (int i = 0; i < NbMeasures * sequence1.Numerator; i++)
+            {
+                p1 = new Point(x + _TimeLineHeight / 2, _TimeLineHeight / 2);
+                g.DrawString(i.ToString(), fontMeasure, textBrush, p1.X, p1.Y);
+
+                x += _TimeLineHeight + (_LinesWidth - 1);
+            }
+            */
+
+            if (Gridchords != null)
+            {
+                (string,string) ttx;
+                string tx = string.Empty;   
+                int Offset = 4;
+
+                for (int i = 1; i < Gridchords.Count; i++)
+                {
+                    p1 = new Point(x + Offset, _TimeLineHeight / 2);
+
+                    ttx = Gridchords[i];
+                    tx = ttx.Item1;
+                    tx = InterpreteNote(tx);
+                    g.DrawString(tx, fontMeasure, textBrush, p1.X, p1.Y);
+
+                    x += (_TimeLineHeight + (_LinesWidth - 1)) * sequence1.Numerator;
+                }
+
+            }
+
+        }
+
+        private string InterpreteNote(string note)
+        {
+            note = note.Replace(" major", "");
+            note = note.Replace(" triad", "");
+
+            note = note.Replace(" seventh", "7");
+            note = note.Replace(" minor", "m");
+            note = note.Replace("seventh", "7");
+            note = note.Replace("sixth", "6");
+            note = note.Replace("ninth", "9");
+            note = note.Replace("eleventh", "11");
+
+
+            note = note.Trim();
+            return note;
+        }
+
+        #endregion public
 
 
         #region Protected events

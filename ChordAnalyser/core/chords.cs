@@ -1536,11 +1536,6 @@ namespace ChordsAnalyser.cchords
                     // return inversion_exhauster([chord[-1]] + chord[:-1], shorthand, tries + 1, result, polychords)
                     chord.Insert(0, chord[chord.Count - 1]);
                     chord.RemoveAt(chord.Count - 1);
-                    //List<string> ll = new List<string>();
-                    //ll.Add(chord[chord.Count - 1]);
-                    //for (int i = 0; i < chord.Count - 2; i++)
-                    //    ll.Add(chord[i]);
-                    //chord = ll;
                     return inversion_exhauster(tries + 1, result, polychords);
                 }
                 else
@@ -1595,7 +1590,7 @@ namespace ChordsAnalyser.cchords
                 string intval6 = intervals.determine(chord[0], chord[6]);
 
                 foreach (string c in ch) {
-                    string sc = c.Substring(chord[0].Length, c.Length - 1); //[len(chord[0]) :]                    
+                    string sc = c.Substring(chord[0].Length, c.Length - 1 - chord[0].Length); //[len(chord[0]) :]                    
                     if (c == "11") {
                         if (intval6 == "major sixth")
                             add_result("13");
@@ -1615,11 +1610,6 @@ namespace ChordsAnalyser.cchords
                     // return inversion_exhauster([chord[-1]] + chord[:-1], shorthand, tries + 1, result, polychords)
                     chord.Insert(0, chord[chord.Count - 1]);
                     chord.RemoveAt(chord.Count - 1);
-                    //List<string> ll = new List<string>();
-                    //ll.Add(chord[chord.Count - 1]);
-                    //for (int i = 0; i < chord.Count - 2; i++)
-                    //    ll.Add(chord[i]);
-                    //chord = ll;
                     return inversion_exhauster(tries + 1, result, polychords);
                 }
                 else
@@ -1680,26 +1670,7 @@ namespace ChordsAnalyser.cchords
                new Func<List<string>, bool, bool,bool, List<string>> (determine_extended_chord5),
                new Func<List<string>, bool, bool,bool, List<string>> (determine_extended_chord6),
                new Func<List<string>, bool, bool,bool, List<string>> (determine_extended_chord7),
-            };
-
-            List<dynamic> function_list2 = new List<dynamic>
-            {                
-                new Func<List<string>>(() => determine_triad(new List<string>(), new bool(), new bool(), new bool())),
-                new Func<List<string>>(() => determine_seventh(new List<string>(), new bool(), new bool(), new bool())),
-                new Func<List<string>>(() => determine_extended_chord5(new List<string>(), new bool(), new bool(), new bool())),
-                new Func<List<string>>(() => determine_extended_chord6(new List<string>(), new bool(), new bool(), new bool())),
-                new Func<List<string>>(() => determine_extended_chord7(new List<string>(), new bool(), new bool(), new bool()))
             };            
-            
-
-            /*
-            List<dynamic> function_list = new List<dynamic>();
-            function_list.Add(determine_triad(new List<string>(), new bool(), new bool(), string.Empty));
-            function_list.Add(determine_seventh(new List<string>(), new bool(), new bool(), new bool()));
-            function_list.Add(determine_extended_chord5(new List<string>(), new bool(), new bool(), new bool()));
-            function_list.Add(determine_extended_chord6(new List<string>(), new bool(), new bool(), new bool()));
-            function_list.Add(determine_extended_chord7(new List<string>(), new bool(), new bool(), new bool()));
-            */
 
             List<int> function_nr = new List<int>();
 
