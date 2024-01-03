@@ -235,7 +235,7 @@ namespace ChordAnalyser.UI
             if (sequence1.Time != null)
             {
                 _measurelen = sequence1.Time.Measure;
-                NbMeasures = _totalTicks / _measurelen;
+                NbMeasures = Convert.ToInt32(Math.Ceiling((double)_totalTicks / _measurelen)); // rounds up to the next full integer
             }
         }
 

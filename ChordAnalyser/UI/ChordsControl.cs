@@ -311,7 +311,9 @@ namespace ChordAnalyser.UI
         }
         private void DrawNotes(Graphics g, Rectangle clip)
         {
-            SolidBrush textBrush = new SolidBrush(Color.Black);
+            SolidBrush ChordBrush = new SolidBrush(Color.Black);
+            SolidBrush MeasureBrush = new SolidBrush(Color.Red);
+
             Font fontMeasure = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel);
             int _LinesWidth = 2;
             int x = _TimeLineHeight + (_LinesWidth - 1);
@@ -333,16 +335,24 @@ namespace ChordAnalyser.UI
                 string tx = string.Empty;   
                 int Offset = 4;
 
-                for (int i = 1; i < Gridchords.Count; i++)
+                for (int i = 1; i <= Gridchords.Count; i++)
                 {
+                    // Chord name
                     p1 = new Point(x + Offset, _TimeLineHeight / 2);
 
                     ttx = Gridchords[i];
                     tx = ttx.Item1;
                     tx = InterpreteNote(tx);
-                    g.DrawString(tx, fontMeasure, textBrush, p1.X, p1.Y);
+                    g.DrawString(tx, fontMeasure, ChordBrush, p1.X, p1.Y);
 
+                    // Measure number
+                    tx = i.ToString();
+                    p1 = new Point(x + Offset, _TimeLineHeight - fontMeasure.Height);                    
+                    g.DrawString(tx, fontMeasure, MeasureBrush, p1.X, p1.Y);
+                    
+                    // Increment x (go to next measure)
                     x += (_TimeLineHeight + (_LinesWidth - 1)) * sequence1.Numerator;
+
                 }
 
             }
@@ -450,7 +460,7 @@ namespace ChordAnalyser.UI
             if (sequence1.Time != null)
             {
                 _measurelen = sequence1.Time.Measure;
-                NbMeasures = _totalTicks / _measurelen;
+                NbMeasures = Convert.ToInt32(Math.Ceiling((double)_totalTicks / _measurelen)); // rounds up to the next full integer
             }
         }
 
