@@ -8555,12 +8555,12 @@ namespace Karaboss
         private void btnChords_Click(object sender, EventArgs e)
         {
 
-            if (Application.OpenForms.OfType<frmDisplayChords>().Count() == 0)
+            if (Application.OpenForms.OfType<frmChords>().Count() == 0)
             {
                 try
                 {
-                    frmDisplayChords frmDisplayChords = new frmDisplayChords(sequence1);
-                    frmDisplayChords.Show();
+                    frmChords frmChords = new frmChords(sequence1);
+                    frmChords.Show();
                 }
                 catch (Exception ex)
                 {

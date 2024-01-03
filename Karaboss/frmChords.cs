@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using ChordAnalyser.UI;
 using Sanford.Multimedia.Midi;
-using ChordAnalyser.Properties;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
-
-namespace ChordAnalyser.UI
+namespace Karaboss
 {
-    public partial class frmDisplayChords : Form
+    public partial class frmChords : Form
     {
-
 
         #region private
         private Sequence sequence1 = new Sequence();
@@ -35,18 +38,16 @@ namespace ChordAnalyser.UI
         #endregion private
 
 
-        public frmDisplayChords(Sequence seq)
+        public frmChords(Sequence seq)
         {
             InitializeComponent();
             this.sequence1 = seq;
-            
+
             UpdateMidiTimes();
             DisplayChordControl();
 
             DisplayResults();
-
         }
-
 
         #region Display Controls
         private void DisplayChordControl()
@@ -59,7 +60,7 @@ namespace ChordAnalyser.UI
             pnlTop.BackColor = Color.Green;
             pnlTop.Dock = DockStyle.Top;
             tabPageDiagrams.Controls.Add(pnlTop);
-            
+
 
             // Panel Bottom
             pnlBottom = new Panel();
@@ -82,11 +83,11 @@ namespace ChordAnalyser.UI
 
 
             // MIDDLE
-            
+
             // ChordControl
             chordAnalyserControl1 = new ChordsControl();
             chordAnalyserControl1.Parent = pnlDisplay;
-            chordAnalyserControl1.Sequence1 = this.sequence1;            
+            chordAnalyserControl1.Sequence1 = this.sequence1;
             chordAnalyserControl1.Size = new Size(pnlDisplay.Width, 80);
             chordAnalyserControl1.Location = new Point(0, 0);
             chordAnalyserControl1.WidthChanged += new WidthChangedEventHandler(chordAnalyserControl1_WidthChanged);
@@ -95,7 +96,7 @@ namespace ChordAnalyser.UI
             // positionHScrollBar
             positionHScrollBar = new ColorSlider.ColorSlider();
             positionHScrollBar.Parent = pnlDisplay;
-            positionHScrollBar.ThumbImage = Resources.BTN_Thumb_Blue;
+            positionHScrollBar.ThumbImage =  Properties.Resources.BTN_Thumb_Blue;
             //positionHScrollBar.Size = new Size(pnlDisplay.Width - 16, 20);
             positionHScrollBar.Size = new Size(pnlDisplay.Width, 20);
             positionHScrollBar.Location = new Point(0, chordAnalyserControl1.Height);
@@ -105,16 +106,16 @@ namespace ChordAnalyser.UI
             // Set maximum & visibility
             SetScrollBarValues();
 
-            positionHScrollBar.TickStyle = TickStyle.None;                        
+            positionHScrollBar.TickStyle = TickStyle.None;
             positionHScrollBar.SmallChange = 1;
             positionHScrollBar.LargeChange = 1 + NbMeasures * sequence1.Numerator;
             positionHScrollBar.ShowDivisionsText = false;
             positionHScrollBar.ShowSmallScale = false;
-            positionHScrollBar.MouseWheelBarPartitions = 1 + NbMeasures * sequence1.Numerator ;            
+            positionHScrollBar.MouseWheelBarPartitions = 1 + NbMeasures * sequence1.Numerator;
             positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(PositionHScrollBar_Scroll);
             positionHScrollBar.ValueChanged += new EventHandler(PositionHScollBar_ValueChanged);
             pnlDisplay.Controls.Add(positionHScrollBar);
-            
+
 
         }
 
@@ -129,7 +130,7 @@ namespace ChordAnalyser.UI
 
             // Width of control
             int W = chordAnalyserControl1.maxStaffWidth;
-            
+
             if (W <= pnlDisplay.Width)
             {
                 positionHScrollBar.Visible = false;
@@ -138,7 +139,7 @@ namespace ChordAnalyser.UI
                 positionHScrollBar.Value = 0;
             }
             else if (W > pnlDisplay.Width)
-            {                
+            {
                 positionHScrollBar.Maximum = W - pnlDisplay.Width;
                 positionHScrollBar.Visible = true;
             }
@@ -163,7 +164,7 @@ namespace ChordAnalyser.UI
         /// <param name="sender"></param>
         /// <param name="value"></param>
         private void chordAnalyserControl1_WidthChanged(object sender, int value)
-        {            
+        {
             // Set maximum & visibility
             SetScrollBarValues();
         }
@@ -175,7 +176,7 @@ namespace ChordAnalyser.UI
 
         private void DisplayResults()
         {
-            
+
             // Display chods in the textbox
             ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
             Dictionary<int, (string, string)> Gridchords = Analyser.Gridchords;
@@ -197,19 +198,50 @@ namespace ChordAnalyser.UI
         #endregion Display results
 
         #region Form
-        private void frmDisplayChords_Resize(object sender, EventArgs e)
+
+        private void frmChords_Load(object sender, EventArgs e)
+        {
+            #region setwindowlocation
+            // Récupère la taille et position de la forme
+            // Set window location
+            if (Properties.Settings.Default.frmChordsMaximized)
+            {
+                Location = Properties.Settings.Default.frmChordsLocation;
+                WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                Location = Properties.Settings.Default.frmChordsLocation;
+                // Verify if this windows is visible in extended screens
+                Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
+                foreach (Screen screen in Screen.AllScreens)
+                    rect = Rectangle.Union(rect, screen.Bounds);
+
+                if (Location.X > rect.Width)
+                    Location = new Point(0, Location.Y);
+                if (Location.Y > rect.Height)
+                    Location = new Point(Location.X, 0);
+
+                Size = Properties.Settings.Default.frmChordsSize;
+            }
+            #endregion
+
+            this.Activate();
+        }
+
+        private void frmChords_Resize(object sender, EventArgs e)
         {
             pnlDisplay.Width = pnlTop.Width;
             pnlDisplay.Height = tabPageDiagrams.Height - pnlTop.Height - pnlBottom.Height;
-            
-            if (chordAnalyserControl1 != null)                            
+
+            if (chordAnalyserControl1 != null)
                 positionHScrollBar.Width = (pnlDisplay.Width > chordAnalyserControl1.Width ? chordAnalyserControl1.Width : pnlDisplay.Width);
-            
+
             // Set maximum & visibility
             SetScrollBarValues();
         }
 
-        private void frmDisplayChords_FormClosing(object sender, FormClosingEventArgs e)
+        private void frmChords_FormClosing(object sender, FormClosingEventArgs e)
         {
             // enregistre la taille et la position de la forme
             // Copy window location to app settings                
@@ -217,23 +249,19 @@ namespace ChordAnalyser.UI
             {
                 if (WindowState == FormWindowState.Maximized)
                 {
-                    //Properties.Settings.Default.frmExplorerLocation = RestoreBounds.Location;
-                    //Properties.Settings.Default.frmExplorerMaximized = true;
+                    Properties.Settings.Default.frmChordsLocation = RestoreBounds.Location;
+                    Properties.Settings.Default.frmChordsMaximized = true;
 
                 }
                 else if (WindowState == FormWindowState.Normal)
                 {
-                    //Properties.Settings.Default.frmExplorerLocation = Location;
-                    //Properties.Settings.Default.frmExplorerSize = Size;
-                    //Properties.Settings.Default.frmExplorerMaximized = false;
+                    Properties.Settings.Default.frmChordsLocation = Location;
+                    Properties.Settings.Default.frmChordsSize = Size;
+                    Properties.Settings.Default.frmChordsMaximized = false;
                 }
 
-                // Save Largeur gauche Splitter
-                //Properties.Settings.Default.frmExplorerSplitterDistance = xplorerControl.SplitterDistance;
-
-
                 // Save settings
-                //Properties.Settings.Default.Save();
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -258,6 +286,7 @@ namespace ChordAnalyser.UI
                 NbMeasures = Convert.ToInt32(Math.Ceiling((double)_totalTicks / _measurelen)); // rounds up to the next full integer
             }
         }
+
 
         #endregion Midi
 

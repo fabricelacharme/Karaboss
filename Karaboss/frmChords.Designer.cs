@@ -1,6 +1,6 @@
-﻿namespace ChordAnalyser.UI
+﻿namespace Karaboss
 {
-    partial class frmDisplayChords
+    partial class frmChords
     {
         /// <summary>
         /// Required designer variable.
@@ -46,7 +46,7 @@
             this.tabChordsControl.Location = new System.Drawing.Point(0, 0);
             this.tabChordsControl.Name = "tabChordsControl";
             this.tabChordsControl.SelectedIndex = 0;
-            this.tabChordsControl.Size = new System.Drawing.Size(778, 419);
+            this.tabChordsControl.Size = new System.Drawing.Size(800, 450);
             this.tabChordsControl.TabIndex = 0;
             // 
             // tabPageDiagrams
@@ -54,7 +54,7 @@
             this.tabPageDiagrams.Location = new System.Drawing.Point(4, 22);
             this.tabPageDiagrams.Name = "tabPageDiagrams";
             this.tabPageDiagrams.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageDiagrams.Size = new System.Drawing.Size(770, 393);
+            this.tabPageDiagrams.Size = new System.Drawing.Size(792, 424);
             this.tabPageDiagrams.TabIndex = 0;
             this.tabPageDiagrams.Text = "Diagrams";
             this.tabPageDiagrams.UseVisualStyleBackColor = true;
@@ -65,7 +65,7 @@
             this.tabPageOverview.Location = new System.Drawing.Point(4, 22);
             this.tabPageOverview.Name = "tabPageOverview";
             this.tabPageOverview.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageOverview.Size = new System.Drawing.Size(770, 393);
+            this.tabPageOverview.Size = new System.Drawing.Size(792, 424);
             this.tabPageOverview.TabIndex = 1;
             this.tabPageOverview.Text = "Overview";
             this.tabPageOverview.UseVisualStyleBackColor = true;
@@ -77,28 +77,29 @@
             this.txtOverview.Multiline = true;
             this.txtOverview.Name = "txtOverview";
             this.txtOverview.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtOverview.Size = new System.Drawing.Size(764, 387);
-            this.txtOverview.TabIndex = 0;
+            this.txtOverview.Size = new System.Drawing.Size(786, 418);
+            this.txtOverview.TabIndex = 1;
             // 
             // tabPageEdit
             // 
             this.tabPageEdit.Location = new System.Drawing.Point(4, 22);
             this.tabPageEdit.Name = "tabPageEdit";
-            this.tabPageEdit.Size = new System.Drawing.Size(770, 393);
+            this.tabPageEdit.Size = new System.Drawing.Size(792, 424);
             this.tabPageEdit.TabIndex = 2;
             this.tabPageEdit.Text = "Edit";
             this.tabPageEdit.UseVisualStyleBackColor = true;
             // 
-            // frmDisplayChords
+            // frmChords
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(778, 419);
+            this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.tabChordsControl);
-            this.Name = "frmDisplayChords";
+            this.Name = "frmChords";
             this.Text = "Chords";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmDisplayChords_FormClosing);
-            this.Resize += new System.EventHandler(this.frmDisplayChords_Resize);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmChords_FormClosing);
+            this.Load += new System.EventHandler(this.frmChords_Load);
+            this.Resize += new System.EventHandler(this.frmChords_Resize);
             this.tabChordsControl.ResumeLayout(false);
             this.tabPageOverview.ResumeLayout(false);
             this.tabPageOverview.PerformLayout();

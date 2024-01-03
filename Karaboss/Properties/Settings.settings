@@ -308,5 +308,14 @@
     <Setting Name="bForceUppercase" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="frmChordsLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="frmChordsSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">400, 200</Value>
+    </Setting>
+    <Setting Name="frmChordsMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

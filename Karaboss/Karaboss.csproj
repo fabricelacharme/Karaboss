@@ -158,6 +158,12 @@
       <DependentUpon>UpdControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Configuration\UpdFrequency.cs" />
+    <Compile Include="frmChords.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmChords.Designer.cs">
+      <DependentUpon>frmChords.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmGuitarTraining.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -475,6 +481,9 @@
     <EmbeddedResource Include="Configuration\UpdControl.resx">
       <DependentUpon>UpdControl.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmChords.resx">
+      <DependentUpon>frmChords.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmExternalMidiPlay.resx">
       <DependentUpon>frmExternalMidiPlay.cs</DependentUpon>

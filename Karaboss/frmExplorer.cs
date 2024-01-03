@@ -1866,7 +1866,7 @@ namespace Karaboss
                     }
                     else if (WindowState == FormWindowState.Normal)
                     {
-                        Properties.Settings.Default.frmExplorerLocation = Location;
+                        Karaboss.Properties.Settings.Default.frmExplorerLocation = Location;
                         Properties.Settings.Default.frmExplorerSize = Size;
                         Properties.Settings.Default.frmExplorerMaximized = false;
                     }
