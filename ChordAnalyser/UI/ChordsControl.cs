@@ -96,6 +96,7 @@ namespace ChordAnalyser.UI
                     _maxstaffwidth = value;
                     if(WidthChanged != null)
                     {
+                        Width = _maxstaffwidth;
                         WidthChanged(this, _maxstaffwidth);
                     }
                 }                    
@@ -278,7 +279,7 @@ namespace ChordAnalyser.UI
             }
 
             maxStaffWidth = x;
-            Width = _maxstaffwidth;
+            //Width = _maxstaffwidth;
         }
 
 

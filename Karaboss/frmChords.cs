@@ -44,6 +44,7 @@ namespace Karaboss
             this.sequence1 = seq;
 
             UpdateMidiTimes();
+            
             DisplayChordControl();
 
             DisplayResults();
@@ -52,7 +53,7 @@ namespace Karaboss
         #region Display Controls
         private void DisplayChordControl()
         {
-            // Panel Top
+            #region Panel Top
             pnlTop = new Panel();
             pnlTop.Parent = this.tabPageDiagrams;
             pnlTop.Location = new Point(0, 0);
@@ -60,9 +61,9 @@ namespace Karaboss
             pnlTop.BackColor = Color.Green;
             pnlTop.Dock = DockStyle.Top;
             tabPageDiagrams.Controls.Add(pnlTop);
+            #endregion
 
-
-            // Panel Bottom
+            #region Panel Bottom
             pnlBottom = new Panel();
             pnlBottom.Parent = this.tabPageDiagrams;
             pnlBottom.Location = new Point(0, 0);
@@ -70,21 +71,21 @@ namespace Karaboss
             pnlBottom.BackColor = Color.Red;
             pnlBottom.Dock = DockStyle.Bottom;
             tabPageDiagrams.Controls.Add(pnlBottom);
+            #endregion
 
-
-            // Panel Display
+            #region Panel Display
             pnlDisplay = new Panel();
             pnlDisplay.Parent = tabPageDiagrams;
             pnlDisplay.Location = new Point(tabPageDiagrams.Margin.Left, pnlTop.Height);
             pnlDisplay.Size = new Size(pnlTop.Width, tabPageDiagrams.Height - pnlTop.Height - pnlBottom.Height);
-            pnlDisplay.BackColor = Color.FromArgb(70, 77, 95);
-            //pnlDisplay.Dock = DockStyle.Fill;
+            pnlDisplay.BackColor = Color.FromArgb(70, 77, 95);            
             tabPageDiagrams.Controls.Add(pnlDisplay);
+            #endregion
 
 
             // MIDDLE
 
-            // ChordControl
+            #region ChordControl
             chordAnalyserControl1 = new ChordsControl();
             chordAnalyserControl1.Parent = pnlDisplay;
             chordAnalyserControl1.Sequence1 = this.sequence1;
@@ -92,12 +93,12 @@ namespace Karaboss
             chordAnalyserControl1.Location = new Point(0, 0);
             chordAnalyserControl1.WidthChanged += new WidthChangedEventHandler(chordAnalyserControl1_WidthChanged);
             pnlDisplay.Controls.Add(chordAnalyserControl1);
+            #endregion
 
-            // positionHScrollBar
+            #region positionHScrollBar
             positionHScrollBar = new ColorSlider.ColorSlider();
             positionHScrollBar.Parent = pnlDisplay;
-            positionHScrollBar.ThumbImage =  Properties.Resources.BTN_Thumb_Blue;
-            //positionHScrollBar.Size = new Size(pnlDisplay.Width - 16, 20);
+            positionHScrollBar.ThumbImage =  Properties.Resources.BTN_Thumb_Blue;            
             positionHScrollBar.Size = new Size(pnlDisplay.Width, 20);
             positionHScrollBar.Location = new Point(0, chordAnalyserControl1.Height);
             positionHScrollBar.Value = 0;
@@ -115,13 +116,15 @@ namespace Karaboss
             positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(PositionHScrollBar_Scroll);
             positionHScrollBar.ValueChanged += new EventHandler(PositionHScollBar_ValueChanged);
             pnlDisplay.Controls.Add(positionHScrollBar);
-
+            
+            #endregion
 
         }
 
         #endregion Display Controls
 
-        #region HSCrollBar
+
+        #region positionHSCrollBar
 
         private void SetScrollBarValues()
         {
@@ -165,12 +168,15 @@ namespace Karaboss
         /// <param name="value"></param>
         private void chordAnalyserControl1_WidthChanged(object sender, int value)
         {
+            positionHScrollBar.Width = (pnlDisplay.Width > chordAnalyserControl1.Width ? chordAnalyserControl1.Width : pnlDisplay.Width);
+
             // Set maximum & visibility
             SetScrollBarValues();
         }
 
 
-        #endregion HScrollBar
+        #endregion positionHScrollBar
+
 
         #region Display results
 
@@ -196,6 +202,7 @@ namespace Karaboss
         }
 
         #endregion Display results
+
 
         #region Form
 
@@ -223,6 +230,7 @@ namespace Karaboss
                     Location = new Point(Location.X, 0);
 
                 Size = Properties.Settings.Default.frmChordsSize;
+                
             }
             #endregion
 

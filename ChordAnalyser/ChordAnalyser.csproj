@@ -66,12 +66,6 @@
     <Compile Include="UI\ChordsControl.Designer.cs">
       <DependentUpon>ChordsControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\frmDisplayChords.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\frmDisplayChords.Designer.cs">
-      <DependentUpon>frmDisplayChords.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ColorSlider\ColorSlider.csproj">
@@ -87,9 +81,6 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\frmDisplayChords.resx">
-      <DependentUpon>frmDisplayChords.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

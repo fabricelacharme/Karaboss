@@ -80,10 +80,7 @@ namespace ChordsAnalyser
             PublishResults(Gridchords);      
             
 
-            // Display form
-            //frmDisplayChords frmDisplayChords= new frmDisplayChords(sequence1);
-            //frmDisplayChords.Show();
-
+            
 
         }
 

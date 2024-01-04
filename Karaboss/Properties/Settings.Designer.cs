@@ -1264,7 +1264,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("400, 200")]
+        [global::System.Configuration.DefaultSettingValueAttribute("800, 600")]
         public global::System.Drawing.Size frmChordsSize {
             get {
                 return ((global::System.Drawing.Size)(this["frmChordsSize"]));
