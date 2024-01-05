@@ -33,11 +33,8 @@ namespace ChordsAnalyser
         #endregion properties
 
         #region private
-        private Sequence sequence1 = new Sequence();
-        //private SheetMusic sheetmusic;
+        private Sequence sequence1 = new Sequence();        
         
-
-
         // Midifile characteristics
         private double _duration = 0;  // en secondes
         private int _totalTicks = 0;
@@ -48,6 +45,7 @@ namespace ChordsAnalyser
         private int NbMeasures;
 
         private string NoChord = "<Chord not found>";
+        private string EmptyChord = "<Empty>";
 
         #endregion private
 
@@ -78,10 +76,7 @@ namespace ChordsAnalyser
 
             // display resluts
             PublishResults(Gridchords);      
-            
-
-            
-
+                        
         }
 
         /*
@@ -379,172 +374,188 @@ namespace ChordsAnalyser
                 }
 
                 #region first part of measure
-                //Remove doubles
-                List<int> lstInt = new List<int>();
-                for (int i = 0; i < lstfirstmidiNotes.Count; i++)
+                if (lstfirstmidiNotes.Count == 0)
                 {
-                    int n = lstfirstmidiNotes[i].Number % 12;
-                    lstInt.Add(n);
+                    if (Gridchords[_measure].Item1 == NoChord)
+                        Gridchords[_measure] = (EmptyChord, Gridchords[_measure].Item2);
                 }
-                lstInt = lstInt.Distinct().ToList();
-
-                // Check impossible chords
-                // C, E, D, D#, A
-                lstInt = CheckImpossibleChord(lstInt);
-
-                if (lstInt.Count > 2)
+                else
                 {
-                    // Debug
-                    List<string> notletters = TransposeToLetterChord(lstInt);
-
-                    // Store into table
-                    int[] intNotes = new int[lstInt.Count];
-                    for (int i = 0; i < lstInt.Count; i++)
-                        intNotes[i] = lstInt[i];
-
-                    lnIntNote = new List<int[]>();
-                    // Build ln = list of all combinations of int
-                    PermuteIntNote(intNotes, 0, lstInt.Count - 1);
-
-                    // Minor the value of the notes of a chord and ensure that each note has a value greater than the previous one.
-                    List<List<int>> notes = new List<List<int>>();
-                    foreach (int[] arry in lnIntNote)
+                    //Remove doubles
+                    List<int> lstInt = new List<int>();
+                    for (int i = 0; i < lstfirstmidiNotes.Count; i++)
                     {
-                        List<int> lll = new List<int>();
-                        for (int i = 0; i < arry.Length; i++)
-                        {
-                            lll.Add(arry[i]);
-                        }
-                        notes.Add(lll);
+                        int n = lstfirstmidiNotes[i].Number % 12;
+                        lstInt.Add(n);
                     }
+                    lstInt = lstInt.Distinct().ToList();
 
-                    notes = ChangeListListNotesNumber(notes);
+                    // Check impossible chords
+                    // C, E, D, D#, A
+                    lstInt = CheckImpossibleChord(lstInt);
 
-                    // Search root note                    
-                    List<int> lroot = DetermineRoot(notes);
-                    
-                    if (lroot != null)
-                    {                        
-                        // Transpose to letters
-                        List<string> notesletters = TransposeToLetterChord(lroot);
-                        List<string> res = ch.determine(notesletters);
+                    if (lstInt.Count > 2)
+                    {
+                        // Debug
+                        List<string> notletters = TransposeToLetterChord(lstInt);
 
-                        if (res.Count > 0)
+                        // Store into table
+                        int[] intNotes = new int[lstInt.Count];
+                        for (int i = 0; i < lstInt.Count; i++)
+                            intNotes[i] = lstInt[i];
+
+                        lnIntNote = new List<int[]>();
+                        // Build ln = list of all combinations of int
+                        PermuteIntNote(intNotes, 0, lstInt.Count - 1);
+
+                        // Minor the value of the notes of a chord and ensure that each note has a value greater than the previous one.
+                        List<List<int>> notes = new List<List<int>>();
+                        foreach (int[] arry in lnIntNote)
                         {
-                            if (Gridchords[_measure].Item1 == NoChord)
-                                Gridchords[_measure] = (res[0], Gridchords[_measure].Item2);
+                            List<int> lll = new List<int>();
+                            for (int i = 0; i < arry.Length; i++)
+                            {
+                                lll.Add(arry[i]);
+                            }
+                            notes.Add(lll);
                         }
-                        else
+
+                        notes = ChangeListListNotesNumber(notes);
+
+                        // Search root note                    
+                        List<int> lroot = DetermineRoot(notes);
+
+                        if (lroot != null)
                         {
-                            lroot = new List<int> { lroot[0], lroot[1], lroot[2] };
                             // Transpose to letters
-                            notesletters = TransposeToLetterChord(lroot);
-                            res = ch.determine(notesletters);
+                            List<string> notesletters = TransposeToLetterChord(lroot);
+                            List<string> res = ch.determine(notesletters);
+
                             if (res.Count > 0)
                             {
                                 if (Gridchords[_measure].Item1 == NoChord)
                                     Gridchords[_measure] = (res[0], Gridchords[_measure].Item2);
                             }
                             else
-                                Console.WriteLine(string.Format("{0} - [Search by chord] ERREUR : Determine n'a pas trouvé d'accord", _measure));
+                            {
+                                lroot = new List<int> { lroot[0], lroot[1], lroot[2] };
+                                // Transpose to letters
+                                notesletters = TransposeToLetterChord(lroot);
+                                res = ch.determine(notesletters);
+                                if (res.Count > 0)
+                                {
+                                    if (Gridchords[_measure].Item1 == NoChord)
+                                        Gridchords[_measure] = (res[0], Gridchords[_measure].Item2);
+                                }
+                                else
+                                    Console.WriteLine(string.Format("{0} - [Search by chord] ERREUR : Determine n'a pas trouvé d'accord", _measure));
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine(string.Format("{0} - [Search by chord] no root note found", _measure));
                         }
                     }
                     else
                     {
-                        Console.WriteLine(string.Format("{0} - [Search by chord] no root note found", _measure));
+                        Console.WriteLine(string.Format("{0} - [Search by chord] number of notes < 2", _measure));
                     }
 
-                }
-                else
-                {
-                    Console.WriteLine(string.Format("{0} - [Search by chord] number of notes < 2", _measure));
                 }
                 #endregion first part of measure
 
 
                 #region 2nd part of measure
-                //Remove doubles
-                lstInt = new List<int>();
-                for (int i = 0; i < lstSecmidiNotes.Count; i++)
+                if (lstSecmidiNotes.Count == 0)
                 {
-                    int n = lstSecmidiNotes[i].Number % 12;
-                    lstInt.Add(n);
+                    if (Gridchords[_measure].Item2 == NoChord)
+                        Gridchords[_measure] = (Gridchords[_measure].Item1, EmptyChord);
                 }
-                lstInt = lstInt.Distinct().ToList();
-
-                // Check impossible chords
-                // C, E, D, D#, A
-                lstInt = CheckImpossibleChord(lstInt);
-
-                if (lstInt.Count > 2)
+                else
                 {
-                    // Debug
-                    List<string> notletters = TransposeToLetterChord(lstInt);
-
-                    // Store into table
-                    int[] intNotes = new int[lstInt.Count];
-                    for (int i = 0; i < lstInt.Count; i++)
-                        intNotes[i] = lstInt[i];
-
-                    lnIntNote = new List<int[]>();
-                    // Build ln = list of all combinations of int
-                    PermuteIntNote(intNotes, 0, lstInt.Count - 1);
-
-                    // Minor the value of the notes of a chord and ensure that each note has a value greater than the previous one.
-                    List<List<int>> notes = new List<List<int>>();
-                    foreach (int[] arry in lnIntNote)
+                    List<int> lstInt = new List<int>();
+                    //Remove doubles
+                    lstInt = new List<int>();
+                    for (int i = 0; i < lstSecmidiNotes.Count; i++)
                     {
-                        List<int> lll = new List<int>();
-                        for (int i = 0; i < arry.Length; i++)
-                        {
-                            lll.Add(arry[i]);
-                        }
-                        notes.Add(lll);
+                        int n = lstSecmidiNotes[i].Number % 12;
+                        lstInt.Add(n);
                     }
+                    lstInt = lstInt.Distinct().ToList();
 
-                    notes = ChangeListListNotesNumber(notes);
+                    // Check impossible chords
+                    // C, E, D, D#, A
+                    lstInt = CheckImpossibleChord(lstInt);
 
-                    // Search root note                    
-                    List<int> lroot = DetermineRoot(notes);
-
-                    if (lroot != null)
+                    if (lstInt.Count > 2)
                     {
-                        // Transpose to letters
-                        List<string> notesletters = TransposeToLetterChord(lroot);
-                        List<string> res = ch.determine(notesletters);
+                        // Debug
+                        List<string> notletters = TransposeToLetterChord(lstInt);
 
-                        if (res.Count > 0)
+                        // Store into table
+                        int[] intNotes = new int[lstInt.Count];
+                        for (int i = 0; i < lstInt.Count; i++)
+                            intNotes[i] = lstInt[i];
+
+                        lnIntNote = new List<int[]>();
+                        // Build ln = list of all combinations of int
+                        PermuteIntNote(intNotes, 0, lstInt.Count - 1);
+
+                        // Minor the value of the notes of a chord and ensure that each note has a value greater than the previous one.
+                        List<List<int>> notes = new List<List<int>>();
+                        foreach (int[] arry in lnIntNote)
                         {
-                            if (Gridchords[_measure].Item2 == NoChord)
-                                Gridchords[_measure] = (Gridchords[_measure].Item1, res[0]);
+                            List<int> lll = new List<int>();
+                            for (int i = 0; i < arry.Length; i++)
+                            {
+                                lll.Add(arry[i]);
+                            }
+                            notes.Add(lll);
                         }
-                        else
+
+                        notes = ChangeListListNotesNumber(notes);
+
+                        // Search root note                    
+                        List<int> lroot = DetermineRoot(notes);
+
+                        if (lroot != null)
                         {
-                            lroot = new List<int> { lroot[0], lroot[1], lroot[2] };
                             // Transpose to letters
-                            notesletters = TransposeToLetterChord(lroot);
-                            res = ch.determine(notesletters);
+                            List<string> notesletters = TransposeToLetterChord(lroot);
+                            List<string> res = ch.determine(notesletters);
+
                             if (res.Count > 0)
                             {
                                 if (Gridchords[_measure].Item2 == NoChord)
                                     Gridchords[_measure] = (Gridchords[_measure].Item1, res[0]);
                             }
                             else
-                                Console.WriteLine(string.Format("{0} - [Search by chord] ERREUR : Determine n'a pas trouvé d'accord", _measure));
+                            {
+                                lroot = new List<int> { lroot[0], lroot[1], lroot[2] };
+                                // Transpose to letters
+                                notesletters = TransposeToLetterChord(lroot);
+                                res = ch.determine(notesletters);
+                                if (res.Count > 0)
+                                {
+                                    if (Gridchords[_measure].Item2 == NoChord)
+                                        Gridchords[_measure] = (Gridchords[_measure].Item1, res[0]);
+                                }
+                                else
+                                    Console.WriteLine(string.Format("{0} - [Search by chord] ERREUR : Determine n'a pas trouvé d'accord", _measure));
+                            }
                         }
+                        else
+                        {
+                            Console.WriteLine(string.Format("{0} - [Search by chord] no root note found", _measure));
+                        }
+
                     }
                     else
                     {
-                        Console.WriteLine(string.Format("{0} - [Search by chord] no root note found", _measure));
+                        Console.WriteLine(string.Format("{0} - [Search by chord] number of notes < 2", _measure));
                     }
 
                 }
-                else
-                {
-                    Console.WriteLine(string.Format("{0} - [Search by chord] number of notes < 2", _measure));
-                }
-
-
                 #endregion               
 
             }

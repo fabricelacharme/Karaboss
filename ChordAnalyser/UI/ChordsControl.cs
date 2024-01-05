@@ -219,8 +219,7 @@ namespace ChordAnalyser.UI
             Pen mesureSeparatorPen = new Pen(Color.Black, _MeasureSeparatorWidth);
             Pen FillPen = new Pen(TimeLineColor, _LinesWidth);
 
-            SolidBrush FillBrush;
-            
+            //SolidBrush FillBrush;            
             Rectangle rect;
 
             Point p1;
@@ -246,7 +245,6 @@ namespace ChordAnalyser.UI
             g.FillRectangle(new SolidBrush(Color.Black), rect);
 
             x += _TimeLineHeight + (_LinesWidth - 1);
-
 
 
             // Draw measures
@@ -278,12 +276,9 @@ namespace ChordAnalyser.UI
 
             }
 
-            maxStaffWidth = x;
-            //Width = _maxstaffwidth;
+            maxStaffWidth = x;            
         }
 
-
- 
 
         private Rectangle GetVisibleRectangle(Control c)
         {
@@ -315,20 +310,13 @@ namespace ChordAnalyser.UI
             SolidBrush ChordBrush = new SolidBrush(Color.Black);
             SolidBrush MeasureBrush = new SolidBrush(Color.Red);
 
+            Font fontChord = new Font("Arial", 16, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontMeasure = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel);
+
             int _LinesWidth = 2;
             int x = _TimeLineHeight + (_LinesWidth - 1);
             Point p1;
-
-            /*
-            for (int i = 0; i < NbMeasures * sequence1.Numerator; i++)
-            {
-                p1 = new Point(x + _TimeLineHeight / 2, _TimeLineHeight / 2);
-                g.DrawString(i.ToString(), fontMeasure, textBrush, p1.X, p1.Y);
-
-                x += _TimeLineHeight + (_LinesWidth - 1);
-            }
-            */
+          
 
             if (Gridchords != null)
             {
@@ -339,12 +327,12 @@ namespace ChordAnalyser.UI
                 for (int i = 1; i <= Gridchords.Count; i++)
                 {
                     // Chord name
-                    p1 = new Point(x + Offset, _TimeLineHeight / 2);
+                    p1 = new Point(x + Offset, (_TimeLineHeight / 2) - (fontMeasure.Height/2));
 
                     ttx = Gridchords[i];
                     tx = ttx.Item1;
                     tx = InterpreteNote(tx);
-                    g.DrawString(tx, fontMeasure, ChordBrush, p1.X, p1.Y);
+                    g.DrawString(tx, fontChord, ChordBrush, p1.X, p1.Y);
 
                     // Measure number
                     tx = i.ToString();
@@ -355,9 +343,7 @@ namespace ChordAnalyser.UI
                     x += (_TimeLineHeight + (_LinesWidth - 1)) * sequence1.Numerator;
 
                 }
-
             }
-
         }
 
         private string InterpreteNote(string note)
@@ -371,7 +357,6 @@ namespace ChordAnalyser.UI
             note = note.Replace("sixth", "6");
             note = note.Replace("ninth", "9");
             note = note.Replace("eleventh", "11");
-
 
             note = note.Trim();
             return note;
