@@ -57,7 +57,7 @@ namespace Karaboss
             pnlTop = new Panel();
             pnlTop.Parent = this.tabPageDiagrams;
             pnlTop.Location = new Point(0, 0);
-            pnlTop.Size = new Size(tabPageDiagrams.Width, 100);
+            pnlTop.Size = new Size(tabPageDiagrams.Width, 20);
             pnlTop.BackColor = Color.Green;
             pnlTop.Dock = DockStyle.Top;
             tabPageDiagrams.Controls.Add(pnlTop);
@@ -67,7 +67,7 @@ namespace Karaboss
             pnlBottom = new Panel();
             pnlBottom.Parent = this.tabPageDiagrams;
             pnlBottom.Location = new Point(0, 0);
-            pnlBottom.Size = new Size(tabPageDiagrams.Width, 100);
+            pnlBottom.Size = new Size(tabPageDiagrams.Width, 20);
             pnlBottom.BackColor = Color.Red;
             pnlBottom.Dock = DockStyle.Bottom;
             tabPageDiagrams.Controls.Add(pnlBottom);

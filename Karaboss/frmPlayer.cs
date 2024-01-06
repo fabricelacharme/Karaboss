@@ -8566,9 +8566,7 @@ namespace Karaboss
                 {
                     MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
-
-            //ChordsAnalyser.ChordAnalyser chan = new ChordsAnalyser.ChordAnalyser(sheetmusic, sequence1);            
+            }            
         }
 
         #endregion
