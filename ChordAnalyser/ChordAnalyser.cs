@@ -629,16 +629,16 @@ namespace ChordsAnalyser
 
 
         /// <summary>
-        /// R*Get time inside measure
+        /// Get time inside measure
         /// </summary>
         /// <param name="ticks"></param>
         /// <returns></returns>
-        public float GetTimeInMeasure(float ticks)
+        public float GetTimeInMeasure(int ticks)
         {
             // Num measure
-            int nummeasure = Convert.ToInt32(ticks) / _measurelen;
+            //int nummeasure = Convert.ToInt32(ticks) / _measurelen;
             // Temps dans la mesure
-            int rest = Convert.ToInt32(ticks) % _measurelen;
+            int rest = ticks % _measurelen;
             return (float)rest / sequence1.Time.Quarter;            
         }
 

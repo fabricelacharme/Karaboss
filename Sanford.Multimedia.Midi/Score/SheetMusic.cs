@@ -3302,7 +3302,7 @@ namespace Sanford.Multimedia.Midi.Score
         {
             // Display note under the mouse                    
             // Num measure
-            int nummeasure = Convert.ToInt32(ticks) / measurelen;
+            //int nummeasure = Convert.ToInt32(ticks) / measurelen;
             // Temps dans la mesure
             int rest = Convert.ToInt32(ticks) % measurelen;
             float timeinmeasure = (float)rest / sequence1.Time.Quarter;
