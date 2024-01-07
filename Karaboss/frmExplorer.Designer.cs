@@ -567,7 +567,7 @@
             // 
             resources.ApplyResources(this.searchControl, "searchControl");
             this.searchControl.Name = "searchControl";
-            this.searchControl.SongRoot = "C:\\Users\\A453868\\Music";
+            this.searchControl.SongRoot = "C:\\Users\\Fabrice\\OneDrive\\Music";
             this.searchControl.SView = Karaboss.Search.SearchViewStyle.Author;
             // 
             // frmExplorer

@@ -8559,7 +8559,7 @@ namespace Karaboss
             {
                 try
                 {
-                    frmChords frmChords = new frmChords(sequence1);
+                    frmChords frmChords = new frmChords(outDevice, MIDIfileFullPath);
                     frmChords.Show();
                 }
                 catch (Exception ex)

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,8 +17,39 @@ namespace Karaboss
     {
 
         #region private
+        private bool closing = false;
+
+        // Current file beeing edited
+        private string MIDIfileName = string.Empty;
+        private string MIDIfilePath = string.Empty;
+        private string MIDIfileFullPath = string.Empty;
+
+        private int bouclestart = 0;
+        private int newstart = 0;
+        private int laststart = 0;      // Start time to play
+        private int nbstop = 0;
+
+
+        /// <summary>
+        /// Player status
+        /// </summary>
+        private enum PlayerStates
+        {
+            Playing,
+            Paused,
+            Stopped,
+            NextSong,
+            Waiting,
+            WaitingPaused
+        }
+        private PlayerStates PlayerState;
+
+        #region controls
         private Sequence sequence1 = new Sequence();
         private ChordAnalyser.UI.ChordsControl chordAnalyserControl1;
+        private OutputDevice outDevice;
+        private Sequencer sequencer1 = new Sequencer();
+        #endregion controls
 
         private Panel pnlTop;
         private Panel pnlDisplay;
@@ -38,20 +70,77 @@ namespace Karaboss
         #endregion private
 
 
-        public frmChords(Sequence seq)
+        public frmChords(OutputDevice OtpDev, string FileName)
         {
             InitializeComponent();
-            this.sequence1 = seq;
+
+            this.DoubleBuffered = true;
+
+            // Sequence
+            MIDIfileFullPath = FileName;
+            MIDIfileName = Path.GetFileName(FileName);
+            MIDIfilePath = Path.GetDirectoryName(FileName);
+
+            // Sequence
+            //LoadSequencer(seq);
+            outDevice = OtpDev;
+
+            // Title
+            SetTitle(FileName);
 
             UpdateMidiTimes();
             
-            DisplayChordControl();
+            //DrawControls();
 
-            DisplayResults();
+            //DisplayResults();
         }
 
         #region Display Controls
-        private void DisplayChordControl()
+
+        /// <summary>
+        /// Sets title of form
+        /// </summary>
+        /// <param name="fileName"></param>
+        private void SetTitle(string fileName)
+        {
+            Text = "Karaboss - " + Path.GetFileName(fileName);
+        }
+
+        private void LoadSequencer(Sequence seq)
+        {
+            try
+            {
+                sequence1 = seq;
+
+                sequencer1 = new Sequencer();
+                sequencer1.Sequence = sequence1;    // primordial !!!!!
+                this.sequencer1.PlayingCompleted += new System.EventHandler(this.HandlePlayingCompleted);
+                this.sequencer1.ChannelMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.ChannelMessageEventArgs>(this.HandleChannelMessagePlayed);
+                this.sequencer1.SysExMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.SysExMessageEventArgs>(this.HandleSysExMessagePlayed);
+                this.sequencer1.Chased += new System.EventHandler<Sanford.Multimedia.Midi.ChasedEventArgs>(this.HandleChased);
+                this.sequencer1.Stopped += new System.EventHandler<Sanford.Multimedia.Midi.StoppedEventArgs>(this.HandleStopped);
+
+                UpdateMidiTimes();
+
+                //TempoOrig = _tempo;
+                //lblTempo.Text = string.Format("Tempo: {0} - BPM: {1}", _tempo, _bpm);
+
+                // Display
+                int Min = (int)(_duration / 60);
+                int Sec = (int)(_duration - (Min * 60));
+                //lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
+
+                ResetSequencer();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+
+        private void DrawControls()
         {
             #region Panel Top
             pnlTop = new Panel();
@@ -122,6 +211,106 @@ namespace Karaboss
         }
 
         #endregion Display Controls
+
+
+        #region handle messages
+
+        /// <summary>
+        /// Event: loading of midi file in progress
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleLoadProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //loading = true;
+            try
+            {
+                //toolStripProgressBarPlayer.Value = e.ProgressPercentage;
+                //progressBarPlayer.Value = e.ProgressPercentage;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+
+        /// <summary>
+        /// Event: loading of midi file terminated: launch song
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleLoadCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            LoadSequencer(sequence1);
+            
+            DrawControls();
+
+            DisplayResults();
+            //AnalyseInstruments();
+            
+            //InitCbTracks();
+        }
+
+        /// <summary>
+        /// Load the midi file in the sequencer
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void LoadAsyncFile(string fileName)
+        {
+            try
+            {
+                //progressBarPlayer.Visible = true;
+
+                ResetSequencer();
+                if (fileName != "\\")
+                {
+                    sequence1.LoadAsync(fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        private void HandleStopped(object sender, StoppedEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void HandleChased(object sender, ChasedEventArgs e)
+        {
+            foreach (ChannelMessage message in e.Messages)
+            {
+                outDevice.Send(message);
+            }
+        }
+
+        private void HandleSysExMessagePlayed(object sender, SysExMessageEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void HandleChannelMessagePlayed(object sender, ChannelMessageEventArgs e)
+        {
+            #region Guard
+            if (closing)
+            {
+                return;
+            }
+            #endregion
+
+
+        }
+
+        private void HandlePlayingCompleted(object sender, EventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        #endregion handle messages
+
 
 
         #region positionHSCrollBar
@@ -206,6 +395,35 @@ namespace Karaboss
 
         #region Form
 
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            closing = true;
+            base.OnClosing(e);
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            ResetSequencer();
+            sequencer1.Dispose();
+            if (outDevice != null && !outDevice.IsDisposed)
+                outDevice.Reset();
+            base.OnClosed(e);
+        }
+
+        /// <summary>
+        /// Override form load event
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnLoad(EventArgs e)
+        {
+            sequence1.LoadProgressChanged += HandleLoadProgressChanged;
+            sequence1.LoadCompleted += HandleLoadCompleted;
+
+            LoadAsyncFile(MIDIfileFullPath);
+
+            base.OnLoad(e);
+        }
+
         private void frmChords_Load(object sender, EventArgs e)
         {
             #region setwindowlocation
@@ -239,8 +457,11 @@ namespace Karaboss
 
         private void frmChords_Resize(object sender, EventArgs e)
         {
-            pnlDisplay.Width = pnlTop.Width;
-            pnlDisplay.Height = tabPageDiagrams.Height - pnlTop.Height - pnlBottom.Height;
+            if (pnlDisplay != null)
+            {
+                pnlDisplay.Width = pnlTop.Width;
+                pnlDisplay.Height = tabPageDiagrams.Height - pnlTop.Height - pnlBottom.Height;
+            }
 
             if (chordAnalyserControl1 != null)
                 positionHScrollBar.Width = (pnlDisplay.Width > chordAnalyserControl1.Width ? chordAnalyserControl1.Width : pnlDisplay.Width);
@@ -298,6 +519,19 @@ namespace Karaboss
 
         #endregion Midi
 
-       
+
+        #region Play stop pause
+
+        private void ResetSequencer()
+        {
+            newstart = 0;
+            laststart = 0;
+            sequencer1.Stop();
+            PlayerState = PlayerStates.Stopped;
+        }
+
+
+        #endregion Play stop pause
+
     }
 }

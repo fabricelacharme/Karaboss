@@ -122,26 +122,22 @@
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="tssLeft.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 20</value>
+    <value>39, 17</value>
   </data>
   <data name="tssLeft.Text" xml:space="preserve">
     <value>Ready</value>
   </data>
   <data name="tssMiddle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>965, 20</value>
+    <value>722, 17</value>
   </data>
   <data name="tssRight.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 20</value>
+    <value>0, 17</value>
   </data>
   <data name="statusBar.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 495</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="statusBar.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>1, 0, 19, 0</value>
+    <value>0, 420</value>
   </data>
   <data name="statusBar.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1035, 26</value>
+    <value>776, 22</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="statusBar.TabIndex" type="System.Int32, mscorlib">
@@ -162,65 +158,66 @@
   <metadata name="mnuExplorer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>243, 3</value>
   </metadata>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="mnuFileNew.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>Ctrl+N</value>
   </data>
   <data name="mnuFileNew.Size" type="System.Drawing.Size, System.Drawing">
-    <value>175, 26</value>
+    <value>141, 22</value>
   </data>
   <data name="mnuFileNew.Text" xml:space="preserve">
     <value>&amp;New</value>
   </data>
   <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>175, 26</value>
+    <value>141, 22</value>
   </data>
   <data name="mnuFileOpen.Text" xml:space="preserve">
     <value>&amp;Open</value>
   </data>
   <data name="mnuFileEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>175, 26</value>
+    <value>141, 22</value>
   </data>
   <data name="mnuFileEdit.Text" xml:space="preserve">
     <value>&amp;Edit</value>
   </data>
   <data name="MnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 6</value>
+    <value>138, 6</value>
   </data>
   <data name="MnuFileRecentFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>175, 26</value>
+    <value>141, 22</value>
   </data>
   <data name="MnuFileRecentFiles.Text" xml:space="preserve">
     <value>Recent Files</value>
   </data>
   <data name="MnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 6</value>
+    <value>138, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>175, 26</value>
+    <value>141, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quit</value>
   </data>
   <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>46, 24</value>
+    <value>37, 20</value>
   </data>
   <data name="mnuFile.Text" xml:space="preserve">
     <value>&amp;File</value>
   </data>
   <data name="mnuEditRenameAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>270, 26</value>
+    <value>217, 22</value>
   </data>
   <data name="mnuEditRenameAll.Text" xml:space="preserve">
     <value>Rename all (F3)</value>
   </data>
   <data name="invertAuthorAndSongToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>270, 26</value>
+    <value>217, 22</value>
   </data>
   <data name="invertAuthorAndSongToolStripMenuItem.Text" xml:space="preserve">
     <value>Invert author and song (F7)</value>
   </data>
   <data name="mnuEditRename.Size" type="System.Drawing.Size, System.Drawing">
-    <value>196, 26</value>
+    <value>155, 22</value>
   </data>
   <data name="mnuEditRename.Text" xml:space="preserve">
     <value>Rename</value>
@@ -229,175 +226,175 @@
     <value>Rename all songs</value>
   </data>
   <data name="mnuEditReplaceAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>196, 26</value>
+    <value>155, 22</value>
   </data>
   <data name="mnuEditReplaceAll.Text" xml:space="preserve">
     <value>Replace All (F4)</value>
   </data>
   <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>49, 24</value>
+    <value>39, 20</value>
   </data>
   <data name="mnuEdit.Text" xml:space="preserve">
     <value>Edit</value>
   </data>
   <data name="mnuDisplaySearch.Size" type="System.Drawing.Size, System.Drawing">
-    <value>339, 26</value>
+    <value>273, 22</value>
   </data>
   <data name="mnuDisplaySearch.Text" xml:space="preserve">
     <value>Search...</value>
   </data>
   <data name="mnuDisplayExplore.Size" type="System.Drawing.Size, System.Drawing">
-    <value>339, 26</value>
+    <value>273, 22</value>
   </data>
   <data name="mnuDisplayExplore.Text" xml:space="preserve">
     <value>Explore</value>
   </data>
   <data name="mnuDisplayPlaylist.Size" type="System.Drawing.Size, System.Drawing">
-    <value>339, 26</value>
+    <value>273, 22</value>
   </data>
   <data name="mnuDisplayPlaylist.Text" xml:space="preserve">
     <value>Playlists</value>
   </data>
   <data name="MnuDisplayConnected.Size" type="System.Drawing.Size, System.Drawing">
-    <value>339, 26</value>
+    <value>273, 22</value>
   </data>
   <data name="MnuDisplayConnected.Text" xml:space="preserve">
     <value>Find artists, songs &amp;&amp; lyrics on the web</value>
   </data>
   <data name="MnuDisplayPianoTraining.Size" type="System.Drawing.Size, System.Drawing">
-    <value>339, 26</value>
+    <value>273, 22</value>
   </data>
   <data name="MnuDisplayPianoTraining.Text" xml:space="preserve">
     <value>Piano training</value>
   </data>
   <data name="MnuDisplayGuitarTraining.Size" type="System.Drawing.Size, System.Drawing">
-    <value>339, 26</value>
+    <value>273, 22</value>
   </data>
   <data name="MnuDisplayGuitarTraining.Text" xml:space="preserve">
     <value>Guitar training</value>
   </data>
   <data name="mnuDisplay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>72, 24</value>
+    <value>57, 20</value>
   </data>
   <data name="mnuDisplay.Text" xml:space="preserve">
     <value>&amp;Display</value>
   </data>
   <data name="mnuToolsOption.Size" type="System.Drawing.Size, System.Drawing">
-    <value>211, 26</value>
+    <value>168, 22</value>
   </data>
   <data name="mnuToolsOption.Text" xml:space="preserve">
     <value>&amp;Options</value>
   </data>
   <data name="MnuToolsSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 6</value>
+    <value>165, 6</value>
   </data>
   <data name="mnuToolsMngtFilesDeleteEmptyDirs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>372, 26</value>
+    <value>296, 22</value>
   </data>
   <data name="mnuToolsMngtFilesDeleteEmptyDirs.Text" xml:space="preserve">
     <value>Delete empty dirs</value>
   </data>
   <data name="MnuToolsSep2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>369, 6</value>
+    <value>293, 6</value>
   </data>
   <data name="mnuToolsMngtFilesSearchDoubles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>372, 26</value>
+    <value>296, 22</value>
   </data>
   <data name="mnuToolsMngtFilesSearchDoubles.Text" xml:space="preserve">
     <value>Search doubles compared to reference</value>
   </data>
   <data name="mnuToolsMngtFilesSearchDoublesSingle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>372, 26</value>
+    <value>296, 22</value>
   </data>
   <data name="mnuToolsMngtFilesSearchDoublesSingle.Text" xml:space="preserve">
     <value>Search doubles in a single directory</value>
   </data>
   <data name="MnuToolsSep3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>369, 6</value>
+    <value>293, 6</value>
   </data>
   <data name="mnuToolsMngtFilesSearchSameSizeComparedToReference.Size" type="System.Drawing.Size, System.Drawing">
-    <value>372, 26</value>
+    <value>296, 22</value>
   </data>
   <data name="mnuToolsMngtFilesSearchSameSizeComparedToReference.Text" xml:space="preserve">
     <value>Search same size compared to reference</value>
   </data>
   <data name="mnuToolsMngtFilesSearchSameSizeInASingleDirectory.Size" type="System.Drawing.Size, System.Drawing">
-    <value>372, 26</value>
+    <value>296, 22</value>
   </data>
   <data name="mnuToolsMngtFilesSearchSameSizeInASingleDirectory.Text" xml:space="preserve">
     <value>Search same size in a single directory</value>
   </data>
   <data name="MnuToolsSep4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>369, 6</value>
+    <value>293, 6</value>
   </data>
   <data name="mnuToolsMngtFilesSearchSameNameComparedToReference.Size" type="System.Drawing.Size, System.Drawing">
-    <value>372, 26</value>
+    <value>296, 22</value>
   </data>
   <data name="mnuToolsMngtFilesSearchSameNameComparedToReference.Text" xml:space="preserve">
     <value>Search same name compared to reference</value>
   </data>
   <data name="mnuToolsMngtFilesSearchSameNameInASingleDirectory.Size" type="System.Drawing.Size, System.Drawing">
-    <value>372, 26</value>
+    <value>296, 22</value>
   </data>
   <data name="mnuToolsMngtFilesSearchSameNameInASingleDirectory.Text" xml:space="preserve">
     <value>Search same name in a single directory</value>
   </data>
   <data name="mnuToolsMngtFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>211, 26</value>
+    <value>168, 22</value>
   </data>
   <data name="mnuToolsMngtFiles.Text" xml:space="preserve">
     <value>Manage Midi files</value>
   </data>
   <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 6</value>
+    <value>165, 6</value>
   </data>
   <data name="mnuTools.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 24</value>
+    <value>46, 20</value>
   </data>
   <data name="mnuTools.Text" xml:space="preserve">
     <value>&amp;Tools</value>
   </data>
   <data name="mnuMidiInputDevice.Size" type="System.Drawing.Size, System.Drawing">
-    <value>219, 26</value>
+    <value>177, 22</value>
   </data>
   <data name="mnuMidiInputDevice.Text" xml:space="preserve">
     <value>&amp;Input device</value>
   </data>
   <data name="mnuMidiOutputDevice.Size" type="System.Drawing.Size, System.Drawing">
-    <value>219, 26</value>
+    <value>177, 22</value>
   </data>
   <data name="mnuMidiOutputDevice.Text" xml:space="preserve">
     <value>&amp;Output device</value>
   </data>
   <data name="MnuMidiSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>216, 6</value>
+    <value>174, 6</value>
   </data>
   <data name="MnuMidiExternalPlay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>139, 26</value>
+    <value>111, 22</value>
   </data>
   <data name="MnuMidiExternalPlay.Text" xml:space="preserve">
     <value>Play</value>
   </data>
   <data name="MnuMidiExternalRecord.Size" type="System.Drawing.Size, System.Drawing">
-    <value>139, 26</value>
+    <value>111, 22</value>
   </data>
   <data name="MnuMidiExternalRecord.Text" xml:space="preserve">
     <value>Record</value>
   </data>
   <data name="MnuMidiExternal.Size" type="System.Drawing.Size, System.Drawing">
-    <value>219, 26</value>
+    <value>177, 22</value>
   </data>
   <data name="MnuMidiExternal.Text" xml:space="preserve">
     <value>External Instrument</value>
   </data>
   <data name="mnuMidi.Size" type="System.Drawing.Size, System.Drawing">
-    <value>53, 24</value>
+    <value>43, 20</value>
   </data>
   <data name="mnuMidi.Text" xml:space="preserve">
     <value>&amp;Midi</value>
   </data>
   <data name="MnuHelpCheckNewVersion.Size" type="System.Drawing.Size, System.Drawing">
-    <value>213, 26</value>
+    <value>173, 22</value>
   </data>
   <data name="MnuHelpCheckNewVersion.Text" xml:space="preserve">
     <value>Check new version</value>
@@ -406,13 +403,13 @@
     <value>False</value>
   </data>
   <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
-    <value>213, 26</value>
+    <value>173, 22</value>
   </data>
   <data name="mnuHelpAbout.Text" xml:space="preserve">
     <value>About Karaboss</value>
   </data>
   <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>55, 24</value>
+    <value>44, 20</value>
   </data>
   <data name="mnuHelp.Text" xml:space="preserve">
     <value>&amp;Help</value>
@@ -420,8 +417,11 @@
   <data name="mnuExplorer.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
+  <data name="mnuExplorer.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 2, 0, 2</value>
+  </data>
   <data name="mnuExplorer.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1035, 28</value>
+    <value>776, 24</value>
   </data>
   <data name="mnuExplorer.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -448,13 +448,10 @@
     <value>NoControl</value>
   </data>
   <data name="lblLyrics.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 48</value>
-  </data>
-  <data name="lblLyrics.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
+    <value>3, 39</value>
   </data>
   <data name="lblLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 16</value>
+    <value>35, 13</value>
   </data>
   <data name="lblLyrics.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -481,13 +478,10 @@
     <value>NoControl</value>
   </data>
   <data name="lblWtags.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1200, 0</value>
-  </data>
-  <data name="lblWtags.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
+    <value>900, 0</value>
   </data>
   <data name="lblWtags.Size" type="System.Drawing.Size, System.Drawing">
-    <value>46, 16</value>
+    <value>38, 13</value>
   </data>
   <data name="lblWtags.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -514,13 +508,10 @@
     <value>NoControl</value>
   </data>
   <data name="lblVtags.Location" type="System.Drawing.Point, System.Drawing">
-    <value>133, 0</value>
-  </data>
-  <data name="lblVtags.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
+    <value>100, 0</value>
   </data>
   <data name="lblVtags.Size" type="System.Drawing.Size, System.Drawing">
-    <value>42, 16</value>
+    <value>34, 13</value>
   </data>
   <data name="lblVtags.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -547,13 +538,10 @@
     <value>NoControl</value>
   </data>
   <data name="lblTtags.Location" type="System.Drawing.Point, System.Drawing">
-    <value>827, 0</value>
-  </data>
-  <data name="lblTtags.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
+    <value>620, 0</value>
   </data>
   <data name="lblTtags.Size" type="System.Drawing.Size, System.Drawing">
-    <value>42, 16</value>
+    <value>34, 13</value>
   </data>
   <data name="lblTtags.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -580,13 +568,10 @@
     <value>NoControl</value>
   </data>
   <data name="lblLtags.Location" type="System.Drawing.Point, System.Drawing">
-    <value>133, 31</value>
-  </data>
-  <data name="lblLtags.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
+    <value>100, 25</value>
   </data>
   <data name="lblLtags.Size" type="System.Drawing.Size, System.Drawing">
-    <value>40, 16</value>
+    <value>33, 13</value>
   </data>
   <data name="lblLtags.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -613,13 +598,10 @@
     <value>NoControl</value>
   </data>
   <data name="lblKtags.Location" type="System.Drawing.Point, System.Drawing">
-    <value>240, 0</value>
-  </data>
-  <data name="lblKtags.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
+    <value>180, 0</value>
   </data>
   <data name="lblKtags.Size" type="System.Drawing.Size, System.Drawing">
-    <value>41, 16</value>
+    <value>34, 13</value>
   </data>
   <data name="lblKtags.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -646,13 +628,10 @@
     <value>NoControl</value>
   </data>
   <data name="lblItags.Location" type="System.Drawing.Point, System.Drawing">
-    <value>533, 0</value>
-  </data>
-  <data name="lblItags.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
+    <value>400, 0</value>
   </data>
   <data name="lblItags.Size" type="System.Drawing.Size, System.Drawing">
-    <value>36, 16</value>
+    <value>30, 13</value>
   </data>
   <data name="lblItags.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -679,13 +658,10 @@
     <value>NoControl</value>
   </data>
   <data name="lblDuration.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 32</value>
-  </data>
-  <data name="lblDuration.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
+    <value>3, 26</value>
   </data>
   <data name="lblDuration.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 16</value>
+    <value>35, 13</value>
   </data>
   <data name="lblDuration.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -712,13 +688,10 @@
     <value>NoControl</value>
   </data>
   <data name="lblFormat.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 16</value>
-  </data>
-  <data name="lblFormat.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
+    <value>3, 13</value>
   </data>
   <data name="lblFormat.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 16</value>
+    <value>35, 13</value>
   </data>
   <data name="lblFormat.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -745,13 +718,10 @@
     <value>NoControl</value>
   </data>
   <data name="lblTracks.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 0</value>
-  </data>
-  <data name="lblTracks.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
+    <value>3, 0</value>
   </data>
   <data name="lblTracks.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 16</value>
+    <value>35, 13</value>
   </data>
   <data name="lblTracks.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -772,13 +742,10 @@
     <value>9</value>
   </data>
   <data name="pnlFileInfos.Location" type="System.Drawing.Point, System.Drawing">
-    <value>237, 427</value>
-  </data>
-  <data name="pnlFileInfos.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>178, 347</value>
   </data>
   <data name="pnlFileInfos.Size" type="System.Drawing.Size, System.Drawing">
-    <value>781, 74</value>
+    <value>586, 60</value>
   </data>
   <data name="pnlFileInfos.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -796,13 +763,13 @@
     <value>1</value>
   </data>
   <data name="sideBarControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>87, 44</value>
+    <value>65, 36</value>
   </data>
   <data name="sideBarControl.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 5, 5, 5</value>
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="sideBarControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>120, 730</value>
+    <value>90, 593</value>
   </data>
   <data name="sideBarControl.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -820,13 +787,13 @@
     <value>3</value>
   </data>
   <data name="connectedControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>460, 97</value>
+    <value>345, 79</value>
   </data>
   <data name="connectedControl.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 5, 5, 5</value>
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="connectedControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>496, 293</value>
+    <value>372, 238</value>
   </data>
   <data name="connectedControl.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -835,7 +802,7 @@
     <value>connectedControl</value>
   </data>
   <data name="&gt;&gt;connectedControl.Type" xml:space="preserve">
-    <value>Karaboss.Pages.ConnectedControl, Karaboss, Version=1.0.8.2, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Pages.ConnectedControl, Karaboss, Version=1.0.9.1, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;connectedControl.Parent" xml:space="preserve">
     <value>$this</value>
@@ -844,13 +811,13 @@
     <value>0</value>
   </data>
   <data name="xplorerControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>559, 15</value>
+    <value>419, 12</value>
   </data>
   <data name="xplorerControl.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 5, 5, 5</value>
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="xplorerControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>460, 315</value>
+    <value>345, 256</value>
   </data>
   <data name="xplorerControl.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -859,7 +826,7 @@
     <value>xplorerControl</value>
   </data>
   <data name="&gt;&gt;xplorerControl.Type" xml:space="preserve">
-    <value>Karaboss.xplorer.xplorerControl, Karaboss, Version=1.0.8.2, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.xplorer.xplorerControl, Karaboss, Version=1.0.9.1, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;xplorerControl.Parent" xml:space="preserve">
     <value>$this</value>
@@ -868,13 +835,13 @@
     <value>2</value>
   </data>
   <data name="playlistsControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>285, 97</value>
+    <value>214, 79</value>
   </data>
   <data name="playlistsControl.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 5, 5, 5</value>
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="playlistsControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>691, 322</value>
+    <value>518, 262</value>
   </data>
   <data name="playlistsControl.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -883,7 +850,7 @@
     <value>playlistsControl</value>
   </data>
   <data name="&gt;&gt;playlistsControl.Type" xml:space="preserve">
-    <value>Karaboss.playlists.PlaylistsControl, Karaboss, Version=1.0.8.2, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.playlists.PlaylistsControl, Karaboss, Version=1.0.9.1, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;playlistsControl.Parent" xml:space="preserve">
     <value>$this</value>
@@ -892,13 +859,13 @@
     <value>4</value>
   </data>
   <data name="searchControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>237, 44</value>
+    <value>178, 36</value>
   </data>
   <data name="searchControl.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 5, 5, 5</value>
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="searchControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>433, 331</value>
+    <value>325, 269</value>
   </data>
   <data name="searchControl.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -907,7 +874,7 @@
     <value>searchControl</value>
   </data>
   <data name="&gt;&gt;searchControl.Type" xml:space="preserve">
-    <value>Karaboss.Search.SearchControl, Karaboss, Version=1.0.8.2, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Search.SearchControl, Karaboss, Version=1.0.9.1, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;searchControl.Parent" xml:space="preserve">
     <value>$this</value>
@@ -922,10 +889,10 @@
     <value>244</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>8, 16</value>
+    <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1035, 521</value>
+    <value>776, 442</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -3947,9 +3914,6 @@
         AQAAgAEAAMADAADwDwAA
 </value>
   </data>
-  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>
   </data>
@@ -4248,7 +4212,7 @@
     <value>sequence1</value>
   </data>
   <data name="&gt;&gt;sequence1.Type" xml:space="preserve">
-    <value>Sanford.Multimedia.Midi.Sequence, Sanford.Multimedia.Midi, Version=6.1.0.5, Culture=neutral, PublicKeyToken=null</value>
+    <value>Sanford.Multimedia.Midi.Sequence, Sanford.Multimedia.Midi, Version=6.1.0.6, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmExplorer</value>

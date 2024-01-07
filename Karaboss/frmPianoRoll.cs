@@ -137,8 +137,6 @@ namespace Karaboss
             this.KeyDown += new KeyEventHandler(FrmPianoRoll_KeyDown);
             this.KeyUp += new KeyEventHandler(FrmPianoRoll_KeyUp);
 
-            //pianoRollControl2.OnMouseMoved += new Sanford.Multimedia.Midi.VPianoRoll.MouseMoveEventHandler(pianoRollControl2_MouseMove);
-
             timer1.Interval = 20;
 
             // Sequence

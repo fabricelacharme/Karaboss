@@ -55,6 +55,7 @@ namespace VBarControl.SideBarControl
      * EDIT: open the midi editor for the selected file
      * PIANOTRAINING: open piano training page
      * GUITARTRAINING: open guitar training page
+     * CHORDS: open and display chods of the midi file
      * 
      */
 
@@ -70,6 +71,8 @@ namespace VBarControl.SideBarControl
         public event EventHandler EditFile;
         public event EventHandler DisplayPianoTraining;
         public event EventHandler DisplayGuitarTraining;
+        public event EventHandler DisplayChords;
+
 
 
         private ObservableCollection<NavButton.NavButton> _buttons = new ObservableCollection<NavButton.NavButton>();
@@ -161,6 +164,7 @@ namespace VBarControl.SideBarControl
             btnEdit.Selectable = false;
             btnPianoTraining.Selectable = false;
             btnGuitarTraining.Selectable = false;
+            btnChords.Selectable = false;
 
             // default panel is file explorer
             btnFiles.Selected = true;
@@ -222,6 +226,11 @@ namespace VBarControl.SideBarControl
         }
 
         #endregion
+
+        private void btnChords_Click(object sender, EventArgs e)
+        {
+            DisplayChords?.Invoke(new object(), new EventArgs());
+        }
     }
 
 
