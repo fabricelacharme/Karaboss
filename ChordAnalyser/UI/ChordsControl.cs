@@ -164,6 +164,8 @@ namespace ChordAnalyser.UI
         private int _measurelen = 0;
         private int NbMeasures;
 
+        private int _currentpos = 0;
+        private int _currentmeasure = -1;
 
         #endregion private
 
@@ -280,6 +282,7 @@ namespace ChordAnalyser.UI
                 x += sequence1.Numerator * (_TimeLineHeight + (_LinesWidth - 1));
 
             }
+            
 
             maxStaffWidth = x;            
         }
@@ -306,10 +309,36 @@ namespace ChordAnalyser.UI
 
         #region public
 
-        public void DisplayNotes()
+        /// <summary>
+        /// Paint black current time played
+        /// </summary>
+        /// <param name="pos"></param>
+        public void DisplayNotes(int pos)
         {
-
+            _currentpos = pos;                        
         }
+
+        private void DrawCurrentNote(Graphics g,Rectangle clip)
+        {
+            int _LinesWidth = 2;
+            Color TimeLineColor = Color.Red;
+
+            Pen FillPen = new Pen(TimeLineColor, _LinesWidth);
+            int curmeasure = 1 + _currentpos / _measurelen;
+
+            //if (curmeasure != _currentmeasure)
+            //{
+                _currentmeasure = curmeasure;
+                // Quelle case de la mesure
+                int offset = _TimeLineHeight + (_LinesWidth - 1);
+                int x = _offsetx + offset * curmeasure;
+
+                Rectangle rect = new Rectangle(x, 0, _TimeLineHeight, _TimeLineHeight);
+                g.FillRectangle(new SolidBrush(Color.Red), rect);
+            //}
+            
+        }
+
         private void DrawNotes(Graphics g, Rectangle clip)
         {
             SolidBrush ChordBrush = new SolidBrush(Color.Black);
@@ -432,6 +461,8 @@ namespace ChordAnalyser.UI
                 DrawGrid(g, clip);
 
                 DrawNotes(g, clip);
+
+                DrawCurrentNote(g, clip);
 
                 g.TranslateTransform(clip.X, 0);
 

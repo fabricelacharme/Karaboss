@@ -296,6 +296,12 @@ namespace Karaboss
             int Sec = (int)(maintenant - (Min * 60));
             lblElapsed.Text = string.Format("{0:00}:{1:00}", Min, Sec);
         }
+
+        /// <summary>
+        /// Timer tick management
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (!scrolling)
@@ -338,7 +344,11 @@ namespace Karaboss
         {           
             // pos is in which measure?
             int curmeasure = 1 + pos / _measurelen;
-            
+
+            chordAnalyserControl1.DisplayNotes(pos);
+            //return;
+
+
             if (curmeasure != _currentMeasure)
             {
                 _currentMeasure = curmeasure;
@@ -468,6 +478,7 @@ namespace Karaboss
             }
             #endregion
 
+            outDevice.Send(e.Message);
 
         }
 
@@ -546,12 +557,12 @@ namespace Karaboss
 
         private void PositionHScrollBar_Scroll(object sender, ScrollEventArgs e)
         {            
-            //chordAnalyserControl1.OffsetX = e.NewValue;
+            chordAnalyserControl1.OffsetX = e.NewValue;
         }
 
         private void PositionHScollBar_ValueChanged(object sender, EventArgs e)
         {
-            ColorSlider.ColorSlider c = (ColorSlider.ColorSlider)sender;
+            //ColorSlider.ColorSlider c = (ColorSlider.ColorSlider)sender;
             //chordAnalyserControl1.OffsetX = Convert.ToInt32(c.Value);
         }
 
@@ -607,7 +618,7 @@ namespace Karaboss
         }
 
         protected override void OnClosed(EventArgs e)
-        {
+        {            
             ResetSequencer();
             sequencer1.Dispose();
             if (outDevice != null && !outDevice.IsDisposed)
@@ -729,6 +740,8 @@ namespace Karaboss
 
         private void ResetSequencer()
         {
+            if (timer1 != null)
+                timer1.Stop();
             newstart = 0;
             laststart = 0;
             _currentMeasure = -1;
