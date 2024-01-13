@@ -237,7 +237,9 @@ namespace ChordAnalyser.UI
             // ========================== 
             int x = 0;
 
+            // =====================================================
             // 1ere case noire en plus ce celles du morceau
+            //======================================================
             //g.DrawRectangle(FillPen, clip.X, clip.Y, _TimeLineHeight, _TimeLineHeight);
             g.DrawRectangle(FillPen, 0, 0, _TimeLineHeight, _TimeLineHeight);
             //rect = new Rectangle(clip.X, clip.Y, _TimeLineHeight, _TimeLineHeight);
@@ -246,8 +248,9 @@ namespace ChordAnalyser.UI
 
             x += _TimeLineHeight + (_LinesWidth - 1);
 
-
+            // ======================================================
             // Draw measures
+            // ======================================================
             // 4 temps = 4 carrés gris
             // Chaque mesure, une ligne verticale gris foncé
 
@@ -265,7 +268,9 @@ namespace ChordAnalyser.UI
                 }                
             }
 
+            // ====================================================
             // Ligne noire sur la dernière case de chaque mesure
+            // ====================================================
             x = _TimeLineHeight + (_LinesWidth - 1); 
             for (int i = 0; i < NbMeasures; i++)
             {
