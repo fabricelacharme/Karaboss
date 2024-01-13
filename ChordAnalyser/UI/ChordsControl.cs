@@ -350,6 +350,9 @@ namespace ChordAnalyser.UI
         {
             note = note.Replace(" major", "");
             note = note.Replace(" triad", "");
+            note = note.Replace("dominant", "");
+            note = note.Replace("first inversion", "");
+            note = note.Replace("second inversion", "");
 
             note = note.Replace(" seventh", "7");
             note = note.Replace(" minor", "m");
@@ -357,6 +360,7 @@ namespace ChordAnalyser.UI
             note = note.Replace("sixth", "6");
             note = note.Replace("ninth", "9");
             note = note.Replace("eleventh", "11");
+
 
             note = note.Trim();
             return note;

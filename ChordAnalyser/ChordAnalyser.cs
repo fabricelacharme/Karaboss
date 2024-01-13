@@ -70,9 +70,13 @@ namespace ChordsAnalyser
 
             //SearchByChord();
 
-            //SeartchByBass();
-
+            
+            // 1. Search by notes
             SearchByNotes();
+
+            // if unsuccessfull above, seach by the bass line
+            SeartchByBass();
+
 
             // display resluts
             PublishResults(Gridchords);      

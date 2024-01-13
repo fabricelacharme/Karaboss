@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace Karaboss
 {
@@ -18,6 +19,7 @@ namespace Karaboss
 
         #region private
         private bool closing = false;
+        private bool scrolling = false;
 
         // Current file beeing edited
         private string MIDIfileName = string.Empty;
@@ -49,6 +51,11 @@ namespace Karaboss
         private ChordAnalyser.UI.ChordsControl chordAnalyserControl1;
         private OutputDevice outDevice;
         private Sequencer sequencer1 = new Sequencer();
+
+        private System.Windows.Forms.Timer timer1;
+        private Karaboss.NoSelectButton btnPlay;
+        private Karaboss.NoSelectButton btnRewind;
+
         #endregion controls
 
         private Panel pnlTop;
@@ -65,6 +72,7 @@ namespace Karaboss
         private int _tempo;
         private int _measurelen = 0;
         private int NbMeasures;
+        private int _currentMeasure = 0;
 
 
         #endregion private
@@ -90,9 +98,6 @@ namespace Karaboss
 
             UpdateMidiTimes();
             
-            //DrawControls();
-
-            //DisplayResults();
         }
 
         #region Display Controls
@@ -130,6 +135,7 @@ namespace Karaboss
                 int Sec = (int)(_duration - (Min * 60));
                 //lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
 
+                // PlayerState = stopped
                 ResetSequencer();
             }
             catch (Exception ex)
@@ -142,14 +148,52 @@ namespace Karaboss
 
         private void DrawControls()
         {
+            // Timer
+            timer1 = new Timer();
+            timer1.Interval = 20;
+            timer1.Tick += new EventHandler(timer1_Tick);
+
+
+
             #region Panel Top
             pnlTop = new Panel();
             pnlTop.Parent = this.tabPageDiagrams;
             pnlTop.Location = new Point(0, 0);
-            pnlTop.Size = new Size(tabPageDiagrams.Width, 20);
-            pnlTop.BackColor = Color.Green;
+            pnlTop.Size = new Size(tabPageDiagrams.Width, 54);
+            pnlTop.BackColor = Color.FromArgb(70, 77, 95);
             pnlTop.Dock = DockStyle.Top;
             tabPageDiagrams.Controls.Add(pnlTop);
+
+            // Button Rewind
+            btnRewind = new NoSelectButton();            
+            btnRewind.FlatAppearance.BorderSize = 0;
+            btnRewind.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            btnRewind.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            btnRewind.FlatStyle = FlatStyle.Flat;   
+            btnRewind.Parent = pnlTop;
+            btnRewind.Location = new Point(2, 2);
+            btnRewind.Size = new Size(50, 50);
+            btnRewind.Image = Properties.Resources.btn_black_prev;
+            btnRewind.Click += new EventHandler(btnRewind_Click);
+            btnRewind.MouseHover += new EventHandler(btnRewind_MouseHover);
+            btnRewind.MouseLeave += new EventHandler(btnRewind_MouseLeave);
+            pnlTop.Controls.Add(btnRewind);
+
+            // Button play
+            btnPlay = new NoSelectButton();
+            btnPlay.FlatAppearance.BorderSize = 0;
+            btnPlay.FlatStyle = FlatStyle.Flat;
+            btnPlay.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            btnPlay.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            btnPlay.Parent = pnlTop;
+            btnPlay.Location = new Point(2 + btnRewind.Width, 2);
+            btnPlay.Size = new Size(50, 50);
+            btnPlay.Image = Properties.Resources.btn_black_play;
+            btnPlay.Click += new EventHandler(btnPlay_Click);
+            btnPlay.MouseHover += new EventHandler(btnPlay_MouseHover);
+            btnPlay.MouseLeave += new EventHandler(btnPlay_MouseLeave);
+            pnlTop.Controls.Add(btnPlay);    
+
             #endregion
 
             #region Panel Bottom
@@ -184,6 +228,7 @@ namespace Karaboss
             pnlDisplay.Controls.Add(chordAnalyserControl1);
             #endregion
 
+
             #region positionHScrollBar
             positionHScrollBar = new ColorSlider.ColorSlider();
             positionHScrollBar.Parent = pnlDisplay;
@@ -207,10 +252,92 @@ namespace Karaboss
             pnlDisplay.Controls.Add(positionHScrollBar);
             
             #endregion
-
         }
 
+
         #endregion Display Controls
+
+
+        #region timer
+
+        /// <summary>
+        /// Display Time Elapse
+        /// </summary>
+        private void DisplayTimeElapse(double dpercent)
+        {
+            //lblPercent.Text = string.Format("{0}%", (int)dpercent);
+
+            double maintenant = (dpercent * _duration) / 100;  //seconds
+            int Min = (int)(maintenant / 60);
+            int Sec = (int)(maintenant - (Min * 60));
+            //lblElapsed.Text = string.Format("{0:00}:{1:00}", Min, Sec);
+        }
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (!scrolling)
+            {
+                // Display time elapse
+                double dpercent = 100 * sequencer1.Position / (double)_totalTicks;
+                DisplayTimeElapse(dpercent);
+
+                switch (PlayerState)
+                {
+                    case PlayerStates.Playing:
+                        //ScrollView();
+                        break;
+
+                    case PlayerStates.Stopped:
+                        timer1.Stop();
+                        AfterStopped();
+                        break;
+
+                    case PlayerStates.Paused:
+                        sequencer1.Stop();
+                        timer1.Stop();
+                        break;
+                }
+
+                #region position hscrollbar
+                try
+                {
+                    if (PlayerState == PlayerStates.Playing && sequencer1.Position < positionHScrollBar.Maximum - positionHScrollBar.Minimum)
+                    {
+                        DisplayPositionHScrollBar(sequencer1.Position);
+                        
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.Write("Error positionHScrollBarNew.Value - " + ex.Message);
+                }
+                #endregion position hscrollbar
+            }
+        }
+
+
+        #endregion timer
+
+
+        #region Scroll ChordsControl 
+
+        /// <summary>
+        /// Display 
+        /// </summary>
+        /// <param name="pos"></param>
+        private void DisplayPositionHScrollBar(int ticks)
+        {           
+            // pos is in which measure?
+            int curmeasure = 1 + ticks / _measurelen;
+            if (curmeasure != _currentMeasure)
+            {
+                positionHScrollBar.Value = ticks + positionHScrollBar.Minimum;
+                //chordAnalyserControl1.OffsetX = ticks;
+                _currentMeasure = curmeasure;
+            }
+            
+        }
+
+        #endregion Scroll ChordsControl
 
 
         #region handle messages
@@ -247,6 +374,7 @@ namespace Karaboss
             DrawControls();
 
             DisplayResults();
+
             //AnalyseInstruments();
             
             //InitCbTracks();
@@ -312,6 +440,43 @@ namespace Karaboss
         #endregion handle messages
 
 
+        #region buttons
+        private void btnPlay_MouseHover(object sender, EventArgs e)
+        {
+            if (PlayerState == PlayerStates.Stopped)
+                btnPlay.Image = Properties.Resources.btn_blue_play;
+            else if (PlayerState == PlayerStates.Paused)
+                btnPlay.Image = Properties.Resources.btn_blue_play;
+            else if (PlayerState == PlayerStates.Playing)
+                btnPlay.Image = Properties.Resources.btn_blue_pause;
+
+        }
+
+        private void btnRewind_MouseHover(object sender, EventArgs e)
+        {
+            if(PlayerState == PlayerStates.Playing || PlayerState == PlayerStates.Paused)
+                btnRewind.Image = Properties.Resources.btn_blue_prev;
+        }
+
+        private void btnPlay_MouseLeave(object sender, EventArgs e)
+        {
+            if (PlayerState == PlayerStates.Stopped)
+                btnPlay.Image = Properties.Resources.btn_black_play;
+            else if (PlayerState == PlayerStates.Paused)
+                btnPlay.Image = Properties.Resources.btn_green_play;
+            else if (PlayerState == PlayerStates.Playing)
+                btnPlay.Image = Properties.Resources.btn_green_pause;
+
+        }
+
+        private void btnRewind_MouseLeave(object sender, EventArgs e)
+        {
+            btnRewind.Image = Properties.Resources.btn_black_prev;
+        }
+
+
+        #endregion buttons
+
 
         #region positionHSCrollBar
 
@@ -339,15 +504,14 @@ namespace Karaboss
         }
 
         private void PositionHScrollBar_Scroll(object sender, ScrollEventArgs e)
-        {
-            //throw new NotImplementedException();
-            //chordAnalyserControl1.OffsetX = e.NewValue;
+        {            
+            chordAnalyserControl1.OffsetX = e.NewValue;
         }
 
         private void PositionHScollBar_ValueChanged(object sender, EventArgs e)
         {
             ColorSlider.ColorSlider c = (ColorSlider.ColorSlider)sender;
-            chordAnalyserControl1.OffsetX = Convert.ToInt32(c.Value);
+            //chordAnalyserControl1.OffsetX = Convert.ToInt32(c.Value);
         }
 
         /// <summary>
@@ -526,10 +690,176 @@ namespace Karaboss
         {
             newstart = 0;
             laststart = 0;
+            _currentMeasure = 0;
             sequencer1.Stop();
             PlayerState = PlayerStates.Stopped;
         }
 
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+            PlayPauseMusic();
+        }
+
+        private void btnRewind_Click(object sender, EventArgs e)
+        {
+            StopMusic(); 
+        }
+
+
+        /// <summary>
+        /// Button play clicked: manage actions according to player status 
+        /// </summary>
+        private void PlayPauseMusic()
+        {
+            switch (PlayerState)
+            {
+                case PlayerStates.Playing:
+                    // If playing => pause
+                    PlayerState = PlayerStates.Paused;
+                    BtnStatus();
+                    break;
+
+                case PlayerStates.Paused:
+                    // if paused => play                
+                    nbstop = 0;
+                    PlayerState = PlayerStates.Playing;
+                    BtnStatus();
+                    timer1.Start();
+                    sequencer1.Continue();
+                    break;
+
+                default:
+                    // First play                
+                    FirstPlaySong(newstart);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// PlaySong for first time
+        /// </summary>
+        public void FirstPlaySong(int ticks)
+        {
+            try
+            {
+                PlayerState = PlayerStates.Playing;
+                nbstop = 0;
+                _currentMeasure = 0;
+                BtnStatus();
+                sequencer1.Start();
+
+                if (ticks > 0)
+                    sequencer1.Position = ticks;
+
+                timer1.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        /// <summary>
+        /// Display according to play, pause, stop status
+        /// </summary>
+        private void BtnStatus()
+        {
+            // Play and pause are same button
+            switch (PlayerState)
+            {
+                case PlayerStates.Playing:
+                    btnPlay.Image = Properties.Resources.btn_green_pause;
+                    //btnStop.Image = Properties.Resources.btn_black_stop;
+                    btnPlay.Enabled = true;  // to allow pause
+                    //btnStop.Enabled = true;  // to allow stop 
+                    break;
+
+                case PlayerStates.Paused:
+                    btnPlay.Image = Properties.Resources.btn_green_play;
+                    btnPlay.Enabled = true;  // to allow play
+                    //btnStop.Enabled = true;  // to allow stop
+                    break;
+
+                case PlayerStates.Stopped:
+                    btnPlay.Image = Properties.Resources.btn_black_play;
+                    btnPlay.Enabled = true;   // to allow play
+                    if (newstart == 0)
+                    {
+                        //btnStop.Image = Properties.Resources.btn_red_stop;
+                    }
+                    else
+                    {
+                        //btnStop.Enabled = true;   // to enable real stop because stop point not at the beginning of the song 
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Stop Music player
+        /// </summary>
+        private void StopMusic()
+        {
+            PlayerState = PlayerStates.Stopped;
+            try
+            {
+                sequencer1.Stop();
+
+                // Si point de départ n'est pas le début du morceau
+                if (newstart > 0)
+                {
+                    if (nbstop > 0)
+                    {
+                        newstart = 0;
+                        nbstop = 0;
+                        AfterStopped();
+                    }
+                    else
+                    {
+                        positionHScrollBar.Value = newstart + positionHScrollBar.Minimum;
+                        nbstop = 1;
+                    }
+                }
+                else
+                {
+                    // Point de départ = début du morceau
+                    AfterStopped();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+        /// <summary>
+        /// Things to do at the end of a song
+        /// </summary>
+        private void AfterStopped()
+        {
+            // Buttons play & stop 
+            BtnStatus();
+            //sheetmusic.BPlaying = false;
+
+            // Clear all
+            //ClearInstruments();
+
+            // Stopped to begining of score
+            if (newstart <= 0)
+            {
+                DisplayTimeElapse(0);
+
+                positionHScrollBar.Value = positionHScrollBar.Minimum;
+                chordAnalyserControl1.OffsetX = 0;
+                laststart = 0;
+            }
+            else
+            {
+                // Stop to start point newstart (ticks)                            
+            }
+        }
 
         #endregion Play stop pause
 
