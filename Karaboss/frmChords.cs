@@ -59,6 +59,7 @@ namespace Karaboss
         private Label lblNumMeasure;
         private Label lblElapsed;
         private Label lblPercent;
+        private Label lblBeat;
 
         #endregion controls
 
@@ -77,7 +78,7 @@ namespace Karaboss
         private int _measurelen = 0;
         private int NbMeasures;
         private int _currentMeasure = -1;
-
+        private int _currentTimeInMeasure = -1;
 
         #endregion private
 
@@ -147,8 +148,6 @@ namespace Karaboss
                 MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
 
         private void DrawControls()
         {
@@ -227,6 +226,12 @@ namespace Karaboss
             lblPercent.Parent = pnlBottom;
             pnlBottom.Controls.Add(lblPercent);
 
+            lblBeat = new Label();
+            lblBeat.Location = new Point(300, 1);
+            lblBeat.Text = "1";
+            lblBeat.Parent = pnlBottom;
+            pnlBottom.Controls.Add(lblBeat);
+
             #endregion
 
             #region Panel Display
@@ -283,19 +288,7 @@ namespace Karaboss
 
         #region timer
 
-        /// <summary>
-        /// Display Time Elapse
-        /// </summary>
-        private void DisplayTimeElapse()
-        {
-            double dpercent = 100 * sequencer1.Position / (double)_totalTicks;
-            lblPercent.Text = string.Format("{0}%", (int)dpercent);
-
-            double maintenant = (dpercent * _duration) / 100;  //seconds
-            int Min = (int)(maintenant / 60);
-            int Sec = (int)(maintenant - (Min * 60));
-            lblElapsed.Text = string.Format("{0:00}:{1:00}", Min, Sec);
-        }
+ 
 
         /// <summary>
         /// Timer tick management
@@ -307,7 +300,7 @@ namespace Karaboss
             if (!scrolling)
             {
                 // Display time elapse               
-                DisplayTimeElapse();
+                DisplayTimeElapse(sequencer1.Position);
 
                 switch (PlayerState)
                 {
@@ -345,20 +338,34 @@ namespace Karaboss
             // pos is in which measure?
             int curmeasure = 1 + pos / _measurelen;
 
-            chordAnalyserControl1.DisplayNotes(pos);
-            //return;
 
+            // Quel temps dans la mesure ?
+            int rest = pos % _measurelen;
+            int TimeInMeasure = (int)((float)rest / sequence1.Time.Quarter);
+            lblBeat.Text = TimeInMeasure.ToString();
 
+            // change time in measure => draw cell in control
+            if (TimeInMeasure != _currentTimeInMeasure)
+            {
+                _currentTimeInMeasure = TimeInMeasure;
+                chordAnalyserControl1.DisplayNotes(pos, TimeInMeasure);
+            }
+            
+
+            // Change measure => offset control
             if (curmeasure != _currentMeasure)
             {
-                _currentMeasure = curmeasure;
+                
+                //if (curmeasure != _currentMeasure)
+                    _currentMeasure = curmeasure;
+                
                 int val = 0;
 
-                int offset = chordAnalyserControl1.TimeLineY + 1;
-                int offsetguardleft = offset * sequence1.Numerator; // keep one measure on the left
-                int offsetx = offset + (_currentMeasure - 1) * (offset * sequence1.Numerator);
+                int LargeurCellule = chordAnalyserControl1.TimeLineY + 1;
+                int LargeurMesure = LargeurCellule * sequence1.Numerator; // keep one measure on the left
+                int offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);
 
-                val = offset + (int)((_currentMeasure/(float)NbMeasures) * (int)(positionHScrollBar.Maximum - positionHScrollBar.Minimum));
+                val = LargeurCellule + (int)((_currentMeasure/(float)NbMeasures) * (int)(positionHScrollBar.Maximum - positionHScrollBar.Minimum));
 
                 if ( positionHScrollBar.Minimum <= val && val <= positionHScrollBar.Maximum)
                     positionHScrollBar.Value = val;
@@ -367,11 +374,11 @@ namespace Karaboss
                 // ensure to Keep 1 measure on the left
                 int W = chordAnalyserControl1.maxStaffWidth - offsetx - pnlDisplay.Width;
 
-                if (offsetx > offsetguardleft)
+                if (offsetx > LargeurMesure)
                 {
                     if (offsetx < chordAnalyserControl1.maxStaffWidth - pnlDisplay.Width)
                     {
-                        chordAnalyserControl1.OffsetX = offsetx - offsetguardleft;
+                        chordAnalyserControl1.OffsetX = offsetx - LargeurMesure;
                     }
                     else
                     {
@@ -895,24 +902,37 @@ namespace Karaboss
         {
             // Buttons play & stop 
             BtnStatus();
-            //sheetmusic.BPlaying = false;
-
-            // Clear all
-            //ClearInstruments();
-
+            
             // Stopped to begining of score
             if (newstart <= 0)
             {
-                DisplayTimeElapse();
+                DisplayTimeElapse(0);
+
+                DisplayPositionHScrollBar(0);
 
                 positionHScrollBar.Value = positionHScrollBar.Minimum;
                 chordAnalyserControl1.OffsetX = 0;
+                
                 laststart = 0;
             }
             else
             {
                 // Stop to start point newstart (ticks)                            
             }
+        }
+
+        /// <summary>
+        /// Display Time elapse
+        /// </summary>
+        private void DisplayTimeElapse(int pos)
+        {
+            double dpercent = 100 * pos / (double)_totalTicks;
+            lblPercent.Text = string.Format("{0}%", (int)dpercent);
+
+            double maintenant = (dpercent * _duration) / 100;  //seconds
+            int Min = (int)(maintenant / 60);
+            int Sec = (int)(maintenant - (Min * 60));
+            lblElapsed.Text = string.Format("{0:00}:{1:00}", Min, Sec);
         }
 
         #endregion Play stop pause

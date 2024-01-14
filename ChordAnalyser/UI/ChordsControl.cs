@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using static ChordsAnalyser.cscales.scales;
 
 namespace ChordAnalyser.UI
@@ -166,6 +167,7 @@ namespace ChordAnalyser.UI
 
         private int _currentpos = 0;
         private int _currentmeasure = -1;
+        private int _currentTimeInMeasure = -1;
 
         #endregion private
 
@@ -313,27 +315,53 @@ namespace ChordAnalyser.UI
         /// Paint black current time played
         /// </summary>
         /// <param name="pos"></param>
-        public void DisplayNotes(int pos)
+        public void DisplayNotes(int pos, int timeinmeasure)
         {
-            _currentpos = pos;                        
+            _currentpos = pos;
+            _currentTimeInMeasure = timeinmeasure;
+
+            
+            this.Redraw();
         }
 
-        private void DrawCurrentNote(Graphics g,Rectangle clip)
-        {
+        private void DrawCurrentNote(Graphics g, Rectangle clip)
+        {            
+            int x = 0;
             int _LinesWidth = 2;
             Color TimeLineColor = Color.Red;
-
             Pen FillPen = new Pen(TimeLineColor, _LinesWidth);
+            
+            // Quelle mesure ?
             int curmeasure = 1 + _currentpos / _measurelen;
 
-            //if (curmeasure != _currentmeasure)
-            //{
-                _currentmeasure = curmeasure;
-                // Quelle case de la mesure
-                int offset = _TimeLineHeight + (_LinesWidth - 1);
-                int x = _offsetx + offset * curmeasure;
+            // Quel temps dans la mesure ?
+            int rest = _currentpos % _measurelen;
+            int TimeInMeasure = 1 + (int)((float)rest / sequence1.Time.Quarter);
 
-                Rectangle rect = new Rectangle(x, 0, _TimeLineHeight, _TimeLineHeight);
+            //if (TimeInMeasure != _currentTimeInMeasure)
+            //{
+                //_currentmeasure = curmeasure;
+                _currentTimeInMeasure = TimeInMeasure;
+            
+                // Largeur d'une case
+                int LargeurCase = _TimeLineHeight + (_LinesWidth - 1);
+
+                // Largeur d'une mesure ?
+                int LargeurMesure = sequence1.Numerator * LargeurCase;
+
+
+                if (_currentpos == 0)
+                {
+                    x = 0;
+                }
+                else
+                {
+                    // avancer case par case
+                    //x = _offsetx +  LargeurMesure * curmeasure + LargeurCase * TimeInMeasure;
+                    x = LargeurMesure * (curmeasure -1) + LargeurCase * _currentTimeInMeasure;
+                }
+
+                Rectangle rect = new Rectangle( x, 0, _TimeLineHeight, _TimeLineHeight);
                 g.FillRectangle(new SolidBrush(Color.Red), rect);
             //}
             
