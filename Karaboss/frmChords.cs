@@ -341,14 +341,14 @@ namespace Karaboss
 
             // Quel temps dans la mesure ?
             int rest = pos % _measurelen;
-            int TimeInMeasure = (int)((float)rest / sequence1.Time.Quarter);
+            int TimeInMeasure = 1 + (int)((float)rest / sequence1.Time.Quarter);
             lblBeat.Text = TimeInMeasure.ToString();
 
             // change time in measure => draw cell in control
             if (TimeInMeasure != _currentTimeInMeasure)
             {
                 _currentTimeInMeasure = TimeInMeasure;
-                chordAnalyserControl1.DisplayNotes(pos, TimeInMeasure);
+                chordAnalyserControl1.DisplayNotes(pos, curmeasure, TimeInMeasure);
             }
             
 

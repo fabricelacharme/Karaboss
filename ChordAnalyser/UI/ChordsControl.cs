@@ -262,13 +262,26 @@ namespace ChordAnalyser.UI
 
             for (int i = 0; i < NbMeasures; i++)
             {
+                                
                 // Dessine autant de cases que le numerateur
                 for (int j = 0; j < sequence1.Numerator; j++)
                 {
-                    //g.DrawRectangle(FillPen, clip.X + x, clip.Y, _TimeLineHeight, _TimeLineHeight);
-                    g.DrawRectangle(FillPen, x, 0, _TimeLineHeight, _TimeLineHeight);
-                    x += _TimeLineHeight + (_LinesWidth - 1);
 
+                    // Draw played cell in gray
+                    if (i == _currentmeasure - 1 && j == _currentTimeInMeasure - 1)
+                    {
+                        g.DrawRectangle(FillPen, x, 0, _TimeLineHeight, _TimeLineHeight);
+                        rect = new Rectangle(x, 0, _TimeLineHeight, _TimeLineHeight);
+                        g.FillRectangle(new SolidBrush(Color.Gray), rect);
+
+                    }
+                    else
+                    {
+                        // Draw other celles in white
+                        //g.DrawRectangle(FillPen, clip.X + x, clip.Y, _TimeLineHeight, _TimeLineHeight);
+                        g.DrawRectangle(FillPen, x, 0, _TimeLineHeight, _TimeLineHeight);                        
+                    }
+                    x += _TimeLineHeight + (_LinesWidth - 1);
                 }                
             }
 
@@ -315,62 +328,30 @@ namespace ChordAnalyser.UI
         /// Paint black current time played
         /// </summary>
         /// <param name="pos"></param>
-        public void DisplayNotes(int pos, int timeinmeasure)
+        public void DisplayNotes(int pos, int measure, int timeinmeasure)
         {
             _currentpos = pos;
+            _currentmeasure = measure;
             _currentTimeInMeasure = timeinmeasure;
 
             
             this.Redraw();
         }
 
-        private void DrawCurrentNote(Graphics g, Rectangle clip)
-        {            
-            int x = 0;
-            int _LinesWidth = 2;
-            Color TimeLineColor = Color.Red;
-            Pen FillPen = new Pen(TimeLineColor, _LinesWidth);
-            
-            // Quelle mesure ?
-            int curmeasure = 1 + _currentpos / _measurelen;
+        
 
-            // Quel temps dans la mesure ?
-            int rest = _currentpos % _measurelen;
-            int TimeInMeasure = 1 + (int)((float)rest / sequence1.Time.Quarter);
-
-            //if (TimeInMeasure != _currentTimeInMeasure)
-            //{
-                //_currentmeasure = curmeasure;
-                _currentTimeInMeasure = TimeInMeasure;
-            
-                // Largeur d'une case
-                int LargeurCase = _TimeLineHeight + (_LinesWidth - 1);
-
-                // Largeur d'une mesure ?
-                int LargeurMesure = sequence1.Numerator * LargeurCase;
-
-
-                if (_currentpos == 0)
-                {
-                    x = 0;
-                }
-                else
-                {
-                    // avancer case par case
-                    //x = _offsetx +  LargeurMesure * curmeasure + LargeurCase * TimeInMeasure;
-                    x = LargeurMesure * (curmeasure -1) + LargeurCase * _currentTimeInMeasure;
-                }
-
-                Rectangle rect = new Rectangle( x, 0, _TimeLineHeight, _TimeLineHeight);
-                g.FillRectangle(new SolidBrush(Color.Red), rect);
-            //}
-            
-        }
-
+        /// <summary>
+        /// Draw the name of the notes
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="clip"></param>
         private void DrawNotes(Graphics g, Rectangle clip)
         {
             SolidBrush ChordBrush = new SolidBrush(Color.Black);
             SolidBrush MeasureBrush = new SolidBrush(Color.Red);
+
+            //Color ActiveCellColor = Color.Red;
+            //SolidBrush ActiveCellBrush = new SolidBrush(ActiveCellColor);
 
             Font fontChord = new Font("Arial", 16, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontMeasure = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel);
@@ -488,9 +469,7 @@ namespace ChordAnalyser.UI
             {
                 DrawGrid(g, clip);
 
-                DrawNotes(g, clip);
-
-                DrawCurrentNote(g, clip);
+                DrawNotes(g, clip);                
 
                 g.TranslateTransform(clip.X, 0);
 
