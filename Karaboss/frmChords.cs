@@ -912,7 +912,8 @@ namespace Karaboss
 
                 positionHScrollBar.Value = positionHScrollBar.Minimum;
                 chordAnalyserControl1.OffsetX = 0;
-                
+                chordAnalyserControl1.DisplayNotes(0, 0, 0);
+
                 laststart = 0;
             }
             else

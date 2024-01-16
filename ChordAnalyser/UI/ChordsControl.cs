@@ -268,12 +268,12 @@ namespace ChordAnalyser.UI
                 {
 
                     // Draw played cell in gray
-                    if (i == _currentmeasure - 1 && j == _currentTimeInMeasure - 1)
+                    if (i == _currentmeasure - 1 && j == _currentTimeInMeasure - 1 && _currentpos > 0)
                     {
                         g.DrawRectangle(FillPen, x, 0, _TimeLineHeight, _TimeLineHeight);
                         rect = new Rectangle(x, 0, _TimeLineHeight, _TimeLineHeight);
                         g.FillRectangle(new SolidBrush(Color.Gray), rect);
-
+                        
                     }
                     else
                     {
