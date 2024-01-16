@@ -383,20 +383,21 @@ namespace Karaboss
 
 
                 // ensure to Keep 1 measure on the left
-                int W = chordAnalyserControl1.maxStaffWidth - offsetx - pnlDisplay.Width;
-
-                if (offsetx > LargeurMesure)
+                if (chordAnalyserControl1.maxStaffWidth > pnlDisplay.Width)
                 {
-                    if (offsetx < chordAnalyserControl1.maxStaffWidth - pnlDisplay.Width)
-                    {
-                        chordAnalyserControl1.OffsetX = offsetx - LargeurMesure;
-                    }
-                    else
-                    {
-                        chordAnalyserControl1.OffsetX = chordAnalyserControl1.maxStaffWidth - pnlDisplay.Width;
-                    }
+                    int W = chordAnalyserControl1.maxStaffWidth - offsetx - pnlDisplay.Width;
 
-                  
+                    if (offsetx > LargeurMesure)
+                    {
+                        if (offsetx < chordAnalyserControl1.maxStaffWidth - pnlDisplay.Width)
+                        {
+                            chordAnalyserControl1.OffsetX = offsetx - LargeurMesure;
+                        }
+                        else
+                        {
+                            chordAnalyserControl1.OffsetX = chordAnalyserControl1.maxStaffWidth - pnlDisplay.Width;
+                        }
+                    }
                 }
 
                 lblNumMeasure.Text = "Measure: " + _currentMeasure;
@@ -606,7 +607,7 @@ namespace Karaboss
         private void DisplayResults()
         {
 
-            // Display chods in the textbox
+            // Display chords in the textbox
             ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
             Dictionary<int, (string, string)> Gridchords = Analyser.Gridchords;
 
@@ -921,9 +922,11 @@ namespace Karaboss
 
                 DisplayPositionHScrollBar(0);
 
+                _currentMeasure = -1;
+                _currentTimeInMeasure = -1;
                 positionHScrollBar.Value = positionHScrollBar.Minimum;
                 chordAnalyserControl1.OffsetX = 0;
-                chordAnalyserControl1.DisplayNotes(0, 0, 0);
+                chordAnalyserControl1.DisplayNotes(0, -1, -1);
 
                 laststart = 0;
             }
