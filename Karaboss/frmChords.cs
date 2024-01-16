@@ -341,7 +341,7 @@ namespace Karaboss
 
             // Quel temps dans la mesure ?
             int rest = pos % _measurelen;
-            int TimeInMeasure = 1 + (int)((float)rest / sequence1.Time.Quarter);
+            int TimeInMeasure = 1 + (int)((float)rest / sequence1.Time.Quarter);   // faux !!! pour 2 temps
             lblBeat.Text = TimeInMeasure.ToString();
 
             // change time in measure => draw cell in control
@@ -365,7 +365,18 @@ namespace Karaboss
                 int LargeurMesure = LargeurCellule * sequence1.Numerator; // keep one measure on the left
                 int offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);
 
-                val = LargeurCellule + (int)((_currentMeasure/(float)NbMeasures) * (int)(positionHScrollBar.Maximum - positionHScrollBar.Minimum));
+                int course = (int)(positionHScrollBar.Maximum - positionHScrollBar.Minimum);
+                int CellsNumber = 1 + NbMeasures * sequence1.Numerator;
+
+                // La première case ne sert qu'à l'affichage
+                // La position de la scrollbar doit tenir compte de la première case
+                // % de Largeur Cellule par rapport à la course de la scrollbar ?
+                // On dessine toutes ces cases : 1 + NbMeasures * Sequence1.Numerator
+                // Course de la scrollbar = Largeur1ereCellule +  NbMeasures * sequence1.Numerator * LargeurCellule
+                // soit : Course = LargeurCellule * (NbMeasures * sequence1.Numerator + 1)
+                // val = Largeur1ereCellule + (int)((_currentMeasure/(float)NbMeasures) * course);
+                // Largeur1ereCellule = Course/CellsNumber
+                val = (course/CellsNumber) + (int)((_currentMeasure / (float)NbMeasures) * course);
 
                 if ( positionHScrollBar.Minimum <= val && val <= positionHScrollBar.Maximum)
                     positionHScrollBar.Value = val;
