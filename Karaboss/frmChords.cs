@@ -123,6 +123,7 @@ namespace Karaboss
                 sequence1 = seq;
 
                 sequencer1 = new Sequencer();
+                sequencer1.Position = 0;
                 sequencer1.Sequence = sequence1;    // primordial !!!!!
                 this.sequencer1.PlayingCompleted += new System.EventHandler(this.HandlePlayingCompleted);
                 this.sequencer1.ChannelMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.ChannelMessageEventArgs>(this.HandleChannelMessagePlayed);
@@ -253,6 +254,8 @@ namespace Karaboss
             chordAnalyserControl1.Size = new Size(pnlDisplay.Width, 80);
             chordAnalyserControl1.Location = new Point(0, 0);
             chordAnalyserControl1.WidthChanged += new WidthChangedEventHandler(chordAnalyserControl1_WidthChanged);
+            chordAnalyserControl1.MouseDown += new MouseEventHandler(chordAnalyserControl1_MouseDown); 
+            chordAnalyserControl1.Cursor = Cursors.Hand;
             pnlDisplay.Controls.Add(chordAnalyserControl1);
             #endregion
 
@@ -282,13 +285,23 @@ namespace Karaboss
             #endregion
         }
 
+        private void chordAnalyserControl1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                int x = e.Location.X;
+            }
+
+            //throw new NotImplementedException();
+        }
+
 
         #endregion Display Controls
 
 
         #region timer
 
- 
+
 
         /// <summary>
         /// Timer tick management
@@ -314,7 +327,7 @@ namespace Karaboss
                         break;
 
                     case PlayerStates.Paused:
-                        sequencer1.Stop();
+                        sequencer1.Stop();                        
                         timer1.Stop();
                         break;
                 }
@@ -764,7 +777,9 @@ namespace Karaboss
             newstart = 0;
             laststart = 0;
             _currentMeasure = -1;
-            sequencer1.Stop();
+            
+            if (sequencer1 != null) 
+                sequencer1.Stop();
             PlayerState = PlayerStates.Stopped;
         }
 
