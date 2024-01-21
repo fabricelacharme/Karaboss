@@ -20,12 +20,18 @@ namespace Sanford.Multimedia.Midi.Score.UI
         public int Offset
         {
             get { return Int32.Parse(txtTimeAmount.Text); }
-        } 
-        
+        }
 
-        public ModifyStartTimesDialog()
+        public bool bAllTracks
+        {
+            get { return this.radioButtonAllTracks.Checked; }
+        }
+
+
+        public ModifyStartTimesDialog(int ticks)
         {
             InitializeComponent();
+            txtStartTime.Text = ticks.ToString();
         }
 
     }

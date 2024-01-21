@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi.Resources;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace Sanford.Multimedia.Midi.Score
 {
@@ -265,8 +266,8 @@ namespace Sanford.Multimedia.Midi.Score
         private int selectedX = 0;
         private int selectedY = 0;
 
-        
-        
+
+        private int _mousedowninitialticks = -1; // store position of mouse when a menu is opened (altered when the user click on amenu item)
 
         private Sanford.Multimedia.Midi.MidiOptions options;
         private int transpose = 0;
@@ -1834,6 +1835,13 @@ namespace Sanford.Multimedia.Midi.Score
 
                     // Change staff selection
                     SelectedStaff = GetStaffClicked(e.Y);
+
+                    // store the initial horizontal position when the menu was requested (when the user click on a menu item, the position is altered)                            
+                    Point pPos = PointToClient(Control.MousePosition);
+                    pPos.X = pPos.X + OffsetX;
+                    _mousedowninitialticks = this.staffs[SelectedStaff].PulseTimeForPoint(pPos);
+
+                                        
                     // Save real X, Y because menus can be displayed on another staff
                     selectedX = e.X;
                     selectedY = e.Y;
@@ -1841,22 +1849,7 @@ namespace Sanford.Multimedia.Midi.Score
                     // Affiche menu contextuel copy paste sur une portée
                     smContextMenu = new ContextMenuStrip();
                     smContextMenu.Items.Clear();
-
-                    /*
-                    // Insert measure                    
-                    ToolStripMenuItem menuInsertMeasure = new ToolStripMenuItem(Strings.InsertMeasure);
-                    smContextMenu.Items.Add(menuInsertMeasure);
-                    // -> this track
-                    ToolStripMenuItem menuInsertMeasureThisTrack = new ToolStripMenuItem(Strings.ThisTrack);
-                    menuInsertMeasure.DropDownItems.Add(menuInsertMeasureThisTrack);
-                    menuInsertMeasureThisTrack.Click += new System.EventHandler(this.MnuInsertMeasureThisTrack_Click);
-                    // -> all tracks
-                    ToolStripMenuItem menuInsertMeasureAllTracks = new ToolStripMenuItem(Strings.AllTracks);
-                    menuInsertMeasure.DropDownItems.Add(menuInsertMeasureAllTracks);
-                    menuInsertMeasureAllTracks.Click += new System.EventHandler(this.MnuInsertMeasureAllTracks_Click);
-                    menuInsertMeasureAllTracks.ShortcutKeys = Keys.Control | Keys.I;     // Shortcut.CtrlI;
-                    menuInsertMeasure.ShortcutKeyDisplayString = "Ctrl+I";
-                    */
+                    
 
                     // IMPROVEMENT 230423 Insert Measures
                     ToolStripMenuItem menuInsertMeasures = new ToolStripMenuItem(Strings.InsertMeasures);
@@ -1870,23 +1863,7 @@ namespace Sanford.Multimedia.Midi.Score
                     smContextMenu.Items.Add(menuDeleteMeasures);
                     menuDeleteMeasures.Click += new EventHandler(this.MnuDeleteMeasures_Click);
                     menuDeleteMeasures.ShortcutKeys = Keys.Control | Keys.D;     // Shortcut.CtrlD;
-                    menuDeleteMeasures.ShortcutKeyDisplayString = "Ctrl+D";
-
-                    /*
-                    // Delete measure
-                    ToolStripMenuItem menuDeleteMeasure = new ToolStripMenuItem(Strings.DeleteMeasure);
-                    smContextMenu.Items.Add(menuDeleteMeasure);
-                    // -> this track
-                    ToolStripMenuItem menuDeleteMeasureThisTrack = new ToolStripMenuItem(Strings.ThisTrack);
-                    menuDeleteMeasure.DropDownItems.Add(menuDeleteMeasureThisTrack);
-                    menuDeleteMeasureThisTrack.Click += new System.EventHandler(this.MnuDeleteMeasureThisTrack_Click);
-                    // -> all tracks
-                    ToolStripMenuItem menuDeleteMeasureAllTracks = new ToolStripMenuItem(Strings.AllTracks);
-                    menuDeleteMeasure.DropDownItems.Add(menuDeleteMeasureAllTracks);
-                    menuDeleteMeasureAllTracks.Click += new System.EventHandler(this.MnuDeleteMeasureAllTracks_Click);
-                    menuDeleteMeasureAllTracks.ShortcutKeys = Keys.Control | Keys.D;     // Shortcut.CtrlD;
-                    menuDeleteMeasure.ShortcutKeyDisplayString = "Ctrl+D";
-                    */
+                    menuDeleteMeasures.ShortcutKeyDisplayString = "Ctrl+D";                    
 
 
                     // Sep 1
@@ -1949,11 +1926,9 @@ namespace Sanford.Multimedia.Midi.Score
 
 
                     // Offset start times of all notes                    
-                    //ToolStripMenuItem menuOffsetNotes = new ToolStripMenuItem("Offset start times");
                     ToolStripMenuItem menuOffsetNotes = new ToolStripMenuItem(Strings.OffsetStartTimesOfNotes);
                     smContextMenu.Items.Add(menuOffsetNotes);
                     menuOffsetNotes.Click += new EventHandler(this.MnuOffsetNotes_Click);
-
 
 
                     // Sep 2
@@ -2010,10 +1985,7 @@ namespace Sanford.Multimedia.Midi.Score
                     #endregion right button
                 }
             }
-        }
-
- 
-
+        }        
 
 
         /// <summary>
@@ -2302,25 +2274,24 @@ namespace Sanford.Multimedia.Midi.Score
         /// <exception cref="NotImplementedException"></exception>
         private void MnuInsertMeasures_Click(object sender, EventArgs e)
         {
-            aPos = PointToClient(Control.MousePosition);
-            int X = aPos.X;
-            int Y = aPos.Y;
+            //aPos = PointToClient(Control.MousePosition);
+            //int X = aPos.X;
+            //int Y = aPos.Y;
 
-            X = X + OffsetX;
-            X = Convert.ToInt32(X / zoom);
+            //X = X + OffsetX;
+            //X = Convert.ToInt32(X / zoom);
 
             // Click on menu can be located on wrong staff if menu is very long           
-            Y = selectedY;
+            //Y = selectedY;
 
             if (_selectedstaff != -1)
             {
                 Cursor.Current = Cursors.WaitCursor;
-
                 Staff staff = this.staffs[_selectedstaff];
 
-                if (X < 0) X = -X;
-
-                int ticks = staff.PulseTimeForPoint(new Point(X, Y));
+                //if (X < 0) X = -X;
+                //int ticks = staff.PulseTimeForPoint(new Point(X, Y));
+                int ticks = _mousedowninitialticks;
 
                 // Numéro de mesure de départ par défaut
                 decimal MeasureFrom = 1 + Convert.ToInt32(ticks / measurelen);
@@ -2374,25 +2345,24 @@ namespace Sanford.Multimedia.Midi.Score
         /// <exception cref="NotImplementedException"></exception>
         private void MnuDeleteMeasures_Click(object sender, EventArgs e)
         {
-            aPos = PointToClient(Control.MousePosition);
-            int X = aPos.X;
-            int Y = aPos.Y;
+            //aPos = PointToClient(Control.MousePosition);
+            //int X = aPos.X;
+            //int Y = aPos.Y;
 
-            X = X + OffsetX;
-            X = Convert.ToInt32(X / zoom);
+            //X = X + OffsetX;
+            //X = Convert.ToInt32(X / zoom);
 
             // Click on menu can be located on wrong staff if menu is very long           
-            Y = selectedY;
+            //Y = selectedY;
 
             if (_selectedstaff != -1)
             {
                 Cursor.Current = Cursors.WaitCursor;
-
                 Staff staff = this.staffs[_selectedstaff];
 
-                if (X < 0) X = -X;
-
-                int ticks = staff.PulseTimeForPoint(new Point(X, Y));
+                //if (X < 0) X = -X;
+                //int ticks = staff.PulseTimeForPoint(new Point(X, Y));
+                int ticks = _mousedowninitialticks;
 
                 // Numéro de mesure de départ par défaut
                 decimal MeasureFrom = 1 + Convert.ToInt32(ticks / measurelen);
@@ -2435,162 +2405,7 @@ namespace Sanford.Multimedia.Midi.Score
 
                 Invalidate();
             }
-        }
-
-        /*
-        /// <summary>
-        /// Menu: insert a measure in a track
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuInsertMeasureThisTrack_Click(object sender, EventArgs e)
-        {
-            int X = selectedX;
-            int Y = selectedY;
-            X = X + OffsetX;
-            X = Convert.ToInt32(X / zoom);
-            Y = Convert.ToInt32(Y / zoom);
-
-            if (_selectedstaff != -1)
-            {
-                Cursor.Current = Cursors.WaitCursor;
-
-                if (X < 0) X = -X;
-                int ticks = staffs[_selectedstaff].PulseTimeForPoint(new Point(X, Y));
-
-                // Numéro de mesure à décaler
-                int NumMeasure = Convert.ToInt32(ticks / measurelen);
-                int startticks = NumMeasure * measurelen;
-
-                Track track = sequence1.tracks[_selectedstaff];
-                track.insertMeasure(startticks, measurelen);
-                this.Refresh();
-
-                // Raise event
-                FileModified?.Invoke(this);
-                WidthChanged?.Invoke(maxstaffwidth);
-
-                Cursor.Current = Cursors.Default;
-            }
-        }
-
-        /// <summary>
-        /// Menu: insert a measure in all tracks
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuInsertMeasureAllTracks_Click(object sender, EventArgs e)
-        {
-            int X = selectedX;
-            int Y = selectedY;
-            X = X + OffsetX;
-            X = Convert.ToInt32(X / zoom);
-            Y = Convert.ToInt32(Y / zoom);
-
-            if (_selectedstaff != -1)
-            {
-                Cursor.Current = Cursors.WaitCursor;
-
-                if (X < 0) X = -X;
-                int ticks = staffs[_selectedstaff].PulseTimeForPoint(new Point(X, Y));
-
-                // Numéro de mesure à décaler
-                int NumMeasure = Convert.ToInt32(ticks / measurelen);
-                int startticks = NumMeasure * measurelen;
-
-                foreach (Track track in sequence1.tracks)
-                {
-                    track.insertMeasure(startticks, measurelen);
-                }
-                this.Refresh();
-
-                // Raise event
-                FileModified?.Invoke(this);
-                WidthChanged?.Invoke(maxstaffwidth);
-
-                Cursor.Current = Cursors.Default;
-            }
-        }
-
-        /// <summary>
-        /// Menu: delete a measure
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuDeleteMeasureThisTrack_Click(object sender, EventArgs e)
-        {
-            int X = selectedX;
-            int Y = selectedY;
-
-            X = X + OffsetX;
-            X = Convert.ToInt32(X / zoom);
-            Y = Convert.ToInt32(Y / zoom);
-            
-            if (_selectedstaff != -1)
-            {
-                Cursor.Current = Cursors.WaitCursor;
-
-                if (X < 0)
-                    X = -X;
-                int ticks = staffs[_selectedstaff].PulseTimeForPoint(new Point(X, Y));
-
-                // Numéro de mesure à supprimer
-                int NumMeasure = Convert.ToInt32(ticks / measurelen);
-                int startticks = NumMeasure * measurelen;
-                Track track = sequence1.tracks[_selectedstaff];
-                track.deleteMeasure(startticks, measurelen);
-
-                this.Refresh();
-
-                // Raise event
-                FileModified?.Invoke(this);
-                WidthChanged?.Invoke(maxstaffwidth);
-
-                Cursor.Current = Cursors.Default;
-            }
-        }
-
-        /// <summary>
-        /// Menu: delete a mesure for all tracks
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuDeleteMeasureAllTracks_Click(object sender, EventArgs e)
-        {
-            int X = selectedX;
-            int Y = selectedY;
-
-            X = X + OffsetX;
-            X = Convert.ToInt32(X / zoom);
-            Y = Convert.ToInt32(Y / zoom);
-
-            if (_selectedstaff != -1)
-            {
-                Cursor.Current = Cursors.WaitCursor;
-
-                if (X < 0)
-                    X = -X;
-                int ticks = staffs[_selectedstaff].PulseTimeForPoint(new Point(X, Y));
-
-                // Numéro de mesure à supprimer
-                int NumMeasure = Convert.ToInt32(ticks / measurelen);
-                int startticks = NumMeasure * measurelen;
-
-                foreach (Track track in sequence1.tracks)
-                {
-                    track.deleteMeasure(startticks, measurelen);
-                }
-
-                this.Refresh();
-
-                // Raise event
-                FileModified?.Invoke(this);
-                WidthChanged?.Invoke(maxstaffwidth);
-
-                Cursor.Current = Cursors.Default;
-            }
-        }
-        */
+        }    
 
         private void MnuDeleteTimeThisTrack_Click(object sender, EventArgs e)
         {
@@ -2603,8 +2418,6 @@ namespace Sanford.Multimedia.Midi.Score
             int dur = sequence1.Division;
             DeleteTimeAllTracks(dur);
         }
-
-
 
         private void MnuInsertTimeThisTrack_Click(object sender, EventArgs e)
         {
@@ -2632,11 +2445,14 @@ namespace Sanford.Multimedia.Midi.Score
             if (_selectedstaff != -1 && CurrentNote.numstaff == _selectedstaff)
             {
                 Cursor.Current = Cursors.WaitCursor;
-
-                int startticks = (int)CurrentNote.midinote.StartTime;
                 Track track = sequence1.tracks[_selectedstaff];
+
+                //int startticks = (int)CurrentNote.midinote.StartTime;
+                int startticks = _mousedowninitialticks;
+                startticks = getPreviousNoteStart(track, startticks);
+                
                 // insert dur duration
-                track.insertMeasure(startticks + 1, dur);
+                track.insertMeasure(startticks, dur);
 
                 this.Refresh();
 
@@ -2646,7 +2462,31 @@ namespace Sanford.Multimedia.Midi.Score
 
                 Cursor.Current = Cursors.Default;
             }
+        }
 
+        /// <summary>
+        /// Return end time of previous note
+        /// Used in Insert od delete times
+        /// </summary>
+        /// <param name="track"></param>
+        /// <param name="ticks"></param>
+        /// <returns></returns>
+        private int getPreviousNoteStart(Track track, int ticks)
+        {            
+            int ret = 0;
+            if (ticks > 0)
+            { 
+                // Search note just before : consider EndTime + 1
+                for (int i = track.Notes.Count - 1; i >= 0; i--)
+                {
+                    if (track.Notes[i].StartTime <= ticks)
+                    {
+                        ret = track.Notes[i].EndTime + 1;
+                        break;
+                    }
+                }
+            }
+            return ret;
         }
 
         private void InsertTimeAllTracks(int dur)
@@ -2657,12 +2497,16 @@ namespace Sanford.Multimedia.Midi.Score
             if (_selectedstaff != -1 && CurrentNote.numstaff == _selectedstaff)
             {
                 Cursor.Current = Cursors.WaitCursor;
+                Track trackorg = sequence1.tracks[_selectedstaff];
 
-                int startticks = (int)CurrentNote.midinote.StartTime;
+                //int startticks = (int)CurrentNote.midinote.StartTime;
+                int startticks = _mousedowninitialticks;
+                startticks = getPreviousNoteStart(trackorg, startticks);
 
+                //int startticks = (int)CurrentNote.midinote.StartTime;                
                 foreach (Track track in sequence1.tracks)
                 {
-                    track.insertMeasure(startticks + 1, dur);
+                    track.insertMeasure(startticks, dur);
                 }
 
                 this.Refresh();
@@ -2689,11 +2533,14 @@ namespace Sanford.Multimedia.Midi.Score
             if (_selectedstaff != -1 && CurrentNote.numstaff == _selectedstaff)
             {
                 Cursor.Current = Cursors.WaitCursor;
-
-                int startticks = (int)CurrentNote.midinote.StartTime;
                 Track track = sequence1.tracks[_selectedstaff];
+
+                //int startticks = (int)CurrentNote.midinote.StartTime;
+                int startticks = _mousedowninitialticks;
+                startticks = getPreviousNoteStart(track, startticks);                
+
                 // delete dur duration
-                track.deleteMeasure(startticks + 1, dur);
+                track.deleteMeasure(startticks, dur);
 
                 this.Refresh();
 
@@ -2715,11 +2562,15 @@ namespace Sanford.Multimedia.Midi.Score
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                int startticks = (int)CurrentNote.midinote.StartTime;
-                
+                Track trackorg = sequence1.tracks[_selectedstaff];
+
+                //int startticks = (int)CurrentNote.midinote.StartTime;
+                int startticks = _mousedowninitialticks;
+                startticks = getPreviousNoteStart(trackorg, startticks);
+
                 foreach (Track track in sequence1.tracks)
                 {
-                    track.deleteMeasure(startticks + 1, dur);
+                    track.deleteMeasure(startticks, dur);
                 }
                 
                 this.Refresh();
@@ -2803,10 +2654,7 @@ namespace Sanford.Multimedia.Midi.Score
                 int destnumstaff = GetStaffClicked(Y);
 
                 if (destnumstaff != -1)
-                {
-                    
-
-                    
+                {                                        
                     Cursor.Current = Cursors.WaitCursor;
                     if (X < 0) X = -X;
                     ticks = staffs[destnumstaff].PulseTimeForPoint(new Point(X, Y));
@@ -2821,24 +2669,7 @@ namespace Sanford.Multimedia.Midi.Score
 
                     // Copy all events
                     desttrack.CopyEvents(srcstarttime, srcendtime, srcstarttime + deltaticks);
-
-                    /*
-                    // Copy notes
-                    foreach (MidiNote n in _selnotes)
-                    {
-                        // Create new notes having the channel of the target track in case the paste is done on two different tracks!                        
-                        MidiNote newnote = new MidiNote(n.StartTime, track.MidiChannel, n.Number, n.Duration, n.Velocity, false);
-
-                        noteMeasure = Convert.ToInt32(newnote.StartTime / measurelen);
-                        ticks = newnote.StartTime + deltaticks;
-                        newnote.StartTime = Convert.ToInt32(ticks);
-                        track.addNote(newnote);
-                    }
-
-                    if (track.Notes.Count > 1)
-                        track.Notes.Sort(track.Notes[0]);
                     
-                    */
 
                     // Refresh track notes
                     desttrack.ExtractNotes();
@@ -2881,7 +2712,6 @@ namespace Sanford.Multimedia.Midi.Score
         }
 
 
-
         /// <summary>
         /// Menu => PianoRoll show required event
         /// </summary>
@@ -2892,10 +2722,10 @@ namespace Sanford.Multimedia.Midi.Score
             // Click on Menu         
 
             aPos = PointToClient(Control.MousePosition);
-            int X = aPos.X;
+            //int X = aPos.X;
             int Y = aPos.Y;
 
-            X = Convert.ToInt32(X / zoom);
+            //X = Convert.ToInt32(X / zoom);
 
             // Click on menu can be located on wrong staff if menu is very long
             Y = selectedY;
@@ -3002,25 +2832,24 @@ namespace Sanford.Multimedia.Midi.Score
         /// <param name="e"></param>
         private void MnuSelectMeasures_Click(object sender, EventArgs e)
         {
-            aPos = PointToClient(Control.MousePosition);
-            int X = aPos.X;
-            int Y = aPos.Y;
+            //aPos = PointToClient(Control.MousePosition);
+            //int X = aPos.X;
+            //int Y = aPos.Y;
 
-            X = X + OffsetX;
-            X = Convert.ToInt32(X / zoom);
+            //X = X + OffsetX;
+            //X = Convert.ToInt32(X / zoom);
             
             // Click on menu can be located on wrong staff if menu is very long           
-            Y = selectedY;
+            //Y = selectedY;
             
             if (_selectedstaff != -1)
             {
                 Cursor.Current = Cursors.WaitCursor;
-
                 Staff staff = this.staffs[_selectedstaff];
 
-                if (X < 0) X = -X;
-
-                int ticks = staff.PulseTimeForPoint(new Point(X, Y));                
+                //if (X < 0) X = -X;
+                //int ticks = staff.PulseTimeForPoint(new Point(X, Y));
+                int ticks = _mousedowninitialticks;
 
                 // Numéro de mesure de départ par défaut
                 int MeasureFrom = 1 + Convert.ToInt32(ticks / measurelen);
@@ -3075,20 +2904,45 @@ namespace Sanford.Multimedia.Midi.Score
             }
         }
 
-
+        /// <summary>
+        /// Offset start times of notes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MnuOffsetNotes_Click(object sender, EventArgs e)
-        {
+        {            
+            int ticks = _mousedowninitialticks;
+
+            // Open dialog with current ticks as default
             DialogResult dr = new DialogResult();
-            UI.ModifyStartTimesDialog ModifyStartTimesDialog = new UI.ModifyStartTimesDialog();
+            UI.ModifyStartTimesDialog ModifyStartTimesDialog = new UI.ModifyStartTimesDialog(ticks);
             dr = ModifyStartTimesDialog.ShowDialog();
 
             if (dr == System.Windows.Forms.DialogResult.Cancel)
                 return;
 
+            // Select all measures ?
+            bool bAllTracks = ModifyStartTimesDialog.bAllTracks;
+
             int StartTime = ModifyStartTimesDialog.StartTime;
             int Offset = ModifyStartTimesDialog.Offset;
-            Track track = sequence1.tracks[_selectedstaff];
-            track.OffsetStartTimes(StartTime, Offset);
+
+
+            if (bAllTracks)
+            {
+                foreach (Track track in sequence1.tracks)
+                {
+                    track.OffsetStartTimes(StartTime, Offset);
+                }
+            }
+            else
+            {
+                Track track = sequence1.tracks[_selectedstaff];
+                track.OffsetStartTimes(StartTime, Offset);
+            }
+
+            //Track track = sequence1.tracks[_selectedstaff];
+            //track.OffsetStartTimes(StartTime, Offset);
 
             this.Refresh();
 

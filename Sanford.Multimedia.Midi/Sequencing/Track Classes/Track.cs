@@ -2215,7 +2215,7 @@ namespace Sanford.Multimedia.Midi
             {
                 if (notes[i].StartTime >= starttime)
                 {
-                    notes[i].StartTime = notes[i].StartTime + offset;
+                    notes[i].StartTime = notes[i].StartTime + offset;                    
                 }
             }
 

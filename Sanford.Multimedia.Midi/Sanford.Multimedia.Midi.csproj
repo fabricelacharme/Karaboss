@@ -427,6 +427,9 @@
     <EmbeddedResource Include="Score\UI\InsertMeasuresDialog.resx">
       <DependentUpon>InsertMeasuresDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Score\UI\ModifyStartTimesDialog.fr.resx">
+      <DependentUpon>ModifyStartTimesDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\ModifyStartTimesDialog.resx">
       <DependentUpon>ModifyStartTimesDialog.cs</DependentUpon>
     </EmbeddedResource>
