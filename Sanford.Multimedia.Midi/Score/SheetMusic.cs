@@ -58,7 +58,7 @@ namespace Sanford.Multimedia.Midi.Score
         public event smMouseMoveEventHandler OnSMMouseMove;
 
         // Event: display PianoRoll required
-        public delegate void mnuPianoRollClickEventHandler(object sender, EventArgs e, int staffnum);
+        public delegate void mnuPianoRollClickEventHandler(object sender, EventArgs e, int staffnum, int ticks);
         public event mnuPianoRollClickEventHandler MnuPianoRollClick;
 
         // Width of sheetmusic has changed
@@ -2718,22 +2718,15 @@ namespace Sanford.Multimedia.Midi.Score
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void MnuPianoRoll_Clicked(object sender, EventArgs e)
-        {
-            // Click on Menu         
-
-            aPos = PointToClient(Control.MousePosition);
-            //int X = aPos.X;
-            int Y = aPos.Y;
-
-            //X = Convert.ToInt32(X / zoom);
-
+        {            
             // Click on menu can be located on wrong staff if menu is very long
-            Y = selectedY;
+            int Y = selectedY;
 
             int numstaff = GetStaffClicked(Y);
             if (numstaff != -1)
             {
-                MnuPianoRollClick(sender, e, numstaff);
+                int ticks = _mousedowninitialticks;
+                MnuPianoRollClick(sender, e, numstaff, ticks);
             }
 
 

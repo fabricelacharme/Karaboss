@@ -2642,6 +2642,8 @@ namespace Sanford.Multimedia.Midi
 
                 while (current.AbsoluteTicks > position)
                 {
+                    if (current.Previous == null)
+                        break;
                     current = current.Previous;
                 }
 

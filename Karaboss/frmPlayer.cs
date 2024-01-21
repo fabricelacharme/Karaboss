@@ -502,10 +502,10 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <param name="staffnum"></param>
-        private void PianoRoll_Required(object sender, EventArgs e, int staffnum)
+        private void PianoRoll_Required(object sender, EventArgs e, int staffnum, int ticks)
         {
-            float t = sequence1.GetLength() * (float)hScrollBar.Value / (float)hScrollBar.Maximum;
-            DisplayPianoRoll(staffnum, MIDIfileFullPath, t);
+            //float pos = sequence1.GetLength() * (float)hScrollBar.Value / (float)hScrollBar.Maximum;
+            DisplayPianoRoll(staffnum, MIDIfileFullPath, ticks);
         }
 
         /// <summary>
@@ -761,7 +761,7 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <param name="staffnum"></param>
-        private void Track_DoubleClick(object sender, EventArgs e, int staffnum, float ticks)
+        private void Track_DoubleClick(object sender, EventArgs e, int staffnum, float pos)
         {
             #region guard
             if (PlayerState != PlayerStates.Stopped)
@@ -771,7 +771,7 @@ namespace Karaboss
             #endregion guard            
 
             // Launch PianoRoll Window in order to display this track
-            DisplayPianoRoll(staffnum, MIDIfileFullPath, ticks);
+            DisplayPianoRoll(staffnum, MIDIfileFullPath, (int)pos);
         }
 
         /// <summary>
@@ -3081,7 +3081,7 @@ namespace Karaboss
         /// Display the pianoRoll window
         /// </summary>
         /// <param name="tracknum"></param>
-        private void DisplayPianoRoll(int tracknum, string fileName, float ticks)
+        private void DisplayPianoRoll(int tracknum, string fileName, int ticks)
         {                        
             if (Application.OpenForms["frmPianoRoll"] == null)
             {
@@ -6438,8 +6438,13 @@ namespace Karaboss
         private void BtnPianoRollClickOneEvent(object sender, EventArgs e, int track)
         {            
             float max = sequence1.GetLength();
-            float t = max * (sheetmusic.OffsetX + pnlScrollView.Width/2) / (float)sheetmusic.MaxStaffWidth;           
-            DisplayPianoRoll(track, MIDIfileFullPath, t);
+            float t = max * (sheetmusic.OffsetX + pnlScrollView.Width/2) / (float)sheetmusic.MaxStaffWidth;
+            
+
+            //float pcent =  (float)hScrollBar.Value / (uint)(hScrollBar.Maximum - hScrollBar.Minimum);
+            //float t = pcent * sequence1.GetLength();
+            
+            DisplayPianoRoll(track, MIDIfileFullPath, (int)t);
         }
 
 

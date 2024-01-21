@@ -1023,7 +1023,7 @@ namespace Karaboss
         /// <summary>
         /// Window and scrollbar startup position
         /// </summary>
-        public void StartupPosition(float ticks = 0, int note = 0)
+        public void StartupPosition(int ticks, int note = 0)
         {
             // VERTICAL
             if (note > 0)
@@ -1033,9 +1033,11 @@ namespace Karaboss
                 vScrollBar.Value = vScrollBar.Maximum - middleScroll;
             }
 
-            // HORIZONTAL            
-            if ((uint)ticks > positionHScrollBar.Minimum  && (uint)ticks < positionHScrollBar.Maximum)
-                positionHScrollBar.Value = (uint)ticks;
+            // HORIZONTAL                        
+            float pcent = (float)ticks / sequence1.GetLength();
+            uint v = (uint)(pcent * (float)(positionHScrollBar.Maximum - positionHScrollBar.Minimum)); ;
+            if (positionHScrollBar.Minimum <= v && v <= positionHScrollBar.Maximum)
+                positionHScrollBar.Value = (uint)(pcent * (float)(positionHScrollBar.Maximum - positionHScrollBar.Minimum));
         }
 
         private void FrmPianoRoll_Resize(object sender, EventArgs e)
