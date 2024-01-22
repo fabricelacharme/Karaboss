@@ -432,6 +432,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\ModifyStartTimesDialog.resx">
       <DependentUpon>ModifyStartTimesDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\modifyTempoDialog.resx">
       <DependentUpon>modifyTempoDialog.cs</DependentUpon>

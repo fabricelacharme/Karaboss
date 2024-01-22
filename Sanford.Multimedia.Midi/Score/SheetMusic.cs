@@ -2497,15 +2497,16 @@ namespace Sanford.Multimedia.Midi.Score
             if (_selectedstaff != -1 && CurrentNote.numstaff == _selectedstaff)
             {
                 Cursor.Current = Cursors.WaitCursor;
-                Track trackorg = sequence1.tracks[_selectedstaff];
+                //Track trackorg = sequence1.tracks[_selectedstaff];
 
                 //int startticks = (int)CurrentNote.midinote.StartTime;
                 int startticks = _mousedowninitialticks;
-                startticks = getPreviousNoteStart(trackorg, startticks);
+                //startticks = getPreviousNoteStart(trackorg, startticks);
 
                 //int startticks = (int)CurrentNote.midinote.StartTime;                
                 foreach (Track track in sequence1.tracks)
                 {
+                    startticks = getPreviousNoteStart(track, startticks);
                     track.insertMeasure(startticks, dur);
                 }
 
@@ -2562,14 +2563,15 @@ namespace Sanford.Multimedia.Midi.Score
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                Track trackorg = sequence1.tracks[_selectedstaff];
+                //Track trackorg = sequence1.tracks[_selectedstaff];
 
                 //int startticks = (int)CurrentNote.midinote.StartTime;
                 int startticks = _mousedowninitialticks;
-                startticks = getPreviousNoteStart(trackorg, startticks);
+                //startticks = getPreviousNoteStart(trackorg, startticks);
 
                 foreach (Track track in sequence1.tracks)
                 {
+                    startticks = getPreviousNoteStart(track, startticks);
                     track.deleteMeasure(startticks, dur);
                 }
                 
