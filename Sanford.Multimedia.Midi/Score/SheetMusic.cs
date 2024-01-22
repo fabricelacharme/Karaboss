@@ -2927,12 +2927,14 @@ namespace Sanford.Multimedia.Midi.Score
             {
                 foreach (Track track in sequence1.tracks)
                 {
+                    StartTime = getPreviousNoteStart(track, StartTime);
                     track.OffsetStartTimes(StartTime, Offset);
                 }
             }
             else
             {
                 Track track = sequence1.tracks[_selectedstaff];
+                StartTime = getPreviousNoteStart(track, StartTime);
                 track.OffsetStartTimes(StartTime, Offset);
             }
 
