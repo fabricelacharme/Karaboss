@@ -1,16 +1,45 @@
-﻿using ChordAnalyser.UI;
+﻿#region License
+
+/* Copyright (c) 2024 Fabrice Lacharme
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), to 
+ * deal in the Software without restriction, including without limitation the 
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+ * sell copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software. 
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+ * THE SOFTWARE.
+ */
+
+#endregion
+
+#region Contact
+
+/*
+ * Fabrice Lacharme
+ * Email: fabrice.lacharme@gmail.com
+ */
+
+#endregion
+using ChordAnalyser.UI;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace Karaboss
 {
@@ -290,6 +319,11 @@ namespace Karaboss
             if (e.Button == MouseButtons.Left)
             {
                 int x = e.Location.X;
+
+                newstart = (int)(  ( (chordAnalyserControl1.OffsetX + x) / (float)chordAnalyserControl1.Width) * sequence1.GetLength()   );
+                FirstPlaySong(newstart);
+
+
             }
 
             //throw new NotImplementedException();
@@ -485,7 +519,10 @@ namespace Karaboss
 
         private void HandleStopped(object sender, StoppedEventArgs e)
         {
-            //throw new NotImplementedException();
+            foreach (ChannelMessage message in e.Messages)
+            {
+                outDevice.Send(message);             
+            }
         }
 
         private void HandleChased(object sender, ChasedEventArgs e)
@@ -641,7 +678,7 @@ namespace Karaboss
         #endregion Display results
 
 
-        #region Form
+        #region Form load close
 
         protected override void OnClosing(CancelEventArgs e)
         {
@@ -740,6 +777,17 @@ namespace Karaboss
                 // Save settings
                 Properties.Settings.Default.Save();
             }
+
+            // Active le formulaire frmExplorer
+            if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
+            {
+                // Restore form
+                Application.OpenForms["frmExplorer"].Restore();
+                Application.OpenForms["frmExplorer"].Activate();
+
+            }
+
+            Dispose();
         }
 
         #endregion Form
@@ -790,6 +838,7 @@ namespace Karaboss
 
         private void btnRewind_Click(object sender, EventArgs e)
         {
+            newstart = 0;
             StopMusic(); 
         }
 
@@ -907,7 +956,9 @@ namespace Karaboss
                     }
                     else
                     {
-                        positionHScrollBar.Value = newstart + positionHScrollBar.Minimum;
+                        decimal pos = newstart + positionHScrollBar.Minimum;
+                        if (positionHScrollBar.Minimum <= pos && pos <= positionHScrollBar.Maximum)
+                            positionHScrollBar.Value = pos;
                         nbstop = 1;
                     }
                 }

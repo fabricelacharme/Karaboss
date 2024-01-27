@@ -5,10 +5,12 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
+using Sanford.Multimedia.Midi.PianoRoll;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using static ChordsAnalyser.cscales.scales;
 
@@ -172,25 +174,19 @@ namespace ChordAnalyser.UI
         #endregion private
 
 
+        #region Events
+        //public delegate void MouseDownEventHandler(object sender, MouseEventArgs e);
+        //public event EventHandler MouseDownHandler;
+
+        #endregion events
+
         public ChordsControl()
-        {            
+        {
+
+            
 
             // Draw pnlCanvas
-            pnlCanvas = new MyPanel();
-            pnlCanvas.Location = new Point(0, 0);
-            pnlCanvas.Size = new Size(40, 40);
-            pnlCanvas.BackColor = Color.White;
-            pnlCanvas.Dock = DockStyle.Fill;
-
-            pnlCanvas.Paint += new PaintEventHandler(pnlCanvas_Paint);
-            pnlCanvas.MouseDown += new MouseEventHandler(pnlCanvas_MouseDown);
-            pnlCanvas.MouseUp += new MouseEventHandler(pnlCanvas_MouseUp);
-            pnlCanvas.MouseMove += new MouseEventHandler(pnlCanvas_MouseMove);
-            pnlCanvas.MouseLeave += new EventHandler(pnlCanvas_MouseLeave);           
-
-
-            this.Controls.Add(pnlCanvas);
-
+            DrawCanvas();         
 
             // Graphic optimization
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
@@ -198,6 +194,11 @@ namespace ChordAnalyser.UI
             this.SetStyle(ControlStyles.UserPaint, true);
             this.SetStyle(ControlStyles.ResizeRedraw, true);
 
+        }
+
+        private void ChordControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            //throw new NotImplementedException();            
         }
 
 
@@ -212,6 +213,26 @@ namespace ChordAnalyser.UI
         }
 
 
+
+        private void DrawCanvas()
+        {
+            // Draw pnlCanvas            
+            pnlCanvas = new MyPanel();
+            pnlCanvas.Location = new Point(0, 0);
+            pnlCanvas.Size = new Size(40, 40);
+            pnlCanvas.BackColor = Color.White;
+            pnlCanvas.Dock = DockStyle.Fill;
+
+            pnlCanvas.Paint += new PaintEventHandler(pnlCanvas_Paint);
+            pnlCanvas.MouseDown += new MouseEventHandler(pnlCanvas_MouseDown);
+            pnlCanvas.MouseUp += new MouseEventHandler(pnlCanvas_MouseUp);
+            pnlCanvas.MouseMove += new MouseEventHandler(pnlCanvas_MouseMove);
+            pnlCanvas.MouseLeave += new EventHandler(pnlCanvas_MouseLeave);
+
+
+            this.Controls.Add(pnlCanvas);
+
+        }
         private void DrawGrid(Graphics g, Rectangle clip)
         {
             int _MeasureSeparatorWidth = 2;
@@ -445,6 +466,7 @@ namespace ChordAnalyser.UI
         private void pnlCanvas_MouseDown(object sender, MouseEventArgs e)
         {
             //throw new NotImplementedException();
+            OnMouseDown(e);
         }
 
         private void pnlCanvas_MouseUp(object sender, MouseEventArgs e)
