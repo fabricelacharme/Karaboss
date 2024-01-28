@@ -107,6 +107,13 @@ namespace Sanford.Multimedia.Midi
             properties.Quarternote = division;
 
             properties.ResetLog();
+
+            if (division != properties.Division)
+            {
+                properties.AddLog(string.Format("Division was changed from {0} to {1}", division, properties.Division));
+                Log = properties.Log;
+            }
+
             InitializeBackgroundWorkers();
         }
 
@@ -395,46 +402,7 @@ namespace Sanford.Multimedia.Midi
 
             saveWorker.CancelAsync();
         }
-
-
-        #region deleteme
-        /*
-        public void WriteDump(string fileName, string dumpFileName)
-        {
-            #region Require
-            if (disposed)
-            {
-                throw new ObjectDisposedException("Sequence");
-            }
-            else if (dumpFileName == null)
-            {
-                throw new ArgumentNullException("dumpFileName");
-            }
-            else if (this.tracks.Count == 0)
-                throw new Exception("No tracks");
-            #endregion
-
-
-            try
-            {
-                FileStream fstream = new FileStream(dumpFileName, FileMode.Create,
-                    FileAccess.Write, FileShare.None);
-
-                StreamWriter stream = new StreamWriter(fstream);
-
-                using (stream)
-                {
-                    DumpWriter dumpwriter = new DumpWriter(this, fileName);
-                    dumpwriter.Write(stream);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-        */
-        #endregion deleteme
+        
 
         /// <summary>
         /// Gets the length in ticks of the Sequence.
@@ -1625,7 +1593,7 @@ namespace Sanford.Multimedia.Midi
 
         public string TextEncoding { get; set; }
 
-        private string log;
+        private string log = string.Empty;
         public string Log
         {
             get { return log; }

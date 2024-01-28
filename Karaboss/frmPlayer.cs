@@ -47,6 +47,7 @@ using MusicXml;
 using MusicTxt;
 using System.Linq;
 using ChordAnalyser.UI;
+using Karaboss.Search;
 
 namespace Karaboss
 {
@@ -2629,8 +2630,7 @@ namespace Karaboss
 
             // Display log file
             if (sequence1.Log != "")
-            {
-                //MessageBox.Show(sequence1.Log, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            {                
                 lblChangesInfos.Text = sequence1.Log;
             }
 
@@ -7423,12 +7423,14 @@ namespace Karaboss
             sequence1 = new Sequence(CreateNewMidiFile.Division)
             {
                 Format = 1,
+                OrigFormat= 1,
                 Numerator = CreateNewMidiFile.Numerator,
                 Denominator = CreateNewMidiFile.Denominator,
                 Tempo = CreateNewMidiFile.Tempo,
                 Time = new TimeSignature(CreateNewMidiFile.Numerator, CreateNewMidiFile.Denominator, CreateNewMidiFile.Division, CreateNewMidiFile.Tempo),
             };
 
+            
             sequence1.CloneTags();
 
             pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
@@ -7487,6 +7489,12 @@ namespace Karaboss
 
             // Display midi file infos
             DisplayFileInfos();
+
+            // Display log file
+            if (sequence1.Log != "")
+            {
+                lblChangesInfos.Text = sequence1.Log;
+            }
 
             PlayerState = PlayerStates.Stopped;
 

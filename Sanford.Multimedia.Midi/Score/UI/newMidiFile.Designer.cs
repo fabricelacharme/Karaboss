@@ -31,7 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmNewMidiFile));
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
-            this.txtDivision = new System.Windows.Forms.TextBox();
             this.lblDivision = new System.Windows.Forms.Label();
             this.txtTempo = new System.Windows.Forms.TextBox();
             this.lblTempo = new System.Windows.Forms.Label();
@@ -44,9 +43,11 @@
             this.lblTitle = new System.Windows.Forms.Label();
             this.txtBpm = new System.Windows.Forms.TextBox();
             this.lblBpm = new System.Windows.Forms.Label();
+            this.updDivision = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.updMeasures)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.updNumerator)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.updDenominator)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.updDivision)).BeginInit();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -64,12 +65,6 @@
             this.btnOk.Name = "btnOk";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
-            // 
-            // txtDivision
-            // 
-            resources.ApplyResources(this.txtDivision, "txtDivision");
-            this.txtDivision.Name = "txtDivision";
-            this.txtDivision.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDivision_KeyPress);
             // 
             // lblDivision
             // 
@@ -153,11 +148,38 @@
             resources.ApplyResources(this.lblBpm, "lblBpm");
             this.lblBpm.Name = "lblBpm";
             // 
+            // updDivision
+            // 
+            this.updDivision.Increment = new decimal(new int[] {
+            24,
+            0,
+            0,
+            0});
+            resources.ApplyResources(this.updDivision, "updDivision");
+            this.updDivision.Maximum = new decimal(new int[] {
+            24000,
+            0,
+            0,
+            0});
+            this.updDivision.Minimum = new decimal(new int[] {
+            24,
+            0,
+            0,
+            0});
+            this.updDivision.Name = "updDivision";
+            this.updDivision.Value = new decimal(new int[] {
+            480,
+            0,
+            0,
+            0});
+            this.updDivision.ValueChanged += new System.EventHandler(this.updDivision_ValueChanged);
+            // 
             // frmNewMidiFile
             // 
             this.AcceptButton = this.btnOk;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.updDivision);
             this.Controls.Add(this.lblBpm);
             this.Controls.Add(this.txtBpm);
             this.Controls.Add(this.lblTitle);
@@ -169,7 +191,6 @@
             this.Controls.Add(this.lblMeasures);
             this.Controls.Add(this.txtTempo);
             this.Controls.Add(this.lblTempo);
-            this.Controls.Add(this.txtDivision);
             this.Controls.Add(this.lblDivision);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
@@ -180,6 +201,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.updMeasures)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.updNumerator)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.updDenominator)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.updDivision)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -189,7 +211,6 @@
 
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOk;
-        private System.Windows.Forms.TextBox txtDivision;
         private System.Windows.Forms.Label lblDivision;
         private System.Windows.Forms.TextBox txtTempo;
         private System.Windows.Forms.Label lblTempo;
@@ -202,5 +223,6 @@
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.TextBox txtBpm;
         private System.Windows.Forms.Label lblBpm;
+        private System.Windows.Forms.NumericUpDown updDivision;
     }
 }

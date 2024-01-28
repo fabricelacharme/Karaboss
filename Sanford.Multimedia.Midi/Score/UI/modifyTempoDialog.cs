@@ -45,7 +45,7 @@ namespace Sanford.Multimedia.Midi.Score.UI
         public int Division
         {
             get
-            { return Convert.ToInt32(this.txtDivision.Text); }
+            { return Convert.ToInt32(updDivision.Value); }
         }
         public int Tempo
         {
@@ -57,7 +57,9 @@ namespace Sanford.Multimedia.Midi.Score.UI
         public modifyTempoDialog(int division, int tempo)
         {
             InitializeComponent();
-            txtDivision.Text = division.ToString();
+            
+            updDivision.Value = Convert.ToDecimal(division);
+
             _tempo = tempo;
             txtTempo.Text = tempo.ToString();
 
@@ -65,7 +67,18 @@ namespace Sanford.Multimedia.Midi.Score.UI
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            decimal division = 0;
+            decimal val = updDivision.Value;
+            division = val;
+            if (val % PpqnClock.PpqnMinValue != 0)
+            {
+                val = (int)(Math.Round((double)val / PpqnClock.PpqnMinValue) * PpqnClock.PpqnMinValue);
+                updDivision.Value = val;
 
+                string msg = "Division must be a multiple of 24 \r\n";
+                msg += string.Format("Division will be changed from {0} to {1}", division, val);
+                MessageBox.Show(msg, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -97,11 +110,6 @@ namespace Sanford.Multimedia.Midi.Score.UI
 
                 }
             }
-        }
-
-        private void txtDivision_TextChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void txtBpm_TextChanged(object sender, EventArgs e)
@@ -136,6 +144,22 @@ namespace Sanford.Multimedia.Midi.Score.UI
         private void txtBpm_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+        }
+
+        private void updDivision_ValueChanged(object sender, EventArgs e)
+        {
+            decimal division = 0;
+            decimal val = updDivision.Value;
+            division = val;
+            if (val % PpqnClock.PpqnMinValue != 0)
+            {
+                val = (int)(Math.Round((double)val / PpqnClock.PpqnMinValue) * PpqnClock.PpqnMinValue);
+                updDivision.Value = val;
+
+                string msg = "Division must be a multiple of 24 \r\n";
+                msg += string.Format("Division will be changed from {0} to {1}", division, val);
+                MessageBox.Show(msg, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }
