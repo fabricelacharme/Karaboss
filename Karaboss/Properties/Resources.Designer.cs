@@ -1406,6 +1406,16 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap silence {
+            get {
+                object obj = ResourceManager.GetObject("silence", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap table_multiple {
             get {
                 object obj = ResourceManager.GetObject("table_multiple", resourceCulture);

@@ -5161,8 +5161,7 @@ namespace Karaboss
         {
             foreach(ChannelMessage message in e.Messages)
             {
-                outDevice.Send(message);
-                //pianoControl1.Send(message);
+                outDevice.Send(message);                
             }
         }
 

@@ -385,17 +385,18 @@ namespace Karaboss
             // pos is in which measure?
             int curmeasure = 1 + pos / _measurelen;
 
-
             // Quel temps dans la mesure ?
-            int rest = pos % _measurelen;
-            int TimeInMeasure = 1 + (int)((float)rest / sequence1.Time.Quarter);   // faux !!! pour 2 temps
-            lblBeat.Text = TimeInMeasure.ToString();
+            //int rest = pos % _measurelen;
+            //int timeinmeasure = 1 + (int)((float)rest / sequence1.Time.Quarter);   // faux !!! pour 2 temps
+            int timeinmeasure = sequence1.Numerator - (int)((curmeasure * _measurelen - pos) / (_measurelen / sequence1.Numerator));
+
+            lblBeat.Text = timeinmeasure.ToString();
 
             // change time in measure => draw cell in control
-            if (TimeInMeasure != _currentTimeInMeasure)
+            if (timeinmeasure != _currentTimeInMeasure)
             {
-                _currentTimeInMeasure = TimeInMeasure;
-                chordAnalyserControl1.DisplayNotes(pos, curmeasure, TimeInMeasure);
+                _currentTimeInMeasure = timeinmeasure;
+                chordAnalyserControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
             }
             
 

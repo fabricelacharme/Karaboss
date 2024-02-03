@@ -4,11 +4,13 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ChordAnalyser.Properties;
 using Sanford.Multimedia.Midi;
 using Sanford.Multimedia.Midi.PianoRoll;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
@@ -170,6 +172,9 @@ namespace ChordAnalyser.UI
         private int _currentpos = 0;
         private int _currentmeasure = -1;
         private int _currentTimeInMeasure = -1;
+
+        private string NoChord = "<Chord not found>";
+        private string EmptyChord = "<Empty>";
 
         #endregion private
 
@@ -369,10 +374,7 @@ namespace ChordAnalyser.UI
         private void DrawNotes(Graphics g, Rectangle clip)
         {
             SolidBrush ChordBrush = new SolidBrush(Color.Black);
-            SolidBrush MeasureBrush = new SolidBrush(Color.Red);
-
-            //Color ActiveCellColor = Color.Red;
-            //SolidBrush ActiveCellBrush = new SolidBrush(ActiveCellColor);
+            SolidBrush MeasureBrush = new SolidBrush(Color.Red); 
 
             Font fontChord = new Font("Arial", 16, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontMeasure = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel);
@@ -388,6 +390,9 @@ namespace ChordAnalyser.UI
                 string tx = string.Empty;   
                 int Offset = 4;
 
+                var src = new Bitmap(Resources.silence_black);
+                var bmp = new Bitmap(src.Width, src.Height, PixelFormat.Format32bppPArgb);
+
                 for (int i = 1; i <= Gridchords.Count; i++)
                 {
                     // Chord name
@@ -395,10 +400,20 @@ namespace ChordAnalyser.UI
 
                     ttx = Gridchords[i];
                     tx = ttx.Item1;
-                    tx = InterpreteNote(tx);
-                    g.DrawString(tx, fontChord, ChordBrush, p1.X, p1.Y);
 
-                    // Measure number
+                    // If not nptes, draw symbol
+                    if (tx == EmptyChord)
+                    {                                                
+                        g.DrawImage(src, new Rectangle(p1.X, 10, bmp.Width, bmp.Height));                                                
+                        
+                    }
+                    else
+                    {
+                        tx = InterpreteNote(tx);
+                        g.DrawString(tx, fontChord, ChordBrush, p1.X, p1.Y);
+                    }
+                    
+                    // Draw measure number
                     tx = i.ToString();
                     p1 = new Point(x + Offset, _TimeLineHeight - fontMeasure.Height);                    
                     g.DrawString(tx, fontMeasure, MeasureBrush, p1.X, p1.Y);

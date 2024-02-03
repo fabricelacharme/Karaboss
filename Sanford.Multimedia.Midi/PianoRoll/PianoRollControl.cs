@@ -1601,10 +1601,9 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                     // Display note under the mouse                    
                     // Num measure
                     int nummeasure = 1 + starttime / measurelen;
+                    
                     // Temps dans la mesure
-                    int rest = starttime % measurelen;
-                    
-                    
+                    int rest = starttime % measurelen;                                        
                     int timeinmeasure = 1 + rest / sequence1.Time.Quarter;
 
                     timeinmeasure = sequence1.Numerator - (int)((nummeasure * measurelen - starttime) / (measurelen / sequence1.Numerator));
