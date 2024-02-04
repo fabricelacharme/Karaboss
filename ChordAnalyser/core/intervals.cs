@@ -491,7 +491,7 @@ namespace ChordsAnalyser.cintervals
                 if (!shorthand)
                     return "augmented " + current.Item1;
                 
-                return "#" + (half_notes - maj) + current.Item2;
+                return new String('#', half_notes - maj) + current.Item2;
             }
             else if (maj - 1 == half_notes)
             {
@@ -506,7 +506,7 @@ namespace ChordsAnalyser.cintervals
                 if (!shorthand)
                     return "diminished " + current.Item1;
                 
-                return "b" + (maj - half_notes) + current.Item2;
+                return new String('b', maj - half_notes) + current.Item2;
             }
 
             return null;

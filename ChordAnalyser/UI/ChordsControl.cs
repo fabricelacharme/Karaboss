@@ -401,7 +401,7 @@ namespace ChordAnalyser.UI
                     ttx = Gridchords[i];
                     tx = ttx.Item1;
 
-                    // If not nptes, draw symbol
+                    // If empty, draw symbol
                     if (tx == EmptyChord)
                     {                                                
                         g.DrawImage(src, new Rectangle(p1.X, 10, bmp.Width, bmp.Height));                                                
@@ -417,6 +417,30 @@ namespace ChordAnalyser.UI
                     tx = i.ToString();
                     p1 = new Point(x + Offset, _TimeLineHeight - fontMeasure.Height);                    
                     g.DrawString(tx, fontMeasure, MeasureBrush, p1.X, p1.Y);
+                    
+                    // ===============================
+                    // Second part of mesure
+                    // ==============================
+                    if (sequence1.Numerator == 4 )
+                    {
+                        if (ttx.Item1 != ttx.Item2)
+                        {
+                            tx = ttx.Item2;
+                            int z = (_TimeLineHeight + (_LinesWidth - 1)) * sequence1.Numerator / 2;
+
+                            // If empty, draw symbol
+                            if (tx == EmptyChord)
+                            {
+                                g.DrawImage(src, new Rectangle(p1.X + z, 10, bmp.Width, bmp.Height));
+                            }
+                            else
+                            {
+                                tx = InterpreteNote(tx);
+                                g.DrawString(tx, fontChord, ChordBrush, p1.X + z, (_TimeLineHeight / 2) - (fontMeasure.Height / 2));
+                            }
+                        }
+                    }
+                    
                     
                     // Increment x (go to next measure)
                     x += (_TimeLineHeight + (_LinesWidth - 1)) * sequence1.Numerator;

@@ -1204,11 +1204,10 @@ namespace ChordsAnalyser.cchords
 
                 if (tries != 3 && !no_inversions)
                 {
-                    List<string> ll = new List<string>();
-                    ll.Add(triad[triad.Count - 1]);
-                    for (int i = 0; i < triad.Count - 2; i++)
-                        ll.Add(triad[i]);
-                    //triad = ll;
+                    // rotate triad
+                    string first = triad[0];
+                    triad.RemoveAt(0);
+                    triad.Add(first);
                     return inversion_exhauster(tries + 1, result);
                 }
                 else
@@ -1331,11 +1330,10 @@ namespace ChordsAnalyser.cchords
 
                 if (tries != 4 && !no_inversion) {
 
-                    List<string> ll = new List<string>();
-                    ll.Add(seventh[seventh.Count - 1]);
-                    seventh.RemoveAt(seventh.Count - 1);
-                    ll.AddRange(seventh);
-                    seventh = ll;
+                    // rotate
+                    string first = seventh[0];
+                    seventh.RemoveAt(0);
+                    seventh.Add(first);
                     return inversion_exhauster(tries + 1, result, polychords);
                 }
                 else

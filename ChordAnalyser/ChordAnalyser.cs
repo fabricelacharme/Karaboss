@@ -342,7 +342,7 @@ namespace ChordsAnalyser
             // Collect all notes of all tracks for each measure and try to fing a chord
             for (int _measure = 1; _measure <= NbMeasures; _measure++)
             {
-                List<string> lsnotes = new List<string>();
+                //List<string> lsnotes = new List<string>();
 
                 // Create a list only for permutations
                 List<MidiNote> lstfirstmidiNotes = new List<MidiNote> ();
@@ -365,7 +365,7 @@ namespace ChordsAnalyser
                                 float st = GetTimeInMeasure(note.StartTime);
                                 if (st < sequence1.Denominator / 2)
                                 {
-                                    lsnotes.Add(TransposeToLetterNote(note.Number));
+                                    //lsnotes.Add(TransposeToLetterNote(note.Number));
                                     lstfirstmidiNotes.Add(note);
                                 }
                                 else
@@ -432,7 +432,9 @@ namespace ChordsAnalyser
                         if (lroot != null)
                         {
                             // Transpose to letters
-                            List<string> notesletters = TransposeToLetterChord(lroot);
+                            List<string> notesletters = TransposeToLetterChordSpecial(lroot);
+                            //notesletters = new List<string> { "A#", "C#", "E#" };
+                            //List<string> res = ch.determine(notesletters,true);
                             List<string> res = ch.determine(notesletters);
 
                             if (res.Count > 0)
@@ -525,7 +527,7 @@ namespace ChordsAnalyser
                         if (lroot != null)
                         {
                             // Transpose to letters
-                            List<string> notesletters = TransposeToLetterChord(lroot);
+                            List<string> notesletters = TransposeToLetterChordSpecial(lroot);
                             List<string> res = ch.determine(notesletters);
 
                             if (res.Count > 0)
@@ -640,10 +642,14 @@ namespace ChordsAnalyser
         public float GetTimeInMeasure(int ticks)
         {
             // Num measure
-            //int nummeasure = Convert.ToInt32(ticks) / _measurelen;
+            int curmeasure = 1 + ticks / _measurelen;
             // Temps dans la mesure
-            int rest = ticks % _measurelen;
-            return (float)rest / sequence1.Time.Quarter;            
+            float timeinmeasure = sequence1.Numerator - (int)((curmeasure * _measurelen - ticks) / (_measurelen / sequence1.Numerator));
+            
+            return timeinmeasure;
+
+            //int rest = ticks % _measurelen;
+            //return (float)rest / sequence1.Time.Quarter;            
         }
 
         /// <summary>
@@ -676,7 +682,7 @@ namespace ChordsAnalyser
         /// <returns></returns>
         private List<string> TransposeToLetterChord(List<int> notes)
         {
-            List<string> letters = new List<string>() { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+            List<string> letters = new List<string>() { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};            
             List<string> letternotes = new List<string>();            
             string l = string.Empty;
             int x = 0;
@@ -688,6 +694,30 @@ namespace ChordsAnalyser
             }            
             return letternotes;
         }
+
+
+        /// <summary>
+        /// Fix error F => E#
+        /// </summary>
+        /// <param name="notes"></param>
+        /// <returns></returns>
+        private List<string> TransposeToLetterChordSpecial(List<int> notes)
+        {
+            //List<string> letters = new List<string>() { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+            List<string> letters = new List<string>() { "C", "C#", "D", "D#", "E", "E#", "F#", "G", "G#", "A", "A#", "B" };
+            List<string> letternotes = new List<string>();
+            string l = string.Empty;
+            int x = 0;
+            foreach (int n in notes)
+            {
+                x = n % 12;
+                l = letters[x];
+                letternotes.Add(l);
+            }
+            return letternotes;
+        }
+
+
 
         /// <summary>
         /// Retrieve notes letter for a chord
