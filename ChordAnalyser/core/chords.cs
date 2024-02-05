@@ -1440,9 +1440,14 @@ namespace ChordsAnalyser.cchords
 
                 if (tries != 5 && !no_inversions)
                 {
+                    // Rotate
                     // return inversion_exhauster([chord[-1]] + chord[:-1], shorthand, tries + 1, result, polychords)                    
-                    chord.Insert(0, chord[chord.Count - 1]);
-                    chord.RemoveAt(chord.Count - 1);
+                    string first = chord[0];
+                    chord.RemoveAt(0);
+                    chord.Add(first);
+
+                    //chord.Insert(0, chord[chord.Count - 1]);
+                    //chord.RemoveAt(chord.Count - 1);
                     //List<string> ll = new List<string>();
                     //ll.Add(chord[chord.Count - 1]);
                     //for (int i = 0; i < chord.Count -2; i++)
@@ -1531,9 +1536,13 @@ namespace ChordsAnalyser.cchords
                 }
 
                 if (tries != 6 && !no_inversions) {
+                    // rotate
                     // return inversion_exhauster([chord[-1]] + chord[:-1], shorthand, tries + 1, result, polychords)
-                    chord.Insert(0, chord[chord.Count - 1]);
-                    chord.RemoveAt(chord.Count - 1);
+                    string first = chord[0];
+                    chord.RemoveAt(0);
+                    chord.Add(first);
+                    //chord.Insert(0, chord[chord.Count - 1]);
+                    //chord.RemoveAt(chord.Count - 1);
                     return inversion_exhauster(tries + 1, result, polychords);
                 }
                 else
@@ -1605,9 +1614,13 @@ namespace ChordsAnalyser.cchords
 
                 if (tries != 6)
                 {
+                    // Rotate
                     // return inversion_exhauster([chord[-1]] + chord[:-1], shorthand, tries + 1, result, polychords)
-                    chord.Insert(0, chord[chord.Count - 1]);
-                    chord.RemoveAt(chord.Count - 1);
+                    string first = chord[0];
+                    chord.RemoveAt(0);
+                    chord.Add(first);
+                    //chord.Insert(0, chord[chord.Count - 1]);
+                    //chord.RemoveAt(chord.Count - 1);
                     return inversion_exhauster(tries + 1, result, polychords);
                 }
                 else

@@ -421,7 +421,7 @@ namespace ChordAnalyser.UI
                     // ===============================
                     // Second part of mesure
                     // ==============================
-                    if (sequence1.Numerator == 4 )
+                    if (sequence1.Numerator % 2 == 0 )
                     {
                         if (ttx.Item1 != ttx.Item2)
                         {
