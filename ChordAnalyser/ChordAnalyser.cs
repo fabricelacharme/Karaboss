@@ -433,7 +433,6 @@ namespace ChordsAnalyser
                         {
                             // Transpose to letters
                             List<string> notesletters = TransposeToLetterChordSpecial(lroot);
-                            //notesletters = new List<string> { "A#", "C#", "E#" };
                             //List<string> res = ch.determine(notesletters,true);
                             List<string> res = ch.determine(notesletters);
 
@@ -704,7 +703,11 @@ namespace ChordsAnalyser
         private List<string> TransposeToLetterChordSpecial(List<int> notes)
         {
             //List<string> letters = new List<string>() { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
-            List<string> letters = new List<string>() { "C", "C#", "D", "D#", "E", "E#", "F#", "G", "G#", "A", "A#", "B" };
+            //List<string> letters = new List<string>() { "B#", "C#", "D", "D#", "E", "E#", "F#", "G", "G#", "A", "A#", "B" };
+            //List<string> letters = new List<string>() { "C", "C#", "D", "D#", "E", "E#", "F#", "G", "G#", "A", "A#", "B" };
+
+            List<string> letters = new List<string>() { "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B" };
+
             List<string> letternotes = new List<string>();
             string l = string.Empty;
             int x = 0;
