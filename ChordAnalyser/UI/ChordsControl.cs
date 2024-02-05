@@ -395,6 +395,12 @@ namespace ChordAnalyser.UI
 
                 for (int i = 1; i <= Gridchords.Count; i++)
                 {
+                    Gridchords[i] = (InterpreteNote(Gridchords[i].Item1), InterpreteNote(Gridchords[i].Item2));
+                }
+
+
+                for (int i = 1; i <= Gridchords.Count; i++)
+                {
                     // Chord name
                     p1 = new Point(x + Offset, (_TimeLineHeight / 2) - (fontMeasure.Height/2));
 
@@ -409,7 +415,7 @@ namespace ChordAnalyser.UI
                     }
                     else
                     {
-                        tx = InterpreteNote(tx);
+                        //tx = InterpreteNote(tx);
                         g.DrawString(tx, fontChord, ChordBrush, p1.X, p1.Y);
                     }
                     
@@ -435,7 +441,7 @@ namespace ChordAnalyser.UI
                             }
                             else
                             {
-                                tx = InterpreteNote(tx);
+                                //tx = InterpreteNote(tx);
                                 g.DrawString(tx, fontChord, ChordBrush, p1.X + z, (_TimeLineHeight / 2) - (fontMeasure.Height / 2));
                             }
                         }
@@ -465,6 +471,8 @@ namespace ChordAnalyser.UI
             note = note.Replace("sixth", "6");
             note = note.Replace("ninth", "9");
             note = note.Replace("eleventh", "11");
+
+            note = note.Replace("<Chord not found>", "?");
 
 
             note = note.Trim();
