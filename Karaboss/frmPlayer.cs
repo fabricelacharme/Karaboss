@@ -8567,6 +8567,10 @@ namespace Karaboss
         private void btnChords_Click(object sender, EventArgs e)
         {
 
+            // Ferme le formulaire frmChords
+            if (Application.OpenForms["frmChords"] != null)
+                Application.OpenForms["frmChords"].Close();
+
             if (Application.OpenForms.OfType<frmChords>().Count() == 0)
             {
                 try

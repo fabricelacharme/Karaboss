@@ -393,11 +393,12 @@ namespace ChordAnalyser.UI
                 var src = new Bitmap(Resources.silence_black);
                 var bmp = new Bitmap(src.Width, src.Height, PixelFormat.Format32bppPArgb);
 
+                /*
                 for (int i = 1; i <= Gridchords.Count; i++)
                 {
                     Gridchords[i] = (InterpreteNote(Gridchords[i].Item1), InterpreteNote(Gridchords[i].Item2));
                 }
-
+                */
 
                 for (int i = 1; i <= Gridchords.Count; i++)
                 {
@@ -414,8 +415,7 @@ namespace ChordAnalyser.UI
                         
                     }
                     else
-                    {
-                        //tx = InterpreteNote(tx);
+                    {                        
                         g.DrawString(tx, fontChord, ChordBrush, p1.X, p1.Y);
                     }
                     
@@ -440,8 +440,7 @@ namespace ChordAnalyser.UI
                                 g.DrawImage(src, new Rectangle(p1.X + z, 10, bmp.Width, bmp.Height));
                             }
                             else
-                            {
-                                //tx = InterpreteNote(tx);
+                            {                                
                                 g.DrawString(tx, fontChord, ChordBrush, p1.X + z, (_TimeLineHeight / 2) - (fontMeasure.Height / 2));
                             }
                         }
@@ -455,6 +454,7 @@ namespace ChordAnalyser.UI
             }
         }
 
+        /*
         private string InterpreteNote(string note)
         {
             note = note.Replace(" major", "");
@@ -478,6 +478,7 @@ namespace ChordAnalyser.UI
             note = note.Trim();
             return note;
         }
+        */
 
         #endregion public
 

@@ -670,10 +670,52 @@ namespace Karaboss
             txtOverview.Text = res;
 
 
+            //Change labels displayed
+            for (int i = 1; i <= Gridchords.Count; i++)
+            {
+                Gridchords[i] = (InterpreteNote(Gridchords[i].Item1), InterpreteNote(Gridchords[i].Item2));
+            }
+
+
             // Display Chords in boxes
             this.chordAnalyserControl1.Gridchords = Gridchords;
 
 
+        }
+
+
+        private string InterpreteNote(string note)
+        {
+          
+            
+
+            note = note.Replace("sus", "");
+
+            note = note.Replace(" major", "");
+            note = note.Replace(" triad", "");
+            note = note.Replace("dominant", "");
+
+            note = note.Replace("first inversion", "");
+            note = note.Replace("second inversion", "");
+            note = note.Replace("third inversion", "");
+
+            note = note.Replace(" seventh", "7");
+            note = note.Replace(" minor", "m");
+            note = note.Replace("seventh", "7");
+            note = note.Replace("sixth", "6");
+            note = note.Replace("ninth", "9");
+            note = note.Replace("eleventh", "11");
+
+            note = note.Replace("6", "");
+            note = note.Replace("9", "");
+            note = note.Replace("11", "");
+
+
+            note = note.Replace("<Chord not found>", "?");
+
+
+            note = note.Trim();
+            return note;
         }
 
         #endregion Display results
