@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analyser.cs" />
     <Compile Include="ChordAnalyser.cs" />
     <Compile Include="core\chords.cs" />
     <Compile Include="core\intervals.cs" />

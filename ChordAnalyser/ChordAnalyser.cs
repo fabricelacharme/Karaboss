@@ -14,11 +14,14 @@ using Sanford.Multimedia.Midi;
 using Sanford.Multimedia.Midi.Score;
 using ChordsAnalyser.cchords;
 using ChordAnalyser.UI;
+using ChordAnalyser;
 
 namespace ChordsAnalyser
 {
     public class ChordAnalyser
     {
+        // Fabrice Method
+        Analyser Analyser = new Analyser();
 
         cchords.chords ch = new cchords.chords();
         static List<MidiNote[]> lnMidiNote = new List<MidiNote[]>();
@@ -146,24 +149,32 @@ namespace ChordsAnalyser
 
                 #region search
  
-                SearchFirstPartMeasureFabrice(_measure, lstfirstmidiNotes);
+                SearchMeasureFabrice(_measure, 1, lstfirstmidiNotes);
 
-                //SearchSecondPartMeasureFabrice(_measure, lstSecmidiNotes);
+                SearchMeasureFabrice(_measure, 2, lstSecmidiNotes);
 
                 #endregion search
             }
         }
 
-        private void SearchFirstPartMeasureFabrice(int _measure, List<int> lstfirstmidiNotes)
+        private void SearchMeasureFabrice(int _measure, int section,  List<int> notes)
         {
-            if (lstfirstmidiNotes.Count == 0)
+            if (notes.Count == 0)
             {
-                if (Gridchords[_measure].Item1 == NoChord)
-                    Gridchords[_measure] = (EmptyChord, Gridchords[_measure].Item2);
+                if (section == 1)
+                {
+                    if (Gridchords[_measure].Item1 == NoChord)
+                        Gridchords[_measure] = (EmptyChord, Gridchords[_measure].Item2);
+                }
+                else if (section == 2)
+                {
+                    if (Gridchords[_measure].Item2 == NoChord)
+                        Gridchords[_measure] = (Gridchords[_measure].Item1, EmptyChord);
+                }
             }
             else
             {
-                List<string> notletters = TransposeToLetterChord(lstfirstmidiNotes);
+                List<string> notletters = TransposeToLetterChord(notes);
                 List<int> lstInt = new List<int>();
 
                 // Remove doubles
@@ -201,7 +212,7 @@ namespace ChordsAnalyser
                 PermuteIntNote(intNotes, 0, lstInt.Count - 1);
 
                 // Minor the value of the notes of a chord and ensure that each note has a value greater than the previous one.
-                List<List<int>> notes = new List<List<int>>();
+                List<List<int>> llnotes = new List<List<int>>();
                 foreach (int[] arry in lnIntNote)
                 {
                     List<int> lll = new List<int>();
@@ -209,13 +220,31 @@ namespace ChordsAnalyser
                     {
                         lll.Add(arry[i]);
                     }
-                    notes.Add(lll);
+                    llnotes.Add(lll);
                 }
 
-                notes = ChangeListListNotesNumber(notes);
+                llnotes = ChangeListListNotesNumber(llnotes);
 
-                // Search root note                    
-                List<int> lroot = DetermineRoot(notes);
+                // Search major or minor triads note                    
+                List<int> lroot = DetermineRoot(llnotes);
+
+                if (lroot != null)
+                {
+                    string res = Analyser.determine(lroot);
+                    if (section == 1)
+                    {
+                        if (Gridchords[_measure].Item1 == NoChord)
+                            Gridchords[_measure] = (res, Gridchords[_measure].Item2);
+                    }
+                    else if (section == 2)
+                    {
+                        if (Gridchords[_measure].Item2 == NoChord)
+                            Gridchords[_measure] = (Gridchords[_measure].Item1, res);
+
+                    }
+                }
+
+
             }
         }
 
@@ -1000,6 +1029,7 @@ namespace ChordsAnalyser
             return l;
         }
 
+        #region permutations
 
         /// <summary>
         /// Get all combinations of a set of values
@@ -1094,7 +1124,8 @@ namespace ChordsAnalyser
             a = b;
             b = tmp;
         }
-        
+
+        #endregion permutations
 
         /// <summary>
         /// Minor the value of the notes of a chord and ensure that each note has a value greater than the previous one.
