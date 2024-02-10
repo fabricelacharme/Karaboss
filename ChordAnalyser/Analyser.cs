@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChordsAnalyser.cchords;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,21 +17,79 @@ namespace ChordAnalyser
 
         public string determine(List<int> notes)
         {
+
+            if (notes.Count == 0)
+                return null;
+            else if (notes.Count == 1 || notes.Count == 2)
+                return determine_single(notes);
+            else if (notes.Count == 3)
+                return determine_triad(notes);
+            else if (notes.Count == 4)
+                return determine_seventh(notes);
+            else
+                return determine_others(notes);
+            
+        }
+
+
+        private string determine_single(List<int> single)
+        {
+            return letters[single[0]];
+        }
+        private string determine_triad(List<int> triad)
+        {
             string res = string.Empty;
 
-            if (IsMajorChord(notes))
+            if (IsMajorChord(triad))
             {
-                res = letters[notes[0]];
+                res = letters[triad[0]];
             }
-            else if (IsMinorChord(notes))
+            else if (IsMinorChord(triad))
             {
-                res = letters[notes[0]] + "m";
+                res = letters[triad[0]] + "m";
             }
+            return res;
+        }
 
+        private string determine_seventh(List<int> seventh)
+        {
+            string res = string.Empty;
+            List<int> triad = new List<int>() { seventh[0], seventh[1], seventh[2] };
+            if (IsMajorChord(triad))
+            {
+                res = letters[triad[0]];
+                if (seventh[3] - seventh[0] == 10)
+                    res += " 7";
+            } 
+            else if (IsMinorChord(triad))
+            {
+                res = letters[triad[0]] + "m";
+                if (seventh[3] - seventh[0] == 10)
+                    res += " 7";
+            }
 
             return res;
         }
 
+
+        private string determine_others(List<int> others)
+        {
+            string res = string.Empty;
+            List<int> triad = new List<int>() { others[0], others[1], others[2] };
+            if (IsMajorChord(triad))
+            {
+                res = letters[triad[0]];
+                if (others[3] - others[0] == 10)
+                    res += " 7";
+            }
+            else if (IsMinorChord(triad))
+            {
+                res = letters[triad[0]] + "m";
+                if (others[3] - others[0] == 10)
+                    res += " 7";
+            }
+            return res;
+        }
 
         static bool IsMajorChord(List<int> notes)
         {
