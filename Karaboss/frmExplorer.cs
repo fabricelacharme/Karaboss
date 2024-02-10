@@ -1513,6 +1513,13 @@ namespace Karaboss
             {
                 Application.OpenForms["FrmTextPlayer"].Close();
             }
+
+            // Ferme le formulaire frmChords
+            if (Application.OpenForms.OfType<frmChords>().Count() > 0)
+            {
+                Application.OpenForms["frmChords"].Close();
+            }
+
             #endregion
 
             // Affiche le formulaire frmPlay 
@@ -1582,6 +1589,12 @@ namespace Karaboss
             if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
             {
                 Application.OpenForms["FrmTextPlayer"].Close();
+            }
+
+            // Ferme le formulaire frmChords
+            if (Application.OpenForms.OfType<frmChords>().Count() > 0)
+            {
+                Application.OpenForms["frmChords"].Close();
             }
             #endregion
 
@@ -1654,6 +1667,12 @@ namespace Karaboss
             if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
             {
                 Application.OpenForms["FrmTextPlayer"].Close();
+            }
+
+            // Ferme le formulaire frmChords
+            if (Application.OpenForms.OfType<frmChords>().Count() > 0)
+            {
+                Application.OpenForms["frmChords"].Close();
             }
             #endregion
 
