@@ -1147,9 +1147,7 @@ namespace ChordsAnalyser
             // Temps dans la mesure
             float timeinmeasure = sequence1.Numerator - ((curmeasure * _measurelen - ticks) / (float)(_measurelen / sequence1.Numerator));
             
-            return timeinmeasure;
-
-                       
+            return timeinmeasure;                       
         }
 
         /// <summary>

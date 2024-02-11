@@ -84,6 +84,8 @@ namespace Karaboss
         private System.Windows.Forms.Timer timer1;
         private Karaboss.NoSelectButton btnPlay;
         private Karaboss.NoSelectButton btnRewind;
+        private Karaboss.NoSelectButton btnZoomPlus;
+        private Karaboss.NoSelectButton btnZoomMinus;
 
         private Label lblNumMeasure;
         private Label lblElapsed;
@@ -227,6 +229,24 @@ namespace Karaboss
             btnPlay.MouseLeave += new EventHandler(btnPlay_MouseLeave);
             pnlTop.Controls.Add(btnPlay);    
 
+
+            btnZoomPlus = new NoSelectButton();
+            btnZoomPlus.Parent = pnlTop;
+            btnZoomPlus.Location = new Point(2 + btnPlay.Left + btnPlay.Width, 2);
+            btnZoomPlus.Size = new Size(50, 50);
+            btnZoomPlus.Text = "+";
+            btnZoomPlus.Click += new EventHandler(btnZoomPlus_Click);
+            pnlTop.Controls.Add(btnZoomPlus);
+
+            btnZoomMinus = new NoSelectButton();
+            btnZoomMinus.Parent = pnlTop;
+            btnZoomMinus.Location = new Point(2 + btnZoomPlus.Left + btnZoomPlus.Width, 2);
+            btnZoomMinus.Size = new Size(50, 50);
+            btnZoomMinus.Text = "-";
+            btnZoomMinus.Click += new EventHandler(btnZoomMinus_Click);
+            pnlTop.Controls.Add(btnZoomMinus);
+
+
             #endregion
 
             #region Panel Bottom
@@ -283,6 +303,7 @@ namespace Karaboss
             chordAnalyserControl1.Size = new Size(pnlDisplay.Width, 80);
             chordAnalyserControl1.Location = new Point(0, 0);
             chordAnalyserControl1.WidthChanged += new WidthChangedEventHandler(chordAnalyserControl1_WidthChanged);
+            chordAnalyserControl1.HeightChanged += new HeightChangedEventHandler(chordAnalyserControl1_HeightChanged);
             chordAnalyserControl1.MouseDown += new MouseEventHandler(chordAnalyserControl1_MouseDown); 
             chordAnalyserControl1.Cursor = Cursors.Hand;
             pnlDisplay.Controls.Add(chordAnalyserControl1);
@@ -312,6 +333,18 @@ namespace Karaboss
             pnlDisplay.Controls.Add(positionHScrollBar);
             
             #endregion
+        }
+
+     
+
+        private void btnZoomMinus_Click(object sender, EventArgs e)
+        {
+            this.chordAnalyserControl1.zoom -= (float)0.1;
+        }
+
+        private void btnZoomPlus_Click(object sender, EventArgs e)
+        {
+            this.chordAnalyserControl1.zoom += (float)0.1;
         }
 
         private void chordAnalyserControl1_MouseDown(object sender, MouseEventArgs e)
@@ -389,7 +422,7 @@ namespace Karaboss
             //int rest = pos % _measurelen;
             //int timeinmeasure = 1 + (int)((float)rest / sequence1.Time.Quarter);   // faux !!! pour 2 temps
             int timeinmeasure = sequence1.Numerator - (int)((curmeasure * _measurelen - pos) / (_measurelen / sequence1.Numerator));
-
+            
             lblBeat.Text = timeinmeasure.ToString();
 
             // change time in measure => draw cell in control
@@ -409,7 +442,7 @@ namespace Karaboss
                 
                 int val = 0;
 
-                int LargeurCellule = chordAnalyserControl1.TimeLineY + 1;
+                int LargeurCellule = (int)(chordAnalyserControl1.TimeLineY * chordAnalyserControl1.zoom) + 1;
                 int LargeurMesure = LargeurCellule * sequence1.Numerator; // keep one measure on the left
                 int offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);
 
@@ -451,6 +484,21 @@ namespace Karaboss
                 lblNumMeasure.Text = "Measure: " + _currentMeasure;
             }
             
+        }
+
+        /// <summary>
+        /// Get time inside measure
+        /// </summary>
+        /// <param name="ticks"></param>
+        /// <returns></returns>
+        public float GetTimeInMeasure(int ticks)
+        {
+            // Num measure
+            int curmeasure = 1 + ticks / _measurelen;
+            // Temps dans la mesure
+            float timeinmeasure = sequence1.Numerator - ((curmeasure * _measurelen - ticks) / (float)(_measurelen / sequence1.Numerator));
+
+            return timeinmeasure;
         }
 
         #endregion Scroll ChordsControl
@@ -627,7 +675,19 @@ namespace Karaboss
 
         private void PositionHScrollBar_Scroll(object sender, ScrollEventArgs e)
         {            
-            chordAnalyserControl1.OffsetX = e.NewValue;
+            //chordAnalyserControl1.OffsetX = e.NewValue;
+
+            if (e.Type == ScrollEventType.EndScroll)
+            {
+
+                sequencer1.Position = e.NewValue;
+
+                scrolling = false;
+            }
+            else
+            {
+                scrolling = true;
+            }
         }
 
         private void PositionHScollBar_ValueChanged(object sender, EventArgs e)
@@ -649,6 +709,11 @@ namespace Karaboss
             SetScrollBarValues();
         }
 
+
+        private void chordAnalyserControl1_HeightChanged(object sender, int value)
+        {
+            positionHScrollBar.Location = new Point(0, chordAnalyserControl1.Height);
+        }
 
         #endregion positionHScrollBar
 
@@ -685,10 +750,7 @@ namespace Karaboss
 
 
         private string InterpreteNote(string note)
-        {
-          
-            
-
+        {                      
             note = note.Replace("sus", "");
 
             note = note.Replace(" major", "");
@@ -792,7 +854,10 @@ namespace Karaboss
             }
 
             if (chordAnalyserControl1 != null)
+            {
                 positionHScrollBar.Width = (pnlDisplay.Width > chordAnalyserControl1.Width ? chordAnalyserControl1.Width : pnlDisplay.Width);
+                //positionHScrollBar.Location = chordAnalyserControl1.Location.X;
+            }
 
             // Set maximum & visibility
             SetScrollBarValues();

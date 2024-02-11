@@ -22,6 +22,7 @@ namespace ChordAnalyser.UI
     #region delegate    
     public delegate void OffsetChangedEventHandler(object sender, int value);   
     public delegate void WidthChangedEventHandler(object sender, int value);
+    public delegate void HeightChangedEventHandler(object sender, int value);
 
     #endregion delegate
 
@@ -32,6 +33,7 @@ namespace ChordAnalyser.UI
         #region events
         public event OffsetChangedEventHandler OffsetChanged;
         public event WidthChangedEventHandler WidthChanged;
+        public event HeightChangedEventHandler HeightChanged;
 
         #endregion events
 
@@ -153,6 +155,22 @@ namespace ChordAnalyser.UI
 
         public Dictionary<int, (string, string)> Gridchords { get; set; }
 
+        /// <summary>
+        /// zoom
+        /// </summary>
+        private float _zoom = 1.0f;    // zoom for horizontal
+        public float zoom
+        {
+            get
+            { return _zoom; }
+            set
+            {                
+                _zoom = value;
+                this.Height = (int)(_TimeLineHeight * zoom);
+                HeightChanged(this, this.Height);
+                pnlCanvas.Invalidate();                               
+            }
+        }
 
         #endregion properties
 
@@ -269,14 +287,12 @@ namespace ChordAnalyser.UI
 
             // =====================================================
             // 1ere case noire en plus ce celles du morceau
-            //======================================================
-            //g.DrawRectangle(FillPen, clip.X, clip.Y, _TimeLineHeight, _TimeLineHeight);
-            g.DrawRectangle(FillPen, 0, 0, _TimeLineHeight, _TimeLineHeight);
-            //rect = new Rectangle(clip.X, clip.Y, _TimeLineHeight, _TimeLineHeight);
-            rect = new Rectangle(0, 0, _TimeLineHeight, _TimeLineHeight);
+            //======================================================            
+            g.DrawRectangle(FillPen, 0, 0, _TimeLineHeight * zoom, _TimeLineHeight * zoom);            
+            rect = new Rectangle(0, 0, (int)(_TimeLineHeight * zoom), (int)(_TimeLineHeight * zoom));
             g.FillRectangle(new SolidBrush(Color.Black), rect);
 
-            x += _TimeLineHeight + (_LinesWidth - 1);
+            x += (int)(_TimeLineHeight * zoom) + (_LinesWidth - 1);
 
             // ======================================================
             // Draw measures
@@ -296,8 +312,8 @@ namespace ChordAnalyser.UI
                     // Draw played cell in gray
                     if (i == _currentmeasure - 1 && j == _currentTimeInMeasure - 1 && _currentpos > 0)
                     {
-                        g.DrawRectangle(FillPen, x, 0, _TimeLineHeight, _TimeLineHeight);
-                        rect = new Rectangle(x, 0, _TimeLineHeight, _TimeLineHeight);
+                        g.DrawRectangle(FillPen, x, 0, _TimeLineHeight * zoom, _TimeLineHeight * zoom);
+                        rect = new Rectangle(x, 0, (int)(_TimeLineHeight * zoom), (int)(_TimeLineHeight * zoom));
                         g.FillRectangle(new SolidBrush(Color.Gray), rect);
                         
                     }
@@ -305,22 +321,22 @@ namespace ChordAnalyser.UI
                     {
                         // Draw other celles in white
                         //g.DrawRectangle(FillPen, clip.X + x, clip.Y, _TimeLineHeight, _TimeLineHeight);
-                        g.DrawRectangle(FillPen, x, 0, _TimeLineHeight, _TimeLineHeight);                        
+                        g.DrawRectangle(FillPen, x, 0, _TimeLineHeight * zoom, _TimeLineHeight * zoom);                        
                     }
-                    x += _TimeLineHeight + (_LinesWidth - 1);
+                    x += (int)(_TimeLineHeight * zoom) + (_LinesWidth - 1);
                 }                
             }
 
             // ====================================================
             // Ligne noire sur la dernière case de chaque mesure
             // ====================================================
-            x = _TimeLineHeight + (_LinesWidth - 1); 
+            x = (int)(_TimeLineHeight * zoom) + (_LinesWidth - 1); 
             for (int i = 0; i < NbMeasures; i++)
             {
                 p1 = new Point(x, clip.Y);
-                p2 = new Point(x, clip.Y + _TimeLineHeight);
+                p2 = new Point(x, clip.Y + (int)(_TimeLineHeight * zoom));
                 g.DrawLine(mesureSeparatorPen, p1, p2);
-                x += sequence1.Numerator * (_TimeLineHeight + (_LinesWidth - 1));
+                x += sequence1.Numerator * ((int)(_TimeLineHeight * zoom) + (_LinesWidth - 1));
 
             }
             
@@ -328,23 +344,7 @@ namespace ChordAnalyser.UI
             maxStaffWidth = x;            
         }
 
-
-        private Rectangle GetVisibleRectangle(Control c)
-        {
-            // rectangle du controle en coordonnées écran
-            Rectangle rect = c.RectangleToScreen(c.ClientRectangle);
-            c = c.Parent;
-            while (c != null)
-            {
-                rect = Rectangle.Intersect(rect, c.RectangleToScreen(c.ClientRectangle));
-                c = c.Parent;
-            }
-            // rectangle en coordonnées relatives au client
-            rect = pnlCanvas.RectangleToClient(rect);
-            return rect;
-        }
-
-
+        
         #endregion Draw Canvas
 
 
@@ -376,11 +376,11 @@ namespace ChordAnalyser.UI
             SolidBrush ChordBrush = new SolidBrush(Color.Black);
             SolidBrush MeasureBrush = new SolidBrush(Color.Red); 
 
-            Font fontChord = new Font("Arial", 16, FontStyle.Regular, GraphicsUnit.Pixel);
-            Font fontMeasure = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font fontChord = new Font("Arial", 16 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font fontMeasure = new Font("Arial", 12 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
             int _LinesWidth = 2;
-            int x = _TimeLineHeight + (_LinesWidth - 1);
+            int x = (int)(_TimeLineHeight * zoom) + (_LinesWidth - 1);
             Point p1;
           
 
@@ -391,19 +391,12 @@ namespace ChordAnalyser.UI
                 int Offset = 4;
 
                 var src = new Bitmap(Resources.silence_black);
-                var bmp = new Bitmap(src.Width, src.Height, PixelFormat.Format32bppPArgb);
-
-                /*
-                for (int i = 1; i <= Gridchords.Count; i++)
-                {
-                    Gridchords[i] = (InterpreteNote(Gridchords[i].Item1), InterpreteNote(Gridchords[i].Item2));
-                }
-                */
+                var bmp = new Bitmap((int)(src.Width * zoom), (int)(src.Height * zoom), PixelFormat.Format32bppPArgb);                
 
                 for (int i = 1; i <= Gridchords.Count; i++)
                 {
                     // Chord name
-                    p1 = new Point(x + Offset, (_TimeLineHeight / 2) - (fontMeasure.Height/2));
+                    p1 = new Point(x + Offset, ((int)(_TimeLineHeight * zoom) / 2) - (fontMeasure.Height/2));
 
                     ttx = Gridchords[i];
                     tx = ttx.Item1;
@@ -421,7 +414,7 @@ namespace ChordAnalyser.UI
                     
                     // Draw measure number
                     tx = i.ToString();
-                    p1 = new Point(x + Offset, _TimeLineHeight - fontMeasure.Height);                    
+                    p1 = new Point(x + Offset, (int)(_TimeLineHeight * zoom) - fontMeasure.Height);                    
                     g.DrawString(tx, fontMeasure, MeasureBrush, p1.X, p1.Y);
                     
                     // ===============================
@@ -432,7 +425,7 @@ namespace ChordAnalyser.UI
                         if (ttx.Item1 != ttx.Item2)
                         {
                             tx = ttx.Item2;
-                            int z = (_TimeLineHeight + (_LinesWidth - 1)) * sequence1.Numerator / 2;
+                            int z = ((int)(_TimeLineHeight * zoom) + (_LinesWidth - 1)) * sequence1.Numerator / 2;
 
                             // If empty, draw symbol
                             if (tx == EmptyChord)
@@ -441,44 +434,19 @@ namespace ChordAnalyser.UI
                             }
                             else
                             {                                
-                                g.DrawString(tx, fontChord, ChordBrush, p1.X + z, (_TimeLineHeight / 2) - (fontMeasure.Height / 2));
+                                g.DrawString(tx, fontChord, ChordBrush, p1.X + z, (_TimeLineHeight * zoom/ 2) - (fontMeasure.Height / 2));
                             }
                         }
                     }
                     
                     
                     // Increment x (go to next measure)
-                    x += (_TimeLineHeight + (_LinesWidth - 1)) * sequence1.Numerator;
+                    x += ((int)(_TimeLineHeight * zoom) + (_LinesWidth - 1)) * sequence1.Numerator;
 
                 }
             }
         }
-
-        /*
-        private string InterpreteNote(string note)
-        {
-            note = note.Replace(" major", "");
-            note = note.Replace(" triad", "");
-            note = note.Replace("dominant", "");
-            
-            note = note.Replace("first inversion", "");
-            note = note.Replace("second inversion", "");
-            note = note.Replace("third inversion", "");
-
-            note = note.Replace(" seventh", "7");
-            note = note.Replace(" minor", "m");
-            note = note.Replace("seventh", "7");
-            note = note.Replace("sixth", "6");
-            note = note.Replace("ninth", "9");
-            note = note.Replace("eleventh", "11");
-
-            note = note.Replace("<Chord not found>", "?");
-
-
-            note = note.Trim();
-            return note;
-        }
-        */
+  
 
         #endregion public
 
