@@ -129,6 +129,9 @@ namespace Karaboss
             //LoadSequencer(seq);
             outDevice = OtpDev;
 
+            // Allow form keydown
+            this.KeyPreview = true;
+
             // Title
             SetTitle(FileName);
 
@@ -898,15 +901,52 @@ namespace Karaboss
             Dispose();
         }
 
+        /// <summary>
+        /// Key Up event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void frmChords_KeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Space:
+                    PlayPauseMusic();
+                    break;
+            }
+        }
+
+
+        /// <summary>
+        /// I am able to detect alpha-numeric keys. However i am not able to detect arrow keys
+        /// ProcessCmdKey save my life
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="keyData"></param>
+        /// <returns></returns>
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if ((PlayerState == PlayerStates.Paused) || (PlayerState == PlayerStates.Stopped && newstart > 0))
+            {
+                if (keyData == Keys.Left)
+                {
+                    StopMusic();
+                    return true;
+                }
+            }
+
+        return base.ProcessCmdKey(ref msg, keyData);
+
+        }
         #endregion Form
 
 
-        #region Midi
+            #region Midi
 
-        /// <summary>
-        /// Upadate MIDI times
-        /// </summary>
-        private void UpdateMidiTimes()
+            /// <summary>
+            /// Upadate MIDI times
+            /// </summary>
+            private void UpdateMidiTimes()
         {
             _totalTicks = sequence1.GetLength();
             _tempo = sequence1.Tempo;
@@ -1126,5 +1166,6 @@ namespace Karaboss
 
         #endregion Play stop pause
 
+ 
     }
 }

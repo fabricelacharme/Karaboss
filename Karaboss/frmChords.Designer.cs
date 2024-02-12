@@ -99,6 +99,7 @@
             this.Text = "Chords";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmChords_FormClosing);
             this.Load += new System.EventHandler(this.frmChords_Load);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmChords_KeyUp);
             this.Resize += new System.EventHandler(this.frmChords_Resize);
             this.tabChordsControl.ResumeLayout(false);
             this.tabPageOverview.ResumeLayout(false);
