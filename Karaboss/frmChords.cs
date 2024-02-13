@@ -331,8 +331,7 @@ namespace Karaboss
             positionHScrollBar.ShowDivisionsText = false;
             positionHScrollBar.ShowSmallScale = false;
             positionHScrollBar.MouseWheelBarPartitions = 1 + NbMeasures * sequence1.Numerator;
-            positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(PositionHScrollBar_Scroll);
-            positionHScrollBar.ValueChanged += new EventHandler(PositionHScollBar_ValueChanged);
+            positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(PositionHScrollBar_Scroll);            
             pnlDisplay.Controls.Add(positionHScrollBar);
             
             #endregion
@@ -676,14 +675,22 @@ namespace Karaboss
 
         }
 
+        /// <summary>
+        /// Scroll horizontal scrollbar: move sequencer position to scrollbar value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PositionHScrollBar_Scroll(object sender, ScrollEventArgs e)
         {            
-            //chordAnalyserControl1.OffsetX = e.NewValue;
+            chordAnalyserControl1.OffsetX = e.NewValue;
 
             if (e.Type == ScrollEventType.EndScroll)
             {
+                // scrollbar position = fraction  of sequence Length
+                float n =  (e.NewValue / (float)(positionHScrollBar.Maximum - positionHScrollBar.Minimum)) * sequence1.GetLength();
+                newstart = (int)n;                
 
-                sequencer1.Position = e.NewValue;
+                sequencer1.Position = newstart;
 
                 scrolling = false;
             }
@@ -693,11 +700,7 @@ namespace Karaboss
             }
         }
 
-        private void PositionHScollBar_ValueChanged(object sender, EventArgs e)
-        {
-            //ColorSlider.ColorSlider c = (ColorSlider.ColorSlider)sender;
-            //chordAnalyserControl1.OffsetX = Convert.ToInt32(c.Value);
-        }
+      
 
         /// <summary>
         /// Set positionHScrollbar Width equal to chord control
