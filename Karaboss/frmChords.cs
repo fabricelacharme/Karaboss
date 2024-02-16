@@ -691,7 +691,6 @@ namespace Karaboss
                 newstart = (int)n;                
 
                 sequencer1.Position = newstart;
-
                 scrolling = false;
             }
             else
@@ -910,13 +909,13 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void frmChords_KeyUp(object sender, KeyEventArgs e)
-        {
+        {            
             switch (e.KeyCode)
             {
                 case Keys.Space:
                     PlayPauseMusic();
                     break;
-            }
+            }            
         }
 
 
@@ -933,9 +932,9 @@ namespace Karaboss
             {
                 if (keyData == Keys.Left)
                 {
-                    StopMusic();
+                    Rewind();
                     return true;
-                }
+                }               
             }
 
         return base.ProcessCmdKey(ref msg, keyData);
@@ -973,6 +972,7 @@ namespace Karaboss
         {
             if (timer1 != null)
                 timer1.Stop();
+            scrolling = false;
             newstart = 0;
             laststart = 0;
             _currentMeasure = -1;
@@ -989,10 +989,15 @@ namespace Karaboss
 
         private void btnRewind_Click(object sender, EventArgs e)
         {
-            newstart = 0;
-            StopMusic(); 
+            Rewind();
         }
 
+        private void Rewind()
+        {
+            scrolling = false;
+            newstart = 0;
+            StopMusic();
+        }
 
         /// <summary>
         /// Button play clicked: manage actions according to player status 
@@ -1010,6 +1015,7 @@ namespace Karaboss
                 case PlayerStates.Paused:
                     // if paused => play                
                     nbstop = 0;
+                    scrolling = false;
                     PlayerState = PlayerStates.Playing;
                     BtnStatus();
                     timer1.Start();
@@ -1032,6 +1038,7 @@ namespace Karaboss
             {
                 PlayerState = PlayerStates.Playing;
                 nbstop = 0;
+                scrolling = false;
                 _currentMeasure = -1;
                 BtnStatus();
                 sequencer1.Start();
@@ -1146,6 +1153,7 @@ namespace Karaboss
                 chordAnalyserControl1.DisplayNotes(0, -1, -1);
 
                 laststart = 0;
+                scrolling = false;
             }
             else
             {
