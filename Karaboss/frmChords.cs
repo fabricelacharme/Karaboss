@@ -411,82 +411,7 @@ namespace Karaboss
 
         #region Scroll ChordsControl 
 
-        /// <summary>
-        /// Display 
-        /// </summary>
-        /// <param name="pos"></param>
-        private void DisplayPositionHScrollBar(int pos)
-        {           
-            // pos is in which measure?
-            int curmeasure = 1 + pos / _measurelen;
-
-            // Quel temps dans la mesure ?
-            //int rest = pos % _measurelen;
-            //int timeinmeasure = 1 + (int)((float)rest / sequence1.Time.Quarter);   // faux !!! pour 2 temps
-            int timeinmeasure = sequence1.Numerator - (int)((curmeasure * _measurelen - pos) / (_measurelen / sequence1.Numerator));
-            
-            lblBeat.Text = timeinmeasure.ToString();
-
-            // change time in measure => draw cell in control
-            if (timeinmeasure != _currentTimeInMeasure)
-            {
-                _currentTimeInMeasure = timeinmeasure;
-                chordAnalyserControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
-            }
-            
-
-            // Change measure => offset control
-            if (curmeasure != _currentMeasure)
-            {
-                
-                //if (curmeasure != _currentMeasure)
-                    _currentMeasure = curmeasure;
-                
-                int val = 0;
-
-                int LargeurCellule = (int)(chordAnalyserControl1.TimeLineY * chordAnalyserControl1.zoom) + 1;
-                int LargeurMesure = LargeurCellule * sequence1.Numerator; // keep one measure on the left
-                int offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);
-
-                int course = (int)(positionHScrollBar.Maximum - positionHScrollBar.Minimum);
-                int CellsNumber = 1 + NbMeasures * sequence1.Numerator;
-
-                // La première case ne sert qu'à l'affichage
-                // La position de la scrollbar doit tenir compte de la première case
-                // % de Largeur Cellule par rapport à la course de la scrollbar ?
-                // On dessine toutes ces cases : 1 + NbMeasures * Sequence1.Numerator
-                // Course de la scrollbar = Largeur1ereCellule +  NbMeasures * sequence1.Numerator * LargeurCellule
-                // soit : Course = LargeurCellule * (NbMeasures * sequence1.Numerator + 1)
-                // val = Largeur1ereCellule + (int)((_currentMeasure/(float)NbMeasures) * course);
-                // Largeur1ereCellule = Course/CellsNumber
-                val = (course/CellsNumber) + (int)((_currentMeasure / (float)NbMeasures) * course);
-
-                if ( positionHScrollBar.Minimum <= val && val <= positionHScrollBar.Maximum)
-                    positionHScrollBar.Value = val;
-
-
-                // ensure to Keep 1 measure on the left
-                if (chordAnalyserControl1.maxStaffWidth > pnlDisplay.Width)
-                {
-                    int W = chordAnalyserControl1.maxStaffWidth - offsetx - pnlDisplay.Width;
-
-                    if (offsetx > LargeurMesure)
-                    {
-                        if (offsetx < chordAnalyserControl1.maxStaffWidth - pnlDisplay.Width)
-                        {
-                            chordAnalyserControl1.OffsetX = offsetx - LargeurMesure;
-                        }
-                        else
-                        {
-                            chordAnalyserControl1.OffsetX = chordAnalyserControl1.maxStaffWidth - pnlDisplay.Width;
-                        }
-                    }
-                }
-
-                lblNumMeasure.Text = "Measure: " + _currentMeasure;
-            }
-            
-        }
+       
 
         /// <summary>
         /// Get time inside measure
@@ -651,6 +576,83 @@ namespace Karaboss
 
 
         #region positionHSCrollBar
+
+        /// <summary>
+        /// Display 
+        /// </summary>
+        /// <param name="pos"></param>
+        private void DisplayPositionHScrollBar(int pos)
+        {
+            // pos is in which measure?
+            int curmeasure = 1 + pos / _measurelen;
+
+            // Quel temps dans la mesure ?
+            //int rest = pos % _measurelen;
+            //int timeinmeasure = 1 + (int)((float)rest / sequence1.Time.Quarter);   // faux !!! pour 2 temps
+            int timeinmeasure = sequence1.Numerator - (int)((curmeasure * _measurelen - pos) / (_measurelen / sequence1.Numerator));
+
+            lblBeat.Text = timeinmeasure.ToString();
+
+            // change time in measure => draw cell in control
+            if (timeinmeasure != _currentTimeInMeasure)
+            {
+                _currentTimeInMeasure = timeinmeasure;
+                chordAnalyserControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
+            }
+
+
+            // Change measure => offset control
+            if (curmeasure != _currentMeasure)
+            {
+
+                //if (curmeasure != _currentMeasure)
+                _currentMeasure = curmeasure;
+
+                int val = 0;
+                
+                int LargeurCellule = (int)(chordAnalyserControl1.CellSize) + 1;
+                int LargeurMesure = LargeurCellule * sequence1.Numerator; // keep one measure on the left
+                int offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);
+
+                int course = (int)(positionHScrollBar.Maximum - positionHScrollBar.Minimum);
+                int CellsNumber = 1 + NbMeasures * sequence1.Numerator;
+
+                // La première case ne sert qu'à l'affichage
+                // La position de la scrollbar doit tenir compte de la première case
+                // % de Largeur Cellule par rapport à la course de la scrollbar ?
+                // On dessine toutes ces cases : 1 + NbMeasures * Sequence1.Numerator
+                // Course de la scrollbar = Largeur1ereCellule +  NbMeasures * sequence1.Numerator * LargeurCellule
+                // soit : Course = LargeurCellule * (NbMeasures * sequence1.Numerator + 1)
+                // val = Largeur1ereCellule + (int)((_currentMeasure/(float)NbMeasures) * course);
+                // Largeur1ereCellule = Course/CellsNumber
+                val = (course / CellsNumber) + (int)((_currentMeasure / (float)NbMeasures) * course);
+
+                if (positionHScrollBar.Minimum <= val && val <= positionHScrollBar.Maximum)
+                    positionHScrollBar.Value = val;
+
+
+                // ensure to Keep 1 measure on the left
+                if (chordAnalyserControl1.maxStaffWidth > pnlDisplay.Width)
+                {
+                    int W = chordAnalyserControl1.maxStaffWidth - offsetx - pnlDisplay.Width;
+
+                    if (offsetx > LargeurMesure)
+                    {
+                        if (offsetx < chordAnalyserControl1.maxStaffWidth - pnlDisplay.Width)
+                        {
+                            chordAnalyserControl1.OffsetX = offsetx - LargeurMesure;
+                        }
+                        else
+                        {
+                            chordAnalyserControl1.OffsetX = chordAnalyserControl1.maxStaffWidth - pnlDisplay.Width;
+                        }
+                    }
+                }
+
+                lblNumMeasure.Text = "Measure: " + _currentMeasure;
+            }
+
+        }
 
         private void SetScrollBarValues()
         {
