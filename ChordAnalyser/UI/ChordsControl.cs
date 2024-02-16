@@ -268,6 +268,11 @@ namespace ChordAnalyser.UI
             rect = new Rectangle(0, 0, (int)(_cellsize), (int)(_cellsize));
             g.FillRectangle(new SolidBrush(Color.Black), rect);
 
+            var src = new Bitmap(Resources.silence_white);
+            var bmp = new Bitmap((int)(src.Width * zoom), (int)(src.Height * zoom), PixelFormat.Format32bppPArgb);
+            g.DrawImage(src, new Rectangle(10, 10, bmp.Width, bmp.Height));
+
+
             x += (int)(_cellsize) + (_LinesWidth - 1);
 
             // ======================================================

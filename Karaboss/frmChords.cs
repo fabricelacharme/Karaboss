@@ -695,8 +695,10 @@ namespace Karaboss
                 sequencer1.Position = newstart;
                 scrolling = false;
             }
-            else
+            else if (e.Type != ScrollEventType.First)
             {
+                // Explain: remove ScrollEventType.First when using the keyboard to pause, start, rewind
+                // Without this, scrolling is set to true
                 scrolling = true;
             }
         }

@@ -90,5 +90,14 @@
   <ItemGroup>
     <None Include="Resources\Silence.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\silence_white.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\silence_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\silence_black.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
