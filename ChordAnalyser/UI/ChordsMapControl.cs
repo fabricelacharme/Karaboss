@@ -1,9 +1,11 @@
-﻿using Sanford.Multimedia.Midi;
+﻿using ChordAnalyser.Properties;
+using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -227,7 +229,7 @@ namespace ChordAnalyser.UI
         /// <param name="clip"></param>
         private void DrawGrid(Graphics g, Rectangle clip)
         {
-            int max = sequence1.Numerator - 1;
+            int max = 3;
 
             int _MeasureSeparatorWidth = 2;
             int _LinesWidth = 2;
@@ -246,15 +248,49 @@ namespace ChordAnalyser.UI
             int compteurmesure = -1;
 
             FillPen = new Pen(Color.Gray, _LinesWidth);
-            for (int i = 0; i < NbMeasures; i++)
+
+            // ********************************
+            // 1st place = false measuree
+            // ********************************
+            for (int j = 0; j < sequence1.Numerator - 1; j++)
+            {
+                g.DrawRectangle(FillPen, x, y, _cellsize, _cellsize);
+                rect = new Rectangle(x, 0, (int)(_cellsize), (int)(_cellsize));
+                g.FillRectangle(new SolidBrush(Color.Gray), rect);
+                x += (int)(_cellsize) + (_LinesWidth - 1);
+            }
+
+            // =====================================================
+            // 1ere case noire en plus de celles du morceau
+            //======================================================            
+            g.DrawRectangle(FillPen, x, 0, _cellsize, _cellsize);
+            rect = new Rectangle(x, 0, (int)(_cellsize), (int)(_cellsize));
+            g.FillRectangle(new SolidBrush(Color.Black), rect);
+
+            var src = new Bitmap(Resources.silence_white);
+            var bmp = new Bitmap((int)(src.Width * zoom), (int)(src.Height * zoom), PixelFormat.Format32bppPArgb);
+            g.DrawImage(src, new Rectangle(x + 10, 10, bmp.Width, bmp.Height));
+
+
+
+            // init variables
+            compteurmesure = 0;
+            x = ((int)(_cellsize) + (_LinesWidth - 1)) * sequence1.Numerator;
+
+            // ********************
+            // Begin at 2nd place
+            // ********************
+            for (int i = 1; i <= NbMeasures; i++)
             {
                 compteurmesure++;
-                if (compteurmesure > max)
+                if (compteurmesure > max)   // 4 measures per line
                 {
                     y +=  (int)_cellsize + 1;
                     x = 0;
                     compteurmesure = 0;
                 }
+                
+                
                 // Dessine autant de cases que le numerateur
                 for (int j = 0; j < sequence1.Numerator; j++)
                 {
@@ -279,25 +315,31 @@ namespace ChordAnalyser.UI
             // ====================================================
             // Ligne noire sur la dernière case de chaque mesure
             // ====================================================                        
-            x = 0;
+            x = sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1));
             y = 0;
             compteurmesure = -1;
 
-            for (int i = 0; i < NbMeasures; i++)
+            for (int i = 0; i <= NbMeasures + 1; i++)
             {
                 compteurmesure++;
                 if (compteurmesure > max)
                 {
                     y += (int)_cellsize + 1;
-                    x = 0;
+                    x = sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1));
                     compteurmesure = 0;
                 }
 
-                p1 = new Point(x, y);
-                p2 = new Point(x, y + (int)(_cellsize));
-                g.DrawLine(mesureSeparatorPen, p1, p2);
-                x += sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1));
+                if (i % (max + 1) != 0)
+                {
+                    p1 = new Point(x, y);
+                    p2 = new Point(x, y + (int)(_cellsize));
+                    g.DrawLine(mesureSeparatorPen, p1, p2);
+                    x += sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1));
+                }
             }
+
+             maxStaffHeight = y;
+             //maxStaffWidth = x;
 
         }
 
@@ -305,6 +347,7 @@ namespace ChordAnalyser.UI
 
 
         #region drawnotes 
+
         /// <summary>
         /// Draw the name of the notes
         /// </summary>
@@ -312,7 +355,97 @@ namespace ChordAnalyser.UI
         /// <param name="clip"></param>
         private void DrawNotes(Graphics g, Rectangle clip)
         {
+            int max = 3;
+            int compteurmesure = 0;
 
+            SolidBrush ChordBrush = new SolidBrush(Color.Black);
+            SolidBrush MeasureBrush = new SolidBrush(Color.Red);
+
+            Font fontChord = new Font("Arial", 16 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font fontMeasure = new Font("Arial", 12 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+
+            int _LinesWidth = 2;            
+            
+            // Start after the 1st false measure
+            int x = ((int)(_cellsize) + (_LinesWidth - 1)) * sequence1.Numerator;
+            int y_chord = ((int)(_cellsize) / 2) - (fontMeasure.Height / 2);
+            int y_symbol = 10;
+            int y_measurenumber = (int)(_cellsize) - fontMeasure.Height;
+
+            Point p1;
+
+            if (Gridchords != null)
+            {
+                (string, string) ttx;
+                string tx = string.Empty;
+                int Offset = 4;
+
+                var src = new Bitmap(Resources.silence_black);
+                var bmp = new Bitmap((int)(src.Width * zoom), (int)(src.Height * zoom), PixelFormat.Format32bppPArgb);
+
+                for (int i = 1; i <= Gridchords.Count; i++)
+                {
+
+                    compteurmesure++;
+                    if (compteurmesure > max)   // 4 measures per line
+                    {
+                        y_chord += (int)_cellsize + 1;
+                        y_symbol += (int)_cellsize + 1;
+                        y_measurenumber += (int)_cellsize + 1;
+                        x = 0;
+                        compteurmesure = 0;
+                    }
+
+                    // Chord name
+                    p1 = new Point(x + Offset, y_chord);
+
+                    ttx = Gridchords[i];
+                    tx = ttx.Item1;
+
+                    // If empty, draw symbol
+                    if (tx == EmptyChord)
+                    {
+                        g.DrawImage(src, new Rectangle(p1.X, y_symbol, bmp.Width, bmp.Height));
+
+                    }
+                    else
+                    {
+                        g.DrawString(tx, fontChord, ChordBrush, p1.X, p1.Y);
+                    }
+
+                    // Draw measure number
+                    tx = i.ToString();
+                    p1 = new Point(x + Offset, y_measurenumber);
+                    g.DrawString(tx, fontMeasure, MeasureBrush, p1.X, p1.Y);
+
+                    // ===============================
+                    // Second part of mesure
+                    // ==============================
+                    if (sequence1.Numerator % 2 == 0)
+                    {
+                        if (ttx.Item1 != ttx.Item2)
+                        {
+                            tx = ttx.Item2;
+                            int z = ((int)(_cellsize) + (_LinesWidth - 1)) * sequence1.Numerator / 2;
+
+                            // If empty, draw symbol
+                            if (tx == EmptyChord)
+                            {
+                                g.DrawImage(src, new Rectangle(p1.X + z, y_symbol, bmp.Width, bmp.Height));
+                            }
+                            else
+                            {
+                                g.DrawString(tx, fontChord, ChordBrush, p1.X + z, y_chord);
+                            }
+                        }
+                    }
+
+
+                    // Increment x (go to next measure)
+                    x += ((int)(_cellsize) + (_LinesWidth - 1)) * sequence1.Numerator;
+
+                }
+            }
         }
 
         #endregion drawnotes

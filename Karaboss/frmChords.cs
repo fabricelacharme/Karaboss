@@ -95,7 +95,7 @@ namespace Karaboss
 
         #endregion controls
 
-        private Panel pnlTop;
+        //private Panel pnlTop;
         private Panel pnlDisplayHorz;       // chords in horizontal mode
         private Panel pnlDisplayMap;        // chords in map mode
         private Panel pnlBottom;
@@ -193,31 +193,24 @@ namespace Karaboss
             timer1.Interval = 20;
             timer1.Tick += new EventHandler(timer1_Tick);
 
-            #region 1er TAB
+            #region Toolbar
 
-            #region Panel Top
-            pnlTop = new Panel();
-            pnlTop.Parent = this.tabPageDiagrams;
-            pnlTop.Location = new Point(0, 0);
-            pnlTop.Size = new Size(tabPageDiagrams.Width, 54);
-            pnlTop.BackColor = Color.FromArgb(70, 77, 95);
-            pnlTop.Dock = DockStyle.Top;
-            tabPageDiagrams.Controls.Add(pnlTop);
+            pnlToolbar.BackColor = Color.FromArgb(70, 77, 95);
 
             // Button Rewind
-            btnRewind = new NoSelectButton();            
+            btnRewind = new NoSelectButton();
             btnRewind.FlatAppearance.BorderSize = 0;
             btnRewind.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             btnRewind.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            btnRewind.FlatStyle = FlatStyle.Flat;   
-            btnRewind.Parent = pnlTop;
+            btnRewind.FlatStyle = FlatStyle.Flat;
+            btnRewind.Parent = pnlToolbar;
             btnRewind.Location = new Point(2, 2);
             btnRewind.Size = new Size(50, 50);
             btnRewind.Image = Properties.Resources.btn_black_prev;
             btnRewind.Click += new EventHandler(btnRewind_Click);
             btnRewind.MouseHover += new EventHandler(btnRewind_MouseHover);
             btnRewind.MouseLeave += new EventHandler(btnRewind_MouseLeave);
-            pnlTop.Controls.Add(btnRewind);
+            pnlToolbar.Controls.Add(btnRewind);
 
             // Button play
             btnPlay = new NoSelectButton();
@@ -225,44 +218,105 @@ namespace Karaboss
             btnPlay.FlatStyle = FlatStyle.Flat;
             btnPlay.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             btnPlay.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            btnPlay.Parent = pnlTop;
+            btnPlay.Parent = pnlToolbar;
             btnPlay.Location = new Point(2 + btnRewind.Width, 2);
             btnPlay.Size = new Size(50, 50);
             btnPlay.Image = Properties.Resources.btn_black_play;
             btnPlay.Click += new EventHandler(btnPlay_Click);
             btnPlay.MouseHover += new EventHandler(btnPlay_MouseHover);
             btnPlay.MouseLeave += new EventHandler(btnPlay_MouseLeave);
-            pnlTop.Controls.Add(btnPlay);    
+            pnlToolbar.Controls.Add(btnPlay);
 
 
             btnZoomPlus = new NoSelectButton();
-            btnZoomPlus.Parent = pnlTop;
+            btnZoomPlus.Parent = pnlToolbar;
             btnZoomPlus.Location = new Point(2 + btnPlay.Left + btnPlay.Width, 2);
             btnZoomPlus.Size = new Size(50, 50);
             btnZoomPlus.Text = "+";
             btnZoomPlus.Click += new EventHandler(btnZoomPlus_Click);
-            pnlTop.Controls.Add(btnZoomPlus);
+            pnlToolbar.Controls.Add(btnZoomPlus);
 
             btnZoomMinus = new NoSelectButton();
-            btnZoomMinus.Parent = pnlTop;
+            btnZoomMinus.Parent = pnlToolbar;
             btnZoomMinus.Location = new Point(2 + btnZoomPlus.Left + btnZoomPlus.Width, 2);
             btnZoomMinus.Size = new Size(50, 50);
             btnZoomMinus.Text = "-";
             btnZoomMinus.Click += new EventHandler(btnZoomMinus_Click);
-            pnlTop.Controls.Add(btnZoomMinus);
+            pnlToolbar.Controls.Add(btnZoomMinus);
 
-            #endregion Panel Top
+
+            #endregion Toolbar
+
+
+            #region 1er TAB
+          
+           
+
+
+            #region Panel Display horizontal chords
+            pnlDisplayHorz = new Panel();
+            pnlDisplayHorz.Parent = tabPageDiagrams;
+            pnlDisplayHorz.Location = new Point(tabPageDiagrams.Margin.Left, tabPageDiagrams.Margin.Top);            
+            pnlDisplayHorz.Size = new Size(tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, 150);
+            //pnlDisplayHorz.BackColor = Color.FromArgb(70, 77, 95);            
+            pnlDisplayHorz.BackColor = Color.Chocolate;
+            tabPageDiagrams.Controls.Add(pnlDisplayHorz);
+            #endregion Panel Display horizontal chords
+
+
+            
+
+            #region ChordControl
+            chordAnalyserControl1 = new ChordsControl();
+            chordAnalyserControl1.Parent = pnlDisplayHorz;
+            chordAnalyserControl1.Sequence1 = this.sequence1;
+            chordAnalyserControl1.Size = new Size(pnlDisplayHorz.Width, 80);
+            chordAnalyserControl1.Location = new Point(0, 0);
+            chordAnalyserControl1.WidthChanged += new WidthChangedEventHandler(chordAnalyserControl1_WidthChanged);
+            chordAnalyserControl1.HeightChanged += new HeightChangedEventHandler(chordAnalyserControl1_HeightChanged);
+            chordAnalyserControl1.MouseDown += new MouseEventHandler(chordAnalyserControl1_MouseDown); 
+            chordAnalyserControl1.Cursor = Cursors.Hand;
+            pnlDisplayHorz.Controls.Add(chordAnalyserControl1);
+            #endregion
+
+
+            #region positionHScrollBar
+            positionHScrollBar = new ColorSlider.ColorSlider();
+            positionHScrollBar.Parent = pnlDisplayHorz;
+            positionHScrollBar.ThumbImage = Properties.Resources.BTN_Thumb_Blue;
+            positionHScrollBar.Size = new Size(pnlDisplayHorz.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, 20);
+            positionHScrollBar.Location = new Point(0, chordAnalyserControl1.Height);
+            positionHScrollBar.Value = 0;
+            positionHScrollBar.Minimum = 0;
+
+            // Set maximum & visibility
+            SetScrollBarValues();
+
+            positionHScrollBar.TickStyle = TickStyle.None;
+            positionHScrollBar.SmallChange = 1;
+            positionHScrollBar.LargeChange = 1 + NbMeasures * sequence1.Numerator;
+            positionHScrollBar.ShowDivisionsText = false;
+            positionHScrollBar.ShowSmallScale = false;
+            positionHScrollBar.MouseWheelBarPartitions = 1 + NbMeasures * sequence1.Numerator;
+            positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(PositionHScrollBar_Scroll);
+            pnlDisplayHorz.Controls.Add(positionHScrollBar);
+
+            pnlDisplayHorz.Height = chordAnalyserControl1.Height + positionHScrollBar.Height;
+
+            #endregion
 
 
             #region Panel Bottom
             pnlBottom = new Panel();
             pnlBottom.Parent = this.tabPageDiagrams;
-            pnlBottom.Location = new Point(0, 0);
-            pnlBottom.Size = new Size(tabPageDiagrams.Width, 20);
+            pnlBottom.Location = new Point(tabPageDiagrams.Margin.Left, pnlDisplayHorz.Top + pnlDisplayHorz.Height);
+            //pnlBottom.Size = new Size(tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height);
+            pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height;
             pnlBottom.BackColor = Color.Red;
             pnlBottom.Dock = DockStyle.Bottom;
+            //pnlBottom.Dock = DockStyle.Fill;
             tabPageDiagrams.Controls.Add(pnlBottom);
-            
+
             lblNumMeasure = new Label();
             lblNumMeasure.Location = new Point(1, 1);
             lblNumMeasure.Text = "measure";
@@ -289,35 +343,8 @@ namespace Karaboss
 
             #endregion
 
-
-            #region Panel Display horizontal chords
-            pnlDisplayHorz = new Panel();
-            pnlDisplayHorz.Parent = tabPageDiagrams;
-            pnlDisplayHorz.Location = new Point(tabPageDiagrams.Margin.Left, pnlTop.Height);
-            pnlDisplayHorz.Size = new Size(pnlTop.Width, tabPageDiagrams.Height - pnlTop.Height - pnlBottom.Height);
-            pnlDisplayHorz.BackColor = Color.FromArgb(70, 77, 95);            
-            tabPageDiagrams.Controls.Add(pnlDisplayHorz);
-            #endregion Panel Display horizontal chords
-
-
-
-
-            // MIDDLE
-
-            #region ChordControl
-            chordAnalyserControl1 = new ChordsControl();
-            chordAnalyserControl1.Parent = pnlDisplayHorz;
-            chordAnalyserControl1.Sequence1 = this.sequence1;
-            chordAnalyserControl1.Size = new Size(pnlDisplayHorz.Width, 80);
-            chordAnalyserControl1.Location = new Point(0, 0);
-            chordAnalyserControl1.WidthChanged += new WidthChangedEventHandler(chordAnalyserControl1_WidthChanged);
-            chordAnalyserControl1.HeightChanged += new HeightChangedEventHandler(chordAnalyserControl1_HeightChanged);
-            chordAnalyserControl1.MouseDown += new MouseEventHandler(chordAnalyserControl1_MouseDown); 
-            chordAnalyserControl1.Cursor = Cursors.Hand;
-            pnlDisplayHorz.Controls.Add(chordAnalyserControl1);
-            #endregion
-
             #endregion 1er TAB
+
 
 
             #region 2eme TAB
@@ -329,6 +356,7 @@ namespace Karaboss
             pnlDisplayMap.Size = new Size(tabPageOverview.Width, tabPageOverview.Height - txtOverview.Height);
             pnlDisplayMap.Dock = DockStyle.Fill;
             pnlDisplayMap.BackColor = Color.White;
+            pnlDisplayMap.AutoScroll = true;            
             tabPageOverview.Controls.Add(pnlDisplayMap);
             #endregion display map chords
 
@@ -349,28 +377,7 @@ namespace Karaboss
 
             #endregion 2eme TAB
 
-            #region positionHScrollBar
-            positionHScrollBar = new ColorSlider.ColorSlider();
-            positionHScrollBar.Parent = pnlDisplayHorz;
-            positionHScrollBar.ThumbImage =  Properties.Resources.BTN_Thumb_Blue;            
-            positionHScrollBar.Size = new Size(pnlDisplayHorz.Width, 20);
-            positionHScrollBar.Location = new Point(0, chordAnalyserControl1.Height);
-            positionHScrollBar.Value = 0;
-            positionHScrollBar.Minimum = 0;
-
-            // Set maximum & visibility
-            SetScrollBarValues();
-
-            positionHScrollBar.TickStyle = TickStyle.None;
-            positionHScrollBar.SmallChange = 1;
-            positionHScrollBar.LargeChange = 1 + NbMeasures * sequence1.Numerator;
-            positionHScrollBar.ShowDivisionsText = false;
-            positionHScrollBar.ShowSmallScale = false;
-            positionHScrollBar.MouseWheelBarPartitions = 1 + NbMeasures * sequence1.Numerator;
-            positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(PositionHScrollBar_Scroll);            
-            pnlDisplayHorz.Controls.Add(positionHScrollBar);
-            
-            #endregion
+ 
         }
 
         private void ChordMapControl1_MouseDown(object sender, MouseEventArgs e)
@@ -761,6 +768,10 @@ namespace Karaboss
         private void chordAnalyserControl1_HeightChanged(object sender, int value)
         {
             positionHScrollBar.Location = new Point(0, chordAnalyserControl1.Height);
+            pnlDisplayHorz.Height = chordAnalyserControl1.Height + positionHScrollBar.Height;
+
+            pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height;
+
         }
 
         #endregion positionHScrollBar
@@ -792,6 +803,7 @@ namespace Karaboss
 
             // Display Chords in boxes
             this.chordAnalyserControl1.Gridchords = Gridchords;
+            this.ChordMapControl1.Gridchords = Gridchords;
 
 
         }
@@ -895,17 +907,24 @@ namespace Karaboss
 
         private void frmChords_Resize(object sender, EventArgs e)
         {
+            tabChordsControl.Top = pnlToolbar.Height;
+            tabChordsControl.Width = this.ClientSize.Width;
+            tabChordsControl.Height = this.ClientSize.Height;
+
+
             if (pnlDisplayHorz != null)
             {
-                pnlDisplayHorz.Width = pnlTop.Width;
-                pnlDisplayHorz.Height = tabPageDiagrams.Height - pnlTop.Height - pnlBottom.Height;
+                pnlDisplayHorz.Width = tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right;
+                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height;
             }
 
             if (chordAnalyserControl1 != null)
             {
                 positionHScrollBar.Width = (pnlDisplayHorz.Width > chordAnalyserControl1.Width ? chordAnalyserControl1.Width : pnlDisplayHorz.Width);
-                //positionHScrollBar.Location = chordAnalyserControl1.Location.X;
+                positionHScrollBar.Top = chordAnalyserControl1.Top + chordAnalyserControl1.Height;
             }
+
+            
 
             // Set maximum & visibility
             SetScrollBarValues();
