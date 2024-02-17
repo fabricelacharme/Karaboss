@@ -1,21 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ChordAnalyser.Properties;
 using Sanford.Multimedia.Midi;
-using Sanford.Multimedia.Midi.PianoRoll;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
-using static ChordsAnalyser.cscales.scales;
 
 namespace ChordAnalyser.UI
 {
@@ -142,7 +131,8 @@ namespace ChordAnalyser.UI
                 _zoom = value;
                 _cellsize = 80 * zoom;
                 this.Height = (int)(_cellsize);
-                HeightChanged(this, this.Height);
+                if (HeightChanged != null)
+                    HeightChanged(this, this.Height);
                 pnlCanvas.Invalidate();                               
             }
         }
@@ -179,10 +169,7 @@ namespace ChordAnalyser.UI
         #endregion events
 
         public ChordsControl()
-        {
-
-            
-
+        {            
             // Draw pnlCanvas
             DrawCanvas();         
 
@@ -209,8 +196,6 @@ namespace ChordAnalyser.UI
         {
             pnlCanvas.Invalidate();
         }
-
-
 
         private void DrawCanvas()
         {
@@ -241,9 +226,7 @@ namespace ChordAnalyser.UI
             Color TimeLineColor = Color.White;
 
             Pen mesureSeparatorPen = new Pen(Color.Black, _MeasureSeparatorWidth);
-            Pen FillPen = new Pen(TimeLineColor, _LinesWidth);
-
-            //SolidBrush FillBrush;            
+            Pen FillPen = new Pen(TimeLineColor, _LinesWidth);                       
             Rectangle rect;
 
             Point p1;
@@ -262,7 +245,7 @@ namespace ChordAnalyser.UI
             int x = 0;
 
             // =====================================================
-            // 1ere case noire en plus ce celles du morceau
+            // 1ere case noire en plus de celles du morceau
             //======================================================            
             g.DrawRectangle(FillPen, 0, 0, _cellsize, _cellsize);
             rect = new Rectangle(0, 0, (int)(_cellsize), (int)(_cellsize));
@@ -318,9 +301,7 @@ namespace ChordAnalyser.UI
                 p2 = new Point(x, clip.Y + (int)(_cellsize));
                 g.DrawLine(mesureSeparatorPen, p1, p2);
                 x += sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1));
-
             }
-
 
             maxStaffWidth = x;
         }
@@ -475,6 +456,12 @@ namespace ChordAnalyser.UI
             //throw new NotImplementedException();
         }
 
+
+        #endregion Mouse
+
+
+        #region paint
+
         private void pnlCanvas_Paint(object sender, PaintEventArgs e)
         {
             Rectangle clip =
@@ -492,13 +479,14 @@ namespace ChordAnalyser.UI
             {
                 DrawGrid(g, clip);
 
-                DrawNotes(g, clip);                
+                DrawNotes(g, clip);
 
                 g.TranslateTransform(clip.X, 0);
 
             }
         }
-        #endregion Mouse
+
+        #endregion paint
 
 
         #region Midi

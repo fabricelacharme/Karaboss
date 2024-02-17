@@ -67,6 +67,12 @@
     <Compile Include="UI\ChordsControl.Designer.cs">
       <DependentUpon>ChordsControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\ChordsMapControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\ChordsMapControl.Designer.cs">
+      <DependentUpon>ChordsMapControl.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ColorSlider\ColorSlider.csproj">

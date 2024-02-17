@@ -72,12 +72,12 @@
             // 
             // txtOverview
             // 
-            this.txtOverview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtOverview.Location = new System.Drawing.Point(3, 3);
+            this.txtOverview.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.txtOverview.Location = new System.Drawing.Point(3, 232);
             this.txtOverview.Multiline = true;
             this.txtOverview.Name = "txtOverview";
             this.txtOverview.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtOverview.Size = new System.Drawing.Size(786, 418);
+            this.txtOverview.Size = new System.Drawing.Size(786, 189);
             this.txtOverview.TabIndex = 1;
             // 
             // tabPageEdit

@@ -77,7 +77,8 @@ namespace Karaboss
 
         #region controls
         private Sequence sequence1 = new Sequence();
-        private ChordAnalyser.UI.ChordsControl chordAnalyserControl1;
+        private ChordsControl chordAnalyserControl1;
+        private ChordsMapControl ChordMapControl1;
         private OutputDevice outDevice;
         private Sequencer sequencer1 = new Sequencer();
 
@@ -95,7 +96,8 @@ namespace Karaboss
         #endregion controls
 
         private Panel pnlTop;
-        private Panel pnlDisplay;
+        private Panel pnlDisplayHorz;       // chords in horizontal mode
+        private Panel pnlDisplayMap;        // chords in map mode
         private Panel pnlBottom;
 
         private ColorSlider.ColorSlider positionHScrollBar;
@@ -191,7 +193,7 @@ namespace Karaboss
             timer1.Interval = 20;
             timer1.Tick += new EventHandler(timer1_Tick);
 
-
+            #region 1er TAB
 
             #region Panel Top
             pnlTop = new Panel();
@@ -249,8 +251,8 @@ namespace Karaboss
             btnZoomMinus.Click += new EventHandler(btnZoomMinus_Click);
             pnlTop.Controls.Add(btnZoomMinus);
 
+            #endregion Panel Top
 
-            #endregion
 
             #region Panel Bottom
             pnlBottom = new Panel();
@@ -287,37 +289,71 @@ namespace Karaboss
 
             #endregion
 
-            #region Panel Display
-            pnlDisplay = new Panel();
-            pnlDisplay.Parent = tabPageDiagrams;
-            pnlDisplay.Location = new Point(tabPageDiagrams.Margin.Left, pnlTop.Height);
-            pnlDisplay.Size = new Size(pnlTop.Width, tabPageDiagrams.Height - pnlTop.Height - pnlBottom.Height);
-            pnlDisplay.BackColor = Color.FromArgb(70, 77, 95);            
-            tabPageDiagrams.Controls.Add(pnlDisplay);
-            #endregion
+
+            #region Panel Display horizontal chords
+            pnlDisplayHorz = new Panel();
+            pnlDisplayHorz.Parent = tabPageDiagrams;
+            pnlDisplayHorz.Location = new Point(tabPageDiagrams.Margin.Left, pnlTop.Height);
+            pnlDisplayHorz.Size = new Size(pnlTop.Width, tabPageDiagrams.Height - pnlTop.Height - pnlBottom.Height);
+            pnlDisplayHorz.BackColor = Color.FromArgb(70, 77, 95);            
+            tabPageDiagrams.Controls.Add(pnlDisplayHorz);
+            #endregion Panel Display horizontal chords
+
+
 
 
             // MIDDLE
 
             #region ChordControl
             chordAnalyserControl1 = new ChordsControl();
-            chordAnalyserControl1.Parent = pnlDisplay;
+            chordAnalyserControl1.Parent = pnlDisplayHorz;
             chordAnalyserControl1.Sequence1 = this.sequence1;
-            chordAnalyserControl1.Size = new Size(pnlDisplay.Width, 80);
+            chordAnalyserControl1.Size = new Size(pnlDisplayHorz.Width, 80);
             chordAnalyserControl1.Location = new Point(0, 0);
             chordAnalyserControl1.WidthChanged += new WidthChangedEventHandler(chordAnalyserControl1_WidthChanged);
             chordAnalyserControl1.HeightChanged += new HeightChangedEventHandler(chordAnalyserControl1_HeightChanged);
             chordAnalyserControl1.MouseDown += new MouseEventHandler(chordAnalyserControl1_MouseDown); 
             chordAnalyserControl1.Cursor = Cursors.Hand;
-            pnlDisplay.Controls.Add(chordAnalyserControl1);
+            pnlDisplayHorz.Controls.Add(chordAnalyserControl1);
             #endregion
 
+            #endregion 1er TAB
+
+
+            #region 2eme TAB
+
+            #region display map chords
+            pnlDisplayMap = new Panel();
+            pnlDisplayMap.Parent = tabPageOverview;
+            pnlDisplayMap.Location = new Point(tabPageOverview.Margin.Left, tabPageOverview.Margin.Top);
+            pnlDisplayMap.Size = new Size(tabPageOverview.Width, tabPageOverview.Height - txtOverview.Height);
+            pnlDisplayMap.Dock = DockStyle.Fill;
+            pnlDisplayMap.BackColor = Color.White;
+            tabPageOverview.Controls.Add(pnlDisplayMap);
+            #endregion display map chords
+
+
+            #region ChordMapControl
+            ChordMapControl1 = new ChordsMapControl();
+            ChordMapControl1.Parent = pnlDisplayMap;
+            ChordMapControl1.Sequence1 = this.sequence1;
+            ChordMapControl1.Size = new Size(pnlDisplayMap.Width, pnlDisplayMap.Height);
+            ChordMapControl1.Dock = DockStyle.Fill;
+            ChordMapControl1.MouseDown += new MouseEventHandler(ChordMapControl1_MouseDown);
+            ChordMapControl1.Cursor = Cursors.Hand;
+            pnlDisplayMap.Controls.Add(ChordMapControl1);
+
+
+            #endregion ChordMapControl
+
+
+            #endregion 2eme TAB
 
             #region positionHScrollBar
             positionHScrollBar = new ColorSlider.ColorSlider();
-            positionHScrollBar.Parent = pnlDisplay;
+            positionHScrollBar.Parent = pnlDisplayHorz;
             positionHScrollBar.ThumbImage =  Properties.Resources.BTN_Thumb_Blue;            
-            positionHScrollBar.Size = new Size(pnlDisplay.Width, 20);
+            positionHScrollBar.Size = new Size(pnlDisplayHorz.Width, 20);
             positionHScrollBar.Location = new Point(0, chordAnalyserControl1.Height);
             positionHScrollBar.Value = 0;
             positionHScrollBar.Minimum = 0;
@@ -332,12 +368,15 @@ namespace Karaboss
             positionHScrollBar.ShowSmallScale = false;
             positionHScrollBar.MouseWheelBarPartitions = 1 + NbMeasures * sequence1.Numerator;
             positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(PositionHScrollBar_Scroll);            
-            pnlDisplay.Controls.Add(positionHScrollBar);
+            pnlDisplayHorz.Controls.Add(positionHScrollBar);
             
             #endregion
         }
 
-     
+        private void ChordMapControl1_MouseDown(object sender, MouseEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
 
         private void btnZoomMinus_Click(object sender, EventArgs e)
         {
@@ -632,19 +671,19 @@ namespace Karaboss
 
 
                 // ensure to Keep 1 measure on the left
-                if (chordAnalyserControl1.maxStaffWidth > pnlDisplay.Width)
+                if (chordAnalyserControl1.maxStaffWidth > pnlDisplayHorz.Width)
                 {
-                    int W = chordAnalyserControl1.maxStaffWidth - offsetx - pnlDisplay.Width;
+                    int W = chordAnalyserControl1.maxStaffWidth - offsetx - pnlDisplayHorz.Width;
 
                     if (offsetx > LargeurMesure)
                     {
-                        if (offsetx < chordAnalyserControl1.maxStaffWidth - pnlDisplay.Width)
+                        if (offsetx < chordAnalyserControl1.maxStaffWidth - pnlDisplayHorz.Width)
                         {
                             chordAnalyserControl1.OffsetX = offsetx - LargeurMesure;
                         }
                         else
                         {
-                            chordAnalyserControl1.OffsetX = chordAnalyserControl1.maxStaffWidth - pnlDisplay.Width;
+                            chordAnalyserControl1.OffsetX = chordAnalyserControl1.maxStaffWidth - pnlDisplayHorz.Width;
                         }
                     }
                 }
@@ -656,22 +695,22 @@ namespace Karaboss
 
         private void SetScrollBarValues()
         {
-            if (pnlDisplay == null || chordAnalyserControl1 == null)
+            if (pnlDisplayHorz == null || chordAnalyserControl1 == null)
                 return;
 
             // Width of control
             int W = chordAnalyserControl1.maxStaffWidth;
 
-            if (W <= pnlDisplay.Width)
+            if (W <= pnlDisplayHorz.Width)
             {
                 positionHScrollBar.Visible = false;
                 positionHScrollBar.Maximum = 0;
                 chordAnalyserControl1.OffsetX = 0;
                 positionHScrollBar.Value = 0;
             }
-            else if (W > pnlDisplay.Width)
+            else if (W > pnlDisplayHorz.Width)
             {
-                positionHScrollBar.Maximum = W - pnlDisplay.Width;
+                positionHScrollBar.Maximum = W - pnlDisplayHorz.Width;
                 positionHScrollBar.Visible = true;
             }
 
@@ -712,7 +751,7 @@ namespace Karaboss
         /// <param name="value"></param>
         private void chordAnalyserControl1_WidthChanged(object sender, int value)
         {
-            positionHScrollBar.Width = (pnlDisplay.Width > chordAnalyserControl1.Width ? chordAnalyserControl1.Width : pnlDisplay.Width);
+            positionHScrollBar.Width = (pnlDisplayHorz.Width > chordAnalyserControl1.Width ? chordAnalyserControl1.Width : pnlDisplayHorz.Width);
 
             // Set maximum & visibility
             SetScrollBarValues();
@@ -856,15 +895,15 @@ namespace Karaboss
 
         private void frmChords_Resize(object sender, EventArgs e)
         {
-            if (pnlDisplay != null)
+            if (pnlDisplayHorz != null)
             {
-                pnlDisplay.Width = pnlTop.Width;
-                pnlDisplay.Height = tabPageDiagrams.Height - pnlTop.Height - pnlBottom.Height;
+                pnlDisplayHorz.Width = pnlTop.Width;
+                pnlDisplayHorz.Height = tabPageDiagrams.Height - pnlTop.Height - pnlBottom.Height;
             }
 
             if (chordAnalyserControl1 != null)
             {
-                positionHScrollBar.Width = (pnlDisplay.Width > chordAnalyserControl1.Width ? chordAnalyserControl1.Width : pnlDisplay.Width);
+                positionHScrollBar.Width = (pnlDisplayHorz.Width > chordAnalyserControl1.Width ? chordAnalyserControl1.Width : pnlDisplayHorz.Width);
                 //positionHScrollBar.Location = chordAnalyserControl1.Location.X;
             }
 
