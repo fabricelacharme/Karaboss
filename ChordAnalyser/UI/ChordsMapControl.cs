@@ -295,10 +295,10 @@ namespace ChordAnalyser.UI
                 for (int j = 0; j < sequence1.Numerator; j++)
                 {
                     // Draw played cell in gray
-                    if (i == _currentmeasure - 1 && j == _currentTimeInMeasure - 1 && _currentpos > 0)
+                    if (i == _currentmeasure && j == _currentTimeInMeasure - 1 && _currentpos > 0)
                     {
                         g.DrawRectangle(FillPen, x, y, _cellsize, _cellsize);
-                        rect = new Rectangle(x, 0, (int)(_cellsize), (int)(_cellsize));
+                        rect = new Rectangle(x, y, (int)(_cellsize), (int)(_cellsize));
                         g.FillRectangle(new SolidBrush(Color.Gray), rect);
 
                     }
@@ -338,7 +338,7 @@ namespace ChordAnalyser.UI
                 }
             }
 
-             maxStaffHeight = (int)( ((int)_cellsize + 1) *   (1 +  Math.Ceiling((double)((NbMeasures + 1)/(max + 1)) )   )   );
+             maxStaffHeight = (int)( ((int)_cellsize + 1) *   (1 +  Math.Ceiling((double)((NbMeasures + 1)/(max + 1)))));
              maxStaffWidth = (sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1))) * (max + 1);
 
         }
@@ -451,6 +451,23 @@ namespace ChordAnalyser.UI
         #endregion drawnotes
 
 
+        #region public
+        /// <summary>
+        /// Paint black current time played
+        /// </summary>
+        /// <param name="pos"></param>
+        public void DisplayNotes(int pos, int measure, int timeinmeasure)
+        {
+            _currentpos = pos;
+            _currentmeasure = measure;
+            _currentTimeInMeasure = timeinmeasure;
+
+
+            this.Redraw();
+        }
+        #endregion public
+
+
         #region mouse
         private void pnlCanvas_MouseLeave(object sender, EventArgs e)
         {
@@ -479,15 +496,16 @@ namespace ChordAnalyser.UI
         private void pnlCanvas_Paint(object sender, PaintEventArgs e)
         {
             Rectangle clip =
-                 new Rectangle((int)(_offsety),
-                 (int)(e.ClipRectangle.Y),
+                 new Rectangle(
+                 (int)(e.ClipRectangle.X),
+                 (int)(_offsety),
                  (int)(e.ClipRectangle.Width),
                  (int)(e.ClipRectangle.Height));
 
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            g.TranslateTransform(-clip.X, 0);
+            g.TranslateTransform(0, -clip.Y);
 
             if (sequence1 != null)
             {
@@ -495,13 +513,14 @@ namespace ChordAnalyser.UI
 
                 DrawNotes(g, clip);
 
-                g.TranslateTransform(clip.X, 0);
+                g.TranslateTransform(0, clip.Y);
 
             }
         }
 
 
         #endregion paint
+
 
         #region Midi
 

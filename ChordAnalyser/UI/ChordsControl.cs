@@ -283,7 +283,7 @@ namespace ChordAnalyser.UI
                     }
                     else
                     {
-                        // Draw other celles in white
+                        // Draw other cells in white
                         //g.DrawRectangle(FillPen, clip.X + x, clip.Y, _TimeLineHeight, _TimeLineHeight);
                         g.DrawRectangle(FillPen, x, 0, _cellsize, _cellsize);
                     }
@@ -307,26 +307,7 @@ namespace ChordAnalyser.UI
         }
 
 
-        #endregion Draw Canvas
-
-
-        #region public
-
-        /// <summary>
-        /// Paint black current time played
-        /// </summary>
-        /// <param name="pos"></param>
-        public void DisplayNotes(int pos, int measure, int timeinmeasure)
-        {
-            _currentpos = pos;
-            _currentmeasure = measure;
-            _currentTimeInMeasure = timeinmeasure;
-
-            
-            this.Redraw();
-        }
-
-        #endregion public
+        #endregion Draw Canvas    
 
 
         #region drawnotes   
@@ -415,6 +396,25 @@ namespace ChordAnalyser.UI
         #endregion drawnotes
 
 
+        #region public
+
+        /// <summary>
+        /// Paint black current time played
+        /// </summary>
+        /// <param name="pos"></param>
+        public void DisplayNotes(int pos, int measure, int timeinmeasure)
+        {
+            _currentpos = pos;
+            _currentmeasure = measure;
+            _currentTimeInMeasure = timeinmeasure;
+
+
+            this.Redraw();
+        }
+
+        #endregion public
+
+
         #region Protected events
 
         protected override void OnResize(EventArgs e)
@@ -431,8 +431,6 @@ namespace ChordAnalyser.UI
 
         #endregion Protected events
    
-
-
 
         #region Mouse
         private void pnlCanvas_MouseLeave(object sender, EventArgs e)
@@ -465,7 +463,8 @@ namespace ChordAnalyser.UI
         private void pnlCanvas_Paint(object sender, PaintEventArgs e)
         {
             Rectangle clip =
-                new Rectangle((int)(_offsetx),
+                new Rectangle(
+                (int)(_offsetx),
                 (int)(e.ClipRectangle.Y),
                 (int)(e.ClipRectangle.Width),
                 (int)(e.ClipRectangle.Height));

@@ -112,6 +112,7 @@ namespace Karaboss
         private int NbMeasures;
         private int _currentMeasure = -1;
         private int _currentTimeInMeasure = -1;
+        private int _currentLine = 1;
 
         #endregion private
 
@@ -616,9 +617,10 @@ namespace Karaboss
             // pos is in which measure?
             int curmeasure = 1 + pos / _measurelen;
 
+            int curline = 0;
+            
+
             // Quel temps dans la mesure ?
-            //int rest = pos % _measurelen;
-            //int timeinmeasure = 1 + (int)((float)rest / sequence1.Time.Quarter);   // faux !!! pour 2 temps
             int timeinmeasure = sequence1.Numerator - (int)((curmeasure * _measurelen - pos) / (_measurelen / sequence1.Numerator));
 
             lblBeat.Text = timeinmeasure.ToString();
@@ -627,7 +629,10 @@ namespace Karaboss
             if (timeinmeasure != _currentTimeInMeasure)
             {
                 _currentTimeInMeasure = timeinmeasure;
+                
+                // DRaw gray cell for played note
                 chordAnalyserControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
+                ChordMapControl1.DisplayNotes(pos,curmeasure,timeinmeasure);
             }
 
 
@@ -643,6 +648,10 @@ namespace Karaboss
                 int LargeurCellule = (int)(chordAnalyserControl1.CellSize) + 1;
                 int LargeurMesure = LargeurCellule * sequence1.Numerator; // keep one measure on the left
                 int offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);
+                
+                // which line ?                                
+                curline = (int)(Math.Ceiling((double)(_currentMeasure + 1) / 4));
+                
 
                 int course = (int)(positionHScrollBar.Maximum - positionHScrollBar.Minimum);
                 int CellsNumber = 1 + NbMeasures * sequence1.Numerator;
@@ -663,9 +672,8 @@ namespace Karaboss
 
                 // ensure to Keep 1 measure on the left
                 if (chordAnalyserControl1.maxStaffWidth > pnlDisplayHorz.Width)
-                {
-                    int W = chordAnalyserControl1.maxStaffWidth - offsetx - pnlDisplayHorz.Width;
-
+                {                    
+                    // offset horizontal
                     if (offsetx > LargeurMesure)
                     {
                         if (offsetx < chordAnalyserControl1.maxStaffWidth - pnlDisplayHorz.Width)
@@ -676,10 +684,24 @@ namespace Karaboss
                         {
                             chordAnalyserControl1.OffsetX = chordAnalyserControl1.maxStaffWidth - pnlDisplayHorz.Width;
                         }
-                    }
+                    }                    
                 }
 
+                // Change line => offset Chord map
+                if (curline != _currentLine)
+                {
+                    _currentLine = curline;
+
+                    
+                    if (ChordMapControl1.maxStaffHeight > pnlDisplayMap.Height)
+                    {
+                        // offset vertical
+                        ChordMapControl1.OffsetY = (curline - 1) * LargeurCellule - LargeurCellule;
+                    }
+                }
+                
                 lblNumMeasure.Text = "Measure: " + _currentMeasure;
+
             }
 
         }
@@ -1248,8 +1270,12 @@ namespace Karaboss
                 _currentMeasure = -1;
                 _currentTimeInMeasure = -1;
                 positionHScrollBar.Value = positionHScrollBar.Minimum;
+                
                 chordAnalyserControl1.OffsetX = 0;
                 chordAnalyserControl1.DisplayNotes(0, -1, -1);
+
+                ChordMapControl1.OffsetY = 0;
+                ChordMapControl1.DisplayNotes(0, -1, -1);
 
                 laststart = 0;
                 scrolling = false;
