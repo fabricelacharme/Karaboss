@@ -353,8 +353,8 @@ namespace Karaboss
             pnlDisplayMap = new Panel();
             pnlDisplayMap.Parent = tabPageOverview;
             pnlDisplayMap.Location = new Point(tabPageOverview.Margin.Left, tabPageOverview.Margin.Top);
-            pnlDisplayMap.Size = new Size(tabPageOverview.Width, tabPageOverview.Height - txtOverview.Height);
-            pnlDisplayMap.Dock = DockStyle.Fill;
+            pnlDisplayMap.Size = new Size(tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right, tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom);
+            //pnlDisplayMap.Dock = DockStyle.Fill;
             pnlDisplayMap.BackColor = Color.White;
             pnlDisplayMap.AutoScroll = true;            
             tabPageOverview.Controls.Add(pnlDisplayMap);
@@ -364,9 +364,13 @@ namespace Karaboss
             #region ChordMapControl
             ChordMapControl1 = new ChordsMapControl();
             ChordMapControl1.Parent = pnlDisplayMap;
+            ChordMapControl1.Location = new Point(0, 0);
             ChordMapControl1.Sequence1 = this.sequence1;
-            ChordMapControl1.Size = new Size(pnlDisplayMap.Width, pnlDisplayMap.Height);
-            ChordMapControl1.Dock = DockStyle.Fill;
+            //ChordMapControl1.Size = new Size(pnlDisplayMap.Width, pnlDisplayMap.Height);
+            ChordMapControl1.Size = new Size(400, 200);
+            //ChordMapControl1.Dock = DockStyle.Fill;
+            ChordMapControl1.WidthChanged += new WidthChangedEventHandler(ChordMapControl1_WidthChanged);
+            ChordMapControl1.HeightChanged += new HeightChangedEventHandler(ChordMapControl1_HeightChanged);            
             ChordMapControl1.MouseDown += new MouseEventHandler(ChordMapControl1_MouseDown);
             ChordMapControl1.Cursor = Cursors.Hand;
             pnlDisplayMap.Controls.Add(ChordMapControl1);
@@ -380,43 +384,12 @@ namespace Karaboss
  
         }
 
-        private void ChordMapControl1_MouseDown(object sender, MouseEventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
 
-        private void btnZoomMinus_Click(object sender, EventArgs e)
-        {
-            this.chordAnalyserControl1.zoom -= (float)0.1;
-        }
+        #endregion Display Controls       
 
-        private void btnZoomPlus_Click(object sender, EventArgs e)
-        {
-            this.chordAnalyserControl1.zoom += (float)0.1;
-        }
-
-        private void chordAnalyserControl1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                int x = e.Location.X;
-
-                newstart = (int)(  ( (chordAnalyserControl1.OffsetX + x) / (float)chordAnalyserControl1.Width) * sequence1.GetLength()   );
-                FirstPlaySong(newstart);
-
-
-            }
-
-            //throw new NotImplementedException();
-        }
-
-
-        #endregion Display Controls
 
 
         #region timer
-
-
 
         /// <summary>
         /// Timer tick management
@@ -617,6 +590,17 @@ namespace Karaboss
             btnRewind.Image = Properties.Resources.btn_black_prev;
         }
 
+        private void btnZoomMinus_Click(object sender, EventArgs e)
+        {
+            chordAnalyserControl1.zoom -= (float)0.1;
+            ChordMapControl1.zoom -= (float)0.1;
+        }
+
+        private void btnZoomPlus_Click(object sender, EventArgs e)
+        {
+            chordAnalyserControl1.zoom += (float)0.1;
+            ChordMapControl1.zoom += (float)0.1;
+        }
 
         #endregion buttons
 
@@ -774,6 +758,53 @@ namespace Karaboss
 
         }
 
+        private void ChordMapControl1_HeightChanged(object sender, int value)
+        {            
+            ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
+            
+            if (pnlDisplayMap != null)
+            {
+                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
+                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
+            }
+            
+        }
+
+        private void ChordMapControl1_WidthChanged(object sender, int value)
+        {
+            ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
+
+            
+            if (pnlDisplayMap != null)
+            {
+                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
+                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
+            }
+            
+        }
+
+        private void ChordMapControl1_MouseDown(object sender, MouseEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+
+
+        private void chordAnalyserControl1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                int x = e.Location.X;
+
+                newstart = (int)(((chordAnalyserControl1.OffsetX + x) / (float)chordAnalyserControl1.Width) * sequence1.GetLength());
+                FirstPlaySong(newstart);
+
+
+            }            
+        }
+
+
+
         #endregion positionHScrollBar
 
 
@@ -791,7 +822,7 @@ namespace Karaboss
             {
                 res += string.Format("{0} - {1}", pair.Key, pair.Value) + "\r\n";
             }
-            txtOverview.Text = res;
+            
 
 
             //Change labels displayed
@@ -924,6 +955,12 @@ namespace Karaboss
                 positionHScrollBar.Top = chordAnalyserControl1.Top + chordAnalyserControl1.Height;
             }
 
+            
+            if (pnlDisplayMap != null)
+            {
+                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
+                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
+            }
             
 
             // Set maximum & visibility

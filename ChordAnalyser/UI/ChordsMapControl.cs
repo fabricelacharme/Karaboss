@@ -338,8 +338,8 @@ namespace ChordAnalyser.UI
                 }
             }
 
-             maxStaffHeight = y;
-             //maxStaffWidth = x;
+             maxStaffHeight = (int)( ((int)_cellsize + 1) *   (1 +  Math.Ceiling((double)((NbMeasures + 1)/(max + 1)) )   )   );
+             maxStaffWidth = (sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1))) * (max + 1);
 
         }
 
