@@ -97,8 +97,10 @@ namespace Karaboss
 
         //private Panel pnlTop;
         private Panel pnlDisplayHorz;       // chords in horizontal mode
-        private Panel pnlDisplayMap;        // chords in map mode
         private Panel pnlBottom;
+        
+        private Panel pnlDisplayMap = new Panel();        // chords in map mode
+        //private Panel pnlBottomMap = new Panel();
 
         private ColorSlider.ColorSlider positionHScrollBar;
 
@@ -344,11 +346,21 @@ namespace Karaboss
 
             #region 2eme TAB
 
+            /*
+            #region display bottom map            
+            pnlBottomMap = new Panel();
+            pnlBottomMap.Parent = tabPageOverview;
+            pnlBottom.Height = 80;
+            pnlBottomMap.Dock = DockStyle.Bottom;
+            tabPageOverview.Controls.Add(pnlBottomMap);
+            #endregion display bottom map
+            */
+
             #region display map chords
             pnlDisplayMap = new Panel();
             pnlDisplayMap.Parent = tabPageOverview;
             pnlDisplayMap.Location = new Point(tabPageOverview.Margin.Left, tabPageOverview.Margin.Top);
-            pnlDisplayMap.Size = new Size(tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right, tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom);
+            //pnlDisplayMap.Size = new Size(tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right, tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom);
             //pnlDisplayMap.Dock = DockStyle.Fill;
             pnlDisplayMap.BackColor = Color.White;
             pnlDisplayMap.AutoScroll = true;            
@@ -359,8 +371,7 @@ namespace Karaboss
             #region ChordMapControl
             ChordMapControl1 = new ChordsMapControl();
             ChordMapControl1.Parent = pnlDisplayMap;
-            ChordMapControl1.Location = new Point(0, 0);
-            
+            ChordMapControl1.Location = new Point(0, 0);            
             //ChordMapControl1.Size = new Size(pnlDisplayMap.Width, pnlDisplayMap.Height);
             //ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
             //ChordMapControl1.Dock = DockStyle.Fill;
@@ -481,9 +492,7 @@ namespace Karaboss
 
             DisplayResults();
 
-            //AnalyseInstruments();
             
-            //InitCbTracks();
         }
 
         /// <summary>
@@ -599,6 +608,62 @@ namespace Karaboss
         }
 
         #endregion buttons
+
+
+        #region Events
+        private void chordAnalyserControl1_HeightChanged(object sender, int value)
+        {
+            positionHScrollBar.Location = new Point(0, chordAnalyserControl1.Height);
+            pnlDisplayHorz.Height = chordAnalyserControl1.Height + positionHScrollBar.Height;
+
+            pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height;
+
+        }
+
+        private void ChordMapControl1_HeightChanged(object sender, int value)
+        {
+            //ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
+
+            if (pnlDisplayMap != null)
+            {
+                //Console.WriteLine(pnlDisplayMap.Width.ToString());
+                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;                
+                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
+            }
+
+        }
+
+        private void ChordMapControl1_WidthChanged(object sender, int value)
+        {
+            //ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
+
+
+            if (pnlDisplayMap != null)
+            {
+                //Console.WriteLine(pnlDisplayMap.Width.ToString());
+                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
+                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
+            }
+        }
+
+        private void ChordMapControl1_MouseDown(object sender, MouseEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void chordAnalyserControl1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                int x = e.Location.X;
+
+                newstart = (int)(((chordAnalyserControl1.OffsetX + x) / (float)chordAnalyserControl1.Width) * sequence1.GetLength());
+                FirstPlaySong(newstart);
+
+
+            }
+        }
+        #endregion Events
 
 
         #region positionHSCrollBar
@@ -766,59 +831,7 @@ namespace Karaboss
         }
 
 
-        private void chordAnalyserControl1_HeightChanged(object sender, int value)
-        {
-            positionHScrollBar.Location = new Point(0, chordAnalyserControl1.Height);
-            pnlDisplayHorz.Height = chordAnalyserControl1.Height + positionHScrollBar.Height;
-
-            pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height;
-
-        }
-
-        private void ChordMapControl1_HeightChanged(object sender, int value)
-        {            
-            ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
-            
-            if (pnlDisplayMap != null)
-            {
-                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
-                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
-            }
-            
-        }
-
-        private void ChordMapControl1_WidthChanged(object sender, int value)
-        {
-            //ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
-
-            
-            if (pnlDisplayMap != null)
-            {
-                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
-                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
-            }
-            
-        }
-
-        private void ChordMapControl1_MouseDown(object sender, MouseEventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-
-
-
-        private void chordAnalyserControl1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                int x = e.Location.X;
-
-                newstart = (int)(((chordAnalyserControl1.OffsetX + x) / (float)chordAnalyserControl1.Width) * sequence1.GetLength());
-                FirstPlaySong(newstart);
-
-
-            }            
-        }
+  
 
 
 
@@ -834,13 +847,13 @@ namespace Karaboss
             ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
             Dictionary<int, (string, string)> Gridchords = Analyser.Gridchords;
 
+            /*
             string res = string.Empty;
             foreach (KeyValuePair<int, (string, string)> pair in Gridchords)
             {
                 res += string.Format("{0} - {1}", pair.Key, pair.Value) + "\r\n";
             }
-            
-
+            */
 
             //Change labels displayed
             for (int i = 1; i <= Gridchords.Count; i++)
@@ -848,11 +861,9 @@ namespace Karaboss
                 Gridchords[i] = (InterpreteNote(Gridchords[i].Item1), InterpreteNote(Gridchords[i].Item2));
             }
 
-
             // Display Chords in boxes
-            this.chordAnalyserControl1.Gridchords = Gridchords;
-            this.ChordMapControl1.Gridchords = Gridchords;
-
+            chordAnalyserControl1.Gridchords = Gridchords;
+            ChordMapControl1.Gridchords = Gridchords;
 
         }
 
@@ -955,10 +966,21 @@ namespace Karaboss
 
         private void frmChords_Resize(object sender, EventArgs e)
         {
+            // Controle onglets
             tabChordsControl.Top = pnlToolbar.Height;
             tabChordsControl.Width = this.ClientSize.Width;
-            tabChordsControl.Height = this.ClientSize.Height;
+            tabChordsControl.Height = this.ClientSize.Height - pnlToolbar.Height;
 
+            // Bug: only the selected TabPage is resized, but not others 
+            for (int i = 0;i< tabChordsControl.TabCount;i++)
+            {
+                if (i != tabChordsControl.SelectedIndex)
+                {
+                    // Fore other tabs to redim
+                    tabChordsControl.TabPages[i].Width = tabChordsControl.TabPages[tabChordsControl.SelectedIndex].Width;
+                    tabChordsControl.TabPages[i].Height = tabChordsControl.TabPages[tabChordsControl.SelectedIndex].Height;
+                }
+            }
 
             if (pnlDisplayHorz != null)
             {
@@ -966,20 +988,20 @@ namespace Karaboss
                 pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height;
             }
 
+            if (pnlDisplayMap != null)
+            {
+                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
+                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
+            }
+
+
             if (chordAnalyserControl1 != null)
             {
                 positionHScrollBar.Width = (pnlDisplayHorz.Width > chordAnalyserControl1.Width ? chordAnalyserControl1.Width : pnlDisplayHorz.Width);
                 positionHScrollBar.Top = chordAnalyserControl1.Top + chordAnalyserControl1.Height;
             }
 
-            
-            if (pnlDisplayMap != null)
-            {
-                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
-                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
-            }
-            
-
+                        
             // Set maximum & visibility
             SetScrollBarValues();
         }
@@ -1295,8 +1317,7 @@ namespace Karaboss
             lblElapsed.Text = string.Format("{0:00}:{1:00}", Min, Sec);
         }
 
-        #endregion Play stop pause
 
- 
+        #endregion Play stop pause
     }
 }

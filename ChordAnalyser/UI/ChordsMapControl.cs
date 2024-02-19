@@ -192,7 +192,7 @@ namespace ChordAnalyser.UI
             {
                 _zoom = value;
                 _cellsize = 80 * zoom;
-                this.Height = (int)(_cellsize);
+                //this.Height = (int)(_cellsize);
                 if (HeightChanged != null)
                     HeightChanged(this, this.Height);
                 pnlCanvas.Invalidate();
@@ -569,9 +569,6 @@ namespace ChordAnalyser.UI
             NbLines = (int)(Math.Ceiling((double)(NbMeasures + 1) / _nbcolumns));
             maxStaffHeight = ((int)_cellsize + 1) * NbLines;
             maxStaffWidth = (sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1))) * _nbcolumns;
-
-            //Height = maxStaffHeight;
-            //Width = maxStaffWidth;
         }
 
         #endregion Midi
