@@ -13,13 +13,22 @@ using System.Windows.Forms;
 
 namespace ChordAnalyser.UI
 {
+
+    #region delegate    
+    public delegate void MapOffsetChangedEventHandler(object sender, int value);
+    public delegate void MapWidthChangedEventHandler(object sender, int value);
+    public delegate void MapHeightChangedEventHandler(object sender, int value);
+
+    #endregion delegate
+
+
     public partial class ChordsMapControl : Control
     {
 
         #region events
-        public event OffsetChangedEventHandler OffsetChanged;
-        public event WidthChangedEventHandler WidthChanged;
-        public event HeightChangedEventHandler HeightChanged;
+        public event MapOffsetChangedEventHandler OffsetChanged;
+        public event MapWidthChangedEventHandler WidthChanged;
+        public event MapHeightChangedEventHandler HeightChanged;
 
         #endregion events
 
@@ -51,6 +60,9 @@ namespace ChordAnalyser.UI
         private int _measurelen = 0;
         private int NbMeasures;
         private int NbLines;        // Number of lines of the control        
+
+        private int _LinesWidth = 2;
+        private int _MeasureSeparatorWidth = 2;
 
         private int _currentpos = 0;
         private int _currentmeasure = -1;
@@ -104,7 +116,7 @@ namespace ChordAnalyser.UI
             {
                 if (value != _maxstaffwidth)
                 {
-                    _maxstaffwidth = value;
+                    _maxstaffwidth = value;                    
                     if (WidthChanged != null)
                     {
                         Width = _maxstaffwidth;
@@ -153,6 +165,7 @@ namespace ChordAnalyser.UI
                 if (sequence1 != null && sequence1.Time != null)
                 {
                     UpdateMidiTimes();
+                    RedimControl();
                     Redraw();
                 }
             }
@@ -239,11 +252,7 @@ namespace ChordAnalyser.UI
         /// <param name="g"></param>
         /// <param name="clip"></param>
         private void DrawGrid(Graphics g, Rectangle clip)
-        {
-            //int max = 3;
-
-            int _MeasureSeparatorWidth = 2;
-            int _LinesWidth = 2;
+        {            
 
             Color blackKeysColor = System.Drawing.ColorTranslator.FromHtml("#FF313131");
             Color TimeLineColor = Color.White;
@@ -348,10 +357,9 @@ namespace ChordAnalyser.UI
                     x += sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1));
                 }
             }
-
-            //int nblines = (int)(Math.Ceiling((double)(NbMeasures + 1) / 4));
-            maxStaffHeight = ((int)_cellsize + 1) * NbLines;            
-            maxStaffWidth = (sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1))) * _nbcolumns;
+            
+            //maxStaffHeight = ((int)_cellsize + 1) * NbLines;            
+            //maxStaffWidth = (sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1))) * _nbcolumns;
 
         }
 
@@ -376,7 +384,7 @@ namespace ChordAnalyser.UI
             Font fontChord = new Font("Arial", 16 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontMeasure = new Font("Arial", 12 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
-            int _LinesWidth = 2;            
+            //int _LinesWidth = 2;            
             
             // Start after the 1st false measure
             int x = ((int)(_cellsize) + (_LinesWidth - 1)) * sequence1.Numerator;
@@ -553,6 +561,17 @@ namespace ChordAnalyser.UI
 
                 NbLines = (int)(Math.Ceiling((double)(NbMeasures + 1) / _nbcolumns));
             }
+        }
+
+
+        private void RedimControl()
+        {
+            NbLines = (int)(Math.Ceiling((double)(NbMeasures + 1) / _nbcolumns));
+            maxStaffHeight = ((int)_cellsize + 1) * NbLines;
+            maxStaffWidth = (sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1))) * _nbcolumns;
+
+            //Height = maxStaffHeight;
+            //Width = maxStaffWidth;
         }
 
         #endregion Midi

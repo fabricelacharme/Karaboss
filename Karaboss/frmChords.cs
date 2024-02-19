@@ -249,10 +249,7 @@ namespace Karaboss
             #endregion Toolbar
 
 
-            #region 1er TAB
-          
-           
-
+            #region 1er TAB                    
 
             #region Panel Display horizontal chords
             pnlDisplayHorz = new Panel();
@@ -263,8 +260,6 @@ namespace Karaboss
             pnlDisplayHorz.BackColor = Color.Chocolate;
             tabPageDiagrams.Controls.Add(pnlDisplayHorz);
             #endregion Panel Display horizontal chords
-
-
             
 
             #region ChordControl
@@ -347,7 +342,6 @@ namespace Karaboss
             #endregion 1er TAB
 
 
-
             #region 2eme TAB
 
             #region display map chords
@@ -366,14 +360,15 @@ namespace Karaboss
             ChordMapControl1 = new ChordsMapControl();
             ChordMapControl1.Parent = pnlDisplayMap;
             ChordMapControl1.Location = new Point(0, 0);
-            ChordMapControl1.Sequence1 = this.sequence1;
+            
             //ChordMapControl1.Size = new Size(pnlDisplayMap.Width, pnlDisplayMap.Height);
-            ChordMapControl1.Size = new Size(400, 200);
+            //ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
             //ChordMapControl1.Dock = DockStyle.Fill;
-            ChordMapControl1.WidthChanged += new WidthChangedEventHandler(ChordMapControl1_WidthChanged);
-            ChordMapControl1.HeightChanged += new HeightChangedEventHandler(ChordMapControl1_HeightChanged);            
+            ChordMapControl1.WidthChanged += new MapWidthChangedEventHandler(ChordMapControl1_WidthChanged);
+            ChordMapControl1.HeightChanged += new MapHeightChangedEventHandler(ChordMapControl1_HeightChanged);            
             ChordMapControl1.MouseDown += new MouseEventHandler(ChordMapControl1_MouseDown);
             ChordMapControl1.Cursor = Cursors.Hand;
+            ChordMapControl1.Sequence1 = this.sequence1;
             pnlDisplayMap.Controls.Add(ChordMapControl1);
 
 
@@ -794,7 +789,7 @@ namespace Karaboss
 
         private void ChordMapControl1_WidthChanged(object sender, int value)
         {
-            ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
+            //ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
 
             
             if (pnlDisplayMap != null)
@@ -1064,7 +1059,7 @@ namespace Karaboss
         #endregion Form
 
 
-            #region Midi
+        #region Midi
 
             /// <summary>
             /// Upadate MIDI times
