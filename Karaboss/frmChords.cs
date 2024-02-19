@@ -650,7 +650,7 @@ namespace Karaboss
                 int offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);
                 
                 // which line ?                                
-                curline = (int)(Math.Ceiling((double)(_currentMeasure + 1) / 4));
+                curline = (int)(Math.Ceiling((double)(_currentMeasure + 1) / ChordMapControl1.NbColumns));
                 
 
                 int course = (int)(positionHScrollBar.Maximum - positionHScrollBar.Minimum);

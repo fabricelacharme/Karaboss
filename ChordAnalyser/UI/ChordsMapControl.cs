@@ -50,6 +50,7 @@ namespace ChordAnalyser.UI
         private int _tempo;
         private int _measurelen = 0;
         private int NbMeasures;
+        private int NbLines;        // Number of lines of the control        
 
         private int _currentpos = 0;
         private int _currentmeasure = -1;
@@ -61,6 +62,16 @@ namespace ChordAnalyser.UI
         #endregion private
 
         #region properties
+
+        private int _nbcolumns = 4;
+        /// <summary>
+        /// Number of columns of the control
+        /// </summary>
+        public int NbColumns
+        {
+            get { return _nbcolumns; }
+        }
+
 
         private int _offsety = 0;
         /// <summary>
@@ -229,7 +240,7 @@ namespace ChordAnalyser.UI
         /// <param name="clip"></param>
         private void DrawGrid(Graphics g, Rectangle clip)
         {
-            int max = 3;
+            //int max = 3;
 
             int _MeasureSeparatorWidth = 2;
             int _LinesWidth = 2;
@@ -283,7 +294,7 @@ namespace ChordAnalyser.UI
             for (int i = 1; i <= NbMeasures; i++)
             {
                 compteurmesure++;
-                if (compteurmesure > max)   // 4 measures per line
+                if (compteurmesure > (_nbcolumns - 1))   // 4 measures per line
                 {
                     y +=  (int)_cellsize + 1;
                     x = 0;
@@ -322,14 +333,14 @@ namespace ChordAnalyser.UI
             for (int i = 0; i <= NbMeasures + 1; i++)
             {
                 compteurmesure++;
-                if (compteurmesure > max)
+                if (compteurmesure > _nbcolumns - 1)
                 {
                     y += (int)_cellsize + 1;
                     x = sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1));
                     compteurmesure = 0;
                 }
 
-                if (i % (max + 1) != 0)
+                if (i % _nbcolumns != 0)
                 {
                     p1 = new Point(x, y);
                     p2 = new Point(x, y + (int)(_cellsize));
@@ -338,8 +349,9 @@ namespace ChordAnalyser.UI
                 }
             }
 
-             maxStaffHeight = (int)( ((int)_cellsize + 1) *   (1 +  Math.Ceiling((double)((NbMeasures + 1)/(max + 1)))));
-             maxStaffWidth = (sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1))) * (max + 1);
+            //int nblines = (int)(Math.Ceiling((double)(NbMeasures + 1) / 4));
+            maxStaffHeight = ((int)_cellsize + 1) * NbLines;            
+            maxStaffWidth = (sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1))) * _nbcolumns;
 
         }
 
@@ -355,7 +367,7 @@ namespace ChordAnalyser.UI
         /// <param name="clip"></param>
         private void DrawNotes(Graphics g, Rectangle clip)
         {
-            int max = 3;
+            //int max = 3;
             int compteurmesure = 0;
 
             SolidBrush ChordBrush = new SolidBrush(Color.Black);
@@ -387,7 +399,7 @@ namespace ChordAnalyser.UI
                 {
 
                     compteurmesure++;
-                    if (compteurmesure > max)   // 4 measures per line
+                    if (compteurmesure > _nbcolumns - 1)   // 4 measures per line
                     {
                         y_chord += (int)_cellsize + 1;
                         y_symbol += (int)_cellsize + 1;
@@ -538,6 +550,8 @@ namespace ChordAnalyser.UI
             {
                 _measurelen = sequence1.Time.Measure;
                 NbMeasures = Convert.ToInt32(Math.Ceiling((double)_totalTicks / _measurelen)); // rounds up to the next full integer
+
+                NbLines = (int)(Math.Ceiling((double)(NbMeasures + 1) / _nbcolumns));
             }
         }
 
