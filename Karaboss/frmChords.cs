@@ -248,6 +248,31 @@ namespace Karaboss
             pnlToolbar.Controls.Add(btnZoomMinus);
 
 
+            lblNumMeasure = new Label();
+            lblNumMeasure.Location = new Point(100 + btnZoomMinus.Left + btnZoomMinus.Width, 2 );
+            lblNumMeasure.Text = "measure";
+            lblNumMeasure.Parent = pnlToolbar;
+            pnlToolbar.Controls.Add(lblNumMeasure);
+
+            lblElapsed = new Label();
+            lblElapsed.Location = new Point(100 + lblNumMeasure.Left + lblNumMeasure.Width, 2);
+            lblElapsed.Text = "00:00";
+            lblElapsed.Parent = pnlToolbar;
+            pnlToolbar.Controls.Add(lblElapsed);
+
+            lblPercent = new Label();
+            lblPercent.Location = new Point(100 + lblElapsed.Left + lblElapsed.Width, 2);
+            lblPercent.Text = "0%";
+            lblPercent.Parent = pnlToolbar;
+            pnlToolbar.Controls.Add(lblPercent);
+
+            lblBeat = new Label();
+            lblBeat.Location = new Point(100 + lblPercent.Left + lblPercent.Width, 1);
+            lblBeat.Text = "1";
+            lblBeat.Parent = pnlToolbar;
+            pnlToolbar.Controls.Add(lblBeat);
+
+
             #endregion Toolbar
 
 
@@ -315,29 +340,6 @@ namespace Karaboss
             //pnlBottom.Dock = DockStyle.Fill;
             tabPageDiagrams.Controls.Add(pnlBottom);
 
-            lblNumMeasure = new Label();
-            lblNumMeasure.Location = new Point(1, 1);
-            lblNumMeasure.Text = "measure";
-            lblNumMeasure.Parent = pnlBottom;
-            pnlBottom.Controls.Add(lblNumMeasure);
-
-            lblElapsed = new Label();
-            lblElapsed.Location = new Point(100, 1);
-            lblElapsed.Text = "00:00";
-            lblElapsed.Parent = pnlBottom;
-            pnlBottom.Controls.Add(lblElapsed);
-
-            lblPercent = new Label();
-            lblPercent.Location = new Point(200, 1);
-            lblPercent.Text = "0%";
-            lblPercent.Parent = pnlBottom;
-            pnlBottom.Controls.Add(lblPercent);
-
-            lblBeat = new Label();
-            lblBeat.Location = new Point(300, 1);
-            lblBeat.Text = "1";
-            lblBeat.Parent = pnlBottom;
-            pnlBottom.Controls.Add(lblBeat);
 
             #endregion
 
