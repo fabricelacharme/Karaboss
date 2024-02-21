@@ -415,7 +415,9 @@ namespace Karaboss
                 switch (PlayerState)
                 {
                     case PlayerStates.Playing:
+                        // first page
                         DisplayPositionHScrollBar(sequencer1.Position);
+                        DisplayPositionVScrollbar(sequencer1.Position);
                         break;
 
                     case PlayerStates.Stopped:
@@ -668,19 +670,49 @@ namespace Karaboss
         #endregion Events
 
 
+        #region PositionVScrollbar
+
+        /// <summary>
+        /// Display vertical scrollbar in 2nd page
+        /// </summary>
+        /// <param name="pos"></param>
+        private void DisplayPositionVScrollbar(int pos)
+        {          
+            // which line ?                                
+            int curline = (int)(Math.Ceiling((double)(_currentMeasure + 1) / ChordMapControl1.NbColumns));
+
+            // Change line => offset Chord map
+            if (curline != _currentLine)
+            {
+                _currentLine = curline;
+                int LargeurCellule = (int)(chordAnalyserControl1.CellSize) + 1;
+
+                // if control is higher then the panel => scroll
+                if (ChordMapControl1.maxStaffHeight > pnlDisplayMap.Height)
+                {
+                    // offset vertical: ensure to see 2 lines
+                    //ChordMapControl1.OffsetY = LargeurCellule * (curline - 2); 
+                    int offset = LargeurCellule * (curline - 2);
+
+
+                    if (pnlDisplayMap.VerticalScroll.Visible && pnlDisplayMap.VerticalScroll.Minimum <= offset && offset <= pnlDisplayMap.VerticalScroll.Maximum)
+                        pnlDisplayMap.VerticalScroll.Value = LargeurCellule * (curline - 2);
+                }
+            }
+        }
+
+        #endregion PositionVScrollbar
+
         #region positionHSCrollBar
 
         /// <summary>
-        /// Display 
+        /// Display horizontal scrollbar in first page
         /// </summary>
         /// <param name="pos"></param>
         private void DisplayPositionHScrollBar(int pos)
         {
             // pos is in which measure?
-            int curmeasure = 1 + pos / _measurelen;
-
-            int curline = 0;
-            
+            int curmeasure = 1 + pos / _measurelen;                        
 
             // Quel temps dans la mesure ?
             int timeinmeasure = sequence1.Numerator - (int)((curmeasure * _measurelen - pos) / (_measurelen / sequence1.Numerator));
@@ -692,11 +724,10 @@ namespace Karaboss
             {
                 _currentTimeInMeasure = timeinmeasure;
                 
-                // DRaw gray cell for played note
+                // Draw gray cell for played note
                 chordAnalyserControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
                 ChordMapControl1.DisplayNotes(pos,curmeasure,timeinmeasure);
             }
-
 
             // Change measure => offset control
             if (curmeasure != _currentMeasure)
@@ -709,12 +740,8 @@ namespace Karaboss
                 
                 int LargeurCellule = (int)(chordAnalyserControl1.CellSize) + 1;
                 int LargeurMesure = LargeurCellule * sequence1.Numerator; // keep one measure on the left
-                int offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);
+                int offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);                    
                 
-                // which line ?                                
-                curline = (int)(Math.Ceiling((double)(_currentMeasure + 1) / ChordMapControl1.NbColumns));
-                
-
                 int course = (int)(positionHScrollBar.Maximum - positionHScrollBar.Minimum);
                 int CellsNumber = 1 + NbMeasures * sequence1.Numerator;
 
@@ -748,24 +775,9 @@ namespace Karaboss
                         }
                     }                    
                 }
-
-                // Change line => offset Chord map
-                if (curline != _currentLine)
-                {
-                    _currentLine = curline;
-
-                    
-                    if (ChordMapControl1.maxStaffHeight > pnlDisplayMap.Height)
-                    {
-                        // offset vertical
-                        ChordMapControl1.OffsetY = (curline - 1) * LargeurCellule - LargeurCellule;
-                    }
-                }
                 
                 lblNumMeasure.Text = "Measure: " + _currentMeasure;
-
             }
-
         }
 
         private void SetScrollBarValues()
@@ -831,11 +843,6 @@ namespace Karaboss
             // Set maximum & visibility
             SetScrollBarValues();
         }
-
-
-  
-
-
 
         #endregion positionHScrollBar
 
@@ -1293,6 +1300,7 @@ namespace Karaboss
                 chordAnalyserControl1.OffsetX = 0;
                 chordAnalyserControl1.DisplayNotes(0, -1, -1);
 
+                pnlDisplayMap.VerticalScroll.Value = pnlDisplayMap.VerticalScroll.Minimum;                
                 ChordMapControl1.OffsetY = 0;
                 ChordMapControl1.DisplayNotes(0, -1, -1);
 
