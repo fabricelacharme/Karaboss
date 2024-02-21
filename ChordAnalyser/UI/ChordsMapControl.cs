@@ -506,7 +506,7 @@ namespace ChordAnalyser.UI
 
         private void pnlCanvas_MouseDown(object sender, MouseEventArgs e)
         {
-            //throw new NotImplementedException();
+            OnMouseDown(e);
         }
 
         #endregion mouse
