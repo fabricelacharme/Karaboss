@@ -32,6 +32,7 @@
 
 #endregion
 using ChordAnalyser.UI;
+using Karaboss.Lrc.SharedFramework;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
@@ -92,6 +93,7 @@ namespace Karaboss
         private Label lblElapsed;
         private Label lblPercent;
         private Label lblBeat;
+        private Label lblLyrics;
 
         #endregion controls
 
@@ -119,6 +121,9 @@ namespace Karaboss
         // Lyrics 
         public CLyric myLyric;
         private List<plLyric> plLyrics;
+
+        private Dictionary <int, string> LyricsLines = new Dictionary<int, string>();
+        private Array LyricsLinesKeys;
 
         #endregion private
 
@@ -339,11 +344,24 @@ namespace Karaboss
             pnlBottom.Location = new Point(tabPageDiagrams.Margin.Left, pnlDisplayHorz.Top + pnlDisplayHorz.Height);
             //pnlBottom.Size = new Size(tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height);
             pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height;
-            pnlBottom.BackColor = Color.Red;
+            pnlBottom.BackColor = Color.White;
             pnlBottom.Dock = DockStyle.Bottom;
             //pnlBottom.Dock = DockStyle.Fill;
             tabPageDiagrams.Controls.Add(pnlBottom);
 
+
+            lblLyrics = new Label();
+            lblLyrics.Parent = pnlBottom;
+            lblLyrics.Location = new Point(0, 0);
+            
+            lblLyrics.AutoSize = false;            
+            Font fontLyrics = new Font("Arial", 32, FontStyle.Regular, GraphicsUnit.Pixel);
+            lblLyrics.Height =fontLyrics.Height + 20;
+            lblLyrics.Font = fontLyrics;
+            lblLyrics.TextAlign = ContentAlignment.MiddleCenter;            
+            lblLyrics.Dock = DockStyle.Top;
+            lblLyrics.Text = "AD Lorem ipsus";
+            pnlBottom .Controls.Add(lblLyrics);
 
             #endregion
 
@@ -419,9 +437,11 @@ namespace Karaboss
                 {
                     case PlayerStates.Playing:
                         // first page
-                        DisplayNotes(sequencer1.Position);
-                        DisplayPositionHScrollBar(sequencer1.Position);
-                        DisplayPositionVScrollbar(sequencer1.Position);
+                        int p = sequencer1.Position;
+                        DisplayNotes(p);
+                        DisplayLyrics(p);
+                        DisplayPositionHScrollBar(p);
+                        DisplayPositionVScrollbar(p);
                         break;
 
                     case PlayerStates.Stopped:
@@ -475,6 +495,32 @@ namespace Karaboss
 
         #endregion DisplayNotes
 
+
+        #region Display Lyrics
+
+        /// <summary>
+        /// Display lyrics
+        /// </summary>
+        /// <param name="pos"></param>
+        private void DisplayLyrics(int pos)
+        {
+            if (LyricsLinesKeys == null)
+                return;
+
+            int lyricpos;
+            for (int i = 0; i < LyricsLinesKeys.Length; i++)
+            {
+                lyricpos = (int)LyricsLinesKeys.GetValue(i);
+                if (lyricpos >= pos)
+                {
+                    lblLyrics.Text = LyricsLines[lyricpos];
+                    break;                    
+                }               
+            }
+        }
+
+        #endregion Display Lyrics
+
         /*
         #region Scroll ChordsControl 
         /// <summary>
@@ -527,13 +573,13 @@ namespace Karaboss
             if (e.Error == null && e.Cancelled == false)
             {
 
-                LoadSequencer(sequence1);
+                LoadSequencer(sequence1);                
 
-                LoadLyrics();
-
-                DrawControls();
+                DrawControls();                
 
                 DisplayResults();
+
+                LoadLyrics();
             }
             else
             {
@@ -616,8 +662,54 @@ namespace Karaboss
             plLyrics = new List<plLyric>();
 
             ExtractLyrics();
+            LoadLyricsLines();
 
+            DisplayLyrics(0);
+            //if (LyricsLines.Count > 0)
+            //    lblLyrics.Text = LyricsLines.Values.First(); 
         }
+
+        private void LoadLyricsLines()
+        {
+            LyricsLines = new Dictionary<int, string>();
+            string line = string.Empty;
+            bool newline = false;
+
+            for (int i = 0; i < plLyrics.Count; i++)
+            {
+                if (plLyrics[i].Type == plLyric.Types.LineFeed || plLyrics[i].Type == plLyric.Types.Paragraph)
+                {
+                    newline = true;
+                }
+                else
+                {
+                    // the first item after nwline
+                    if (newline)
+                    {
+                        if (line.Trim() != "")
+                            LyricsLines.Add(plLyrics[i].TicksOn, line);
+                        newline = false;
+                        //line = plLyrics[i].Element;
+                        line = string.Empty;
+                    }
+
+                    // others items of a line
+                    line += plLyrics[i].Element;
+                }
+            }
+
+
+            // Do not forget last line
+            if(line.Trim() != "")
+            {
+                LyricsLines.Add(plLyrics[plLyrics.Count - 1].TicksOn, line);
+            }
+
+            if (LyricsLines.Count > 0)
+                LyricsLinesKeys = LyricsLines.Keys.ToArray();
+        }
+        
+      
 
         /// <summary>
         /// Lyrics extraction & display
@@ -1567,6 +1659,8 @@ namespace Karaboss
 
                 ChordMapControl1.OffsetY = 0;
                 ChordMapControl1.DisplayNotes(0, -1, -1);
+
+                DisplayLyrics(0);
 
                 laststart = 0;
                 scrolling = false;
