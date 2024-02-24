@@ -4510,7 +4510,7 @@ namespace Karaboss
                 // Display track controls             
                 DisplayTrackControls();
 
-                // REset tracks Stuff
+                // Reset tracks Stuff
                 InitTracksStuff();
                 #endregion
 

@@ -268,6 +268,9 @@ namespace Karaboss
 
     }
 
+    /// <summary>
+    /// A class to store all lyric's syllabes
+    /// </summary>
     public class plLyric
     {
         public enum Types
