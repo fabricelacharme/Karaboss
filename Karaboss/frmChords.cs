@@ -47,7 +47,7 @@ namespace Karaboss
     public partial class frmChords : Form
     {
 
-        #region private
+        #region private dcl
         private bool closing = false;
         private bool scrolling = false;
 
@@ -123,9 +123,11 @@ namespace Karaboss
         private List<plLyric> plLyrics;
 
         private Dictionary <int, string> LyricsLines = new Dictionary<int, string>();
+        private Dictionary<int, int> LyricsTimes = new Dictionary<int, int>();
         private Array LyricsLinesKeys;
+        private Array LyricsTimesKeys;
 
-        #endregion private
+        #endregion private dcl
 
 
         public frmChords(OutputDevice OtpDev, string FileName)
@@ -507,39 +509,38 @@ namespace Karaboss
             if (LyricsLinesKeys == null)
                 return;
 
-            int lyricpos;
-            for (int i = 0; i < LyricsLinesKeys.Length; i++)
+            int lyrictickson = 0;
+            int lyricticksoff = 0;
+            //lLyrics.Text = "";
+            bool bfound = false;
+            string txtcontent = string.Empty;
+
+            for (int i = LyricsLinesKeys.Length - 1; i >= 0; i--)
             {
-                lyricpos = (int)LyricsLinesKeys.GetValue(i);
-                if (lyricpos >= pos)
-                {
-                    lblLyrics.Text = LyricsLines[lyricpos];
+                lyrictickson = (int)LyricsLinesKeys.GetValue(i);
+                lyricticksoff = LyricsTimes[lyrictickson];
+                
+                if (lyrictickson <= pos && pos <= lyricticksoff)
+                {                    
+                    bfound = true;
                     break;                    
                 }               
             }
+
+            if (bfound)
+            {
+                lblLyrics.Text = LyricsLines[lyrictickson];
+            }
+            else
+            {
+                lblLyrics.Text = "";
+            }
+
         }
+        
 
         #endregion Display Lyrics
 
-        /*
-        #region Scroll ChordsControl 
-        /// <summary>
-        /// Get time inside measure
-        /// </summary>
-        /// <param name="ticks"></param>
-        /// <returns></returns>
-        public float GetTimeInMeasure(int ticks)
-        {
-            // Num measure
-            int curmeasure = 1 + ticks / _measurelen;
-            // Temps dans la mesure
-            float timeinmeasure = sequence1.Numerator - ((curmeasure * _measurelen - ticks) / (float)(_measurelen / sequence1.Numerator));
-
-            return timeinmeasure;
-        }
-
-        #endregion Scroll ChordsControl
-        */
 
         #region handle messages
 
@@ -662,11 +663,10 @@ namespace Karaboss
             plLyrics = new List<plLyric>();
 
             ExtractLyrics();
+            
             LoadLyricsLines();
 
             DisplayLyrics(0);
-            //if (LyricsLines.Count > 0)
-            //    lblLyrics.Text = LyricsLines.Values.First(); 
         }
 
         private void LoadLyricsLines()
@@ -674,6 +674,8 @@ namespace Karaboss
             LyricsLines = new Dictionary<int, string>();
             string line = string.Empty;
             bool newline = false;
+            int ticksoff = 0;
+            int curindex = -1;            
 
             for (int i = 0; i < plLyrics.Count; i++)
             {
@@ -683,18 +685,29 @@ namespace Karaboss
                 }
                 else
                 {
-                    // the first item after nwline
+                    // the first item after newline
                     if (newline)
                     {
                         if (line.Trim() != "")
-                            LyricsLines.Add(plLyrics[i].TicksOn, line);
-                        newline = false;
-                        //line = plLyrics[i].Element;
+                        {                            
+                            LyricsLines.Add(curindex, line);                            
+                            LyricsTimes.Add(curindex, ticksoff);
+                        }
+                        newline = false;                        
                         line = string.Empty;
                     }
 
+                    // Last line (the last line will not have a new line event)
+                    if (line.Trim() == "")
+                    {                        
+                        curindex = plLyrics[i].TicksOn;
+                    }
+                    
                     // others items of a line
                     line += plLyrics[i].Element;
+                    ticksoff = plLyrics[i].TicksOff;
+                                        
+                   
                 }
             }
 
@@ -702,14 +715,17 @@ namespace Karaboss
             // Do not forget last line
             if(line.Trim() != "")
             {
-                LyricsLines.Add(plLyrics[plLyrics.Count - 1].TicksOn, line);
+                LyricsLines.Add(curindex, line);
+                LyricsTimes.Add(curindex, ticksoff);
             }
 
             if (LyricsLines.Count > 0)
+            {
                 LyricsLinesKeys = LyricsLines.Keys.ToArray();
+                LyricsTimesKeys = LyricsTimes.Keys.ToArray();
+            }
         }
-        
-      
+            
 
         /// <summary>
         /// Lyrics extraction & display
@@ -723,6 +739,8 @@ namespace Karaboss
 
             double l_text = 1;
             double l_lyric = 1;
+
+            int OneBeat = _measurelen / sequence1.Numerator;
 
             // ----------------------------------------------------------------------
             // Objectif : comparer texte et lyriques et choisir la meilleure solution
@@ -775,6 +793,8 @@ namespace Karaboss
                     plLyrics.Clear();
 
                 Track track = sequence1.tracks[myLyric.lyricstracknum];
+                
+
                 for (int k = 0; k < track.LyricsText.Count; k++)
                 {
                     // Stockage dans liste plLyrics
@@ -785,7 +805,7 @@ namespace Karaboss
                     int plTicksOn = track.LyricsText[k].TicksOn;
 
                     // Stop time for a lyric (maxi 1 beat ?)
-                    int plTicksOff = 0;
+                    int plTicksOff = plTicksOn + _measurelen;
 
                     plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
                 }
@@ -836,7 +856,7 @@ namespace Karaboss
                             int plTicksOn = track.Lyrics[k].TicksOn;
 
                             // Stop time for the lyric
-                            int plTicksOff = 0;
+                            int plTicksOff = plTicksOn + _measurelen;
 
                             plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
                         }
