@@ -304,7 +304,7 @@ namespace Karaboss
             chordAnalyserControl1 = new ChordsControl();
             chordAnalyserControl1.Parent = pnlDisplayHorz;
             chordAnalyserControl1.Sequence1 = this.sequence1;
-            chordAnalyserControl1.Size = new Size(pnlDisplayHorz.Width, 80);
+            chordAnalyserControl1.Size = new Size(pnlDisplayHorz.Width, chordAnalyserControl1.Height);
             chordAnalyserControl1.Location = new Point(0, 0);
             chordAnalyserControl1.WidthChanged += new WidthChangedEventHandler(chordAnalyserControl1_WidthChanged);
             chordAnalyserControl1.HeightChanged += new HeightChangedEventHandler(chordAnalyserControl1_HeightChanged);
