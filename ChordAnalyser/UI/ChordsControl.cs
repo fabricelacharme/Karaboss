@@ -64,7 +64,7 @@ namespace ChordAnalyser.UI
         }
 
        
-        private int _maxstaffwidth;
+        private int _maxstaffwidth = 80;
         /// <summary>
         /// Gets Length of score
         /// </summary>
@@ -111,7 +111,41 @@ namespace ChordAnalyser.UI
 
         public Dictionary<int, (string, string)> Gridchords { get; set; }
 
+        
+        private float _cellwidth;
+        private float _cellheight;
 
+        private int _columnwidth = 80;
+        public int ColumnWidth
+        {
+            get { return _columnwidth; }
+            set { 
+                _columnwidth = value;
+                _cellwidth = _columnwidth * zoom;
+                if (WidthChanged != null)
+                    WidthChanged(this, this.Width);
+                pnlCanvas.Invalidate();
+
+            }
+        }
+
+        private int _columnheight = 80;
+        public int ColumnHeight
+        {
+            get { return _columnheight; }
+            set { 
+                _columnheight = value;
+                _cellheight = _columnheight * zoom;
+
+                this.Height = (int)(_cellheight);
+                if (HeightChanged != null)
+                    HeightChanged(this, this.Height);
+                pnlCanvas.Invalidate();
+            }
+        }
+
+
+        /*
         private float _cellsizewidth = 80;
         public float CellSizeWidth
         {
@@ -131,6 +165,7 @@ namespace ChordAnalyser.UI
         {
             get { return _cellsize; }
         }
+        */
 
         /// <summary>
         /// zoom
@@ -143,10 +178,15 @@ namespace ChordAnalyser.UI
             set
             {                
                 _zoom = value;
-                _cellsize = 80 * zoom;                
-                _cellsizewidth = 80 * zoom;
-                _cellsizeheight = 160 * zoom;
-                this.Height = (int)(_cellsizeheight);
+                //_cellsize = 80 * zoom;                
+                //_cellsizewidth = 80 * zoom;
+                //_cellsizeheight = 160 * zoom;
+
+                _cellwidth = _columnwidth * zoom;
+                _cellheight = _columnheight * zoom;
+
+                //this.Height = (int)(_cellsizeheight);
+                this.Height = (int)(_cellheight);
                 if (HeightChanged != null)
                     HeightChanged(this, this.Height);
                 pnlCanvas.Invalidate();                               
@@ -215,7 +255,8 @@ namespace ChordAnalyser.UI
 
         private void DrawCanvas()
         {
-            Height = (int)_cellsizeheight;
+            //Height = (int)_cellheight;
+            Height = (int)_columnheight;
 
             // Draw pnlCanvas            
             pnlCanvas = new MyPanel();
@@ -265,8 +306,8 @@ namespace ChordAnalyser.UI
             // =====================================================
             // 1ere case noire en plus de celles du morceau
             //======================================================            
-            g.DrawRectangle(FillPen, 0, 0, _cellsizewidth, _cellsizeheight);
-            rect = new Rectangle(0, 0, (int)(_cellsizewidth), (int)(_cellsizeheight));
+            g.DrawRectangle(FillPen, 0, 0, _cellwidth, _cellheight);
+            rect = new Rectangle(0, 0, (int)(_cellwidth), (int)(_cellheight));
             g.FillRectangle(new SolidBrush(Color.Black), rect);
 
             var src = new Bitmap(Resources.silence_white);
@@ -274,7 +315,7 @@ namespace ChordAnalyser.UI
             g.DrawImage(src, new Rectangle(10, 10, bmp.Width, bmp.Height));
 
 
-            x += (int)(_cellsizewidth) + (_LinesWidth - 1);
+            x += (int)(_cellwidth) + (_LinesWidth - 1);
 
             // ======================================================
             // Draw measures
@@ -294,8 +335,8 @@ namespace ChordAnalyser.UI
                     // Draw played cell in gray
                     if (i == _currentmeasure - 1 && j == _currentTimeInMeasure - 1 && _currentpos > 0)
                     {
-                        g.DrawRectangle(FillPen, x, 0, _cellsizewidth, _cellsizeheight);
-                        rect = new Rectangle(x, 0, (int)(_cellsizewidth), (int)(_cellsizeheight));
+                        g.DrawRectangle(FillPen, x, 0, _cellwidth, _cellheight);
+                        rect = new Rectangle(x, 0, (int)(_cellwidth), (int)(_cellheight));
                         g.FillRectangle(new SolidBrush(Color.Gray), rect);
 
                     }
@@ -303,22 +344,22 @@ namespace ChordAnalyser.UI
                     {
                         // Draw other cells in white
                         //g.DrawRectangle(FillPen, clip.X + x, clip.Y, _TimeLineHeight, _TimeLineHeight);
-                        g.DrawRectangle(FillPen, x, 0, _cellsizewidth, _cellsizeheight);
+                        g.DrawRectangle(FillPen, x, 0, _cellwidth, _cellheight);
                     }
-                    x += (int)(_cellsizewidth) + (_LinesWidth - 1);
+                    x += (int)(_cellwidth) + (_LinesWidth - 1);
                 }
             }
 
             // ====================================================
             // Ligne noire sur la dernière case de chaque mesure
             // ====================================================
-            x = (int)(_cellsizewidth) + (_LinesWidth - 1);
+            x = (int)(_cellwidth) + (_LinesWidth - 1);
             for (int i = 0; i < NbMeasures; i++)
             {
                 p1 = new Point(x, clip.Y);
-                p2 = new Point(x, clip.Y + (int)(_cellsizeheight));
+                p2 = new Point(x, clip.Y + (int)(_cellheight));
                 g.DrawLine(mesureSeparatorPen, p1, p2);
-                x += sequence1.Numerator * ((int)(_cellsizewidth) + (_LinesWidth - 1));
+                x += sequence1.Numerator * ((int)(_cellwidth) + (_LinesWidth - 1));
             }
 
             maxStaffWidth = x;
@@ -344,7 +385,7 @@ namespace ChordAnalyser.UI
             Font fontMeasure = new Font("Arial", 12 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
             int _LinesWidth = 2;
-            int x = (int)(_cellsizewidth) + (_LinesWidth - 1);
+            int x = (int)(_cellwidth) + (_LinesWidth - 1);
             Point p1;
 
 
@@ -360,7 +401,8 @@ namespace ChordAnalyser.UI
                 for (int i = 1; i <= Gridchords.Count; i++)
                 {
                     // Chord name
-                    p1 = new Point(x + Offset, ((int)(_cellsizeheight) / 2) - (fontMeasure.Height / 2));
+                    p1 = new Point(x + Offset, ((int)(_cellheight) / 2) - (fontMeasure.Height / 2));
+                    
 
                     ttx = Gridchords[i];
                     tx = ttx.Item1;
@@ -368,17 +410,19 @@ namespace ChordAnalyser.UI
                     // If empty, draw symbol
                     if (tx == EmptyChord)
                     {
+                        
                         g.DrawImage(src, new Rectangle(p1.X, 10, bmp.Width, bmp.Height));
 
                     }
                     else
                     {
+                        
                         g.DrawString(tx, fontChord, ChordBrush, p1.X, p1.Y);
                     }
 
                     // Draw measure number
                     tx = i.ToString();
-                    p1 = new Point(x + Offset, (int)(_cellsizeheight) - fontMeasure.Height);
+                    p1 = new Point(x + Offset, (int)(_cellheight) - fontMeasure.Height);
                     g.DrawString(tx, fontMeasure, MeasureBrush, p1.X, p1.Y);
 
                     // ===============================
@@ -389,7 +433,7 @@ namespace ChordAnalyser.UI
                         if (ttx.Item1 != ttx.Item2)
                         {
                             tx = ttx.Item2;
-                            int z = ((int)(_cellsizewidth) + (_LinesWidth - 1)) * sequence1.Numerator / 2;
+                            int z = ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator / 2;
 
                             // If empty, draw symbol
                             if (tx == EmptyChord)
@@ -398,14 +442,14 @@ namespace ChordAnalyser.UI
                             }
                             else
                             {
-                                g.DrawString(tx, fontChord, ChordBrush, p1.X + z, (_cellsizeheight / 2) - (fontMeasure.Height / 2));
+                                g.DrawString(tx, fontChord, ChordBrush, p1.X + z, (_cellheight / 2) - (fontMeasure.Height / 2));
                             }
                         }
                     }
 
 
                     // Increment x (go to next measure)
-                    x += ((int)(_cellsizewidth) + (_LinesWidth - 1)) * sequence1.Numerator;
+                    x += ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator;
 
                 }
             }

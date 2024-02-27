@@ -303,12 +303,17 @@ namespace Karaboss
             #region ChordControl
             chordAnalyserControl1 = new ChordsControl();
             chordAnalyserControl1.Parent = pnlDisplayHorz;
+            
             chordAnalyserControl1.Sequence1 = this.sequence1;
             chordAnalyserControl1.Size = new Size(pnlDisplayHorz.Width, chordAnalyserControl1.Height);
             chordAnalyserControl1.Location = new Point(0, 0);
             chordAnalyserControl1.WidthChanged += new WidthChangedEventHandler(chordAnalyserControl1_WidthChanged);
             chordAnalyserControl1.HeightChanged += new HeightChangedEventHandler(chordAnalyserControl1_HeightChanged);
-            chordAnalyserControl1.MouseDown += new MouseEventHandler(chordAnalyserControl1_MouseDown); 
+            chordAnalyserControl1.MouseDown += new MouseEventHandler(chordAnalyserControl1_MouseDown);
+
+            chordAnalyserControl1.ColumnWidth = 80;
+            chordAnalyserControl1.ColumnHeight = 120;
+
             chordAnalyserControl1.Cursor = Cursors.Hand;
             pnlDisplayHorz.Controls.Add(chordAnalyserControl1);
             #endregion
@@ -990,10 +995,14 @@ namespace Karaboss
         #region Events
         private void chordAnalyserControl1_HeightChanged(object sender, int value)
         {
-            positionHScrollBar.Location = new Point(0, chordAnalyserControl1.Height);
-            pnlDisplayHorz.Height = chordAnalyserControl1.Height + positionHScrollBar.Height;
+            if (positionHScrollBar != null)
+            {
+                positionHScrollBar.Location = new Point(0, chordAnalyserControl1.Height);
+                pnlDisplayHorz.Height = chordAnalyserControl1.Height + positionHScrollBar.Height;
+            }
 
-            pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height;
+            if (pnlBottom != null)
+                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height;
 
         }
 
@@ -1032,7 +1041,8 @@ namespace Karaboss
                 int y = e.Location.Y + ChordMapControl1.OffsetY;  // Vertical
 
                 // Calculate start time
-                int LargeurCellule = (int)(chordAnalyserControl1.CellSize) + 1;
+                //int LargeurCellule = (int)(chordAnalyserControl1.CellSize) + 1;
+                int LargeurCellule = (int)(chordAnalyserControl1.ColumnWidth) + 1;
                 int line = 1 + (y / LargeurCellule);
                 int prevmeasures = -1 + (line - 1) * ChordMapControl1.NbColumns;
                 int cellincurrentline = (int)Math.Ceiling(x / (double)LargeurCellule);
@@ -1076,19 +1086,19 @@ namespace Karaboss
             if (curline != _currentLine)
             {
                 _currentLine = curline;
-                int LargeurCellule = (int)(chordAnalyserControl1.CellSize) + 1;
+                int HauteurCellule = (int)(ChordMapControl1.CellSize) + 1;
 
                 // if control is higher then the panel => scroll
                 if (ChordMapControl1.maxStaffHeight > pnlDisplayMap.Height)
                 {
                     // offset vertical: ensure to see 2 lines
-                    int offset = LargeurCellule * (curline - 2);
+                    int offset = HauteurCellule * (curline - 2);
 
                     //ChordMapControl1.OffsetY = offset;
                     
 
                     if (pnlDisplayMap.VerticalScroll.Visible && pnlDisplayMap.VerticalScroll.Minimum <= offset && offset <= pnlDisplayMap.VerticalScroll.Maximum)
-                        pnlDisplayMap.VerticalScroll.Value = LargeurCellule * (curline - 2);
+                        pnlDisplayMap.VerticalScroll.Value = HauteurCellule * (curline - 2);
                 }
             }
         }
@@ -1114,7 +1124,7 @@ namespace Karaboss
                 //if (curmeasure != _currentMeasure)
                 _currentMeasure = curmeasure;                
                 
-                int LargeurCellule = (int)(chordAnalyserControl1.CellSize) + 1;
+                int LargeurCellule = (int)(chordAnalyserControl1.ColumnWidth) + 1;
                 int LargeurMesure = LargeurCellule * sequence1.Numerator; // keep one measure on the left
                 int offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);                    
                 
@@ -1212,10 +1222,13 @@ namespace Karaboss
         /// <param name="value"></param>
         private void chordAnalyserControl1_WidthChanged(object sender, int value)
         {
-            positionHScrollBar.Width = (pnlDisplayHorz.Width > chordAnalyserControl1.Width ? chordAnalyserControl1.Width : pnlDisplayHorz.Width);
+            if (positionHScrollBar != null)
+            {
+                positionHScrollBar.Width = (pnlDisplayHorz.Width > chordAnalyserControl1.Width ? chordAnalyserControl1.Width : pnlDisplayHorz.Width);
 
-            // Set maximum & visibility
-            SetScrollBarValues();
+                // Set maximum & visibility
+                SetScrollBarValues();
+            }
         }
 
         #endregion positionHScrollBar
