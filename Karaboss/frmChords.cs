@@ -127,6 +127,9 @@ namespace Karaboss
         private Array LyricsLinesKeys;
         private Array LyricsTimesKeys;
 
+        // Lyrics : int = time, string = syllabes in corresponding time
+        private Dictionary<int, string> GridLyrics;
+
         #endregion private dcl
 
 
@@ -183,13 +186,9 @@ namespace Karaboss
 
                 UpdateMidiTimes();
 
-                //TempoOrig = _tempo;
-                //lblTempo.Text = string.Format("Tempo: {0} - BPM: {1}", _tempo, _bpm);
-
                 // Display
                 int Min = (int)(_duration / 60);
                 int Sec = (int)(_duration - (Min * 60));
-                //lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
 
                 // PlayerState = stopped
                 ResetSequencer();
@@ -293,8 +292,7 @@ namespace Karaboss
             pnlDisplayHorz = new Panel();
             pnlDisplayHorz.Parent = tabPageDiagrams;
             pnlDisplayHorz.Location = new Point(tabPageDiagrams.Margin.Left, tabPageDiagrams.Margin.Top);            
-            pnlDisplayHorz.Size = new Size(tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, 150);
-            //pnlDisplayHorz.BackColor = Color.FromArgb(70, 77, 95);            
+            pnlDisplayHorz.Size = new Size(tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, 150);                    
             pnlDisplayHorz.BackColor = Color.Chocolate;
             tabPageDiagrams.Controls.Add(pnlDisplayHorz);
             #endregion Panel Display horizontal chords
@@ -303,10 +301,11 @@ namespace Karaboss
             #region ChordControl
             chordAnalyserControl1 = new ChordsControl();
             chordAnalyserControl1.Parent = pnlDisplayHorz;
-            
-            chordAnalyserControl1.Sequence1 = this.sequence1;
+            chordAnalyserControl1.Location = new Point(0, 0);            
+
+            // Set size mandatory ??? unless, the control is not shoqn correctly
             chordAnalyserControl1.Size = new Size(pnlDisplayHorz.Width, chordAnalyserControl1.Height);
-            chordAnalyserControl1.Location = new Point(0, 0);
+            
             chordAnalyserControl1.WidthChanged += new WidthChangedEventHandler(chordAnalyserControl1_WidthChanged);
             chordAnalyserControl1.HeightChanged += new HeightChangedEventHandler(chordAnalyserControl1_HeightChanged);
             chordAnalyserControl1.MouseDown += new MouseEventHandler(chordAnalyserControl1_MouseDown);
@@ -315,6 +314,7 @@ namespace Karaboss
             chordAnalyserControl1.ColumnHeight = 120;
 
             chordAnalyserControl1.Cursor = Cursors.Hand;
+            chordAnalyserControl1.Sequence1 = this.sequence1;
             pnlDisplayHorz.Controls.Add(chordAnalyserControl1);
             #endregion
 
@@ -377,16 +377,6 @@ namespace Karaboss
 
             #region 2eme TAB
 
-            /*
-            #region display bottom map            
-            pnlBottomMap = new Panel();
-            pnlBottomMap.Parent = tabPageOverview;
-            pnlBottom.Height = 80;
-            pnlBottomMap.Dock = DockStyle.Bottom;
-            tabPageOverview.Controls.Add(pnlBottomMap);
-            #endregion display bottom map
-            */
-
             #region display map chords
             pnlDisplayMap = new Panel();
             pnlDisplayMap.Parent = tabPageOverview;
@@ -403,25 +393,16 @@ namespace Karaboss
             ChordMapControl1 = new ChordsMapControl();
             ChordMapControl1.Parent = pnlDisplayMap;
             ChordMapControl1.Location = new Point(0, 0);            
-            //ChordMapControl1.Size = new Size(pnlDisplayMap.Width, pnlDisplayMap.Height);
-            //ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
-            //ChordMapControl1.Dock = DockStyle.Fill;
             ChordMapControl1.WidthChanged += new MapWidthChangedEventHandler(ChordMapControl1_WidthChanged);
             ChordMapControl1.HeightChanged += new MapHeightChangedEventHandler(ChordMapControl1_HeightChanged);            
             ChordMapControl1.MouseDown += new MouseEventHandler(ChordMapControl1_MouseDown);
             ChordMapControl1.Cursor = Cursors.Hand;
             ChordMapControl1.Sequence1 = this.sequence1;
             pnlDisplayMap.Controls.Add(ChordMapControl1);
-
-
             #endregion ChordMapControl
 
-
-            #endregion 2eme TAB
-
- 
+            #endregion 2eme TAB 
         }
-
 
         #endregion Display Controls       
 
@@ -672,6 +653,18 @@ namespace Karaboss
             LoadLyricsLines();
 
             DisplayLyrics(0);
+        }
+
+        /// <summary>
+        /// Load lyrivs in a dictionnary
+        /// </summary>
+        private void LoadDictLyrics()
+        {
+            GridLyrics = new Dictionary<int, string>();
+            for (int i = 0; i < plLyrics.Count; i++)
+            {
+
+            }
         }
 
         private void LoadLyricsLines()
@@ -1007,9 +1000,7 @@ namespace Karaboss
         }
 
         private void ChordMapControl1_HeightChanged(object sender, int value)
-        {
-            //ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
-
+        {            
             if (pnlDisplayMap != null)
             {
                 //Console.WriteLine(pnlDisplayMap.Width.ToString());
@@ -1020,10 +1011,7 @@ namespace Karaboss
         }
 
         private void ChordMapControl1_WidthChanged(object sender, int value)
-        {
-            //ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
-
-
+        {            
             if (pnlDisplayMap != null)
             {
                 //Console.WriteLine(pnlDisplayMap.Width.ToString());
@@ -1033,15 +1021,13 @@ namespace Karaboss
         }
 
         private void ChordMapControl1_MouseDown(object sender, MouseEventArgs e)
-        {
-            //throw new NotImplementedException();
+        {            
             if (e.Button == MouseButtons.Left)
             {
                 int x = e.Location.X;  //Horizontal
                 int y = e.Location.Y + ChordMapControl1.OffsetY;  // Vertical
 
-                // Calculate start time
-                //int LargeurCellule = (int)(chordAnalyserControl1.CellSize) + 1;
+                // Calculate start time                
                 int LargeurCellule = (int)(chordAnalyserControl1.ColumnWidth) + 1;
                 int line = 1 + (y / LargeurCellule);
                 int prevmeasures = -1 + (line - 1) * ChordMapControl1.NbColumns;
@@ -1049,7 +1035,6 @@ namespace Karaboss
 
                 newstart = _measurelen * prevmeasures + (_measurelen / sequence1.Numerator) * cellincurrentline;
                 FirstPlaySong(newstart);
-
             }
         }
 

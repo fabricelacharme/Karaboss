@@ -82,6 +82,7 @@ namespace ChordAnalyser.UI
         public int NbColumns
         {
             get { return _nbcolumns; }
+            set { _nbcolumns = value; }
         }
 
 

@@ -83,11 +83,9 @@ namespace ChordAnalyser.UI
                     }
                 }                    
              }
-
         }        
 
-
-    
+            
         private Sequence sequence1;
         /// <summary>
         /// Gets or sets sequence
@@ -109,9 +107,12 @@ namespace ChordAnalyser.UI
             }
         }
 
+        // Chords
         public Dictionary<int, (string, string)> Gridchords { get; set; }
-
+        //Lyrics
+        public Dictionary<int,string> GridLyrics { get; set; }
         
+
         private float _cellwidth;
         private float _cellheight;
 
@@ -143,29 +144,7 @@ namespace ChordAnalyser.UI
                 pnlCanvas.Invalidate();
             }
         }
-
-
-        /*
-        private float _cellsizewidth = 80;
-        public float CellSizeWidth
-        {
-            get { return _cellsizewidth; }
-        }
-
-        //private static float _cellsizeheightinit = 80;
-        private float _cellsizeheight = 160;
-        public float CellSizeHeight
-        {
-            get { return _cellsizeheight; }
-        }
-
-
-        private float _cellsize = 80;
-        public float CellSize
-        {
-            get { return _cellsize; }
-        }
-        */
+     
 
         /// <summary>
         /// zoom
@@ -177,18 +156,16 @@ namespace ChordAnalyser.UI
             { return _zoom; }
             set
             {                
-                _zoom = value;
-                //_cellsize = 80 * zoom;                
-                //_cellsizewidth = 80 * zoom;
-                //_cellsizeheight = 160 * zoom;
+                _zoom = value;                
 
                 _cellwidth = _columnwidth * zoom;
                 _cellheight = _columnheight * zoom;
-
-                //this.Height = (int)(_cellsizeheight);
+                
                 this.Height = (int)(_cellheight);
                 if (HeightChanged != null)
                     HeightChanged(this, this.Height);
+                // No need to manage width: controls position on frmChords depends only on its height
+
                 pnlCanvas.Invalidate();                               
             }
         }
@@ -254,8 +231,7 @@ namespace ChordAnalyser.UI
         }
 
         private void DrawCanvas()
-        {
-            //Height = (int)_cellheight;
+        {            
             Height = (int)_columnheight;
 
             // Draw pnlCanvas            
@@ -271,9 +247,7 @@ namespace ChordAnalyser.UI
             pnlCanvas.MouseMove += new MouseEventHandler(pnlCanvas_MouseMove);
             pnlCanvas.MouseLeave += new EventHandler(pnlCanvas_MouseLeave);
 
-
             this.Controls.Add(pnlCanvas);
-
         }
               
         private void DrawGrid(Graphics g, Rectangle clip)
