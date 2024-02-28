@@ -357,6 +357,7 @@ namespace ChordAnalyser.UI
 
             Font fontChord = new Font("Arial", 16 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontMeasure = new Font("Arial", 12 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font fontLyric = new Font("Arial", 12 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
             int _LinesWidth = 2;
             int x = (int)(_cellwidth) + (_LinesWidth - 1);
@@ -426,6 +427,25 @@ namespace ChordAnalyser.UI
                     x += ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator;
 
                 }
+
+
+                // Display Lyrics                
+                int currentbeat;
+                string currentlyric = string.Empty;
+                int d = ((int)(_cellwidth) + (_LinesWidth - 1));
+                foreach ( var z in GridLyrics )
+                {
+                    currentbeat = z.Key;
+                    currentlyric = z.Value;
+
+                    x = (currentbeat + 1) * d;
+                    g.DrawString(currentlyric, fontLyric, ChordBrush, x, 40);
+
+
+                }
+
+
+
             }
         }
 

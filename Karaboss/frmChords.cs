@@ -649,21 +649,48 @@ namespace Karaboss
             plLyrics = new List<plLyric>();
 
             ExtractLyrics();
-            
+
+            // Load lyrcis per beat dictionary
+            LoadLyricsPerBeat();
+            chordAnalyserControl1.GridLyrics = GridLyrics;
+
             LoadLyricsLines();
 
             DisplayLyrics(0);
         }
 
         /// <summary>
-        /// Load lyrivs in a dictionnary
+        /// Load lyrics in a dictionnary
         /// </summary>
-        private void LoadDictLyrics()
+        private void LoadLyricsPerBeat()
         {
             GridLyrics = new Dictionary<int, string>();
+            int tickson;
+            int beat;
+            int beatduration = _measurelen/sequence1.Numerator;
+            int beats = NbMeasures * sequence1.Numerator;
+            int currentbeat = 0;
+            string currenttext = string.Empty;
+            
+
             for (int i = 0; i < plLyrics.Count; i++)
             {
-
+                if (plLyrics[i].Type == plLyric.Types.Text)
+                {
+                    tickson = plLyrics[i].TicksOn;
+                    beat = (int)((tickson / (float)_totalTicks) * beats);
+                    
+                    // New beat
+                    // Store previous syllabes
+                    if (beat != currentbeat)
+                    {                                               
+                        GridLyrics.Add(currentbeat, currenttext);
+                        currentbeat = beat;
+                        currenttext = string.Empty;
+                    }
+                    // Add syllabe to currenttext
+                    currenttext += plLyrics[i].Element;                    
+                }
             }
         }
 
