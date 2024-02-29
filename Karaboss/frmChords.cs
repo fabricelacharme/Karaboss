@@ -667,19 +667,33 @@ namespace Karaboss
             GridLyrics = new Dictionary<int, string>();
             int tickson;
             int beat;
+            int beatold;
             int beatduration = _measurelen/sequence1.Numerator;
             int beats = NbMeasures * sequence1.Numerator;
             int currentbeat = 0;
             string currenttext = string.Empty;
-            
+
+            int nbdiffs = 0;
 
             for (int i = 0; i < plLyrics.Count; i++)
             {
                 if (plLyrics[i].Type == plLyric.Types.Text)
                 {
                     tickson = plLyrics[i].TicksOn;
-                    beat = (int)((tickson / (float)_totalTicks) * beats);
-                    
+                    beatold = (int)((tickson / (float)_totalTicks) * beats);
+
+                    // Prendre valeur supérieur
+                    beat = (int)Math.Ceiling(((tickson / (float)_totalTicks) * beats));
+
+                    // Correction pas suffisante, il faut comparer avec la piste de la mélodie pour avoir
+                    // le ticks off et s'assurer qu'on déborde bien sur l'autre beat
+                    // si on ne déborde pas, c'est que la syllabe est bien dans le beat initial et pas dans le suivant.
+                    // pb évident avec la chanson let it be
+
+
+                    if (beat != beatold)
+                        nbdiffs++;
+
                     // New beat
                     // Store previous syllabes
                     if (beat != currentbeat)
@@ -692,6 +706,8 @@ namespace Karaboss
                     currenttext += plLyrics[i].Element;                    
                 }
             }
+
+            Console.WriteLine("******** Différences positionnement lyrics : " + nbdiffs.ToString());
         }
 
         private void LoadLyricsLines()
