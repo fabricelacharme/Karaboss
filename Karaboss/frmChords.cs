@@ -33,6 +33,7 @@
 #endregion
 using ChordAnalyser.UI;
 using Karaboss.Lrc.SharedFramework;
+using Karaboss.Lyrics;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
@@ -78,7 +79,7 @@ namespace Karaboss
 
         #region controls
         private Sequence sequence1 = new Sequence();
-        private ChordsControl chordAnalyserControl1;
+        private ChordsControl ChordControl;
         private ChordsMapControl ChordMapControl1;
         private OutputDevice outDevice;
         private Sequencer sequencer1 = new Sequencer();
@@ -119,17 +120,8 @@ namespace Karaboss
         private int _currentLine = 1;
 
         // Lyrics 
-        public CLyric myLyric;
-        private List<plLyric> plLyrics;
-
-        private Dictionary <int, string> LyricsLines = new Dictionary<int, string>();
-        private Dictionary<int, int> LyricsTimes = new Dictionary<int, int>();
-        private Array LyricsLinesKeys;
-        private Array LyricsTimesKeys;
-
-        // Lyrics : int = time, string = syllabes in corresponding time
-        private Dictionary<int, string> GridLyrics;
-
+        private LyricsMgmt myLyricsMgmt;
+       
         #endregion private dcl
 
 
@@ -143,9 +135,7 @@ namespace Karaboss
             MIDIfileFullPath = FileName;
             MIDIfileName = Path.GetFileName(FileName);
             MIDIfilePath = Path.GetDirectoryName(FileName);
-
-            // Sequence
-            //LoadSequencer(seq);
+                        
             outDevice = OtpDev;
 
             // Allow form keydown
@@ -299,23 +289,23 @@ namespace Karaboss
             
 
             #region ChordControl
-            chordAnalyserControl1 = new ChordsControl();
-            chordAnalyserControl1.Parent = pnlDisplayHorz;
-            chordAnalyserControl1.Location = new Point(0, 0);            
+            ChordControl = new ChordsControl();
+            ChordControl.Parent = pnlDisplayHorz;
+            ChordControl.Location = new Point(0, 0);            
 
             // Set size mandatory ??? unless, the control is not shoqn correctly
-            chordAnalyserControl1.Size = new Size(pnlDisplayHorz.Width, chordAnalyserControl1.Height);
+            ChordControl.Size = new Size(pnlDisplayHorz.Width, ChordControl.Height);
             
-            chordAnalyserControl1.WidthChanged += new WidthChangedEventHandler(chordAnalyserControl1_WidthChanged);
-            chordAnalyserControl1.HeightChanged += new HeightChangedEventHandler(chordAnalyserControl1_HeightChanged);
-            chordAnalyserControl1.MouseDown += new MouseEventHandler(chordAnalyserControl1_MouseDown);
+            ChordControl.WidthChanged += new WidthChangedEventHandler(ChordControl_WidthChanged);
+            ChordControl.HeightChanged += new HeightChangedEventHandler(ChordControl_HeightChanged);
+            ChordControl.MouseDown += new MouseEventHandler(ChordControl_MouseDown);
 
-            chordAnalyserControl1.ColumnWidth = 80;
-            chordAnalyserControl1.ColumnHeight = 120;
+            ChordControl.ColumnWidth = 80;
+            ChordControl.ColumnHeight = 120;
 
-            chordAnalyserControl1.Cursor = Cursors.Hand;
-            chordAnalyserControl1.Sequence1 = this.sequence1;
-            pnlDisplayHorz.Controls.Add(chordAnalyserControl1);
+            ChordControl.Cursor = Cursors.Hand;
+            ChordControl.Sequence1 = this.sequence1;
+            pnlDisplayHorz.Controls.Add(ChordControl);
             #endregion
 
 
@@ -324,7 +314,7 @@ namespace Karaboss
             positionHScrollBar.Parent = pnlDisplayHorz;
             positionHScrollBar.ThumbImage = Properties.Resources.BTN_Thumb_Blue;
             positionHScrollBar.Size = new Size(pnlDisplayHorz.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, 20);
-            positionHScrollBar.Location = new Point(0, chordAnalyserControl1.Height);
+            positionHScrollBar.Location = new Point(0, ChordControl.Height);
             positionHScrollBar.Value = 0;
             positionHScrollBar.Minimum = 0;
 
@@ -340,7 +330,7 @@ namespace Karaboss
             positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(PositionHScrollBar_Scroll);
             pnlDisplayHorz.Controls.Add(positionHScrollBar);
 
-            pnlDisplayHorz.Height = chordAnalyserControl1.Height + positionHScrollBar.Height;
+            pnlDisplayHorz.Height = ChordControl.Height + positionHScrollBar.Height;
 
             #endregion
 
@@ -426,8 +416,8 @@ namespace Karaboss
                     case PlayerStates.Playing:
                         // first page
                         int p = sequencer1.Position;
-                        DisplayNotes(p);
-                        DisplayLyrics(p);
+                        DisplayCurrentBeat(p);
+                        DisplayLineLyrics(p);                        
                         DisplayPositionHScrollBar(p);
                         DisplayPositionVScrollbar(p);
                         break;
@@ -451,13 +441,76 @@ namespace Karaboss
         #endregion timer
 
 
-        #region DisplayNotes
+        #region Display Notes
+
+        
+        private void DisplayChords()
+        {
+
+            // Display chords in the textbox
+            ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
+            Dictionary<int, (string, string)> Gridchords = Analyser.Gridchords;
+
+            /*
+            string res = string.Empty;
+            foreach (KeyValuePair<int, (string, string)> pair in Gridchords)
+            {
+                res += string.Format("{0} - {1}", pair.Key, pair.Value) + "\r\n";
+            }
+            */
+
+            //Change labels displayed
+            for (int i = 1; i <= Gridchords.Count; i++)
+            {
+                Gridchords[i] = (InterpreteNote(Gridchords[i].Item1), InterpreteNote(Gridchords[i].Item2));
+            }
+
+            // Display Chords in boxes
+            ChordControl.Gridchords = Gridchords;
+            ChordMapControl1.Gridchords = Gridchords;
+
+        }
+
+
+        private string InterpreteNote(string note)
+        {
+            note = note.Replace("sus", "");
+
+            note = note.Replace(" major", "");
+            note = note.Replace(" triad", "");
+            note = note.Replace("dominant", "");
+
+            note = note.Replace("first inversion", "");
+            note = note.Replace("second inversion", "");
+            note = note.Replace("third inversion", "");
+
+            note = note.Replace(" seventh", "7");
+            note = note.Replace(" minor", "m");
+            note = note.Replace("seventh", "7");
+            note = note.Replace("sixth", "6");
+            note = note.Replace("ninth", "9");
+            note = note.Replace("eleventh", "11");
+
+            note = note.Replace("6", "");
+            note = note.Replace("9", "");
+            note = note.Replace("11", "");
+
+
+            note = note.Replace("<Chord not found>", "?");
+
+
+            note = note.Trim();
+            return note;
+        }
+
+        
+
 
         /// <summary>
         /// Display gray cells
         /// </summary>
         /// <param name="pos"></param>
-        private void DisplayNotes(int pos)
+        private void DisplayCurrentBeat(int pos)
         {
             // pos is in which measure?
             int curmeasure = 1 + pos / _measurelen;
@@ -476,58 +529,14 @@ namespace Karaboss
                 _currentTimeInMeasure = timeinmeasure;
 
                 // Draw gray cell for played note
-                chordAnalyserControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
+                ChordControl.DisplayNotes(pos, curmeasure, timeinmeasure);
                 ChordMapControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
             }
         }
 
-        #endregion DisplayNotes
+        #endregion Display Notes
 
-
-        #region Display Lyrics
-
-        /// <summary>
-        /// Display lyrics
-        /// </summary>
-        /// <param name="pos"></param>
-        private void DisplayLyrics(int pos)
-        {
-            if (LyricsLinesKeys == null)
-                return;
-
-            int lyrictickson = 0;
-            int lyricticksoff = 0;
-            //lLyrics.Text = "";
-            bool bfound = false;
-            string txtcontent = string.Empty;
-
-            for (int i = LyricsLinesKeys.Length - 1; i >= 0; i--)
-            {
-                lyrictickson = (int)LyricsLinesKeys.GetValue(i);
-                lyricticksoff = LyricsTimes[lyrictickson];
-                
-                if (lyrictickson <= pos && pos <= lyricticksoff)
-                {                    
-                    bfound = true;
-                    break;                    
-                }               
-            }
-
-            if (bfound)
-            {
-                lblLyrics.Text = LyricsLines[lyrictickson];
-            }
-            else
-            {
-                lblLyrics.Text = "";
-            }
-
-        }
-        
-
-        #endregion Display Lyrics
-
-
+       
         #region handle messages
 
         /// <summary>
@@ -564,9 +573,10 @@ namespace Karaboss
 
                 DrawControls();                
 
-                DisplayResults();
+                DisplayChords();
 
-                LoadLyrics();
+                DisplayLyrics();
+                                                
             }
             else
             {
@@ -641,342 +651,30 @@ namespace Karaboss
         #endregion handle messages
 
 
-        #region Lyrics
-
-        private void LoadLyrics()
-        {
-            myLyric = new CLyric();
-            plLyrics = new List<plLyric>();
-
-            ExtractLyrics();
-
-            // Load lyrcis per beat dictionary
-            LoadLyricsPerBeat();
-            chordAnalyserControl1.GridLyrics = GridLyrics;
-
-            LoadLyricsLines();
-
-            DisplayLyrics(0);
-        }
+        #region DisplayLyrics
 
         /// <summary>
-        /// Load lyrics in a dictionnary
+        /// Display lyrics in the first page
         /// </summary>
-        private void LoadLyricsPerBeat()
+        private void DisplayLyrics()
         {
-            GridLyrics = new Dictionary<int, string>();
-            int tickson;
-            int beat;
-            int beatold;
-            int beatduration = _measurelen/sequence1.Numerator;
-            int beats = NbMeasures * sequence1.Numerator;
-            int currentbeat = 0;
-            string currenttext = string.Empty;
+            myLyricsMgmt = new LyricsMgmt(sequence1);
+            ChordControl.GridLyrics = myLyricsMgmt.Gridlyrics;
 
-            int nbdiffs = 0;
-
-            for (int i = 0; i < plLyrics.Count; i++)
-            {
-                if (plLyrics[i].Type == plLyric.Types.Text)
-                {
-                    tickson = plLyrics[i].TicksOn;
-                    beatold = (int)((tickson / (float)_totalTicks) * beats);
-
-                    // Prendre valeur supérieur
-                    beat = (int)Math.Ceiling(((tickson / (float)_totalTicks) * beats));
-
-                    // Correction pas suffisante, il faut comparer avec la piste de la mélodie pour avoir
-                    // le ticks off et s'assurer qu'on déborde bien sur l'autre beat
-                    // si on ne déborde pas, c'est que la syllabe est bien dans le beat initial et pas dans le suivant.
-                    // pb évident avec la chanson let it be
-
-
-                    if (beat != beatold)
-                        nbdiffs++;
-
-                    // New beat
-                    // Store previous syllabes
-                    if (beat != currentbeat)
-                    {                                               
-                        GridLyrics.Add(currentbeat, currenttext);
-                        currentbeat = beat;
-                        currenttext = string.Empty;
-                    }
-                    // Add syllabe to currenttext
-                    currenttext += plLyrics[i].Element;                    
-                }
-            }
-
-            Console.WriteLine("******** Différences positionnement lyrics : " + nbdiffs.ToString());
-        }
-
-        private void LoadLyricsLines()
-        {
-            LyricsLines = new Dictionary<int, string>();
-            string line = string.Empty;
-            bool newline = false;
-            int ticksoff = 0;
-            int curindex = -1;            
-
-            for (int i = 0; i < plLyrics.Count; i++)
-            {
-                if (plLyrics[i].Type == plLyric.Types.LineFeed || plLyrics[i].Type == plLyric.Types.Paragraph)
-                {
-                    newline = true;
-                }
-                else
-                {
-                    // the first item after newline
-                    if (newline)
-                    {
-                        if (line.Trim() != "")
-                        {                            
-                            LyricsLines.Add(curindex, line);                            
-                            LyricsTimes.Add(curindex, ticksoff);
-                        }
-                        newline = false;                        
-                        line = string.Empty;
-                    }
-
-                    // Last line (the last line will not have a new line event)
-                    if (line.Trim() == "")
-                    {                        
-                        curindex = plLyrics[i].TicksOn;
-                    }
-                    
-                    // others items of a line
-                    line += plLyrics[i].Element;
-                    ticksoff = plLyrics[i].TicksOff;
-                                        
-                   
-                }
-            }
-
-
-            // Do not forget last line
-            if(line.Trim() != "")
-            {
-                LyricsLines.Add(curindex, line);
-                LyricsTimes.Add(curindex, ticksoff);
-            }
-
-            if (LyricsLines.Count > 0)
-            {
-                LyricsLinesKeys = LyricsLines.Keys.ToArray();
-                LyricsTimesKeys = LyricsTimes.Keys.ToArray();
-            }
-        }
-            
-
+            DisplayLineLyrics(0);
+        }            
+         
         /// <summary>
-        /// Lyrics extraction & display
+        /// Display current line of lyrics in Label Lyrics 
         /// </summary>
-        private string ExtractLyrics()
+        /// <param name="pos"></param>
+        private void DisplayLineLyrics(int pos)
         {
-            string retval = string.Empty; //ret value (lyrics)
-
-            string lyrics = string.Empty;
-            string lyricstext = string.Empty;
-
-            double l_text = 1;
-            double l_lyric = 1;
-
-            int OneBeat = _measurelen / sequence1.Numerator;
-
-            // ----------------------------------------------------------------------
-            // Objectif : comparer texte et lyriques et choisir la meilleure solution
-            // ----------------------------------------------------------------------
-
-            // track for text
-            int trktext = HasLyricsText();     // Recherche si Textes
-            if (trktext >= 0)
-            {
-                lyricstext = sequence1.tracks[trktext].TotalLyricsT;
-                l_text = lyricstext.Length;
-            }
-
-            // track for lyrics
-            int trklyric = HasLyrics();              // Recherche si lyrics  
-            if (trklyric >= 0)
-            {
-                lyrics = sequence1.tracks[trklyric].TotalLyricsL;
-                l_lyric = lyrics.Length;
-            }
-
-            if (trktext >= 0 && trklyric >= 0)
-            {
-                // regarde lequel est le plus gros... lol                
-                if (l_lyric >= l_text)
-                {
-                    // Elimine texte et choisi les lyrics
-                    trktext = -1;
-                }
-                else
-                {
-                    // Elimine lyrics et choisi les textes
-                    trklyric = -1;
-                }
-            }
-
-            // if lyrics are in text events
-            if (trktext >= 0)
-            {
-                myLyric = new CLyric()
-                {
-                    melodytracknum = -1,
-                    lyricstracknum = trktext,
-                    lyrictype = CLyric.LyricTypes.Text,
-                };
-
-                lyrics = sequence1.tracks[trktext].TotalLyricsT;
-                // Charge listes           
-                if (plLyrics != null)
-                    plLyrics.Clear();
-
-                Track track = sequence1.tracks[myLyric.lyricstracknum];
-                
-
-                for (int k = 0; k < track.LyricsText.Count; k++)
-                {
-                    // Stockage dans liste plLyrics
-                    plLyric.Types plType = (plLyric.Types)track.LyricsText[k].Type;
-                    string plElement = track.LyricsText[k].Element;
-
-                    // Start time for a lyric
-                    int plTicksOn = track.LyricsText[k].TicksOn;
-
-                    // Stop time for a lyric (maxi 1 beat ?)
-                    int plTicksOff = plTicksOn + _measurelen;
-
-                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
-                }
-
-                return lyrics;
-            }
-            // if lyrics are in lyric events
-            else
-            {
-                if (trklyric >= 0)
-                {
-                    lyrics = sequence1.tracks[trklyric].TotalLyricsL;
-
-                    myLyric = new CLyric()
-                    {
-                        melodytracknum = -1,
-                        lyricstracknum = trklyric,
-                        lyrictype = CLyric.LyricTypes.Lyric,
-                    };
-
-
-                    // Charge listes            
-                    if (plLyrics != null)
-                        plLyrics.Clear();
-
-                    // Remove "[]" for the letter by letter lyrics
-                    Track track = sequence1.tracks[myLyric.lyricstracknum];
-                    for (int k = 0; k < track.Lyrics.Count - 1; k++)
-                    {
-                        if (track.Lyrics[k].Element == "[]")
-                        {
-                            if (track.Lyrics[k + 1].Type == Track.Lyric.Types.Text)
-                            {
-                                track.Lyrics[k + 1].Element = " " + track.Lyrics[k + 1].Element;
-                            }
-                        }
-                    }
-
-                    for (int k = 0; k < track.Lyrics.Count; k++)
-                    {
-                        if (track.Lyrics[k].Element != "[]")
-                        {
-                            // Stockage dans liste plLyrics
-                            plLyric.Types plType = (plLyric.Types)track.Lyrics[k].Type;
-                            string plElement = track.Lyrics[k].Element;
-
-                            // Start time for a lyric
-                            int plTicksOn = track.Lyrics[k].TicksOn;
-
-                            // Stop time for the lyric
-                            int plTicksOff = plTicksOn + _measurelen;
-
-                            plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
-                        }
-                    }
-                    return lyrics;
-
-                }
-                // no choice was possible
-                else
-                {
-                    if (trklyric >= 0)
-                    {
-                        MessageBox.Show("This file contains lyrics events, but I am unable to use them.");
-                    }
-
-                    if (trktext >= 0)
-                    {
-                        MessageBox.Show("This file contains text events, but I am unable to use them.");
-                    }
-                }
-            }
-            return retval;
+            lblLyrics.Text = myLyricsMgmt.DisplayLineLyrics(pos);
         }
 
-        /// <summary>
-        /// Lyrics type = Text
-        /// </summary>
-        /// <returns></returns>
-        private int HasLyricsText()
-        {
-            int max = -1;
-            int track = -1;
-            for (int i = 0; i < sequence1.tracks.Count; i++)
-            {
-                if (sequence1.tracks[i].TotalLyricsT != null)
-                {
-                    if (sequence1.tracks[i].TotalLyricsT.Length > max)
-                    {
-                        // BUG : on écrit des lyrics text dans n'importe quelle piste  ???
-                        max = sequence1.tracks[i].TotalLyricsT.Length;
-                        track = i;
-                    }
-                }
-            }
-            return track;
-        }
 
-        /// <summary>
-        /// Lyrics type = Lyric
-        /// </summary>
-        /// <returns></returns>
-        private int HasLyrics()
-        {
-            string tx = string.Empty;
-            int max = 0;
-            int trk = -1;
-
-            for (int i = 0; i < sequence1.tracks.Count; i++)
-            {
-                tx = string.Empty;
-                if (sequence1.tracks[i].TotalLyricsL != null)
-                {
-                    tx = sequence1.tracks[i].TotalLyricsL;
-                    if (tx.Length > max)
-                    {
-                        max = tx.Length;
-                        trk = i;
-                    }
-                }
-            }
-            if (max > 0)
-            {
-                return trk;
-            }
-
-            return -1;
-        }
-
-        #endregion Lyrics
+        #endregion DisplayLyrics
 
 
         #region buttons
@@ -1015,13 +713,13 @@ namespace Karaboss
 
         private void btnZoomMinus_Click(object sender, EventArgs e)
         {
-            chordAnalyserControl1.zoom -= (float)0.1;
+            ChordControl.zoom -= (float)0.1;
             ChordMapControl1.zoom -= (float)0.1;
         }
 
         private void btnZoomPlus_Click(object sender, EventArgs e)
         {
-            chordAnalyserControl1.zoom += (float)0.1;
+            ChordControl.zoom += (float)0.1;
             ChordMapControl1.zoom += (float)0.1;
         }
 
@@ -1029,12 +727,12 @@ namespace Karaboss
 
 
         #region Events
-        private void chordAnalyserControl1_HeightChanged(object sender, int value)
+        private void ChordControl_HeightChanged(object sender, int value)
         {
             if (positionHScrollBar != null)
             {
-                positionHScrollBar.Location = new Point(0, chordAnalyserControl1.Height);
-                pnlDisplayHorz.Height = chordAnalyserControl1.Height + positionHScrollBar.Height;
+                positionHScrollBar.Location = new Point(0, ChordControl.Height);
+                pnlDisplayHorz.Height = ChordControl.Height + positionHScrollBar.Height;
             }
 
             if (pnlBottom != null)
@@ -1071,7 +769,7 @@ namespace Karaboss
                 int y = e.Location.Y + ChordMapControl1.OffsetY;  // Vertical
 
                 // Calculate start time                
-                int LargeurCellule = (int)(chordAnalyserControl1.ColumnWidth) + 1;
+                int LargeurCellule = (int)(ChordControl.ColumnWidth) + 1;
                 int line = 1 + (y / LargeurCellule);
                 int prevmeasures = -1 + (line - 1) * ChordMapControl1.NbColumns;
                 int cellincurrentline = (int)Math.Ceiling(x / (double)LargeurCellule);
@@ -1081,13 +779,13 @@ namespace Karaboss
             }
         }
 
-        private void chordAnalyserControl1_MouseDown(object sender, MouseEventArgs e)
+        private void ChordControl_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
                 int x = e.Location.X;
 
-                newstart = (int)(((chordAnalyserControl1.OffsetX + x) / (float)chordAnalyserControl1.Width) * sequence1.GetLength());
+                newstart = (int)(((ChordControl.OffsetX + x) / (float)ChordControl.Width) * sequence1.GetLength());
                 FirstPlaySong(newstart);
 
 
@@ -1152,7 +850,7 @@ namespace Karaboss
                 //if (curmeasure != _currentMeasure)
                 _currentMeasure = curmeasure;                
                 
-                int LargeurCellule = (int)(chordAnalyserControl1.ColumnWidth) + 1;
+                int LargeurCellule = (int)(ChordControl.ColumnWidth) + 1;
                 int LargeurMesure = LargeurCellule * sequence1.Numerator; // keep one measure on the left
                 int offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);                    
                 
@@ -1174,18 +872,18 @@ namespace Karaboss
 
 
                 // ensure to Keep 1 measure on the left
-                if (chordAnalyserControl1.maxStaffWidth > pnlDisplayHorz.Width)
+                if (ChordControl.maxStaffWidth > pnlDisplayHorz.Width)
                 {                    
                     // offset horizontal
                     if (offsetx > LargeurMesure)
                     {
-                        if (offsetx < chordAnalyserControl1.maxStaffWidth - pnlDisplayHorz.Width)
+                        if (offsetx < ChordControl.maxStaffWidth - pnlDisplayHorz.Width)
                         {
-                            chordAnalyserControl1.OffsetX = offsetx - LargeurMesure;
+                            ChordControl.OffsetX = offsetx - LargeurMesure;
                         }
                         else
                         {
-                            chordAnalyserControl1.OffsetX = chordAnalyserControl1.maxStaffWidth - pnlDisplayHorz.Width;
+                            ChordControl.OffsetX = ChordControl.maxStaffWidth - pnlDisplayHorz.Width;
                         }
                     }                    
                 }                                
@@ -1194,17 +892,17 @@ namespace Karaboss
 
         private void SetScrollBarValues()
         {
-            if (pnlDisplayHorz == null || chordAnalyserControl1 == null)
+            if (pnlDisplayHorz == null || ChordControl == null)
                 return;
 
             // Width of control
-            int W = chordAnalyserControl1.maxStaffWidth;
+            int W = ChordControl.maxStaffWidth;
 
             if (W <= pnlDisplayHorz.Width)
             {
                 positionHScrollBar.Visible = false;
                 positionHScrollBar.Maximum = 0;
-                chordAnalyserControl1.OffsetX = 0;
+                ChordControl.OffsetX = 0;
                 positionHScrollBar.Value = 0;
             }
             else if (W > pnlDisplayHorz.Width)
@@ -1222,7 +920,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void PositionHScrollBar_Scroll(object sender, ScrollEventArgs e)
         {            
-            chordAnalyserControl1.OffsetX = e.NewValue;
+            ChordControl.OffsetX = e.NewValue;
 
             if (e.Type == ScrollEventType.EndScroll)
             {
@@ -1248,11 +946,11 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="value"></param>
-        private void chordAnalyserControl1_WidthChanged(object sender, int value)
+        private void ChordControl_WidthChanged(object sender, int value)
         {
             if (positionHScrollBar != null)
             {
-                positionHScrollBar.Width = (pnlDisplayHorz.Width > chordAnalyserControl1.Width ? chordAnalyserControl1.Width : pnlDisplayHorz.Width);
+                positionHScrollBar.Width = (pnlDisplayHorz.Width > ChordControl.Width ? ChordControl.Width : pnlDisplayHorz.Width);
 
                 // Set maximum & visibility
                 SetScrollBarValues();
@@ -1262,68 +960,7 @@ namespace Karaboss
         #endregion positionHScrollBar
 
 
-        #region Display results
-
-        private void DisplayResults()
-        {
-
-            // Display chords in the textbox
-            ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
-            Dictionary<int, (string, string)> Gridchords = Analyser.Gridchords;
-
-            /*
-            string res = string.Empty;
-            foreach (KeyValuePair<int, (string, string)> pair in Gridchords)
-            {
-                res += string.Format("{0} - {1}", pair.Key, pair.Value) + "\r\n";
-            }
-            */
-
-            //Change labels displayed
-            for (int i = 1; i <= Gridchords.Count; i++)
-            {
-                Gridchords[i] = (InterpreteNote(Gridchords[i].Item1), InterpreteNote(Gridchords[i].Item2));
-            }
-
-            // Display Chords in boxes
-            chordAnalyserControl1.Gridchords = Gridchords;
-            ChordMapControl1.Gridchords = Gridchords;
-
-        }
-
-
-        private string InterpreteNote(string note)
-        {                      
-            note = note.Replace("sus", "");
-
-            note = note.Replace(" major", "");
-            note = note.Replace(" triad", "");
-            note = note.Replace("dominant", "");
-
-            note = note.Replace("first inversion", "");
-            note = note.Replace("second inversion", "");
-            note = note.Replace("third inversion", "");
-
-            note = note.Replace(" seventh", "7");
-            note = note.Replace(" minor", "m");
-            note = note.Replace("seventh", "7");
-            note = note.Replace("sixth", "6");
-            note = note.Replace("ninth", "9");
-            note = note.Replace("eleventh", "11");
-
-            note = note.Replace("6", "");
-            note = note.Replace("9", "");
-            note = note.Replace("11", "");
-
-
-            note = note.Replace("<Chord not found>", "?");
-
-
-            note = note.Trim();
-            return note;
-        }
-
-        #endregion Display results
+  
 
 
         #region Form load close
@@ -1419,10 +1056,10 @@ namespace Karaboss
             }
 
 
-            if (chordAnalyserControl1 != null)
+            if (ChordControl != null)
             {
-                positionHScrollBar.Width = (pnlDisplayHorz.Width > chordAnalyserControl1.Width ? chordAnalyserControl1.Width : pnlDisplayHorz.Width);
-                positionHScrollBar.Top = chordAnalyserControl1.Top + chordAnalyserControl1.Height;
+                positionHScrollBar.Width = (pnlDisplayHorz.Width > ChordControl.Width ? ChordControl.Width : pnlDisplayHorz.Width);
+                positionHScrollBar.Top = ChordControl.Top + ChordControl.Height;
             }
 
                         
@@ -1712,8 +1349,8 @@ namespace Karaboss
                 _currentTimeInMeasure = -1;
                 positionHScrollBar.Value = positionHScrollBar.Minimum;
                 
-                chordAnalyserControl1.OffsetX = 0;
-                chordAnalyserControl1.DisplayNotes(0, -1, -1);
+                ChordControl.OffsetX = 0;
+                ChordControl.DisplayNotes(0, -1, -1);
 
                 pnlDisplayMap.VerticalScroll.Value = pnlDisplayMap.VerticalScroll.Minimum;     
                 
@@ -1721,7 +1358,7 @@ namespace Karaboss
                 ChordMapControl1.OffsetY = 0;
                 ChordMapControl1.DisplayNotes(0, -1, -1);
 
-                DisplayLyrics(0);
+                DisplayLineLyrics(0);                
 
                 laststart = 0;
                 scrolling = false;

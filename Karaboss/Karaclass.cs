@@ -38,10 +38,6 @@ using System.Windows.Forms;
 using System.Globalization;
 using System.Threading;
 using System.ComponentModel; // DLL import
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using PicControl;
-using System.Reflection;
 
 namespace Karaboss
 {

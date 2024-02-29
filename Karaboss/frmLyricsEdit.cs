@@ -2041,7 +2041,7 @@ namespace Karaboss
         /// <param name="Source"></param>
         private void LoadLRCFile(string Source)
         {
-            Lyrics lyrics = new Lyrics();
+            Karaboss.Lrc.SharedFramework.Lyrics lyrics = new Karaboss.Lrc.SharedFramework.Lyrics();
             lyrics.ArrangeLyrics(Source);
 
 
