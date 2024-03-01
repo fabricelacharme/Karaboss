@@ -557,11 +557,21 @@ namespace Karaboss.Lyrics
             int ticksoff = 0;
             int curindex = -1;
 
+            int currenttime = 0;
+            int newtime = 0;
+
             for (int i = 0; i < plLyrics.Count; i++)
             {
+                // if new line
                 if (plLyrics[i].Type == plLyric.Types.LineFeed || plLyrics[i].Type == plLyric.Types.Paragraph)
                 {
-                    newline = true;
+                    // Case several lines with the same start time
+                    newtime = plLyrics[i].TicksOn;
+                    if (newtime != currenttime)
+                    {
+                        newline = true;
+                        currenttime = newtime;
+                    }
                 }
                 else
                 {
@@ -570,8 +580,16 @@ namespace Karaboss.Lyrics
                     {
                         if (line.Trim() != "")
                         {
-                            LyricsLines.Add(curindex, line);
-                            LyricsTimes.Add(curindex, ticksoff);
+                            try
+                            {
+                                LyricsLines.Add(curindex, line);
+                                LyricsTimes.Add(curindex, ticksoff);
+                            }
+                            catch (Exception ex)
+                            {
+                                string tx = ex.Message + "\r\n" + "Line: " + line;
+                                MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                         newline = false;
                         line = string.Empty;
