@@ -79,7 +79,7 @@ namespace Karaboss
 
         #region controls
         private Sequence sequence1 = new Sequence();
-        private ChordsControl ChordControl;
+        private ChordsControl ChordControl1;
         private ChordsMapControl ChordMapControl1;
         private OutputDevice outDevice;
         private Sequencer sequencer1 = new Sequencer();
@@ -289,23 +289,23 @@ namespace Karaboss
             
 
             #region ChordControl
-            ChordControl = new ChordsControl();
-            ChordControl.Parent = pnlDisplayHorz;
-            ChordControl.Location = new Point(0, 0);            
+            ChordControl1 = new ChordsControl();
+            ChordControl1.Parent = pnlDisplayHorz;
+            ChordControl1.Location = new Point(0, 0);            
 
             // Set size mandatory ??? unless, the control is not shoqn correctly
-            ChordControl.Size = new Size(pnlDisplayHorz.Width, ChordControl.Height);
+            ChordControl1.Size = new Size(pnlDisplayHorz.Width, ChordControl1.Height);
             
-            ChordControl.WidthChanged += new WidthChangedEventHandler(ChordControl_WidthChanged);
-            ChordControl.HeightChanged += new HeightChangedEventHandler(ChordControl_HeightChanged);
-            ChordControl.MouseDown += new MouseEventHandler(ChordControl_MouseDown);
+            ChordControl1.WidthChanged += new WidthChangedEventHandler(ChordControl_WidthChanged);
+            ChordControl1.HeightChanged += new HeightChangedEventHandler(ChordControl_HeightChanged);
+            ChordControl1.MouseDown += new MouseEventHandler(ChordControl_MouseDown);
 
-            ChordControl.ColumnWidth = 120;
-            ChordControl.ColumnHeight = 120;
+            ChordControl1.ColumnWidth = 120;
+            ChordControl1.ColumnHeight = 120;
 
-            ChordControl.Cursor = Cursors.Hand;
-            ChordControl.Sequence1 = this.sequence1;
-            pnlDisplayHorz.Controls.Add(ChordControl);
+            ChordControl1.Cursor = Cursors.Hand;
+            ChordControl1.Sequence1 = this.sequence1;
+            pnlDisplayHorz.Controls.Add(ChordControl1);
             #endregion
 
 
@@ -314,7 +314,7 @@ namespace Karaboss
             positionHScrollBar.Parent = pnlDisplayHorz;
             positionHScrollBar.ThumbImage = Properties.Resources.BTN_Thumb_Blue;
             positionHScrollBar.Size = new Size(pnlDisplayHorz.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, 20);
-            positionHScrollBar.Location = new Point(0, ChordControl.Height);
+            positionHScrollBar.Location = new Point(0, ChordControl1.Height);
             positionHScrollBar.Value = 0;
             positionHScrollBar.Minimum = 0;
 
@@ -330,7 +330,7 @@ namespace Karaboss
             positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(PositionHScrollBar_Scroll);
             pnlDisplayHorz.Controls.Add(positionHScrollBar);
 
-            pnlDisplayHorz.Height = ChordControl.Height + positionHScrollBar.Height;
+            pnlDisplayHorz.Height = ChordControl1.Height + positionHScrollBar.Height;
 
             #endregion
 
@@ -466,7 +466,7 @@ namespace Karaboss
             }
 
             // Display Chords in boxes
-            ChordControl.Gridchords = Gridchords;
+            ChordControl1.Gridchords = Gridchords;
             ChordMapControl1.Gridchords = Gridchords;
 
         }
@@ -529,7 +529,7 @@ namespace Karaboss
                 _currentTimeInMeasure = timeinmeasure;
 
                 // Draw gray cell for played note
-                ChordControl.DisplayNotes(pos, curmeasure, timeinmeasure);
+                ChordControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
                 ChordMapControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
             }
         }
@@ -659,7 +659,7 @@ namespace Karaboss
         private void DisplayLyrics()
         {
             myLyricsMgmt = new LyricsMgmt(sequence1);
-            ChordControl.GridLyrics = myLyricsMgmt.Gridlyrics;
+            ChordControl1.GridLyrics = myLyricsMgmt.Gridlyrics;
 
             DisplayLineLyrics(0);
         }            
@@ -713,13 +713,13 @@ namespace Karaboss
 
         private void btnZoomMinus_Click(object sender, EventArgs e)
         {
-            ChordControl.zoom -= (float)0.1;
+            ChordControl1.zoom -= (float)0.1;
             ChordMapControl1.zoom -= (float)0.1;
         }
 
         private void btnZoomPlus_Click(object sender, EventArgs e)
         {
-            ChordControl.zoom += (float)0.1;
+            ChordControl1.zoom += (float)0.1;
             ChordMapControl1.zoom += (float)0.1;
         }
 
@@ -731,8 +731,8 @@ namespace Karaboss
         {
             if (positionHScrollBar != null)
             {
-                positionHScrollBar.Location = new Point(0, ChordControl.Height);
-                pnlDisplayHorz.Height = ChordControl.Height + positionHScrollBar.Height;
+                positionHScrollBar.Location = new Point(0, ChordControl1.Height);
+                pnlDisplayHorz.Height = ChordControl1.Height + positionHScrollBar.Height;
             }
 
             if (pnlBottom != null)
@@ -769,7 +769,7 @@ namespace Karaboss
                 int y = e.Location.Y + ChordMapControl1.OffsetY;  // Vertical
 
                 // Calculate start time                
-                int LargeurCellule = (int)(ChordControl.ColumnWidth) + 1;
+                int LargeurCellule = (int)(ChordControl1.ColumnWidth) + 1;
                 int line = 1 + (y / LargeurCellule);
                 int prevmeasures = -1 + (line - 1) * ChordMapControl1.NbColumns;
                 int cellincurrentline = (int)Math.Ceiling(x / (double)LargeurCellule);
@@ -785,7 +785,7 @@ namespace Karaboss
             {
                 int x = e.Location.X;
 
-                newstart = (int)(((ChordControl.OffsetX + x) / (float)ChordControl.Width) * sequence1.GetLength());
+                newstart = (int)(((ChordControl1.OffsetX + x) / (float)ChordControl1.Width) * sequence1.GetLength());
                 FirstPlaySong(newstart);
 
 
@@ -850,7 +850,7 @@ namespace Karaboss
                 //if (curmeasure != _currentMeasure)
                 _currentMeasure = curmeasure;                
                 
-                int LargeurCellule = (int)(ChordControl.ColumnWidth) + 1;
+                int LargeurCellule = (int)(ChordControl1.ColumnWidth * ChordControl1.zoom) + 1;
                 int LargeurMesure = LargeurCellule * sequence1.Numerator; // keep one measure on the left
                 int offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);                    
                 
@@ -871,19 +871,20 @@ namespace Karaboss
                     positionHScrollBar.Value = val;
 
 
-                // ensure to Keep 1 measure on the left
-                if (ChordControl.maxStaffWidth > pnlDisplayHorz.Width)
+                // Aftert firts measure, the curseur is on le left
+                if (ChordControl1.maxStaffWidth > pnlDisplayHorz.Width)
                 {                    
                     // offset horizontal
                     if (offsetx > LargeurMesure)
                     {
-                        if (offsetx < ChordControl.maxStaffWidth - pnlDisplayHorz.Width)
+                        if (offsetx < ChordControl1.maxStaffWidth - pnlDisplayHorz.Width)
                         {
-                            ChordControl.OffsetX = offsetx - LargeurMesure;
+                            //ChordControl1.OffsetX = offsetx - LargeurMesure;
+                            ChordControl1.OffsetX = offsetx;
                         }
                         else
                         {
-                            ChordControl.OffsetX = ChordControl.maxStaffWidth - pnlDisplayHorz.Width;
+                            ChordControl1.OffsetX = ChordControl1.maxStaffWidth - pnlDisplayHorz.Width;
                         }
                     }                    
                 }                                
@@ -892,17 +893,17 @@ namespace Karaboss
 
         private void SetScrollBarValues()
         {
-            if (pnlDisplayHorz == null || ChordControl == null)
+            if (pnlDisplayHorz == null || ChordControl1 == null)
                 return;
 
             // Width of control
-            int W = ChordControl.maxStaffWidth;
+            int W = ChordControl1.maxStaffWidth;
 
             if (W <= pnlDisplayHorz.Width)
             {
                 positionHScrollBar.Visible = false;
                 positionHScrollBar.Maximum = 0;
-                ChordControl.OffsetX = 0;
+                ChordControl1.OffsetX = 0;
                 positionHScrollBar.Value = 0;
             }
             else if (W > pnlDisplayHorz.Width)
@@ -920,7 +921,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void PositionHScrollBar_Scroll(object sender, ScrollEventArgs e)
         {            
-            ChordControl.OffsetX = e.NewValue;
+            ChordControl1.OffsetX = e.NewValue;
 
             if (e.Type == ScrollEventType.EndScroll)
             {
@@ -950,7 +951,7 @@ namespace Karaboss
         {
             if (positionHScrollBar != null)
             {
-                positionHScrollBar.Width = (pnlDisplayHorz.Width > ChordControl.Width ? ChordControl.Width : pnlDisplayHorz.Width);
+                positionHScrollBar.Width = (pnlDisplayHorz.Width > ChordControl1.Width ? ChordControl1.Width : pnlDisplayHorz.Width);
 
                 // Set maximum & visibility
                 SetScrollBarValues();
@@ -1056,10 +1057,10 @@ namespace Karaboss
             }
 
 
-            if (ChordControl != null)
+            if (ChordControl1 != null)
             {
-                positionHScrollBar.Width = (pnlDisplayHorz.Width > ChordControl.Width ? ChordControl.Width : pnlDisplayHorz.Width);
-                positionHScrollBar.Top = ChordControl.Top + ChordControl.Height;
+                positionHScrollBar.Width = (pnlDisplayHorz.Width > ChordControl1.Width ? ChordControl1.Width : pnlDisplayHorz.Width);
+                positionHScrollBar.Top = ChordControl1.Top + ChordControl1.Height;
             }
 
                         
@@ -1349,8 +1350,8 @@ namespace Karaboss
                 _currentTimeInMeasure = -1;
                 positionHScrollBar.Value = positionHScrollBar.Minimum;
                 
-                ChordControl.OffsetX = 0;
-                ChordControl.DisplayNotes(0, -1, -1);
+                ChordControl1.OffsetX = 0;
+                ChordControl1.DisplayNotes(0, -1, -1);
 
                 pnlDisplayMap.VerticalScroll.Value = pnlDisplayMap.VerticalScroll.Minimum;     
                 
