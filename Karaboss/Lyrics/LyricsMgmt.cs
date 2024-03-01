@@ -488,9 +488,12 @@ namespace Karaboss.Lyrics
                     // if next note starts before current note ending
                     if (i < plLyrics.Count - 1)
                     {
-                        nexttickson = plLyrics[i + 1 ].TicksOn;
-                        if(ticksoff > nexttickson)
-                            ticksoff = nexttickson;
+                        if (plLyrics[i + 1].Type == plLyric.Types.Text)
+                        {
+                            nexttickson = plLyrics[i + 1].TicksOn;
+                            if (ticksoff > nexttickson)
+                                ticksoff = nexttickson;
+                        }
                     }
                     
                     // Value -
