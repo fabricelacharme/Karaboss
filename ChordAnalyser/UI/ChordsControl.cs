@@ -433,17 +433,20 @@ namespace ChordAnalyser.UI
                 int currentbeat;
                 string currentlyric = string.Empty;
                 int d = ((int)(_cellwidth) + (_LinesWidth - 1));
-                foreach ( var z in GridLyrics )
+
+                if (GridLyrics != null)
                 {
-                    currentbeat = z.Key;
-                    currentlyric = z.Value;
+                    foreach (var z in GridLyrics)
+                    {
+                        currentbeat = z.Key;
+                        currentlyric = z.Value;
 
-                    x = (currentbeat + 1) * d;
-                    g.DrawString(currentlyric, fontLyric, ChordBrush, x, 40);
+                        x = (currentbeat + 1) * d;
+                        g.DrawString(currentlyric, fontLyric, ChordBrush, x, 40);
 
 
+                    }
                 }
-
 
 
             }

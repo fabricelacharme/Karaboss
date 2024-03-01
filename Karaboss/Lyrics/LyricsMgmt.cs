@@ -464,15 +464,17 @@ namespace Karaboss.Lyrics
             _gridlyrics = new Dictionary<int, string>();
             int tickson;
             int ticksoff;
+            int nexttickson;
             int beat;
             int beatplus;
             int beatminus;            
             int beatoff;            
             int beatduration = _measurelen / sequence1.Numerator;
-            int beatsold = NbMeasures * sequence1.Numerator;
+            //int beatsold = NbMeasures * sequence1.Numerator;
             int beats = _totalTicks/beatduration;
             int currentbeat = 0;
             string currenttext = string.Empty;
+            int currentmeasure = 0;
 
             int nbdiffs = 0;
 
@@ -483,6 +485,14 @@ namespace Karaboss.Lyrics
                     tickson = plLyrics[i].TicksOn;
                     ticksoff = plLyrics[i].TicksOff;
 
+                    // if next note starts before current note ending
+                    if (i < plLyrics.Count - 1)
+                    {
+                        nexttickson = plLyrics[i + 1 ].TicksOn;
+                        if(ticksoff > nexttickson)
+                            ticksoff = nexttickson;
+                    }
+                    
                     // Value -
                     beatminus = (int)((tickson / (float)_totalTicks) * beats);
                     // Value +
@@ -504,11 +514,22 @@ namespace Karaboss.Lyrics
                     if (beat != beatminus)
                         nbdiffs++;
 
+                    currentmeasure = 1 + (int)((tickson /(float)_totalTicks) * NbMeasures);
+                    
+
                     // New beat
                     // Store previous syllabes
                     if (beat != currentbeat)
-                    {                                                
-                        _gridlyrics.Add(currentbeat, currenttext);
+                    {
+                        try
+                        {
+                            _gridlyrics.Add(currentbeat, currenttext);
+                        }
+                        catch (Exception ex)
+                        {
+                            string tx = ex.Message + "\r\n" + "Syllab :" + currenttext + "\r\n" + "Measure: " + currentmeasure;
+                            MessageBox.Show(tx, "Karaboss",MessageBoxButtons.OK, MessageBoxIcon.Error); 
+                        }
                         currentbeat = beat;
                         currenttext = string.Empty;
                     }
@@ -582,6 +603,9 @@ namespace Karaboss.Lyrics
 
         private void CheckTimes()
         {
+            if (_melodytracknum == -1)
+                return;
+            
             Track trk = sequence1.tracks[_melodytracknum];
             List<MidiNote> notes = trk.Notes;
 

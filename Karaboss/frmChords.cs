@@ -300,7 +300,7 @@ namespace Karaboss
             ChordControl.HeightChanged += new HeightChangedEventHandler(ChordControl_HeightChanged);
             ChordControl.MouseDown += new MouseEventHandler(ChordControl_MouseDown);
 
-            ChordControl.ColumnWidth = 80;
+            ChordControl.ColumnWidth = 120;
             ChordControl.ColumnHeight = 120;
 
             ChordControl.Cursor = Cursors.Hand;
