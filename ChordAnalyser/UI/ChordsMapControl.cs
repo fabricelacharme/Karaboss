@@ -50,6 +50,8 @@ namespace ChordAnalyser.UI
 
         #region private
         private MyPanel pnlCanvas;
+        private Font m_font;
+        private StringFormat sf;
 
         // Midifile characteristics
         private double _duration = 0;  // en secondes
@@ -382,7 +384,7 @@ namespace ChordAnalyser.UI
             SolidBrush ChordBrush = new SolidBrush(Color.Black);
             SolidBrush MeasureBrush = new SolidBrush(Color.Red);
 
-            Font fontChord = new Font("Arial", 16 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font fontChord = new Font("Arial", 20 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontMeasure = new Font("Arial", 12 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
             //int _LinesWidth = 2;            
@@ -399,7 +401,9 @@ namespace ChordAnalyser.UI
             {
                 (string, string) ttx;
                 string tx = string.Empty;
+                string ChordName = string.Empty;  
                 int Offset = 4;
+                float w;
 
                 var src = new Bitmap(Resources.silence_black);
                 var bmp = new Bitmap((int)(src.Width * zoom), (int)(src.Height * zoom), PixelFormat.Format32bppPArgb);
@@ -417,21 +421,23 @@ namespace ChordAnalyser.UI
                         compteurmesure = 0;
                     }
 
-                    // Chord name
+                    // Chord name                    
+                    ttx = Gridchords[i];
+                    ChordName = ttx.Item1;
+                    w = MeasureString(fontChord.FontFamily, ChordName, fontChord.Size);
+
                     p1 = new Point(x + Offset, y_chord);
 
-                    ttx = Gridchords[i];
-                    tx = ttx.Item1;
 
                     // If empty, draw symbol
-                    if (tx == EmptyChord)
+                    if (ChordName == EmptyChord)
                     {
                         g.DrawImage(src, new Rectangle(p1.X, y_symbol, bmp.Width, bmp.Height));
 
                     }
                     else
                     {
-                        g.DrawString(tx, fontChord, ChordBrush, p1.X, p1.Y);
+                        g.DrawString(ChordName, fontChord, ChordBrush, x + (CellSize - w) / 2, p1.Y);
                     }
 
                     // Draw measure number
@@ -446,17 +452,19 @@ namespace ChordAnalyser.UI
                     {
                         if (ttx.Item1 != ttx.Item2)
                         {
-                            tx = ttx.Item2;
+                            ChordName = ttx.Item2;
+                            w = MeasureString(fontChord.FontFamily, ChordName, fontChord.Size);
+
                             int z = ((int)(_cellsize) + (_LinesWidth - 1)) * sequence1.Numerator / 2;
 
                             // If empty, draw symbol
-                            if (tx == EmptyChord)
+                            if (ChordName == EmptyChord)
                             {
                                 g.DrawImage(src, new Rectangle(p1.X + z, y_symbol, bmp.Width, bmp.Height));
                             }
                             else
                             {
-                                g.DrawString(tx, fontChord, ChordBrush, p1.X + z, y_chord);
+                                g.DrawString(ChordName, fontChord, ChordBrush, z + x + (CellSize - w) / 2, y_chord);
                             }
                         }
                     }
@@ -574,6 +582,62 @@ namespace ChordAnalyser.UI
 
         #endregion Midi
 
+
+        #region mesures
+        /// <summary>
+        /// Measure the length of a string
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="fSize"></param>
+        /// <returns></returns>
+        private float MeasureString(FontFamily fnt, string line, float femSize)
+        {
+            float ret = 0;
+
+            if (line != "")
+            {
+                using (Graphics g = pnlCanvas.CreateGraphics())
+                {
+                    m_font = new Font(fnt, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+
+                    SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
+                    ret = sz.Width;
+
+                    g.Dispose();
+                }
+
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// Measure the height of a string
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="femSize"></param>
+        /// <returns></returns>
+        private float MeasureStringHeight(FontFamily fnt, string line, float femSize)
+        {
+            float ret = 0;
+
+            if (line != "")
+            {
+                using (Graphics g = pnlCanvas.CreateGraphics())
+                {
+
+                    if (femSize > 0)
+                        m_font = new Font(fnt, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+
+                    SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
+                    ret = sz.Height;
+
+                    g.Dispose();
+                }
+            }
+            return ret;
+        }
+
+        #endregion mesures
 
     }
 }
