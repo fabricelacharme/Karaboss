@@ -95,6 +95,7 @@ namespace Karaboss
         private Label lblPercent;
         private Label lblBeat;
         private Label lblLyrics;
+        private Label lblOtherLyrics;
 
         #endregion controls
 
@@ -355,10 +356,25 @@ namespace Karaboss
             Font fontLyrics = new Font("Arial", 32, FontStyle.Regular, GraphicsUnit.Pixel);
             lblLyrics.Height =fontLyrics.Height + 20;
             lblLyrics.Font = fontLyrics;
-            lblLyrics.TextAlign = ContentAlignment.MiddleCenter;            
+            lblLyrics.TextAlign = ContentAlignment.MiddleCenter;           
             lblLyrics.Dock = DockStyle.Top;
             lblLyrics.Text = "AD Lorem ipsus";
             pnlBottom .Controls.Add(lblLyrics);
+            
+
+
+            lblOtherLyrics = new Label();
+            lblOtherLyrics.Parent = pnlBottom;
+            lblOtherLyrics.Location = new Point(0, lblLyrics.Height);
+            lblOtherLyrics.Size = new Size(pnlBottom.Width, pnlBottom.Height - lblLyrics.Height);
+            lblOtherLyrics.BackColor = Color.YellowGreen;
+            lblOtherLyrics.AutoSize = false;                      
+            lblOtherLyrics.Font = fontLyrics;
+            lblOtherLyrics.TextAlign = ContentAlignment.TopCenter;
+            lblOtherLyrics.Text = "Other lyrics";            
+            pnlBottom.Controls.Add(lblOtherLyrics);
+            
+
 
             #endregion
 
@@ -386,6 +402,10 @@ namespace Karaboss
             ChordMapControl1.WidthChanged += new MapWidthChangedEventHandler(ChordMapControl1_WidthChanged);
             ChordMapControl1.HeightChanged += new MapHeightChangedEventHandler(ChordMapControl1_HeightChanged);            
             ChordMapControl1.MouseDown += new MouseEventHandler(ChordMapControl1_MouseDown);
+
+            ChordMapControl1.ColumnWidth = 80;
+            ChordMapControl1.ColumnHeight = 80;
+
             ChordMapControl1.Cursor = Cursors.Hand;
             ChordMapControl1.Sequence1 = this.sequence1;
             pnlDisplayMap.Controls.Add(ChordMapControl1);
@@ -671,6 +691,8 @@ namespace Karaboss
         private void DisplayLineLyrics(int pos)
         {
             lblLyrics.Text = myLyricsMgmt.DisplayLineLyrics(pos);
+
+            lblOtherLyrics.Text = myLyricsMgmt.DisplayOtherLinesLyrics(pos);
         }
 
 
@@ -812,7 +834,7 @@ namespace Karaboss
             if (curline != _currentLine)
             {
                 _currentLine = curline;
-                int HauteurCellule = (int)(ChordMapControl1.CellSize) + 1;
+                int HauteurCellule = (int)(ChordMapControl1.ColumnHeight) + 1;
 
                 // if control is higher then the panel => scroll
                 if (ChordMapControl1.maxStaffHeight > pnlDisplayMap.Height)
@@ -961,9 +983,6 @@ namespace Karaboss
         #endregion positionHScrollBar
 
 
-  
-
-
         #region Form load close
 
         protected override void OnClosing(CancelEventArgs e)
@@ -1063,7 +1082,9 @@ namespace Karaboss
                 positionHScrollBar.Top = ChordControl1.Top + ChordControl1.Height;
             }
 
-                        
+            if (pnlBottom != null)
+                lblOtherLyrics.Size = new Size(pnlBottom.Width, pnlBottom.Height - lblLyrics.Height);
+
             // Set maximum & visibility
             SetScrollBarValues();
         }

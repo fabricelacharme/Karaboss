@@ -161,7 +161,7 @@ namespace ChordAnalyser.UI
                 _cellwidth = _columnwidth * zoom;
                 _cellheight = _columnheight * zoom;
                 
-                this.Height = (int)(_cellheight);
+                this.Height = (int)_cellheight;
                 if (HeightChanged != null)
                     HeightChanged(this, this.Height);
                 // No need to manage width: controls position on frmChords depends only on its height
@@ -447,10 +447,11 @@ namespace ChordAnalyser.UI
                     {
                         currentbeat = z.Key;
                         currentlyric = z.Value;
+                        w = MeasureString(fontLyric.FontFamily, currentlyric, fontLyric.Size);
                         h = MeasureStringHeight(fontLyric.FontFamily, currentlyric, fontLyric.Size);
 
                         x = (currentbeat + 1) * d;
-                        g.DrawString(currentlyric, fontLyric, LyricBrush, x, _cellheight/2 + h);
+                        g.DrawString(currentlyric, fontLyric, LyricBrush, x + (_cellwidth - w)/2, _cellheight/2 + h);
                     }
                 }
             }

@@ -731,7 +731,7 @@ namespace Karaboss.Lyrics
         #region Display Lyrics
 
         /// <summary>
-        /// return syllabes lyrics related to pos
+        /// return the line of lyrics related to pos
         /// </summary>
         /// <param name="pos"></param>
         public string DisplayLineLyrics(int pos)
@@ -767,6 +767,21 @@ namespace Karaboss.Lyrics
             }
         }
 
+        public string DisplayOtherLinesLyrics(int pos)
+        {
+            if (LyricsLinesKeys == null)
+                return "";
+            string res = string.Empty;
+            foreach (KeyValuePair<int,string> var in LyricsLines)
+            {
+                if (var.Key > pos)
+                {
+                    res += var.Value + "\r\n";
+                }
+            }
+            return res;
+           
+        }
 
         #endregion Display Lyrics
 
