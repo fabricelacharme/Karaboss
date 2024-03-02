@@ -168,7 +168,9 @@ namespace Karaboss.Lyrics
 
                 Track track = sequence1.tracks[_lyricstracknum];
 
-
+                int plTicksOn = 0;
+                int plTicksOff = 0;
+                
                 for (int k = 0; k < track.LyricsText.Count; k++)
                 {
                     // Stockage dans liste plLyrics
@@ -176,14 +178,43 @@ namespace Karaboss.Lyrics
                     string plElement = track.LyricsText[k].Element;
 
                     // Start time for a lyric
-                    int plTicksOn = track.LyricsText[k].TicksOn;
+                    plTicksOn = track.LyricsText[k].TicksOn;
 
                     // Stop time for a lyric (maxi 1 beat ?)
-                    int plTicksOff = plTicksOn + _measurelen;
+                    if (plType == plLyric.Types.Text)
+                        plTicksOff = plTicksOn + _measurelen;
 
                     plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
                 }
 
+                // reduce ticksoff to next tickson
+                int ticksoff;
+                int nexttickson;
+                string elm = string.Empty;
+                for (int k = 0; k < plLyrics.Count; k++)
+                {
+                    ticksoff = plLyrics[k].TicksOff;
+                    if (k < plLyrics.Count - 1)
+                    {
+                        nexttickson = plLyrics[k + 1].TicksOn;
+                        if (ticksoff > nexttickson)
+                            plLyrics[k].TicksOff = nexttickson;
+                    }
+
+                    // Add a trailing space to syllabs at the end of the lines if missing
+                    if (plLyrics[k].Type == plLyric.Types.LineFeed || plLyrics[k].Type == plLyric.Types.Paragraph)
+                    {
+                        if (k > 0)
+                        {
+                            elm = plLyrics[k - 1].Element;
+                            if (elm.Length > 0)
+                            {
+                                if (elm.Substring(1, elm.Length - 1) != " ")
+                                    plLyrics[k - 1].Element = elm + " ";
+                            }
+                        }
+                    }
+                }
                 return lyrics;
             }
             // if lyrics are in lyric events
@@ -215,6 +246,9 @@ namespace Karaboss.Lyrics
                         }
                     }
 
+                    int plTicksOn = 0;
+                    int plTicksOff = 0;
+                    string elm = string.Empty;
                     for (int k = 0; k < track.Lyrics.Count; k++)
                     {
                         if (track.Lyrics[k].Element != "[]")
@@ -224,12 +258,41 @@ namespace Karaboss.Lyrics
                             string plElement = track.Lyrics[k].Element;
 
                             // Start time for a lyric
-                            int plTicksOn = track.Lyrics[k].TicksOn;
+                            plTicksOn = track.Lyrics[k].TicksOn;
 
                             // Stop time for the lyric
-                            int plTicksOff = plTicksOn + _measurelen;
+                            if (plType == plLyric.Types.Text)
+                                plTicksOff = plTicksOn + _measurelen;    
 
                             plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                        }
+                    }
+
+                    // reduce ticksoff to next tickson
+                    int ticksoff;
+                    int nexttickson;
+                    for (int k = 0; k < plLyrics.Count; k++)
+                    {
+                        ticksoff = plLyrics[k].TicksOff;
+                        if (k < plLyrics.Count - 1)
+                        {
+                            nexttickson = plLyrics[k + 1].TicksOn;
+                            if (ticksoff > nexttickson)
+                                plLyrics[k].TicksOff = nexttickson;
+                        }
+
+                        // Add a trailing space to syllabs at the end of the lines if missing
+                        if (plLyrics[k].Type == plLyric.Types.LineFeed || plLyrics[k].Type == plLyric.Types.Paragraph)
+                        {
+                            if (k > 0)
+                            {
+                                elm = plLyrics[k - 1].Element;
+                                if (elm.Length > 0)
+                                {
+                                    if (elm.Substring(1, elm.Length - 1) != " ")
+                                        plLyrics[k - 1].Element = elm + " ";
+                                }
+                            }
                         }
                     }
                     return lyrics;
