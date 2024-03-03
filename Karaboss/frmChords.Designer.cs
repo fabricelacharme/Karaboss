@@ -34,7 +34,11 @@
             this.tabPageOverview = new System.Windows.Forms.TabPage();
             this.tabPageEdit = new System.Windows.Forms.TabPage();
             this.pnlToolbar = new System.Windows.Forms.Panel();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.tabChordsControl.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabChordsControl
@@ -70,10 +74,30 @@
             resources.ApplyResources(this.pnlToolbar, "pnlToolbar");
             this.pnlToolbar.Name = "pnlToolbar";
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFile});
+            resources.ApplyResources(this.menuStrip1, "menuStrip1");
+            this.menuStrip1.Name = "menuStrip1";
+            // 
+            // mnuFile
+            // 
+            this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFileQuit});
+            this.mnuFile.Name = "mnuFile";
+            resources.ApplyResources(this.mnuFile, "mnuFile");
+            // 
+            // mnuFileQuit
+            // 
+            this.mnuFileQuit.Name = "mnuFileQuit";
+            resources.ApplyResources(this.mnuFileQuit, "mnuFileQuit");
+            // 
             // frmChords
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.pnlToolbar);
             this.Controls.Add(this.tabChordsControl);
             this.Name = "frmChords";
@@ -82,7 +106,10 @@
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmChords_KeyUp);
             this.Resize += new System.EventHandler(this.frmChords_Resize);
             this.tabChordsControl.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -93,5 +120,8 @@
         private System.Windows.Forms.TabPage tabPageOverview;
         private System.Windows.Forms.TabPage tabPageEdit;
         private System.Windows.Forms.Panel pnlToolbar;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem mnuFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileQuit;
     }
 }

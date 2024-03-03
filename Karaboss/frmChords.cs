@@ -192,6 +192,9 @@ namespace Karaboss
             }
         }
 
+        /// <summary>
+        /// Draw all controls
+        /// </summary>
         private void DrawControls()
         {
             // Timer
@@ -200,7 +203,8 @@ namespace Karaboss
             timer1.Tick += new EventHandler(timer1_Tick);
 
             #region Toolbar
-
+            pnlToolbar.Location = new Point(0, menuStrip1.Height);
+            pnlToolbar.Size = new Size(Width, 55);
             pnlToolbar.BackColor = Color.FromArgb(70, 77, 95);
 
             // Button Rewind
@@ -309,6 +313,9 @@ namespace Karaboss
 
             #endregion Toolbar
 
+            tabChordsControl.Top = pnlToolbar.Top + pnlToolbar.Height;
+            tabChordsControl.Height =  this.ClientSize.Height - menuStrip1.Height - pnlToolbar.Height;
+            tabChordsControl.Width = this.ClientSize.Width;
 
             #region 1er TAB                    
 
@@ -660,11 +667,14 @@ namespace Karaboss
                 int Sec = (int)(_duration - (Min * 60));
                 lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
 
-
+                //TAB1, TAB2
                 DisplayChords();
 
+                // TAB1
                 DisplayLyrics();
-                                                
+                       
+                //TAB3
+                DisplayWordsAndChords();
             }
             else
             {
@@ -742,7 +752,7 @@ namespace Karaboss
         #region DisplayLyrics
 
         /// <summary>
-        /// Display lyrics in the first page
+        /// TAB1: Display lyrics
         /// </summary>
         private void DisplayLyrics()
         {
@@ -753,7 +763,7 @@ namespace Karaboss
         }            
          
         /// <summary>
-        /// Display current line of lyrics in Label Lyrics 
+        /// TAB1: Display current line of lyrics in Label Lyrics 
         /// </summary>
         /// <param name="pos"></param>
         private void DisplayLineLyrics(int pos)
@@ -761,6 +771,14 @@ namespace Karaboss
             lblLyrics.Text = myLyricsMgmt.DisplayLineLyrics(pos);
 
             lblOtherLyrics.Text = myLyricsMgmt.DisplayOtherLinesLyrics(pos);
+        }
+
+        /// <summary>
+        /// TAB3 : dispaly words + chords
+        /// </summary>
+        private void DisplayWordsAndChords()
+        {
+            txtDisplayWords.Text = myLyricsMgmt.DisplayWordsAndChords();
         }
 
 
@@ -1118,9 +1136,9 @@ namespace Karaboss
         private void frmChords_Resize(object sender, EventArgs e)
         {
             // Controle onglets
-            tabChordsControl.Top = pnlToolbar.Height;
+            tabChordsControl.Top = menuStrip1.Height + pnlToolbar.Height;
             tabChordsControl.Width = this.ClientSize.Width;
-            tabChordsControl.Height = this.ClientSize.Height - pnlToolbar.Height;
+            tabChordsControl.Height = this.ClientSize.Height - menuStrip1.Height - pnlToolbar.Height;
 
             // Bug: only the selected TabPage is resized, but not others 
             for (int i = 0;i< tabChordsControl.TabCount;i++)
@@ -1131,6 +1149,11 @@ namespace Karaboss
                     tabChordsControl.TabPages[i].Width = tabChordsControl.TabPages[tabChordsControl.SelectedIndex].Width;
                     tabChordsControl.TabPages[i].Height = tabChordsControl.TabPages[tabChordsControl.SelectedIndex].Height;
                 }
+            }
+
+            if (pnlToolbar != null)
+            {
+                pnlToolbar.Width = this.ClientSize.Width;
             }
 
             // 1st TAB
@@ -1153,8 +1176,7 @@ namespace Karaboss
             // 2nd TAB
             if (pnlDisplayMap != null)
             {
-                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
-                //pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
+                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;                
                 pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
             }
 
@@ -1490,5 +1512,15 @@ namespace Karaboss
 
 
         #endregion Play stop pause
+
+        #region menus
+        private void mnuFileQuit_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        #endregion menus
+
+        
     }
 }

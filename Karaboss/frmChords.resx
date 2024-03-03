@@ -126,7 +126,7 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tabPageDiagrams.Size" type="System.Drawing.Size, System.Drawing">
-    <value>792, 340</value>
+    <value>792, 281</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="tabPageDiagrams.TabIndex" type="System.Int32, mscorlib">
@@ -184,7 +184,7 @@
     <value>2</value>
   </data>
   <data name="tabPageEdit.Text" xml:space="preserve">
-    <value>Edit</value>
+    <value>Words</value>
   </data>
   <data name="&gt;&gt;tabPageEdit.Name" xml:space="preserve">
     <value>tabPageEdit</value>
@@ -205,10 +205,10 @@
     <value>71, 40</value>
   </data>
   <data name="tabChordsControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 62</value>
+    <value>0, 121</value>
   </data>
   <data name="tabChordsControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>800, 388</value>
+    <value>800, 329</value>
   </data>
   <data name="tabChordsControl.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -223,16 +223,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;tabChordsControl.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="pnlToolbar.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
+    <value>2</value>
   </data>
   <data name="pnlToolbar.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>0, 27</value>
   </data>
   <data name="pnlToolbar.Size" type="System.Drawing.Size, System.Drawing">
-    <value>800, 55</value>
+    <value>800, 59</value>
   </data>
   <data name="pnlToolbar.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -247,7 +244,46 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pnlToolbar.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>800, 24</value>
+  </data>
+  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="menuStrip1.Text" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>37, 20</value>
+  </data>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;File</value>
+  </data>
+  <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>97, 22</value>
+  </data>
+  <data name="mnuFileQuit.Text" xml:space="preserve">
+    <value>&amp;Quit</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -2924,6 +2960,18 @@
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Chords</value>
+  </data>
+  <data name="&gt;&gt;mnuFile.Name" xml:space="preserve">
+    <value>mnuFile</value>
+  </data>
+  <data name="&gt;&gt;mnuFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuFileQuit.Name" xml:space="preserve">
+    <value>mnuFileQuit</value>
+  </data>
+  <data name="&gt;&gt;mnuFileQuit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmChords</value>

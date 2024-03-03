@@ -521,6 +521,8 @@ namespace Karaboss.Lyrics
 
         /// <summary>
         /// Load lyrics in a dictionnary
+        /// key : beat
+        /// Value : lyrics in this beat
         /// </summary>
         private void LoadLyricsPerBeat()
         {
@@ -532,8 +534,7 @@ namespace Karaboss.Lyrics
             int beatplus;
             int beatminus;            
             int beatoff;            
-            int beatduration = _measurelen / sequence1.Numerator;
-            //int beatsold = NbMeasures * sequence1.Numerator;
+            int beatduration = _measurelen / sequence1.Numerator;            
             int beats = _totalTicks/beatduration;
             int currentbeat = 0;
             string currenttext = string.Empty;
@@ -685,6 +686,9 @@ namespace Karaboss.Lyrics
             }
         }
 
+        /// <summary>
+        /// Fix ticksoff of lyrics
+        /// </summary>
         private void CheckTimes()
         {
             if (_melodytracknum == -1)
@@ -709,23 +713,8 @@ namespace Karaboss.Lyrics
                     }
                 }    
             }
-
-            /*
-            foreach (MidiNote note in notes)
-            {
-                foreach (plLyric pl in plLyrics)
-                {
-                    if (note.StartTime == pl.TicksOn)
-                    {
-                        pl.TicksOff = note.EndTime;
-                        nbmodified++;
-                        break;
-                    }
-                }
-            }
-            */
+            
             Console.WriteLine("******** lyrics ticksoff modifiés : " + nbmodified.ToString());
-
         }
 
         #region Display Lyrics
@@ -767,6 +756,11 @@ namespace Karaboss.Lyrics
             }
         }
 
+        /// <summary>
+        /// Display lyrics lines except line being played
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
         public string DisplayOtherLinesLyrics(int pos)
         {
             if (LyricsLinesKeys == null)
@@ -781,6 +775,36 @@ namespace Karaboss.Lyrics
             }
             return res;
            
+        }
+
+
+        public string DisplayWordsAndChords()
+        {
+            // Gridchords <int,(string,string)> = measure number, chord of 1rst beat, chord of 2nd part of measure
+            //  GridLyrics <int, string>        = ticks of beat, lyrics in this beat
+            string res = string.Empty;
+            string cr = "\r\n";
+            string linetext = string.Empty;
+            string linechords = string.Empty;
+            string chords = string.Empty;
+            int l = 0;
+            int tickson = 0;
+
+            foreach (KeyValuePair<int,string> words in LyricsLines)
+            {
+                tickson = words.Key;
+                linetext = words.Value.Trim();
+                l = linetext.Length;
+
+                chords = "Em";
+                linechords = chords + new String(' ', l - chords.Length);
+                
+                res += linechords + cr + linetext + cr;
+            }
+
+            // Remove last CR
+            res = res.Substring(0, res.Length - 2); 
+            return res;
         }
 
         #endregion Display Lyrics

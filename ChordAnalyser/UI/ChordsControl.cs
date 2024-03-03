@@ -399,8 +399,7 @@ namespace ChordAnalyser.UI
                     }
 
                     // Draw measure number
-                    tx = i.ToString();
-                    //p1 = new Point(x + Offset, (int)(_cellheight) - fontMeasure.Height);
+                    tx = i.ToString();                    
                     g.DrawString(tx, fontMeasure, MeasureBrush, x + Offset, (int)(_cellheight) - fontMeasure.Height);
 
                     // ===============================
@@ -414,6 +413,7 @@ namespace ChordAnalyser.UI
                             w = MeasureString(fontChord.FontFamily, ChordName, fontChord.Size);
                             h = MeasureStringHeight(fontChord.FontFamily, ChordName, fontChord.Size);
 
+                            // Move to 2nd part of the measure
                             int z = ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator / 2;
 
                             // If empty, draw symbol
