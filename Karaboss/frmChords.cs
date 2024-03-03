@@ -78,9 +78,7 @@ namespace Karaboss
         private PlayerStates PlayerState;
 
         #region controls
-        private Sequence sequence1 = new Sequence();
-        private ChordsControl ChordControl1;
-        private ChordsMapControl ChordMapControl1;
+        private Sequence sequence1 = new Sequence();               
         private OutputDevice outDevice;
         private Sequencer sequencer1 = new Sequencer();
 
@@ -90,6 +88,13 @@ namespace Karaboss
         private Karaboss.NoSelectButton btnZoomPlus;
         private Karaboss.NoSelectButton btnZoomMinus;
 
+        // 1 rst TAB
+        private ColorSlider.ColorSlider positionHScrollBar;
+        private ChordsControl ChordControl1;
+        private Panel pnlDisplay;
+        private Panel pnlDisplayHorz;       // chords in horizontal mode
+        private Panel pnlBottom;
+        
         private Label lblNumMeasure;
         private Label lblElapsed;
         private Label lblPercent;
@@ -98,16 +103,18 @@ namespace Karaboss
         private Label lblOtherLyrics;
         private Label lblDuration;
 
+
+        // 2 nd TAB 
+        private ChordsMapControl ChordMapControl1;
+        private Panel pnlDisplayMap;       // chords in map mode        
+
+        // 3 rd TAB
+        private Panel pnlDisplayWords;
+        private TextBox txtDisplayWords;
+        
+
         #endregion controls
 
-        private Panel pnlDisplay;
-        private Panel pnlDisplayHorz;       // chords in horizontal mode
-        private Panel pnlBottom;
-        
-        private Panel pnlDisplayMap = new Panel();        // chords in map mode
-        //private Panel pnlBottomMap = new Panel();
-
-        private ColorSlider.ColorSlider positionHScrollBar;
 
         // Midifile characteristics
         private double _duration = 0;  // en secondes
@@ -144,10 +151,7 @@ namespace Karaboss
             this.KeyPreview = true;
 
             // Title
-            SetTitle(FileName);
-
-            UpdateMidiTimes();
-            
+            SetTitle(FileName);                        
         }
 
         #region Display Controls
@@ -323,7 +327,7 @@ namespace Karaboss
             ChordControl1.Parent = pnlDisplayHorz;
             ChordControl1.Location = new Point(0, 0);            
 
-            // Set size mandatory ??? unless, the control is not shoqn correctly
+            // Set size mandatory ??? unless, the control is not shown correctly
             ChordControl1.Size = new Size(pnlDisplayHorz.Width, ChordControl1.Height);
             
             ChordControl1.WidthChanged += new WidthChangedEventHandler(ChordControl_WidthChanged);
@@ -441,6 +445,33 @@ namespace Karaboss
             #endregion ChordMapControl
 
             #endregion 2eme TAB 
+
+
+            #region 3eme TAB
+            pnlDisplayWords = new Panel();
+            pnlDisplayWords.Parent = tabPageEdit;
+            pnlDisplayWords.Location = new Point(tabPageEdit.Margin.Left, tabPageEdit.Margin.Top);
+            pnlDisplayWords.Size = new Size(tabPageEdit.Width - tabPageEdit.Margin.Left - tabPageEdit.Margin.Right, tabPageEdit.Height - tabPageEdit.Margin.Top - tabPageEdit.Margin.Bottom);
+            pnlDisplayWords.BackColor = Color.Coral;
+            pnlDisplayWords.AutoScroll = true;
+            tabPageEdit.Controls.Add(pnlDisplayWords);
+
+            Font fontWords = new Font("Courier New", 22, FontStyle.Regular, GraphicsUnit.Pixel);
+            txtDisplayWords = new TextBox();
+            txtDisplayWords.Parent = pnlDisplayWords;
+            txtDisplayWords.Location = new Point(0, 0);
+            txtDisplayWords.Multiline = true;
+            txtDisplayWords.TextAlign = HorizontalAlignment.Center;
+            txtDisplayWords.ScrollBars = ScrollBars.Both;
+            txtDisplayWords.Size = new Size(pnlDisplayWords.Width, pnlDisplayWords.Height); 
+            txtDisplayWords.Font = fontWords;
+            txtDisplayWords.Text = "La petite maison dans la prairie\r\nIl était une fois dans l'ouest";
+            txtDisplayWords.Dock = DockStyle.Fill;
+            pnlDisplayWords.Controls.Add(txtDisplayWords);
+
+
+            #endregion 3eme TAB
+
         }
 
         #endregion Display Controls       
@@ -622,6 +653,8 @@ namespace Karaboss
 
                 DrawControls();
 
+                UpdateMidiTimes();
+
                 // Display
                 int Min = (int)(_duration / 60);
                 int Sec = (int)(_duration - (Min * 60));
@@ -802,8 +835,9 @@ namespace Karaboss
             if (pnlDisplayMap != null)
             {
                 //Console.WriteLine(pnlDisplayMap.Width.ToString());
-                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;                
-                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
+                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
+                //pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
+                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
             }
 
         }
@@ -814,7 +848,8 @@ namespace Karaboss
             {
                 //Console.WriteLine(pnlDisplayMap.Width.ToString());
                 pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
-                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
+                //pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
+                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
             }
         }
 
@@ -1098,18 +1133,12 @@ namespace Karaboss
                 }
             }
 
+            // 1st TAB
             if (pnlDisplayHorz != null)
             {
                 pnlDisplayHorz.Width = tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right;
                 pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height;
             }
-
-            if (pnlDisplayMap != null)
-            {
-                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
-                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
-            }
-
 
             if (ChordControl1 != null)
             {
@@ -1119,6 +1148,24 @@ namespace Karaboss
 
             if (pnlBottom != null)
                 lblOtherLyrics.Size = new Size(pnlBottom.Width, pnlBottom.Height - lblLyrics.Height);
+
+
+            // 2nd TAB
+            if (pnlDisplayMap != null)
+            {
+                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
+                //pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
+                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
+            }
+
+
+            // 3rd TAB
+            if (pnlDisplayWords != null)
+            {
+                pnlDisplayWords.Width = tabPageEdit.Width - tabPageEdit.Margin.Left - tabPageEdit.Margin.Right;
+                pnlDisplayWords.Height = tabPageEdit.Height - tabPageEdit.Margin.Top - tabPageEdit.Margin.Bottom;
+            }
+
 
             // Set maximum & visibility
             SetScrollBarValues();
@@ -1169,7 +1216,8 @@ namespace Karaboss
             switch (e.KeyCode)
             {
                 case Keys.Space:
-                    PlayPauseMusic();
+                    if (tabChordsControl.SelectedIndex != 2)
+                        PlayPauseMusic();
                     break;
             }            
         }

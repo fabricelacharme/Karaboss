@@ -117,71 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="&gt;&gt;tabPageDiagrams.Name" xml:space="preserve">
-    <value>tabPageDiagrams</value>
-  </data>
-  <data name="&gt;&gt;tabPageDiagrams.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabPageDiagrams.Parent" xml:space="preserve">
-    <value>tabChordsControl</value>
-  </data>
-  <data name="&gt;&gt;tabPageDiagrams.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;tabPageOverview.Name" xml:space="preserve">
-    <value>tabPageOverview</value>
-  </data>
-  <data name="&gt;&gt;tabPageOverview.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabPageOverview.Parent" xml:space="preserve">
-    <value>tabChordsControl</value>
-  </data>
-  <data name="&gt;&gt;tabPageOverview.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;tabPageEdit.Name" xml:space="preserve">
-    <value>tabPageEdit</value>
-  </data>
-  <data name="&gt;&gt;tabPageEdit.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabPageEdit.Parent" xml:space="preserve">
-    <value>tabChordsControl</value>
-  </data>
-  <data name="&gt;&gt;tabPageEdit.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="tabChordsControl.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Arial Narrow, 10.2pt</value>
-  </data>
-  <data name="tabChordsControl.ItemSize" type="System.Drawing.Size, System.Drawing">
-    <value>71, 40</value>
-  </data>
-  <data name="tabChordsControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 62</value>
-  </data>
-  <data name="tabChordsControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>800, 388</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="tabChordsControl.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;tabChordsControl.Name" xml:space="preserve">
-    <value>tabChordsControl</value>
-  </data>
-  <data name="&gt;&gt;tabChordsControl.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabChordsControl.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;tabChordsControl.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="tabPageDiagrams.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 44</value>
   </data>
@@ -192,6 +128,7 @@
   <data name="tabPageDiagrams.Size" type="System.Drawing.Size, System.Drawing">
     <value>792, 340</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="tabPageDiagrams.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
@@ -260,6 +197,33 @@
   </data>
   <data name="&gt;&gt;tabPageEdit.ZOrder" xml:space="preserve">
     <value>2</value>
+  </data>
+  <data name="tabChordsControl.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial Narrow, 10.2pt</value>
+  </data>
+  <data name="tabChordsControl.ItemSize" type="System.Drawing.Size, System.Drawing">
+    <value>71, 40</value>
+  </data>
+  <data name="tabChordsControl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 62</value>
+  </data>
+  <data name="tabChordsControl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>800, 388</value>
+  </data>
+  <data name="tabChordsControl.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tabChordsControl.Name" xml:space="preserve">
+    <value>tabChordsControl</value>
+  </data>
+  <data name="&gt;&gt;tabChordsControl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabChordsControl.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tabChordsControl.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="pnlToolbar.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
