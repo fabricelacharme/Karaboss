@@ -1,10 +1,12 @@
-﻿using Sanford.Multimedia.Midi;
+﻿using ChordsAnalyser.cchords;
+using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Un4seen.Bass.AddOn.Enc;
 
 namespace Karaboss.Lyrics
 {
@@ -78,6 +80,12 @@ namespace Karaboss.Lyrics
             get { return _gridlyrics; }
         }
 
+        private Dictionary<int, (string, string)> _gridchords;
+        public Dictionary<int, (string, string)> Gridchords
+        {
+            get { return _gridchords; }
+            set { _gridchords = value; }
+        }
 
         #endregion public
 
@@ -549,7 +557,8 @@ namespace Karaboss.Lyrics
                     tickson = plLyrics[i].TicksOn;
                     ticksoff = plLyrics[i].TicksOff;
 
-                    // if next note starts before current note ending
+                    // Fix ticksoff when the next note starts before current lyric ending
+                    // Lyric ticksoff = next note startime
                     if (i < plLyrics.Count - 1)
                     {
                         if (plLyrics[i + 1].Type == plLyric.Types.Text)
@@ -560,22 +569,26 @@ namespace Karaboss.Lyrics
                         }
                     }
                     
-                    // Value -
+                    // Cast the beat of the starting lyric to lower Value (3.5 => 3 = 3rd time of the current measure)
                     beatminus = (int)((tickson / (float)_totalTicks) * beats);
-                    // Value +
+                    // Cast the beat of the starting lyric to upper Value (3.5 => 4 = 1rst time of next measure, so next beat)
                     beatplus = (int)Math.Ceiling(((tickson / (float)_totalTicks) * beats));
 
+                    // Beat of the lyric stops (lower value)
                     beatoff = (int)((ticksoff / (float)_totalTicks) * beats);
 
+
+                    // il faut comparer avec la piste de la mélodie pour avoir la valeur du 
+                    // ticks off et s'assurer qu'on déborde bien sur l'autre beat.
+                    // Si on ne déborde pas, c'est que la syllabe est bien dans le beat initial et pas dans le suivant.
+                    // pb évident avec la chanson let it be par exemple
+
+                    // if the lyric stops after the beat lower value, the real beat can be set to the next beat
                     if (beatoff > beatminus)
                         beat = beatplus;
                     else
                         beat = beatminus;
                     
-                    // Correction pas suffisante, il faut comparer avec la piste de la mélodie pour avoir
-                    // le ticks off et s'assurer qu'on déborde bien sur l'autre beat
-                    // si on ne déborde pas, c'est que la syllabe est bien dans le beat initial et pas dans le suivant.
-                    // pb évident avec la chanson let it be
 
 
                     if (beat != beatminus)
@@ -605,16 +618,16 @@ namespace Karaboss.Lyrics
                 }
             }
 
-            Console.WriteLine("******** Différences positionnement lyrics : " + nbdiffs.ToString());
+            Console.WriteLine("******** lyrics set to another beat: " + nbdiffs.ToString());
         }
 
         /// <summary>
-        /// Load Lyrics lines
+        /// Load Lyrics lines in Dictionaries LyrictLines & LyricsTimes
         /// </summary>
         private void LoadLyricsLines()
         {
-            LyricsLines = new Dictionary<int, string>();
-            LyricsTimes = new Dictionary<int, int>();
+            LyricsLines = new Dictionary<int, string>();  // tickson of the first lyric, line of lyrics
+            LyricsTimes = new Dictionary<int, int>();     // tickson of the first lyric, ticksoff of the last lyric
 
             string line = string.Empty;
             bool newline = false;
@@ -704,8 +717,10 @@ namespace Karaboss.Lyrics
                 {
                     if (plLyrics[j].Type == plLyric.Types.Text)
                     {
+                        // Search the note starttime corresponding to the lyric (not always true)
                         if (notes[i].StartTime == plLyrics[j].TicksOn)
                         {
+                            // Set ticksoff of the lyric to the endtime of the note
                             plLyrics[j].TicksOff = notes[i].EndTime;
                             nbmodified++;
                             break;
@@ -714,7 +729,7 @@ namespace Karaboss.Lyrics
                 }    
             }
             
-            Console.WriteLine("******** lyrics ticksoff modifiés : " + nbmodified.ToString());
+            Console.WriteLine("******** lyrics ticksoff modified : " + nbmodified.ToString());
         }
 
         #region Display Lyrics
@@ -778,10 +793,11 @@ namespace Karaboss.Lyrics
         }
 
 
-        public string DisplayWordsAndChords()
+        public string DisplayWordsAndChords2()
         {
             // Gridchords <int,(string,string)> = measure number, chord of 1rst beat, chord of 2nd part of measure
-            //  GridLyrics <int, string>        = ticks of beat, lyrics in this beat
+            // GridLyrics <int, string>        = beat number, lyrics in this beat
+            // LyricsLines <int, string>       = ticks on, line of lyrics 
             string res = string.Empty;
             string cr = "\r\n";
             string linetext = string.Empty;
@@ -807,8 +823,303 @@ namespace Karaboss.Lyrics
             return res;
         }
 
+        public string DisplayWordsAndChords3()
+        {
+            // GridLyrics <int, string>        = beat number, lyrics in this beat
+            // Gridchords <int,(string,string)> = measure number, chord of 1rst beat, chord of 2nd part of measure
+
+            string res = string.Empty;
+            string cr = "\r\n";
+            int beat;
+            string lyr = string.Empty;
+
+            int nbBeatsPerMeasure = sequence1.Numerator;
+            int nbBeats = NbMeasures * nbBeatsPerMeasure;
+            int beatDuration = _measurelen / nbBeatsPerMeasure;
+            int measure;
+            int currentmeasure = 1;
+            string chord = string.Empty;
+            int timeinmeasure;
+            int l;
+            string linebeatchord = string.Empty;
+            string linebeatlyr = string.Empty;
+
+            foreach (KeyValuePair<int, string> mylyrics in Gridlyrics)
+            {
+                beat = mylyrics.Key;
+                lyr = mylyrics.Value;
+                l = lyr.Length;
+
+                // Which measure  for this beat ?
+                // Which place in the measure for this beat ?
+
+                // Time in measure ?
+                timeinmeasure = 1 + beat % nbBeatsPerMeasure;
+
+                // Measure ?
+                measure = 1 + beat / nbBeatsPerMeasure;
+
+                if (measure != currentmeasure)
+                {
+                    currentmeasure = measure;
+                    res += linebeatchord + cr + linebeatlyr + cr;
+                }
+
+                var ttx = Gridchords[measure];
+
+                if (timeinmeasure == 1) 
+                {
+                    chord = ttx.Item1;
+                    linebeatchord = chord;
+                    linebeatlyr = lyr;
+
+                    if (lyr.Length > chord.Length)
+                    {
+                        linebeatchord += new string(' ', lyr.Length - chord.Length);
+                    }
+                    else if (lyr.Length < chord.Length)
+                    {                       
+                        linebeatlyr += new string(' ', chord.Length - lyr.Length);
+                    }
+                }
+                else if (timeinmeasure == 1 + nbBeatsPerMeasure/2) 
+                {
+                    chord += ttx.Item2;
+                    linebeatchord = chord;
+                    linebeatlyr += lyr;
+
+                    if (lyr.Length > chord.Length)
+                    {
+                        linebeatchord += new string(' ', lyr.Length - chord.Length);
+                    }
+                    else if (lyr.Length < chord.Length)
+                    {
+                        linebeatlyr += new string(' ', chord.Length - lyr.Length);
+                    }
+                }
+                else
+                {
+                    // No chord
+                    linebeatlyr += lyr;
+                    if (lyr.Length > 0)
+                        linebeatchord += new string(' ', lyr.Length);
+
+                }
+
+            }
+
+
+
+            return res;
+        }
+
+
+        private float GetTimeInMeasure(int ticks)
+        {
+            // Num measure
+            int curmeasure = 1 + ticks / _measurelen;
+            // Temps dans la mesure
+            float timeinmeasure = sequence1.Numerator - ((curmeasure * _measurelen - ticks) / (float)(_measurelen / sequence1.Numerator));
+
+            return timeinmeasure;
+        }
+        public string DisplayWordsAndChords()
+        {
+            string res = string.Empty;
+            string cr = "\r\n";
+            int nbBeatsPerMeasure = sequence1.Numerator;
+            int beatDuration = _measurelen / nbBeatsPerMeasure;
+            int tickson;
+            int ticksoff;
+            int nexttickson;
+            int beat;
+            int beatoff;
+            int currentbeat = -1;
+            int currentmeasure = 1;
+            int measure;
+            string chord = string.Empty;
+            int timeinmeasure;
+            string beatlyr = string.Empty;
+            string beatchord = string.Empty;
+            string linebeatchord = string.Empty;
+            string linebeatlyr = string.Empty;
+            string lyr = string.Empty;
+
+            for (int i = 0; i < plLyrics.Count; i++)
+            {
+                plLyric pll = plLyrics[i];
+
+                // =========================================
+                // Linefeed
+                // =========================================
+                if (pll.Type == plLyric.Types.LineFeed || pll.Type == plLyric.Types.Paragraph) 
+                {
+                    #region store previous
+                    linebeatlyr += beatlyr;
+                    linebeatchord += beatchord;
+
+                    // Store results of previous beat
+                    timeinmeasure = 1 + (int)GetTimeInMeasure((currentbeat - 1) * beatDuration); // 1 + currentbeat % nbBeatsPerMeasure;                        
+                    var tty = Gridchords[currentmeasure];
+
+                    if (timeinmeasure == 1)
+                    {
+                        // Chord 1
+                        chord = tty.Item1;
+                        beatchord = chord;
+                        //beatlyr += lyr;
+
+                        if (beatlyr.Length > chord.Length)
+                        {
+                            beatchord += new string(' ', beatlyr.Length - beatchord.Length);
+                        }
+                        else if (beatlyr.Length < chord.Length)
+                        {
+                            beatlyr += new string(' ', chord.Length - beatlyr.Length);
+                        }
+                    }
+                    else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
+                    {
+                        // Chord 2
+                        chord = tty.Item2;
+                        beatchord = chord;
+                        //beatlyr += lyr;
+
+                        if (beatlyr.Length > chord.Length)
+                        {
+                            beatchord += new string(' ', beatlyr.Length - chord.Length);
+                        }
+                        else if (beatlyr.Length < chord.Length)
+                        {
+                            beatlyr += new string(' ', chord.Length - beatlyr.Length);
+                        }
+                    }
+                    else
+                    {
+                        // No chord
+                        //beatlyr += lyr;
+                        if (beatlyr.Length > 0)
+                            beatchord += new string(' ', beatlyr.Length);
+                    }
+
+                    #endregion store result
+
+                    // New Line => stor result
+                    res += linebeatchord + cr + linebeatlyr + cr;
+                    linebeatchord = string.Empty;
+                    linebeatlyr = string.Empty;
+                    beatlyr = string.Empty;
+                    beatchord = string.Empty;
+                    currentbeat = -1;
+
+                }
+                // =========================================
+                // Text
+                // =========================================
+                else if (pll.Type == plLyric.Types.Text)
+                {
+                    tickson = pll.TicksOn;
+                    ticksoff = pll.TicksOff;
+                    // Fix ticksoff when the next note starts before current lyric ending
+                    // Lyric ticksoff = next note startime
+                    if (i < plLyrics.Count - 1)
+                    {
+                        if (plLyrics[i + 1].Type == plLyric.Types.Text)
+                        {
+                            nexttickson = plLyrics[i + 1].TicksOn;
+                            if (ticksoff > nexttickson)
+                                ticksoff = nexttickson;
+                        }
+                    }
+
+                    measure = 1 + tickson / _measurelen;
+                    
+                    // Real beat                    
+                    beat = 1 + tickson / beatDuration;
+                    beatoff = 1 + ticksoff / beatDuration;
+                    if (beatoff > beat)
+                        beat += 1;
+
+                    lyr = pll.Element;
+
+                    if (currentbeat == -1)
+                    {
+                        currentbeat = beat;
+                        currentmeasure = measure;
+                    }
+
+                    // If beat change
+                    if (beat != currentbeat)
+                    {
+                        #region store result
+                        // Store results of previous beat
+                        timeinmeasure = 1 + (int)GetTimeInMeasure((currentbeat - 1) * beatDuration) ; // 1 + currentbeat % nbBeatsPerMeasure;                        
+                        var tty = Gridchords[currentmeasure];
+
+                        if (timeinmeasure == 1)
+                        {
+                            // Chord 1
+                            chord = tty.Item1;
+                            beatchord = chord;
+                            //beatlyr += lyr;
+
+                            if (beatlyr.Length > chord.Length)
+                            {
+                                beatchord += new string(' ', beatlyr.Length - beatchord.Length);
+                            }
+                            else if (beatlyr.Length < chord.Length)
+                            {
+                                beatlyr += new string(' ', chord.Length - beatlyr.Length);
+                            }
+                        }
+                        else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
+                        {
+                            // Chord 2
+                            chord = tty.Item2;
+                            beatchord = chord;
+                            //beatlyr += lyr;
+
+                            if (beatlyr.Length > chord.Length)
+                            {
+                                beatchord += new string(' ', beatlyr.Length - chord.Length);
+                            }
+                            else if (beatlyr.Length < chord.Length)
+                            {
+                                beatlyr += new string(' ', chord.Length - beatlyr.Length);
+                            }
+                        }
+                        else
+                        {
+                            // No chord
+                            //beatlyr += lyr;
+                            if (beatlyr.Length > 0)
+                                beatchord += new string(' ', beatlyr.Length);
+                        }
+
+                        #endregion store result
+
+                        // update current
+                        currentbeat = beat;
+                        currentmeasure = measure;
+
+                        linebeatlyr += beatlyr;
+                        linebeatchord += beatchord;
+                        beatlyr = string.Empty;
+                        beatchord = string.Empty;
+                    }
+
+                    // If same beat and same measure
+                    beatlyr += lyr;                                        
+                }
+            }
+
+            return res;
+        }
+
         #endregion Display Lyrics
 
+
+        #region midi
         /// <summary>
         /// Upadate MIDI times
         /// </summary>
@@ -825,5 +1136,7 @@ namespace Karaboss.Lyrics
                 NbMeasures = Convert.ToInt32(Math.Ceiling((double)_totalTicks / _measurelen)); // rounds up to the next full integer
             }
         }
+
+        #endregion midi
     }
 }

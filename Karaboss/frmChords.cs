@@ -130,7 +130,8 @@ namespace Karaboss
 
         // Lyrics 
         private LyricsMgmt myLyricsMgmt;
-       
+        Dictionary<int, (string, string)> Gridchords;
+
         #endregion private dcl
 
 
@@ -536,7 +537,7 @@ namespace Karaboss
 
             // Display chords in the textbox
             ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
-            Dictionary<int, (string, string)> Gridchords = Analyser.Gridchords;
+            Gridchords = Analyser.Gridchords;
 
             /*
             string res = string.Empty;
@@ -757,6 +758,8 @@ namespace Karaboss
         private void DisplayLyrics()
         {
             myLyricsMgmt = new LyricsMgmt(sequence1);
+            
+            // Display lyrics on first tab
             ChordControl1.GridLyrics = myLyricsMgmt.Gridlyrics;
 
             DisplayLineLyrics(0);
@@ -778,6 +781,7 @@ namespace Karaboss
         /// </summary>
         private void DisplayWordsAndChords()
         {
+            myLyricsMgmt.Gridchords = Gridchords;
             txtDisplayWords.Text = myLyricsMgmt.DisplayWordsAndChords();
         }
 
