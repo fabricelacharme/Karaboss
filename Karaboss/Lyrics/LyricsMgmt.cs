@@ -1007,11 +1007,14 @@ namespace Karaboss.Lyrics
                     linebeatlyr += beatlyr;
                     linebeatchord += beatchord;
 
-                    // New Line => stor result
-                    if (pll.Type == plLyric.Types.LineFeed)
-                        res += linebeatchord + cr + linebeatlyr + cr;
-                    else
-                        res += linebeatchord + cr + linebeatlyr + cr + cr;
+                    if (linebeatlyr != "" || linebeatchord != "")
+                    {
+                        // New Line => stor result
+                        if (pll.Type == plLyric.Types.LineFeed)
+                            res += linebeatchord + cr + linebeatlyr + cr;
+                        else
+                            res += linebeatchord + cr + linebeatlyr + cr + cr;
+                    }
 
                     linebeatchord = string.Empty;
                     linebeatlyr = string.Empty;
@@ -1038,14 +1041,16 @@ namespace Karaboss.Lyrics
                                 ticksoff = nexttickson;
                         }
                     }
-
-                    measure = 1 + tickson / _measurelen;
-                    
+                                        
                     // Real beat                    
                     beat = 1 + tickson / beatDuration;
                     beatoff = 1 + ticksoff / beatDuration;
                     if (beatoff > beat)
                         beat += 1;
+
+                    //measure = 1 + tickson / _measurelen;
+                    // Fixed measure number with updated value of beat
+                    measure = (int)Math.Ceiling(beat / (float)nbBeatsPerMeasure);
 
                     lyr = pll.Element;
 
