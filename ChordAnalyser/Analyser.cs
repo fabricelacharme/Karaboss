@@ -59,13 +59,13 @@ namespace ChordAnalyser
             {
                 res = letters[triad[0]];
                 if (seventh[3] - seventh[0] == 10)
-                    res += " 7";
+                    res += "7";
             } 
             else if (IsMinorChord(triad))
             {
                 res = letters[triad[0]] + "m";
                 if (seventh[3] - seventh[0] == 10)
-                    res += " 7";
+                    res += "7";
             }
 
             return res;
@@ -80,13 +80,13 @@ namespace ChordAnalyser
             {
                 res = letters[triad[0]];
                 if (others[3] - others[0] == 10)
-                    res += " 7";
+                    res += "7";
             }
             else if (IsMinorChord(triad))
             {
                 res = letters[triad[0]] + "m";
                 if (others[3] - others[0] == 10)
-                    res += " 7";
+                    res += "7";
             }
             return res;
         }

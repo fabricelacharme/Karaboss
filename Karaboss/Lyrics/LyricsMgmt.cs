@@ -955,9 +955,7 @@ namespace Karaboss.Lyrics
                 if (pll.Type == plLyric.Types.LineFeed || pll.Type == plLyric.Types.Paragraph) 
                 {
                     #region store previous
-                    linebeatlyr += beatlyr;
-                    linebeatchord += beatchord;
-
+                                        
                     // Store results of previous beat
                     timeinmeasure = 1 + (int)GetTimeInMeasure((currentbeat - 1) * beatDuration); // 1 + currentbeat % nbBeatsPerMeasure;                        
                     var tty = Gridchords[currentmeasure];
@@ -966,9 +964,10 @@ namespace Karaboss.Lyrics
                     {
                         // Chord 1
                         chord = tty.Item1;
+                        if (chord == "<Empty>")
+                            chord = "";
                         beatchord = chord;
-                        //beatlyr += lyr;
-
+                        
                         if (beatlyr.Length > chord.Length)
                         {
                             beatchord += new string(' ', beatlyr.Length - beatchord.Length);
@@ -982,8 +981,10 @@ namespace Karaboss.Lyrics
                     {
                         // Chord 2
                         chord = tty.Item2;
-                        beatchord = chord;
-                        //beatlyr += lyr;
+                        if (chord == "<Empty>")
+                            chord = "";
+
+                        beatchord = chord;                        
 
                         if (beatlyr.Length > chord.Length)
                         {
@@ -997,15 +998,21 @@ namespace Karaboss.Lyrics
                     else
                     {
                         // No chord
-                        //beatlyr += lyr;
                         if (beatlyr.Length > 0)
                             beatchord += new string(' ', beatlyr.Length);
                     }
 
                     #endregion store result
 
+                    linebeatlyr += beatlyr;
+                    linebeatchord += beatchord;
+
                     // New Line => stor result
-                    res += linebeatchord + cr + linebeatlyr + cr;
+                    if (pll.Type == plLyric.Types.LineFeed)
+                        res += linebeatchord + cr + linebeatlyr + cr;
+                    else
+                        res += linebeatchord + cr + linebeatlyr + cr + cr;
+
                     linebeatchord = string.Empty;
                     linebeatlyr = string.Empty;
                     beatlyr = string.Empty;
@@ -1060,8 +1067,9 @@ namespace Karaboss.Lyrics
                         {
                             // Chord 1
                             chord = tty.Item1;
-                            beatchord = chord;
-                            //beatlyr += lyr;
+                            if (chord == "<Empty>")
+                                chord = "";
+                            beatchord = chord;                            
 
                             if (beatlyr.Length > chord.Length)
                             {
@@ -1076,8 +1084,9 @@ namespace Karaboss.Lyrics
                         {
                             // Chord 2
                             chord = tty.Item2;
-                            beatchord = chord;
-                            //beatlyr += lyr;
+                            if (chord == "<Empty>")
+                                chord = "";
+                            beatchord = chord;                            
 
                             if (beatlyr.Length > chord.Length)
                             {
@@ -1091,7 +1100,6 @@ namespace Karaboss.Lyrics
                         else
                         {
                             // No chord
-                            //beatlyr += lyr;
                             if (beatlyr.Length > 0)
                                 beatchord += new string(' ', beatlyr.Length);
                         }
