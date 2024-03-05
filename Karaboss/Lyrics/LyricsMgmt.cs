@@ -220,11 +220,14 @@ namespace Karaboss.Lyrics
                     {
                         if (k > 0)
                         {
-                            elm = plLyrics[k - 1].Element;
-                            if (elm.Length > 0)
+                            if (plLyrics[k - 1].Type == plLyric.Types.Text)
                             {
-                                if (elm.Substring(1, elm.Length - 1) != " ")
-                                    plLyrics[k - 1].Element = elm + " ";
+                                elm = plLyrics[k - 1].Element;
+                                if (elm.Length > 0)
+                                {
+                                    if (elm.Substring(1, elm.Length - 1) != " ")
+                                        plLyrics[k - 1].Element = elm + " ";
+                                }
                             }
                         }
                     }
@@ -303,11 +306,14 @@ namespace Karaboss.Lyrics
                         {
                             if (k > 0)
                             {
-                                elm = plLyrics[k - 1].Element;
-                                if (elm.Length > 0)
+                                if (plLyrics[k - 1].Type == plLyric.Types.Text)
                                 {
-                                    if (elm.Substring(1, elm.Length - 1) != " ")
-                                        plLyrics[k - 1].Element = elm + " ";
+                                    elm = plLyrics[k - 1].Element;
+                                    if (elm.Length > 0)
+                                    {
+                                        if (elm.Substring(1, elm.Length - 1) != " ")
+                                            plLyrics[k - 1].Element = elm + " ";
+                                    }
                                 }
                             }
                         }
@@ -612,10 +618,8 @@ namespace Karaboss.Lyrics
 
                     // if the lyric stops after the beat lower value, the real beat can be set to the next beat
                     beat = beatminus;
-                    beatend = beat * beatDuration;
-
+                    beatend = (beat + 1) * beatDuration;
                     
-
                     if (beatoff > beatminus && ticksoff - beatend > beatend - tickson)
                         beat = beatplus;
                     
@@ -643,6 +647,18 @@ namespace Karaboss.Lyrics
                     // Add syllabe to currenttext
                     currenttext += plLyrics[i].Element;
                 }
+            }
+
+
+            // Last word ?
+            try
+            {
+                _gridlyrics.Add(currentbeat, currenttext);
+            }
+            catch (Exception ex)
+            {
+                string tx = ex.Message + "\r\n" + "Syllab :" + currenttext + "\r\n" + "Measure: " + currentmeasure;
+                MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             Console.WriteLine("******** lyrics set to another beat: " + nbdiffs.ToString());
@@ -950,6 +966,11 @@ namespace Karaboss.Lyrics
 
             return timeinmeasure;
         }
+        
+        /// <summary>
+        /// TAB 3: Display words & lyrics
+        /// </summary>
+        /// <returns></returns>
         public string DisplayWordsAndChords()
         {
             string res = string.Empty;
@@ -1078,14 +1099,12 @@ namespace Karaboss.Lyrics
                     beatend = beat * beatDuration;
                     if (beatoff > beat &&  ticksoff - beatend > beatend - tickson)
                     {
-
-                        //if (beatoff > beat)
                             beat += 1;
                     }
 
                     //measure = 1 + tickson / _measurelen;
                     // Fixed measure number with updated value of beat
-                    measure = (int)Math.Ceiling(beat / (float)nbBeatsPerMeasure);
+                    measure = (int)Math.Ceiling(beat / (float)nbBeatsPerMeasure);                    
 
                     lyr = pll.Element;
 
@@ -1160,6 +1179,63 @@ namespace Karaboss.Lyrics
                     beatlyr += lyr;                                        
                 }
             }
+
+            // Do not forget the last line
+            
+            var ttz = Gridchords[currentmeasure];
+            timeinmeasure = 1 + (int)GetTimeInMeasure((currentbeat - 1) * beatDuration);
+
+            #region store result
+            if (timeinmeasure == 1)
+            {
+                // Chord 1
+                chord = ttz.Item1;
+                if (chord == "<Empty>")
+                    chord = "";
+                beatchord = chord;
+
+                if (beatlyr.Length > chord.Length)
+                {
+                    beatchord += new string(' ', beatlyr.Length - beatchord.Length);
+                }
+                else if (beatlyr.Length < chord.Length)
+                {
+                    beatlyr += new string(' ', chord.Length - beatlyr.Length);
+                }
+            }
+            else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
+            {
+                // Chord 2
+                chord = ttz.Item2;
+                if (chord == "<Empty>")
+                    chord = "";
+                beatchord = chord;
+
+                if (beatlyr.Length > chord.Length)
+                {
+                    beatchord += new string(' ', beatlyr.Length - chord.Length);
+                }
+                else if (beatlyr.Length < chord.Length)
+                {
+                    beatlyr += new string(' ', chord.Length - beatlyr.Length);
+                }
+            }
+            else
+            {
+                // No chord
+                if (beatlyr.Length > 0)
+                    beatchord += new string(' ', beatlyr.Length);
+            }
+            #endregion store result
+
+            linebeatlyr += beatlyr;
+            linebeatchord += beatchord;            
+            if (linebeatlyr != "" || linebeatchord != "")
+            {
+                // New Line => store result                
+                res += linebeatchord + cr + linebeatlyr;
+            }
+
 
             return res;
         }
