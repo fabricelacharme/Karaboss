@@ -102,11 +102,15 @@ namespace Karaboss.Lyrics
             
             UpdateMidiTimes();
 
+            // Extract lyrics
             ExtractLyrics();
 
+            // Search for the melody track
             _melodytracknum = GuessMelodyTrack();
 
+            // Fix lyrics endtime to notes of the melody track end time
             CheckTimes();
+
             LoadLyricsPerBeat();
 
             LoadLyricsLines();
@@ -127,7 +131,7 @@ namespace Karaboss.Lyrics
             double l_lyric = 1;
 
             int nbBeatsPerMeasure = sequence1.Numerator;
-            int OneBeat = _measurelen / sequence1.Numerator;
+            //int OneBeat = _measurelen / sequence1.Numerator;
             int beatDuration = _measurelen / nbBeatsPerMeasure;
 
             // ----------------------------------------------------------------------
@@ -572,24 +576,12 @@ namespace Karaboss.Lyrics
                 if (plLyrics[i].Type == plLyric.Types.Text)
                 {
                     tickson = plLyrics[i].TicksOn;
-                    ticksoff = plLyrics[i].TicksOff;
-
-                    // Fix ticksoff when the next note starts before current lyric ending
-                    // Lyric ticksoff = next note startime
-                    if (i < plLyrics.Count - 1)
-                    {
-                        if (plLyrics[i + 1].Type == plLyric.Types.Text)
-                        {
-                            nexttickson = plLyrics[i + 1].TicksOn;
-                            if (ticksoff > nexttickson)
-                                ticksoff = nexttickson;
-                        }
-                    }
+                    ticksoff = plLyrics[i].TicksOff;                    
 
                     
                     // Real beat                    
-                    //beat =  tickson / beatDuration;
-                    //beatoff =  ticksoff / beatDuration;
+                    int beat1 =  tickson / beatDuration;
+                    int beatoff1 =  ticksoff / beatDuration;
                     /*
                     // In case the note is located on 2 beats, is the note more in the first one or in the second one ?
                     beatend = beat * beatDuration;
@@ -601,7 +593,7 @@ namespace Karaboss.Lyrics
                     // Fixed measure number with updated value of beat
                     currentmeasure = (int)Math.Ceiling(beat / (float)nbBeatsPerMeasure);
                     */
-                    
+
                     // Cast the beat of the starting lyric to lower Value (3.5 => 3 = 3rd time of the current measure)
                     beatminus = (int)((tickson / (float)_totalTicks) * beats);
                     // Cast the beat of the starting lyric to upper Value (3.5 => 4 = 1rst time of next measure, so next beat)
@@ -619,12 +611,16 @@ namespace Karaboss.Lyrics
                     // if the lyric stops after the beat lower value, the real beat can be set to the next beat
                     beat = beatminus;
                     beatend = (beat + 1) * beatDuration;
-                    
-                    if (beatoff > beatminus && ticksoff - beatend > beatend - tickson)
+                    //beatend = (beatoff) * beatDuration;
+
+                    if (beatoff > beat && ticksoff - beatend > beatend - tickson)
+                    {
+                        //beat += 1;
                         beat = beatplus;
+                    }
                     
-                    if (beat != beatminus)
-                        nbdiffs++;
+                    //if (beat != beatminus)
+                    //    nbdiffs++;
 
                     currentmeasure = 1 + (int)((tickson /(float)_totalTicks) * NbMeasures);                    
 
@@ -763,9 +759,13 @@ namespace Karaboss.Lyrics
                         // Search the note starttime corresponding to the lyric (not always true)
                         if (notes[i].StartTime == plLyrics[j].TicksOn)
                         {
-                            // Set ticksoff of the lyric to the endtime of the note
-                            plLyrics[j].TicksOff = notes[i].EndTime;
-                            nbmodified++;
+                            // lyric tickoff was already reduced to the next lyric tickson
+                            // Set ticksoff of the lyric to the endtime of the note only if it reduces it again 
+                            if (notes[i].EndTime < plLyrics[j].TicksOff)
+                            {
+                                plLyrics[j].TicksOff = notes[i].EndTime;
+                                nbmodified++;
+                            }
                             break;
                         }
                     }
@@ -836,127 +836,7 @@ namespace Karaboss.Lyrics
         }
 
 
-        public string DisplayWordsAndChords2()
-        {
-            // Gridchords <int,(string,string)> = measure number, chord of 1rst beat, chord of 2nd part of measure
-            // GridLyrics <int, string>        = beat number, lyrics in this beat
-            // LyricsLines <int, string>       = ticks on, line of lyrics 
-            string res = string.Empty;
-            string cr = "\r\n";
-            string linetext = string.Empty;
-            string linechords = string.Empty;
-            string chords = string.Empty;
-            int l = 0;
-            int tickson = 0;
-
-            foreach (KeyValuePair<int,string> words in LyricsLines)
-            {
-                tickson = words.Key;
-                linetext = words.Value.Trim();
-                l = linetext.Length;
-
-                chords = "Em";
-                linechords = chords + new String(' ', l - chords.Length);
-                
-                res += linechords + cr + linetext + cr;
-            }
-
-            // Remove last CR
-            res = res.Substring(0, res.Length - 2); 
-            return res;
-        }
-
-        public string DisplayWordsAndChords3()
-        {
-            // GridLyrics <int, string>        = beat number, lyrics in this beat
-            // Gridchords <int,(string,string)> = measure number, chord of 1rst beat, chord of 2nd part of measure
-
-            string res = string.Empty;
-            string cr = "\r\n";
-            int beat;
-            string lyr = string.Empty;
-
-            int nbBeatsPerMeasure = sequence1.Numerator;
-            int nbBeats = NbMeasures * nbBeatsPerMeasure;
-            int beatDuration = _measurelen / nbBeatsPerMeasure;
-            int measure;
-            int currentmeasure = 1;
-            string chord = string.Empty;
-            int timeinmeasure;
-            int l;
-            string linebeatchord = string.Empty;
-            string linebeatlyr = string.Empty;
-
-            foreach (KeyValuePair<int, string> mylyrics in Gridlyrics)
-            {
-                beat = mylyrics.Key;
-                lyr = mylyrics.Value;
-                l = lyr.Length;
-
-                // Which measure  for this beat ?
-                // Which place in the measure for this beat ?
-
-                // Time in measure ?
-                timeinmeasure = 1 + beat % nbBeatsPerMeasure;
-
-                // Measure ?
-                measure = 1 + beat / nbBeatsPerMeasure;
-
-                if (measure != currentmeasure)
-                {
-                    currentmeasure = measure;
-                    res += linebeatchord + cr + linebeatlyr + cr;
-                }
-
-                var ttx = Gridchords[measure];
-
-                if (timeinmeasure == 1) 
-                {
-                    chord = ttx.Item1;
-                    linebeatchord = chord;
-                    linebeatlyr = lyr;
-
-                    if (lyr.Length > chord.Length)
-                    {
-                        linebeatchord += new string(' ', lyr.Length - chord.Length);
-                    }
-                    else if (lyr.Length < chord.Length)
-                    {                       
-                        linebeatlyr += new string(' ', chord.Length - lyr.Length);
-                    }
-                }
-                else if (timeinmeasure == 1 + nbBeatsPerMeasure/2) 
-                {
-                    chord += ttx.Item2;
-                    linebeatchord = chord;
-                    linebeatlyr += lyr;
-
-                    if (lyr.Length > chord.Length)
-                    {
-                        linebeatchord += new string(' ', lyr.Length - chord.Length);
-                    }
-                    else if (lyr.Length < chord.Length)
-                    {
-                        linebeatlyr += new string(' ', chord.Length - lyr.Length);
-                    }
-                }
-                else
-                {
-                    // No chord
-                    linebeatlyr += lyr;
-                    if (lyr.Length > 0)
-                        linebeatchord += new string(' ', lyr.Length);
-
-                }
-
-            }
-
-
-
-            return res;
-        }
-
-
+           
         private float GetTimeInMeasure(int ticks)
         {
             // Num measure
@@ -979,7 +859,7 @@ namespace Karaboss.Lyrics
             int beatDuration = _measurelen / nbBeatsPerMeasure;
             int tickson;
             int ticksoff;
-            int nexttickson;
+            //int nexttickson;
             int beat;
             int beatoff;
             int currentbeat = -1;
@@ -1082,18 +962,8 @@ namespace Karaboss.Lyrics
                 {
                     tickson = pll.TicksOn;
                     ticksoff = pll.TicksOff;
-                    // Fix ticksoff when the next note starts before current lyric ending
-                    // Lyric ticksoff = next note startime
-                    if (i < plLyrics.Count - 1)
-                    {
-                        if (plLyrics[i + 1].Type == plLyric.Types.Text)
-                        {
-                            nexttickson = plLyrics[i + 1].TicksOn;
-                            if (ticksoff > nexttickson)
-                                ticksoff = nexttickson;
-                        }
-                    }
-                                        
+                    
+                    
                     // Real beat                    
                     beat = 1 + tickson / beatDuration;
                     beatoff = 1 + ticksoff / beatDuration;
