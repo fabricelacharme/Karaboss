@@ -948,56 +948,7 @@ namespace Karaboss.Lyrics
                                 linebeatchord = string.Empty;
                                 linebeatlyr = string.Empty;
                                 beatlyr = string.Empty;
-                                beatchord = string.Empty;
-
-                                #region store line
-                                /*
-                                if (timeinmeasure == 1)
-                                {
-                                    // Chord 1
-                                    chord = kvChord.Item1;
-                                    if (chord == "<Empty>")
-                                        chord = "";
-                                    beatchord = chord;
-
-                                    if (beatlyr.Length > chord.Length)
-                                    {
-                                        beatchord += new string(' ', beatlyr.Length - beatchord.Length);
-                                    }
-                                    else if (beatlyr.Length < chord.Length)
-                                    {
-                                        beatlyr += new string(' ', chord.Length - beatlyr.Length);
-                                    }
-                                }
-                                else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
-                                {
-                                    // Chord 2
-                                    chord = kvChord.Item2;
-                                    if (chord == "<Empty>")
-                                        chord = "";
-                                    beatchord = chord;
-
-                                    if (beatlyr.Length > chord.Length)
-                                    {
-                                        beatchord += new string(' ', beatlyr.Length - chord.Length);
-                                    }
-                                    else if (beatlyr.Length < chord.Length)
-                                    {
-                                        beatlyr += new string(' ', chord.Length - beatlyr.Length);
-                                    }
-                                }
-                                else
-                                {
-                                    // No chord
-                                    if (beatlyr.Length > 0)
-                                        beatchord += new string(' ', beatlyr.Length);
-                                }
-                                */
-                                #endregion store line
-
-                                //linebeatlyr += beatlyr;
-                                //linebeatchord += beatchord;
-
+                                beatchord = string.Empty;                               
                                 
                             }
                             else if (pll.Type == plLyric.Types.Text)
@@ -1071,24 +1022,27 @@ namespace Karaboss.Lyrics
                             chord = kvChord.Item1;
                             if (chord == "<Empty>")
                                 chord = "";
-                            beatchord = chord + " ";
+                            if (chord.Trim() != "")
+                                chord += " ";
+                            beatchord = chord;
+                            beatlyr += new string(' ', chord.Length);
                         }
-                        else if (timeinmeasure == 2)
+                        else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
                         {
                             // Chord 2
                             chord = kvChord.Item2;
                             if (chord == "<Empty>")
                                 chord = "";
-                            beatchord = chord + " ";
+                            if (chord.Trim() != "")
+                                chord += " ";
+                            beatchord = chord;
+                            beatlyr += new string(' ', chord.Length);
                         }
 
-                        if (beatchord.Trim() != "")
-                        {
-                            if (timeinmeasure == nbBeatsPerMeasure)
-                                linebeatchord += beatchord + cr;
-                            else
-                                linebeatchord += beatchord;
-                        }
+                        linebeatlyr += beatlyr;
+                        linebeatchord += beatchord;
+                        beatlyr = string.Empty;
+                        beatchord = string.Empty;
                     }
 
                     
@@ -1097,54 +1051,10 @@ namespace Karaboss.Lyrics
             }
 
             // Store last line
-            #region store result
-            var ttz = Gridchords[NbMeasures];
-            int timeinmeasur = nbBeatsPerMeasure;
-
-            if (timeinmeasur == 1)
-            {
-                // Chord 1
-                chord = ttz.Item1;
-                if (chord == "<Empty>")
-                    chord = "";
-                beatchord = chord;
-
-                if (beatlyr.Length > chord.Length)
-                {
-                    beatchord += new string(' ', beatlyr.Length - beatchord.Length);
-                }
-                else if (beatlyr.Length < chord.Length)
-                {
-                    beatlyr += new string(' ', chord.Length - beatlyr.Length);
-                }
-            }
-            else if (timeinmeasur == 1 + nbBeatsPerMeasure / 2)
-            {
-                // Chord 2
-                chord = ttz.Item2;
-                if (chord == "<Empty>")
-                    chord = "";
-                beatchord = chord;
-
-                if (beatlyr.Length > chord.Length)
-                {
-                    beatchord += new string(' ', beatlyr.Length - chord.Length);
-                }
-                else if (beatlyr.Length < chord.Length)
-                {
-                    beatlyr += new string(' ', chord.Length - beatlyr.Length);
-                }
-            }
-            else
-            {
-                // No chord
-                if (beatlyr.Length > 0)
-                    beatchord += new string(' ', beatlyr.Length);
-            }
-            #endregion store result
+          
 
             linebeatlyr += beatlyr;
-            linebeatchord += beatchord;
+            //linebeatchord += beatchord;
             if (linebeatlyr != "" || linebeatchord != "")
             {
                 // New Line => store result                
