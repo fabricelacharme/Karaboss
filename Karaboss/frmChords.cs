@@ -534,19 +534,10 @@ namespace Karaboss
         
         private void DisplayChords()
         {
-
             // Display chords in the textbox
             ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
             Gridchords = Analyser.Gridchords;
-
-            /*
-            string res = string.Empty;
-            foreach (KeyValuePair<int, (string, string)> pair in Gridchords)
-            {
-                res += string.Format("{0} - {1}", pair.Key, pair.Value) + "\r\n";
-            }
-            */
-
+           
             //Change labels displayed
             for (int i = 1; i <= Gridchords.Count; i++)
             {
@@ -559,9 +550,14 @@ namespace Karaboss
 
         }
 
-
+        /// <summary>
+        /// REmove useless strings
+        /// </summary>
+        /// <param name="note"></param>
+        /// <returns></returns>
         private string InterpreteNote(string note)
         {
+            /*
             note = note.Replace("sus", "");
 
             note = note.Replace(" major", "");
@@ -582,10 +578,9 @@ namespace Karaboss
             note = note.Replace("6", "");
             note = note.Replace("9", "");
             note = note.Replace("11", "");
-
+            */
 
             note = note.Replace("<Chord not found>", "?");
-
 
             note = note.Trim();
             return note;
