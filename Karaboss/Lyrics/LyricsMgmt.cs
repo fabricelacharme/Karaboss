@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Un4seen.Bass.AddOn.Enc;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace Karaboss.Lyrics
 {
@@ -32,6 +33,7 @@ namespace Karaboss.Lyrics
             public string Element { get; set; }
             public int TicksOn { get; set; }
             public int TicksOff { get; set; }
+            public int Beat { get; set; }
         }
 
   
@@ -181,7 +183,7 @@ namespace Karaboss.Lyrics
                 if (plLyrics != null)
                     plLyrics.Clear();
 
-                Track track = sequence1.tracks[_lyricstracknum];
+                Sanford.Multimedia.Midi.Track track = sequence1.tracks[_lyricstracknum];
 
                 int plTicksOn = 0;
                 int plTicksOff = 0;
@@ -202,7 +204,8 @@ namespace Karaboss.Lyrics
                     plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
                 }
 
-                // reduce ticksoff to next tickson
+                // reduce ticksoff to tickson of next lyric
+                /*
                 int ticksoff;
                 int nexttickson;
                 string elm = string.Empty;
@@ -236,6 +239,7 @@ namespace Karaboss.Lyrics
                         }
                     }
                 }
+                */
                 return lyrics;
             }
             // if lyrics are in lyric events
@@ -255,12 +259,12 @@ namespace Karaboss.Lyrics
                         plLyrics.Clear();
 
                     // Remove "[]" for the letter by letter lyrics
-                    Track track = sequence1.tracks[_lyricstracknum];
+                    Sanford.Multimedia.Midi.Track track = sequence1.tracks[_lyricstracknum];
                     for (int k = 0; k < track.Lyrics.Count - 1; k++)
                     {
                         if (track.Lyrics[k].Element == "[]")
                         {
-                            if (track.Lyrics[k + 1].Type == Track.Lyric.Types.Text)
+                            if (track.Lyrics[k + 1].Type == Sanford.Multimedia.Midi.Track.Lyric.Types.Text)
                             {
                                 track.Lyrics[k + 1].Element = " " + track.Lyrics[k + 1].Element;
                             }
@@ -289,7 +293,8 @@ namespace Karaboss.Lyrics
                         }
                     }
 
-                    // reduce ticksoff to next tickson
+                    // reduce ticksoff to  tickson of next lyric
+                    /*
                     int ticksoff;
                     int nexttickson;
                     for (int k = 0; k < plLyrics.Count; k++)
@@ -322,6 +327,7 @@ namespace Karaboss.Lyrics
                             }
                         }
                     }
+                    */
                     return lyrics;
 
                 }
@@ -397,6 +403,123 @@ namespace Karaboss.Lyrics
             return -1;
         }
 
+
+        /// <summary>
+        /// Fix ticksoff of lyrics with melody notes
+        /// </summary>
+        private void CheckTimes()
+        {
+            int ticksoff;
+            int nexttickson;
+            string elm = string.Empty;
+            int nbmodified = 0;
+
+            // reduce ticksoff to  tickson of next lyric
+            for (int k = 0; k < plLyrics.Count; k++)
+            {
+                ticksoff = plLyrics[k].TicksOff;
+                if (k < plLyrics.Count - 1)
+                {
+                    if (plLyrics[k + 1].Type == plLyric.Types.Text)
+                    {
+                        nexttickson = plLyrics[k + 1].TicksOn;
+                        if (ticksoff > nexttickson)
+                        {
+                            plLyrics[k].TicksOff = nexttickson;
+                            nbmodified++;
+                        }
+                    }
+                }
+
+
+                // Add a trailing space to syllabs at the end of the lines if missing
+                if (plLyrics[k].Type == plLyric.Types.LineFeed || plLyrics[k].Type == plLyric.Types.Paragraph)
+                {
+                    if (k > 0)
+                    {
+                        if (plLyrics[k - 1].Type == plLyric.Types.Text)
+                        {
+                            elm = plLyrics[k - 1].Element;
+                            if (elm.Length > 0)
+                            {
+                                if (elm.Substring(1, elm.Length - 1) != " ")
+                                {
+                                    plLyrics[k - 1].Element = elm + " ";
+                                    nbmodified++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("******** lyrics ticksoff modified with next lyric : " + nbmodified.ToString());
+            nbmodified = 0;
+
+            // Reduce lyric Ticksoff to the tickson of the  corresponding melody note
+            // If a melody track exists, and if it is less than the actual value.
+
+            if (_melodytracknum != -1)
+            {
+                Sanford.Multimedia.Midi.Track trk = sequence1.tracks[_melodytracknum];
+                List<MidiNote> notes = trk.Notes;
+
+
+                for (int i = 0; i < notes.Count; i++)
+                {
+                    for (int j = 0; j < plLyrics.Count; j++)
+                    {
+                        if (plLyrics[j].Type == plLyric.Types.Text)
+                        {
+                            // Search the note starttime corresponding to the lyric (not always true)
+                            if (notes[i].StartTime == plLyrics[j].TicksOn)
+                            {
+                                // lyric tickoff was already reduced to the next lyric tickson
+                                // Set ticksoff of the lyric to the endtime of the note only if it reduces it again 
+                                if (notes[i].EndTime < plLyrics[j].TicksOff)
+                                {
+                                    plLyrics[j].TicksOff = notes[i].EndTime;
+                                    nbmodified++;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("******** lyrics ticksoff modified : " + nbmodified.ToString());
+            nbmodified = 0;
+
+            int beat;
+            int beatend;
+            int beatoff;
+            int tickson;            
+            int nbBeatsPerMeasure = sequence1.Numerator;
+            int beatDuration = _measurelen / nbBeatsPerMeasure;
+
+            // Sets the beat of the Lyric
+            for (int i = 0; i < plLyrics.Count; i++)
+            {
+                tickson = plLyrics[i].TicksOn;
+                ticksoff = plLyrics[i].TicksOff;    
+
+                // Real beat                    
+                beat = 1 + tickson / beatDuration;
+                beatoff = 1 + ticksoff / beatDuration;
+
+                // In case the note is located on 2 beats, is the note more in the first one or in the second one ?
+                beatend = beat * beatDuration;
+                if (beatoff > beat && ticksoff - beatend > beatend - tickson)
+                {
+                    beat += 1;
+                }
+                
+                //int measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+
+                plLyrics[i].Beat = beat;
+
+            }
+        }
+
         /// <summary>
         /// Guess which track contains the melody
         /// A very complex search :-)
@@ -435,7 +558,7 @@ namespace Karaboss.Lyrics
                 nbfound = 0;
                 nbnotes = 0;
 
-                Track track = sequence1.tracks[i];
+                Sanford.Multimedia.Midi.Track track = sequence1.tracks[i];
 
                 if (track.ContainsNotes == true && track.MidiChannel != 9)
                 {
@@ -556,20 +679,11 @@ namespace Karaboss.Lyrics
             _gridlyrics = new Dictionary<int, string>();
             int tickson;
             int ticksoff;
-            int nexttickson;
             int beat;
-            int beatplus;
-            int beatminus;            
-            int beatoff;   
             int nbBeatsPerMeasure = sequence1.Numerator;
-            int beatDuration = _measurelen / nbBeatsPerMeasure;            
-            int beats = _totalTicks/beatDuration;
-            int currentbeat = 0;
+            int currentbeat = 1;
             string currenttext = string.Empty;
-            int currentmeasure = 0;
-            int beatend;
-
-            int nbdiffs = 0;
+            int currentmeasure = 0;           
 
             for (int i = 0; i < plLyrics.Count; i++)
             {
@@ -577,57 +691,16 @@ namespace Karaboss.Lyrics
                 {
                     tickson = plLyrics[i].TicksOn;
                     ticksoff = plLyrics[i].TicksOff;                    
-
+                    beat = plLyrics[i].Beat;
                     
-                    // Real beat                    
-                    int beat1 =  tickson / beatDuration;
-                    int beatoff1 =  ticksoff / beatDuration;
-                    /*
-                    // In case the note is located on 2 beats, is the note more in the first one or in the second one ?
-                    beatend = beat * beatDuration;
-                    if (beatoff > beat && ticksoff - beatend > beatend - tickson)                                            
-                        beat += 1;
                     
-
-                    //measure = 1 + tickson / _measurelen;
-                    // Fixed measure number with updated value of beat
-                    currentmeasure = (int)Math.Ceiling(beat / (float)nbBeatsPerMeasure);
-                    */
-
-                    // Cast the beat of the starting lyric to lower Value (3.5 => 3 = 3rd time of the current measure)
-                    beatminus = (int)((tickson / (float)_totalTicks) * beats);
-                    // Cast the beat of the starting lyric to upper Value (3.5 => 4 = 1rst time of next measure, so next beat)
-                    beatplus = (int)Math.Ceiling(((tickson / (float)_totalTicks) * beats));
-
-                    // Beat of the lyric stops (lower value)
-                    beatoff = (int)((ticksoff / (float)_totalTicks) * beats);
-
-
-                    // il faut comparer avec la piste de la mélodie pour avoir la valeur du 
-                    // ticks off et s'assurer qu'on déborde bien sur l'autre beat.
-                    // Si on ne déborde pas, c'est que la syllabe est bien dans le beat initial et pas dans le suivant.
-                    // pb évident avec la chanson let it be par exemple
-
-                    // if the lyric stops after the beat lower value, the real beat can be set to the next beat
-                    beat = beatminus;
-                    beatend = (beat + 1) * beatDuration;
-                    //beatend = (beatoff) * beatDuration;
-
-                    if (beatoff > beat && ticksoff - beatend > beatend - tickson)
-                    {
-                        //beat += 1;
-                        beat = beatplus;
-                    }
-                    
-                    //if (beat != beatminus)
-                    //    nbdiffs++;
-
-                    currentmeasure = 1 + (int)((tickson /(float)_totalTicks) * NbMeasures);                    
 
                     // New beat
                     // Store previous syllabes
                     if (beat != currentbeat)
                     {
+                        currentmeasure = 1 + (currentbeat - 1) / nbBeatsPerMeasure;
+
                         try
                         {
                             _gridlyrics.Add(currentbeat, currenttext);
@@ -645,7 +718,6 @@ namespace Karaboss.Lyrics
                 }
             }
 
-
             // Last word ?
             try
             {
@@ -655,9 +727,7 @@ namespace Karaboss.Lyrics
             {
                 string tx = ex.Message + "\r\n" + "Syllab :" + currenttext + "\r\n" + "Measure: " + currentmeasure;
                 MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            Console.WriteLine("******** lyrics set to another beat: " + nbdiffs.ToString());
+            }            
         }
 
         /// <summary>
@@ -738,42 +808,7 @@ namespace Karaboss.Lyrics
             }
         }
 
-        /// <summary>
-        /// Fix ticksoff of lyrics
-        /// </summary>
-        private void CheckTimes()
-        {
-            if (_melodytracknum == -1)
-                return;
-            
-            Track trk = sequence1.tracks[_melodytracknum];
-            List<MidiNote> notes = trk.Notes;
-
-            int nbmodified = 0;
-            for (int i = 0; i < notes.Count; i++) 
-            {
-                for(int j = 0; j < plLyrics.Count; j++)
-                {
-                    if (plLyrics[j].Type == plLyric.Types.Text)
-                    {
-                        // Search the note starttime corresponding to the lyric (not always true)
-                        if (notes[i].StartTime == plLyrics[j].TicksOn)
-                        {
-                            // lyric tickoff was already reduced to the next lyric tickson
-                            // Set ticksoff of the lyric to the endtime of the note only if it reduces it again 
-                            if (notes[i].EndTime < plLyrics[j].TicksOff)
-                            {
-                                plLyrics[j].TicksOff = notes[i].EndTime;
-                                nbmodified++;
-                            }
-                            break;
-                        }
-                    }
-                }    
-            }
-            
-            Console.WriteLine("******** lyrics ticksoff modified : " + nbmodified.ToString());
-        }
+ 
 
         #region Display Lyrics
 

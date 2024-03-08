@@ -450,7 +450,8 @@ namespace ChordAnalyser.UI
                         w = MeasureString(fontLyric.FontFamily, currentlyric, fontLyric.Size);
                         h = MeasureStringHeight(fontLyric.FontFamily, currentlyric, fontLyric.Size);
 
-                        x = (currentbeat + 1) * d;
+                        //x = (currentbeat + 1) * d;
+                        x = currentbeat * d;
                         g.DrawString(currentlyric, fontLyric, LyricBrush, x + (_cellwidth - w)/2, _cellheight/2 + h);
                     }
                 }
