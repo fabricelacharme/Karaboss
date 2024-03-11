@@ -426,6 +426,7 @@ namespace Karaboss.Lyrics
             int tickson;            
             int nbBeatsPerMeasure = sequence1.Numerator;
             int beatDuration = _measurelen / nbBeatsPerMeasure;
+            int previousbeat = -1;
 
             // Sets the beat of the Lyric
             for (int i = 0; i < plLyrics.Count; i++)
@@ -444,7 +445,14 @@ namespace Karaboss.Lyrics
                     beat += 1;
                 }                                
 
+                if (beat < previousbeat)
+                {
+                    Console.WriteLine("************** Error beat < previous");
+                    beat = previousbeat;
+                }
+
                 plLyrics[i].Beat = beat;
+                previousbeat = beat;
 
             }
         }
@@ -879,6 +887,7 @@ namespace Karaboss.Lyrics
                                 {
                                     if (pll.Type == plLyric.Types.LineFeed)
                                     {
+                                        
                                         // If Linefeed, one cr
                                         if (linebeatchord != "" && linebeatlyr != "")
                                             res += linebeatchord + cr + linebeatlyr + cr;
@@ -886,9 +895,12 @@ namespace Karaboss.Lyrics
                                             res += linebeatchord + cr;
                                         else if (linebeatlyr != "")
                                             res += linebeatlyr + cr;
+                                        
+                                        
                                     }
                                     else if (pll.Type == plLyric.Types.Paragraph)
                                     {
+                                        
                                         // If paragraph, 2 cr
                                         if (linebeatchord != "" && linebeatlyr != "")
                                             res += linebeatchord + cr + linebeatlyr + cr + cr;
@@ -896,6 +908,8 @@ namespace Karaboss.Lyrics
                                             res += linebeatchord + cr + cr;
                                         else if (linebeatlyr != "")
                                             res += linebeatlyr + cr + cr;
+                                        
+                                        
                                     }
                                 }
                                 // Reset all
