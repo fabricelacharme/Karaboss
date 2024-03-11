@@ -345,7 +345,9 @@ namespace Karaboss.Lyrics
             string elm = string.Empty;
             int nbmodified = 0;
 
+            // ===============================================
             // reduce ticksoff to  tickson of next lyric
+            // ===============================================
             for (int k = 0; k < plLyrics.Count; k++)
             {
                 ticksoff = plLyrics[k].TicksOff;
@@ -376,7 +378,7 @@ namespace Karaboss.Lyrics
                                 if (elm.Substring(1, elm.Length - 1) != " ")
                                 {
                                     plLyrics[k - 1].Element = elm + " ";
-                                    nbmodified++;
+                                    //nbmodified++;
                                 }
                             }
                         }
@@ -386,9 +388,10 @@ namespace Karaboss.Lyrics
             Console.WriteLine("******** lyrics ticksoff modified with next lyric : " + nbmodified.ToString());
             nbmodified = 0;
 
+            // ===============================================
             // Reduce lyric Ticksoff to the tickson of the  corresponding melody note
             // If a melody track exists, and if it is less than the actual value.
-
+            // ===============================================
             if (_melodytracknum != -1)
             {
                 Sanford.Multimedia.Midi.Track trk = sequence1.tracks[_melodytracknum];
@@ -417,7 +420,7 @@ namespace Karaboss.Lyrics
                     }
                 }
             }
-            Console.WriteLine("******** lyrics ticksoff modified : " + nbmodified.ToString());
+            Console.WriteLine("******** lyrics ticksoff modified with associated note : " + nbmodified.ToString());
             nbmodified = 0;
 
             int beat;
@@ -447,7 +450,7 @@ namespace Karaboss.Lyrics
 
                 if (beat < previousbeat)
                 {
-                    Console.WriteLine("************** Error beat < previous");
+                    Console.WriteLine("************** Error beat < previous " + plLyrics[i].Type);
                     beat = previousbeat;
                 }
 
@@ -923,7 +926,7 @@ namespace Karaboss.Lyrics
                             else if (pll.Type == plLyric.Types.Text)
                             {
                                 lyr = pll.Element;
-                                beatlyr += lyr;
+                                //beatlyr += lyr;
                             
 
                                 // ===========================
@@ -972,19 +975,51 @@ namespace Karaboss.Lyrics
                                     // F1 if (beatlyr.Length > chord.Length)
                                     if (lyr.Length > chord.Length)
                                     {
-                                        beatchord += chord;
-                                        // F1 beatchord += new string(' ', beatlyr.Length - chord.Length);
-                                        beatchord += new string(' ', lyr.Length - chord.Length);
+                                        // Case of lyrics starting with a space (instead of trailing space)
+                                        if (lyr.Substring(0, 1) == " ")
+                                        {
+                                            beatchord += " " + chord;
+                                            beatchord += new string(' ', lyr.Length -1 - chord.Length);
+                                            beatlyr += lyr;
+                                        }
+                                        else
+                                        {
+                                            // F1 beatchord += new string(' ', beatlyr.Length - chord.Length);
+                                            beatchord += chord;
+                                            beatchord += new string(' ', lyr.Length - chord.Length);
+                                            beatlyr += lyr;
+                                        }
                                     }
-                                    // F1else if (beatlyr.Length < chord.Length)
+                                    // F1 else if (beatlyr.Length < chord.Length)
                                     else if (lyr.Length < chord.Length)
                                     {
-                                        beatchord += chord;
-                                        beatlyr += new string(' ', chord.Length - lyr.Length);
+                                        if (lyr.Substring(0, 1) == " ")
+                                        {
+                                            Console.WriteLine("lyric left space");
+                                            beatchord += " " + chord;
+                                            beatlyr += lyr;
+                                            beatlyr += new string(' ', chord.Length + 1 - lyr.Length);
+                                        }
+                                        else
+                                        {
+                                            beatchord += chord;
+                                            beatlyr += lyr;
+                                            beatlyr += new string(' ', chord.Length - lyr.Length);
+                                        }
                                     }
                                     else
                                     {
-                                        beatchord += chord;
+                                        if (lyr.Substring(0, 1) == " ")
+                                        {
+                                            Console.WriteLine("lyric left space");
+                                            beatchord += " " + chord;
+                                            beatlyr += lyr + " ";
+                                        }
+                                        else
+                                        {
+                                            beatchord += chord;
+                                            beatlyr += lyr;
+                                        }
 
                                     }
                                 }
@@ -993,6 +1028,7 @@ namespace Karaboss.Lyrics
                                 else if (lyr.Trim() != "" && chord.Trim() == "")
                                 {
                                     beatchord += new string(' ', lyr.Length);
+                                    beatlyr += lyr;
                                 }
                                 // no lyric, chord
                                 //F1 else if (beatlyr.Trim() == "" && chord.Trim() != "")
