@@ -204,42 +204,7 @@ namespace Karaboss.Lyrics
                     plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
                 }
 
-                // reduce ticksoff to tickson of next lyric
-                /*
-                int ticksoff;
-                int nexttickson;
-                string elm = string.Empty;
-                for (int k = 0; k < plLyrics.Count; k++)
-                {
-                    ticksoff = plLyrics[k].TicksOff;
-                    if (k < plLyrics.Count - 1)
-                    {
-                        if (plLyrics[k + 1].Type == plLyric.Types.Text)
-                        {
-                            nexttickson = plLyrics[k + 1].TicksOn;
-                            if (ticksoff > nexttickson)
-                                plLyrics[k].TicksOff = nexttickson;
-                        }
-                    }
-
-                    // Add a trailing space to syllabs at the end of the lines if missing
-                    if (plLyrics[k].Type == plLyric.Types.LineFeed || plLyrics[k].Type == plLyric.Types.Paragraph)
-                    {
-                        if (k > 0)
-                        {
-                            if (plLyrics[k - 1].Type == plLyric.Types.Text)
-                            {
-                                elm = plLyrics[k - 1].Element;
-                                if (elm.Length > 0)
-                                {
-                                    if (elm.Substring(1, elm.Length - 1) != " ")
-                                        plLyrics[k - 1].Element = elm + " ";
-                                }
-                            }
-                        }
-                    }
-                }
-                */
+                
                 return lyrics;
             }
             // if lyrics are in lyric events
@@ -293,41 +258,7 @@ namespace Karaboss.Lyrics
                         }
                     }
 
-                    // reduce ticksoff to  tickson of next lyric
-                    /*
-                    int ticksoff;
-                    int nexttickson;
-                    for (int k = 0; k < plLyrics.Count; k++)
-                    {
-                        ticksoff = plLyrics[k].TicksOff;
-                        if (k < plLyrics.Count - 1)
-                        {
-                            if (plLyrics[k + 1].Type == plLyric.Types.Text)
-                            {
-                                nexttickson = plLyrics[k + 1].TicksOn;
-                                if (ticksoff > nexttickson)
-                                    plLyrics[k].TicksOff = nexttickson;
-                            }
-                        }
-
-                        // Add a trailing space to syllabs at the end of the lines if missing
-                        if (plLyrics[k].Type == plLyric.Types.LineFeed || plLyrics[k].Type == plLyric.Types.Paragraph)
-                        {
-                            if (k > 0)
-                            {
-                                if (plLyrics[k - 1].Type == plLyric.Types.Text)
-                                {
-                                    elm = plLyrics[k - 1].Element;
-                                    if (elm.Length > 0)
-                                    {
-                                        if (elm.Substring(1, elm.Length - 1) != " ")
-                                            plLyrics[k - 1].Element = elm + " ";
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    */
+                    
                     return lyrics;
 
                 }
@@ -508,9 +439,9 @@ namespace Karaboss.Lyrics
 
                 // In case the note is located on 2 beats, is the note more in the first one or in the second one ?
                 beatend = beat * beatDuration;
-                if (beatoff > beat && (ticksoff - beatend > 2 * (beatend - tickson)) )
+                if (beatoff > beat && (ticksoff - beatend > 3 * (beatend - tickson)) )
                 {
-                    //beat += 1;
+                    beat += 1;
                 }                                
 
                 plLyrics[i].Beat = beat;
