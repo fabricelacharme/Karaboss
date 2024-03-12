@@ -388,6 +388,7 @@ namespace Karaboss.Lyrics
             Console.WriteLine("******** lyrics ticksoff modified with next lyric : " + nbmodified.ToString());
             nbmodified = 0;
 
+
             // ===============================================
             // Reduce lyric Ticksoff to the tickson of the  corresponding melody note
             // If a melody track exists, and if it is less than the actual value.
@@ -423,6 +424,10 @@ namespace Karaboss.Lyrics
             Console.WriteLine("******** lyrics ticksoff modified with associated note : " + nbmodified.ToString());
             nbmodified = 0;
 
+
+            //==========================================================
+            // Check beat of lyric in case of overcoming in next beat
+            //==========================================================
             int beat;
             int beatend;
             int beatoff;
@@ -457,37 +462,6 @@ namespace Karaboss.Lyrics
                 plLyrics[i].Beat = beat;
                 previousbeat = beat;
 
-            }
-
-
-            // Check next linefeed: if next linefeed is too far, it means that there is a instrumental before next lyric
-            // So add an additional linefeed
-            List<int> lstadd = new List<int>();
-            int interval = 0;
-            int measure = 0;
-            for (int i = 0; i < plLyrics.Count; i++)
-            {
-                if (plLyrics[i].Type == plLyric.Types.Text)
-                {
-                    if (i < plLyrics.Count - 1)
-                    {
-                        if (plLyrics[i + 1].Type == plLyric.Types.LineFeed || plLyrics[i + 1].Type == plLyric.Types.Paragraph)
-                        {
-                            ticksoff = plLyrics[i].TicksOff;
-                            tickson = plLyrics[i + 1].TicksOn;
-                            interval = tickson - ticksoff;
-                            if (interval > _measurelen)
-                            {                                
-                                beat = 1 + ticksoff / beatDuration;
-                                measure = 1 + (beat - 1) / nbBeatsPerMeasure;
-                                Console.WriteLine(string.Format("**** Instrumental : measure: {0} Beat: {1} **************", measure, beat));
-
-                                // TODO : add a linefeed to 1st time of this measure (this beat ?)
-                            }
-
-                        }
-                    }
-                }
             }
 
 
@@ -874,13 +848,14 @@ namespace Karaboss.Lyrics
             plLyric pll;
             string lyr = string.Empty;                        
 
-            
+            // Create a dictionary key = beat, value = list of lyrics in this beat
             Dictionary<int, List<plLyric>> diclyr = new Dictionary<int, List<plLyric>>();            
             for (int i = 1; i <= beats; i++)
             {
                 diclyr[i] = new List<plLyric>();                
             }
 
+            // Load lyrics in each beat
             for (int i = 0; i < plLyrics.Count; i++)
             {
                 beat = plLyrics[i].Beat;
@@ -888,8 +863,64 @@ namespace Karaboss.Lyrics
                 {
                     diclyr[beat].Add(plLyrics[i]); 
                 }
-            }            
+            }
 
+            //==========================================================
+            // Check next linefeed: if next linefeed is too far, it means that there is a instrumental before next lyric
+            // So add an additional linefeed
+            //==========================================================            
+            int interval = 0;            
+            int ticksoff;
+            int tickson;
+            int beatDuration = _measurelen / nbBeatsPerMeasure;
+            for (int i = 0; i < plLyrics.Count; i++)
+            {
+                if (plLyrics[i].Type == plLyric.Types.Text)
+                {
+                    if (i < plLyrics.Count - 1)
+                    {
+                        // Is the next plLyric a linefeed and very far, meaning there is an instrumental ?
+                        // interval checked is 1 measure
+                        // If greater than 1 measure => add a linefeed
+                        if (plLyrics[i + 1].Type == plLyric.Types.LineFeed || plLyrics[i + 1].Type == plLyric.Types.Paragraph)
+                        {
+                            ticksoff = plLyrics[i].TicksOff;
+                            tickson = plLyrics[i + 1].TicksOn;
+                            interval = tickson - ticksoff;
+                            if (interval > _measurelen)
+                            {
+                                beat = 1 + ticksoff / beatDuration;
+                                int measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+                                Console.WriteLine(string.Format("**** Instrumental : measure: {0} Beat: {1} **************", measure, beat));
+
+                                // TODO : add a linefeed to 1st time of this measure (this beat ?)
+                                // Do not forget the end of the song : no linefeed
+                                pll = new plLyric();
+                                pll.Type = plLyric.Types.LineFeed;
+                                pll.Beat = beat;
+                                pll.TicksOn = beat * beatDuration;
+
+                                diclyr[beat].Add(pll);
+                            }
+
+                        }
+                    }                   
+                }
+            }
+
+            // Add a cr to the Last lyric (in case of instrumental after the last lyric)
+            if (plLyrics[plLyrics.Count - 1].Type == plLyric.Types.Text)
+            {
+                pll = new plLyric();
+                pll.Type = plLyric.Types.LineFeed;
+                pll.Beat = plLyrics[plLyrics.Count - 1].Beat;
+                pll.TicksOn = pll.Beat * beatDuration;
+                diclyr[pll.Beat].Add(pll);
+            }
+
+
+
+            // Extract chords & lyrics and format in text mode
             for (int measure = 1; measure <= NbMeasures; measure++)
             {
                 // Is this measure the first measure of lyrics after several measures without lyrics ?
