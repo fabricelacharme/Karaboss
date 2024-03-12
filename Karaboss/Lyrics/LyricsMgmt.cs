@@ -914,8 +914,11 @@ namespace Karaboss.Lyrics
                 pll = new plLyric();
                 pll.Type = plLyric.Types.LineFeed;
                 pll.Beat = plLyrics[plLyrics.Count - 1].Beat;
-                pll.TicksOn = pll.Beat * beatDuration;
-                diclyr[pll.Beat].Add(pll);
+                if (pll.Beat < beats)
+                {
+                    pll.TicksOn = pll.Beat * beatDuration;
+                    diclyr[pll.Beat].Add(pll);
+                }
             }
 
 
