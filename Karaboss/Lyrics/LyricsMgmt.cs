@@ -458,6 +458,39 @@ namespace Karaboss.Lyrics
                 previousbeat = beat;
 
             }
+
+
+            // Check next linefeed: if next linefeed is too far, it means that there is a instrumental before next lyric
+            // So add an additional linefeed
+            List<int> lstadd = new List<int>();
+            int interval = 0;
+            int measure = 0;
+            for (int i = 0; i < plLyrics.Count; i++)
+            {
+                if (plLyrics[i].Type == plLyric.Types.Text)
+                {
+                    if (i < plLyrics.Count - 1)
+                    {
+                        if (plLyrics[i + 1].Type == plLyric.Types.LineFeed || plLyrics[i + 1].Type == plLyric.Types.Paragraph)
+                        {
+                            ticksoff = plLyrics[i].TicksOff;
+                            tickson = plLyrics[i + 1].TicksOn;
+                            interval = tickson - ticksoff;
+                            if (interval > _measurelen)
+                            {                                
+                                beat = 1 + ticksoff / beatDuration;
+                                measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+                                Console.WriteLine(string.Format("**** Instrumental : measure: {0} Beat: {1} **************", measure, beat));
+
+                                // TODO : add a linefeed to 1st time of this measure (this beat ?)
+                            }
+
+                        }
+                    }
+                }
+            }
+
+
         }
 
         /// <summary>
