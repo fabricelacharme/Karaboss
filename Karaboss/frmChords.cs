@@ -1559,13 +1559,93 @@ namespace Karaboss
 
 
         #region menus
+
+        #region mnu file
+        private void mnuFilePrint_Click(object sender, EventArgs e)
+        {
+            String tx = txtDisplayWords.Text;
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            string file = path + "\\tabs.txt";
+
+            System.IO.File.WriteAllText(@file, tx);
+            try
+            {
+                System.Diagnostics.Process.Start(@file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
         private void mnuFileQuit_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        #endregion mnu File
+
+        #region mnu Help
+        private void mnuHelpAbout_Click(object sender, EventArgs e)
+        {
+            frmAboutDialog dlg = new frmAboutDialog();
+            dlg.ShowDialog();
+        }
+
+        private void mnuHelpAboutSong_Click(object sender, EventArgs e)
+        {
+            string tx = string.Empty;
+            int i;
+            string cr = Environment.NewLine;
+
+            // Karaoke infos
+            for (i = 0; i < sequence1.KTag.Count; i++)
+            {
+                tx += sequence1.KTag[i] + cr;
+            }
+
+            tx += cr;
+            // Version
+            for (i = 0; i < sequence1.VTag.Count; i++)
+            {
+                tx += sequence1.VTag[i] + cr;
+            }
+            // Lang
+            for (i = 0; i < sequence1.LTag.Count; i++)
+            {
+                tx += sequence1.LTag[i] + cr;
+            }
+
+            tx += cr;
+            // Copyright of karaoke
+            for (i = 0; i < sequence1.WTag.Count; i++)
+            {
+                tx += sequence1.WTag[i] + cr;
+            }
+
+            tx += cr;
+            // Song infos
+            for (i = 0; i < sequence1.TTag.Count; i++)
+            {
+                tx += sequence1.TTag[i] + cr;
+            }
+
+            tx += cr;
+            // Infos
+            for (i = 0; i < sequence1.ITag.Count; i++)
+            {
+                tx += sequence1.ITag[i] + cr;
+            }
+
+
+            MessageBox.Show(tx, "About this song", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        #endregion mnu Help
+
         #endregion menus
 
-        
+
     }
 }

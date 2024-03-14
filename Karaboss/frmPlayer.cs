@@ -3567,8 +3567,7 @@ namespace Karaboss
         }
        
         private void MnuHelpAboutSong_Click(object sender, EventArgs e)
-        {
-            //string tx =MidiFile.copyright;
+        {            
             string tx = string.Empty;
             int i;
             string cr = Environment.NewLine;
