@@ -909,7 +909,7 @@ namespace Karaboss.Lyrics
             }
 
             // Add a cr to the Last lyric (in case of instrumental after the last lyric)
-            if (plLyrics[plLyrics.Count - 1].Type == plLyric.Types.Text)
+            if (plLyrics.Count > 0 && plLyrics[plLyrics.Count - 1].Type == plLyric.Types.Text)
             {
                 pll = new plLyric();
                 pll.Type = plLyric.Types.LineFeed;
