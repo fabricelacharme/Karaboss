@@ -183,6 +183,7 @@ namespace Karaboss
                 this.sequencer1.Chased += new System.EventHandler<Sanford.Multimedia.Midi.ChasedEventArgs>(this.HandleChased);
                 this.sequencer1.Stopped += new System.EventHandler<Sanford.Multimedia.Midi.StoppedEventArgs>(this.HandleStopped);
 
+                sequence1.Clean();
                 UpdateMidiTimes();
 
 
