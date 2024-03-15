@@ -1,14 +1,8 @@
-﻿using ChordsAnalyser.cchords;
-using MusicXml.Domain;
-using Sanford.Multimedia.Midi;
+﻿using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Un4seen.Bass.AddOn.Enc;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace Karaboss.Lyrics
 {
@@ -132,8 +126,7 @@ namespace Karaboss.Lyrics
             double l_text = 1;
             double l_lyric = 1;
 
-            int nbBeatsPerMeasure = sequence1.Numerator;
-            //int OneBeat = _measurelen / sequence1.Numerator;
+            int nbBeatsPerMeasure = sequence1.Numerator;            
             int beatDuration = _measurelen / nbBeatsPerMeasure;
 
             // ----------------------------------------------------------------------
@@ -838,7 +831,6 @@ namespace Karaboss.Lyrics
             string res = string.Empty;
             string cr = "\r\n";
             int nbBeatsPerMeasure = sequence1.Numerator;
-            int beats = NbMeasures * nbBeatsPerMeasure;
             int beat;
             string chord = string.Empty;
             string beatchord = string.Empty;
@@ -846,7 +838,13 @@ namespace Karaboss.Lyrics
             string linebeatlyr = string.Empty;
             string linebeatchord = string.Empty;
             plLyric pll;
-            string lyr = string.Empty;                        
+            string lyr = string.Empty;
+            int interval = 0;
+            int ticksoff;
+            int tickson;
+            int beatDuration = _measurelen / nbBeatsPerMeasure;            
+            int beats = (int)Math.Ceiling(_totalTicks/(float)beatDuration);
+
 
             // Create a dictionary key = beat, value = list of lyrics in this beat
             Dictionary<int, List<plLyric>> diclyr = new Dictionary<int, List<plLyric>>();            
@@ -869,10 +867,6 @@ namespace Karaboss.Lyrics
             // Check next linefeed: if next linefeed is too far, it means that there is a instrumental before next lyric
             // So add an additional linefeed
             //==========================================================            
-            int interval = 0;            
-            int ticksoff;
-            int tickson;
-            int beatDuration = _measurelen / nbBeatsPerMeasure;
             for (int i = 0; i < plLyrics.Count; i++)
             {
                 if (plLyrics[i].Type == plLyric.Types.Text)
@@ -925,448 +919,271 @@ namespace Karaboss.Lyrics
 
             // Extract chords & lyrics and format in text mode
             for (int measure = 1; measure <= NbMeasures; measure++)
-            {
-                // Is this measure the first measure of lyrics after several measures without lyrics ?
-                
+            {                                
                 for (int timeinmeasure = 1; timeinmeasure <= nbBeatsPerMeasure; timeinmeasure++)
                 {
                     beat = (measure - 1) * nbBeatsPerMeasure + timeinmeasure;
-                    var kvChord = Gridchords[measure];
-
-                    // ===========================
-                    // 1 - Search lyrics
-                    // ===========================
-                    if (diclyr[beat].Count > 0)
+                    if (beat <= beats)
                     {
-                        string lastchord = string.Empty;
+                        var kvChord = Gridchords[measure];
 
-                        // foreach lyric in this beat
-                        for (int i = 0; i < diclyr[beat].Count; i++)
+                        // ===========================
+                        // 1 - Search lyrics
+                        // ===========================
+                        if (diclyr[beat].Count > 0)
                         {
-                            pll = diclyr[beat][i];
+                            string lastchord = string.Empty;
 
-
-                            // LINEFEE => STORE RESULT
-                            #region Store result
-                            if (pll.Type == plLyric.Types.LineFeed || pll.Type == plLyric.Types.Paragraph)
+                            // foreach lyric in this beat
+                            for (int i = 0; i < diclyr[beat].Count; i++)
                             {
-                                // Store line
-                                linebeatlyr += beatlyr;
-                                linebeatchord += beatchord;
-                                if (linebeatlyr != "" || linebeatchord != "")
-                                {
-                                    if (pll.Type == plLyric.Types.LineFeed)
-                                    {
-                                        
-                                        // If Linefeed, one cr
-                                        if (linebeatchord != "" && linebeatlyr != "")
-                                            res += linebeatchord + cr + linebeatlyr + cr;
-                                        else if (linebeatchord != "")
-                                            res += linebeatchord + cr;
-                                        else if (linebeatlyr != "")
-                                            res += linebeatlyr + cr;
-                                        
-                                        
-                                    }
-                                    else if (pll.Type == plLyric.Types.Paragraph)
-                                    {
-                                        
-                                        // If paragraph, 2 cr
-                                        if (linebeatchord != "" && linebeatlyr != "")
-                                            res += linebeatchord + cr + linebeatlyr + cr + cr;
-                                        else if (linebeatchord != "")
-                                            res += linebeatchord + cr + cr;
-                                        else if (linebeatlyr != "")
-                                            res += linebeatlyr + cr + cr;
-                                        
-                                        
-                                    }
-                                }
-                                // Reset all
-                                linebeatchord = string.Empty;
-                                linebeatlyr = string.Empty;
-                                beatlyr = string.Empty;
-                                beatchord = string.Empty;
-                                lastchord = string.Empty;
-                            }
-                            #endregion store result
-                            else if (pll.Type == plLyric.Types.Text)
-                            {
-                                lyr = pll.Element;
-                                //beatlyr += lyr;
-                            
+                                pll = diclyr[beat][i];
 
-                                // ===========================
-                                // 2 - Search chords
-                                // ===========================                                        
-                                if (timeinmeasure == 1)
-                                {
-                                    // Chord 1
-                                    chord = kvChord.Item1;
-                                    
-                                    // Do not repeat chord on all lyrics of this beat
-                                    if (lastchord == chord)
-                                        chord = "";
-                                    else
-                                        lastchord = chord;
 
-                                    if (chord == "<Empty>")
-                                        chord = "";
-                                }
-                                else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
+                                // LINEFEE => STORE RESULT
+                                #region Store result
+                                if (pll.Type == plLyric.Types.LineFeed || pll.Type == plLyric.Types.Paragraph)
                                 {
-                                    // Chord 2
-                                    if (kvChord.Item2 != kvChord.Item1)
+                                    // Store line
+                                    linebeatlyr += beatlyr;
+                                    linebeatchord += beatchord;
+                                    if (linebeatlyr != "" || linebeatchord != "")
                                     {
-                                        chord = kvChord.Item2;
+                                        if (pll.Type == plLyric.Types.LineFeed)
+                                        {
+
+                                            // If Linefeed, one cr
+                                            if (linebeatchord != "" && linebeatlyr != "")
+                                                res += linebeatchord + cr + linebeatlyr + cr;
+                                            else if (linebeatchord != "")
+                                                res += linebeatchord + cr;
+                                            else if (linebeatlyr != "")
+                                                res += linebeatlyr + cr;
+
+
+                                        }
+                                        else if (pll.Type == plLyric.Types.Paragraph)
+                                        {
+
+                                            // If paragraph, 2 cr
+                                            if (linebeatchord != "" && linebeatlyr != "")
+                                                res += linebeatchord + cr + linebeatlyr + cr + cr;
+                                            else if (linebeatchord != "")
+                                                res += linebeatchord + cr + cr;
+                                            else if (linebeatlyr != "")
+                                                res += linebeatlyr + cr + cr;
+
+
+                                        }
+                                    }
+                                    // Reset all
+                                    linebeatchord = string.Empty;
+                                    linebeatlyr = string.Empty;
+                                    beatlyr = string.Empty;
+                                    beatchord = string.Empty;
+                                    lastchord = string.Empty;
+                                }
+                                #endregion store result
+                                else if (pll.Type == plLyric.Types.Text)
+                                {
+                                    lyr = pll.Element;
+                                    //beatlyr += lyr;
+
+
+                                    // ===========================
+                                    // 2 - Search chords
+                                    // ===========================                                        
+                                    if (timeinmeasure == 1)
+                                    {
+                                        // Chord 1
+                                        chord = kvChord.Item1;
 
                                         // Do not repeat chord on all lyrics of this beat
                                         if (lastchord == chord)
                                             chord = "";
                                         else
                                             lastchord = chord;
-                                        
+
                                         if (chord == "<Empty>")
                                             chord = "";
                                     }
-                                }
-
-                                // ===========================
-                                // 3 - Manage lyrics &
-                                //  Add spaces to harminize lenght of items
-                                // ===========================
-                                // lyric AND chord
-                                // F1 if (beatlyr.Trim() != "" && chord.Trim() != "")
-                                if (lyr.Trim() != "" && chord.Trim() != "")
-                                {
-                                    // F1 if (beatlyr.Length > chord.Length)
-                                    if (lyr.Length > chord.Length)
+                                    else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
                                     {
-                                        // Case of lyrics starting with a space (instead of trailing space)
-                                        if (lyr.Substring(0, 1) == " ")
+                                        // Chord 2
+                                        if (kvChord.Item2 != kvChord.Item1)
                                         {
-                                            beatchord += " " + chord;
-                                            beatchord += new string(' ', lyr.Length -1 - chord.Length);
-                                            beatlyr += lyr;
+                                            chord = kvChord.Item2;
+
+                                            // Do not repeat chord on all lyrics of this beat
+                                            if (lastchord == chord)
+                                                chord = "";
+                                            else
+                                                lastchord = chord;
+
+                                            if (chord == "<Empty>")
+                                                chord = "";
+                                        }
+                                    }
+
+                                    // ===========================
+                                    // 3 - Manage lyrics &
+                                    //  Add spaces to harminize lenght of items
+                                    // ===========================
+                                    // lyric AND chord
+                                    // F1 if (beatlyr.Trim() != "" && chord.Trim() != "")
+                                    if (lyr.Trim() != "" && chord.Trim() != "")
+                                    {
+                                        // F1 if (beatlyr.Length > chord.Length)
+                                        if (lyr.Length > chord.Length)
+                                        {
+                                            // Case of lyrics starting with a space (instead of trailing space)
+                                            if (lyr.Substring(0, 1) == " ")
+                                            {
+                                                beatchord += " " + chord;
+                                                beatchord += new string(' ', lyr.Length - 1 - chord.Length);
+                                                beatlyr += lyr;
+                                            }
+                                            else
+                                            {
+                                                // F1 beatchord += new string(' ', beatlyr.Length - chord.Length);
+                                                beatchord += chord;
+                                                beatchord += new string(' ', lyr.Length - chord.Length);
+                                                beatlyr += lyr;
+                                            }
+                                        }
+                                        // F1 else if (beatlyr.Length < chord.Length)
+                                        else if (lyr.Length < chord.Length)
+                                        {
+                                            if (lyr.Substring(0, 1) == " ")
+                                            {
+                                                Console.WriteLine("lyric left space");
+                                                beatchord += " " + chord;
+                                                beatlyr += lyr;
+                                                beatlyr += new string(' ', chord.Length + 1 - lyr.Length);
+                                            }
+                                            else
+                                            {
+                                                beatchord += chord;
+                                                beatlyr += lyr;
+                                                beatlyr += new string(' ', chord.Length - lyr.Length);
+                                            }
                                         }
                                         else
                                         {
-                                            // F1 beatchord += new string(' ', beatlyr.Length - chord.Length);
-                                            beatchord += chord;
-                                            beatchord += new string(' ', lyr.Length - chord.Length);
-                                            beatlyr += lyr;
+                                            if (lyr.Substring(0, 1) == " ")
+                                            {
+                                                Console.WriteLine("lyric left space");
+                                                beatchord += " " + chord;
+                                                beatlyr += lyr + " ";
+                                            }
+                                            else
+                                            {
+                                                beatchord += chord;
+                                                beatlyr += lyr;
+                                            }
+
                                         }
                                     }
-                                    // F1 else if (beatlyr.Length < chord.Length)
-                                    else if (lyr.Length < chord.Length)
+                                    // lyric, no chord
+                                    //F1 else if (beatlyr.Trim() != "" && chord.Trim() == "")
+                                    else if (lyr.Trim() != "" && chord.Trim() == "")
                                     {
-                                        if (lyr.Substring(0, 1) == " ")
-                                        {
-                                            Console.WriteLine("lyric left space");
-                                            beatchord += " " + chord;
-                                            beatlyr += lyr;
-                                            beatlyr += new string(' ', chord.Length + 1 - lyr.Length);
-                                        }
-                                        else
-                                        {
-                                            beatchord += chord;
-                                            beatlyr += lyr;
-                                            beatlyr += new string(' ', chord.Length - lyr.Length);
-                                        }
+                                        beatchord += new string(' ', lyr.Length);
+                                        beatlyr += lyr;
                                     }
-                                    else
+                                    // no lyric, chord
+                                    //F1 else if (beatlyr.Trim() == "" && chord.Trim() != "")
+                                    else if (lyr.Trim() == "" && chord.Trim() != "")
                                     {
-                                        if (lyr.Substring(0, 1) == " ")
-                                        {
-                                            Console.WriteLine("lyric left space");
-                                            beatchord += " " + chord;
-                                            beatlyr += lyr + " ";
-                                        }
-                                        else
-                                        {
-                                            beatchord += chord;
-                                            beatlyr += lyr;
-                                        }
-
+                                        beatchord += chord + " ";
+                                        beatlyr += new string(' ', chord.Length + 1);
                                     }
-                                }
-                                // lyric, no chord
-                                //F1 else if (beatlyr.Trim() != "" && chord.Trim() == "")
-                                else if (lyr.Trim() != "" && chord.Trim() == "")
-                                {
-                                    beatchord += new string(' ', lyr.Length);
-                                    beatlyr += lyr;
-                                }
-                                // no lyric, chord
-                                //F1 else if (beatlyr.Trim() == "" && chord.Trim() != "")
-                                else if (lyr.Trim() == "" && chord.Trim() != "")
-                                {
-                                    beatchord += chord + " ";
-                                    beatlyr += new string(' ', chord.Length + 1);
-                                }
 
-                                // Reset all
-                                linebeatlyr += beatlyr;
-                                linebeatchord += beatchord;
-                                beatlyr = string.Empty;
-                                beatchord = string.Empty;
-                                lyr = string.Empty;
-                                chord = string.Empty;
-                            }
-                        } // foreach beatlyr
-                    }
-                    else
-                    {
-                        // diclyr[beat] is null
-                        // Chords ?
-
-                        // ===========================
-                        // 2 - Search chords
-                        // ===========================                                        
-                        if (timeinmeasure == 1)
-                        {
-                            // Chord 1
-                            chord = kvChord.Item1;
-                            if (chord == "<Empty>")
-                                chord = "";
+                                    // Reset all
+                                    linebeatlyr += beatlyr;
+                                    linebeatchord += beatchord;
+                                    beatlyr = string.Empty;
+                                    beatchord = string.Empty;
+                                    lyr = string.Empty;
+                                    chord = string.Empty;
+                                }
+                            } // foreach beatlyr
                         }
-                        else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
+                        else
                         {
-                            // Chord 2
-                            if (kvChord.Item2 != kvChord.Item1)
+                            // diclyr[beat] is null
+                            // Chords ?
+
+                            // ===========================
+                            // 2 - Search chords
+                            // ===========================                                        
+                            if (timeinmeasure == 1)
                             {
-                                chord = kvChord.Item2;
+                                // Chord 1
+                                chord = kvChord.Item1;
                                 if (chord == "<Empty>")
                                     chord = "";
                             }
-                        }
-
-
-                        // ===========================
-                        // 3 - Manage lyrics &
-                        //  Add spaces to rech lenght of items
-                        // ===========================
-                        // lyric
-                        if (beatlyr.Trim() != "" && chord.Trim() != "")
-                        {
-                            if (beatlyr.Length > chord.Length)
+                            else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
                             {
-                                beatchord += chord;
-                                beatchord += new string(' ', beatlyr.Length - chord.Length);
-                            }
-                            else if (beatlyr.Length < chord.Length)
-                            {
-                                beatchord += chord;
-                                beatlyr += new string(' ', chord.Length - lyr.Length);
-                            }
-                            else
-                            {
-                                beatchord += chord;
-
-                            }
-                        }
-                        // lyric, no chord
-                        else if (beatlyr.Trim() != "" && chord.Trim() == "")
-                        {
-                            beatchord += new string(' ', lyr.Length);
-                        }
-                        // no lyric, chord
-                        else if (beatlyr.Trim() == "" && chord.Trim() != "")
-                        {
-                            beatchord += chord + " ";
-                            beatlyr += new string(' ', chord.Length + 1);
-                        }
-
-                        // Reset all
-                        linebeatlyr += beatlyr;
-                        linebeatchord += beatchord;
-                        beatlyr = string.Empty;
-                        beatchord = string.Empty;
-                        lyr = string.Empty;
-                        chord = string.Empty;
-                    }                 
-                }
-            }
-
-            // Store last line
-            linebeatlyr += beatlyr;
-            //linebeatchord += beatchord;
-            if (linebeatlyr != "" || linebeatchord != "")
-            {
-                // New Line => store result                
-                res += linebeatchord + cr + linebeatlyr;
-            }
-
-            return res;
-        }
-        public string DisplayWordsAndChords3()
-        {
-            // New version with all beats
-            string res = string.Empty;
-            string cr = "\r\n";
-            int nbBeatsPerMeasure = sequence1.Numerator;
-            int beats = NbMeasures * nbBeatsPerMeasure;
-            int beat;
-            string chord = string.Empty;
-            string beatchord = string.Empty;
-            string beatlyr = string.Empty;
-            string linebeatlyr = string.Empty;
-            string linebeatchord = string.Empty;
-            plLyric pll;
-            string lyr;
-            bool bfound = false;
-
-            for (int measure = 1; measure <= NbMeasures; measure++)
-            {
-                for (int timeinmeasure = 1; timeinmeasure <= nbBeatsPerMeasure; timeinmeasure++)
-                {
-                    beat = (measure - 1) * nbBeatsPerMeasure + timeinmeasure;                    
-                    var kvChord = Gridchords[measure];
-                    bfound = false;
-
-                    for (int i = 0; i < plLyrics.Count; i++)
-                    {
-                        pll = plLyrics[i];
-                        if (pll.Beat == beat)
-                        {
-                            bfound = true; 
-                            
-                            if (pll.Type == plLyric.Types.Paragraph || pll.Type == plLyric.Types.LineFeed) 
-                            {
-                                linebeatlyr += beatlyr;
-                                linebeatchord += beatchord;
-
-                                if (linebeatlyr != "" || linebeatchord != "")
+                                // Chord 2
+                                if (kvChord.Item2 != kvChord.Item1)
                                 {
-                                    // New Line => stor result
-                                    if (pll.Type == plLyric.Types.LineFeed)
-                                    {
-                                        if (linebeatchord != "" && linebeatlyr != "")
-                                            res += linebeatchord + cr + linebeatlyr + cr;
-                                        else if (linebeatchord != "")
-                                            res += linebeatchord + cr;
-                                        else if (linebeatlyr != "")
-                                            res += linebeatlyr + cr;
-                                    }
-                                    else
-                                    {
-                                        if (linebeatchord != "" && linebeatlyr != "")
-                                            res += linebeatchord + cr + linebeatlyr + cr + cr;
-                                        else if (linebeatchord != "")
-                                            res += linebeatchord + cr + cr;
-                                        else if (linebeatlyr != "")
-                                            res += linebeatlyr + cr + cr;
-                                    }
-                                }
-
-                                linebeatchord = string.Empty;
-                                linebeatlyr = string.Empty;
-                                beatlyr = string.Empty;
-                                beatchord = string.Empty;                               
-                                
-                            }
-                            else if (pll.Type == plLyric.Types.Text)
-                            {
-                                #region store previous line
-                                if (timeinmeasure == 1)
-                                {
-                                    // Chord 1
-                                    chord = kvChord.Item1;
-                                    if (chord == "<Empty>")
-                                        chord = "";
-                                    beatchord = chord;
-
-                                    if (beatlyr.Length > chord.Length)
-                                    {
-                                        beatchord += new string(' ', beatlyr.Length - beatchord.Length);
-                                    }
-                                    else if (beatlyr.Length < chord.Length)
-                                    {
-                                        beatlyr += new string(' ', chord.Length - beatlyr.Length);
-                                    }
-                                }
-                                else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
-                                {
-                                    // Chord 2
                                     chord = kvChord.Item2;
                                     if (chord == "<Empty>")
                                         chord = "";
-                                    beatchord = chord;
+                                }
+                            }
 
-                                    if (beatlyr.Length > chord.Length)
-                                    {
-                                        beatchord += new string(' ', beatlyr.Length - chord.Length);
-                                    }
-                                    else if (beatlyr.Length < chord.Length)
-                                    {
-                                        beatlyr += new string(' ', chord.Length - beatlyr.Length);
-                                    }
+
+                            // ===========================
+                            // 3 - Manage lyrics &
+                            //  Add spaces to rech lenght of items
+                            // ===========================
+                            // lyric
+                            if (beatlyr.Trim() != "" && chord.Trim() != "")
+                            {
+                                if (beatlyr.Length > chord.Length)
+                                {
+                                    beatchord += chord;
+                                    beatchord += new string(' ', beatlyr.Length - chord.Length);
+                                }
+                                else if (beatlyr.Length < chord.Length)
+                                {
+                                    beatchord += chord;
+                                    beatlyr += new string(' ', chord.Length - lyr.Length);
                                 }
                                 else
                                 {
-                                    // No chord
-                                    if (beatlyr.Length > 0)
-                                        beatchord += new string(' ', beatlyr.Length);
+                                    beatchord += chord;
+
                                 }
-                                #endregion store line
-
-                                linebeatlyr += beatlyr;
-                                linebeatchord += beatchord;
-                                beatlyr = string.Empty;
-                                beatchord = string.Empty;
-
-
-                                lyr = pll.Element;
-                                beatlyr += lyr;
                             }
-                            
-                        }
-                        else if (pll.Beat > beat)
-                        {
-                            break;
+                            // lyric, no chord
+                            else if (beatlyr.Trim() != "" && chord.Trim() == "")
+                            {
+                                beatchord += new string(' ', lyr.Length);
+                            }
+                            // no lyric, chord
+                            else if (beatlyr.Trim() == "" && chord.Trim() != "")
+                            {
+                                beatchord += chord + " ";
+                                beatlyr += new string(' ', chord.Length + 1);
+                            }
+
+                            // Reset all
+                            linebeatlyr += beatlyr;
+                            linebeatchord += beatchord;
+                            beatlyr = string.Empty;
+                            beatchord = string.Empty;
+                            lyr = string.Empty;
+                            chord = string.Empty;
                         }
                     }
-
-                    if(!bfound)
-                    {
-                        // No lyrics found, maybe chords ?
-                        if (timeinmeasure == 1)
-                        {
-                            // Chord 1
-                            chord = kvChord.Item1;
-                            if (chord == "<Empty>")
-                                chord = "";
-                            if (chord.Trim() != "")
-                                chord += " ";
-                            beatchord = chord;
-                            beatlyr += new string(' ', chord.Length);
-                        }
-                        else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
-                        {
-                            // Chord 2
-                            chord = kvChord.Item2;
-                            if (chord == "<Empty>")
-                                chord = "";
-                            if (chord.Trim() != "")
-                                chord += " ";
-                            beatchord = chord;
-                            beatlyr += new string(' ', chord.Length);
-                        }
-
-                        linebeatlyr += beatlyr;
-                        linebeatchord += beatchord;
-                        beatlyr = string.Empty;
-                        beatchord = string.Empty;
-                    }
-
-                    
-
                 }
             }
 
             // Store last line
-          
-
             linebeatlyr += beatlyr;
             //linebeatchord += beatchord;
             if (linebeatlyr != "" || linebeatchord != "")
@@ -1377,253 +1194,7 @@ namespace Karaboss.Lyrics
 
             return res;
         }
-        public string DisplayWordsAndChords2()
-        {
-            string res = string.Empty;
-            string cr = "\r\n";
-            int nbBeatsPerMeasure = sequence1.Numerator;
-            int beatDuration = _measurelen / nbBeatsPerMeasure;
-            int tickson;
-            int ticksoff;           
-            int beat;            
-            int currentbeat = -1;
-            int currentmeasure = 1;
-            int measure;
-            string chord = string.Empty;
-            int timeinmeasure;
-            string beatlyr = string.Empty;
-            string beatchord = string.Empty;
-            string linebeatchord = string.Empty;
-            string linebeatlyr = string.Empty;
-            string lyr = string.Empty;            
-
-            for (int i = 0; i < plLyrics.Count; i++)
-            {
-                plLyric pll = plLyrics[i];
-
-                // =========================================
-                // Linefeed
-                // =========================================
-                if (pll.Type == plLyric.Types.LineFeed || pll.Type == plLyric.Types.Paragraph) 
-                {                                                                                                                                            
-                    if (currentmeasure < Gridchords.Count)
-                    {
-                        // Store results of previous beat
-                        #region store previous
-                        timeinmeasure = nbBeatsPerMeasure + currentbeat - currentmeasure * nbBeatsPerMeasure;
-                        var tty = Gridchords[currentmeasure];
-
-                        if (timeinmeasure == 1)
-                        {
-                            // Chord 1
-                            chord = tty.Item1;
-                            if (chord == "<Empty>")
-                                chord = "";
-                            beatchord = chord;
-
-                            if (beatlyr.Length > chord.Length)
-                            {
-                                beatchord += new string(' ', beatlyr.Length - beatchord.Length);
-                            }
-                            else if (beatlyr.Length < chord.Length)
-                            {
-                                beatlyr += new string(' ', chord.Length - beatlyr.Length);
-                            }
-                        }
-                        else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
-                        {
-                            // Chord 2
-                            chord = tty.Item2;
-                            if (chord == "<Empty>")
-                                chord = "";
-
-                            beatchord = chord;
-
-                            if (beatlyr.Length > chord.Length)
-                            {
-                                beatchord += new string(' ', beatlyr.Length - chord.Length);
-                            }
-                            else if (beatlyr.Length < chord.Length)
-                            {
-                                beatlyr += new string(' ', chord.Length - beatlyr.Length);
-                            }
-                        }
-                        else
-                        {
-                            // No chord
-                            if (beatlyr.Length > 0)
-                                beatchord += new string(' ', beatlyr.Length);
-                        }
-
-                        #endregion store result
-
-                        linebeatlyr += beatlyr;
-                        linebeatchord += beatchord;
-
-                        if (linebeatlyr != "" || linebeatchord != "")
-                        {
-                            // New Line => stor result
-                            if (pll.Type == plLyric.Types.LineFeed)
-                                res += linebeatchord + cr + linebeatlyr + cr;
-                            else
-                                res += linebeatchord + cr + linebeatlyr + cr + cr;
-                        }
-                    }
-
-                    linebeatchord = string.Empty;
-                    linebeatlyr = string.Empty;
-                    beatlyr = string.Empty;
-                    beatchord = string.Empty;
-                    currentbeat = -1;
-
-                }
-                // =========================================
-                // Text
-                // =========================================
-                else if (pll.Type == plLyric.Types.Text)
-                {
-                    tickson = pll.TicksOn;
-                    ticksoff = pll.TicksOff;
-
-                    beat = pll.Beat;                   
-                    measure = 1 + (beat - 1) / nbBeatsPerMeasure;
-                    lyr = pll.Element;
-
-                    if (currentbeat == -1)
-                    {
-                        currentbeat = beat;
-                        currentmeasure = measure;
-                    }
-
-                    // If beat change
-                    if (beat != currentbeat)
-                    {
-                        // Store results of previous beat
-                        #region store result
-                        // Store results of previous beat                        
-                        timeinmeasure = nbBeatsPerMeasure + currentbeat - currentmeasure * nbBeatsPerMeasure;
-
-                        var tty = Gridchords[currentmeasure];
-
-                        if (timeinmeasure == 1)
-                        {
-                            // Chord 1
-                            chord = tty.Item1;
-                            if (chord == "<Empty>")
-                                chord = "";
-                            beatchord = chord;                            
-
-                            if (beatlyr.Length > chord.Length)
-                            {
-                                beatchord += new string(' ', beatlyr.Length - beatchord.Length);
-                            }
-                            else if (beatlyr.Length < chord.Length)
-                            {
-                                beatlyr += new string(' ', chord.Length - beatlyr.Length);
-                            }
-                        }
-                        else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
-                        {
-                            // Chord 2
-                            chord = tty.Item2;
-                            if (chord == "<Empty>")
-                                chord = "";
-                            beatchord = chord;                            
-
-                            if (beatlyr.Length > chord.Length)
-                            {
-                                beatchord += new string(' ', beatlyr.Length - chord.Length);
-                            }
-                            else if (beatlyr.Length < chord.Length)
-                            {
-                                beatlyr += new string(' ', chord.Length - beatlyr.Length);
-                            }
-                        }
-                        else
-                        {
-                            // No chord
-                            if (beatlyr.Length > 0)
-                                beatchord += new string(' ', beatlyr.Length);
-                        }
-
-                        #endregion store result
-
-                        // update current
-                        currentbeat = beat;
-                        currentmeasure = measure;
-
-                        linebeatlyr += beatlyr;
-                        linebeatchord += beatchord;
-                        beatlyr = string.Empty;
-                        beatchord = string.Empty;
-                    }
-
-                    // If same beat and same measure
-                    beatlyr += lyr;                                        
-                }
-            }
-
-            // Do not forget the last line
-            if (currentmeasure < Gridchords.Count)
-            {
-                // Store last line
-                #region store result
-                var ttz = Gridchords[currentmeasure];
-                timeinmeasure = nbBeatsPerMeasure + currentbeat - currentmeasure * nbBeatsPerMeasure;
-
-                if (timeinmeasure == 1)
-                {
-                    // Chord 1
-                    chord = ttz.Item1;
-                    if (chord == "<Empty>")
-                        chord = "";
-                    beatchord = chord;
-
-                    if (beatlyr.Length > chord.Length)
-                    {
-                        beatchord += new string(' ', beatlyr.Length - beatchord.Length);
-                    }
-                    else if (beatlyr.Length < chord.Length)
-                    {
-                        beatlyr += new string(' ', chord.Length - beatlyr.Length);
-                    }
-                }
-                else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
-                {
-                    // Chord 2
-                    chord = ttz.Item2;
-                    if (chord == "<Empty>")
-                        chord = "";
-                    beatchord = chord;
-
-                    if (beatlyr.Length > chord.Length)
-                    {
-                        beatchord += new string(' ', beatlyr.Length - chord.Length);
-                    }
-                    else if (beatlyr.Length < chord.Length)
-                    {
-                        beatlyr += new string(' ', chord.Length - beatlyr.Length);
-                    }
-                }
-                else
-                {
-                    // No chord
-                    if (beatlyr.Length > 0)
-                        beatchord += new string(' ', beatlyr.Length);
-                }
-                #endregion store result
-
-                linebeatlyr += beatlyr;
-                linebeatchord += beatchord;
-                if (linebeatlyr != "" || linebeatchord != "")
-                {
-                    // New Line => store result                
-                    res += linebeatchord + cr + linebeatlyr;
-                }
-            }
-
-            return res;
-        }
+      
 
         #endregion Display Lyrics
 

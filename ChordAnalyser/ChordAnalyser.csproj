@@ -43,23 +43,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analyser.cs" />
-    <Compile Include="ChordAnalyser.cs" />
-    <Compile Include="core\chords.cs" />
-    <Compile Include="core\intervals.cs" />
-    <Compile Include="core\keys.cs" />
-    <Compile Include="core\meter.cs" />
-    <Compile Include="core\mt_exceptions.cs" />
-    <Compile Include="core\notes.cs" />
-    <Compile Include="core\progressions.cs" />
-    <Compile Include="core\scales.cs" />
+    <Compile Include="core\Analyser.cs" />
+    <Compile Include="core\ChordAnalyser.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="tests.cs" />
-    <Compile Include="core\value.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\ChordsControl.cs">
       <SubType>Component</SubType>
@@ -105,5 +95,6 @@
   <ItemGroup>
     <None Include="Resources\silence_black.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
