@@ -209,6 +209,7 @@ namespace TrkControl
             set
             {
                 patch = value;
+                lblProgram.Text = value.ToString();
             }
         }
 

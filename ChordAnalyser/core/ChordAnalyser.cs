@@ -74,7 +74,8 @@ namespace ChordsAnalyser
                 Gridchords[i] = (NoChord, NoChord);
             }
 
-            SearchMethod2();
+            SearchMethod();
+            //SearchMethod2();
 
                         
         }

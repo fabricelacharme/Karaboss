@@ -240,7 +240,7 @@ namespace Sanford.Multimedia.Midi
             cmBuilder.MidiChannel = ChannelMessage.UnpackMidiChannel(status);
             cmBuilder.Data1 = trackData[trackIndex];
 
-            // PROGRAM CHANGE
+            // PROGRAM CHANGE / Patch
             if (cmBuilder.Command == ChannelCommand.ProgramChange)
             {
                 newTrack.ProgramChange = cmBuilder.Data1;

@@ -5025,7 +5025,7 @@ namespace Karaboss
                 outDevice.Send(e.Message);
 
 
-            
+            // Modify display according to changes during play 
             if (e.Message.Command == ChannelCommand.NoteOn)
             {
                 // Allume la diode du channel correspondant                
@@ -5139,6 +5139,15 @@ namespace Karaboss
                     Debug.Print("controller: {0}", ct);
                 }
                 */
+            }
+            else if (e.Message.Command == ChannelCommand.ProgramChange)
+            {
+                // Instrument is changed during play !!!!!
+                ChannelMessage Msg = e.Message;
+                int ProgramChange = Msg.Data1;
+                int MidiChannel = Msg.MidiChannel;
+
+                Console.WriteLine(string.Format("******* ProgramChange {0} on MidiChannel {1} **********", ProgramChange,MidiChannel));
             }
             
         }
