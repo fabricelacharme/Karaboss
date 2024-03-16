@@ -78,11 +78,14 @@ namespace Karaboss
             public int pan = 64;
             public int reverb = 0;
             public int channel = 0;
+            public int patch = 0;
             public bool muted = false;
             public bool maximized = true;
         }
         private List<_reglages> lstTrkReglages;
         private _reglages TrkReglages;
+        private bool bReglageChanged = false;
+
 
         private class _channels
         {
@@ -595,8 +598,11 @@ namespace Karaboss
                 TrkReglages.reverb = track.Reverb;
                 TrkReglages.muted = false;
                 TrkReglages.channel = track.MidiChannel;
+                TrkReglages.patch = track.ProgramChange;
                 lstTrkReglages.Add(TrkReglages);
             }
+
+            bReglageChanged = false;
 
             // Mute Channel
             for (int i = 0; i < 16; i++)
@@ -2062,6 +2068,8 @@ namespace Karaboss
                                 trkctrl.SetPan(trk.Pan);
                                 // Reverb
                                 trkctrl.SetReverb(trk.Reverb);
+                                // Patch
+                                trkctrl.SetPatch(trk.ProgramChange);
                             }
                         }
                     }                   
@@ -5015,8 +5023,7 @@ namespace Karaboss
             if(closing)
             {
                 return;
-            }
-            //outDevice.Send(e.Message);
+            }            
 
             int nChannel = e.Message.MidiChannel;
             string sChannel = nChannel.ToString();
@@ -5090,6 +5097,7 @@ namespace Karaboss
                             }
                         }                                
                     }
+                    bReglageChanged = true;
                 }
                 else if (ct == ControllerType.Pan)
                 {
@@ -5111,6 +5119,7 @@ namespace Karaboss
                             }
                         }
                     }
+                    bReglageChanged = true;
                 }
                 else if (ct == ControllerType.EffectsLevel)
                 {
@@ -5132,22 +5141,34 @@ namespace Karaboss
                             }
                         }
                     }
-                }
-                /*
-                else
-                {
-                    Debug.Print("controller: {0}", ct);
-                }
-                */
+                    bReglageChanged = true;
+                }                
             }
             else if (e.Message.Command == ChannelCommand.ProgramChange)
             {
                 // Instrument is changed during play !!!!!
                 ChannelMessage Msg = e.Message;
-                int ProgramChange = Msg.Data1;
-                int MidiChannel = Msg.MidiChannel;
+                int patch = Msg.Data1;
+                int j = -1;                
 
-                Console.WriteLine(string.Format("******* ProgramChange {0} on MidiChannel {1} **********", ProgramChange,MidiChannel));
+                for (int i = 0; i < pnlTracks.Controls.Count; i++)
+                {
+                    if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                    {
+                        j++;
+                        if (pnlTracks.Controls[i].Tag != null)
+                        {
+                            string stag = pnlTracks.Controls[i].Tag.ToString();
+                            if (stag == sChannel)
+                            {
+                                // Ajust patch for all tracks having this programchange
+                                lstTrkReglages[j].patch = patch;
+                            }
+                        }
+                    }
+                }
+                bReglageChanged = true;
+
             }
             
         }
@@ -5352,7 +5373,8 @@ namespace Karaboss
             lblBeat.Text = beat.ToString() + "|" + sequence1.Numerator;
 
             // Light off all channels
-            // Display volume of tracks 
+            // Display volume of tracks and other setups
+            
             int j = -1;
             for (int i = 0; i < pnlTracks.Controls.Count; i++)
             {
@@ -5365,20 +5387,24 @@ namespace Karaboss
                         // Light Off
                         trkctrl.LightOff();
 
-                        // Volume
-                        Track track = sequence1.tracks[pTrack.Track];
-                        //j = sequence1.tracks.IndexOf(track);
 
-                        trkctrl.SetVolume(lstTrkReglages[j].volume);                       
-                        // Pan
-                        trkctrl.SetPan(lstTrkReglages[j].pan);
-                        // Reverb
-                        trkctrl.SetReverb(lstTrkReglages[j].reverb);
-                        //j++;
+                        // Change values only if differents?
+                        if (bReglageChanged == true)
+                        {
+                            // Volume                                                
+                            trkctrl.SetVolume(lstTrkReglages[j].volume);
+                            // Pan
+                            trkctrl.SetPan(lstTrkReglages[j].pan);
+                            // Reverb
+                            trkctrl.SetReverb(lstTrkReglages[j].reverb);
+                            // Patch
+                            trkctrl.SetPatch(lstTrkReglages[j].patch);
+                        }                        
                     }
                 }
             }
-                        
+            bReglageChanged = false;
+
             #endregion beat animation
         }
 
