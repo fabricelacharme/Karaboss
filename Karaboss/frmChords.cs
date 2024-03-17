@@ -611,7 +611,8 @@ namespace Karaboss
             note = note.Replace("11", "");
             */
 
-            note = note.Replace("<Chord not found>", "?");
+            //note = note.Replace("<Chord not found>", "?");
+            note = note.Replace("<Chord not found>", "");
 
             note = note.Trim();
             return note;
@@ -813,8 +814,13 @@ namespace Karaboss
         /// </summary>
         private void DisplayWordsAndChords()
         {
-            myLyricsMgmt.Gridchords = Gridchords;
-            txtDisplayWords.Text = myLyricsMgmt.DisplayWordsAndChords();
+            string cr = Environment.NewLine;
+            string tx = ExtractTMidiInfos();
+
+            myLyricsMgmt.Gridchords = Gridchords;            
+
+            tx += cr + myLyricsMgmt.DisplayWordsAndChords();
+            txtDisplayWords.Text = tx;
         }
 
 
@@ -1596,6 +1602,13 @@ namespace Karaboss
 
         private void mnuHelpAboutSong_Click(object sender, EventArgs e)
         {
+            string tx = ExtractMidiInfos();
+
+            MessageBox.Show(tx, "About this song", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private string ExtractMidiInfos()
+        {
             string tx = string.Empty;
             int i;
             string cr = Environment.NewLine;
@@ -1639,10 +1652,38 @@ namespace Karaboss
                 tx += sequence1.ITag[i] + cr;
             }
 
-
-            MessageBox.Show(tx, "About this song", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return tx;
         }
 
+
+        private string ExtractTMidiInfos()
+        {
+            string tx = string.Empty;
+            int i;
+            string cr = Environment.NewLine;
+            
+            // Copyright of karaoke
+            for (i = 0; i < sequence1.WTag.Count; i++)
+            {
+                tx += sequence1.WTag[i] + cr;
+            }
+
+            tx += cr;
+            // Song infos
+            for (i = 0; i < sequence1.TTag.Count; i++)
+            {
+                tx += sequence1.TTag[i] + cr;
+            }
+
+            tx += cr;
+            // Infos
+            for (i = 0; i < sequence1.ITag.Count; i++)
+            {
+                tx += sequence1.ITag[i] + cr;
+            }
+
+            return tx;
+        }
         #endregion mnu Help
 
         #endregion menus

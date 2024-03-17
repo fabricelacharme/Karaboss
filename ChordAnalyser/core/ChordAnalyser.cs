@@ -9,8 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Sanford.Multimedia.Midi;
 using ChordAnalyser;
-using static System.Collections.Specialized.BitVector32;
-using System.Diagnostics.Eventing.Reader;
 
 namespace ChordsAnalyser
 {
@@ -55,7 +53,7 @@ namespace ChordsAnalyser
 
         public ChordAnalyser() { }
 
-        //public ChordAnalyser(SheetMusic sheetmus, Sequence seq)
+        
         public ChordAnalyser(Sequence seq)
         {
             sequence1 = seq;
@@ -75,9 +73,7 @@ namespace ChordsAnalyser
             }
 
             SearchMethod();
-            //SearchMethod2();
-
-                        
+            //SearchMethod2();                        
         }
 
         
@@ -153,8 +149,7 @@ namespace ChordsAnalyser
             else
             {
                 List<string> notletters = TransposeToLetterChord(dictnotes[beat]);
-                List<int> lstInt = new List<int>();
-
+                
                 // Remove doubles
                 notletters = notletters.Distinct().ToList();
 
@@ -162,52 +157,15 @@ namespace ChordsAnalyser
                 notletters = CheckImpossibleChordString(notletters);
 
                 // Translate strings to int
-                for (int i = 0; i < notletters.Count; i++)
-                {
-                    string n = notletters[i];
-                    string n0 = n.Substring(0, 1);
-                    Dictionary<string, int> _note_dict = new Dictionary<string, int>() { { "C", 0 }, { "D", 2 }, { "E", 4 }, { "F", 5 }, { "G", 7 }, { "A", 9 }, { "B", 11 } };
-                    int x = _note_dict[n0];
-                    if (n.Length > 1)
-                    {
-                        if (n.Substring(1, 1) == "#")
-                        {
-                            x += 1;
-                        }
-                        else
-                        {
-                            x -= 1;
-                            if (x < 0)  // Cb = B
-                                x = 11;
-                        }
-                    }
+                List<int> lstInt = TransposeToIntChord(notletters);
 
-                    lstInt.Add(x);
-                }
 
-                // Store into table
-                int[] intNotes = new int[lstInt.Count];
-                for (int i = 0; i < lstInt.Count; i++)
-                    intNotes[i] = lstInt[i];
-
-                lnIntNote = new List<int[]>();
-                // Build ln = list of all combinations of int
-                PermuteIntNote(intNotes, 0, lstInt.Count - 1);
-
+                // Get all Combinations of notes numbers          
+                List<List<int>> llnotes = GetAllChordsCombinations(lstInt);
+                
 
                 // Minor the value of the notes of a chord and ensure that each note has a value greater than the previous one.
-                List<List<int>> llnotes = new List<List<int>>();
-                foreach (int[] arry in lnIntNote)
-                {
-                    List<int> lll = new List<int>();
-                    for (int i = 0; i < arry.Length; i++)
-                    {
-                        lll.Add(arry[i]);
-                    }
-                    llnotes.Add(lll);
-                }
-
-                llnotes = ChangeListListNotesNumber(llnotes);
+                llnotes = SortChordsByNotesNumber(llnotes);
 
 
                 // Search major or minor triads note                    
@@ -238,7 +196,7 @@ namespace ChordsAnalyser
         #region Search method
 
         /// <summary>
-        /// HArvest notes
+        /// Harvest notes
         /// </summary>
         private void SearchByHalfMeasure()
         {
@@ -318,66 +276,75 @@ namespace ChordsAnalyser
             else
             {
                 List<string> notletters = TransposeToLetterChord(notes);
-                List<int> lstInt = new List<int>();
+                // Dictionary with notes sorted by apparition
+                Dictionary<string, int> dictbestnotes = GetBestNotes(notletters);
+
 
                 // Remove doubles
-                notletters = notletters.Distinct().ToList();
+                // TODO
+                // Notes appearing more frequently than others should be favorised
+                // Pb found: a chord C with many (C, E, G) and just a single "A" note is viewed as a "Am7" chord (A, C, E, G) 
 
-                // Remove impossible chords
-                notletters = CheckImpossibleChordString(notletters);
-
-                // Translate strings to int
-                for (int i = 0; i < notletters.Count; i++)
-                {
-                    string n = notletters[i];
-                    string n0 = n.Substring(0,1);                    
-                    Dictionary<string, int> _note_dict = new Dictionary<string, int>() { { "C", 0 }, { "D", 2 }, { "E", 4 }, { "F", 5 }, { "G", 7 }, { "A", 9 }, { "B", 11 } };
-                    int x = _note_dict[n0];
-                    if (n.Length > 1)
-                    {
-                        if (n.Substring(1, 1) == "#")
-                        {
-                            x += 1;
-                        }
-                        else
-                        {
-                            x -= 1;
-                            if (x < 0)  // Cb = B
-                                x = 11;
-                        }
-                    }
-
-                    lstInt.Add(x);
-                }
-
-                // Store into table
-                int[] intNotes = new int[lstInt.Count];
-                for (int i = 0; i < lstInt.Count; i++)
-                    intNotes[i] = lstInt[i];
-
-                lnIntNote = new List<int[]>();
-                // Build ln = list of all combinations of int
-                PermuteIntNote(intNotes, 0, lstInt.Count - 1);
+                // Ex
+                // (C, 10), (G, 5), (E, 8), (A, 2)
+                // => chord C, E, G
+                // If more than 3 notes => search first 3 more frequent notes
+                var sortedDict = from entry in dictbestnotes orderby entry.Value descending select entry;
+                dictbestnotes = sortedDict.ToDictionary<KeyValuePair<string, int>, string, int>(pair => pair.Key, pair => pair.Value);
                 
+                
+                List<string> bestnotletters = new List<string>();
+                List<string> bestnotletters4 = new List<string>();
 
-                // Minor the value of the notes of a chord and ensure that each note has a value greater than the previous one.
-                List<List<int>> llnotes = new List<List<int>>();
-                foreach (int[] arry in lnIntNote)
+                // Hard selection => bestnotletters
+                int moy = 0;
+                int lastvalue = 0;
+                if (dictbestnotes.Count >= 3)
                 {
-                    List<int> lll = new List<int>();
-                    for (int i = 0; i < arry.Length; i++)
+                    for (int i = 0; i < 3; i++)
                     {
-                        lll.Add(arry[i]);
+                        bestnotletters.Add(dictbestnotes.ElementAt(i).Key);
+                        bestnotletters4.Add(dictbestnotes.ElementAt(i).Key);
+                        moy += dictbestnotes.ElementAt(i).Value;                        
                     }
-                    llnotes.Add(lll);
+                    moy = moy / 3;
+                    lastvalue = dictbestnotes.ElementAt(2).Value;
+
+                    if (dictbestnotes.Count > 3)
+                    {                        
+                        for (int i = 3; i < dictbestnotes.Count; i++)
+                        {
+                            //if (dictbestnotes.ElementAt(i).Value >= moy)
+                            //    bestnotletters.Add(dictbestnotes.ElementAt(i).Key);
+                            if (dictbestnotes.ElementAt(i).Value >= lastvalue)
+                                bestnotletters.Add(dictbestnotes.ElementAt(i).Key);
+                        }
+
+                        bestnotletters4.Add(dictbestnotes.ElementAt(3).Key);
+                    }
                 }
 
-                llnotes = ChangeListListNotesNumber(llnotes);
 
+                // Try best notes, if not, try all notes                
+                //notletters = notletters.Distinct().ToList();
+                //notletters = bestnotletters;
+                List<int> lroot = null;
+                
+                // Try with best notes
+                if (bestnotletters.Count > 2)
+                    lroot = GetChord(bestnotletters);
 
-                // Search major or minor triads note                    
-                List<int> lroot = DetermineRoot(llnotes);
+                if (lroot == null && bestnotletters4.Count == 4)                
+                    lroot = GetChord(bestnotletters4);
 
+                if (lroot == null) { 
+                    // Try with all notes
+                    notletters = notletters.Distinct().ToList();
+                    if (notletters.Count > 2)
+                        lroot = GetChord(notletters);
+                }
+
+               
                 if (lroot != null)
                 {
                     string res = Analyser.determine(lroot);
@@ -458,7 +425,7 @@ namespace ChordsAnalyser
                 return;
 
             List<string> notletters = TransposeToLetterChord(notes);
-            List<int> lstInt = new List<int>();
+            
 
             // Remove doubles
             notletters = notletters.Distinct().ToList();
@@ -467,51 +434,15 @@ namespace ChordsAnalyser
             notletters = CheckImpossibleChordString(notletters);
 
             // Translate strings to int
-            for (int i = 0; i < notletters.Count; i++)
-            {
-                string n = notletters[i];
-                string n0 = n.Substring(0, 1);
-                Dictionary<string, int> _note_dict = new Dictionary<string, int>() { { "C", 0 }, { "D", 2 }, { "E", 4 }, { "F", 5 }, { "G", 7 }, { "A", 9 }, { "B", 11 } };
-                int x = _note_dict[n0];
-                if (n.Length > 1)
-                {
-                    if (n.Substring(1, 1) == "#")
-                    {
-                        x += 1;
-                    }
-                    else
-                    {
-                        x -= 1;
-                        if (x < 0)  // Cb = B
-                            x = 11;
-                    }
-                }
+            List<int> lstInt = TransposeToIntChord(notletters);
 
-                lstInt.Add(x);
-            }
 
-            // Store into table
-            int[] intNotes = new int[lstInt.Count];
-            for (int i = 0; i < lstInt.Count; i++)
-                intNotes[i] = lstInt[i];
-
-            lnIntNote = new List<int[]>();
-            // Build ln = list of all combinations of int
-            PermuteIntNote(intNotes, 0, lstInt.Count - 1);
+            // Get all Combinations of notes numbers          
+            List<List<int>> llnotes = GetAllChordsCombinations(lstInt);
 
             // Minor the value of the notes of a chord and ensure that each note has a value greater than the previous one.
-            List<List<int>> llnotes = new List<List<int>>();
-            foreach (int[] arry in lnIntNote)
-            {
-                List<int> lll = new List<int>();
-                for (int i = 0; i < arry.Length; i++)
-                {
-                    lll.Add(arry[i]);
-                }
-                llnotes.Add(lll);
-            }
+            llnotes = SortChordsByNotesNumber(llnotes);
 
-            llnotes = ChangeListListNotesNumber(llnotes);
 
             // Search major or minor triads note                    
             List<int> lroot = DetermineRoot(llnotes);
@@ -555,6 +486,41 @@ namespace ChordsAnalyser
        
         #endregion Search method
 
+
+
+        List<int> GetChord(List<string> chord)
+        {
+            if (chord.Count == 0)
+                return null;
+
+            // Remove impossible chords
+            chord = CheckImpossibleChordString(chord);
+
+            // Translate strings to int                
+            List<int> lstInt = TransposeToIntChord(chord);
+
+            // Get all Combinations of notes numbers          
+            List<List<int>> llnotes = GetAllChordsCombinations(lstInt);
+
+            // Minor the value of the notes of a chord and ensure that each note has a value greater than the previous one.
+            llnotes = SortChordsByNotesNumber(llnotes);
+
+
+            // Search major or minor triads note                    
+            List<int> lroot = DetermineRoot(llnotes);
+
+            // Alternative
+            List<List<List<int>>> lroots = DetermineRoots(llnotes);
+            foreach (List<List<int>> l in lroots)
+            {
+                List<int> lr = DetermineRoot(l);
+                string res = Analyser.determine(lr);
+                Console.WriteLine(res);
+            }
+
+            return lroot;
+
+        }
 
         private List<int> CheckImpossibleChordInt(List<int> lstInt)
         {
@@ -689,19 +655,106 @@ namespace ChordsAnalyser
         private List<string> TransposeToLetterChord(List<int> notes)
         {
             List<string> letters = new List<string>() { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};            
-            List<string> letternotes = new List<string>();            
+            List<string> res = new List<string>();            
             string l = string.Empty;
             int x = 0;
             foreach (int n in notes)
             {                
                 x = n % 12;
                 l = letters[x];
-                letternotes.Add(l);
+                res.Add(l);
             }            
-            return letternotes;
+            return res;
+        }
+
+        /// <summary>
+        /// Transpose letters to int
+        /// </summary>
+        /// <param name="notes"></param>
+        /// <returns></returns>
+        private List<int> TransposeToIntChord(List<string> notes)
+        {
+            List<int> res = new List<int>();
+            Dictionary<string, int> _note_dict = new Dictionary<string, int>() { { "C", 0 }, { "D", 2 }, { "E", 4 }, { "F", 5 }, { "G", 7 }, { "A", 9 }, { "B", 11 } };
+
+            for (int i = 0; i < notes.Count; i++)
+            {
+                string n = notes[i];
+                string n0 = n.Substring(0, 1);
+                
+                int x = _note_dict[n0];
+                if (n.Length > 1)
+                {
+                    if (n.Substring(1, 1) == "#")
+                    {
+                        x += 1;
+                    }
+                    else
+                    {
+                        x -= 1;
+                        if (x < 0)  // Cb = B
+                            x = 11;
+                    }
+                }
+
+                res.Add(x);
+            }
+            return res;
         }
 
 
+        /// <summary>
+        /// Return all combinations of notes numbers
+        /// </summary>
+        /// <param name="chord"></param>
+        /// <returns></returns>
+        List<List<int>> GetAllChordsCombinations(List<int> lstInt)
+        {
+            List<List<int>> res = new List<List<int>>();
+
+            int[] intNotes = new int[lstInt.Count];
+            for (int i = 0; i < lstInt.Count; i++)
+                intNotes[i] = lstInt[i];
+
+            lnIntNote = new List<int[]>();
+            // Build ln = list of all combinations of int
+            PermuteIntNote(intNotes, 0, lstInt.Count - 1);
+
+            foreach (int[] arry in lnIntNote)
+            {
+                List<int> lll = new List<int>();
+                for (int i = 0; i < arry.Length; i++)
+                {
+                    lll.Add(arry[i]);
+                }
+                res.Add(lll);
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// Get notes classified with number of appearance
+        /// </summary>
+        Dictionary<string,int> GetBestNotes(List<string> chords)
+        {
+            Dictionary<string,int> res = new Dictionary<string,int>();
+
+            foreach(string ch in chords)
+            {
+                if (!res.ContainsKey(ch) )
+                {
+                    res[ch] = 1;
+                }
+                else
+                {
+                    res[ch] += 1;
+                }
+
+            }
+
+            return res;
+
+        }
 
         #region permutations
 
@@ -807,15 +860,15 @@ namespace ChordsAnalyser
         /// </summary>
         /// <param name="ll"></param>
         /// <returns></returns>
-        private List<List<int>> ChangeListListNotesNumber(List<List<int>> ll)
-        {            
+        private List<List<int>> SortChordsByNotesNumber(List<List<int>> ll)
+        {
             int n;
             int prevnumber = 0;
             List<List<int>> res = new List<List<int>>();
 
-            for (int j = 0; j < ll.Count; j++)          
-            {               
-                List<int> lsnotes = ll[j];                
+            for (int j = 0; j < ll.Count; j++)
+            {
+                List<int> lsnotes = ll[j];
                 int t = lsnotes[0];
                 t = t % 12;
                 lsnotes[0] = t;
@@ -836,7 +889,7 @@ namespace ChordsAnalyser
             }
             return res;
         }
-
+    
 
         /// <summary>
         /// Select the chord existing in the proposed list
@@ -874,6 +927,11 @@ namespace ChordsAnalyser
             return null;  
         }
 
+        /// <summary>
+        /// Retruns list of possible chords
+        /// </summary>
+        /// <param name="lsnotes"></param>
+        /// <returns></returns>
         private List<List<List<int>>> DetermineRoots(List<List<int>> lsnotes)
         {
             List<List<int>> lstMajorChords = new List<List<int>>();
@@ -889,31 +947,35 @@ namespace ChordsAnalyser
                 {
                     if (IsMajorChord7(chord)) 
                     {
-                        lstMajorChords7.Add(chord);
+                        lstMajorChords7.Add(new List<int> { chord[0], chord[1], chord[2], chord[3] });
                     }
                     else if (IsMinorChord7(chord)) 
                     {
-                        lstMinorChords7.Add(chord);
+                        lstMinorChords7.Add(new List<int> { chord[0], chord[1], chord[2], chord[3] });
                     }                        
                 }
 
                 if (chord.Count > 2)
                 {
                     if (IsMajorChord(chord))
-                    {
-                        lstMajorChords.Add(chord);
+                    {                        
+                        lstMajorChords.Add(new List<int> { chord[0], chord[1], chord[2] });
                     }
                     else if (IsMinorChord(chord))
-                    {
-                        lstMinorChords.Add(chord);
+                    {                        
+                        lstMinorChords.Add(new List<int> { chord[0], chord[1], chord[2] });
                     }
                 }
             }
 
-            res.Add(lstMajorChords7);
-            res.Add(lstMinorChords7);
-            res.Add(lstMajorChords);
-            res.Add(lstMinorChords);
+            if (lstMajorChords7.Count > 0)
+                res.Add(lstMajorChords7);
+            if (lstMinorChords7.Count > 0)
+                res.Add(lstMinorChords7);
+            if (lstMajorChords.Count > 0)
+                res.Add(lstMajorChords);
+            if (lstMinorChords.Count > 0)
+                res.Add(lstMinorChords);
 
             return res;
         }

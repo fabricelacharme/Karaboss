@@ -358,7 +358,7 @@ namespace ChordAnalyser.UI
             SolidBrush MeasureBrush = new SolidBrush(Color.Red);
             SolidBrush LyricBrush = new SolidBrush(Color.Blue);
 
-            Font fontChord = new Font("Arial", 30 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font fontChord = new Font("Arial", 40 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontMeasure = new Font("Arial", 14 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontLyric = new Font("Arial", 14 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
