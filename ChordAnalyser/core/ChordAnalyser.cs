@@ -297,6 +297,8 @@ namespace ChordsAnalyser
                 List<string> bestnotletters4 = new List<string>();
 
                 // Hard selection => bestnotletters
+                //List<string> v = dictbestnotes.Take(3);
+
                 int moy = 0;
                 int lastvalue = 0;
                 if (dictbestnotes.Count >= 3)
@@ -311,12 +313,20 @@ namespace ChordsAnalyser
                     lastvalue = dictbestnotes.ElementAt(2).Value;
 
                     if (dictbestnotes.Count > 3)
-                    {                        
+                    {
+                        /*
+                        if (lastvalue > 1)
+                        {
+                            for (int i = 3; i < dictbestnotes.Count; i++)
+                            {
+                                if (dictbestnotes.ElementAt(i).Value >= lastvalue - 1)
+                                    bestnotletters.Add(dictbestnotes.ElementAt(i).Key);
+                            }
+                        }
+                        */
                         for (int i = 3; i < dictbestnotes.Count; i++)
                         {
-                            //if (dictbestnotes.ElementAt(i).Value >= moy)
-                            //    bestnotletters.Add(dictbestnotes.ElementAt(i).Key);
-                            if (dictbestnotes.ElementAt(i).Value >= lastvalue)
+                            if (dictbestnotes.ElementAt(i).Value >= moy)
                                 bestnotletters.Add(dictbestnotes.ElementAt(i).Key);
                         }
 
@@ -465,7 +475,7 @@ namespace ChordsAnalyser
             else
             {
                 string res = Analyser.determine(llnotes[0]);
-                if (res != null)
+                if (res != "")
                 {
                     if (section == 1)
                     {
@@ -510,6 +520,7 @@ namespace ChordsAnalyser
             List<int> lroot = DetermineRoot(llnotes);
 
             // Alternative
+            /*
             List<List<List<int>>> lroots = DetermineRoots(llnotes);
             foreach (List<List<int>> l in lroots)
             {
@@ -517,6 +528,7 @@ namespace ChordsAnalyser
                 string res = Analyser.determine(lr);
                 Console.WriteLine(res);
             }
+            */
 
             return lroot;
 
