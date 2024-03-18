@@ -44,6 +44,16 @@ namespace ChordAnalyser.UI
 
         #region properties
 
+        private Font _fontChord;
+        public Font fontChord
+        {
+            get { return _fontChord; } 
+            set 
+            {  _fontChord = value;
+                pnlCanvas.Invalidate();
+            }
+        }
+
         private int _offsetx = 0;
         /// <summary>
         /// Gets or sets horizontal offset
@@ -160,7 +170,9 @@ namespace ChordAnalyser.UI
 
                 _cellwidth = _columnwidth * zoom;
                 _cellheight = _columnheight * zoom;
-                
+
+                _fontChord = new Font(_fontChord.FontFamily, 40 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+
                 this.Height = (int)_cellheight;
                 if (HeightChanged != null)
                     HeightChanged(this, this.Height);
@@ -204,7 +216,9 @@ namespace ChordAnalyser.UI
         #endregion events
 
         public ChordsControl()
-        {            
+        {
+            _fontChord = new Font("Arial", 40, FontStyle.Regular, GraphicsUnit.Pixel);
+            
             // Draw pnlCanvas
             DrawCanvas();         
 
@@ -358,7 +372,7 @@ namespace ChordAnalyser.UI
             SolidBrush MeasureBrush = new SolidBrush(Color.Red);
             SolidBrush LyricBrush = new SolidBrush(Color.Blue);
 
-            Font fontChord = new Font("Arial", 40 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+            //Font _fontChord = new Font("Arial", 40 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontMeasure = new Font("Arial", 14 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontLyric = new Font("Arial", 14 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
@@ -385,8 +399,8 @@ namespace ChordAnalyser.UI
                     ttx = Gridchords[i];
                     
                     ChordName = ttx.Item1;
-                    w = MeasureString(fontChord.FontFamily, ChordName, fontChord.Size);
-                    h = MeasureStringHeight(fontChord.FontFamily, ChordName, fontChord.Size);                    
+                    w = MeasureString(_fontChord.FontFamily, ChordName, _fontChord.Size);
+                    h = MeasureStringHeight(_fontChord.FontFamily, ChordName, _fontChord.Size);                    
 
                     // If empty, draw symbol
                     if (ChordName == EmptyChord)
@@ -395,7 +409,7 @@ namespace ChordAnalyser.UI
                     }
                     else
                     {                        
-                        g.DrawString(ChordName, fontChord, ChordBrush, x + (_cellwidth - w)/2, (_cellheight/2 - h)/2);
+                        g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w)/2, (_cellheight/2 - h)/2);
                     }
 
                     // Draw measure number
@@ -410,8 +424,8 @@ namespace ChordAnalyser.UI
                         if (ttx.Item1 != ttx.Item2)
                         {
                             ChordName = ttx.Item2;
-                            w = MeasureString(fontChord.FontFamily, ChordName, fontChord.Size);
-                            h = MeasureStringHeight(fontChord.FontFamily, ChordName, fontChord.Size);
+                            w = MeasureString(_fontChord.FontFamily, ChordName, _fontChord.Size);
+                            h = MeasureStringHeight(_fontChord.FontFamily, ChordName, _fontChord.Size);
 
                             // Move to 2nd part of the measure
                             int z = ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator / 2;
@@ -423,7 +437,7 @@ namespace ChordAnalyser.UI
                             }
                             else
                             {
-                                g.DrawString(ChordName, fontChord, ChordBrush, z + x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
+                                g.DrawString(ChordName, _fontChord, ChordBrush, z + x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
                             }
                         }
                     }
