@@ -86,7 +86,7 @@ namespace ChordsAnalyser
             SearchByBass();
 
             // display results
-            PublishResults(Gridchords);
+            //PublishResults(Gridchords);
 
         }
 

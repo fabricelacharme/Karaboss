@@ -864,46 +864,69 @@ namespace Karaboss.Lyrics
             }
 
 
-            // TO BE FIXED : find the first syllable SUNG, not the first syllabe of informations at the begining of the file
-            // Ex : The more I see you
-            // Add a cr to the first lyric (in case of instrumental BEFORE the first lyric)
-            if (plLyrics.Count > 0 && plLyrics[0].Type == plLyric.Types.Text)
-            {
-                pll = new plLyric();
-                pll.Type = plLyric.Types.LineFeed;
-                pll.Beat = plLyrics[0].Beat;
-                if (pll.Beat < beats)
-                {
-                    pll.TicksOn = pll.Beat * beatDuration;
-                    // Insert linefedd at first position
-                    //diclyr[pll.Beat].Insert(0, pll);
-                }
-            }
+            
 
 
             //==========================================================
             // Check next linefeed: if next linefeed is too far, it means that there is a instrumental before next lyric
             // So add an additional linefeed
+            // TODO : if next lyric is too far => there is also an instrumental
             //==========================================================            
             for (int i = 0; i < plLyrics.Count; i++)
             {
                 if (plLyrics[i].Type == plLyric.Types.Text)
                 {
+                    
+                    
                     if (i < plLyrics.Count - 1)
                     {
-                        // Is the next plLyric a linefeed and very far, meaning there is an instrumental ?
+                        // If the next lyric is very far, add a linfeed at the begining of the next lyric
+                        int j = i + 1;
+                        while (j < plLyrics.Count)
+                        {
+                            if (plLyrics[j].Type == plLyric.Types.Text)
+                            {
+                                ticksoff = plLyrics[i].TicksOff;
+                                tickson = plLyrics[j].TicksOn;
+                                interval = tickson - ticksoff;
+                                if (interval > 2 * _measurelen)
+                                {
+                                    beat = 1 + tickson / beatDuration;
+                                    int measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+                                    Console.WriteLine(string.Format("**** Instrumental1 : measure: {0} Beat: {1} **************", measure, beat));
+
+                                    // Add a linefeed at the beginning of the the next lyric
+                                    pll = new plLyric();
+                                    pll.Type = plLyric.Types.LineFeed;
+                                    pll.Beat = beat;
+                                    pll.TicksOn = beat * beatDuration;
+
+                                    diclyr[pll.Beat].Insert(0, pll);
+                                }
+                                break;
+                            }
+                            else
+                            {
+                                j++;
+                            }
+                        }
+                    }
+
+                    if (i < plLyrics.Count - 1)
+                    {
+                        // If the next plLyric is a linefeed and very far, meaning there is an instrumental ?
                         // interval checked is 1 measure
-                        // If greater than 1 measure => add a linefeed
+                        // If greater than 1 measure => add a linefeed the the end of the current lyric
                         if (plLyrics[i + 1].Type == plLyric.Types.LineFeed || plLyrics[i + 1].Type == plLyric.Types.Paragraph)
                         {
                             ticksoff = plLyrics[i].TicksOff;
                             tickson = plLyrics[i + 1].TicksOn;
                             interval = tickson - ticksoff;
-                            if (interval > _measurelen)
+                            if (interval > 2 * _measurelen)
                             {
                                 beat = 1 + ticksoff / beatDuration;
                                 int measure = 1 + (beat - 1) / nbBeatsPerMeasure;
-                                Console.WriteLine(string.Format("**** Instrumental : measure: {0} Beat: {1} **************", measure, beat));
+                                Console.WriteLine(string.Format("**** Instrumental2 : measure: {0} Beat: {1} **************", measure, beat));
 
                                 // TODO : add a linefeed to 1st time of this measure (this beat ?)
                                 // Do not forget the end of the song : no linefeed
@@ -914,7 +937,6 @@ namespace Karaboss.Lyrics
 
                                 diclyr[beat].Add(pll);
                             }
-
                         }
                     }                   
                 }
