@@ -863,6 +863,24 @@ namespace Karaboss.Lyrics
                 }
             }
 
+
+            // TO BE FIXED : find the first syllable SUNG, not the first syllabe of informations at the begining of the file
+            // Ex : The more I see you
+            // Add a cr to the first lyric (in case of instrumental BEFORE the first lyric)
+            if (plLyrics.Count > 0 && plLyrics[0].Type == plLyric.Types.Text)
+            {
+                pll = new plLyric();
+                pll.Type = plLyric.Types.LineFeed;
+                pll.Beat = plLyrics[0].Beat;
+                if (pll.Beat < beats)
+                {
+                    pll.TicksOn = pll.Beat * beatDuration;
+                    // Insert linefedd at first position
+                    //diclyr[pll.Beat].Insert(0, pll);
+                }
+            }
+
+
             //==========================================================
             // Check next linefeed: if next linefeed is too far, it means that there is a instrumental before next lyric
             // So add an additional linefeed
