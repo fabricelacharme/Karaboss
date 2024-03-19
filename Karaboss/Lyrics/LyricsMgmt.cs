@@ -925,7 +925,7 @@ namespace Karaboss.Lyrics
                                 // TODO : add a linefeed to 1st time of this measure (this beat ?)
                                 // Do not forget the end of the song : no linefeed
                                 pll = new plLyric();
-                                pll.Type = plLyric.Types.LineFeed;
+                                pll.Type = plLyric.Types.Paragraph;
                                 pll.Beat = beat;
                                 pll.TicksOn = beat * beatDuration;
 
@@ -940,7 +940,7 @@ namespace Karaboss.Lyrics
             if (plLyrics.Count > 0 && plLyrics[plLyrics.Count - 1].Type == plLyric.Types.Text)
             {
                 pll = new plLyric();
-                pll.Type = plLyric.Types.LineFeed;
+                pll.Type = plLyric.Types.Paragraph;
                 pll.Beat = plLyrics[plLyrics.Count - 1].Beat;
                 if (pll.Beat < beats)
                 {
