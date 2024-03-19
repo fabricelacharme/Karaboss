@@ -862,10 +862,7 @@ namespace Karaboss.Lyrics
                     diclyr[beat].Add(plLyrics[i]); 
                 }
             }
-
-
-            
-
+           
 
             //==========================================================
             // Check next linefeed: if next linefeed is too far, it means that there is a instrumental before next lyric
@@ -875,48 +872,45 @@ namespace Karaboss.Lyrics
             for (int i = 0; i < plLyrics.Count; i++)
             {
                 if (plLyrics[i].Type == plLyric.Types.Text)
-                {
-                    
-                    
-                    if (i < plLyrics.Count - 1)
+                {                                        
+                    if (i < plLyrics.Count - 2)
                     {
-                        // If the next lyric is very far, add a linfeed at the begining of the next lyric
-                        int j = i + 1;
-                        while (j < plLyrics.Count)
+                        // INSTRUMENTAL BEFORE A LINE
+                        // If the next LINE lyric is very far, add a linefeed at the begining of the next LINE lyric                        
+                        // use case : 'lyric','cr',chord chord,chord,'lyric' => 'lyric','cr',chord chord,chord,***<new cr>***,lyric
+                        // Contrary : 'lyric',chord chord,chord,'lyric' must stay as is
+
+                        if ( (plLyrics[i + 1].Type == plLyric.Types.LineFeed || plLyrics[i + 1].Type == plLyric.Types.Paragraph) && plLyrics[i + 2].Type == plLyric.Types.Text)
                         {
-                            if (plLyrics[j].Type == plLyric.Types.Text)
+                            
+                            ticksoff = plLyrics[i].TicksOff;
+                            tickson = plLyrics[i + 2].TicksOn;
+                            interval = tickson - ticksoff;
+                            if (interval > 2 * _measurelen)
                             {
-                                ticksoff = plLyrics[i].TicksOff;
-                                tickson = plLyrics[j].TicksOn;
-                                interval = tickson - ticksoff;
-                                if (interval > 2 * _measurelen)
-                                {
-                                    beat = 1 + tickson / beatDuration;
-                                    int measure = 1 + (beat - 1) / nbBeatsPerMeasure;
-                                    Console.WriteLine(string.Format("**** Instrumental1 : measure: {0} Beat: {1} **************", measure, beat));
+                                beat = 1 + tickson / beatDuration;
+                                int measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+                                Console.WriteLine(string.Format("**** Instrumental1 : measure: {0} Beat: {1} **************", measure, beat));
 
-                                    // Add a linefeed at the beginning of the the next lyric
-                                    pll = new plLyric();
-                                    pll.Type = plLyric.Types.LineFeed;
-                                    pll.Beat = beat;
-                                    pll.TicksOn = beat * beatDuration;
+                                // Add a linefeed at the beginning of the the next lyric
+                                pll = new plLyric();
+                                pll.Type = plLyric.Types.LineFeed;
+                                pll.Beat = beat;
+                                pll.TicksOn = beat * beatDuration;
 
-                                    diclyr[pll.Beat].Insert(0, pll);
-                                }
-                                break;
-                            }
-                            else
-                            {
-                                j++;
-                            }
+                                diclyr[pll.Beat].Insert(0, pll);
+                            }                                    
                         }
                     }
 
                     if (i < plLyrics.Count - 1)
                     {
-                        // If the next plLyric is a linefeed and very far, meaning there is an instrumental ?
-                        // interval checked is 1 measure
-                        // If greater than 1 measure => add a linefeed the the end of the current lyric
+                        // INSTRUMENTAL AFTER A LINE
+                        // CR AT END OF LINE TOO FAR, INSTRUMENTAL TRAILING
+                        // If the next plLyric is a linefeed and very far, meaning there is an instrumental before next line
+                        // interval checked is 2 measures
+                        // If greater than 2 measure => add a linefeed the the end of the current lyric, in order to have the instrumental in a separate line
+                        // use case : lyric,chord,chord,chord,cr,lyric => lyric,***<new cr>***,chord,chord,chord,cr,lyric 
                         if (plLyrics[i + 1].Type == plLyric.Types.LineFeed || plLyrics[i + 1].Type == plLyric.Types.Paragraph)
                         {
                             ticksoff = plLyrics[i].TicksOff;
