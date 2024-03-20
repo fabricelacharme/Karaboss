@@ -294,6 +294,7 @@ namespace ChordsAnalyser
                 
                 
                 List<string> bestnotletters = new List<string>();
+                //List<string> bestnotlettersbis = new List<string>();
                 List<string> bestnotletters4 = new List<string>();
 
                 // Hard selection => bestnotletters
@@ -306,6 +307,7 @@ namespace ChordsAnalyser
                     for (int i = 0; i < 3; i++)
                     {
                         bestnotletters.Add(dictbestnotes.ElementAt(i).Key);
+                        //bestnotlettersbis.Add(dictbestnotes.ElementAt(i).Key);
                         bestnotletters4.Add(dictbestnotes.ElementAt(i).Key);
                         moy += dictbestnotes.ElementAt(i).Value;                        
                     }
@@ -331,6 +333,7 @@ namespace ChordsAnalyser
                         }
 
                         bestnotletters4.Add(dictbestnotes.ElementAt(3).Key);
+                        //bestnotlettersbis[2] = bestnotletters4[3];
                     }
                 }
 
@@ -343,6 +346,15 @@ namespace ChordsAnalyser
                 // Try with best notes
                 if (bestnotletters.Count > 2)
                     lroot = GetChord(bestnotletters);
+
+                /*
+                if (lroot == null && bestnotlettersbis.Count > 2)
+                {
+                    lroot = GetChord(bestnotlettersbis);
+                    if (lroot != null)
+                        Console.WriteLine("************ best note bis succeeded");
+                }
+                */
 
                 if (lroot == null && bestnotletters4.Count == 4)                
                     lroot = GetChord(bestnotletters4);
