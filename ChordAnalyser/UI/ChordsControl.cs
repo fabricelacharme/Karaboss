@@ -419,28 +419,32 @@ namespace ChordAnalyser.UI
                     // ===============================
                     // Second part of mesure
                     // ==============================
-                    if (sequence1.Numerator % 2 == 0)
+                    //if (sequence1.Numerator % 2 == 0)
+                    //{
+                    if (ttx.Item1 != ttx.Item2)
                     {
-                        if (ttx.Item1 != ttx.Item2)
+                        ChordName = ttx.Item2;
+                        w = MeasureString(_fontChord.FontFamily, ChordName, _fontChord.Size);
+                        h = MeasureStringHeight(_fontChord.FontFamily, ChordName, _fontChord.Size);
+
+                    // Move to 2nd part of the measure
+                        int z = 0;
+                        if (sequence1.Numerator % 2 == 0)
+                            z = ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator / 2;
+                        else
+                            z = ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator / 3;
+                            
+                        // If empty, draw symbol
+                        if (ChordName == EmptyChord)
                         {
-                            ChordName = ttx.Item2;
-                            w = MeasureString(_fontChord.FontFamily, ChordName, _fontChord.Size);
-                            h = MeasureStringHeight(_fontChord.FontFamily, ChordName, _fontChord.Size);
-
-                            // Move to 2nd part of the measure
-                            int z = ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator / 2;
-
-                            // If empty, draw symbol
-                            if (ChordName == EmptyChord)
-                            {
-                                g.DrawImage(src, new Rectangle(x + Offset + z, 10, bmp.Width, bmp.Height));
-                            }
-                            else
-                            {
-                                g.DrawString(ChordName, _fontChord, ChordBrush, z + x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
-                            }
+                            g.DrawImage(src, new Rectangle(x + Offset + z, 10, bmp.Width, bmp.Height));
+                        }
+                        else
+                        {
+                            g.DrawString(ChordName, _fontChord, ChordBrush, z + x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
                         }
                     }
+                    //}
 
 
                     // Increment x (go to next measure)

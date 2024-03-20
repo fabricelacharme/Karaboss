@@ -856,6 +856,7 @@ namespace Karaboss.Lyrics
             }
 
             // Load lyrics in each beat
+            int _prevmeasure;
             for (int i = 0; i < plLyrics.Count; i++)
             {
                 beat = plLyrics[i].Beat;
@@ -869,13 +870,25 @@ namespace Karaboss.Lyrics
                     // if prev line is not on the same measure                    
                     if ( i > 0 && plLyrics[i - 1].Type == plLyric.Types.Text)
                     {
-                        int _prevmeasure = 1 + (plLyrics[i - 1].Beat - 1) / nbBeatsPerMeasure;
+                        // Measure of previous text lyrics
+                        _prevmeasure = 1 + (plLyrics[i - 1].Beat - 1) / nbBeatsPerMeasure;
                         if (_prevmeasure < _measure)
                         {
+                            // if measure of previous text lyric is before measure
                             // Last beat of prev measure
                             beat = (_measure - 1) * nbBeatsPerMeasure;
                         }
-                    }                                                            
+                    } 
+                    else if (i == 0)
+                    {
+                        // First pll is a cr => move it at the beginning of previous measure
+                        _prevmeasure = _measure -1;
+                        if (_prevmeasure > 0)
+                        {
+                            // Last beat of prevmeausre
+                            beat = (_measure - 1) * nbBeatsPerMeasure;
+                        }                        
+                    }
                 }
 
 
@@ -883,11 +896,7 @@ namespace Karaboss.Lyrics
                 {
                     diclyr[beat].Add(plLyrics[i]); 
                 }
-            }
-
-
-            
-
+            }            
 
                 // INSTRUMENTAL BEFORE THE FIRST LINE
                 // Add a linefeed to the first line
@@ -933,18 +942,22 @@ namespace Karaboss.Lyrics
                         {
                             
                             ticksoff = plLyrics[i].TicksOff;
-                            tickson = plLyrics[i + 2].TicksOn;
+                            tickson = plLyrics[i + 2].TicksOn;  // begining of next line
                             interval = tickson - ticksoff;
                             if (interval > 2 * _measurelen)
                             {
                                 beat = 1 + tickson / beatDuration;
                                 _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+
+                                int lastbeat = (_measure - 1) * nbBeatsPerMeasure;
+
                                 Console.WriteLine(string.Format("**** Instrumental before line : measure: {0} Beat: {1} **************", _measure, beat));
 
                                 // Add a linefeed at the beginning of the the next lyric
                                 pll = new plLyric();
                                 pll.Type = plLyric.Types.LineFeed;
-                                pll.Beat = beat;
+                                //pll.Beat = beat;
+                                pll.Beat = lastbeat;
                                 pll.TicksOn = beat * beatDuration;
 
                                 diclyr[pll.Beat].Insert(0, pll);
