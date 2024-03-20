@@ -443,7 +443,7 @@ namespace Karaboss.Lyrics
 
                 // In case the note is located on 2 beats, is the note more in the first one or in the second one ?
                 beatend = beat * beatDuration;
-                if (beatoff > beat && (ticksoff - beatend > 3 * (beatend - tickson)) )
+                if (beatoff > beat && (beatend - tickson < beatDuration) && (ticksoff - beatend > 1 * (beatend - tickson)) )
                 {
                     beat += 1;
                 }                                
@@ -877,6 +877,8 @@ namespace Karaboss.Lyrics
                             // if measure of previous text lyric is before measure
                             // Last beat of prev measure
                             beat = (_measure - 1) * nbBeatsPerMeasure;
+                            plLyrics[i].Beat = beat;
+                            plLyrics[i].TicksOn = beat * beatDuration;
                         }
                     } 
                     else if (i == 0)
@@ -885,15 +887,17 @@ namespace Karaboss.Lyrics
                         _prevmeasure = _measure -1;
                         if (_prevmeasure > 0)
                         {
-                            // Last beat of prevmeausre
+                            // Last beat of prevmeasure
                             beat = (_measure - 1) * nbBeatsPerMeasure;
+                            plLyrics[i].Beat = beat;
+                            plLyrics[i].TicksOn = beat * beatDuration;
                         }                        
                     }
                 }
 
 
                 if (beat < beats)
-                {
+                {                    
                     diclyr[beat].Add(plLyrics[i]); 
                 }
             }            
@@ -902,9 +906,10 @@ namespace Karaboss.Lyrics
                 // Add a linefeed to the first line
             if (plLyrics.Count > 0)
             {
-                if (plLyrics[0].Type != plLyric.Types.LineFeed && plLyrics[0].Type != plLyric.Types.Paragraph)
+                // Fist lyric is a Text
+                if (plLyrics[0].Type == plLyric.Types.Text)
                 {
-                    // Add a linefeed at the beginning of the the next lyric                    
+                    // Add a linefeed at the end of previous measure                    
                     pll = new plLyric();
                     pll.Type = plLyric.Types.LineFeed;
                     beat = plLyrics[0].Beat;                    
@@ -919,6 +924,35 @@ namespace Karaboss.Lyrics
                     pll.TicksOn = pll.Beat * beatDuration;
                     diclyr[pll.Beat].Insert(0, pll);
                     
+                }
+                else
+                {
+                    // First lyric is not a text
+                    // should be ok, but sometimes not
+                    
+                    // Kill first cr
+                    beat = plLyrics[0].Beat;
+                    diclyr[beat] = new List<plLyric>(); 
+
+                    int i = 0;
+                    while (plLyrics[i].Type != plLyric.Types.Text)
+                    {
+                        i++;
+                    }
+                    if (plLyrics[i].Type == plLyric.Types.Text)
+                    {
+                        beat = plLyrics[i].Beat;
+                        _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+                        int lastbeat = (_measure - 1) * nbBeatsPerMeasure;
+                        if (lastbeat == 0)
+                            lastbeat = 1;
+
+                        pll = new plLyric();
+                        pll.Type = plLyric.Types.LineFeed;
+                        pll.Beat = lastbeat;
+                        pll.TicksOn = pll.Beat * beatDuration;
+                        diclyr[pll.Beat].Insert(0, pll);
+                    }
                 }
             }
 
