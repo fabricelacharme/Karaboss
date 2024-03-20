@@ -846,7 +846,7 @@ namespace Karaboss.Lyrics
             int tickson;
             int beatDuration = _measurelen / nbBeatsPerMeasure;            
             int beats = (int)Math.Ceiling(_totalTicks/(float)beatDuration);
-
+            int _measure;
 
             // Create a dictionary key = beat, value = list of lyrics in this beat
             Dictionary<int, List<plLyric>> diclyr = new Dictionary<int, List<plLyric>>();            
@@ -859,14 +859,38 @@ namespace Karaboss.Lyrics
             for (int i = 0; i < plLyrics.Count; i++)
             {
                 beat = plLyrics[i].Beat;
+
+                // Set all linefeeds to start of measure?
+                // What if a line ends in the measure and the next line starts in the same measure ?
+                if (plLyrics[i].Type == plLyric.Types.LineFeed || plLyrics[i].Type == plLyric.Types.Paragraph)
+                {
+                    _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+
+                    // if prev line is not on the same measure                    
+                    if ( i > 0 && plLyrics[i - 1].Type == plLyric.Types.Text)
+                    {
+                        int _prevmeasure = 1 + (plLyrics[i - 1].Beat - 1) / nbBeatsPerMeasure;
+                        if (_prevmeasure < _measure)
+                        {
+                            // Last beat of prev measure
+                            beat = (_measure - 1) * nbBeatsPerMeasure;
+                        }
+                    }                                                            
+                }
+
+
                 if (beat < beats)
                 {
                     diclyr[beat].Add(plLyrics[i]); 
                 }
             }
-           
-            // INSTRUMENTAL BEFORE THE FIRST LINE
-            // Add a linefeed to the first line
+
+
+            
+
+
+                // INSTRUMENTAL BEFORE THE FIRST LINE
+                // Add a linefeed to the first line
             if (plLyrics.Count > 0)
             {
                 if (plLyrics[0].Type != plLyric.Types.LineFeed && plLyrics[0].Type != plLyric.Types.Paragraph)
@@ -875,13 +899,17 @@ namespace Karaboss.Lyrics
                     pll = new plLyric();
                     pll.Type = plLyric.Types.LineFeed;
                     beat = plLyrics[0].Beat;                    
-                    int measure = 1 + (beat - 1) / nbBeatsPerMeasure;
-                    int firstbeat = 1 + (measure - 1) * nbBeatsPerMeasure;
-
-                    pll.Beat = firstbeat;
+                    _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+                    
+                    int lastbeat = (_measure - 1) * nbBeatsPerMeasure;
+                    if (lastbeat == 0)
+                        lastbeat = 1;                    
+                    
+                    pll.Beat = lastbeat;
 
                     pll.TicksOn = pll.Beat * beatDuration;
                     diclyr[pll.Beat].Insert(0, pll);
+                    
                 }
             }
 
@@ -910,8 +938,8 @@ namespace Karaboss.Lyrics
                             if (interval > 2 * _measurelen)
                             {
                                 beat = 1 + tickson / beatDuration;
-                                int measure = 1 + (beat - 1) / nbBeatsPerMeasure;
-                                Console.WriteLine(string.Format("**** Instrumental before line : measure: {0} Beat: {1} **************", measure, beat));
+                                _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+                                Console.WriteLine(string.Format("**** Instrumental before line : measure: {0} Beat: {1} **************", _measure, beat));
 
                                 // Add a linefeed at the beginning of the the next lyric
                                 pll = new plLyric();
@@ -940,8 +968,8 @@ namespace Karaboss.Lyrics
                             if (interval > 2 * _measurelen)
                             {
                                 beat = 1 + ticksoff / beatDuration;
-                                int measure = 1 + (beat - 1) / nbBeatsPerMeasure;
-                                Console.WriteLine(string.Format("**** Instrumental after line : measure: {0} Beat: {1} **************", measure, beat));
+                                _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+                                Console.WriteLine(string.Format("**** Instrumental after line : measure: {0} Beat: {1} **************", _measure, beat));
 
                                 // TODO : add a linefeed to 1st time of this measure (this beat ?)
                                 // Do not forget the end of the song : no linefeed
@@ -971,8 +999,9 @@ namespace Karaboss.Lyrics
             }
 
 
-
+            // =================================================
             // Extract chords & lyrics and format in text mode
+            // =================================================
             for (int measure = 1; measure <= NbMeasures; measure++)
             {                                
                 for (int timeinmeasure = 1; timeinmeasure <= nbBeatsPerMeasure; timeinmeasure++)
@@ -995,7 +1024,7 @@ namespace Karaboss.Lyrics
                                 pll = diclyr[beat][i];
 
 
-                                // LINEFEE => STORE RESULT
+                                // LINEFEED => STORE RESULT
                                 #region Store result
                                 if (pll.Type == plLyric.Types.LineFeed || pll.Type == plLyric.Types.Paragraph)
                                 {
@@ -1250,17 +1279,7 @@ namespace Karaboss.Lyrics
             return res;
         }
       
-        private int GetFirstBeatOfMeasure(int beat)
-        {
-            int res = 0;
-            int nbBeatsPerMeasure = 4;
-            int measure = 1 + (beat - 1) / nbBeatsPerMeasure;
-
-            res = 1 + (measure - 1) * nbBeatsPerMeasure;
-
-            res = 1 + ((beat - 1) / nbBeatsPerMeasure) * nbBeatsPerMeasure;
-            return res; 
-        }
+        
 
         #endregion Display Lyrics
 
