@@ -1,8 +1,10 @@
-﻿using Sanford.Multimedia.Midi;
+﻿using MusicXml.Domain;
+using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace Karaboss.Lyrics
 {
@@ -863,6 +865,25 @@ namespace Karaboss.Lyrics
                 }
             }
            
+            // INSTRUMENTAL BEFORE THE FIRST LINE
+            // Add a linefeed to the first line
+            if (plLyrics.Count > 0)
+            {
+                if (plLyrics[0].Type != plLyric.Types.LineFeed && plLyrics[0].Type != plLyric.Types.Paragraph)
+                {
+                    // Add a linefeed at the beginning of the the next lyric                    
+                    pll = new plLyric();
+                    pll.Type = plLyric.Types.LineFeed;
+                    beat = plLyrics[0].Beat;                    
+                    int measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+                    int firstbeat = 1 + (measure - 1) * nbBeatsPerMeasure;
+
+                    pll.Beat = firstbeat;
+
+                    pll.TicksOn = pll.Beat * beatDuration;
+                    diclyr[pll.Beat].Insert(0, pll);
+                }
+            }
 
             //==========================================================
             // Check next linefeed: if next linefeed is too far, it means that there is a instrumental before next lyric
@@ -890,7 +911,7 @@ namespace Karaboss.Lyrics
                             {
                                 beat = 1 + tickson / beatDuration;
                                 int measure = 1 + (beat - 1) / nbBeatsPerMeasure;
-                                Console.WriteLine(string.Format("**** Instrumental1 : measure: {0} Beat: {1} **************", measure, beat));
+                                Console.WriteLine(string.Format("**** Instrumental before line : measure: {0} Beat: {1} **************", measure, beat));
 
                                 // Add a linefeed at the beginning of the the next lyric
                                 pll = new plLyric();
@@ -920,7 +941,7 @@ namespace Karaboss.Lyrics
                             {
                                 beat = 1 + ticksoff / beatDuration;
                                 int measure = 1 + (beat - 1) / nbBeatsPerMeasure;
-                                Console.WriteLine(string.Format("**** Instrumental2 : measure: {0} Beat: {1} **************", measure, beat));
+                                Console.WriteLine(string.Format("**** Instrumental after line : measure: {0} Beat: {1} **************", measure, beat));
 
                                 // TODO : add a linefeed to 1st time of this measure (this beat ?)
                                 // Do not forget the end of the song : no linefeed
@@ -1229,6 +1250,17 @@ namespace Karaboss.Lyrics
             return res;
         }
       
+        private int GetFirstBeatOfMeasure(int beat)
+        {
+            int res = 0;
+            int nbBeatsPerMeasure = 4;
+            int measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+
+            res = 1 + (measure - 1) * nbBeatsPerMeasure;
+
+            res = 1 + ((beat - 1) / nbBeatsPerMeasure) * nbBeatsPerMeasure;
+            return res; 
+        }
 
         #endregion Display Lyrics
 
