@@ -443,7 +443,7 @@ namespace Karaboss.Lyrics
 
                 // In case the note is located on 2 beats, is the note more in the first one or in the second one ?
                 beatend = beat * beatDuration;
-                if (beatoff > beat && (beatend - tickson < beatDuration) && (ticksoff - beatend > 1 * (beatend - tickson)) )
+                if (beatoff > beat && (beatend - tickson < 0.8 * beatDuration) && (ticksoff - beatend > 1 * (beatend - tickson)) )
                 {
                     beat += 1;
                 }                                
