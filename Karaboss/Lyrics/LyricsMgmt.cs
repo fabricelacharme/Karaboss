@@ -625,7 +625,8 @@ namespace Karaboss.Lyrics
             int nbBeatsPerMeasure = sequence1.Numerator;
             int currentbeat = 1;
             string currenttext = string.Empty;
-            int currentmeasure = 0;           
+            int currentmeasure = 0;
+            string cr = Environment.NewLine;
 
             for (int i = 0; i < plLyrics.Count; i++)
             {
@@ -647,7 +648,7 @@ namespace Karaboss.Lyrics
                         }
                         catch (Exception ex)
                         {
-                            string tx = ex.Message + "\r\n" + "Syllab :" + currenttext + "\r\n" + "Measure: " + currentmeasure;
+                            string tx = ex.Message + cr + "Syllab :" + currenttext + cr + "Measure: " + currentmeasure;
                             MessageBox.Show(tx, "Karaboss",MessageBoxButtons.OK, MessageBoxIcon.Error); 
                         }
                         currentbeat = beat;
@@ -666,7 +667,7 @@ namespace Karaboss.Lyrics
             }
             catch (Exception ex)
             {
-                string tx = ex.Message + "\r\n" + "Syllab :" + currenttext + "\r\n" + "Measure: " + currentmeasure;
+                string tx = ex.Message + cr + "Syllab :" + currenttext + cr + "Measure: " + currentmeasure;
                 MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }            
         }
@@ -686,6 +687,7 @@ namespace Karaboss.Lyrics
 
             int currenttime = 0;
             int newtime = 0;
+            string cr = Environment.NewLine;
 
             for (int i = 0; i < plLyrics.Count; i++)
             {
@@ -714,7 +716,7 @@ namespace Karaboss.Lyrics
                             }
                             catch (Exception ex)
                             {
-                                string tx = ex.Message + "\r\n" + "Line: " + line;
+                                string tx = ex.Message + cr + "Line: " + line;
                                 MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                         }
@@ -804,7 +806,7 @@ namespace Karaboss.Lyrics
             {
                 if (var.Key > pos)
                 {
-                    res += var.Value + "\r\n";
+                    res += var.Value + Environment.NewLine;
                 }
             }
             return res;
@@ -831,7 +833,7 @@ namespace Karaboss.Lyrics
         {
             // New version with all beats
             string res = string.Empty;
-            string cr = "\r\n";
+            string cr = Environment.NewLine;//"\r\n";
             int nbBeatsPerMeasure = sequence1.Numerator;
             int beat;
             string chord = string.Empty;

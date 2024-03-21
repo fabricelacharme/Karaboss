@@ -817,9 +817,16 @@ namespace Karaboss
             string cr = Environment.NewLine;
             string tx = ExtractTMidiInfos();
 
-            myLyricsMgmt.Gridchords = Gridchords;            
+            myLyricsMgmt.Gridchords = Gridchords;
 
-            tx += cr + myLyricsMgmt.DisplayWordsAndChords();
+            if (tx != "")
+            {
+                tx += cr + myLyricsMgmt.DisplayWordsAndChords();
+            }
+            else
+            {
+                tx = myLyricsMgmt.DisplayWordsAndChords();
+            }
             txtDisplayWords.Text = tx;
         }
 
@@ -1665,21 +1672,28 @@ namespace Karaboss
             // Copyright of karaoke
             for (i = 0; i < sequence1.WTag.Count; i++)
             {
-                tx += sequence1.WTag[i] + cr;
+                if (sequence1.WTag[i] != "")
+                    tx += sequence1.WTag[i] + cr;
             }
 
-            tx += cr;
+            if (tx != "")
+                tx += cr;
+
             // Song infos
             for (i = 0; i < sequence1.TTag.Count; i++)
             {
-                tx += sequence1.TTag[i] + cr;
+                if (sequence1.TTag[i] != "")
+                    tx += sequence1.TTag[i] + cr;
             }
 
-            tx += cr;
+            if (tx != "")
+                tx += cr;
+
             // Infos
             for (i = 0; i < sequence1.ITag.Count; i++)
             {
-                tx += sequence1.ITag[i] + cr;
+                if (sequence1.ITag[i] != "")
+                    tx += sequence1.ITag[i] + cr;
             }
 
             return tx;
