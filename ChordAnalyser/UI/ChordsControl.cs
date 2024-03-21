@@ -368,9 +368,13 @@ namespace ChordAnalyser.UI
         /// <param name="clip"></param>
         private void DrawNotes(Graphics g, Rectangle clip)
         {
-            SolidBrush ChordBrush = new SolidBrush(Color.Black);
-            SolidBrush MeasureBrush = new SolidBrush(Color.Red);
-            SolidBrush LyricBrush = new SolidBrush(Color.Blue);
+            //SolidBrush ChordBrush = new SolidBrush(Color.Black);
+            SolidBrush ChordBrush = new SolidBrush(Color.FromArgb(29,29,29));
+            //SolidBrush MeasureBrush = new SolidBrush(Color.Red);
+            SolidBrush MeasureBrush = new SolidBrush(Color.FromArgb(238,17,17));
+            //SolidBrush LyricBrush = new SolidBrush(Color.Blue);
+            //SolidBrush LyricBrush = new SolidBrush(Color.FromArgb(43,87,151));
+            SolidBrush LyricBrush = new SolidBrush(Color.FromArgb(45, 137, 239));
 
             //Font _fontChord = new Font("Arial", 40 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontMeasure = new Font("Arial", 14 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);

@@ -32,6 +32,7 @@
 
 #endregion
 using ChordAnalyser.UI;
+using Karaboss.Display;
 using Karaboss.Lrc.SharedFramework;
 using Karaboss.Lyrics;
 using Sanford.Multimedia.Midi;
@@ -95,16 +96,12 @@ namespace Karaboss
         private Panel pnlDisplayHorz;       // chords in horizontal mode
         private Panel pnlBottom;
 
-        private Label lblStatus;
-        private Label lblNumMeasure;
-        private Label lblElapsed;
-        private Label lblPercent;
-        private Label lblBeat;
+        private PanelPlayer panelPlayer;
+       
+        //private Label lblNumMeasure;
         private Label lblLyrics;
         private Label lblOtherLyrics;
-        private Label lblDuration;
         
-
 
         // 2 nd TAB 
         private ChordsMapControl ChordMapControl1;
@@ -241,107 +238,40 @@ namespace Karaboss
             btnPlay.MouseLeave += new EventHandler(btnPlay_MouseLeave);
             pnlToolbar.Controls.Add(btnPlay);
 
+            #region PanelPlay
+
+            panelPlayer = new PanelPlayer();
+            panelPlayer.Parent = pnlToolbar;
+            panelPlayer.Location = new Point(30 + btnPlay.Left + btnPlay.Width, 5);
+            pnlToolbar.Controls.Add(panelPlayer);
+
+            #endregion PanelPlay
+
+
+            #region zoom
 
             btnZoomPlus = new NoSelectButton();
             btnZoomPlus.Parent = pnlToolbar;
-            btnZoomPlus.Location = new Point(30 + btnPlay.Left + btnPlay.Width, 2);
+            btnZoomPlus.Image = Karaboss.Properties.Resources.magnifyplus24;
+            btnZoomPlus.UseVisualStyleBackColor = true;
+            btnZoomPlus.Location = new Point(34 + panelPlayer.Left + panelPlayer.Width, 2);
             btnZoomPlus.Size = new Size(50, 50);
-            btnZoomPlus.Text = "+";
+            btnZoomPlus.Text = "";
             btnZoomPlus.Click += new EventHandler(btnZoomPlus_Click);
             pnlToolbar.Controls.Add(btnZoomPlus);
 
             btnZoomMinus = new NoSelectButton();
             btnZoomMinus.Parent = pnlToolbar;
+            btnZoomMinus.Image = Karaboss.Properties.Resources.magnifyminus24; 
+            btnZoomMinus.UseVisualStyleBackColor = true;
             btnZoomMinus.Location = new Point(2 + btnZoomPlus.Left + btnZoomPlus.Width, 2);
             btnZoomMinus.Size = new Size(50, 50);
             btnZoomMinus.Text = "-";
             btnZoomMinus.Click += new EventHandler(btnZoomMinus_Click);
             pnlToolbar.Controls.Add(btnZoomMinus);
 
-
-            
-
-            pnlDisplay = new Panel();
-            pnlDisplay.BackColor = Color.Black;
-            pnlDisplay.Size = new Size(200, 45);
-            pnlDisplay.Location = new Point(30 + btnZoomMinus.Left + btnZoomMinus.Width, 5);
-            pnlDisplay.BorderStyle = BorderStyle.FixedSingle;
-            pnlDisplay.Parent = pnlToolbar;
-            pnlToolbar.Controls.Add(pnlDisplay);
-
-            lblStatus = new Label();
-            lblStatus.Location = new Point(1, 2);
-            lblStatus.Font = new Font("Consolas", 12, FontStyle.Regular, GraphicsUnit.Point);
-            lblStatus.AutoSize = false;
-            lblStatus.Size = new Size(80, 19);
-            lblStatus.Text = "Stopped";
-            lblStatus.TextAlign = ContentAlignment.MiddleLeft;
-            lblStatus.ForeColor = Color.Red;    
-            lblStatus.BackColor = Color.Transparent;
-            lblStatus.Parent = pnlDisplay;
-            pnlDisplay.Controls.Add(lblStatus);
-
-
-            lblElapsed = new Label();
-            lblElapsed.Location = new Point(1, 22);
-            lblElapsed.AutoSize = false; ;
-            lblElapsed.ForeColor = Color.White;
-            lblElapsed.BackColor = Color.Transparent;
-            lblElapsed.Font = new Font("Consolas", 12, FontStyle.Regular, GraphicsUnit.Point);
-            lblElapsed.Text = "00:00";
-            lblElapsed.Size = new Size(60, 19);
-            lblElapsed.TextAlign = ContentAlignment.MiddleLeft;
-            lblElapsed.Parent = pnlDisplay;
-            pnlDisplay.Controls.Add(lblElapsed);
-
-
-            lblBeat = new Label();
-            lblBeat.BackColor = Color.Transparent;
-            lblBeat.AutoSize = false; 
-            lblBeat.Location = new Point(142, 2);
-            lblBeat.Size = new Size(60, 19);
-            lblBeat.Font = new Font("Consolas", 12, FontStyle.Regular, GraphicsUnit.Point);
-            lblBeat.TextAlign = ContentAlignment.MiddleLeft;
-            lblBeat.Text = "15|16";
-            lblBeat.ForeColor = Color.PaleGreen;
-            lblBeat.Parent = pnlDisplay;
-            pnlDisplay.Controls.Add(lblBeat);
-
-
-            lblPercent = new Label();            
-            lblPercent.Location = new Point(94, 26);
-            lblPercent.AutoSize = true;            
-            lblPercent.ForeColor = Color.White;
-            lblPercent.BackColor = Color.Transparent;
-            lblPercent.Font = new Font("Consolas", 8, FontStyle.Regular, GraphicsUnit.Point);
-            lblPercent.Size = new Size(19, 13);                                    
-            lblPercent.Text = "0%";
-            lblPercent.TextAlign = ContentAlignment.TopLeft;
-            lblPercent.Parent = pnlDisplay;
-            pnlDisplay.Controls.Add(lblPercent);
-
-            lblDuration = new Label();
-            lblDuration.AutoSize = false;
-            lblDuration.BackColor = Color.Transparent;
-            lblDuration.ForeColor = Color.White;
-            lblDuration.Font = new Font("Consolas", 12, FontStyle.Regular, GraphicsUnit.Point);
-            lblDuration.Text = "00:00";
-            lblDuration.Location = new Point(142, 22);
-            lblDuration.Size = new Size(60, 19);
-            lblDuration.TextAlign = ContentAlignment.MiddleLeft;
-            lblDuration.Parent = pnlDisplay;
-            pnlDisplay.Controls.Add(lblDuration);
-
-
-            lblNumMeasure = new Label();
-            lblNumMeasure.Location = new Point(50 + pnlDisplay.Left + pnlDisplay.Width, 21);
-            lblNumMeasure.Text = "measure";
-            lblNumMeasure.ForeColor = Color.White;
-            lblNumMeasure.Parent = pnlToolbar;
-            pnlToolbar.Controls.Add(lblNumMeasure);
-
-
-
+            #endregion zoom
+                       
 
             #endregion Toolbar
 
@@ -412,18 +342,16 @@ namespace Karaboss
             pnlBottom = new Panel();
             pnlBottom.Parent = this.tabPageDiagrams;
             pnlBottom.Location = new Point(tabPageDiagrams.Margin.Left, pnlDisplayHorz.Top + pnlDisplayHorz.Height);
-            //pnlBottom.Size = new Size(tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height);
             pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height;
             pnlBottom.BackColor = Color.White;
-            pnlBottom.Dock = DockStyle.Bottom;
-            //pnlBottom.Dock = DockStyle.Fill;
+            pnlBottom.Dock = DockStyle.Bottom;            
             tabPageDiagrams.Controls.Add(pnlBottom);
 
 
             lblLyrics = new Label();
             lblLyrics.Parent = pnlBottom;
             lblLyrics.Location = new Point(0, 0);
-            
+            lblLyrics.BackColor = Color.FromArgb(239, 244, 255);
             lblLyrics.AutoSize = false;            
             Font fontLyrics = new Font("Arial", 32, FontStyle.Regular, GraphicsUnit.Pixel);
             lblLyrics.Height =fontLyrics.Height + 20;
@@ -439,7 +367,8 @@ namespace Karaboss
             lblOtherLyrics.Parent = pnlBottom;
             lblOtherLyrics.Location = new Point(0, lblLyrics.Height);
             lblOtherLyrics.Size = new Size(pnlBottom.Width, pnlBottom.Height - lblLyrics.Height);
-            lblOtherLyrics.BackColor = Color.YellowGreen;
+            //lblOtherLyrics.BackColor = Color.YellowGreen; 
+            lblOtherLyrics.BackColor = Color.FromArgb(0, 163, 0);
             lblOtherLyrics.AutoSize = false;                      
             lblOtherLyrics.Font = fontLyrics;
             lblOtherLyrics.TextAlign = ContentAlignment.TopCenter;
@@ -459,8 +388,6 @@ namespace Karaboss
             pnlDisplayMap = new Panel();
             pnlDisplayMap.Parent = tabPageOverview;
             pnlDisplayMap.Location = new Point(tabPageOverview.Margin.Left, tabPageOverview.Margin.Top);
-            //pnlDisplayMap.Size = new Size(tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right, tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom);
-            //pnlDisplayMap.Dock = DockStyle.Fill;
             pnlDisplayMap.BackColor = Color.White;
             pnlDisplayMap.AutoScroll = true;            
             tabPageOverview.Controls.Add(pnlDisplayMap);
@@ -635,8 +562,10 @@ namespace Karaboss
 
 
             // Labels
-            lblBeat.Text = timeinmeasure.ToString() + "|" + sequence1.Numerator;
-            lblNumMeasure.Text = "Measure: " + curmeasure;
+            //lblBeat.Text = timeinmeasure.ToString() + "|" + sequence1.Numerator;
+            panelPlayer.DisplayBeat(timeinmeasure.ToString() + "|" + sequence1.Numerator);
+                
+            //lblNumMeasure.Text = "Measure: " + curmeasure;
 
             // change time in measure => draw cell in control
             if (timeinmeasure != _currentTimeInMeasure)
@@ -713,8 +642,11 @@ namespace Karaboss
             // Display
             int Min = (int)(_duration / 60);
             int Sec = (int)(_duration - (Min * 60));
-            lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
-            lblBeat.Text = "1|" + sequence1.Numerator;
+            //lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
+            //lblBeat.Text = "1|" + sequence1.Numerator;
+
+            panelPlayer.DisplayDuration(string.Format("{0:00}:{1:00}", Min, Sec));
+            panelPlayer.DisplayBeat("1|" + sequence1.Numerator);
         }
 
         /// <summary>
@@ -1443,8 +1375,9 @@ namespace Karaboss
                     btnPlay.Enabled = true;  // to allow pause
                     //btnStop.Enabled = true;  // to allow stop 
                     
-                    lblStatus.Text = "Playing";
-                    lblStatus.ForeColor = Color.LightGreen;
+                    //lblStatus.Text = "Playing";
+                    //lblStatus.ForeColor = Color.LightGreen;
+                    panelPlayer.DisplayStatus("Playing");
                     break;
 
                 case PlayerStates.Paused:
@@ -1452,8 +1385,9 @@ namespace Karaboss
                     btnPlay.Enabled = true;  // to allow play
                     //btnStop.Enabled = true;  // to allow stop
 
-                    lblStatus.Text = "Paused";
-                    lblStatus.ForeColor = Color.Yellow;
+                    //lblStatus.Text = "Paused";
+                    //lblStatus.ForeColor = Color.Yellow;
+                    panelPlayer.DisplayStatus("Paused");
                     break;
 
                 case PlayerStates.Stopped:
@@ -1468,8 +1402,9 @@ namespace Karaboss
                         //btnStop.Enabled = true;   // to enable real stop because stop point not at the beginning of the song 
                     }
 
-                    lblStatus.Text = "Stopped";
-                    lblStatus.ForeColor = Color.Red;
+                    //lblStatus.Text = "Stopped";
+                    //lblStatus.ForeColor = Color.Red;
+                    panelPlayer.DisplayStatus("Stopped");
                     break;
 
                 default:
@@ -1528,7 +1463,8 @@ namespace Karaboss
             {
                 DisplayTimeElapse(0);
                 DisplayPositionHScrollBar(0);
-                lblBeat.Text = "1|" + sequence1.Numerator;
+                //lblBeat.Text = "1|" + sequence1.Numerator;
+                panelPlayer.DisplayBeat("1|" + sequence1.Numerator);
 
                 _currentMeasure = -1;
                 _currentTimeInMeasure = -1;
@@ -1560,12 +1496,14 @@ namespace Karaboss
         private void DisplayTimeElapse(int pos)
         {
             double dpercent = 100 * pos / (double)_totalTicks;
-            lblPercent.Text = string.Format("{0}%", (int)dpercent);
+            //lblPercent.Text = string.Format("{0}%", (int)dpercent);
+            panelPlayer.DisplayPercent(string.Format("{0}%", (int)dpercent));
 
             double maintenant = (dpercent * _duration) / 100;  //seconds
             int Min = (int)(maintenant / 60);
             int Sec = (int)(maintenant - (Min * 60));
-            lblElapsed.Text = string.Format("{0:00}:{1:00}", Min, Sec);
+            //lblElapsed.Text = string.Format("{0:00}:{1:00}", Min, Sec);
+            panelPlayer.displayElapsed(string.Format("{0:00}:{1:00}", Min, Sec));
         }
 
 
