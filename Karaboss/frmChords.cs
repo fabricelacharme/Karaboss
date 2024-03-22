@@ -1607,11 +1607,13 @@ namespace Karaboss
                     for (int page = 1; page <= numpages; page++)
                     {
 
-                        Bitmap MemoryImage = new Bitmap(PageWidth + 40, PageHeight + 40);
-                        System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, PageWidth + 40, PageHeight + 40);
+                        Bitmap MemoryImage = new Bitmap(PageWidth + 40,PageHeight + 40);
+                        System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, h, PageWidth + 40, PageHeight + 40);
                         pnlDisplayMap.DrawToBitmap(MemoryImage, new System.Drawing.Rectangle(0, h, width, height));
-                        
-                        
+
+                        //Graphics g = Graphics.FromImage(MemoryImage);
+
+
                         pdfdocument.AddImage(MemoryImage);
                         //g.Dispose();
                         MemoryImage.Dispose();
