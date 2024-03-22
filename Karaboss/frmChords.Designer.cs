@@ -42,6 +42,8 @@
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpAboutSong = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFilePrintPDF = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileSep = new System.Windows.Forms.ToolStripSeparator();
             this.tabChordsControl.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -93,6 +95,8 @@
             // 
             this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFilePrint,
+            this.mnuFilePrintPDF,
+            this.mnuFileSep,
             this.mnuFileQuit});
             this.mnuFile.Name = "mnuFile";
             resources.ApplyResources(this.mnuFile, "mnuFile");
@@ -133,6 +137,17 @@
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             resources.ApplyResources(this.aboutToolStripMenuItem, "aboutToolStripMenuItem");
             // 
+            // mnuFilePrintPDF
+            // 
+            this.mnuFilePrintPDF.Name = "mnuFilePrintPDF";
+            resources.ApplyResources(this.mnuFilePrintPDF, "mnuFilePrintPDF");
+            this.mnuFilePrintPDF.Click += new System.EventHandler(this.mnuFilePrintPDF_Click);
+            // 
+            // mnuFileSep
+            // 
+            this.mnuFileSep.Name = "mnuFileSep";
+            resources.ApplyResources(this.mnuFileSep, "mnuFileSep");
+            // 
             // frmChords
             // 
             resources.ApplyResources(this, "$this");
@@ -168,5 +183,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
         private System.Windows.Forms.ToolStripMenuItem mnuHelpAboutSong;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mnuFilePrintPDF;
+        private System.Windows.Forms.ToolStripSeparator mnuFileSep;
     }
 }

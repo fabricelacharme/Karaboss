@@ -190,6 +190,9 @@ public class PDFWithImages {
     private List<PDFObject> pdfobjects;  /* The PDF objects */
     private long startxref;              /* The start offset of the XRef (cross-reference) table */
 
+        private int docwidth = 1680;//840;
+        private int docheight = 1090;//4000; //2180;//1090;
+
     public PDFWithImages(Stream stream, string title, int numpages) {
         this.stream = stream;
         this.title = title;
@@ -298,7 +301,7 @@ public class PDFWithImages {
         page.StringPairs = "<< /Type /Page /Parent " + pagetree.RefString + 
                            " /Resources " + pageResource.RefString + 
                            " /Contents " + pageContent.RefString + 
-                           " /MediaBox [0 0 840 1090] >>";
+                           " /MediaBox [0 0 " + docwidth + " " + docheight +"] >>";
 
         pageResource.StringPairs = "<< /ProcSet [ /PDF /ImageB /ImageC /ImageI ] /XObject << /Im1 " + pageXObject.RefString + " >> >>";
 
@@ -318,8 +321,9 @@ public class PDFWithImages {
     /** Create the page tree object, which contains references to all the page objects */
     void initPageTreeValue() {
         PDFObject pagetree = getPDFObject(PDFType.PDFTypePageTree);
-        string pageTreeValue = "<< /Type /Pages /MediaBox [0 0 840 1090] /Count " + numpages.ToString() + " /Kids [ ";
-        foreach (PDFObject obj in pdfobjects) {
+            string pageTreeValue = "<< /Type /Pages /MediaBox [0 0 " + docwidth + " " + docheight + "] /Count " + numpages.ToString() + " /Kids [ ";
+            //string pageTreeValue = "<< /Type /Pages /MediaBox [0 0 " + 200 + " " + 200 + "] /Count " + numpages.ToString() + " /Kids [ ";
+            foreach (PDFObject obj in pdfobjects) {
             if (obj.PDFType == PDFType.PDFTypePage) {
                 pageTreeValue += obj.RefString + " ";
             }

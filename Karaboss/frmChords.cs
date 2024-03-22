@@ -36,6 +36,7 @@ using Karaboss.Display;
 using Karaboss.Lrc.SharedFramework;
 using Karaboss.Lyrics;
 using Sanford.Multimedia.Midi;
+using Sanford.Multimedia.Midi.Score;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -43,6 +44,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Karaboss
 {
@@ -1531,6 +1533,113 @@ namespace Karaboss
 
         }
 
+        /// <summary>
+        /// Print pnlDisplayMap to PDF
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuFilePrintPDF_Click(object sender, EventArgs e)
+        {
+            string message = string.Empty;
+            const int PageWidth = 800;    /** The width of each page */
+            const int PageHeight = 1050;  /** The height of each page (when printing) */
+
+        String CurrentPath = MIDIfileFullPath;
+            string initname = Path.GetFileName(CurrentPath);
+
+            initname = initname.Replace(".mid", "");
+            initname = initname.Replace(".kar", "");
+            initname += ".pdf";
+
+
+            int width = pnlDisplayMap.Width;
+            int height = pnlDisplayMap.Height;
+            
+            
+
+            SaveFileDialog dialog = new SaveFileDialog()
+            {
+                ShowHelp = true,
+                CreatePrompt = false,
+                OverwritePrompt = true,
+                DefaultExt = "pdf",
+                Filter = "PDF Document (*.pdf)|*.pdf",
+            };
+
+            dialog.FileName = initname;
+            int numpages = (int)Math.Ceiling(height/(float)PageHeight);
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                // Create a dialog with a progress bar 
+                Form progressDialog = new Form()
+                {
+                    Text = "Generating PDF Document...",
+                    BackColor = Color.White,
+                    Size = new Size(400, 80),
+                };
+
+                ProgressBar progressBar = new ProgressBar()
+                {
+                    Parent = progressDialog,
+                    Size = new Size(300, 20),
+                    Location = new Point(10, 10),
+                    Minimum = 1,
+                    Maximum = numpages + 2,
+                    Value = 2,
+                    Step = 1,
+                };
+
+                progressDialog.Show();
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(500);
+
+
+                string filename = dialog.FileName;
+                try
+                {
+                    FileStream stream = new FileStream(filename, FileMode.Create);
+                    string title = Path.GetFileName(filename);
+
+                    Karaboss.PDFWithImages pdfdocument = new PDFWithImages(stream, title, numpages);
+                    
+                    int h = 0;
+                    for (int page = 1; page <= numpages; page++)
+                    {
+
+                        Bitmap MemoryImage = new Bitmap(PageWidth + 40, PageHeight + 40);
+                        System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, PageWidth + 40, PageHeight + 40);
+                        pnlDisplayMap.DrawToBitmap(MemoryImage, new System.Drawing.Rectangle(0, h, width, height));
+                        
+                        
+                        pdfdocument.AddImage(MemoryImage);
+                        //g.Dispose();
+                        MemoryImage.Dispose();
+                        progressBar.PerformStep();
+                        Application.DoEvents();
+
+                        h += PageHeight + 40;
+                    }
+                    pdfdocument.Save();
+                    stream.Close();
+                    System.Threading.Thread.Sleep(500);
+                }
+                catch (System.IO.IOException ep)
+                {
+                    message = "";
+                    message += "Karaboss was unable to save to file " + filename;
+                    message += " because:\n" + ep.Message + "\n";
+
+                    MessageBox.Show(message, "Error Saving File",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                }
+                progressDialog.Dispose();
+            }
+
+
+        }
+
         private void mnuFileQuit_Click(object sender, EventArgs e)
         {
             Close();
@@ -1636,10 +1745,11 @@ namespace Karaboss
 
             return tx;
         }
+
         #endregion mnu Help
 
         #endregion menus
 
-
+        
     }
 }
