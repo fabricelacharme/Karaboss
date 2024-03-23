@@ -46,9 +46,7 @@
             this.mnuHelpAboutSong = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.button1 = new System.Windows.Forms.Button();
             this.tabChordsControl.SuspendLayout();
-            this.pnlToolbar.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -83,7 +81,6 @@
             // pnlToolbar
             // 
             this.pnlToolbar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.pnlToolbar.Controls.Add(this.button1);
             resources.ApplyResources(this.pnlToolbar, "pnlToolbar");
             this.pnlToolbar.Name = "pnlToolbar";
             // 
@@ -154,13 +151,6 @@
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             resources.ApplyResources(this.aboutToolStripMenuItem, "aboutToolStripMenuItem");
             // 
-            // button1
-            // 
-            resources.ApplyResources(this.button1, "button1");
-            this.button1.Name = "button1";
-            this.toolTip1.SetToolTip(this.button1, resources.GetString("button1.ToolTip"));
-            this.button1.UseVisualStyleBackColor = true;
-            // 
             // frmChords
             // 
             resources.ApplyResources(this, "$this");
@@ -174,7 +164,6 @@
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmChords_KeyUp);
             this.Resize += new System.EventHandler(this.frmChords_Resize);
             this.tabChordsControl.ResumeLayout(false);
-            this.pnlToolbar.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -200,6 +189,5 @@
         private System.Windows.Forms.ToolStripMenuItem mnuFilePrintPDF;
         private System.Windows.Forms.ToolStripSeparator mnuFileSep;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Button button1;
     }
 }
