@@ -165,7 +165,10 @@ namespace ChordAnalyser.UI
             get
             { return _zoom; }
             set
-            {                
+            {
+                if (value <= 0.0f)
+                    return;
+
                 _zoom = value;                
 
                 _cellwidth = _columnwidth * zoom;

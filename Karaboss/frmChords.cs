@@ -32,18 +32,22 @@
 
 #endregion
 using ChordAnalyser.UI;
+using FlShell.Interop;
 using Karaboss.Display;
 using Karaboss.Lrc.SharedFramework;
 using Karaboss.Lyrics;
+using Karaboss.Properties;
 using Sanford.Multimedia.Midi;
 using Sanford.Multimedia.Midi.Score;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Karaboss
@@ -86,10 +90,15 @@ namespace Karaboss
         private Sequencer sequencer1 = new Sequencer();
 
         private System.Windows.Forms.Timer timer1;
-        private Karaboss.NoSelectButton btnPlay;
-        private Karaboss.NoSelectButton btnRewind;
-        private Karaboss.NoSelectButton btnZoomPlus;
-        private Karaboss.NoSelectButton btnZoomMinus;
+        private NoSelectButton btnPlay;
+        private NoSelectButton btnRewind;
+
+        private NoSelectButton btnZoomPlus;
+        private NoSelectButton btnZoomMinus;
+
+        private NoSelectButton btnPrintTXT;
+        private NoSelectButton btnPrintPDF;
+
 
         // 1 rst TAB
         private ColorSlider.ColorSlider positionHScrollBar;
@@ -111,7 +120,7 @@ namespace Karaboss
 
         // 3 rd TAB
         private Panel pnlDisplayWords;
-        private TextBox txtDisplayWords;
+        private System.Windows.Forms.TextBox txtDisplayWords;
         
 
         #endregion controls
@@ -255,11 +264,13 @@ namespace Karaboss
             btnZoomPlus = new NoSelectButton();
             btnZoomPlus.Parent = pnlToolbar;
             btnZoomPlus.Image = Karaboss.Properties.Resources.magnifyplus24;
+            toolTip1.SetToolTip(btnZoomPlus, "100%");
             btnZoomPlus.UseVisualStyleBackColor = true;
             btnZoomPlus.Location = new Point(34 + panelPlayer.Left + panelPlayer.Width, 2);
             btnZoomPlus.Size = new Size(50, 50);
-            btnZoomPlus.Text = "";
+            btnZoomPlus.Text = "";            
             btnZoomPlus.Click += new EventHandler(btnZoomPlus_Click);
+            
             pnlToolbar.Controls.Add(btnZoomPlus);
 
             btnZoomMinus = new NoSelectButton();
@@ -268,12 +279,34 @@ namespace Karaboss
             btnZoomMinus.UseVisualStyleBackColor = true;
             btnZoomMinus.Location = new Point(2 + btnZoomPlus.Left + btnZoomPlus.Width, 2);
             btnZoomMinus.Size = new Size(50, 50);
-            btnZoomMinus.Text = "-";
+            btnZoomMinus.Text = "";
             btnZoomMinus.Click += new EventHandler(btnZoomMinus_Click);
             pnlToolbar.Controls.Add(btnZoomMinus);
 
             #endregion zoom
-                       
+            
+            btnPrintPDF = new NoSelectButton();
+            btnPrintPDF.Parent = pnlToolbar;
+            btnPrintPDF.Image = Properties.Resources.Apps_Pdf_icon;
+            btnPrintPDF.UseVisualStyleBackColor = true;
+            btnPrintPDF.Location = new Point(2 + btnZoomMinus.Left + btnZoomMinus.Width);
+            btnPrintPDF.Size = new Size(50, 50);
+            btnPrintPDF.Text = "";
+            btnPrintPDF.Click += new EventHandler(btnPrintPDF_Click);
+            btnPrintPDF.Visible = false;
+            pnlToolbar.Controls.Add((btnPrintPDF));
+
+            btnPrintTXT = new NoSelectButton();
+            btnPrintTXT.Parent = pnlToolbar;
+            btnPrintTXT.Image = Properties.Resources.table_multiple;
+            btnPrintTXT.UseVisualStyleBackColor = true;
+            btnPrintTXT.Location = new Point(2 + btnPrintPDF.Left + btnPrintPDF.Width);
+            btnPrintTXT.Size = new Size(50, 50);
+            btnPrintTXT.Text = "";
+            btnPrintTXT.Click += new EventHandler(btnPrintTXT_Click);
+            btnPrintTXT.Visible = false;
+            pnlToolbar.Controls.Add((btnPrintTXT));
+
 
             #endregion Toolbar
 
@@ -390,6 +423,7 @@ namespace Karaboss
             pnlDisplayMap = new Panel();
             pnlDisplayMap.Parent = tabPageOverview;
             pnlDisplayMap.Location = new Point(tabPageOverview.Margin.Left, tabPageOverview.Margin.Top);
+            pnlDisplayMap.Size = new Size(tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right, tabPageOverview.Height -  tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom);    
             pnlDisplayMap.BackColor = Color.White;
             pnlDisplayMap.AutoScroll = true;            
             tabPageOverview.Controls.Add(pnlDisplayMap);
@@ -400,6 +434,8 @@ namespace Karaboss
             ChordMapControl1 = new ChordsMapControl();
             ChordMapControl1.Parent = pnlDisplayMap;
             ChordMapControl1.Location = new Point(0, 0);            
+            
+
             ChordMapControl1.WidthChanged += new MapWidthChangedEventHandler(ChordMapControl1_WidthChanged);
             ChordMapControl1.HeightChanged += new MapHeightChangedEventHandler(ChordMapControl1_HeightChanged);            
             ChordMapControl1.MouseDown += new MouseEventHandler(ChordMapControl1_MouseDown);
@@ -409,6 +445,8 @@ namespace Karaboss
 
             ChordMapControl1.Cursor = Cursors.Hand;
             ChordMapControl1.Sequence1 = this.sequence1;
+            ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
+            pnlDisplayMap.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
             pnlDisplayMap.Controls.Add(ChordMapControl1);
             #endregion ChordMapControl
 
@@ -425,7 +463,7 @@ namespace Karaboss
             tabPageEdit.Controls.Add(pnlDisplayWords);
 
             Font fontWords = new Font("Courier New", 22, FontStyle.Regular, GraphicsUnit.Pixel);
-            txtDisplayWords = new TextBox();
+            txtDisplayWords = new System.Windows.Forms.TextBox();
             txtDisplayWords.Parent = pnlDisplayWords;
             txtDisplayWords.Location = new Point(0, 0);
             txtDisplayWords.Multiline = true;
@@ -441,6 +479,10 @@ namespace Karaboss
             #endregion 3eme TAB
 
         }
+
+       
+
+
 
         #endregion Display Controls       
 
@@ -804,14 +846,36 @@ namespace Karaboss
 
         private void btnZoomMinus_Click(object sender, EventArgs e)
         {
-            ChordControl1.zoom -= (float)0.1;
-            ChordMapControl1.zoom -= (float)0.1;
+            float zoom = ChordControl1.zoom;
+            zoom -= (float)0.1;
+
+            ChordControl1.zoom = zoom; //-= (float)0.1;
+            ChordMapControl1.zoom = zoom; // -= (float)0.1;
+
+            toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+            toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
         }
 
         private void btnZoomPlus_Click(object sender, EventArgs e)
         {
-            ChordControl1.zoom += (float)0.1;
-            ChordMapControl1.zoom += (float)0.1;
+            float zoom = ChordControl1.zoom;
+            zoom += (float)0.1;
+
+            ChordControl1.zoom = zoom; //+= (float)0.1;
+            ChordMapControl1.zoom = zoom; // += (float)0.1;
+
+            toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+            toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+        }
+
+        private void btnPrintPDF_Click(object sender, EventArgs e)
+        {
+            PrintPDF(); 
+        }
+
+        private void btnPrintTXT_Click(object sender, EventArgs e)
+        {
+            PrintText();
         }
 
         #endregion buttons
@@ -834,11 +898,9 @@ namespace Karaboss
         private void ChordMapControl1_HeightChanged(object sender, int value)
         {            
             if (pnlDisplayMap != null)
-            {
-                //Console.WriteLine(pnlDisplayMap.Width.ToString());
-                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
-                //pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
-                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
+            {                
+                //pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
+                pnlDisplayMap.Height = ChordMapControl1.Height; //tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
             }
 
         }
@@ -846,11 +908,10 @@ namespace Karaboss
         private void ChordMapControl1_WidthChanged(object sender, int value)
         {            
             if (pnlDisplayMap != null)
-            {
-                //Console.WriteLine(pnlDisplayMap.Width.ToString());
-                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
-                //pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom - 50;
-                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
+            {                
+                //pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
+                pnlDisplayMap.Width = ChordMapControl1.Width;
+                //pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
             }
         }
 
@@ -907,6 +968,7 @@ namespace Karaboss
                 _currentLine = curline;
                 int HauteurCellule = (int)(ChordMapControl1.ColumnHeight) + 1;
 
+                /*
                 // if control is higher then the panel => scroll
                 if (ChordMapControl1.maxStaffHeight > pnlDisplayMap.Height)
                 {
@@ -919,6 +981,8 @@ namespace Karaboss
                     if (pnlDisplayMap.VerticalScroll.Visible && pnlDisplayMap.VerticalScroll.Minimum <= offset && offset <= pnlDisplayMap.VerticalScroll.Maximum)
                         pnlDisplayMap.VerticalScroll.Value = HauteurCellule * (curline - 2);
                 }
+                */
+
             }
         }
 
@@ -1159,8 +1223,8 @@ namespace Karaboss
             // 2nd TAB
             if (pnlDisplayMap != null)
             {
-                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;                
-                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
+                //pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;                
+                //pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
             }
 
 
@@ -1515,6 +1579,11 @@ namespace Karaboss
         #region menus
 
         #region mnu file
+        /// <summary>
+        /// Print text
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuFilePrint_Click(object sender, EventArgs e)
         {
             String tx = txtDisplayWords.Text;
@@ -1540,109 +1609,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void mnuFilePrintPDF_Click(object sender, EventArgs e)
         {
-            string message = string.Empty;
-            const int PageWidth = 800;    /** The width of each page */
-            const int PageHeight = 1050;  /** The height of each page (when printing) */
-
-        String CurrentPath = MIDIfileFullPath;
-            string initname = Path.GetFileName(CurrentPath);
-
-            initname = initname.Replace(".mid", "");
-            initname = initname.Replace(".kar", "");
-            initname += ".pdf";
-
-
-            int width = pnlDisplayMap.Width;
-            int height = pnlDisplayMap.Height;
-            
-            
-
-            SaveFileDialog dialog = new SaveFileDialog()
-            {
-                ShowHelp = true,
-                CreatePrompt = false,
-                OverwritePrompt = true,
-                DefaultExt = "pdf",
-                Filter = "PDF Document (*.pdf)|*.pdf",
-            };
-
-            dialog.FileName = initname;
-            int numpages = (int)Math.Ceiling(height/(float)PageHeight);
-
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                // Create a dialog with a progress bar 
-                Form progressDialog = new Form()
-                {
-                    Text = "Generating PDF Document...",
-                    BackColor = Color.White,
-                    Size = new Size(400, 80),
-                };
-
-                ProgressBar progressBar = new ProgressBar()
-                {
-                    Parent = progressDialog,
-                    Size = new Size(300, 20),
-                    Location = new Point(10, 10),
-                    Minimum = 1,
-                    Maximum = numpages + 2,
-                    Value = 2,
-                    Step = 1,
-                };
-
-                progressDialog.Show();
-                Application.DoEvents();
-                System.Threading.Thread.Sleep(500);
-
-
-                string filename = dialog.FileName;
-                try
-                {
-                    FileStream stream = new FileStream(filename, FileMode.Create);
-                    string title = Path.GetFileName(filename);
-
-                    Karaboss.PDFWithImages pdfdocument = new PDFWithImages(stream, title, numpages);
-                    
-                    pdfdocument.DocWidth = width;
-                    pdfdocument.DocHeight = height;
-
-                    int h = 0;
-                    for (int page = 1; page <= numpages; page++)
-                    {
-
-                        Bitmap MemoryImage = new Bitmap(width + 40,height + 40);
-                        System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, width + 40, height + 40);
-                        pnlDisplayMap.DrawToBitmap(MemoryImage, new System.Drawing.Rectangle(0, 0, width + 40, height + 40));
-
-                        //Graphics g = Graphics.FromImage(MemoryImage);
-
-
-                        pdfdocument.AddImage(MemoryImage);
-                        //g.Dispose();
-                        MemoryImage.Dispose();
-                        progressBar.PerformStep();
-                        Application.DoEvents();
-
-                        //h += PageHeight + 40;
-                    }
-                    pdfdocument.Save();
-                    stream.Close();
-                    System.Threading.Thread.Sleep(500);
-                }
-                catch (System.IO.IOException ep)
-                {
-                    message = "";
-                    message += "Karaboss was unable to save to file " + filename;
-                    message += " because:\n" + ep.Message + "\n";
-
-                    MessageBox.Show(message, "Error Saving File",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                }
-                progressDialog.Dispose();
-            }
-
-
+            PrintPDF();
         }
 
         private void mnuFileQuit_Click(object sender, EventArgs e)
@@ -1755,6 +1722,177 @@ namespace Karaboss
 
         #endregion menus
 
+
+        #region print pdf
+
+        /// <summary>
+        /// Print text file
+        /// </summary>
+        private void PrintText()
+        {
+            String tx = txtDisplayWords.Text;
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            string file = path + "\\tabs.txt";
+
+            System.IO.File.WriteAllText(@file, tx);
+            try
+            {
+                System.Diagnostics.Process.Start(@file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
         
+        private void PrintPDF()
+        {
+            string message = string.Empty;
+            //const int PageWidth = 800;    /** The width of each page */
+            //const int PageHeight = 1050;  /** The height of each page (when printing) */
+
+            String CurrentPath = MIDIfileFullPath;
+            string initname = Path.GetFileName(CurrentPath);
+
+            initname = initname.Replace(".mid", "");
+            initname = initname.Replace(".kar", "");
+            initname += ".pdf";
+
+            int width = 0;
+            int height = 0;
+            int oldheight = 0;
+
+            if (tabChordsControl.SelectedIndex == 1)
+            {
+                width = ChordMapControl1.Width;
+                height = ChordMapControl1.Height;
+            }
+            else if (tabChordsControl.SelectedIndex == 2)
+            {
+                width = txtDisplayWords.Width;                
+                StringFormat sf = new StringFormat();
+                Graphics gr = txtDisplayWords.CreateGraphics();
+                SizeF sz = gr.MeasureString(txtDisplayWords.Lines[0], txtDisplayWords.Font, new Point(0, 0), sf);
+                height = (int)sz.Height * txtDisplayWords.Lines.Count();
+                oldheight = pnlDisplayWords.Height;
+                pnlDisplayWords.Height = height;
+            }
+
+
+            SaveFileDialog dialog = new SaveFileDialog()
+            {
+                ShowHelp = true,
+                CreatePrompt = false,
+                OverwritePrompt = true,
+                DefaultExt = "pdf",
+                Filter = "PDF Document (*.pdf)|*.pdf",
+            };
+
+            dialog.FileName = initname;
+            int numpages = 2; // (int)Math.Ceiling(height / (float)PageHeight);
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                // Create a dialog with a progress bar 
+                Form progressDialog = new Form()
+                {
+                    Text = "Generating PDF Document...",
+                    BackColor = Color.White,
+                    Size = new Size(400, 80),
+                };
+
+                System.Windows.Forms.ProgressBar progressBar = new System.Windows.Forms.ProgressBar()
+                {
+                    Parent = progressDialog,
+                    Size = new Size(300, 20),
+                    Location = new Point(10, 10),
+                    Minimum = 1,
+                    Maximum = 2, //numpages + 2,
+                    Value = 2,
+                    Step = 1,
+                };
+
+                progressDialog.Show();
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(500);
+
+
+                string filename = dialog.FileName;
+                try
+                {
+                    FileStream stream = new FileStream(filename, FileMode.Create);
+                    string title = Path.GetFileName(filename);
+
+                    Karaboss.PDFWithImages pdfdocument = new PDFWithImages(stream, title, numpages);
+
+                    pdfdocument.DocWidth = width;
+                    pdfdocument.DocHeight = height;
+
+
+                    Bitmap MemoryImage = new Bitmap(width, height);
+                    System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, width, height);
+                        
+                    if (tabChordsControl.SelectedIndex == 1)
+                        pnlDisplayMap.DrawToBitmap(MemoryImage, new System.Drawing.Rectangle(0, 0, width, height));
+                    else if (tabChordsControl.SelectedIndex == 2)
+                        pnlDisplayWords.DrawToBitmap(MemoryImage, new Rectangle(0, 0, width, height));
+
+                    pdfdocument.AddImage(MemoryImage);
+                    MemoryImage.Dispose();
+                    progressBar.PerformStep();
+                    Application.DoEvents();
+
+                    pdfdocument.Save();
+                    stream.Close();
+                    System.Threading.Thread.Sleep(500);
+                }
+                catch (System.IO.IOException ep)
+                {
+                    message = "";
+                    message += "Karaboss was unable to save to file " + filename;
+                    message += " because:\n" + ep.Message + "\n";
+
+                    MessageBox.Show(message, "Error Saving File",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                }
+                progressDialog.Dispose();
+
+
+                if (tabChordsControl.SelectedIndex == 2)
+                    pnlDisplayWords.Height = oldheight;
+
+                // Display created PDF
+                System.Diagnostics.Process.Start(@filename);
+            }
+
+        }
+
+        #endregion print pdf
+
+        private void tabChordsControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            btnPrintPDF.Visible = (tabChordsControl.SelectedIndex != 0);
+            btnPrintTXT.Visible = (tabChordsControl.SelectedIndex == 2);
+            
+            btnZoomPlus.Visible = (tabChordsControl.SelectedIndex != 2);
+            btnZoomMinus.Visible = (tabChordsControl.SelectedIndex != 2);
+
+            /*
+            switch (tabChordsControl.SelectedIndex)
+            {
+                case 0:
+                    
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+            }
+            */
+        }
     }
 }

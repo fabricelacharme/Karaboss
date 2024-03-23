@@ -3473,6 +3473,7 @@ namespace Sanford.Multimedia.Midi.Score
 
         #endregion colors
 
+
         #region lyrics
         /** Get the lyrics for each track */
         private static List<LyricSymbol>[] GetLyrics(List<Track> tracks)
