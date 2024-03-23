@@ -446,7 +446,8 @@ namespace Karaboss
             ChordMapControl1.Cursor = Cursors.Hand;
             ChordMapControl1.Sequence1 = this.sequence1;
             ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
-            pnlDisplayMap.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
+            //pnlDisplayMap.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
+            pnlDisplayMap.Size = new Size(tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right, tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom);
             pnlDisplayMap.Controls.Add(ChordMapControl1);
             #endregion ChordMapControl
 
@@ -792,6 +793,9 @@ namespace Karaboss
         {
             string cr = Environment.NewLine;
             string tx = ExtractTMidiInfos();
+            string title = MIDIfileName;
+
+            title = Path.GetFileNameWithoutExtension(title);            
 
             myLyricsMgmt.Gridchords = Gridchords;
 
@@ -800,8 +804,8 @@ namespace Karaboss
                 tx += cr + myLyricsMgmt.DisplayWordsAndChords();
             }
             else
-            {
-                tx = myLyricsMgmt.DisplayWordsAndChords();
+            {                
+                tx = title + cr + cr + myLyricsMgmt.DisplayWordsAndChords();
             }
             txtDisplayWords.Text = tx;
         }
@@ -945,6 +949,25 @@ namespace Karaboss
 
             }
         }
+
+        /// <summary>
+        /// A new tab is selected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tabChordsControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            btnPrintPDF.Visible = (tabChordsControl.SelectedIndex != 0);
+            btnPrintTXT.Visible = (tabChordsControl.SelectedIndex == 2);
+
+            btnZoomPlus.Visible = (tabChordsControl.SelectedIndex != 2);
+            btnZoomMinus.Visible = (tabChordsControl.SelectedIndex != 2);
+
+            mnuFilePrintLyrics.Visible = (tabChordsControl.SelectedIndex == 2);
+            mnuFilePrintPDF.Visible = (tabChordsControl.SelectedIndex != 0);
+        }
+
         #endregion Events
 
 
@@ -968,20 +991,21 @@ namespace Karaboss
                 _currentLine = curline;
                 int HauteurCellule = (int)(ChordMapControl1.ColumnHeight) + 1;
 
-                /*
+                
                 // if control is higher then the panel => scroll
-                if (ChordMapControl1.maxStaffHeight > pnlDisplayMap.Height)
+                if (ChordMapControl1.Height > pnlDisplayMap.Height)
                 {
                     // offset vertical: ensure to see 2 lines
-                    int offset = HauteurCellule * (curline - 2);
-
-                    //ChordMapControl1.OffsetY = offset;
-                    
+                    //int offset = HauteurCellule * (curline - 2);
+                    int offset = HauteurCellule * (curline - 1);
 
                     if (pnlDisplayMap.VerticalScroll.Visible && pnlDisplayMap.VerticalScroll.Minimum <= offset && offset <= pnlDisplayMap.VerticalScroll.Maximum)
-                        pnlDisplayMap.VerticalScroll.Value = HauteurCellule * (curline - 2);
+                    {
+                        //pnlDisplayMap.VerticalScroll.Value = HauteurCellule * (curline - 2);
+                        pnlDisplayMap.VerticalScroll.Value = offset;
+                    }
                 }
-                */
+                
 
             }
         }
@@ -1223,8 +1247,8 @@ namespace Karaboss
             // 2nd TAB
             if (pnlDisplayMap != null)
             {
-                //pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;                
-                //pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
+                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;                
+                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
             }
 
 
@@ -1539,8 +1563,10 @@ namespace Karaboss
                 ChordControl1.OffsetX = 0;
                 ChordControl1.DisplayNotes(0, -1, -1);
 
-                pnlDisplayMap.VerticalScroll.Value = pnlDisplayMap.VerticalScroll.Minimum;     
-                
+                pnlDisplayMap.VerticalScroll.Value = pnlDisplayMap.VerticalScroll.Minimum;
+                pnlDisplayMap.VerticalScroll.Visible = false;
+                pnlDisplayMap.VerticalScroll.Value = pnlDisplayMap.VerticalScroll.Minimum;
+                pnlDisplayMap.VerticalScroll.Visible = true;
 
                 ChordMapControl1.OffsetY = 0;
                 ChordMapControl1.DisplayNotes(0, -1, -1);
@@ -1579,31 +1605,19 @@ namespace Karaboss
         #region menus
 
         #region mnu file
+
         /// <summary>
-        /// Print text
+        /// TAB 3: send lyrics to notepad
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void mnuFilePrint_Click(object sender, EventArgs e)
+        private void mnuFilePrintLyrics_Click(object sender, EventArgs e)
         {
-            String tx = txtDisplayWords.Text;
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-            string file = path + "\\tabs.txt";
-
-            System.IO.File.WriteAllText(@file, tx);
-            try
-            {
-                System.Diagnostics.Process.Start(@file);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
+            PrintText();
         }
 
         /// <summary>
-        /// Print pnlDisplayMap to PDF
+        /// TAB 2 : Print Chord Map to PDF
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1723,7 +1737,7 @@ namespace Karaboss
         #endregion menus
 
 
-        #region print pdf
+        #region print text pdf
 
         /// <summary>
         /// Print text file
@@ -1750,9 +1764,6 @@ namespace Karaboss
         private void PrintPDF()
         {
             string message = string.Empty;
-            //const int PageWidth = 800;    /** The width of each page */
-            //const int PageHeight = 1050;  /** The height of each page (when printing) */
-
             String CurrentPath = MIDIfileFullPath;
             string initname = Path.GetFileName(CurrentPath);
 
@@ -1833,11 +1844,17 @@ namespace Karaboss
 
                     Bitmap MemoryImage = new Bitmap(width, height);
                     System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, width, height);
-                        
+
                     if (tabChordsControl.SelectedIndex == 1)
-                        pnlDisplayMap.DrawToBitmap(MemoryImage, new System.Drawing.Rectangle(0, 0, width, height));
+                    {
+                        //pnlDisplayMap.DrawToBitmap(MemoryImage, new System.Drawing.Rectangle(0, 0, width, height));
+                        ChordMapControl1.DrawToBitmap(MemoryImage, new Rectangle(0, 0, width, height));
+                    }
                     else if (tabChordsControl.SelectedIndex == 2)
+                    {
                         pnlDisplayWords.DrawToBitmap(MemoryImage, new Rectangle(0, 0, width, height));
+                        
+                    }
 
                     pdfdocument.AddImage(MemoryImage);
                     MemoryImage.Dispose();
@@ -1870,29 +1887,9 @@ namespace Karaboss
 
         }
 
-        #endregion print pdf
 
-        private void tabChordsControl_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        #endregion print text pdf
 
-            btnPrintPDF.Visible = (tabChordsControl.SelectedIndex != 0);
-            btnPrintTXT.Visible = (tabChordsControl.SelectedIndex == 2);
-            
-            btnZoomPlus.Visible = (tabChordsControl.SelectedIndex != 2);
-            btnZoomMinus.Visible = (tabChordsControl.SelectedIndex != 2);
-
-            /*
-            switch (tabChordsControl.SelectedIndex)
-            {
-                case 0:
-                    
-                    break;
-                case 1:
-                    break;
-                case 2:
-                    break;
-            }
-            */
-        }
+      
     }
 }

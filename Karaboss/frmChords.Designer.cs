@@ -37,7 +37,6 @@
             this.pnlToolbar = new System.Windows.Forms.Panel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFilePrint = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFilePrintPDF = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSep = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,6 +45,7 @@
             this.mnuHelpAboutSong = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.mnuFilePrintLyrics = new System.Windows.Forms.ToolStripMenuItem();
             this.tabChordsControl.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -97,18 +97,12 @@
             // mnuFile
             // 
             this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFilePrint,
+            this.mnuFilePrintLyrics,
             this.mnuFilePrintPDF,
             this.mnuFileSep,
             this.mnuFileQuit});
             this.mnuFile.Name = "mnuFile";
             resources.ApplyResources(this.mnuFile, "mnuFile");
-            // 
-            // mnuFilePrint
-            // 
-            this.mnuFilePrint.Name = "mnuFilePrint";
-            resources.ApplyResources(this.mnuFilePrint, "mnuFilePrint");
-            this.mnuFilePrint.Click += new System.EventHandler(this.mnuFilePrint_Click);
             // 
             // mnuFilePrintPDF
             // 
@@ -151,6 +145,12 @@
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             resources.ApplyResources(this.aboutToolStripMenuItem, "aboutToolStripMenuItem");
             // 
+            // mnuFilePrintLyrics
+            // 
+            this.mnuFilePrintLyrics.Name = "mnuFilePrintLyrics";
+            resources.ApplyResources(this.mnuFilePrintLyrics, "mnuFilePrintLyrics");
+            this.mnuFilePrintLyrics.Click += new System.EventHandler(this.mnuFilePrintLyrics_Click);
+            // 
             // frmChords
             // 
             resources.ApplyResources(this, "$this");
@@ -181,7 +181,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem mnuFile;
         private System.Windows.Forms.ToolStripMenuItem mnuFileQuit;
-        private System.Windows.Forms.ToolStripMenuItem mnuFilePrint;
         private System.Windows.Forms.ToolStripMenuItem mnuHelp;
         private System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
         private System.Windows.Forms.ToolStripMenuItem mnuHelpAboutSong;
@@ -189,5 +188,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnuFilePrintPDF;
         private System.Windows.Forms.ToolStripSeparator mnuFileSep;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ToolStripMenuItem mnuFilePrintLyrics;
     }
 }

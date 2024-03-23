@@ -117,7 +117,71 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="&gt;&gt;tabPageDiagrams.Name" xml:space="preserve">
+    <value>tabPageDiagrams</value>
+  </data>
+  <data name="&gt;&gt;tabPageDiagrams.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPageDiagrams.Parent" xml:space="preserve">
+    <value>tabChordsControl</value>
+  </data>
+  <data name="&gt;&gt;tabPageDiagrams.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tabPageOverview.Name" xml:space="preserve">
+    <value>tabPageOverview</value>
+  </data>
+  <data name="&gt;&gt;tabPageOverview.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPageOverview.Parent" xml:space="preserve">
+    <value>tabChordsControl</value>
+  </data>
+  <data name="&gt;&gt;tabPageOverview.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;tabPageEdit.Name" xml:space="preserve">
+    <value>tabPageEdit</value>
+  </data>
+  <data name="&gt;&gt;tabPageEdit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPageEdit.Parent" xml:space="preserve">
+    <value>tabChordsControl</value>
+  </data>
+  <data name="&gt;&gt;tabPageEdit.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="tabChordsControl.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial Narrow, 10.2pt</value>
+  </data>
+  <data name="tabChordsControl.ItemSize" type="System.Drawing.Size, System.Drawing">
+    <value>71, 40</value>
+  </data>
+  <data name="tabChordsControl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 121</value>
+  </data>
+  <data name="tabChordsControl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>800, 329</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="tabChordsControl.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tabChordsControl.Name" xml:space="preserve">
+    <value>tabChordsControl</value>
+  </data>
+  <data name="&gt;&gt;tabChordsControl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabChordsControl.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tabChordsControl.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
   <data name="tabPageDiagrams.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 44</value>
   </data>
@@ -128,7 +192,6 @@
   <data name="tabPageDiagrams.Size" type="System.Drawing.Size, System.Drawing">
     <value>792, 281</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="tabPageDiagrams.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
@@ -198,33 +261,6 @@
   <data name="&gt;&gt;tabPageEdit.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="tabChordsControl.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Arial Narrow, 10.2pt</value>
-  </data>
-  <data name="tabChordsControl.ItemSize" type="System.Drawing.Size, System.Drawing">
-    <value>71, 40</value>
-  </data>
-  <data name="tabChordsControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 121</value>
-  </data>
-  <data name="tabChordsControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>800, 329</value>
-  </data>
-  <data name="tabChordsControl.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;tabChordsControl.Name" xml:space="preserve">
-    <value>tabChordsControl</value>
-  </data>
-  <data name="&gt;&gt;tabChordsControl.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabChordsControl.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;tabChordsControl.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <data name="pnlToolbar.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 27</value>
   </data>
@@ -249,23 +285,29 @@
   <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="mnuFilePrint.Size" type="System.Drawing.Size, System.Drawing">
-    <value>123, 22</value>
+  <data name="mnuFilePrintLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
   </data>
-  <data name="mnuFilePrint.Text" xml:space="preserve">
-    <value>Print</value>
+  <data name="mnuFilePrintLyrics.Text" xml:space="preserve">
+    <value>Print Lyrics</value>
+  </data>
+  <data name="mnuFilePrintLyrics.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
   <data name="mnuFilePrintPDF.Size" type="System.Drawing.Size, System.Drawing">
-    <value>123, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFilePrintPDF.Text" xml:space="preserve">
     <value>Print PDF</value>
   </data>
+  <data name="mnuFilePrintPDF.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="mnuFileSep.Size" type="System.Drawing.Size, System.Drawing">
-    <value>120, 6</value>
+    <value>177, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>123, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quit</value>
@@ -275,18 +317,6 @@
   </data>
   <data name="mnuFile.Text" xml:space="preserve">
     <value>&amp;File</value>
-  </data>
-  <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
-    <value>158, 22</value>
-  </data>
-  <data name="mnuHelpAbout.Text" xml:space="preserve">
-    <value>&amp;About...</value>
-  </data>
-  <data name="mnuHelpAboutSong.Size" type="System.Drawing.Size, System.Drawing">
-    <value>158, 22</value>
-  </data>
-  <data name="mnuHelpAboutSong.Text" xml:space="preserve">
-    <value>A&amp;bout this song</value>
   </data>
   <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 20</value>
@@ -323,6 +353,18 @@
   </data>
   <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuHelpAbout.Text" xml:space="preserve">
+    <value>&amp;About...</value>
+  </data>
+  <data name="mnuHelpAboutSong.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuHelpAboutSong.Text" xml:space="preserve">
+    <value>A&amp;bout this song</value>
   </data>
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>132, 17</value>
@@ -3009,12 +3051,6 @@
   <data name="&gt;&gt;mnuFile.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;mnuFilePrint.Name" xml:space="preserve">
-    <value>mnuFilePrint</value>
-  </data>
-  <data name="&gt;&gt;mnuFilePrint.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;mnuFilePrintPDF.Name" xml:space="preserve">
     <value>mnuFilePrintPDF</value>
   </data>
@@ -3062,6 +3098,12 @@
   </data>
   <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuFilePrintLyrics.Name" xml:space="preserve">
+    <value>mnuFilePrintLyrics</value>
+  </data>
+  <data name="&gt;&gt;mnuFilePrintLyrics.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmChords</value>
