@@ -1603,13 +1603,16 @@ namespace Karaboss
 
                     Karaboss.PDFWithImages pdfdocument = new PDFWithImages(stream, title, numpages);
                     
+                    pdfdocument.DocWidth = width;
+                    pdfdocument.DocHeight = height;
+
                     int h = 0;
                     for (int page = 1; page <= numpages; page++)
                     {
 
-                        Bitmap MemoryImage = new Bitmap(PageWidth + 40,PageHeight + 40);
-                        System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, h, PageWidth + 40, PageHeight + 40);
-                        pnlDisplayMap.DrawToBitmap(MemoryImage, new System.Drawing.Rectangle(0, h, width, height));
+                        Bitmap MemoryImage = new Bitmap(width + 40,height + 40);
+                        System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, width + 40, height + 40);
+                        pnlDisplayMap.DrawToBitmap(MemoryImage, new System.Drawing.Rectangle(0, 0, width + 40, height + 40));
 
                         //Graphics g = Graphics.FromImage(MemoryImage);
 
@@ -1620,7 +1623,7 @@ namespace Karaboss
                         progressBar.PerformStep();
                         Application.DoEvents();
 
-                        h += PageHeight + 40;
+                        //h += PageHeight + 40;
                     }
                     pdfdocument.Save();
                     stream.Close();
