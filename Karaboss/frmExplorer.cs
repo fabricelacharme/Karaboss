@@ -3068,8 +3068,7 @@ namespace Karaboss
 
 
 
-        #endregion
 
-       
+        #endregion
     }
 }

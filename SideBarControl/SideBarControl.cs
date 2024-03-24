@@ -231,6 +231,8 @@ namespace VBarControl.SideBarControl
         {
             DisplayChords?.Invoke(new object(), new EventArgs());
         }
+
+        
     }
 
 

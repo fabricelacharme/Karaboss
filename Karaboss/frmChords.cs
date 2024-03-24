@@ -275,7 +275,8 @@ namespace Karaboss
 
             btnZoomMinus = new NoSelectButton();
             btnZoomMinus.Parent = pnlToolbar;
-            btnZoomMinus.Image = Karaboss.Properties.Resources.magnifyminus24; 
+            btnZoomMinus.Image = Karaboss.Properties.Resources.magnifyminus24;
+            toolTip1.SetToolTip(btnZoomMinus, "100%");
             btnZoomMinus.UseVisualStyleBackColor = true;
             btnZoomMinus.Location = new Point(2 + btnZoomPlus.Left + btnZoomPlus.Width, 2);
             btnZoomMinus.Size = new Size(50, 50);
@@ -284,10 +285,13 @@ namespace Karaboss
             pnlToolbar.Controls.Add(btnZoomMinus);
 
             #endregion zoom
-            
+
+            #region export pdf text
             btnPrintPDF = new NoSelectButton();
             btnPrintPDF.Parent = pnlToolbar;
-            btnPrintPDF.Image = Properties.Resources.Apps_Pdf_icon;
+            //btnPrintPDF.Image = Properties.Resources.Apps_Pdf_icon;
+            btnPrintPDF.Image = Properties.Resources.export_pdf32;
+            toolTip1.SetToolTip(btnPrintPDF, "Export to PDF");
             btnPrintPDF.UseVisualStyleBackColor = true;
             btnPrintPDF.Location = new Point(2 + btnZoomMinus.Left + btnZoomMinus.Width);
             btnPrintPDF.Size = new Size(50, 50);
@@ -298,7 +302,9 @@ namespace Karaboss
 
             btnPrintTXT = new NoSelectButton();
             btnPrintTXT.Parent = pnlToolbar;
-            btnPrintTXT.Image = Properties.Resources.table_multiple;
+            //btnPrintTXT.Image = Properties.Resources.table_multiple;
+            btnPrintTXT.Image = Properties.Resources.export_txt48_2;
+            toolTip1.SetToolTip(btnPrintTXT, "Export to Text");
             btnPrintTXT.UseVisualStyleBackColor = true;
             btnPrintTXT.Location = new Point(2 + btnPrintPDF.Left + btnPrintPDF.Width);
             btnPrintTXT.Size = new Size(50, 50);
@@ -307,6 +313,7 @@ namespace Karaboss
             btnPrintTXT.Visible = false;
             pnlToolbar.Controls.Add((btnPrintTXT));
 
+            #endregion export pdf text
 
             #endregion Toolbar
 
@@ -904,7 +911,7 @@ namespace Karaboss
             if (pnlDisplayMap != null)
             {                
                 //pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
-                pnlDisplayMap.Height = ChordMapControl1.Height; //tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
+                //pnlDisplayMap.Height = ChordMapControl1.Height; //tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
             }
 
         }
@@ -914,7 +921,7 @@ namespace Karaboss
             if (pnlDisplayMap != null)
             {                
                 //pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;
-                pnlDisplayMap.Width = ChordMapControl1.Width;
+                //pnlDisplayMap.Width = ChordMapControl1.Width;
                 //pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
             }
         }
@@ -927,8 +934,9 @@ namespace Karaboss
                 int y = e.Location.Y + ChordMapControl1.OffsetY;  // Vertical
 
                 // Calculate start time                
-                int LargeurCellule = (int)(ChordControl1.ColumnWidth) + 1;
-                int line = 1 + (y / LargeurCellule);
+                int HauteurCellule = (int)(ChordMapControl1.ColumnHeight) + 1;
+                int LargeurCellule = (int)(ChordMapControl1.ColumnWidth) + 1;
+                int line = (int)Math.Ceiling(y / (double)HauteurCellule);
                 int prevmeasures = -1 + (line - 1) * ChordMapControl1.NbColumns;
                 int cellincurrentline = (int)Math.Ceiling(x / (double)LargeurCellule);
 
@@ -1740,55 +1748,119 @@ namespace Karaboss
         #region print text pdf
 
         /// <summary>
-        /// Print text file
+        /// Print words in a text file
         /// </summary>
         private void PrintText()
         {
             String tx = txtDisplayWords.Text;
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-            string file = path + "\\tabs.txt";
+            string message = string.Empty;
+            string initname = Path.GetFileNameWithoutExtension(MIDIfileFullPath);
+            initname += ".txt";
 
-            System.IO.File.WriteAllText(@file, tx);
-            try
+            SaveFileDialog dialog = new SaveFileDialog()
             {
-                System.Diagnostics.Process.Start(@file);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+                ShowHelp = true,
+                CreatePrompt = false,
+                OverwritePrompt = true,
+                DefaultExt = "txt",
+                Filter = "Text Document (*.txt)|*.txt",
+            };
+            dialog.FileName = initname;
 
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                // Create a dialog with a progress bar 
+                Form progressDialog = new Form()
+                {
+                    Text = "Generating Text Document...",
+                    BackColor = Color.White,
+                    Size = new Size(400, 80),
+                };
+
+                System.Windows.Forms.ProgressBar progressBar = new System.Windows.Forms.ProgressBar()
+                {
+                    Parent = progressDialog,
+                    Size = new Size(300, 20),
+                    Location = new Point(10, 10),
+                    Minimum = 1,
+                    Maximum = 2, //numpages + 2,
+                    Value = 2,
+                    Step = 1,
+                };
+
+                progressDialog.Show();
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(500);
+
+
+                string filename = dialog.FileName;
+                try
+                {                    
+                    string title = Path.GetFileName(filename);
+
+                    System.IO.File.WriteAllText(@filename, tx);
+
+                    progressBar.PerformStep();
+                    Application.DoEvents();
+                                     
+                    System.Threading.Thread.Sleep(500);
+                }
+                catch (System.IO.IOException ep)
+                {
+                    message = "";
+                    message += "Karaboss was unable to save to file " + filename;
+                    message += " because:\n" + ep.Message + "\n";
+
+                    MessageBox.Show(message, "Error Saving File",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                }
+                progressDialog.Dispose();
+
+
+                // Display created text file
+                System.Diagnostics.Process.Start(@filename);
+            }            
         }
 
-        
+        /// <summary>
+        /// Save chords map to PDF format
+        /// </summary>
         private void PrintPDF()
         {
             string message = string.Empty;
-            String CurrentPath = MIDIfileFullPath;
-            string initname = Path.GetFileName(CurrentPath);
-
-            initname = initname.Replace(".mid", "");
-            initname = initname.Replace(".kar", "");
-            initname += ".pdf";
+            string initname = Path.GetFileNameWithoutExtension(MIDIfileFullPath);
+            //initname += ".pdf";
 
             int width = 0;
             int height = 0;
             int oldheight = 0;
 
+            // Calculate height & width of controls in order to make a bitmap
+            // corresponding to these dimensions
             if (tabChordsControl.SelectedIndex == 1)
             {
+                //Chords Map
                 width = ChordMapControl1.Width;
                 height = ChordMapControl1.Height;
+                initname += "-chords.pdf";
             }
             else if (tabChordsControl.SelectedIndex == 2)
             {
+                // Lyrics
                 width = txtDisplayWords.Width;                
+                
+                // The textbox has scrollbars: it has not the required dimensions
+                // We have to Caculate the height of the text hosted in the textbox
                 StringFormat sf = new StringFormat();
                 Graphics gr = txtDisplayWords.CreateGraphics();
                 SizeF sz = gr.MeasureString(txtDisplayWords.Lines[0], txtDisplayWords.Font, new Point(0, 0), sf);
                 height = (int)sz.Height * txtDisplayWords.Lines.Count();
+                // Save initial height of panel hosting the textbox
                 oldheight = pnlDisplayWords.Height;
+                // Apply calculated heihgt of text
                 pnlDisplayWords.Height = height;
+                initname += "-Lyrics.pdf";
             }
 
 
@@ -1846,12 +1918,13 @@ namespace Karaboss
                     System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, width, height);
 
                     if (tabChordsControl.SelectedIndex == 1)
-                    {
-                        //pnlDisplayMap.DrawToBitmap(MemoryImage, new System.Drawing.Rectangle(0, 0, width, height));
+                    {                        
+                        // Chords map
                         ChordMapControl1.DrawToBitmap(MemoryImage, new Rectangle(0, 0, width, height));
                     }
                     else if (tabChordsControl.SelectedIndex == 2)
                     {
+                        // Words
                         pnlDisplayWords.DrawToBitmap(MemoryImage, new Rectangle(0, 0, width, height));
                         
                     }
@@ -1878,6 +1951,7 @@ namespace Karaboss
                 progressDialog.Dispose();
 
 
+                // Restore initial height of the panel (changed to fit text height)
                 if (tabChordsControl.SelectedIndex == 2)
                     pnlDisplayWords.Height = oldheight;
 

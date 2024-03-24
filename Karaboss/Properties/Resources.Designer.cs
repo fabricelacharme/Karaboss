@@ -863,6 +863,26 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap export_pdf32 {
+            get {
+                object obj = ResourceManager.GetObject("export_pdf32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap export_txt48_2 {
+            get {
+                object obj = ResourceManager.GetObject("export_txt48_2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap floppy_icon {
             get {
                 object obj = ResourceManager.GetObject("floppy_icon", resourceCulture);
