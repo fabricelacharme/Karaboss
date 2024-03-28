@@ -2215,7 +2215,7 @@ namespace Sanford.Multimedia.Midi
             {
                 if (notes[i].StartTime >= starttime)
                 {
-                    notes[i].StartTime = notes[i].StartTime + offset;
+                    notes[i].StartTime = notes[i].StartTime + offset;                    
                 }
             }
 
@@ -2642,6 +2642,8 @@ namespace Sanford.Multimedia.Midi
 
                 while (current.AbsoluteTicks > position)
                 {
+                    if (current.Previous == null)
+                        break;
                     current = current.Previous;
                 }
 

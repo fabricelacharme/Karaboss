@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.pnlBottom = new System.Windows.Forms.Panel();
+            this.btnPianoRoll = new TrkControl.NoSelectButton();
             this.lblReverb = new System.Windows.Forms.Label();
             this.lblPan = new System.Windows.Forms.Label();
             this.lblVolume = new System.Windows.Forms.Label();
@@ -40,20 +41,20 @@
             this.knobVolume = new KnobControl.KnobControl();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.btnSolo = new TrkControl.NoSelectButton();
             this.lstChannels = new System.Windows.Forms.ListBox();
             this.lblTrack = new System.Windows.Forms.Label();
+            this.btnDel = new TrkControl.NoSelectButton();
             this.lstInstruments = new System.Windows.Forms.ListBox();
             this.lblChannel = new System.Windows.Forms.Label();
             this.lblLight = new System.Windows.Forms.Label();
             this.lblTrackLabel = new System.Windows.Forms.Label();
+            this.btnInstrument = new TrkControl.NoSelectButton();
+            this.btnMut = new TrkControl.NoSelectButton();
             this.lblTrackName = new System.Windows.Forms.Label();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.btnMaximized = new TrkControl.NoSelectButton();
-            this.btnPianoRoll = new TrkControl.NoSelectButton();
-            this.btnSolo = new TrkControl.NoSelectButton();
-            this.btnDel = new TrkControl.NoSelectButton();
-            this.btnInstrument = new TrkControl.NoSelectButton();
-            this.btnMut = new TrkControl.NoSelectButton();
+            this.lblProgram = new System.Windows.Forms.Label();
             this.pnlBottom.SuspendLayout();
             this.pnlTop.SuspendLayout();
             this.SuspendLayout();
@@ -61,6 +62,7 @@
             // pnlBottom
             // 
             this.pnlBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(87)))), ((int)(((byte)(151)))));
+            this.pnlBottom.Controls.Add(this.lblProgram);
             this.pnlBottom.Controls.Add(this.btnPianoRoll);
             this.pnlBottom.Controls.Add(this.lblReverb);
             this.pnlBottom.Controls.Add(this.lblPan);
@@ -92,6 +94,17 @@
             this.pnlBottom.DragOver += new System.Windows.Forms.DragEventHandler(this.panel1_DragOver);
             this.pnlBottom.DragLeave += new System.EventHandler(this.panel1_DragLeave);
             this.pnlBottom.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
+            // 
+            // btnPianoRoll
+            // 
+            this.btnPianoRoll.Image = global::TrkControl.Properties.Resources.piano;
+            this.btnPianoRoll.Location = new System.Drawing.Point(144, 91);
+            this.btnPianoRoll.Name = "btnPianoRoll";
+            this.btnPianoRoll.Size = new System.Drawing.Size(31, 23);
+            this.btnPianoRoll.TabIndex = 22;
+            this.btnPianoRoll.TabStop = false;
+            this.btnPianoRoll.UseVisualStyleBackColor = true;
+            this.btnPianoRoll.Click += new System.EventHandler(this.btnPianoRoll_Click);
             // 
             // lblReverb
             // 
@@ -244,6 +257,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.SystemColors.Control;
             this.label2.Location = new System.Drawing.Point(12, 10);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(29, 13);
@@ -253,11 +267,25 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(69, 9);
+            this.label1.ForeColor = System.Drawing.SystemColors.Control;
+            this.label1.Location = new System.Drawing.Point(65, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 12;
             this.label1.Text = "Trk:";
+            // 
+            // btnSolo
+            // 
+            this.btnSolo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(163)))), ((int)(((byte)(0)))));
+            this.btnSolo.ForeColor = System.Drawing.Color.Black;
+            this.btnSolo.Location = new System.Drawing.Point(144, 28);
+            this.btnSolo.Name = "btnSolo";
+            this.btnSolo.Size = new System.Drawing.Size(31, 23);
+            this.btnSolo.TabIndex = 11;
+            this.btnSolo.TabStop = false;
+            this.btnSolo.Text = "so";
+            this.btnSolo.UseVisualStyleBackColor = false;
+            this.btnSolo.Click += new System.EventHandler(this.btnSolo_Click);
             // 
             // lstChannels
             // 
@@ -273,12 +301,25 @@
             this.lblTrack.BackColor = System.Drawing.Color.AntiqueWhite;
             this.lblTrack.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTrack.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblTrack.Location = new System.Drawing.Point(96, 7);
+            this.lblTrack.Location = new System.Drawing.Point(90, 7);
             this.lblTrack.Name = "lblTrack";
             this.lblTrack.Size = new System.Drawing.Size(20, 16);
             this.lblTrack.TabIndex = 9;
             this.lblTrack.Text = "0";
             this.lblTrack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnDel
+            // 
+            this.btnDel.BackColor = System.Drawing.Color.Black;
+            this.btnDel.ForeColor = System.Drawing.Color.White;
+            this.btnDel.Location = new System.Drawing.Point(144, 70);
+            this.btnDel.Name = "btnDel";
+            this.btnDel.Size = new System.Drawing.Size(31, 23);
+            this.btnDel.TabIndex = 8;
+            this.btnDel.TabStop = false;
+            this.btnDel.Text = "x";
+            this.btnDel.UseVisualStyleBackColor = false;
+            this.btnDel.Click += new System.EventHandler(this.btnDel_Click);
             // 
             // lstInstruments
             // 
@@ -294,7 +335,7 @@
             this.lblChannel.BackColor = System.Drawing.Color.AntiqueWhite;
             this.lblChannel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblChannel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblChannel.Location = new System.Drawing.Point(41, 7);
+            this.lblChannel.Location = new System.Drawing.Point(40, 7);
             this.lblChannel.Name = "lblChannel";
             this.lblChannel.Size = new System.Drawing.Size(20, 16);
             this.lblChannel.TabIndex = 6;
@@ -322,6 +363,30 @@
             this.lblTrackLabel.TabIndex = 4;
             this.lblTrackLabel.Text = "Instrument";
             this.lblTrackLabel.TextChanged += new System.EventHandler(this.lblTrackLabel_TextChanged);
+            // 
+            // btnInstrument
+            // 
+            this.btnInstrument.Location = new System.Drawing.Point(144, 49);
+            this.btnInstrument.Name = "btnInstrument";
+            this.btnInstrument.Size = new System.Drawing.Size(31, 23);
+            this.btnInstrument.TabIndex = 2;
+            this.btnInstrument.TabStop = false;
+            this.btnInstrument.Text = "in";
+            this.btnInstrument.UseVisualStyleBackColor = true;
+            this.btnInstrument.Click += new System.EventHandler(this.btnInstrument_Click);
+            // 
+            // btnMut
+            // 
+            this.btnMut.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.btnMut.ForeColor = System.Drawing.Color.White;
+            this.btnMut.Location = new System.Drawing.Point(144, 7);
+            this.btnMut.Name = "btnMut";
+            this.btnMut.Size = new System.Drawing.Size(31, 23);
+            this.btnMut.TabIndex = 1;
+            this.btnMut.TabStop = false;
+            this.btnMut.Text = "mu";
+            this.btnMut.UseVisualStyleBackColor = false;
+            this.btnMut.Click += new System.EventHandler(this.btnMut_Click);
             // 
             // lblTrackName
             // 
@@ -362,66 +427,17 @@
             this.btnMaximized.UseVisualStyleBackColor = false;
             this.btnMaximized.Click += new System.EventHandler(this.btnMaximized_Click);
             // 
-            // btnPianoRoll
+            // lblProgram
             // 
-            this.btnPianoRoll.Image = global::TrkControl.Properties.Resources.piano;
-            this.btnPianoRoll.Location = new System.Drawing.Point(144, 91);
-            this.btnPianoRoll.Name = "btnPianoRoll";
-            this.btnPianoRoll.Size = new System.Drawing.Size(31, 23);
-            this.btnPianoRoll.TabIndex = 22;
-            this.btnPianoRoll.TabStop = false;
-            this.btnPianoRoll.UseVisualStyleBackColor = true;
-            this.btnPianoRoll.Click += new System.EventHandler(this.btnPianoRoll_Click);
-            // 
-            // btnSolo
-            // 
-            this.btnSolo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(163)))), ((int)(((byte)(0)))));
-            this.btnSolo.ForeColor = System.Drawing.Color.Black;
-            this.btnSolo.Location = new System.Drawing.Point(144, 28);
-            this.btnSolo.Name = "btnSolo";
-            this.btnSolo.Size = new System.Drawing.Size(31, 23);
-            this.btnSolo.TabIndex = 11;
-            this.btnSolo.TabStop = false;
-            this.btnSolo.Text = "so";
-            this.btnSolo.UseVisualStyleBackColor = false;
-            this.btnSolo.Click += new System.EventHandler(this.btnSolo_Click);
-            // 
-            // btnDel
-            // 
-            this.btnDel.BackColor = System.Drawing.Color.Black;
-            this.btnDel.ForeColor = System.Drawing.Color.White;
-            this.btnDel.Location = new System.Drawing.Point(144, 70);
-            this.btnDel.Name = "btnDel";
-            this.btnDel.Size = new System.Drawing.Size(31, 23);
-            this.btnDel.TabIndex = 8;
-            this.btnDel.TabStop = false;
-            this.btnDel.Text = "x";
-            this.btnDel.UseVisualStyleBackColor = false;
-            this.btnDel.Click += new System.EventHandler(this.btnDel_Click);
-            // 
-            // btnInstrument
-            // 
-            this.btnInstrument.Location = new System.Drawing.Point(144, 49);
-            this.btnInstrument.Name = "btnInstrument";
-            this.btnInstrument.Size = new System.Drawing.Size(31, 23);
-            this.btnInstrument.TabIndex = 2;
-            this.btnInstrument.TabStop = false;
-            this.btnInstrument.Text = "in";
-            this.btnInstrument.UseVisualStyleBackColor = true;
-            this.btnInstrument.Click += new System.EventHandler(this.btnInstrument_Click);
-            // 
-            // btnMut
-            // 
-            this.btnMut.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.btnMut.ForeColor = System.Drawing.Color.White;
-            this.btnMut.Location = new System.Drawing.Point(144, 7);
-            this.btnMut.Name = "btnMut";
-            this.btnMut.Size = new System.Drawing.Size(31, 23);
-            this.btnMut.TabIndex = 1;
-            this.btnMut.TabStop = false;
-            this.btnMut.Text = "mu";
-            this.btnMut.UseVisualStyleBackColor = false;
-            this.btnMut.Click += new System.EventHandler(this.btnMut_Click);
+            this.lblProgram.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblProgram.ForeColor = System.Drawing.SystemColors.Control;
+            this.lblProgram.Location = new System.Drawing.Point(117, 7);
+            this.lblProgram.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.lblProgram.Name = "lblProgram";
+            this.lblProgram.Size = new System.Drawing.Size(25, 16);
+            this.lblProgram.TabIndex = 23;
+            this.lblProgram.Text = "000";
+            this.lblProgram.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // TrackControl
             // 
@@ -468,5 +484,6 @@
         private NoSelectButton btnPianoRoll;                //System.Windows.Forms.Button btnPianoRoll;
         private System.Windows.Forms.Panel pnlTop;
         private NoSelectButton btnMaximized;
+        private System.Windows.Forms.Label lblProgram;
     }
 }

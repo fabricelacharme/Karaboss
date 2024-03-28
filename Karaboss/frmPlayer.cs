@@ -37,6 +37,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
+using ChordsAnalyser;
 using System.Diagnostics;
 using Sanford.Multimedia.Midi.Score;
 using Karaboss.Resources.Localization;
@@ -45,6 +46,8 @@ using System.Text.RegularExpressions;
 using MusicXml;
 using MusicTxt;
 using System.Linq;
+using ChordAnalyser.UI;
+using Karaboss.Search;
 
 namespace Karaboss
 {
@@ -75,11 +78,14 @@ namespace Karaboss
             public int pan = 64;
             public int reverb = 0;
             public int channel = 0;
+            public int patch = 0;
             public bool muted = false;
             public bool maximized = true;
         }
         private List<_reglages> lstTrkReglages;
         private _reglages TrkReglages;
+        private bool bReglageChanged = false;
+
 
         private class _channels
         {
@@ -500,10 +506,10 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <param name="staffnum"></param>
-        private void PianoRoll_Required(object sender, EventArgs e, int staffnum)
+        private void PianoRoll_Required(object sender, EventArgs e, int staffnum, int ticks)
         {
-            float t = sequence1.GetLength() * (float)hScrollBar.Value / (float)hScrollBar.Maximum;
-            DisplayPianoRoll(staffnum, MIDIfileFullPath, t);
+            //float pos = sequence1.GetLength() * (float)hScrollBar.Value / (float)hScrollBar.Maximum;
+            DisplayPianoRoll(staffnum, MIDIfileFullPath, ticks);
         }
 
         /// <summary>
@@ -592,8 +598,11 @@ namespace Karaboss
                 TrkReglages.reverb = track.Reverb;
                 TrkReglages.muted = false;
                 TrkReglages.channel = track.MidiChannel;
+                TrkReglages.patch = track.ProgramChange;
                 lstTrkReglages.Add(TrkReglages);
             }
+
+            bReglageChanged = false;
 
             // Mute Channel
             for (int i = 0; i < 16; i++)
@@ -759,7 +768,7 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <param name="staffnum"></param>
-        private void Track_DoubleClick(object sender, EventArgs e, int staffnum, float ticks)
+        private void Track_DoubleClick(object sender, EventArgs e, int staffnum, float pos)
         {
             #region guard
             if (PlayerState != PlayerStates.Stopped)
@@ -769,7 +778,7 @@ namespace Karaboss
             #endregion guard            
 
             // Launch PianoRoll Window in order to display this track
-            DisplayPianoRoll(staffnum, MIDIfileFullPath, ticks);
+            DisplayPianoRoll(staffnum, MIDIfileFullPath, (int)pos);
         }
 
         /// <summary>
@@ -2059,6 +2068,8 @@ namespace Karaboss
                                 trkctrl.SetPan(trk.Pan);
                                 // Reverb
                                 trkctrl.SetReverb(trk.Reverb);
+                                // Patch
+                                trkctrl.SetPatch(trk.ProgramChange);
                             }
                         }
                     }                   
@@ -2542,87 +2553,7 @@ namespace Karaboss
             }
         }
 
-        /*
-        private void importMidiFileFromText2()
-        {
-            openMidiFileDialog.Title = "Open Text file";
-            openMidiFileDialog.DefaultExt = "txt";
-            openMidiFileDialog.Filter = "Text files|*.txt|All files|*.*";
-            openMidiFileDialog.InitialDirectory = MIDIfilePath;
-
-            if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string fileName = openMidiFileDialog.FileName;
-                string lyrics = string.Empty;
-
-                // Load file
-                Sequence seq;
-
-                FileStream fstream = new FileStream(fileName, FileMode.Open,
-                    FileAccess.Read, FileShare.None);
-
-                StreamReader stream = new StreamReader(fstream);
-                using (stream)
-                {
-                    DumpReader dumpreader = new DumpReader();
-                    seq = dumpreader.Read(stream);
-                }
-                if (seq == null)
-                {
-                    MessageBox.Show("Invalid dump file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                sequence1 = seq;
-                bHasLyrics = sequence1.HasLyrics;
-                if (bHasLyrics)
-                    lyrics = ExtractLyrics();
-
-                laststart = 0;
-                // Remove all MIDI events after last note
-                sequence1.Clean();
-
-                ResetSequencer();
-
-                sequencer1.Sequence = sequence1;
-                UpdateMidiTimes();
-                DisplaySongDuration();
-
-                positionHScrollBarNew.Value = 0;
-                positionHScrollBarNew.Maximum = _totalTicks;
-
-                // ----------------------------------------------------------------
-                // Display Scores on panel pnlScrollView
-                // ----------------------------------------------------------------
-                DisplayScores();
-
-                // Display song duration
-                DisplaySongDuration();
-
-                // Display track controls             
-                DisplayTrackControls();
-
-                // Reset tracks stuff
-                InitTracksStuff();
-
-                // Recherche si des lyrics existent et affiche la forme frmLyric
-                mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
-
-                if (bKaraokeAlwaysOn && bHasLyrics)
-                    DisplayLyricsForm();
-
-                // Display log file
-                if (sequence1.Log != "")
-                {
-                    //MessageBox.Show(sequence1.Log, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    lblChangesInfos.Text = sequence1.Log;
-                }
-
-                DisplayFileInfos();
-                DisplayLyricsInfos();
-            }
-        }
-        */
+      
 
         /// <summary>
         /// Import a MusicXml file to Midi
@@ -2707,8 +2638,7 @@ namespace Karaboss
 
             // Display log file
             if (sequence1.Log != "")
-            {
-                //MessageBox.Show(sequence1.Log, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            {                
                 lblChangesInfos.Text = sequence1.Log;
             }
 
@@ -3159,7 +3089,7 @@ namespace Karaboss
         /// Display the pianoRoll window
         /// </summary>
         /// <param name="tracknum"></param>
-        private void DisplayPianoRoll(int tracknum, string fileName, float ticks)
+        private void DisplayPianoRoll(int tracknum, string fileName, int ticks)
         {                        
             if (Application.OpenForms["frmPianoRoll"] == null)
             {
@@ -3645,8 +3575,7 @@ namespace Karaboss
         }
        
         private void MnuHelpAboutSong_Click(object sender, EventArgs e)
-        {
-            //string tx =MidiFile.copyright;
+        {            
             string tx = string.Empty;
             int i;
             string cr = Environment.NewLine;
@@ -4588,7 +4517,7 @@ namespace Karaboss
                 // Display track controls             
                 DisplayTrackControls();
 
-                // REset tracks Stuff
+                // Reset tracks Stuff
                 InitTracksStuff();
                 #endregion
 
@@ -5094,8 +5023,7 @@ namespace Karaboss
             if(closing)
             {
                 return;
-            }
-            //outDevice.Send(e.Message);
+            }            
 
             int nChannel = e.Message.MidiChannel;
             string sChannel = nChannel.ToString();
@@ -5104,7 +5032,7 @@ namespace Karaboss
                 outDevice.Send(e.Message);
 
 
-            
+            // Modify display according to changes during play 
             if (e.Message.Command == ChannelCommand.NoteOn)
             {
                 // Allume la diode du channel correspondant                
@@ -5169,6 +5097,7 @@ namespace Karaboss
                             }
                         }                                
                     }
+                    bReglageChanged = true;
                 }
                 else if (ct == ControllerType.Pan)
                 {
@@ -5190,6 +5119,7 @@ namespace Karaboss
                             }
                         }
                     }
+                    bReglageChanged = true;
                 }
                 else if (ct == ControllerType.EffectsLevel)
                 {
@@ -5211,13 +5141,34 @@ namespace Karaboss
                             }
                         }
                     }
-                }
-                /*
-                else
+                    bReglageChanged = true;
+                }                
+            }
+            else if (e.Message.Command == ChannelCommand.ProgramChange)
+            {
+                // Instrument is changed during play !!!!!
+                ChannelMessage Msg = e.Message;
+                int patch = Msg.Data1;
+                int j = -1;                
+
+                for (int i = 0; i < pnlTracks.Controls.Count; i++)
                 {
-                    Debug.Print("controller: {0}", ct);
+                    if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                    {
+                        j++;
+                        if (pnlTracks.Controls[i].Tag != null)
+                        {
+                            string stag = pnlTracks.Controls[i].Tag.ToString();
+                            if (stag == sChannel)
+                            {
+                                // Ajust patch for all tracks having this programchange
+                                lstTrkReglages[j].patch = patch;
+                            }
+                        }
+                    }
                 }
-                */
+                bReglageChanged = true;
+
             }
             
         }
@@ -5239,8 +5190,7 @@ namespace Karaboss
         {
             foreach(ChannelMessage message in e.Messages)
             {
-                outDevice.Send(message);
-                //pianoControl1.Send(message);
+                outDevice.Send(message);                
             }
         }
 
@@ -5423,7 +5373,8 @@ namespace Karaboss
             lblBeat.Text = beat.ToString() + "|" + sequence1.Numerator;
 
             // Light off all channels
-            // Display volume of tracks 
+            // Display volume of tracks and other setups
+            
             int j = -1;
             for (int i = 0; i < pnlTracks.Controls.Count; i++)
             {
@@ -5436,20 +5387,24 @@ namespace Karaboss
                         // Light Off
                         trkctrl.LightOff();
 
-                        // Volume
-                        Track track = sequence1.tracks[pTrack.Track];
-                        //j = sequence1.tracks.IndexOf(track);
 
-                        trkctrl.SetVolume(lstTrkReglages[j].volume);                       
-                        // Pan
-                        trkctrl.SetPan(lstTrkReglages[j].pan);
-                        // Reverb
-                        trkctrl.SetReverb(lstTrkReglages[j].reverb);
-                        //j++;
+                        // Change values only if differents?
+                        if (bReglageChanged == true)
+                        {
+                            // Volume                                                
+                            trkctrl.SetVolume(lstTrkReglages[j].volume);
+                            // Pan
+                            trkctrl.SetPan(lstTrkReglages[j].pan);
+                            // Reverb
+                            trkctrl.SetReverb(lstTrkReglages[j].reverb);
+                            // Patch
+                            trkctrl.SetPatch(lstTrkReglages[j].patch);
+                        }                        
                     }
                 }
             }
-                        
+            bReglageChanged = false;
+
             #endregion beat animation
         }
 
@@ -6516,8 +6471,13 @@ namespace Karaboss
         private void BtnPianoRollClickOneEvent(object sender, EventArgs e, int track)
         {            
             float max = sequence1.GetLength();
-            float t = max * (sheetmusic.OffsetX + pnlScrollView.Width/2) / (float)sheetmusic.MaxStaffWidth;           
-            DisplayPianoRoll(track, MIDIfileFullPath, t);
+            float t = max * (sheetmusic.OffsetX + pnlScrollView.Width/2) / (float)sheetmusic.MaxStaffWidth;
+            
+
+            //float pcent =  (float)hScrollBar.Value / (uint)(hScrollBar.Maximum - hScrollBar.Minimum);
+            //float t = pcent * sequence1.GetLength();
+            
+            DisplayPianoRoll(track, MIDIfileFullPath, (int)t);
         }
 
 
@@ -7496,12 +7456,14 @@ namespace Karaboss
             sequence1 = new Sequence(CreateNewMidiFile.Division)
             {
                 Format = 1,
+                OrigFormat= 1,
                 Numerator = CreateNewMidiFile.Numerator,
                 Denominator = CreateNewMidiFile.Denominator,
                 Tempo = CreateNewMidiFile.Tempo,
                 Time = new TimeSignature(CreateNewMidiFile.Numerator, CreateNewMidiFile.Denominator, CreateNewMidiFile.Division, CreateNewMidiFile.Tempo),
             };
 
+            
             sequence1.CloneTags();
 
             pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
@@ -7560,6 +7522,12 @@ namespace Karaboss
 
             // Display midi file infos
             DisplayFileInfos();
+
+            // Display log file
+            if (sequence1.Log != "")
+            {
+                lblChangesInfos.Text = sequence1.Log;
+            }
 
             PlayerState = PlayerStates.Stopped;
 
@@ -8624,10 +8592,34 @@ namespace Karaboss
         }
 
 
+
+
         #endregion
 
 
+        #region chords analysis
+        private void btnChords_Click(object sender, EventArgs e)
+        {
 
+            // Ferme le formulaire frmChords
+            if (Application.OpenForms["frmChords"] != null)
+                Application.OpenForms["frmChords"].Close();
+
+            if (Application.OpenForms.OfType<frmChords>().Count() == 0)
+            {
+                try
+                {
+                    frmChords frmChords = new frmChords(outDevice, MIDIfileFullPath);
+                    frmChords.Show();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }            
+        }
+
+        #endregion
     }
 
 }

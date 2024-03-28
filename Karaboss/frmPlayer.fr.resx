@@ -118,92 +118,83 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>54, 20</value>
-  </data>
-  <data name="mnuFile.Text" xml:space="preserve">
-    <value>&amp;Fichier</value>
-  </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 20</value>
-  </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>&amp;Edition</value>
-  </data>
-  <data name="mnuDisplay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>70, 20</value>
-  </data>
-  <data name="mnuDisplay.Text" xml:space="preserve">
-    <value>&amp;Affichage</value>
-  </data>
-  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>43, 20</value>
-  </data>
-  <data name="mnuHelp.Text" xml:space="preserve">
-    <value>&amp;Aide</value>
-  </data>
   <data name="mnuFileNew.Size" type="System.Drawing.Size, System.Drawing">
-    <value>202, 22</value>
+    <value>203, 22</value>
   </data>
   <data name="mnuFileNew.Text" xml:space="preserve">
     <value>&amp;Nouveau</value>
   </data>
   <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>202, 22</value>
+    <value>203, 22</value>
   </data>
   <data name="mnuFileOpen.Text" xml:space="preserve">
     <value>&amp;Ouvrir...</value>
   </data>
-  <data name="MnuFileImportMidiFromText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>202, 22</value>
-  </data>
-  <data name="MnuFileImportMidiFromText.Text" xml:space="preserve">
-    <value>Charger un fichier texte</value>
-  </data>
   <data name="MnuFileSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>199, 6</value>
+    <value>200, 6</value>
   </data>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>202, 22</value>
+    <value>203, 22</value>
   </data>
   <data name="mnuFileSave.Text" xml:space="preserve">
     <value>&amp;Enregistrer</value>
   </data>
   <data name="mnuFileSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>202, 22</value>
+    <value>203, 22</value>
   </data>
   <data name="mnuFileSaveAs.Text" xml:space="preserve">
     <value>Enregistrer &amp;sous</value>
   </data>
-  <data name="MnuFileExportMidiToText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>202, 22</value>
-  </data>
-  <data name="MnuFileExportMidiToText.Text" xml:space="preserve">
-    <value>Exporter au format Texte</value>
-  </data>
   <data name="mnuSaveAsPDF.Size" type="System.Drawing.Size, System.Drawing">
-    <value>202, 22</value>
+    <value>203, 22</value>
   </data>
   <data name="mnuSaveAsPDF.Text" xml:space="preserve">
     <value>Imprimer (PDF)</value>
   </data>
   <data name="MnuFileSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>199, 6</value>
+    <value>200, 6</value>
+  </data>
+  <data name="MnuFileImportMidiFromText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>203, 22</value>
+  </data>
+  <data name="MnuFileImportMidiFromText.Text" xml:space="preserve">
+    <value>Charger un fichier texte</value>
+  </data>
+  <data name="MnuFileExportMidiToText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>203, 22</value>
+  </data>
+  <data name="MnuFileExportMidiToText.Text" xml:space="preserve">
+    <value>Exporter au format Texte</value>
+  </data>
+  <data name="MnuFileSeparator3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>200, 6</value>
+  </data>
+  <data name="MnuFileImportMusicXml.Size" type="System.Drawing.Size, System.Drawing">
+    <value>203, 22</value>
+  </data>
+  <data name="MnuFileSeparator4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>200, 6</value>
   </data>
   <data name="mnufileProperties.Size" type="System.Drawing.Size, System.Drawing">
-    <value>202, 22</value>
+    <value>203, 22</value>
   </data>
   <data name="mnufileProperties.Text" xml:space="preserve">
     <value>Propriétés (Tags MIDI)</value>
   </data>
-  <data name="MnuFileSeparator3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>199, 6</value>
+  <data name="MnuFileSeparator5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>200, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>202, 22</value>
+    <value>203, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
+  </data>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>54, 20</value>
+  </data>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;Fichier</value>
   </data>
   <data name="mnuEditAddLyrics.Size" type="System.Drawing.Size, System.Drawing">
     <value>204, 22</value>
@@ -225,6 +216,12 @@
   </data>
   <data name="MnuEditEnterNotes.Text" xml:space="preserve">
     <value>Saisir des notes</value>
+  </data>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 20</value>
+  </data>
+  <data name="mnuEdit.Text" xml:space="preserve">
+    <value>&amp;Edition</value>
   </data>
   <data name="mnuDisplayLyricsWindows.Size" type="System.Drawing.Size, System.Drawing">
     <value>211, 22</value>
@@ -256,17 +253,17 @@
   <data name="mnuDisplayScrolling.Text" xml:space="preserve">
     <value>Défilement</value>
   </data>
+  <data name="mnuDisplay.Size" type="System.Drawing.Size, System.Drawing">
+    <value>70, 20</value>
+  </data>
+  <data name="mnuDisplay.Text" xml:space="preserve">
+    <value>&amp;Affichage</value>
+  </data>
   <data name="mnuMidiNewTrack.Size" type="System.Drawing.Size, System.Drawing">
     <value>221, 22</value>
   </data>
   <data name="mnuMidiNewTrack.Text" xml:space="preserve">
     <value>&amp;Ajouter une piste</value>
-  </data>
-  <data name="MnuMidiImportTracks.Size" type="System.Drawing.Size, System.Drawing">
-    <value>221, 22</value>
-  </data>
-  <data name="MnuMidiImportTracks.Text" xml:space="preserve">
-    <value>Importer des pistes depuis</value>
   </data>
   <data name="MnuMidiImporTracksFromMidi.Size" type="System.Drawing.Size, System.Drawing">
     <value>139, 22</value>
@@ -279,6 +276,12 @@
   </data>
   <data name="MnuMidiImportTracksFromText.Text" xml:space="preserve">
     <value>Fichier Texte</value>
+  </data>
+  <data name="MnuMidiImportTracks.Size" type="System.Drawing.Size, System.Drawing">
+    <value>221, 22</value>
+  </data>
+  <data name="MnuMidiImportTracks.Text" xml:space="preserve">
+    <value>Importer des pistes depuis</value>
   </data>
   <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
     <value>218, 6</value>
@@ -334,11 +337,29 @@
   <data name="mnuHelpAboutSong.Text" xml:space="preserve">
     <value>A p&amp;ropos du morceau...</value>
   </data>
+  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 20</value>
+  </data>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Aide</value>
+  </data>
+  <data name="menuStrip1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblPercent.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblDuration.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="lblRecord.Size" type="System.Drawing.Size, System.Drawing">
     <value>57, 13</value>
   </data>
   <data name="lblRecord.Text" xml:space="preserve">
     <value>Enregistrer</value>
+  </data>
+  <data name="lblRecord.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="lblMuteMelody.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 13</value>
@@ -346,14 +367,125 @@
   <data name="lblMuteMelody.Text" xml:space="preserve">
     <value>Mélodie</value>
   </data>
+  <data name="lblMuteMelody.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="btnMute1.Location" type="System.Drawing.Point, System.Drawing">
     <value>395, 30</value>
+  </data>
+  <data name="btnMute1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnTranspoMinus.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnTranspoPlus.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnTempoMinus.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnTempoPlus.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblTranspoValue.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblTempoValue.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblOutputDevice.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="VuMasterPeakVolume.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnPrev.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnNext.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="progressBarPlayer.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblStatus.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblBeat.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblElapsed.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlDisplay.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblTransp.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblTemp.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lnlVol.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="positionHScrollBarNew.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblChangesInfos.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblPlaylist.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblMainVolume.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 24</value>
+  </data>
+  <data name="sldMainVolume.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="btnStartRec.Text" xml:space="preserve">
     <value>Enregistrer</value>
   </data>
+  <data name="btnStartRec.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblLyricsInfos.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblInfosF.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlBottom.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnChords.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnDump.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="lblHelp.Text" xml:space="preserve">
     <value>Cliquer sur le bouton EDIT pour commencer à éditer la partition</value>
+  </data>
+  <data name="lblHelp.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblBass.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblTreble.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblCurNoteInfo.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblDotted.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="lblEdit.ToolTip" xml:space="preserve">
     <value>Editer la partition</value>
@@ -361,11 +493,53 @@
   <data name="lblSaisieNotes.ToolTip" xml:space="preserve">
     <value>Saisir des notes</value>
   </data>
+  <data name="lblBecarre.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblQuadrupleCrocheNote.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblTripleCrocheNote.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblDoubleCrocheNote.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="lblBemol.Location" type="System.Drawing.Point, System.Drawing">
     <value>504, 1</value>
   </data>
+  <data name="lblBemol.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblDiese.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblRondNote.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblCrocheNote.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblBlackNote.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblWhiteNote.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="lblGomme.ToolTip" xml:space="preserve">
     <value>Supprimer des notes</value>
+  </data>
+  <data name="pnlTop.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TimeStartVLine.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TimeVLine.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlMiddle.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -3289,5 +3463,8 @@
         AAAAAAAAAAAAAAAAAAAA/gB/APwAHwDwAA8A4AAHAOAAAwDAAAEAgAABAIAAAACAAAAAAAAAAAAAAAAA
         AAAAAAAAAAAAAACAAAAAgAAAAIAAAADAAAEAwAADAOAAAwDwAAcA+AAfAP4APwD/wf8A
 </value>
+  </data>
+  <data name="$this.ToolTip" xml:space="preserve">
+    <value />
   </data>
 </root>

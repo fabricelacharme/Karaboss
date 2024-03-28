@@ -408,9 +408,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\ChangeTimeSignature.resx">
       <DependentUpon>ChangeTimeSignature.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\DeleteMeasuresDialog.fr.resx">
       <DependentUpon>DeleteMeasuresDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\frmNoteEdit.fr.resx">
       <DependentUpon>frmNoteEdit.cs</DependentUpon>
@@ -420,6 +422,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\DeleteMeasuresDialog.resx">
       <DependentUpon>DeleteMeasuresDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\InsertMeasuresDialog.fr.resx">
       <DependentUpon>InsertMeasuresDialog.cs</DependentUpon>
@@ -427,8 +430,12 @@
     <EmbeddedResource Include="Score\UI\InsertMeasuresDialog.resx">
       <DependentUpon>InsertMeasuresDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Score\UI\ModifyStartTimesDialog.fr.resx">
+      <DependentUpon>ModifyStartTimesDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\ModifyStartTimesDialog.resx">
       <DependentUpon>ModifyStartTimesDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\modifyTempoDialog.resx">
       <DependentUpon>modifyTempoDialog.cs</DependentUpon>

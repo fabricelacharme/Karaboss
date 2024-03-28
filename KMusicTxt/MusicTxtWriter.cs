@@ -157,7 +157,7 @@ namespace MusicTxt
                 stream.WriteLine(string.Format("{0}, 0, Instrument_name_t, \"{1}\"", trackid, MidiFile.PCtoInstrument(track.ProgramChange)));
 
                 // Track, Time, Program_c, Channel, Program_num
-                stream.WriteLine(string.Format("{0}, 0, Program_c, {1}, {2}", trackid, track.MidiChannel, track.ProgramChange));
+                //stream.WriteLine(string.Format("{0}, 0, Program_c, {1}, {2}", trackid, track.MidiChannel, track.ProgramChange));
 
                 #region events
                 foreach (MidiEvent e in track.Iterator())
@@ -183,6 +183,8 @@ namespace MusicTxt
                         case MessageType.SystemRealtime:
                             Write((SysRealtimeMessage)e.MidiMessage);
                             break;
+
+                            
                     }
                 }
                 #endregion events
@@ -420,6 +422,18 @@ namespace MusicTxt
                     // 11 Fader
                     // 91 Reverb
                     // 93 chorus                                                          
+                }
+                
+            }
+            else
+            {
+                if (message.Command == ChannelCommand.ProgramChange)
+                {
+                    // Change instrument
+                    // Track, Time, Program_c, Channel, Program_num
+                    stream.WriteLine(string.Format("{0}, {1}, Program_c, {2}, {3}", trackid, ticks, channel, message.Data1));
+
+
                 }
             }
         }

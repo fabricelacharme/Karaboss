@@ -202,6 +202,11 @@ namespace MusicXml
             // List of tracks
             List<Part> Parts = SC.PartList;
 
+            #region check
+            if (Parts.Count == 0)
+                return null;
+            #endregion
+
             // Init sequence
             newTracks = new List<Track>(Parts.Count);
 

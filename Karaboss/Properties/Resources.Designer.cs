@@ -863,6 +863,26 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap export_pdf32 {
+            get {
+                object obj = ResourceManager.GetObject("export_pdf32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap export_txt48_2 {
+            get {
+                object obj = ResourceManager.GetObject("export_txt48_2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap floppy_icon {
             get {
                 object obj = ResourceManager.GetObject("floppy_icon", resourceCulture);
@@ -947,6 +967,26 @@ namespace Karaboss.Properties {
             get {
                 object obj = ResourceManager.GetObject("LOMM", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap magnifyminus24 {
+            get {
+                object obj = ResourceManager.GetObject("magnifyminus24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap magnifyplus24 {
+            get {
+                object obj = ResourceManager.GetObject("magnifyplus24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -1400,6 +1440,16 @@ namespace Karaboss.Properties {
             get {
                 object obj = ResourceManager.GetObject("Separator", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap silence {
+            get {
+                object obj = ResourceManager.GetObject("silence", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

@@ -118,53 +118,8 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>54, 20</value>
-  </data>
-  <data name="mnuFile.Text" xml:space="preserve">
-    <value>&amp;Fichier</value>
-  </data>
-  <data name="mnuEditRenameAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>213, 22</value>
-  </data>
-  <data name="mnuEditRenameAll.Text" xml:space="preserve">
-    <value>Tout renommer (F3)</value>
-  </data>
-  <data name="invertAuthorAndSongToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>236, 22</value>
-  </data>
-  <data name="invertAuthorAndSongToolStripMenuItem.Text" xml:space="preserve">
-    <value>Inverser auteur et chanson (F7)</value>
-  </data>
-  <data name="mnuEditRename.Text" xml:space="preserve">
-    <value>Renommer</value>
-  </data>
-  <data name="mnuEditReplaceAll.Text" xml:space="preserve">
-    <value>Tout remplacer (F4)</value>
-  </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 20</value>
-  </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>&amp;Edition</value>
-  </data>
-  <data name="mnuDisplay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>70, 20</value>
-  </data>
-  <data name="mnuDisplay.Text" xml:space="preserve">
-    <value>&amp;Affichage</value>
-  </data>
-  <data name="mnuTools.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 20</value>
-  </data>
-  <data name="mnuTools.Text" xml:space="preserve">
-    <value>&amp;Outils</value>
-  </data>
-  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>43, 20</value>
-  </data>
-  <data name="mnuHelp.Text" xml:space="preserve">
-    <value>&amp;Aide</value>
+  <data name="statusBar.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 439</value>
   </data>
   <data name="mnuFileNew.Size" type="System.Drawing.Size, System.Drawing">
     <value>165, 22</value>
@@ -202,6 +157,42 @@
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
   </data>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>54, 20</value>
+  </data>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;Fichier</value>
+  </data>
+  <data name="mnuEditRenameAll.Size" type="System.Drawing.Size, System.Drawing">
+    <value>236, 22</value>
+  </data>
+  <data name="mnuEditRenameAll.Text" xml:space="preserve">
+    <value>Tout renommer (F3)</value>
+  </data>
+  <data name="invertAuthorAndSongToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>236, 22</value>
+  </data>
+  <data name="invertAuthorAndSongToolStripMenuItem.Text" xml:space="preserve">
+    <value>Inverser auteur et chanson (F7)</value>
+  </data>
+  <data name="mnuEditRename.Size" type="System.Drawing.Size, System.Drawing">
+    <value>176, 22</value>
+  </data>
+  <data name="mnuEditRename.Text" xml:space="preserve">
+    <value>Renommer</value>
+  </data>
+  <data name="mnuEditReplaceAll.Size" type="System.Drawing.Size, System.Drawing">
+    <value>176, 22</value>
+  </data>
+  <data name="mnuEditReplaceAll.Text" xml:space="preserve">
+    <value>Tout remplacer (F4)</value>
+  </data>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 20</value>
+  </data>
+  <data name="mnuEdit.Text" xml:space="preserve">
+    <value>&amp;Edition</value>
+  </data>
   <data name="mnuDisplaySearch.Size" type="System.Drawing.Size, System.Drawing">
     <value>322, 22</value>
   </data>
@@ -235,17 +226,11 @@
   <data name="MnuDisplayGuitarTraining.Text" xml:space="preserve">
     <value>Entrainement à la guitare</value>
   </data>
-  <data name="mnuToolsOption.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+  <data name="mnuDisplay.Size" type="System.Drawing.Size, System.Drawing">
+    <value>70, 20</value>
   </data>
-  <data name="MnuToolsSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>177, 6</value>
-  </data>
-  <data name="mnuToolsMngtFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
-  </data>
-  <data name="mnuToolsMngtFiles.Text" xml:space="preserve">
-    <value>Gérer mes fichiers</value>
+  <data name="mnuDisplay.Text" xml:space="preserve">
+    <value>&amp;Affichage</value>
   </data>
   <data name="mnuToolsMngtFilesDeleteEmptyDirs.Size" type="System.Drawing.Size, System.Drawing">
     <value>377, 22</value>
@@ -298,8 +283,14 @@
   <data name="mnuToolsMngtFilesSearchSameNameInASingleDirectory.Text" xml:space="preserve">
     <value>Rechercher noms identiques dans un répertoire</value>
   </data>
-  <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>177, 6</value>
+  <data name="mnuToolsMngtFiles.Text" xml:space="preserve">
+    <value>Gérer mes fichiers</value>
+  </data>
+  <data name="mnuTools.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 20</value>
+  </data>
+  <data name="mnuTools.Text" xml:space="preserve">
+    <value>&amp;Outils</value>
   </data>
   <data name="mnuMidiInputDevice.Size" type="System.Drawing.Size, System.Drawing">
     <value>174, 22</value>
@@ -309,12 +300,6 @@
   </data>
   <data name="MnuMidiSep1.Size" type="System.Drawing.Size, System.Drawing">
     <value>171, 6</value>
-  </data>
-  <data name="MnuMidiExternal.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
-  </data>
-  <data name="MnuMidiExternal.Text" xml:space="preserve">
-    <value>Instrument externe</value>
   </data>
   <data name="MnuMidiExternalPlay.Size" type="System.Drawing.Size, System.Drawing">
     <value>130, 22</value>
@@ -328,6 +313,12 @@
   <data name="MnuMidiExternalRecord.Text" xml:space="preserve">
     <value>Enregistrer</value>
   </data>
+  <data name="MnuMidiExternal.Size" type="System.Drawing.Size, System.Drawing">
+    <value>174, 22</value>
+  </data>
+  <data name="MnuMidiExternal.Text" xml:space="preserve">
+    <value>Instrument externe</value>
+  </data>
   <data name="MnuHelpCheckNewVersion.Size" type="System.Drawing.Size, System.Drawing">
     <value>199, 22</value>
   </data>
@@ -339,6 +330,18 @@
   </data>
   <data name="mnuHelpAbout.Text" xml:space="preserve">
     <value>A propos de Karaboss</value>
+  </data>
+  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 20</value>
+  </data>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Aide</value>
+  </data>
+  <data name="sideBarControl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>90, 511</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>776, 461</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -3359,9 +3362,5 @@
         AAAAAAAAAAAAAADwDwAAwAMAAIABAACAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA
         AQAAgAEAAMADAADwDwAA
 </value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
 </root>

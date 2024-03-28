@@ -52,7 +52,7 @@ namespace Karaboss.Lrc.NeteaseMusic
         private bool hasTransLyrics;
         private string _errorLog = "";
         internal string ErrorLog { get => _errorLog; private set => _errorLog = value; }
-        private Lyrics mixedLyrics = new Lyrics();//翻译作为trans来保存
+        private Karaboss.Lrc.SharedFramework.Lyrics mixedLyrics = new Karaboss.Lrc.SharedFramework.Lyrics();//翻译作为trans来保存
 
         public ExtendedLyrics(long ID)
         {
@@ -69,8 +69,8 @@ namespace Karaboss.Lrc.NeteaseMusic
                 userReviseFunc = true;
             hasOriLyrics = false;
             hasTransLyrics = false;
-            Lyrics tempOriLyric = new Lyrics();
-            Lyrics tempTransLyric = new Lyrics();
+            Karaboss.Lrc.SharedFramework.Lyrics tempOriLyric = new Karaboss.Lrc.SharedFramework.Lyrics();
+            Karaboss.Lrc.SharedFramework.Lyrics tempTransLyric = new Karaboss.Lrc.SharedFramework.Lyrics();
             string sLRC = "";
             string sContent;
             HttpRequest hr = new HttpRequest();

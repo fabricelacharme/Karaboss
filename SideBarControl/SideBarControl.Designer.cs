@@ -38,6 +38,7 @@
             this.btnConnected = new VBarControl.NavButton.NavButton();
             this.btnPianoTraining = new VBarControl.NavButton.NavButton();
             this.btnGuitarTraining = new VBarControl.NavButton.NavButton();
+            this.btnChords = new VBarControl.NavButton.NavButton();
             this.SuspendLayout();
             // 
             // btnPlaylists
@@ -148,11 +149,24 @@
             this.btnGuitarTraining.SelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(73)))), ((int)(((byte)(94)))));
             this.btnGuitarTraining.Click += new System.EventHandler(this.btnGuitarTraining_Click);
             // 
+            // btnChords
+            // 
+            resources.ApplyResources(this.btnChords, "btnChords");
+            this.btnChords.defaultBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
+            this.btnChords.HoverColor = System.Drawing.Color.Gray;
+            this.btnChords.Image = ((System.Drawing.Image)(resources.GetObject("btnChords.Image")));
+            this.btnChords.Name = "btnChords";
+            this.btnChords.Selectable = false;
+            this.btnChords.Selected = false;
+            this.btnChords.SelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(73)))), ((int)(((byte)(94)))));
+            this.btnChords.Click += new System.EventHandler(this.btnChords_Click);
+            // 
             // SideBarControl
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
+            this.Controls.Add(this.btnChords);
             this.Controls.Add(this.btnGuitarTraining);
             this.Controls.Add(this.btnPianoTraining);
             this.Controls.Add(this.btnConnected);
@@ -177,5 +191,6 @@
         private NavButton.NavButton btnConnected;
         private NavButton.NavButton btnPianoTraining;
         private NavButton.NavButton btnGuitarTraining;
+        private NavButton.NavButton btnChords;
     }
 }

@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2023 Fabrice Lacharme
+/* Copyright (c) 2024 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -118,6 +118,7 @@ namespace Karaboss
             sideBarControl.EditFile += new EventHandler(SideBarControl_EditFile);
             sideBarControl.DisplayPianoTraining += new EventHandler(SideBarControl_DisplayPianoTraining);
             sideBarControl.DisplayGuitarTraining += new EventHandler(SideBarControl_DisplayGuitarTraining);
+            sideBarControl.DisplayChords += new EventHandler(SideBarControl_DisplayChords);
 
             #endregion
 
@@ -188,6 +189,8 @@ namespace Karaboss
             }
 
         }
+
+       
 
 
         #region Content Changed
@@ -271,6 +274,7 @@ namespace Karaboss
             sideBarControl.ShowButton("btnEdit", bVisible);
             sideBarControl.ShowButton("btnPianoTraining", bVisible);
             sideBarControl.ShowButton("btnGuitarTraining", bVisible);
+            sideBarControl.ShowButton("btnChords", bVisible);
         }
 
         /// <summary>
@@ -476,6 +480,10 @@ namespace Karaboss
             if (Application.OpenForms["frmPianoTraining"] != null)
                 Application.OpenForms["frmPianoTraining"].Close();
 
+            // Ferme le formulaire frmChords
+            if (Application.OpenForms["frmChords"] != null)
+                Application.OpenForms["frmChords"].Close();
+
             // Ferme le formulaire frmGuitarTraining            
             if (Application.OpenForms["frmGuitarTraining"] != null)
                 Application.OpenForms["frmGuitarTraining"].Close();
@@ -526,6 +534,11 @@ namespace Karaboss
             if (Application.OpenForms["frmPianoTraining"] != null)
                 Application.OpenForms["frmPianoTraining"].Close();
 
+            // Ferme le formulaire frmChords
+            if (Application.OpenForms["frmChords"] != null)
+                Application.OpenForms["frmChords"].Close();
+
+
             // Ferme le formulaire frmGuitarTraining            
             if (Application.OpenForms["frmGuitarTraining"] != null)
                 Application.OpenForms["frmGuitarTraining"].Close();
@@ -538,6 +551,58 @@ namespace Karaboss
             frmGuitarTraining.Activate();
         }
 
+        /// <summary>
+        /// Display chords
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void SideBarControl_DisplayChords(object sender, EventArgs e)
+        {
+            string filename = string.Empty;
+            if (searchControl.Visible)
+                filename = searchControl.SelectedFile;
+            else if (xplorerControl.Visible)
+            {
+                if (xplorerControl.SelectedItems.Length == 1)
+                    filename = xplorerControl.SelectedItems[0].FileSystemPath;
+            }
+            else if (playlistsControl.Visible)
+                filename = playlistsControl.SelectedFile;
+
+            if (filename == null || filename == "" || !File.Exists(filename) || !Karaclass.IsMidiExtension(filename))
+            {
+                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // ferme le formulaire frmPlayer
+            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            {
+                Application.OpenForms["frmPlayer"].Close();
+            }
+
+            // Ferme le formulaire frmPianoTraining            
+            if (Application.OpenForms["frmPianoTraining"] != null)
+                Application.OpenForms["frmPianoTraining"].Close();
+
+            // Ferme le formulaire frmGuitarTraining            
+            if (Application.OpenForms["frmGuitarTraining"] != null)
+                Application.OpenForms["frmGuitarTraining"].Close();
+
+            // Ferme le formulaire frmChords
+            if (Application.OpenForms["frmChords"] != null)
+                Application.OpenForms["frmChords"].Close();
+
+
+            ResetOutPutDevice();
+            // Affiche le formulaire frmChords 
+            Form frmChords = new frmChords(outDevice, filename);
+            frmChords.Show();
+            frmChords.Activate();
+
+
+        }
 
         /// <summary>
         /// Open a file selected from the MRU list.
@@ -1448,6 +1513,13 @@ namespace Karaboss
             {
                 Application.OpenForms["FrmTextPlayer"].Close();
             }
+
+            // Ferme le formulaire frmChords
+            if (Application.OpenForms.OfType<frmChords>().Count() > 0)
+            {
+                Application.OpenForms["frmChords"].Close();
+            }
+
             #endregion
 
             // Affiche le formulaire frmPlay 
@@ -1517,6 +1589,12 @@ namespace Karaboss
             if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
             {
                 Application.OpenForms["FrmTextPlayer"].Close();
+            }
+
+            // Ferme le formulaire frmChords
+            if (Application.OpenForms.OfType<frmChords>().Count() > 0)
+            {
+                Application.OpenForms["frmChords"].Close();
             }
             #endregion
 
@@ -1589,6 +1667,12 @@ namespace Karaboss
             if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
             {
                 Application.OpenForms["FrmTextPlayer"].Close();
+            }
+
+            // Ferme le formulaire frmChords
+            if (Application.OpenForms.OfType<frmChords>().Count() > 0)
+            {
+                Application.OpenForms["frmChords"].Close();
             }
             #endregion
 
@@ -1866,7 +1950,7 @@ namespace Karaboss
                     }
                     else if (WindowState == FormWindowState.Normal)
                     {
-                        Properties.Settings.Default.frmExplorerLocation = Location;
+                        Karaboss.Properties.Settings.Default.frmExplorerLocation = Location;
                         Properties.Settings.Default.frmExplorerSize = Size;
                         Properties.Settings.Default.frmExplorerMaximized = false;
                     }
@@ -2984,8 +3068,7 @@ namespace Karaboss
 
 
 
-        #endregion
 
-       
+        #endregion
     }
 }

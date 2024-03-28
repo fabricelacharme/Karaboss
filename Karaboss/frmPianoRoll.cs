@@ -137,8 +137,6 @@ namespace Karaboss
             this.KeyDown += new KeyEventHandler(FrmPianoRoll_KeyDown);
             this.KeyUp += new KeyEventHandler(FrmPianoRoll_KeyUp);
 
-            //pianoRollControl2.OnMouseMoved += new Sanford.Multimedia.Midi.VPianoRoll.MouseMoveEventHandler(pianoRollControl2_MouseMove);
-
             timer1.Interval = 20;
 
             // Sequence
@@ -696,22 +694,7 @@ namespace Karaboss
             {
                 int SC = W / 20;
                 int LC = W / 10;
-
-                // Width is limited to 65535                
-                //hScrollBar.Maximum = W - (wMiddle - vW) + LC;
-                //hScrollBar.SmallChange = SC;
-                //hScrollBar.LargeChange = LC;
-
-     
-                /*
-                // Aggrandissement horizontal de la fenetre => la scrollbar horizontale doit se positionner à droite 
-                if (W - hScrollBar.Value < wMiddle)
-                {
-                    v = hScrollBar.Maximum - hScrollBar.LargeChange;
-                    if (v >= 0)
-                        hScrollBar.Value = v;
-                }
-                */
+                
             }
         }
 
@@ -1040,7 +1023,7 @@ namespace Karaboss
         /// <summary>
         /// Window and scrollbar startup position
         /// </summary>
-        public void StartupPosition(float ticks = 0, int note = 0)
+        public void StartupPosition(int ticks, int note = 0)
         {
             // VERTICAL
             if (note > 0)
@@ -1050,9 +1033,11 @@ namespace Karaboss
                 vScrollBar.Value = vScrollBar.Maximum - middleScroll;
             }
 
-            // HORIZONTAL            
-            if ((uint)ticks > positionHScrollBar.Minimum  && (uint)ticks < positionHScrollBar.Maximum)
-                positionHScrollBar.Value = (uint)ticks;
+            // HORIZONTAL                        
+            float pcent = (float)ticks / sequence1.GetLength();
+            uint v = (uint)(pcent * (float)(positionHScrollBar.Maximum - positionHScrollBar.Minimum)); ;
+            if (positionHScrollBar.Minimum <= v && v <= positionHScrollBar.Maximum)
+                positionHScrollBar.Value = (uint)(pcent * (float)(positionHScrollBar.Maximum - positionHScrollBar.Minimum));
         }
 
         private void FrmPianoRoll_Resize(object sender, EventArgs e)

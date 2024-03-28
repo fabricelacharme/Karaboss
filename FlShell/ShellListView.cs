@@ -1632,33 +1632,52 @@ namespace FlShell
         }
 
         private void ListView_AfterLabelEdit(object sender, LabelEditEventArgs e)
-        {            
+        {
+            Console.WriteLine("ListView_AfterLabelEdit");
 
-            ShellItem item = m_ListView.Items[e.Item].Tag as ShellItem;
-
-            if (e.Label != null && e.Label != String.Empty)
+            try
             {
-                // File or Folder creation                
-                string NewName = e.Label.Trim();
+                ShellItem item = m_ListView.Items[e.Item].Tag as ShellItem;
 
-                IntPtr newPidl = IntPtr.Zero;
-                try
+                if (e.Label != null && e.Label != String.Empty)
                 {
-                    // When the newname is identical to an existing name, Windows proposes to rename again the file: toto => toto (2)
-                    uint res = item.Parent.GetIShellFolder().SetNameOf(m_ListView.Handle, Shell32.ILFindLastID(item.Pidl), NewName, SHGDN.NORMAL, out newPidl);
-                }
-                catch (COMException ex)
-                {
-                    // Ignore the exception raised when the user cancels
-                    // a delete operation, or a change of name because duplicate.
-                    if (ex.ErrorCode != unchecked((int)0x800704C7) &&
-                        ex.ErrorCode != unchecked((int)0x80270000) &&
-                        ex.ErrorCode != unchecked((int)0x8000FFFF))
+                    // File or Folder creation                
+                    string NewName = e.Label.Trim();
+
+                    IntPtr newPidl = IntPtr.Zero;
+                    try
                     {
-                        throw;
+                        // When the newname is identical to an existing name, Windows proposes to rename again the file: toto => toto (2)
+                        uint res = item.Parent.GetIShellFolder().SetNameOf(m_ListView.Handle, Shell32.ILFindLastID(item.Pidl), NewName, SHGDN.NORMAL, out newPidl);
                     }
-                    e.CancelEdit = true;
+                    catch (COMException ex)
+                    {
+                        // Ignore the exception raised when the user cancels
+                        // a delete operation, or a change of name because duplicate.
+                        if (ex.ErrorCode != unchecked((int)0x800704C7) &&
+                            ex.ErrorCode != unchecked((int)0x80270000) &&
+                            ex.ErrorCode != unchecked((int)0x8000FFFF))
+                        {
+                            throw;
+                        }
+                        e.CancelEdit = true;
+                    }
+
+
+                    // Name was changed by Windows because of duplicate                                 
+                    if (e.Item < m_ListView.Items.Count)
+                        if (e.Label != m_ListView.Items[e.Item].Text)
+                            e.CancelEdit = true;
+                        else
+                        {
+                            Console.WriteLine("Rename : indice incorrect ?");
+                            e.CancelEdit = true;
+                        }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Afterlabeledit" + ex.Message);
             }
 
             #region delete me
@@ -2259,8 +2278,9 @@ namespace FlShell
 
             // Debug
             //Console.WriteLine("m_ShellListener_ItemRenamed: " + m_CurrentFolder.DisplayName);
-                m_ResetSelection = false;
-                Navigate(m_CurrentFolder,e.NewItem.DisplayName);
+            
+            m_ResetSelection = false;
+            Navigate(m_CurrentFolder,e.NewItem.DisplayName);
 
 
             //}
@@ -2291,7 +2311,7 @@ namespace FlShell
                 // FAB 15/11/23
                 // Décoche ligne cochée
                 m_ResetSelection = false;
-                    RecreateShellView(m_CurrentFolder);
+                RecreateShellView(m_CurrentFolder);
 
                 //}
 

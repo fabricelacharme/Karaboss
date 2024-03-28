@@ -401,10 +401,8 @@ namespace FlShell
 
         void RefreshItem(TreeNode node)
         {
-
             try
             {
-
                 ShellItem folder = (ShellItem)node.Tag;
 
                 // patch FAB 29/06/2016
@@ -412,7 +410,6 @@ namespace FlShell
                 {
                     node.Text = folder.DisplayName;
                     SetNodeImage(node);
-
 
 
                     if (NodeHasChildren(node))
@@ -608,7 +605,9 @@ namespace FlShell
 
         bool NodeHasChildren(TreeNode node)
         {
+            // FAB 27/11/2023
             return (node.Nodes.Count > 0) && (node.Nodes[0].Tag != null);
+            
         }
 
         void ScrollTreeView(ScrollDirection direction)

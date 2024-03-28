@@ -112,83 +112,103 @@ public class PDFObject {
 }
 
 
-/** @class PDFWithImages
- *
- * The PDFWithImages class takes a set of images, and creates a single
- * PDF document out of them (one image per page).
- *
- * A PDF document has the following format:
- *
- * 1. The header (version and some binary data)
- *   %PDF-1.3
- *   %binary chars
- *
- * 2. The PDF objects
- *   2 0 obj
- *   << /Name /Value pairs >>
- *   endobj
- *
- * 3. A cross-reference (XRef) table.    
- *   This table gives the file offset of every PDF object in the file.
- *   The format is:
- *
- *   xref 0 17    // highest object number  
- *   0000000000 65535 f    // object 0, not used
- *   0000000023 00000 n    // object 1 offset
- *   0000000155 00000 n    // object 2 offset
- *   ....
- *
- * 4. A trailer 
- *
- *   It tells
- *   - The number of PDF objects (size)
- *   - The objectId of the Root 'catalog', the starting object of the document.
- *   - The objectId of the Info, which gives the document title/producer/create date.
- *   - The file offset of the XRef table
- *
- *   trailer
- *   << /Size /17 /Root 2 0 R /Info 1 0 R /ID [<timestamp> <timestamp> ] >>
- *   startxref 259454
- *   %%EOF
- *
- * The main PDF objects are:
- * 
- * - The document information
- *   << /Title file.mid /Producer (MidiSheetMusic) /CreationDate (D:YYYYMMDDHHMMSS-00 >>
- * 
- * - The catalog
- *   << /Type /Catalog /Pages 3 0 R /Version /1.4 >>
- *
- * - The page tree, which gives the document size, and list of pages
- *   << /Type /Pages /MediaBox [0 0 840 1090] /Count 2 /Kids [ 4 0 R 5 0 R ] >>
- *
- * - A single page, which consists of resources and contents
- *   << /Type /Page /Parent 3 0 R /Resources 6 0 R /Contents 7 0 R /MediaBox [0 0 840 1090] >>
- *
- * - The page resource points to the image to draw
- *   << /ProcSet [ /PDF /ImageB /ImageC /ImageI ] /XObject << /Im1 9 0 R >> >>
- *
- * - The page content gives the commands to draw the page (to draw the image in our case)
- *   << /Length 145 /Filter /FlateDecode >>
- *   stream
- *   q Q q /Perceptual ri q 840 0 0 1090 0 0 cm /Im1 Do Q Q  // zlib compressed
- *   endstream 
- *
- * - The XObject is the actual raw image to draw. 
- *   << /Length 159450 /Type /XObject /Subtype /Image /Width 840 /Height 1090 
- *      /Interpolate false /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /FlateDecode >>
- *   stream
- *   raw image data
- *   endstream
- * 
- *
- */
-public class PDFWithImages {
-    private string title;                /* Title of this sheet music */
-    private Stream stream;               /* The stream to save the PDF to */
-    private int numpages;                /* The number of pages in this PDF document */
-    private List<PDFObject> pdfobjects;  /* The PDF objects */
-    private long startxref;              /* The start offset of the XRef (cross-reference) table */
+    /** @class PDFWithImages
+     *
+     * The PDFWithImages class takes a set of images, and creates a single
+     * PDF document out of them (one image per page).
+     *
+     * A PDF document has the following format:
+     *
+     * 1. The header (version and some binary data)
+     *   %PDF-1.3
+     *   %binary chars
+     *
+     * 2. The PDF objects
+     *   2 0 obj
+     *   << /Name /Value pairs >>
+     *   endobj
+     *
+     * 3. A cross-reference (XRef) table.    
+     *   This table gives the file offset of every PDF object in the file.
+     *   The format is:
+     *
+     *   xref 0 17    // highest object number  
+     *   0000000000 65535 f    // object 0, not used
+     *   0000000023 00000 n    // object 1 offset
+     *   0000000155 00000 n    // object 2 offset
+     *   ....
+     *
+     * 4. A trailer 
+     *
+     *   It tells
+     *   - The number of PDF objects (size)
+     *   - The objectId of the Root 'catalog', the starting object of the document.
+     *   - The objectId of the Info, which gives the document title/producer/create date.
+     *   - The file offset of the XRef table
+     *
+     *   trailer
+     *   << /Size /17 /Root 2 0 R /Info 1 0 R /ID [<timestamp> <timestamp> ] >>
+     *   startxref 259454
+     *   %%EOF
+     *
+     * The main PDF objects are:
+     * 
+     * - The document information
+     *   << /Title file.mid /Producer (MidiSheetMusic) /CreationDate (D:YYYYMMDDHHMMSS-00 >>
+     * 
+     * - The catalog
+     *   << /Type /Catalog /Pages 3 0 R /Version /1.4 >>
+     *
+     * - The page tree, which gives the document size, and list of pages
+     *   << /Type /Pages /MediaBox [0 0 840 1090] /Count 2 /Kids [ 4 0 R 5 0 R ] >>
+     *
+     * - A single page, which consists of resources and contents
+     *   << /Type /Page /Parent 3 0 R /Resources 6 0 R /Contents 7 0 R /MediaBox [0 0 840 1090] >>
+     *
+     * - The page resource points to the image to draw
+     *   << /ProcSet [ /PDF /ImageB /ImageC /ImageI ] /XObject << /Im1 9 0 R >> >>
+     *
+     * - The page content gives the commands to draw the page (to draw the image in our case)
+     *   << /Length 145 /Filter /FlateDecode >>
+     *   stream
+     *   q Q q /Perceptual ri q 840 0 0 1090 0 0 cm /Im1 Do Q Q  // zlib compressed
+     *   endstream 
+     *
+     * - The XObject is the actual raw image to draw. 
+     *   << /Length 159450 /Type /XObject /Subtype /Image /Width 840 /Height 1090 
+     *      /Interpolate false /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /FlateDecode >>
+     *   stream
+     *   raw image data
+     *   endstream
+     * 
+     *
+     */
+    public class PDFWithImages {
+        private string title;                /* Title of this sheet music */
+        private Stream stream;               /* The stream to save the PDF to */
+        private int numpages;                /* The number of pages in this PDF document */
+        private List<PDFObject> pdfobjects;  /* The PDF objects */
+        private long startxref;              /* The start offset of the XRef (cross-reference) table */
+
+        /// <summary>
+        /// FAB: Width of PDF?
+        /// </summary>
+        private int _docwidth = 840; //840;        
+        public int DocWidth 
+        { 
+            get { return _docwidth;}
+            set { _docwidth = value; }
+        } 
+        
+        /// <summary>
+        /// FAB: Height of PDF?
+        /// </summary>
+        private int _docheight = 1090; //1090;
+        public int DocHeight
+        {
+            get { return _docheight;}
+            set { _docheight = value; }
+        }
 
     public PDFWithImages(Stream stream, string title, int numpages) {
         this.stream = stream;
@@ -298,7 +318,7 @@ public class PDFWithImages {
         page.StringPairs = "<< /Type /Page /Parent " + pagetree.RefString + 
                            " /Resources " + pageResource.RefString + 
                            " /Contents " + pageContent.RefString + 
-                           " /MediaBox [0 0 840 1090] >>";
+                           " /MediaBox [0 0 " + _docwidth + " " + _docheight +"] >>";
 
         pageResource.StringPairs = "<< /ProcSet [ /PDF /ImageB /ImageC /ImageI ] /XObject << /Im1 " + pageXObject.RefString + " >> >>";
 
@@ -318,8 +338,9 @@ public class PDFWithImages {
     /** Create the page tree object, which contains references to all the page objects */
     void initPageTreeValue() {
         PDFObject pagetree = getPDFObject(PDFType.PDFTypePageTree);
-        string pageTreeValue = "<< /Type /Pages /MediaBox [0 0 840 1090] /Count " + numpages.ToString() + " /Kids [ ";
-        foreach (PDFObject obj in pdfobjects) {
+            string pageTreeValue = "<< /Type /Pages /MediaBox [0 0 " + _docwidth + " " + _docheight + "] /Count " + numpages.ToString() + " /Kids [ ";
+            //string pageTreeValue = "<< /Type /Pages /MediaBox [0 0 " + 200 + " " + 200 + "] /Count " + numpages.ToString() + " /Kids [ ";
+            foreach (PDFObject obj in pdfobjects) {
             if (obj.PDFType == PDFType.PDFTypePage) {
                 pageTreeValue += obj.RefString + " ";
             }

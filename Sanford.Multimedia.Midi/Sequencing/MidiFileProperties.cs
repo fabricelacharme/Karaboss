@@ -88,6 +88,7 @@ namespace Sanford.Multimedia.Midi
         
         // FAB
         private int tempo = 0;
+        private int orig_format = 1;
         private int orig_tempo = 0;
         private int numerator = 0;
         private int denominator = 0;
@@ -421,6 +422,12 @@ namespace Sanford.Multimedia.Midi
             { return tempo; }
             set
             { tempo = value; }
+        }
+
+        public int Orig_format
+        {
+            get { return orig_format; }
+            set { orig_format = value; }
         }
 
         public int Orig_Tempo

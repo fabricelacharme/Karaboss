@@ -209,7 +209,9 @@ namespace Karaboss
 
             /* The initial filename in the dialog will be <midi filename>.pdf */
             string initname = Path.GetFileName(CurrentPath);
-            initname = initname.Replace(".mid", "") + ".pdf";
+            initname = initname.Replace(".mid", "");
+            initname = initname.Replace(".kar", "");
+            initname += ".pdf";
             dialog.FileName = initname;
 
             if (dialog.ShowDialog() == DialogResult.OK)

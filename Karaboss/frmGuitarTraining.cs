@@ -1645,7 +1645,6 @@ namespace Karaboss
         }
 
         #endregion
-
     }
 
     #region MIDIInstrument
