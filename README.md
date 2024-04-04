@@ -29,4 +29,4 @@ This editor is basic compared to professionnal ones (even the free versions) but
 ![GitHub Logo](/Gifs/en.explorer.png)
 
 The sources are hard to show because the merger of all these projects into one results in a non-optimized code (to be fair)
-Anayway, the program can be freely downloadable at http://karaoke.lacharme.net
+Anayway, the program can be freely downloadable at http://karaboss.lacharme.net
