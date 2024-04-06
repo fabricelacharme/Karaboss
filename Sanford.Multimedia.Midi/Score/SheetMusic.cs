@@ -88,18 +88,14 @@ namespace Sanford.Multimedia.Midi.Score
             public int lastnote;
             public MidiNote midinote = new MidiNote(0, 0, 0, 0, 0, false);
         };
-
-        public class CopyPasteNotes
-        {
-            public int srcStaff = -1;
-            public int dstStaff = -1;
-            public List<MidiNote> _selnotes = new List<MidiNote>();
-        }
-        private CopyPasteNotes _copyPasteNotes;
+        
 
         #region properties
 
         private int _selectedstaff = -1;
+        private int _CopyNotesStaff = -1;
+
+
         /// <summary>
         /// Gets or sets current selected staff or track
         /// </summary>
@@ -2060,6 +2056,9 @@ namespace Sanford.Multimedia.Midi.Score
                                 // If several notes are selected, select the first one
                                 if (_selnotes != null && _selnotes.Count > 0)
                                 {
+                                    // Portée où on a copié les notes
+                                    _CopyNotesStaff = _selectedstaff;
+
                                     CurrentNote.midinote = _selnotes[0];
                                     UpdateCurrentNote(_selectedstaff, CurrentNote.midinote.Number, CurrentNote.midinote.StartTime, false);
                                 }
@@ -2665,12 +2664,10 @@ namespace Sanford.Multimedia.Midi.Score
                 //int noteMeasure = 0;
                 int destnumstaff = GetStaffClicked(Y);
 
-                if (_copyPasteNotes != null)
-                    _copyPasteNotes.dstStaff = destnumstaff;
 
                 if (destnumstaff != -1)
                 {
-                    if (_copyPasteNotes.srcStaff == _copyPasteNotes.dstStaff)
+                    if (_CopyNotesStaff == destnumstaff)
                     {
                         // ============================
                         // Paste to the same staff
@@ -2706,7 +2703,7 @@ namespace Sanford.Multimedia.Midi.Score
 
                         Cursor.Current = Cursors.Default;
                     }
-                    else if (_copyPasteNotes.srcStaff != _copyPasteNotes.dstStaff)
+                    else 
                     {
                         // ==========================
                         // Paste to another staff
@@ -2720,18 +2717,27 @@ namespace Sanford.Multimedia.Midi.Score
 
                         // delta measures                    
                         int deltaticks = Convert.ToInt32((NumMeasure - NumMeasureorg) * measurelen);  // ticks du début de mesure
-                        
-                        Track srctrack = sequence1.tracks[_copyPasteNotes.srcStaff];
-                        Track dsttrack = sequence1.tracks[_copyPasteNotes.dstStaff];
+                                                
+                        Track track = sequence1.tracks[destnumstaff];
+                        int noteMeasure = 0;
 
-                        // Copy all events
-                        List<MidiEvent> L = srctrack.GetEvents(srcstarttime, srcendtime, srcstarttime + deltaticks);
-                        // Paste events
-                        dsttrack.PasteEvents(L, srcstarttime, srcendtime, srcstarttime + deltaticks);
+                        foreach (MidiNote n in _selnotes)
+                        {
+                            // Create new notes having the channel of the target track in case the paste is done on two different tracks!                        
+                            MidiNote newnote = new MidiNote(n.StartTime, track.MidiChannel, n.Number, n.Duration, n.Velocity, false);
+
+                            noteMeasure = Convert.ToInt32(newnote.StartTime / measurelen);
+                            ticks = newnote.StartTime + deltaticks;
+                            newnote.StartTime = Convert.ToInt32(ticks);
+                            track.addNote(newnote);
+                        }
+
+                        if (track.Notes.Count > 1)
+                            track.Notes.Sort(track.Notes[0]);
 
 
                         // Refresh track notes
-                        dsttrack.ExtractNotes();
+                        track.ExtractNotes();
 
                         this.Refresh();
                         // Redraw selected notes in red
@@ -3137,11 +3143,6 @@ namespace Sanford.Multimedia.Midi.Score
             {
                 Staff staff = this.staffs[numstaff];
                 L = staff.getSelectedNotes();
-
-                _copyPasteNotes = new CopyPasteNotes();
-                _copyPasteNotes.srcStaff = numstaff;
-                _copyPasteNotes._selnotes = L;
-
             }
             return L;
         }
