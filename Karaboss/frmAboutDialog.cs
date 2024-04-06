@@ -63,7 +63,7 @@ namespace Karaboss
             catch (Exception ex)
             {
                 Console.Write(ex.Message);
-                lblUrl.Text = "http://karaoke.lacharme.net/";
+                lblUrl.Text = "https://karaboss.lacharme.net/";
             }
             
 

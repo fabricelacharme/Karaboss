@@ -51,7 +51,7 @@ namespace Karaboss
          * The program checks if there is an instance already running and send it the arguments
          * otherwise, 
          * it selects the appropriate language
-         * it checks if a new version is available on http://karaoke.lacharme.net
+         * it checks if a new version is available on https://karaboss.lacharme.net
          * it displays a splash screen
          * it displays the first form: the explorer (frmExplorer) 
          * 
