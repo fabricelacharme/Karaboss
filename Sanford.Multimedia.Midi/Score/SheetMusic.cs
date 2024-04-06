@@ -89,6 +89,14 @@ namespace Sanford.Multimedia.Midi.Score
             public MidiNote midinote = new MidiNote(0, 0, 0, 0, 0, false);
         };
 
+        public class CopyPasteNotes
+        {
+            public int srcStaff = -1;
+            public int dstStaff = -1;
+            public List<MidiNote> _selnotes = new List<MidiNote>();
+        }
+        private CopyPasteNotes _copyPasteNotes;
+
         #region properties
 
         private int _selectedstaff = -1;
@@ -1944,7 +1952,9 @@ namespace Sanford.Multimedia.Midi.Score
 
                     // If notes selected, draw menu Copy/Paste
                     if (_selnotes == null || _selnotes.Count == 0)
-                        _selnotes =  GetSelectedNotes(e);
+                    {
+                        _selnotes = GetSelectedNotes(e);
+                    }
 
                     if (_selnotes.Count > 0)
                     {
@@ -2652,42 +2662,91 @@ namespace Sanford.Multimedia.Midi.Score
                 X = Convert.ToInt32(X / zoom);
                 Y = Convert.ToInt32(Y / zoom);
 
-                int noteMeasure = 0;
+                //int noteMeasure = 0;
                 int destnumstaff = GetStaffClicked(Y);
 
+                if (_copyPasteNotes != null)
+                    _copyPasteNotes.dstStaff = destnumstaff;
+
                 if (destnumstaff != -1)
-                {                                        
-                    Cursor.Current = Cursors.WaitCursor;
-                    if (X < 0) X = -X;
-                    ticks = staffs[destnumstaff].PulseTimeForPoint(new Point(X, Y));
+                {
+                    if (_copyPasteNotes.srcStaff == _copyPasteNotes.dstStaff)
+                    {
+                        // ============================
+                        // Paste to the same staff
+                        // ============================
+                        Cursor.Current = Cursors.WaitCursor;
+                        if (X < 0) X = -X;
+                        ticks = staffs[destnumstaff].PulseTimeForPoint(new Point(X, Y));
 
-                    // Numéro de mesure                 
-                    int NumMeasure = 1 + Convert.ToInt32(ticks) / measurelen;
+                        // Numéro de mesure                 
+                        int NumMeasure = 1 + Convert.ToInt32(ticks) / measurelen;
 
-                    // delta measures                    
-                    int deltaticks = Convert.ToInt32((NumMeasure - NumMeasureorg) * measurelen);  // ticks du début de mesure
+                        // delta measures                    
+                        int deltaticks = Convert.ToInt32((NumMeasure - NumMeasureorg) * measurelen);  // ticks du début de mesure
 
-                    Track desttrack = sequence1.tracks[destnumstaff];
+                        Track desttrack = sequence1.tracks[destnumstaff];
 
-                    // Copy all events
-                    desttrack.CopyEvents(srcstarttime, srcendtime, srcstarttime + deltaticks);
-                    
+                        // Copy all events
+                        desttrack.CopyEvents(srcstarttime, srcendtime, srcstarttime + deltaticks);
 
-                    // Refresh track notes
-                    desttrack.ExtractNotes();
+                        // Refresh track notes
+                        desttrack.ExtractNotes();
 
-                    this.Refresh();
-                    // Redraw selected notes in red
-                    RestoreSelectedNotes(destnumstaff);
+                        this.Refresh();
+                        // Redraw selected notes in red
+                        RestoreSelectedNotes(destnumstaff);
 
-                    MidiNote nn = _selnotes[_selnotes.Count - 1];
-                    UpdateCurrentNote(destnumstaff, nn.Number, nn.StartTime, false);
+                        MidiNote nn = _selnotes[_selnotes.Count - 1];
+                        UpdateCurrentNote(destnumstaff, nn.Number, nn.StartTime, false);
 
-                    // Raise Event
-                    FileModified?.Invoke(this);
-                    WidthChanged?.Invoke(maxstaffwidth);
+                        // Raise Event
+                        FileModified?.Invoke(this);
+                        WidthChanged?.Invoke(maxstaffwidth);
 
-                    Cursor.Current = Cursors.Default;
+                        Cursor.Current = Cursors.Default;
+                    }
+                    else if (_copyPasteNotes.srcStaff != _copyPasteNotes.dstStaff)
+                    {
+                        // ==========================
+                        // Paste to another staff
+                        // ==========================
+                        Cursor.Current = Cursors.WaitCursor;
+                        if (X < 0) X = -X;
+                        ticks = staffs[destnumstaff].PulseTimeForPoint(new Point(X, Y));                        
+
+                        // Numéro de mesure                 
+                        int NumMeasure = 1 + Convert.ToInt32(ticks) / measurelen;
+
+                        // delta measures                    
+                        int deltaticks = Convert.ToInt32((NumMeasure - NumMeasureorg) * measurelen);  // ticks du début de mesure
+                        
+                        Track srctrack = sequence1.tracks[_copyPasteNotes.srcStaff];
+                        Track dsttrack = sequence1.tracks[_copyPasteNotes.dstStaff];
+
+                        // Copy all events
+                        List<MidiEvent> L = srctrack.GetEvents(srcstarttime, srcendtime, srcstarttime + deltaticks);
+                        // Paste events
+                        dsttrack.PasteEvents(L, srcstarttime, srcendtime, srcstarttime + deltaticks);
+
+
+                        // Refresh track notes
+                        dsttrack.ExtractNotes();
+
+                        this.Refresh();
+                        // Redraw selected notes in red
+                        RestoreSelectedNotes(destnumstaff);
+
+                        MidiNote nn = _selnotes[_selnotes.Count - 1];
+                        UpdateCurrentNote(destnumstaff, nn.Number, nn.StartTime, false);
+
+                        // Raise Event
+                        FileModified?.Invoke(this);
+                        WidthChanged?.Invoke(maxstaffwidth);
+
+                        Cursor.Current = Cursors.Default;
+                    }
+
                 }
                 else
                 {
@@ -3054,6 +3113,10 @@ namespace Sanford.Multimedia.Midi.Score
 
         #endregion
 
+        /// <summary>
+        /// Called by drawing rectangle
+        /// </summary>
+        /// <param name="midinote"></param>
         public void AddSelectedNote(MidiNote midinote)
         {          
             if (_selnotes == null)
@@ -3074,6 +3137,11 @@ namespace Sanford.Multimedia.Midi.Score
             {
                 Staff staff = this.staffs[numstaff];
                 L = staff.getSelectedNotes();
+
+                _copyPasteNotes = new CopyPasteNotes();
+                _copyPasteNotes.srcStaff = numstaff;
+                _copyPasteNotes._selnotes = L;
+
             }
             return L;
         }
