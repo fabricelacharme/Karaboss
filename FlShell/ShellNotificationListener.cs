@@ -206,6 +206,7 @@ namespace FlShell
                             }
                             break;
 
+                        
                         case SHCNE.UPDATEITEM:
                             if (m_Parent.ItemUpdated != null)
                             {
@@ -218,6 +219,7 @@ namespace FlShell
                                 }
                             }
                             break;
+                        
 
                         case SHCNE.RENAMEFOLDER:
                             if (m_Parent.FolderRenamed != null)

@@ -122,6 +122,13 @@ namespace FlShell
                 if (path == "" || path == "file:///C://")
                     path = "shell:///Desktop";
 
+                /*
+                if (path.Contains("file:///C:/Users/a453868/Music/Karaoke"))
+                {
+                    path = "shell:///My Music//Karaoke";
+                }
+                */
+
                 Initialize(new Uri(path));
             }
             catch (Exception ex)
