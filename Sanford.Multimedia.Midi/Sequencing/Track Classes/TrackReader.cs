@@ -649,6 +649,9 @@ namespace Sanford.Multimedia.Midi
                             else
                                 reste = sy.Substring(0, iParagraph1);
 
+                            //FAB 28/05/2024 : lyriques sans espace ?
+                            reste = SetTrailingSpace(reste);
+
                             newTrack.TotalLyricsL += reste;
                             newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
                         }
@@ -668,20 +671,8 @@ namespace Sanford.Multimedia.Midi
                             else
                                 reste = sy.Substring(0, iParagraph2);
 
-
                             //FAB 28/05/2024 : lyriques sans espace ?
-                            if (LyricsSpacing == lyricsSpacings.WithoutSpace)
-                            {
-                                if (!reste.Contains(" ") && (!reste.EndsWith("-")))
-                                {
-                                    reste += " ";
-                                }
-                                else if (reste.EndsWith("-") && reste.Length > 1)
-                                {
-                                    reste = reste.Substring(0, reste.Length - 1);
-                                }
-                            }
-
+                            reste = SetTrailingSpace(reste);
 
                             newTrack.TotalLyricsL += reste;
                             newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
@@ -689,8 +680,7 @@ namespace Sanford.Multimedia.Midi
                     }
                     else if (iLineFeed1 == 0 || (sy.Length > LineFeed1.Length && iLineFeed1 == sy.Length - LineFeed1.Length))
                     {
-                        // Single linefeed
-                        // A back slash "\" character marks the end of a line of lyrics
+                        // Single linefeed + text                        
                         newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = "¼", TicksOn = ticks });
                         newTrack.TotalLyricsL += "¼";
 
@@ -701,7 +691,10 @@ namespace Sanford.Multimedia.Midi
                                 reste = sy.Substring(LineFeed1.Length, sy.Length - LineFeed1.Length);
                             else
                                 reste = sy.Substring(0, iLineFeed1);
-                            
+
+                            //FAB 28/05/2024 : lyriques sans espace ?
+                            reste = SetTrailingSpace(reste);
+
                             newTrack.TotalLyricsL += reste;
                             newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
                         }
@@ -723,17 +716,7 @@ namespace Sanford.Multimedia.Midi
 
 
                             //FAB 28/05/2024 : lyriques sans espace ?
-                            if (LyricsSpacing == lyricsSpacings.WithoutSpace)
-                            {
-                                if (!reste.Contains(" ") && (!reste.EndsWith("-")))
-                                {
-                                    reste += " ";
-                                }
-                                else if (reste.EndsWith("-") && reste.Length > 1)
-                                {
-                                    reste = reste.Substring(0, reste.Length - 1);
-                                }
-                            }
+                            reste = SetTrailingSpace(reste);
 
                             newTrack.TotalLyricsL += reste;
                             newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
@@ -744,17 +727,7 @@ namespace Sanford.Multimedia.Midi
                         // no linefeedn single text
 
                         //FAB 28/05/2024 : lyriques sans espace ?
-                        if (LyricsSpacing == lyricsSpacings.WithoutSpace)
-                        {
-                            if (!sy.Contains(" ") && (!sy.EndsWith("-")))
-                            {
-                                sy += " ";
-                            }
-                            else if (sy.EndsWith("-") && sy.Length > 1)
-                            {
-                                sy = sy.Substring(0, sy.Length - 1);
-                            }
-                        }
+                        sy = SetTrailingSpace(sy);
 
                         newTrack.TotalLyricsL += sy;
                         newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = sy, TicksOn = ticks });
@@ -774,6 +747,23 @@ namespace Sanford.Multimedia.Midi
             {
                 Console.Write(ely.Message);
             }
+        }
+
+        private string SetTrailingSpace(string s)
+        {            
+            //FAB 28/05/2024 : lyriques sans espace ?
+            if (LyricsSpacing == lyricsSpacings.WithoutSpace)
+            {
+                if (!(s.StartsWith(" ") || s.EndsWith(" ")) && (!s.EndsWith("-")))
+                {
+                    s += " ";
+                }
+                else if (s.EndsWith("-") && s.Length > 1)
+                {
+                    s = s.Substring(0, s.Length - 1);
+                }
+            }
+            return s;
         }
 
         /// <summary>
