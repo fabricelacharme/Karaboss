@@ -594,19 +594,23 @@ namespace Sanford.Multimedia.Midi
             if (sy.Trim() != string.Empty)
                 sy = CleanSpecialChars(sy);
 
-            // What is the type of separator between lyrics ? space or nothing
-            // If there is a space before or after the string, the lyrics are separated by a space
-            if (sy.StartsWith(" ") || sy.EndsWith(" ") )
-            {
-                LyricsSpacing = lyricsSpacings.WithSpace;
-            }
 
             try
             {
+
+                // Elimine caractères bizarres dans certains fichiers    
+                sy = cleanLyric(sy);
+
                 if (sy != string.Empty)
                 {
-                    // Elimine caractères bizarres dans certains fichiers    
-                    sy = cleanLyric(sy);
+                    // What is the type of separator between lyrics ? space or nothing
+                    // If there is a space before or after the string, the lyrics are separated by a space
+                    if (sy.StartsWith(" ") || sy.EndsWith(" "))
+                    {
+                        LyricsSpacing = lyricsSpacings.WithSpace;
+                    }                    
+
+
 
                     string s = sy.Trim();                                      
                     string reste = string.Empty;
@@ -750,17 +754,20 @@ namespace Sanford.Multimedia.Midi
         }
 
         private string SetTrailingSpace(string s)
-        {            
-            //FAB 28/05/2024 : lyriques sans espace ?
-            if (LyricsSpacing == lyricsSpacings.WithoutSpace)
+        {
+            if (s != string.Empty)
             {
-                if (!(s.StartsWith(" ") || s.EndsWith(" ")) && (!s.EndsWith("-")))
+                //FAB 28/05/2024 : lyriques sans espace ?
+                if (LyricsSpacing == lyricsSpacings.WithoutSpace)
                 {
-                    s += " ";
-                }
-                else if (s.EndsWith("-") && s.Length > 1)
-                {
-                    s = s.Substring(0, s.Length - 1);
+                    if (!(s.StartsWith(" ") || s.EndsWith(" ")) && (!s.EndsWith("-")))
+                    {
+                        s += " ";
+                    }
+                    else if (s.EndsWith("-") && s.Length > 1)
+                    {
+                        s = s.Substring(0, s.Length - 1);
+                    }
                 }
             }
             return s;
@@ -828,13 +835,12 @@ namespace Sanford.Multimedia.Midi
 
             try
             {
+
+                // Elimine caractères bizarres dans certains fichiers    
+                sy = cleanLyric(sy);
+
                 if (sy != string.Empty)
-                {
-
-                    // Elimine caractères bizarres dans certains fichiers    
-                    sy = cleanLyric(sy);
-                                       
-
+                {                                                         
                     // Tags
                     if (sy.Substring(0, 1) == "@" && ticks == 0)
                     {
@@ -1166,15 +1172,20 @@ namespace Sanford.Multimedia.Midi
 
         private string cleanLyric(string l)
         {
-            l = Regex.Replace(l, "\0.$", "");
-            l = l.Replace("\0", " ");
+            if (l != string.Empty)
+            {
+                // Fab 03/06/2024
+                l = Regex.Replace(l, "\0.$", "");
+                //l = l.Replace("\0", " ");
+                l = l.Replace("\0", "");
+                l = l.Replace("  ", "");
 
-            //l = l.Replace("/", "\r");   // A forward slash "/" character marks the end of a "paragraph" of lyrics
-            //l = l.Replace("\\", "\r");  // A back slash "\" character marks the end of a line of lyrics
+                //l = l.Replace("/", "\r");   // A forward slash "/" character marks the end of a "paragraph" of lyrics
+                //l = l.Replace("\\", "\r");  // A back slash "\" character marks the end of a line of lyrics
 
-            l = l.Replace("\r\n", "\r");
-            l = l.Replace("\n", "\r");
-
+                l = l.Replace("\r\n", "\r");
+                l = l.Replace("\n", "\r");
+            }
             return l;
         }
 
