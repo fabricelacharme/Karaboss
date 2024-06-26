@@ -267,7 +267,7 @@ namespace Karaboss
 
             // Tempo : 
             //ex tempo = 750000;
-            track.insertTempo(tempo);
+            track.insertTempo(tempo, 0);
 
             // Keysignature
             track.insertKeysignature(timesig.Numerator, timesig.Denominator);

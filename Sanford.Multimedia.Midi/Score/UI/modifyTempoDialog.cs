@@ -42,6 +42,9 @@ namespace Sanford.Multimedia.Midi.Score.UI
         private bool TempoDoChange = true;
         private float _bpm;
         private float _tempo;
+        private float _starttime;
+
+
         public int Division
         {
             get
@@ -53,8 +56,15 @@ namespace Sanford.Multimedia.Midi.Score.UI
             { return Convert.ToInt32(_tempo); }
         }
 
+        public int StartTime
+        {
+            get
+            {
+                return Convert.ToInt32(_starttime);
+            }
+        }
 
-        public modifyTempoDialog(int division, int tempo)
+        public modifyTempoDialog(int division, int tempo, int starttime)
         {
             InitializeComponent();
             
@@ -63,6 +73,8 @@ namespace Sanford.Multimedia.Midi.Score.UI
             _tempo = tempo;
             txtTempo.Text = tempo.ToString();
 
+            _starttime = starttime;
+            txtStartTime.Text = starttime.ToString();
         }
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -92,6 +104,7 @@ namespace Sanford.Multimedia.Midi.Score.UI
             return int.TryParse(input, out test);
         }
 
+        #region events
         private void txtTempo_TextChanged(object sender, EventArgs e)
         {
             if (TempoDoChange == false) return;
@@ -131,20 +144,6 @@ namespace Sanford.Multimedia.Midi.Score.UI
             }
         }
 
-        private void txtTempo_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
-        }
-
-        private void txtDivision_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
-        }
-
-        private void txtBpm_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
-        }
 
         private void updDivision_ValueChanged(object sender, EventArgs e)
         {
@@ -160,6 +159,40 @@ namespace Sanford.Multimedia.Midi.Score.UI
                 msg += string.Format("Division will be changed from {0} to {1}", division, val);
                 MessageBox.Show(msg, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        #endregion events
+
+
+        #region verif
+        private void txtTempo_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+        }
+
+        private void txtDivision_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+        }
+
+        private void txtBpm_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+        }
+
+        private void txtStartTime_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+        }
+
+
+
+
+        #endregion verif
+
+        private void txtStartTime_TextChanged(object sender, EventArgs e)
+        {
+            _starttime = float.Parse(this.txtStartTime.Text);
         }
     }
 }

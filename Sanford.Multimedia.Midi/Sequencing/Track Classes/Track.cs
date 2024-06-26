@@ -385,10 +385,10 @@ namespace Sanford.Multimedia.Midi
 
         #region tempo
         /// <summary>
-        /// Find Tempo Message
+        /// Find Tempo Message starting from ticks
         /// </summary>
         /// <returns></returns>
-        private int findTempo()
+        private int findTempo(int ticks)
         {
             int id = 0;
             MidiEvent current = GetMidiEvent(0);
@@ -402,7 +402,24 @@ namespace Sanford.Multimedia.Midi
                     MetaMessage Msg = (MetaMessage)current.MidiMessage;                    
                     if (Msg.MetaType == MetaType.Tempo)
                     {
-                        return id;
+                        if (current.AbsoluteTicks >= ticks)
+                        {
+                            return id;
+                        }
+                        else
+                        {
+                            #region next
+                            if (current.Next != null)
+                            {
+                                current = current.Next;
+                                id++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            #endregion next
+                        }
                     }
                     else
                     {
@@ -440,14 +457,14 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// Remove Tempo Message
         /// </summary>
-        public void RemoveTempoEvent()
+        public void RemoveTempoEvent(int ticks)
         {
-            int i = findTempo();
+            int i = findTempo(ticks);
 
             while (i != -1)
             {
                 RemoveAt(i);
-                i = findTempo();
+                i = findTempo(ticks);
             }
 
         }
@@ -1273,7 +1290,7 @@ namespace Sanford.Multimedia.Midi
         /// Insert Tempo Message in a track at position 0
         /// </summary>
         /// <param name="tempo"></param>
-        public void insertTempo(int tempo)
+        public void insertTempo(int tempo, int ticks)
         {
             var split = BitConverter.GetBytes(tempo);
             byte[] bytes = new byte[3];
@@ -1281,7 +1298,7 @@ namespace Sanford.Multimedia.Midi
             bytes[1] = split[1]; //113;
             bytes[2] = split[0]; //176;
             MetaMessage metamessage = new MetaMessage(MetaType.Tempo, bytes);
-            Insert(0, metamessage);
+            Insert(ticks, metamessage);
         }
 
         public void insertKeysignature(int numerator, int denominator)

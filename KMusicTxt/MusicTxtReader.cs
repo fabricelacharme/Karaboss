@@ -1389,7 +1389,7 @@ namespace MusicTxt
 
             // Insert Tempo in track 0
             if (sequence.tracks.Count > 0)
-                sequence.tracks[0].insertTempo(Tempo);
+                sequence.tracks[0].insertTempo(Tempo, 0);
 
             // Tags to sequence
             sequence.CloneTags();

@@ -912,7 +912,7 @@ namespace Sanford.Multimedia.Midi
 
                     // FAB 21/03/2015
                     track.Tempo = Tempo;
-                    track.insertTempo(Tempo);
+                    track.insertTempo(Tempo, 0);
                     track.insertKeysignature(Numerator, Denominator);
                     track.insertTimesignature(Numerator, Denominator);
 

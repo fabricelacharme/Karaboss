@@ -3413,7 +3413,7 @@ namespace Karaboss
         private void MnuMidiModifyTempo_Click(object sender, EventArgs e)
         {
             DialogResult dr = new DialogResult();
-            Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog ModifyTempoDialog = new Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog(sequence1.Division, sequence1.Tempo);
+            Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog ModifyTempoDialog = new Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog(sequence1.Division, sequence1.Tempo, 0);
             dr = ModifyTempoDialog.ShowDialog();
 
             if (dr == DialogResult.Cancel)
@@ -3423,15 +3423,16 @@ namespace Karaboss
 
             int tempo = ModifyTempoDialog.Tempo;
             int division = ModifyTempoDialog.Division;
+            int starttime = ModifyTempoDialog.StartTime;
 
-            ModTempo(tempo, division);
+            ModTempoMenu(tempo, division, starttime);
             UpdateMidiTimes();
 
             FileModified();
             DisplayFileInfos();
         }
 
-        private void ModTempo(int tempo, int division)
+        private void ModTempoMenu(int tempo, int division, int ticks)
         {
             // If no change => out
             if (tempo == sequence1.Tempo && division == sequence1.Division)
@@ -3445,11 +3446,12 @@ namespace Karaboss
                 sequence1.Time = new TimeSignature(sequence1.Numerator, sequence1.Denominator, sequence1.Division, sequence1.Tempo);
                 pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
 
+                // RTemove all tempo events stating from ticks
                 foreach (Track trk in sequence1.tracks)
                 {
-                    trk.RemoveTempoEvent();
+                    trk.RemoveTempoEvent(ticks);
                 }
-                sequence1.tracks[0].insertTempo(tempo);
+                sequence1.tracks[0].insertTempo(tempo, ticks);
             }
 
             // Plus compliqué qu'il n'y parait
@@ -7097,7 +7099,7 @@ namespace Karaboss
 
             // Tempo : 
             //ex tempo = 750000;
-            track.insertTempo(tempo);
+            track.insertTempo(tempo, 0);
           
             // Keysignature
             track.insertKeysignature(timesig.Numerator, timesig.Denominator);
@@ -8464,46 +8466,24 @@ namespace Karaboss
 
         private void ModTempo()
         {
-            int tempo = TempoDelta * TempoOrig / 100;
+            _tempo = TempoDelta * TempoOrig / 100;
 
-            // If no change => out
-            if (tempo == sequence1.Tempo)
-                return;
-
-
-            lblTempoValue.Text = string.Format("{0}%", TempoDelta);
+            // Change clock tempo
+            sequencer1.Tempo = _tempo;
             
 
-            // Stop sequencer if it was playing
-            if (PlayerState == PlayerStates.Playing)
-                sequencer1.Stop();
+            lblTempoValue.Text = string.Format("{0}%", TempoDelta);
 
-            _tempo = tempo;
-            sequence1.Tempo = _tempo;
-            sequence1.Time = new TimeSignature(sequence1.Numerator, sequence1.Denominator, sequence1.Division, _tempo);
+            // Update Midi Times            
+            _bpm = GetBPM(_tempo);            
 
-            // Remove all tempo events
-            foreach (Track trk in sequence1.tracks)
-            {
-                trk.RemoveTempoEvent();
-            }
-
-            // Insert new tempo event in track 0
-            sequence1.tracks[0].insertTempo(_tempo);
-
-            // Update Midi Times
-            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
-            _bpm = GetBPM(_tempo);
             // Update display duration
+            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
             int Min = (int)(_duration / 60);
             int Sec = (int)(_duration - (Min * 60));
             lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
 
-            DisplayFileInfos();
-
-            // Restart sequencer if it was playing
-            if (PlayerState == PlayerStates.Playing)
-                sequencer1.Continue();
+            DisplayFileInfos();            
 
         }
 
