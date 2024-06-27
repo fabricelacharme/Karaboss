@@ -1287,7 +1287,7 @@ namespace Sanford.Multimedia.Midi
         }
 
         /// <summary>
-        /// Insert Tempo Message in a track at position 0
+        /// Insert Tempo Message in a track at position ticks
         /// </summary>
         /// <param name="tempo"></param>
         public void insertTempo(int tempo, int ticks)

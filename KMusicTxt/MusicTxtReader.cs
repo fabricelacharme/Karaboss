@@ -308,7 +308,14 @@ namespace MusicTxt
             if (ar.Length != 4)
                 throw new ArgumentException("Tempo Length");
             // Track, Time, Tempo, Number
-            Tempo = Convert.ToInt32(ar[3]);
+            //Tempo = Convert.ToInt32(ar[3]);
+
+            int ticks = Convert.ToInt32(ar[1]);
+            int _tempo = Convert.ToInt32(ar[3]);
+            if (currenttrack >= 0 && currenttrack <= newTracks.Count)
+            {
+                newTracks[currenttrack].insertTempo(_tempo, ticks);
+            }
         }
         #endregion
 
@@ -1388,8 +1395,8 @@ namespace MusicTxt
             //sequence.tracks = newTracks;
 
             // Insert Tempo in track 0
-            if (sequence.tracks.Count > 0)
-                sequence.tracks[0].insertTempo(Tempo, 0);
+            //if (sequence.tracks.Count > 0)
+            //    sequence.tracks[0].insertTempo(Tempo, 0);
 
             // Tags to sequence
             sequence.CloneTags();

@@ -168,7 +168,7 @@ namespace MusicTxt
                 stream.WriteLine(string.Format("{0}, 0, Start_track", trackid));
 
                 // Name of track
-                stream.WriteLine(string.Format("1, 0, Title_t, \"{0}\"", (track.Name == "" ? song : track.Name)));
+                //stream.WriteLine(string.Format("1, 0, Title_t, \"{0}\"", (track.Name == "" ? song : track.Name)));
 
                 // Add sequence infos in first track
                 if (i == 0)
@@ -233,27 +233,27 @@ namespace MusicTxt
             // Classic Karaoke Midi tags
             /*
             @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
-            @L	(single) Language	FRAN, ENGL        
+            @L	(single) Language	FREN, ENGL        
             @W	(multiple) Copyright (of Karaoke file, not song)        
             @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
             @I	Information  ex Date(of Karaoke file, not song)
             @V	(single) Version ex 0100 ?             
             */
             if (sequence.KTag.Count == 0)
-                stream.WriteLine("1, 0, Text_t, \"@KMIDI KARAOKE FILE\"");
+                stream.WriteLine("0, 0, Text_t, \"@KMIDI KARAOKE FILE\"");
             if (sequence.VTag.Count == 0)
-                stream.WriteLine("1, 0, Text_t, \"@V0100\"");
+                stream.WriteLine("0, 0, Text_t, \"@V0100\"");
             if (sequence.TTag.Count == 0)
-                stream.WriteLine(string.Format("1, 0, Text_t, \"@T{0}\"", song));
+                stream.WriteLine(string.Format("0, 0, Text_t, \"@T{0}\"", song));
 
             if (sequence.ITag.Count == 0)
-                stream.WriteLine("1, 0, Text_t, \"@IMidi file dump made with Karaboss\"");
+                stream.WriteLine("0, 0, Text_t, \"@IMidi file dump made with Karaboss\"");
 
-            stream.WriteLine("1, 0, Copyright_t, \"No copyright\"");
+            stream.WriteLine("0, 0, Copyright_t, \"No copyright\"");
 
             // Track, Time, Time_signature, Num, Denom, Click, NotesQ
             // FAB: TO BE CHECKED
-            stream.WriteLine(string.Format("1, 0, Time_signature, {0}, {1}, {2}, {3}", sequence.Time.Numerator, sequence.Time.Denominator, 24, 8));
+            stream.WriteLine(string.Format("0, 0, Time_signature, {0}, {1}, {2}, {3}", sequence.Time.Numerator, sequence.Time.Denominator, 24, 8));
             
             
             // Tempo can change during execution
