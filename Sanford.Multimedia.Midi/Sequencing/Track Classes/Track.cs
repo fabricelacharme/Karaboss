@@ -645,6 +645,12 @@ namespace Sanford.Multimedia.Midi
             }
         }
 
+        public void insertVolume(int channel, int volume)
+        {
+            ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, channel, (int)ControllerType.Volume, volume);
+            Insert(0, message);
+        }
+
         #endregion volume
 
         #region pan
@@ -734,6 +740,15 @@ namespace Sanford.Multimedia.Midi
                 i = findPan();
             }
         }
+
+
+        public void insertPan(int channel, int pan)
+        {
+            ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, channel, (int)ControllerType.Pan, pan);
+            Insert(0, message);
+        }
+
+
         #endregion pan
 
         #region reverb
@@ -822,6 +837,12 @@ namespace Sanford.Multimedia.Midi
                 RemoveAt(i);
                 i = findReverb();
             }
+        }
+
+        public void insertReverb(int channel, int reverb)
+        {
+            ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, channel, (int)ControllerType.EffectsLevel, reverb);
+            Insert(0, message);
         }
 
         #endregion reverb
@@ -1378,25 +1399,7 @@ namespace Sanford.Multimedia.Midi
             Insert(0, message);
         }
 
-        #endregion
-
-        public void insertVolume(int channel, int volume)
-        {
-            ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, channel, (int)ControllerType.Volume, volume);
-            Insert(0, message);
-        }
-
-        public void insertPan(int channel, int pan)
-        {
-            ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, channel, (int)ControllerType.Pan, pan);
-            Insert(0, message);
-        }
-
-        public void insertReverb(int channel, int reverb)
-        {
-            ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, channel, (int)ControllerType.EffectsLevel, reverb);
-            Insert(0, message);
-        }
+        #endregion                            
 
         #region pitchbend
         
