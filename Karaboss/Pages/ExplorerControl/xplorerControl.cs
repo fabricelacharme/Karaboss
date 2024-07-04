@@ -1089,6 +1089,8 @@ namespace Karaboss.xplorer
                     if (wext.IndexOf(txSearch) != -1)
                     {
                         nwext = wext.Replace(txSearch, txReplace);
+                        nwext = nwext.Trim();
+
                         newfileName = nwext + ext;
                         
                         // Files already exists ?
