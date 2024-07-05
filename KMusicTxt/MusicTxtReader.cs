@@ -36,6 +36,7 @@ namespace MusicTxt
         private int Denominator = 4;
         private int Division = 480;
         private int Tempo = 24;
+        private int firstTempo = -1;
 
 
         private int currenttrack = -1;
@@ -315,6 +316,12 @@ namespace MusicTxt
             if (currenttrack >= 0 && currenttrack <= newTracks.Count)
             {
                 newTracks[currenttrack].insertTempo(_tempo, ticks);
+                
+                // FAB 05/07/2024
+                //newTracks[currenttrack].Tempo = _tempo;
+                if (firstTempo == -1)
+                    firstTempo = _tempo;
+
             }
         }
         #endregion
@@ -534,7 +541,7 @@ namespace MusicTxt
                 Pan = Pan,
                 Reverb = Reverb,
                 Denominator = Denominator,
-                Numerator = Numerator
+                Numerator = Numerator                
             };
 
             ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, track.MidiChannel, track.ProgramChange, 0);
@@ -1383,7 +1390,7 @@ namespace MusicTxt
                 OrigFormat = 1,
                 Numerator = Numerator,
                 Denominator = Denominator,
-                Tempo = Tempo,
+                Tempo = firstTempo,
                 Time = new TimeSignature(Numerator, Denominator, Division, Tempo),
             };
 
@@ -1391,16 +1398,10 @@ namespace MusicTxt
             for (int i = 0; i < newTracks.Count; i++)
             {
                 sequence.Add(newTracks[i]);
-            }
-            //sequence.tracks = newTracks;
-
-            // Insert Tempo in track 0
-            //if (sequence.tracks.Count > 0)
-            //    sequence.tracks[0].insertTempo(Tempo, 0);
+            }            
 
             // Tags to sequence
             sequence.CloneTags();
-
 
         }
 

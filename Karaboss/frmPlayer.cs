@@ -7220,8 +7220,17 @@ namespace Karaboss
             pTrack.DragOver += new DragEventHandler(TrkControl_DragOver);
             pTrack.AllowDrop = true;
 
-            pTrack.Tag = track.MidiChannel.ToString();                                    
-            pTrack.Parent = pnlTracks;
+            
+            pTrack.Tag = track.MidiChannel.ToString();
+
+            try
+            {
+                pTrack.Parent = pnlTracks;
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
             return pTrack;
         }
@@ -7246,7 +7255,15 @@ namespace Karaboss
                 }
             }
 
-            TrkControl.TrackControl pTrack = CreateTrackControl(track, trackindex);
+            try
+            {
+                TrkControl.TrackControl pTrack = CreateTrackControl(track, trackindex);
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             int yloc = yOffset + j * iStaffHeightMaximized;
 
