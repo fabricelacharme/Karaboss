@@ -68,6 +68,8 @@ namespace Sanford.Multimedia.Midi
 
         private int runningStatus;
 
+       
+
 
         // FAB 28/05/2024
         private enum lyricsSpacings

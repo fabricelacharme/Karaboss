@@ -48,6 +48,7 @@ using MusicTxt;
 using System.Linq;
 using ChordAnalyser.UI;
 using Karaboss.Search;
+using System.Text;
 
 namespace Karaboss
 {
@@ -280,6 +281,10 @@ namespace Karaboss
         private string MIDIfileName = string.Empty;
         private string MIDIfilePath = string.Empty;
         private string MIDIfileFullPath = string.Empty;
+
+        // FAB 06/07/2024
+        private Encoding _encoding = Encoding.ASCII;
+
         #endregion
 
         /// <summary>
@@ -2388,7 +2393,7 @@ namespace Karaboss
 
                 ResetSequencer();
                 if (fileName != "\\")
-                {
+                {                                        
                     sequence1.LoadAsync(fileName);                                        
                 }
             } catch (Exception ex)
@@ -2396,6 +2401,7 @@ namespace Karaboss
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }            
         }
+        
 
         /// <summary>
         /// Load async a XML file
