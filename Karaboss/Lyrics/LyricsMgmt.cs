@@ -45,14 +45,14 @@ namespace Karaboss.Lyrics
         // Midifile characteristics
         private double _duration = 0;  // en secondes
         private int _totalTicks = 0;
-        private int _bpm = 0;
+        //private int _bpm = 0;
         private double _ppqn;
         private int _tempo;
         private int _measurelen = 0;
         private int NbMeasures;
-        private int _currentMeasure = -1;
-        private int _currentTimeInMeasure = -1;
-        private int _currentLine = 1;
+        //private int _currentMeasure = -1;
+        //private int _currentTimeInMeasure = -1;
+        //private int _currentLine = 1;
 
         #endregion private
 
@@ -912,8 +912,10 @@ namespace Karaboss.Lyrics
                 if (plLyrics[0].Type == plLyric.Types.Text)
                 {
                     // Add a linefeed at the end of previous measure                    
-                    pll = new plLyric();
-                    pll.Type = plLyric.Types.LineFeed;
+                    pll = new plLyric()
+                    {
+                        Type = plLyric.Types.LineFeed
+                    };
                     beat = plLyrics[0].Beat;                    
                     _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
                     

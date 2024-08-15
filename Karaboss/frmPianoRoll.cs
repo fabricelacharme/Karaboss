@@ -94,9 +94,9 @@ namespace Karaboss
         }
         private PlayerStates PlayerState;
 
-        private int bouclestart = 0;
+        //private int bouclestart = 0;
         private int newstart = 0;
-        private int laststart = 0;      // Start time to play
+        //private int laststart = 0;      // Start time to play
         private int nbstop = 0;
 
         private enum Editstatus
@@ -105,7 +105,7 @@ namespace Karaboss
             Arrow,
             Pen,
         }
-        private Editstatus EditStatus;
+        //private Editstatus EditStatus;
 
         private string CurrentPath = string.Empty;        
         
@@ -706,7 +706,7 @@ namespace Karaboss
         private void DisableEditButtons()
         {
             // None selection
-            EditStatus = Editstatus.None;
+            //EditStatus = Editstatus.None;
             Cursor = Cursors.Default;
 
             lblSaisieNotes.BackColor = Color.White;
@@ -1503,7 +1503,7 @@ namespace Karaboss
         private void ResetSequencer()
         {
             newstart = 0;
-            laststart = 0;
+            //laststart = 0;
             sequencer1.Stop();
             PlayerState = PlayerStates.Stopped;
         }
@@ -1564,7 +1564,7 @@ namespace Karaboss
                 positionHScrollBar.Value = positionHScrollBar.Minimum; 
                 hScrollBar.Value = hScrollBar.Minimum;
                 pianoRollControl2.OffsetX = 0;                
-                laststart = 0;                
+                //laststart = 0;                
             }
             else
             {

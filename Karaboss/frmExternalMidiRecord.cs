@@ -87,7 +87,7 @@ namespace Karaboss
         private bool closing = false;
         private int newstart = 0;
         private int nbstop = 0;
-        private int laststart = 0;      // Start time to play
+        //private int laststart = 0;      // Start time to play
         float TimeToTicksConversion = 0;
 
         // Current file beeing edited
@@ -936,7 +936,7 @@ namespace Karaboss
             {
                 DisplayTimeElapse(0);
                 positionHScrollBar.Value = positionHScrollBar.Minimum;                
-                laststart = 0;
+                //laststart = 0;
             }
             else
             {

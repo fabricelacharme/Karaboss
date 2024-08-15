@@ -442,8 +442,8 @@ namespace PicControl
         private bool m_Cancel = false;
         private bool m_Restart = false;       
 
-        private int m_step = 51;          // 0 à 255 par step de 3, 5, 15, 17, 51
-        private bool m_wait = false;
+        //private int m_step = 51;          // 0 à 255 par step de 3, 5, 15, 17, 51
+        //private bool m_wait = false;
         
         delegate void UpdateTimerEnableCallback(bool enabled);
         #endregion SlideShow
@@ -650,7 +650,7 @@ namespace PicControl
         public void LoadSong(List<plLyric> plLyrics, bool bDemoMode = false)
         {
             string lyrics = string.Empty;
-            m_wait = false;
+            //m_wait = false;
 
             if (plLyrics.Count > 0)
             {
@@ -747,7 +747,7 @@ namespace PicControl
             vOffset = 0;
             nextStartOfLineTime = 0;
 
-            m_wait = true;
+            //m_wait = true;
         }
 
         public void endDemoText()

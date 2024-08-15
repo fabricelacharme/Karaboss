@@ -114,7 +114,7 @@ namespace Karaboss
 
         #region controls
         // Creation dynamique de controles 
-        private Sanford.Multimedia.Timers.Timer timerBalls;
+        //private Sanford.Multimedia.Timers.Timer timerBalls;
         private Panel pnlTracks;        // panel left
         private Panel pnlScrollView;    // panel right    
         private Panel pnlHScroll;       // panel horizontal
@@ -200,7 +200,7 @@ namespace Karaboss
         private int TransposeOrig = 0;
 
 
-        private bool bMuted = false;
+        //private bool bMuted = false;
         private bool bVolumed = false;
         private bool bPlayNow = false;        
         private bool bSequencerAlwaysOn = false;
@@ -2505,7 +2505,7 @@ namespace Karaboss
             string file = string.Empty;
             file = string.Format("{0}\\{1}{2}", MIDIfilePath, name, ".txt");
 
-            MusicTxtWriter MTxtWriter = new MusicTxtWriter(sequence1, file);
+            MTxtWriter = new MusicTxtWriter(sequence1, file);
             MTxtWriter.WriteTxtCompleted += MTxtWriter_WriteTxtCompleted;
             MTxtWriter.WriteTxtProgressChanged += MTxtWriter_WriteTxtProgressChanged;
             MTxtWriter.WriteTxtAsync(file);

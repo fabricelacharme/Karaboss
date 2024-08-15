@@ -64,9 +64,9 @@ namespace Karaboss
         private string MIDIfilePath = string.Empty;
         private string MIDIfileFullPath = string.Empty;
 
-        private int bouclestart = 0;
+        //private int bouclestart = 0;
         private int newstart = 0;
-        private int laststart = 0;      // Start time to play
+        //private int laststart = 0;      // Start time to play
         private int nbstop = 0;
 
 
@@ -103,7 +103,7 @@ namespace Karaboss
         // 1 rst TAB
         private ColorSlider.ColorSlider positionHScrollBar;
         private ChordsControl ChordControl1;
-        private Panel pnlDisplay;
+        //private Panel pnlDisplay;
         private Panel pnlDisplayHorz;       // chords in horizontal mode
         private Panel pnlBottom;
 
@@ -129,7 +129,7 @@ namespace Karaboss
         // Midifile characteristics
         private double _duration = 0;  // en secondes
         private int _totalTicks = 0;
-        private int _bpm = 0;
+        //private int _bpm = 0;
         private double _ppqn;
         private int _tempo;
         private int _measurelen = 0;
@@ -1379,7 +1379,7 @@ namespace Karaboss
                 timer1.Stop();
             scrolling = false;
             newstart = 0;
-            laststart = 0;
+            //laststart = 0;
             _currentMeasure = -1;
             
             if (sequencer1 != null) 
@@ -1581,7 +1581,7 @@ namespace Karaboss
 
                 DisplayLineLyrics(0);                
 
-                laststart = 0;
+                //laststart = 0;
                 scrolling = false;
             }
             else

@@ -61,16 +61,16 @@ namespace Karaboss
         private double _ppqn;
         private int _tempo;
 
-        private int resolution = 4;
+        //private int resolution = 4;
         private int _measurelen = 0;
-        private int xScale = 20;
+        //private int xScale = 20;
         private float zoomx = 1.0f;
         private float zoomy = 1.0f;
         private bool scrolling = false;
         private bool closing = false;
         private int newstart = 0;
         private int nbstop = 0;
-        private int laststart = 0;      // Start time to play
+        //private int laststart = 0;      // Start time to play
 
         // Current file beeing edited
         private string MIDIfileName = string.Empty;
@@ -123,7 +123,7 @@ namespace Karaboss
 
             zoomx = 1.0f;
             zoomy = 10.0f;
-            resolution = 4;
+            //resolution = 4;
 
             SetTitle(FileName);
 
@@ -444,21 +444,21 @@ namespace Karaboss
             // Display width
             int wMiddle = pnlScrollView.Width;
 
-            bool bShowHScrollBarIndetermined = false;
+            //bool bShowHScrollBarIndetermined = false;
 
             // If display width > pianoRollControl width => remove horizontal scrollbar
             bShowHScrollBar = pianoControl1.TotalLength > pnlPiano.Width;
 
 
-            bool bShowVScrollBarIndetermined = false;
+            //bool bShowVScrollBarIndetermined = false;
 
             // If display height > pianoRollControl height => remove vertical scrollbar
             if (vPianoRollControl1.maxStaffLength > pnlScrollView.Height)
                 bShowVScrollBar = true;
             else if (vPianoRollControl1.maxStaffLength < pnlScrollView.Height)
                 bShowVScrollBar = false;
-            else
-                bShowVScrollBarIndetermined = true;
+            //else
+            //    bShowVScrollBarIndetermined = true;
 
 
             vScrollBar.Visible = bShowVScrollBar;
@@ -668,7 +668,7 @@ namespace Karaboss
                 positionHScrollBar.Value = positionHScrollBar.Minimum;
                 vScrollBar.Value = vScrollBar.Minimum;
                 vPianoRollControl1.OffsetY = 0;
-                laststart = 0;              
+                //laststart = 0;              
             }
             else
             {

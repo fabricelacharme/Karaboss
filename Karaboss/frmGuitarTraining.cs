@@ -50,7 +50,7 @@ namespace Karaboss
         private double _ppqn;
         private int _tempo;
 
-        private int resolution = 4;
+        //private int resolution = 4;
         private int _measurelen = 0;
         //private int xScale = 20;
         //private float zoomx = 1.0f;
@@ -59,7 +59,7 @@ namespace Karaboss
         private bool closing = false;
         private int newstart = 0;
         private int nbstop = 0;
-        private int laststart = 0;      // Start time to play
+        //private int laststart = 0;      // Start time to play
 
         // Current file beeing edited
         private string MIDIfileName = string.Empty;
@@ -864,7 +864,7 @@ namespace Karaboss
                 DisplayTimeElapse(0);
 
                 positionHScrollBar.Value = positionHScrollBar.Minimum;                                
-                laststart = 0;
+                //laststart = 0;
             }
             else
             {
