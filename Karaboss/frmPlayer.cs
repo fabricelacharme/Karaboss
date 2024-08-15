@@ -4325,7 +4325,7 @@ namespace Karaboss
             if (frmLyric == null || Application.OpenForms.OfType<frmLyric>().Count() == 0)
             {
                 // Affiche les paroles
-                frmLyric = new frmLyric();
+                frmLyric = new frmLyric();                
                 frmLyric.Show();
             }
 
