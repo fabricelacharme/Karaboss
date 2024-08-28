@@ -32,23 +32,16 @@
 
 #endregion
 using ChordAnalyser.UI;
-using FlShell.Interop;
 using Karaboss.Display;
-using Karaboss.Lrc.SharedFramework;
 using Karaboss.Lyrics;
-using Karaboss.Properties;
 using Sanford.Multimedia.Midi;
-using Sanford.Multimedia.Midi.Score;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Karaboss
 {

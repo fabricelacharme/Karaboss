@@ -1,10 +1,8 @@
-﻿using MusicXml.Domain;
-using Sanford.Multimedia.Midi;
+﻿using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace Karaboss.Lyrics
 {
