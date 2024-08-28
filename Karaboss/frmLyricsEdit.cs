@@ -137,7 +137,7 @@ namespace Karaboss
             InitGridView();
             
             // Track containing the melody
-            melodytracknum = myLyric.melodytracknum;
+            melodytracknum = myLyric.MelodyTrackNum;
             if (melodytracknum != -1)
                 melodyTrack = sequence1.tracks[melodytracknum];
 
@@ -227,7 +227,7 @@ namespace Karaboss
                 TextLyricFormat = LyricFormats.Lyric;
                 optFormatLyrics.Checked = true;
             }
-            melodytracknum = frmPlayer.myLyric.melodytracknum;
+            melodytracknum = frmPlayer.myLyric.MelodyTrackNum;
         }
 
 

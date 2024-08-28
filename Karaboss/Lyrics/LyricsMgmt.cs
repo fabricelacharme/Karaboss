@@ -12,27 +12,8 @@ namespace Karaboss.Lyrics
 
         #region private
 
-        /// <summary>
-        /// A class to store all lyric's syllabes
-        /// </summary>
-        private class plLyric
-        {
-            public enum Types
-            {
-                Text = 1,
-                LineFeed = 2,
-                Paragraph = 3,
-            }
-            public Types Type { get; set; }
-            public string Element { get; set; }
-            public int TicksOn { get; set; }
-            public int TicksOff { get; set; }
-            public int Beat { get; set; }
-        }
+        public List<plLyric> plLyrics {get; set;}
 
-  
-
-        private List<plLyric> plLyrics;
         private Dictionary<int, string> LyricsLines = new Dictionary<int, string>();
         private Dictionary<int, int> LyricsTimes = new Dictionary<int, int>();
         private Array LyricsLinesKeys;
@@ -57,18 +38,32 @@ namespace Karaboss.Lyrics
         #region public
         public enum LyricTypes
         {
+            None = -1,
             Text = 0,
             Lyric = 1
         }
 
         private int _lyricstracknum = -1;     // num of track containing lyrics
-        public int LyricsTracknum { get; set; }
+        public int LyricsTrackNum 
+        { 
+            get { return _lyricstracknum; }
+            set { _lyricstracknum = value; } 
+        }
 
         private int _melodytracknum = -1;     // num  of track containing the melody       
-        public int MelodyTrackNum { get; set; }
+        public int MelodyTrackNum 
+        {
+            get { return _melodytracknum; }
+            set {_melodytracknum = value;} 
+        }
 
+        
         private LyricTypes _lyrictype;            // type lyric or text   
-        public LyricTypes LyricType { get; set; }
+        public LyricTypes LyricType 
+        {
+            get { return _lyrictype; }
+            set { _lyrictype = value; }
+        }
 
         // Lyrics : int = time, string = syllabes in corresponding time
         private Dictionary<int, string> _gridlyrics;
@@ -91,7 +86,11 @@ namespace Karaboss.Lyrics
         {
             _lyricstracknum = -1;
             _melodytracknum = -1;
-            _lyrictype = LyricTypes.Text;
+            
+            // FAB 28/08
+            //_lyrictype = LyricTypes.Text;
+            _lyrictype = LyricTypes.None;
+
             plLyrics = new List<plLyric>();
 
             sequence1 = sequence;
