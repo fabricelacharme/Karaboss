@@ -505,7 +505,7 @@ namespace Karaboss
             foreach (plLyric plL in plLyrics)
             {
                 pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric();
-                pcL.Type = (pictureBoxControl.plLyric.Types)plL.Type;
+                pcL.Type = (pictureBoxControl.plLyric.Types)plL.CharType;
                 pcL.Element = plL.Element;
                 pcL.TicksOn = plL.TicksOn;
                 pcL.TicksOff = plL.TicksOff;
@@ -533,15 +533,15 @@ namespace Karaboss
             {
                 LyricsTimes = new List<int>();
 
-                plLyric.Types plType = plLyric.Types.Text;
+                plLyric.CharTypes plType = plLyric.CharTypes.Text;
                 int plTime = 0;
 
                 for (int i = 0; i < plLyrics.Count; i++)
                 {
-                    plType = plLyrics[i].Type;
+                    plType = plLyrics[i].CharType;
                     plTime = plLyrics[i].TicksOn;
 
-                    if (plType == plLyric.Types.Text)
+                    if (plType == plLyric.CharTypes.Text)
                     {
                         LyricsTimes.Add(plTime);
                     }

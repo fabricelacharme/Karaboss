@@ -36,13 +36,7 @@ namespace Karaboss.Lyrics
         #endregion private
 
         #region public
-        public enum LyricTypes
-        {
-            None = -1,
-            Text = 0,
-            Lyric = 1
-        }
-
+       
         private int _lyricstracknum = -1;     // num of track containing lyrics
         public int LyricsTrackNum 
         { 
@@ -183,17 +177,17 @@ namespace Karaboss.Lyrics
                 for (int k = 0; k < track.LyricsText.Count; k++)
                 {
                     // Stockage dans liste plLyrics
-                    plLyric.Types plType = (plLyric.Types)track.LyricsText[k].Type;
+                    plLyric.CharTypes plType = (plLyric.CharTypes)track.LyricsText[k].Type;
                     string plElement = track.LyricsText[k].Element;
 
                     // Start time for a lyric
                     plTicksOn = track.LyricsText[k].TicksOn;
 
                     // Stop time for a lyric (maxi 1 beat ?)
-                    if (plType == plLyric.Types.Text)
+                    if (plType == plLyric.CharTypes.Text)
                         plTicksOff = plTicksOn + _measurelen;
 
-                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                    plLyrics.Add(new plLyric() { CharType = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
                 }
 
                 
@@ -236,17 +230,17 @@ namespace Karaboss.Lyrics
                         if (track.Lyrics[k].Element != "[]")
                         {
                             // Stockage dans liste plLyrics
-                            plLyric.Types plType = (plLyric.Types)track.Lyrics[k].Type;
+                            plLyric.CharTypes plType = (plLyric.CharTypes)track.Lyrics[k].Type;
                             string plElement = track.Lyrics[k].Element;
 
                             // Start time for a lyric
                             plTicksOn = track.Lyrics[k].TicksOn;
 
                             // Stop time for the lyric
-                            if (plType == plLyric.Types.Text)
+                            if (plType == plLyric.CharTypes.Text)
                                 plTicksOff = plTicksOn + _measurelen;    
 
-                            plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                            plLyrics.Add(new plLyric() { CharType = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
                         }
                     }
 
@@ -345,7 +339,7 @@ namespace Karaboss.Lyrics
                 ticksoff = plLyrics[k].TicksOff;
                 if (k < plLyrics.Count - 1)
                 {
-                    if (plLyrics[k + 1].Type == plLyric.Types.Text)
+                    if (plLyrics[k + 1].CharType == plLyric.CharTypes.Text)
                     {
                         nexttickson = plLyrics[k + 1].TicksOn;
                         if (ticksoff > nexttickson)
@@ -358,11 +352,11 @@ namespace Karaboss.Lyrics
 
 
                 // Add a trailing space to syllabs at the end of the lines if missing
-                if (plLyrics[k].Type == plLyric.Types.LineFeed || plLyrics[k].Type == plLyric.Types.Paragraph)
+                if (plLyrics[k].CharType == plLyric.CharTypes.LineFeed || plLyrics[k].CharType == plLyric.CharTypes.ParagraphSep)
                 {
                     if (k > 0)
                     {
-                        if (plLyrics[k - 1].Type == plLyric.Types.Text)
+                        if (plLyrics[k - 1].CharType == plLyric.CharTypes.Text)
                         {
                             elm = plLyrics[k - 1].Element;
                             if (elm.Length > 0)
@@ -395,7 +389,7 @@ namespace Karaboss.Lyrics
                 {
                     for (int j = 0; j < plLyrics.Count; j++)
                     {
-                        if (plLyrics[j].Type == plLyric.Types.Text)
+                        if (plLyrics[j].CharType == plLyric.CharTypes.Text)
                         {
                             // Search the note starttime corresponding to the lyric (not always true)
                             if (notes[i].StartTime == plLyrics[j].TicksOn)
@@ -447,7 +441,7 @@ namespace Karaboss.Lyrics
 
                 if (beat < previousbeat)
                 {
-                    Console.WriteLine("************** Error beat < previous " + plLyrics[i].Type);
+                    Console.WriteLine("************** Error beat < previous " + plLyrics[i].CharType);
                     beat = previousbeat;
                 }
 
@@ -488,7 +482,7 @@ namespace Karaboss.Lyrics
             int nblyrics = 0;
             for (int i = 0; i < plLyrics.Count; i++)
             {
-                if (plLyrics[i].Type == plLyric.Types.Text && plLyrics[i].TicksOn > 0)
+                if (plLyrics[i].CharType == plLyric.CharTypes.Text && plLyrics[i].TicksOn > 0)
                     nblyrics++;
             }
 
@@ -627,7 +621,7 @@ namespace Karaboss.Lyrics
 
             for (int i = 0; i < plLyrics.Count; i++)
             {
-                if (plLyrics[i].Type == plLyric.Types.Text)
+                if (plLyrics[i].CharType == plLyric.CharTypes.Text)
                 {
                     tickson = plLyrics[i].TicksOn;
                     ticksoff = plLyrics[i].TicksOff;                    
@@ -689,7 +683,7 @@ namespace Karaboss.Lyrics
             for (int i = 0; i < plLyrics.Count; i++)
             {
                 // if new line
-                if (plLyrics[i].Type == plLyric.Types.LineFeed || plLyrics[i].Type == plLyric.Types.Paragraph)
+                if (plLyrics[i].CharType == plLyric.CharTypes.LineFeed || plLyrics[i].CharType == plLyric.CharTypes.ParagraphSep)
                 {
                     // Case several lines with the same start time
                     newtime = plLyrics[i].TicksOn;
@@ -862,12 +856,12 @@ namespace Karaboss.Lyrics
 
                 // Set all linefeeds to start of measure?
                 // What if a line ends in the measure and the next line starts in the same measure ?
-                if (plLyrics[i].Type == plLyric.Types.LineFeed || plLyrics[i].Type == plLyric.Types.Paragraph)
+                if (plLyrics[i].CharType == plLyric.CharTypes.LineFeed || plLyrics[i].CharType == plLyric.CharTypes.ParagraphSep)
                 {
                     _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
 
                     // if prev line is not on the same measure                    
-                    if ( i > 0 && plLyrics[i - 1].Type == plLyric.Types.Text)
+                    if ( i > 0 && plLyrics[i - 1].CharType == plLyric.CharTypes.Text)
                     {
                         // Measure of previous text lyrics
                         _prevmeasure = 1 + (plLyrics[i - 1].Beat - 1) / nbBeatsPerMeasure;
@@ -906,12 +900,12 @@ namespace Karaboss.Lyrics
             if (plLyrics.Count > 0)
             {
                 // Fist lyric is a Text
-                if (plLyrics[0].Type == plLyric.Types.Text)
+                if (plLyrics[0].CharType == plLyric.CharTypes.Text)
                 {
                     // Add a linefeed at the end of previous measure                    
                     pll = new plLyric()
                     {
-                        Type = plLyric.Types.LineFeed
+                        CharType = plLyric.CharTypes.LineFeed
                     };
                     beat = plLyrics[0].Beat;                    
                     _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
@@ -940,11 +934,11 @@ namespace Karaboss.Lyrics
                         diclyr[beat] = new List<plLyric>(); 
 
                     int i = 0;
-                    while (plLyrics[i].Type != plLyric.Types.Text)
+                    while (plLyrics[i].CharType != plLyric.CharTypes.Text)
                     {
                         i++;
                     }
-                    if (plLyrics[i].Type == plLyric.Types.Text)
+                    if (plLyrics[i].CharType == plLyric.CharTypes.Text)
                     {
                         beat = plLyrics[i].Beat;
                         _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
@@ -953,7 +947,7 @@ namespace Karaboss.Lyrics
                             lastbeat = 1;
 
                         pll = new plLyric();
-                        pll.Type = plLyric.Types.LineFeed;
+                        pll.CharType = plLyric.CharTypes.LineFeed;
                         pll.Beat = lastbeat;
                         pll.TicksOn = pll.Beat * beatDuration;
                         diclyr[pll.Beat].Insert(0, pll);
@@ -968,7 +962,7 @@ namespace Karaboss.Lyrics
             //==========================================================            
             for (int i = 0; i < plLyrics.Count; i++)
             {
-                if (plLyrics[i].Type == plLyric.Types.Text)
+                if (plLyrics[i].CharType == plLyric.CharTypes.Text)
                 {                                        
                     if (i < plLyrics.Count - 1)
                     {
@@ -977,10 +971,10 @@ namespace Karaboss.Lyrics
                         // use case : 'lyric','cr',chord chord,chord,'lyric' => 'lyric','cr',chord chord,chord,***<new cr>***,lyric
                         // Contrary : 'lyric',chord chord,chord,'lyric' must stay as is
 
-                        if ( (plLyrics[i + 1].Type == plLyric.Types.LineFeed || plLyrics[i + 1].Type == plLyric.Types.Paragraph))
+                        if ( (plLyrics[i + 1].CharType == plLyric.CharTypes.LineFeed || plLyrics[i + 1].CharType == plLyric.CharTypes.ParagraphSep))
                         {
 
-                            if (i < plLyrics.Count - 2 && plLyrics[i + 2].Type == plLyric.Types.Text)
+                            if (i < plLyrics.Count - 2 && plLyrics[i + 2].CharType == plLyric.CharTypes.Text)
                             {
                                 ticksoff = plLyrics[i].TicksOff;
                                 tickson = plLyrics[i + 2].TicksOn;  // begining of next line
@@ -996,7 +990,7 @@ namespace Karaboss.Lyrics
 
                                     // Add a linefeed at the beginning of the the next lyric
                                     pll = new plLyric();
-                                    pll.Type = plLyric.Types.LineFeed;
+                                    pll.CharType = plLyric.CharTypes.LineFeed;
                                     //pll.Beat = beat;
                                     pll.Beat = lastbeat;
                                     pll.TicksOn = beat * beatDuration;
@@ -1004,7 +998,7 @@ namespace Karaboss.Lyrics
                                     diclyr[pll.Beat].Insert(0, pll);
                                 }
                             }
-                            else if (i < plLyrics.Count - 3 && plLyrics[i + 3].Type == plLyric.Types.Text)
+                            else if (i < plLyrics.Count - 3 && plLyrics[i + 3].CharType == plLyric.CharTypes.Text)
                             {
                                 ticksoff = plLyrics[i].TicksOff;
                                 tickson = plLyrics[i + 3].TicksOn;  // begining of next line
@@ -1020,7 +1014,7 @@ namespace Karaboss.Lyrics
 
                                     // Add a linefeed at the beginning of the the next lyric
                                     pll = new plLyric();
-                                    pll.Type = plLyric.Types.LineFeed;
+                                    pll.CharType = plLyric.CharTypes.LineFeed;
                                     //pll.Beat = beat;
                                     pll.Beat = lastbeat;
                                     pll.TicksOn = beat * beatDuration;
@@ -1042,7 +1036,7 @@ namespace Karaboss.Lyrics
                         // interval checked is 2 measures
                         // If greater than 2 measure => add a linefeed the the end of the current lyric, in order to have the instrumental in a separate line
                         // use case : lyric,chord,chord,chord,cr,lyric => lyric,***<new cr>***,chord,chord,chord,cr,lyric 
-                        if (plLyrics[i + 1].Type == plLyric.Types.LineFeed || plLyrics[i + 1].Type == plLyric.Types.Paragraph)
+                        if (plLyrics[i + 1].CharType == plLyric.CharTypes.LineFeed || plLyrics[i + 1].CharType == plLyric.CharTypes.ParagraphSep)
                         {
                             ticksoff = plLyrics[i].TicksOff;
                             tickson = plLyrics[i + 1].TicksOn;
@@ -1056,7 +1050,7 @@ namespace Karaboss.Lyrics
                                 // TODO : add a linefeed to 1st time of this measure (this beat ?)
                                 // Do not forget the end of the song : no linefeed
                                 pll = new plLyric();
-                                pll.Type = plLyric.Types.Paragraph;
+                                pll.CharType = plLyric.CharTypes.ParagraphSep;
                                 pll.Beat = beat;
                                 pll.TicksOn = beat * beatDuration;
 
@@ -1068,10 +1062,10 @@ namespace Karaboss.Lyrics
             }
 
             // Add a cr to the Last lyric (in case of instrumental after the last lyric)
-            if (plLyrics.Count > 0 && plLyrics[plLyrics.Count - 1].Type == plLyric.Types.Text)
+            if (plLyrics.Count > 0 && plLyrics[plLyrics.Count - 1].CharType == plLyric.CharTypes.Text)
             {
                 pll = new plLyric();
-                pll.Type = plLyric.Types.Paragraph;
+                pll.CharType = plLyric.CharTypes.ParagraphSep;
                 pll.Beat = plLyrics[plLyrics.Count - 1].Beat;
                 if (pll.Beat < beats)
                 {
@@ -1108,14 +1102,14 @@ namespace Karaboss.Lyrics
 
                                 // LINEFEED => STORE RESULT
                                 #region Store result
-                                if (pll.Type == plLyric.Types.LineFeed || pll.Type == plLyric.Types.Paragraph)
+                                if (pll.CharType == plLyric.CharTypes.LineFeed || pll.CharType == plLyric.CharTypes.ParagraphSep)
                                 {
                                     // Store line
                                     linebeatlyr += beatlyr;
                                     linebeatchord += beatchord;
                                     if (linebeatlyr != "" || linebeatchord != "")
                                     {
-                                        if (pll.Type == plLyric.Types.LineFeed)
+                                        if (pll.CharType == plLyric.CharTypes.LineFeed)
                                         {
 
                                             // If Linefeed, one cr
@@ -1128,7 +1122,7 @@ namespace Karaboss.Lyrics
 
 
                                         }
-                                        else if (pll.Type == plLyric.Types.Paragraph)
+                                        else if (pll.CharType == plLyric.CharTypes.ParagraphSep)
                                         {
 
                                             // If paragraph, 2 cr
@@ -1150,7 +1144,7 @@ namespace Karaboss.Lyrics
                                     lastchord = string.Empty;
                                 }
                                 #endregion store result
-                                else if (pll.Type == plLyric.Types.Text)
+                                else if (pll.CharType == plLyric.CharTypes.Text)
                                 {
                                     lyr = pll.Element;
                                     //beatlyr += lyr;

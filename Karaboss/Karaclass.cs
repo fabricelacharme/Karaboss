@@ -222,15 +222,15 @@ namespace Karaboss
         }
 
 
-        public static string plTypeToString(plLyric.Types plType)
+        public static string plTypeToString(plLyric.CharTypes plType)
         {
             switch (plType)
             {
-                case plLyric.Types.Text:
+                case plLyric.CharTypes.Text:
                     return "text";
-                case plLyric.Types.LineFeed:
+                case plLyric.CharTypes.LineFeed:
                     return "cr";
-                case plLyric.Types.Paragraph:
+                case plLyric.CharTypes.ParagraphSep:
                     return "par";
                 default:
                     return "text";
@@ -240,43 +240,45 @@ namespace Karaboss
        
     }
 
+    public enum LyricTypes
+    {
+        None = -1,
+        Text = 0,
+        Lyric = 1
+    }
+
     /// <summary>
     /// A class to store some properties of the lyrics
     /// </summary>
+    /*
     public class CLyric
-    {
-        public enum LyricTypes
-        {
-            None = -1,
-            Text = 0,
-            Lyric = 1
-        }
+    {        
 
         public int LyricsTrackNum = -1;     // num of track containing lyrics
         public int MelodyTrackNum = -1;     // num  of track containing the melody       
-        public LyricTypes lyrictype;            // type lyric or text                 
+        public LyricTypes LyricType;            // type lyric or text                 
 
         public CLyric()
         {
             LyricsTrackNum = -1;
             MelodyTrackNum = -1;
-            lyrictype = LyricTypes.None;
+            LyricType = LyricTypes.None;
         }
-
     }
+    */
 
     /// <summary>
     /// A class to store all lyric's syllabes
     /// </summary>
     public class plLyric
     {
-        public enum Types
+        public enum CharTypes
         {
             Text = 1,
             LineFeed = 2,
-            Paragraph = 3,
+            ParagraphSep = 3,
         }
-        public Types Type { get; set; }
+        public CharTypes CharType { get; set; }
         public string Element { get; set; }
         public int TicksOn { get; set; }
         public int TicksOff { get; set; }

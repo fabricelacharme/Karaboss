@@ -41,6 +41,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Karaboss.Resources.Localization;
 using Karaboss.Lrc.SharedFramework;
+using Karaboss.Lyrics;
 
 
 namespace Karaboss
@@ -85,7 +86,7 @@ namespace Karaboss
         private List<plLyric> localplLyrics;
 
         private Track melodyTrack;
-        private CLyric myLyric;
+        //private CLyric myLyric;
 
         private ContextMenuStrip dgContextMenu;        
 
@@ -118,7 +119,7 @@ namespace Karaboss
 
         private List<string> lsInstruments = Sanford.Multimedia.Midi.MidiFile.LoadInstruments();
 
-        public frmLyricsEdit(Sequence sequence, List<plLyric> plLyrics, CLyric mylyric, string fileName)
+        public frmLyricsEdit(Sequence sequence, List<plLyric> plLyrics, LyricsMgmt myLyricsMgmt, string fileName)
         {
             InitializeComponent();            
 
@@ -133,17 +134,17 @@ namespace Karaboss
             // Load list of tracks
             LoadTracks(sequence1);
 
-            myLyric = mylyric;
+            //myLyric = mylyric;
             InitGridView();
             
             // Track containing the melody
-            melodytracknum = myLyric.MelodyTrackNum;
+            melodytracknum = myLyricsMgmt.MelodyTrackNum;
             if (melodytracknum != -1)
                 melodyTrack = sequence1.tracks[melodytracknum];
 
             DisplaySelectedTrack();
 
-            if (myLyric.lyrictype == CLyric.LyricTypes.Text)
+            if (myLyricsMgmt.LyricType == LyricTypes.Text)
             {
                 TextLyricFormat = LyricFormats.Text;
                 optFormatText.Checked = true;
@@ -217,7 +218,7 @@ namespace Karaboss
                 return;
             }
 
-            if (frmPlayer.myLyric.lyrictype == CLyric.LyricTypes.Text)
+            if (frmPlayer.myLyricsMgmt.LyricType == LyricTypes.Text)
             {
                 TextLyricFormat = LyricFormats.Text;
                 optFormatText.Checked = true;                                
@@ -227,7 +228,7 @@ namespace Karaboss
                 TextLyricFormat = LyricFormats.Lyric;
                 optFormatLyrics.Checked = true;
             }
-            melodytracknum = frmPlayer.myLyric.MelodyTrackNum;
+            melodytracknum = frmPlayer.myLyricsMgmt.MelodyTrackNum;
         }
 
 
@@ -569,7 +570,7 @@ namespace Karaboss
 
             int plTicksOn = 0;
             string plRealTime = "00:00.00";
-            plLyric.Types plType = plLyric.Types.Text;             
+            plLyric.CharTypes plType = plLyric.CharTypes.Text;             
 
             int plNote = 0;
             string sNote = string.Empty;
@@ -589,15 +590,15 @@ namespace Karaboss
                     sNote = "";
                     plElement = lLyrics[idx].Element;
                     plElement = plElement.Replace(" ", "_");
-                    plType = lLyrics[idx].Type;
+                    plType = lLyrics[idx].CharType;
 
                     // New Row
                     switch (plType)
                     {
-                        case plLyric.Types.LineFeed:                            
+                        case plLyric.CharTypes.LineFeed:                            
                             plElement = m_SepLine;
                             break;
-                        case plLyric.Types.Paragraph:                            
+                        case plLyric.CharTypes.ParagraphSep:                            
                             plElement = m_SepParagraph;
                             break;
                         default:
@@ -618,7 +619,7 @@ namespace Karaboss
                     plNote = 0;
                     plElement = lLyrics[i].Element;
                     plElement = plElement.Replace(" ", "_");
-                    plType = lLyrics[i].Type;
+                    plType = lLyrics[i].CharType;
 
                     if (idx < lLyrics.Count)
                     {
@@ -650,11 +651,11 @@ namespace Karaboss
                             sNote = plNote.ToString();
                             switch (plType)
                             {
-                                case plLyric.Types.LineFeed:
+                                case plLyric.CharTypes.LineFeed:
                                     sNote = "";
                                     plElement = m_SepLine;
                                     break;
-                                case plLyric.Types.Paragraph:
+                                case plLyric.CharTypes.ParagraphSep:
                                     sNote = "";
                                     plElement = m_SepParagraph;
                                     break;
@@ -665,7 +666,7 @@ namespace Karaboss
                             dgView.Rows.Add(rowlyric);
                             bfound = true; // lyric inscrit dans la grille
                             // Incrémente le compteur de notes si différent de retour chariot
-                            if (plType != plLyric.Types.LineFeed && plType != plLyric.Types.Paragraph)
+                            if (plType != plLyric.CharTypes.LineFeed && plType != plLyric.CharTypes.ParagraphSep)
                                 idx++;
                         }
                        
@@ -677,11 +678,11 @@ namespace Karaboss
                         sNote = plNote.ToString();
                         switch (plType)
                         {
-                            case plLyric.Types.LineFeed:
+                            case plLyric.CharTypes.LineFeed:
                                 sNote = "";
                                 plElement = m_SepLine;
                                 break;
-                            case plLyric.Types.Paragraph:
+                            case plLyric.CharTypes.ParagraphSep:
                                 sNote = "";
                                 plElement = m_SepParagraph;
                                 break;
@@ -2536,7 +2537,7 @@ namespace Karaboss
         {
             int plTicksOn = 0;
             string val = string.Empty;
-            plLyric.Types plType = plLyric.Types.Text;
+            plLyric.CharTypes plType = plLyric.CharTypes.Text;
             string plElement = string.Empty;
             string plReplace = string.Empty;
 
@@ -2559,30 +2560,30 @@ namespace Karaboss
                         switch (val)
                         {
                             case "text":
-                                plType = plLyric.Types.Text;
+                                plType = plLyric.CharTypes.Text;
                                 break;
                             case "cr":
-                                plType = plLyric.Types.LineFeed;
+                                plType = plLyric.CharTypes.LineFeed;
                                 break;
                             case "par":
-                                plType = plLyric.Types.Paragraph;
+                                plType = plLyric.CharTypes.ParagraphSep;
                                 break;
                             default:
-                                plType = plLyric.Types.Text;
+                                plType = plLyric.CharTypes.Text;
                                 break;
                         }
                     }
                     else
                     {
-                        plType = plLyric.Types.Text;
+                        plType = plLyric.CharTypes.Text;
                     }
 
                     // Element
                     if (dgView.Rows[row].Cells[COL_TEXT].Value != null)
                     {
-                        if (plType == plLyric.Types.LineFeed)
+                        if (plType == plLyric.CharTypes.LineFeed)
                             plElement = _InternalSepLines;
-                        else if (plType == plLyric.Types.Paragraph)
+                        else if (plType == plLyric.CharTypes.ParagraphSep)
                             plElement = _InternalSepParagraphs;
                         else
                             plElement = dgView.Rows[row].Cells[COL_TEXT].Value.ToString();
@@ -2592,7 +2593,7 @@ namespace Karaboss
 
                     // replace again spaces
                     plElement = plElement.Replace("_", " ");
-                    localplLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTicksOn });
+                    localplLyrics.Add(new plLyric() { CharType = plType, Element = plElement, TicksOn = plTicksOn });
 
                     // TODO add TicksOff
                 }
@@ -2606,12 +2607,12 @@ namespace Karaboss
         /// </summary>
         private void ReplaceLyrics()
         {
-            CLyric.LyricTypes ltype;
+            LyricTypes ltype;
 
             if (TextLyricFormat == LyricFormats.Text)
-                ltype = CLyric.LyricTypes.Text;
+                ltype = LyricTypes.Text;
             else
-                ltype = CLyric.LyricTypes.Lyric;
+                ltype = LyricTypes.Lyric;
 
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
