@@ -67,7 +67,7 @@ namespace Karaboss
         // Lyrics management
         public LyricsMgmt myLyricsMgmt;
         private bool bHasLyrics = false;        
-        private List<plLyric> plLyrics;
+        //private List<plLyric> plLyrics;
         //public CLyric myLyric;        
 
         // SlideShow directory
@@ -355,8 +355,9 @@ namespace Karaboss
             }
             #endregion
 
+            // FAB 28/08
             // Reset plLyrics            
-            plLyrics = new List<plLyric>();            
+            //plLyrics = new List<plLyric>();            
 
             // Volume de chaque piste
             lstTrkReglages = new List<_reglages>();
@@ -2614,7 +2615,7 @@ namespace Karaboss
             // BEGIN
             myLyricsMgmt = new LyricsMgmt(sequence1);
             bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;
-            plLyrics = myLyricsMgmt.plLyrics;
+            //plLyrics = myLyricsMgmt.plLyrics;
 
             /*
             bHasLyrics = sequence1.HasLyrics;
@@ -2804,13 +2805,13 @@ namespace Karaboss
                 try
                 {
                     // Cas
-                    if (plLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum >= 0)
+                    if (myLyricsMgmt.plLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum >= 0)
                     {
                         // Lyrics exist and melody track found
                         // go directly to edition form ?
 
                     }
-                    else if (plLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum == -1)
+                    else if (myLyricsMgmt.plLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum == -1)
                     {
                         // Some lyrics are found, but no melody
                         // propose to select a track (or not) as a guide
@@ -2818,7 +2819,7 @@ namespace Karaboss
                         // => select track having melody
 
                     }
-                    else if (plLyrics.Count == 0)
+                    else if (myLyricsMgmt.plLyrics.Count == 0)
                     {
                         // Start a new kar file from a mid file
                         // Select a track (or not) as a guide
@@ -2871,7 +2872,7 @@ namespace Karaboss
 
                     // Lyrics exist
                     frmLyricsEdit frmLyricsEdit;
-                    frmLyricsEdit = new frmLyricsEdit(sequence1, plLyrics, myLyricsMgmt, MIDIfileFullPath);
+                    frmLyricsEdit = new frmLyricsEdit(sequence1, myLyricsMgmt.plLyrics, myLyricsMgmt, MIDIfileFullPath);
 
                     frmLyricsEdit.Show();
                 }
@@ -3865,13 +3866,15 @@ namespace Karaboss
         /// Replace existing lyrics by others
         /// </summary>
         /// <param name="pLyrics"></param>
-        public void ReplaceLyrics(List<plLyric> alienpLyrics, LyricTypes lyricType, int melodytracknum)
+        public void ReplaceLyrics(List<plLyric> newpLyrics, LyricTypes newLyricType, int melodytracknum)
         {
             bool bRefreshDisplay = false;
 
-            this.plLyrics = alienpLyrics;
+            // FAB 28/08
+            //this.plLyrics = newpLyrics;
+            myLyricsMgmt.plLyrics = newpLyrics;
 
-            if (this.plLyrics.Count == 0)
+            if (myLyricsMgmt.plLyrics.Count == 0)
                 return;
             else
                 bHasLyrics = true;
@@ -3880,7 +3883,7 @@ namespace Karaboss
             // si on repart de zéro
             if (myLyricsMgmt.LyricsTrackNum == -1 && myLyricsMgmt.MelodyTrackNum == -1)
             {
-                myLyricsMgmt.LyricType = lyricType;
+                myLyricsMgmt.LyricType = newLyricType;
                 myLyricsMgmt.MelodyTrackNum = melodytracknum;
                 myLyricsMgmt.LyricsTrackNum = melodytracknum;
             } 
@@ -3907,10 +3910,10 @@ namespace Karaboss
             }
 
             // Warning change of type of lyric (lyric or text)
-            if (lyricType != myLyricsMgmt.LyricType)
+            if (newLyricType != myLyricsMgmt.LyricType)
             {
                 // Todo : check if track for words exists
-                if (lyricType == LyricTypes.Text)
+                if (newLyricType == LyricTypes.Text)
                 {
                     // Changement de lyric à text
                     // => effacer l'affichage des lyrics sur la piste melodytracknum
@@ -3924,7 +3927,7 @@ namespace Karaboss
                     AddTrackWords();
 
                 }
-                else if (lyricType == LyricTypes.Lyric)
+                else if (newLyricType == LyricTypes.Lyric)
                 {
                     //Changement de text à lyric 
                     if (myLyricsMgmt.LyricsTrackNum > -1)
@@ -3940,7 +3943,7 @@ namespace Karaboss
                 }
 
                 bRefreshDisplay = true;
-                myLyricsMgmt.LyricType = lyricType;
+                myLyricsMgmt.LyricType = newLyricType;
             }
 
             // Display the form frmLyrics
@@ -3957,7 +3960,7 @@ namespace Karaboss
                 // Insert all lyric events
                 InsTrkEvents(tracknum);
 
-                // REstore tags
+                // Restore tags
                 //restoreSequenceTags();
 
             }
@@ -4052,7 +4055,7 @@ namespace Karaboss
                 trk.LyricsText.Clear();
             }
 
-            this.plLyrics.Clear();
+            myLyricsMgmt.plLyrics.Clear();
             // FAB 28/08
             //myLyric = new CLyric();
             bHasLyrics = false;
@@ -4083,7 +4086,7 @@ namespace Karaboss
             string currentCR = string.Empty;
 
             Track Track = sequence1.tracks[tracknum];
-            int midiEventCount = Track.Count;
+            //int midiEventCount = Track.Count;
 
             // FAB 17/03/16
             Track.Lyrics.Clear();
@@ -4091,18 +4094,18 @@ namespace Karaboss
             
 
             // Recréé tout les textes et lyrics
-            for (int idx = 0; idx < plLyrics.Count; idx++)
+            for (int idx = 0; idx < myLyricsMgmt.plLyrics.Count; idx++)
             {                
 
                 // Si c'est un CR, le stocke et le collera au prochain lyric
-                if (plLyrics[idx].CharType == plLyric.CharTypes.LineFeed)
+                if (myLyricsMgmt.plLyrics[idx].CharType == plLyric.CharTypes.LineFeed)
                 {                                        
                     if (myLyricsMgmt.LyricType == LyricTypes.Text)
                         currentCR = m_SepLine;
                     else
                         currentCR = "\r";                    
                 }
-                else if (plLyrics[idx].CharType == plLyric.CharTypes.ParagraphSep)
+                else if (myLyricsMgmt.plLyrics[idx].CharType == plLyric.CharTypes.ParagraphSep)
                 {                                        
                     if (myLyricsMgmt.LyricType == LyricTypes.Text)
                         currentCR = m_SepParagraph;
@@ -4112,11 +4115,11 @@ namespace Karaboss
                 else
                 {
                     // C'est un lyric
-                    currentTick = plLyrics[idx].TicksOn;
+                    currentTick = myLyricsMgmt.plLyrics[idx].TicksOn;
                     if (currentTick >= lastcurrenttick)
                     {
                         lastcurrenttick = currentTick;
-                        currentElement = currentCR + plLyrics[idx].Element;
+                        currentElement = currentCR + myLyricsMgmt.plLyrics[idx].Element;
 
                         // Transforme en byte la nouvelle chaine
                         // ERROR FAB 16-01-2021 : must tyake into accout encoding selected by end user !!!
@@ -4154,9 +4157,9 @@ namespace Karaboss
 
                         // Update Track.Lyrics List
                         Track.Lyric L = new Track.Lyric() {
-                            Element = plLyrics[idx].Element,
-                            TicksOn = plLyrics[idx].TicksOn,
-                            Type = (Track.Lyric.Types)plLyrics[idx].CharType,
+                            Element = myLyricsMgmt.plLyrics[idx].Element,
+                            TicksOn = myLyricsMgmt.plLyrics[idx].TicksOn,
+                            Type = (Track.Lyric.Types)myLyricsMgmt.plLyrics[idx].CharType,
                         };
 
                         
@@ -4182,6 +4185,8 @@ namespace Karaboss
             }
         }
 
+
+        #region deleteme
         /// <summary>
         /// Lyrics extraction & display
         /// </summary>
@@ -4343,7 +4348,7 @@ namespace Karaboss
             return retval;
         }
         */
-       
+        #endregion deleteme
 
         /// <summary>
         /// Load form frmLyrics       
@@ -4383,8 +4388,8 @@ namespace Karaboss
                 tx = sSong + " - " + Strings.Singer + ": " + sSinger;
 
             frmLyric.DisplaySinger(tx);
-            frmLyric.LoadSong(plLyrics);
-            frmLyric.LoadBallsTimes(plLyrics);
+            frmLyric.LoadSong(myLyricsMgmt.plLyrics);
+            frmLyric.LoadBallsTimes(myLyricsMgmt.plLyrics);
                       
             if (frmLyric.WindowState == FormWindowState.Minimized)
                 frmLyric.WindowState = FormWindowState.Normal;
@@ -4528,7 +4533,7 @@ namespace Karaboss
                 // BEGIN
                 myLyricsMgmt = new LyricsMgmt(sequence1);
                 bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;
-                plLyrics = myLyricsMgmt.plLyrics;
+                //plLyrics = myLyricsMgmt.plLyrics;
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -4700,7 +4705,7 @@ namespace Karaboss
                 // BEGIN
                 myLyricsMgmt = new LyricsMgmt(sequence1);
                 bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;
-                plLyrics = myLyricsMgmt.plLyrics;
+                //plLyrics = myLyricsMgmt.plLyrics;
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -4875,7 +4880,7 @@ namespace Karaboss
                 // BEGIN
                 myLyricsMgmt = new LyricsMgmt(sequence1);
                 bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;
-                plLyrics = myLyricsMgmt.plLyrics;
+                //plLyrics = myLyricsMgmt.plLyrics;
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -7098,7 +7103,7 @@ namespace Karaboss
 
         private void ResetMidiFile()
         {
-            plLyrics = new List<plLyric>();
+            //plLyrics = new List<plLyric>();
 
             OpenMidiFileOptions.TextEncoding = Karaclass.m_textEncoding;            
             OpenMidiFileOptions.SplitHands = false;
@@ -7680,7 +7685,7 @@ namespace Karaboss
 
             myLyricsMgmt = new LyricsMgmt(sequence1);
             bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;
-            plLyrics = myLyricsMgmt.plLyrics;
+            //plLyrics = myLyricsMgmt.plLyrics;
 
             // Display midi file infos
             DisplayFileInfos();

@@ -106,6 +106,18 @@ namespace Karaboss.Lyrics
         }
 
 
+        #region private func
+
+        private float GetTimeInMeasure(int ticks)
+        {
+            // Num measure
+            int curmeasure = 1 + ticks / _measurelen;
+            // Temps dans la mesure
+            float timeinmeasure = sequence1.Numerator - ((curmeasure * _measurelen - ticks) / (float)(_measurelen / sequence1.Numerator));
+
+            return timeinmeasure;
+        }
+
         /// <summary>
         /// Lyrics extraction & display
         /// </summary>
@@ -742,7 +754,17 @@ namespace Karaboss.Lyrics
             }
         }
 
- 
+
+        #endregion private func
+
+
+        #region public func
+
+       
+
+
+        #endregion public func
+
 
         #region Display Lyrics
 
@@ -806,15 +828,7 @@ namespace Karaboss.Lyrics
 
 
            
-        private float GetTimeInMeasure(int ticks)
-        {
-            // Num measure
-            int curmeasure = 1 + ticks / _measurelen;
-            // Temps dans la mesure
-            float timeinmeasure = sequence1.Numerator - ((curmeasure * _measurelen - ticks) / (float)(_measurelen / sequence1.Numerator));
 
-            return timeinmeasure;
-        }
 
         /// <summary>
         /// TAB 3: Display words & lyrics
