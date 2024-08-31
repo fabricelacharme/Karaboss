@@ -29,14 +29,20 @@ namespace Karaboss.Lyrics
         private int _tempo;
         private int _measurelen = 0;
         private int NbMeasures;
-        //private int _currentMeasure = -1;
-        //private int _currentTimeInMeasure = -1;
-        //private int _currentLine = 1;
+        
+        // Are lyrics stored with a space or not ?
+        private lyricsSpacings _lyricsspacing = lyricsSpacings.WithoutSpace;
 
         #endregion private
 
         #region public
-       
+        private string _lyrics = string.Empty;
+        public string Lyrics
+        {
+            get { return _lyrics; }
+        }
+
+
         private int _lyricstracknum = -1;     // num of track containing lyrics
         public int LyricsTrackNum 
         { 
@@ -92,7 +98,17 @@ namespace Karaboss.Lyrics
             UpdateMidiTimes();
 
             // Extract lyrics
-            ExtractLyrics();
+            _lyrics = ExtractLyrics();
+
+            // Guess spacing or not
+            if (plLyrics.Count > 0)
+            {
+                _lyricsspacing = GetLyricsSpacingModel();
+                if (_lyricsspacing == lyricsSpacings.WithoutSpace)
+                {
+                    SetTrailingSpace();
+                }
+            }
 
             // Search for the melody track
             _melodytracknum = GuessMelodyTrack();
@@ -107,6 +123,63 @@ namespace Karaboss.Lyrics
 
 
         #region private func
+
+        private lyricsSpacings GetLyricsSpacingModel() 
+        {
+            // What is the type of separator between lyrics ? space or nothing
+            // If there is a space before or after the string, the lyrics are separated by a space
+            for (int k = 0; k < plLyrics.Count; k++)
+            {
+                string s = plLyrics[k].Element;
+                
+                if (plLyrics[k].CharType == plLyric.CharTypes.Text)
+                {
+                    if (s.StartsWith(" ") || s.EndsWith(" ")) 
+                    {
+                        return lyricsSpacings.WithSpace;
+                    }
+                    /*
+                    if (!(s.StartsWith(" ") || s.EndsWith(" ")) && (!s.EndsWith("-")))
+                    {
+                        return lyricsSpacings.WithSpace;
+                    }
+                    */
+                }
+            }
+            return lyricsSpacings.WithoutSpace;
+
+        }
+
+        /// <summary>
+        /// Add a trailing space when the lyrics stored in the midi file have no space.
+        /// </summary>
+        private void SetTrailingSpace()
+        {
+            for (int k = 0; k < plLyrics.Count; k++)
+            {
+                string s = plLyrics[k].Element;
+
+                if (plLyrics[k].CharType == plLyric.CharTypes.Text)
+                {
+                    if (s != string.Empty)
+                    {
+                        //FAB 28/05/2024 : lyriques sans espace ?
+                        if (_lyricsspacing == lyricsSpacings.WithoutSpace)
+                        {
+                            if (!(s.StartsWith(" ") || s.EndsWith(" ")) && (!s.EndsWith("-")))
+                            {
+                                s += " ";
+                            }
+                            else if (s.EndsWith("-") && s.Length > 1)
+                            {
+                                s = s.Substring(0, s.Length - 1);
+                            }
+                            plLyrics[k].Element = s;
+                        }
+                    }
+                }
+            }
+        }
 
         private float GetTimeInMeasure(int ticks)
         {

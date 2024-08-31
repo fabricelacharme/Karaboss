@@ -240,11 +240,21 @@ namespace Karaboss
        
     }
 
+
+    #region lyrics
+
     public enum LyricTypes
     {
         None = -1,
         Text = 0,
         Lyric = 1
+    }
+
+
+    public enum lyricsSpacings
+    {
+        WithSpace = 0,
+        WithoutSpace = 1
     }
 
     /// <summary>
@@ -285,6 +295,10 @@ namespace Karaboss
         public int Beat { get; set; }        
     }
 
+    #endregion lyrics
+
+
+    #region localization
     /// <summary>
     /// Localization
     /// </summary>
@@ -373,7 +387,8 @@ namespace Karaboss
 
     }
 
-   
+    #endregion localization
+
 
     public static class Extensions
     {
