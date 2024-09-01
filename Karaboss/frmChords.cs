@@ -768,7 +768,9 @@ namespace Karaboss
         private void DisplayLyrics()
         {
             myLyricsMgmt = new LyricsMgmt(sequence1);
-            
+            myLyricsMgmt.LoadLyricsPerBeat();
+            myLyricsMgmt.LoadLyricsLines();
+
             // Display lyrics on first tab
             ChordControl1.GridLyrics = myLyricsMgmt.Gridlyrics;
 

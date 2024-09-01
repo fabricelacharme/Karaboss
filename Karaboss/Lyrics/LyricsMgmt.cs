@@ -116,9 +116,10 @@ namespace Karaboss.Lyrics
             // Fix lyrics endtime to notes of the melody track end time
             CheckTimes();
 
-            LoadLyricsPerBeat();
+            
+            //LoadLyricsPerBeat();
 
-            LoadLyricsLines();
+            //LoadLyricsLines();
         }
 
 
@@ -687,12 +688,20 @@ namespace Karaboss.Lyrics
         }
 
 
+
+
+
+        #endregion private func
+
+
+        #region public func
+
         /// <summary>
         /// Load lyrics in a dictionnary
         /// key : beat
         /// Value : lyrics in this beat
         /// </summary>
-        private void LoadLyricsPerBeat()
+        public void LoadLyricsPerBeat()
         {
             _gridlyrics = new Dictionary<int, string>();
             int tickson;
@@ -709,9 +718,9 @@ namespace Karaboss.Lyrics
                 if (plLyrics[i].CharType == plLyric.CharTypes.Text)
                 {
                     tickson = plLyrics[i].TicksOn;
-                    ticksoff = plLyrics[i].TicksOff;                    
+                    ticksoff = plLyrics[i].TicksOff;
                     beat = plLyrics[i].Beat;
-                                        
+
                     // New beat
                     // Store previous syllabes
                     if (beat != currentbeat)
@@ -725,7 +734,7 @@ namespace Karaboss.Lyrics
                         catch (Exception ex)
                         {
                             string tx = ex.Message + cr + "Syllab :" + currenttext + cr + "Measure: " + currentmeasure;
-                            MessageBox.Show(tx, "Karaboss",MessageBoxButtons.OK, MessageBoxIcon.Error); 
+                            MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         currentbeat = beat;
                         currenttext = string.Empty;
@@ -745,13 +754,13 @@ namespace Karaboss.Lyrics
             {
                 string tx = ex.Message + cr + "Syllab :" + currenttext + cr + "Measure: " + currentmeasure;
                 MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }            
+            }
         }
 
         /// <summary>
         /// Load Lyrics lines in Dictionaries LyrictLines & LyricsTimes
         /// </summary>
-        private void LoadLyricsLines()
+        public void LoadLyricsLines()
         {
             LyricsLines = new Dictionary<int, string>();  // tickson of the first lyric, line of lyrics
             LyricsTimes = new Dictionary<int, int>();     // tickson of the first lyric, ticksoff of the last lyric
@@ -826,14 +835,6 @@ namespace Karaboss.Lyrics
                 LyricsTimesKeys = LyricsTimes.Keys.ToArray();
             }
         }
-
-
-        #endregion private func
-
-
-        #region public func
-
-       
 
 
         #endregion public func
