@@ -4375,7 +4375,11 @@ namespace Karaboss
             if (frmLyric == null || Application.OpenForms.OfType<frmLyric>().Count() == 0)
             {
                 // Affiche les paroles
-                frmLyric = new frmLyric();                
+                if (currentPlaylistItem != null)
+                    frmLyric = new frmLyric(true);
+                else
+                    frmLyric = new frmLyric(false);
+
                 frmLyric.Show();
             }
 
@@ -5868,6 +5872,7 @@ namespace Karaboss
                 if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
                 {
                     frmLyric.Close();
+                    //frmLyric.Dispose();
                 }                
                 // ferme le formulaire frmLyricsEdit
                 if (Application.OpenForms.OfType<frmLyricsEdit>().Count() > 0)

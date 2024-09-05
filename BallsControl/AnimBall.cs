@@ -150,5 +150,20 @@ namespace BallsControl
                 pbox.Controls.Remove(P);
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                foreach (Control x in Controls)
+                {
+                    x.Dispose();
+                }
+            }
+
+            //P? .Dispose();
+
+            base.Dispose(disposing);
+        }
+
     }
 }

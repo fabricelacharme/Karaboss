@@ -44,14 +44,17 @@ using System.Runtime.InteropServices;
 
 namespace PicControl
 {
-    public partial class pictureBoxControl : UserControl, IMessageFilter
+    public partial class pictureBoxControl : UserControl, IMessageFilter, IDisposable
     {
         /*
          * timer5_Tick de frmPlayer appelle la fonction colorLyric de frmLyrics 
          * La fenetre frmLyrics appelle la fonction ColorLyric(songposition) de picturebox control
          * Si songposition <> currenttextpos (syllabe active a changé) => redessine
          */
-        //private Sanford.Multimedia.Timers.Timer timerFill;
+
+        bool disposed = false;
+
+
         private BackgroundWorker backgroundWorkerSlideShow;
 
         #region Move form without title bar
@@ -69,7 +72,7 @@ namespace PicControl
 
         private string strCurrentImage; // current image to insure that random will provide a different one
         private int rndIter = 0;
-
+        
 
         public class plLyric
         {
@@ -499,6 +502,7 @@ namespace PicControl
         {
             InitializeComponent();
 
+            
             _karaokeFont = new Font("Arial", this.Font.Size);
 
             #region Move form without title bar
@@ -1460,7 +1464,7 @@ namespace PicControl
                     }
 
                     g.Dispose();   
-                }
+                }                
 
             }
         }
@@ -2253,7 +2257,7 @@ namespace PicControl
             {
                 m_ImageStream.Dispose();
                 m_ImageStream = null;
-            }
+            }            
 
             if (backgroundWorkerSlideShow != null)
             {
@@ -2263,5 +2267,44 @@ namespace PicControl
         }
 
         #endregion paint resize
+
+        #region Dispose
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+
+                    if (m_ImageStream != null)
+                    {
+                        m_ImageStream.Dispose();
+                        m_ImageStream = null;
+                    }
+                                       
+                }
+
+                _karaokeFont? .Dispose();
+                m_font?.Dispose(); 
+                m_CurrentImage? .Dispose();
+                pboxWnd? .Dispose ();
+
+
+                disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~pictureBoxControl()
+        {
+            Dispose(false);
+        }
+
+        #endregion Dispose
     }
 }

@@ -1807,6 +1807,7 @@ namespace Sanford.Multimedia.Midi
 
         #region IDisposable Members
 
+        
         public void Dispose()
         {
             #region Guard

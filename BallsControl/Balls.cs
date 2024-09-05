@@ -377,6 +377,29 @@ namespace BallsControl
             if (picWnd.Width > 0)
                 START_POSITION = picWnd.Width;
         }
-        
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+
+                for (int i = 0; i < pBallsNumber; i++)
+                {
+                    manyBall[i].Dispose();
+                }
+                fixedBall? .Dispose();
+                picWnd? .Dispose();
+
+               
+            }
+
+            base.Dispose(disposing);
+        }
+
+
     }
 }

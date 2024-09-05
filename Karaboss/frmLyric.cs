@@ -41,6 +41,7 @@ using System.Runtime.InteropServices;
 using System.Linq;
 using Karaboss.Resources.Localization;
 using static PicControl.pictureBoxControl;
+using System.ComponentModel;
 
 namespace Karaboss
 {
@@ -63,6 +64,10 @@ namespace Karaboss
         private string lyrics;
         private int currentTextPos = 0;
         private Point Mouselocation;
+
+        private bool _bplaylist;
+
+        private bool closing = false;
 
         #region properties
 
@@ -221,8 +226,8 @@ namespace Karaboss
             set {
 
                 // Change only if not in playlist mode
-                if (_allowModifyDirSlideShow == false)
-                    return;
+                //if (_bplaylist)
+                //    return;
 
                 if (value == null || value == "")
                     value = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
@@ -303,10 +308,10 @@ namespace Karaboss
         public List<pictureBoxControl.plLyric> plLyrics;
         private List<int> LyricsTimes;
 
-        //bool playing = false;
+        
         private frmLyrOptions frmLyrOptions;               
        
-        public frmLyric()
+        public frmLyric(bool bPlayList = false)
         {
             InitializeComponent();
 
@@ -323,6 +328,9 @@ namespace Karaboss
             controlsToMove.Add(this.pnlTittle);
             controlsToMove.Add(this.lblTittle);
             #endregion
+
+            // Check if a playlist is played
+            _bplaylist = bPlayList;
 
             // couleurs pour texte, nombre de lignes
             LoadKarOptions();                               
@@ -481,9 +489,9 @@ namespace Karaboss
         {
             LoadKarOptions();
 
-            AlloModifyDirSlideShow = true;
+            //AlloModifyDirSlideShow = true;
             DirSlideShow = dirSlideShow;
-            AlloModifyDirSlideShow = false;
+            //AlloModifyDirSlideShow = false;
         }
 
         /// <summary>
@@ -614,6 +622,34 @@ namespace Karaboss
 
         #region form load close resize
 
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            closing = true;
+            base.OnClosing(e);
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+
+            Application.RemoveMessageFilter(this);
+
+            timer1.Stop();
+            timer1.Dispose();
+
+            _karaokeFont?.Dispose();
+            
+            pBox.Terminate();
+
+            // FAB 05/09/2024
+            pBox.Dispose();
+            picBalls.Stop();
+            picBalls.Dispose();
+            frmLyrOptions? .Dispose();
+            
+
+            base.OnClosed(e);
+        }
+
         private void FrmLyric_Load(object sender, EventArgs e)
         {
             // Récupère la taille et position de la forme
@@ -664,7 +700,8 @@ namespace Karaboss
                 Properties.Settings.Default.Save();
             }
 
-            pBox.Terminate();
+            //pBox.Terminate();
+
             Dispose();
             
         }
