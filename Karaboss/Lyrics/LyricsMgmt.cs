@@ -1,6 +1,7 @@
 ﻿using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -32,6 +33,9 @@ namespace Karaboss.Lyrics
         
         // Are lyrics stored with a space or not ?
         private lyricsSpacings _lyricsspacing = lyricsSpacings.WithoutSpace;
+
+        private bool _bHasCarriageReturn = false;
+
 
         #endregion private
 
@@ -103,10 +107,18 @@ namespace Karaboss.Lyrics
             // Guess spacing or not
             if (plLyrics.Count > 0)
             {
-                _lyricsspacing = GetLyricsSpacingModel();
+                GetLyricsSpacingModel();
+                
+                // Add a trailing space to each syllabe
                 if (_lyricsspacing == lyricsSpacings.WithoutSpace)
                 {
                     SetTrailingSpace();
+                }
+
+                // If zero carriage return in the lyrics
+                if (!_bHasCarriageReturn)
+                {
+                    AddCarriageReturn();                    
                 }
             }
 
@@ -125,8 +137,15 @@ namespace Karaboss.Lyrics
 
         #region private func
 
-        private lyricsSpacings GetLyricsSpacingModel() 
+        private void GetLyricsSpacingModel() 
         {
+            
+            _bHasCarriageReturn = false;
+            _lyricsspacing = lyricsSpacings.WithoutSpace;
+
+            bool btest1 = false;
+            bool btest2 = false;
+
             // What is the type of separator between lyrics ? space or nothing
             // If there is a space before or after the string, the lyrics are separated by a space
             for (int k = 0; k < plLyrics.Count; k++)
@@ -137,22 +156,26 @@ namespace Karaboss.Lyrics
                 {
                     if (s.StartsWith(" ") || s.EndsWith(" ")) 
                     {
-                        return lyricsSpacings.WithSpace;
-                    }
-                    /*
-                    if (!(s.StartsWith(" ") || s.EndsWith(" ")) && (!s.EndsWith("-")))
-                    {
-                        return lyricsSpacings.WithSpace;
-                    }
-                    */
+                        _lyricsspacing = lyricsSpacings.WithSpace;
+                        btest1 = true;
+                        
+                    }                    
                 }
+                else if (plLyrics[k].CharType == plLyric.CharTypes.LineFeed || plLyrics[k].CharType == plLyric.CharTypes.ParagraphSep)
+                {
+                    _bHasCarriageReturn = true;
+                    btest2 = true;
+                }
+
+                if(btest2 && btest1)
+                    return;
             }
-            return lyricsSpacings.WithoutSpace;
+            
 
         }
 
         /// <summary>
-        /// Add a trailing space when the lyrics stored in the midi file have no space.
+        /// Add a trailing space when the lyrics have no space.
         /// </summary>
         private void SetTrailingSpace()
         {
@@ -180,6 +203,27 @@ namespace Karaboss.Lyrics
                     }
                 }
             }
+        }
+
+
+        /// <summary>
+        /// Add a carriage return
+        /// </summary>
+        private void AddCarriageReturn()
+        {
+            List<plLyric> _tmpL = new List<plLyric>();
+            // test 1 : Add a CR to each uppercase
+            for (int k = 0; k < plLyrics.Count; k++)
+            {
+                if (plLyrics[k].CharType == plLyric.CharTypes.Text && char.IsUpper(plLyrics[k].Element,0))
+                {
+                    //plLyrics[k].Element = "/" + plLyrics[k].Element;                    
+                    _tmpL.Add(new plLyric() { CharType = plLyric.CharTypes.LineFeed, Element = "¼", TicksOn = plLyrics[k].TicksOn, TicksOff = plLyrics[k].TicksOff });
+                }
+                _tmpL.Add(plLyrics[k]);
+            }
+
+            plLyrics = _tmpL;
         }
 
         private float GetTimeInMeasure(int ticks)
