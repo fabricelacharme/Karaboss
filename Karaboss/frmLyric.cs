@@ -111,9 +111,16 @@ namespace Karaboss
             get { return _karaokeFont; }
             set
             {
-                _karaokeFont = value;
-                // Redraw
-                pBox.KaraokeFont = _karaokeFont;
+                try
+                {
+                    _karaokeFont = value;
+                    // Redraw
+                    pBox.KaraokeFont = _karaokeFont;
+                }
+                catch (Exception e) 
+                {
+                    Console.Write("Error: " + e.Message);
+                }
             }
         }
 

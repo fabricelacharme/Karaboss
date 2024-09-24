@@ -333,10 +333,16 @@ namespace PicControl
             get { return _karaokeFont; }
             set
             {
-                _karaokeFont = value;
-                // Redraw
-                //SetDimensions();
-                pboxWnd.Invalidate();
+                try
+                {
+                    _karaokeFont = value;
+                    pboxWnd.Invalidate();
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Error: " + e.Message);
+                }
+
             }
         }
 
@@ -855,31 +861,9 @@ namespace PicControl
 
             sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
 
-            //pboxWnd.Font = new Font(Name = "Arial", emSize);            
-            pboxWnd.Font = new Font(Name = _karaokeFont.Name, emSize);
-            pboxWnd.SizeMode = PictureBoxSizeMode.Zoom;
-
-            /*
-            // Default text
-            string tx = "Lorem ipsum dolor sit amet," + _InternalSepLines;
-            tx += "consectetur adipisicing elit," + _InternalSepLines;
-            tx += "sed do eiusmod tempor incididunt" + _InternalSepLines;
-            tx += "ut labore et dolore magna aliqua." + _InternalSepLines;
-            tx += "Ut enim ad minim veniam," + _InternalSepLines;
-            tx += "quis nostrud exercitation ullamco" + _InternalSepLines;
-            tx += "laboris nisi ut aliquip" + _InternalSepLines;
-            tx += "ex ea commodo consequat." + _InternalSepLines;
-            tx += "Duis aute irure dolor in reprehenderit" + _InternalSepLines;
-            tx += "in voluptate velit esse cillum dolore" + _InternalSepLines;
-            tx += "eu fugiat nulla pariatur.";
-
-            if (_bforceuppercase)
-                tx = tx.ToUpper();
-
-            List<plLyric> plLyrics = StoreDemoText(tx);
                         
-            LoadSong(plLyrics, true);
-            */
+            pboxWnd.Font = new Font(Name = _karaokeFont.Name, emSize);
+            pboxWnd.SizeMode = PictureBoxSizeMode.Zoom;            
 
             // Initial conditions
             _currentPosition = 30;
