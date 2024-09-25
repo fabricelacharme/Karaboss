@@ -9,6 +9,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Reflection;
 using System.Runtime.Remoting.Channels;
+using System.Security.Policy;
 
 namespace MusicTxt
 {
@@ -267,10 +268,10 @@ namespace MusicTxt
                     {
                         ReadMetaText(array);
                     }
-                    else if (array.Contains("End_track"))
-                    {
-                        //track = null;
-                    }
+                    //else if (array.Contains("End_track"))
+                    //{                        
+                    //    ReadMetaEndOfTrack(array);
+                    //}
                     else if (array.Contains("End_of_file"))
                     {
                         CreateSequence();
@@ -521,6 +522,35 @@ namespace MusicTxt
             MetaMessage mtMsg = new MetaMessage(MetaType.Text, newdata);
             track.Insert(ticks, mtMsg);
             manageMetaText(newdata, ticks);
+        }
+
+
+        private void ReadMetaEndOfTrack(string[] ar)
+        {
+            // Format: Track, Ticks, End_track
+            if (ar.Length != 3)
+                throw new ArgumentException("EndOfTrack Length");
+
+            int ticks = Convert.ToInt32(ar[1]);
+
+            /*
+            The MIDI end of track meta message always has the following three bytes of data.
+            0xFF 0x2F 0x00
+            The status byte is 0xFF and shows that this is a meta message.
+            The second byte is the meta type 0x2F and shows that this is an end of track meta message. 
+            The third byte is 0, which means that there are no other bytes in the message.
+            */
+
+            var split = BitConverter.GetBytes(0);
+            byte[] bytes = new byte[3];
+            bytes[0] = split[2]; //11;
+            bytes[1] = split[1]; //113;
+            bytes[2] = split[0]; //176;
+
+            MetaMessage mtMsg = new MetaMessage(MetaType.EndOfTrack, bytes);
+            track.Insert(ticks, mtMsg);
+
+
         }
 
 

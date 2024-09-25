@@ -70,7 +70,8 @@ namespace Sanford.Multimedia.Midi
         private MidiEvent tail = null;
 
         // The end of track MIDI event.
-        private MidiEvent endOfTrackMidiEvent;
+        // FAB 25/09/2024 private MidiEvent endOfTrackMidiEvent;
+        public MidiEvent endOfTrackMidiEvent;
 
         private List<MidiNote> notes;
 
@@ -87,6 +88,12 @@ namespace Sanford.Multimedia.Midi
         #endregion
 
         #region Methods
+
+        public void OffsetEndOfTrack(int offset)
+        {
+            endOfTrackMidiEvent = new MidiEvent(this, offset, MetaMessage.EndOfTrackMessage);
+        }
+
 
         #region notes management
         /// <summary>
@@ -2702,8 +2709,10 @@ namespace Sanford.Multimedia.Midi
                 newMidiEvent.Previous = tail;
                 tail.Next = newMidiEvent;
                 tail = newMidiEvent;
+                               
                 endOfTrackMidiEvent.SetAbsoluteTicks(Length);
                 endOfTrackMidiEvent.Previous = tail;
+                
             }
             else
             {

@@ -50,6 +50,7 @@ using ChordAnalyser.UI;
 using Karaboss.Search;
 using System.Text;
 using Karaboss.Lyrics;
+using MusicXml.Domain;
 
 namespace Karaboss
 {
@@ -286,7 +287,7 @@ namespace Karaboss
         private string MIDIfileFullPath = string.Empty;
 
         // FAB 06/07/2024
-        private Encoding _encoding = Encoding.ASCII;
+        private System.Text.Encoding _encoding = System.Text.Encoding.ASCII;
 
         #endregion
 
@@ -3375,9 +3376,9 @@ namespace Karaboss
             if (dr == System.Windows.Forms.DialogResult.Cancel)            
                 return;            
 
-            decimal Measures = AddMeasuresDialog.Measures;
+            decimal measures = AddMeasuresDialog.Measures;
 
-            if (Measures == 0)
+            if (measures == 0)
                 return;
 
             int i;
@@ -3401,8 +3402,40 @@ namespace Karaboss
             int MeasureLength = sequence1.Division * sequence1.Numerator;
             MeasureLength = Convert.ToInt32(MeasureLength * mult);
 
-            int totalduration = sequence1.GetLength();
-            int nbMeasures = 1 + totalduration / MeasureLength;
+
+            // NEW CODE ==============================================================            
+            _totalTicks = sequence1.GetLength();
+            _measurelen = sequence1.Time.Measure;
+            int ticks = _totalTicks + (int)measures*_measurelen;
+            Track track = sequence1.tracks[0];
+
+            /*
+            var split = BitConverter.GetBytes(0);
+            byte[] bytes = new byte[3];
+            bytes[0] = split[2]; //11;
+            bytes[1] = split[1]; //113;
+            bytes[2] = split[0]; //176;
+
+            
+            MetaMessage mtMsg = new MetaMessage(MetaType.EndOfTrack, bytes);
+            Track track = sequence1.tracks[0];
+            track.Insert(ticks, mtMsg);
+            */
+
+
+            //track.OffsetEndOfTrack(ticks);
+
+            int newMeasuresNumber = (int)measures + _totalTicks / _measurelen;
+
+            SetTrackLength(track, newMeasuresNumber);
+
+
+            // END NEW CODE ==========================================================
+
+
+            // OLD CODE ==============================================================
+            /*
+            int nbMeasures = 1 + _totalTicks / MeasureLength;
             int totalMeasures = nbMeasures + (int)Measures; // mesures existantes + mesures ajoutees
 
             // temps de la dernière note de la dernière mesure ajoutée 
@@ -3410,7 +3443,7 @@ namespace Karaboss
 
             // Start time of the note
             int division = sequence1.Division; // 960 par exemple
-            int ticks = Convert.ToInt32(time * division);           // ticks de début de note
+            ticks = Convert.ToInt32(time * division);           // ticks de début de note
 
             // Duration of the note
             int endticks = (Convert.ToInt32(time) + 1) * division;     // ticks de fin de note
@@ -3424,6 +3457,10 @@ namespace Karaboss
                 MidiNote note = new MidiNote(ticks, track.MidiChannel, noteC, duration, velocity, false);
                 track.addNote(note);                
             }
+            */
+            // END OLD CODE ===========================================================
+
+
 
             UpdateMidiTimes();
             DisplaySongDuration();
@@ -7172,6 +7209,9 @@ namespace Karaboss
         /// <param name="channel"></param>
         private void CreateNewMelody(Track track, int channel, int measures)
         {
+            SetTrackLength(track,measures);
+            return;
+
             int noteC = 60;
             int ticks = 0;
             int number = noteC;
@@ -7193,8 +7233,35 @@ namespace Karaboss
             track.addNote(note);
 
             track.Volume = 80;            
-        }               
-       
+        } 
+        
+        /// <summary>
+        /// Insert a "EndOfTrack" meta message one tick after the duration
+        /// </summary>
+        /// <param name="track"></param>
+        /// <param name="channel"></param>
+        /// <param name="measures"></param>
+        private void SetTrackLength(Track track, int measures)
+        {            
+            int division = sequence1.Division;
+            _measurelen = sequence1.Time.Measure;            
+
+            // ticks + 1            
+            int ticks = _measurelen * measures;
+
+            
+            var split = BitConverter.GetBytes(0);
+            byte[] bytes = new byte[3];
+            bytes[0] = split[2]; //11;
+            bytes[1] = split[1]; //113;
+            bytes[2] = split[0]; //176;
+
+            MetaMessage mtMsg = new MetaMessage(MetaType.EndOfTrack, bytes);
+            track.Insert(ticks, mtMsg);            
+            //track.OffsetEndOfTrack(ticks);
+
+        }
+
         /// <summary>
         /// Insert a new track
         /// </summary>
