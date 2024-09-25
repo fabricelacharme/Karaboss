@@ -68,18 +68,7 @@ namespace Sanford.Multimedia.Midi
 
         private int runningStatus;
 
-       
-
-
-        // FAB 28/05/2024
-        /*
-        private enum lyricsSpacings
-        {
-            WithSpace = 0,
-            WithoutSpace = 1
-        }
-        private lyricsSpacings LyricsSpacing = lyricsSpacings.WithoutSpace;
-        */
+              
 
 		public TrackReader()
 		{

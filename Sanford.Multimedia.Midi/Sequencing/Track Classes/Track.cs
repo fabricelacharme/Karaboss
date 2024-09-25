@@ -3422,16 +3422,17 @@ namespace Sanford.Multimedia.Midi
         {
             get
             {
-                return (totallyricst != null || totallyricsl != null);
+                return ( (totallyricst != null && totallyricst.Length > 2) || (totallyricsl != null && totallyricsl.Length > 2));
             }
         }
 
-        // All lyrics of type Text
+        // All lyrics of type "Text"
         private string totallyricst;
         public string TotalLyricsT
         {
             get
             {
+                //return (totallyricst != null && totallyricst.Length > 2) ? totallyricst : null;
                 return totallyricst;
             }
             set
@@ -3440,12 +3441,13 @@ namespace Sanford.Multimedia.Midi
             }
         }
 
-        // All lyrics of type lyric
+        // All lyrics of type "lyric"
         private string totallyricsl;
         public string TotalLyricsL
         {
             get
             {
+                //return (totallyricsl != null && totallyricsl.Length > 2) ? totallyricsl : null;
                 return totallyricsl;
             }
             set
