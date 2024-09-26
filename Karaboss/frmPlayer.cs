@@ -955,6 +955,24 @@ namespace Karaboss
         /// <returns></returns>
         private float GetNewNoteDuration()
         {
+
+            /*
+            float mult;
+            switch (sequence1.Denominator)
+            {
+                case 4:         // noires
+                    mult = 1;
+                    break;
+                
+                case 2:         //
+                    break;
+                
+                //default:
+                //    mult = 1;
+
+            }
+            */
+
             switch (NoteValue)
             {
                 case NoteValues.Ronde:
