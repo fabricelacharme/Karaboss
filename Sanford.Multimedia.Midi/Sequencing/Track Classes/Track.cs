@@ -89,11 +89,12 @@ namespace Sanford.Multimedia.Midi
 
         #region Methods
 
-        public void OffsetEndOfTrack(int offset)
-        {
-            endOfTrackMidiEvent = new MidiEvent(this, offset, MetaMessage.EndOfTrackMessage);
+        
+        public void MoveEndOfTrack(int position)
+        {                        
+            //endOfTrackMidiEvent.SetAbsoluteTicks(position);            
         }
-
+        
 
         #region notes management
         /// <summary>
@@ -238,13 +239,7 @@ namespace Sanford.Multimedia.Midi
         /// </summary>
         /// <param name="note"></param>
         public int addNote(MidiNote note, bool bCheckDistance = true)
-        {
-
-            // FAb 30/10/2023
-            /*
-            if (note.Duration < 10)
-                return 0;
-            */
+        {            
 
             // Do not add if exists already
             if (findMidiNote(note.Number, note.StartTime) != null)
@@ -283,6 +278,14 @@ namespace Sanford.Multimedia.Midi
                     }
                 }
             }
+
+
+            // FAB 26/09/2024
+            // EndOfTrackOffset is no used to dimension a midi file at creation (instead of creating a dummy note at the end of the file)
+            // Ensure to keep the length of editing zone
+            int offset = Length - note.EndTime;            
+            if (EndOfTrackOffset > offset)
+                EndOfTrackOffset = offset;
 
             // Insert Note on            
             ChannelMessage message = new ChannelMessage(ChannelCommand.NoteOn, note.Channel, note.Number, note.Velocity);
@@ -3440,8 +3443,7 @@ namespace Sanford.Multimedia.Midi
         public string TotalLyricsT
         {
             get
-            {
-                //return (totallyricst != null && totallyricst.Length > 2) ? totallyricst : null;
+            {                
                 return totallyricst;
             }
             set
@@ -3455,8 +3457,7 @@ namespace Sanford.Multimedia.Midi
         public string TotalLyricsL
         {
             get
-            {
-                //return (totallyricsl != null && totallyricsl.Length > 2) ? totallyricsl : null;
+            {                
                 return totallyricsl;
             }
             set

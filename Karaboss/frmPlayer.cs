@@ -3369,6 +3369,21 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuMidiAddMeasures_Click(object sender, EventArgs e)
         {
+
+            // Le numérateur de la fraction (nombre supérieur) indique le « nombre de temps » utilisés dans la mesure :
+            // 2/4 signifie « une mesure à deux noires »,
+            // 3/2, « une mesure à trois blanches »,
+            // 6/8, « une mesure à six croches ».
+
+            // Le dénominateur (nombre inférieur) indique l'unité de temps de la mesure, selon la convention suivante :
+            // le nombre 1 représente la ronde ;
+            // le nombre 2 représente la blanche (soit une demi-ronde) ;
+            // le nombre 4 représente la noire (soit un quart de ronde) ;
+            // le nombre 8 représente la croche (soit un huitième de ronde) ;
+            // le nombre 16 représente la double croche (soit un seizième de ronde).
+
+            #region old code
+            /*
             DialogResult dr = new DialogResult();
             Sanford.Multimedia.Midi.Score.UI.frmAddMeasuresDialog AddMeasuresDialog = new Sanford.Multimedia.Midi.Score.UI.frmAddMeasuresDialog();
             dr = AddMeasuresDialog.ShowDialog();
@@ -3385,18 +3400,6 @@ namespace Karaboss
             int noteC = 60;
 
 
-            // Le numérateur de la fraction (nombre supérieur) indique le « nombre de temps » utilisés dans la mesure :
-            // 2/4 signifie « une mesure à deux noires »,
-            // 3/2, « une mesure à trois blanches »,
-            // 6/8, « une mesure à six croches ».
-
-            // Le dénominateur (nombre inférieur) indique l'unité de temps de la mesure, selon la convention suivante :
-            // le nombre 1 représente la ronde ;
-            // le nombre 2 représente la blanche (soit une demi-ronde) ;
-            // le nombre 4 représente la noire (soit un quart de ronde) ;
-            // le nombre 8 représente la croche (soit un huitième de ronde) ;
-            // le nombre 16 représente la double croche (soit un seizième de ronde).
-
             // Cacul de la durée d'une mesure en nombre de temps
             float mult = 4.0f / sequence1.Denominator;
             int MeasureLength = sequence1.Division * sequence1.Numerator;
@@ -3407,36 +3410,10 @@ namespace Karaboss
             _totalTicks = sequence1.GetLength();
             _measurelen = sequence1.Time.Measure;
             int ticks = _totalTicks + (int)measures*_measurelen;
-            Track track = sequence1.tracks[0];
-
-            /*
-            var split = BitConverter.GetBytes(0);
-            byte[] bytes = new byte[3];
-            bytes[0] = split[2]; //11;
-            bytes[1] = split[1]; //113;
-            bytes[2] = split[0]; //176;
-
+                                   
             
-            MetaMessage mtMsg = new MetaMessage(MetaType.EndOfTrack, bytes);
-            Track track = sequence1.tracks[0];
-            track.Insert(ticks, mtMsg);
-            */
-
-
-            //track.OffsetEndOfTrack(ticks);
-
-            int newMeasuresNumber = (int)measures + _totalTicks / _measurelen;
-
-            SetTrackLength(track, newMeasuresNumber);
-
-
-            // END NEW CODE ==========================================================
-
-
-            // OLD CODE ==============================================================
-            /*
             int nbMeasures = 1 + _totalTicks / MeasureLength;
-            int totalMeasures = nbMeasures + (int)Measures; // mesures existantes + mesures ajoutees
+            int totalMeasures = nbMeasures + (int)measures; // mesures existantes + mesures ajoutees
 
             // temps de la dernière note de la dernière mesure ajoutée 
             float time = -1 + (totalMeasures * sequence1.Numerator) * mult;
@@ -3457,11 +3434,43 @@ namespace Karaboss
                 MidiNote note = new MidiNote(ticks, track.MidiChannel, noteC, duration, velocity, false);
                 track.addNote(note);                
             }
+            
+            UpdateMidiTimes();
+            DisplaySongDuration();
+
+            RedrawSheetMusic();
+            SetScrollBarValues();
+
+            FileModified();
             */
-            // END OLD CODE ===========================================================
+            #endregion old code
 
+            AddMeasures();
+        }
 
+        private void AddMeasures()
+        {
+            DialogResult dr = new DialogResult();
+            Sanford.Multimedia.Midi.Score.UI.frmAddMeasuresDialog AddMeasuresDialog = new Sanford.Multimedia.Midi.Score.UI.frmAddMeasuresDialog();
+            dr = AddMeasuresDialog.ShowDialog();
 
+            if (dr == System.Windows.Forms.DialogResult.Cancel)
+                return;
+
+            decimal measures = AddMeasuresDialog.Measures;
+
+            if (measures == 0)
+                return;
+         
+            _totalTicks = sequence1.GetLength();
+            _measurelen = sequence1.Time.Measure;
+            int ticks = _totalTicks + (int)measures * _measurelen;
+            Track track = sequence1.tracks[0];            
+
+            // Ofset end of track            
+            track.EndOfTrackOffset = ticks;
+            
+            // Update GUI
             UpdateMidiTimes();
             DisplaySongDuration();
 
@@ -7209,9 +7218,8 @@ namespace Karaboss
         /// <param name="channel"></param>
         private void CreateNewMelody(Track track, int channel, int measures)
         {
-            SetTrackLength(track,measures);
-            return;
-
+            #region old code
+            /*
             int noteC = 60;
             int ticks = 0;
             int number = noteC;
@@ -7232,9 +7240,14 @@ namespace Karaboss
             note = new MidiNote(ticks, channel, number, duration, velocity, false);
             track.addNote(note);
 
-            track.Volume = 80;            
-        } 
-        
+            track.Volume = 80;
+            */
+            #endregion old code
+
+            SetTrackLength(track, measures);
+
+        }
+
         /// <summary>
         /// Insert a "EndOfTrack" meta message one tick after the duration
         /// </summary>
@@ -7249,7 +7262,7 @@ namespace Karaboss
             // ticks + 1            
             int ticks = _measurelen * measures;
 
-            
+            /*
             var split = BitConverter.GetBytes(0);
             byte[] bytes = new byte[3];
             bytes[0] = split[2]; //11;
@@ -7259,6 +7272,11 @@ namespace Karaboss
             MetaMessage mtMsg = new MetaMessage(MetaType.EndOfTrack, bytes);
             track.Insert(ticks, mtMsg);            
             //track.OffsetEndOfTrack(ticks);
+            */
+
+            track.EndOfTrackOffset = ticks;
+            
+
 
         }
 
