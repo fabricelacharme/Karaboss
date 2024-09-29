@@ -238,7 +238,7 @@ namespace Sanford.Multimedia.Midi
         /// Add a note in the track
         /// </summary>
         /// <param name="note"></param>
-        public int addNote(MidiNote note, bool bCheckDistance = true)
+        public int addNote(MidiNote note,  bool bCheckDistance = true)
         {            
 
             // Do not add if exists already
@@ -283,7 +283,7 @@ namespace Sanford.Multimedia.Midi
             // FAB 26/09/2024
             // EndOfTrackOffset is no used to dimension a midi file at creation (instead of creating a dummy note at the end of the file)
             // Ensure to keep the length of editing zone
-            int offset = Length - note.EndTime;            
+            int offset = Length - note.EndTime; // + measurelength
             if (EndOfTrackOffset > offset)
                 EndOfTrackOffset = offset;
 
