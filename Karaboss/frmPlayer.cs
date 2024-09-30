@@ -954,25 +954,7 @@ namespace Karaboss
         /// </summary>
         /// <returns></returns>
         private float GetNewNoteDuration()
-        {
-
-            /*
-            float mult;
-            switch (sequence1.Denominator)
-            {
-                case 4:         // noires
-                    mult = 1;
-                    break;
-                
-                case 2:         //
-                    break;
-                
-                //default:
-                //    mult = 1;
-
-            }
-            */
-
+        {           
             switch (NoteValue)
             {
                 case NoteValues.Ronde:
@@ -1298,7 +1280,15 @@ namespace Karaboss
             _bpm = GetBPM(_tempo);
 
             if (sequence1.Time != null)
+            {
                 _measurelen = sequence1.Time.Measure;
+
+                foreach (Track track in sequence1.tracks)
+                { 
+                    track.MeasureLength = _measurelen;
+                }
+
+            }
         }
 
         /// <summary>
@@ -7274,6 +7264,9 @@ namespace Karaboss
         /// <param name="measures"></param>
         private void SetTrackLength(Track track, int measures)
         {            
+            if(measures < 1)
+                return;
+            
             int division = sequence1.Division;
             _measurelen = sequence1.Time.Measure;            
 
@@ -7292,7 +7285,7 @@ namespace Karaboss
             //track.OffsetEndOfTrack(ticks);
             */
 
-            track.EndOfTrackOffset = ticks;
+            track.EndOfTrackOffset = ticks - 1;
             
 
 
@@ -7369,6 +7362,9 @@ namespace Karaboss
 
             // Volume
             track.insertVolume(channel, volume);
+
+            // Lengh of measure
+            track.MeasureLength = _measurelen;
 
             return track;
         }
@@ -7693,6 +7689,8 @@ namespace Karaboss
                     if (sequence1.tracks.Count == 1)
                         CreateNewMelody(track, channel, measures);
                 }
+                
+
 
                 DisplayTrackControls();
 

@@ -89,12 +89,12 @@ namespace Sanford.Multimedia.Midi
 
         #region Methods
 
-        
+
         public void MoveEndOfTrack(int position)
-        {                        
+        {
             //endOfTrackMidiEvent.SetAbsoluteTicks(position);            
         }
-        
+
 
         #region notes management
         /// <summary>
@@ -119,7 +119,7 @@ namespace Sanford.Multimedia.Midi
                 m = notes.Find(u => u.StartTime > 1000000);
             }
         }
-   
+
         public void deleteMidiEventsAfter(int after)
         {
             // supprime tous les messages text & lyric
@@ -147,7 +147,7 @@ namespace Sanford.Multimedia.Midi
                 }
             }
         }
-       
+
 
         // First note of the track
         public MidiNote GetFirstNote()
@@ -238,8 +238,8 @@ namespace Sanford.Multimedia.Midi
         /// Add a note in the track
         /// </summary>
         /// <param name="note"></param>
-        public int addNote(MidiNote note,  bool bCheckDistance = true)
-        {            
+        public int addNote(MidiNote note, bool bCheckDistance = true)
+        {
 
             // Do not add if exists already
             if (findMidiNote(note.Number, note.StartTime) != null)
@@ -281,11 +281,22 @@ namespace Sanford.Multimedia.Midi
 
 
             // FAB 26/09/2024
-            // EndOfTrackOffset is no used to dimension a midi file at creation (instead of creating a dummy note at the end of the file)
-            // Ensure to keep the length of editing zone
-            int offset = Length - note.EndTime; // + measurelength
-            if (EndOfTrackOffset > offset)
-                EndOfTrackOffset = offset;
+            // EndOfTrackOffset is now used to dimension a midi file at creation, instead of creating a dummy note at the end of the file
+            // But we must ensure to keep the length of editing zone even if we delete notes.
+            int distance = Length - note.EndTime;  // => if the offset is too big, reduce the offset to the distance between the end of the note and the end of the track            
+
+            if (EndOfTrackOffset > distance)
+            {
+                // If the distance is greater than a measure, the offset is reduced to the distance
+                if (distance > _measurelength)
+                    EndOfTrackOffset = distance;
+                else if (_measurelength > 0)
+                {
+                    // If the distance is below a measure, the offset is kept to a measure.
+                    // So when you add a note to the last measure, a new mesure is added automatically
+                    EndOfTrackOffset = _measurelength;
+                }
+            }
 
             // Insert Note on            
             ChannelMessage message = new ChannelMessage(ChannelCommand.NoteOn, note.Channel, note.Number, note.Velocity);
@@ -294,7 +305,7 @@ namespace Sanford.Multimedia.Midi
             // Insert Note off at ticksoff - 1 
             // to avoid what ? ovelapping with next note ?
             int ticksoff = note.StartTime + note.Duration;
-            message = new ChannelMessage(ChannelCommand.NoteOff, note.Channel, note.Number, 0);            
+            message = new ChannelMessage(ChannelCommand.NoteOff, note.Channel, note.Number, 0);
             InsertLast(ticksoff - 1, message);
 
             // Add note to list of notes
@@ -349,11 +360,11 @@ namespace Sanford.Multimedia.Midi
         public MidiNote findPreviousMidiNote(int ticks)
         {
             MidiNote m;
-            for (int i = notes.Count -1; i >= 0; i--)
+            for (int i = notes.Count - 1; i >= 0; i--)
             {
                 m = notes[i];
                 if (m.StartTime <= ticks) return m;
-            }            
+            }
             return null;
         }
 
@@ -402,14 +413,14 @@ namespace Sanford.Multimedia.Midi
         {
             int id = 0;
             MidiEvent current = GetMidiEvent(0);
-           
+
             while (current.AbsoluteTicks <= Length)
             {
                 IMidiMessage a = current.MidiMessage;
 
                 if (a.MessageType == MessageType.Meta)
                 {
-                    MetaMessage Msg = (MetaMessage)current.MidiMessage;                    
+                    MetaMessage Msg = (MetaMessage)current.MidiMessage;
                     if (Msg.MetaType == MetaType.Tempo)
                     {
                         if (current.AbsoluteTicks >= ticks)
@@ -866,7 +877,7 @@ namespace Sanford.Multimedia.Midi
         {
             //notes.Clear();
             List<MidiNote> lsnotes = new List<MidiNote>();
-            
+
             MidiEvent current = GetMidiEvent(0);
 
             while (current.AbsoluteTicks <= Length)
@@ -880,7 +891,7 @@ namespace Sanford.Multimedia.Midi
                     ChannelCommand b = Msg.Command;
 
                     if (b == ChannelCommand.NoteOn)
-                    {                        
+                    {
                         int channel = Msg.MidiChannel;
                         int number = Msg.Data1;
                         int velocity = Msg.Data2;
@@ -895,10 +906,10 @@ namespace Sanford.Multimedia.Midi
                         else
                         {
                             // This is a NoteOff equivalent
-                            NoteOff(lsnotes ,channel, number, ticks);
+                            NoteOff(lsnotes, channel, number, ticks);
                         }
 
-                        
+
                     }
                     else if (b == ChannelCommand.NoteOff)
                     {
@@ -907,7 +918,7 @@ namespace Sanford.Multimedia.Midi
                         int velocity = Msg.Data2;
                         int ticks = current.AbsoluteTicks;
 
-                        NoteOff(lsnotes ,channel, number, ticks);
+                        NoteOff(lsnotes, channel, number, ticks);
                     }
 
                     #region next
@@ -958,7 +969,7 @@ namespace Sanford.Multimedia.Midi
 
         }
 
-        private void NoteOff(List<MidiNote> lsn ,int channel, int notenumber, int endtime)
+        private void NoteOff(List<MidiNote> lsn, int channel, int notenumber, int endtime)
         {
 
             MidiNote m = lsn.FindLast(u => u.Channel == channel && u.Number == notenumber && u.Duration == 0);
@@ -966,7 +977,7 @@ namespace Sanford.Multimedia.Midi
             {
                 if (endtime > m.StartTime)
                     m.Duration = endtime - m.StartTime;
-            }            
+            }
         }
 
 
@@ -1189,8 +1200,8 @@ namespace Sanford.Multimedia.Midi
                     MetaMessage M = (MetaMessage)a;
                     if (M.MetaType == MetaType.TrackName)
                     {
-                        return id;                        
-                    }                                       
+                        return id;
+                    }
                     else
                     {
                         #region next
@@ -1356,7 +1367,7 @@ namespace Sanford.Multimedia.Midi
                 Console.Write(ex.Message);
             }
             bytes[1] = Convert.ToByte(negativepowerof2);    // [dd] Denominator negative power of 2
-            
+
             bytes[2] = Convert.ToByte(24);                  // [cc] MIDI ticks per metronome click
             bytes[3] = Convert.ToByte(8);                   // [bb] 32nd notes per MIDI quarter note
             MetaMessage metamessage = new MetaMessage(MetaType.TimeSignature, bytes);
@@ -1396,7 +1407,7 @@ namespace Sanford.Multimedia.Midi
                 i = findProgramChange();
             }
 
-            ProgramChange = programchange; 
+            ProgramChange = programchange;
 
             // Insert new patch at position 0
             ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, MidiChannel, ProgramChange, 0);
@@ -1409,10 +1420,10 @@ namespace Sanford.Multimedia.Midi
             Insert(0, message);
         }
 
-        #endregion                            
+        #endregion
 
         #region pitchbend
-        
+
         /// <summary>
         /// IS there any pitch bend here?
         /// </summary>
@@ -1452,7 +1463,7 @@ namespace Sanford.Multimedia.Midi
             ipitchBend = pb;
 
             RemovePitchBend(channel, starttime, endtime);
-            
+
             // 1 - value 64 before note on    
             StopPitchBend(channel, starttime);
 
@@ -1464,20 +1475,20 @@ namespace Sanford.Multimedia.Midi
 
 
             // After note on, increment 1 to value, each 20 tickes until middle of duration
-            int timetomiddle = starttime + (endtime - starttime)/2;
-            int durationtomiddle = (endtime - starttime)/2;
+            int timetomiddle = starttime + (endtime - starttime) / 2;
+            int durationtomiddle = (endtime - starttime) / 2;
 
             builder.Data1 = ipitchBend & mask;
             builder.Data2 = ipitchBend >> 7;
             int steps = (builder.Data2 - 64);
-            
+
             int deltatime = durationtomiddle / steps;
             int value = 64;
             int t = starttime;
-            for (int i = 0; i< steps; i++)
+            for (int i = 0; i < steps; i++)
             {
                 value++;
-                t += deltatime;                
+                t += deltatime;
                 builder.Data1 = 0;
                 builder.Data2 = value;
 
@@ -1632,7 +1643,7 @@ namespace Sanford.Multimedia.Midi
 
             // Stop pitchbend -1 after last pitch
             StopPitchBend(channel, endPitchTime);
-            
+
 
             #endregion
         }
@@ -1658,15 +1669,15 @@ namespace Sanford.Multimedia.Midi
 
             if (endtime <= starttime)
                 return;
-  
+
             ChannelMessageBuilder builder = new ChannelMessageBuilder();
             ChannelMessage pitchBendMessage;
 
             // Build pitch bend message;
             builder.Command = ChannelCommand.PitchWheel;
-            builder.MidiChannel = channel;            
-            
-             // Start Pitchbend           
+            builder.MidiChannel = channel;
+
+            // Start Pitchbend           
             if (endpitchBend > 16383)
                 endpitchBend = 16383;
             if (endpitchBend < 0)
@@ -1675,10 +1686,10 @@ namespace Sanford.Multimedia.Midi
             // Increase from 8192 to 13383 during the duration of the note
             int steps = 10;
             int OffsetTime = (endPitchTime - starttime) / steps;
-            int offsetPitch = (endpitchBend - startpitchBend) / steps;            
+            int offsetPitch = (endpitchBend - startpitchBend) / steps;
             int t = starttime;
-            
-            for (int i = 0; i < steps ; i++)
+
+            for (int i = 0; i < steps; i++)
             {
                 ipitchBend += offsetPitch;
                 t += OffsetTime;
@@ -1688,7 +1699,7 @@ namespace Sanford.Multimedia.Midi
 
                 // Unpack pitch bend value into two data bytes.
                 builder.Data1 = ipitchBend & mask;
-                builder.Data2 = ipitchBend >> 7;                
+                builder.Data2 = ipitchBend >> 7;
 
                 // Build message.
                 builder.Build();
@@ -1792,7 +1803,7 @@ namespace Sanford.Multimedia.Midi
                     {
                         if (cc == ChannelCommand.PitchWheel)
                         {
-                            
+
                             //x = Msg.Data1;
                             //y = Msg.Data2;
                             pbevents.Add(current);
@@ -1884,11 +1895,11 @@ namespace Sanford.Multimedia.Midi
                 }
                 else if (a.MessageType == MessageType.Channel)
                 {
-                    ChannelMessage Msg = (ChannelMessage)current.MidiMessage;                                       
+                    ChannelMessage Msg = (ChannelMessage)current.MidiMessage;
                     ChannelCommand cc = Msg.Command;
 
                     if (Msg.MidiChannel == channel)
-                    {                        
+                    {
                         if (cc == ChannelCommand.PitchWheel)
                         {
                             return id;
@@ -1971,20 +1982,20 @@ namespace Sanford.Multimedia.Midi
         public void CopyEvents(float srcstarttime, float srcendtime, float deststarttime)
         {
             float delta = 0;
-            MidiEvent current = GetMidiEvent(Count - 1);            
+            MidiEvent current = GetMidiEvent(Count - 1);
             bool bFound = false;
 
             while (current.AbsoluteTicks >= srcstarttime)
-            {                
+            {
                 // Consider events having their ticks inside srcstarttime and screndtime
-                if (current != endOfTrackMidiEvent && current.AbsoluteTicks>= srcstarttime && current.AbsoluteTicks <= srcendtime)
+                if (current != endOfTrackMidiEvent && current.AbsoluteTicks >= srcstarttime && current.AbsoluteTicks <= srcendtime)
                 {
                     delta = current.AbsoluteTicks - srcstarttime;
 
                     // Do not insert if similar event exists in the target position!                    
                     int position = (int)deststarttime + (int)delta;
                     bFound = false;
-                    
+
                     // List all events having this ticks
                     List<MidiEvent> melist = GetEventsFromTicks(position);
                     foreach (MidiEvent me in melist)
@@ -2004,19 +2015,19 @@ namespace Sanford.Multimedia.Midi
                                 bFound = true;
                                 break;
                             }
-                        }                        
+                        }
                     }
 
                     // Insert new event at target position (int)deststarttime + (int)delta
                     // only if not found and if it is a Channel message
-                    if (!bFound && current.MidiMessage.MessageType == MessageType.Channel)                        
+                    if (!bFound && current.MidiMessage.MessageType == MessageType.Channel)
                         Insert((int)deststarttime + (int)delta, current.MidiMessage);
-                    
+
 
                     #region previous
                     if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
                     {
-                        current = current.Previous;                        
+                        current = current.Previous;
                     }
                     else
                     {
@@ -2029,7 +2040,7 @@ namespace Sanford.Multimedia.Midi
                     #region previous
                     if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
                     {
-                        current = current.Previous;                        
+                        current = current.Previous;
                     }
                     else
                     {
@@ -2044,14 +2055,14 @@ namespace Sanford.Multimedia.Midi
 
         public List<MidiEvent> GetEvents(float srcstarttime, float srcendtime, float deststarttime)
         {
-            List<MidiEvent> res = new List<MidiEvent>();           
+            List<MidiEvent> res = new List<MidiEvent>();
             MidiEvent current = GetMidiEvent(Count - 1);
 
             while (current.AbsoluteTicks >= srcstarttime)
             {
                 // Consider events having their ticks inside srcstarttime and screndtime
                 if (current != endOfTrackMidiEvent && current.AbsoluteTicks >= srcstarttime && current.AbsoluteTicks <= srcendtime)
-                {                    
+                {
                     // Add event to result
                     res.Add(current);
 
@@ -2354,7 +2365,7 @@ namespace Sanford.Multimedia.Midi
                         break;
                     }
                     #endregion previous
-                }              
+                }
 
             }
 
@@ -2363,7 +2374,7 @@ namespace Sanford.Multimedia.Midi
             {
                 if (notes[i].StartTime >= starttime)
                 {
-                    notes[i].StartTime = notes[i].StartTime + offset;                    
+                    notes[i].StartTime = notes[i].StartTime + offset;
                 }
             }
 
@@ -2508,7 +2519,7 @@ namespace Sanford.Multimedia.Midi
         /// <returns></returns>
         public List<MidiEvent> GetEventsFromTicks(float ticks)
         {
-            List<MidiEvent> midiEvents = new List<MidiEvent>();            
+            List<MidiEvent> midiEvents = new List<MidiEvent>();
             MidiEvent current = GetMidiEvent(0);
 
             while (current.AbsoluteTicks <= Length)
@@ -2540,7 +2551,7 @@ namespace Sanford.Multimedia.Midi
                     #region next
                     if (current.Next != null)
                     {
-                        current = current.Next;                        
+                        current = current.Next;
                     }
                     else
                     {
@@ -2712,10 +2723,10 @@ namespace Sanford.Multimedia.Midi
                 newMidiEvent.Previous = tail;
                 tail.Next = newMidiEvent;
                 tail = newMidiEvent;
-                               
+
                 endOfTrackMidiEvent.SetAbsoluteTicks(Length);
                 endOfTrackMidiEvent.Previous = tail;
-                
+
             }
             else
             {
@@ -2970,7 +2981,7 @@ namespace Sanford.Multimedia.Midi
             if (count > 0)
                 track.ContainsNotes = true;
 
-           
+
             if (Lyrics != null)
             {
                 track.Lyrics = new List<Track.Lyric>();
@@ -3307,6 +3318,13 @@ namespace Sanford.Multimedia.Midi
             { denominator = value; }
         }
 
+        private int _measurelength;
+        public int MeasureLength
+        {
+            get { return _measurelength; }
+            set { _measurelength = value; }
+        }
+        
         private bool containsnotes;
         public bool ContainsNotes
         {
