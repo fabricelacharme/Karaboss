@@ -956,6 +956,9 @@ namespace Sanford.Multimedia.Midi
             // Caractère insécable
             sy = sy.Replace("Â", "");
 
+            //FAB 30/09/2024
+            // Espace avant retour chariot
+            sy = sy.Replace(" /", "/");
 
             /*
             var dictionary = new Dictionary<string, string>()
