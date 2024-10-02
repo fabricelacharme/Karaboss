@@ -311,14 +311,12 @@ namespace ChordAnalyser.UI
             Color TimeLineColor = Color.White;
 
             Pen mesureSeparatorPen = new Pen(Color.Black, _MeasureSeparatorWidth);
-            Pen FillPen = new Pen(TimeLineColor, _LinesWidth);                       
+            Pen FillPen = new Pen(TimeLineColor, _LinesWidth);
             Rectangle rect;
 
             Point p1;
             Point p2;
 
-            int h = 0;
-            int H = 0;
             int W = 0;
 
             W = clip.Width;
@@ -422,8 +420,8 @@ namespace ChordAnalyser.UI
             if (Gridchords != null)
             {
                 (string, string) ttx;
-                string ChordName = string.Empty;
-                string tx = string.Empty;
+                string ChordName;
+                string tx;
                 int Offset = 4;
 
                 float w;
