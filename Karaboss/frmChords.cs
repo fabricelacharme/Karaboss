@@ -39,6 +39,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -94,15 +95,18 @@ namespace Karaboss
 
 
         // 1 rst TAB
+        private PanelPlayer panelPlayer;
         private ColorSlider.ColorSlider positionHScrollBar;
         private ChordsControl ChordControl1;
-        //private Panel pnlDisplay;
-        private Panel pnlDisplayHorz;       // chords in horizontal mode
-        private Panel pnlBottom;
+        
+        //Panels
+        private Panel pnlDisplayHorz;           // chords in horizontal mode
+        private Panel pnlDisplayImagesOfChords; // images of chords
+        private Panel pnlBottom;                // Lyrics
 
-        private PanelPlayer panelPlayer;
-       
-        //private Label lblNumMeasure;
+        // Image of chord
+        private PictureBox ImageOfChord;
+               
         private Label lblLyrics;
         private Label lblOtherLyrics;
         
@@ -315,8 +319,19 @@ namespace Karaboss
             tabChordsControl.Width = this.ClientSize.Width;
 
             #region 1er TAB                    
+            // * tabPageDiagrams
+            // * -- pnlDisplayHorz
+            //      -- ChordControl1
+            //      -- positionHScrollBar
+            // * -- pnlDisplayImagesOfChords
+            //      -- ImageOfChord
+            // * -- pnlBottom
+            //      -- lblLyrics
+            //      -- lblOtherLyrics
 
             #region Panel Display horizontal chords
+            // 1 : add a panel on top
+            // this panel will host the chrod control and the colorslider
             pnlDisplayHorz = new Panel();
             pnlDisplayHorz.Parent = tabPageDiagrams;
             pnlDisplayHorz.Location = new Point(tabPageDiagrams.Margin.Left, tabPageDiagrams.Margin.Top);            
@@ -327,6 +342,7 @@ namespace Karaboss
             
 
             #region ChordControl
+            // 2 : add a chord control on top
             ChordControl1 = new ChordsControl();
             ChordControl1.Parent = pnlDisplayHorz;
             ChordControl1.Location = new Point(0, 0);            
@@ -348,6 +364,7 @@ namespace Karaboss
 
 
             #region positionHScrollBar
+            // 3 : add a colorslider
             positionHScrollBar = new ColorSlider.ColorSlider();
             positionHScrollBar.Parent = pnlDisplayHorz;
             positionHScrollBar.ThumbImage = Properties.Resources.BTN_Thumb_Blue;
@@ -373,16 +390,48 @@ namespace Karaboss
             #endregion
 
 
+            #region bitmaps of chords
+            // 4 : Add a panel in the middle
+            // This panel will display a diagram for chords being played
+            int imgsize = 180;
+            int imgoffset = 10;
+            pnlDisplayImagesOfChords = new System.Windows.Forms.Panel();
+            pnlDisplayImagesOfChords.Parent = this.tabPageDiagrams;
+            pnlDisplayImagesOfChords.Location = new Point(tabPageDiagrams.Margin.Left, pnlDisplayHorz.Top + pnlDisplayHorz.Height);
+            pnlDisplayImagesOfChords.Height = imgsize + 2 * imgoffset;
+            pnlDisplayImagesOfChords.BackColor = Color.Goldenrod;
+            pnlDisplayImagesOfChords.Width = pnlDisplayHorz.Width;
+            tabPageDiagrams.Controls.Add(pnlDisplayImagesOfChords);
+
+            ImageOfChord = new System.Windows.Forms.PictureBox();
+            ImageOfChord.Parent = pnlDisplayImagesOfChords;            
+            ImageOfChord.Location = new Point(imgoffset, imgoffset);
+            ImageOfChord.Size   = new Size(imgsize, imgsize);
+            ImageOfChord.BackColor = Color.Red;            
+
+            Bitmap image = new Bitmap(Properties.Resources.D);
+            ImageOfChord.Image = image;
+            
+            pnlDisplayImagesOfChords.Controls.Add(ImageOfChord);
+
+
+            #endregion bitmaps of chords
+
+
+
             #region Panel Bottom
+            // 5 : add a panel at the bottom
+            // This panel will host the lyrics
             pnlBottom = new Panel();
             pnlBottom.Parent = this.tabPageDiagrams;
-            pnlBottom.Location = new Point(tabPageDiagrams.Margin.Left, pnlDisplayHorz.Top + pnlDisplayHorz.Height);
-            pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height;
+            //pnlBottom.Location = new Point(tabPageDiagrams.Margin.Left, pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height); // pnlDisplayHorz.Top + pnlDisplayHorz.Height);
+            //pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height;
+            pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             pnlBottom.BackColor = Color.White;
             pnlBottom.Dock = DockStyle.Bottom;            
             tabPageDiagrams.Controls.Add(pnlBottom);
 
-
+            // 6 add a label for text being sung
             lblLyrics = new Label();
             lblLyrics.Parent = pnlBottom;
             lblLyrics.Location = new Point(0, 0);
@@ -397,7 +446,7 @@ namespace Karaboss
             pnlBottom .Controls.Add(lblLyrics);
             
 
-
+            // 7 : add a label for text to be sung
             lblOtherLyrics = new Label();
             lblOtherLyrics.Parent = pnlBottom;
             lblOtherLyrics.Location = new Point(0, lblLyrics.Height);
@@ -1234,7 +1283,8 @@ namespace Karaboss
             if (pnlDisplayHorz != null)
             {
                 pnlDisplayHorz.Width = tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right;
-                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height;
+                pnlDisplayImagesOfChords.Width = pnlDisplayHorz.Width;
+                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             }
 
             if (ChordControl1 != null)

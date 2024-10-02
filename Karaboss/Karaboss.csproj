@@ -829,6 +829,7 @@
     <None Include="Resources\cross_icon.png" />
     <None Include="Resources\export-txt48-2.png" />
     <None Include="Resources\export-pdf32.png" />
+    <None Include="Resources\D.png" />
     <Content Include="Resources\Ico\mml.ico" />
     <None Include="Resources\Media-Controls-Skip-To-Start-icon.png" />
     <None Include="Resources\Media-Controls-Skip-To-End-icon.png" />

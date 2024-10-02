@@ -37,6 +37,7 @@
             this.pnlToolbar = new System.Windows.Forms.Panel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFilePrintLyrics = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFilePrintPDF = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSep = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,23 +46,23 @@
             this.mnuHelpAboutSong = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.mnuFilePrintLyrics = new System.Windows.Forms.ToolStripMenuItem();
             this.tabChordsControl.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabChordsControl
             // 
+            resources.ApplyResources(this.tabChordsControl, "tabChordsControl");
             this.tabChordsControl.Controls.Add(this.tabPageDiagrams);
             this.tabChordsControl.Controls.Add(this.tabPageOverview);
             this.tabChordsControl.Controls.Add(this.tabPageEdit);
-            resources.ApplyResources(this.tabChordsControl, "tabChordsControl");
             this.tabChordsControl.Name = "tabChordsControl";
             this.tabChordsControl.SelectedIndex = 0;
             this.tabChordsControl.SelectedIndexChanged += new System.EventHandler(this.tabChordsControl_SelectedIndexChanged);
             // 
             // tabPageDiagrams
             // 
+            this.tabPageDiagrams.ForeColor = System.Drawing.SystemColors.ControlText;
             resources.ApplyResources(this.tabPageDiagrams, "tabPageDiagrams");
             this.tabPageDiagrams.Name = "tabPageDiagrams";
             this.tabPageDiagrams.UseVisualStyleBackColor = true;
@@ -104,6 +105,12 @@
             this.mnuFile.Name = "mnuFile";
             resources.ApplyResources(this.mnuFile, "mnuFile");
             // 
+            // mnuFilePrintLyrics
+            // 
+            this.mnuFilePrintLyrics.Name = "mnuFilePrintLyrics";
+            resources.ApplyResources(this.mnuFilePrintLyrics, "mnuFilePrintLyrics");
+            this.mnuFilePrintLyrics.Click += new System.EventHandler(this.mnuFilePrintLyrics_Click);
+            // 
             // mnuFilePrintPDF
             // 
             this.mnuFilePrintPDF.Name = "mnuFilePrintPDF";
@@ -144,12 +151,6 @@
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             resources.ApplyResources(this.aboutToolStripMenuItem, "aboutToolStripMenuItem");
-            // 
-            // mnuFilePrintLyrics
-            // 
-            this.mnuFilePrintLyrics.Name = "mnuFilePrintLyrics";
-            resources.ApplyResources(this.mnuFilePrintLyrics, "mnuFilePrintLyrics");
-            this.mnuFilePrintLyrics.Click += new System.EventHandler(this.mnuFilePrintLyrics_Click);
             // 
             // frmChords
             // 
