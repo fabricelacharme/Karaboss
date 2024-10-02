@@ -66,7 +66,7 @@ namespace Karaboss
             this.lblUrl.Name = "lblUrl";
             this.lblUrl.Size = new System.Drawing.Size(280, 21);
             this.lblUrl.TabIndex = 2;
-            this.lblUrl.Text = "http://karaoke.lacharme.net";
+            this.lblUrl.Text = "https://karaboss.lacharme.net";
             this.lblUrl.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.lblUrl.Click += new System.EventHandler(this.lblUrl_Click);
             this.lblUrl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lblUrl_MouseMove);

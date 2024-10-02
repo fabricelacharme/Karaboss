@@ -135,7 +135,7 @@ namespace PrgAutoUpdater
                 // FAB
                 this._serverUrl = rf.Url;
                 Uri uri = new Uri(@rf.Url);
-                _serverUrl = "http://" + uri.Host + "/AutoupdateService.xml";
+                _serverUrl = "https://" + uri.Host + "/AutoupdateService.xml";
 
                 Version v1 = new Version(rf.LastVer);
                 Version v2 = new Version(localfile.LastVer);

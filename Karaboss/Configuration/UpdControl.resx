@@ -223,7 +223,7 @@
     <value>lblDescription</value>
   </data>
   <data name="txtWebSite.Text" xml:space="preserve">
-    <value>http://karaoke.lacharme.net/AutoupdateService.xml</value>
+    <value>https://karaboss.lacharme.net/AutoupdateService.xml</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

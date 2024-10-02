@@ -42,6 +42,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Karaboss.Resources.Localization;
 using FlShell;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace Karaboss.xplorer
 {
@@ -524,14 +526,16 @@ namespace Karaboss.xplorer
                         {
                             if (Path.GetExtension(oldFileName).ToLower() == ".mid")
                             {
-                                newfileName = oldFileName.Replace(".mid", ".kar");
+                                //newfileName = oldFileName.Replace(".mid", ".kar");
+                                newfileName = Regex.Replace(oldFileName, ".mid", ".kar", RegexOptions.IgnoreCase);
                                 newfileName = GetUniqueFileName(newfileName);
 
                                 RenameFile(oldFileName, newfileName, physicalPath);                                
                             }
                             else if (Path.GetExtension(oldFileName).ToLower() == ".kar")
                             {
-                                newfileName = oldFileName.Replace(".kar", ".mid");
+                                //newfileName = oldFileName.Replace(".kar", ".mid");
+                                newfileName = Regex.Replace(oldFileName, ".kar", ".mid", RegexOptions.IgnoreCase);
                                 newfileName = GetUniqueFileName(newfileName);
 
                                 RenameFile(oldFileName, newfileName, physicalPath);                                                                                               
@@ -932,9 +936,16 @@ namespace Karaboss.xplorer
             int count = 2;
 
             string fileNameOnly = Path.GetFileNameWithoutExtension(fullPath);
+
+            // FAB 29/05/2024 : bug when filename has already increments (2), (3) etc...
+            // => remove increment needed
+            string pattern = @"(\([0-9]\))";
+            fileNameOnly = Regex.Replace(fileNameOnly, pattern, String.Empty).Trim();
+
             string extension = Path.GetExtension(fullPath);
             string path = Path.GetDirectoryName(fullPath);
-            string newFullPath = fullPath;
+            //string newFullPath = fullPath;
+            string newFullPath = Path.Combine(path,fileNameOnly + extension);
 
             while (File.Exists(newFullPath))
             {
@@ -1078,6 +1089,8 @@ namespace Karaboss.xplorer
                     if (wext.IndexOf(txSearch) != -1)
                     {
                         nwext = wext.Replace(txSearch, txReplace);
+                        nwext = nwext.Trim();
+
                         newfileName = nwext + ext;
                         
                         // Files already exists ?

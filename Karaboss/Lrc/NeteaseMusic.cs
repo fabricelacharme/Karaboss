@@ -48,8 +48,8 @@ namespace Karaboss.Lrc.NeteaseMusic
         internal LyricsStatus Status { get => _status; private set { if (_status == LyricsStatus.UNSURED) { _status = value; } } }//_status 仅可供修改一次，设计是不可以对外更改的
 
 
-        private bool hasOriLyrics;
-        private bool hasTransLyrics;
+        //private bool hasOriLyrics;
+        //private bool hasTransLyrics;
         private string _errorLog = "";
         internal string ErrorLog { get => _errorLog; private set => _errorLog = value; }
         private Karaboss.Lrc.SharedFramework.Lyrics mixedLyrics = new Karaboss.Lrc.SharedFramework.Lyrics();//翻译作为trans来保存
@@ -67,8 +67,8 @@ namespace Karaboss.Lrc.NeteaseMusic
             bool userReviseFunc = false;
             if (revisedsContentOriLyricsForUserReviseFunc != null)
                 userReviseFunc = true;
-            hasOriLyrics = false;
-            hasTransLyrics = false;
+            //hasOriLyrics = false;
+            //hasTransLyrics = false;
             Karaboss.Lrc.SharedFramework.Lyrics tempOriLyric = new Karaboss.Lrc.SharedFramework.Lyrics();
             Karaboss.Lrc.SharedFramework.Lyrics tempTransLyric = new Karaboss.Lrc.SharedFramework.Lyrics();
             string sLRC = "";
@@ -102,7 +102,7 @@ namespace Karaboss.Lrc.NeteaseMusic
                 { ErrorLog += "<NO_LYRIC_LABEL>"; return; }
                 sLRC = Regex.Match(sContent, @"(?<=""lyric"":"").*?(?="",""code)").Value;
                 tempOriLyric.ArrangeLyrics(sLRC);
-                hasOriLyrics = true;
+                //hasOriLyrics = true;
                 mixedLyrics.ArrangeLyrics(sLRC);
 
                 //===========翻译
@@ -131,7 +131,7 @@ namespace Karaboss.Lrc.NeteaseMusic
                             mixedLyrics[j].SetTransLyrics("#", tempTransLyric[i].OriLyrics);//Mix是以外文歌词的j来充填，当没有trans的时候留空
                         i++;//将翻译下移
                     }
-                    hasTransLyrics = true;
+                    //hasTransLyrics = true;
                 }
                 mixedLyrics.Sort();
                 tempOriLyric = null;

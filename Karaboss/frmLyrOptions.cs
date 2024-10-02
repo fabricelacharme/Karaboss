@@ -590,7 +590,9 @@ namespace Karaboss
                                                
                 // SlideShow frequency
                 frmLyric.FreqSlideShow = freqSlideShow;               
+                
                 // directory for slide show
+
                 frmLyric.DirSlideShow = dirSlideShow;
                 
             }

@@ -95,6 +95,19 @@ namespace Sanford.Multimedia.Midi
 
         #endregion
 
+
+        public int Tempo
+        {
+            get
+            {
+                return this.clock.Tempo;
+            }
+            set
+            {
+                this.clock.Tempo = value;
+            }
+        }
+
         public Sequencer()
         {
             dispatcher.MetaMessageDispatched += delegate(object sender, MetaMessageEventArgs e)

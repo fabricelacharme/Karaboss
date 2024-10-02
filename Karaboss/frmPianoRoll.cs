@@ -94,9 +94,9 @@ namespace Karaboss
         }
         private PlayerStates PlayerState;
 
-        private int bouclestart = 0;
+        //private int bouclestart = 0;
         private int newstart = 0;
-        private int laststart = 0;      // Start time to play
+        //private int laststart = 0;      // Start time to play
         private int nbstop = 0;
 
         private enum Editstatus
@@ -105,7 +105,7 @@ namespace Karaboss
             Arrow,
             Pen,
         }
-        private Editstatus EditStatus;
+        //private Editstatus EditStatus;
 
         private string CurrentPath = string.Empty;        
         
@@ -706,7 +706,7 @@ namespace Karaboss
         private void DisableEditButtons()
         {
             // None selection
-            EditStatus = Editstatus.None;
+            //EditStatus = Editstatus.None;
             Cursor = Cursors.Default;
 
             lblSaisieNotes.BackColor = Color.White;
@@ -1503,7 +1503,7 @@ namespace Karaboss
         private void ResetSequencer()
         {
             newstart = 0;
-            laststart = 0;
+            //laststart = 0;
             sequencer1.Stop();
             PlayerState = PlayerStates.Stopped;
         }
@@ -1564,7 +1564,7 @@ namespace Karaboss
                 positionHScrollBar.Value = positionHScrollBar.Minimum; 
                 hScrollBar.Value = hScrollBar.Minimum;
                 pianoRollControl2.OffsetX = 0;                
-                laststart = 0;                
+                //laststart = 0;                
             }
             else
             {
@@ -1710,45 +1710,22 @@ namespace Karaboss
 
         private void ModTempo()
         {
-            int tempo = TempoDelta * TempoOrig / 100;
+            _tempo = TempoDelta * TempoOrig / 100;          
 
-            // If no change => out
-            if (tempo == sequence1.Tempo)
-                return;
-
+            // Change clock tempo
+            sequencer1.Tempo = _tempo;
 
             lblTempoValue.Text = string.Format("{0}%", TempoDelta);
-            _bpm = GetBPM(tempo);
-            lblTempo.Text = string.Format("Tempo: {0} - BPM: {1}", tempo, _bpm);
 
-            // Stop sequencer if it was playing
-            if (PlayerState == PlayerStates.Playing)
-                sequencer1.Stop();
-
-            _tempo = tempo;
-            sequence1.Tempo = _tempo;
-            sequence1.Time = new TimeSignature(sequence1.Numerator, sequence1.Denominator, sequence1.Division, _tempo);
-
-            // Remove all tempo events
-            foreach (Track trk in sequence1.tracks)
-            {
-                trk.RemoveTempoEvent();
-            }
-
-            // Insert new tempo event in track 0
-            sequence1.tracks[0].insertTempo(_tempo);
-
-            // Update Midi Times
-            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
+            // Update Midi Times            
             _bpm = GetBPM(_tempo);
+            lblTempo.Text = string.Format("Tempo: {0} - BPM: {1}", _tempo, _bpm);
+
             // Update display duration
+            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
             int Min = (int)(_duration / 60);
             int Sec = (int)(_duration - (Min * 60));
-            lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
-
-            // Restart sequencer if it was playing
-            if (PlayerState == PlayerStates.Playing)
-                sequencer1.Continue();
+            lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);          
 
         }
 

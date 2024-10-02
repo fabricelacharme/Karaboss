@@ -44,14 +44,17 @@ using System.Runtime.InteropServices;
 
 namespace PicControl
 {
-    public partial class pictureBoxControl : UserControl, IMessageFilter
+    public partial class pictureBoxControl : UserControl, IMessageFilter, IDisposable
     {
         /*
          * timer5_Tick de frmPlayer appelle la fonction colorLyric de frmLyrics 
          * La fenetre frmLyrics appelle la fonction ColorLyric(songposition) de picturebox control
          * Si songposition <> currenttextpos (syllabe active a changé) => redessine
          */
-        //private Sanford.Multimedia.Timers.Timer timerFill;
+
+        bool disposed = false;
+
+
         private BackgroundWorker backgroundWorkerSlideShow;
 
         #region Move form without title bar
@@ -69,7 +72,7 @@ namespace PicControl
 
         private string strCurrentImage; // current image to insure that random will provide a different one
         private int rndIter = 0;
-
+        
 
         public class plLyric
         {
@@ -330,10 +333,16 @@ namespace PicControl
             get { return _karaokeFont; }
             set
             {
-                _karaokeFont = value;
-                // Redraw
-                //SetDimensions();
-                pboxWnd.Invalidate();
+                try
+                {
+                    _karaokeFont = value;
+                    pboxWnd.Invalidate();
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Error: " + e.Message);
+                }
+
             }
         }
 
@@ -442,8 +451,8 @@ namespace PicControl
         private bool m_Cancel = false;
         private bool m_Restart = false;       
 
-        private int m_step = 51;          // 0 à 255 par step de 3, 5, 15, 17, 51
-        private bool m_wait = false;
+        //private int m_step = 51;          // 0 à 255 par step de 3, 5, 15, 17, 51
+        //private bool m_wait = false;
         
         delegate void UpdateTimerEnableCallback(bool enabled);
         #endregion SlideShow
@@ -499,6 +508,7 @@ namespace PicControl
         {
             InitializeComponent();
 
+            
             _karaokeFont = new Font("Arial", this.Font.Size);
 
             #region Move form without title bar
@@ -650,7 +660,7 @@ namespace PicControl
         public void LoadSong(List<plLyric> plLyrics, bool bDemoMode = false)
         {
             string lyrics = string.Empty;
-            m_wait = false;
+            //m_wait = false;
 
             if (plLyrics.Count > 0)
             {
@@ -747,7 +757,7 @@ namespace PicControl
             vOffset = 0;
             nextStartOfLineTime = 0;
 
-            m_wait = true;
+            //m_wait = true;
         }
 
         public void endDemoText()
@@ -851,31 +861,9 @@ namespace PicControl
 
             sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
 
-            //pboxWnd.Font = new Font(Name = "Arial", emSize);            
-            pboxWnd.Font = new Font(Name = _karaokeFont.Name, emSize);
-            pboxWnd.SizeMode = PictureBoxSizeMode.Zoom;
-
-            /*
-            // Default text
-            string tx = "Lorem ipsum dolor sit amet," + _InternalSepLines;
-            tx += "consectetur adipisicing elit," + _InternalSepLines;
-            tx += "sed do eiusmod tempor incididunt" + _InternalSepLines;
-            tx += "ut labore et dolore magna aliqua." + _InternalSepLines;
-            tx += "Ut enim ad minim veniam," + _InternalSepLines;
-            tx += "quis nostrud exercitation ullamco" + _InternalSepLines;
-            tx += "laboris nisi ut aliquip" + _InternalSepLines;
-            tx += "ex ea commodo consequat." + _InternalSepLines;
-            tx += "Duis aute irure dolor in reprehenderit" + _InternalSepLines;
-            tx += "in voluptate velit esse cillum dolore" + _InternalSepLines;
-            tx += "eu fugiat nulla pariatur.";
-
-            if (_bforceuppercase)
-                tx = tx.ToUpper();
-
-            List<plLyric> plLyrics = StoreDemoText(tx);
                         
-            LoadSong(plLyrics, true);
-            */
+            pboxWnd.Font = new Font(Name = _karaokeFont.Name, emSize);
+            pboxWnd.SizeMode = PictureBoxSizeMode.Zoom;            
 
             // Initial conditions
             _currentPosition = 30;
@@ -1460,7 +1448,7 @@ namespace PicControl
                     }
 
                     g.Dispose();   
-                }
+                }                
 
             }
         }
@@ -2253,7 +2241,7 @@ namespace PicControl
             {
                 m_ImageStream.Dispose();
                 m_ImageStream = null;
-            }
+            }            
 
             if (backgroundWorkerSlideShow != null)
             {
@@ -2263,5 +2251,44 @@ namespace PicControl
         }
 
         #endregion paint resize
+
+        #region Dispose
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+
+                    if (m_ImageStream != null)
+                    {
+                        m_ImageStream.Dispose();
+                        m_ImageStream = null;
+                    }
+                                       
+                }
+
+                _karaokeFont? .Dispose();
+                m_font?.Dispose(); 
+                m_CurrentImage? .Dispose();
+                pboxWnd? .Dispose ();
+
+
+                disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~pictureBoxControl()
+        {
+            Dispose(false);
+        }
+
+        #endregion Dispose
     }
 }

@@ -95,6 +95,5 @@
   <ItemGroup>
     <None Include="Resources\silence_black.png" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

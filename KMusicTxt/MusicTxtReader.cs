@@ -9,6 +9,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Reflection;
 using System.Runtime.Remoting.Channels;
+using System.Security.Policy;
 
 namespace MusicTxt
 {
@@ -36,6 +37,7 @@ namespace MusicTxt
         private int Denominator = 4;
         private int Division = 480;
         private int Tempo = 24;
+        private int firstTempo = -1;
 
 
         private int currenttrack = -1;
@@ -266,10 +268,10 @@ namespace MusicTxt
                     {
                         ReadMetaText(array);
                     }
-                    else if (array.Contains("End_track"))
-                    {
-                        //track = null;
-                    }
+                    //else if (array.Contains("End_track"))
+                    //{                        
+                    //    ReadMetaEndOfTrack(array);
+                    //}
                     else if (array.Contains("End_of_file"))
                     {
                         CreateSequence();
@@ -308,7 +310,20 @@ namespace MusicTxt
             if (ar.Length != 4)
                 throw new ArgumentException("Tempo Length");
             // Track, Time, Tempo, Number
-            Tempo = Convert.ToInt32(ar[3]);
+            //Tempo = Convert.ToInt32(ar[3]);
+
+            int ticks = Convert.ToInt32(ar[1]);
+            int _tempo = Convert.ToInt32(ar[3]);
+            if (currenttrack >= 0 && currenttrack <= newTracks.Count)
+            {
+                newTracks[currenttrack].insertTempo(_tempo, ticks);
+                
+                // FAB 05/07/2024
+                //newTracks[currenttrack].Tempo = _tempo;
+                if (firstTempo == -1)
+                    firstTempo = _tempo;
+
+            }
         }
         #endregion
 
@@ -510,6 +525,35 @@ namespace MusicTxt
         }
 
 
+        private void ReadMetaEndOfTrack(string[] ar)
+        {
+            // Format: Track, Ticks, End_track
+            if (ar.Length != 3)
+                throw new ArgumentException("EndOfTrack Length");
+
+            int ticks = Convert.ToInt32(ar[1]);
+
+            /*
+            The MIDI end of track meta message always has the following three bytes of data.
+            0xFF 0x2F 0x00
+            The status byte is 0xFF and shows that this is a meta message.
+            The second byte is the meta type 0x2F and shows that this is an end of track meta message. 
+            The third byte is 0, which means that there are no other bytes in the message.
+            */
+
+            var split = BitConverter.GetBytes(0);
+            byte[] bytes = new byte[3];
+            bytes[0] = split[2]; //11;
+            bytes[1] = split[1]; //113;
+            bytes[2] = split[0]; //176;
+
+            MetaMessage mtMsg = new MetaMessage(MetaType.EndOfTrack, bytes);
+            track.Insert(ticks, mtMsg);
+
+
+        }
+
+
         /// <summary>
         /// Create new track and add it to the list newtracks
         /// </summary>
@@ -527,7 +571,7 @@ namespace MusicTxt
                 Pan = Pan,
                 Reverb = Reverb,
                 Denominator = Denominator,
-                Numerator = Numerator
+                Numerator = Numerator                
             };
 
             ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, track.MidiChannel, track.ProgramChange, 0);
@@ -1376,7 +1420,7 @@ namespace MusicTxt
                 OrigFormat = 1,
                 Numerator = Numerator,
                 Denominator = Denominator,
-                Tempo = Tempo,
+                Tempo = firstTempo,
                 Time = new TimeSignature(Numerator, Denominator, Division, Tempo),
             };
 
@@ -1384,16 +1428,10 @@ namespace MusicTxt
             for (int i = 0; i < newTracks.Count; i++)
             {
                 sequence.Add(newTracks[i]);
-            }
-            //sequence.tracks = newTracks;
-
-            // Insert Tempo in track 0
-            if (sequence.tracks.Count > 0)
-                sequence.tracks[0].insertTempo(Tempo);
+            }            
 
             // Tags to sequence
             sequence.CloneTags();
-
 
         }
 

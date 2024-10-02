@@ -173,7 +173,9 @@
             // pBox
             // 
             this.pBox.bColorContour = true;
+            this.pBox.bDemo = false;
             this.pBox.BeatDuration = 0;
+            this.pBox.bforceUppercase = false;
             this.pBox.bShowParagraphs = true;
             this.pBox.bTextBackGround = true;
             this.pBox.CurrentTextPos = 2;

@@ -1,4 +1,28 @@
-﻿using Sanford.Multimedia.Midi;
+﻿#region License
+
+/* Copyright (c) 2024 Fabrice Lacharme
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), to 
+ * deal in the Software without restriction, including without limitation the 
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+ * sell copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software. 
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+ * THE SOFTWARE.
+ */
+
+#endregion
+using Sanford.Multimedia.Midi;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -144,7 +168,7 @@ namespace MusicTxt
                 stream.WriteLine(string.Format("{0}, 0, Start_track", trackid));
 
                 // Name of track
-                stream.WriteLine(string.Format("1, 0, Title_t, \"{0}\"", (track.Name == "" ? song : track.Name)));
+                //stream.WriteLine(string.Format("1, 0, Title_t, \"{0}\"", (track.Name == "" ? song : track.Name)));
 
                 // Add sequence infos in first track
                 if (i == 0)
@@ -190,7 +214,7 @@ namespace MusicTxt
                 #endregion events
 
                 //Track, Time, End_track
-                stream.WriteLine(string.Format("{0}, 0, End_track", trackid));
+                //stream.WriteLine(string.Format("{0}, 0, End_track", trackid));
             }
 
             // Last record
@@ -209,175 +233,34 @@ namespace MusicTxt
             // Classic Karaoke Midi tags
             /*
             @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
-            @L	(single) Language	FRAN, ENGL        
+            @L	(single) Language	FREN, ENGL        
             @W	(multiple) Copyright (of Karaoke file, not song)        
             @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
             @I	Information  ex Date(of Karaoke file, not song)
             @V	(single) Version ex 0100 ?             
             */
             if (sequence.KTag.Count == 0)
-                stream.WriteLine("1, 0, Text_t, \"@KMIDI KARAOKE FILE\"");
+                stream.WriteLine("0, 0, Text_t, \"@KMIDI KARAOKE FILE\"");
             if (sequence.VTag.Count == 0)
-                stream.WriteLine("1, 0, Text_t, \"@V0100\"");
+                stream.WriteLine("0, 0, Text_t, \"@V0100\"");
             if (sequence.TTag.Count == 0)
-                stream.WriteLine(string.Format("1, 0, Text_t, \"@T{0}\"", song));
+                stream.WriteLine(string.Format("0, 0, Text_t, \"@T{0}\"", song));
 
             if (sequence.ITag.Count == 0)
-                stream.WriteLine("1, 0, Text_t, \"@IMidi file dump made with Karaboss\"");
+                stream.WriteLine("0, 0, Text_t, \"@IMidi file dump made with Karaboss\"");
 
-            stream.WriteLine("1, 0, Copyright_t, \"No copyright\"");
+            stream.WriteLine("0, 0, Copyright_t, \"No copyright\"");
 
             // Track, Time, Time_signature, Num, Denom, Click, NotesQ
             // FAB: TO BE CHECKED
-            stream.WriteLine(string.Format("1, 0, Time_signature, {0}, {1}, {2}, {3}", sequence.Time.Numerator, sequence.Time.Denominator, 24, 8));
-            stream.WriteLine(string.Format("1, 0, Tempo, {0}", sequence.Tempo));
+            stream.WriteLine(string.Format("0, 0, Time_signature, {0}, {1}, {2}, {3}", sequence.Time.Numerator, sequence.Time.Denominator, 24, 8));
+            
+            
+            // Tempo can change during execution
+            //stream.WriteLine(string.Format("1, 0, Tempo, {0}", sequence.Tempo));
         }
 
-        /*
-        // OLD CODE
-        public void Write2(StreamWriter strm)
-        {
-            this.stream = strm;
-            int trackid = 0;
-            bool bHeaderCreated = false;
-
-            if (sequence.tracks[0].ContainsNotes == false)
-            {
-                // first track has no notes
-                // Create header
-                //0, 0, Header, format, nTracks, division            
-                stream.WriteLine(string.Format("0, 0, Header, {0}, {1}, {2}", sequence.Format, sequence.tracks.Count, sequence.Division));
-            }
-            else
-            {
-                // If first track contains notes, create an empty track with header information (so tracks.count + 1)
-
-                //0, 0, Header, format, nTracks, division            
-                stream.WriteLine(string.Format("0, 0, Header, {0}, {1}, {2}", sequence.Format, sequence.tracks.Count + 1, sequence.Division));
-
-                trackid++;
-
-                // First track is for informations            
-                stream.WriteLine("1, 0, Start_track");
-
-                // informations
-                stream.WriteLine(string.Format("1, 0, Title_t, \"{0}\"", song));
-                stream.WriteLine("1, 0, Text_t, \"Midi file dump made with Karaboss\"");
-                stream.WriteLine("1, 0, Copyright_t, \"No copyright\"");
-
-                // Track, Time, Time_signature, Num, Denom, Click, NotesQ
-                // FAB: TO BE CHECKED
-                stream.WriteLine(string.Format("1, 0, Time_signature, {0}, {1}, {2}, {3}", sequence.Time.Numerator, sequence.Time.Denominator, 24, 8));
-                stream.WriteLine(string.Format("1, 0, Tempo, {0}", sequence.Tempo));
-                stream.WriteLine("1, 0, End_track");
-
-                bHeaderCreated = true;
-            }
-
-
-
-            for (int i = 0; i < sequence.tracks.Count; i++)
-            {
-                runningStatus = 0;
-                track = sequence.tracks[i];
-
-                trackid++;
-
-                #region track informations
-                // Start new track
-                stream.WriteLine(string.Format("{0}, 0, Start_track", trackid));
-
-                if (!bHeaderCreated)
-                {
-                    // first track has no notes
-                    // header was not created
-                    // informations                    
-                    stream.WriteLine(string.Format("1, 0, Title_t, \"{0}\"", (track.Name == "" ? song : track.Name)));
-
-
-                    // Classic Karaoke Midi tags                    
-                    //@K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
-                    //@L	(single) Language	FRAN, ENGL        
-                    //@W	(multiple) Copyright (of Karaoke file, not song)        
-                    //@T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
-                    //@I	Information  ex Date(of Karaoke file, not song)
-                    //@V	(single) Version ex 0100 ?                                 
-                    if (sequence.KTag.Count == 0)
-                        stream.WriteLine("1, 0, Text_t, \"@KMIDI KARAOKE FILE\"");
-                    if (sequence.VTag.Count == 0)
-                        stream.WriteLine("1, 0, Text_t, \"@V0100\"");
-                    if (sequence.TTag.Count == 0)
-                        stream.WriteLine(string.Format("1, 0, Text_t, \"@T{0}\"",song));
-
-                    if (sequence.ITag.Count == 0)
-                        stream.WriteLine("1, 0, Text_t, \"@IMidi file dump made with Karaboss\"");
-                    
-                    stream.WriteLine("1, 0, Copyright_t, \"No copyright\"");
-
-                    // Track, Time, Time_signature, Num, Denom, Click, NotesQ
-                    // FAB: TO BE CHECKED
-                    stream.WriteLine(string.Format("1, 0, Time_signature, {0}, {1}, {2}, {3}", sequence.Time.Numerator, sequence.Time.Denominator, 24, 8));
-                    stream.WriteLine(string.Format("1, 0, Tempo, {0}", sequence.Tempo));
-                    bHeaderCreated = true;
-                }
-                else
-                {
-                    // Track, Time, Title_t, Text
-                    stream.WriteLine(string.Format("{0}, 0, Title_t, \"{1}\"", trackid, track.Name));
-
-                    // Track, Time, Instrument_name_t, Text                
-                    stream.WriteLine(string.Format("{0}, 0, Instrument_name_t, \"{1}\"", trackid, MidiFile.PCtoInstrument(track.ProgramChange)));
-
-                    // Track, Time, Program_c, Channel, Program_num
-                    stream.WriteLine(string.Format("{0}, 0, Program_c, {1}, {2}", trackid, track.MidiChannel, track.ProgramChange));
-
-                }
-
-                #endregion
-
-                #region events
-                foreach (MidiEvent e in track.Iterator())
-                {
-                    switch (e.MidiMessage.MessageType)
-                    {
-                        case MessageType.Channel:
-                            Write((ChannelMessage)e.MidiMessage, trackid, e.AbsoluteTicks, track.MidiChannel);
-                            break;
-
-                        case MessageType.SystemExclusive:
-                            Write((SysExMessage)e.MidiMessage);
-                            break;
-
-                        case MessageType.Meta:
-                            Write((MetaMessage)e.MidiMessage, trackid, e.AbsoluteTicks);
-                            break;
-
-                        case MessageType.SystemCommon:
-                            Write((SysCommonMessage)e.MidiMessage);
-                            break;
-
-                        case MessageType.SystemRealtime:
-                            Write((SysRealtimeMessage)e.MidiMessage);
-                            break;
-
-
-                    }
-                }
-                #endregion
-
-                //Track, Time, End_track
-                stream.WriteLine(string.Format("{0}, 0, End_track", trackid));
-            }
-
-            // Last record
-            // 0, 0, End_of_file
-            stream.WriteLine("0, 0, End_of_file");
-
-            // Close the stream
-            stream.Close();
-        }
-        */
-
+    
 
         #region write events
 
@@ -457,12 +340,7 @@ namespace MusicTxt
         private void Write(MetaMessage message, int trackid, int ticks)
         {
             string sy = string.Empty;
-            //trackData.Add((byte)message.Status);
-            //trackData.Add((byte)message.MetaType);
-
-            //WriteVariableLengthValue(message.Length);
-
-            //trackData.AddRange(message.GetBytes());
+            
 
             switch (message.MetaType)
             {
@@ -472,8 +350,11 @@ namespace MusicTxt
                     break;
                 case MetaType.DeviceName:
                     break;
-                case MetaType.EndOfTrack:
+                
+                case MetaType.EndOfTrack:                                       
+                    stream.WriteLine(string.Format("{0}, {1}, End_track", trackid, ticks));
                     break;
+
                 case MetaType.InstrumentName:
                     break;
                 case MetaType.KeySignature:
@@ -503,6 +384,9 @@ namespace MusicTxt
                 case MetaType.SmpteOffset:
                     break;
                 case MetaType.Tempo:
+                    byte[] data = message.GetBytes();
+                    int _tempo = ((data[0] << 16) | (data[1] << 8) | data[2]);
+                    stream.WriteLine(string.Format("{0}, {1}, Tempo, {2}", trackid, ticks, _tempo));
                     break;
                 case MetaType.Text:
                     // Track, Time, Text_t, Text
@@ -519,6 +403,8 @@ namespace MusicTxt
                     break;
                 case MetaType.TrackName:
                     break;
+
+                
             }
 
 
