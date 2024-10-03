@@ -282,28 +282,27 @@ namespace ChordAnalyser.UI
         #region paint
 
         private void pnlCanvas_Paint(object sender, PaintEventArgs e)
-        {
-            Rectangle clip =
-                new Rectangle(
-                (int)(_offsetx),
-                (int)(e.ClipRectangle.Y),
-                (int)(e.ClipRectangle.Width),
-                (int)(e.ClipRectangle.Height));
-
-            Graphics g = e.Graphics;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
-            
-            g.TranslateTransform(-clip.X, 0);
-
-            if (Gridchords.Count > 0)
+        {                        
+            if (Gridchords !=null && Gridchords.Count > 0)
             {
+                Rectangle clip =
+                    new Rectangle(
+                    (int)(_offsetx),
+                    (int)(e.ClipRectangle.Y),
+                    (int)(e.ClipRectangle.Width),
+                    (int)(e.ClipRectangle.Height));
+
+                Graphics g = e.Graphics;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+
+                g.TranslateTransform(-clip.X, 0);
+
                 DrawGrid(g, clip);
 
                 DrawNotes(g, clip);
 
                 g.TranslateTransform(clip.X, 0);
-
             }
             
         }

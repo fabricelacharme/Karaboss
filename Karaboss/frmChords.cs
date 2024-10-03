@@ -98,6 +98,7 @@ namespace Karaboss
         private PanelPlayer panelPlayer;
         private ColorSlider.ColorSlider positionHScrollBar;
         private ChordsControl ChordControl1;
+        private ChordRenderer ChordRenderer1;   // Display bitmaps of chords used in the song played
         
         //Panels
         private Panel pnlDisplayHorz;           // chords in horizontal mode
@@ -140,7 +141,6 @@ namespace Karaboss
         Dictionary<int, (string, string)> Gridchords;
 
         #endregion private dcl
-
 
         public frmChords(OutputDevice OtpDev, string FileName)
         {
@@ -354,8 +354,8 @@ namespace Karaboss
             ChordControl1.HeightChanged += new HeightChangedEventHandler(ChordControl_HeightChanged);
             ChordControl1.MouseDown += new MouseEventHandler(ChordControl_MouseDown);
 
-            ChordControl1.ColumnWidth = 120;
-            ChordControl1.ColumnHeight = 120;
+            ChordControl1.ColumnWidth = 180;
+            ChordControl1.ColumnHeight = 180;
 
             ChordControl1.Cursor = Cursors.Hand;
             ChordControl1.Sequence1 = this.sequence1;
@@ -403,6 +403,8 @@ namespace Karaboss
             pnlDisplayImagesOfChords.Width = pnlDisplayHorz.Width;
             tabPageDiagrams.Controls.Add(pnlDisplayImagesOfChords);
 
+            // OLD CODE : display a single bitmap of D chord
+            /*
             ImageOfChord = new System.Windows.Forms.PictureBox();
             ImageOfChord.Parent = pnlDisplayImagesOfChords;            
             ImageOfChord.Location = new Point(imgoffset, imgoffset);
@@ -413,8 +415,21 @@ namespace Karaboss
             ImageOfChord.Image = image;
             
             pnlDisplayImagesOfChords.Controls.Add(ImageOfChord);
+            */
 
+            ChordRenderer1 = new ChordRenderer();
+            ChordRenderer1.Parent = pnlDisplayImagesOfChords;
+            ChordRenderer1.Location = new Point(0, 0);
+            ChordRenderer1.Size = new Size(pnlDisplayImagesOfChords.Width, pnlDisplayImagesOfChords.Height);
 
+            ChordRenderer1.WidthChanged += new WidthChangedEventHandler(ChordRenderer_WidthChanged);
+            ChordRenderer1.HeightChanged += new HeightChangedEventHandler(ChordRenderer_HeightChanged);
+            ChordRenderer1.MouseDown += new MouseEventHandler(ChordRenderer_MouseDown);
+
+            ChordRenderer1.ColumnWidth = 120;
+            ChordRenderer1.ColumnHeight = 120;
+
+            pnlDisplayImagesOfChords.Controls.Add(ChordRenderer1);
             #endregion bitmaps of chords
 
 
@@ -525,14 +540,8 @@ namespace Karaboss
             txtDisplayWords.Dock = DockStyle.Fill;
             pnlDisplayWords.Controls.Add(txtDisplayWords);
 
-
             #endregion 3eme TAB
-
-        }
-
-       
-
-
+        }      
 
         #endregion Display Controls       
 
@@ -598,12 +607,13 @@ namespace Karaboss
 
             // Display Chords in boxes
             ChordControl1.Gridchords = Gridchords;
+            ChordRenderer1.Gridchords = Gridchords;
             ChordMapControl1.Gridchords = Gridchords;
 
         }
 
         /// <summary>
-        /// REmove useless strings
+        /// Remove useless strings
         /// </summary>
         /// <param name="note"></param>
         /// <returns></returns>
@@ -655,11 +665,8 @@ namespace Karaboss
             int timeinmeasure = sequence1.Numerator - (int)((curmeasure * _measurelen - pos) / (_measurelen / sequence1.Numerator));
 
 
-            // Labels
-            //lblBeat.Text = timeinmeasure.ToString() + "|" + sequence1.Numerator;
-            panelPlayer.DisplayBeat(timeinmeasure.ToString() + "|" + sequence1.Numerator);
-                
-            //lblNumMeasure.Text = "Measure: " + curmeasure;
+            // Labels            
+            panelPlayer.DisplayBeat(timeinmeasure.ToString() + "|" + sequence1.Numerator);                            
 
             // change time in measure => draw cell in control
             if (timeinmeasure != _currentTimeInMeasure)
@@ -937,6 +944,20 @@ namespace Karaboss
 
 
         #region Events
+
+        #region chordcontrol
+        private void ChordControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                int x = e.Location.X;
+
+                newstart = (int)(((ChordControl1.OffsetX + x) / (float)ChordControl1.Width) * sequence1.GetLength());
+                FirstPlaySong(newstart);
+
+
+            }
+        }
         private void ChordControl_HeightChanged(object sender, int value)
         {
             if (positionHScrollBar != null)
@@ -950,6 +971,28 @@ namespace Karaboss
 
         }
 
+        #endregion chordcontrol
+
+
+        #region chordrenderer
+        private void ChordRenderer_MouseDown(object sender, MouseEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+        private void ChordRenderer_HeightChanged(object sender, int value)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void ChordRenderer_WidthChanged(object sender, int value)
+        {
+            //throw new NotImplementedException();
+        }
+
+        #endregion chordrenderer
+
+
+        #region chordmapcontrol
         private void ChordMapControl1_HeightChanged(object sender, int value)
         {            
             if (pnlDisplayMap != null)
@@ -989,18 +1032,9 @@ namespace Karaboss
             }
         }
 
-        private void ChordControl_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                int x = e.Location.X;
 
-                newstart = (int)(((ChordControl1.OffsetX + x) / (float)ChordControl1.Width) * sequence1.GetLength());
-                FirstPlaySong(newstart);
+        #endregion chordmapcontrol
 
-
-            }
-        }
 
         /// <summary>
         /// A new tab is selected
@@ -1019,7 +1053,8 @@ namespace Karaboss
             mnuFilePrintLyrics.Visible = (tabChordsControl.SelectedIndex == 2);
             mnuFilePrintPDF.Visible = (tabChordsControl.SelectedIndex != 0);
         }
-
+       
+       
         #endregion Events
 
 
@@ -1068,7 +1103,7 @@ namespace Karaboss
         #region positionHSCrollBar
 
         /// <summary>
-        /// Display horizontal scrollbar in first page
+        /// Display horizontal scrollbar in first tab
         /// </summary>
         /// <param name="pos"></param>
         private void DisplayPositionHScrollBar(int pos)
@@ -1079,10 +1114,11 @@ namespace Karaboss
             // Change measure => offset control
             if (curmeasure != _currentMeasure)
             {
-
-                //if (curmeasure != _currentMeasure)
+                
                 _currentMeasure = curmeasure;                
                 
+                
+                // Calculations for ChordControl1
                 int LargeurCellule = (int)(ChordControl1.ColumnWidth * ChordControl1.zoom) + 1;
                 int LargeurMesure = LargeurCellule * sequence1.Numerator; // keep one measure on the left
                 int offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);                    
@@ -1111,8 +1147,7 @@ namespace Karaboss
                     if (offsetx > LargeurMesure)
                     {
                         if (offsetx < ChordControl1.maxStaffWidth - pnlDisplayHorz.Width)
-                        {
-                            //ChordControl1.OffsetX = offsetx - LargeurMesure;
+                        {                            
                             ChordControl1.OffsetX = offsetx;
                         }
                         else
@@ -1120,13 +1155,34 @@ namespace Karaboss
                             ChordControl1.OffsetX = ChordControl1.maxStaffWidth - pnlDisplayHorz.Width;
                         }
                     }                    
-                }                                
+                }
+                
+                // Specific for ChordRenderer
+                if (ChordRenderer1.maxStaffWidth > pnlDisplayImagesOfChords.Width)
+                {
+                    LargeurCellule = (int)(ChordRenderer1.ColumnWidth * ChordRenderer1.zoom) + 1;
+                    offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);
+
+                    // Offset horizontal
+                    if (offsetx > LargeurMesure)
+                    {
+                        if (offsetx < ChordRenderer1.maxStaffWidth - pnlDisplayImagesOfChords.Width)
+                        {
+                            ChordRenderer1.OffsetX = offsetx;
+                        }
+                        else
+                        {
+                            ChordRenderer1.OffsetX = ChordRenderer1.maxStaffWidth - pnlDisplayImagesOfChords.Width;
+                        }
+                    }
+                }
+
             }
         }
 
         private void SetScrollBarValues()
         {
-            if (pnlDisplayHorz == null || ChordControl1 == null)
+            if (pnlDisplayHorz == null || ChordControl1 == null || ChordRenderer1 == null)
                 return;
 
             // Width of control
@@ -1137,6 +1193,7 @@ namespace Karaboss
                 positionHScrollBar.Visible = false;
                 positionHScrollBar.Maximum = 0;
                 ChordControl1.OffsetX = 0;
+                ChordRenderer1.OffsetX = 0;
                 positionHScrollBar.Value = 0;
             }
             else if (W > pnlDisplayHorz.Width)
