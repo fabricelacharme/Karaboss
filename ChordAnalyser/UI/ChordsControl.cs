@@ -366,8 +366,7 @@ namespace ChordAnalyser.UI
                     }
                     else
                     {
-                        // Draw other cells in white
-                        //g.DrawRectangle(FillPen, clip.X + x, clip.Y, _TimeLineHeight, _TimeLineHeight);
+                        // Draw other cells in white                        
                         g.DrawRectangle(FillPen, x, 0, _cellwidth, _cellheight);
                     }
                     x += (int)(_cellwidth) + (_LinesWidth - 1);

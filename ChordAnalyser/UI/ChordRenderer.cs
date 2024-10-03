@@ -270,6 +270,10 @@ namespace ChordAnalyser.UI
                 {
                     g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
                 }
+                else
+                {
+                    g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
+                }
 
                 x += (int)(_cellwidth) + _LinesWidth;
 

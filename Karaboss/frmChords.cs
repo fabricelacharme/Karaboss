@@ -426,8 +426,8 @@ namespace Karaboss
             ChordRenderer1.HeightChanged += new HeightChangedEventHandler(ChordRenderer_HeightChanged);
             ChordRenderer1.MouseDown += new MouseEventHandler(ChordRenderer_MouseDown);
 
-            ChordRenderer1.ColumnWidth = 120;
-            ChordRenderer1.ColumnHeight = 120;
+            ChordRenderer1.ColumnWidth = pnlDisplayImagesOfChords.Height;
+            ChordRenderer1.ColumnHeight = pnlDisplayImagesOfChords.Height;
 
             pnlDisplayImagesOfChords.Controls.Add(ChordRenderer1);
             #endregion bitmaps of chords
@@ -1156,26 +1156,14 @@ namespace Karaboss
                         }
                     }                    
                 }
-                
-                // Specific for ChordRenderer
-                if (ChordRenderer1.maxStaffWidth > pnlDisplayImagesOfChords.Width)
-                {
-                    LargeurCellule = (int)(ChordRenderer1.ColumnWidth * ChordRenderer1.zoom) + 1;
-                    offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);
 
-                    // Offset horizontal
-                    if (offsetx > LargeurMesure)
-                    {
-                        if (offsetx < ChordRenderer1.maxStaffWidth - pnlDisplayImagesOfChords.Width)
-                        {
-                            ChordRenderer1.OffsetX = offsetx;
-                        }
-                        else
-                        {
-                            ChordRenderer1.OffsetX = ChordRenderer1.maxStaffWidth - pnlDisplayImagesOfChords.Width;
-                        }
-                    }
-                }
+                // Specific for ChordRenderer
+                LargeurCellule = (int)(ChordRenderer1.ColumnWidth * ChordRenderer1.zoom) + 1;
+                offsetx = LargeurCellule * (_currentMeasure - 1);
+                // Offset horizontal
+                ChordRenderer1.OffsetX = offsetx;
+
+
 
             }
         }
@@ -1192,8 +1180,10 @@ namespace Karaboss
             {
                 positionHScrollBar.Visible = false;
                 positionHScrollBar.Maximum = 0;
+                
                 ChordControl1.OffsetX = 0;
                 ChordRenderer1.OffsetX = 0;
+                
                 positionHScrollBar.Value = 0;
             }
             else if (W > pnlDisplayHorz.Width)
@@ -1672,6 +1662,7 @@ namespace Karaboss
                 
                 ChordControl1.OffsetX = 0;
                 ChordControl1.DisplayNotes(0, -1, -1);
+                ChordRenderer1.OffsetX = 0;
 
                 pnlDisplayMap.VerticalScroll.Value = pnlDisplayMap.VerticalScroll.Minimum;
                 pnlDisplayMap.VerticalScroll.Visible = false;
