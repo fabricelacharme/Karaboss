@@ -1,7 +1,9 @@
-﻿using System;
+﻿using ChordAnalyser.Properties;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -259,7 +261,7 @@ namespace ChordAnalyser.UI
             int _LinesWidth = 2;
             int x = (_LinesWidth - 1);
 
-            for (int i = 1; i <= Gridchords.Count; i++)
+            for (int i = 1; i < Gridchords.Count; i++)
             {
                 ttx = Gridchords[i];
                 ChordName = ttx.Item1;
@@ -273,6 +275,26 @@ namespace ChordAnalyser.UI
                 else
                 {
                     g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
+                }
+
+                if (ChordName != "")
+                {
+                    try
+                    {
+                        ResourceManager rm = Resources.ResourceManager;
+                        Bitmap chordImage = (Bitmap)rm.GetObject(ChordName);
+
+                        if (chordImage != null)
+                        {
+                            Bitmap Img = new Bitmap(chordImage);
+                            Point p = new Point(x, 0);
+                            g.DrawImage(Img, p);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
                 }
 
                 x += (int)(_cellwidth) + _LinesWidth;
