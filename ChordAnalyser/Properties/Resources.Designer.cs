@@ -203,6 +203,16 @@ namespace ChordAnalyser.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Bm {
+            get {
+                object obj = ResourceManager.GetObject("Bm", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Bm7 {
             get {
                 object obj = ResourceManager.GetObject("Bm7", resourceCulture);

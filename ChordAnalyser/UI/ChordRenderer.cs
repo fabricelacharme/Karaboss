@@ -265,20 +265,13 @@ namespace ChordAnalyser.UI
             {
                 ttx = Gridchords[i];
                 ChordName = ttx.Item1;
-                w = MeasureString(_fontChord.FontFamily, ChordName, _fontChord.Size);
-                h = MeasureStringHeight(_fontChord.FontFamily, ChordName, _fontChord.Size);
 
-                if (ChordName != EmptyChord)
-                {
-                    g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
-                }
-                else
-                {
-                    g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
-                }
-
+                // Draw Chord bitmap
                 if (ChordName != "")
                 {
+                    if (ChordName == "A#")
+                        Console.WriteLine("A#");
+                    
                     try
                     {
                         ResourceManager rm = Resources.ResourceManager;
@@ -295,9 +288,24 @@ namespace ChordAnalyser.UI
                     }
                     catch (Exception ex)
                     {
-
+                        Console.WriteLine(ex.ToString());
                     }
                 }
+
+                w = MeasureString(_fontChord.FontFamily, ChordName, _fontChord.Size);
+                h = MeasureStringHeight(_fontChord.FontFamily, ChordName, _fontChord.Size);
+
+                if (ChordName != EmptyChord)
+                {
+                    //g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
+                    g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, _cellheight - h);
+                }
+                else
+                {
+                    //g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
+                    g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, _cellheight - h );
+                }
+
 
                 x += (int)(_cellwidth) + _LinesWidth;
 
