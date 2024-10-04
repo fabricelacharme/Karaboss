@@ -46,6 +46,9 @@ namespace ChordAnalyser.UI
         private Font m_font;
         private StringFormat sf;
 
+        private int _fontSize = 22;
+        private int _fontPadding = 10;
+
         #endregion private
 
 
@@ -159,7 +162,7 @@ namespace ChordAnalyser.UI
                 _cellwidth = _columnwidth * zoom;
                 _cellheight = _columnheight * zoom;
 
-                _fontChord = new Font(_fontChord.FontFamily, 40 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+                _fontChord = new Font(_fontChord.FontFamily, _fontSize * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
                 this.Height = (int)_cellheight;
                 if (HeightChanged != null)
@@ -175,7 +178,7 @@ namespace ChordAnalyser.UI
 
         public ChordRenderer()
         {
-            _fontChord = new Font("Arial", 40, FontStyle.Regular, GraphicsUnit.Pixel);
+            _fontChord = new Font("Arial", _fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
             // Draw pnlCanvas
             DrawCanvas();
@@ -269,9 +272,7 @@ namespace ChordAnalyser.UI
                 // Draw Chord bitmap
                 if (ChordName != "")
                 {
-                    if (ChordName == "A#")
-                        Console.WriteLine("A#");
-                    
+                                        
                     try
                     {
                         ResourceManager rm = Resources.ResourceManager;
@@ -292,18 +293,19 @@ namespace ChordAnalyser.UI
                     }
                 }
 
+                // Write the name of the chord at the bottom
                 w = MeasureString(_fontChord.FontFamily, ChordName, _fontChord.Size);
                 h = MeasureStringHeight(_fontChord.FontFamily, ChordName, _fontChord.Size);
 
                 if (ChordName != EmptyChord)
                 {
                     //g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
-                    g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, _cellheight - h);
+                    g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, _cellheight - h - _fontPadding);
                 }
                 else
                 {
                     //g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
-                    g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, _cellheight - h );
+                    g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, _cellheight - h - _fontPadding);
                 }
 
 

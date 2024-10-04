@@ -239,5 +239,41 @@
   <ItemGroup>
     <None Include="Resources\Bm.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Am7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\G7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\F#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Fm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\A#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\G#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\C#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\C#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\G#m7.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

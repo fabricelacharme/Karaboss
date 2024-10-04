@@ -75,7 +75,7 @@ namespace ChordAnalyser.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap A_ {
             get {
-                object obj = ResourceManager.GetObject("A_", resourceCulture);
+                object obj = ResourceManager.GetObject("A#", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -85,7 +85,7 @@ namespace ChordAnalyser.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap A_7 {
             get {
-                object obj = ResourceManager.GetObject("A_7", resourceCulture);
+                object obj = ResourceManager.GetObject("A#7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -95,7 +95,17 @@ namespace ChordAnalyser.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap A_m {
             get {
-                object obj = ResourceManager.GetObject("A_m", resourceCulture);
+                object obj = ResourceManager.GetObject("A#m", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap A_m7 {
+            get {
+                object obj = ResourceManager.GetObject("A#m7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -146,6 +156,16 @@ namespace ChordAnalyser.Properties {
         internal static System.Drawing.Bitmap Am {
             get {
                 object obj = ResourceManager.GetObject("Am", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Am7 {
+            get {
+                object obj = ResourceManager.GetObject("Am7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -245,7 +265,17 @@ namespace ChordAnalyser.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap C_ {
             get {
-                object obj = ResourceManager.GetObject("C_", resourceCulture);
+                object obj = ResourceManager.GetObject("C#", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap C_7 {
+            get {
+                object obj = ResourceManager.GetObject("C#7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -255,7 +285,17 @@ namespace ChordAnalyser.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap C_m {
             get {
-                object obj = ResourceManager.GetObject("C_m", resourceCulture);
+                object obj = ResourceManager.GetObject("C#m", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap C_m7 {
+            get {
+                object obj = ResourceManager.GetObject("C#m7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -305,7 +345,37 @@ namespace ChordAnalyser.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap D_ {
             get {
-                object obj = ResourceManager.GetObject("D_", resourceCulture);
+                object obj = ResourceManager.GetObject("D#", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap D_7 {
+            get {
+                object obj = ResourceManager.GetObject("D#7", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap D_m {
+            get {
+                object obj = ResourceManager.GetObject("D#m", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap D_m7 {
+            get {
+                object obj = ResourceManager.GetObject("D#m7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -435,7 +505,7 @@ namespace ChordAnalyser.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap F_ {
             get {
-                object obj = ResourceManager.GetObject("F_", resourceCulture);
+                object obj = ResourceManager.GetObject("F#", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -445,7 +515,7 @@ namespace ChordAnalyser.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap F_7 {
             get {
-                object obj = ResourceManager.GetObject("F_7", resourceCulture);
+                object obj = ResourceManager.GetObject("F#7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -455,7 +525,17 @@ namespace ChordAnalyser.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap F_m {
             get {
-                object obj = ResourceManager.GetObject("F_m", resourceCulture);
+                object obj = ResourceManager.GetObject("F#m", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap F_m7 {
+            get {
+                object obj = ResourceManager.GetObject("F#m7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -483,6 +563,16 @@ namespace ChordAnalyser.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Fm7 {
+            get {
+                object obj = ResourceManager.GetObject("Fm7", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap G {
             get {
                 object obj = ResourceManager.GetObject("G", resourceCulture);
@@ -495,7 +585,7 @@ namespace ChordAnalyser.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap G_ {
             get {
-                object obj = ResourceManager.GetObject("G_", resourceCulture);
+                object obj = ResourceManager.GetObject("G#", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -505,7 +595,37 @@ namespace ChordAnalyser.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap G_7 {
             get {
-                object obj = ResourceManager.GetObject("G_7", resourceCulture);
+                object obj = ResourceManager.GetObject("G#7", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap G_m {
+            get {
+                object obj = ResourceManager.GetObject("G#m", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap G_m7 {
+            get {
+                object obj = ResourceManager.GetObject("G#m7", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap G7 {
+            get {
+                object obj = ResourceManager.GetObject("G7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
