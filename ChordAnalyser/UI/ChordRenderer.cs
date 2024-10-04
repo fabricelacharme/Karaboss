@@ -289,6 +289,8 @@ namespace ChordAnalyser.UI
                             Bitmap Img = new Bitmap(chordImage);
                             Point p = new Point(x, 0);
                             g.DrawImage(Img, p);
+
+                            Img.Dispose();
                         }
                     }
                     catch (Exception ex)
