@@ -132,13 +132,18 @@ namespace Karaboss
         private int _tempo;
         private int _measurelen = 0;
         private int NbMeasures;
-        private int _currentMeasure = -1;
+        private int _currentMeasure = -1;        
         private int _currentTimeInMeasure = -1;
         private int _currentLine = 1;
 
         // Lyrics 
         private LyricsMgmt myLyricsMgmt;
+        
+        // Old Search (by half measure)
         Dictionary<int, (string, string)> Gridchords;
+        // New search (by beat)
+        //public Dictionary<int, List<string>> GridBeatChords;
+        public Dictionary<int, string> GridBeatChords;
 
         #endregion private dcl
 
@@ -597,7 +602,11 @@ namespace Karaboss
         {
             // Display chords in the textbox
             ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
+            
+            // Chords by half measure
             Gridchords = Analyser.Gridchords;
+            // Chords by beat
+            GridBeatChords = Analyser.GridBeatChords;            
            
             //Change labels displayed
             for (int i = 1; i <= Gridchords.Count; i++)
@@ -608,6 +617,7 @@ namespace Karaboss
             // Display Chords in boxes
             ChordControl1.Gridchords = Gridchords;
             ChordRenderer1.Gridchords = Gridchords;
+            ChordRenderer1.GridBeatChords = GridBeatChords;
             ChordMapControl1.Gridchords = Gridchords;
 
         }
@@ -676,6 +686,18 @@ namespace Karaboss
                 // Draw gray cell for played note
                 ChordControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
                 ChordMapControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
+
+
+                // Offset 1 cell
+                // Specific for ChordRenderer                
+                int LargeurCellule = (int)(ChordRenderer1.ColumnWidth * ChordRenderer1.zoom) + 2;
+
+                // Offset by 2 cells because items of GridChords have 2 chords (2 chords by measure for the moment)
+                // Would be better with 1 chord by time (4/4 = 4 possible chords, 3/4 = 3 possible chords)
+                //int offsetx = LargeurCellule * (_currentMeasure - 1);
+                // Offset horizontal
+                ChordRenderer1.OffsetX = LargeurCellule * (timeinmeasure - 1) + (LargeurCellule * sequence1.Numerator) * (curmeasure - 1);
+
             }
         }
 
@@ -1157,12 +1179,17 @@ namespace Karaboss
                     }                    
                 }
 
+
                 // Specific for ChordRenderer
-                LargeurCellule = (int)(ChordRenderer1.ColumnWidth * ChordRenderer1.zoom) + 1;
-                offsetx = LargeurCellule * (_currentMeasure - 1);
+                /*
+                LargeurCellule = (int)(ChordRenderer1.ColumnWidth * ChordRenderer1.zoom) + 2;
+
+                // Offset by 2 cells because items of GridChords have 2 chords (2 chords by measure for the moment)
+                // Would be better with 1 chord by time (4/4 = 4 possible chords, 3/4 = 3 possible chords)
+                offsetx = 2* LargeurCellule * (_currentMeasure - 1);
                 // Offset horizontal
                 ChordRenderer1.OffsetX = offsetx;
-
+                */
 
 
             }

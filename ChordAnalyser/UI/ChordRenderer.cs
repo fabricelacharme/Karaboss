@@ -40,6 +40,8 @@ namespace ChordAnalyser.UI
         private MyPanel pnlCanvas;
 
         private string EmptyChord = "<Empty>";
+        private string NoChord = "<Chord not found>";
+
         private float _cellwidth;
         private float _cellheight;
 
@@ -55,7 +57,12 @@ namespace ChordAnalyser.UI
         #region properties        
 
         // Chords
+        // 2 chords by measure : Chord 1, chord 2
         public Dictionary<int, (string, string)> Gridchords { get; set; }
+
+        // New search (by beat)        
+        public Dictionary<int, string> GridBeatChords { get; set; }
+
 
         private Font _fontChord;
         public Font fontChord
@@ -217,7 +224,12 @@ namespace ChordAnalyser.UI
             this.Controls.Add(pnlCanvas);
         }
 
-        private void DrawGrid(Graphics g, Rectangle clip)
+        /// <summary>
+        /// Draw a cell by chord
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="clip"></param>
+        private void DrawGrid2(Graphics g, Rectangle clip)
         {
             if (Gridchords == null)
                 return;
@@ -227,9 +239,8 @@ namespace ChordAnalyser.UI
             Color TimeLineColor = Color.White;
             Pen FillPen = new Pen(TimeLineColor, _LinesWidth);
             
-
-
-            for (int i = 0; i < Gridchords.Count; i++)
+            // 2 cells by GridChord item (2 chords by measure)
+            for (int i = 0; i < 2 * Gridchords.Count; i++)
             {
                 g.DrawRectangle(FillPen, x, 0, _cellwidth, _cellheight);
 
@@ -238,83 +249,185 @@ namespace ChordAnalyser.UI
             }
 
             maxStaffWidth = x;
-
         }
 
-        #endregion Draw Canvas
-
-        #region drawnotes   
-
-        /// <summary>
-        /// Draw the name of the notes
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="clip"></param>
-        private void DrawNotes(Graphics g, Rectangle clip)
+        private void DrawGrid(Graphics g, Rectangle clip)
         {
             if (Gridchords == null)
                 return;
 
-            SolidBrush ChordBrush = new SolidBrush(Color.FromArgb(29, 29, 29));
+            int x = 0;
+            int _LinesWidth = 2;
+            Color TimeLineColor = Color.White;
+            Pen FillPen = new Pen(TimeLineColor, _LinesWidth);
 
+            // 1 cells by Beat 
+            for (int i = 1; i <= GridBeatChords.Count; i++)
+            {
+                g.DrawRectangle(FillPen, x, 0, _cellwidth, _cellheight);
+
+                // Increase length of control
+                x += (int)(_cellwidth) + (_LinesWidth - 1);
+            }
+
+            maxStaffWidth = x;
+        }
+
+        #endregion Draw Canvas
+
+
+        #region draw chords   
+
+        /// <summary>
+        /// Draw the all chords of song
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="clip"></param>
+        private void DrawChords2(Graphics g, Rectangle clip)
+        {
+            if (Gridchords == null)
+                return;
+            
             (string, string) ttx;
             string ChordName;
-            float w;
-            float h;
+            string currentChordName = string.Empty;
             int _LinesWidth = 2;
             int x = (_LinesWidth - 1);
 
-            for (int i = 1; i < Gridchords.Count; i++)
+            for (int i = 1; i <= Gridchords.Count; i++)
             {
                 ttx = Gridchords[i];
+                
+                // First chord
                 ChordName = ttx.Item1;
-
-                // Draw Chord bitmap
-                if (ChordName != "")
+                if (ChordName != "" && ChordName != EmptyChord && ChordName != currentChordName)
                 {
-                                        
-                    try
-                    {
-                        ResourceManager rm = Resources.ResourceManager;
-                        Bitmap chordImage = (Bitmap)rm.GetObject(ChordName);
+                    currentChordName = ChordName;
 
-                        if (chordImage != null)
-                        {
-                            Bitmap Img = new Bitmap(chordImage);
-                            Point p = new Point(x, 0);
-                            g.DrawImage(Img, p);
+                    // Draw Chord bitmap
+                    DrawChord(g, ChordName, x);
 
-                            Img.Dispose();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.ToString());
-                    }
+                    // Draw chord name
+                    DrawChordName(g, ChordName, x);
+
                 }
+                // Increase x of 1 cell
+                x += (int)(_cellwidth) + _LinesWidth;
 
-                // Write the name of the chord at the bottom
-                w = MeasureString(_fontChord.FontFamily, ChordName, _fontChord.Size);
-                h = MeasureStringHeight(_fontChord.FontFamily, ChordName, _fontChord.Size);
-
-                if (ChordName != EmptyChord)
+                // Second chord
+                ChordName = ttx.Item2;
+                if (ChordName != "" && ChordName != EmptyChord && ChordName != currentChordName)
                 {
-                    //g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
-                    g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, _cellheight - h - _fontPadding);
-                }
-                else
-                {
-                    //g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
-                    g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, _cellheight - h - _fontPadding);
-                }
+                    currentChordName = ChordName;
 
+                    // Draw Chord bitmap
+                    DrawChord(g, ChordName, x);
 
+                    // Draw chord name
+                    DrawChordName(g, ChordName, x);
+                }
+                // Increase x of 1 cell
                 x += (int)(_cellwidth) + _LinesWidth;
 
             }
         }
 
-        #endregion drawnotes
+        private void DrawChords(Graphics g, Rectangle clip)
+        {
+            if (Gridchords == null)
+                return;
+            
+            string ChordName;
+            string currentChordName = string.Empty;
+            int _LinesWidth = 2;
+            int x = (_LinesWidth - 1);
+
+            for (int i = 1; i <= GridBeatChords.Count; i++)
+            {
+                ChordName = GridBeatChords[i];
+
+                // First chord                
+                if (ChordName != "" && ChordName != EmptyChord && ChordName != currentChordName)
+                {
+                    currentChordName = ChordName;
+
+                    // Draw Chord bitmap
+                    DrawChord(g, ChordName, x);
+
+                    // Draw chord name
+                    DrawChordName(g, ChordName, x);
+
+                }
+                // Increase x of 1 cell
+                x += (int)(_cellwidth) + _LinesWidth;                
+
+            }
+        }
+
+        /// <summary>
+        /// Draw a chord
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="ChordName"></param>
+        /// <param name="pos"></param>
+        private void DrawChord(Graphics g, string ChordName, int pos)
+        {
+            // Draw Chord bitmap
+            if (ChordName != "")
+            {
+                try
+                {
+                    ResourceManager rm = Resources.ResourceManager;
+                    Bitmap chordImage = (Bitmap)rm.GetObject(ChordName);
+
+                    if (chordImage != null)
+                    {
+                        Bitmap Img = new Bitmap(chordImage);
+                        Point p = new Point(pos, 0);
+                        g.DrawImage(Img, p);
+
+                        Img.Dispose();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Draw a chord name
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="ChordName"></param>
+        /// <param name="pos"></param>
+        private void DrawChordName(Graphics g, string ChordName, int pos)
+        {
+            float w;
+            float h;
+            SolidBrush ChordBrush = new SolidBrush(Color.FromArgb(29, 29, 29));
+
+
+            // Write the name of the chord at the bottom
+            w = MeasureString(_fontChord.FontFamily, ChordName, _fontChord.Size);
+            h = MeasureStringHeight(_fontChord.FontFamily, ChordName, _fontChord.Size);
+
+            if (ChordName != EmptyChord)
+            {
+                //g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
+                g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight - h - _fontPadding);
+            }
+            else
+            {
+                //g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
+                g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight - h - _fontPadding);
+            }
+        }
+
+        #endregion draw chords
+
+
 
 
         #region paint
@@ -338,7 +451,7 @@ namespace ChordAnalyser.UI
 
                 DrawGrid(g, clip);
 
-                DrawNotes(g, clip);
+                DrawChords(g, clip);
 
                 g.TranslateTransform(clip.X, 0);
             }
