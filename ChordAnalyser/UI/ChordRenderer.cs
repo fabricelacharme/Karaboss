@@ -51,6 +51,12 @@ namespace ChordAnalyser.UI
         private int _fontSize = 22;
         private int _fontPadding = 10;
 
+        //private int _currentpos = 0;
+        //private int _currentmeasure = -1;
+        //private int _currentTimeInMeasure = -1;
+        private string _currentChordName = string.Empty;
+        private bool _bFirstPlay = false;
+
         #endregion private
 
 
@@ -61,9 +67,11 @@ namespace ChordAnalyser.UI
         public Dictionary<int, (string, string)> Gridchords { get; set; }
 
         // New search (by beat)        
+        private int _chordsCount = 0;
+        private Dictionary<int, (int, string)> _cleangridbeatchords;
+
         public Dictionary<int, string> GridBeatChords { get; set; }
-
-
+        
         private Font _fontChord;
         public Font fontChord
         {
@@ -197,6 +205,108 @@ namespace ChordAnalyser.UI
             this.SetStyle(ControlStyles.ResizeRedraw, true);
 
         }
+
+
+        public void TransferByMeasureToByBeat(int numerator, int measures)
+        {
+            GridBeatChords = new Dictionary<int, string>();
+
+            int beats = numerator * measures;
+            for (int i = 1; i <= beats; i++)
+            {
+                GridBeatChords.Add(i, "");
+            }
+
+
+            int beat;
+            
+            for (int measure = 1; measure <= Gridchords.Count; measure++ )
+            {
+                beat = 1 + (measure - 1) * numerator; // + (timeinmeasure - 1);
+                string item1 = Gridchords[measure].Item1;
+                GridBeatChords[beat] = item1;
+
+                beat = 1 + (measure - 1) * numerator + (numerator/2);
+                string item2 = Gridchords[measure].Item2;
+                GridBeatChords[beat] = item2;
+
+            }
+        }
+        
+        /// <summary>
+        /// Create a new dictionnary with only real chords (eliminate empty & no chords)
+        /// </summary>
+        public void SetCleanGridBeatChords()
+        {
+            try
+            {                
+                _chordsCount = 0;
+                _cleangridbeatchords = new Dictionary<int, (int, string)>();
+                string currentchord = "-1";
+
+
+                for (int i = 1; i <= GridBeatChords.Count; i++)
+                {
+                    string t = GridBeatChords[i];
+
+                    if (t != "" && t != EmptyChord && t != NoChord && t != currentchord)
+                    {
+                        currentchord = t;
+                        _chordsCount++;
+                        _cleangridbeatchords.Add(i, (_chordsCount, t));
+                    }
+
+
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        public void DisplayChords(int numerator, int pos, int measure, int timeinmeasure)
+        {
+            // Dictionnary _cleangridbeatchords |key = real beat| index of chord in the grid | chord name  
+            // knowing the beat, we can retrieve the position of the chord
+
+            //int beat = (measure - 1) * numerator + (timeinmeasure - 1);
+            int beat = (measure - 1) * numerator + timeinmeasure;
+            if (beat == 1)
+            {
+                _currentChordName = "";
+                _bFirstPlay = true;
+            }
+
+            if (!GridBeatChords.ContainsKey(beat))
+                return;
+
+            string ChordName = GridBeatChords[beat];
+            if (ChordName != NoChord && ChordName != "" && ChordName != EmptyChord && ChordName != _currentChordName)
+            {
+                _currentChordName = ChordName;
+                //Console.WriteLine("***********  " + ChordName + "  ***********");
+                
+                (int,string) toto = _cleangridbeatchords[beat];
+                int x = toto.Item1; // index of the chord
+                //string y = toto.Item2; // chord name
+
+                int LargeurCellule = (int)(ColumnWidth * zoom) + 2;
+
+                // Do not offset at first chord
+                if (_bFirstPlay)
+                {
+                    _bFirstPlay = false;
+                    //Console.WriteLine("***********  No offset, first play  ***********");
+                }
+                else
+                {
+                    this.OffsetX = (x - 1) * LargeurCellule;                // Changing this property will lauch a redraw
+                    //Console.WriteLine("***********  offset, " + (x - 1) + " ***********");
+                }
+            }
+        }
+
 
         #region Draw Canvas
 
@@ -347,7 +457,7 @@ namespace ChordAnalyser.UI
                 ChordName = GridBeatChords[i];
 
                 // First chord                
-                if (ChordName != "" && ChordName != EmptyChord && ChordName != currentChordName)
+                if (ChordName != "" && ChordName != EmptyChord && ChordName != currentChordName && ChordName != NoChord)
                 {
                     currentChordName = ChordName;
 
@@ -357,9 +467,12 @@ namespace ChordAnalyser.UI
                     // Draw chord name
                     DrawChordName(g, ChordName, x);
 
+                    // Increase x of 1 cell
+                    x += (int)(_cellwidth) + _LinesWidth;                
+
                 }
                 // Increase x of 1 cell
-                x += (int)(_cellwidth) + _LinesWidth;                
+                //x += (int)(_cellwidth) + _LinesWidth;                
 
             }
         }
@@ -449,7 +562,7 @@ namespace ChordAnalyser.UI
 
                 g.TranslateTransform(-clip.X, 0);
 
-                DrawGrid(g, clip);
+                //DrawGrid(g, clip);
 
                 DrawChords(g, clip);
 

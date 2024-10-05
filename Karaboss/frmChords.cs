@@ -616,8 +616,16 @@ namespace Karaboss
 
             // Display Chords in boxes
             ChordControl1.Gridchords = Gridchords;
+            
             ChordRenderer1.Gridchords = Gridchords;
-            ChordRenderer1.GridBeatChords = GridBeatChords;
+
+            
+            //ChordRenderer1.GridBeatChords = GridBeatChords;
+            ChordRenderer1.TransferByMeasureToByBeat(sequence1.Numerator, NbMeasures);
+            
+            
+            ChordRenderer1.SetCleanGridBeatChords();
+
             ChordMapControl1.Gridchords = Gridchords;
 
         }
@@ -685,19 +693,19 @@ namespace Karaboss
 
                 // Draw gray cell for played note
                 ChordControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
+                ChordRenderer1.DisplayChords(sequence1.Numerator , pos, curmeasure, timeinmeasure);
                 ChordMapControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
 
-
+                /*
                 // Offset 1 cell
                 // Specific for ChordRenderer                
                 int LargeurCellule = (int)(ChordRenderer1.ColumnWidth * ChordRenderer1.zoom) + 2;
 
                 // Offset by 2 cells because items of GridChords have 2 chords (2 chords by measure for the moment)
                 // Would be better with 1 chord by time (4/4 = 4 possible chords, 3/4 = 3 possible chords)
-                //int offsetx = LargeurCellule * (_currentMeasure - 1);
                 // Offset horizontal
                 ChordRenderer1.OffsetX = LargeurCellule * (timeinmeasure - 1) + (LargeurCellule * sequence1.Numerator) * (curmeasure - 1);
-
+                */
             }
         }
 

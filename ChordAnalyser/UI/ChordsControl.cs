@@ -464,12 +464,12 @@ namespace ChordAnalyser.UI
                         w = MeasureString(_fontChord.FontFamily, ChordName, _fontChord.Size);
                         h = MeasureStringHeight(_fontChord.FontFamily, ChordName, _fontChord.Size);
 
-                    // Move to 2nd part of the measure
+                        // Move to 2nd part of the measure
                         int z = 0;
                         if (sequence1.Numerator % 2 == 0)
                             z = ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator / 2;
                         else
-                            z = ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator / 3;
+                            z = 2 * ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator / 3;
                             
                         // If empty, draw symbol
                         if (ChordName == EmptyChord)

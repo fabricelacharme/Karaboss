@@ -334,7 +334,10 @@ namespace ChordsAnalyser
                             {
                                 float st = GetTimeInMeasure(note.StartTime);
 
-                                if (st < sequence1.Denominator / 2)
+
+                                // Ce n'est pas plutot le numérateur ???????????????????????????????????????????????????????
+                                //if (st < sequence1.Denominator / 2)
+                                if (st < sequence1.Numerator / 2)
                                 {
                                     // add note to first part of the measure
                                     lstfirstmidiNotes.Add(note.Number);
