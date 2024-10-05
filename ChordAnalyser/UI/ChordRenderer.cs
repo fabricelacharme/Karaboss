@@ -286,23 +286,27 @@ namespace ChordAnalyser.UI
             {
                 _currentChordName = ChordName;
                 //Console.WriteLine("***********  " + ChordName + "  ***********");
-                
-                (int,string) toto = _cleangridbeatchords[beat];
-                int x = toto.Item1; // index of the chord
-                //string y = toto.Item2; // chord name
 
-                int LargeurCellule = (int)(ColumnWidth * zoom) + 2;
+                if (_cleangridbeatchords.ContainsKey(beat))
+                {
 
-                // Do not offset at first chord
-                if (_bFirstPlay)
-                {
-                    _bFirstPlay = false;
-                    //Console.WriteLine("***********  No offset, first play  ***********");
-                }
-                else
-                {
-                    this.OffsetX = (x - 1) * LargeurCellule;                // Changing this property will lauch a redraw
-                    //Console.WriteLine("***********  offset, " + (x - 1) + " ***********");
+                    (int, string) toto = _cleangridbeatchords[beat];
+                    int x = toto.Item1; // index of the chord
+                                        //string y = toto.Item2; // chord name
+
+                    int LargeurCellule = (int)(ColumnWidth * zoom) + 2;
+
+                    // Do not offset at first chord
+                    if (_bFirstPlay)
+                    {
+                        _bFirstPlay = false;
+                        //Console.WriteLine("***********  No offset, first play  ***********");
+                    }
+                    else
+                    {
+                        this.OffsetX = (x - 1) * LargeurCellule;                // Changing this property will lauch a redraw
+                                                                                //Console.WriteLine("***********  offset, " + (x - 1) + " ***********");
+                    }
                 }
             }
         }
