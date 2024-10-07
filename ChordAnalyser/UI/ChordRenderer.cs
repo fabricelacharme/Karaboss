@@ -49,13 +49,13 @@ namespace ChordAnalyser.UI
         private StringFormat sf;
 
         private int _fontSize = 22;
-        private int _fontPadding = 10;
+        private int fontPadding = 10;
+        private int _fontpadding;
 
-        //private int _currentpos = 0;
-        //private int _currentmeasure = -1;
-        //private int _currentTimeInMeasure = -1;
         private string _currentChordName = string.Empty;
         private bool _bFirstPlay = false;
+
+        private float _bitmapwidth = 200;
 
         #endregion private
 
@@ -176,6 +176,8 @@ namespace ChordAnalyser.UI
 
                 _cellwidth = _columnwidth * zoom;
                 _cellheight = _columnheight * zoom;
+                
+                _fontpadding = (int)(fontPadding * zoom);
 
                 _fontChord = new Font(_fontChord.FontFamily, _fontSize * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
@@ -194,6 +196,7 @@ namespace ChordAnalyser.UI
         public ChordRenderer()
         {
             _fontChord = new Font("Arial", _fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            _fontpadding = 10;
 
             // Draw pnlCanvas
             DrawCanvas();
@@ -216,7 +219,6 @@ namespace ChordAnalyser.UI
             {
                 GridBeatChords.Add(i, "");
             }
-
 
             int beat;
             
@@ -284,8 +286,7 @@ namespace ChordAnalyser.UI
             string ChordName = GridBeatChords[beat];
             if (ChordName != NoChord && ChordName != "" && ChordName != EmptyChord && ChordName != _currentChordName)
             {
-                _currentChordName = ChordName;
-                //Console.WriteLine("***********  " + ChordName + "  ***********");
+                _currentChordName = ChordName;                
 
                 if (_cleangridbeatchords.ContainsKey(beat))
                 {
@@ -299,13 +300,11 @@ namespace ChordAnalyser.UI
                     // Do not offset at first chord
                     if (_bFirstPlay)
                     {
-                        _bFirstPlay = false;
-                        //Console.WriteLine("***********  No offset, first play  ***********");
+                        _bFirstPlay = false;                        
                     }
                     else
                     {
-                        this.OffsetX = (x - 1) * LargeurCellule;                // Changing this property will lauch a redraw
-                                                                                //Console.WriteLine("***********  offset, " + (x - 1) + " ***********");
+                        this.OffsetX = (x - 1) * LargeurCellule;                // Changing this property will lauch a redraw                                                                                
                     }
                 }
             }
@@ -497,13 +496,24 @@ namespace ChordAnalyser.UI
                     ResourceManager rm = Resources.ResourceManager;
                     Bitmap chordImage = (Bitmap)rm.GetObject(ChordName);
 
+
                     if (chordImage != null)
                     {
-                        Bitmap Img = new Bitmap(chordImage);
                         Point p = new Point(pos, 0);
-                        g.DrawImage(Img, p);
 
+                        /*
+                        Bitmap Img = new Bitmap(chordImage);                        
+                        g.DrawImage(Img, p);
                         Img.Dispose();
+                        */
+                        Size newSize = new Size((int)(chordImage.Width * zoom), (int)(chordImage.Height * zoom));
+                        Bitmap bmp = new Bitmap(chordImage, newSize);
+
+                        //g.DrawImage(chordImage, p);
+                        g.DrawImage(bmp, p);
+                        chordImage.Dispose();
+                        bmp.Dispose();
+
                     }
                 }
                 catch (Exception ex)
@@ -533,12 +543,12 @@ namespace ChordAnalyser.UI
             if (ChordName != EmptyChord)
             {
                 //g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
-                g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight - h - _fontPadding);
+                g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight - h - _fontpadding);
             }
             else
             {
                 //g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
-                g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight - h - _fontPadding);
+                g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight - h - _fontpadding);
             }
         }
 

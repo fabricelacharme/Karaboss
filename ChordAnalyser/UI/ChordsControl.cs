@@ -431,8 +431,7 @@ namespace ChordAnalyser.UI
 
                 for (int i = 1; i <= Gridchords.Count; i++)
                 {
-                    // Chord name
-                                       
+                    // Chord name                                       
                     ttx = Gridchords[i];
                     
                     ChordName = ttx.Item1;

@@ -408,19 +408,7 @@ namespace Karaboss
             pnlDisplayImagesOfChords.Width = pnlDisplayHorz.Width;
             tabPageDiagrams.Controls.Add(pnlDisplayImagesOfChords);
 
-            // OLD CODE : display a single bitmap of D chord
-            /*
-            ImageOfChord = new System.Windows.Forms.PictureBox();
-            ImageOfChord.Parent = pnlDisplayImagesOfChords;            
-            ImageOfChord.Location = new Point(imgoffset, imgoffset);
-            ImageOfChord.Size   = new Size(imgsize, imgsize);
-            ImageOfChord.BackColor = Color.Red;            
-
-            Bitmap image = new Bitmap(Properties.Resources.D);
-            ImageOfChord.Image = image;
-            
-            pnlDisplayImagesOfChords.Controls.Add(ImageOfChord);
-            */
+           
 
             ChordRenderer1 = new ChordRenderer();
             ChordRenderer1.Parent = pnlDisplayImagesOfChords;
@@ -463,7 +451,7 @@ namespace Karaboss
             lblLyrics.TextAlign = ContentAlignment.MiddleCenter;           
             lblLyrics.Dock = DockStyle.Top;
             lblLyrics.Text = "AD Lorem ipsus";
-            pnlBottom .Controls.Add(lblLyrics);
+            
             
 
             // 7 : add a label for text to be sung
@@ -475,10 +463,14 @@ namespace Karaboss
             lblOtherLyrics.BackColor = Color.FromArgb(0, 163, 0);
             lblOtherLyrics.AutoSize = false;                      
             lblOtherLyrics.Font = fontLyrics;
-            lblOtherLyrics.TextAlign = ContentAlignment.TopCenter;
+            lblOtherLyrics.TextAlign = ContentAlignment.TopCenter;                        
+            lblOtherLyrics.Dock = DockStyle.Fill;
             lblOtherLyrics.Text = "Other lyrics";            
-            pnlBottom.Controls.Add(lblOtherLyrics);
             
+            
+            // Add controls in reverse order, to insure that DockStyle.Fill will work properly
+            pnlBottom.Controls.Add(lblOtherLyrics);
+            pnlBottom.Controls.Add(lblLyrics);
 
 
             #endregion
@@ -942,7 +934,10 @@ namespace Karaboss
             zoom -= (float)0.1;
 
             ChordControl1.zoom = zoom; //-= (float)0.1;
+            ChordRenderer1.zoom = zoom;
             ChordMapControl1.zoom = zoom; // -= (float)0.1;
+
+            SetScrollBarValues();
 
             toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
             toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
@@ -954,7 +949,10 @@ namespace Karaboss
             zoom += (float)0.1;
 
             ChordControl1.zoom = zoom; //+= (float)0.1;
+            ChordRenderer1.zoom = zoom;
             ChordMapControl1.zoom = zoom; // += (float)0.1;
+
+            SetScrollBarValues();
 
             toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
             toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
@@ -996,8 +994,13 @@ namespace Karaboss
                 pnlDisplayHorz.Height = ChordControl1.Height + positionHScrollBar.Height;
             }
 
-            if (pnlBottom != null)
-                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height;
+            
+
+            if (pnlBottom != null && pnlDisplayImagesOfChords != null && pnlDisplayHorz != null)
+            {
+                pnlBottom.Location = new Point(0, pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height);
+                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+            }
 
         }
 
@@ -1011,7 +1014,18 @@ namespace Karaboss
         }
         private void ChordRenderer_HeightChanged(object sender, int value)
         {
-            //throw new NotImplementedException();
+
+            if (pnlDisplayImagesOfChords != null && pnlDisplayHorz != null)
+            {
+                pnlDisplayImagesOfChords.Location = new Point(0, pnlDisplayHorz.Top + pnlDisplayHorz.Height);
+                pnlDisplayImagesOfChords.Height = ChordRenderer1.Height;
+            }
+
+            if (pnlBottom != null && pnlDisplayImagesOfChords != null && pnlDisplayHorz != null)
+            {
+                pnlBottom.Location = new Point(0, pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height);
+                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+            }
         }
 
         private void ChordRenderer_WidthChanged(object sender, int value)
@@ -1185,20 +1199,7 @@ namespace Karaboss
                             ChordControl1.OffsetX = ChordControl1.maxStaffWidth - pnlDisplayHorz.Width;
                         }
                     }                    
-                }
-
-
-                // Specific for ChordRenderer
-                /*
-                LargeurCellule = (int)(ChordRenderer1.ColumnWidth * ChordRenderer1.zoom) + 2;
-
-                // Offset by 2 cells because items of GridChords have 2 chords (2 chords by measure for the moment)
-                // Would be better with 1 chord by time (4/4 = 4 possible chords, 3/4 = 3 possible chords)
-                offsetx = 2* LargeurCellule * (_currentMeasure - 1);
-                // Offset horizontal
-                ChordRenderer1.OffsetX = offsetx;
-                */
-
+                }                
 
             }
         }
@@ -1216,6 +1217,11 @@ namespace Karaboss
                 positionHScrollBar.Visible = false;
                 positionHScrollBar.Maximum = 0;
                 
+                pnlDisplayHorz.Height = ChordControl1.Height;
+                pnlDisplayImagesOfChords.Top = pnlDisplayHorz.Top + pnlDisplayHorz.Height;
+                pnlBottom.Top = pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height;
+                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+
                 ChordControl1.OffsetX = 0;
                 ChordRenderer1.OffsetX = 0;
                 
@@ -1225,6 +1231,11 @@ namespace Karaboss
             {
                 positionHScrollBar.Maximum = W - pnlDisplayHorz.Width;
                 positionHScrollBar.Visible = true;
+
+                pnlDisplayHorz.Height = ChordControl1.Height + positionHScrollBar.Height;
+                pnlDisplayImagesOfChords.Top = pnlDisplayHorz.Top + pnlDisplayHorz.Height;
+                pnlBottom.Top = pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height;
+                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             }
 
         }
@@ -1375,9 +1386,7 @@ namespace Karaboss
                 positionHScrollBar.Top = ChordControl1.Top + ChordControl1.Height;
             }
 
-            if (pnlBottom != null)
-                lblOtherLyrics.Size = new Size(pnlBottom.Width, pnlBottom.Height - lblLyrics.Height);
-
+            
 
             // 2nd TAB
             if (pnlDisplayMap != null)
