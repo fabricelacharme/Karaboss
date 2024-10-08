@@ -275,5 +275,161 @@
   <ItemGroup>
     <None Include="Resources\G#m7.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pD#.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pD#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pD#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pD.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pD7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pDb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pDbm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pDm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pDm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pE.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pE7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pEb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pEbm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pEm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pEm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pF#.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pF#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pF#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pF#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pF.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pF7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pFm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pG#.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pG#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pGm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pA#.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pA#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pA#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pA#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pA.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pA7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pAb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pAb7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pAbm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pAm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pAm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pB7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pBb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pBb7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pBbm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pBbm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pBm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pBm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pC#.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pC#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pC#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pC.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pC7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pCm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pCm7.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

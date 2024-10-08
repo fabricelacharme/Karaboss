@@ -298,6 +298,162 @@
   <data name="Gm7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Gm7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="pA" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pA.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pA#" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pA#.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pA#7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pA#7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pA#m" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pA#m.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pA#m7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pA#m7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pA7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pA7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pAb" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pAb.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pAb7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pAb7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pAbm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pAbm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pAm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pAm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pAm7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pAm7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pB" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pB.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pB7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pB7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pBb" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pBb.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pBb7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pBb7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pBbm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pBbm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pBbm7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pBbm7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pBm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pBm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pBm7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pBm7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pC" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pC.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pC#" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pC#.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pC#m" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pC#m.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pC#m7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pC#m7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pC7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pC7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pCm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pCm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pCm7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pCm7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pD" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pD.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pD#" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pD#.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pD#7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pD#7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pD#m" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pD#m.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pD7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pD7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pDb" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pDb.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pDbm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pDbm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pDm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pDm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pDm7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pDm7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pE" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pE.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pE7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pE7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pEb" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pEb.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pEbm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pEbm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pEm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pEm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pEm7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pEm7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pF" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pF.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pF#" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pF#.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pF#7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pF#7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pF#m" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pF#m.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pF#m7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pF#m7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pF7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pF7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pFm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pFm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pG" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pG.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pG#" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pG#.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pGm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pGm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pG_m" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pG#m.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="silence_black" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\silence_black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
