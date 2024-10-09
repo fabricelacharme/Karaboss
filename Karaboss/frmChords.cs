@@ -402,18 +402,19 @@ namespace Karaboss
             #region bitmaps of chords
             // 4 : Add a panel in the middle
             // This panel will display a diagram for chords being played
-            int imgsize = 210; // 180;
-            int imgoffset = 10;
+            int imgsize = 278; //248 + 30 : 248 pour accord de guitare (200 taille de l'image + 1.24 * 200 accord jouée 25% plus gros et + 30 pour les onglets
+            //int imgoffset = 10;
             pnlDisplayImagesOfChords = new Panel();
             pnlDisplayImagesOfChords.Parent = tabPageDiagrams;
             pnlDisplayImagesOfChords.Location = new Point(tabPageDiagrams.Margin.Left, pnlDisplayHorz.Top + pnlDisplayHorz.Height);
-            pnlDisplayImagesOfChords.Height = imgsize + 2 * imgoffset;
+            pnlDisplayImagesOfChords.Height = imgsize;
             pnlDisplayImagesOfChords.BackColor = Color.Goldenrod;
             pnlDisplayImagesOfChords.Width = pnlDisplayHorz.Width;
             tabPageDiagrams.Controls.Add(pnlDisplayImagesOfChords);
 
 
             #region tabPage to select Guitar or Piano
+            // =======================================
             tbPChords = new TabControl();
             tbPChords.Parent = pnlDisplayImagesOfChords;
             tbPChords.Location = new Point(0, 0);            
@@ -430,13 +431,14 @@ namespace Karaboss
 
 
             #region ChordRenderer Guitar
+            // =======================================
             ChordRendererGuitar = new ChordRenderer();            
             ChordRendererGuitar.Parent = TabPageGuitar;            
             ChordRendererGuitar.Location = new Point(TabPageGuitar.Margin.Left, TabPageGuitar.Margin.Top);
             ChordRendererGuitar.Width = TabPageGuitar.ClientSize.Width;            
             ChordRendererGuitar.HeightChanged += new HeightChangedEventHandler(ChordRendererGuitar_HeightChanged);
-            ChordRendererGuitar.ColumnWidth = 200; //  
-            ChordRendererGuitar.ColumnHeight = ChordRendererGuitar.ColumnWidth;
+            ChordRendererGuitar.ColumnWidth = imgsize - 100; // 200; //  248 = 200 * 1.24 pour l'accord joué qui est 24% plus grand
+            ChordRendererGuitar.ColumnHeight = imgsize - 40; //imgsize - 30; // 200; //  248 = 200 * 1.24 pour l'accord joué qui est 24% plus grand
 
             ChordRendererGuitar.DisplayMode = ChordRenderer.DiplayModes.Guitar;
             TabPageGuitar.Controls.Add(ChordRendererGuitar);
@@ -444,15 +446,16 @@ namespace Karaboss
 
 
             #region ChordRenderer Piano
+            // =======================================
             // Tabpages dimension are not set if not visible => force redim
             TabPagePiano.Width = TabPageGuitar.Width;
             ChordRendererPiano = new ChordRenderer();
             ChordRendererPiano.Parent = TabPagePiano;
             ChordRendererPiano.Location = new Point(TabPagePiano.Margin.Left, TabPagePiano.Margin.Top);
             ChordRendererPiano.Width = TabPagePiano.ClientSize.Width;
-            ChordRendererPiano.HeightChanged += new HeightChangedEventHandler(ChordRendererPiano_HeightChanged);            
-            ChordRendererPiano.ColumnWidth = 230; //  
-            ChordRendererPiano.ColumnHeight = 150;
+            ChordRendererPiano.HeightChanged += new HeightChangedEventHandler(ChordRendererPiano_HeightChanged);
+            ChordRendererPiano.ColumnWidth = 265; //230; //  
+            ChordRendererPiano.ColumnHeight = 186;//150;
 
             ChordRendererPiano.DisplayMode = ChordRenderer.DiplayModes.Piano;
             TabPagePiano.Controls.Add(ChordRendererPiano);

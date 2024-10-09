@@ -53,6 +53,7 @@ namespace ChordAnalyser.UI
         private int _fontpadding;
 
         private string _currentChordName = string.Empty;
+        private int _currentbeat;
         private bool _bFirstPlay = false;
 
         private float _bitmapwidth = 200;
@@ -289,6 +290,8 @@ namespace ChordAnalyser.UI
             // knowing the beat, we can retrieve the position of the chord
             
             int beat = (measure - 1) * numerator + timeinmeasure;
+            _currentbeat = beat;
+
             if (beat == 1)
             {
                 _currentChordName = "";
@@ -319,6 +322,12 @@ namespace ChordAnalyser.UI
                     }
                     else
                     {
+                        // Offset should be
+                        // - 0 at start
+                        // - One cell when playing
+                        // - 
+                        
+                        
                         // Offset the control with the value of the position of the filtered chord in the filtered dictionnary
                         this.OffsetX = (x - 1) * LargeurCellule;                // Changing this property will lauch a redraw                                                                                
                     }
@@ -417,6 +426,7 @@ namespace ChordAnalyser.UI
         /// </summary>
         /// <param name="g"></param>
         /// <param name="clip"></param>
+        /*
         private void DrawChordsByHalfMeasure(Graphics g, Rectangle clip)
         {
             if (Gridchords == null)
@@ -466,6 +476,7 @@ namespace ChordAnalyser.UI
             }
         }
 
+        */
         private void DrawChordsByBeat(Graphics g, Rectangle clip)
         {
             if (Gridchords == null)
@@ -475,14 +486,17 @@ namespace ChordAnalyser.UI
             string currentChordName = string.Empty;
             int _LinesWidth = 2;
             int x = (_LinesWidth - 1);
+            bool bChordPlayed = false;
 
             for (int i = 1; i <= GridBeatChords.Count; i++)
             {
                 ChordName = GridBeatChords[i];
 
-                // First chord                
+                // Draw chords if they are different from previous               
                 if (ChordName != "" && ChordName != EmptyChord && ChordName != currentChordName && ChordName != NoChord)
                 {
+                                                                
+                    bChordPlayed = (i == _currentbeat);
                                         
                     currentChordName = ChordName;
 
@@ -490,10 +504,10 @@ namespace ChordAnalyser.UI
                     switch (DisplayMode)
                     {
                         case DiplayModes.Guitar:
-                            DrawChord(g, ChordName, x);
+                            DrawChord(g, ChordName, x, bChordPlayed);
                             break;
                         case DiplayModes.Piano:
-                            DrawChord(g, "p" + ChordName, x);                            
+                            DrawChord(g, "p" + ChordName, x, bChordPlayed);                            
                             break;
 
                     }
@@ -515,8 +529,14 @@ namespace ChordAnalyser.UI
         /// <param name="g"></param>
         /// <param name="ChordName"></param>
         /// <param name="pos"></param>
-        private void DrawChord(Graphics g, string ChordName, int pos)
+        private void DrawChord(Graphics g, string ChordName, int pos, bool bChordPlayed)
         {
+            float enlarge = 1;
+            int w;
+            int h;
+            int middlex;
+            int middley;
+
             // Draw Chord bitmap
             if (ChordName != "")
             {
@@ -525,20 +545,22 @@ namespace ChordAnalyser.UI
                     ResourceManager rm = Resources.ResourceManager;
                     Bitmap chordImage = (Bitmap)rm.GetObject(ChordName);
 
+                    // chord played is bigger
+                    if (bChordPlayed)
+                        enlarge = 1.24f;
 
                     if (chordImage != null)
                     {
-                        Point p = new Point(pos, 0);
+                        w = (int)(chordImage.Width * zoom * enlarge);
+                        h = (int)(chordImage.Height * zoom * enlarge);                        
+                        Size newSize = new Size(w, h);
 
-                        /*
-                        Bitmap Img = new Bitmap(chordImage);                        
-                        g.DrawImage(Img, p);
-                        Img.Dispose();
-                        */
-                        Size newSize = new Size((int)(chordImage.Width * zoom), (int)(chordImage.Height * zoom));
                         Bitmap bmp = new Bitmap(chordImage, newSize);
 
-                        //g.DrawImage(chordImage, p);
+                        middlex = pos + (int)(_cellwidth - w) / 2;
+                        middley = (int)((_cellheight - h) / 2);
+                        Point p = new Point(middlex, middley);
+
                         g.DrawImage(bmp, p);
                         chordImage.Dispose();
                         bmp.Dispose();
@@ -570,8 +592,12 @@ namespace ChordAnalyser.UI
             h = MeasureStringHeight(_fontChord.FontFamily, ChordName, _fontChord.Size);
 
             if (ChordName != EmptyChord)
-            {                
+            {
                 g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight - h - _fontpadding);
+                //g.DrawString("----------", _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, 0);
+                //g.DrawString("----------", _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight/2);
+                //g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, 2 * _cellheight / 3);
+                //g.DrawString("----------", _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight - 70);
             }
             else
             {                
