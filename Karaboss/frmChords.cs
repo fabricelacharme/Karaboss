@@ -436,8 +436,9 @@ namespace Karaboss
             ChordRendererGuitar.Width = TabPageGuitar.ClientSize.Width;            
             ChordRendererGuitar.HeightChanged += new HeightChangedEventHandler(ChordRendererGuitar_HeightChanged);
             ChordRendererGuitar.ColumnWidth = 200; //  
-            ChordRendererGuitar.ColumnHeight = ChordRendererGuitar.ColumnWidth;            
-            
+            ChordRendererGuitar.ColumnHeight = ChordRendererGuitar.ColumnWidth;
+
+            ChordRendererGuitar.DisplayMode = ChordRenderer.DiplayModes.Guitar;
             TabPageGuitar.Controls.Add(ChordRendererGuitar);
             #endregion ChordRenderer Guitar
 
@@ -450,9 +451,10 @@ namespace Karaboss
             ChordRendererPiano.Location = new Point(TabPagePiano.Margin.Left, TabPagePiano.Margin.Top);
             ChordRendererPiano.Width = TabPagePiano.ClientSize.Width;
             ChordRendererPiano.HeightChanged += new HeightChangedEventHandler(ChordRendererPiano_HeightChanged);            
-            ChordRendererPiano.ColumnWidth = 200; //  
-            ChordRendererPiano.ColumnHeight = ChordRendererPiano.ColumnWidth;
+            ChordRendererPiano.ColumnWidth = 230; //  
+            ChordRendererPiano.ColumnHeight = 150;
 
+            ChordRendererPiano.DisplayMode = ChordRenderer.DiplayModes.Piano;
             TabPagePiano.Controls.Add(ChordRendererPiano);
             #endregion ChordRenderer Guitar
 

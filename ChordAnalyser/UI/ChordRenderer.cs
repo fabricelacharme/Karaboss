@@ -57,6 +57,14 @@ namespace ChordAnalyser.UI
 
         private float _bitmapwidth = 200;
 
+        public enum DiplayModes
+        {
+            Guitar,
+            Piano
+        }
+
+        public DiplayModes DisplayMode { get; set; }
+
         #endregion private
 
 
@@ -104,7 +112,6 @@ namespace ChordAnalyser.UI
         }
 
 
-
         private int _columnwidth = 80;
         public int ColumnWidth
         {
@@ -136,7 +143,7 @@ namespace ChordAnalyser.UI
             }
         }
 
-
+        /*
         private int _maxstaffwidth = 80;
         /// <summary>
         /// Gets Length of score
@@ -157,7 +164,7 @@ namespace ChordAnalyser.UI
                 }
             }
         }
-
+        */
 
         /// <summary>
         /// zoom
@@ -197,6 +204,8 @@ namespace ChordAnalyser.UI
         {
             _fontChord = new Font("Arial", _fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
             _fontpadding = 10;
+
+            DisplayMode = DiplayModes.Guitar;
 
             // Draw pnlCanvas
             DrawCanvas();
@@ -474,11 +483,21 @@ namespace ChordAnalyser.UI
                 // First chord                
                 if (ChordName != "" && ChordName != EmptyChord && ChordName != currentChordName && ChordName != NoChord)
                 {
+                                        
                     currentChordName = ChordName;
 
                     // Draw Chord bitmap
-                    DrawChord(g, ChordName, x);
+                    switch (DisplayMode)
+                    {
+                        case DiplayModes.Guitar:
+                            DrawChord(g, ChordName, x);
+                            break;
+                        case DiplayModes.Piano:
+                            DrawChord(g, "p" + ChordName, x);                            
+                            break;
 
+                    }
+                    
                     // Draw chord name
                     DrawChordName(g, ChordName, x);
 
@@ -486,8 +505,6 @@ namespace ChordAnalyser.UI
                     x += (int)(_cellwidth) + _LinesWidth;                
 
                 }
-                // Increase x of 1 cell
-                //x += (int)(_cellwidth) + _LinesWidth;                
 
             }
         }

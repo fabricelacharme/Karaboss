@@ -431,5 +431,26 @@
   <ItemGroup>
     <None Include="Resources\pCm7.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pC#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pG7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pG#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pD#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pFm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pGm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pG#m7.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

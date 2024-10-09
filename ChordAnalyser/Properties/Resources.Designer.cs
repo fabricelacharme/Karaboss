@@ -873,6 +873,16 @@ namespace ChordAnalyser.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap pC_7 {
+            get {
+                object obj = ResourceManager.GetObject("pC#7", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap pC_m {
             get {
                 object obj = ResourceManager.GetObject("pC#m", resourceCulture);
@@ -956,6 +966,16 @@ namespace ChordAnalyser.Properties {
         internal static System.Drawing.Bitmap pD_m {
             get {
                 object obj = ResourceManager.GetObject("pD#m", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap pD_m7 {
+            get {
+                object obj = ResourceManager.GetObject("pD#m7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1143,6 +1163,16 @@ namespace ChordAnalyser.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap pFm7 {
+            get {
+                object obj = ResourceManager.GetObject("pFm7", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap pG {
             get {
                 object obj = ResourceManager.GetObject("pG", resourceCulture);
@@ -1163,9 +1193,39 @@ namespace ChordAnalyser.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap pG_7 {
+            get {
+                object obj = ResourceManager.GetObject("pG#7", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap pG_m {
             get {
-                object obj = ResourceManager.GetObject("pG_m", resourceCulture);
+                object obj = ResourceManager.GetObject("pG#m", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap pG_m7 {
+            get {
+                object obj = ResourceManager.GetObject("pG#m7", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap pG7 {
+            get {
+                object obj = ResourceManager.GetObject("pG7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1176,6 +1236,16 @@ namespace ChordAnalyser.Properties {
         internal static System.Drawing.Bitmap pGm {
             get {
                 object obj = ResourceManager.GetObject("pGm", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap pGm7 {
+            get {
+                object obj = ResourceManager.GetObject("pGm7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
