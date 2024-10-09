@@ -66,6 +66,9 @@ namespace ChordAnalyser.UI
 
         public DiplayModes DisplayMode { get; set; }
 
+
+        private bool _bPlaying = false;
+
         #endregion private
 
 
@@ -121,6 +124,7 @@ namespace ChordAnalyser.UI
             {
                 _columnwidth = value;
                 _cellwidth = _columnwidth * zoom;
+
                 if (WidthChanged != null)
                     WidthChanged(this, this.Width);
                 pnlCanvas.Invalidate();
@@ -136,36 +140,12 @@ namespace ChordAnalyser.UI
             {
                 _columnheight = value;
                 _cellheight = _columnheight * zoom;
-
-                this.Height = (int)(_cellheight);
+                
                 if (HeightChanged != null)
                     HeightChanged(this, this.Height);
                 pnlCanvas.Invalidate();
             }
-        }
-
-        /*
-        private int _maxstaffwidth = 80;
-        /// <summary>
-        /// Gets Length of score
-        /// </summary>
-        public int maxStaffWidth
-        {
-            get { return _maxstaffwidth; }
-            set
-            {
-                if (value != _maxstaffwidth)
-                {
-                    _maxstaffwidth = value;
-                    if (WidthChanged != null)
-                    {
-                        Width = _maxstaffwidth;
-                        WidthChanged(this, _maxstaffwidth);
-                    }
-                }
-            }
-        }
-        */
+        }       
 
         /// <summary>
         /// zoom
@@ -183,13 +163,10 @@ namespace ChordAnalyser.UI
                 _zoom = value;
 
                 _cellwidth = _columnwidth * zoom;
-                _cellheight = _columnheight * zoom;
-                
+                _cellheight = _columnheight * zoom;                
                 _fontpadding = (int)(fontPadding * zoom);
-
                 _fontChord = new Font(_fontChord.FontFamily, _fontSize * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
-
-                this.Height = (int)_cellheight;
+                
                 if (HeightChanged != null)
                     HeightChanged(this, this.Height);
                 // No need to manage width: controls position on frmChords depends only on its height
@@ -289,12 +266,13 @@ namespace ChordAnalyser.UI
             // Dictionnary _filteredgridbeatchords |key = real beat| index of chord in the grid | chord name  
             // knowing the beat, we can retrieve the position of the chord
             
+            _bPlaying = true;
             int beat = (measure - 1) * numerator + timeinmeasure;
             _currentbeat = beat;
 
             if (beat == 1)
             {
-                _currentChordName = "";
+                _currentChordName = "<>";
                 _bFirstPlay = true;
             }
 
@@ -318,14 +296,17 @@ namespace ChordAnalyser.UI
                     // Do not offset at first chord
                     if (_bFirstPlay)
                     {
-                        _bFirstPlay = false;                        
+                        _bFirstPlay = false;
+                        // Force redraw in order to paint in red the first chord
+                        pnlCanvas.Invalidate();
                     }
                     else
                     {
+                        // TODO
                         // Offset should be
                         // - 0 at start
                         // - One cell when playing
-                        // - 
+                        // - at the end, no more offset, the red goes until the last chord
                         
                         
                         // Offset the control with the value of the position of the filtered chord in the filtered dictionnary
@@ -335,6 +316,11 @@ namespace ChordAnalyser.UI
             }
         }
 
+        public void AfterStopped()
+        {
+            OffsetX = 0;
+            _bPlaying = false;
+        }
 
         #region Draw Canvas
 
@@ -496,7 +482,7 @@ namespace ChordAnalyser.UI
                 if (ChordName != "" && ChordName != EmptyChord && ChordName != currentChordName && ChordName != NoChord)
                 {
                                                                 
-                    bChordPlayed = (i == _currentbeat);
+                    bChordPlayed = (i == _currentbeat && _bPlaying);
                                         
                     currentChordName = ChordName;
 
@@ -513,7 +499,7 @@ namespace ChordAnalyser.UI
                     }
                     
                     // Draw chord name
-                    DrawChordName(g, ChordName, x);
+                    DrawChordName(g, ChordName, x, bChordPlayed);
 
                     // Increase x of 1 cell
                     x += (int)(_cellwidth) + _LinesWidth;                
@@ -556,9 +542,11 @@ namespace ChordAnalyser.UI
                         Size newSize = new Size(w, h);
 
                         Bitmap bmp = new Bitmap(chordImage, newSize);
-
+                        
                         middlex = pos + (int)(_cellwidth - w) / 2;
                         middley = (int)((_cellheight - h) / 2);
+                        //middley = (int)((Height - h) / 3);
+
                         Point p = new Point(middlex, middley);
 
                         g.DrawImage(bmp, p);
@@ -580,12 +568,17 @@ namespace ChordAnalyser.UI
         /// <param name="g"></param>
         /// <param name="ChordName"></param>
         /// <param name="pos"></param>
-        private void DrawChordName(Graphics g, string ChordName, int pos)
+        private void DrawChordName(Graphics g, string ChordName, int pos, bool bChordPlayed)
         {
             float w;
             float h;
             SolidBrush ChordBrush = new SolidBrush(Color.FromArgb(29, 29, 29));
 
+            
+            if (bChordPlayed)
+                ChordBrush = new SolidBrush(Color.Red);
+
+            int y;
 
             // Write the name of the chord at the bottom
             w = MeasureString(_fontChord.FontFamily, ChordName, _fontChord.Size);
@@ -593,11 +586,10 @@ namespace ChordAnalyser.UI
 
             if (ChordName != EmptyChord)
             {
-                g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight - h - _fontpadding);
-                //g.DrawString("----------", _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, 0);
-                //g.DrawString("----------", _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight/2);
-                //g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, 2 * _cellheight / 3);
-                //g.DrawString("----------", _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight - 70);
+                y = (int)(_cellheight + _fontpadding);
+                //g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight - h - _fontpadding);
+                g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, y);
+
             }
             else
             {                

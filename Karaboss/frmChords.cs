@@ -402,12 +402,14 @@ namespace Karaboss
             #region bitmaps of chords
             // 4 : Add a panel in the middle
             // This panel will display a diagram for chords being played
-            int imgsize = 278; //248 + 30 : 248 pour accord de guitare (200 taille de l'image + 1.24 * 200 accord jouée 25% plus gros et + 30 pour les onglets
-            //int imgoffset = 10;
+            //int imgsizeh = 216; // //278; //248 + 30 : 248 pour accord de guitare (200 taille de l'image + 1.24 * 200 accord jouée 25% plus gros et + 30 pour les onglets
+            //int imgsizew = 
+            int htotale = 280;
+            
             pnlDisplayImagesOfChords = new Panel();
             pnlDisplayImagesOfChords.Parent = tabPageDiagrams;
             pnlDisplayImagesOfChords.Location = new Point(tabPageDiagrams.Margin.Left, pnlDisplayHorz.Top + pnlDisplayHorz.Height);
-            pnlDisplayImagesOfChords.Height = imgsize;
+            pnlDisplayImagesOfChords.Height = htotale;
             pnlDisplayImagesOfChords.BackColor = Color.Goldenrod;
             pnlDisplayImagesOfChords.Width = pnlDisplayHorz.Width;
             tabPageDiagrams.Controls.Add(pnlDisplayImagesOfChords);
@@ -435,10 +437,13 @@ namespace Karaboss
             ChordRendererGuitar = new ChordRenderer();            
             ChordRendererGuitar.Parent = TabPageGuitar;            
             ChordRendererGuitar.Location = new Point(TabPageGuitar.Margin.Left, TabPageGuitar.Margin.Top);
-            ChordRendererGuitar.Width = TabPageGuitar.ClientSize.Width;            
+            ChordRendererGuitar.Width = TabPageGuitar.ClientSize.Width;
+            ChordRendererGuitar.Height = htotale;
             ChordRendererGuitar.HeightChanged += new HeightChangedEventHandler(ChordRendererGuitar_HeightChanged);
-            ChordRendererGuitar.ColumnWidth = imgsize - 100; // 200; //  248 = 200 * 1.24 pour l'accord joué qui est 24% plus grand
-            ChordRendererGuitar.ColumnHeight = imgsize - 40; //imgsize - 30; // 200; //  248 = 200 * 1.24 pour l'accord joué qui est 24% plus grand
+            
+            ChordRendererGuitar.ColumnWidth = 162;  // 130 + 24% 
+            ChordRendererGuitar.ColumnHeight = 186; // 150 + 24%
+            
 
             ChordRendererGuitar.DisplayMode = ChordRenderer.DiplayModes.Guitar;
             TabPageGuitar.Controls.Add(ChordRendererGuitar);
@@ -453,9 +458,11 @@ namespace Karaboss
             ChordRendererPiano.Parent = TabPagePiano;
             ChordRendererPiano.Location = new Point(TabPagePiano.Margin.Left, TabPagePiano.Margin.Top);
             ChordRendererPiano.Width = TabPagePiano.ClientSize.Width;
+            ChordRendererPiano.Height = htotale;
             ChordRendererPiano.HeightChanged += new HeightChangedEventHandler(ChordRendererPiano_HeightChanged);
-            ChordRendererPiano.ColumnWidth = 265; //230; //  
-            ChordRendererPiano.ColumnHeight = 186;//150;
+            
+            ChordRendererPiano.ColumnWidth = 286;  // 230 + 24%  
+            ChordRendererPiano.ColumnHeight = 186; // 150 + 24%
 
             ChordRendererPiano.DisplayMode = ChordRenderer.DiplayModes.Piano;
             TabPagePiano.Controls.Add(ChordRendererPiano);
@@ -1378,15 +1385,17 @@ namespace Karaboss
             tabChordsControl.Height = this.ClientSize.Height - menuStrip1.Height - pnlToolbar.Height;
 
             // Bug: only the selected TabPage is resized, but not others 
-            for (int i = 0;i< tabChordsControl.TabCount;i++)
+            for (int i = 0; i < tabChordsControl.TabCount;i++)
             {
                 if (i != tabChordsControl.SelectedIndex)
                 {
-                    // Fore other tabs to redim
+                    // Force other tabs to redim
                     tabChordsControl.TabPages[i].Width = tabChordsControl.TabPages[tabChordsControl.SelectedIndex].Width;
                     tabChordsControl.TabPages[i].Height = tabChordsControl.TabPages[tabChordsControl.SelectedIndex].Height;
                 }
             }
+
+            
 
             if (pnlToolbar != null)
             {
@@ -1397,7 +1406,18 @@ namespace Karaboss
             if (pnlDisplayHorz != null && tbPChords != null)
             {
                 pnlDisplayHorz.Width = tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right;
-                pnlDisplayImagesOfChords.Width = pnlDisplayHorz.Width;                
+                pnlDisplayImagesOfChords.Width = pnlDisplayHorz.Width;
+
+                for (int i = 0; i < tbPChords.TabCount; i++)
+                {
+                    if (i != tbPChords.SelectedIndex)
+                    {
+                        // Force other tabs to redim
+                        tbPChords.TabPages[i].Width = tbPChords.TabPages[tbPChords.SelectedIndex].Width;
+                    }
+                }
+
+
                 ChordRendererGuitar.Width = tbPChords.TabPages[0].Width;
                 ChordRendererPiano.Width = tbPChords.TabPages[1].Width;
 
@@ -1731,9 +1751,10 @@ namespace Karaboss
                 
                 ChordControl1.OffsetX = 0;
                 ChordControl1.DisplayNotes(0, -1, -1);
-                ChordRendererGuitar.OffsetX = 0;
-                ChordRendererPiano.OffsetX = 0;
 
+                ChordRendererGuitar.AfterStopped();
+                ChordRendererPiano.AfterStopped();
+                
                 pnlDisplayMap.VerticalScroll.Value = pnlDisplayMap.VerticalScroll.Minimum;
                 pnlDisplayMap.VerticalScroll.Visible = false;
                 pnlDisplayMap.VerticalScroll.Value = pnlDisplayMap.VerticalScroll.Minimum;
