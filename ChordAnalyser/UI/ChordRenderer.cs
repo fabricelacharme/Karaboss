@@ -68,7 +68,7 @@ namespace ChordAnalyser.UI
 
         // New search (by beat)        
         private int _chordsCount = 0;
-        private Dictionary<int, (int, string)> _cleangridbeatchords;
+        private Dictionary<int, (int, string)> _filteredgridbeatchords;
 
         public Dictionary<int, string> GridBeatChords { get; set; }
         
@@ -238,12 +238,12 @@ namespace ChordAnalyser.UI
         /// <summary>
         /// Create a new dictionnary with only real chords (eliminate empty & no chords)
         /// </summary>
-        public void SetCleanGridBeatChords()
+        public void FilterChords()
         {
             try
             {                
                 _chordsCount = 0;
-                _cleangridbeatchords = new Dictionary<int, (int, string)>();
+                _filteredgridbeatchords = new Dictionary<int, (int, string)>();
                 string currentchord = "-1";
 
 
@@ -255,7 +255,7 @@ namespace ChordAnalyser.UI
                     {
                         currentchord = t;
                         _chordsCount++;
-                        _cleangridbeatchords.Add(i, (_chordsCount, t));
+                        _filteredgridbeatchords.Add(i, (_chordsCount, t));
                     }
 
 
@@ -267,12 +267,18 @@ namespace ChordAnalyser.UI
             }
         }
 
-        public void DisplayChords(int numerator, int pos, int measure, int timeinmeasure)
+        /// <summary>
+        /// Offset control
+        /// </summary>
+        /// <param name="numerator"></param>
+        /// <param name="pos"></param>
+        /// <param name="measure"></param>
+        /// <param name="timeinmeasure"></param>
+        public void OffsetControl(int numerator, int pos, int measure, int timeinmeasure)
         {
-            // Dictionnary _cleangridbeatchords |key = real beat| index of chord in the grid | chord name  
+            // Dictionnary _filteredgridbeatchords |key = real beat| index of chord in the grid | chord name  
             // knowing the beat, we can retrieve the position of the chord
-
-            //int beat = (measure - 1) * numerator + (timeinmeasure - 1);
+            
             int beat = (measure - 1) * numerator + timeinmeasure;
             if (beat == 1)
             {
@@ -288,10 +294,10 @@ namespace ChordAnalyser.UI
             {
                 _currentChordName = ChordName;                
 
-                if (_cleangridbeatchords.ContainsKey(beat))
+                if (_filteredgridbeatchords.ContainsKey(beat))
                 {
 
-                    (int, string) toto = _cleangridbeatchords[beat];
+                    (int, string) toto = _filteredgridbeatchords[beat];
                     int x = toto.Item1; // index of the chord
                                         //string y = toto.Item2; // chord name
 
@@ -304,6 +310,7 @@ namespace ChordAnalyser.UI
                     }
                     else
                     {
+                        // Offset the control with the value of the position of the filtered chord in the filtered dictionnary
                         this.OffsetX = (x - 1) * LargeurCellule;                // Changing this property will lauch a redraw                                                                                
                     }
                 }
@@ -336,6 +343,9 @@ namespace ChordAnalyser.UI
 
             this.Controls.Add(pnlCanvas);
         }
+
+        #region delete me
+        /*
 
         /// <summary>
         /// Draw a cell by chord
@@ -385,6 +395,8 @@ namespace ChordAnalyser.UI
 
             maxStaffWidth = x;
         }
+        */
+        #endregion delete me
 
         #endregion Draw Canvas
 
@@ -396,7 +408,7 @@ namespace ChordAnalyser.UI
         /// </summary>
         /// <param name="g"></param>
         /// <param name="clip"></param>
-        private void DrawChords2(Graphics g, Rectangle clip)
+        private void DrawChordsByHalfMeasure(Graphics g, Rectangle clip)
         {
             if (Gridchords == null)
                 return;
@@ -445,7 +457,7 @@ namespace ChordAnalyser.UI
             }
         }
 
-        private void DrawChords(Graphics g, Rectangle clip)
+        private void DrawChordsByBeat(Graphics g, Rectangle clip)
         {
             if (Gridchords == null)
                 return;
@@ -541,13 +553,11 @@ namespace ChordAnalyser.UI
             h = MeasureStringHeight(_fontChord.FontFamily, ChordName, _fontChord.Size);
 
             if (ChordName != EmptyChord)
-            {
-                //g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
+            {                
                 g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight - h - _fontpadding);
             }
             else
-            {
-                //g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
+            {                
                 g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight - h - _fontpadding);
             }
         }
@@ -578,7 +588,7 @@ namespace ChordAnalyser.UI
 
                 //DrawGrid(g, clip);
 
-                DrawChords(g, clip);
+                DrawChordsByBeat(g, clip);
 
                 g.TranslateTransform(clip.X, 0);
             }

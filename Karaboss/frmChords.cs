@@ -97,16 +97,16 @@ namespace Karaboss
         // 1 rst TAB
         private PanelPlayer panelPlayer;
         private ColorSlider.ColorSlider positionHScrollBar;
-        private ChordsControl ChordControl1;
-        private ChordRenderer ChordRenderer1;   // Display bitmaps of chords used in the song played
-        
+        private ChordsControl ChordControl1;        
+        private ChordRenderer ChordRendererGuitar; // Display bitmaps of chords used in the song played
+        private ChordRenderer ChordRendererPiano;
+
         //Panels
         private Panel pnlDisplayHorz;           // chords in horizontal mode
         private Panel pnlDisplayImagesOfChords; // images of chords
         private Panel pnlBottom;                // Lyrics
 
-        // Image of chord
-        //private PictureBox ImageOfChord;
+        // Tabpage for image of chord (Guitar & Piano)        
         private TabControl tbPChords;
         private TabPage TabPageGuitar;
         private TabPage TabPagePiano;
@@ -416,8 +416,7 @@ namespace Karaboss
             #region tabPage to select Guitar or Piano
             tbPChords = new TabControl();
             tbPChords.Parent = pnlDisplayImagesOfChords;
-            tbPChords.Location = new Point(0, 0);
-            //tbPChords.Size = new Size(pnlDisplayImagesOfChords.Width, pnlDisplayImagesOfChords.Height);
+            tbPChords.Location = new Point(0, 0);            
 
             TabPage TabPageGuitar = new TabPage("Guitar");
             tbPChords.Controls.Add(TabPageGuitar);
@@ -429,22 +428,34 @@ namespace Karaboss
 
             #endregion tabpage
 
-            #region ChordRenderer
-            ChordRenderer1 = new ChordRenderer();            
-            ChordRenderer1.Parent = TabPageGuitar;            
-            ChordRenderer1.Location = new Point(TabPageGuitar.Margin.Left, TabPageGuitar.Margin.Top);
-            ChordRenderer1.Width = TabPageGuitar.ClientSize.Width;
 
-
-            ChordRenderer1.WidthChanged += new WidthChangedEventHandler(ChordRenderer_WidthChanged);
-            ChordRenderer1.HeightChanged += new HeightChangedEventHandler(ChordRenderer_HeightChanged);
-            ChordRenderer1.MouseDown += new MouseEventHandler(ChordRenderer_MouseDown);
-
-            ChordRenderer1.ColumnWidth = 200; //  
-            ChordRenderer1.ColumnHeight = ChordRenderer1.ColumnWidth;            
+            #region ChordRenderer Guitar
+            ChordRendererGuitar = new ChordRenderer();            
+            ChordRendererGuitar.Parent = TabPageGuitar;            
+            ChordRendererGuitar.Location = new Point(TabPageGuitar.Margin.Left, TabPageGuitar.Margin.Top);
+            ChordRendererGuitar.Width = TabPageGuitar.ClientSize.Width;            
+            ChordRendererGuitar.HeightChanged += new HeightChangedEventHandler(ChordRendererGuitar_HeightChanged);
+            ChordRendererGuitar.ColumnWidth = 200; //  
+            ChordRendererGuitar.ColumnHeight = ChordRendererGuitar.ColumnWidth;            
             
-            TabPageGuitar.Controls.Add(ChordRenderer1);
-            #endregion ChordRenderer
+            TabPageGuitar.Controls.Add(ChordRendererGuitar);
+            #endregion ChordRenderer Guitar
+
+
+            #region ChordRenderer Piano
+            // Tabpages dimension are not set if not visible => force redim
+            TabPagePiano.Width = TabPageGuitar.Width;
+            ChordRendererPiano = new ChordRenderer();
+            ChordRendererPiano.Parent = TabPagePiano;
+            ChordRendererPiano.Location = new Point(TabPagePiano.Margin.Left, TabPagePiano.Margin.Top);
+            ChordRendererPiano.Width = TabPagePiano.ClientSize.Width;
+            ChordRendererPiano.HeightChanged += new HeightChangedEventHandler(ChordRendererPiano_HeightChanged);            
+            ChordRendererPiano.ColumnWidth = 200; //  
+            ChordRendererPiano.ColumnHeight = ChordRendererPiano.ColumnWidth;
+
+            TabPagePiano.Controls.Add(ChordRendererPiano);
+            #endregion ChordRenderer Guitar
+
 
             #endregion bitmaps of chords
 
@@ -630,14 +641,16 @@ namespace Karaboss
             // Display Chords in boxes
             ChordControl1.Gridchords = Gridchords;
             
-            ChordRenderer1.Gridchords = Gridchords;
+            ChordRendererGuitar.Gridchords = Gridchords;
+            ChordRendererPiano.Gridchords = Gridchords;
 
-            
-            //ChordRenderer1.GridBeatChords = GridBeatChords;
-            ChordRenderer1.TransferByMeasureToByBeat(sequence1.Numerator, NbMeasures);
-            
-            
-            ChordRenderer1.SetCleanGridBeatChords();
+            // choice
+            //ChordRendererGuitar.GridBeatChords = GridBeatChords;
+            ChordRendererGuitar.TransferByMeasureToByBeat(sequence1.Numerator, NbMeasures);
+            ChordRendererPiano.TransferByMeasureToByBeat(sequence1.Numerator, NbMeasures);
+
+            ChordRendererGuitar.FilterChords();
+            ChordRendererPiano.FilterChords();
 
             ChordMapControl1.Gridchords = Gridchords;
 
@@ -706,7 +719,8 @@ namespace Karaboss
 
                 // Draw gray cell for played note
                 ChordControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
-                ChordRenderer1.DisplayChords(sequence1.Numerator , pos, curmeasure, timeinmeasure);
+                ChordRendererGuitar.OffsetControl(sequence1.Numerator , pos, curmeasure, timeinmeasure);
+                ChordRendererPiano.OffsetControl(sequence1.Numerator, pos, curmeasure, timeinmeasure);
                 ChordMapControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
             }
         }
@@ -944,7 +958,8 @@ namespace Karaboss
             zoom -= (float)0.1;
 
             ChordControl1.zoom = zoom; //-= (float)0.1;
-            ChordRenderer1.zoom = zoom;
+            ChordRendererGuitar.zoom = zoom;
+            ChordRendererPiano.zoom = zoom;
             ChordMapControl1.zoom = zoom; // -= (float)0.1;
 
             SetScrollBarValues();
@@ -959,7 +974,8 @@ namespace Karaboss
             zoom += (float)0.1;
 
             ChordControl1.zoom = zoom; //+= (float)0.1;
-            ChordRenderer1.zoom = zoom;
+            ChordRendererGuitar.zoom = zoom;
+            ChordRendererPiano.zoom = zoom;
             ChordMapControl1.zoom = zoom; // += (float)0.1;
 
             SetScrollBarValues();
@@ -1017,12 +1033,9 @@ namespace Karaboss
         #endregion chordcontrol
 
 
-        #region chordrenderer
-        private void ChordRenderer_MouseDown(object sender, MouseEventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-        private void ChordRenderer_HeightChanged(object sender, int value)
+        #region chordrenderer events
+        
+        private void ChordRendererGuitar_HeightChanged(object sender, int value)
         {                        
 
             if (pnlBottom != null && pnlDisplayImagesOfChords != null && pnlDisplayHorz != null)
@@ -1031,13 +1044,20 @@ namespace Karaboss
                 pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             }
         }
-
-        private void ChordRenderer_WidthChanged(object sender, int value)
+                       
+        
+        private void ChordRendererPiano_HeightChanged(object sender, int value)
         {
-            //throw new NotImplementedException();
-        }
 
-        #endregion chordrenderer
+            if (pnlBottom != null && pnlDisplayImagesOfChords != null && pnlDisplayHorz != null)
+            {
+                pnlBottom.Location = new Point(0, pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height);
+                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+            }
+        }
+      
+        #endregion chordrenderer events
+
 
 
         #region chordmapcontrol
@@ -1201,7 +1221,7 @@ namespace Karaboss
 
         private void SetScrollBarValues()
         {
-            if (pnlDisplayHorz == null || ChordControl1 == null || ChordRenderer1 == null)
+            if (pnlDisplayHorz == null || ChordControl1 == null || ChordRendererGuitar == null || ChordRendererPiano == null)
                 return;
 
             // Width of control
@@ -1218,8 +1238,9 @@ namespace Karaboss
                 pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
 
                 ChordControl1.OffsetX = 0;
-                ChordRenderer1.OffsetX = 0;
-                
+                ChordRendererGuitar.OffsetX = 0;
+                ChordRendererPiano.OffsetX = 0;
+
                 positionHScrollBar.Value = 0;
             }
             else if (W > pnlDisplayHorz.Width)
@@ -1368,11 +1389,13 @@ namespace Karaboss
             }
 
             // 1st TAB
-            if (pnlDisplayHorz != null)
+            if (pnlDisplayHorz != null && tbPChords != null)
             {
                 pnlDisplayHorz.Width = tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right;
                 pnlDisplayImagesOfChords.Width = pnlDisplayHorz.Width;                
-                ChordRenderer1.Width = tbPChords.TabPages[0].Width;
+                ChordRendererGuitar.Width = tbPChords.TabPages[0].Width;
+                ChordRendererPiano.Width = tbPChords.TabPages[1].Width;
+
 
                 pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             }
@@ -1703,7 +1726,8 @@ namespace Karaboss
                 
                 ChordControl1.OffsetX = 0;
                 ChordControl1.DisplayNotes(0, -1, -1);
-                ChordRenderer1.OffsetX = 0;
+                ChordRendererGuitar.OffsetX = 0;
+                ChordRendererPiano.OffsetX = 0;
 
                 pnlDisplayMap.VerticalScroll.Value = pnlDisplayMap.VerticalScroll.Minimum;
                 pnlDisplayMap.VerticalScroll.Visible = false;
