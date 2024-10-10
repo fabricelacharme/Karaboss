@@ -80,12 +80,12 @@ namespace ChordAnalyser.UI
         #region private
         private MyPanel pnlCanvas;
         private Font m_font;
-        private StringFormat sf;
+        private StringFormat sf = new StringFormat();
 
         // Midifile characteristics
         private double _duration = 0;  // en secondes
         private int _totalTicks = 0;
-        private int _bpm = 0;
+        //private int _bpm = 0;
         private double _ppqn;
         private int _tempo;
         private int _measurelen = 0;
@@ -99,7 +99,7 @@ namespace ChordAnalyser.UI
         private int _currentmeasure = -1;
         private int _currentTimeInMeasure = -1;
 
-        private string NoChord = "<Chord not found>";
+        //private string NoChord = "<Chord not found>";
         private string EmptyChord = "<Empty>";
 
         public const int PageWidth = 800;    /** The width of each page */

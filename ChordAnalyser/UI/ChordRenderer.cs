@@ -44,19 +44,17 @@ namespace ChordAnalyser.UI
 
         private float _cellwidth;
         private float _cellheight;
+        private int _LinesWidth = 2;
 
         private Font m_font;
-        private StringFormat sf;
+        private StringFormat sf = new StringFormat();
 
         private int _fontSize = 22;
-        private int fontPadding = 10;
+        private int fontPadding = 0;//10;
         private int _fontpadding;
 
         private string _currentChordName = string.Empty;
         private int _currentbeat;
-        private bool _bFirstPlay = false;
-
-        private float _bitmapwidth = 200;
 
         public enum DiplayModes
         {
@@ -181,7 +179,7 @@ namespace ChordAnalyser.UI
         public ChordRenderer()
         {
             _fontChord = new Font("Arial", _fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
-            _fontpadding = 10;
+            _fontpadding = fontPadding;
 
             DisplayMode = DiplayModes.Guitar;
 
@@ -233,6 +231,7 @@ namespace ChordAnalyser.UI
                 _filteredgridbeatchords = new Dictionary<int, (int, string)>();
                 string currentchord = "-1";
 
+                int x = _LinesWidth - 1;
 
                 for (int i = 1; i <= GridBeatChords.Count; i++)
                 {
@@ -243,16 +242,20 @@ namespace ChordAnalyser.UI
                         currentchord = t;
                         _chordsCount++;
                         _filteredgridbeatchords.Add(i, (_chordsCount, t));
+
+                        // Increase x of 1 cell
+                        x += (int)(_cellwidth) + _LinesWidth;
                     }
-
-
                 }
+                // Set Width of control
+                Width = x;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
-        }
+        }      
+
 
         /// <summary>
         /// Offset control
@@ -263,7 +266,7 @@ namespace ChordAnalyser.UI
         /// <param name="timeinmeasure"></param>
         public void OffsetControl(int numerator, int pos, int measure, int timeinmeasure)
         {
-            // Dictionnary _filteredgridbeatchords |key = real beat| index of chord in the grid | chord name  
+            // Dictionnary _filteredgridbeatchords |key = real beat| index of the chord in the grid | chord name  
             // knowing the beat, we can retrieve the position of the chord
             
             _bPlaying = true;
@@ -273,13 +276,14 @@ namespace ChordAnalyser.UI
             if (beat == 1)
             {
                 _currentChordName = "<>";
-                _bFirstPlay = true;
+                //_bFirstPlay = true;
             }
 
             if (!GridBeatChords.ContainsKey(beat))
                 return;
 
             string ChordName = GridBeatChords[beat];
+            // If the chord chord played is different than the previous one, we have to offset the control
             if (ChordName != NoChord && ChordName != "" && ChordName != EmptyChord && ChordName != _currentChordName)
             {
                 _currentChordName = ChordName;                
@@ -287,31 +291,37 @@ namespace ChordAnalyser.UI
                 if (_filteredgridbeatchords.ContainsKey(beat))
                 {
 
+                    // The chord played is different than the previous one.
+
                     (int, string) toto = _filteredgridbeatchords[beat];
-                    int x = toto.Item1; // index of the chord
-                                        //string y = toto.Item2; // chord name
+                    int index = toto.Item1; // index of the chord //string y = toto.Item2; // chord name
 
-                    int LargeurCellule = (int)(ColumnWidth * zoom) + 2;
+                    int LargeurCellule = (int)(ColumnWidth * zoom) + _LinesWidth;
+                    
+                    // Display 2 chords on the left : the last chord played, the chord being played => index - 2
+                    int offset = (index - 2) * LargeurCellule;
+                    int remainingwidth = Width - offset;
 
-                    // Do not offset at first chord
-                    if (_bFirstPlay)
+                    if (offset <= 0)
                     {
-                        _bFirstPlay = false;
-                        // Force redraw in order to paint in red the first chord
+                        // At start, do not offset until we have passed 2 cells
                         pnlCanvas.Invalidate();
                     }
                     else
                     {
-                        // TODO
-                        // Offset should be
-                        // - 0 at start
-                        // - One cell when playing
-                        // - at the end, no more offset, the red goes until the last chord
-                        
-                        
-                        // Offset the control with the value of the position of the filtered chord in the filtered dictionnary
-                        this.OffsetX = (x - 1) * LargeurCellule;                // Changing this property will lauch a redraw                                                                                
-                    }
+                        if (remainingwidth >= Parent.Width - LargeurCellule)
+                        {                            
+                            // if the remaining display width of the control is greater than that of the parent control, then you can shift
+                            this.OffsetX = offset;
+                        }
+                        else
+                        {
+                            // if the remaining display width of the control is less than that of the parent control, then we no longer shift
+                            int z = (Width - Parent.Width) / LargeurCellule;                            
+                            this.OffsetX = (z + 1) * LargeurCellule;
+                            pnlCanvas.Invalidate();
+                        }
+                    }                    
                 }
             }
         }
@@ -320,6 +330,7 @@ namespace ChordAnalyser.UI
         {
             OffsetX = 0;
             _bPlaying = false;
+            Redraw();
         }
 
         #region Draw Canvas
@@ -470,8 +481,8 @@ namespace ChordAnalyser.UI
             
             string ChordName;
             string currentChordName = string.Empty;
-            int _LinesWidth = 2;
-            int x = (_LinesWidth - 1);
+           
+            int x = _LinesWidth - 1;
             bool bChordPlayed = false;
 
             for (int i = 1; i <= GridBeatChords.Count; i++)
@@ -505,9 +516,13 @@ namespace ChordAnalyser.UI
                     x += (int)(_cellwidth) + _LinesWidth;                
 
                 }
-
             }
+
+            
         }
+
+
+
 
         /// <summary>
         /// Draw a chord
@@ -563,7 +578,7 @@ namespace ChordAnalyser.UI
         }
 
         /// <summary>
-        /// Draw a chord name
+        /// Write the name of the chord
         /// </summary>
         /// <param name="g"></param>
         /// <param name="ChordName"></param>
@@ -572,29 +587,17 @@ namespace ChordAnalyser.UI
         {
             float w;
             float h;
+            int y;
             SolidBrush ChordBrush = new SolidBrush(Color.FromArgb(29, 29, 29));
-
             
             if (bChordPlayed)
-                ChordBrush = new SolidBrush(Color.Red);
-
-            int y;
-
-            // Write the name of the chord at the bottom
+                ChordBrush = new SolidBrush(Color.Red);           
+            
             w = MeasureString(_fontChord.FontFamily, ChordName, _fontChord.Size);
             h = MeasureStringHeight(_fontChord.FontFamily, ChordName, _fontChord.Size);
+            y = (int)(_cellheight + _fontpadding);
 
-            if (ChordName != EmptyChord)
-            {
-                y = (int)(_cellheight + _fontpadding);
-                //g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight - h - _fontpadding);
-                g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, y);
-
-            }
-            else
-            {                
-                g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, _cellheight - h - _fontpadding);
-            }
+            g.DrawString(ChordName, _fontChord, ChordBrush, pos + (_cellwidth - w) / 2, y);
         }
 
         #endregion draw chords

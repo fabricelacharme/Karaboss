@@ -103,13 +103,14 @@ namespace Karaboss
 
         //Panels
         private Panel pnlDisplayHorz;           // chords in horizontal mode
+        private int padding = 10;
         private Panel pnlDisplayImagesOfChords; // images of chords
         private Panel pnlBottom;                // Lyrics
 
         // Tabpage for image of chord (Guitar & Piano)        
         private TabControl tbPChords;
-        private TabPage TabPageGuitar;
-        private TabPage TabPagePiano;
+        private TabPage TabPageGuitar = new TabPage();
+        private TabPage TabPagePiano = new TabPage();
 
 
         private Label lblLyrics;
@@ -345,7 +346,7 @@ namespace Karaboss
             pnlDisplayHorz.Parent = tabPageDiagrams;
             pnlDisplayHorz.Location = new Point(tabPageDiagrams.Margin.Left, tabPageDiagrams.Margin.Top);            
             pnlDisplayHorz.Size = new Size(tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, 150);                    
-            pnlDisplayHorz.BackColor = Color.Chocolate;
+            pnlDisplayHorz.BackColor = Color.FromArgb(239, 244, 255); //Color.Chocolate;
             tabPageDiagrams.Controls.Add(pnlDisplayHorz);
             #endregion Panel Display horizontal chords
             
@@ -394,7 +395,7 @@ namespace Karaboss
             positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(PositionHScrollBar_Scroll);
             pnlDisplayHorz.Controls.Add(positionHScrollBar);
 
-            pnlDisplayHorz.Height = ChordControl1.Height + positionHScrollBar.Height;
+            pnlDisplayHorz.Height = ChordControl1.Height + positionHScrollBar.Height + padding;
 
             #endregion
 
@@ -410,7 +411,7 @@ namespace Karaboss
             pnlDisplayImagesOfChords.Parent = tabPageDiagrams;
             pnlDisplayImagesOfChords.Location = new Point(tabPageDiagrams.Margin.Left, pnlDisplayHorz.Top + pnlDisplayHorz.Height);
             pnlDisplayImagesOfChords.Height = htotale;
-            pnlDisplayImagesOfChords.BackColor = Color.Goldenrod;
+            pnlDisplayImagesOfChords.BackColor = Color.FromArgb(239, 244, 255);
             pnlDisplayImagesOfChords.Width = pnlDisplayHorz.Width;
             tabPageDiagrams.Controls.Add(pnlDisplayImagesOfChords);
 
@@ -437,7 +438,7 @@ namespace Karaboss
             ChordRendererGuitar = new ChordRenderer();            
             ChordRendererGuitar.Parent = TabPageGuitar;            
             ChordRendererGuitar.Location = new Point(TabPageGuitar.Margin.Left, TabPageGuitar.Margin.Top);
-            ChordRendererGuitar.Width = TabPageGuitar.ClientSize.Width;
+            //ChordRendererGuitar.Width = TabPageGuitar.ClientSize.Width;
             ChordRendererGuitar.Height = htotale;
             ChordRendererGuitar.HeightChanged += new HeightChangedEventHandler(ChordRendererGuitar_HeightChanged);
             
@@ -454,6 +455,7 @@ namespace Karaboss
             // =======================================
             // Tabpages dimension are not set if not visible => force redim
             TabPagePiano.Width = TabPageGuitar.Width;
+
             ChordRendererPiano = new ChordRenderer();
             ChordRendererPiano.Parent = TabPagePiano;
             ChordRendererPiano.Location = new Point(TabPagePiano.Margin.Left, TabPagePiano.Margin.Top);
@@ -461,8 +463,8 @@ namespace Karaboss
             ChordRendererPiano.Height = htotale;
             ChordRendererPiano.HeightChanged += new HeightChangedEventHandler(ChordRendererPiano_HeightChanged);
             
-            ChordRendererPiano.ColumnWidth = 286;  // 230 + 24%  
-            ChordRendererPiano.ColumnHeight = 186; // 150 + 24%
+            ChordRendererPiano.ColumnWidth = 286;   // 230 + 24%  
+            ChordRendererPiano.ColumnHeight = 137;  // 110 + 24%
 
             ChordRendererPiano.DisplayMode = ChordRenderer.DiplayModes.Piano;
             TabPagePiano.Controls.Add(ChordRendererPiano);
@@ -653,8 +655,8 @@ namespace Karaboss
             // Display Chords in boxes
             ChordControl1.Gridchords = Gridchords;
             
-            ChordRendererGuitar.Gridchords = Gridchords;
-            ChordRendererPiano.Gridchords = Gridchords;
+            ChordRendererGuitar.Gridchords = Gridchords;            
+            ChordRendererPiano.Gridchords = Gridchords;            
 
             // choice
             //ChordRendererGuitar.GridBeatChords = GridBeatChords;
@@ -1029,7 +1031,7 @@ namespace Karaboss
             if (positionHScrollBar != null)
             {
                 positionHScrollBar.Location = new Point(0, ChordControl1.Height);
-                pnlDisplayHorz.Height = ChordControl1.Height + positionHScrollBar.Height;
+                pnlDisplayHorz.Height = ChordControl1.Height + positionHScrollBar.Height + padding;
                 
                 pnlDisplayImagesOfChords.Top = pnlDisplayHorz.Top + pnlDisplayHorz.Height;
             }            
@@ -1244,7 +1246,7 @@ namespace Karaboss
                 positionHScrollBar.Visible = false;
                 positionHScrollBar.Maximum = 0;
                 
-                pnlDisplayHorz.Height = ChordControl1.Height;
+                pnlDisplayHorz.Height = ChordControl1.Height + padding;
                 pnlDisplayImagesOfChords.Top = pnlDisplayHorz.Top + pnlDisplayHorz.Height;
                 pnlBottom.Top = pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height;
                 pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
@@ -1260,7 +1262,7 @@ namespace Karaboss
                 positionHScrollBar.Maximum = W - pnlDisplayHorz.Width;
                 positionHScrollBar.Visible = true;
 
-                pnlDisplayHorz.Height = ChordControl1.Height + positionHScrollBar.Height;
+                pnlDisplayHorz.Height = ChordControl1.Height + positionHScrollBar.Height + padding;
                 pnlDisplayImagesOfChords.Top = pnlDisplayHorz.Top + pnlDisplayHorz.Height;
                 pnlBottom.Top = pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height;
                 pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
@@ -1394,9 +1396,7 @@ namespace Karaboss
                     tabChordsControl.TabPages[i].Height = tabChordsControl.TabPages[tabChordsControl.SelectedIndex].Height;
                 }
             }
-
             
-
             if (pnlToolbar != null)
             {
                 pnlToolbar.Width = this.ClientSize.Width;
@@ -1418,7 +1418,7 @@ namespace Karaboss
                 }
 
 
-                ChordRendererGuitar.Width = tbPChords.TabPages[0].Width;
+                //ChordRendererGuitar.Width = tbPChords.TabPages[0].Width;
                 ChordRendererPiano.Width = tbPChords.TabPages[1].Width;
 
 

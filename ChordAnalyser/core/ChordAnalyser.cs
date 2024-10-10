@@ -42,7 +42,7 @@ namespace ChordsAnalyser
         // Midifile characteristics
         private double _duration = 0;  // en secondes
         private int _totalTicks = 0;
-        private int _bpm = 0;
+        //private int _bpm = 0;
         private double _ppqn;
         private int _tempo;
         private int _measurelen = 0;
@@ -770,7 +770,7 @@ namespace ChordsAnalyser
         private List<List<int>> RemoveDoubles(List<List<int>> lschords)
         {
             List<List<int>> res = new List<List<int>>();
-            int n = 0;
+            //int n = 0;
             for (int j = 0; j < lschords.Count; j++)
             {
                 List<int> lsnotes = lschords[j];
