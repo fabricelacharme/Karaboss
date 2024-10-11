@@ -184,23 +184,23 @@
   <data name="mnutbAddToPlayList.Text" xml:space="preserve">
     <value>Ajouter à la playlist</value>
   </data>
+  <data name="mnuRename.Size" type="System.Drawing.Size, System.Drawing">
+    <value>95, 22</value>
+  </data>
+  <data name="mnuRename.Text" xml:space="preserve">
+    <value>Renommer</value>
+  </data>
   <data name="mnuRenameFiles.Size" type="System.Drawing.Size, System.Drawing">
     <value>236, 22</value>
   </data>
   <data name="mnuRenameFiles.Text" xml:space="preserve">
-    <value>Renommer les fichiers (F6)</value>
+    <value>Renommer les fichiers (F3)</value>
   </data>
   <data name="mnuInvertAuthorSong.Size" type="System.Drawing.Size, System.Drawing">
     <value>236, 22</value>
   </data>
   <data name="mnuInvertAuthorSong.Text" xml:space="preserve">
     <value>Inverser auteur et chanson (F7)</value>
-  </data>
-  <data name="mnuRename.Size" type="System.Drawing.Size, System.Drawing">
-    <value>95, 22</value>
-  </data>
-  <data name="mnuRename.Text" xml:space="preserve">
-    <value>Renommer</value>
   </data>
   <data name="replaceButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
