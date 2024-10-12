@@ -48,6 +48,8 @@ namespace MusicXml.Domain
         public int Staves { get; set; }  // included 2nd track
         public int Staff { get; set; }   // Staff number
         public int Voice { get; set; }  // voice
+        
+        private int _division;
         public int Division { get; set; }
         public Dictionary<int, int> Tempos { get; set; } // key = measure, value = tempo
 
@@ -75,7 +77,7 @@ namespace MusicXml.Domain
 			// Fab
 			MidiChannel = 1;
 			MidiProgram = 1;
-			Volume = 80;
+            Volume = 80; // 101;
 			Pan = 80;            
 		}
 
@@ -97,7 +99,9 @@ namespace MusicXml.Domain
             _part.MidiChannel = (int?)partlistElement.Descendants("midi-channel").FirstOrDefault() ?? 1;
             _part.MidiProgram = (int?)partlistElement.Descendants("midi-program").FirstOrDefault() ?? 1;
 
+            
             // VOLUME
+            // ******************************* The result is wrong => convert value to midi value *************************************************
             //_part.Volume = (int?)partlistElement.Descendants("volume").FirstOrDefault() ?? 80;
             int vol = 80;
             string volu;
@@ -111,7 +115,10 @@ namespace MusicXml.Domain
                 else
                     vol = Convert.ToInt32(volu);
             }
-            _part.Volume = vol;
+
+            _part.Volume = vol * 127/100;
+
+
 
 
             _part.Pan = (int?)partlistElement.Descendants("pan").FirstOrDefault() ?? 0;
@@ -130,7 +137,29 @@ namespace MusicXml.Domain
                     // Is there a 2nd track included in this part?
                     _part.Staves = (int?)partElement.Descendants("staves").FirstOrDefault() ?? 1;
 
-                    _part.Division = (int?)partElement.Descendants("divisions").FirstOrDefault() ?? 24;
+
+                    XElement quarterlength = partElement.Descendants("divisions").FirstOrDefault();
+                    if (quarterlength != null)
+                    {
+                        //_part.Division = 100 * (int)partElement.Descendants("divisions").FirstOrDefault();
+                        _part.Division = (int)partElement.Descendants("divisions").FirstOrDefault();
+
+                    }
+
+                    // quarter 100 signifie que la noire est à 100 bpm
+                    XElement metronome = partElement.Descendants("metronome").FirstOrDefault();
+                    if (metronome != null)
+                    {
+                        XElement BeatUnit = metronome.Descendants("beat-unit").FirstOrDefault();   // quarter
+                        if (BeatUnit != null)
+                        {
+                            float PerMinute = (float)metronome.Descendants("per-minute").FirstOrDefault();         // BPM
+                            const float kOneMinuteInMicroseconds = 60000000;
+                            float ttempo = kOneMinuteInMicroseconds / PerMinute;
+
+                            _part.Tempo = (int)ttempo;
+                        }
+                    }
 
                     XElement ptime = partElement.Descendants("time").FirstOrDefault();
                     _part.Numerator = (int?)ptime.Descendants("beats").FirstOrDefault() ?? 4;
@@ -198,13 +227,13 @@ namespace MusicXml.Domain
                             {
                                 if (childnode.Attribute("tempo") != null)
                                 {
-                                    int curTempo = int.Parse(childnode.Attribute("tempo").Value);
-                                    if (curTempo > 0)
-                                    {
-                                        curTempo *= 10000;
-                                        curMeasure.Tempo = curTempo;                                        
-                                        _part.Tempo = curTempo;
-                                    }
+                                    
+                                    double curTempo = Convert.ToDouble(childnode.Attribute("tempo").Value, (CultureInfo.InvariantCulture));
+                                    const float kOneMinuteInMicroseconds = 60000000;
+                                    float ttempo = kOneMinuteInMicroseconds / (float)curTempo;
+
+                                    _part.Tempo = (int)ttempo;                                    
+
                                 }
                             }                            
                             else if (childnode.Name == "note")
@@ -331,7 +360,10 @@ namespace MusicXml.Domain
                 note.Pitch.Octave = int.Parse(octave.Value);
 
             if (duration != null)
+            {
                 note.Duration = int.Parse(duration.Value);
+                //note.Duration = note.Duration * 100;
+            }
 
             if (chord != null)            
                 note.IsChordTone = true;

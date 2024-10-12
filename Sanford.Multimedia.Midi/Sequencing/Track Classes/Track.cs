@@ -353,8 +353,18 @@ namespace Sanford.Multimedia.Midi
 
         public MidiNote findMidiNote(int number, int ticks)
         {
-            MidiNote m = notes.Find(u => u.Number == number && u.StartTime == ticks);
-            return m;
+            
+            try
+            {
+                MidiNote m = notes.Find(u => u.Number == number && u.StartTime == ticks);
+                return m;
+            }
+            catch (Exception e) 
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+            
         }
 
         public MidiNote findPreviousMidiNote(int ticks)

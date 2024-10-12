@@ -232,8 +232,11 @@ namespace MusicXml
 
             // Search common Division for all parts
             int commondivision = Parts[0].Division;
+
+            // *********************************** WRONG ***********************************
             if (commondivision < 24)
                 commondivision = 24;
+
 
             foreach (Part part in Parts)
             {
