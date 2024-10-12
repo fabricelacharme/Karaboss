@@ -239,7 +239,7 @@ namespace MusicXml.Domain
                             else if (childnode.Name == "note")
                             {
                                 // Get notes information
-                                Note note = GetNote(childnode);       
+                                Note note = GetNote(childnode, _part.Division);       
 
                                 // Create new element
                                 MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
@@ -309,7 +309,7 @@ namespace MusicXml.Domain
            
         }
 
-        private static Note GetNote(XElement node)
+        private static Note GetNote(XElement node, int division)
         {
             var rest = node.Descendants("rest").FirstOrDefault();
             var step = node.Descendants("step").FirstOrDefault();
@@ -319,6 +319,10 @@ namespace MusicXml.Domain
             var chord = node.Descendants("chord").FirstOrDefault();
             var voice = node.Descendants("voice").FirstOrDefault();
             var staff = node.Descendants("staff").FirstOrDefault();
+            var type = node.Descendants("type").FirstOrDefault();
+            var grace = node.Descendants("grace").FirstOrDefault();
+
+            bool bgrace = false;
 
             Note note = new Note();
 
@@ -330,6 +334,10 @@ namespace MusicXml.Domain
 
             if (rest != null)
                 note.IsRest = true;
+            
+            if (type != null)          
+                note.Type = type.Value;
+            
 
             string stp = "";
             if (step != null)
@@ -359,10 +367,37 @@ namespace MusicXml.Domain
             if (octave != null)
                 note.Pitch.Octave = int.Parse(octave.Value);
 
+            if (grace != null)
+            {
+                if (grace.FirstAttribute != null && grace.FirstAttribute.Value == "yes")
+                    bgrace = true;                
+            }
+
+
             if (duration != null)
             {
                 note.Duration = int.Parse(duration.Value);
                 //note.Duration = note.Duration * 100;
+            }
+            else
+            {
+                note.Duration = 0;
+                
+                /*
+                switch (note.Type)
+                {
+                    case "quarter":
+                        note.Duration = division;
+                        break;
+                    case "eighth":
+                        note.Duration = division / 2;
+                        break;
+                    default:
+                        Console.WriteLine("Note without duration !!!");
+                        break;
+                }
+                */
+                
             }
 
             if (chord != null)            

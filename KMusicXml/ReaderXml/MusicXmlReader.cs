@@ -250,11 +250,11 @@ namespace MusicXml
                 TrackName = part.Name.Trim();
                 
                 Id = part.Id.Trim();
-                Channel = part.MidiChannel;
+                Channel = part.MidiChannel - 1;
                 if (Channel > 15)
                     break;
 
-                ProgramChange = part.MidiProgram;
+                ProgramChange = part.MidiProgram - 1;
                 Volume = part.Volume;
                 Pan = part.Pan;
 
@@ -267,7 +267,16 @@ namespace MusicXml
                  *  Conclusion, il fait gérer chaque piste séparément
                  */
                 double multcoeff = 1;       // Mutiply everything in order to have common Division
+                
+                if (part.Division == 0)
+                {
+                    Console.WriteLine("ERROR: Division = 0");
+                    part.Division = 24;
+                }
+                
                 Division = part.Division;
+                
+                
                 if (Division != commondivision)
                 {
                     Division = commondivision;
