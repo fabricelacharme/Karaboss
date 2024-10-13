@@ -188,7 +188,7 @@ namespace MusicXml.Domain
                         // Attributes containing everything
                         curMeasure.Attributes = new MeasureAttributes();
 
-                        // ATTIBUTES / KEY
+                        // ATTIBUTES / KEY **********************************
                         XElement pkey = partElement.Descendants("key").FirstOrDefault();
                         if (pkey != null)
                         {
@@ -204,9 +204,7 @@ namespace MusicXml.Domain
 
                         }
 
-
                         
-
                         #region measure number
                         /* 
                         * TODO
@@ -280,6 +278,24 @@ namespace MusicXml.Domain
                                 }
 
                             }
+                            else if (childnode.Name == "repeat")
+                            {
+                                string direction = childnode.Attributes("direction").FirstOrDefault()?.Value;
+                                
+                                if (direction == "forward") {
+                                    var forward = new Forward();
+                                    MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Forward, Element = forward };
+                                    curMeasure.MeasureElements.Add(trucmeasureElement);
+                                }
+                                else if (direction == "backward")
+                                {
+                                    var backup = new Backup();
+                                    MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Backup, Element = backup };
+                                    curMeasure.MeasureElements.Add(trucmeasureElement);
+                                }
+
+                            }
+
                         }
 
                         _part.Measures.Add(curMeasure);
