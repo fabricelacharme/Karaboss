@@ -81,7 +81,7 @@ namespace MusicXml.Domain
 			Pan = 80;            
 		}
 
-
+        public int coeffmult { get; set; }
 
         /// <summary>
         /// Create each part
@@ -138,14 +138,18 @@ namespace MusicXml.Domain
                     _part.Staves = (int?)partElement.Descendants("staves").FirstOrDefault() ?? 1;
 
 
+                    // DIVISON *********************
                     XElement quarterlength = partElement.Descendants("divisions").FirstOrDefault();
                     if (quarterlength != null)
                     {
-                        //_part.Division = 100 * (int)partElement.Descendants("divisions").FirstOrDefault();
                         _part.Division = (int)partElement.Descendants("divisions").FirstOrDefault();
+                        //_part.Division = 480 * _part.Division;
+                        _part.coeffmult = 480 / _part.Division;
+                        _part.Division = _part.coeffmult * _part.Division;
 
                     }
 
+                    // TEMPO *************************
                     // quarter 100 signifie que la noire est à 100 bpm
                     XElement metronome = partElement.Descendants("metronome").FirstOrDefault();
                     if (metronome != null)
@@ -239,7 +243,7 @@ namespace MusicXml.Domain
                             else if (childnode.Name == "note")
                             {
                                 // Get notes information
-                                Note note = GetNote(childnode, _part.Division);       
+                                Note note = GetNote(childnode, _part.coeffmult);       
 
                                 // Create new element
                                 MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
@@ -254,7 +258,9 @@ namespace MusicXml.Domain
                                 if (dur != null)
                                 {
                                     var backup = new Backup();
-                                    int duration = int.Parse(dur.Value);
+                                    //int duration = 480 * int.Parse(dur.Value);
+                                    int duration = _part.coeffmult * int.Parse(dur.Value);
+
                                     backup.Duration = duration;
                                     MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Backup, Element = backup };
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
@@ -266,7 +272,8 @@ namespace MusicXml.Domain
                                 if (dur != null)
                                 {
                                     var forward = new Forward();
-                                    int duration = int.Parse(dur.Value);
+                                    //int duration = 480 * int.Parse(dur.Value);
+                                    int duration = _part.coeffmult * int.Parse(dur.Value);
                                     forward.Duration = duration;
                                     MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Forward, Element = forward };
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
@@ -309,7 +316,7 @@ namespace MusicXml.Domain
            
         }
 
-        private static Note GetNote(XElement node, int division)
+        private static Note GetNote(XElement node, int mult)
         {
             var rest = node.Descendants("rest").FirstOrDefault();
             var step = node.Descendants("step").FirstOrDefault();
@@ -377,7 +384,8 @@ namespace MusicXml.Domain
             if (duration != null)
             {
                 note.Duration = int.Parse(duration.Value);
-                //note.Duration = note.Duration * 100;
+                //note.Duration = note.Duration * 480;
+                note.Duration = note.Duration * mult;
             }
             else
             {

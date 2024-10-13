@@ -39,7 +39,8 @@ namespace MusicXml
         private int Format = 1;
         private int Numerator = 4;
         private int Denominator = 4;
-        private int Division = 24;
+        //private int Division = 24;
+        private int Division = 480; // 20 fois plus que 24
         private int Tempo = 500000;
 
 
@@ -231,11 +232,11 @@ namespace MusicXml
             }
 
             // Search common Division for all parts
-            int commondivision = Parts[0].Division;
+            int commondivision = ((Parts[0].Division > 0) ? Parts[0].Division  :  1); 
 
             // *********************************** WRONG ***********************************
-            if (commondivision < 24)
-                commondivision = 24;
+            //if (commondivision < 24)
+            //    commondivision = 24;
 
 
             foreach (Part part in Parts)
@@ -271,7 +272,7 @@ namespace MusicXml
                 if (part.Division == 0)
                 {
                     Console.WriteLine("ERROR: Division = 0");
-                    part.Division = 24;
+                    part.Division = 1;
                 }
                 
                 Division = part.Division;
