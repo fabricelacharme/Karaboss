@@ -208,6 +208,58 @@ namespace MusicXml
                 return null;
             #endregion
 
+
+            //                                      ************************* FAB *************************
+                        
+            List<List<int>> lstmeasures = new List<List<int>>();    
+                        
+            bool bcondition = true;
+            int y = 0;
+            int start = 0;
+            int firstfwd;
+            List<int> bloc = new List<int>();
+
+            while (bcondition)
+            {
+                // Search ascending backward from last
+                y = GetFirstBackward(start, Parts[0].Measures);
+                if (!(y < Parts[0].Measures.Count - 1))
+                {
+                    // Add Last bloc
+                    bloc = new List<int>();
+                    for (int i = start; i <= y; i++)
+                    {
+                        bloc.Add(i);
+                    }
+                    lstmeasures.Add(bloc);                    
+                    bcondition = false;
+                    break;
+                }
+                                               
+                // Add new bloc                
+                bloc = new List<int>();
+                for (int i = start; i <= y; i++)
+                {
+                    bloc.Add(i);
+                }
+                lstmeasures.Add(bloc);                
+
+                // Search descending forward from last backward
+                firstfwd = GetFirstForward(y, Parts[0].Measures);                
+                bloc = new List<int>();
+                for (int i = firstfwd; i <= y; i++)
+                {
+                    bloc.Add(i);
+                }
+                lstmeasures.Add(bloc);
+                
+
+                start = y + 1;
+
+            }
+            
+            //                                       ************************* FAB *************************
+
             // Init sequence
             newTracks = new List<Track>(Parts.Count);
 
@@ -234,11 +286,7 @@ namespace MusicXml
             // Search common Division for all parts
             int commondivision = ((Parts[0].Division > 0) ? Parts[0].Division  :  1); 
 
-            // *********************************** WRONG ***********************************
-            //if (commondivision < 24)
-            //    commondivision = 24;
-
-
+            
             foreach (Part part in Parts)
             {
                  if (part.Division > commondivision)
@@ -265,7 +313,7 @@ namespace MusicXml
                  *  Part 1 : division 24
                  *  Part 2 : division 96
                  *  
-                 *  Conclusion, il fait gérer chaque piste séparément
+                 *  Conclusion, il faut gérer chaque piste séparément
                  */
                 double multcoeff = 1;       // Mutiply everything in order to have common Division
                 
@@ -307,6 +355,9 @@ namespace MusicXml
                 int offset = 0;                
                 int starttime = 0;
 
+                
+                
+                
                 // For each measure
                 foreach (Measure measure in Measures)
                 {
@@ -408,6 +459,9 @@ namespace MusicXml
                     #endregion Extract all
 
                 }
+            
+            
+            
             }
 
             CreateSequence();
@@ -416,6 +470,67 @@ namespace MusicXml
         }
 
         // =================================================================================================
+        
+        /// <summary>
+        /// Return first element of type barline/forward
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="Measures"></param>
+        /// <returns></returns>
+        private int GetFirstForward(int start, List<Measure> Measures)
+        {            
+            for (int j = start; j >= 0; j--)
+            {
+                Measure measure = Measures[j];
+                List<MeasureElement> lstME = measure.MeasureElements;
+                for (int i = 0; i < lstME.Count; i++)
+                {
+                    MeasureElement measureElement = lstME[i];
+                    if (measureElement.Type == MeasureElementType.Barline)
+                    {
+                        Barline bl = (Barline)measureElement.Element;
+                        if (bl.Direction == RepeatDirections.forward)
+                        {
+                            return j;
+                        }
+                    }
+                }
+            }
+
+            // Return first element if no forward
+            return 0;
+        }
+
+        /// <summary>
+        /// Return first element of type barline/backward
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="Measures"></param>
+        /// <returns></returns>
+        private int GetFirstBackward(int start, List<Measure> Measures)
+        {                                                            
+            for (int j = start; j < Measures.Count; j++)
+            {
+                Measure measure = Measures[j];
+                List<MeasureElement> lstME = measure.MeasureElements;
+                for (int i = 0; i < lstME.Count; i++)
+                {
+                    MeasureElement measureElement = lstME[i];
+                    if (measureElement.Type == MeasureElementType.Barline)
+                    {
+                        Barline bl = (Barline)measureElement.Element;
+                        if (bl.Direction == RepeatDirections.backward)
+                        {
+                            return  j;                            
+                        }
+                    }
+                }
+            }
+
+            // Return last element if no backward
+            return Measures.Count - 1;
+        }
+
 
         #region tracks
 

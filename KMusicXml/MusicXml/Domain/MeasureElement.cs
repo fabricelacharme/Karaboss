@@ -10,6 +10,7 @@
 	{
 		Note,
 		Backup,
-		Forward
+		Forward,
+		Barline
 	}
 }

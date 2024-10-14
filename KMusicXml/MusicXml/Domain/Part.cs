@@ -278,22 +278,46 @@ namespace MusicXml.Domain
                                 }
 
                             }
-                            else if (childnode.Name == "repeat")
+                            else if (childnode.Name == "barline")
                             {
-                                string direction = childnode.Attributes("direction").FirstOrDefault()?.Value;
-                                
-                                if (direction == "forward") {
-                                    var forward = new Forward();
-                                    MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Forward, Element = forward };
-                                    curMeasure.MeasureElements.Add(trucmeasureElement);
-                                }
-                                else if (direction == "backward")
-                                {
-                                    var backup = new Backup();
-                                    MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Backup, Element = backup };
-                                    curMeasure.MeasureElements.Add(trucmeasureElement);
+                                var barline = new Barline();
+                                barline.Measure = curMeasure.Number;
+
+                                var ending = childnode.Descendants("ending").FirstOrDefault();
+                                if (ending != null)
+                                {                                    
+                                    barline.Ending.Number = Convert.ToInt32(ending.Attribute("number").Value);
+
+                                    string type = ending.Attribute("type").Value;
+                                    switch (type)
+                                    {
+                                        case "start":
+                                            barline.Ending.Type = EndingTypes.start;
+                                            break;
+                                        case "stop":
+                                            barline.Ending.Type = EndingTypes.stop;
+                                            break;
+                                    }                                    
                                 }
 
+                                var repeat = childnode.Descendants("repeat").FirstOrDefault();
+                                if (repeat != null)
+                                {                                    
+                                    if (repeat.Attribute("direction").Value == "forward")
+                                    {
+                                        
+                                        barline.Direction = RepeatDirections.forward;
+                                        MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Barline, Element = barline };
+                                        curMeasure.MeasureElements.Add(trucmeasureElement);
+                                    }
+                                    else if (repeat.Attribute("direction").Value == "backward")
+                                    {
+                                        
+                                        barline.Direction = RepeatDirections.backward;
+                                        MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Barline, Element = barline };
+                                        curMeasure.MeasureElements.Add(trucmeasureElement);
+                                    }                                    
+                                }
                             }
 
                         }
@@ -405,22 +429,7 @@ namespace MusicXml.Domain
             }
             else
             {
-                note.Duration = 0;
-                
-                /*
-                switch (note.Type)
-                {
-                    case "quarter":
-                        note.Duration = division;
-                        break;
-                    case "eighth":
-                        note.Duration = division / 2;
-                        break;
-                    default:
-                        Console.WriteLine("Note without duration !!!");
-                        break;
-                }
-                */
+                note.Duration = 0;                               
                 
             }
 
