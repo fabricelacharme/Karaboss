@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Xml;
 
 namespace MusicXml.Domain
@@ -24,6 +25,9 @@ namespace MusicXml.Domain
 
 		public Lyric Lyric { get; internal set; }
 		
+		// FAB : for couplets (several lyrics on the same note with different "number"
+		public List<Lyric> Lyrics { get; internal set; }
+
 		public Pitch Pitch { get; internal set; }
 
 		public int Staff { get; internal set; }

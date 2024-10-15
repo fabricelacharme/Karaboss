@@ -2430,7 +2430,7 @@ namespace Karaboss
                 ResetSequencer();
                 if (fileName != "\\")
                 {
-                    MXmlReader.LoadXmlAsync(fileName);
+                    MXmlReader.LoadXmlAsync(fileName, false);
                 }
             }
             catch (Exception ex)
@@ -2609,7 +2609,7 @@ namespace Karaboss
           
             // Load xml file                
             MusicXmlReader M = new MusicXmlReader();
-            sequence1 = M.Read(fileName);
+            sequence1 = M.Read(fileName, false);
 
             if (sequence1 == null)
             {

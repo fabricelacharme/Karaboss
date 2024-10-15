@@ -137,7 +137,7 @@ namespace MusicXml
                 using (stream)
                 {
                     // Your stuff
-                    seq = Read(fileName);
+                    seq = Read(fileName, true);
                 }
             }
             catch (Exception ee)
@@ -166,8 +166,9 @@ namespace MusicXml
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public Sequence Read(string fileName)
+        public Sequence Read(string fileName, bool silencemode)
         {
+            bSilenceMode = silencemode;
             System.Xml.Linq.XDocument doc;
 
             // Create Score
@@ -209,68 +210,16 @@ namespace MusicXml
             #endregion
 
 
-            //                                      ************************* FAB *************************
-                        
-            List<List<int>> lstmeasures = new List<List<int>>();    
-                        
-            bool bcondition = true;
-            int y = 0;
-            int start = 0;
-            int firstfwd;
-            List<int> bloc = new List<int>();
+            // Create MAP of measures according to repeat backward/forward found
+            List<List<int>> mapmeasures = CreateMap(Parts[0].Measures);
 
-            while (bcondition)
-            {
-                // Search ascending backward from last
-                y = GetFirstBackward(start, Parts[0].Measures);
-                if (!(y < Parts[0].Measures.Count - 1))
-                {
-                    // Add Last bloc
-                    bloc = new List<int>();
-                    for (int i = start; i <= y; i++)
-                    {
-                        bloc.Add(i);
-                    }
-                    lstmeasures.Add(bloc);                    
-                    bcondition = false;
-                    break;
-                }
-                                               
-                // Add new bloc                
-                bloc = new List<int>();
-                for (int i = start; i <= y; i++)
-                {
-                    bloc.Add(i);
-                }
-                lstmeasures.Add(bloc);                
-
-                // Search descending forward from last backward
-                firstfwd = GetFirstForward(y, Parts[0].Measures);                
-                bloc = new List<int>();
-                for (int i = firstfwd; i <= y; i++)
-                {
-                    bloc.Add(i);
-                }
-                lstmeasures.Add(bloc);
-                
-
-                start = y + 1;
-
-            }
-            
-            //                                       ************************* FAB *************************
 
             // Init sequence
             newTracks = new List<Track>(Parts.Count);
-
-
             Tempo = Parts[0].Tempo;
             Format = 1;
-
             Numerator = Parts[0].Numerator;
             Denominator = Parts[0].Denominator;
-
-
             int firstmeasure = 10;
             
             // Search for First measure & tempo max
@@ -284,7 +233,7 @@ namespace MusicXml
             }
 
             // Search common Division for all parts
-            int commondivision = ((Parts[0].Division > 0) ? Parts[0].Division  :  1); 
+            int commondivision = ((Parts[0].Division > 0) ? Parts[0].Division  :  24); 
 
             
             foreach (Part part in Parts)
@@ -320,7 +269,7 @@ namespace MusicXml
                 if (part.Division == 0)
                 {
                     Console.WriteLine("ERROR: Division = 0");
-                    part.Division = 1;
+                    part.Division = 24;
                 }
                 
                 Division = part.Division;
@@ -355,10 +304,133 @@ namespace MusicXml
                 int offset = 0;                
                 int starttime = 0;
 
-                
-                
-                
+                // =========================================
+                // NEW CODE
+                // =========================================
+                foreach (List<int> lmap in mapmeasures)
+                {
+                    foreach (int indice in lmap)
+                    {
+                        if (indice < Measures.Count) 
+                        { 
+
+                            Measure measure = Measures[indice];
+
+                            // BEGIN RECUP
+                            decimal W = measure.Width;
+                            int notenumber = 0;
+
+                            Key k = measure.Attributes.Key;
+                            int fif = k.Fifths;
+                            string mod = k.Mode;
+
+
+                            // *************** TAKE INTO ACCOUNT THOSE THINGS !!!!! ***************
+                            //
+                            // if (fif != 0)
+                            //{
+                            //    Console.WriteLine(fif.ToString());
+                            //}
+
+
+                            #region Extract all
+                            List<MeasureElement> lstME = measure.MeasureElements;
+
+                            // For each measureElement in current measure
+                            foreach (MeasureElement measureElement in lstME)
+                            {
+
+                                object obj = measureElement.Element;
+                                MeasureElementType metype = measureElement.Type;
+
+                                switch (metype)
+                                {
+
+                                    case MeasureElementType.Backup:
+                                        Backup bkp = (Backup)obj;
+                                        timeline -= (int)(bkp.Duration * multcoeff);
+                                        break;
+
+
+                                    case MeasureElementType.Note:
+                                        Note note = (Note)obj;
+
+                                        string accidental = note.Accidental;
+                                        int staff = note.Staff;
+                                        bool isrest = note.IsRest;
+                                        bool ischordtone = note.IsChordTone;
+                                        Pitch pitch = note.Pitch;
+                                        int voice = note.Voice;
+                                        
+                                        // NEW
+                                        // keep only the good number of the couplet             TODO
+                                        List<Lyric> lyrics = note.Lyrics;
+                                        // OLD
+                                        Lyric lyric = note.Lyric;
+                                        
+                                        string ntype = note.Type;
+
+                                        note.Duration = (int)(note.Duration * multcoeff);
+
+                                        if (note.IsRest)
+                                        {
+                                            timeline += note.Duration;
+                                            break;
+                                        }
+
+                                        // Take into account previous note                                
+                                        if (note.IsChordTone)
+                                            offset = 0;
+                                        timeline += offset;
+
+                                        // For the next note (if not chord)
+                                        offset = note.Duration;
+
+                                        starttime = timeline;
+                                        int octave = note.Pitch.Octave;
+                                        string letter = note.Pitch.Step.ToString();
+                                        notenumber = 12 + Notes.IndexOf(letter) + 12 * octave;
+
+                                        if (note.Pitch.Alter != 0)
+                                        {
+                                            int alter = note.Pitch.Alter;
+                                            notenumber += alter;
+                                        }
+
+                                        // Create note
+                                        if (note.Staff <= 1)
+                                            CreateMidiNote1(note, notenumber, starttime);
+                                        else
+                                            CreateMidiNote2(note, notenumber, starttime);
+
+                                        if (note.Lyric.Text != null)
+                                        {
+                                            CreateLyric(note, starttime);
+                                        }
+                                        break;
+
+
+                                    case MeasureElementType.Forward:
+                                        Forward fwd = (Forward)obj;
+                                        timeline += (int)(fwd.Duration * multcoeff);
+                                        break;
+
+                                }
+                            }
+
+                            #endregion Extract all
+
+                        // END RECUP
+                        }
+                    }
+                }
+
+
+                // ====================================
+                // OLD CODE
                 // For each measure
+                // ====================================
+                /*
                 foreach (Measure measure in Measures)
                 {
                     decimal W = measure.Width;
@@ -370,12 +442,12 @@ namespace MusicXml
 
                     
                     // *************** TAKE INTO ACCOUNT THOSE THINGS !!!!! ***************
-                    /*
-                    if (fif != 0)
-                    {
-                        Console.WriteLine(fif.ToString());
-                    }
-                    */
+                    //
+                    // if (fif != 0)
+                    //{
+                    //    Console.WriteLine(fif.ToString());
+                    //}
+                    
 
                     #region Extract all
                     List<MeasureElement> lstME = measure.MeasureElements;
@@ -459,9 +531,9 @@ namespace MusicXml
                     #endregion Extract all
 
                 }
-            
-            
-            
+                
+                */
+                        
             }
 
             CreateSequence();
@@ -471,8 +543,76 @@ namespace MusicXml
 
         // =================================================================================================
         
+        private List<List<int>> CreateMap(List<Measure> partmes)
+        {
+            bool bcondition = true;
+            int y;
+            int start = 0;
+            int firstfwd = 0;
+            List<int> bloc = new List<int>();
+            List<List<int>> mapmeasures = new List<List<int>>();
+
+            // no backward/forward
+            y = GetFirstBackward(start, partmes);
+            if (y == -1)
+            {
+                bloc = new List<int>();
+                for (int i = 0; i <= partmes.Count - 1; i++)
+                {
+                    bloc.Add(i);
+                }
+                mapmeasures.Add(bloc);
+                return mapmeasures;
+            }
+            
+
+            // blocs backward/forward exist
+            y = 0;
+            while (bcondition)
+            {
+
+                // 1 Search descending forward from start to less
+                if (start > 0)                 
+                    firstfwd = GetFirstForward(start, partmes);
+                
+                // Search ascending backward from start to more
+                y = GetFirstBackward(start, partmes);
+
+                // Add bloc
+                bloc = new List<int>();
+                for (int i = firstfwd; i <= y; i++)
+                {
+                    bloc.Add(i);
+                }
+                mapmeasures.Add(bloc);                                
+
+                start = y + 1;
+
+                if (start > partmes.Count - 1)
+                {
+                    start = partmes.Count - 1;
+                    firstfwd = GetFirstForward(start, partmes);
+                    y = GetFirstBackward(start, partmes);
+                    // Add bloc
+                    bloc = new List<int>();
+                    for (int i = firstfwd; i <= y; i++)
+                    {
+                        bloc.Add(i);
+                    }
+                    mapmeasures.Add(bloc);
+
+
+                    break;
+                }
+
+            }
+
+            return mapmeasures;
+        }
+
+
         /// <summary>
-        /// Return first element of type barline/forward
+        /// Return first element of type barline/forward - Search descending
         /// </summary>
         /// <param name="start"></param>
         /// <param name="Measures"></param>
@@ -502,7 +642,7 @@ namespace MusicXml
         }
 
         /// <summary>
-        /// Return first element of type barline/backward
+        /// Return first element of type barline/backward - Search ascending
         /// </summary>
         /// <param name="start"></param>
         /// <param name="Measures"></param>
@@ -528,7 +668,7 @@ namespace MusicXml
             }
 
             // Return last element if no backward
-            return Measures.Count - 1;
+            return -1;
         }
 
 

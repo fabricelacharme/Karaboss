@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using static Sanford.Multimedia.Midi.Track;
 
 namespace MusicXml.Domain
 {
@@ -99,7 +100,9 @@ namespace MusicXml.Domain
             _part.MidiChannel = (int?)partlistElement.Descendants("midi-channel").FirstOrDefault() ?? 1;
             _part.MidiProgram = (int?)partlistElement.Descendants("midi-program").FirstOrDefault() ?? 1;
 
-            
+
+            _part.coeffmult = 6;
+
             // VOLUME
             // ******************************* The result is wrong => convert value to midi value *************************************************
             //_part.Volume = (int?)partlistElement.Descendants("volume").FirstOrDefault() ?? 80;
@@ -115,12 +118,9 @@ namespace MusicXml.Domain
                 else
                     vol = Convert.ToInt32(volu);
             }
-
             _part.Volume = vol * 127/100;
 
-
-
-
+            // PAN
             _part.Pan = (int?)partlistElement.Descendants("pan").FirstOrDefault() ?? 0;
             _part.Pan += 65;
           
@@ -142,10 +142,9 @@ namespace MusicXml.Domain
                     XElement quarterlength = partElement.Descendants("divisions").FirstOrDefault();
                     if (quarterlength != null)
                     {
-                        _part.Division = (int)partElement.Descendants("divisions").FirstOrDefault();
-                        //_part.Division = 480 * _part.Division;
+                        _part.Division = (int)partElement.Descendants("divisions").FirstOrDefault();                        
                         _part.coeffmult = 480 / _part.Division;
-                        _part.Division = _part.coeffmult * _part.Division;
+                        _part.Division = 480; // = _part.coeffmult * _part.Division;
 
                     }
 
@@ -436,18 +435,79 @@ namespace MusicXml.Domain
             if (chord != null)            
                 note.IsChordTone = true;
 
+            // On ne prend qu'une seule lyric, il peut y en avoir plusieurs pour une note (couplets) !!!!!
             note.Lyric = GetLyric(node);
+
+            // Gestion de plusieur lyrics
+            note.Lyrics = GetLyrics(node);
 
             return note;
         }
       
+        private static List<Lyric> GetLyrics(XElement node)
+        {
+            var lyric = new Lyric();
+            List<Lyric> lstLyrics = new List<Lyric>();
+            var allLyrics = node.Descendants("lyric");
+            if (allLyrics != null)
+            {
+                foreach (var myLyric in allLyrics)
+                {
+                    if (myLyric != null)
+                    {
+                        lyric = new Lyric();
+                        lyric.Number = Convert.ToInt32(myLyric.Attribute("number").Value);
+                        var syllabicNode = myLyric.Descendants("syllabic").FirstOrDefault();
+                        var syllabicText = string.Empty;
+
+                        if (syllabicNode != null)
+                            syllabicText = syllabicNode.Value;
+
+                        switch (syllabicText)
+                        {
+                            case "":
+                                lyric.Syllabic = Syllabic.None;
+                                break;
+                            case "begin":
+                                lyric.Syllabic = Syllabic.Begin;
+                                break;
+                            case "single":
+                                lyric.Syllabic = Syllabic.Single;
+                                break;
+                            case "end":
+                                lyric.Syllabic = Syllabic.End;
+                                break;
+                            case "middle":
+                                lyric.Syllabic = Syllabic.Middle;
+                                break;
+                        }
+
+                        //var textNode = node.Descendants("text").FirstOrDefault();
+                        var textNode = myLyric.Descendants("text").FirstOrDefault();
+                        if (textNode != null)
+                            lyric.Text = textNode.Value;
+
+                        lstLyrics.Add(lyric);
+                    }
+
+                }
+            }
+
+            return lstLyrics;
+        }
+        
         private static Lyric GetLyric(XElement node)
         {
             var lyric = new Lyric();
-
+            
+            // *************************** OLD CODE ******************************
+            // Ici on ne prend que la premiere !!!!!
             var lyrics = node.Descendants("lyric").FirstOrDefault();
             if (lyrics != null)
             {
+
+                lyric.Number = Convert.ToInt32(lyrics.Attribute("number").Value);
+
                 var syllabicNode = lyrics.Descendants("syllabic").FirstOrDefault();
                 var syllabicText = string.Empty;
 

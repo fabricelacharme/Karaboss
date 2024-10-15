@@ -1555,11 +1555,11 @@ namespace Karaboss
             }
 
             // File can be an xml file but not in musicxml format
-            if (MXmlReader.Read(fpath) == null)
+            if (MXmlReader.Read(fpath, false) == null)
             {
                 try
                 {
-                    System.Diagnostics.Process.Start(fpath);
+                    //System.Diagnostics.Process.Start(fpath);
                 }
                 catch (Exception ex)
                 {
