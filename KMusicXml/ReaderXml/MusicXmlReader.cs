@@ -304,11 +304,15 @@ namespace MusicXml
                 int offset = 0;                
                 int starttime = 0;
 
+                int coupletnumber = 0;
+
                 // =========================================
                 // NEW CODE
                 // =========================================
                 foreach (List<int> lmap in mapmeasures)
                 {
+                    coupletnumber++;
+
                     foreach (int indice in lmap)
                     {
                         if (indice < Measures.Count) 
@@ -365,6 +369,7 @@ namespace MusicXml
                                         // NEW
                                         // keep only the good number of the couplet             TODO
                                         List<Lyric> lyrics = note.Lyrics;
+
                                         // OLD
                                         Lyric lyric = note.Lyric;
                                         
@@ -403,9 +408,10 @@ namespace MusicXml
                                         else
                                             CreateMidiNote2(note, notenumber, starttime);
 
-                                        if (note.Lyric.Text != null)
+                                        //if (note.Lyric.Text != null)
+                                        if (note.Lyrics.Count > 0 && note.Lyrics[0].Text != null)
                                         {
-                                            CreateLyric(note, starttime);
+                                            CreateLyric(note, starttime, coupletnumber);
                                         }
                                         break;
 
@@ -552,6 +558,8 @@ namespace MusicXml
             List<int> bloc = new List<int>();
             List<List<int>> mapmeasures = new List<List<int>>();
 
+            int coupletnumber = 0;
+
             // no backward/forward
             y = GetFirstBackward(start, partmes);
             if (y == -1)
@@ -568,6 +576,7 @@ namespace MusicXml
 
             // blocs backward/forward exist
             y = 0;
+            Measure mes = new Measure();
             while (bcondition)
             {
 
@@ -579,10 +588,13 @@ namespace MusicXml
                 y = GetFirstBackward(start, partmes);
 
                 // Add bloc
+                coupletnumber++;
                 bloc = new List<int>();
                 for (int i = firstfwd; i <= y; i++)
                 {
-                    bloc.Add(i);
+                    mes = partmes[i];
+                    if (mes.Couplet == 0 || mes.Couplet == coupletnumber)
+                        bloc.Add(i);
                 }
                 mapmeasures.Add(bloc);                                
 
@@ -785,17 +797,25 @@ namespace MusicXml
 
 
         #region lyrics
-        private void CreateLyric(Note n, int t)
+        private void CreateLyric(Note n, int t, int coupletnumber)
         {
             try
             {
                 bool bCutPossible = false;
                 bool blineFeed = false;
-                string currentElement = n.Lyric.Text;
+                //string currentElement = n.Lyric.Text;
                 byte[] newdata;
 
+                Lyric lyric;
+                if(coupletnumber > n.Lyrics.Count) 
+                    coupletnumber = n.Lyrics.Count;
 
-                switch (n.Lyric.Syllabic)
+                lyric = n.Lyrics[coupletnumber - 1];
+                string currentElement = lyric.Text;
+
+
+                //switch (n.Lyric.Syllabic)
+                switch (lyric.Syllabic)
                 {
                     case Syllabic.Begin: break;
 

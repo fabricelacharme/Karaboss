@@ -11,6 +11,7 @@
 		Note,
 		Backup,
 		Forward,
-		Barline
+		Barline,
+		Ending
 	}
 }

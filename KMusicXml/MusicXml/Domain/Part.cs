@@ -177,12 +177,19 @@ namespace MusicXml.Domain
                         _part.Staff = v;
 
 
+                    bool bReserved = false;
+                    int Couplet = -1;
 
                     var measuresXpath = string.Format("//part[@id='{0}']/measure", _part.Id);
                     var measureNodes = doc.XPathSelectElements(measuresXpath);                    
                     foreach ( XElement measureNode in measureNodes )
                     {                        
                         Measure curMeasure = new Measure();
+
+                        if (bReserved) 
+                        { 
+                            curMeasure.Couplet = Couplet;
+                        }
 
                         // Attributes containing everything
                         curMeasure.Attributes = new MeasureAttributes();
@@ -221,6 +228,7 @@ namespace MusicXml.Domain
                         }
                         #endregion measure number
 
+                       
 
                         foreach (XElement childnode in measureNode.Descendants())
                         {                            
@@ -276,46 +284,61 @@ namespace MusicXml.Domain
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
                                 }
 
-                            }
+                            }                            
                             else if (childnode.Name == "barline")
                             {
                                 var barline = new Barline();
                                 barline.Measure = curMeasure.Number;
 
-                                var ending = childnode.Descendants("ending").FirstOrDefault();
-                                if (ending != null)
-                                {                                    
-                                    barline.Ending.Number = Convert.ToInt32(ending.Attribute("number").Value);
+                                // There is an "ending" start or stop
+                                // it means mesures dedicated to a couplet
+                                // Start reservation: <ending number="1" type="start"/>
+                                // Stop reservation: <ending number="1" type="stop"/>
+                                var nending = childnode.Descendants("ending").FirstOrDefault();
+                                if (nending != null)
+                                {
+                                    var ending = new Ending();
+                                    ending.Number = Convert.ToInt32(nending.Attribute("number").Value);
 
-                                    string type = ending.Attribute("type").Value;
+                                    string type = nending.Attribute("type").Value;
                                     switch (type)
                                     {
                                         case "start":
-                                            barline.Ending.Type = EndingTypes.start;
+                                            ending.Type = EndingTypes.start;
+                                            bReserved = true;
+                                            Couplet = ending.Number;
+                                            curMeasure.Couplet = Couplet;
                                             break;
                                         case "stop":
-                                            barline.Ending.Type = EndingTypes.stop;
+                                            ending.Type = EndingTypes.stop;                                            
+                                            curMeasure.Couplet = ending.Number;
+                                            Couplet = -1;
+                                            bReserved = false;
                                             break;
-                                    }                                    
+                                    }
+                                    // Add element
+                                    MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Ending, Element = ending };
+                                    curMeasure.MeasureElements.Add(trucmeasureElement);
+
                                 }
 
+                                // There is a repeat forward or backward
+                                // It means repeat a sequence for a new couplet with the same notes
                                 var repeat = childnode.Descendants("repeat").FirstOrDefault();
                                 if (repeat != null)
                                 {                                    
                                     if (repeat.Attribute("direction").Value == "forward")
-                                    {
-                                        
-                                        barline.Direction = RepeatDirections.forward;
-                                        MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Barline, Element = barline };
-                                        curMeasure.MeasureElements.Add(trucmeasureElement);
+                                    {                                        
+                                        barline.Direction = RepeatDirections.forward;                                        
                                     }
                                     else if (repeat.Attribute("direction").Value == "backward")
                                     {
                                         
                                         barline.Direction = RepeatDirections.backward;
-                                        MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Barline, Element = barline };
-                                        curMeasure.MeasureElements.Add(trucmeasureElement);
-                                    }                                    
+                                    }
+                                    // Add element
+                                    MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Barline, Element = barline };
+                                    curMeasure.MeasureElements.Add(trucmeasureElement);
                                 }
                             }
 
@@ -436,7 +459,7 @@ namespace MusicXml.Domain
                 note.IsChordTone = true;
 
             // On ne prend qu'une seule lyric, il peut y en avoir plusieurs pour une note (couplets) !!!!!
-            note.Lyric = GetLyric(node);
+            //note.Lyric = GetLyric(node);
 
             // Gestion de plusieur lyrics
             note.Lyrics = GetLyrics(node);
@@ -456,7 +479,10 @@ namespace MusicXml.Domain
                     if (myLyric != null)
                     {
                         lyric = new Lyric();
-                        lyric.Number = Convert.ToInt32(myLyric.Attribute("number").Value);
+                        
+                        if (myLyric.Attribute("number") != null)
+                            lyric.Number = Convert.ToInt32(myLyric.Attribute("number").Value);
+                        
                         var syllabicNode = myLyric.Descendants("syllabic").FirstOrDefault();
                         var syllabicText = string.Empty;
 

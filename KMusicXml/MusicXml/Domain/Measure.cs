@@ -24,7 +24,8 @@ namespace MusicXml.Domain
         public int Tempo { get; set; } // key = measure, value = tempo
         public int Number { get; set; }
 
-
+		// FAB : is measure belonging to a couplet?
+		public int Couplet { get; internal set; }	
 
     }
 
