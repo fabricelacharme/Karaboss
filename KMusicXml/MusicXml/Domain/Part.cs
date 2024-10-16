@@ -178,7 +178,7 @@ namespace MusicXml.Domain
 
 
                     bool bReserved = false;
-                    int Couplet = -1;
+                    List<int> VerseNumber = new List<int>();
 
                     var measuresXpath = string.Format("//part[@id='{0}']/measure", _part.Id);
                     var measureNodes = doc.XPathSelectElements(measuresXpath);                    
@@ -188,7 +188,7 @@ namespace MusicXml.Domain
 
                         if (bReserved) 
                         { 
-                            curMeasure.Couplet = Couplet;
+                            curMeasure.VerseNumber = VerseNumber;
                         }
 
                         // Attributes containing everything
@@ -291,14 +291,25 @@ namespace MusicXml.Domain
                                 barline.Measure = curMeasure.Number;
 
                                 // There is an "ending" start or stop
-                                // it means mesures dedicated to a couplet
+                                // it means mesures dedicated to a verse
                                 // Start reservation: <ending number="1" type="start"/>
                                 // Stop reservation: <ending number="1" type="stop"/>
                                 var nending = childnode.Descendants("ending").FirstOrDefault();
                                 if (nending != null)
                                 {
                                     var ending = new Ending();
-                                    ending.Number = Convert.ToInt32(nending.Attribute("number").Value);
+                                    // New case: list of numbers
+                                    // <ending number="2, 3" type="start" default-y="44.97"/>
+                                    string s = nending.Attribute("number").Value;
+                                    List<string> lststrnumbers = s.Split(',').Select(p => p.Trim()).ToList(); 
+                                    List<int> lstnumbers = new List<int>();
+                                    for (int i = 0; i < lststrnumbers.Count; i++)
+                                    {
+                                        lstnumbers.Add(Convert.ToInt32(lststrnumbers[i]));
+                                    }
+
+                                    //ending.VerseNumber = Convert.ToInt32(nending.Attribute("number").Value);
+                                    ending.VerseNumber = lstnumbers;
 
                                     string type = nending.Attribute("type").Value;
                                     switch (type)
@@ -306,13 +317,13 @@ namespace MusicXml.Domain
                                         case "start":
                                             ending.Type = EndingTypes.start;
                                             bReserved = true;
-                                            Couplet = ending.Number;
-                                            curMeasure.Couplet = Couplet;
+                                            VerseNumber = ending.VerseNumber;
+                                            curMeasure.VerseNumber = VerseNumber;
                                             break;
                                         case "stop":
                                             ending.Type = EndingTypes.stop;                                            
-                                            curMeasure.Couplet = ending.Number;
-                                            Couplet = -1;
+                                            curMeasure.VerseNumber = ending.VerseNumber;
+                                            VerseNumber = new List<int>();
                                             bReserved = false;
                                             break;
                                     }
@@ -323,7 +334,7 @@ namespace MusicXml.Domain
                                 }
 
                                 // There is a repeat forward or backward
-                                // It means repeat a sequence for a new couplet with the same notes
+                                // It means repeat a sequence for a new verse with the same notes
                                 var repeat = childnode.Descendants("repeat").FirstOrDefault();
                                 if (repeat != null)
                                 {                                    
@@ -458,15 +469,17 @@ namespace MusicXml.Domain
             if (chord != null)            
                 note.IsChordTone = true;
 
-            // On ne prend qu'une seule lyric, il peut y en avoir plusieurs pour une note (couplets) !!!!!
-            //note.Lyric = GetLyric(node);
-
-            // Gestion de plusieur lyrics
+            // Manage several lyrics per note (a note can be used by several verses)
             note.Lyrics = GetLyrics(node);
 
             return note;
         }
       
+        /// <summary>
+        /// Extract the list of lyrics for a single note 
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private static List<Lyric> GetLyrics(XElement node)
         {
             var lyric = new Lyric();
@@ -481,7 +494,7 @@ namespace MusicXml.Domain
                         lyric = new Lyric();
                         
                         if (myLyric.Attribute("number") != null)
-                            lyric.Number = Convert.ToInt32(myLyric.Attribute("number").Value);
+                            lyric.VerseNumber = Convert.ToInt32(myLyric.Attribute("number").Value);
                         
                         var syllabicNode = myLyric.Descendants("syllabic").FirstOrDefault();
                         var syllabicText = string.Empty;
@@ -507,8 +520,7 @@ namespace MusicXml.Domain
                                 lyric.Syllabic = Syllabic.Middle;
                                 break;
                         }
-
-                        //var textNode = node.Descendants("text").FirstOrDefault();
+                        
                         var textNode = myLyric.Descendants("text").FirstOrDefault();
                         if (textNode != null)
                             lyric.Text = textNode.Value;
@@ -521,7 +533,9 @@ namespace MusicXml.Domain
 
             return lstLyrics;
         }
-        
+
+        #region deleteme
+        /*
         private static Lyric GetLyric(XElement node)
         {
             var lyric = new Lyric();
@@ -532,7 +546,7 @@ namespace MusicXml.Domain
             if (lyrics != null)
             {
 
-                lyric.Number = Convert.ToInt32(lyrics.Attribute("number").Value);
+                lyric.VerseNumber = Convert.ToInt32(lyrics.Attribute("number").Value);
 
                 var syllabicNode = lyrics.Descendants("syllabic").FirstOrDefault();
                 var syllabicText = string.Empty;
@@ -567,6 +581,8 @@ namespace MusicXml.Domain
 
             return lyric;
         }
+        */
+        #endregion deleteme
 
     }
 }

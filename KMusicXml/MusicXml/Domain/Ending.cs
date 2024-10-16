@@ -15,7 +15,7 @@ namespace MusicXml.Domain
 
     public class Ending
     {
-        public int Number { get; internal set; }
+        public List<int> VerseNumber { get; internal set; }
         public EndingTypes Type { get; internal set; }
 
     }

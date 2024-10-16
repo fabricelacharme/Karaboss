@@ -8,7 +8,9 @@ namespace MusicXml.Domain
 		{
 			Width = -1;
 			MeasureElements = new List<MeasureElement>();
-		}
+			VerseNumber = new List<int>();
+
+        }
 
 		public decimal Width { get; internal set; }
 		
@@ -24,8 +26,8 @@ namespace MusicXml.Domain
         public int Tempo { get; set; } // key = measure, value = tempo
         public int Number { get; set; }
 
-		// FAB : is measure belonging to a couplet?
-		public int Couplet { get; internal set; }	
+		// FAB : is measure belonging to a Verse?
+		public List<int> VerseNumber { get; internal set; }	
 
     }
 

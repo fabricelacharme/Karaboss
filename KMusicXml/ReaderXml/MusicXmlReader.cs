@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using MusicXml.Domain;
 using Sanford.Multimedia.Midi;
+using System.Runtime.CompilerServices;
 
 namespace MusicXml
 {
@@ -304,14 +305,16 @@ namespace MusicXml
                 int offset = 0;                
                 int starttime = 0;
 
-                int coupletnumber = 0;
+                int versenumber = 0;
 
-                // =========================================
-                // NEW CODE
+                // =========================================                
+                // mapmesure is the list of verses.
+                // Each element of mapmesure is a list of measure indices that belong to a verse. 
+                // (The same measure may belong to several verses)
                 // =========================================
                 foreach (List<int> lmap in mapmeasures)
                 {
-                    coupletnumber++;
+                    versenumber++;
 
                     foreach (int indice in lmap)
                     {
@@ -366,12 +369,9 @@ namespace MusicXml
                                         Pitch pitch = note.Pitch;
                                         int voice = note.Voice;
                                         
-                                        // NEW
-                                        // keep only the good number of the couplet             TODO
-                                        List<Lyric> lyrics = note.Lyrics;
 
-                                        // OLD
-                                        Lyric lyric = note.Lyric;
+                                        // keep only the good number of the verse             
+                                        List<Lyric> lyrics = note.Lyrics;
                                         
                                         string ntype = note.Type;
 
@@ -411,7 +411,7 @@ namespace MusicXml
                                         //if (note.Lyric.Text != null)
                                         if (note.Lyrics.Count > 0 && note.Lyrics[0].Text != null)
                                         {
-                                            CreateLyric(note, starttime, coupletnumber);
+                                            CreateLyric(note, starttime, versenumber);
                                         }
                                         break;
 
@@ -436,6 +436,7 @@ namespace MusicXml
                 // OLD CODE
                 // For each measure
                 // ====================================
+                #region deleteme
                 /*
                 foreach (Measure measure in Measures)
                 {
@@ -539,7 +540,8 @@ namespace MusicXml
                 }
                 
                 */
-                        
+
+                #endregion deleteme
             }
 
             CreateSequence();
@@ -549,6 +551,11 @@ namespace MusicXml
 
         // =================================================================================================
         
+        /// <summary>
+        /// Create the list of verses
+        /// </summary>
+        /// <param name="partmes"></param>
+        /// <returns></returns>
         private List<List<int>> CreateMap(List<Measure> partmes)
         {
             bool bcondition = true;
@@ -558,9 +565,9 @@ namespace MusicXml
             List<int> bloc = new List<int>();
             List<List<int>> mapmeasures = new List<List<int>>();
 
-            int coupletnumber = 0;
+            int versenumber = 0;
 
-            // no backward/forward
+            // no backward/forward => no changes => mapmeasure is the list of measures
             y = GetFirstBackward(start, partmes);
             if (y == -1)
             {
@@ -575,6 +582,8 @@ namespace MusicXml
             
 
             // blocs backward/forward exist
+            // => extract verses
+            //    remove measures attached to a single verse
             y = 0;
             Measure mes = new Measure();
             while (bcondition)
@@ -587,13 +596,27 @@ namespace MusicXml
                 // Search ascending backward from start to more
                 y = GetFirstBackward(start, partmes);
 
+                // If no more backward starting from "start"
+                // Create a verse with all trailing measures
+                if (y == -1) 
+                {
+                    bloc = new List<int>();
+                    for (int i = firstfwd; i <= partmes.Count - 1; i++)
+                    {
+                        if (mes.VerseNumber.Count == 0 || mes.VerseNumber.Contains(versenumber))
+                            bloc.Add(i);
+                    }
+                    mapmeasures.Add(bloc);
+                    break; 
+                }
+                
                 // Add bloc
-                coupletnumber++;
+                versenumber++;
                 bloc = new List<int>();
                 for (int i = firstfwd; i <= y; i++)
                 {
                     mes = partmes[i];
-                    if (mes.Couplet == 0 || mes.Couplet == coupletnumber)
+                    if (mes.VerseNumber.Count == 0 || mes.VerseNumber.Contains(versenumber))
                         bloc.Add(i);
                 }
                 mapmeasures.Add(bloc);                                
@@ -605,11 +628,13 @@ namespace MusicXml
                     start = partmes.Count - 1;
                     firstfwd = GetFirstForward(start, partmes);
                     y = GetFirstBackward(start, partmes);
+                    
                     // Add bloc
                     bloc = new List<int>();
                     for (int i = firstfwd; i <= y; i++)
                     {
-                        bloc.Add(i);
+                        if (mes.VerseNumber.Count == 0 || mes.VerseNumber.Contains(versenumber))
+                            bloc.Add(i);
                     }
                     mapmeasures.Add(bloc);
 
@@ -621,6 +646,8 @@ namespace MusicXml
 
             return mapmeasures;
         }
+
+       
 
 
         /// <summary>
@@ -681,6 +708,7 @@ namespace MusicXml
 
             // Return last element if no backward
             return -1;
+
         }
 
 
@@ -797,7 +825,7 @@ namespace MusicXml
 
 
         #region lyrics
-        private void CreateLyric(Note n, int t, int coupletnumber)
+        private void CreateLyric(Note n, int t, int versenumber)
         {
             try
             {
@@ -807,10 +835,10 @@ namespace MusicXml
                 byte[] newdata;
 
                 Lyric lyric;
-                if(coupletnumber > n.Lyrics.Count) 
-                    coupletnumber = n.Lyrics.Count;
+                if(versenumber > n.Lyrics.Count) 
+                    versenumber = n.Lyrics.Count;
 
-                lyric = n.Lyrics[coupletnumber - 1];
+                lyric = n.Lyrics[versenumber - 1];
                 string currentElement = lyric.Text;
 
 

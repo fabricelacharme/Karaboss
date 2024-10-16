@@ -22,10 +22,9 @@ namespace MusicXml.Domain
 		public int Voice { get; internal set; }
 
 		public int Duration { get; internal set; }
-
-		public Lyric Lyric { get; internal set; }
 		
-		// FAB : for couplets (several lyrics on the same note with different "number"
+		
+		// FAB : for verses (several lyrics on the same note with different "number")
 		public List<Lyric> Lyrics { get; internal set; }
 
 		public Pitch Pitch { get; internal set; }

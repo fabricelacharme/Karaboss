@@ -19,6 +19,6 @@ namespace MusicXml.Domain
 		
 		public string Text { get; internal set; }
 
-		public int Number { get; internal set; }	
+		public int VerseNumber { get; internal set; }	
 	}
 }

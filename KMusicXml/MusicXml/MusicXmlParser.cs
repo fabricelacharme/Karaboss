@@ -1,10 +1,12 @@
 using MusicXml.Domain;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace MusicXml
 {
@@ -251,7 +253,7 @@ namespace MusicXml
 			if (accidental != null)
 				note.Accidental = accidental.InnerText;
 
-			note.Lyric = GetLyric(noteNode);
+			note.Lyrics = GetLyrics(noteNode);
 
 			note.Pitch = GetPitch(noteNode);
 
@@ -296,7 +298,63 @@ namespace MusicXml
 			return pitch;
 		}
 
-		private static Lyric GetLyric(XmlNode noteNode)
+
+        private static List<Lyric> GetLyrics(XmlNode noteNode)
+		{
+            var lyric = new Lyric();
+            List<Lyric> lstLyrics = new List<Lyric>();
+			
+			var allLyricsnodes = noteNode.ChildNodes;    //.Descendants("lyric");
+
+			if (allLyricsnodes != null)
+			{
+				foreach (var node in allLyricsnodes)
+				{
+
+				}
+			}
+
+			// =============================================
+			/*
+            var lyricNode = noteNode.SelectSingleNode("lyric");
+            if (lyricNode != null)
+            {
+                var syllabicNode = lyricNode.SelectSingleNode("syllabic");
+
+                var syllabicText = string.Empty;
+
+                if (syllabicNode != null)
+                    syllabicText = syllabicNode.InnerText;
+
+                switch (syllabicText)
+                {
+                    case "":
+                        lyric.Syllabic = Syllabic.None;
+                        break;
+                    case "begin":
+                        lyric.Syllabic = Syllabic.Begin;
+                        break;
+                    case "single":
+                        lyric.Syllabic = Syllabic.Single;
+                        break;
+                    case "end":
+                        lyric.Syllabic = Syllabic.End;
+                        break;
+                    case "middle":
+                        lyric.Syllabic = Syllabic.Middle;
+                        break;
+                }
+
+                var textNode = lyricNode.SelectSingleNode("text");
+                if (textNode != null)
+                    lyric.Text = textNode.InnerText;
+            }
+			*/
+            return lstLyrics;
+        }
+
+
+        private static Lyric GetLyric(XmlNode noteNode)
 		{
 			var lyric = new Lyric();
 
