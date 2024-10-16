@@ -590,8 +590,11 @@ namespace MusicXml
             {
 
                 // 1 Search descending forward from start to less
-                if (start > 0)                 
-                    firstfwd = GetFirstForward(start, partmes);
+                if (start > 0)
+                {
+                    //firstfwd = GetFirstForward(start, partmes);
+                    firstfwd = GetFirstForward(start - 1, partmes);
+                }
                 
                 // Search ascending backward from start to more
                 y = GetFirstBackward(start, partmes);
