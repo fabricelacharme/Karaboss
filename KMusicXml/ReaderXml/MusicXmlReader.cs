@@ -461,11 +461,12 @@ namespace MusicXml
             int y;
             int pivot = 0;
             int firstfwd = 0;
+            int firstbackward = 0;
             List<int> bloc = new List<int>();
             List<List<int>> mapmeasures = new List<List<int>>();
 
             int versenumber = 0;
-
+            bool bReserved = false;
             // no backward/forward => no changes => mapmeasure is the list of measures
             y = GetFirstBackward(pivot, partmes);
             if (y == -1)
@@ -485,44 +486,90 @@ namespace MusicXml
             //    remove measures attached to a single verse
             y = 0;
             Measure mes = new Measure();
-            int NumberOfVersesPerMeasure;
-            //int numloop = 0;
+            
+            int NumberOfVersesPerMeasure = 0;            
+            int numloop = 0;            
+            int nbLoopMax = 2;
+            int firstfwdminimum = 0;
+
+            // Consider forst nloc
+            // Can be empty or not
+            // Can be some measure or repeated measures
+
+            // Get first forward/forward
+            firstfwd = GetFirstForwardUp(partmes.Count - 1, partmes);
+            firstbackward = GetFirstBackward(0, partmes);
+            // Blox exists if firstfwd is at 0
+
+            // A backward exists greater than the forward 
+            // this is a reapeat  => take twice (ex imagine)
+            if (firstbackward > 0 && firstbackward < firstfwd)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    bloc = new List<int>();
+                    for (int i = 0; i <= firstbackward; i++)
+                    {
+                        bloc.Add(i);
+                    }
+                    mapmeasures.Add(bloc);
+                }
+                pivot = firstbackward + 1;
+            }
+            else if (firstfwd > 0 && firstfwd < firstbackward)
+            {
+                // This is a simple bloc => take one (ex cigarette)
+                bloc = new List<int>();
+                for (int i = 0; i < firstfwd; i++)
+                {
+                    bloc.Add(i);
+                }
+                mapmeasures.Add(bloc);
+                
+                pivot = firstfwd + 1;
+            }
+            
 
             while (bcondition)
             {
-                
-                // 1 Search descending forward from start to less
-                if (pivot > 0)
-                {
-                    //firstfwd = GetFirstForward(pivot - 1, partmes);
+
+                // Calculate limits of bloc if the repeats are done
+                //if (!bRepeatsDone)
+                //{
+                    // 1 Search descending forward from start to less
+                    //if (pivot > 0)
+                    //{                        
                     firstfwd = GetFirstForward(pivot, partmes);
-                }
-                
-                // 2. Search ascending backward from start to more
-                y = GetFirstBackward(pivot, partmes);
+                    if (firstfwd < firstfwdminimum)
+                        firstfwd = firstfwdminimum;
+                    //}
 
-                
-                // If no more backward starting from "start"
-                // Create a verse with all trailing measures
-                if (y == -1) 
-                {
-                    #region leave if no more backward
-                    bloc = new List<int>();
-                    for (int i = firstfwd; i <= partmes.Count - 1; i++)
+                    // 2. Search ascending backward from start to more
+                    y = GetFirstBackward(pivot, partmes);
+
+
+                    // If no more backward starting from "start"
+                    // Create a verse with all trailing measures and leave
+                    if (y == -1)
                     {
-                        if (mes.VerseNumber.Count == 0 || mes.VerseNumber.Contains(versenumber))
-                            bloc.Add(i);
-                    }
-                    mapmeasures.Add(bloc);
-                    break;
-                    #endregion leave if no more backward
+                        #region leave if no more backward
+                        bloc = new List<int>();
+                        for (int i = firstfwd; i <= partmes.Count - 1; i++)
+                        {
+                            if (mes.VerseNumber.Count == 0 || mes.VerseNumber.Contains(versenumber))
+                                bloc.Add(i);
+                        }
+                        mapmeasures.Add(bloc);
+                        break;
+                        #endregion leave if no more backward
 
-                } else
-                {
-                    //if (numloop != 1)
-                    //    numloop = 2;
-                }
-                
+                    }
+                    else
+                    {
+                        //if (numloop != 1)
+                        //    numloop = 2;
+                    }
+                //}
 
                 // Add bloc including measures between FirstForward and FirstBackWard
                 versenumber++;
@@ -535,19 +582,41 @@ namespace MusicXml
                     {
                         // Count maximum of verses for this bloc
                         if (NumberOfVersesPerMeasure < mes.NumberOfVerses)
+                        {
                             NumberOfVersesPerMeasure = mes.NumberOfVerses;
+                            nbLoopMax = NumberOfVersesPerMeasure;
+                        }
+
+                        if (mes.VerseNumber.Count > 0)
+                            bReserved = true;
+
                         bloc.Add(i);
                     }
-                }
+                }                
                 mapmeasures.Add(bloc);
-               // numloop--;
+
+                numloop++;
 
                 // Increase pivot value
                 // Works only if 2 verses
                 // if 3 verses or more, we should do an additional loop
-                //if (numloop == 0)
+                if (numloop == nbLoopMax)
+                {
+                    pivot = y + 1;   // Bug : pivot must increase in case a reserved measures at the end of the blocs
+                    numloop = 0;
+                    nbLoopMax = 2;
+
+                    // All loops have been done: we do not have to consider previous measures
+                    // how can we prevent to calculate again firstfwd ?
+                    firstfwdminimum = pivot;
+
+                    bReserved = false;
+                } 
+                else if (bReserved)
+                {
                     pivot = y + 1;
-                
+                }
+
 
 
                 #region leave if end of file
@@ -605,6 +674,31 @@ namespace MusicXml
             // Return first element if no forward
             return 0;
         }
+
+        private int GetFirstForwardUp(int end, List<Measure> Measures)
+        {
+            for (int j = 0; j <= end; j++)
+            {
+                Measure measure = Measures[j];
+                List<MeasureElement> lstME = measure.MeasureElements;
+                for (int i = 0; i < lstME.Count; i++)
+                {
+                    MeasureElement measureElement = lstME[i];
+                    if (measureElement.Type == MeasureElementType.Barline)
+                    {
+                        Barline bl = (Barline)measureElement.Element;
+                        if (bl.Direction == RepeatDirections.forward)
+                        {
+                            return j;
+                        }
+                    }
+                }
+            }
+
+            // Return first element if no forward
+            return -1;
+        }
+
 
         /// <summary>
         /// Return first element of type barline/backward - Search ascending
