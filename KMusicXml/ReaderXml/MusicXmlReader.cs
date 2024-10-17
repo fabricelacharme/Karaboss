@@ -407,8 +407,12 @@ namespace MusicXml
                                             CreateMidiNote1(note, notenumber, starttime);
                                         else
                                             CreateMidiNote2(note, notenumber, starttime);
+                                        
+                                        if (measure.Number == 5 && versenumber == 1)
+                                        {
+                                            Console.WriteLine("ici");
+                                        }
 
-                                        //if (note.Lyric.Text != null)
                                         if (note.Lyrics.Count > 0 && note.Lyrics[0].Text != null)
                                         {
                                             CreateLyric(note, starttime, versenumber);
@@ -616,6 +620,8 @@ namespace MusicXml
                 // Add bloc
                 versenumber++;
                 bloc = new List<int>();
+
+
                 for (int i = firstfwd; i <= y; i++)
                 {
                     mes = partmes[i];
@@ -833,15 +839,40 @@ namespace MusicXml
             try
             {
                 bool bCutPossible = false;
-                bool blineFeed = false;
-                //string currentElement = n.Lyric.Text;
+                bool blineFeed = false;                
                 byte[] newdata;
 
-                Lyric lyric;
-                if(versenumber > n.Lyrics.Count) 
-                    versenumber = n.Lyrics.Count;
+                
+                //if (versenumber > n.Lyrics.Count) 
+                //    versenumber = n.Lyrics.Count;
 
-                lyric = n.Lyrics[versenumber - 1];
+
+                // Search if Lyrics has a versenumber equal to current versenumber
+                Lyric lyric = new Lyric();
+
+                if (n.Lyrics.Count > 1)
+                {
+                    bool bfound = false;
+                    foreach (Lyric ll in n.Lyrics)
+                    {
+                        if (ll.VerseNumber == versenumber)
+                        {
+                            lyric = ll;
+                            bfound = true;
+                            break;
+                        }
+                    }
+
+                    if (!bfound)
+                        return;
+                }
+                else
+                {
+                    lyric = n.Lyrics[0];
+                }
+
+                //lyric = n.Lyrics[versenumber - 1];
+                
                 string currentElement = lyric.Text;
 
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using static Sanford.Multimedia.Midi.Track;
@@ -125,7 +126,8 @@ namespace MusicXml.Domain
             _part.Pan += 65;
           
             // Default
-            _part.Tempo = 100000;
+            // Division 480 + Tempo 500000 => BPM 120
+            _part.Tempo = 500000;
 
             foreach (var partElement in doc.Descendants("part"))
             {
@@ -156,11 +158,18 @@ namespace MusicXml.Domain
                         XElement BeatUnit = metronome.Descendants("beat-unit").FirstOrDefault();   // quarter
                         if (BeatUnit != null)
                         {
-                            float PerMinute = (float)metronome.Descendants("per-minute").FirstOrDefault();         // BPM
-                            const float kOneMinuteInMicroseconds = 60000000;
-                            float ttempo = kOneMinuteInMicroseconds / PerMinute;
+                            string strtmpo = metronome.Descendants("per-minute").FirstOrDefault().Value;
+                            if (strtmpo != null)
+                            {
+                                strtmpo = strtmpo.Replace(",", ".");
+                                double PerMinute = Convert.ToDouble(strtmpo, (CultureInfo.InvariantCulture));
 
-                            _part.Tempo = (int)ttempo;
+                                //float PerMinute = (float)metronome.Descendants("per-minute").FirstOrDefault();         // BPM
+                                const float kOneMinuteInMicroseconds = 60000000;
+                                float ttempo = kOneMinuteInMicroseconds / (float)PerMinute;
+
+                                _part.Tempo = (int)ttempo;
+                            }
                         }
                     }
 
@@ -185,6 +194,8 @@ namespace MusicXml.Domain
                     foreach ( XElement measureNode in measureNodes )
                     {                        
                         Measure curMeasure = new Measure();
+
+                        
 
                         if (bReserved) 
                         { 
@@ -226,9 +237,16 @@ namespace MusicXml.Domain
                         {
                             Console.WriteLine(ex.Message);
                         }
+
+                        /*
+                        if (curMeasure.Number == 17)
+                        {
+                            Console.WriteLine("17");
+                        }
+                        */
                         #endregion measure number
 
-                       
+
 
                         foreach (XElement childnode in measureNode.Descendants())
                         {                            
@@ -330,9 +348,7 @@ namespace MusicXml.Domain
                                     // Add element
                                     MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Ending, Element = ending };
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
-
                                 }
-
                                 // There is a repeat forward or backward
                                 // It means repeat a sequence for a new verse with the same notes
                                 var repeat = childnode.Descendants("repeat").FirstOrDefault();
@@ -352,9 +368,7 @@ namespace MusicXml.Domain
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
                                 }
                             }
-
                         }
-
                         _part.Measures.Add(curMeasure);
                     }
                                 
@@ -371,14 +385,11 @@ namespace MusicXml.Domain
                         name = "NO NAME";
                     }
                     _part.Name = name;
-
                 }
             }
-
             _part.Raw = partlistElement.ToString();
             return _part;
         }
-
 
         private static int ConvertStringValue(string value)
         {
@@ -492,9 +503,19 @@ namespace MusicXml.Domain
                     if (myLyric != null)
                     {
                         lyric = new Lyric();
-                        
+
                         if (myLyric.Attribute("number") != null)
-                            lyric.VerseNumber = Convert.ToInt32(myLyric.Attribute("number").Value);
+                        {
+                            try
+                            {
+                                lyric.VerseNumber = Convert.ToInt32(myLyric.Attribute("number").Value);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.Message);
+                                return lstLyrics;
+                            }                            
+                        }
                         
                         var syllabicNode = myLyric.Descendants("syllabic").FirstOrDefault();
                         var syllabicText = string.Empty;
