@@ -266,7 +266,14 @@ namespace MusicXml.Domain
                             else if (childnode.Name == "note")
                             {
                                 // Get notes information
-                                Note note = GetNote(childnode, _part.coeffmult);       
+                                Note note = GetNote(childnode, _part.coeffmult);
+
+                                if (note.Lyrics != null)
+                                {
+                                    int x = note.Lyrics.Count;
+                                    if (curMeasure.NumberOfVerses < x)
+                                        curMeasure.NumberOfVerses = x;
+                                }
 
                                 // Create new element
                                 MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
@@ -481,7 +488,7 @@ namespace MusicXml.Domain
                 note.IsChordTone = true;
 
             // Manage several lyrics per note (a note can be used by several verses)
-            note.Lyrics = GetLyrics(node);
+            note.Lyrics = GetLyrics(node);            
 
             return note;
         }
@@ -555,55 +562,7 @@ namespace MusicXml.Domain
             return lstLyrics;
         }
 
-        #region deleteme
-        /*
-        private static Lyric GetLyric(XElement node)
-        {
-            var lyric = new Lyric();
-            
-            // *************************** OLD CODE ******************************
-            // Ici on ne prend que la premiere !!!!!
-            var lyrics = node.Descendants("lyric").FirstOrDefault();
-            if (lyrics != null)
-            {
-
-                lyric.VerseNumber = Convert.ToInt32(lyrics.Attribute("number").Value);
-
-                var syllabicNode = lyrics.Descendants("syllabic").FirstOrDefault();
-                var syllabicText = string.Empty;
-
-                if (syllabicNode != null)
-                    syllabicText = syllabicNode.Value;
-
-                switch (syllabicText)
-                {
-                    case "":
-                        lyric.Syllabic = Syllabic.None;
-                        break;
-                    case "begin":
-                        lyric.Syllabic = Syllabic.Begin;
-                        break;
-                    case "single":
-                        lyric.Syllabic = Syllabic.Single;
-                        break;
-                    case "end":
-                        lyric.Syllabic = Syllabic.End;
-                        break;
-                    case "middle":
-                        lyric.Syllabic = Syllabic.Middle;
-                        break;
-                }
-
-                var textNode = node.Descendants("text").FirstOrDefault();
-                if (textNode != null)
-                    lyric.Text = textNode.Value;
-
-            }
-
-            return lyric;
-        }
-        */
-        #endregion deleteme
+      
 
     }
 }

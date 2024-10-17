@@ -28,6 +28,7 @@ namespace MusicXml.Domain
 
 		// FAB : is measure belonging to a Verse?
 		public List<int> VerseNumber { get; internal set; }	
+		public int NumberOfVerses { get; internal set; }	
 
     }
 
