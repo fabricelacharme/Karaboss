@@ -314,7 +314,21 @@ namespace MusicXml
                 // =========================================
                 foreach (List<int> lmap in mapmeasures)
                 {
-                    versenumber++;
+                    // No !!!!!
+                    //versenumber++;
+                    bool bFound = false;
+                    foreach (int indice in lmap)
+                    {
+                        Measure measure = Measures[indice];
+                        if (measure.NumberOfVerses > 0)
+                        {
+                            versenumber++;
+                            bFound = true;
+                            break;
+                        }
+                    }
+                    if (!bFound)
+                        versenumber = 0;
 
                     foreach (int indice in lmap)
                     {
@@ -409,9 +423,9 @@ namespace MusicXml
                                             CreateMidiNote2(note, notenumber, starttime);
                                         
                                         /*
-                                        if (measure.Number == 5 && versenumber == 1)
+                                        if (measure.Number == 10)// && versenumber == 1)
                                         {
-                                            Console.WriteLine("ici");
+                                             Console.WriteLine("ici");
                                         }
                                         */
 
@@ -489,7 +503,7 @@ namespace MusicXml
             
             int NumberOfVersesPerMeasure = 0;            
             int numloop = 0;            
-            int nbLoopMax = 2;
+            int nbLoopMax = 3;
             int firstfwdminimum = 0;
 
             // Consider forst nloc
@@ -534,42 +548,35 @@ namespace MusicXml
             {
 
                 // Calculate limits of bloc if the repeats are done
-                //if (!bRepeatsDone)
-                //{
-                    // 1 Search descending forward from start to less
-                    //if (pivot > 0)
-                    //{                        
-                    firstfwd = GetFirstForward(pivot, partmes);
-                    if (firstfwd < firstfwdminimum)
-                        firstfwd = firstfwdminimum;
-                    //}
+                // 1 Search descending forward from start to less
+                firstfwd = GetFirstForward(pivot, partmes);
+                if (firstfwd < firstfwdminimum)
+                    firstfwd = firstfwdminimum;
+                    
 
-                    // 2. Search ascending backward from start to more
-                    y = GetFirstBackward(pivot, partmes);
+                // 2. Search ascending backward from start to more
+                y = GetFirstBackward(pivot, partmes);
 
 
-                    // If no more backward starting from "start"
-                    // Create a verse with all trailing measures and leave
-                    if (y == -1)
+                // If no more backward starting from "start"
+                // Create a verse with all trailing measures and leave
+                if (y == -1)
+                {
+                    #region leave if no more backward
+                    versenumber++;
+                    bloc = new List<int>();
+                    for (int i = firstfwd; i <= partmes.Count - 1; i++)
                     {
-                        #region leave if no more backward
-                        bloc = new List<int>();
-                        for (int i = firstfwd; i <= partmes.Count - 1; i++)
-                        {
-                            if (mes.VerseNumber.Count == 0 || mes.VerseNumber.Contains(versenumber))
-                                bloc.Add(i);
-                        }
-                        mapmeasures.Add(bloc);
-                        break;
-                        #endregion leave if no more backward
+                        mes = partmes[i];
+                        if (mes.VerseNumber.Count == 0 || mes.VerseNumber.Contains(versenumber))
+                            bloc.Add(i);
+                    }
+                    mapmeasures.Add(bloc);
+                    break;
+                    #endregion leave if no more backward
 
-                    }
-                    else
-                    {
-                        //if (numloop != 1)
-                        //    numloop = 2;
-                    }
-                //}
+                }
+                
 
                 // Add bloc including measures between FirstForward and FirstBackWard
                 versenumber++;
@@ -600,11 +607,11 @@ namespace MusicXml
                 // Increase pivot value
                 // Works only if 2 verses
                 // if 3 verses or more, we should do an additional loop
-                if (numloop == nbLoopMax)
+                if (numloop >= nbLoopMax)
                 {
                     pivot = y + 1;   // Bug : pivot must increase in case a reserved measures at the end of the blocs
                     numloop = 0;
-                    nbLoopMax = 2;
+                    nbLoopMax = 3;
 
                     // All loops have been done: we do not have to consider previous measures
                     // how can we prevent to calculate again firstfwd ?
@@ -615,8 +622,8 @@ namespace MusicXml
                 else if (bReserved)
                 {
                     pivot = y + 1;
+                    bReserved = false;
                 }
-
 
 
                 #region leave if end of file
@@ -631,6 +638,7 @@ namespace MusicXml
                     bloc = new List<int>();
                     for (int i = firstfwd; i <= y; i++)
                     {
+                        mes = partmes[i];
                         if (mes.VerseNumber.Count == 0 || mes.VerseNumber.Contains(versenumber))
                             bloc.Add(i);
                     }
@@ -864,37 +872,34 @@ namespace MusicXml
                 // next time, the next lyric will be used
                 Lyric lyric = new Lyric();
 
+                
+                bool bfound = false;
                 if (n.Lyrics.Count > 1)
                 {
-                    bool bfound = false;
                     foreach (Lyric ll in n.Lyrics)
                     {
-                        string s = ll.Text;
-                        if (s.Length > 0)
+                        if (ll.VerseNumber == versenumber)
                         {
-                            if (!s.StartsWith("¼"))
-                            {
-                                lyric = ll;
-                                lyric.Text = "¼" + s;
-                                bfound = true;
-                                break;
-                            }
-                        }                        
+                            lyric = ll;
+                            bfound = true;
+                            break;
+                        }
                     }
-
                     if (!bfound)
                         return;
                 }
-                else
+                else if (n.Lyrics.Count == 1)
                 {
                     lyric = n.Lyrics[0];
                 }
+                else
+                {
+                    return;
+                }
 
-                //lyric = n.Lyrics[versenumber - 1];                
+                                
                 string currentElement = lyric.Text;
-                if (currentElement.StartsWith("¼"))
-                    currentElement = currentElement.Substring(1);
-
+               
                 
                 switch (lyric.Syllabic)
                 {

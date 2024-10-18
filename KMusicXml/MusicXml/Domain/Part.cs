@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -265,6 +266,10 @@ namespace MusicXml.Domain
                             }                            
                             else if (childnode.Name == "note")
                             {
+                                if (curMeasure.Number == 10)
+                                {
+                                    Console.WriteLine("ici");
+                                }
                                 // Get notes information
                                 Note note = GetNote(childnode, _part.coeffmult);
 
@@ -503,6 +508,8 @@ namespace MusicXml.Domain
             var lyric = new Lyric();
             List<Lyric> lstLyrics = new List<Lyric>();
             var allLyrics = node.Descendants("lyric");
+            int maxversenumber = 0;
+
             if (allLyrics != null)
             {
                 foreach (var myLyric in allLyrics)
@@ -516,6 +523,8 @@ namespace MusicXml.Domain
                             try
                             {
                                 lyric.VerseNumber = Convert.ToInt32(myLyric.Attribute("number").Value);
+                                if (maxversenumber < lyric.VerseNumber)
+                                    maxversenumber = lyric.VerseNumber;
                             }
                             catch (Exception e)
                             {
@@ -553,10 +562,43 @@ namespace MusicXml.Domain
                         if (textNode != null)
                             lyric.Text = textNode.Value;
 
+                        
+
                         lstLyrics.Add(lyric);
                     }
 
                 }
+                if (lstLyrics.Count < maxversenumber)
+                {
+                    Console.WriteLine("ici");
+                    bool bFound = false;
+
+                    for (int i = 0; i < maxversenumber; i++) 
+                    {                                                
+                        int versenb = i + 1;
+                        bFound = false;
+                        for (int j = 0; j < lstLyrics.Count; j++)
+                        {
+                            lyric = lstLyrics[j];
+                            if (lyric.VerseNumber   == versenb)
+                            {
+                                bFound = true; break;
+                            }
+                        }
+
+                        if (!bFound) 
+                        {
+                            lyric = new Lyric();
+                            lyric.VerseNumber = versenb;
+                            lyric.Text = "";                            
+                            lstLyrics.Insert(versenb - 1, lyric);
+                         }
+
+                       
+
+                    }
+                }
+               
             }
 
             return lstLyrics;
