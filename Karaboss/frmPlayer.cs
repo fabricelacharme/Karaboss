@@ -239,6 +239,7 @@ namespace Karaboss
         private int _bpm = 0;        
         private double _ppqn;
         private int _tempo;
+        private int _tempoplayed;
         private int _measurelen;
         
 
@@ -1335,6 +1336,30 @@ namespace Karaboss
             lblInfosF.Text = tx;
         }
 
+        private void DisplayFileInfos(int tempo)
+        {
+            // BEAT
+            beat = 1;
+            int bpm = GetBPM(tempo);
+
+            int Min = (int)(_duration / 60);
+            int Sec = (int)(_duration - (Min * 60));
+
+            string tx;
+            tx = string.Format("Division: {0}", _ppqn) + "\n";
+            tx += string.Format("Tempo: {0}", tempo) + "\n";
+            tx += string.Format("BPM: {0}", bpm) + "\n";
+            tx += string.Format("TotalTicks: {0}", _totalTicks) + "\n";
+            tx += "Duree: " + string.Format("{0:00}:{1:00}", Min, Sec) + "\n";
+
+            if (sequence1.Format != sequence1.OrigFormat)
+                tx += "Midi Format: " + sequence1.Format.ToString() + " (Orig. Format: " + sequence1.OrigFormat.ToString() + ")";
+            else
+                tx += "Midi Format: " + sequence1.Format.ToString();
+
+            lblInfosF.Text = tx;
+        }
+
         #endregion Displays objects
 
 
@@ -2053,6 +2078,7 @@ namespace Karaboss
             {
                 ScrollTimeBar(0);                
                 DisplayTimeElapse(0);
+                DisplayFileInfos();
 
                 lblBeat.Text = "1|" + sequence1.Numerator;
 
@@ -5221,6 +5247,26 @@ namespace Karaboss
             }
         }
 
+        private void HandleMetaMessagePlayed(object sender, MetaMessageEventArgs e)
+        {
+            if (closing)
+            {
+                return;
+            }
+            //var a = e.Message.MessageType;
+
+            if (e.Message.MetaType == MetaType.Tempo)
+            {
+                MetaMessage msg = e.Message;
+                byte[] data = msg.GetBytes();
+                _tempoplayed = ((data[0] << 16) | (data[1] << 8) | data[2]);
+
+                
+                
+
+            }
+
+        }
 
         private void HandleChannelMessagePlayed(object sender, ChannelMessageEventArgs e)
         {
@@ -5610,6 +5656,12 @@ namespace Karaboss
             bReglageChanged = false;
 
             #endregion beat animation
+
+
+            // Tempo change during play
+            //if (_tempoplayed != _tempo)
+                DisplayFileInfos(_tempoplayed);
+
         }
 
         /// <summary>

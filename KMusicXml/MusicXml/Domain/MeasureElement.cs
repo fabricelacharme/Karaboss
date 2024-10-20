@@ -12,6 +12,7 @@
 		Backup,
 		Forward,
 		Barline,
-		Ending
+		Ending,
+		Time
 	}
 }

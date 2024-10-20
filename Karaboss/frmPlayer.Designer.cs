@@ -1258,6 +1258,7 @@ namespace Karaboss
             this.sequencer1.Sequence = this.sequence1;
             this.sequencer1.PlayingCompleted += new System.EventHandler(this.HandlePlayingCompleted);
             this.sequencer1.ChannelMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.ChannelMessageEventArgs>(this.HandleChannelMessagePlayed);
+            this.sequencer1.MetaMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.MetaMessageEventArgs>(this.HandleMetaMessagePlayed);
             this.sequencer1.SysExMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.SysExMessageEventArgs>(this.HandleSysExMessagePlayed);
             this.sequencer1.Chased += new System.EventHandler<Sanford.Multimedia.Midi.ChasedEventArgs>(this.HandleChased);
             this.sequencer1.Stopped += new System.EventHandler<Sanford.Multimedia.Midi.StoppedEventArgs>(this.HandleStopped);

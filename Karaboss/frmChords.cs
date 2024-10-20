@@ -193,7 +193,7 @@ namespace Karaboss
                 sequencer1.Position = 0;
                 sequencer1.Sequence = sequence1;    // primordial !!!!!
                 this.sequencer1.PlayingCompleted += new System.EventHandler(this.HandlePlayingCompleted);
-                this.sequencer1.ChannelMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.ChannelMessageEventArgs>(this.HandleChannelMessagePlayed);
+                this.sequencer1.ChannelMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.ChannelMessageEventArgs>(this.HandleChannelMessagePlayed);                
                 this.sequencer1.SysExMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.SysExMessageEventArgs>(this.HandleSysExMessagePlayed);
                 this.sequencer1.Chased += new System.EventHandler<Sanford.Multimedia.Midi.ChasedEventArgs>(this.HandleChased);
                 this.sequencer1.Stopped += new System.EventHandler<Sanford.Multimedia.Midi.StoppedEventArgs>(this.HandleStopped);
@@ -210,6 +210,10 @@ namespace Karaboss
                 MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+       
+
+
 
         /// <summary>
         /// Draw all controls

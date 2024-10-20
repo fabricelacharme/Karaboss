@@ -128,8 +128,10 @@ namespace MusicXml.Domain
           
             // Default
             // Division 480 + Tempo 500000 => BPM 120
-            _part.Tempo = 500000;
+            //_part.Tempo = 500000;
 
+            
+            
             foreach (var partElement in doc.Descendants("part"))
             {
                 // Check if goof Id for this part
@@ -153,6 +155,7 @@ namespace MusicXml.Domain
 
                     // TEMPO *************************
                     // quarter 100 signifie que la noire est à 100 bpm
+                    /*
                     XElement metronome = partElement.Descendants("metronome").FirstOrDefault();
                     if (metronome != null)
                     {
@@ -173,6 +176,7 @@ namespace MusicXml.Domain
                             }
                         }
                     }
+                    */
 
                     XElement ptime = partElement.Descendants("time").FirstOrDefault();
                     _part.Numerator = (int?)ptime.Descendants("beats").FirstOrDefault() ?? 4;
@@ -195,9 +199,7 @@ namespace MusicXml.Domain
                     foreach ( XElement measureNode in measureNodes )
                     {                        
                         Measure curMeasure = new Measure();
-
                         
-
                         if (bReserved) 
                         { 
                             curMeasure.VerseNumber = VerseNumber;
@@ -248,10 +250,32 @@ namespace MusicXml.Domain
                         #endregion measure number
 
 
-
                         foreach (XElement childnode in measureNode.Descendants())
                         {                            
-                            if (childnode.Name == "sound")
+                            if (childnode.Name == "metronome")
+                            {
+                                var pm = childnode.Descendants("per-minute").FirstOrDefault();
+                                if (pm != null)                             
+                                {
+                                    string strtmpo = pm.Value;
+                                    strtmpo = strtmpo.Replace(",", ".");                                    
+                                    double PerMinute = Convert.ToDouble(strtmpo, (CultureInfo.InvariantCulture));                                    
+                                    const float kOneMinuteInMicroseconds = 60000000;
+                                    float ttempo = kOneMinuteInMicroseconds / (float)PerMinute;
+
+                                    var newTime = new Time();
+                                    newTime.Tempo = ttempo;
+                                    MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Time, Element = newTime };
+                                    curMeasure.MeasureElements.Add(trucmeasureElement);
+
+
+                                    if (_part.Tempo == 0)
+                                        _part.Tempo = (int)ttempo;
+                                }
+
+                            }
+                            /*
+                            else if (childnode.Name == "sound")
                             {
                                 if (childnode.Attribute("tempo") != null)
                                 {
@@ -263,13 +287,16 @@ namespace MusicXml.Domain
                                     _part.Tempo = (int)ttempo;                                    
 
                                 }
-                            }                            
+                            }
+                            */
                             else if (childnode.Name == "note")
                             {
+                                /*
                                 if (curMeasure.Number == 10)
                                 {
                                     Console.WriteLine("ici");
                                 }
+                                */
                                 // Get notes information
                                 Note note = GetNote(childnode, _part.coeffmult);
 
@@ -399,7 +426,10 @@ namespace MusicXml.Domain
                     _part.Name = name;
                 }
             }
+            
             _part.Raw = partlistElement.ToString();
+            if (_part.Tempo == 0)
+                _part.Tempo = 500000;
             return _part;
         }
 

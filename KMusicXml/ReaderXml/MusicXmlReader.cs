@@ -367,6 +367,12 @@ namespace MusicXml
                                 switch (metype)
                                 {
 
+                                    case MeasureElementType.Time:
+                                        Time tm = (Time)obj;
+                                        float ttempo = tm.Tempo;
+                                        CreateTempoEvent(ttempo, timeline);
+                                        break;
+                                    
                                     case MeasureElementType.Backup:
                                         Backup bkp = (Backup)obj;
                                         timeline -= (int)(bkp.Duration * multcoeff);
@@ -802,6 +808,15 @@ namespace MusicXml
         }
 
         #endregion tracks
+
+
+
+        #region Tempo
+        private void CreateTempoEvent(float tmp, int ticks)
+        {
+            track1.insertTempo((int)tmp, ticks);
+        }
+        #endregion Tempo
 
 
         #region notes
