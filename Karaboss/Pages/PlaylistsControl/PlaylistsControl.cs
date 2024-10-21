@@ -49,6 +49,7 @@ namespace Karaboss.playlists
     public delegate void PlayAbcEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayTxtEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayXmlEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
+    public delegate void PlayMxlEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void NavigateToEventHandler(Object sender, string path, string file);
 
@@ -61,6 +62,7 @@ namespace Karaboss.playlists
         public event PlayAbcEventHandler PlayAbc;
         public event PlayTxtEventHandler PlayTxt;
         public event PlayXmlEventHandler PlayXml;
+        public event PlayXmlEventHandler PlayMxl;
         public event PlayCDGEventHandler PlayCDG;
         public event NavigateToEventHandler NavigateTo;
 
@@ -1476,6 +1478,11 @@ namespace Karaboss.playlists
                                     PlayXml?.Invoke(this, fi, currentPlaylist, bplay);
                                     break;
                                 }
+                            case ".mxl":
+                                {
+                                    PlayMxl?.Invoke(this, fi, currentPlaylist, bplay);
+                                    break;
+                                }
                             default:
                                 try
                                 {
@@ -2352,6 +2359,11 @@ namespace Karaboss.playlists
                     case ".xml":
                         {
                             PlayXml?.Invoke(this, new FileInfo(file), null, bplay);
+                            break;
+                        }
+                    case ".mxl":
+                        {
+                            PlayMxl?.Invoke(this, new FileInfo(file), null, bplay);
                             break;
                         }
                     case ".txt":
