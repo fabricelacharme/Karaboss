@@ -27,6 +27,8 @@ namespace MusicXml.Domain
 		// FAB : for verses (several lyrics on the same note with different "number")
 		public List<Lyric> Lyrics { get; internal set; }
 
+		public int Transpose { get; internal set; }
+
 		public Pitch Pitch { get; internal set; }
 
 		public int Staff { get; internal set; }

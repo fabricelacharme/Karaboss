@@ -74,6 +74,8 @@ namespace MusicXml.Domain
         public int Numerator { get; internal set; }
         public int Denominator { get; internal set; }
 
+        public int _chromatictranspose {get; internal set; }
+
         public Part()
 		{
 			Id = string.Empty;						
@@ -81,8 +83,11 @@ namespace MusicXml.Domain
 			MidiChannel = 1;
 			MidiProgram = 1;
             Volume = 80; // 101;
-			Pan = 80;            
+			Pan = 80;
+            _chromatictranspose = 0;
 		}
+
+
 
         public int coeffmult { get; set; }
 
@@ -122,6 +127,7 @@ namespace MusicXml.Domain
             }
             _part.Volume = vol * 127/100;
 
+
             // PAN
             _part.Pan = (int?)partlistElement.Descendants("pan").FirstOrDefault() ?? 0;
             _part.Pan += 65;
@@ -142,45 +148,42 @@ namespace MusicXml.Domain
                     // Is there a 2nd track included in this part?
                     _part.Staves = (int?)partElement.Descendants("staves").FirstOrDefault() ?? 1;
 
+                   
 
-                    // DIVISON *********************
-                    XElement quarterlength = partElement.Descendants("divisions").FirstOrDefault();
-                    if (quarterlength != null)
-                    {
-                        _part.Division = (int)partElement.Descendants("divisions").FirstOrDefault();                        
-                        _part.coeffmult = 480 / _part.Division;
-                        _part.Division = 480; // = _part.coeffmult * _part.Division;
-
-                    }
-
-                    // TEMPO *************************
-                    // quarter 100 signifie que la noire est à 100 bpm
-                    /*
-                    XElement metronome = partElement.Descendants("metronome").FirstOrDefault();
-                    if (metronome != null)
-                    {
-                        XElement BeatUnit = metronome.Descendants("beat-unit").FirstOrDefault();   // quarter
-                        if (BeatUnit != null)
+                    // =======================================================================
+                    // ATTRIBUTES ******************
+                    // =======================================================================
+                    XElement attributes = partElement.Descendants("attributes").FirstOrDefault();
+                    if (attributes != null) 
+                    { 
+                        // Transpositions
+                        XElement transpose = attributes.Descendants("transpose").FirstOrDefault();
+                        if (transpose != null)
                         {
-                            string strtmpo = metronome.Descendants("per-minute").FirstOrDefault().Value;
-                            if (strtmpo != null)
+                            string diatonic = transpose.Descendants("diatonic").FirstOrDefault()?.Value;
+                            string chromatic = transpose.Descendants("chromatic").FirstOrDefault()?.Value;
+                            try
                             {
-                                strtmpo = strtmpo.Replace(",", ".");
-                                double PerMinute = Convert.ToDouble(strtmpo, (CultureInfo.InvariantCulture));
-
-                                //float PerMinute = (float)metronome.Descendants("per-minute").FirstOrDefault();         // BPM
-                                const float kOneMinuteInMicroseconds = 60000000;
-                                float ttempo = kOneMinuteInMicroseconds / (float)PerMinute;
-
-                                _part.Tempo = (int)ttempo;
+                                _part._chromatictranspose = Convert.ToInt32(chromatic);
                             }
+                            catch (Exception ex) { Console.WriteLine(ex.Message); }
+                        }
+
+                        // Time
+                        XElement ptime = attributes.Descendants("time").FirstOrDefault();
+                        _part.Numerator = (int?)ptime.Descendants("beats").FirstOrDefault() ?? 4;
+                        _part.Denominator = (int?)ptime.Descendants("beat-type").FirstOrDefault() ?? 4;
+
+                        // Divisions
+                        XElement quarterlength = attributes.Descendants("divisions").FirstOrDefault();
+                        if (quarterlength != null)
+                        {
+                            _part.Division = (int)attributes.Descendants("divisions").FirstOrDefault();
+                            _part.coeffmult = 480 / _part.Division;
+                            _part.Division = 480; // = _part.coeffmult * _part.Division;
                         }
                     }
-                    */
 
-                    XElement ptime = partElement.Descendants("time").FirstOrDefault();
-                    _part.Numerator = (int?)ptime.Descendants("beats").FirstOrDefault() ?? 4;
-                    _part.Denominator = (int?)ptime.Descendants("beat-type").FirstOrDefault() ?? 4;
 
                     XElement pnote = partElement.Descendants("note").FirstOrDefault();
                     int v = (int?)pnote.Descendants("voice").FirstOrDefault() ?? -1;
@@ -221,7 +224,6 @@ namespace MusicXml.Domain
                             XElement mod = pkey.Descendants("mode").FirstOrDefault();
                             if (mod != null)
                                 curMeasure.Attributes.Key.Mode = mod.Value.ToString();
-
                         }
 
                         
@@ -298,7 +300,7 @@ namespace MusicXml.Domain
                                 }
                                 */
                                 // Get notes information
-                                Note note = GetNote(childnode, _part.coeffmult);
+                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose);
 
                                 if (note.Lyrics != null)
                                 {
@@ -442,8 +444,11 @@ namespace MusicXml.Domain
            
         }
 
-        private static Note GetNote(XElement node, int mult)
+        private static Note GetNote(XElement node, int mult, int transpose)
         {
+            Dictionary<string, int> strnote_dict = new Dictionary<string, int>() { { "C", 0 }, { "Db", 1 }, { "D", 2 }, { "Eb", 3 }, { "E", 4 }, { "F", 5 }, { "Gb", 6 }, { "G", 7 }, { "Ab", 8 }, { "A", 9 }, { "Bb", 10 }, { "B", 11 } };
+            Dictionary<int, string> intnote_dict = new Dictionary<int, string>() { { 0, "C" }, { 1, "Db" }, { 2, "D" }, { 3, "Eb" }, { 4, "E" }, { 5, "F" }, { 6, "Gb" }, { 7, "G" }, { 8, "Ab" }, { 9, "A" }, { 10, "Bb" }, { 11, "B" } };
+
             var rest = node.Descendants("rest").FirstOrDefault();
             var step = node.Descendants("step").FirstOrDefault();
             var alter = node.Descendants("alter").FirstOrDefault();
@@ -477,6 +482,10 @@ namespace MusicXml.Domain
             {
                 stp = step.Value;
                 note.Pitch.Step = stp[0];
+
+                note.Transpose = transpose;
+                
+                
             }
 
             string accidental = "";
@@ -509,8 +518,7 @@ namespace MusicXml.Domain
 
             if (duration != null)
             {
-                note.Duration = int.Parse(duration.Value);
-                //note.Duration = note.Duration * 480;
+                note.Duration = int.Parse(duration.Value);                
                 note.Duration = note.Duration * mult;
             }
             else
@@ -528,6 +536,8 @@ namespace MusicXml.Domain
             return note;
         }
       
+        
+
         /// <summary>
         /// Extract the list of lyrics for a single note 
         /// </summary>

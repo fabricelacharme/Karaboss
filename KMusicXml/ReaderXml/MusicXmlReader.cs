@@ -416,6 +416,8 @@ namespace MusicXml
                                         string letter = note.Pitch.Step.ToString();
                                         notenumber = 12 + Notes.IndexOf(letter) + 12 * octave;
 
+                                        notenumber += note.Transpose;
+                                        
                                         if (note.Pitch.Alter != 0)
                                         {
                                             int alter = note.Pitch.Alter;
