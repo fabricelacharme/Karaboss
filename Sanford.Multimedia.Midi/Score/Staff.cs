@@ -313,7 +313,7 @@ namespace Sanford.Multimedia.Midi.Score
                     g.RotateTransform(45);
 
                     // Draw stem
-                    g.DrawLine(pen, SheetMusic.NoteWidth / 2, -SheetMusic.NoteHeight / 2, SheetMusic.NoteWidth / 2, -10);
+                    g.DrawLine(pen, SheetMusic.NoteWidth / 2, -SheetMusic.NoteHeight / 2, SheetMusic.NoteWidth / 2, -14);
 
                     //Draw text (= 120)
                     g.DrawString(tx, SheetMusic.LetterFont, Brushes.Black, SheetMusic.NoteWidth, -SheetMusic.NoteHeight - SheetMusic.LineWidth);
