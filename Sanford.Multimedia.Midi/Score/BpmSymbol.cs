@@ -9,7 +9,9 @@
  * 
  */
 
+using System;
 using System.Drawing;
+using System.Windows.Media;
 
 namespace Sanford.Multimedia.Midi.Score
 {
@@ -70,7 +72,8 @@ namespace Sanford.Multimedia.Midi.Score
         /** Draw nothing.
          * @param ytop The ylocation (in pixels) where the top of the staff starts.
          */
-        //public override void Draw(Graphics g, Pen pen, int ytop, int tracknum, Rectangle selrect, int OffsetX) { }
+        //public void Draw (Graphics g, System.Drawing.Pen pen, int ytop, int tracknum, Rectangle selrect, int OffsetX) 
+        
 
         public override string ToString()
         {

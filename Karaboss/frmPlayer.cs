@@ -3414,70 +3414,7 @@ namespace Karaboss
             // le nombre 2 représente la blanche (soit une demi-ronde) ;
             // le nombre 4 représente la noire (soit un quart de ronde) ;
             // le nombre 8 représente la croche (soit un huitième de ronde) ;
-            // le nombre 16 représente la double croche (soit un seizième de ronde).
-
-            #region old code
-            /*
-            DialogResult dr = new DialogResult();
-            Sanford.Multimedia.Midi.Score.UI.frmAddMeasuresDialog AddMeasuresDialog = new Sanford.Multimedia.Midi.Score.UI.frmAddMeasuresDialog();
-            dr = AddMeasuresDialog.ShowDialog();
-
-            if (dr == System.Windows.Forms.DialogResult.Cancel)            
-                return;            
-
-            decimal measures = AddMeasuresDialog.Measures;
-
-            if (measures == 0)
-                return;
-
-            int i;
-            int noteC = 60;
-
-
-            // Cacul de la durée d'une mesure en nombre de temps
-            float mult = 4.0f / sequence1.Denominator;
-            int MeasureLength = sequence1.Division * sequence1.Numerator;
-            MeasureLength = Convert.ToInt32(MeasureLength * mult);
-
-
-            // NEW CODE ==============================================================            
-            _totalTicks = sequence1.GetLength();
-            _measurelen = sequence1.Time.Measure;
-            int ticks = _totalTicks + (int)measures*_measurelen;
-                                   
-            
-            int nbMeasures = 1 + _totalTicks / MeasureLength;
-            int totalMeasures = nbMeasures + (int)measures; // mesures existantes + mesures ajoutees
-
-            // temps de la dernière note de la dernière mesure ajoutée 
-            float time = -1 + (totalMeasures * sequence1.Numerator) * mult;
-
-            // Start time of the note
-            int division = sequence1.Division; // 960 par exemple
-            ticks = Convert.ToInt32(time * division);           // ticks de début de note
-
-            // Duration of the note
-            int endticks = (Convert.ToInt32(time) + 1) * division;     // ticks de fin de note
-            int duration = endticks - ticks;
-
-            int velocity = Karaclass.m_Velocity;
-
-            for (i = 0; i < sequence1.tracks.Count; i++)
-            {
-                Track track = sequence1.tracks[i];
-                MidiNote note = new MidiNote(ticks, track.MidiChannel, noteC, duration, velocity, false);
-                track.addNote(note);                
-            }
-            
-            UpdateMidiTimes();
-            DisplaySongDuration();
-
-            RedrawSheetMusic();
-            SetScrollBarValues();
-
-            FileModified();
-            */
-            #endregion old code
+            // le nombre 16 représente la double croche (soit un seizième de ronde).           
 
             AddMeasures();
         }
@@ -3536,6 +3473,8 @@ namespace Karaboss
 
             ModTempoMenu(tempo, division, starttime);
             UpdateMidiTimes();
+
+            RedrawSheetMusic();
 
             FileModified();
             DisplayFileInfos();

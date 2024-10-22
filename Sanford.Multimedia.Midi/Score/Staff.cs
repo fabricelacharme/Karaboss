@@ -282,24 +282,46 @@ namespace Sanford.Multimedia.Midi.Score
             }
         }
 
+        /// <summary>
+        /// Draw a black note plus the value of the tempo (BPM)
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="clip"></param>
+        /// <param name="pen"></param>
         private void DrawTempos(Graphics g, Rectangle clip, Pen pen)
         {
             int xpos = keysigWidth;
             int ypos = 0;
-            int bpm;    
+            //int bpm;    
             string t = string.Empty;
+            string tx = string.Empty;
+            System.Drawing.Brush brush = System.Drawing.Brushes.Black;
 
             foreach (BpmSymbol bpmSymbol in tempos)
             {
                 if ((xpos + bpmSymbol.X >= clip.X - 50) && (xpos + bpmSymbol.X <= clip.X + clip.Width + 50))
                 {
-                    //bpm = bpmSymbol.Tempo;
-                    t = "BPM = " + bpmSymbol.BPM.ToString();
+                                        
+                    tx = "= " + bpmSymbol.BPM.ToString();                    
 
-                    g.DrawString(t,
-                             SheetMusic.LetterFont,
-                             Brushes.Black,
-                             xpos + bpmSymbol.X, ypos);
+                    // Offset
+                    g.TranslateTransform(xpos + bpmSymbol.X + SheetMusic.NoteWidth / 2 + 1, 15 + ypos - SheetMusic.LineWidth + SheetMusic.NoteHeight / 2);
+
+                    // draw ellipse
+                    g.RotateTransform(-45);                                        
+                    g.FillEllipse(brush, -SheetMusic.NoteWidth / 2, -SheetMusic.NoteHeight / 2, SheetMusic.NoteWidth, SheetMusic.NoteHeight - 1);                   
+                    g.RotateTransform(45);
+
+                    // Draw stem
+                    g.DrawLine(pen, SheetMusic.NoteWidth / 2, -SheetMusic.NoteHeight / 2, SheetMusic.NoteWidth / 2, -10);
+
+                    //Draw text (= 120)
+                    g.DrawString(tx, SheetMusic.LetterFont, Brushes.Black, SheetMusic.NoteWidth, -SheetMusic.NoteHeight - SheetMusic.LineWidth);
+
+                    // Offset back
+                    g.TranslateTransform(-(xpos + bpmSymbol.X + SheetMusic.NoteWidth / 2 + 1), -(15 + ypos - SheetMusic.LineWidth + SheetMusic.NoteHeight / 2));
+                    
+
                 }
             }
         }
