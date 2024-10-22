@@ -1353,6 +1353,79 @@ namespace Sanford.Multimedia.Midi
             Insert(ticks, metamessage);
         }
 
+        /// <summary>
+        /// Get the list of all tempo changes in the track
+        /// Format: (ticks, tempo value)
+        /// </summary>
+        /// <returns>List</returns>
+        public List<(int,int)> GetTemposList()
+        {
+            List<(int,int)> l = new List<(int,int)> ();
+
+            int id = 0;
+            int _tempoplayed;
+            MidiEvent current = GetMidiEvent(0);
+
+            while (current.AbsoluteTicks <= Length)
+            {
+                IMidiMessage a = current.MidiMessage;
+                if (a.MessageType == MessageType.Meta)
+                {
+                    MetaMessage msg = (MetaMessage)a;
+                    if (msg.MetaType == MetaType.Tempo)
+                    {
+                        byte[] data = msg.GetBytes();
+                        _tempoplayed = ((data[0] << 16) | (data[1] << 8) | data[2]);                        
+                        l.Add((current.AbsoluteTicks, _tempoplayed));
+
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                            id++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion next 
+                    }
+                    else
+                    {
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                            id++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion next      
+                    }
+                }
+                else
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                        id++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion next      
+                }
+            }
+            
+
+
+            return l;
+        }
+
         public void insertKeysignature(int numerator, int denominator)
         {
             byte[] bytes = new byte[2];

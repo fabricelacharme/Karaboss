@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using static Sanford.Multimedia.Midi.Track;
 
 namespace Sanford.Multimedia.Midi.Score
 {
@@ -36,6 +37,7 @@ namespace Sanford.Multimedia.Midi.Score
     {
         private List<MusicSymbol> symbols;  /** The music symbols in this staff */
         private List<LyricSymbol> lyrics;   /** The lyrics to display (can be null) */
+        private List<BpmSymbol> tempos;     /** The tempo changes to display (minimum 1) */
         private int ytop;                   /** The y pixel of the top of the staff */
         private ClefSymbol clefsym;         /** The left-side Clef symbol */
         private AccidSymbol[] keys;         /** The key signature symbols */
@@ -280,6 +282,28 @@ namespace Sanford.Multimedia.Midi.Score
             }
         }
 
+        private void DrawTempos(Graphics g, Rectangle clip, Pen pen)
+        {
+            int xpos = keysigWidth;
+            int ypos = 0;
+            int bpm;    
+            string t = string.Empty;
+
+            foreach (BpmSymbol bpmSymbol in tempos)
+            {
+                if ((xpos + bpmSymbol.X >= clip.X - 50) && (xpos + bpmSymbol.X <= clip.X + clip.Width + 50))
+                {
+                    //bpm = bpmSymbol.Tempo;
+                    t = "BPM = " + bpmSymbol.BPM.ToString();
+
+                    g.DrawString(t,
+                             SheetMusic.LetterFont,
+                             Brushes.Black,
+                             xpos + bpmSymbol.X, ypos);
+                }
+            }
+        }
+
         /** Draw the measure numbers for each measure */
         private void DrawMeasureNumbers(Graphics g, Rectangle clip, Pen pen)
         {
@@ -452,15 +476,13 @@ namespace Sanford.Multimedia.Midi.Score
                     break;
                 }
                 /* Get the x-position of this lyric */
-                while (symbolindex < symbols.Count &&
-                       symbols[symbolindex].StartTime < lyric.StartTime)
+                while (symbolindex < symbols.Count &&  symbols[symbolindex].StartTime < lyric.StartTime)
                 {
                     xpos += symbols[symbolindex].Width;
                     symbolindex++;
                 }
                 lyric.X = xpos;
-                if (symbolindex < symbols.Count &&
-                    (symbols[symbolindex] is BarSymbol))
+                if (symbolindex < symbols.Count && (symbols[symbolindex] is BarSymbol))
                 {
                     lyric.X += SheetMusic.NoteWidth;
                 }
@@ -471,8 +493,48 @@ namespace Sanford.Multimedia.Midi.Score
                 lyrics = null;
             }
         }
-        
-        
+
+
+        public void AddBpms(List<BpmSymbol> bpmSymbols)
+        {
+            if (bpmSymbols == null)
+             return;
+
+            int xpos = 0;
+            int symbolindex = 0;
+            tempos = new List<BpmSymbol>();
+
+            foreach (BpmSymbol bpmSymbol in bpmSymbols) 
+            {
+                if (bpmSymbol.StartTime < starttime)
+                {
+                    continue;
+                }
+                if (bpmSymbol.StartTime >= endtime)
+                {
+                    break;
+                }
+
+                /* Get the x-position of this bpmsymbol */
+                while (symbolindex < symbols.Count && symbols[symbolindex].StartTime < bpmSymbol.StartTime)
+                {
+                    xpos += symbols[symbolindex].Width;
+                    symbolindex++;
+                }
+                bpmSymbol.X = xpos;
+                if (symbolindex < symbols.Count && (symbols[symbolindex] is BarSymbol))
+                {
+                    bpmSymbol.X += SheetMusic.NoteWidth;
+                }
+                tempos.Add(bpmSymbol);
+            }
+            if (tempos.Count == 0)
+            {
+                tempos = null;
+            }
+
+        }
+
         /** Draw this staff. Only draw the symbols inside the clip area */
         public void Draw(Graphics g, Rectangle clip, Rectangle selRect, Pen pen)
         {
@@ -528,6 +590,9 @@ namespace Sanford.Multimedia.Midi.Score
 
             if (lyrics != null)            
                 DrawLyrics(g, clip ,pen);            
+
+            if (tempos != null)
+                DrawTempos(g, clip, pen);
         }
 
 

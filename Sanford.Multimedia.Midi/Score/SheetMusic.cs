@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi.Resources;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace Sanford.Multimedia.Midi.Score
@@ -489,6 +490,12 @@ namespace Sanford.Multimedia.Midi.Score
                 lyrics = GetLyrics(tracks);
             }
 
+
+            // List of all tempo changes
+            List<BpmSymbol> bpmsymbols = GetAllTempoChanges();
+            
+
+
             /* Vertically align the music symbols */
 
             SymbolWidths widths = new SymbolWidths(symbols, lyrics, measurelen);
@@ -506,6 +513,11 @@ namespace Sanford.Multimedia.Midi.Score
             if (lyrics != null && staffs != null)
             {
                 AddLyricsToStaffs(staffs, lyrics);
+            }
+
+            if (bpmsymbols != null && staffs != null)
+            {
+                AddBpmToStaffs(staffs, bpmsymbols);
             }
 
             /* After making chord pairs, the stem directions can change,
@@ -696,6 +708,35 @@ namespace Sanford.Multimedia.Midi.Score
             this.Invalidate();
         }
 
+
+        #region tempos
+
+        private List<BpmSymbol> GetAllTempoChanges()
+        {
+            List<(int,int)> l = new List<(int,int)> ();
+            List<(int, int)> lt = new List<(int, int)>();
+
+            List<BpmSymbol> result = new List<BpmSymbol>();
+
+            foreach (Track track in sequence1.tracks) 
+            {
+                l = track.GetTemposList();
+                for (int i = 0; i < l.Count; i++)
+                {
+                    if (!lt.Contains (l[i]))
+                    {                                                                        
+                        lt.Add(l[i]);
+                        BpmSymbol bpms = new BpmSymbol(l[i].Item1, l[i].Item2);
+                        result.Add(bpms);
+                    }
+                }
+            }
+
+            //Console.WriteLine (lt.Count);
+            return result;
+        }
+
+        #endregion tempos
 
         /** Apply the given sheet music options to the MidiNotes.
           *  Return the midi tracks with the changes applied.
@@ -3609,6 +3650,14 @@ namespace Sanford.Multimedia.Midi.Score
         }
 
         #endregion lyrics
+
+
+        static void AddBpmToStaffs(List<Staff> staffs, List<BpmSymbol> bpmsymbols)
+        {
+            Staff staff = staffs.FirstOrDefault();
+            staff.AddBpms(bpmsymbols);
+
+        }
 
 
         #region zoom
