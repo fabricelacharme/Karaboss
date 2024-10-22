@@ -173,18 +173,24 @@ namespace Karaboss
 
 
 
-        public static bool IsMIDI(string filename)
+        public static bool IsMIDI(string f)
         {
-            return Regex.IsMatch(filename, "^.+(\\.mid|\\.kar|\\.midi)$", RegexOptions.IgnoreCase);
+            if (f == null || f == "")
+                return false;
+            return Regex.IsMatch(f, "^.+(\\.mid|\\.kar|\\.midi)$", RegexOptions.IgnoreCase);
         }
-        public static bool IsXML(string filename)
+        public static bool IsXML(string f)
         {
-            return Regex.IsMatch(filename, "^.+(\\.xml|\\.musicxml|\\.mxml)$", RegexOptions.IgnoreCase);
+            if (f == null || f == "")
+                return false;
+            return Regex.IsMatch(f, "^.+(\\.xml|\\.musicxml|\\.mxml)$", RegexOptions.IgnoreCase);
         }
 
-        public static bool IsMXL(string filename)
+        public static bool IsMXL(string f)
         {
-            return Regex.IsMatch(filename, "^.+(\\.mxl)$", RegexOptions.IgnoreCase);
+            if (f == null || f == "")
+                return false;
+            return Regex.IsMatch(f, "^.+(\\.mxl)$", RegexOptions.IgnoreCase);
         }
 
         public static bool IsTXT(string filename)
