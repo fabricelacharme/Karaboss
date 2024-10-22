@@ -803,7 +803,7 @@ namespace Karaboss
                 DisplayMidiLabels();
 
         }
-       
+
 
         /// <summary>
         /// Initialize the display of internal infos of a MIDI file in the bottom panel
@@ -811,6 +811,14 @@ namespace Karaboss
         /// <param name="fileName"></param>
         private void InitDisplayMidiFileInfos(string fileName)
         {
+            if (fileName == null || fileName == "")
+            {
+                MidiInfos.Clear();
+                DisplayMidiLabels();
+                return;
+            }
+        
+
             if (Karaclass.IsMidiExtension(fileName) && MidiInfos.busy == false)
             {               
                 MidiInfos.busy = true;                             
