@@ -433,7 +433,7 @@ namespace Sanford.Multimedia.Midi
                     MetaMessage Msg = (MetaMessage)current.MidiMessage;
                     if (Msg.MetaType == MetaType.Tempo)
                     {
-                        if (current.AbsoluteTicks >= ticks)
+                        if (current.AbsoluteTicks == ticks)
                         {
                             return id;
                         }
@@ -486,7 +486,7 @@ namespace Sanford.Multimedia.Midi
         }
 
         /// <summary>
-        /// Remove Tempo Message
+        /// Remove Tempo Message at exact location ticks
         /// </summary>
         public void RemoveTempoEvent(int ticks)
         {
@@ -497,7 +497,6 @@ namespace Sanford.Multimedia.Midi
                 RemoveAt(i);
                 i = findTempo(ticks);
             }
-
         }
 
         #endregion tempo

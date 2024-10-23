@@ -720,95 +720,7 @@ namespace Sanford.Multimedia.Midi.Score
         }
 
 
-        #region tempos
-
-        public TempoSymbol GetSelectedTempoSymbol()
-        {
-            foreach (TempoSymbol temposymbol in _lsttemposymbols) 
-            { 
-                if (temposymbol.Selected)
-                {
-                    return temposymbol;
-                }
-            }
-            return null;
-        }
-
-
-        /// <summary>
-        /// Return the list of all Tempo changes
-        /// </summary>
-        /// <returns></returns>
-        private List<TempoSymbol> GetAllTempoChanges()
-        {
-            List<(int,int)> l = new List<(int,int)> ();
-            List<(int, int)> lt = new List<(int, int)>();
-
-            List<TempoSymbol> result = new List<TempoSymbol>();
-
-            foreach (Track track in sequence1.tracks) 
-            {
-                l = track.GetTemposList();
-                for (int i = 0; i < l.Count; i++)
-                {
-                    if (!lt.Contains (l[i]))
-                    {                                                                        
-                        lt.Add(l[i]);
-                        TempoSymbol temposymbol = new TempoSymbol(l[i].Item1, l[i].Item2);
-                        result.Add(temposymbol);
-                    }
-                }
-            }
-            
-            return result;
-        }
-
-        
-        /// <summary>
-        /// Return selected TempoSymbol, or null
-        /// </summary>
-        /// <returns></returns>
-        private bool SetSelectedTempoSymbol(Staff staff, int ypos, float ticks)
-        {
-            int width = 160;
-            foreach (TempoSymbol temposymbol in _lsttemposymbols)
-            {
-                if (ticks >= temposymbol.StartTime - 50 && ticks < temposymbol.StartTime + width)
-                {
-                    temposymbol.Selected = true;
-                    return true;
-                }
-                else
-                {
-                    temposymbol.Selected = false;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Unselect all tempo symbols
-        /// </summary>
-        private void ClearSelectedTempoSymbols()
-        {
-            foreach (TempoSymbol temposymbol in _lsttemposymbols)
-            {
-                temposymbol.Selected = false;
-            }
-        }
-
-        /// <summary>
-        /// Add tempo symbols to first staff
-        /// </summary>
-        /// <param name="staffs"></param>
-        /// <param name="TempoSymbols"></param>
-        static void AddTemposToStaffs(List<Staff> staffs, List<TempoSymbol> TempoSymbols)
-        {
-            Staff staff = staffs.FirstOrDefault();
-            staff.AddTempos(TempoSymbols);
-        }        
-
-        #endregion tempos
+      
 
 
         /** Apply the given sheet music options to the MidiNotes.
@@ -4412,6 +4324,109 @@ namespace Sanford.Multimedia.Midi.Score
 
 
         #endregion notes
+
+
+        #region tempos
+
+        public TempoSymbol GetSelectedTempoSymbol()
+        {
+            foreach (TempoSymbol temposymbol in _lsttemposymbols)
+            {
+                if (temposymbol.Selected)
+                {
+                    return temposymbol;
+                }
+            }
+            return null;
+        }
+
+
+        /// <summary>
+        /// Return the list of all Tempo changes
+        /// </summary>
+        /// <returns></returns>
+        public List<TempoSymbol> GetAllTempoChanges()
+        {
+            List<(int, int)> l = new List<(int, int)>();
+            List<(int, int)> lt = new List<(int, int)>();
+
+            List<TempoSymbol> result = new List<TempoSymbol>();
+
+            foreach (Track track in sequence1.tracks)
+            {
+                l = track.GetTemposList();
+                for (int i = 0; i < l.Count; i++)
+                {
+                    if (!lt.Contains(l[i]))
+                    {
+                        lt.Add(l[i]);
+                        TempoSymbol temposymbol = new TempoSymbol(l[i].Item1, l[i].Item2);
+                        result.Add(temposymbol);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public List<TempoSymbol> DeleteTempoChange(int ticks)
+        {
+
+            foreach (Track track in sequence1.tracks)
+            {
+                track.RemoveTempoEvent(ticks);
+            }
+
+            return GetAllTempoChanges();
+
+        }
+
+
+        /// <summary>
+        /// Return selected TempoSymbol, or null
+        /// </summary>
+        /// <returns></returns>
+        private bool SetSelectedTempoSymbol(Staff staff, int ypos, float ticks)
+        {
+            int width = 160;
+            foreach (TempoSymbol temposymbol in _lsttemposymbols)
+            {
+                if (ticks >= temposymbol.StartTime - 50 && ticks < temposymbol.StartTime + width)
+                {
+                    temposymbol.Selected = true;
+                    return true;
+                }
+                else
+                {
+                    temposymbol.Selected = false;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Unselect all tempo symbols
+        /// </summary>
+        private void ClearSelectedTempoSymbols()
+        {
+            foreach (TempoSymbol temposymbol in _lsttemposymbols)
+            {
+                temposymbol.Selected = false;
+            }
+        }
+
+        /// <summary>
+        /// Add tempo symbols to first staff
+        /// </summary>
+        /// <param name="staffs"></param>
+        /// <param name="TempoSymbols"></param>
+        static void AddTemposToStaffs(List<Staff> staffs, List<TempoSymbol> TempoSymbols)
+        {
+            Staff staff = staffs.FirstOrDefault();
+            staff.AddTempos(TempoSymbols);
+        }
+
+        #endregion tempos
 
 
         #region print PDF

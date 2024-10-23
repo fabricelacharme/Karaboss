@@ -32,7 +32,9 @@
 
 #endregion
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace Sanford.Multimedia.Midi.Score.UI
 {
@@ -43,12 +45,19 @@ namespace Sanford.Multimedia.Midi.Score.UI
         private float _bpm;
         private float _tempo;
         private float _starttime;
+        private decimal _division;
 
+        private SheetMusic sheetmusic;
+        TempoSymbol _tempoSymbol;
+        Sequence sequence1;
 
         public int Division
         {
             get
             { return Convert.ToInt32(updDivision.Value); }
+            set { 
+                _division = value;
+                updDivision.Value = _division; }
         }
         public int Tempo
         {
@@ -64,17 +73,39 @@ namespace Sanford.Multimedia.Midi.Score.UI
             }
         }
 
-        public modifyTempoDialog(int division, int tempo, int starttime)
+
+        public modifyTempoDialog(SheetMusic sheetMusic, Sequence seq, int deftempo)
         {
             InitializeComponent();
+
+            sheetmusic = sheetMusic;
+            sequence1 = seq;
+
+            // Check if a TempoSymbol is selected
+            TempoSymbol tempoSymbol = sheetMusic.GetSelectedTempoSymbol();
+            if (tempoSymbol != null)
+            {
+                _tempoSymbol = tempoSymbol;
+                _starttime = _tempoSymbol.StartTime;
+                _tempo = _tempoSymbol.Tempo;
+            }
+            // if a note is selected
+            else if (sheetMusic.SelectedNotes != null && sheetmusic.SelectedNotes.Count > 0)
+            {
+                MidiNote n = sheetMusic.SelectedNotes[0];
+                _starttime = n.StartTime;
+                _tempo = deftempo;
+            }
+            else
+            {
+                _starttime = 0;
+                _tempo = deftempo;
+            }
             
-            updDivision.Value = Convert.ToDecimal(division);
-
-            _tempo = tempo;
-            txtTempo.Text = tempo.ToString();
-
-            _starttime = starttime;
-            txtStartTime.Text = starttime.ToString();
+            Division = sequence1.Division;
+            updDivision.Value = Convert.ToDecimal(Division);            
+            txtTempo.Text = _tempo.ToString();            
+            txtStartTime.Text = _starttime.ToString();
         }
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -186,13 +217,153 @@ namespace Sanford.Multimedia.Midi.Score.UI
         }
 
 
-
-
         #endregion verif
 
         private void txtStartTime_TextChanged(object sender, EventArgs e)
         {
-            _starttime = float.Parse(this.txtStartTime.Text);
+            UpdateFields();
+           
         }
+
+        private void UpdateFields()
+        {
+            try
+            {
+                if (txtStartTime.Text == "")
+                    txtStartTime.Text = "0";
+
+                _starttime = float.Parse(this.txtStartTime.Text);
+
+                if (_starttime == 0)
+                {
+                    lblTempoNumber.Text = string.Format("Tempo {0}", 0);
+                    btnDelete.Enabled = false;
+                    txtStartTime.Enabled = false;
+                    btnOk.Text = "Update";
+                    return;
+                }
+
+                int index = IsTempoExists(_starttime);
+                if (index != -1)
+                {
+                    btnDelete.Enabled = true;
+                    lblTempoNumber.Text = string.Format("Tempo {0}", index);
+                    txtStartTime.Enabled = true;
+                    btnOk.Text = "Update";
+                }
+                else
+                {
+                    btnDelete.Enabled = false;
+                    lblTempoNumber.Text = "New tempo";
+                    txtStartTime.Enabled = true;
+                    btnOk.Text = "Create";
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+        // Delere current tempo
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();                        
+            TempoSymbol tmps = new TempoSymbol((int)_starttime, (int)_tempo);
+            
+            string msg;
+
+            // The method l.Contains(tmps) does not work ??????                       
+            if (!IsContains(tmps, l))
+            {
+                msg = "There is no tempo change at this location";    
+                MessageBox.Show(msg, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error );
+                return;
+            }
+
+            sheetmusic.DeleteTempoChange((int)_starttime);
+
+            DisplayPreviousTempoChange();
+
+
+        }
+
+        private bool IsContains(TempoSymbol symbol, List<TempoSymbol> l) 
+        { 
+            foreach (TempoSymbol t in l)
+            {
+                if (symbol.StartTime == t.StartTime && symbol.Tempo == t.Tempo)
+                    return true;
+            }
+            return false;
+        }
+
+
+        private void btnPrevTempo_Click(object sender, EventArgs e)
+        {
+            DisplayPreviousTempoChange();
+        }
+
+        private void DisplayPreviousTempoChange()
+        {
+            List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();
+
+            float ticks = -1 + float.Parse(txtStartTime.Text);
+            for (int i = l.Count - 1; i >= 0; i--)
+            {
+                TempoSymbol tempo = l[i];
+                if (tempo.StartTime < ticks)
+                {
+                    txtStartTime.Text = tempo.StartTime.ToString();
+                    txtTempo.Text = tempo.Tempo.ToString();
+                    break;
+                }
+            }
+        }
+
+        private void btnNextTempo_Click(object sender, EventArgs e)
+        {
+            DisplayNextTempoChange();
+        }
+
+        private void DisplayNextTempoChange()
+        {
+            List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();
+
+            float ticks = 1 + float.Parse(txtStartTime.Text);
+
+            for (int i = 0; i < l.Count; i++)
+            {
+                TempoSymbol tempo = l[i];
+                if (tempo.StartTime >= ticks)
+                {
+                    txtStartTime.Text = tempo.StartTime.ToString();
+                    txtTempo.Text = tempo.Tempo.ToString();
+                    break;
+                }
+            }
+        }
+
+
+        private int IsTempoExists(float ticks)
+        {
+            List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();
+            
+            for (int i = 0; i < l.Count; i ++)            
+            {
+                TempoSymbol temposymbol = l[i];
+                if (temposymbol.StartTime == ticks)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+
+        }
+
+
+
     }
 }

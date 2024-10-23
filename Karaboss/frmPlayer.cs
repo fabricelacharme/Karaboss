@@ -3460,22 +3460,9 @@ namespace Karaboss
         {
             int starttime = 0;
             int tempo = sequence1.Tempo;
-
-            // Check if a TempoSymbol is selected
-            TempoSymbol temposymbol = sheetmusic.GetSelectedTempoSymbol();
-            if (temposymbol != null)
-            {
-                starttime = temposymbol.StartTime;
-                tempo = temposymbol.Tempo;
-            }
-            else if (sheetmusic.SelectedNotes != null)
-            {
-                MidiNote n = sheetmusic.SelectedNotes[0];
-                starttime = n.StartTime;
-            }
             
             DialogResult dr = new DialogResult();
-            Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog ModifyTempoDialog = new Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog(sequence1.Division, tempo, starttime);
+            Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog ModifyTempoDialog = new Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog(sheetmusic, sequence1, tempo);
             dr = ModifyTempoDialog.ShowDialog();
 
             if (dr == DialogResult.Cancel)
@@ -3510,7 +3497,7 @@ namespace Karaboss
                 sequence1.Time = new TimeSignature(sequence1.Numerator, sequence1.Denominator, sequence1.Division, sequence1.Tempo);
                 pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
 
-                // RTemove all tempo events stating from ticks
+                // Remove all tempo events starting from ticks
                 foreach (Track trk in sequence1.tracks)
                 {
                     trk.RemoveTempoEvent(ticks);
