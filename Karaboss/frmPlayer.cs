@@ -3458,8 +3458,24 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuMidiModifyTempo_Click(object sender, EventArgs e)
         {
+            int starttime = 0;
+            int tempo = sequence1.Tempo;
+
+            // Check if a TempoSymbol is selected
+            TempoSymbol temposymbol = sheetmusic.GetSelectedTempoSymbol();
+            if (temposymbol != null)
+            {
+                starttime = temposymbol.StartTime;
+                tempo = temposymbol.Tempo;
+            }
+            else if (sheetmusic.SelectedNotes != null)
+            {
+                MidiNote n = sheetmusic.SelectedNotes[0];
+                starttime = n.StartTime;
+            }
+            
             DialogResult dr = new DialogResult();
-            Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog ModifyTempoDialog = new Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog(sequence1.Division, sequence1.Tempo, 0);
+            Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog ModifyTempoDialog = new Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog(sequence1.Division, tempo, starttime);
             dr = ModifyTempoDialog.ShowDialog();
 
             if (dr == DialogResult.Cancel)
@@ -3467,9 +3483,9 @@ namespace Karaboss
                 return;
             }
 
-            int tempo = ModifyTempoDialog.Tempo;
+            tempo = ModifyTempoDialog.Tempo;
             int division = ModifyTempoDialog.Division;
-            int starttime = ModifyTempoDialog.StartTime;
+            starttime = ModifyTempoDialog.StartTime;
 
             ModTempoMenu(tempo, division, starttime);
             UpdateMidiTimes();

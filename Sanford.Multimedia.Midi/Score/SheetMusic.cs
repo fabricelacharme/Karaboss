@@ -227,11 +227,22 @@ namespace Sanford.Multimedia.Midi.Score
 
         // List of chords for each track
         private List<ChordSymbol>[] _lstchords;
-        public List<ChordSymbol>[] lstChords { 
+        public List<ChordSymbol>[] lstChords 
+        { 
             get { return _lstchords; }
-         }
+        }
+
+        // List of tempo symbols
+        private List<TempoSymbol> _lsttemposymbols;
+        public List<TempoSymbol> lstTempoSymbols
+        {
+            get { return _lsttemposymbols; }
+
+        }
+
 
         #endregion
+
 
         #region private dec
 
@@ -492,7 +503,7 @@ namespace Sanford.Multimedia.Midi.Score
 
 
             // List of all tempo changes
-            List<BpmSymbol> bpmsymbols = GetAllTempoChanges();
+            _lsttemposymbols = GetAllTempoChanges();
             
 
 
@@ -515,9 +526,9 @@ namespace Sanford.Multimedia.Midi.Score
                 AddLyricsToStaffs(staffs, lyrics);
             }
 
-            if (bpmsymbols != null && staffs != null)
+            if (_lsttemposymbols != null && staffs != null)
             {
-                AddBpmToStaffs(staffs, bpmsymbols);
+                AddTemposToStaffs(staffs, _lsttemposymbols);
             }
 
             /* After making chord pairs, the stem directions can change,
@@ -711,12 +722,29 @@ namespace Sanford.Multimedia.Midi.Score
 
         #region tempos
 
-        private List<BpmSymbol> GetAllTempoChanges()
+        public TempoSymbol GetSelectedTempoSymbol()
+        {
+            foreach (TempoSymbol temposymbol in _lsttemposymbols) 
+            { 
+                if (temposymbol.Selected)
+                {
+                    return temposymbol;
+                }
+            }
+            return null;
+        }
+
+
+        /// <summary>
+        /// Return the list of all Tempo changes
+        /// </summary>
+        /// <returns></returns>
+        private List<TempoSymbol> GetAllTempoChanges()
         {
             List<(int,int)> l = new List<(int,int)> ();
             List<(int, int)> lt = new List<(int, int)>();
 
-            List<BpmSymbol> result = new List<BpmSymbol>();
+            List<TempoSymbol> result = new List<TempoSymbol>();
 
             foreach (Track track in sequence1.tracks) 
             {
@@ -726,17 +754,62 @@ namespace Sanford.Multimedia.Midi.Score
                     if (!lt.Contains (l[i]))
                     {                                                                        
                         lt.Add(l[i]);
-                        BpmSymbol bpms = new BpmSymbol(l[i].Item1, l[i].Item2);
-                        result.Add(bpms);
+                        TempoSymbol temposymbol = new TempoSymbol(l[i].Item1, l[i].Item2);
+                        result.Add(temposymbol);
                     }
                 }
             }
-
-            //Console.WriteLine (lt.Count);
+            
             return result;
         }
 
+        
+        /// <summary>
+        /// Return selected TempoSymbol, or null
+        /// </summary>
+        /// <returns></returns>
+        private bool SetSelectedTempoSymbol(Staff staff, int ypos, float ticks)
+        {
+            int width = 160;
+            foreach (TempoSymbol temposymbol in _lsttemposymbols)
+            {
+                if (ticks >= temposymbol.StartTime - 50 && ticks < temposymbol.StartTime + width)
+                {
+                    temposymbol.Selected = true;
+                    return true;
+                }
+                else
+                {
+                    temposymbol.Selected = false;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Unselect all tempo symbols
+        /// </summary>
+        private void ClearSelectedTempoSymbols()
+        {
+            foreach (TempoSymbol temposymbol in _lsttemposymbols)
+            {
+                temposymbol.Selected = false;
+            }
+        }
+
+        /// <summary>
+        /// Add tempo symbols to first staff
+        /// </summary>
+        /// <param name="staffs"></param>
+        /// <param name="TempoSymbols"></param>
+        static void AddTemposToStaffs(List<Staff> staffs, List<TempoSymbol> TempoSymbols)
+        {
+            Staff staff = staffs.FirstOrDefault();
+            staff.AddTempos(TempoSymbols);
+        }        
+
         #endregion tempos
+
 
         /** Apply the given sheet music options to the MidiNotes.
           *  Return the midi tracks with the changes applied.
@@ -1747,24 +1820,44 @@ namespace Sanford.Multimedia.Midi.Score
                 X = X + OffsetX;
 
                 float ticks = 0;               
+                bool bTempoIsSelected = false;
 
                 if (_selectedstaff != -1)
-                {
-                    
+                {                    
                     // Find horizontal position                    
                     ticks = this.staffs[_selectedstaff].PulseTimeForPoint(new Point(X, Y));
 
-                    // Find the note
-                    int note = GetNoteClicked(Y, _selectedstaff, ticks);
-                    Track track = sequence1.tracks[_selectedstaff];
-
-                    if (track.findMidiNote(note, (int)ticks) != null)
-                        UpdateCurrentNote(_selectedstaff, note, ticks, false);
-                    else 
+                    // Find the TempoSymbol
+                    if (_selectedstaff == 0 && Y < 22)
                     {
-                        MidiNote n = track.findPreviousMidiNote((int)ticks);
-                        if (n != null)
-                            UpdateCurrentNote(_selectedstaff, n.Number, n.StartTime, false);
+                        bTempoIsSelected = SetSelectedTempoSymbol(this.staffs[_selectedstaff], Y, ticks);
+                    }
+                    else
+                    {
+                        ClearSelectedTempoSymbols();
+                    }
+
+                    // Find the note
+                    if (!bTempoIsSelected)
+                    {
+
+                        int note = GetNoteClicked(Y, _selectedstaff, ticks);
+                        Track track = sequence1.tracks[_selectedstaff];
+
+                        if (track.findMidiNote(note, (int)ticks) != null)
+                            UpdateCurrentNote(_selectedstaff, note, ticks, false);
+                        else
+                        {
+                            MidiNote n = track.findPreviousMidiNote((int)ticks);
+                            if (n != null)
+                                UpdateCurrentNote(_selectedstaff, n.Number, n.StartTime, false);
+                        }
+                    }
+                    else
+                    {
+                        // Unselect notes
+                        ClearSelectedNotes();
+                        this.Invalidate();
                     }
                 }
             }
@@ -3160,6 +3253,8 @@ namespace Sanford.Multimedia.Midi.Score
 
         #endregion
 
+
+
         /// <summary>
         /// Called by drawing rectangle
         /// </summary>
@@ -3294,6 +3389,10 @@ namespace Sanford.Multimedia.Midi.Score
 
             duration = midinote.Duration;                
             CurrentNote.midinote = midinote;
+
+            // FAB 23/10/2024
+            _selnotes = new List<MidiNote>();
+            _selnotes.Add(midinote);
                 
             // Raise event
             CurrentNoteChanged?.Invoke(midinote);
@@ -3309,8 +3408,9 @@ namespace Sanford.Multimedia.Midi.Score
             float timeinmeasure = GetTimeInMeasure(ticks);
             return string.Format("note {0} ({1}) - time {2} - ticks {3} - duration {4} - velocity {5}", note, noteLetter, timeinmeasure, ticks, duration, velocity);
         }
-       
 
+
+       
         /// <summary>
         /// Double Click: raise event
         /// </summary>
@@ -3343,7 +3443,6 @@ namespace Sanford.Multimedia.Midi.Score
                 }
             }
         }
-
 
 
        /// <summary>
@@ -3651,15 +3750,7 @@ namespace Sanford.Multimedia.Midi.Score
 
         #endregion lyrics
 
-
-        static void AddBpmToStaffs(List<Staff> staffs, List<BpmSymbol> bpmsymbols)
-        {
-            Staff staff = staffs.FirstOrDefault();
-            staff.AddBpms(bpmsymbols);
-
-        }
-
-
+        
         #region zoom
 
         /** Set the zoom level to display at (1.0 == 100%).
@@ -4322,6 +4413,7 @@ namespace Sanford.Multimedia.Midi.Score
 
         #endregion notes
 
+
         #region print PDF
 
 
@@ -4520,6 +4612,7 @@ namespace Sanford.Multimedia.Midi.Score
 
         #endregion print PDF
 
+
         #region scroll
 
         public void ScrollTo(int currentPulseTime, int prevPulseTime)
@@ -4653,6 +4746,7 @@ namespace Sanford.Multimedia.Midi.Score
       
 
         #endregion scroll
+
 
         #region edit notes 
 

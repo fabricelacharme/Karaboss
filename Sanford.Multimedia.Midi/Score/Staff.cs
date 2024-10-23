@@ -37,7 +37,7 @@ namespace Sanford.Multimedia.Midi.Score
     {
         private List<MusicSymbol> symbols;  /** The music symbols in this staff */
         private List<LyricSymbol> lyrics;   /** The lyrics to display (can be null) */
-        private List<BpmSymbol> tempos;     /** The tempo changes to display (minimum 1) */
+        private List<TempoSymbol> tempos;     /** The tempo changes to display (minimum 1) */
         private int ytop;                   /** The y pixel of the top of the staff */
         private ClefSymbol clefsym;         /** The left-side Clef symbol */
         private AccidSymbol[] keys;         /** The key signature symbols */
@@ -291,37 +291,15 @@ namespace Sanford.Multimedia.Midi.Score
         private void DrawTempos(Graphics g, Rectangle clip, Pen pen)
         {
             int xpos = keysigWidth;
-            int ypos = 0;
-            //int bpm;    
-            string t = string.Empty;
+            int ypos = 15;                            
             string tx = string.Empty;
             System.Drawing.Brush brush = System.Drawing.Brushes.Black;
 
-            foreach (BpmSymbol bpmSymbol in tempos)
+            foreach (TempoSymbol TempoSymbol in tempos)
             {
-                if ((xpos + bpmSymbol.X >= clip.X - 50) && (xpos + bpmSymbol.X <= clip.X + clip.Width + 50))
-                {
-                                        
-                    tx = "= " + bpmSymbol.BPM.ToString();                    
-
-                    // Offset
-                    g.TranslateTransform(xpos + bpmSymbol.X + SheetMusic.NoteWidth / 2 + 1, 15 + ypos - SheetMusic.LineWidth + SheetMusic.NoteHeight / 2);
-
-                    // draw ellipse
-                    g.RotateTransform(-45);                                        
-                    g.FillEllipse(brush, -SheetMusic.NoteWidth / 2, -SheetMusic.NoteHeight / 2, SheetMusic.NoteWidth, SheetMusic.NoteHeight - 1);                   
-                    g.RotateTransform(45);
-
-                    // Draw stem
-                    g.DrawLine(pen, SheetMusic.NoteWidth / 2, -SheetMusic.NoteHeight / 2, SheetMusic.NoteWidth / 2, -14);
-
-                    //Draw text (= 120)
-                    g.DrawString(tx, SheetMusic.LetterFont, Brushes.Black, SheetMusic.NoteWidth, -SheetMusic.NoteHeight - SheetMusic.LineWidth);
-
-                    // Offset back
-                    g.TranslateTransform(-(xpos + bpmSymbol.X + SheetMusic.NoteWidth / 2 + 1), -(15 + ypos - SheetMusic.LineWidth + SheetMusic.NoteHeight / 2));
-                    
-
+                if ((xpos + TempoSymbol.X >= clip.X - 50) && (xpos + TempoSymbol.X <= clip.X + clip.Width + 50))
+                {                    
+                    TempoSymbol.Draw(g, pen, xpos, ypos);                    
                 }
             }
         }
@@ -516,39 +494,42 @@ namespace Sanford.Multimedia.Midi.Score
             }
         }
 
-
-        public void AddBpms(List<BpmSymbol> bpmSymbols)
+        /// <summary>
+        /// Add Tempo symbols to the first staff
+        /// </summary>
+        /// <param name="TempoSymbols"></param>
+        public void AddTempos(List<TempoSymbol> TempoSymbols)
         {
-            if (bpmSymbols == null)
+            if (TempoSymbols == null)
              return;
 
             int xpos = 0;
             int symbolindex = 0;
-            tempos = new List<BpmSymbol>();
+            tempos = new List<TempoSymbol>();
 
-            foreach (BpmSymbol bpmSymbol in bpmSymbols) 
+            foreach (TempoSymbol TempoSymbol in TempoSymbols) 
             {
-                if (bpmSymbol.StartTime < starttime)
+                if (TempoSymbol.StartTime < starttime)
                 {
                     continue;
                 }
-                if (bpmSymbol.StartTime >= endtime)
+                if (TempoSymbol.StartTime >= endtime)
                 {
                     break;
                 }
 
-                /* Get the x-position of this bpmsymbol */
-                while (symbolindex < symbols.Count && symbols[symbolindex].StartTime < bpmSymbol.StartTime)
+                /* Get the x-position of this TempoSymbol */
+                while (symbolindex < symbols.Count && symbols[symbolindex].StartTime < TempoSymbol.StartTime)
                 {
                     xpos += symbols[symbolindex].Width;
                     symbolindex++;
                 }
-                bpmSymbol.X = xpos;
+                TempoSymbol.X = xpos;
                 if (symbolindex < symbols.Count && (symbols[symbolindex] is BarSymbol))
                 {
-                    bpmSymbol.X += SheetMusic.NoteWidth;
+                    TempoSymbol.X += SheetMusic.NoteWidth;
                 }
-                tempos.Add(bpmSymbol);
+                tempos.Add(TempoSymbol);
             }
             if (tempos.Count == 0)
             {
