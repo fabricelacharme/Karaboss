@@ -89,10 +89,10 @@ namespace Sanford.Multimedia.Midi.Score.UI
                 _starttime = _tempoSymbol.StartTime;
                 _tempo = _tempoSymbol.Tempo;
             }
-            // if a note is selected
-            else if (sheetMusic.SelectedNotes != null && sheetmusic.SelectedNotes.Count > 0)
+            else if (sheetmusic.CurrentNote != null)
             {
-                MidiNote n = sheetMusic.SelectedNotes[0];
+                // if a note is selected
+                MidiNote n = sheetmusic.CurrentNote.midinote;
                 _starttime = n.StartTime;
                 _tempo = deftempo;
             }

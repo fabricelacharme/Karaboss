@@ -3302,10 +3302,7 @@ namespace Sanford.Multimedia.Midi.Score
             duration = midinote.Duration;                
             CurrentNote.midinote = midinote;
 
-            // FAB 23/10/2024
-            _selnotes = new List<MidiNote>();
-            _selnotes.Add(midinote);
-                
+                           
             // Raise event
             CurrentNoteChanged?.Invoke(midinote);
 
