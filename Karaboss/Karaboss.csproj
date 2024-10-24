@@ -188,6 +188,12 @@
     <Compile Include="frmExternalMidiRecord.Designer.cs">
       <DependentUpon>frmExternalMidiRecord.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmModifyTempo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmModifyTempo.Designer.cs">
+      <DependentUpon>frmModifyTempo.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmPianoTraining.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -512,6 +518,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmLyricsSelectTrack.fr.resx">
       <DependentUpon>frmLyricsSelectTrack.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmModifyTempo.resx">
+      <DependentUpon>frmModifyTempo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPianoTraining.resx">
       <DependentUpon>frmPianoTraining.cs</DependentUpon>

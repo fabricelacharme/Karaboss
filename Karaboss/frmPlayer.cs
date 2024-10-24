@@ -264,7 +264,8 @@ namespace Karaboss
         private frmLyric frmLyric;
         private frmLoading frmLoading;
         private frmPianoRoll frmPianoRoll;
-        private frmPianoTraining frmPianoTraining;       
+        private frmPianoTraining frmPianoTraining;     
+        private frmModifyTempo frmModifyTempo;
         private int NumInstance = 1;
 
         // To wait between 2 songs (playlists)
@@ -455,6 +456,8 @@ namespace Karaboss
 
             // Event handler double click on track            
             sheetmusic.OnSMMouseDoubleClick += new SheetMusic.smMouseDoubleClickEventHandler(Track_DoubleClick);
+            sheetmusic.OnSMMouseDoubleClickTempo += new SheetMusic.smMouseDoubleClickTempoEventHandler(Tempo_DoubleClick);
+
             // Contextual menu on sheetmusic
             sheetmusic.MnuPianoRollClick += new SheetMusic.mnuPianoRollClickEventHandler(PianoRoll_Required);
            
@@ -490,6 +493,7 @@ namespace Karaboss
             Cursor = Cursors.Default; 
         }
 
+        
         /// <summary>
         /// Default velocity value was changed in sheetmusic
         /// </summary>
@@ -1583,7 +1587,7 @@ namespace Karaboss
         /// Scroll score to a position
         /// </summary>
         /// <param name="curtime"></param>
-        private void ScrollTo(double starttime)
+        public void ScrollTo(double starttime)
         {
             if (sheetmusic != null)
             {
@@ -3223,6 +3227,7 @@ namespace Karaboss
         #region Menu Midi
 
         #region tracks
+
         /// <summary>
         /// Add a new track
         /// </summary>
@@ -3460,7 +3465,17 @@ namespace Karaboss
         {
             int starttime = 0;
             int tempo = sequence1.Tempo;
-            
+
+
+            if (Application.OpenForms["frmModifyTempo"] == null)
+            {
+                frmModifyTempo = new frmModifyTempo(sheetmusic, sequence1, tempo);
+                frmModifyTempo.ShowDialog();
+                frmModifyTempo.Refresh();
+
+            }
+
+            /*
             DialogResult dr = new DialogResult();
             Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog ModifyTempoDialog = new Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog(sheetmusic, sequence1, tempo);
             dr = ModifyTempoDialog.ShowDialog();
@@ -3469,12 +3484,14 @@ namespace Karaboss
             {
                 return;
             }
+            */
 
-            tempo = ModifyTempoDialog.Tempo;
-            int division = ModifyTempoDialog.Division;
-            starttime = ModifyTempoDialog.StartTime;
 
-            ModTempoMenu(tempo, division, starttime);
+            //tempo = ModifyTempoDialog.Tempo;
+            //int division = ModifyTempoDialog.Division;
+            //starttime = ModifyTempoDialog.StartTime;
+
+            //ModTempoMenu(tempo, division, starttime);
             UpdateMidiTimes();
 
             RedrawSheetMusic();
@@ -3690,35 +3707,8 @@ namespace Karaboss
         public void DisplayLyricsInfos()
         {
             string tx = string.Empty;
-
-            /*
-            if (myLyric != null)
-            {                
-                // Lyric : mélodie dans quelle piste  ?
-                if (myLyric.lyrictype == CLyric.LyricTypes.Lyric)
-                {
-                    if (myLyric.lyricstracknum != -1 && myLyric.melodytracknum == -1)
-                        myLyric.melodytracknum = GuessMelodyTrack();                    
-                }
-                else if (myLyric.lyrictype == CLyric.LyricTypes.Text && myLyric.melodytracknum == -1)
-                {
-                    myLyric.melodytracknum = GuessMelodyTrack();
-                }                
-
-                tx = "Lyrics type: " + myLyric.lyrictype + "\r";
-                tx += "Lyrics track: " + myLyric.lyricstracknum.ToString() + "\r";
-                tx += "Melody track: " + myLyric.melodytracknum.ToString();
-
-                lblLyricsInfos.Text = tx;
-
-                // Mute melody track
-                MuteMelodyTrack(myLyric.melodytracknum);
-            }
-            */
-
-            // NEW LYRICS 
+            
             // FAB 28/08
-            //if (myLyricsMgmt != null && myLyricsMgmt.LyricType != LyricsMgmt.LyricTypes.None)
             if (myLyricsMgmt != null)
                 {
                 tx = "Lyrics type: " + myLyricsMgmt.LyricType + "\r";
@@ -3732,157 +3722,7 @@ namespace Karaboss
             }
 
         }
-
-        /// <summary>
-        /// Guess which track contains the melody
-        /// A very complex search :-)
-        /// </summary>
-        /// <returns></returns>
-        /*
-        private int GuessMelodyTrack()
-        {
-            // Comparer timing pistes à pistes
-            int tracknum = myLyric.LyricsTrackNum;
-            //Track trackly = sequence1.tracks[tracknum];
-            int nbfound = 0;
-            //int trackm = -1;
-            int max = 0;
-            int min = 5000;
-            int nbnotes = 0;
-            int diff = 0;
-
-            float fRatioNotes = 0;
-            float maxRatioNotes = 0;
-            
-            int maxDiff = -1;
-            int trackfnote = -1;
-
-            int delta = 30; // 20 origin
-            
-            // Eliminer les cr
-            int nblyrics = 0;
-            for (int i = 0; i < plLyrics.Count; i++)
-            {
-                if (plLyrics[i].CharType == plLyric.CharTypes.Text && plLyrics[i].TicksOn > 0)                
-                    nblyrics++;                           
-            }
-
-            for (int i = 0; i < sequence1.tracks.Count; i++)
-            {
-                nbfound = 0;
-                nbnotes = 0;
-
-                Track track = sequence1.tracks[i];
-
-                if (track.ContainsNotes == true && track.MidiChannel != 9)
-                {
-
-                    // comparaison 1 : nombre de notes versus nombre de lyrics
-                    // Plus le nombre de notes se rapproche de celui de lyrics, plus c'est mieux
-                    nbnotes = track.Notes.Count;
-
-                    // Avoid tracks with not enough notes and those having too many notes compared to lyrics                    
-                    if (nbnotes > nblyrics / 2 && nbnotes < nblyrics * 3)
-                    {
-                        diff = nbnotes - nblyrics;
-                        if (diff < 0) diff = -diff;
-
-                        int oldtn = -1;                     
-
-                        // Search if notes have a start time corresponding of those of lytics 
-                        // Search is performed in a time frame of 20 plus or minus
-                        for (int j = 0; j < track.Notes.Count; j++)
-                        {
-                            MidiNote n = track.Notes[j];
-                            int tn = n.StartTime;
-                            if (tn > oldtn) // Avoid to search for all the notes belonging to a chords having the same time
-                            {
-                                // Search lyrics 
-                                for (int k = 0; k < plLyrics.Count; k++)
-                                {
-                                    int tl = plLyrics[k].TicksOn;
-                                    if (tl > tn - delta && tl < tn + delta)
-                                    {
-                                        nbfound++;
-                                        break;
-                                    }
-                                    else if (tl > tn)
-                                    {
-                                        break;
-                                    }
-                                }
-
-                                oldtn = tn;
-                            }
-                        }
-
-                        // FAB 04/07/20
-                        //nbnotes = nbfound;   // empeche d'éliminer les pistes qui ont trop de notes
-                        //diff = nbnotes - nblyrics;
-                        //if (diff < 0) diff = -diff;
-
-                        // Il faudrait supprimer les lyrics qui n'ont pas de notes                        
-                        diff = nbnotes - nbfound;
-                        if (diff < 0) diff = -diff;
-
-                        // TODO, which algoritm is the best ????
-                        bool bchoice = false;
-                        bchoice = true;
-
-                        if (bchoice)
-                        {
-                            // 1st criteria "diff": tracks having the nearest number of notes than number of lyrics
-                            if (diff < maxDiff || maxDiff == -1)
-                            {
-                                // 2nd criteria: 
-                                // ratio between the number of notes having the same start time than lyrics 
-                                // and the number of lyrics (ideally same number, ie 1)
-                                fRatioNotes = (float)nbfound / (float)nblyrics;
-                                if (fRatioNotes > 1) fRatioNotes = 1;   // FAB 04/07 origin = 1
-                                if (fRatioNotes >= maxRatioNotes)
-                                {
-                                    maxRatioNotes = fRatioNotes;
-                                    maxDiff = diff;
-                                    trackfnote = i;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            #region delete
-
-                            if (nbfound > 0)
-                            {
-                                // Plus diff est petit, mieux c'est (différence entre nombre de notes et lyrics)
-                                // Plus nbfound est grand, mieux c'est (notes jouées au même moment que les lyrics)
-                                if (nbfound > max || diff < min)
-                                {
-
-
-                                    if (nbfound > 4 * nblyrics / 5)
-                                    {
-                                        if (nbfound - diff > max - min)
-                                        {
-                                            min = diff;
-                                            max = nbfound;
-                                            trackfnote = i;
-                                        }
-                                    }
-                                }
-                            }
-
-                            #endregion
-                        }
-                    }
-
-                    
-                } // contains notes                
-            }
-            //return trackm;
-            return trackfnote;
-        }        
-        */
-        
+       
 
         /// <summary>
         /// Replace existing lyrics by others
@@ -5932,6 +5772,11 @@ namespace Karaboss
                 {
                     Application.OpenForms["frmPianoRoll"].Close();
                 }
+                // ferme le formulaire frmModifyTempo
+                if (Application.OpenForms.OfType<frmModifyTempo>().Count() > 0)
+                {
+                    Application.OpenForms["frmModifyTempo"].Close();
+                }
                 // ferme le formulaire frmPrint
                 if (Application.OpenForms.OfType<frmPrint>().Count() > 0)
                 {
@@ -7801,9 +7646,37 @@ namespace Karaboss
 
         }
 
-  
+
 
         #endregion new song
+
+
+        #region Tempo
+        /// <summary>
+        /// Open window of tempo management
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="tmps"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void Tempo_DoubleClick(object sender, EventArgs e, TempoSymbol tmps)
+        {
+            int starttime = 0;
+            int tempo = sequence1.Tempo;
+
+            if (Application.OpenForms["frmModifyTempo"] == null)
+            {
+                frmModifyTempo = new frmModifyTempo(sheetmusic, sequence1, tempo);
+                frmModifyTempo.ShowDialog();
+                frmModifyTempo.Refresh();
+
+            }
+
+
+            
+        }
+
+        #endregion Tempo
 
 
         #region edit partition

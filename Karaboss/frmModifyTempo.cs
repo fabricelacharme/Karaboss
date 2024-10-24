@@ -1,47 +1,18 @@
-﻿#region License
-
-/* Copyright (c) 2016 Fabrice Lacharme
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy 
- * of this software and associated documentation files (the "Software"), to 
- * deal in the Software without restriction, including without limitation the 
- * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
- * sell copies of the Software, and to permit persons to whom the Software is 
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in 
- * all copies or substantial portions of the Software. 
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- */
-
-#endregion
-
-#region Contact
-
-/*
- * Fabrice Lacharme
- * Email: fabrice.lacharme@gmail.com
- */
-
-#endregion
+﻿using Sanford.Multimedia.Midi.Score;
+using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
-using System.Windows;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
-namespace Sanford.Multimedia.Midi.Score.UI
+namespace Karaboss
 {
-    public partial class modifyTempoDialog : Form
+    public partial class frmModifyTempo : Form
     {
 
         private bool TempoDoChange = true;
@@ -49,6 +20,8 @@ namespace Sanford.Multimedia.Midi.Score.UI
         private float _tempo;
         private float _starttime;
         private decimal _division;
+
+        frmPlayer FrmPlayer;
 
         private SheetMusic sheetmusic;
         TempoSymbol _tempoSymbol;
@@ -58,9 +31,11 @@ namespace Sanford.Multimedia.Midi.Score.UI
         {
             get
             { return Convert.ToInt32(updDivision.Value); }
-            set { 
+            set
+            {
                 _division = value;
-                updDivision.Value = _division; }
+                updDivision.Value = _division;
+            }
         }
         public int Tempo
         {
@@ -76,8 +51,7 @@ namespace Sanford.Multimedia.Midi.Score.UI
             }
         }
 
-
-        public modifyTempoDialog(SheetMusic sheetMusic, Sequence seq, int deftempo)
+        public frmModifyTempo(SheetMusic sheetMusic, Sequence seq, int deftempo)
         {
             InitializeComponent();
 
@@ -104,13 +78,15 @@ namespace Sanford.Multimedia.Midi.Score.UI
                 _starttime = 0;
                 _tempo = deftempo;
             }
-            
+
             Division = sequence1.Division;
-            updDivision.Value = Convert.ToDecimal(Division);            
-            txtTempo.Text = _tempo.ToString();            
+            updDivision.Value = Convert.ToDecimal(Division);
+            txtTempo.Text = _tempo.ToString();
             txtStartTime.Text = _starttime.ToString();
         }
 
+
+        #region OK CANCEL
         private void btnOk_Click(object sender, EventArgs e)
         {
             decimal division = 0;
@@ -132,11 +108,11 @@ namespace Sanford.Multimedia.Midi.Score.UI
 
         }
 
-        private bool IsNumeric(string input)
-        {
-            int test;
-            return int.TryParse(input, out test);
-        }
+        #endregion OK CANCEL
+
+
+       
+
 
         #region events
         private void txtTempo_TextChanged(object sender, EventArgs e)
@@ -177,7 +153,6 @@ namespace Sanford.Multimedia.Midi.Score.UI
                 }
             }
         }
-
 
         private void updDivision_ValueChanged(object sender, EventArgs e)
         {
@@ -222,10 +197,11 @@ namespace Sanford.Multimedia.Midi.Score.UI
 
         #endregion verif
 
+
         private void txtStartTime_TextChanged(object sender, EventArgs e)
         {
             UpdateFields();
-           
+
         }
 
         private void UpdateFields()
@@ -272,16 +248,16 @@ namespace Sanford.Multimedia.Midi.Score.UI
         // Delere current tempo
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();                        
+            List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();
             TempoSymbol tmps = new TempoSymbol((int)_starttime, (int)_tempo);
-            
+
             string msg;
 
             // The method l.Contains(tmps) does not work ??????                       
             if (!IsContains(tmps, l))
             {
-                msg = "There is no tempo change at this location";    
-                MessageBox.Show(msg, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error );
+                msg = "There is no tempo change at this location";
+                MessageBox.Show(msg, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -292,8 +268,8 @@ namespace Sanford.Multimedia.Midi.Score.UI
 
         }
 
-        private bool IsContains(TempoSymbol symbol, List<TempoSymbol> l) 
-        { 
+        private bool IsContains(TempoSymbol symbol, List<TempoSymbol> l)
+        {
             foreach (TempoSymbol t in l)
             {
                 if (symbol.StartTime == t.StartTime && symbol.Tempo == t.Tempo)
@@ -303,6 +279,7 @@ namespace Sanford.Multimedia.Midi.Score.UI
         }
 
 
+        #region prev next
         private void btnPrevTempo_Click(object sender, EventArgs e)
         {
             DisplayPreviousTempoChange();
@@ -320,7 +297,12 @@ namespace Sanford.Multimedia.Midi.Score.UI
                 {
                     txtStartTime.Text = tempo.StartTime.ToString();
                     txtTempo.Text = tempo.Tempo.ToString();
-                    sheetmusic.DoScroll(tempo.StartTime, tempo.StartTime);
+
+                    if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+                    {
+                        frmPlayer frmPlayer = getForm<frmPlayer>();
+                        frmPlayer.ScrollTo(tempo.StartTime);
+                    }
                     break;
                 }
             }
@@ -345,23 +327,26 @@ namespace Sanford.Multimedia.Midi.Score.UI
                     txtStartTime.Text = tempo.StartTime.ToString();
                     txtTempo.Text = tempo.Tempo.ToString();
 
-                    //if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
-                    //{
-                    //    frmPlayer frmPlayer = getForm<frmPlayer>();                        
-                    //}
-
-                    sheetmusic.ScrollTo(tempo.StartTime, 0);
+                    if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+                    {
+                        frmPlayer frmPlayer = getForm<frmPlayer>();     
+                        frmPlayer.ScrollTo(tempo.StartTime);
+                    }                    
                     break;
                 }
             }
         }
 
 
+
+
+        #endregion prev next
+
         private int IsTempoExists(float ticks)
         {
             List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();
-            
-            for (int i = 0; i < l.Count; i ++)            
+
+            for (int i = 0; i < l.Count; i++)
             {
                 TempoSymbol temposymbol = l[i];
                 if (temposymbol.StartTime == ticks)
@@ -374,9 +359,34 @@ namespace Sanford.Multimedia.Midi.Score.UI
 
         }
 
+        private bool IsNumeric(string input)
+        {
+            int test;
+            return int.TryParse(input, out test);
+        }
 
+        /// <summary>
+        /// Locate form
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <returns></returns>
+        private TForm GetForm<TForm>()
+            where TForm : Form
+        {
+            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
+        }
 
-       
+        /// <summary>
+        /// Locate form
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <returns></returns>
+        private T getForm<T>()
+        where T : Form
+        {
+            return (T)Application.OpenForms.OfType<T>().FirstOrDefault();
+        }
+
 
     }
 }

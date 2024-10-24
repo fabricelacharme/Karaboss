@@ -54,6 +54,8 @@ namespace Sanford.Multimedia.Midi.Score
         public delegate void smMouseDoubleClickEventHandler(object sender, EventArgs e, int staffnum, float ticks);
         public event smMouseDoubleClickEventHandler OnSMMouseDoubleClick;
 
+        public delegate void smMouseDoubleClickTempoEventHandler(object sender, EventArgs e, TempoSymbol tmps);
+        public event smMouseDoubleClickTempoEventHandler OnSMMouseDoubleClickTempo;
 
         public delegate void smMouseMoveEventHandler(object sender, EventArgs e);
         public event smMouseMoveEventHandler OnSMMouseMove;
@@ -197,9 +199,15 @@ namespace Sanford.Multimedia.Midi.Score
 
                 // Show/Hide form toolbox notes edition
                 if (!_beditmode)
+                {
                     CloseFrmNoteEdit();
+                    UnselectTempoSymbols();
+                    Invalidate();
+                }
                 else if (_beditmode && !_benternotes)
+                {
                     ShowFrmNoteEdit();
+                }
             }
         }
 
@@ -1732,7 +1740,7 @@ namespace Sanford.Multimedia.Midi.Score
                 X = X + OffsetX;
 
                 float ticks = 0;               
-                bool bTempoIsSelected = false;
+                bool bTempoSymbolIsSelected = false;
 
                 if (_selectedstaff != -1)
                 {                    
@@ -1740,17 +1748,17 @@ namespace Sanford.Multimedia.Midi.Score
                     ticks = this.staffs[_selectedstaff].PulseTimeForPoint(new Point(X, Y));
 
                     // Find the TempoSymbol
-                    if (_selectedstaff == 0 && Y < 22)
+                    if (_selectedstaff == 0 && Y < 22 && bEditMode)
                     {
-                        bTempoIsSelected = SetSelectedTempoSymbol(this.staffs[_selectedstaff], Y, ticks);
+                        bTempoSymbolIsSelected = SetSelectedTempoSymbol(this.staffs[_selectedstaff], Y, ticks);
                     }
                     else
                     {
-                        ClearSelectedTempoSymbols();
+                        UnselectTempoSymbols();
                     }
 
                     // Find the note
-                    if (!bTempoIsSelected)
+                    if (!bTempoSymbolIsSelected)
                     {
 
                         int note = GetNoteClicked(Y, _selectedstaff, ticks);
@@ -1767,6 +1775,7 @@ namespace Sanford.Multimedia.Midi.Score
                     }
                     else
                     {
+                        // Tempo Symbol is selected
                         // Unselect notes
                         ClearSelectedNotes();
                         this.Invalidate();
@@ -3346,6 +3355,19 @@ namespace Sanford.Multimedia.Midi.Score
                 if (numstaff != -1)
                 {
                     _selectedstaff = numstaff;
+
+                    if (numstaff == 0 && Y < 22 && bEditMode)
+                    {
+                        // Double click on a temposymbol?
+                        TempoSymbol tmps = GetSelectedTempoSymbol();
+                        if (tmps != null) 
+                        {
+                            Console.WriteLine("Double click on a tempo symbol");
+                            OnSMMouseDoubleClickTempo(this, e, tmps);
+                            return;
+                        }
+                    }
+
                     // Find horizontal position                    
                     ticks = this.staffs[_selectedstaff].PulseTimeForPoint(new Point(X, Y));
                     OnSMMouseDoubleClick(this, e, numstaff, ticks);
@@ -4404,7 +4426,7 @@ namespace Sanford.Multimedia.Midi.Score
         /// <summary>
         /// Unselect all tempo symbols
         /// </summary>
-        private void ClearSelectedTempoSymbols()
+        public void UnselectTempoSymbols()
         {
             foreach (TempoSymbol temposymbol in _lsttemposymbols)
             {
@@ -4656,7 +4678,7 @@ namespace Sanford.Multimedia.Midi.Score
             }
         }
 
-        private void DoScroll(int currentPulseTime, int x_shade)
+        public void DoScroll(int currentPulseTime, int x_shade)
         {
             Panel pnlScrollview = (Panel)this.Parent;
             Point scrollPos = pnlScrollview.AutoScrollPosition;
