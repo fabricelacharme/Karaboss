@@ -15,6 +15,15 @@ namespace Karaboss
     public partial class frmModifyTempo : Form
     {
 
+        private enum TempoChangesModes
+        {
+            CreateTempo,
+            UpdateTempo,
+            DeleteTempo
+        }
+        private TempoChangesModes ChangeMode;
+
+
         private bool TempoDoChange = true;
         private float _bpm;
         private float _tempo;
@@ -87,8 +96,15 @@ namespace Karaboss
 
 
         #region OK CANCEL
+        
+        /// <summary>
+        /// Create or update a tempo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnOk_Click(object sender, EventArgs e)
         {
+            /*
             decimal division = 0;
             decimal val = updDivision.Value;
             division = val;
@@ -101,7 +117,49 @@ namespace Karaboss
                 msg += string.Format("Division will be changed from {0} to {1}", division, val);
                 MessageBox.Show(msg, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+            */
+
+            switch (ChangeMode) 
+            {
+                case TempoChangesModes.CreateTempo:
+                    CreateTempo();
+                    break;
+
+                case TempoChangesModes.UpdateTempo:
+                    UpdateTempo();
+                    break;
+            
+            }
+
         }
+
+        /// <summary>
+        /// Delere current tempo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();
+            TempoSymbol tmps = new TempoSymbol((int)_starttime, (int)_tempo);
+
+            string msg;
+
+            // The method l.Contains(tmps) does not work ??????                       
+            if (!IsContains(tmps, l))
+            {
+                msg = "There is no tempo change at this location";
+                MessageBox.Show(msg, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            sheetmusic.DeleteTempoChange((int)_starttime);
+
+            DisplayPreviousTempoChange();
+
+
+        }
+
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
@@ -110,11 +168,9 @@ namespace Karaboss
 
         #endregion OK CANCEL
 
-
        
-
-
         #region events
+
         private void txtTempo_TextChanged(object sender, EventArgs e)
         {
             if (TempoDoChange == false) return;
@@ -170,6 +226,13 @@ namespace Karaboss
             }
         }
 
+        private void txtStartTime_TextChanged(object sender, EventArgs e)
+        {
+            UpdateFields();
+
+        }
+
+
         #endregion events
 
 
@@ -197,89 +260,9 @@ namespace Karaboss
 
         #endregion verif
 
-
-        private void txtStartTime_TextChanged(object sender, EventArgs e)
-        {
-            UpdateFields();
-
-        }
-
-        private void UpdateFields()
-        {
-            try
-            {
-                if (txtStartTime.Text == "")
-                    txtStartTime.Text = "0";
-
-                _starttime = float.Parse(this.txtStartTime.Text);
-
-                if (_starttime == 0)
-                {
-                    lblTempoNumber.Text = string.Format("Tempo {0}", 0);
-                    btnDelete.Enabled = false;
-                    txtStartTime.Enabled = false;
-                    btnOk.Text = "Update";
-                    return;
-                }
-
-                int index = IsTempoExists(_starttime);
-                if (index != -1)
-                {
-                    btnDelete.Enabled = true;
-                    lblTempoNumber.Text = string.Format("Tempo {0}", index);
-                    txtStartTime.Enabled = true;
-                    btnOk.Text = "Update";
-                }
-                else
-                {
-                    btnDelete.Enabled = false;
-                    lblTempoNumber.Text = "New tempo";
-                    txtStartTime.Enabled = true;
-                    btnOk.Text = "Create";
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-
-        // Delere current tempo
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-            List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();
-            TempoSymbol tmps = new TempoSymbol((int)_starttime, (int)_tempo);
-
-            string msg;
-
-            // The method l.Contains(tmps) does not work ??????                       
-            if (!IsContains(tmps, l))
-            {
-                msg = "There is no tempo change at this location";
-                MessageBox.Show(msg, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            sheetmusic.DeleteTempoChange((int)_starttime);
-
-            DisplayPreviousTempoChange();
-
-
-        }
-
-        private bool IsContains(TempoSymbol symbol, List<TempoSymbol> l)
-        {
-            foreach (TempoSymbol t in l)
-            {
-                if (symbol.StartTime == t.StartTime && symbol.Tempo == t.Tempo)
-                    return true;
-            }
-            return false;
-        }
-
-
+                  
         #region prev next
+
         private void btnPrevTempo_Click(object sender, EventArgs e)
         {
             DisplayPreviousTempoChange();
@@ -342,6 +325,94 @@ namespace Karaboss
 
         #endregion prev next
 
+
+        #region functions
+
+        /// <summary>
+        /// Update existing tempo
+        /// </summary>
+        private void UpdateTempo ()
+        {
+
+        }
+        
+        /// <summary>
+        /// Create a new tempo
+        /// </summary>
+        private void CreateTempo()
+        {
+
+        }
+
+        /// <summary>
+        /// Update fields according to the tempo displayed
+        /// </summary>
+        private void UpdateFields()
+        {
+            try
+            {
+                if (txtStartTime.Text == "")
+                    txtStartTime.Text = "0";
+
+                _starttime = float.Parse(this.txtStartTime.Text);
+
+                if (_starttime == 0)
+                {
+                    lblTempoNumber.Text = string.Format("Tempo {0}", 0);
+                    btnDelete.Enabled = false;
+                    txtStartTime.Enabled = false;
+                    ChangeMode = TempoChangesModes.UpdateTempo;
+                    btnOk.Text = "Update";
+                    return;
+                }
+
+                int index = IsTempoExists(_starttime);
+                if (index != -1)
+                {
+                    btnDelete.Enabled = true;
+                    lblTempoNumber.Text = string.Format("Tempo {0}", index);
+                    txtStartTime.Enabled = true;
+                    ChangeMode= TempoChangesModes.UpdateTempo;
+                    btnOk.Text = "Update";
+                }
+                else
+                {
+                    btnDelete.Enabled = false;
+                    lblTempoNumber.Text = "New tempo";
+                    txtStartTime.Enabled = true;
+                    ChangeMode = TempoChangesModes.CreateTempo;
+                    btnOk.Text = "Create";
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+        /// <summary>
+        /// Replacement function for List.Contains
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="l"></param>
+        /// <returns></returns>
+        private bool IsContains(TempoSymbol symbol, List<TempoSymbol> l)
+        {
+            foreach (TempoSymbol t in l)
+            {
+                if (symbol.StartTime == t.StartTime && symbol.Tempo == t.Tempo)
+                    return true;
+            }
+            return false;
+        }
+        
+
+        /// <summary>
+        /// Check existence of a tempo
+        /// </summary>
+        /// <param name="ticks"></param>
+        /// <returns></returns>
         private int IsTempoExists(float ticks)
         {
             List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();
@@ -359,22 +430,18 @@ namespace Karaboss
 
         }
 
+
+        /// <summary>
+        /// Test if data is numeric
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         private bool IsNumeric(string input)
         {
             int test;
             return int.TryParse(input, out test);
         }
 
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
 
         /// <summary>
         /// Locate form
@@ -387,6 +454,7 @@ namespace Karaboss
             return (T)Application.OpenForms.OfType<T>().FirstOrDefault();
         }
 
-
+        #endregion functions
+    
     }
 }
