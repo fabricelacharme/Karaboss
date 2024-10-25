@@ -4408,6 +4408,15 @@ namespace Sanford.Multimedia.Midi.Score
             _lsttemposymbols = AddTemposToStaffs(staffs, _lsttemposymbols);
         }
 
+        public List<TempoSymbol> CreateTempoChange(int ticks, int tempo)
+        {
+            if (sequence1 != null && sequence1.tracks.Count > 0)
+            {
+                sequence1.tracks[0].insertTempo(tempo, ticks);
+            }
+            return GetAllTempoChanges();
+        }
+
 
         /// <summary>
         /// Return selected TempoSymbol, or null
@@ -4429,23 +4438,6 @@ namespace Sanford.Multimedia.Midi.Score
                 }
             }
             return false;
-        }
-
-
-        public void SetSelectedTempoSymbol(TempoSymbol temposymbol)
-        {
-            if (_lsttemposymbols != null && _lsttemposymbols.Contains(temposymbol))
-            {
-                // Unselect all
-                foreach (TempoSymbol tmps in _lsttemposymbols)
-                {
-                    if (tmps == temposymbol)
-                        tmps.Selected = true;
-                    else
-                        tmps.Selected = false;
-                }
-            }
-
         }
 
         /// <summary>
