@@ -429,7 +429,7 @@ namespace Karaboss
           * control, and add it to this form. Update the MidiPlayer with
           * the new midi file.
           */
-        private void RedrawSheetMusic()
+        public void RedrawSheetMusic()
         {
 
             /* Create a new SheetMusic Control from the midifile */
@@ -3463,43 +3463,26 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuMidiModifyTempo_Click(object sender, EventArgs e)
         {
-            int starttime = 0;
-            int tempo = sequence1.Tempo;
-
-
             if (Application.OpenForms["frmModifyTempo"] == null)
             {
-                frmModifyTempo = new frmModifyTempo(sheetmusic, sequence1, tempo);
-                frmModifyTempo.ShowDialog();
+                frmModifyTempo = new frmModifyTempo(sheetmusic, sequence1);                
+                frmModifyTempo.Show();
                 frmModifyTempo.Refresh();
-
             }
-
-            /*
-            DialogResult dr = new DialogResult();
-            Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog ModifyTempoDialog = new Sanford.Multimedia.Midi.Score.UI.modifyTempoDialog(sheetmusic, sequence1, tempo);
-            dr = ModifyTempoDialog.ShowDialog();
-
-            if (dr == DialogResult.Cancel)
-            {
-                return;
-            }
-            */
+            
+        }
 
 
-            //tempo = ModifyTempoDialog.Tempo;
-            //int division = ModifyTempoDialog.Division;
-            //starttime = ModifyTempoDialog.StartTime;
-
-            //ModTempoMenu(tempo, division, starttime);
+        public void Redraw()
+        {
             UpdateMidiTimes();
 
             RedrawSheetMusic();
 
             FileModified();
             DisplayFileInfos();
-        }
 
+        }
         private void ModTempoMenu(int tempo, int division, int ticks)
         {
             // If no change => out
@@ -7660,20 +7643,15 @@ namespace Karaboss
         /// <param name="tmps"></param>
         /// <exception cref="NotImplementedException"></exception>
         private void Tempo_DoubleClick(object sender, EventArgs e, TempoSymbol tmps)
-        {
-            int starttime = 0;
-            int tempo = sequence1.Tempo;
+        {                        
 
             if (Application.OpenForms["frmModifyTempo"] == null)
             {
-                frmModifyTempo = new frmModifyTempo(sheetmusic, sequence1, tempo);
-                frmModifyTempo.ShowDialog();
+                frmModifyTempo = new frmModifyTempo(sheetmusic, sequence1);                
+                frmModifyTempo.Show();
                 frmModifyTempo.Refresh();
 
-            }
-
-
-            
+            }            
         }
 
         #endregion Tempo

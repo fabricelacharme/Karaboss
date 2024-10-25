@@ -44,7 +44,7 @@
             this.updDivision = new System.Windows.Forms.NumericUpDown();
             this.lblTitle = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.btnOk = new System.Windows.Forms.Button();
+            this.btnUpdate = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updDivision)).BeginInit();
             this.SuspendLayout();
@@ -173,29 +173,30 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // btnOk
+            // btnUpdate
             // 
-            this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            resources.ApplyResources(this.btnOk, "btnOk");
-            this.btnOk.Name = "btnOk";
-            this.btnOk.UseVisualStyleBackColor = true;
-            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
+            resources.ApplyResources(this.btnUpdate, "btnUpdate");
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // frmModifyTempo
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
+            this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.lblTempoNumber);
             this.Controls.Add(this.btnNextTempo);
             this.Controls.Add(this.btnPrevTempo);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnOk);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmModifyTempo";
+            this.TopMost = true;
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updDivision)).EndInit();
@@ -221,6 +222,6 @@
         private System.Windows.Forms.NumericUpDown updDivision;
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button btnOk;
+        private System.Windows.Forms.Button btnUpdate;
     }
 }

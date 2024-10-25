@@ -154,10 +154,10 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblTempoNumber.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="btnNextTempo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 43</value>
+    <value>205, 43</value>
   </data>
   <data name="btnNextTempo.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 23</value>
@@ -178,10 +178,10 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnNextTempo.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="btnPrevTempo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>24, 43</value>
+    <value>29, 43</value>
   </data>
   <data name="btnPrevTempo.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 23</value>
@@ -202,7 +202,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnPrevTempo.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="btnDelete.Location" type="System.Drawing.Point, System.Drawing">
     <value>163, 83</value>
@@ -469,7 +469,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;groupBox1.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="lblTitle.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -505,7 +505,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblTitle.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="btnCancel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -514,7 +514,7 @@
     <value>175, 209</value>
   </data>
   <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+    <value>64, 23</value>
   </data>
   <data name="btnCancel.TabIndex" type="System.Int32, mscorlib">
     <value>18</value>
@@ -532,34 +532,34 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnCancel.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
-  <data name="btnOk.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="btnUpdate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="btnOk.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="btnUpdate.Location" type="System.Drawing.Point, System.Drawing">
     <value>24, 209</value>
   </data>
-  <data name="btnOk.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+  <data name="btnUpdate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>64, 23</value>
   </data>
-  <data name="btnOk.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
+  <data name="btnUpdate.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
   </data>
-  <data name="btnOk.Text" xml:space="preserve">
+  <data name="btnUpdate.Text" xml:space="preserve">
     <value>&amp;Update</value>
   </data>
-  <data name="&gt;&gt;btnOk.Name" xml:space="preserve">
-    <value>btnOk</value>
+  <data name="&gt;&gt;btnUpdate.Name" xml:space="preserve">
+    <value>btnUpdate</value>
   </data>
-  <data name="&gt;&gt;btnOk.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnUpdate.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnOk.Parent" xml:space="preserve">
+  <data name="&gt;&gt;btnUpdate.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;btnOk.ZOrder" xml:space="preserve">
-    <value>6</value>
+  <data name="&gt;&gt;btnUpdate.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

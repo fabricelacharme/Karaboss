@@ -280,12 +280,6 @@
     <Compile Include="Score\UI\selectMeasuresDialog.Designer.cs">
       <DependentUpon>selectMeasuresDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Score\UI\modifyTempoDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Score\UI\modifyTempoDialog.Designer.cs">
-      <DependentUpon>modifyTempoDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="Score\UI\newMidiFile.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -420,6 +414,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\frmNoteEdit.resx">
       <DependentUpon>frmNoteEdit.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\DeleteMeasuresDialog.resx">
       <DependentUpon>DeleteMeasuresDialog.cs</DependentUpon>
@@ -437,9 +432,6 @@
     <EmbeddedResource Include="Score\UI\ModifyStartTimesDialog.resx">
       <DependentUpon>ModifyStartTimesDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Score\UI\modifyTempoDialog.resx">
-      <DependentUpon>modifyTempoDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Score\UI\newMidiFile.en.resx">
       <DependentUpon>newMidiFile.cs</DependentUpon>
