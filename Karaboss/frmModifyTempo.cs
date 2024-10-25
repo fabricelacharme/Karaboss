@@ -134,7 +134,7 @@ namespace Karaboss
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-
+            Close();
         }
 
         #endregion OK CANCEL
@@ -325,11 +325,15 @@ namespace Karaboss
             }
 
             // Remove all tempo events at location ticks
+            sheetmusic.DeleteTempoChange(ticks);
+            /*
             foreach (Track trk in sequence1.tracks)
             {
                 trk.RemoveTempoEvent(ticks);
             }
-            sequence1.tracks[0].insertTempo(tempo, ticks);
+            */
+            sheetmusic.CreateTempoChange(ticks, tempo);
+            //sequence1.tracks[0].insertTempo(tempo, ticks);
 
             Redraw();
 
@@ -381,6 +385,9 @@ namespace Karaboss
         /// </summary>
         private void UpdateFields()
         {
+            int index;
+            List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();
+
             try
             {
                 if (txtStartTime.Text == "")
@@ -390,19 +397,20 @@ namespace Karaboss
 
                 if (_starttime == 0)
                 {
-                    lblTempoNumber.Text = string.Format("Tempo {0}", 0);
+                    index = 1;
+                    lblTempoNumber.Text = string.Format("Tempo {0} of {1}", index, l.Count);
                     btnDelete.Enabled = false;
-                    txtStartTime.Enabled = false;
+                    //txtStartTime.Enabled = false;
                     ChangeMode = TempoChangesModes.UpdateTempo;
                     btnUpdate.Text = "Update";
                     return;
                 }
 
-                int index = IsTempoExists((int)_starttime);
+                index = IsTempoExists((int)_starttime);
                 if (index != -1)
                 {
                     btnDelete.Enabled = true;
-                    lblTempoNumber.Text = string.Format("Tempo {0}", index);
+                    lblTempoNumber.Text = string.Format("Tempo {0} of {1}", index + 1, l.Count);
                     txtStartTime.Enabled = true;
                     ChangeMode= TempoChangesModes.UpdateTempo;
                     btnUpdate.Text = "Update";
