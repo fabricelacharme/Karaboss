@@ -254,7 +254,7 @@ namespace Karaboss
                     txtStartTime.Text = _tempoSymbol.StartTime.ToString();
                     txtTempo.Text = _tempoSymbol.Tempo.ToString();
 
-                    sheetmusic.SetSelectedTempoSymbol(_tempoSymbol);
+                    sheetmusic.SelectTempoSymbol(_tempoSymbol);
 
                     if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                     {
@@ -284,7 +284,7 @@ namespace Karaboss
                     _tempoSymbol = l[i];
                     txtStartTime.Text = _tempoSymbol.StartTime.ToString();
                     txtTempo.Text = _tempoSymbol.Tempo.ToString();
-                    sheetmusic.SetSelectedTempoSymbol(_tempoSymbol);
+                    sheetmusic.SelectTempoSymbol(_tempoSymbol);
 
                     if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                     {

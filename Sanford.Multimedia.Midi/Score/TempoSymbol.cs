@@ -1,7 +1,7 @@
 ﻿/*
  * Copyright (c) 2024 - Fabrice Lacharme
  * 
- * Attempt to display the BPM of a song
+ * Attempt to display the Tempo/BPM of a song
  * 
  * 
  * 
@@ -114,8 +114,9 @@ namespace Sanford.Multimedia.Midi.Score
         public void Draw (Graphics g, System.Drawing.Pen pen, int xpos, int ypos) 
         {
             string tx = string.Empty;
-            System.Drawing.Brush brush = System.Drawing.Brushes.Black;
-
+            System.Drawing.Brush brush = System.Drawing.Brushes.Black;            
+            
+                        
             if (Selected) 
             { 
                 pen.Color = System.Drawing.Color.Red;
@@ -142,6 +143,11 @@ namespace Sanford.Multimedia.Midi.Score
             // Offset back                    
             g.TranslateTransform(-(xpos + X + SheetMusic.NoteWidth / 2 + 1), -(ypos - SheetMusic.LineWidth + SheetMusic.NoteHeight / 2));
 
+
+            // Restore black color for other Music symbols
+            brush = System.Drawing.Brushes.Black;
+            pen.Color = System.Drawing.Color.Black;
+            
 
         }
 

@@ -3463,6 +3463,9 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuMidiModifyTempo_Click(object sender, EventArgs e)
         {
+            if (Application.OpenForms["frmModifyTempo"] != null)
+                Application.OpenForms["frmModifyTempo"].Close();
+
             if (Application.OpenForms["frmModifyTempo"] == null)
             {
                 frmModifyTempo = new frmModifyTempo(sheetmusic, sequence1);                
@@ -3472,18 +3475,16 @@ namespace Karaboss
             
         }
 
-        /*
-        public void Redraw()
+        
+        public void UpdateTimes()
         {
-            UpdateMidiTimes();
-
-            RedrawSheetMusic();
+            UpdateMidiTimes();            
 
             FileModified();
             DisplayFileInfos();
 
         }
-        */
+        
 
         private void ModTempoMenu(int tempo, int division, int ticks)
         {
@@ -7645,7 +7646,10 @@ namespace Karaboss
         /// <param name="tmps"></param>
         /// <exception cref="NotImplementedException"></exception>
         private void Tempo_DoubleClick(object sender, EventArgs e, TempoSymbol tmps)
-        {                        
+        {
+            if (Application.OpenForms["frmModifyTempo"] != null)
+                Application.OpenForms["frmModifyTempo"].Close();
+
 
             if (Application.OpenForms["frmModifyTempo"] == null)
             {

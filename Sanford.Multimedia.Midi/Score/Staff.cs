@@ -543,8 +543,8 @@ namespace Sanford.Multimedia.Midi.Score
         public void Draw(Graphics g, Rectangle clip, Rectangle selRect, Pen pen)
         {
             int xpos = SheetMusic.LeftMargin + 5;
-            int yy = ytop + SheetMusic.LineWidth;            
-
+            int yy = ytop + SheetMusic.LineWidth;
+            
             /* Draw the left side Clef symbol */
             g.TranslateTransform(xpos, 0);
             clefsym.Draw(g, pen, yy, this.tracknum, selRect, xpos);
@@ -573,6 +573,8 @@ namespace Sanford.Multimedia.Midi.Score
                 // deselect all MusicSymbol if selection rectangle is null
                 if (selRect.Width == 0)
                     s.Selected = false;
+                
+
 
                 // Draw only in clip area
                 if ((xpos <= clip.X + clip.Width + 50) && (xpos + s.Width + 50 >= clip.X))
@@ -595,6 +597,7 @@ namespace Sanford.Multimedia.Midi.Score
             if (lyrics != null)            
                 DrawLyrics(g, clip ,pen);            
 
+            // Draw tempo symbols
             if (lsttempos != null)
                 DrawTempos(g, clip, pen);
         }
