@@ -3472,7 +3472,7 @@ namespace Karaboss
             
         }
 
-
+        /*
         public void Redraw()
         {
             UpdateMidiTimes();
@@ -3483,6 +3483,8 @@ namespace Karaboss
             DisplayFileInfos();
 
         }
+        */
+
         private void ModTempoMenu(int tempo, int division, int ticks)
         {
             // If no change => out

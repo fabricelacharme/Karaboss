@@ -37,7 +37,7 @@ namespace Sanford.Multimedia.Midi.Score
     {
         private List<MusicSymbol> symbols;  /** The music symbols in this staff */
         private List<LyricSymbol> lyrics;   /** The lyrics to display (can be null) */
-        private List<TempoSymbol> tempos;     /** The tempo changes to display (minimum 1) */
+        private List<TempoSymbol> lsttempos;     /** The tempo changes to display (minimum 1) */
         private int ytop;                   /** The y pixel of the top of the staff */
         private ClefSymbol clefsym;         /** The left-side Clef symbol */
         private AccidSymbol[] keys;         /** The key signature symbols */
@@ -295,7 +295,7 @@ namespace Sanford.Multimedia.Midi.Score
             string tx = string.Empty;
             System.Drawing.Brush brush = System.Drawing.Brushes.Black;
 
-            foreach (TempoSymbol TempoSymbol in tempos)
+            foreach (TempoSymbol TempoSymbol in lsttempos)
             {
                 if ((xpos + TempoSymbol.X >= clip.X - 50) && (xpos + TempoSymbol.X <= clip.X + clip.Width + 50))
                 {                    
@@ -498,14 +498,14 @@ namespace Sanford.Multimedia.Midi.Score
         /// Add Tempo symbols to the first staff
         /// </summary>
         /// <param name="TempoSymbols"></param>
-        public void AddTempos(List<TempoSymbol> TempoSymbols)
+        public List<TempoSymbol> AddTempos(List<TempoSymbol> TempoSymbols)
         {
             if (TempoSymbols == null)
-             return;
+             return null;
 
             int xpos = 0;
             int symbolindex = 0;
-            tempos = new List<TempoSymbol>();
+            lsttempos = new List<TempoSymbol>();
 
             foreach (TempoSymbol TempoSymbol in TempoSymbols) 
             {
@@ -529,13 +529,14 @@ namespace Sanford.Multimedia.Midi.Score
                 {
                     TempoSymbol.X += SheetMusic.NoteWidth;
                 }
-                tempos.Add(TempoSymbol);
+                lsttempos.Add(TempoSymbol);
             }
-            if (tempos.Count == 0)
+            
+            if (lsttempos.Count == 0)
             {
-                tempos = null;
+                lsttempos = null;
             }
-
+            return lsttempos;
         }
 
         /** Draw this staff. Only draw the symbols inside the clip area */
@@ -594,7 +595,7 @@ namespace Sanford.Multimedia.Midi.Score
             if (lyrics != null)            
                 DrawLyrics(g, clip ,pen);            
 
-            if (tempos != null)
+            if (lsttempos != null)
                 DrawTempos(g, clip, pen);
         }
 

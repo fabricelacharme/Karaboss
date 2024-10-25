@@ -14,7 +14,6 @@ namespace Karaboss
 {
     public partial class frmModifyTempo : Form
     {
-
         private enum TempoChangesModes
         {
             CreateTempo,
@@ -23,6 +22,7 @@ namespace Karaboss
         }
         private TempoChangesModes ChangeMode;
 
+        //private TempoSymbol CurrentTempoSymbol;
 
         private bool TempoDoChange = true;
         private float _bpm;
@@ -83,11 +83,13 @@ namespace Karaboss
                 MidiNote n = sheetmusic.CurrentNote.midinote;
                 _starttime = n.StartTime;
                 _tempo = deftempo;
+                _tempoSymbol = null;
             }
             else
             {
                 _starttime = 0;
                 _tempo = deftempo;
+                _tempoSymbol = null;
             }
 
             Division = sequence1.Division;
@@ -134,7 +136,7 @@ namespace Karaboss
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-
+            Close();
         }
 
         #endregion OK CANCEL
@@ -241,21 +243,23 @@ namespace Karaboss
 
         private void DisplayPreviousTempoChange()
         {
-            List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();
+            List<TempoSymbol> l = sheetmusic.lstTempoSymbols;
 
             float ticks = -1 + float.Parse(txtStartTime.Text);
             for (int i = l.Count - 1; i >= 0; i--)
-            {
-                TempoSymbol tempo = l[i];
-                if (tempo.StartTime < ticks)
+            {                
+                if (l[i].StartTime < ticks)
                 {
-                    txtStartTime.Text = tempo.StartTime.ToString();
-                    txtTempo.Text = tempo.Tempo.ToString();
+                    _tempoSymbol = l[i];
+                    txtStartTime.Text = _tempoSymbol.StartTime.ToString();
+                    txtTempo.Text = _tempoSymbol.Tempo.ToString();
+
+                    sheetmusic.SetSelectedTempoSymbol(_tempoSymbol);
 
                     if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                     {
                         frmPlayer frmPlayer = getForm<frmPlayer>();
-                        frmPlayer.ScrollTo(tempo.StartTime);
+                        frmPlayer.ScrollTo(_tempoSymbol.StartTime);
                     }
                     break;
                 }
@@ -269,22 +273,23 @@ namespace Karaboss
 
         private void DisplayNextTempoChange()
         {
-            List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();
+            List<TempoSymbol> l = sheetmusic.lstTempoSymbols;
 
             float ticks = 1 + float.Parse(txtStartTime.Text);
 
             for (int i = 0; i < l.Count; i++)
-            {
-                TempoSymbol tempo = l[i];
-                if (tempo.StartTime >= ticks)
+            {                
+                if (l[i].StartTime >= ticks)
                 {
-                    txtStartTime.Text = tempo.StartTime.ToString();
-                    txtTempo.Text = tempo.Tempo.ToString();
+                    _tempoSymbol = l[i];
+                    txtStartTime.Text = _tempoSymbol.StartTime.ToString();
+                    txtTempo.Text = _tempoSymbol.Tempo.ToString();
+                    sheetmusic.SetSelectedTempoSymbol(_tempoSymbol);
 
                     if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                     {
                         frmPlayer frmPlayer = getForm<frmPlayer>();     
-                        frmPlayer.ScrollTo(tempo.StartTime);
+                        frmPlayer.ScrollTo(_tempoSymbol.StartTime);
                     }                    
                     break;
                 }
@@ -311,7 +316,7 @@ namespace Karaboss
         /// </summary>
         private void CreateTempo()
         {
-            List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();
+            List<TempoSymbol> l = sheetmusic.lstTempoSymbols;
 
             int ticks = Convert.ToInt32(txtStartTime.Text);
             int tempo = Convert.ToInt32(txtTempo.Text);
@@ -325,13 +330,8 @@ namespace Karaboss
             }
 
             // Remove all tempo events at location ticks
-            foreach (Track trk in sequence1.tracks)
-            {
-                trk.RemoveTempoEvent(ticks);
-            }
-            sequence1.tracks[0].insertTempo(tempo, ticks);
-
-            Redraw();
+            sheetmusic.DeleteTempoChange(ticks);
+            sheetmusic.CreateTempoChange(ticks, tempo);                        
 
             DisplayPreviousTempoChange();
             DisplayNextTempoChange();
@@ -343,7 +343,7 @@ namespace Karaboss
         /// </summary>
         private void DeleteTempo()
         {
-            List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();
+            List<TempoSymbol> l = sheetmusic.lstTempoSymbols;
             TempoSymbol tmps = new TempoSymbol((int)_starttime, (int)_tempo);
 
             string msg;
@@ -356,23 +356,9 @@ namespace Karaboss
                 return;
             }
 
-            sheetmusic.DeleteTempoChange((int)_starttime);
-
-            Redraw();
-
+            sheetmusic.DeleteTempoChange((int)_starttime);            
+            
             DisplayPreviousTempoChange();
-
-        }
-
-
-        private void Redraw()
-        {
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
-            {
-                frmPlayer frmPlayer = getForm<frmPlayer>();
-                frmPlayer.Redraw();
-            }
-
         }
 
 
@@ -381,6 +367,9 @@ namespace Karaboss
         /// </summary>
         private void UpdateFields()
         {
+            int index;
+            List<TempoSymbol> l = sheetmusic.lstTempoSymbols;
+
             try
             {
                 if (txtStartTime.Text == "")
@@ -390,19 +379,20 @@ namespace Karaboss
 
                 if (_starttime == 0)
                 {
-                    lblTempoNumber.Text = string.Format("Tempo {0}", 0);
+                    index = 1;
+                    lblTempoNumber.Text = string.Format("Tempo {0} of {1}", index, l.Count);
                     btnDelete.Enabled = false;
-                    txtStartTime.Enabled = false;
+                    //txtStartTime.Enabled = false;
                     ChangeMode = TempoChangesModes.UpdateTempo;
                     btnUpdate.Text = "Update";
                     return;
                 }
 
-                int index = IsTempoExists((int)_starttime);
+                index = IsTempoExists((int)_starttime);
                 if (index != -1)
                 {
                     btnDelete.Enabled = true;
-                    lblTempoNumber.Text = string.Format("Tempo {0}", index);
+                    lblTempoNumber.Text = string.Format("Tempo {0} of {1}", index + 1, l.Count);
                     txtStartTime.Enabled = true;
                     ChangeMode= TempoChangesModes.UpdateTempo;
                     btnUpdate.Text = "Update";
@@ -447,7 +437,7 @@ namespace Karaboss
         /// <returns></returns>
         private int IsTempoExists(int ticks)
         {
-            List<TempoSymbol> l = sheetmusic.GetAllTempoChanges();
+            List<TempoSymbol> l = sheetmusic.lstTempoSymbols;
 
             for (int i = 0; i < l.Count; i++)
             {

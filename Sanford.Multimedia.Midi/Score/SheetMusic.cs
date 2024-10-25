@@ -536,7 +536,7 @@ namespace Sanford.Multimedia.Midi.Score
 
             if (_lsttemposymbols != null && staffs != null)
             {
-                AddTemposToStaffs(staffs, _lsttemposymbols);
+                _lsttemposymbols = AddTemposToStaffs(staffs, _lsttemposymbols);
             }
 
             /* After making chord pairs, the stem directions can change,
@@ -726,10 +726,7 @@ namespace Sanford.Multimedia.Midi.Score
             Parent.Focus();
             this.Invalidate();
         }
-
-
-      
-
+     
 
         /** Apply the given sheet music options to the MidiNotes.
           *  Return the midi tracks with the changes applied.
@@ -4364,7 +4361,7 @@ namespace Sanford.Multimedia.Midi.Score
         /// Return the list of all Tempo changes
         /// </summary>
         /// <returns></returns>
-        public List<TempoSymbol> GetAllTempoChanges()
+        private List<TempoSymbol> GetAllTempoChanges()
         {
             List<(int, int)> l = new List<(int, int)>();
             List<(int, int)> lt = new List<(int, int)>();
@@ -4388,16 +4385,27 @@ namespace Sanford.Multimedia.Midi.Score
             return result;
         }
 
-        public List<TempoSymbol> DeleteTempoChange(int ticks)
+        public void DeleteTempoChange(int ticks)
         {
 
             foreach (Track track in sequence1.tracks)
             {
                 track.RemoveTempoEvent(ticks);
             }
+            _lsttemposymbols = GetAllTempoChanges();
+            _lsttemposymbols = AddTemposToStaffs(staffs, _lsttemposymbols);
 
-            return GetAllTempoChanges();
+        }
 
+        public void CreateTempoChange(int ticks, int tempo)
+        {
+            if (sequence1 != null && sequence1.tracks.Count > 0)
+            {
+                sequence1.tracks[0].insertTempo(tempo, ticks);
+            }
+
+            _lsttemposymbols = GetAllTempoChanges();
+            _lsttemposymbols = AddTemposToStaffs(staffs, _lsttemposymbols);
         }
 
 
@@ -4423,6 +4431,23 @@ namespace Sanford.Multimedia.Midi.Score
             return false;
         }
 
+
+        public void SetSelectedTempoSymbol(TempoSymbol temposymbol)
+        {
+            if (_lsttemposymbols != null && _lsttemposymbols.Contains(temposymbol))
+            {
+                // Unselect all
+                foreach (TempoSymbol tmps in _lsttemposymbols)
+                {
+                    if (tmps == temposymbol)
+                        tmps.Selected = true;
+                    else
+                        tmps.Selected = false;
+                }
+            }
+
+        }
+
         /// <summary>
         /// Unselect all tempo symbols
         /// </summary>
@@ -4439,10 +4464,10 @@ namespace Sanford.Multimedia.Midi.Score
         /// </summary>
         /// <param name="staffs"></param>
         /// <param name="TempoSymbols"></param>
-        static void AddTemposToStaffs(List<Staff> staffs, List<TempoSymbol> TempoSymbols)
+        static List<TempoSymbol> AddTemposToStaffs(List<Staff> staffs, List<TempoSymbol> TempoSymbols)
         {
             Staff staff = staffs.FirstOrDefault();
-            staff.AddTempos(TempoSymbols);
+            return staff.AddTempos(TempoSymbols);
         }
 
         #endregion tempos
