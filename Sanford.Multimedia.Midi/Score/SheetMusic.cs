@@ -4395,12 +4395,12 @@ namespace Sanford.Multimedia.Midi.Score
         /// Delete a tempo change
         /// </summary>
         /// <param name="ticks"></param>
-        public void DeleteTempoChange(int ticks)
+        public void DeleteTempoChange(int ticks, int tempo)
         {
 
             foreach (Track track in sequence1.tracks)
             {
-                track.RemoveTempoEvent(ticks);
+                track.RemoveTempoEvent(ticks, tempo);
             }
             _lsttemposymbols = AddTemposToStaffs(staffs, GetAllTempoChanges());
 

@@ -416,9 +416,10 @@ namespace Sanford.Multimedia.Midi
 
         #region tempo
         /// <summary>
-        /// Find Tempo Message starting from ticks
+        /// Find Tempo Message starting from ticks and having value tempo
         /// </summary>
         /// <returns></returns>
+        /*
         private int findTempo(int ticks)
         {
             int id = 0;
@@ -484,18 +485,87 @@ namespace Sanford.Multimedia.Midi
             }
             return -1;
         }
+        */
+        private int findTempoValue(int ticks, int tempo)
+        {
+            int id = 0;
+            MidiEvent current = GetMidiEvent(0);
+
+            while (current.AbsoluteTicks <= Length)
+            {
+                IMidiMessage a = current.MidiMessage;
+
+                if (a.MessageType == MessageType.Meta)
+                {
+                    MetaMessage Msg = (MetaMessage)current.MidiMessage;
+                    if (Msg.MetaType == MetaType.Tempo)
+                    {
+                        byte[] data = Msg.GetBytes();
+                        int _tempo = ((data[0] << 16) | (data[1] << 8) | data[2]);
+
+                        if (current.AbsoluteTicks == ticks && _tempo == tempo)
+                        {
+                            return id;
+                        }
+                        else
+                        {
+                            #region next
+                            if (current.Next != null)
+                            {
+                                current = current.Next;
+                                id++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            #endregion next
+                        }
+                    }
+                    else
+                    {
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                            id++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion next                            
+                    }
+                }
+                else
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                        id++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion next 
+                }
+            }
+            return -1;
+        }
 
         /// <summary>
         /// Remove Tempo Message at exact location ticks
         /// </summary>
-        public void RemoveTempoEvent(int ticks)
+        public void RemoveTempoEvent(int ticks, int tempo)
         {
-            int i = findTempo(ticks);
+            int i = findTempoValue(ticks, tempo);
 
             while (i != -1)
             {
                 RemoveAt(i);
-                i = findTempo(ticks);
+                i = findTempoValue(ticks, tempo);
             }
         }
 

@@ -3484,41 +3484,8 @@ namespace Karaboss
             DisplayFileInfos();
 
         }
-        
 
-        private void ModTempoMenu(int tempo, int division, int ticks)
-        {
-            // If no change => out
-            if (tempo == sequence1.Tempo && division == sequence1.Division)
-            {
-                return;
-            }
-
-            if (tempo != sequence1.Tempo)
-            {
-                sequence1.Tempo = tempo;
-                sequence1.Time = new TimeSignature(sequence1.Numerator, sequence1.Denominator, sequence1.Division, sequence1.Tempo);
-                pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
-
-                // Remove all tempo events starting from ticks
-                foreach (Track trk in sequence1.tracks)
-                {
-                    trk.RemoveTempoEvent(ticks);
-                }
-                sequence1.tracks[0].insertTempo(tempo, ticks);
-            }
-
-            // Plus compliqué qu'il n'y parait
-            // il faudrait modifier la durée des notes et leur start time
-            if (division != sequence1.Division)
-            {
-                sequence1.Division = division;
-                sequence1.Time = new TimeSignature(sequence1.Numerator, sequence1.Denominator, sequence1.Division, sequence1.Tempo);
-                pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
-
-            }
-        }       
-     
+       
         /// <summary>
         /// Modify Time Signature (4/4, 4/2 etc...)
         /// </summary>
@@ -5694,6 +5661,11 @@ namespace Karaboss
             }
             else
             {
+                
+                // Remove edit forms like frmNoteEdit, frmModifyTempo etcc (always on top)
+                // They can hide the messagebox asking for saving the file
+                DspEdit(false);
+                
                 if (bfilemodified == true)
                 {
                     string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
@@ -5736,12 +5708,7 @@ namespace Karaboss
                     Properties.Settings.Default.Save();
                 }
                 
-                            
-                // Ferme le formulaire frmScore
-                if (Application.OpenForms["frmScore"] != null)
-                {
-                    Application.OpenForms["frmScore"].Close();
-                }
+                                            
                 // Ferme le formulaire frmLyric
                 if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
                 {
@@ -7834,6 +7801,13 @@ namespace Karaboss
 
                 // Unselect all track controls
                 UnselectTrackControls();
+
+                // Close frmModifyTempo
+                if (Application.OpenForms.OfType<frmModifyTempo>().Count() > 0)
+                {
+                    Application.OpenForms["frmModifyTempo"].Close();
+                }
+
             }
         }
 
