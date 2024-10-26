@@ -1211,5 +1211,12 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("Create", resourceCulture);
             }
         }
+        internal static string NewTempo
+        {
+            get
+            {
+                return ResourceManager.GetString("NewTempo", resourceCulture);
+            }
+        }
     }
 }

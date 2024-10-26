@@ -515,7 +515,8 @@ namespace Karaboss
                 else
                 {
                     btnDelete.Enabled = false;
-                    lblTempoNumber.Text = "New tempo";
+                    tx = Resources.Localization.Strings.NewTempo;
+                    lblTempoNumber.Text = tx;
                     txtStartTime.Enabled = true;
                     ChangeMode = TempoChangesModes.CreateTempo;
                     tx = Karaboss.Resources.Localization.Strings.Create;

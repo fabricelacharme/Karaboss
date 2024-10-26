@@ -117,10 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="lblTempoNumber.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="lblTempoNumber.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9.75pt</value>
@@ -130,11 +126,12 @@
     <value>NoControl</value>
   </data>
   <data name="lblTempoNumber.Location" type="System.Drawing.Point, System.Drawing">
-    <value>109, 47</value>
+    <value>87, 47</value>
   </data>
   <data name="lblTempoNumber.Size" type="System.Drawing.Size, System.Drawing">
-    <value>66, 17</value>
+    <value>110, 17</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="lblTempoNumber.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
