@@ -3463,6 +3463,8 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuMidiModifyTempo_Click(object sender, EventArgs e)
         {
+            DspEdit(true);
+
             if (Application.OpenForms["frmModifyTempo"] != null)
                 Application.OpenForms["frmModifyTempo"].Close();
 

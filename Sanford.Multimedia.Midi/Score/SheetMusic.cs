@@ -4411,7 +4411,7 @@ namespace Sanford.Multimedia.Midi.Score
         /// </summary>
         /// <param name="ticks"></param>
         /// <param name="tempo"></param>
-        public void CreateTempoChange(int ticks, int tempo)
+        public TempoSymbol CreateTempoChange(int ticks, int tempo)
         {
             if (sequence1 != null && sequence1.tracks.Count > 0)
             {
@@ -4419,6 +4419,16 @@ namespace Sanford.Multimedia.Midi.Score
             }
 
             _lsttemposymbols = AddTemposToStaffs(staffs, GetAllTempoChanges());
+
+            for (int i = 0; i < _lsttemposymbols.Count; i++)
+            {
+                if (_lsttemposymbols[i].StartTime == ticks && _lsttemposymbols[i].Tempo == tempo)
+                {
+                    return _lsttemposymbols[i];
+                }
+            }
+            return null;
+
         }
 
        
@@ -4461,6 +4471,7 @@ namespace Sanford.Multimedia.Midi.Score
                         tmps.Selected = false;
                 }
             }
+            Invalidate();
 
         }
 
@@ -4473,6 +4484,7 @@ namespace Sanford.Multimedia.Midi.Score
             {
                 temposymbol.Selected = false;
             }
+            Invalidate();
         }
 
         /// <summary>

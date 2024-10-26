@@ -29,6 +29,7 @@ namespace Karaboss
         TempoSymbol _tempoSymbol;
         Sequence sequence1;
 
+        
         public int Division
         {
             get
@@ -52,6 +53,7 @@ namespace Karaboss
                 return Convert.ToInt32(_starttime);
             }
         }
+        
 
         public frmModifyTempo(SheetMusic sheetMusic, Sequence seq)
         {
@@ -64,33 +66,46 @@ namespace Karaboss
 
             // Check if a TempoSymbol is selected
             TempoSymbol tempoSymbol = sheetMusic.GetSelectedTempoSymbol();
+            List<TempoSymbol> l = sheetmusic.lstTempoSymbols;
+
             if (tempoSymbol != null)
             {
                 _tempoSymbol = tempoSymbol;
                 _starttime = _tempoSymbol.StartTime;
                 _tempo = _tempoSymbol.Tempo;
             }
-            else if (sheetmusic.CurrentNote != null)
-            {
-                // if a note is selected
-                MidiNote n = sheetmusic.CurrentNote.midinote;
-                _starttime = n.StartTime;
-                _tempo = deftempo;
-                _tempoSymbol = null;
-            }
             else
             {
-                _starttime = 0;
                 _tempo = deftempo;
                 _tempoSymbol = null;
+
+                if (sheetmusic.CurrentNote != null)
+                {
+                    // if a note is selected
+                    MidiNote n = sheetmusic.CurrentNote.midinote;
+                    _starttime = n.StartTime;
+                }
+                else
+                {
+                    _starttime = 0;
+                }
+
+                for (int i = 0; i < l.Count; i++)
+                {
+                    if (l[i].StartTime == _starttime)
+                    {
+                        _tempoSymbol = l[i];
+                        _tempo = _tempoSymbol.Tempo;
+                        sheetMusic.SelectTempoSymbol(_tempoSymbol);
+                        break;
+                    }
+                }
             }
 
             Division = sequence1.Division;
             updDivision.Value = Convert.ToDecimal(Division);
             txtTempo.Text = _tempo.ToString();
-            txtStartTime.Text = _starttime.ToString();
-
-            UpdateFields();
+            txtStartTime.Text = _starttime.ToString();            
         }
 
 
@@ -355,18 +370,10 @@ namespace Karaboss
             // Remove all tempo events at location oldstarttime and oldtempo
             sheetmusic.DeleteTempoChange(oldstarttime, oldtempo);
             // Create a tempo event at location oldstarttime and newtempo
-            sheetmusic.CreateTempoChange(oldstarttime, newtempo);
+            _tempoSymbol = sheetmusic.CreateTempoChange(oldstarttime, newtempo);
+                        
+            sheetmusic.SelectTempoSymbol(_tempoSymbol);
 
-            if (oldstarttime == 0)
-            {
-                DisplayNextTempoChange();
-                DisplayPreviousTempoChange();
-            }
-            else
-            {
-                DisplayPreviousTempoChange();
-                DisplayNextTempoChange();
-            }
             // File modified
             UpdatefrmPlayer();
 
@@ -398,11 +405,10 @@ namespace Karaboss
 
             // Remove all tempo events at location starttime and tempo
             sheetmusic.DeleteTempoChange(starttime, tempo);
-            sheetmusic.CreateTempoChange(starttime, tempo);                        
-
-            DisplayPreviousTempoChange();
-            DisplayNextTempoChange();
+            _tempoSymbol = sheetmusic.CreateTempoChange(starttime, tempo);                        
             
+            sheetmusic.SelectTempoSymbol(_tempoSymbol);
+
             // File modified
             UpdatefrmPlayer();
         }
@@ -448,8 +454,11 @@ namespace Karaboss
             {
                 if (l[i].StartTime == starttime)
                 {
-                    DisplayPreviousTempoChange();
-                    DisplayNextTempoChange();
+                    _tempoSymbol = l[i];
+                    sheetmusic.SelectTempoSymbol(_tempoSymbol);
+                    //DisplayPreviousTempoChange();
+                    //DisplayNextTempoChange();
+                    
                     UpdatefrmPlayer();
                     return;
                 }
