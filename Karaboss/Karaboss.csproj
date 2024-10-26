@@ -519,6 +519,9 @@
     <EmbeddedResource Include="frmLyricsSelectTrack.fr.resx">
       <DependentUpon>frmLyricsSelectTrack.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmModifyTempo.fr.resx">
+      <DependentUpon>frmModifyTempo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmModifyTempo.resx">
       <DependentUpon>frmModifyTempo.cs</DependentUpon>
     </EmbeddedResource>

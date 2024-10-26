@@ -52,7 +52,7 @@
             // lblTempoNumber
             // 
             resources.ApplyResources(this.lblTempoNumber, "lblTempoNumber");
-            this.lblTempoNumber.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.lblTempoNumber.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.lblTempoNumber.Name = "lblTempoNumber";
             // 
             // btnNextTempo
@@ -86,6 +86,7 @@
             // 
             // btnDelete
             // 
+            this.btnDelete.Image = global::Karaboss.Properties.Resources.delete_icon;
             resources.ApplyResources(this.btnDelete, "btnDelete");
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.UseVisualStyleBackColor = true;
@@ -101,16 +102,19 @@
             // lblDivision
             // 
             resources.ApplyResources(this.lblDivision, "lblDivision");
+            this.lblDivision.ForeColor = System.Drawing.Color.White;
             this.lblDivision.Name = "lblDivision";
             // 
             // lblTempo
             // 
             resources.ApplyResources(this.lblTempo, "lblTempo");
+            this.lblTempo.ForeColor = System.Drawing.Color.White;
             this.lblTempo.Name = "lblTempo";
             // 
             // lblStartTime
             // 
             resources.ApplyResources(this.lblStartTime, "lblStartTime");
+            this.lblStartTime.ForeColor = System.Drawing.Color.White;
             this.lblStartTime.Name = "lblStartTime";
             // 
             // txtBpm
@@ -130,6 +134,7 @@
             // lblBpm
             // 
             resources.ApplyResources(this.lblBpm, "lblBpm");
+            this.lblBpm.ForeColor = System.Drawing.Color.White;
             this.lblBpm.Name = "lblBpm";
             // 
             // updDivision
@@ -162,7 +167,7 @@
             // lblTitle
             // 
             resources.ApplyResources(this.lblTitle, "lblTitle");
-            this.lblTitle.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.lblTitle.Name = "lblTitle";
             // 
             // btnCancel
@@ -184,6 +189,7 @@
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
             this.CancelButton = this.btnCancel;
             this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.lblTempoNumber);

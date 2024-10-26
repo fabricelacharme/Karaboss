@@ -130,16 +130,16 @@
     <value>NoControl</value>
   </data>
   <data name="lblTempoNumber.Location" type="System.Drawing.Point, System.Drawing">
-    <value>95, 47</value>
+    <value>109, 47</value>
   </data>
   <data name="lblTempoNumber.Size" type="System.Drawing.Size, System.Drawing">
-    <value>48, 17</value>
+    <value>66, 17</value>
   </data>
   <data name="lblTempoNumber.TabIndex" type="System.Int32, mscorlib">
-    <value>22</value>
+    <value>2</value>
   </data>
   <data name="lblTempoNumber.Text" xml:space="preserve">
-    <value>Tempo</value>
+    <value>Tempo 00</value>
   </data>
   <data name="lblTempoNumber.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleCenter</value>
@@ -163,7 +163,7 @@
     <value>50, 23</value>
   </data>
   <data name="btnNextTempo.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
+    <value>3</value>
   </data>
   <data name="btnNextTempo.Text" xml:space="preserve">
     <value>&gt;&gt;</value>
@@ -187,7 +187,7 @@
     <value>50, 23</value>
   </data>
   <data name="btnPrevTempo.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
+    <value>1</value>
   </data>
   <data name="btnPrevTempo.Text" xml:space="preserve">
     <value>&lt;&lt;</value>
@@ -204,17 +204,23 @@
   <data name="&gt;&gt;btnPrevTempo.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
+  <data name="btnDelete.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
   <data name="btnDelete.Location" type="System.Drawing.Point, System.Drawing">
     <value>163, 83</value>
   </data>
   <data name="btnDelete.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+    <value>81, 23</value>
   </data>
   <data name="btnDelete.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
+    <value>13</value>
   </data>
   <data name="btnDelete.Text" xml:space="preserve">
     <value>&amp;Delete</value>
+  </data>
+  <data name="btnDelete.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
   </data>
   <data name="&gt;&gt;btnDelete.Name" xml:space="preserve">
     <value>btnDelete</value>
@@ -235,7 +241,7 @@
     <value>60, 20</value>
   </data>
   <data name="txtTempo.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+    <value>6</value>
   </data>
   <data name="txtTempo.Text" xml:space="preserve">
     <value>500000</value>
@@ -268,7 +274,7 @@
     <value>47, 13</value>
   </data>
   <data name="lblDivision.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+    <value>7</value>
   </data>
   <data name="lblDivision.Text" xml:space="preserve">
     <value>Division:</value>
@@ -298,7 +304,7 @@
     <value>43, 13</value>
   </data>
   <data name="lblTempo.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+    <value>5</value>
   </data>
   <data name="lblTempo.Text" xml:space="preserve">
     <value>Tempo:</value>
@@ -328,7 +334,7 @@
     <value>54, 13</value>
   </data>
   <data name="lblStartTime.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
+    <value>11</value>
   </data>
   <data name="lblStartTime.Text" xml:space="preserve">
     <value>Start time:</value>
@@ -352,7 +358,7 @@
     <value>47, 20</value>
   </data>
   <data name="txtBpm.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
+    <value>10</value>
   </data>
   <data name="txtBpm.Text" xml:space="preserve">
     <value>120</value>
@@ -379,7 +385,7 @@
     <value>47, 20</value>
   </data>
   <data name="txtStartTime.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
+    <value>12</value>
   </data>
   <data name="txtStartTime.Text" xml:space="preserve">
     <value>-1</value>
@@ -412,7 +418,7 @@
     <value>31, 13</value>
   </data>
   <data name="lblBpm.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+    <value>9</value>
   </data>
   <data name="lblBpm.Text" xml:space="preserve">
     <value>Bpm:</value>
@@ -430,13 +436,13 @@
     <value>7</value>
   </data>
   <data name="updDivision.Location" type="System.Drawing.Point, System.Drawing">
-    <value>178, 21</value>
+    <value>184, 21</value>
   </data>
   <data name="updDivision.Size" type="System.Drawing.Size, System.Drawing">
     <value>60, 20</value>
   </data>
   <data name="updDivision.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+    <value>8</value>
   </data>
   <data name="&gt;&gt;updDivision.Name" xml:space="preserve">
     <value>updDivision</value>
@@ -457,7 +463,7 @@
     <value>260, 120</value>
   </data>
   <data name="groupBox1.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
+    <value>4</value>
   </data>
   <data name="&gt;&gt;groupBox1.Name" xml:space="preserve">
     <value>groupBox1</value>
@@ -484,13 +490,13 @@
     <value>12, 8</value>
   </data>
   <data name="lblTitle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 21</value>
+    <value>116, 21</value>
   </data>
   <data name="lblTitle.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
+    <value>0</value>
   </data>
   <data name="lblTitle.Text" xml:space="preserve">
-    <value>Manage tempo changes</value>
+    <value>Manage Tempo</value>
   </data>
   <data name="lblTitle.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleCenter</value>
@@ -514,10 +520,10 @@
     <value>175, 209</value>
   </data>
   <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>64, 23</value>
+    <value>80, 23</value>
   </data>
   <data name="btnCancel.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
+    <value>15</value>
   </data>
   <data name="btnCancel.Text" xml:space="preserve">
     <value>&amp;Cancel</value>
@@ -541,10 +547,10 @@
     <value>24, 209</value>
   </data>
   <data name="btnUpdate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>64, 23</value>
+    <value>80, 23</value>
   </data>
   <data name="btnUpdate.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
+    <value>14</value>
   </data>
   <data name="btnUpdate.Text" xml:space="preserve">
     <value>&amp;Update</value>
@@ -574,7 +580,7 @@
     <value>CenterScreen</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>Karaboss - Modify tempo</value>
+    <value>Karaboss - Change the MIDI tempo</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmModifyTempo</value>

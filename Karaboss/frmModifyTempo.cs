@@ -2,14 +2,8 @@
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace Karaboss
 {
@@ -253,25 +247,23 @@ namespace Karaboss
                 index = l.IndexOf(_tempoSymbol);
                 if (index > 0)
                 {
-                    DisplayTempoSymbol(l[index - 1]);                    
+                    DisplayTempoSymbol(l[index - 1]);
+                    return;
                 }
-                else
+            }
+            
+            // Current tempo symbol does not exist (deletion or update for egg)
+            // Display previous existing tempo
+            for (int i = l.Count - 1; i >= 0; i--)
+            {
+                if (l[i].StartTime < starttime)
                 {
-                    // Current tempo symbol does not exist (deletion or update for egg)
-                    for (int i = l.Count - 1; i >= 0; i--)
-                    {
-                        if (l[i].StartTime < starttime)
-                        {
-                            DisplayTempoSymbol(l[i]);
-                            break;
-                        }
-                    }             
+                    DisplayTempoSymbol(l[i]);
+                    break;
                 }
-            }            
+            }                                         
         }
-
        
-
 
         private void btnNextTempo_Click(object sender, EventArgs e)
         {
@@ -290,22 +282,21 @@ namespace Karaboss
                 index = l.IndexOf(_tempoSymbol);
                 if (index != -1 && index < l.Count - 1)
                 {
-                    DisplayTempoSymbol(l[index + 1]);                    
-                }
-                else
-                {
-                    // Current tempo symbol does not exist (deletion or update for egg)
-                    for (int i = 0; i < l.Count; i++)
-                    {
-                        if (l[i].StartTime > starttime)
-                        {
-                            DisplayTempoSymbol(l[i]);
-                            break;
-                        }
-                    }
-                    
+                    DisplayTempoSymbol(l[index + 1]);
+                    return;
                 }
             }
+           
+            // Current tempo symbol does not exist (deletion or update for egg)
+            // Display upper tempo, id exists
+            for (int i = 0; i < l.Count; i++)
+            {
+                if (l[i].StartTime > starttime)
+                {
+                    DisplayTempoSymbol(l[i]);
+                    break;
+                }
+            }           
             
         }
 
@@ -448,7 +439,22 @@ namespace Karaboss
                 return;
             }
 
-            sheetmusic.DeleteTempoChange(starttime, tempo);                        
+            sheetmusic.DeleteTempoChange(starttime, tempo);
+
+            // Check if a tempo symbol still exists having the same start time (case of several tempos at the same start time)
+            // Refresh l
+            l = sheetmusic.lstTempoSymbols;
+            for (int i = l.Count - 1; i >= 0; i--)
+            {
+                if (l[i].StartTime == starttime)
+                {
+                    DisplayPreviousTempoChange();
+                    DisplayNextTempoChange();
+                    UpdatefrmPlayer();
+                    return;
+                }
+            } 
+
             DisplayPreviousTempoChange();
             UpdatefrmPlayer();
         }
@@ -473,6 +479,7 @@ namespace Karaboss
         {
             int index;
             List<TempoSymbol> l = sheetmusic.lstTempoSymbols;
+            string tx;
 
             try
             {
@@ -486,9 +493,10 @@ namespace Karaboss
                     index = 1;
                     lblTempoNumber.Text = string.Format("Tempo {0} of {1}", index, l.Count);
                     btnDelete.Enabled = false;
-                    //txtStartTime.Enabled = false;
+                    
                     ChangeMode = TempoChangesModes.UpdateTempo;
-                    btnUpdate.Text = "Update";
+                    tx = Karaboss.Resources.Localization.Strings.Update;
+                    btnUpdate.Text = tx;
                     return;
                 }
 
@@ -500,7 +508,8 @@ namespace Karaboss
                     lblTempoNumber.Text = string.Format("Tempo {0} of {1}", index + 1, l.Count);
                     txtStartTime.Enabled = true;
                     ChangeMode = TempoChangesModes.UpdateTempo;
-                    btnUpdate.Text = "Update";
+                    tx = Karaboss.Resources.Localization.Strings.Update;
+                    btnUpdate.Text = tx;
 
                 }                
                 else
@@ -509,7 +518,8 @@ namespace Karaboss
                     lblTempoNumber.Text = "New tempo";
                     txtStartTime.Enabled = true;
                     ChangeMode = TempoChangesModes.CreateTempo;
-                    btnUpdate.Text = "Create";
+                    tx = Karaboss.Resources.Localization.Strings.Create;
+                    btnUpdate.Text = tx;
                 }
             }
             catch (Exception e)
@@ -517,50 +527,7 @@ namespace Karaboss
                 MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
-        #region deleteme
-        /*
-        /// <summary>
-        /// Replacement function for List.Contains
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="l"></param>
-        /// <returns></returns>
-        private bool IsContains(TempoSymbol symbol, List<TempoSymbol> l)
-        {
-            foreach (TempoSymbol t in l)
-            {
-                if (symbol.StartTime == t.StartTime && symbol.Tempo == t.Tempo)
-                    return true;
-            }
-            return false;
-        }
-        
-        
-        /// <summary>
-        /// Check existence of a tempo
-        /// </summary>
-        /// <param name="ticks"></param>
-        /// <returns></returns>
-        private int IsTempoExists(int ticks)
-        {
-            List<TempoSymbol> l = sheetmusic.lstTempoSymbols;
-
-            for (int i = 0; i < l.Count; i++)
-            {
-                TempoSymbol temposymbol = l[i];
-                if (temposymbol.StartTime == ticks)
-                {
-                    return i;
-                }
-            }
-
-            return -1;
-
-        }
-        */
-        #endregion deleteme
+      
 
         /// <summary>
         /// Test if data is numeric

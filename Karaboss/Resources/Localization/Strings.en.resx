@@ -216,32 +216,14 @@
   <data name="chooseInstrumentsMenu" xml:space="preserve">
     <value>Choose Instruments...</value>
   </data>
-  <data name="showLettersMenu" xml:space="preserve">
-    <value>Show Note Letters</value>
-  </data>
   <data name="none" xml:space="preserve">
     <value>None</value>
   </data>
   <data name="showLetters" xml:space="preserve">
     <value>Letters</value>
   </data>
-  <data name="showFixedDoReMi" xml:space="preserve">
-    <value>Fixed Do-Re-Mi</value>
-  </data>
-  <data name="showMovableDoReMi" xml:space="preserve">
-    <value>Movable Do-Re-Mi</value>
-  </data>
-  <data name="showFixedNumbers" xml:space="preserve">
-    <value>Fixed Numbers</value>
-  </data>
-  <data name="showMovableNumbers" xml:space="preserve">
-    <value>Movable Numbers</value>
-  </data>
   <data name="showLyricsMenu" xml:space="preserve">
     <value>Show Lyrics</value>
-  </data>
-  <data name="showMeasuresMenu" xml:space="preserve">
-    <value>Show Measure Numbers</value>
   </data>
   <data name="changeKeyMenu" xml:space="preserve">
     <value>Key Signature</value>
@@ -252,35 +234,8 @@
   <data name="transposeMenu" xml:space="preserve">
     <value>Transpose</value>
   </data>
-  <data name="up" xml:space="preserve">
-    <value>Up</value>
-  </data>
   <data name="down" xml:space="preserve">
     <value>Down</value>
-  </data>
-  <data name="shiftNotesMenu" xml:space="preserve">
-    <value>Shift Notes</value>
-  </data>
-  <data name="shiftRight18" xml:space="preserve">
-    <value>Right 1/8 note</value>
-  </data>
-  <data name="shiftRight14" xml:space="preserve">
-    <value>Right 1/4 note</value>
-  </data>
-  <data name="shiftRight38" xml:space="preserve">
-    <value>Right 3/8 note</value>
-  </data>
-  <data name="shiftRight12" xml:space="preserve">
-    <value>Right 1/2 note</value>
-  </data>
-  <data name="shiftRight58" xml:space="preserve">
-    <value>Right 5/8 note</value>
-  </data>
-  <data name="shiftRight34" xml:space="preserve">
-    <value>Right 3/4 note</value>
-  </data>
-  <data name="shiftRight78" xml:space="preserve">
-    <value>Right 7/8 note</value>
   </data>
   <data name="measureMenu" xml:space="preserve">
     <value>Measure Length</value>
@@ -324,9 +279,6 @@
   <data name="chooseInstrumentsTitle" xml:space="preserve">
     <value>Choose Instruments For Each Track</value>
   </data>
-  <data name="setAllPiano" xml:space="preserve">
-    <value>Set All To Piano</value>
-  </data>
   <data name="playMeasuresTitle" xml:space="preserve">
     <value>Play Selected Measures in a Loop</value>
   </data>
@@ -360,6 +312,12 @@
   <data name="fileName" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="Modified" xml:space="preserve">
+    <value>Modified</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
   <data name="addToPlaylist" xml:space="preserve">
     <value>Add to Playlist</value>
   </data>
@@ -375,26 +333,23 @@
   <data name="replaceAllMenu" xml:space="preserve">
     <value>Replace All</value>
   </data>
-  <data name="edit" xml:space="preserve">
-    <value>Edit</value>
-  </data>
   <data name="newFolderMenu" xml:space="preserve">
     <value>New Folder</value>
   </data>
   <data name="refreshDisplayMenu" xml:space="preserve">
     <value>Refresh</value>
   </data>
-  <data name="Modified" xml:space="preserve">
-    <value>Modified</value>
-  </data>
-  <data name="Size" xml:space="preserve">
-    <value>Size</value>
-  </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>
   </data>
   <data name="Singer" xml:space="preserve">
     <value>Singer</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>New Playlist</value>
+  </data>
+  <data name="edit" xml:space="preserve">
+    <value>Edit</value>
   </data>
   <data name="KaraokeOptions" xml:space="preserve">
     <value>Karaoke Options</value>
@@ -407,9 +362,6 @@
   </data>
   <data name="UpdateKaraboss" xml:space="preserve">
     <value>Update Karaboss</value>
-  </data>
-  <data name="NewPlaylist" xml:space="preserve">
-    <value>New Playlist</value>
   </data>
   <data name="AddSongToNewPlaylist" xml:space="preserve">
     <value>Add {0} songs to a new playlist</value>
@@ -527,5 +479,11 @@
   </data>
   <data name="ErrorSelectFile" xml:space="preserve">
     <value>Please select a file</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
   </data>
 </root>

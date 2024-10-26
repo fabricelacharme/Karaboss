@@ -117,14 +117,209 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="addToPlaylist" xml:space="preserve">
-    <value>Ajouter à la playlist</value>
+  <data name="trackMenu" xml:space="preserve">
+    <value>Piste</value>
+  </data>
+  <data name="notesMenu" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="fileMenu" xml:space="preserve">
+    <value>Fichier</value>
+  </data>
+  <data name="openMenu" xml:space="preserve">
+    <value>&amp;Ouvrir...</value>
+  </data>
+  <data name="openSampleSongMenu" xml:space="preserve">
+    <value>Ouvrir le morceau de test</value>
+  </data>
+  <data name="closeMenu" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="saveImagesMenu" xml:space="preserve">
+    <value>Sauver au format image</value>
+  </data>
+  <data name="savePDFMenu" xml:space="preserve">
+    <value>Sauver au format PDF</value>
+  </data>
+  <data name="previewMenu" xml:space="preserve">
+    <value>Apperçu de l'impression</value>
+  </data>
+  <data name="printMenu" xml:space="preserve">
+    <value>Imprimer...</value>
+  </data>
+  <data name="exitMenu" xml:space="preserve">
+    <value>Quitter</value>
+  </data>
+  <data name="viewMenu" xml:space="preserve">
+    <value>&amp;Voir</value>
+  </data>
+  <data name="zoomInMenu" xml:space="preserve">
+    <value>Zoom In</value>
+  </data>
+  <data name="zoomOutMenu" xml:space="preserve">
+    <value>Zoom Out</value>
+  </data>
+  <data name="zoom100Menu" xml:space="preserve">
+    <value>Zoom à 100%</value>
+  </data>
+  <data name="zoom150Menu" xml:space="preserve">
+    <value>Zoom à 150%</value>
+  </data>
+  <data name="scrollVertMenu" xml:space="preserve">
+    <value>Défiler verticalement</value>
+  </data>
+  <data name="scrollHorizMenu" xml:space="preserve">
+    <value>Défiler horizontalement </value>
+  </data>
+  <data name="smallNotesMenu" xml:space="preserve">
+    <value>Petites notes</value>
+  </data>
+  <data name="largeNotesMenu" xml:space="preserve">
+    <value>Grandes notes</value>
+  </data>
+  <data name="colorMenu" xml:space="preserve">
+    <value>Couleurs</value>
+  </data>
+  <data name="useColorMenu" xml:space="preserve">
+    <value>Use Color</value>
+  </data>
+  <data name="chooseColorMenu" xml:space="preserve">
+    <value>Modifier les couleurs</value>
+  </data>
+  <data name="trackDisplayMenu" xml:space="preserve">
+    <value>Sélectionner la piste à afficher</value>
+  </data>
+  <data name="selectAllTracksMenu" xml:space="preserve">
+    <value>Sélectionner toutes les pistes</value>
+  </data>
+  <data name="deselectAllTracksMenu" xml:space="preserve">
+    <value>Déselectionner toutes les pistes</value>
+  </data>
+  <data name="trackMuteMenu" xml:space="preserve">
+    <value>Sélectionner les pistes à couper</value>
+  </data>
+  <data name="muteAllTracksMenu" xml:space="preserve">
+    <value>Couper toutes les pistes</value>
+  </data>
+  <data name="unmuteAllTracksMenu" xml:space="preserve">
+    <value>Remettre le son sur toutes les pistes</value>
+  </data>
+  <data name="oneStaffMenu" xml:space="preserve">
+    <value>Une portée par piste</value>
+  </data>
+  <data name="splitStaffMenu" xml:space="preserve">
+    <value>Séparer la piste en deux portées</value>
+  </data>
+  <data name="combineStaffMenu" xml:space="preserve">
+    <value>Séparer les notes dans 2 pistes</value>
+  </data>
+  <data name="chooseInstrumentsMenu" xml:space="preserve">
+    <value>Sélectionner un instrument</value>
+  </data>
+  <data name="none" xml:space="preserve">
+    <value>Aucun</value>
+  </data>
+  <data name="showLetters" xml:space="preserve">
+    <value>Lettres</value>
+  </data>
+  <data name="showLyricsMenu" xml:space="preserve">
+    <value>Afficher les paroles</value>
+  </data>
+  <data name="changeKeyMenu" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="showDefault" xml:space="preserve">
+    <value>Par défaut</value>
+  </data>
+  <data name="transposeMenu" xml:space="preserve">
+    <value>Transposer</value>
+  </data>
+  <data name="down" xml:space="preserve">
+    <value>descendre</value>
+  </data>
+  <data name="measureMenu" xml:space="preserve">
+    <value>Longueur des mesures</value>
+  </data>
+  <data name="pulses" xml:space="preserve">
+    <value>pulsations</value>
+  </data>
+  <data name="timeSigMenu" xml:space="preserve">
+    <value>Time Signature</value>
+  </data>
+  <data name="combineNotesMenu" xml:space="preserve">
+    <value>Arranger les notes dans un intervalle</value>
+  </data>
+  <data name="milliseconds" xml:space="preserve">
+    <value>Millisecondes</value>
+  </data>
+  <data name="playMeasuresMenu" xml:space="preserve">
+    <value>Jouer en boucle</value>
+  </data>
+  <data name="helpMenu" xml:space="preserve">
+    <value>Aide</value>
+  </data>
+  <data name="helpContentsMenu" xml:space="preserve">
+    <value>Aide...</value>
+  </data>
+  <data name="aboutMenu" xml:space="preserve">
+    <value>A propos...</value>
+  </data>
+  <data name="sampleSongTitle" xml:space="preserve">
+    <value>Sélectionner un fichier de test</value>
+  </data>
+  <data name="okButton" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="cancelButton" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="chooseColorsTitle" xml:space="preserve">
+    <value>Modifier les couleurs des notes</value>
+  </data>
+  <data name="chooseInstrumentsTitle" xml:space="preserve">
+    <value>Sélectionner un instrument pour chaque piste</value>
+  </data>
+  <data name="playMeasuresTitle" xml:space="preserve">
+    <value>Jouer les mesures sélectionnées en boucle</value>
+  </data>
+  <data name="startMeasure" xml:space="preserve">
+    <value>Mesure de départ</value>
+  </data>
+  <data name="endMeasure" xml:space="preserve">
+    <value>Fin de mesure</value>
+  </data>
+  <data name="rewind" xml:space="preserve">
+    <value>Rembobiner</value>
   </data>
   <data name="play" xml:space="preserve">
     <value>Jouer</value>
   </data>
+  <data name="stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="fastForward" xml:space="preserve">
+    <value>Retour rapide</value>
+  </data>
+  <data name="speed" xml:space="preserve">
+    <value>Vitesse</value>
+  </data>
+  <data name="volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
   <data name="QuitApplication" xml:space="preserve">
     <value>Quitter l'application ?</value>
+  </data>
+  <data name="fileName" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Modified" xml:space="preserve">
+    <value>Modifié le</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Taille</value>
+  </data>
+  <data name="addToPlaylist" xml:space="preserve">
+    <value>Ajouter à la playlist</value>
   </data>
   <data name="deleteMenu" xml:space="preserve">
     <value>Supprimer</value>
@@ -138,29 +333,23 @@
   <data name="replaceAllMenu" xml:space="preserve">
     <value>Remplacer tout</value>
   </data>
-  <data name="edit" xml:space="preserve">
-    <value>Editer</value>
-  </data>
   <data name="newFolderMenu" xml:space="preserve">
     <value>Nouveau dossier</value>
   </data>
   <data name="refreshDisplayMenu" xml:space="preserve">
     <value>Rafraichir</value>
   </data>
-  <data name="fileName" xml:space="preserve">
-    <value>Nom</value>
-  </data>
-  <data name="Modified" xml:space="preserve">
-    <value>Modifié le</value>
-  </data>
-  <data name="Size" xml:space="preserve">
-    <value>Taille</value>
-  </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>
   </data>
   <data name="Singer" xml:space="preserve">
     <value>Chanteur</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>Nouvelle playlist</value>
+  </data>
+  <data name="edit" xml:space="preserve">
+    <value>Editer</value>
   </data>
   <data name="KaraokeOptions" xml:space="preserve">
     <value>Options du Karaoke</value>
@@ -173,66 +362,6 @@
   </data>
   <data name="UpdateKaraboss" xml:space="preserve">
     <value>Mises à jour</value>
-  </data>
-  <data name="NewPlaylist" xml:space="preserve">
-    <value>Nouvelle playlist</value>
-  </data>
-  <data name="aboutMenu" xml:space="preserve">
-    <value>A propos...</value>
-  </data>
-  <data name="cancelButton" xml:space="preserve">
-    <value>Annuler</value>
-  </data>
-  <data name="changeKeyMenu" xml:space="preserve">
-    <value>Signature</value>
-  </data>
-  <data name="chooseColorMenu" xml:space="preserve">
-    <value>Modifier les couleurs</value>
-  </data>
-  <data name="chooseColorsTitle" xml:space="preserve">
-    <value>Modifier les couleurs des notes</value>
-  </data>
-  <data name="chooseInstrumentsMenu" xml:space="preserve">
-    <value>Sélectionner un instrument</value>
-  </data>
-  <data name="chooseInstrumentsTitle" xml:space="preserve">
-    <value>Sélectionner un instrument pour chaque piste</value>
-  </data>
-  <data name="closeMenu" xml:space="preserve">
-    <value>Fermer</value>
-  </data>
-  <data name="colorMenu" xml:space="preserve">
-    <value>Couleurs</value>
-  </data>
-  <data name="combineNotesMenu" xml:space="preserve">
-    <value>Arranger les notes dans un intervalle</value>
-  </data>
-  <data name="combineStaffMenu" xml:space="preserve">
-    <value>Séparer les notes dans 2 pistes</value>
-  </data>
-  <data name="deselectAllTracksMenu" xml:space="preserve">
-    <value>Déselectionner toutes les pistes</value>
-  </data>
-  <data name="down" xml:space="preserve">
-    <value>descendre</value>
-  </data>
-  <data name="endMeasure" xml:space="preserve">
-    <value>Fin de mesure</value>
-  </data>
-  <data name="exitMenu" xml:space="preserve">
-    <value>Quitter</value>
-  </data>
-  <data name="fastForward" xml:space="preserve">
-    <value>Retour rapide</value>
-  </data>
-  <data name="fileMenu" xml:space="preserve">
-    <value>Fichier</value>
-  </data>
-  <data name="helpContentsMenu" xml:space="preserve">
-    <value>Aide...</value>
-  </data>
-  <data name="helpMenu" xml:space="preserve">
-    <value>Aide</value>
   </data>
   <data name="AddSongToNewPlaylist" xml:space="preserve">
     <value>Ajouter {0} chansons à une nouvelle playlist</value>
@@ -288,7 +417,7 @@
   <data name="InsertMeasures" xml:space="preserve">
     <value>Insérer des mesure</value>
   </data>
-  <data name="InsertOnetime" xml:space="preserve">
+  <data name="InsertOneTime" xml:space="preserve">
     <value>Insérer 1 temps</value>
   </data>
   <data name="SelectMeasures" xml:space="preserve">
@@ -350,5 +479,11 @@
   </data>
   <data name="ErrorSelectFile" xml:space="preserve">
     <value>Sélectionnez un fichier</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Créer</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Mise à jour</value>
   </data>
 </root>

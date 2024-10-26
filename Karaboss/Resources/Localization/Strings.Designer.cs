@@ -1197,5 +1197,19 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("ErrorSelectFile", resourceCulture);
             }
         }
+        internal static string Update
+        {
+            get
+            {
+                return ResourceManager.GetString("Update", resourceCulture);
+            }
+        }
+        internal static string Create
+        {
+            get
+            {
+                return ResourceManager.GetString("Create", resourceCulture);
+            }
+        }
     }
 }
