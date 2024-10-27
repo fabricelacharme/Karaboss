@@ -171,8 +171,11 @@ namespace MusicXml.Domain
 
                         // Time
                         XElement ptime = attributes.Descendants("time").FirstOrDefault();
-                        _part.Numerator = (int?)ptime.Descendants("beats").FirstOrDefault() ?? 4;
-                        _part.Denominator = (int?)ptime.Descendants("beat-type").FirstOrDefault() ?? 4;
+                        if (ptime != null)
+                        {
+                            _part.Numerator = (int?)ptime.Descendants("beats").FirstOrDefault() ?? 4;
+                            _part.Denominator = (int?)ptime.Descendants("beat-type").FirstOrDefault() ?? 4;
+                        }
 
                         // Divisions
                         XElement quarterlength = attributes.Descendants("divisions").FirstOrDefault();

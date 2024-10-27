@@ -219,8 +219,12 @@ namespace MusicXml
             newTracks = new List<Track>(Parts.Count);
             Tempo = Parts[0].Tempo;
             Format = 1;
-            Numerator = Parts[0].Numerator;
-            Denominator = Parts[0].Denominator;
+            
+            if (Parts[0].Numerator > 0)
+                Numerator = Parts[0].Numerator;
+            
+            if (Parts[0].Denominator > 0)
+                Denominator = Parts[0].Denominator;
             int firstmeasure = 10;
             
             // Search for First measure & tempo max
