@@ -61,21 +61,22 @@ namespace Karaboss
 
             sheetmusic = sheetMusic;
             sequence1 = seq;
-            int deftempo = sequence1.Tempo;
-
-
-            // Check if a TempoSymbol is selected
-            TempoSymbol tempoSymbol = sheetMusic.GetSelectedTempoSymbol();
-            List<TempoSymbol> l = sheetmusic.lstTempoSymbols;
+           
+            // Check if a TempoSymbol was selected by doubleclick
+            TempoSymbol tempoSymbol = sheetMusic.GetSelectedTempoSymbol();            
 
             if (tempoSymbol != null)
             {
                 _tempoSymbol = tempoSymbol;
-                _starttime = _tempoSymbol.StartTime;
-                _tempo = _tempoSymbol.Tempo;
             }
             else
             {
+                // No tempo was selected by double click
+                _tempoSymbol = sheetmusic.lstTempoSymbols[0];
+                sheetmusic.SelectTempoSymbol(_tempoSymbol);
+
+                #region deleme
+                /*
                 _tempo = deftempo;
                 _tempoSymbol = null;
 
@@ -100,12 +101,14 @@ namespace Karaboss
                         break;
                     }
                 }
-            }
+                */
+                #endregion deleteme
+            }            
 
             Division = sequence1.Division;
             updDivision.Value = Convert.ToDecimal(Division);
-            txtTempo.Text = _tempo.ToString();
-            txtStartTime.Text = _starttime.ToString();            
+            txtTempo.Text = _tempoSymbol.Tempo.ToString();
+            txtStartTime.Text = _tempoSymbol.StartTime.ToString();            
         }
 
 

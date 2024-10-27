@@ -393,7 +393,7 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Display the player MIDI or CDG according to file extension
+        /// Display the player MIDI, or CDG according to file extension
         /// and launch play
         /// </summary>
         /// <param name="sender"></param>

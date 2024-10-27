@@ -51,14 +51,16 @@ using Karaboss.Search;
 using System.Text;
 using Karaboss.Lyrics;
 using MusicXml.Domain;
+using System.Xml;
 
 namespace Karaboss
 {
 
     public partial class frmPlayer : Form
     {
-        MusicXmlReader MXmlReader = new MusicXmlReader();
-        MusicTxtReader MTxtReader; //= new MusicTxtReader();
+        // FAB 2710
+        MusicXmlReader MXmlReader; // = new MusicXmlReader();
+        MusicTxtReader MTxtReader; 
         MusicTxtWriter MTxtWriter;
 
         public bool bfilemodified = false;
@@ -2460,6 +2462,11 @@ namespace Karaboss
                 ResetSequencer();
                 if (fileName != "\\")
                 {
+                    // FAB 2710
+                    MXmlReader = new MusicXmlReader();
+                    MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
+                    // ========
+
                     MXmlReader.LoadXmlAsync(fileName, false);
                 }
             }
@@ -5564,7 +5571,11 @@ namespace Karaboss
                     sequence1.LoadProgressChanged += HandleLoadProgressChanged;
                     sequence1.LoadCompleted += HandleLoadCompleted;
 
-                    MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
+                    // FAB 2710
+                    //MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
+                    // ===================
+                    
+                    
                     //MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
 
                     // ==========================================================================
