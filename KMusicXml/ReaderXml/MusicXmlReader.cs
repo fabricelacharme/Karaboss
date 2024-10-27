@@ -430,12 +430,7 @@ namespace MusicXml
                                         else
                                             CreateMidiNote2(note, notenumber, starttime);
                                         
-                                        /*
-                                        if (measure.Number == 10)// && versenumber == 1)
-                                        {
-                                             Console.WriteLine("ici");
-                                        }
-                                        */
+                                       
 
                                         if (note.Lyrics.Count > 0 && note.Lyrics[0].Text != null)
                                         {
@@ -879,11 +874,7 @@ namespace MusicXml
                 bool blineFeed = false;                
                 byte[] newdata;
 
-                
-                //if (versenumber > n.Lyrics.Count) 
-                //    versenumber = n.Lyrics.Count;
-
-
+             
                 // Search the Lyric coresponding to the right verse
                 // We add a special character at the begining of the lyric when we use it
                 // next time, the next lyric will be used
@@ -1101,7 +1092,7 @@ namespace MusicXml
                 sequence.tracks[0].insertTempo(Tempo, 0);
 
             // Tags to sequence
-            sequence.CloneTags();
+            //sequence.CloneTags();
         }
 
         #endregion sequence

@@ -170,6 +170,18 @@ namespace Karaboss.playlists
             }
         }
 
+        /// <summary>
+        /// FAB 2710
+        /// </summary>
+        private int m_SelectedSongIndex;
+        public int SelectedSongIndex
+        {
+            get
+            {
+                return m_SelectedSongIndex;
+            }
+        }
+
         #endregion
 
         private bool bModified = false;
@@ -397,7 +409,9 @@ namespace Karaboss.playlists
                     itemsToAdd.Add(CreateItem(file, fileName, KaraokeSinger, Duration));
                 }
                                 
-                listView.Items.AddRange(itemsToAdd.ToArray());                
+                listView.Items.AddRange(itemsToAdd.ToArray());     
+                               
+
             }
             catch (Exception ee)
             {
@@ -505,6 +519,8 @@ namespace Karaboss.playlists
 
                 if (song != null)
                 {
+                    m_SelectedSongIndex = index;
+                    //Console.WriteLine("Selected song" + m_SelectedSongIndex);
                     currentplaylistItem = GetPlaylistItem(song);
                     ShowPlaylistItem(currentplaylistItem);                   
                 }
@@ -1006,8 +1022,18 @@ namespace Karaboss.playlists
 
                         if (currentPlaylist != null)
                         {
+                            // We open another playlist, so current song index is set to zero
+                            if (m_selectedPlaylist != currentPlaylist.Name)
+                            {
+                                m_SelectedSongIndex = 0;
+                            }
                             m_selectedPlaylist = currentPlaylist.Name;
-                            ShowPlContent(currentPlaylist, 0);
+
+                            if (m_SelectedSongIndex < 0 || m_SelectedSongIndex > currentPlaylist.Count - 1)
+                            {
+                                m_SelectedSongIndex = 0;
+                            }
+                            ShowPlContent(currentPlaylist, m_SelectedSongIndex);
 
                             // Display playlist infos
                             DisplayPlaylistInfos();
@@ -1702,8 +1728,11 @@ namespace Karaboss.playlists
         {
             PopulateListView(pl);
 
-            if (listView.Items.Count > 0 && itemIndex >= 0)
-                listView.Items[itemIndex].Selected = true;            
+            if (listView.Items.Count > 0 && itemIndex < listView.Items.Count && itemIndex >= 0)
+            {
+                listView.Items[itemIndex].Selected = true;
+                listView.Items[itemIndex].EnsureVisible();
+            }
         }
 
 

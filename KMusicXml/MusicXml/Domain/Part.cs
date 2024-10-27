@@ -293,12 +293,7 @@ namespace MusicXml.Domain
                             */
                             else if (childnode.Name == "note")
                             {
-                                /*
-                                if (curMeasure.Number == 10)
-                                {
-                                    Console.WriteLine("ici");
-                                }
-                                */
+                                
                                 // Get notes information
                                 Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose);
 
@@ -606,8 +601,7 @@ namespace MusicXml.Domain
 
                 }
                 if (lstLyrics.Count < maxversenumber)
-                {
-                    Console.WriteLine("ici");
+                {                    
                     bool bFound = false;
 
                     for (int i = 0; i < maxversenumber; i++) 

@@ -847,9 +847,8 @@ namespace Karaboss
                 return;                        
                                  
             if (e.Error == null && e.Cancelled == false)
-            {
-                sequence1 = MXmlReader.seq;
-                CommonLoadCompleted(sequence1);
+            {                
+                CommonLoadCompleted(MXmlReader.seq);
             }
             else
             {
@@ -894,9 +893,8 @@ namespace Karaboss
             if (MTxtReader.seq == null) return;
             
             if (e.Error == null && e.Cancelled == false)
-            {
-                sequence1 = MTxtReader.seq;
-                CommonLoadCompleted(sequence1);
+            {                
+                CommonLoadCompleted(MTxtReader.seq);
             }
             else
             {
@@ -930,6 +928,7 @@ namespace Karaboss
             }
         }
 
+
         /// <summary>
         /// Display song duration
         /// </summary>
@@ -945,6 +944,7 @@ namespace Karaboss
             panelPlayer.DisplayBeat("1|" + sequence1.Numerator);
         }
 
+
         /// <summary>
         /// Common to MIDI, XML 
         /// </summary>
@@ -955,7 +955,7 @@ namespace Karaboss
 
             try
             {
-                LoadSequencer(sequence1);
+                LoadSequencer(seq);
 
                 DrawControls();
 

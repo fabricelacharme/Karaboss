@@ -501,7 +501,7 @@ namespace Karaboss.Lyrics
                     }
                 }
             }
-            Console.WriteLine("******** lyrics ticksoff modified with next lyric : " + nbmodified.ToString());
+            //Console.WriteLine("******** lyrics ticksoff modified with next lyric : " + nbmodified.ToString());
             nbmodified = 0;
 
 
@@ -537,7 +537,7 @@ namespace Karaboss.Lyrics
                     }
                 }
             }
-            Console.WriteLine("******** lyrics ticksoff modified with associated note : " + nbmodified.ToString());
+            //Console.WriteLine("******** lyrics ticksoff modified with associated note : " + nbmodified.ToString());
             nbmodified = 0;
 
 
@@ -1118,7 +1118,7 @@ namespace Karaboss.Lyrics
 
                                     int lastbeat = (_measure - 1) * nbBeatsPerMeasure;
 
-                                    Console.WriteLine(string.Format("**** Instrumental before line : measure: {0} Beat: {1} **************", _measure, beat));
+                                    //Console.WriteLine(string.Format("**** Instrumental before line : measure: {0} Beat: {1} **************", _measure, beat));
 
                                     // Add a linefeed at the beginning of the the next lyric
                                     pll = new plLyric();
@@ -1142,7 +1142,7 @@ namespace Karaboss.Lyrics
 
                                     int lastbeat = (_measure - 1) * nbBeatsPerMeasure;
 
-                                    Console.WriteLine(string.Format("**** Instrumental before line : measure: {0} Beat: {1} **************", _measure, beat));
+                                    //Console.WriteLine(string.Format("**** Instrumental before line : measure: {0} Beat: {1} **************", _measure, beat));
 
                                     // Add a linefeed at the beginning of the the next lyric
                                     pll = new plLyric();
@@ -1177,7 +1177,7 @@ namespace Karaboss.Lyrics
                             {
                                 beat = 1 + ticksoff / beatDuration;
                                 _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
-                                Console.WriteLine(string.Format("**** Instrumental after line : measure: {0} Beat: {1} **************", _measure, beat));
+                                //Console.WriteLine(string.Format("**** Instrumental after line : measure: {0} Beat: {1} **************", _measure, beat));
 
                                 // TODO : add a linefeed to 1st time of this measure (this beat ?)
                                 // Do not forget the end of the song : no linefeed
@@ -1348,7 +1348,7 @@ namespace Karaboss.Lyrics
                                         {
                                             if (lyr.Substring(0, 1) == " ")
                                             {
-                                                Console.WriteLine("lyric left space");
+                                                //Console.WriteLine("lyric left space");
                                                 beatchord += " " + chord;
                                                 beatlyr += lyr;
                                                 beatlyr += new string(' ', chord.Length + 1 - lyr.Length);
@@ -1364,7 +1364,7 @@ namespace Karaboss.Lyrics
                                         {
                                             if (lyr.Substring(0, 1) == " ")
                                             {
-                                                Console.WriteLine("lyric left space");
+                                                //Console.WriteLine("lyric left space");
                                                 beatchord += " " + chord;
                                                 beatlyr += lyr + " ";
                                             }
