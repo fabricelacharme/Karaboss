@@ -579,7 +579,7 @@ namespace Karaboss
             else if (playlistsControl.Visible)
                 filename = playlistsControl.SelectedFile;
 
-            if (filename == null || filename == "" || !File.Exists(filename) || !Karaclass.IsMidiExtension(filename))
+            if (filename == null || filename == "" || !File.Exists(filename) || (!Karaclass.IsMidiExtension(filename) && !Karaclass.IsXML(filename) & !Karaclass.IsTXT(filename) ) )
             {
                 MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;

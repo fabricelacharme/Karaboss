@@ -2256,8 +2256,7 @@ namespace Karaboss
                 // Load file
                 sequence1.LoadProgressChanged += HandleLoadProgressChanged;
                 sequence1.LoadCompleted += HandleLoadCompleted;
-
-                //LoadAsyncFile(fileName);                
+                             
                 SelectFileToLoadAsync();
 
             }
@@ -2431,7 +2430,7 @@ namespace Karaboss
         /// Load the midi file in the sequencer
         /// </summary>
         /// <param name="fileName"></param>
-        public void LoadAsyncFile(string fileName)
+        public void LoadAsyncMidiFile(string fileName)
         {
             try
             {                
@@ -3587,7 +3586,7 @@ namespace Karaboss
             OpenMidiFileOptions.SplitHands = mnuMidiSplitHands.Checked;
 
             // reload the file according to split hands choice stored in MidiFile properties
-            LoadAsyncFile(MIDIfileFullPath);
+            LoadAsyncMidiFile(MIDIfileFullPath);
         }
 
         #endregion
@@ -4550,37 +4549,7 @@ namespace Karaboss
 
                     // Insert all lyric events
                     InsTrkEvents(tracknum);
-                }
-
-                // END
-
-                // OLD
-                /*
-                bHasLyrics = sequence1.HasLyrics;
-                if (bHasLyrics)
-                {
-                    lyrics = ExtractLyrics();
-
-
-                        // Bug when format is 0, Karaboss change the format to 1.
-                        // If the file contains lyrics (not text), they are lost when the file is saved
-                        // Workaround is to rewrite the lyrics                    
-                    if (sequence1.OrigFormat == 0)
-                    {
-                        if (myLyric.lyrictype == CLyric.LyricTypes.Lyric)
-                        {
-                            int tracknum = myLyric.lyricstracknum;
-                            Track track = sequence1.tracks[tracknum];
-
-                            // supprime tous les messages text & lyric
-                            track.deleteLyrics();
-
-                            // Insert all lyric events
-                            InsTrkEvents(tracknum);
-                        }
-                    }
-                }
-                */
+                }                               
 
                 // Remove all MIDI events after last note
                 sequence1.Clean();
@@ -5624,7 +5593,7 @@ namespace Karaboss
             if (ext == ".mid" || ext == ".kar")
             {
                 // Play a single MIDI file
-                LoadAsyncFile(MIDIfileFullPath);
+                LoadAsyncMidiFile(MIDIfileFullPath);
             }
             else if (ext == ".xml" || ext == ".musicxml")
             {

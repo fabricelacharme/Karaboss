@@ -34,6 +34,8 @@
 using ChordAnalyser.UI;
 using Karaboss.Display;
 using Karaboss.Lyrics;
+using MusicTxt;
+using MusicXml;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
@@ -42,7 +44,9 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Karaboss
 {
@@ -50,6 +54,10 @@ namespace Karaboss
     {
 
         #region private dcl
+        MusicXmlReader MXmlReader; 
+        MusicTxtReader MTxtReader;
+
+
         private bool closing = false;
         private bool scrolling = false;
 
@@ -210,10 +218,7 @@ namespace Karaboss
                 MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
        
-
-
 
         /// <summary>
         /// Draw all controls
@@ -777,7 +782,10 @@ namespace Karaboss
         {
             if (e.Error == null && e.Cancelled == false)
             {
+                CommonLoadCompleted(sequence1);
 
+                #region deleteme
+                /*
                 LoadSequencer(sequence1);                
 
                 DrawControls();
@@ -794,14 +802,137 @@ namespace Karaboss
                        
                 //TAB3
                 DisplayWordsAndChords();
+                */
+                #endregion deleteme
             }
             else
             {
                 if (e.Error != null)
-                    MessageBox.Show(e.Error.Message);
+                    MessageBox.Show(e.Error.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }            
         }
 
+       
+        /// <summary>
+        /// Load the midi file in the sequencer
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void LoadAsyncMidiFile(string fileName)
+        {
+            try
+            {                
+                ResetSequencer();
+                if (fileName != "\\")
+                {
+                    sequence1.LoadAsync(fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+
+        /// <summary>
+        /// Event: end loading XML music file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleLoadXmlCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            this.Cursor = Cursors.Arrow;
+
+            if (MXmlReader.seq == null)
+                return;                        
+                                 
+            if (e.Error == null && e.Cancelled == false)
+            {
+                sequence1 = MXmlReader.seq;
+                CommonLoadCompleted(sequence1);
+            }
+            else
+            {
+                if (e.Error != null)
+                    MessageBox.Show(e.Error.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+        /// <summary>
+        /// Load async a XML file
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void LoadAsyncXmlFile(string fileName)
+        {
+            try
+            {                
+                ResetSequencer();
+                if (fileName != "\\")
+                {                    
+                    MXmlReader = new MusicXmlReader();
+                    MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;                    
+                    MXmlReader.LoadXmlAsync(fileName, false);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+
+        /// <summary>
+        /// Event: TXT dump sequence loaded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleLoadTxtCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            this.Cursor= Cursors.Arrow;
+            
+            if (MTxtReader.seq == null) return;
+            
+            if (e.Error == null && e.Cancelled == false)
+            {
+                sequence1 = MTxtReader.seq;
+                CommonLoadCompleted(sequence1);
+            }
+            else
+            {
+                if (e.Error != null)
+                    MessageBox.Show(e.Error.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+       
+        /// <summary>
+        /// Load async a TXT file
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void LoadAsyncTxtFile(string fileName)
+        {
+            try
+            {                
+
+                ResetSequencer();
+                if (fileName != "\\")
+                {
+                    MTxtReader = new MusicTxtReader(fileName);
+                    MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
+
+                    MTxtReader.LoadTxtAsync(fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        /// <summary>
+        /// Display song duration
+        /// </summary>
         private void DisplaySongDuration()
         {
             // Display
@@ -815,26 +946,38 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Load the midi file in the sequencer
+        /// Common to MIDI, XML 
         /// </summary>
-        /// <param name="fileName"></param>
-        public void LoadAsyncFile(string fileName)
+        /// <param name="seq"></param>& TXT
+        private void CommonLoadCompleted(Sequence seq)
         {
+            if (seq == null) return;
+
             try
             {
-                //progressBarPlayer.Visible = true;
+                LoadSequencer(sequence1);
 
-                ResetSequencer();
-                if (fileName != "\\")
-                {
-                    sequence1.LoadAsync(fileName);
-                }
+                DrawControls();
+
+                UpdateMidiTimes();
+
+                DisplaySongDuration();
+
+                //TAB1, TAB2
+                DisplayChords();
+
+                // TAB1
+                DisplayLyrics();
+
+                //TAB3
+                DisplayWordsAndChords();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private void HandleStopped(object sender, StoppedEventArgs e)
         {
@@ -1343,14 +1486,62 @@ namespace Karaboss
         /// </summary>
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
-        {
-            sequence1.LoadProgressChanged += HandleLoadProgressChanged;
-            sequence1.LoadCompleted += HandleLoadCompleted;
+        {            
+            if (outDevice == null)
+            {
+                MessageBox.Show("No MIDI output devices available.", "Error!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                Close();
+            }
+            else
+            {
+                try
+                {
+                    sequence1.LoadProgressChanged += HandleLoadProgressChanged;
+                    sequence1.LoadCompleted += HandleLoadCompleted;
 
-            LoadAsyncFile(MIDIfileFullPath);
-
+                    // ACTIONS TO PERFORM
+                    SelectActionOnLoad();                    
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error!",
+                        MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    Close();
+                }
+            }
             base.OnLoad(e);
         }
+
+        /// <summary>
+        /// Select what to do on load: new score, play single file, or playlist 
+        /// </summary>
+        private void SelectActionOnLoad()
+        {
+            string ext = Path.GetExtension(MIDIfileFullPath).ToLower();
+            if (ext == ".mid" || ext == ".kar")
+            {
+                // Play a single MIDI file
+                LoadAsyncMidiFile(MIDIfileFullPath);
+            }
+            else if (ext == ".xml" || ext == ".musicxml")
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                Application.DoEvents();
+                LoadAsyncXmlFile(MIDIfileFullPath);
+            }
+            else if (ext == ".txt")
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                Application.DoEvents();
+                LoadAsyncTxtFile(MIDIfileFullPath);
+            }
+            else
+            {
+                MessageBox.Show("Unknown extension");
+            }
+        }
+
 
         private void frmChords_Load(object sender, EventArgs e)
         {
