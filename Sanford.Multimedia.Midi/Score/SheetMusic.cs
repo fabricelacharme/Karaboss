@@ -533,7 +533,14 @@ namespace Sanford.Multimedia.Midi.Score
             // List of all tempo changes (only 2 fields tempo & ticks)
             List<TempoSymbol> l = GetAllTempoChanges();
 
-            if (l != null && staffs != null)
+            // Case of files without any tempo event ....
+            if (l.Count ==  0)
+            {
+                TempoSymbol tmps = new TempoSymbol(0, 500000);
+                l.Add(tmps);
+            }
+
+            if (l != null && l.Count > 0 && staffs != null)
             {
                 // List of all tempo changes / all fields (tempo, ticks, X etc...)
                 _lsttemposymbols = AddTemposToStaffs(staffs, l);
@@ -4352,6 +4359,9 @@ namespace Sanford.Multimedia.Midi.Score
         /// <returns></returns>
         public TempoSymbol GetSelectedTempoSymbol()
         {
+            if (_lsttemposymbols == null)
+                return null;
+
             foreach (TempoSymbol temposymbol in _lsttemposymbols)
             {
                 if (temposymbol.Selected)
@@ -4480,11 +4490,14 @@ namespace Sanford.Multimedia.Midi.Score
         /// </summary>
         public void UnselectTempoSymbols()
         {
-            foreach (TempoSymbol temposymbol in _lsttemposymbols)
+            if (_lsttemposymbols != null)
             {
-                temposymbol.Selected = false;
+                foreach (TempoSymbol temposymbol in _lsttemposymbols)
+                {
+                    temposymbol.Selected = false;
+                }
+                Invalidate();
             }
-            Invalidate();
         }
 
         /// <summary>
