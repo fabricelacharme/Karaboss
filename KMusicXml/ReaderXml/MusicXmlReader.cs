@@ -909,27 +909,39 @@ namespace MusicXml
                     return;
                 }
 
-                                
                 string currentElement = lyric.Text;
-               
                 
+                if (lyric.Text.Trim().Length == 0)
+                    return;
+
+                // check if linefeed present before trimming it (This will remove the '\n' character !!!!)
+                if (currentElement.IndexOf("\n") > -1)                
+                {                    
+                    blineFeed = true;
+                }
+                // Trim first, and after add spaces occording to "Single" and "End" syllabic 
+                currentElement = currentElement.Trim();  
+                
+
                 switch (lyric.Syllabic)
                 {
                     case Syllabic.Begin: break;
 
-                    case Syllabic.Single:
+                    case Syllabic.Single: 
                         currentElement += " ";
-                        bCutPossible = true;
+                        //bCutPossible = true;                        
                         break;
 
                     case Syllabic.End:
                         currentElement += " ";
-                        bCutPossible = true;
+                        //bCutPossible = true;
+                        //blineFeed = true;
                         break;
 
                     case Syllabic.None: break;
                 }
 
+                /*
                 // Check if linefeed has to be added
                 if (lyricLengh > 30 && bCutPossible)
                 {
@@ -939,6 +951,8 @@ namespace MusicXml
                 }
                 else
                     lyricLengh += currentElement.Length;
+                */
+
 
                 // Text encoding
                 switch (OpenMidiFileOptions.TextEncoding)
