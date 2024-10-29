@@ -205,9 +205,12 @@ namespace MusicXml.Domain
                     foreach ( XElement measureNode in measureNodes )
                     {                        
                         Measure curMeasure = new Measure();
-                        
+                                                
+                        // pourquoi ?????
                         if (bReserved) 
                         { 
+                            //Console.WriteLine(curMeasure.NumberOfVerses);
+                            //if (VerseNumber.Count > 0)
                             curMeasure.VerseNumber = VerseNumber;
                         }
 
@@ -363,9 +366,7 @@ namespace MusicXml.Domain
                                     for (int i = 0; i < lststrnumbers.Count; i++)
                                     {
                                         lstnumbers.Add(Convert.ToInt32(lststrnumbers[i]));
-                                    }
-
-                                    //ending.VerseNumber = Convert.ToInt32(nending.Attribute("number").Value);
+                                    }                                    
                                     ending.VerseNumber = lstnumbers;
 
                                     string type = nending.Attribute("type").Value;
@@ -375,7 +376,7 @@ namespace MusicXml.Domain
                                             ending.Type = EndingTypes.start;
                                             bReserved = true;
                                             VerseNumber = ending.VerseNumber;
-                                            curMeasure.VerseNumber = VerseNumber;
+                                            curMeasure.VerseNumber = ending.VerseNumber;
                                             break;
                                         case "stop":
                                             ending.Type = EndingTypes.stop;                                            
@@ -388,6 +389,7 @@ namespace MusicXml.Domain
                                     MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Ending, Element = ending };
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
                                 }
+                                
                                 // There is a repeat forward or backward
                                 // It means repeat a sequence for a new verse with the same notes
                                 var repeat = childnode.Descendants("repeat").FirstOrDefault();

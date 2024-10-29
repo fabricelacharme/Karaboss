@@ -310,6 +310,7 @@ namespace MusicXml
                 int starttime = 0;
 
                 int versenumber = 0;
+                
 
                 // =========================================                
                 // mapmesure is the list of verses.
@@ -318,17 +319,22 @@ namespace MusicXml
                 // =========================================
                 foreach (List<int> lmap in mapmeasures)
                 {
-                    // No !!!!!
-                    //versenumber++;
+
                     bool bFound = false;
                     foreach (int indice in lmap)
                     {
                         Measure measure = Measures[indice];
-                        if (measure.NumberOfVerses > 0)
+                        //if (measure.NumberOfVerses > 0)
+                        if (measure.NumberOfVerses > 1)
                         {
                             versenumber++;
                             bFound = true;
                             break;
+                        }
+                        else
+                        {
+                            //Console.Write("ici");
+                            versenumber = 0;
                         }
                     }
                     if (!bFound)
@@ -549,7 +555,9 @@ namespace MusicXml
                 
                 pivot = firstfwd + 1;
             }
-            
+
+
+            int compteur = 0;
 
             while (bcondition)
             {
@@ -604,6 +612,27 @@ namespace MusicXml
                         if (mes.VerseNumber.Count > 0)
                             bReserved = true;
 
+                        /*
+                        if (mes.VerseNumber.Count == 1)
+                        {
+                            bReserved = true;
+                        }
+                        else if (mes.VerseNumber.Count == 2)
+                        {
+                            compteur++;
+                            if (compteur == 2)
+                            {
+                                compteur = 0;
+                                bReserved = true;
+                            }
+                            Console.WriteLine("ici");
+                        }
+                        else
+                        {
+                            Console.WriteLine("ici");
+                        }
+                        */
+
                         bloc.Add(i);
                     }
                 }                
@@ -628,6 +657,7 @@ namespace MusicXml
                 } 
                 else if (bReserved)
                 {
+                    // Do not increase pivot if not all reserved mesures have been stored
                     pivot = y + 1;
                     bReserved = false;
                 }
@@ -811,7 +841,6 @@ namespace MusicXml
         #endregion tracks
 
 
-
         #region Tempo
         private void CreateTempoEvent(float tmp, int ticks)
         {
@@ -874,7 +903,7 @@ namespace MusicXml
         {
             try
             {
-                bool bCutPossible = false;
+                //bool bCutPossible = false;
                 bool blineFeed = false;                
                 byte[] newdata;
 
@@ -888,20 +917,43 @@ namespace MusicXml
                 bool bfound = false;
                 if (n.Lyrics.Count > 1)
                 {
+                    // Search with current versenumber
                     foreach (Lyric ll in n.Lyrics)
                     {
-                        if (ll.VerseNumber == versenumber)
+                        if (ll.VerseNumber == versenumber && ll.Text != "")
                         {
                             lyric = ll;
                             bfound = true;
                             break;
                         }
                     }
+                    /*
+                    if (!bfound && versenumber >= 2)
+                    {
+                        // If not found, try with previous versenumber
+                        foreach (Lyric ll in n.Lyrics)
+                        {
+                            if (ll.VerseNumber == versenumber - 1)
+                            {
+                                lyric = ll;
+                                bfound = true;
+                                break;
+                            }
+                        }
+                        if (!bfound)
+                        {
+                            return;
+                        }
+                    }
+                    */
                     if (!bfound)
+                    {
                         return;
+                    }
                 }
                 else if (n.Lyrics.Count == 1)
                 {
+                    // If only one line of lyrics => take it
                     lyric = n.Lyrics[0];
                 }
                 else
@@ -911,7 +963,7 @@ namespace MusicXml
 
                 string currentElement = lyric.Text;
                 
-                if (lyric.Text.Trim().Length == 0)
+                if (lyric.Text == null || lyric.Text.Trim().Length == 0)
                     return;
 
                 // check if linefeed present before trimming it (This will remove the '\n' character !!!!)

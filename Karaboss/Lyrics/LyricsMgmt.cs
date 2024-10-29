@@ -223,6 +223,7 @@ namespace Karaboss.Lyrics
                 if (plLyrics[k].CharType == plLyric.CharTypes.Text) // && char.IsUpper(plLyrics[k].Element,0) )
                 {
                     element = plLyrics[k].Element;
+                    
 
                     // Check if uppercase
                     if (char.IsUpper(element, 0))
@@ -240,6 +241,15 @@ namespace Karaboss.Lyrics
                             lyricLengh += element.Length;
                             _tmpL.Add(plLyrics[k]);
                         }
+                    }
+                    else if (char.IsPunctuation(element.Trim(), element.Trim().Length - 1))
+                    {
+                        // Add lyric first
+                        _tmpL.Add(plLyrics[k]);
+
+                        // Add linefeed after
+                        _tmpL.Add(new plLyric() { CharType = plLyric.CharTypes.LineFeed, Element = "¼", TicksOn = plLyrics[k].TicksOn, TicksOff = plLyrics[k].TicksOff });
+                        lyricLengh = 0;
                     }
                     else 
                     {
