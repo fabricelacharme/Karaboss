@@ -134,22 +134,17 @@ namespace MusicXml.Domain
           
             // Default
             // Division 480 + Tempo 500000 => BPM 120
-            //_part.Tempo = 500000;
-
-            
+            //_part.Tempo = 500000;            
             
             foreach (var partElement in doc.Descendants("part"))
             {
                 // Check if goof Id for this part
                 string idd = partElement.Attributes("id").FirstOrDefault()?.Value;
                 if (idd == _part.Id)
-                {
-                    
+                {                    
                     // Is there a 2nd track included in this part?
                     _part.Staves = (int?)partElement.Descendants("staves").FirstOrDefault() ?? 1;
-
                    
-
                     // =======================================================================
                     // ATTRIBUTES ******************
                     // =======================================================================
@@ -202,6 +197,9 @@ namespace MusicXml.Domain
 
                     var measuresXpath = string.Format("//part[@id='{0}']/measure", _part.Id);
                     var measureNodes = doc.XPathSelectElements(measuresXpath);                    
+                    
+                    
+                    
                     foreach ( XElement measureNode in measureNodes )
                     {                        
                         Measure curMeasure = new Measure();
@@ -248,12 +246,13 @@ namespace MusicXml.Domain
                             Console.WriteLine(ex.Message);
                         }
 
-                        
+                        /*
                         if (curMeasure.Number == 14)
                         {
                             Console.WriteLine("ici");
                         }
-                        
+                        */
+
                         #endregion measure number
 
 
@@ -305,16 +304,34 @@ namespace MusicXml.Domain
                                 if (note.Lyrics != null)
                                 {
                                     int x = note.Lyrics.Count;
+                                    // Adjust field number of verses
                                     if (curMeasure.NumberOfVerses < x)
                                         curMeasure.NumberOfVerses = x;
 
+                                    /*
+                                    if (curMeasure.Number == 35)
+                                    {
+                                        Console.Write("ici");
+                                    }
+                                    */
+
+                                    // Adjust list of verses
                                     if (curMeasure.lstVerseNumber.Count < note.Lyrics.Count)
                                     {
                                         lstVerseNumber = new List<int>();
-                                        foreach (Lyric lyric in note.Lyrics) 
+                                        foreach (Lyric lyric in note.Lyrics)
                                         {
-                                            lstVerseNumber.Add(lyric.VerseNumber);
-                                            
+                                            if (bReserved || note.Lyrics.Count > 1)
+                                            {                                                                                                
+                                                // real number for reserved                                                 
+                                                lstVerseNumber.Add(lyric.VerseNumber);
+                                                
+                                            }
+                                            else
+                                            {
+                                                // 0 for non reserved
+                                                lstVerseNumber.Add(0);
+                                            }
                                         }
                                         curMeasure.lstVerseNumber = lstVerseNumber;
                                     }
@@ -495,10 +512,7 @@ namespace MusicXml.Domain
             {
                 stp = step.Value;
                 note.Pitch.Step = stp[0];
-
-                note.Transpose = transpose;
-                
-                
+                note.Transpose = transpose;                                
             }
 
             string accidental = "";
@@ -517,6 +531,7 @@ namespace MusicXml.Domain
                 }
                 note.Pitch.Alter = int.Parse(alter.Value);
             }
+
             note.Accidental = accidental;
 
             if (octave != null)
@@ -544,7 +559,10 @@ namespace MusicXml.Domain
                 note.IsChordTone = true;
 
             // Manage several lyrics per note (a note can be used by several verses)
-            note.Lyrics = GetLyrics(node, lstVerseNumbers);            
+            note.Lyrics = GetLyrics(node);
+
+            // TODO number is wrong for repeat of 2 verses
+            // verses 2, 3 and numbers are 1, 2
 
             return note;
         }
@@ -556,12 +574,11 @@ namespace MusicXml.Domain
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        private static List<Lyric> GetLyrics(XElement node, List<int> lstVerseNumbers)
+        private static List<Lyric> GetLyrics(XElement node)
         {
             var lyric = new Lyric();
             List<Lyric> lstLyrics = new List<Lyric>();
-            var allLyrics = node.Descendants("lyric");
-            int maxversenumber = 0;
+            var allLyrics = node.Descendants("lyric");            
 
             if (allLyrics != null)
             {
@@ -575,16 +592,7 @@ namespace MusicXml.Domain
                         {
                             try
                             {
-                                lyric.VerseNumber = Convert.ToInt32(myLyric.Attribute("number").Value);
-                                if (lstVerseNumbers.Count > 0 && lstVerseNumbers[0] > 1) 
-                                {
-                                    int add = lstVerseNumbers[0] - 1;
-                                    lyric.VerseNumber += add;
-                                }
-
-
-                                if (maxversenumber < lyric.VerseNumber)
-                                    maxversenumber = lyric.VerseNumber;
+                                lyric.VerseNumber = Convert.ToInt32(myLyric.Attribute("number").Value);                                                                
                             }
                             catch (Exception e)
                             {
@@ -592,7 +600,8 @@ namespace MusicXml.Domain
                                 return lstLyrics;
                             }                            
                         }
-                        
+
+                        #region syllabic
                         var syllabicNode = myLyric.Descendants("syllabic").FirstOrDefault();
                         var syllabicText = string.Empty;
 
@@ -617,47 +626,15 @@ namespace MusicXml.Domain
                                 lyric.Syllabic = Syllabic.Middle;
                                 break;
                         }
-                        
+                        #endregion syllabic
+
                         var textNode = myLyric.Descendants("text").FirstOrDefault();
                         if (textNode != null)
-                            lyric.Text = textNode.Value;
-
-                        
+                            lyric.Text = textNode.Value;                        
 
                         lstLyrics.Add(lyric);
                     }
-
-                }
-                if (lstLyrics.Count < maxversenumber)
-                {                    
-                    bool bFound = false;
-
-                    for (int i = 0; i < maxversenumber; i++) 
-                    {                                                
-                        int versenb = i + 1;
-                        bFound = false;
-                        for (int j = 0; j < lstLyrics.Count; j++)
-                        {
-                            lyric = lstLyrics[j];
-                            if (lyric.VerseNumber   == versenb)
-                            {
-                                bFound = true; break;
-                            }
-                        }
-
-                        if (!bFound) 
-                        {
-                            lyric = new Lyric();
-                            lyric.VerseNumber = versenb;
-                            lyric.Text = "";                            
-                            lstLyrics.Insert(versenb - 1, lyric);
-                         }
-
-                       
-
-                    }
-                }
-               
+                }                                                
             }
 
             return lstLyrics;

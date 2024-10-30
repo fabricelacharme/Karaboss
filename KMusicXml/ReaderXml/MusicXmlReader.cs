@@ -595,7 +595,7 @@ namespace MusicXml
                     for (int i = firstfwd; i <= partmes.Count - 1; i++)
                     {
                         mes = partmes[i];
-                        if (mes.lstVerseNumber.Count <= 1 || mes.lstVerseNumber.Contains(versenumber))
+                        if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber) || mes.lstVerseNumber[0] == 0)
                         //if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber))
                         {
                             bloc.Add(i);
@@ -615,18 +615,14 @@ namespace MusicXml
                 {
                     mes = partmes[i];
 
-
                     // TODO lyriques réservés et pas réservés
-
-
-
 
                     // keep only blocs 
                     // - Without lyrics (Count = 0)
                     // - With only one lyric number (all the verses use these single lyrics) (Count = 1)
                     // - Which verse number is contained in the list of verses
                     //if (mes.lstVerseNumber.Count <= 1 || mes.lstVerseNumber.Contains(versenumber))
-                    if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber))
+                    if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber)  || mes.lstVerseNumber[0] == 0 )
                     {                        
                         // If last measure of a verse
                         // if the current verse is the last one, it means that we have looped all the verses
@@ -682,7 +678,7 @@ namespace MusicXml
                     {
                         mes = partmes[i];
                         //if (mes.lstVerseNumber.Count <= 1 || mes.lstVerseNumber.Contains(versenumber))
-                        if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber))
+                        if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber) || mes.lstVerseNumber[0] == 0)
                         {
                             bloc.Add(i);
                         }
