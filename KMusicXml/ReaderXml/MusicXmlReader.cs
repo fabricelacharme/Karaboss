@@ -321,10 +321,15 @@ namespace MusicXml
                 {
 
                     bool bFound = false;
-                    foreach (int indice in lmap)
+                    int indice;
+                    
+                    // Search for verse number
+                    for (int i = 0; i < lmap.Count; i++)
                     {
+                        indice = lmap[i];
                         Measure measure = Measures[indice];
-                        //if (measure.NumberOfVerses > 0)
+                        
+
                         if (measure.NumberOfVerses > 1)
                         {
                             versenumber++;
@@ -334,14 +339,17 @@ namespace MusicXml
                         else
                         {
                             //Console.Write("ici");
-                            versenumber = 0;
+                            //versenumber = 0;
                         }
                     }
+
                     if (!bFound)
                         versenumber = 0;
 
-                    foreach (int indice in lmap)
+                    
+                    for (int i = 0; i < lmap.Count; i++)
                     {
+                        indice = lmap[i];
                         if (indice < Measures.Count) 
                         { 
 
@@ -493,8 +501,12 @@ namespace MusicXml
             List<List<int>> mapmeasures = new List<List<int>>();
 
             int versenumber = 0;
-            bool bReserved = false;
+            //bool bReserved = false;
+            bool bIncreasePivot = false;
+            
+            // SIMPLE CASE  ===========================================================
             // no backward/forward => no changes => mapmeasure is the list of measures
+            // ========================================================================
             y = GetFirstBackward(pivot, partmes);
             if (y == -1)
             {
@@ -506,20 +518,21 @@ namespace MusicXml
                 mapmeasures.Add(bloc);
                 return mapmeasures;
             }
-            
 
+
+            // COMPLEX CASE ===========================================================
             // blocs backward/forward exist
             // => extract verses
             //    remove measures attached to a single verse
+            // ========================================================================
             y = 0;
             Measure mes = new Measure();
-            
-            int NumberOfVersesPerMeasure = 0;            
+                        
             int numloop = 0;            
             int nbLoopMax = 3;
             int firstfwdminimum = 0;
 
-            // Consider forst nloc
+            // 1. Consider first bloc
             // Can be empty or not
             // Can be some measure or repeated measures
 
@@ -557,11 +570,10 @@ namespace MusicXml
             }
 
 
-            int compteur = 0;
-
+            
+            // 2. consider a loop with several forward/backward
             while (bcondition)
             {
-
                 // Calculate limits of bloc if the repeats are done
                 // 1 Search descending forward from start to less
                 firstfwd = GetFirstForward(pivot, partmes);
@@ -583,55 +595,50 @@ namespace MusicXml
                     for (int i = firstfwd; i <= partmes.Count - 1; i++)
                     {
                         mes = partmes[i];
-                        if (mes.VerseNumber.Count == 0 || mes.VerseNumber.Contains(versenumber))
+                        if (mes.lstVerseNumber.Count <= 1 || mes.lstVerseNumber.Contains(versenumber))
+                        //if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber))
+                        {
                             bloc.Add(i);
+                        }
                     }
                     mapmeasures.Add(bloc);
                     break;
                     #endregion leave if no more backward
-
                 }
                 
 
                 // Add bloc including measures between FirstForward and FirstBackWard
-                versenumber++;
-                NumberOfVersesPerMeasure = 0;
+                versenumber++;                
                 bloc = new List<int>();
+
                 for (int i = firstfwd; i <= y; i++)
                 {
                     mes = partmes[i];
-                    if (mes.VerseNumber.Count == 0 || mes.VerseNumber.Contains(versenumber))
-                    {
-                        // Count maximum of verses for this bloc
-                        if (NumberOfVersesPerMeasure < mes.NumberOfVerses)
-                        {
-                            NumberOfVersesPerMeasure = mes.NumberOfVerses;
-                            nbLoopMax = NumberOfVersesPerMeasure;
-                        }
 
-                        if (mes.VerseNumber.Count > 0)
-                            bReserved = true;
 
-                        /*
-                        if (mes.VerseNumber.Count == 1)
+                    // TODO lyriques réservés et pas réservés
+
+
+
+
+                    // keep only blocs 
+                    // - Without lyrics (Count = 0)
+                    // - With only one lyric number (all the verses use these single lyrics) (Count = 1)
+                    // - Which verse number is contained in the list of verses
+                    //if (mes.lstVerseNumber.Count <= 1 || mes.lstVerseNumber.Contains(versenumber))
+                    if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber))
+                    {                        
+                        // If last measure of a verse
+                        // if the current verse is the last one, it means that we have looped all the verses
+                        // put bReserved to true in order to evolve the pivot value
+                        if (i == y)
                         {
-                            bReserved = true;
-                        }
-                        else if (mes.VerseNumber.Count == 2)
-                        {
-                            compteur++;
-                            if (compteur == 2)
+                            if (mes.lstVerseNumber.Count > 0)
                             {
-                                compteur = 0;
-                                bReserved = true;
-                            }
-                            Console.WriteLine("ici");
+                                if (versenumber == mes.lstVerseNumber[mes.lstVerseNumber.Count - 1])
+                                    bIncreasePivot = true; // bReserved = true;
+                            }                           
                         }
-                        else
-                        {
-                            Console.WriteLine("ici");
-                        }
-                        */
 
                         bloc.Add(i);
                     }
@@ -640,26 +647,24 @@ namespace MusicXml
 
                 numloop++;
 
-                // Increase pivot value
-                // Works only if 2 verses
-                // if 3 verses or more, we should do an additional loop
+                // Increase pivot value               /
                 if (numloop >= nbLoopMax)
                 {
-                    pivot = y + 1;   // Bug : pivot must increase in case a reserved measures at the end of the blocs
+                    pivot = y + 1;  
                     numloop = 0;
                     nbLoopMax = 3;
 
                     // All loops have been done: we do not have to consider previous measures
                     // how can we prevent to calculate again firstfwd ?
+                    // this is the forward minimum value to take into account
                     firstfwdminimum = pivot;
-
-                    bReserved = false;
+                    bIncreasePivot = false; //bReserved = false;
                 } 
-                else if (bReserved)
-                {
-                    // Do not increase pivot if not all reserved mesures have been stored
+                else if (bIncreasePivot) // bReserved)
+                {                    
                     pivot = y + 1;
-                    bReserved = false;
+                    bIncreasePivot = false; // bReserved = false;
+                    
                 }
 
 
@@ -676,8 +681,11 @@ namespace MusicXml
                     for (int i = firstfwd; i <= y; i++)
                     {
                         mes = partmes[i];
-                        if (mes.VerseNumber.Count == 0 || mes.VerseNumber.Contains(versenumber))
+                        //if (mes.lstVerseNumber.Count <= 1 || mes.lstVerseNumber.Contains(versenumber))
+                        if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber))
+                        {
                             bloc.Add(i);
+                        }
                     }
                     mapmeasures.Add(bloc);
                     break;
@@ -777,6 +785,7 @@ namespace MusicXml
         }
 
         #endregion Create verses
+
 
         #region tracks
 
@@ -927,25 +936,7 @@ namespace MusicXml
                             break;
                         }
                     }
-                    /*
-                    if (!bfound && versenumber >= 2)
-                    {
-                        // If not found, try with previous versenumber
-                        foreach (Lyric ll in n.Lyrics)
-                        {
-                            if (ll.VerseNumber == versenumber - 1)
-                            {
-                                lyric = ll;
-                                bfound = true;
-                                break;
-                            }
-                        }
-                        if (!bfound)
-                        {
-                            return;
-                        }
-                    }
-                    */
+                    
                     if (!bfound)
                     {
                         return;
@@ -980,32 +971,17 @@ namespace MusicXml
                     case Syllabic.Begin: break;
 
                     case Syllabic.Single: 
-                        currentElement += " ";
-                        //bCutPossible = true;                        
+                        currentElement += " ";                                               
                         break;
 
                     case Syllabic.End:
                         currentElement += " ";
-                        //bCutPossible = true;
-                        //blineFeed = true;
                         break;
 
                     case Syllabic.None: break;
                 }
 
-                /*
-                // Check if linefeed has to be added
-                if (lyricLengh > 30 && bCutPossible)
-                {
-                    blineFeed = true;
-                    //currentElement = "\r" + currentElement;
-                    lyricLengh = 0;
-                }
-                else
-                    lyricLengh += currentElement.Length;
-                */
-
-
+               
                 // Text encoding
                 switch (OpenMidiFileOptions.TextEncoding)
                 {
@@ -1128,6 +1104,7 @@ namespace MusicXml
             }
         }
         #endregion lyrics
+
 
         #region sequence
 

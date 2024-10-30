@@ -8,7 +8,7 @@ namespace MusicXml.Domain
 		{
 			Width = -1;
 			MeasureElements = new List<MeasureElement>();
-			VerseNumber = new List<int>();
+			lstVerseNumber = new List<int>();
 
         }
 
@@ -27,7 +27,7 @@ namespace MusicXml.Domain
         public int Number { get; set; }
 
 		// FAB : is measure belonging to a Verse?
-		public List<int> VerseNumber { get; internal set; }	
+		public List<int> lstVerseNumber { get; internal set; }	
 		public int NumberOfVerses { get; internal set; }	
 
     }

@@ -198,7 +198,7 @@ namespace MusicXml.Domain
 
 
                     bool bReserved = false;
-                    List<int> VerseNumber = new List<int>();
+                    List<int> lstVerseNumber = new List<int>();
 
                     var measuresXpath = string.Format("//part[@id='{0}']/measure", _part.Id);
                     var measureNodes = doc.XPathSelectElements(measuresXpath);                    
@@ -206,12 +206,11 @@ namespace MusicXml.Domain
                     {                        
                         Measure curMeasure = new Measure();
                                                 
-                        // pourquoi ?????
+                        // Why ?: the measures between ending.start and ending.stop are reserved for one or several verses
+                        // So we must set the list of verses to these measures
                         if (bReserved) 
                         { 
-                            //Console.WriteLine(curMeasure.NumberOfVerses);
-                            //if (VerseNumber.Count > 0)
-                            curMeasure.VerseNumber = VerseNumber;
+                            curMeasure.lstVerseNumber = lstVerseNumber;
                         }
 
                         // Attributes containing everything
@@ -249,12 +248,12 @@ namespace MusicXml.Domain
                             Console.WriteLine(ex.Message);
                         }
 
-                        /*
-                        if (curMeasure.Number == 17)
+                        
+                        if (curMeasure.Number == 14)
                         {
-                            Console.WriteLine("17");
+                            Console.WriteLine("ici");
                         }
-                        */
+                        
                         #endregion measure number
 
 
@@ -301,13 +300,24 @@ namespace MusicXml.Domain
                             {
                                 
                                 // Get notes information
-                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose);
+                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, lstVerseNumber);
 
                                 if (note.Lyrics != null)
                                 {
                                     int x = note.Lyrics.Count;
                                     if (curMeasure.NumberOfVerses < x)
                                         curMeasure.NumberOfVerses = x;
+
+                                    if (curMeasure.lstVerseNumber.Count < note.Lyrics.Count)
+                                    {
+                                        lstVerseNumber = new List<int>();
+                                        foreach (Lyric lyric in note.Lyrics) 
+                                        {
+                                            lstVerseNumber.Add(lyric.VerseNumber);
+                                            
+                                        }
+                                        curMeasure.lstVerseNumber = lstVerseNumber;
+                                    }
                                 }
 
                                 // Create new element
@@ -375,13 +385,19 @@ namespace MusicXml.Domain
                                         case "start":
                                             ending.Type = EndingTypes.start;
                                             bReserved = true;
-                                            VerseNumber = ending.VerseNumber;
-                                            curMeasure.VerseNumber = ending.VerseNumber;
+                                            lstVerseNumber = ending.VerseNumber;
+                                            curMeasure.lstVerseNumber = ending.VerseNumber;
                                             break;
                                         case "stop":
                                             ending.Type = EndingTypes.stop;                                            
-                                            curMeasure.VerseNumber = ending.VerseNumber;
-                                            VerseNumber = new List<int>();
+                                            curMeasure.lstVerseNumber = ending.VerseNumber;
+                                            lstVerseNumber = new List<int>();
+                                            bReserved = false;
+                                            break;
+                                        case "discontinue":
+                                            ending.Type = EndingTypes.discontinue;
+                                            curMeasure.lstVerseNumber = ending.VerseNumber;
+                                            lstVerseNumber = new List<int>();
                                             bReserved = false;
                                             break;
                                     }
@@ -444,7 +460,7 @@ namespace MusicXml.Domain
            
         }
 
-        private static Note GetNote(XElement node, int mult, int transpose)
+        private static Note GetNote(XElement node, int mult, int transpose, List<int> lstVerseNumbers)
         {
             var rest = node.Descendants("rest").FirstOrDefault();
             var step = node.Descendants("step").FirstOrDefault();
@@ -528,7 +544,7 @@ namespace MusicXml.Domain
                 note.IsChordTone = true;
 
             // Manage several lyrics per note (a note can be used by several verses)
-            note.Lyrics = GetLyrics(node);            
+            note.Lyrics = GetLyrics(node, lstVerseNumbers);            
 
             return note;
         }
@@ -540,7 +556,7 @@ namespace MusicXml.Domain
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        private static List<Lyric> GetLyrics(XElement node)
+        private static List<Lyric> GetLyrics(XElement node, List<int> lstVerseNumbers)
         {
             var lyric = new Lyric();
             List<Lyric> lstLyrics = new List<Lyric>();
@@ -560,6 +576,13 @@ namespace MusicXml.Domain
                             try
                             {
                                 lyric.VerseNumber = Convert.ToInt32(myLyric.Attribute("number").Value);
+                                if (lstVerseNumbers.Count > 0 && lstVerseNumbers[0] > 1) 
+                                {
+                                    int add = lstVerseNumbers[0] - 1;
+                                    lyric.VerseNumber += add;
+                                }
+
+
                                 if (maxversenumber < lyric.VerseNumber)
                                     maxversenumber = lyric.VerseNumber;
                             }

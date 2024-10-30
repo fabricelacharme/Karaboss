@@ -10,7 +10,8 @@ namespace MusicXml.Domain
     public enum EndingTypes
     {
         start,
-        stop
+        stop,
+        discontinue
     }
 
     public class Ending
