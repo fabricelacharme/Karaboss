@@ -49,6 +49,7 @@ namespace Karaboss.playlists
     public delegate void PlayAbcEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayTxtEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayXmlEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
+    public delegate void PlayMxlEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void NavigateToEventHandler(Object sender, string path, string file);
 
@@ -61,6 +62,7 @@ namespace Karaboss.playlists
         public event PlayAbcEventHandler PlayAbc;
         public event PlayTxtEventHandler PlayTxt;
         public event PlayXmlEventHandler PlayXml;
+        public event PlayXmlEventHandler PlayMxl;
         public event PlayCDGEventHandler PlayCDG;
         public event NavigateToEventHandler NavigateTo;
 
@@ -165,6 +167,18 @@ namespace Karaboss.playlists
             get
             {
                 return m_selectedPlaylist;
+            }
+        }
+
+        /// <summary>
+        /// FAB 2710
+        /// </summary>
+        private int m_SelectedSongIndex;
+        public int SelectedSongIndex
+        {
+            get
+            {
+                return m_SelectedSongIndex;
             }
         }
 
@@ -395,7 +409,9 @@ namespace Karaboss.playlists
                     itemsToAdd.Add(CreateItem(file, fileName, KaraokeSinger, Duration));
                 }
                                 
-                listView.Items.AddRange(itemsToAdd.ToArray());                
+                listView.Items.AddRange(itemsToAdd.ToArray());     
+                               
+
             }
             catch (Exception ee)
             {
@@ -503,6 +519,8 @@ namespace Karaboss.playlists
 
                 if (song != null)
                 {
+                    m_SelectedSongIndex = index;
+                    //Console.WriteLine("Selected song" + m_SelectedSongIndex);
                     currentplaylistItem = GetPlaylistItem(song);
                     ShowPlaylistItem(currentplaylistItem);                   
                 }
@@ -1004,8 +1022,18 @@ namespace Karaboss.playlists
 
                         if (currentPlaylist != null)
                         {
+                            // We open another playlist, so current song index is set to zero
+                            if (m_selectedPlaylist != currentPlaylist.Name)
+                            {
+                                m_SelectedSongIndex = 0;
+                            }
                             m_selectedPlaylist = currentPlaylist.Name;
-                            ShowPlContent(currentPlaylist, 0);
+
+                            if (m_SelectedSongIndex < 0 || m_SelectedSongIndex > currentPlaylist.Count - 1)
+                            {
+                                m_SelectedSongIndex = 0;
+                            }
+                            ShowPlContent(currentPlaylist, m_SelectedSongIndex);
 
                             // Display playlist infos
                             DisplayPlaylistInfos();
@@ -1476,6 +1504,11 @@ namespace Karaboss.playlists
                                     PlayXml?.Invoke(this, fi, currentPlaylist, bplay);
                                     break;
                                 }
+                            case ".mxl":
+                                {
+                                    PlayMxl?.Invoke(this, fi, currentPlaylist, bplay);
+                                    break;
+                                }
                             default:
                                 try
                                 {
@@ -1695,8 +1728,11 @@ namespace Karaboss.playlists
         {
             PopulateListView(pl);
 
-            if (listView.Items.Count > 0 && itemIndex >= 0)
-                listView.Items[itemIndex].Selected = true;            
+            if (listView.Items.Count > 0 && itemIndex < listView.Items.Count && itemIndex >= 0)
+            {
+                listView.Items[itemIndex].Selected = true;
+                listView.Items[itemIndex].EnsureVisible();
+            }
         }
 
 
@@ -2352,6 +2388,11 @@ namespace Karaboss.playlists
                     case ".xml":
                         {
                             PlayXml?.Invoke(this, new FileInfo(file), null, bplay);
+                            break;
+                        }
+                    case ".mxl":
+                        {
+                            PlayMxl?.Invoke(this, new FileInfo(file), null, bplay);
                             break;
                         }
                     case ".txt":

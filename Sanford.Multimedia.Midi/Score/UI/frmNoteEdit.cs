@@ -136,14 +136,12 @@ namespace Sanford.Multimedia.Midi.Score.UI
             }
 
 
-            if (_lstmidinotes != null)
-            {
-               // _lstmidinotes = lstMidiNotes;
+            if (_lstmidinotes != null && _lstmidinotes.Count > 1)
+            {               
                 lblSelection.Text = String.Format("Selection: {0}", lstMidiNotes.Count);
 
                 // Invalidate all
-                upDownNoteValue.Enabled = false;
-                //txtTime.Enabled = false;
+                upDownNoteValue.Enabled = false;               
                 txtTicks.Enabled = false;
                 txtDuration.Enabled = false;
 

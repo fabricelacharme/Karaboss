@@ -116,6 +116,8 @@ namespace Sanford.Multimedia.Midi
          */
         public int Compare(MidiNote x, MidiNote y)
         {
+            if (x == null || y == null)
+                return 0;
             if (x.StartTime == y.StartTime)
                 return x.Number - y.Number;
             else

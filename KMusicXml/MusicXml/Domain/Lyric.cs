@@ -18,5 +18,7 @@ namespace MusicXml.Domain
 		public Syllabic Syllabic { get; internal set; }
 		
 		public string Text { get; internal set; }
+
+		public int VerseNumber { get; internal set; }	
 	}
 }

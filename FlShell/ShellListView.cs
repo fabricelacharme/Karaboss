@@ -68,6 +68,8 @@ namespace FlShell
     public delegate void PlayAbcEventHandler(object sender, FileInfo fi, bool bplay);
     // Play musicxml, xml file
     public delegate void PlayXmlEventHandler(object sender, FileInfo fi, bool bplay);
+    // Play compressed mxl file
+    public delegate void PlayMxlEventHandler(object sender, FileInfo fi, bool bplay);
     // Play txt file
     public delegate void PlayTxtEventHandler(object sender, FileInfo fi, bool bplay);
     // Playlists management
@@ -98,6 +100,8 @@ namespace FlShell
         public event PlayAbcEventHandler PlayAbc;
         public event PlayTxtEventHandler PlayTxt;
         public event PlayXmlEventHandler PlayXml;
+        public event PlayMxlEventHandler PlayMxl;
+
         public event AddToPlaylistByNameHandler AddToPlaylist;
         
         // Send Key to parent
@@ -1435,6 +1439,7 @@ namespace FlShell
                         case ".kar":
                         case ".xml":
                         case ".musicxml":
+                        case ".mxl":
                         case ".txt":
                             SelectedIndexChanged?.Invoke(this, file);
                             break;
@@ -1797,6 +1802,11 @@ namespace FlShell
                     case ".xml":
                         {
                             PlayXml?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
+                    case ".mxl":
+                        {
+                            PlayMxl?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
                     case ".txt":

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using MusicXml.Domain;
 using Sanford.Multimedia.Midi;
+using System.Runtime.CompilerServices;
 
 namespace MusicXml
 {
@@ -39,7 +40,8 @@ namespace MusicXml
         private int Format = 1;
         private int Numerator = 4;
         private int Denominator = 4;
-        private int Division = 24;
+        //private int Division = 24;
+        private int Division = 480; // 20 fois plus que 24
         private int Tempo = 500000;
 
 
@@ -136,7 +138,7 @@ namespace MusicXml
                 using (stream)
                 {
                     // Your stuff
-                    seq = Read(fileName);
+                    seq = Read(fileName, true);
                 }
             }
             catch (Exception ee)
@@ -165,8 +167,9 @@ namespace MusicXml
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public Sequence Read(string fileName)
+        public Sequence Read(string fileName, bool silencemode)
         {
+            bSilenceMode = silencemode;
             System.Xml.Linq.XDocument doc;
 
             // Create Score
@@ -207,17 +210,21 @@ namespace MusicXml
                 return null;
             #endregion
 
+
+            // Create MAP of measures according to repeat backward/forward found
+            List<List<int>> mapmeasures = CreateVerses(Parts[0].Measures);
+
+
             // Init sequence
             newTracks = new List<Track>(Parts.Count);
-
-
             Tempo = Parts[0].Tempo;
             Format = 1;
-
-            Numerator = Parts[0].Numerator;
-            Denominator = Parts[0].Denominator;
-
-
+            
+            if (Parts[0].Numerator > 0)
+                Numerator = Parts[0].Numerator;
+            
+            if (Parts[0].Denominator > 0)
+                Denominator = Parts[0].Denominator;
             int firstmeasure = 10;
             
             // Search for First measure & tempo max
@@ -231,10 +238,9 @@ namespace MusicXml
             }
 
             // Search common Division for all parts
-            int commondivision = Parts[0].Division;
-            if (commondivision < 24)
-                commondivision = 24;
+            int commondivision = ((Parts[0].Division > 0) ? Parts[0].Division  :  24); 
 
+            
             foreach (Part part in Parts)
             {
                  if (part.Division > commondivision)
@@ -247,11 +253,11 @@ namespace MusicXml
                 TrackName = part.Name.Trim();
                 
                 Id = part.Id.Trim();
-                Channel = part.MidiChannel;
+                Channel = part.MidiChannel - 1;
                 if (Channel > 15)
                     break;
 
-                ProgramChange = part.MidiProgram;
+                ProgramChange = part.MidiProgram - 1;
                 Volume = part.Volume;
                 Pan = part.Pan;
 
@@ -261,10 +267,19 @@ namespace MusicXml
                  *  Part 1 : division 24
                  *  Part 2 : division 96
                  *  
-                 *  Conclusion, il fait gérer chaque piste séparément
+                 *  Conclusion, il faut gérer chaque piste séparément
                  */
                 double multcoeff = 1;       // Mutiply everything in order to have common Division
+                
+                if (part.Division == 0)
+                {
+                    Console.WriteLine("ERROR: Division = 0");
+                    part.Division = 24;
+                }
+                
                 Division = part.Division;
+                
+                
                 if (Division != commondivision)
                 {
                     Division = commondivision;
@@ -294,107 +309,172 @@ namespace MusicXml
                 int offset = 0;                
                 int starttime = 0;
 
-                // For each measure
-                foreach (Measure measure in Measures)
+                int versenumber = 0;
+                
+
+                // =========================================                
+                // mapmesure is the list of verses.
+                // Each element of mapmesure is a list of measure indices that belong to a verse. 
+                // (The same measure may belong to several verses)
+                // =========================================
+                foreach (List<int> lmap in mapmeasures)
                 {
-                    decimal W = measure.Width;
-                    int notenumber = 0;
 
-                    Key k = measure.Attributes.Key;
-                    int fif = k.Fifths;
-                    string mod = k.Mode;
-
+                    bool bFound = false;
+                    int indice;
                     
-                    // *************** TAKE INTO ACCOUNT THOSE THINGS !!!!! ***************
-                    /*
-                    if (fif != 0)
+                    // Search for verse number
+                    for (int i = 0; i < lmap.Count; i++)
                     {
-                        Console.WriteLine(fif.ToString());
-                    }
-                    */
+                        indice = lmap[i];
+                        if (indice < Measures.Count)
+                        {
+                            Measure measure = Measures[indice];
 
-                    #region Extract all
-                    List<MeasureElement> lstME = measure.MeasureElements;
-                                                           
-                    // For each measureElement in current measure
-                    foreach (MeasureElement measureElement in lstME)
-                    {
-                        
-                        object obj = measureElement.Element;
-                        MeasureElementType metype = measureElement.Type;
-
-                        switch (metype)
-                        {                            
-                            
-                            case MeasureElementType.Backup:                               
-                                Backup bkp = (Backup)obj;                                
-                                timeline -= (int)(bkp.Duration * multcoeff);
+                            if (measure.lstVerseNumber.Count > 1)
+                            {
+                                versenumber++;
+                                bFound = true;
                                 break;
-                            
-
-                            case MeasureElementType.Note: 
-                                Note note = (Note)obj;
-                                
-                                string accidental = note.Accidental;
-                                int staff = note.Staff;
-                                bool isrest = note.IsRest;
-                                bool ischordtone = note.IsChordTone;
-                                Pitch pitch = note.Pitch;
-                                int voice = note.Voice;
-                                Lyric lyric = note.Lyric;
-                                string ntype = note.Type;
-                                
-                                note.Duration = (int)(note.Duration * multcoeff);
-
-                                if (note.IsRest)
-                                {                                        
-                                    timeline += note.Duration;
-                                    break;
-                                }
-
-                                // Take into account previous note                                
-                                if (note.IsChordTone)
-                                    offset = 0;
-                                timeline += offset;                                                               
-
-                                // For the next note (if not chord)
-                                offset = note.Duration;
-
-                                starttime = timeline;
-                                int octave = note.Pitch.Octave;
-                                string letter = note.Pitch.Step.ToString();
-                                notenumber = 12 + Notes.IndexOf(letter) + 12 * octave;
-
-                                if (note.Pitch.Alter != 0)
-                                {
-                                    int alter = note.Pitch.Alter;
-                                    notenumber += alter;
-                                }
-
-                                // Create note
-                                if (note.Staff <= 1)                                                                    
-                                    CreateMidiNote1(note, notenumber, starttime);                                
-                                else                                                                                                                                           
-                                    CreateMidiNote2(note, notenumber, starttime);
-                                
-                                if (note.Lyric.Text != null)
-                                {
-                                    CreateLyric(note, starttime);                                    
-                                }
-                                break;
-
-
-                            case MeasureElementType.Forward:                                
-                                Forward fwd = (Forward)obj;
-                                timeline += (int)(fwd.Duration * multcoeff);
-                                break;                               
-
+                            }
                         }
                     }
 
-                    #endregion Extract all
+                    if (!bFound)
+                        versenumber = 0;
 
+                    
+                    for (int i = 0; i < lmap.Count; i++)
+                    {
+                        indice = lmap[i];
+                        if (indice < Measures.Count) 
+                        { 
+
+                            Measure measure = Measures[indice];
+                            
+                            // BEGIN RECUP
+                            decimal W = measure.Width;
+                            int notenumber = 0;
+
+                            Key k = measure.Attributes.Key;
+                            int fif = k.Fifths;
+                            string mod = k.Mode;
+
+
+                            // *************** TAKE INTO ACCOUNT THOSE THINGS !!!!! ***************
+                            //
+                            // if (fif != 0)
+                            //{
+                            //    Console.WriteLine(fif.ToString());
+                            //}
+
+
+                            #region Extract all
+                            List<MeasureElement> lstME = measure.MeasureElements;
+
+                            // For each measureElement in current measure
+                            foreach (MeasureElement measureElement in lstME)
+                            {
+
+                                object obj = measureElement.Element;
+                                MeasureElementType metype = measureElement.Type;
+
+                                switch (metype)
+                                {
+
+                                    case MeasureElementType.Time:
+                                        Time tm = (Time)obj;
+                                        float ttempo = tm.Tempo;
+                                        CreateTempoEvent(ttempo, timeline);
+                                        break;
+                                    
+                                    case MeasureElementType.Backup:
+                                        Backup bkp = (Backup)obj;
+                                        timeline -= (int)(bkp.Duration * multcoeff);
+                                        break;
+
+
+                                    case MeasureElementType.Note:
+                                        Note note = (Note)obj;
+
+                                        string accidental = note.Accidental;
+                                        int staff = note.Staff;
+                                        bool isrest = note.IsRest;
+                                        bool ischordtone = note.IsChordTone;
+                                        Pitch pitch = note.Pitch;
+                                        int voice = note.Voice;
+                                        
+
+                                        // keep only the good number of the verse             
+                                        List<Lyric> lyrics = note.Lyrics;
+                                        
+                                        string ntype = note.Type;
+
+                                        note.Duration = (int)(note.Duration * multcoeff);
+
+                                        if (note.IsRest)
+                                        {
+                                            timeline += note.Duration;
+                                            break;
+                                        }
+
+                                        // Take into account previous note                                
+                                        if (note.IsChordTone)
+                                            offset = 0;
+                                        timeline += offset;
+
+                                        // For the next note (if not chord)
+                                        offset = note.Duration;
+
+                                        starttime = timeline;
+                                        int octave = note.Pitch.Octave;
+                                        string letter = note.Pitch.Step.ToString();
+                                        notenumber = 12 + Notes.IndexOf(letter) + 12 * octave;
+
+                                        notenumber += note.Transpose;
+                                        
+                                        if (note.Pitch.Alter != 0)
+                                        {
+                                            int alter = note.Pitch.Alter;
+                                            notenumber += alter;
+                                        }
+
+                                        // Create note
+                                        if (note.Staff <= 1)
+                                            CreateMidiNote1(note, notenumber, starttime);
+                                        else
+                                            CreateMidiNote2(note, notenumber, starttime);
+                                        
+                                        /*
+                                        if (measure.Number == 4)
+                                        {
+                                            Console.WriteLine("ici");
+                                        }
+                                        */
+
+                                        if (note.Lyrics.Count > 0 && note.Lyrics[0].Text != null)
+                                        {
+                                            CreateLyric(note, starttime, versenumber);
+                                        }
+                                        break;
+
+
+                                    case MeasureElementType.Forward:
+                                        Forward fwd = (Forward)obj;
+                                        timeline += (int)(fwd.Duration * multcoeff);
+                                        break;
+
+                                }
+                            }
+
+                            #endregion Extract all
+
+                        // END RECUP
+                        }
+                    }
                 }
+
+
             }
 
             CreateSequence();
@@ -403,6 +483,311 @@ namespace MusicXml
         }
 
         // =================================================================================================
+
+
+        #region Create verses
+
+        /// <summary>
+        /// Create the list of verses
+        /// </summary>
+        /// <param name="partmes"></param>
+        /// <returns></returns>
+        private List<List<int>> CreateVerses(List<Measure> partmes)
+        {
+            bool bcondition = true;
+            int y;
+            int pivot = 0;
+            int firstfwd = 0;
+            int firstbackward = 0;
+            List<int> bloc = new List<int>();
+            List<List<int>> mapmeasures = new List<List<int>>();
+
+            int versenumber = 0;
+            //bool bReserved = false;
+            bool bIncreasePivot = false;
+            
+            // SIMPLE CASE  ===========================================================
+            // no backward/forward => no changes => mapmeasure is the list of measures
+            // ========================================================================
+            y = GetFirstBackward(pivot, partmes);
+            if (y == -1)
+            {
+                bloc = new List<int>();
+                for (int i = 0; i <= partmes.Count - 1; i++)
+                {
+                    bloc.Add(i);
+                }
+                mapmeasures.Add(bloc);
+                return mapmeasures;
+            }
+
+
+            // COMPLEX CASE ===========================================================
+            // blocs backward/forward exist
+            // => extract verses
+            //    remove measures attached to a single verse
+            // ========================================================================
+            y = 0;
+            Measure mes = new Measure();
+                        
+            int numloop = 0;            
+            int nbLoopMax = 3;
+            int firstfwdminimum = 0;
+
+            // 1. Consider first bloc
+            // Can be empty or not
+            // Can be some measure or repeated measures
+
+            // Get first forward/forward
+            firstfwd = GetFirstForwardUp(partmes.Count - 1, partmes);
+            firstbackward = GetFirstBackward(0, partmes);
+            // Blox exists if firstfwd is at 0
+
+            // A backward exists greater than the forward 
+            // this is a reapeat  => take twice (ex imagine)
+            if (firstbackward > 0 && firstbackward < firstfwd)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    bloc = new List<int>();
+                    for (int i = 0; i <= firstbackward; i++)
+                    {
+                        bloc.Add(i);
+                    }
+                    mapmeasures.Add(bloc);
+                }
+                pivot = firstbackward + 1;
+            }
+            else if (firstfwd > 0 && firstfwd < firstbackward)
+            {
+                // This is a simple bloc => take one (ex cigarette)
+                bloc = new List<int>();
+                for (int i = 0; i < firstfwd; i++)
+                {
+                    bloc.Add(i);
+                }
+                mapmeasures.Add(bloc);
+                
+                pivot = firstfwd + 1;
+            }
+
+
+            
+            // 2. consider a loop with several forward/backward
+            while (bcondition)
+            {
+                // Calculate limits of bloc if the repeats are done
+                // 1 Search descending forward from start to less
+                firstfwd = GetFirstForward(pivot, partmes);
+                if (firstfwd < firstfwdminimum)
+                    firstfwd = firstfwdminimum;
+                    
+
+                // 2. Search ascending backward from start to more
+                y = GetFirstBackward(pivot, partmes);
+
+
+                // If no more backward starting from "start"
+                // Create a verse with all trailing measures and leave
+                if (y == -1)
+                {
+                    #region leave if no more backward
+                    versenumber++;
+                    bloc = new List<int>();
+                    for (int i = firstfwd; i <= partmes.Count - 1; i++)
+                    {
+                        mes = partmes[i];
+                        if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber) || mes.lstVerseNumber[0] == 0)
+                        //if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber))
+                        {
+                            bloc.Add(i);
+                        }
+                    }
+                    mapmeasures.Add(bloc);
+                    break;
+                    #endregion leave if no more backward
+                }
+                
+
+                // Add bloc including measures between FirstForward and FirstBackWard
+                versenumber++;                
+                bloc = new List<int>();
+
+                for (int i = firstfwd; i <= y; i++)
+                {
+                    mes = partmes[i];
+
+                    // TODO lyriques réservés et pas réservés
+
+                    // keep only blocs 
+                    // - Without lyrics (Count = 0)
+                    // - With only one lyric number (all the verses use these single lyrics) (Count = 1)
+                    // - Which verse number is contained in the list of verses
+                    //if (mes.lstVerseNumber.Count <= 1 || mes.lstVerseNumber.Contains(versenumber))
+                    if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber)  || mes.lstVerseNumber[0] == 0 )
+                    {                        
+                        // If last measure of a verse
+                        // if the current verse is the last one, it means that we have looped all the verses
+                        // put bReserved to true in order to evolve the pivot value
+                        if (i == y)
+                        {
+                            if (mes.lstVerseNumber.Count > 0)
+                            {
+                                if (versenumber == mes.lstVerseNumber[mes.lstVerseNumber.Count - 1])
+                                    bIncreasePivot = true; // bReserved = true;
+                            }                           
+                        }
+
+                        bloc.Add(i);
+                    }
+                }                
+                mapmeasures.Add(bloc);
+
+                numloop++;
+
+                // Increase pivot value               /
+                if (numloop >= nbLoopMax)
+                {
+                    pivot = y + 1;  
+                    numloop = 0;
+                    nbLoopMax = 3;
+
+                    // All loops have been done: we do not have to consider previous measures
+                    // how can we prevent to calculate again firstfwd ?
+                    // this is the forward minimum value to take into account
+                    firstfwdminimum = pivot;
+                    bIncreasePivot = false; //bReserved = false;
+                    
+                    
+                    // ********************* FAB 31/10/ A CONFIRMER *******************************
+                    versenumber = 0;
+                } 
+                else if (bIncreasePivot) // bReserved)
+                {                    
+                    pivot = y + 1;
+                    bIncreasePivot = false; // bReserved = false;
+                    
+                }
+
+
+                #region leave if end of file
+                // get last bloc before leaving
+                if (pivot > partmes.Count - 1)
+                {
+                    pivot = partmes.Count - 1;
+                    firstfwd = GetFirstForward(pivot, partmes);
+                    y = GetFirstBackward(pivot, partmes);
+                    
+                    // Add bloc
+                    bloc = new List<int>();
+                    for (int i = firstfwd; i <= y; i++)
+                    {
+                        mes = partmes[i];
+                        //if (mes.lstVerseNumber.Count <= 1 || mes.lstVerseNumber.Contains(versenumber))
+                        if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber) || mes.lstVerseNumber[0] == 0)
+                        {
+                            bloc.Add(i);
+                        }
+                    }
+                    mapmeasures.Add(bloc);
+                    break;
+                }
+
+                #endregion leave if end of file
+            }
+
+            return mapmeasures;
+        }
+       
+
+        /// <summary>
+        /// Return first element of type barline/forward - Search descending
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="Measures"></param>
+        /// <returns></returns>
+        private int GetFirstForward(int start, List<Measure> Measures)
+        {            
+            for (int j = start; j >= 0; j--)
+            {
+                Measure measure = Measures[j];
+                List<MeasureElement> lstME = measure.MeasureElements;
+                for (int i = 0; i < lstME.Count; i++)
+                {
+                    MeasureElement measureElement = lstME[i];
+                    if (measureElement.Type == MeasureElementType.Barline)
+                    {
+                        Barline bl = (Barline)measureElement.Element;
+                        if (bl.Direction == RepeatDirections.forward)
+                        {
+                            return j;
+                        }
+                    }
+                }
+            }
+
+            // Return first element if no forward
+            return 0;
+        }
+
+        private int GetFirstForwardUp(int end, List<Measure> Measures)
+        {
+            for (int j = 0; j <= end; j++)
+            {
+                Measure measure = Measures[j];
+                List<MeasureElement> lstME = measure.MeasureElements;
+                for (int i = 0; i < lstME.Count; i++)
+                {
+                    MeasureElement measureElement = lstME[i];
+                    if (measureElement.Type == MeasureElementType.Barline)
+                    {
+                        Barline bl = (Barline)measureElement.Element;
+                        if (bl.Direction == RepeatDirections.forward)
+                        {
+                            return j;
+                        }
+                    }
+                }
+            }
+
+            // Return first element if no forward
+            return -1;
+        }
+
+
+        /// <summary>
+        /// Return first element of type barline/backward - Search ascending
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="Measures"></param>
+        /// <returns></returns>
+        private int GetFirstBackward(int start, List<Measure> Measures)
+        {                                                            
+            for (int j = start; j < Measures.Count; j++)
+            {
+                Measure measure = Measures[j];
+                List<MeasureElement> lstME = measure.MeasureElements;
+                for (int i = 0; i < lstME.Count; i++)
+                {
+                    MeasureElement measureElement = lstME[i];
+                    if (measureElement.Type == MeasureElementType.Barline)
+                    {
+                        Barline bl = (Barline)measureElement.Element;
+                        if (bl.Direction == RepeatDirections.backward)
+                        {
+                            return  j;                            
+                        }
+                    }
+                }
+            }
+
+            // Return last element if no backward
+            return -1;
+
+        }
+
+        #endregion Create verses
+
 
         #region tracks
 
@@ -467,6 +852,14 @@ namespace MusicXml
         #endregion tracks
 
 
+        #region Tempo
+        private void CreateTempoEvent(float tmp, int ticks)
+        {
+            track1.insertTempo((int)tmp, ticks);
+        }
+        #endregion Tempo
+
+
         #region notes
 
         /// <summary>
@@ -517,43 +910,80 @@ namespace MusicXml
 
 
         #region lyrics
-        private void CreateLyric(Note n, int t)
+        private void CreateLyric(Note n, int t, int versenumber)
         {
             try
             {
-                bool bCutPossible = false;
-                bool blineFeed = false;
-                string currentElement = n.Lyric.Text;
+                //bool bCutPossible = false;
+                bool blineFeed = false;                
                 byte[] newdata;
 
+             
+                // Search the Lyric coresponding to the right verse
+                // We add a special character at the begining of the lyric when we use it
+                // next time, the next lyric will be used
+                Lyric lyric = new Lyric();
 
-                switch (n.Lyric.Syllabic)
+                
+                bool bfound = false;
+                if (n.Lyrics.Count > 1)
+                {
+                    // Search with current versenumber
+                    foreach (Lyric ll in n.Lyrics)
+                    {
+                        if (ll.VerseNumber == versenumber && ll.Text != "")
+                        {
+                            lyric = ll;
+                            bfound = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!bfound)
+                    {
+                        return;
+                    }
+                }
+                else if (n.Lyrics.Count == 1)
+                {
+                    // If only one line of lyrics => take it
+                    lyric = n.Lyrics[0];
+                }
+                else
+                {
+                    return;
+                }
+
+                string currentElement = lyric.Text;
+                
+                if (lyric.Text == null || lyric.Text.Trim().Length == 0)
+                    return;
+
+                // check if linefeed present before trimming it (This will remove the '\n' character !!!!)
+                if (currentElement.IndexOf("\n") > -1)                
+                {                    
+                    blineFeed = true;
+                }
+                // Trim first, and after add spaces occording to "Single" and "End" syllabic 
+                currentElement = currentElement.Trim();  
+                
+
+                switch (lyric.Syllabic)
                 {
                     case Syllabic.Begin: break;
 
-                    case Syllabic.Single:
-                        currentElement += " ";
-                        bCutPossible = true;
+                    case Syllabic.Single: 
+                        currentElement += " ";                                               
                         break;
 
                     case Syllabic.End:
                         currentElement += " ";
-                        bCutPossible = true;
                         break;
 
                     case Syllabic.None: break;
                 }
 
-                // Check if linefeed has to be added
-                if (lyricLengh > 30 && bCutPossible)
-                {
-                    blineFeed = true;
-                    //currentElement = "\r" + currentElement;
-                    lyricLengh = 0;
-                }
-                else
-                    lyricLengh += currentElement.Length;
-
+               
                 // Text encoding
                 switch (OpenMidiFileOptions.TextEncoding)
                 {
@@ -677,6 +1107,7 @@ namespace MusicXml
         }
         #endregion lyrics
 
+
         #region sequence
 
         /// <summary>
@@ -710,7 +1141,7 @@ namespace MusicXml
                 sequence.tracks[0].insertTempo(Tempo, 0);
 
             // Tags to sequence
-            sequence.CloneTags();
+            //sequence.CloneTags();
         }
 
         #endregion sequence

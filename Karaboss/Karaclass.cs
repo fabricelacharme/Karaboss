@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2018 Fabrice Lacharme
+/* Copyright (c) 2024 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -37,7 +37,9 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Globalization;
 using System.Threading;
-using System.ComponentModel; // DLL import
+using System.ComponentModel;
+using System.Text.RegularExpressions;
+using System.Collections.Generic; // DLL import
 
 namespace Karaboss
 {
@@ -170,6 +172,32 @@ namespace Karaboss
         }
 
 
+
+        public static bool IsMIDI(string f)
+        {
+            if (f == null || f == "")
+                return false;
+            return Regex.IsMatch(f, "^.+(\\.mid|\\.kar|\\.midi)$", RegexOptions.IgnoreCase);
+        }
+        public static bool IsXML(string f)
+        {
+            if (f == null || f == "")
+                return false;
+            return Regex.IsMatch(f, "^.+(\\.xml|\\.musicxml|\\.mxml)$", RegexOptions.IgnoreCase);
+        }
+
+        public static bool IsMXL(string f)
+        {
+            if (f == null || f == "")
+                return false;
+            return Regex.IsMatch(f, "^.+(\\.mxl)$", RegexOptions.IgnoreCase);
+        }
+
+        public static bool IsTXT(string filename)
+        {
+            return Regex.IsMatch(filename, "^.+(\\.txt)$", RegexOptions.IgnoreCase);
+        }
+
         public static bool IsMidiExtension(string f)
         {
             if (f == null || f == "")
@@ -204,6 +232,8 @@ namespace Karaboss
             return false;
         }
 
+
+
         public static bool IsTxtExtension(string f)
         {
             if (f == null || f == "")
@@ -237,7 +267,49 @@ namespace Karaboss
             }
         }
 
-       
+
+
+        #region Unzip
+
+        /// <summary>
+        /// Extract any file with extension 'extension'
+        /// For egg : '*.musicxml', '*.mxl'
+        /// </summary>
+        /// <param name="zipFilename"></param>
+        /// <param name="extension"></param>
+        /// <param name="outputPath"></param>
+        /// <returns></returns>
+        public static string UnzipFiles(string zipFilename, List<string> lsextension, string outputPath)
+        {
+            string UnzipFiles = "";
+            try
+            {
+                ICSharpCode.SharpZipLib.Zip.FastZip myZip = new ICSharpCode.SharpZipLib.Zip.FastZip();
+                myZip.ExtractZip(zipFilename, outputPath, "");
+                DirectoryInfo myDirInfo = new DirectoryInfo(outputPath);
+
+                foreach (string extension in lsextension)
+                {
+                    //FileInfo[] myFileInfo = myDirInfo.GetFiles(extension, SearchOption.AllDirectories);
+                    FileInfo[] myFileInfo = myDirInfo.GetFiles(extension, SearchOption.TopDirectoryOnly);
+                    if (myFileInfo.Length > 0)
+                    {
+                        UnzipFiles = myFileInfo[0].FullName;
+                        break;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+            }
+
+            return UnzipFiles;
+        }
+
+        #endregion Unzip
+
     }
 
 
@@ -257,25 +329,7 @@ namespace Karaboss
         WithoutSpace = 1
     }
 
-    /// <summary>
-    /// A class to store some properties of the lyrics
-    /// </summary>
-    /*
-    public class CLyric
-    {        
-
-        public int LyricsTrackNum = -1;     // num of track containing lyrics
-        public int MelodyTrackNum = -1;     // num  of track containing the melody       
-        public LyricTypes LyricType;            // type lyric or text                 
-
-        public CLyric()
-        {
-            LyricsTrackNum = -1;
-            MelodyTrackNum = -1;
-            LyricType = LyricTypes.None;
-        }
-    }
-    */
+   
 
     /// <summary>
     /// A class to store all lyric's syllabes
@@ -477,5 +531,7 @@ namespace Karaboss
         }
     }
 
+
+ 
 
 }

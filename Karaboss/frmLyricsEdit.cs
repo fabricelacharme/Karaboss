@@ -42,6 +42,7 @@ using System.Text.RegularExpressions;
 using Karaboss.Resources.Localization;
 using Karaboss.Lrc.SharedFramework;
 using Karaboss.Lyrics;
+using System.Xml.Linq;
 
 
 namespace Karaboss
@@ -117,11 +118,20 @@ namespace Karaboss
         private int _tempo;
         private int _measurelen;
 
+
+        // txtResult, BtnFontPlus
+        private Font _lyricseditfont;
+        private float _fontSize = 8.25f;
+
         private List<string> lsInstruments = Sanford.Multimedia.Midi.MidiFile.LoadInstruments();
 
         public frmLyricsEdit(Sequence sequence, List<plLyric> plLyrics, LyricsMgmt myLyricsMgmt, string fileName)
         {
-            InitializeComponent();            
+            InitializeComponent();
+
+            LoadOptions();
+            
+            //_lyricseditfont = new Font("Segoe UI", _fontSize, FontStyle.Regular, GraphicsUnit.Point);
 
             MIDIfileName = fileName;
             sequence1 = sequence;
@@ -134,7 +144,8 @@ namespace Karaboss
             // Load list of tracks
             LoadTracks(sequence1);
 
-            //myLyric = mylyric;
+            InitTxtResult();
+
             InitGridView();
             
             // Track containing the melody
@@ -187,6 +198,32 @@ namespace Karaboss
         }
 
 
+        private void LoadOptions()
+        {
+            try
+            {
+                _lyricseditfont = Properties.Settings.Default.LyricsEditFont;
+                _fontSize = _lyricseditfont.Size;
+
+            }
+            catch (Exception e) 
+            {
+                Console.Write("Error: " + e.Message);
+            }
+        }
+
+        private void SaveOptions()
+        {
+            try
+            {
+                Properties.Settings.Default.LyricsEditFont = _lyricseditfont;
+            }
+            catch (Exception e) 
+            {
+                Console.Write("Error: " + e.Message);
+            }
+
+        }
 
         /// <summary>
         /// Upadate MIDI times
@@ -538,7 +575,7 @@ namespace Karaboss
             }
         }
 
-     
+        
 
 
         /// <summary>
@@ -753,6 +790,16 @@ namespace Karaboss
 
         #endregion gridview
 
+        #region TxtResult
+
+
+        private void InitTxtResult()
+        {
+            txtResult.Font = _lyricseditfont;
+        }
+
+        #endregion TxtResult
+
 
         #region form load close resize
 
@@ -841,6 +888,9 @@ namespace Karaboss
                     Properties.Settings.Default.frmLyricsEditSize = Size;
                     Properties.Settings.Default.frmLyricsEditMaximized = false;
                 }
+                
+                SaveOptions();
+                
                 // Save settings
                 Properties.Settings.Default.Save();
             }
@@ -1168,17 +1218,29 @@ namespace Karaboss
 
         private void BtnFontPlus_Click(object sender, EventArgs e)
         {
-            float emSize = txtResult.Font.Size;
-            emSize++;
-            txtResult.Font = new Font(txtResult.Font.FontFamily, emSize);
+            //float emSize = txtResult.Font.Size;
+            //emSize++;
+            _fontSize++;
+            _lyricseditfont = new Font(_lyricseditfont.FontFamily, _fontSize);
+
+            //txtResult.Font = new Font(txtResult.Font.FontFamily, emSize);
+            txtResult.Font = _lyricseditfont;
         }
 
         private void BtnFontMoins_Click(object sender, EventArgs e)
         {
-            float emSize = txtResult.Font.Size;
-            emSize--;
-            if (emSize > 5)
-                txtResult.Font = new Font(txtResult.Font.FontFamily, emSize);
+            //float emSize = txtResult.Font.Size;
+            //emSize--;
+            if (_fontSize > 5)
+            {
+                _fontSize--;
+                _lyricseditfont = new Font(_lyricseditfont.FontFamily, _fontSize);
+                txtResult.Font = _lyricseditfont;
+            }
+            
+
+            //if (emSize > 5)
+            //    txtResult.Font = new Font(txtResult.Font.FontFamily, emSize);
         }
 
 

@@ -48,6 +48,9 @@ using Karaboss.Pages.ABCnotation;
 using Karaboss.Mru;
 using MusicXml;
 using MusicTxt;
+using Sanford.Multimedia.Midi.Score;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace Karaboss
 {
@@ -87,6 +90,8 @@ namespace Karaboss
         // The MruList
         int MruFilesCount = 10;
         MruList MyMruList;
+
+        private string mTempDir;
 
         public frmExplorer(string[] args, int numinstance)
         {
@@ -138,7 +143,10 @@ namespace Karaboss
             xplorerControl.PlayMidi += new xplorer.PlayMidiEventHandler(Global_xPlayMidi);
             xplorerControl.PlayCDG += new xplorer.PlayCDGEventHandler(Global_PlayCDG);
             xplorerControl.PlayAbc += new xplorer.PlayAbcEventHandler(Global_xPlayAbc);
+            
             xplorerControl.PlayXml += new xplorer.PlayXmlEventHandler(Global_xPlayXml);
+            xplorerControl.PlayMxl += new xplorer.PlayMxlEventHandler(Global_xPlayMxl);
+
             xplorerControl.PlayTxt += new xplorer.PlayTxtEventHandler(Global_xPlayTxt);
             xplorerControl.LvContentChanged += new xplorer.ContentChangedEventHandler(Xplorer_ContentChanged);
             xplorerControl.CreateNewMidiFile += new xplorer.CreateNewMidiFileEventHandler(Xplorer_CreateNewMidiFile);
@@ -152,6 +160,7 @@ namespace Karaboss
             playlistsControl.PlayCDG += new playlists.PlayCDGEventHandler(Global_PlayCDG);
             playlistsControl.PlayAbc += new playlists.PlayAbcEventHandler(Global_PlayAbc);
             playlistsControl.PlayXml += new playlists.PlayXmlEventHandler(Global_PlayXml);
+            playlistsControl.PlayMxl += new playlists.PlayXmlEventHandler(Global_PlayMxl);
             playlistsControl.PlayTxt += new playlists.PlayTxtEventHandler(Global_PlayTxt);
             playlistsControl.NavigateTo += new playlists.NavigateToEventHandler(Item_NavigateTo);
             #endregion
@@ -384,7 +393,7 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Display the player MIDI or CDG according to file extension
+        /// Display the player MIDI, or CDG according to file extension
         /// and launch play
         /// </summary>
         /// <param name="sender"></param>
@@ -464,12 +473,23 @@ namespace Karaboss
             else if (playlistsControl.Visible)
                 filename = playlistsControl.SelectedFile;
 
-            if (filename == null || filename == "" || !File.Exists(filename) || !Karaclass.IsMidiExtension(filename))
+            
+            if (filename == null || filename == "" || !File.Exists(filename) || (!Karaclass.IsMidiExtension(filename) && !Karaclass.IsXML(filename) && !Karaclass.IsTXT(filename) && !Karaclass.IsMXL(filename) )   )
             {                
                 MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
+            // Unzip MXL before
+            if (Karaclass.IsMXL(filename))
+            {
+                filename = UnzipFile(filename);
+                if (!File.Exists(filename))
+                {
+                    return;
+                }
+            }
+            
             // ferme le formulaire frmPlayer
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
@@ -518,11 +538,23 @@ namespace Karaboss
             else if (playlistsControl.Visible)
                 filename = playlistsControl.SelectedFile;
 
-            if (filename == null || filename == "" || !File.Exists(filename) || !Karaclass.IsMidiExtension(filename))
-            {                
+            
+            if (filename == null || filename == "" || !File.Exists(filename) || (!Karaclass.IsMidiExtension(filename) && !Karaclass.IsXML(filename) && !Karaclass.IsTXT(filename) && !Karaclass.IsMXL(filename)))
+                {                
                 MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            // Unzip MXL before
+            if (Karaclass.IsMXL(filename))
+            {
+                filename = UnzipFile(filename);
+                if (!File.Exists(filename))
+                {
+                    return;
+                }
+            }
+
 
             // ferme le formulaire frmPlayer
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
@@ -570,10 +602,20 @@ namespace Karaboss
             else if (playlistsControl.Visible)
                 filename = playlistsControl.SelectedFile;
 
-            if (filename == null || filename == "" || !File.Exists(filename) || !Karaclass.IsMidiExtension(filename))
+            if (filename == null || filename == "" || !File.Exists(filename) || (!Karaclass.IsMidiExtension(filename) && !Karaclass.IsXML(filename) && !Karaclass.IsTXT(filename) && !Karaclass.IsMXL(filename) ))
             {
                 MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
+            }
+
+            // Unzip MXL before
+            if (Karaclass.IsMXL(filename))
+            {
+                filename = UnzipFile(filename);
+                if (!File.Exists(filename))
+                {
+                    return;
+                }
             }
 
             // ferme le formulaire frmPlayer
@@ -784,6 +826,13 @@ namespace Karaboss
         /// <param name="fileName"></param>
         private void Global_SelectedIndexChanged(object sender, string fileName)
         {
+            // to avoid untimely display changes caused by the explorer 
+            if (sender.ToString() == "Karaboss.xplorer.xplorerControl" && !xplorerControl.Visible)
+            {
+                return;
+            }
+
+
             MidiInfos.Clear();
             if (fileName != null && fileName != "")
             {
@@ -794,7 +843,7 @@ namespace Karaboss
                 DisplayMidiLabels();
 
         }
-       
+
 
         /// <summary>
         /// Initialize the display of internal infos of a MIDI file in the bottom panel
@@ -802,6 +851,14 @@ namespace Karaboss
         /// <param name="fileName"></param>
         private void InitDisplayMidiFileInfos(string fileName)
         {
+            if (fileName == null || fileName == "")
+            {
+                MidiInfos.Clear();
+                DisplayMidiLabels();
+                return;
+            }
+        
+
             if (Karaclass.IsMidiExtension(fileName) && MidiInfos.busy == false)
             {               
                 MidiInfos.busy = true;                             
@@ -813,13 +870,21 @@ namespace Karaboss
             }
             else if (Karaclass.IsXmlExtension(fileName) && MidiInfos.busy == false)
             {
-                MidiInfos.busy = true;                
+                MidiInfos.busy = true;                  
                 ResetMidiFile();
 
                 // load file and display MIDI infos
                 CurrentPath = fileName;
                 LoadAsyncXmlFile(fileName, true);
             }
+            //else if (Karaclass.IsMXL(fileName) && MidiInfos.busy == false)
+            //{
+                //MidiInfos.busy |= true;
+                //ResetMidiFile();
+                //CurrentPath = fileName;
+                //LoadMxlFile(fileName, true);
+
+            //}
             else if (Karaclass.IsTxtExtension(fileName) && MidiInfos.busy == false)
             {
                 MidiInfos.busy = true;
@@ -840,6 +905,7 @@ namespace Karaboss
         {
             OpenMidiFileOptions.TextEncoding = Karaclass.m_textEncoding;           
             OpenMidiFileOptions.SplitHands = false;
+            MidiInfos.Clear();
         }
 
         /// <summary>
@@ -894,6 +960,32 @@ namespace Karaboss
             }
         }
 
+
+        /// <summary>
+        /// Load compressed mxl file
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="silenceMode"></param>
+        private void LoadMxlFile(string fileName, bool silenceMode = false)
+        {
+            string myXMLFileName = UnzipFile(fileName);
+            if (File.Exists(myXMLFileName))
+            {
+                LoadAsyncXmlFile(myXMLFileName, silenceMode);
+            }
+        }
+
+        private string UnzipFile(string f)
+        {
+            mTempDir = Path.GetTempPath() + "karaboss\\";
+            string myTempDir = mTempDir + Path.GetRandomFileName();
+            Directory.CreateDirectory(myTempDir);            
+
+            List<string> lsextensions = new List<string> { "*.musicxml", "*.xml" };
+            return Karaclass.UnzipFiles(f, lsextensions, myTempDir);
+
+
+        }
 
         /// <summary>
         /// Event: Midi sequence loaded
@@ -1318,6 +1410,13 @@ namespace Karaboss
         {
             DisplayXmlPlayer(fi.FullName, null, bplay);
         }
+
+        private void Global_xPlayMxl(object sender, FileInfo fi, bool bplay)
+        {
+            DisplayMxlPlayer(fi.FullName, null, bplay);
+        }
+
+
         private void Global_xPlayTxt(object sender, FileInfo fi, bool bplay)
         {
             DisplayTxtPlayer(fi.FullName, null, bplay);
@@ -1346,6 +1445,11 @@ namespace Karaboss
         private void Global_PlayXml(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
             DisplayXmlPlayer(fi.FullName, pl, bplay);
+        }
+
+        private void Global_PlayMxl(object sender, FileInfo fi, Playlist pl, bool bplay)
+        {
+            DisplayMxlPlayer(fi.FullName, pl, bplay);
         }
 
         private void Global_PlayTxt(object sender, FileInfo fi, Playlist pl, bool bplay)
@@ -1555,7 +1659,7 @@ namespace Karaboss
             }
 
             // File can be an xml file but not in musicxml format
-            if (MXmlReader.Read(fpath) == null)
+            if (MXmlReader.Read(fpath, false) == null)
             {
                 try
                 {
@@ -1610,6 +1714,30 @@ namespace Karaboss
             Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice, songRoot);
             frmPlayer.Show();
             frmPlayer.Activate();
+
+        }
+
+        /// <summary>
+        /// Display compressed musicxml file (*.mxl)
+        /// </summary>
+        /// <param name="fpath"></param>
+        /// <param name="pl"></param>
+        /// <param name="bPlayNow"></param>
+        private void DisplayMxlPlayer(string fpath, Playlist pl, bool bPlayNow)
+        {
+            if (fpath == null)
+                return;
+            if (File.Exists(fpath) == false)
+            {
+                MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            
+            string myXMLFileName = UnzipFile(fpath);            
+            if (File.Exists(myXMLFileName))
+            {
+                DisplayXmlPlayer(myXMLFileName, pl, bPlayNow);
+            }
 
         }
 
@@ -1872,6 +2000,12 @@ namespace Karaboss
                         DisplayXmlPlayer(cmdpath, null, bPlayNow);
                         break;
                     }
+                case ".mxl":
+                    {
+                        // Compressed musix xml file
+                        DisplayMxlPlayer(cmdpath, null, bPlayNow);
+                        break;
+                    }
                 case ".txt":
                     {
                         /*
@@ -1898,6 +2032,24 @@ namespace Karaboss
             }
         }
 
+        private void CleanUpTempDir()
+        {
+            if (!string.IsNullOrEmpty(mTempDir))
+            {
+                if (mTempDir == Path.GetTempPath() + "karaboss\\" && Directory.Exists(mTempDir))
+                {
+                    try
+                    {
+                        Directory.Delete(mTempDir, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Write(ex.Message);
+                    }
+                }
+            }
+            mTempDir = "";
+        }
 
         protected override void OnClosed(EventArgs e)
         {
@@ -1914,6 +2066,8 @@ namespace Karaboss
                 inDevice.Close();
                 inDevice.Dispose();
             }
+
+            CleanUpTempDir();
 
             base.OnClosed(e);
         }

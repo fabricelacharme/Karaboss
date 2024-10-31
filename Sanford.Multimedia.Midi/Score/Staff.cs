@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using static Sanford.Multimedia.Midi.Track;
 
 namespace Sanford.Multimedia.Midi.Score
 {
@@ -36,6 +37,7 @@ namespace Sanford.Multimedia.Midi.Score
     {
         private List<MusicSymbol> symbols;  /** The music symbols in this staff */
         private List<LyricSymbol> lyrics;   /** The lyrics to display (can be null) */
+        private List<TempoSymbol> lsttempos;     /** The tempo changes to display (minimum 1) */
         private int ytop;                   /** The y pixel of the top of the staff */
         private ClefSymbol clefsym;         /** The left-side Clef symbol */
         private AccidSymbol[] keys;         /** The key signature symbols */
@@ -280,6 +282,28 @@ namespace Sanford.Multimedia.Midi.Score
             }
         }
 
+        /// <summary>
+        /// Draw a black note plus the value of the tempo (BPM)
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="clip"></param>
+        /// <param name="pen"></param>
+        private void DrawTempos(Graphics g, Rectangle clip, Pen pen)
+        {
+            int xpos = keysigWidth;
+            int ypos = 15;                            
+            string tx = string.Empty;
+            System.Drawing.Brush brush = System.Drawing.Brushes.Black;
+
+            foreach (TempoSymbol TempoSymbol in lsttempos)
+            {
+                if ((xpos + TempoSymbol.X >= clip.X - 50) && (xpos + TempoSymbol.X <= clip.X + clip.Width + 50))
+                {                    
+                    TempoSymbol.Draw(g, pen, xpos, ypos);                    
+                }
+            }
+        }
+
         /** Draw the measure numbers for each measure */
         private void DrawMeasureNumbers(Graphics g, Rectangle clip, Pen pen)
         {
@@ -452,15 +476,13 @@ namespace Sanford.Multimedia.Midi.Score
                     break;
                 }
                 /* Get the x-position of this lyric */
-                while (symbolindex < symbols.Count &&
-                       symbols[symbolindex].StartTime < lyric.StartTime)
+                while (symbolindex < symbols.Count &&  symbols[symbolindex].StartTime < lyric.StartTime)
                 {
                     xpos += symbols[symbolindex].Width;
                     symbolindex++;
                 }
                 lyric.X = xpos;
-                if (symbolindex < symbols.Count &&
-                    (symbols[symbolindex] is BarSymbol))
+                if (symbolindex < symbols.Count && (symbols[symbolindex] is BarSymbol))
                 {
                     lyric.X += SheetMusic.NoteWidth;
                 }
@@ -471,14 +493,58 @@ namespace Sanford.Multimedia.Midi.Score
                 lyrics = null;
             }
         }
-        
-        
+
+        /// <summary>
+        /// Add Tempo symbols to the first staff
+        /// </summary>
+        /// <param name="TempoSymbols"></param>
+        public List<TempoSymbol> AddTempos(List<TempoSymbol> TempoSymbols)
+        {
+            if (TempoSymbols == null)
+             return null;
+
+            int xpos = 0;
+            int symbolindex = 0;
+            lsttempos = new List<TempoSymbol>();
+
+            foreach (TempoSymbol TempoSymbol in TempoSymbols) 
+            {
+                if (TempoSymbol.StartTime < starttime)
+                {
+                    continue;
+                }
+                if (TempoSymbol.StartTime >= endtime)
+                {
+                    break;
+                }
+
+                /* Get the x-position of this TempoSymbol */
+                while (symbolindex < symbols.Count && symbols[symbolindex].StartTime < TempoSymbol.StartTime)
+                {
+                    xpos += symbols[symbolindex].Width;
+                    symbolindex++;
+                }
+                TempoSymbol.X = xpos;
+                if (symbolindex < symbols.Count && (symbols[symbolindex] is BarSymbol))
+                {
+                    TempoSymbol.X += SheetMusic.NoteWidth;
+                }
+                lsttempos.Add(TempoSymbol);
+            }
+            
+            if (lsttempos.Count == 0)
+            {
+                lsttempos = null;
+            }
+            return lsttempos;
+        }
+
         /** Draw this staff. Only draw the symbols inside the clip area */
         public void Draw(Graphics g, Rectangle clip, Rectangle selRect, Pen pen)
         {
             int xpos = SheetMusic.LeftMargin + 5;
-            int yy = ytop + SheetMusic.LineWidth;            
-
+            int yy = ytop + SheetMusic.LineWidth;
+            
             /* Draw the left side Clef symbol */
             g.TranslateTransform(xpos, 0);
             clefsym.Draw(g, pen, yy, this.tracknum, selRect, xpos);
@@ -507,6 +573,8 @@ namespace Sanford.Multimedia.Midi.Score
                 // deselect all MusicSymbol if selection rectangle is null
                 if (selRect.Width == 0)
                     s.Selected = false;
+                
+
 
                 // Draw only in clip area
                 if ((xpos <= clip.X + clip.Width + 50) && (xpos + s.Width + 50 >= clip.X))
@@ -528,6 +596,10 @@ namespace Sanford.Multimedia.Midi.Score
 
             if (lyrics != null)            
                 DrawLyrics(g, clip ,pen);            
+
+            // Draw tempo symbols
+            if (lsttempos != null)
+                DrawTempos(g, clip, pen);
         }
 
 

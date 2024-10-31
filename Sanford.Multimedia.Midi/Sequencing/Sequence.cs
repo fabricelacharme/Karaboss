@@ -105,6 +105,11 @@ namespace Sanford.Multimedia.Midi
             properties.Numerator = 0;
             properties.Denominator = 0;
             properties.Quarternote = division;
+            
+            WTag = new List<string>();
+            TTag = new List<string>();
+            ITag = new List<string>();
+
 
             properties.ResetLog();
 

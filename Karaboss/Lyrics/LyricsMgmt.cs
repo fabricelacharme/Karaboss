@@ -211,16 +211,68 @@ namespace Karaboss.Lyrics
         /// </summary>
         private void AddCarriageReturn()
         {
+            int lyricLengh = 0;
+            int linelength = 30;
+            int minimumlinelength = 10;
+            string element;
+
             List<plLyric> _tmpL = new List<plLyric>();
             // test 1 : Add a CR to each uppercase
             for (int k = 0; k < plLyrics.Count; k++)
             {
-                if (plLyrics[k].CharType == plLyric.CharTypes.Text && char.IsUpper(plLyrics[k].Element,0))
+                if (plLyrics[k].CharType == plLyric.CharTypes.Text) // && char.IsUpper(plLyrics[k].Element,0) )
                 {
-                    //plLyrics[k].Element = "/" + plLyrics[k].Element;                    
-                    _tmpL.Add(new plLyric() { CharType = plLyric.CharTypes.LineFeed, Element = "¼", TicksOn = plLyrics[k].TicksOn, TicksOff = plLyrics[k].TicksOff });
+                    element = plLyrics[k].Element;
+                    
+
+                    // Check if uppercase
+                    if (char.IsUpper(element, 0))
+                    {
+                        if (lyricLengh > minimumlinelength)
+                        {
+                            // Add linefeed first
+                            _tmpL.Add(new plLyric() { CharType = plLyric.CharTypes.LineFeed, Element = "¼", TicksOn = plLyrics[k].TicksOn, TicksOff = plLyrics[k].TicksOff });
+                            lyricLengh = 0;
+                            // Add lyric after
+                            _tmpL.Add(plLyrics[k]);
+                        }
+                        else
+                        {
+                            lyricLengh += element.Length;
+                            _tmpL.Add(plLyrics[k]);
+                        }
+                    }
+                    else if (char.IsPunctuation(element.Trim(), element.Trim().Length - 1))
+                    {
+                        // Add lyric first
+                        _tmpL.Add(plLyrics[k]);
+
+                        // Add linefeed after
+                        _tmpL.Add(new plLyric() { CharType = plLyric.CharTypes.LineFeed, Element = "¼", TicksOn = plLyrics[k].TicksOn, TicksOff = plLyrics[k].TicksOff });
+                        lyricLengh = 0;
+                    }
+                    else 
+                    {
+                        // No upper case, but too long
+                        // Cut if blank
+                        if (lyricLengh > linelength && element.IndexOf(" ") > -1)
+                        {
+                            // Add lyric first
+                            _tmpL.Add(plLyrics[k]);
+
+                            // Add linefeed after
+                            _tmpL.Add(new plLyric() { CharType = plLyric.CharTypes.LineFeed, Element = "¼", TicksOn = plLyrics[k].TicksOn, TicksOff = plLyrics[k].TicksOff });
+                            lyricLengh = 0;
+                            
+                        }
+                        else
+                        {
+                            lyricLengh += element.Length;
+                            _tmpL.Add(plLyrics[k]);
+                        }
+                    }
                 }
-                _tmpL.Add(plLyrics[k]);
+                
             }
 
             plLyrics = _tmpL;
@@ -501,7 +553,7 @@ namespace Karaboss.Lyrics
                     }
                 }
             }
-            Console.WriteLine("******** lyrics ticksoff modified with next lyric : " + nbmodified.ToString());
+            //Console.WriteLine("******** lyrics ticksoff modified with next lyric : " + nbmodified.ToString());
             nbmodified = 0;
 
 
@@ -537,7 +589,7 @@ namespace Karaboss.Lyrics
                     }
                 }
             }
-            Console.WriteLine("******** lyrics ticksoff modified with associated note : " + nbmodified.ToString());
+            //Console.WriteLine("******** lyrics ticksoff modified with associated note : " + nbmodified.ToString());
             nbmodified = 0;
 
 
@@ -1118,7 +1170,7 @@ namespace Karaboss.Lyrics
 
                                     int lastbeat = (_measure - 1) * nbBeatsPerMeasure;
 
-                                    Console.WriteLine(string.Format("**** Instrumental before line : measure: {0} Beat: {1} **************", _measure, beat));
+                                    //Console.WriteLine(string.Format("**** Instrumental before line : measure: {0} Beat: {1} **************", _measure, beat));
 
                                     // Add a linefeed at the beginning of the the next lyric
                                     pll = new plLyric();
@@ -1142,7 +1194,7 @@ namespace Karaboss.Lyrics
 
                                     int lastbeat = (_measure - 1) * nbBeatsPerMeasure;
 
-                                    Console.WriteLine(string.Format("**** Instrumental before line : measure: {0} Beat: {1} **************", _measure, beat));
+                                    //Console.WriteLine(string.Format("**** Instrumental before line : measure: {0} Beat: {1} **************", _measure, beat));
 
                                     // Add a linefeed at the beginning of the the next lyric
                                     pll = new plLyric();
@@ -1177,7 +1229,7 @@ namespace Karaboss.Lyrics
                             {
                                 beat = 1 + ticksoff / beatDuration;
                                 _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
-                                Console.WriteLine(string.Format("**** Instrumental after line : measure: {0} Beat: {1} **************", _measure, beat));
+                                //Console.WriteLine(string.Format("**** Instrumental after line : measure: {0} Beat: {1} **************", _measure, beat));
 
                                 // TODO : add a linefeed to 1st time of this measure (this beat ?)
                                 // Do not forget the end of the song : no linefeed
@@ -1348,7 +1400,7 @@ namespace Karaboss.Lyrics
                                         {
                                             if (lyr.Substring(0, 1) == " ")
                                             {
-                                                Console.WriteLine("lyric left space");
+                                                //Console.WriteLine("lyric left space");
                                                 beatchord += " " + chord;
                                                 beatlyr += lyr;
                                                 beatlyr += new string(' ', chord.Length + 1 - lyr.Length);
@@ -1364,7 +1416,7 @@ namespace Karaboss.Lyrics
                                         {
                                             if (lyr.Substring(0, 1) == " ")
                                             {
-                                                Console.WriteLine("lyric left space");
+                                                //Console.WriteLine("lyric left space");
                                                 beatchord += " " + chord;
                                                 beatlyr += lyr + " ";
                                             }

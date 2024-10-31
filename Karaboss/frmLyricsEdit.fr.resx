@@ -163,13 +163,6 @@
   <data name="btnInsertParagraph.Text" xml:space="preserve">
     <value>Nouveau paragraphe (\)</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="BtnFontMoins.Location" type="System.Drawing.Point, System.Drawing">
-    <value>443, 93</value>
-  </data>
-  <data name="BtnFontPlus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>408, 93</value>
-  </data>
   <data name="btnInsertCr.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
@@ -180,8 +173,9 @@
   <data name="btnSpaceRight.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="btnSpaceRight.Location" type="System.Drawing.Point, System.Drawing">
-    <value>408, 3</value>
+    <value>149, 66</value>
   </data>
   <data name="btnSpaceRight.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -190,7 +184,7 @@
     <value>NoControl</value>
   </data>
   <data name="btnSpaceLeft.Location" type="System.Drawing.Point, System.Drawing">
-    <value>408, 36</value>
+    <value>149, 92</value>
   </data>
   <data name="btnSpaceLeft.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -255,14 +249,8 @@
   <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
     <value>211, 6</value>
   </data>
-  <data name="mnuFileSaveAsLrcLines.Size" type="System.Drawing.Size, System.Drawing">
-    <value>116, 22</value>
-  </data>
   <data name="mnuFileSaveAsLrcLines.Text" xml:space="preserve">
     <value>Lignes</value>
-  </data>
-  <data name="mnuFileSaveAsLrcSyllabes.Size" type="System.Drawing.Size, System.Drawing">
-    <value>116, 22</value>
   </data>
   <data name="mnuFileSaveAsLrc.Size" type="System.Drawing.Size, System.Drawing">
     <value>214, 22</value>
@@ -328,7 +316,7 @@
     <value>&amp;Edition</value>
   </data>
   <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>122, 22</value>
   </data>
   <data name="mnuHelpAbout.Text" xml:space="preserve">
     <value>A &amp;propos</value>
@@ -391,6 +379,21 @@
     <value />
   </data>
   <data name="tabControl1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblSelectTrack.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 13</value>
+  </data>
+  <data name="lblSelectTrack.Text" xml:space="preserve">
+    <value>Choisir la piste :</value>
+  </data>
+  <data name="lblSelectTrack.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cbSelectTrack.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlMenus.ToolTip" xml:space="preserve">
     <value />
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

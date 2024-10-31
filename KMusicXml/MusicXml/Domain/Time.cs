@@ -26,7 +26,7 @@ namespace MusicXml.Domain
 		public TimeSymbol Symbol { get; internal set; }
 
         // Fab
-        public int Tempo { get; internal set; }
+        public float Tempo { get; internal set; }
 
     }
 }

@@ -54,6 +54,7 @@ namespace Karaboss.xplorer
     public delegate void PlayAbcEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void PlayTxtEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void PlayXmlEventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayMxlEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void ContentChangedEventHandler(object sender, string strContent, string strPath);
     public delegate void CreateNewMidiFileEventHandler(object sender);
 
@@ -68,6 +69,7 @@ namespace Karaboss.xplorer
         public event PlayAbcEventHandler PlayAbc;
         public event PlayTxtEventHandler PlayTxt;
         public event PlayXmlEventHandler PlayXml;
+        public event PlayMxlEventHandler PlayMxl;
         public event ContentChangedEventHandler LvContentChanged;
         public event CreateNewMidiFileEventHandler CreateNewMidiFile;
         
@@ -159,6 +161,7 @@ namespace Karaboss.xplorer
             shellListView.PlayAbc += new FlShell.PlayAbcEventHandler(ShellListView_PlayAbc);
             shellListView.PlayTxt += new FlShell.PlayTxtEventHandler(ShellListView_PlayTxt);
             shellListView.PlayXml += new FlShell.PlayXmlEventHandler(ShellListView_PlayXml);
+            shellListView.PlayMxl += new FlShell.PlayMxlEventHandler(ShellListView_PlayMxl);
             shellListView.lvContentChanged += new FlShell.ContentChangedEvenHandler(ShellListView_ContentChanged);
             shellListView.SelectedIndexChanged += new FlShell.SelectedIndexChangedEventHandler(ShellListView_SelectedIndexChanged);
                        
@@ -262,6 +265,14 @@ namespace Karaboss.xplorer
             PlayXml?.Invoke(this, fi, bplay);
         }
 
+        private void ShellListView_PlayMxl(object sender, FileInfo fi, bool bplay)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            Application.DoEvents();
+            PlayMxl?.Invoke(this, fi, bplay);
+        }
+
+       
 
         private void ShellListView_AddToPlaylist(object sender, FlShell.ShellItem[] fls, string plname, string key, bool bnewPlaylist)
         {
@@ -1298,6 +1309,11 @@ namespace Karaboss.xplorer
                     case ".xml":
                         {
                             PlayXml?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
+                    case ".mxl":
+                        {
+                            PlayMxl?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
                     case ".txt":

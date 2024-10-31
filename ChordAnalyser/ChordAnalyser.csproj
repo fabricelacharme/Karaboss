@@ -51,6 +51,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\ChordRenderer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UI\ChordsControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -94,6 +97,360 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\silence_black.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Db.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dbm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\E.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\E7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Eb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ebm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Em.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Em7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\F#.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\F#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\F#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\F.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\F7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Fm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\G#.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\G#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\G.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\A#.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\A#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\A#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\A.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\A7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ab.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ab7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Abm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Am.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\B.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\B7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bb7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bbm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\C#.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\C#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\C.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\C7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D#.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Am7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\G7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\F#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Fm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\A#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\G#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\C#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\C#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\G#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pD#.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pD#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pD#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pD.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pD7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pDb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pDbm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pDm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pDm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pE.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pE7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pEb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pEbm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pEm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pEm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pF#.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pF#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pF#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pF#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pF.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pF7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pFm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pG#.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pG#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pGm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pA#.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pA#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pA#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pA#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pA.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pA7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pAb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pAb7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pAbm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pAm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pAm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pB7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pBb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pBb7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pBbm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pBbm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pBm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pBm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pC#.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pC#m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pC#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pC.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pC7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pCm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pCm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pC#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pG7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pG#7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pD#m7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pFm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pGm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pG#m7.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

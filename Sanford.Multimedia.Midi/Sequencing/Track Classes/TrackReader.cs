@@ -431,7 +431,8 @@ namespace Sanford.Multimedia.Midi
                     // tempo = System.Text.ASCIIEncoding.ASCII.GetString(data);
                     int Tempo = ((data[0] << 16) | (data[1] << 8) | data[2]);
 
-                    newTrack.Tempo = Tempo;
+                    if (newTrack.Tempo == 0)
+                        newTrack.Tempo = Tempo;
                 }
                 catch (Exception ex)
                 {

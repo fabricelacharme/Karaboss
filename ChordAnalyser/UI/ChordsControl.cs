@@ -224,12 +224,12 @@ namespace ChordAnalyser.UI
         #region private
         private MyPanel pnlCanvas;
         private Font m_font;
-        private StringFormat sf;
+        private StringFormat sf = new StringFormat();
 
         // Midifile characteristics
         private double _duration = 0;  // en secondes
         private int _totalTicks = 0;
-        private int _bpm = 0;
+        //private int _bpm = 0;
         private double _ppqn;
         private int _tempo;
         private int _measurelen = 0;
@@ -239,7 +239,7 @@ namespace ChordAnalyser.UI
         private int _currentmeasure = -1;
         private int _currentTimeInMeasure = -1;
 
-        private string NoChord = "<Chord not found>";
+        //private string NoChord = "<Chord not found>";
         private string EmptyChord = "<Empty>";
 
         #endregion private
@@ -311,14 +311,12 @@ namespace ChordAnalyser.UI
             Color TimeLineColor = Color.White;
 
             Pen mesureSeparatorPen = new Pen(Color.Black, _MeasureSeparatorWidth);
-            Pen FillPen = new Pen(TimeLineColor, _LinesWidth);                       
+            Pen FillPen = new Pen(TimeLineColor, _LinesWidth);
             Rectangle rect;
 
             Point p1;
             Point p2;
 
-            int h = 0;
-            int H = 0;
             int W = 0;
 
             W = clip.Width;
@@ -368,8 +366,7 @@ namespace ChordAnalyser.UI
                     }
                     else
                     {
-                        // Draw other cells in white
-                        //g.DrawRectangle(FillPen, clip.X + x, clip.Y, _TimeLineHeight, _TimeLineHeight);
+                        // Draw other cells in white                        
                         g.DrawRectangle(FillPen, x, 0, _cellwidth, _cellheight);
                     }
                     x += (int)(_cellwidth) + (_LinesWidth - 1);
@@ -422,8 +419,8 @@ namespace ChordAnalyser.UI
             if (Gridchords != null)
             {
                 (string, string) ttx;
-                string ChordName = string.Empty;
-                string tx = string.Empty;
+                string ChordName;
+                string tx;
                 int Offset = 4;
 
                 float w;
@@ -434,8 +431,7 @@ namespace ChordAnalyser.UI
 
                 for (int i = 1; i <= Gridchords.Count; i++)
                 {
-                    // Chord name
-                                       
+                    // Chord name                                       
                     ttx = Gridchords[i];
                     
                     ChordName = ttx.Item1;
@@ -467,12 +463,12 @@ namespace ChordAnalyser.UI
                         w = MeasureString(_fontChord.FontFamily, ChordName, _fontChord.Size);
                         h = MeasureStringHeight(_fontChord.FontFamily, ChordName, _fontChord.Size);
 
-                    // Move to 2nd part of the measure
+                        // Move to 2nd part of the measure
                         int z = 0;
                         if (sequence1.Numerator % 2 == 0)
                             z = ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator / 2;
                         else
-                            z = ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator / 3;
+                            z = 2 * ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator / 3;
                             
                         // If empty, draw symbol
                         if (ChordName == EmptyChord)

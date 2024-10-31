@@ -353,8 +353,18 @@ namespace Sanford.Multimedia.Midi
 
         public MidiNote findMidiNote(int number, int ticks)
         {
-            MidiNote m = notes.Find(u => u.Number == number && u.StartTime == ticks);
-            return m;
+            
+            try
+            {
+                MidiNote m = notes.Find(u => u != null && u.Number == number && u.StartTime == ticks);
+                return m;
+            }
+            catch (Exception e) 
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+            
         }
 
         public MidiNote findPreviousMidiNote(int ticks)
@@ -406,9 +416,10 @@ namespace Sanford.Multimedia.Midi
 
         #region tempo
         /// <summary>
-        /// Find Tempo Message starting from ticks
+        /// Find Tempo Message starting from ticks and having value tempo
         /// </summary>
         /// <returns></returns>
+        /*
         private int findTempo(int ticks)
         {
             int id = 0;
@@ -423,7 +434,76 @@ namespace Sanford.Multimedia.Midi
                     MetaMessage Msg = (MetaMessage)current.MidiMessage;
                     if (Msg.MetaType == MetaType.Tempo)
                     {
-                        if (current.AbsoluteTicks >= ticks)
+                        if (current.AbsoluteTicks == ticks)
+                        {
+                            return id;
+                        }
+                        else
+                        {
+                            #region next
+                            if (current.Next != null)
+                            {
+                                current = current.Next;
+                                id++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            #endregion next
+                        }
+                    }
+                    else
+                    {
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                            id++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion next                            
+                    }
+                }
+                else
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                        id++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion next 
+                }
+            }
+            return -1;
+        }
+        */
+        private int findTempoValue(int ticks, int tempo)
+        {
+            int id = 0;
+            MidiEvent current = GetMidiEvent(0);
+
+            while (current.AbsoluteTicks <= Length)
+            {
+                IMidiMessage a = current.MidiMessage;
+
+                if (a.MessageType == MessageType.Meta)
+                {
+                    MetaMessage Msg = (MetaMessage)current.MidiMessage;
+                    if (Msg.MetaType == MetaType.Tempo)
+                    {
+                        byte[] data = Msg.GetBytes();
+                        int _tempo = ((data[0] << 16) | (data[1] << 8) | data[2]);
+
+                        if (current.AbsoluteTicks == ticks && _tempo == tempo)
                         {
                             return id;
                         }
@@ -476,18 +556,17 @@ namespace Sanford.Multimedia.Midi
         }
 
         /// <summary>
-        /// Remove Tempo Message
+        /// Remove Tempo Message at exact location ticks
         /// </summary>
-        public void RemoveTempoEvent(int ticks)
+        public void RemoveTempoEvent(int ticks, int tempo)
         {
-            int i = findTempo(ticks);
+            int i = findTempoValue(ticks, tempo);
 
             while (i != -1)
             {
                 RemoveAt(i);
-                i = findTempo(ticks);
+                i = findTempoValue(ticks, tempo);
             }
-
         }
 
         #endregion tempo
@@ -1341,6 +1420,79 @@ namespace Sanford.Multimedia.Midi
             bytes[2] = split[0]; //176;
             MetaMessage metamessage = new MetaMessage(MetaType.Tempo, bytes);
             Insert(ticks, metamessage);
+        }
+
+        /// <summary>
+        /// Get the list of all tempo changes in the track
+        /// Format: (ticks, tempo value)
+        /// </summary>
+        /// <returns>List</returns>
+        public List<(int,int)> GetTemposList()
+        {
+            List<(int,int)> l = new List<(int,int)> ();
+
+            int id = 0;
+            int _tempoplayed;
+            MidiEvent current = GetMidiEvent(0);
+
+            while (current.AbsoluteTicks <= Length)
+            {
+                IMidiMessage a = current.MidiMessage;
+                if (a.MessageType == MessageType.Meta)
+                {
+                    MetaMessage msg = (MetaMessage)a;
+                    if (msg.MetaType == MetaType.Tempo)
+                    {
+                        byte[] data = msg.GetBytes();
+                        _tempoplayed = ((data[0] << 16) | (data[1] << 8) | data[2]);                        
+                        l.Add((current.AbsoluteTicks, _tempoplayed));
+
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                            id++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion next 
+                    }
+                    else
+                    {
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                            id++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion next      
+                    }
+                }
+                else
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                        id++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion next      
+                }
+            }
+            
+
+
+            return l;
         }
 
         public void insertKeysignature(int numerator, int denominator)

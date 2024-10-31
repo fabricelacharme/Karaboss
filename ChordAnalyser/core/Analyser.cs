@@ -9,7 +9,11 @@ namespace ChordAnalyser
 
         public Analyser() { }
 
-
+        /// <summary>
+        /// Determine the letter of a chord 
+        /// </summary>
+        /// <param name="notes"></param>
+        /// <returns>string</returns>
         public string determine(List<int> notes)
         {
 
@@ -31,6 +35,12 @@ namespace ChordAnalyser
         {
             return letters[single[0]];
         }
+        
+        /// <summary>
+        /// Return the letter of a chord made with 3 notes (triad), major or minor (+ m)
+        /// </summary>
+        /// <param name="triad"></param>
+        /// <returns></returns>
         private string determine_triad(List<int> triad)
         {
             string res = string.Empty;
@@ -46,6 +56,11 @@ namespace ChordAnalyser
             return res;
         }
 
+        /// <summary>
+        /// Return the letter of a chord plus 7
+        /// </summary>
+        /// <param name="seventh"></param>
+        /// <returns></returns>
         private string determine_seventh(List<int> seventh)
         {
             string res = string.Empty;
@@ -66,7 +81,11 @@ namespace ChordAnalyser
             return res;
         }
 
-
+        /// <summary>
+        /// notes.count is greater than 4
+        /// </summary>
+        /// <param name="others"></param>
+        /// <returns></returns>
         private string determine_others(List<int> others)
         {
             string res = string.Empty;
@@ -86,6 +105,11 @@ namespace ChordAnalyser
             return res;
         }
 
+        /// <summary>
+        /// Return true if Major Chord, false otherwise
+        /// </summary>
+        /// <param name="notes"></param>
+        /// <returns></returns>
         static bool IsMajorChord(List<int> notes)
         {
             // Un coup ça marche sans % 12, un coup avec
@@ -96,6 +120,12 @@ namespace ChordAnalyser
             return (notes[1] - notes[0] == 4) && (notes[2] - notes[0] == 7);
         }
 
+
+        /// <summary>
+        /// Return true if minor chord, false otherwise
+        /// </summary>
+        /// <param name="notes"></param>
+        /// <returns></returns>
         static bool IsMinorChord(List<int> notes)
         {
             if (notes.Count < 3) return false;

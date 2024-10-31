@@ -277,10 +277,10 @@
     <value>NoControl</value>
   </data>
   <data name="btnDeleteAllLyrics.Location" type="System.Drawing.Point, System.Drawing">
-    <value>405, 62</value>
+    <value>248, 58</value>
   </data>
   <data name="btnDeleteAllLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>130, 23</value>
+    <value>158, 23</value>
   </data>
   <data name="btnDeleteAllLyrics.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
@@ -310,7 +310,7 @@
     <value>NoControl</value>
   </data>
   <data name="btnInsertParagraph.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 33</value>
+    <value>3, 27</value>
   </data>
   <data name="btnInsertParagraph.Size" type="System.Drawing.Size, System.Drawing">
     <value>130, 23</value>
@@ -320,6 +320,9 @@
   </data>
   <data name="btnInsertParagraph.Text" xml:space="preserve">
     <value>New paragraph (\)</value>
+  </data>
+  <data name="btnInsertParagraph.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="btnInsertParagraph.ToolTip" xml:space="preserve">
     <value>Insert a new paragraph</value>
@@ -337,7 +340,7 @@
     <value>1</value>
   </data>
   <data name="BtnFontMoins.Location" type="System.Drawing.Point, System.Drawing">
-    <value>440, 93</value>
+    <value>201, 92</value>
   </data>
   <data name="BtnFontMoins.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 23</value>
@@ -364,7 +367,7 @@
     <value>2</value>
   </data>
   <data name="BtnFontPlus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>405, 93</value>
+    <value>201, 67</value>
   </data>
   <data name="BtnFontPlus.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 23</value>
@@ -402,6 +405,9 @@
   <data name="btnInsertCr.Text" xml:space="preserve">
     <value>Insert a Line Break (/)</value>
   </data>
+  <data name="btnInsertCr.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
   <data name="btnInsertCr.ToolTip" xml:space="preserve">
     <value>Insert a Line break</value>
   </data>
@@ -418,7 +424,7 @@
     <value>4</value>
   </data>
   <data name="btnSpaceRight.Location" type="System.Drawing.Point, System.Drawing">
-    <value>405, 33</value>
+    <value>149, 92</value>
   </data>
   <data name="btnSpaceRight.Size" type="System.Drawing.Size, System.Drawing">
     <value>35, 23</value>
@@ -445,7 +451,7 @@
     <value>5</value>
   </data>
   <data name="btnSpaceLeft.Location" type="System.Drawing.Point, System.Drawing">
-    <value>405, 3</value>
+    <value>149, 67</value>
   </data>
   <data name="btnSpaceLeft.Size" type="System.Drawing.Size, System.Drawing">
     <value>35, 23</value>
@@ -478,7 +484,7 @@
     <value>NoControl</value>
   </data>
   <data name="optFormatLyrics.Location" type="System.Drawing.Point, System.Drawing">
-    <value>157, 36</value>
+    <value>149, 27</value>
   </data>
   <data name="optFormatLyrics.Size" type="System.Drawing.Size, System.Drawing">
     <value>87, 17</value>
@@ -505,7 +511,7 @@
     <value>7</value>
   </data>
   <data name="btnInsertText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 63</value>
+    <value>3, 67</value>
   </data>
   <data name="btnInsertText.Size" type="System.Drawing.Size, System.Drawing">
     <value>130, 23</value>
@@ -515,6 +521,9 @@
   </data>
   <data name="btnInsertText.Text" xml:space="preserve">
     <value>&amp;Insert text line</value>
+  </data>
+  <data name="btnInsertText.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="btnInsertText.ToolTip" xml:space="preserve">
     <value>Insert a new line (text)</value>
@@ -535,7 +544,7 @@
     <value>True</value>
   </data>
   <data name="optFormatText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>157, 6</value>
+    <value>149, 6</value>
   </data>
   <data name="optFormatText.Size" type="System.Drawing.Size, System.Drawing">
     <value>81, 17</value>
@@ -573,6 +582,9 @@
   <data name="btnDelete.Text" xml:space="preserve">
     <value>&amp;Delete line</value>
   </data>
+  <data name="btnDelete.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
   <data name="btnDelete.ToolTip" xml:space="preserve">
     <value>Delete current line</value>
   </data>
@@ -595,16 +607,19 @@
     <value>NoControl</value>
   </data>
   <data name="btnPlay.Location" type="System.Drawing.Point, System.Drawing">
-    <value>263, 91</value>
+    <value>248, 92</value>
   </data>
   <data name="btnPlay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>130, 23</value>
+    <value>158, 23</value>
   </data>
   <data name="btnPlay.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
   </data>
   <data name="btnPlay.Text" xml:space="preserve">
     <value>&amp;Play from cursor</value>
+  </data>
+  <data name="btnPlay.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
   </data>
   <data name="btnPlay.ToolTip" xml:space="preserve">
     <value>Play starting from the current cell</value>
@@ -622,10 +637,10 @@
     <value>11</value>
   </data>
   <data name="btnView.Location" type="System.Drawing.Point, System.Drawing">
-    <value>263, 3</value>
+    <value>248, 27</value>
   </data>
   <data name="btnView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>130, 23</value>
+    <value>158, 23</value>
   </data>
   <data name="btnView.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -655,10 +670,10 @@
     <value>NoControl</value>
   </data>
   <data name="btnSave.Location" type="System.Drawing.Point, System.Drawing">
-    <value>263, 33</value>
+    <value>248, 3</value>
   </data>
   <data name="btnSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>130, 23</value>
+    <value>158, 23</value>
   </data>
   <data name="btnSave.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -1342,10 +1357,10 @@
     <value>0</value>
   </data>
   <data name="cbSelectTrack.Location" type="System.Drawing.Point, System.Drawing">
-    <value>85, 3</value>
+    <value>120, 3</value>
   </data>
   <data name="cbSelectTrack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>240, 21</value>
+    <value>380, 21</value>
   </data>
   <data name="cbSelectTrack.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>

@@ -47,6 +47,7 @@
     <Compile Include="MusicXml\Domain\Backup.cs" />
     <Compile Include="MusicXml\Domain\Clef.cs" />
     <Compile Include="MusicXml\Domain\Encoding.cs" />
+    <Compile Include="MusicXml\Domain\Ending.cs" />
     <Compile Include="MusicXml\Domain\Forward.cs" />
     <Compile Include="MusicXml\Domain\Identification.cs" />
     <Compile Include="MusicXml\Domain\Key.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="MusicXml\Domain\Note.cs" />
     <Compile Include="MusicXml\Domain\Part.cs" />
     <Compile Include="MusicXml\Domain\Pitch.cs" />
+    <Compile Include="MusicXml\Domain\Barline.cs" />
     <Compile Include="MusicXml\Domain\Score.cs" />
     <Compile Include="MusicXml\Domain\Time.cs" />
     <Compile Include="MusicXml\MusicXmlParser.cs" />

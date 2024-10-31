@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sanford.Multimedia.Midi;
 using ChordAnalyser;
+using static System.Collections.Specialized.BitVector32;
 
 namespace ChordsAnalyser
 {
@@ -24,10 +25,13 @@ namespace ChordsAnalyser
 
         #region properties
 
+        // Old Search (by half measure)
         public Dictionary<int, (string, string)> Gridchords { get; set; }
-        
-        // New search
-        public Dictionary<int, List<string>> GridBeatChords { get; set; }
+
+        // New search (by beat)
+        //public Dictionary<int, List<string>> GridBeatChords { get; set; }
+        public Dictionary<int, string> GridBeatChords { get; set; }
+
         private Dictionary<int, List<int>> dictnotes = new Dictionary<int, List<int>>();
 
         #endregion properties
@@ -38,7 +42,7 @@ namespace ChordsAnalyser
         // Midifile characteristics
         private double _duration = 0;  // en secondes
         private int _totalTicks = 0;
-        private int _bpm = 0;
+        //private int _bpm = 0;
         private double _ppqn;
         private int _tempo;
         private int _measurelen = 0;
@@ -72,12 +76,15 @@ namespace ChordsAnalyser
                 Gridchords[i] = (NoChord, NoChord);
             }
 
-            SearchMethod();
-            //SearchMethod2();                        
+            // Search by half measure
+            SearchByHalfMeasureMethod();
+            
+            // Search by beat
+            SearchByBeatMethod();                        
         }
 
         
-        private void SearchMethod()
+        private void SearchByHalfMeasureMethod()
         {
             // Search notes in measures
             SearchByHalfMeasure();
@@ -91,7 +98,7 @@ namespace ChordsAnalyser
         }
 
 
-        private void SearchMethod2()
+        private void SearchByBeatMethod()
         {
             SearchByBeat();
         }
@@ -108,11 +115,13 @@ namespace ChordsAnalyser
             int beats = (int)Math.Ceiling(_totalTicks / (float)beatDuration);
 
             // init dictionary
-            GridBeatChords = new Dictionary<int, List<string>>();
+            //GridBeatChords = new Dictionary<int, List<string>>();
+            GridBeatChords = new Dictionary<int, string>();
             for (int i = 1; i <= beats; i++)
             {
                 dictnotes[i] = new List<int>();
-                GridBeatChords[i] = null;
+                //GridBeatChords[i] = null;
+                GridBeatChords[i] = EmptyChord;
             }
 
             //Search notes
@@ -125,6 +134,8 @@ namespace ChordsAnalyser
                         measure = DetermineMeasure(note.StartTime);
                         timeinmeasure = (int)GetTimeInMeasure(note.StartTime);
                         beat = 1 + (measure - 1) * nbBeatsPerMeasure + timeinmeasure;
+                        
+                        // Harvest notes belanging to each beat
                         dictnotes[beat].Add(note.Number);
                     }
                 }
@@ -137,16 +148,10 @@ namespace ChordsAnalyser
 
         }
 
-        private void SearchBeat(int beat)
-        {
-            if (dictnotes[beat].Count == 0)
-            {
-                if (GridBeatChords[beat] == null)
-                {
-                    GridBeatChords[beat] = new List<string> { EmptyChord };
-                }
-            }
-            else
+        // Search chord for each beat
+        private void SearchBeat2(int beat)
+        {            
+            if (dictnotes[beat].Count > 0)
             {
                 List<string> notletters = TransposeToLetterChord(dictnotes[beat]);
                 
@@ -176,15 +181,120 @@ namespace ChordsAnalyser
                 if (lroot != null)
                 {
                     string res = Analyser.determine(lroot);
+                    GridBeatChords[beat] = res;                    
+                }
+                else
+                {
+                    GridBeatChords[beat] = NoChord;
+                }
 
-                    if (GridBeatChords[beat] == null)
+            }
+        }
+
+
+        private void SearchBeat(int beat)
+        {
+            if (dictnotes[beat].Count > 0)
+            {
+                List<string> notletters = TransposeToLetterChord(dictnotes[beat]);
+                // Dictionary with notes sorted by apparition
+                Dictionary<string, int> dictbestnotes = GetBestNotes(notletters);
+
+                // Remove doubles
+                // TODO
+                // Notes appearing more frequently than others should be favorised
+                // Pb found: a chord C with many (C, E, G) and just a single "A" note is viewed as a "Am7" chord (A, C, E, G) 
+
+                // Ex
+                // (C, 10), (G, 5), (E, 8), (A, 2)
+                // => chord C, E, G
+                // If more than 3 notes => search first 3 more frequent notes
+                var sortedDict = from entry in dictbestnotes orderby entry.Value descending select entry;
+                dictbestnotes = sortedDict.ToDictionary<KeyValuePair<string, int>, string, int>(pair => pair.Key, pair => pair.Value);
+
+                List<string> bestnotletters = new List<string>();
+                //List<string> bestnotlettersbis = new List<string>();
+                List<string> bestnotletters4 = new List<string>();
+
+                // Hard selection => bestnotletters
+                //List<string> v = dictbestnotes.Take(3);
+
+                int moy = 0;
+                int lastvalue = 0;
+                if (dictbestnotes.Count >= 3)
+                {
+                    for (int i = 0; i < 3; i++)
                     {
-                        GridBeatChords[beat] = new List<string> { res };
+                        bestnotletters.Add(dictbestnotes.ElementAt(i).Key);
+                        //bestnotlettersbis.Add(dictbestnotes.ElementAt(i).Key);
+                        bestnotletters4.Add(dictbestnotes.ElementAt(i).Key);
+                        moy += dictbestnotes.ElementAt(i).Value;
                     }
-                    else
+                    moy = moy / 3;
+                    lastvalue = dictbestnotes.ElementAt(2).Value;
+
+                    if (dictbestnotes.Count > 3)
                     {
-                        GridBeatChords[beat].Add(res);
+                        /*
+                        if (lastvalue > 1)
+                        {
+                            for (int i = 3; i < dictbestnotes.Count; i++)
+                            {
+                                if (dictbestnotes.ElementAt(i).Value >= lastvalue - 1)
+                                    bestnotletters.Add(dictbestnotes.ElementAt(i).Key);
+                            }
+                        }
+                        */
+                        for (int i = 3; i < dictbestnotes.Count; i++)
+                        {
+                            if (dictbestnotes.ElementAt(i).Value >= moy)
+                                bestnotletters.Add(dictbestnotes.ElementAt(i).Key);
+                        }
+
+                        bestnotletters4.Add(dictbestnotes.ElementAt(3).Key);
+                        //bestnotlettersbis[2] = bestnotletters4[3];
                     }
+                }
+
+                // Try best notes, if not, try all notes                
+                //notletters = notletters.Distinct().ToList();
+                //notletters = bestnotletters;
+                List<int> lroot = null;
+
+                // Try with best notes
+                if (bestnotletters.Count > 2)
+                    lroot = GetChord(bestnotletters);
+
+                /*
+                if (lroot == null && bestnotlettersbis.Count > 2)
+                {
+                    lroot = GetChord(bestnotlettersbis);
+                    if (lroot != null)
+                        Console.WriteLine("************ best note bis succeeded");
+                }
+                */
+
+                if (lroot == null && bestnotletters4.Count == 4)
+                    lroot = GetChord(bestnotletters4);
+
+                if (lroot == null)
+                {
+                    // Try with all notes
+                    notletters = notletters.Distinct().ToList();
+                    if (notletters.Count > 2)
+                        lroot = GetChord(notletters);
+                }
+
+                             
+
+                if (lroot != null)
+                {
+                    string res = Analyser.determine(lroot);
+                    GridBeatChords[beat] = res;
+                }
+                else
+                {
+                    GridBeatChords[beat] = NoChord;
                 }
 
             }
@@ -193,7 +303,7 @@ namespace ChordsAnalyser
 
 
 
-        #region Search method
+        #region Search by half measure method
 
         /// <summary>
         /// Harvest notes
@@ -224,7 +334,10 @@ namespace ChordsAnalyser
                             {
                                 float st = GetTimeInMeasure(note.StartTime);
 
-                                if (st < sequence1.Denominator / 2)
+
+                                // Ce n'est pas plutot le numérateur ???????????????????????????????????????????????????????
+                                //if (st < sequence1.Denominator / 2)
+                                if (st < sequence1.Numerator / 2)
                                 {
                                     // add note to first part of the measure
                                     lstfirstmidiNotes.Add(note.Number);
@@ -657,7 +770,7 @@ namespace ChordsAnalyser
         private List<List<int>> RemoveDoubles(List<List<int>> lschords)
         {
             List<List<int>> res = new List<List<int>>();
-            int n = 0;
+            //int n = 0;
             for (int j = 0; j < lschords.Count; j++)
             {
                 List<int> lsnotes = lschords[j];
