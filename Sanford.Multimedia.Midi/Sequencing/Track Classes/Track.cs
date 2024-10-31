@@ -356,7 +356,7 @@ namespace Sanford.Multimedia.Midi
             
             try
             {
-                MidiNote m = notes.Find(u => u.Number == number && u.StartTime == ticks);
+                MidiNote m = notes.Find(u => u != null && u.Number == number && u.StartTime == ticks);
                 return m;
             }
             catch (Exception e) 

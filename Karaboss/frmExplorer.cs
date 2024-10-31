@@ -2036,13 +2036,16 @@ namespace Karaboss
         {
             if (!string.IsNullOrEmpty(mTempDir))
             {
-                try
+                if (mTempDir == Path.GetTempPath() + "karaboss\\" && Directory.Exists(mTempDir))
                 {
-                    Directory.Delete(mTempDir, true);
-                }
-                catch (Exception ex)
-                {
-                    Console.Write(ex.Message);
+                    try
+                    {
+                        Directory.Delete(mTempDir, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Write(ex.Message);
+                    }
                 }
             }
             mTempDir = "";

@@ -327,19 +327,16 @@ namespace MusicXml
                     for (int i = 0; i < lmap.Count; i++)
                     {
                         indice = lmap[i];
-                        Measure measure = Measures[indice];
-                        
+                        if (indice < Measures.Count)
+                        {
+                            Measure measure = Measures[indice];
 
-                        if (measure.NumberOfVerses > 1)
-                        {
-                            versenumber++;
-                            bFound = true;
-                            break;
-                        }
-                        else
-                        {
-                            //Console.Write("ici");
-                            //versenumber = 0;
+                            if (measure.lstVerseNumber.Count > 1)
+                            {
+                                versenumber++;
+                                bFound = true;
+                                break;
+                            }
                         }
                     }
 
@@ -354,7 +351,7 @@ namespace MusicXml
                         { 
 
                             Measure measure = Measures[indice];
-
+                            
                             // BEGIN RECUP
                             decimal W = measure.Width;
                             int notenumber = 0;
@@ -448,7 +445,12 @@ namespace MusicXml
                                         else
                                             CreateMidiNote2(note, notenumber, starttime);
                                         
-                                       
+                                        /*
+                                        if (measure.Number == 4)
+                                        {
+                                            Console.WriteLine("ici");
+                                        }
+                                        */
 
                                         if (note.Lyrics.Count > 0 && note.Lyrics[0].Text != null)
                                         {
@@ -655,6 +657,10 @@ namespace MusicXml
                     // this is the forward minimum value to take into account
                     firstfwdminimum = pivot;
                     bIncreasePivot = false; //bReserved = false;
+                    
+                    
+                    // ********************* FAB 31/10/ A CONFIRMER *******************************
+                    versenumber = 0;
                 } 
                 else if (bIncreasePivot) // bReserved)
                 {                    

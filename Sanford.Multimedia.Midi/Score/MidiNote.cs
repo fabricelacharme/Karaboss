@@ -115,7 +115,9 @@ namespace Sanford.Multimedia.Midi
          *  If the start times are equal, compare by their numbers.
          */
         public int Compare(MidiNote x, MidiNote y)
-        {            
+        {
+            if (x == null || y == null)
+                return 0;
             if (x.StartTime == y.StartTime)
                 return x.Number - y.Number;
             else

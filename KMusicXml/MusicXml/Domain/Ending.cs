@@ -11,6 +11,7 @@ namespace MusicXml.Domain
     {
         start,
         stop,
+        repeat,
         discontinue
     }
 

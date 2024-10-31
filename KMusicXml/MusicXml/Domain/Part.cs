@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Security.Policy;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -207,7 +208,13 @@ namespace MusicXml.Domain
                         // Why ?: the measures between ending.start and ending.stop are reserved for one or several verses
                         // So we must set the list of verses to these measures
                         if (bReserved) 
-                        { 
+                        {
+                            /*
+                            if (curMeasure.Number == 5)
+                            {
+                                Console.Write("ici");
+                            }
+                            */
                             curMeasure.lstVerseNumber = lstVerseNumber;
                         }
 
@@ -299,42 +306,117 @@ namespace MusicXml.Domain
                             {
                                 
                                 // Get notes information
-                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, lstVerseNumber);
+                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose);
 
-                                if (note.Lyrics != null)
+                                if (note.Lyrics != null && note.Lyrics.Count > 0)
                                 {
-                                    int x = note.Lyrics.Count;
-                                    // Adjust field number of verses
-                                    if (curMeasure.NumberOfVerses < x)
-                                        curMeasure.NumberOfVerses = x;
-
+                                    
                                     /*
-                                    if (curMeasure.Number == 35)
+                                    if (curMeasure.Number == 4)
                                     {
                                         Console.Write("ici");
                                     }
-                                    */
+                                     */                                   
 
-                                    // Adjust list of verses
+                                    // case not reserved and normally 3 verses, but only one lyric on this note
+                                    // add a space as a lyric on missing ones
+                                    if (!bReserved &&  (note.Lyrics.Count < curMeasure.lstVerseNumber.Count))
+                                    {
+                                        int versenumber;
+                                        List<Lyric> lstlyrics = new List<Lyric>();  
+                                        for (int i = 0; i < curMeasure.lstVerseNumber.Count; i++)
+                                        {
+                                            Lyric lyric = new Lyric();
+                                            lyric.VerseNumber = curMeasure.lstVerseNumber[i];
+                                            lyric.Text = "";
+                                            lstlyrics.Add(lyric);
+                                        }
+                                        for (int i = 0; i < lstlyrics.Count; i++)
+                                        {
+                                            versenumber = lstlyrics[i].VerseNumber;
+                                            for (int j = 0; j < note.Lyrics.Count; j++)
+                                            {
+                                                if (note.Lyrics[j].VerseNumber == versenumber)
+                                                {
+                                                    lstlyrics[i] = note.Lyrics[j];
+                                                    break;
+                                                }
+                                            }                                            
+                                        }
+                                        note.Lyrics = lstlyrics;                                       
+                                    }
+
+
+                                    // Wrong curMeasure.lstVerseNumber
+                                    // Adjust list of verses of the measure to the list of lyrics of the note
                                     if (curMeasure.lstVerseNumber.Count < note.Lyrics.Count)
                                     {
-                                        lstVerseNumber = new List<int>();
+                                        List<int> tmpVerseNumber = new List<int>();
                                         foreach (Lyric lyric in note.Lyrics)
                                         {
                                             if (bReserved || note.Lyrics.Count > 1)
                                             {                                                                                                
                                                 // real number for reserved                                                 
-                                                lstVerseNumber.Add(lyric.VerseNumber);
+                                                tmpVerseNumber.Add(lyric.VerseNumber);
                                                 
                                             }
                                             else
                                             {
                                                 // 0 for non reserved
-                                                lstVerseNumber.Add(0);
+                                                tmpVerseNumber.Add(0);
                                             }
                                         }
-                                        curMeasure.lstVerseNumber = lstVerseNumber;
+                                        curMeasure.lstVerseNumber = tmpVerseNumber;
                                     }
+
+                                    // case reserved and verse numbers wrong
+                                    // Ajust for the notes (1,2) => (2,3)                                    
+                                    if (bReserved && lstVerseNumber.Count > 1 && lstVerseNumber.Count == note.Lyrics.Count)
+                                    {                                        
+                                        for (int i = 0; i < note.Lyrics.Count; i++)
+                                        {
+                                            note.Lyrics[i].VerseNumber = lstVerseNumber[i];
+
+                                        }
+                                    }
+
+                                    // Case of reserved for several verses, 
+                                    if (bReserved && note.Lyrics.Count == 1 && curMeasure.lstVerseNumber.Count > note.Lyrics.Count)
+                                    {
+                                        
+                                        // only one lyric common to all
+                                        if (note.Lyrics[0].VerseNumber == 1 && curMeasure.lstVerseNumber[0] > 1) 
+                                        {
+                                            // One lyric with versnumber = 1
+                                            note.Lyrics[0].VerseNumber = curMeasure.lstVerseNumber[0];
+                                            Lyric lyric = new Lyric();
+                                            lyric.Text =  note.Lyrics[0].Text;
+                                            lyric.Syllabic = note.Lyrics[0].Syllabic;
+                                            lyric.VerseNumber = note.Lyrics[0].VerseNumber;
+                                            
+                                            for (int i = 1; i < curMeasure.lstVerseNumber.Count; i++)
+                                            {                                                
+                                                lyric.VerseNumber = curMeasure.lstVerseNumber[i];
+                                                note.Lyrics.Add(lyric);
+                                            }
+                                        }
+                                        else if (note.Lyrics[0].VerseNumber == 2)
+                                        {
+                                            // One lyric, dedicated to a verse
+                                            // verses 2,3
+                                            // versenumber > 1 means "not the first verse"
+                                            //Console.WriteLine("ici");
+
+                                            note.Lyrics[0].VerseNumber = 3;
+
+                                            Lyric lyric = new Lyric();
+                                            lyric.Text = "";
+                                            lyric.VerseNumber = 2;
+                                            note.Lyrics.Insert(0, lyric);
+
+                                        }                                                                                                                             
+                                    }
+                                    
                                 }
 
                                 // Create new element
@@ -396,6 +478,13 @@ namespace MusicXml.Domain
                                     }                                    
                                     ending.VerseNumber = lstnumbers;
 
+                                    /*
+                                    if (curMeasure.Number == 4)
+                                    {
+                                        Console.Write("ici");
+                                    }
+                                    */
+
                                     string type = nending.Attribute("type").Value;
                                     switch (type)
                                     {
@@ -410,12 +499,15 @@ namespace MusicXml.Domain
                                             curMeasure.lstVerseNumber = ending.VerseNumber;
                                             lstVerseNumber = new List<int>();
                                             bReserved = false;
-                                            break;
+                                            break;                                        
                                         case "discontinue":
+                                            // This is located at the end of a measure
                                             ending.Type = EndingTypes.discontinue;
                                             curMeasure.lstVerseNumber = ending.VerseNumber;
-                                            lstVerseNumber = new List<int>();
-                                            bReserved = false;
+                                            //lstVerseNumber = new List<int>();
+                                            //bReserved = false;
+                                            lstVerseNumber = ending.VerseNumber;
+                                            bReserved = true;
                                             break;
                                     }
                                     // Add element
@@ -434,7 +526,9 @@ namespace MusicXml.Domain
                                     }
                                     else if (repeat.Attribute("direction").Value == "backward")
                                     {
-                                        
+                                        // Remove bReserved for the next measures
+                                        lstVerseNumber = new List<int>();
+                                        bReserved = false;
                                         barline.Direction = RepeatDirections.backward;
                                     }
                                     // Add element
@@ -477,7 +571,7 @@ namespace MusicXml.Domain
            
         }
 
-        private static Note GetNote(XElement node, int mult, int transpose, List<int> lstVerseNumbers)
+        private static Note GetNote(XElement node, int mult, int transpose)
         {
             var rest = node.Descendants("rest").FirstOrDefault();
             var step = node.Descendants("step").FirstOrDefault();

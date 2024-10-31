@@ -5538,14 +5538,7 @@ namespace Karaboss
                     AlertOutputDevice(outDeviceName);
 
                     sequence1.LoadProgressChanged += HandleLoadProgressChanged;
-                    sequence1.LoadCompleted += HandleLoadCompleted;
-
-                    // FAB 2710
-                    //MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
-                    // ===================
-                    
-                    
-                    //MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
+                    sequence1.LoadCompleted += HandleLoadCompleted;                    
 
                     // ==========================================================================
                     // Chargement du fichier midi selectionné depuis frmExplorer
