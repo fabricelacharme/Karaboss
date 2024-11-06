@@ -2988,6 +2988,9 @@ namespace Karaboss
                                 bAbortDelete = false;
                                 try
                                 {
+                                    DirectoryInfo dir = new DirectoryInfo(directory);
+                                    dir.Attributes = FileAttributes.Normal;
+                                    
                                     Directory.Delete(directory, false);
                                     iNbDelete++;
                                 }
@@ -3009,6 +3012,9 @@ namespace Karaboss
                         {
                             try
                             {
+                                DirectoryInfo dir = new DirectoryInfo(directory);
+                                dir.Attributes = FileAttributes.Normal;
+
                                 Directory.Delete(directory, false);
                                 iNbDelete++;
                             }
@@ -3030,6 +3036,18 @@ namespace Karaboss
             }
         }
 
+
+        private void setAttributesNormal(DirectoryInfo dir)
+        {
+            
+            foreach (var subDir in dir.GetDirectories())
+                setAttributesNormal(subDir);
+            foreach (var file in dir.GetFiles())
+            {
+                file.Attributes = FileAttributes.Normal;
+            }
+            dir.Attributes = FileAttributes.Normal;
+        }
 
         #endregion
 
