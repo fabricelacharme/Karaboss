@@ -40,8 +40,10 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 using Karaboss.Resources.Localization;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
@@ -72,10 +74,11 @@ namespace Karaboss
             /// <param name="song"></param>
             /// <param name="md5"></param>
             /// <param name="size"></param>
-            public MFile(string path, string filename, string song ,string md5, long size)
+            public MFile(string path, string filename, string cleansong, string song ,string md5, long size)
             {
                 this._path = path;              // Full path
                 this._filename = filename;      // file with extension (artist - song.kar)
+                this._cleansong = cleansong;
                 this._song = song;              // only song
                 this._md5 = md5;
                 this._size = size;
@@ -83,6 +86,7 @@ namespace Karaboss
 
             public string _path { get; set; }
             public string _filename { get; set; }
+            public string _cleansong { get; set; }
             public string _song { get; set; }
             public string _md5 { get; set; }
             public long _size { get; set; }
@@ -159,7 +163,13 @@ namespace Karaboss
                         else
                             song = filename;
 
-                        MFile data = new MFile(fpath, filename, song, GetMD5(fpath), size);
+
+                        string pattern = @"[ (\d)]";
+                        string replace = @"";
+                        string cleansong = Regex.Replace(song, pattern, replace);
+
+
+                        MFile data = new MFile(fpath, filename, cleansong, song, GetMD5(fpath), size);
                         lstMyFiles.Add(data);
 
 
@@ -756,9 +766,19 @@ namespace Karaboss
                 // Case of comparison between reference directory with a second directory
                 // => delete all doubles in the second directory
 
+                /*
                 for (int i = 0; i < listSelFiles.Count; i++)
                 {
                     if (listRefFiles.Any(F => F._song == listSelFiles[i]._song))
+                    {
+                        lstDoubles.Add(listSelFiles[i]._path);
+                        nb++;
+                    }
+                }
+                */
+                for (int i = 0; i < listSelFiles.Count; i++)
+                {
+                    if (listRefFiles.Any(F => F._cleansong == listSelFiles[i]._cleansong))
                     {
                         lstDoubles.Add(listSelFiles[i]._path);
                         nb++;

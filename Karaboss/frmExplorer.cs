@@ -2793,7 +2793,11 @@ namespace Karaboss
             
         }
 
-
+        /// <summary>
+        /// Search for files having the same name
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MnuToolsMngtFilesSearchSameNameComparedToReference_Click(object sender, EventArgs e)
         {
             
