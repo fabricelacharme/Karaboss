@@ -168,7 +168,7 @@
       <Value Profile="(Default)">0, 0</Value>
     </Setting>
     <Setting Name="frmExplorerSize" Type="System.Drawing.Size" Scope="User">
-      <Value Profile="(Default)">600, 600</Value>
+      <Value Profile="(Default)">1200, 800</Value>
     </Setting>
     <Setting Name="frmExplorerSplitterDistance" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">300</Value>

@@ -1913,8 +1913,8 @@ namespace Karaboss
                 if (Location.X > rect.Width)
                     Location = new Point(0, Location.Y);
                 if (Location.Y > rect.Height)
-                    Location = new Point(Location.X, 0);
-
+                    Location = new Point(Location.X, 0);                
+                                
                 Size = Properties.Settings.Default.frmExplorerSize;
             }
             #endregion
