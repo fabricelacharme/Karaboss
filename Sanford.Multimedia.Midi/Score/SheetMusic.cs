@@ -4507,6 +4507,9 @@ namespace Sanford.Multimedia.Midi.Score
         /// <param name="TempoSymbols"></param>
         static List<TempoSymbol> AddTemposToStaffs(List<Staff> staffs, List<TempoSymbol> TempoSymbols)
         {
+            if (staffs.Count == 0)
+                return null;
+
             Staff staff = staffs.FirstOrDefault();
             return staff.AddTempos(TempoSymbols);
         }
