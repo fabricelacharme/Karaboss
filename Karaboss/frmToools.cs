@@ -164,10 +164,14 @@ namespace Karaboss
                             song = filename;
 
 
+                        // Create CleanSong
+                        // Remove additional infos like (2) (3) (4) when double files...
+                        // Remove extension
                         string pattern = @"[ (\d)]";
                         string replace = @"";
                         string cleansong = Regex.Replace(song, pattern, replace);
-
+                        cleansong = cleansong.Replace(".mid", "");
+                        cleansong = cleansong.Replace(".kar", "");
 
                         MFile data = new MFile(fpath, filename, cleansong, song, GetMD5(fpath), size);
                         lstMyFiles.Add(data);
@@ -504,7 +508,8 @@ namespace Karaboss
             FileInfo fi = new FileInfo(refMD5fileName);
             if (fi.Exists)
             {
-                var diffOfDates = DateTime.Now - fi.CreationTime;
+                //var diffOfDates = DateTime.Now - fi.CreationTime;
+                var diffOfDates = DateTime.Now - fi.LastWriteTime;
                 if (diffOfDates.Days == 0)
                 {
                     string strQuestion = "You've recently scanned your library - do you want to skip this step?";
@@ -766,16 +771,7 @@ namespace Karaboss
                 // Case of comparison between reference directory with a second directory
                 // => delete all doubles in the second directory
 
-                /*
-                for (int i = 0; i < listSelFiles.Count; i++)
-                {
-                    if (listRefFiles.Any(F => F._song == listSelFiles[i]._song))
-                    {
-                        lstDoubles.Add(listSelFiles[i]._path);
-                        nb++;
-                    }
-                }
-                */
+                
                 for (int i = 0; i < listSelFiles.Count; i++)
                 {
                     if (listRefFiles.Any(F => F._cleansong == listSelFiles[i]._cleansong))
