@@ -36,6 +36,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -172,6 +173,7 @@ namespace Karaboss
                         string cleansong = Regex.Replace(song, pattern, replace);
                         cleansong = cleansong.Replace(".mid", "");
                         cleansong = cleansong.Replace(".kar", "");
+                        cleansong = RemoveDiacritics(cleansong);
 
                         MFile data = new MFile(fpath, filename, cleansong, song, GetMD5(fpath), size);
                         lstMyFiles.Add(data);
@@ -210,6 +212,16 @@ namespace Karaboss
                     }
                 }
             }
+
+            static string RemoveDiacritics(string text)
+            {
+                return string.Concat(
+                    text.Normalize(NormalizationForm.FormD)
+                    .Where(ch => CharUnicodeInfo.GetUnicodeCategory(ch) !=
+                                                  UnicodeCategory.NonSpacingMark)
+                  ).Normalize(NormalizationForm.FormC);
+            }
+
         }
 
 
