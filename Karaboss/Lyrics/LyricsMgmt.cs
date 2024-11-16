@@ -1079,8 +1079,8 @@ namespace Karaboss.Lyrics
                 }
             }            
 
-                // INSTRUMENTAL BEFORE THE FIRST LINE
-                // Add a linefeed to the first line
+            // INSTRUMENTAL BEFORE THE FIRST LINE
+            // Add a linefeed to the first line
             if (plLyrics.Count > 0)
             {
                 // Fist lyric is a Text
@@ -1262,6 +1262,9 @@ namespace Karaboss.Lyrics
             // =================================================
             // Extract chords & lyrics and format in text mode
             // =================================================
+            // Do not repeat chords
+            string _currentChordName = "<>";
+
             for (int measure = 1; measure <= NbMeasures; measure++)
             {                                
                 for (int timeinmeasure = 1; timeinmeasure <= nbBeatsPerMeasure; timeinmeasure++)
@@ -1330,9 +1333,7 @@ namespace Karaboss.Lyrics
                                 #endregion store result
                                 else if (pll.CharType == plLyric.CharTypes.Text)
                                 {
-                                    lyr = pll.Element;
-                                    //beatlyr += lyr;
-
+                                    lyr = pll.Element;                                    
 
                                     // ===========================
                                     // 2 - Search chords
@@ -1342,14 +1343,24 @@ namespace Karaboss.Lyrics
                                         // Chord 1
                                         chord = kvChord.Item1;
 
+                                        if (chord == "<Empty>")                                        
+                                            chord = "";                                                          
+                                        
+                                        if (chord != "" && chord != _currentChordName)
+                                        {
+                                            _currentChordName = chord;
+                                        }
+                                        else
+                                        {
+                                            chord = "";
+                                        }
+
                                         // Do not repeat chord on all lyrics of this beat
                                         if (lastchord == chord)
                                             chord = "";
                                         else
                                             lastchord = chord;
 
-                                        if (chord == "<Empty>")
-                                            chord = "";
                                     }
                                     else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
                                     {
@@ -1358,14 +1369,25 @@ namespace Karaboss.Lyrics
                                         {
                                             chord = kvChord.Item2;
 
+                                            if (chord == "<Empty>")                                            
+                                                chord = "";
+                                                                                        
+                                            if (chord != "" && chord!= _currentChordName)
+                                            {
+                                                _currentChordName = chord;
+                                            }
+                                            else
+                                            {
+                                                chord = "";
+                                            }
+
+
                                             // Do not repeat chord on all lyrics of this beat
                                             if (lastchord == chord)
                                                 chord = "";
                                             else
                                                 lastchord = chord;
 
-                                            if (chord == "<Empty>")
-                                                chord = "";
                                         }
                                     }
 
@@ -1425,7 +1447,6 @@ namespace Karaboss.Lyrics
                                                 beatchord += chord;
                                                 beatlyr += lyr;
                                             }
-
                                         }
                                     }
                                     // lyric, no chord
@@ -1465,8 +1486,19 @@ namespace Karaboss.Lyrics
                             {
                                 // Chord 1
                                 chord = kvChord.Item1;
+                                
                                 if (chord == "<Empty>")
                                     chord = "";
+
+                                if (chord != "" && chord != _currentChordName)
+                                {
+                                    _currentChordName = chord;
+                                }
+                                else
+                                {
+                                    chord = "";
+                                }
+
                             }
                             else if (timeinmeasure == 1 + nbBeatsPerMeasure / 2)
                             {
@@ -1474,8 +1506,19 @@ namespace Karaboss.Lyrics
                                 if (kvChord.Item2 != kvChord.Item1)
                                 {
                                     chord = kvChord.Item2;
+                                    
                                     if (chord == "<Empty>")
                                         chord = "";
+
+                                    if (chord != "" && chord != _currentChordName)
+                                    {
+                                        _currentChordName = chord;
+                                    }
+                                    else
+                                    {
+                                        chord = "";
+                                    }
+
                                 }
                             }
 

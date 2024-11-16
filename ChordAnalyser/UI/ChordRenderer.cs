@@ -1,11 +1,42 @@
-﻿using ChordAnalyser.Properties;
+﻿#region License
+
+/* Copyright (c) 2024 Fabrice Lacharme
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), to 
+ * deal in the Software without restriction, including without limitation the 
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+ * sell copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software. 
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+ * THE SOFTWARE.
+ */
+
+#endregion
+
+#region Contact
+
+/*
+ * Fabrice Lacharme
+ * Email: fabrice.lacharme@gmail.com
+ */
+
+#endregion
+
+using ChordAnalyser.Properties;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Resources;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ChordAnalyser.UI
@@ -209,7 +240,7 @@ namespace ChordAnalyser.UI
             
             for (int measure = 1; measure <= Gridchords.Count; measure++ )
             {
-                beat = 1 + (measure - 1) * numerator; // + (timeinmeasure - 1);
+                beat = 1 + (measure - 1) * numerator; 
                 string item1 = Gridchords[measure].Item1;
                 GridBeatChords[beat] = item1;
 
@@ -275,8 +306,7 @@ namespace ChordAnalyser.UI
 
             if (beat == 1)
             {
-                _currentChordName = "<>";
-                //_bFirstPlay = true;
+                _currentChordName = "<>";                
             }
 
             if (!GridBeatChords.ContainsKey(beat))
@@ -333,6 +363,7 @@ namespace ChordAnalyser.UI
             Redraw();
         }
 
+
         #region Draw Canvas
 
         /// <summary>
@@ -357,61 +388,7 @@ namespace ChordAnalyser.UI
             pnlCanvas.Paint += new PaintEventHandler(pnlCanvas_Paint);            
 
             this.Controls.Add(pnlCanvas);
-        }
-
-        #region delete me
-        /*
-
-        /// <summary>
-        /// Draw a cell by chord
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="clip"></param>
-        private void DrawGrid2(Graphics g, Rectangle clip)
-        {
-            if (Gridchords == null)
-                return;
-
-            int x = 0;
-            int _LinesWidth = 2;
-            Color TimeLineColor = Color.White;
-            Pen FillPen = new Pen(TimeLineColor, _LinesWidth);
-            
-            // 2 cells by GridChord item (2 chords by measure)
-            for (int i = 0; i < 2 * Gridchords.Count; i++)
-            {
-                g.DrawRectangle(FillPen, x, 0, _cellwidth, _cellheight);
-
-                // Increase length of control
-                x += (int)(_cellwidth) + (_LinesWidth - 1);
-            }
-
-            maxStaffWidth = x;
-        }
-
-        private void DrawGrid(Graphics g, Rectangle clip)
-        {
-            if (Gridchords == null)
-                return;
-
-            int x = 0;
-            int _LinesWidth = 2;
-            Color TimeLineColor = Color.White;
-            Pen FillPen = new Pen(TimeLineColor, _LinesWidth);
-
-            // 1 cells by Beat 
-            for (int i = 1; i <= GridBeatChords.Count; i++)
-            {
-                g.DrawRectangle(FillPen, x, 0, _cellwidth, _cellheight);
-
-                // Increase length of control
-                x += (int)(_cellwidth) + (_LinesWidth - 1);
-            }
-
-            maxStaffWidth = x;
-        }
-        */
-        #endregion delete me
+        }      
 
         #endregion Draw Canvas
 
@@ -423,57 +400,6 @@ namespace ChordAnalyser.UI
         /// </summary>
         /// <param name="g"></param>
         /// <param name="clip"></param>
-        /*
-        private void DrawChordsByHalfMeasure(Graphics g, Rectangle clip)
-        {
-            if (Gridchords == null)
-                return;
-            
-            (string, string) ttx;
-            string ChordName;
-            string currentChordName = string.Empty;
-            int _LinesWidth = 2;
-            int x = (_LinesWidth - 1);
-
-            for (int i = 1; i <= Gridchords.Count; i++)
-            {
-                ttx = Gridchords[i];
-                
-                // First chord
-                ChordName = ttx.Item1;
-                if (ChordName != "" && ChordName != EmptyChord && ChordName != currentChordName)
-                {
-                    currentChordName = ChordName;
-
-                    // Draw Chord bitmap
-                    DrawChord(g, ChordName, x);
-
-                    // Draw chord name
-                    DrawChordName(g, ChordName, x);
-
-                }
-                // Increase x of 1 cell
-                x += (int)(_cellwidth) + _LinesWidth;
-
-                // Second chord
-                ChordName = ttx.Item2;
-                if (ChordName != "" && ChordName != EmptyChord && ChordName != currentChordName)
-                {
-                    currentChordName = ChordName;
-
-                    // Draw Chord bitmap
-                    DrawChord(g, ChordName, x);
-
-                    // Draw chord name
-                    DrawChordName(g, ChordName, x);
-                }
-                // Increase x of 1 cell
-                x += (int)(_cellwidth) + _LinesWidth;
-
-            }
-        }
-
-        */
         private void DrawChordsByBeat(Graphics g, Rectangle clip)
         {
             if (Gridchords == null)
@@ -516,12 +442,8 @@ namespace ChordAnalyser.UI
                     x += (int)(_cellwidth) + _LinesWidth;                
 
                 }
-            }
-
-            
+            }            
         }
-
-
 
 
         /// <summary>
@@ -559,8 +481,7 @@ namespace ChordAnalyser.UI
                         Bitmap bmp = new Bitmap(chordImage, newSize);
                         
                         middlex = pos + (int)(_cellwidth - w) / 2;
-                        middley = (int)((_cellheight - h) / 2);
-                        //middley = (int)((Height - h) / 3);
+                        middley = (int)((_cellheight - h) / 2);                        
 
                         Point p = new Point(middlex, middley);
 
@@ -603,8 +524,6 @@ namespace ChordAnalyser.UI
         #endregion draw chords
 
 
-
-
         #region paint
 
         private void pnlCanvas_Paint(object sender, PaintEventArgs e)
@@ -621,10 +540,7 @@ namespace ChordAnalyser.UI
                 Graphics g = e.Graphics;
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-
-                g.TranslateTransform(-clip.X, 0);
-
-                //DrawGrid(g, clip);
+                g.TranslateTransform(-clip.X, 0);                
 
                 DrawChordsByBeat(g, clip);
 
@@ -654,7 +570,7 @@ namespace ChordAnalyser.UI
         #endregion Protected events
 
 
-        #region mesures
+        #region mesure strings
         /// <summary>
         /// Measure the length of a string
         /// </summary>
@@ -708,7 +624,7 @@ namespace ChordAnalyser.UI
             return ret;
         }
 
-        #endregion mesures
+        #endregion mesure strings
 
     }
 }

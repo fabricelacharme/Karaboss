@@ -84,8 +84,7 @@ namespace ChordAnalyser.UI
 
         // Midifile characteristics
         private double _duration = 0;  // en secondes
-        private int _totalTicks = 0;
-        //private int _bpm = 0;
+        private int _totalTicks = 0;        
         private double _ppqn;
         private int _tempo;
         private int _measurelen = 0;
@@ -317,7 +316,7 @@ namespace ChordAnalyser.UI
                 g.DrawRectangle(FillPen, x, y, _cellwidth, _cellheight);
                 rect = new Rectangle(x, 0, (int)(_cellwidth), (int)(_cellheight));
                 g.FillRectangle(new SolidBrush(Color.Gray), rect);
-                x += _beatwidth; //(int)(_cellwidth) + (_LinesWidth - 1);
+                x += _beatwidth; 
             }
 
             // =====================================================
@@ -335,7 +334,7 @@ namespace ChordAnalyser.UI
 
             // init variables
             compteurmesure = 0;
-            x = _measurewidth; //((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator;
+            x = _measurewidth; 
 
             // ********************
             // Begin at 2nd place
@@ -345,7 +344,7 @@ namespace ChordAnalyser.UI
                 compteurmesure++;
                 if (compteurmesure > (_nbcolumns - 1))   // 4 measures per line
                 {
-                    y += _beatheight; //(int)_cellheight + 1;
+                    y += _beatheight; 
                     x = 0;
                     compteurmesure = 0;
                 }
@@ -367,7 +366,7 @@ namespace ChordAnalyser.UI
                         // Draw other celles in white                        
                         g.DrawRectangle(FillPen, x, y, _cellwidth, _cellheight);
                     }
-                    x += _beatwidth; //(int)(_cellwidth) + (_LinesWidth - 1);
+                    x += _beatwidth; 
                 }
             }
 
@@ -375,7 +374,7 @@ namespace ChordAnalyser.UI
             // ====================================================
             // Ligne noire sur la dernière case de chaque mesure
             // ====================================================                        
-            x = _measurewidth; //sequence1.Numerator * ((int)(_cellwidth) + (_LinesWidth - 1));
+            x = _measurewidth; 
             y = 0;
             compteurmesure = -1;
 
@@ -384,8 +383,8 @@ namespace ChordAnalyser.UI
                 compteurmesure++;
                 if (compteurmesure > _nbcolumns - 1)
                 {
-                    y += _beatheight; //(int)_cellheight + 1;
-                    x = _measurewidth; //sequence1.Numerator * ((int)(_cellwidth) + (_LinesWidth - 1));
+                    y += _beatheight; 
+                    x = _measurewidth; 
                     compteurmesure = 0;
                 }
 
@@ -394,13 +393,9 @@ namespace ChordAnalyser.UI
                     p1 = new Point(x, y);
                     p2 = new Point(x, y + (int)(_cellheight));
                     g.DrawLine(mesureSeparatorPen, p1, p2);
-                    x += _measurewidth; //sequence1.Numerator * ((int)(_cellwidth) + (_LinesWidth - 1));
+                    x += _measurewidth; 
                 }
-            }
-            
-            //maxStaffHeight = ((int)_cellsize + 1) * NbLines;            
-            //maxStaffWidth = (sequence1.Numerator * ((int)(_cellsize) + (_LinesWidth - 1))) * _nbcolumns;
-
+            }                        
         }
 
         #endregion draw canvas
@@ -445,9 +440,11 @@ namespace ChordAnalyser.UI
                 var src = new Bitmap(Resources.silence_black);
                 var bmp = new Bitmap((int)(src.Width * zoom), (int)(src.Height * zoom), PixelFormat.Format32bppPArgb);
 
+                // Filter chords
+                string _currentChordName = "<>";
+
                 for (int i = 1; i <= Gridchords.Count; i++)
                 {
-
                     compteurmesure++;
                     if (compteurmesure > _nbcolumns - 1)   // 4 measures per line
                     {
@@ -472,8 +469,9 @@ namespace ChordAnalyser.UI
                         g.DrawImage(src, new Rectangle(p1.X, y_symbol, bmp.Width, bmp.Height));
 
                     }
-                    else
+                    else if (ChordName != "" && ChordName != _currentChordName)
                     {
+                        _currentChordName = ChordName;
                         // If chord, print chord name
                         g.DrawString(ChordName, fontChord, ChordBrush, x + (_cellwidth - w) / 2, p1.Y);
                     }
@@ -488,9 +486,10 @@ namespace ChordAnalyser.UI
                     // ==============================
                     if (sequence1.Numerator % 2 == 0)
                     {
-                        if (ttx.Item1 != ttx.Item2)
+                        ChordName = ttx.Item2;
+                        if (ChordName != "" && ChordName != ttx.Item1)
                         {
-                            ChordName = ttx.Item2;
+                            
                             w = MeasureString(fontChord.FontFamily, ChordName, fontChord.Size);
 
                             int z = ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator / 2;
@@ -500,8 +499,9 @@ namespace ChordAnalyser.UI
                             {
                                 g.DrawImage(src, new Rectangle(p1.X + z, y_symbol, bmp.Width, bmp.Height));
                             }
-                            else
+                            else if (ChordName != _currentChordName)
                             {
+                                _currentChordName = ChordName;
                                 g.DrawString(ChordName, fontChord, ChordBrush, z + x + (_cellwidth - w) / 2, y_chord);
                             }
                         }
@@ -624,7 +624,7 @@ namespace ChordAnalyser.UI
         #endregion Midi
 
 
-        #region mesures
+        #region mesure strings
         /// <summary>
         /// Measure the length of a string
         /// </summary>
@@ -678,7 +678,7 @@ namespace ChordAnalyser.UI
             return ret;
         }
 
-        #endregion mesures
+        #endregion mesure strings
 
 
         #region print pdf

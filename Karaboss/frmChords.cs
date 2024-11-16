@@ -661,14 +661,15 @@ namespace Karaboss
                 Gridchords[i] = (InterpreteNote(Gridchords[i].Item1), InterpreteNote(Gridchords[i].Item2));
             }
 
-            // Display Chords in boxes
+            // Display Chords in horizontal cells
             ChordControl1.Gridchords = Gridchords;
             
+
+
+            // Display chords for guitar & piano
             ChordRendererGuitar.Gridchords = Gridchords;            
             ChordRendererPiano.Gridchords = Gridchords;            
-
-            // choice
-            //ChordRendererGuitar.GridBeatChords = GridBeatChords;
+                        
             ChordRendererGuitar.TransferByMeasureToByBeat(sequence1.Numerator, NbMeasures);
             ChordRendererPiano.TransferByMeasureToByBeat(sequence1.Numerator, NbMeasures);
 

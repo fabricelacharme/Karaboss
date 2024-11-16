@@ -42,6 +42,15 @@ using Sanford.Multimedia.Midi;
 namespace ChordAnalyser.UI
 {
 
+    /*
+     *  This control display chords horizontally on a line of cells
+     * 
+     * 
+     * 
+     * 
+     * */
+
+
     #region delegate    
     public delegate void OffsetChangedEventHandler(object sender, int value);   
     public delegate void WidthChangedEventHandler(object sender, int value);
@@ -150,14 +159,23 @@ namespace ChordAnalyser.UI
             }
         }
 
+
         // Chords
-        public Dictionary<int, (string, string)> Gridchords { get; set; }
+        // 2 chords by measure : Chord 1, chord 2
+        public Dictionary<int, (string, string)> Gridchords { get; set; }        
+
+
         //Lyrics
         public Dictionary<int,string> GridLyrics { get; set; }
-        
+
+
+        private string EmptyChord = "<Empty>";
+        private string NoChord = "<Chord not found>";
 
         private float _cellwidth;
         private float _cellheight;
+        private int _LinesWidth = 2;
+
 
         private int _columnwidth = 80;
         public int ColumnWidth
@@ -228,8 +246,7 @@ namespace ChordAnalyser.UI
 
         // Midifile characteristics
         private double _duration = 0;  // en secondes
-        private int _totalTicks = 0;
-        //private int _bpm = 0;
+        private int _totalTicks = 0;        
         private double _ppqn;
         private int _tempo;
         private int _measurelen = 0;
@@ -238,18 +255,9 @@ namespace ChordAnalyser.UI
         private int _currentpos = 0;
         private int _currentmeasure = -1;
         private int _currentTimeInMeasure = -1;
-
-        //private string NoChord = "<Chord not found>";
-        private string EmptyChord = "<Empty>";
-
+       
         #endregion private
-
-
-        #region Events
-        //public delegate void MouseDownEventHandler(object sender, MouseEventArgs e);
-        //public event EventHandler MouseDownHandler;
-
-        #endregion events
+        
 
         public ChordsControl()
         {
@@ -265,12 +273,7 @@ namespace ChordAnalyser.UI
             this.SetStyle(ControlStyles.ResizeRedraw, true);
 
         }
-
-        private void ChordControl_MouseDown(object sender, MouseEventArgs e)
-        {
-            //throw new NotImplementedException();            
-        }
-
+        
 
         #region Draw Canvas
 
@@ -301,11 +304,17 @@ namespace ChordAnalyser.UI
 
             this.Controls.Add(pnlCanvas);
         }
-              
+        
+        
+        /// <summary>
+        /// Draw a line of cells
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="clip"></param>
         private void DrawGrid(Graphics g, Rectangle clip)
         {
             int _MeasureSeparatorWidth = 2;
-            int _LinesWidth = 2;
+            //int _LinesWidth = 2;
 
             Color blackKeysColor = System.Drawing.ColorTranslator.FromHtml("#FF313131");
             Color TimeLineColor = Color.White;
@@ -395,25 +404,20 @@ namespace ChordAnalyser.UI
         #region drawnotes   
 
         /// <summary>
-        /// Draw the name of the notes
+        /// Draw the name of the notes inside the cells using dictionnary gridchords
         /// </summary>
         /// <param name="g"></param>
         /// <param name="clip"></param>
         private void DrawNotes(Graphics g, Rectangle clip)
         {
-            //SolidBrush ChordBrush = new SolidBrush(Color.Black);
-            SolidBrush ChordBrush = new SolidBrush(Color.FromArgb(29,29,29));
-            //SolidBrush MeasureBrush = new SolidBrush(Color.Red);
+            
+            SolidBrush ChordBrush = new SolidBrush(Color.FromArgb(29,29,29));            
             SolidBrush MeasureBrush = new SolidBrush(Color.FromArgb(238,17,17));
-            //SolidBrush LyricBrush = new SolidBrush(Color.Blue);
-            //SolidBrush LyricBrush = new SolidBrush(Color.FromArgb(43,87,151));
             SolidBrush LyricBrush = new SolidBrush(Color.FromArgb(45, 137, 239));
 
-            //Font _fontChord = new Font("Arial", 40 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontMeasure = new Font("Arial", 14 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontLyric = new Font("Arial", 14 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
-
-            int _LinesWidth = 2;
+            
             int x = (int)(_cellwidth) + (_LinesWidth - 1);            
 
             if (Gridchords != null)
@@ -429,6 +433,9 @@ namespace ChordAnalyser.UI
                 var src = new Bitmap(Resources.silence_black);
                 var bmp = new Bitmap((int)(src.Width * zoom), (int)(src.Height * zoom), PixelFormat.Format32bppPArgb);
 
+                // Filter chords
+                string _currentChordName = "<>";
+
                 for (int i = 1; i <= Gridchords.Count; i++)
                 {
                     // Chord name                                       
@@ -443,8 +450,10 @@ namespace ChordAnalyser.UI
                     {                        
                         g.DrawImage(src, new Rectangle(x + Offset, 10, bmp.Width, bmp.Height));
                     }
-                    else
+                    else if (ChordName != "" && ChordName != _currentChordName)
                     {                        
+                        // Draw a chord only if different than previous one
+                        _currentChordName = ChordName;
                         g.DrawString(ChordName, _fontChord, ChordBrush, x + (_cellwidth - w)/2, (_cellheight/2 - h)/2);
                     }
 
@@ -455,11 +464,10 @@ namespace ChordAnalyser.UI
                     // ===============================
                     // Second part of mesure
                     // ==============================
-                    //if (sequence1.Numerator % 2 == 0)
-                    //{
-                    if (ttx.Item1 != ttx.Item2)
+                    ChordName = ttx.Item2;
+                    if (ChordName != "" && ChordName != ttx.Item1)
                     {
-                        ChordName = ttx.Item2;
+                        
                         w = MeasureString(_fontChord.FontFamily, ChordName, _fontChord.Size);
                         h = MeasureStringHeight(_fontChord.FontFamily, ChordName, _fontChord.Size);
 
@@ -475,12 +483,12 @@ namespace ChordAnalyser.UI
                         {
                             g.DrawImage(src, new Rectangle(x + Offset + z, 10, bmp.Width, bmp.Height));
                         }
-                        else
+                        else if (ChordName != _currentChordName)
                         {
+                            _currentChordName = ChordName;
                             g.DrawString(ChordName, _fontChord, ChordBrush, z + x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
                         }
-                    }
-                    //}
+                    }                    
 
 
                     // Increment x (go to next measure)
@@ -512,6 +520,9 @@ namespace ChordAnalyser.UI
             }
         }
 
+
+
+
         #endregion drawnotes
 
 
@@ -526,7 +537,6 @@ namespace ChordAnalyser.UI
             _currentpos = pos;
             _currentmeasure = measure;
             _currentTimeInMeasure = timeinmeasure;
-
 
             this.Redraw();
         }
@@ -550,9 +560,15 @@ namespace ChordAnalyser.UI
         }
 
         #endregion Protected events
-   
+
 
         #region Mouse
+
+        private void ChordControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            //throw new NotImplementedException();            
+        }
+
         private void pnlCanvas_MouseLeave(object sender, EventArgs e)
         {
             //throw new NotImplementedException();
@@ -630,7 +646,7 @@ namespace ChordAnalyser.UI
         #endregion Midi
 
 
-        #region mesures
+        #region mesure strings
         /// <summary>
         /// Measure the length of a string
         /// </summary>
@@ -684,6 +700,6 @@ namespace ChordAnalyser.UI
             return ret;
         }
 
-        #endregion mesures
+        #endregion mesure strings
     }
 }
