@@ -71,16 +71,15 @@ namespace FlShell
         /// </summary>
         public ShellTreeView()
         {
-            m_TreeView = new TreeView();
-            //m_TreeView.AllowDrop = true;
+            m_TreeView = new TreeView();            
             m_TreeView.Dock = DockStyle.Fill;
-            m_TreeView.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        
+            SetFontScheme();
+
             m_TreeView.HideSelection = false;            
             m_TreeView.HotTracking = true;
             m_TreeView.Parent = this;
-            m_TreeView.ShowRootLines = false;
-
-            //m_TreeView.ItemHeight = 30;
+            m_TreeView.ShowRootLines = false;            
 
             m_TreeView.ShowLines = false;
             m_TreeView.FullRowSelect = true; // highlight all row (ignored if Showlines is set to true)
@@ -115,6 +114,9 @@ namespace FlShell
             m_ShellListener.ItemUpdated += new ShellItemEventHandler(m_ShellListener_ItemUpdated);
             m_ShellListener.SharingChanged += new ShellItemEventHandler(m_ShellListener_ItemUpdated);
 
+            // Accessibility : manage user size of font
+            Microsoft.Win32.SystemEvents.UserPreferenceChanged += new Microsoft.Win32.UserPreferenceChangedEventHandler(this.UserPreferenceChanged);
+
             // Setting AllowDrop to true then false makes sure OleInitialize()
             // is called for the thread: it must be called before we can use
             // RegisterDragDrop. There is probably a neater way of doing this.
@@ -127,9 +129,7 @@ namespace FlShell
 
             CreateItems();
         }
-
-      
-
+     
 
         #region Dispose
         protected override void Dispose(bool disposing)
@@ -148,7 +148,10 @@ namespace FlShell
                 m_ShellListener.ItemUpdated -= new ShellItemEventHandler(m_ShellListener_ItemUpdated);
                 m_ShellListener.SharingChanged -= new ShellItemEventHandler(m_ShellListener_ItemUpdated);
 
-              
+
+
+                Microsoft.Win32.SystemEvents.UserPreferenceChanged -= new Microsoft.Win32.UserPreferenceChangedEventHandler(this.UserPreferenceChanged);
+
             }
 
             base.Dispose(disposing);
@@ -167,6 +170,7 @@ namespace FlShell
         }
 
         #endregion
+
 
         #region Properties
 
@@ -400,6 +404,17 @@ namespace FlShell
 
 
         #region Internal
+
+        private void UserPreferenceChanged(object sender, Microsoft.Win32.UserPreferenceChangedEventArgs e)
+        {
+            SetFontScheme();
+        }
+
+        private void SetFontScheme()
+        {
+            m_TreeView.Font = new System.Drawing.Font("Segoe UI", SystemFonts.MenuFont.Size, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            
+        }
 
         void RefreshItem(TreeNode node)
         {

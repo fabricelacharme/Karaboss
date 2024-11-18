@@ -34,6 +34,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -81,9 +82,7 @@ namespace VBarControl.SideBarControl
             get { return _buttons; }
             
         }
-            
-            
-         //   = new ObservableCollection<NavButton.NavButton>();
+                                 
 
         ToolTip tipBtn = new System.Windows.Forms.ToolTip();
 
@@ -142,13 +141,16 @@ namespace VBarControl.SideBarControl
         // Constructor
         public SideBarControl()
         {
+            InitializeComponent();
+            
+            int h = (int)(60 + SystemFonts.CaptionFont.Height - 13);
+            //this.Width = (int)(90 * (SystemFonts.CaptionFont.Size / 8.25F));
 
-            InitializeComponent();          
-
-            foreach(Control ctrl in Controls)
+            foreach (Control ctrl in Controls)
             {
                 if (ctrl.GetType() == typeof(NavButton.NavButton))
                 {
+                    ctrl.Height = h;
                     _buttons.Add((NavButton.NavButton)ctrl);
                 }
             }
@@ -169,10 +171,45 @@ namespace VBarControl.SideBarControl
             // default panel is file explorer
             btnFiles.Selected = true;
 
-            btnHome.ToolTipText = _tooltiptextHome;            
+            btnHome.ToolTipText = _tooltiptextHome;
+
+
+            int y = 0;
+            // home     1 - 0
+            btnHome.Location = new System.Drawing.Point(1, y);
+
+            // search   1 - 75   => 75            
+            // files    1 - 135  => 60
+            // playlist 1 - 195  => 60
+            y += h + 15;
+            btnSearch.Location = new System.Drawing.Point(1, y);
+            y += h;
+            btnFiles.Location = new System.Drawing.Point(1, y);
+            y += h;
+            btnPlaylists.Location = new System.Drawing.Point(1, y);
+
+            // artists  1 - 270  => 75
+            y += h + 15;
+            btnConnected.Location = new System.Drawing.Point(1, y);
+
+            // play     1 - 345  => 75
+            // edit     1 - 405  => 60
+            // piano    1 - 465  => 60
+            // guitar   1 - 525  => 60
+            // chords   1 - 585  => 60
+            y += h + 15;
+            btnPlay.Location = new System.Drawing.Point(1, y);
+            y += h;
+            btnEdit.Location = new System.Drawing.Point(1, y);
+            y += h;
+            btnPianoTraining.Location = new System.Drawing.Point(1, y);
+            y += h;
+            btnGuitarTraining.Location = new System.Drawing.Point(1, y);
+            y += h;
+            btnChords.Location = new System.Drawing.Point(1, y);
         }
 
-        
+
         public void ShowButton(string Name, bool bvisible)
         {
             NavButton.NavButton btn = _buttons.Where(b => b.Name == Name).FirstOrDefault();
@@ -225,14 +262,16 @@ namespace VBarControl.SideBarControl
             DisplayGuitarTraining?.Invoke(new object(), new EventArgs());
         }
 
-        #endregion
-
         private void btnChords_Click(object sender, EventArgs e)
         {
             DisplayChords?.Invoke(new object(), new EventArgs());
         }
 
-        
+
+        #endregion
+
+
+
     }
 
 
