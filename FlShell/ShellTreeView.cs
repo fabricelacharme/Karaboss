@@ -80,6 +80,8 @@ namespace FlShell
             m_TreeView.Parent = this;
             m_TreeView.ShowRootLines = false;
 
+            //m_TreeView.ItemHeight = 30;
+
             m_TreeView.ShowLines = false;
             m_TreeView.FullRowSelect = true; // highlight all row (ignored if Showlines is set to true)
 
@@ -709,6 +711,8 @@ namespace FlShell
         private void TreeView_HandleCreated(object sender, EventArgs e)
         {
             SetWindowTheme(m_TreeView.Handle, "explorer", null);
+            // Increase row height to 18 + 6 = 24
+            m_TreeView.ItemHeight += 6;
         }
 
 
