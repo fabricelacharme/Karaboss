@@ -148,7 +148,7 @@
     <value>1, 195</value>
   </data>
   <data name="btnPlaylists.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 60</value>
+    <value>98, 60</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="btnPlaylists.TabIndex" type="System.Int32, mscorlib">
@@ -219,7 +219,7 @@
     <value>1, 135</value>
   </data>
   <data name="btnFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 60</value>
+    <value>98, 60</value>
   </data>
   <data name="btnFiles.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -286,7 +286,7 @@
     <value>1, 75</value>
   </data>
   <data name="btnSearch.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 60</value>
+    <value>98, 60</value>
   </data>
   <data name="btnSearch.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -350,7 +350,7 @@
     <value>1, 345</value>
   </data>
   <data name="btnPlay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 60</value>
+    <value>98, 60</value>
   </data>
   <data name="btnPlay.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
@@ -402,7 +402,7 @@
     <value>1, 405</value>
   </data>
   <data name="btnEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 60</value>
+    <value>98, 60</value>
   </data>
   <data name="btnEdit.TabIndex" type="System.Int32, mscorlib">
     <value>14</value>
@@ -456,7 +456,7 @@
     <value>1, 0</value>
   </data>
   <data name="btnHome.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 60</value>
+    <value>98, 60</value>
   </data>
   <data name="btnHome.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
@@ -536,7 +536,7 @@
     <value>1, 270</value>
   </data>
   <data name="btnConnected.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 60</value>
+    <value>98, 60</value>
   </data>
   <data name="btnConnected.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
@@ -609,7 +609,7 @@
     <value>1, 465</value>
   </data>
   <data name="btnPianoTraining.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 60</value>
+    <value>98, 60</value>
   </data>
   <data name="btnPianoTraining.TabIndex" type="System.Int32, mscorlib">
     <value>17</value>
@@ -670,7 +670,7 @@
     <value>1, 525</value>
   </data>
   <data name="btnGuitarTraining.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 60</value>
+    <value>98, 60</value>
   </data>
   <data name="btnGuitarTraining.TabIndex" type="System.Int32, mscorlib">
     <value>18</value>
@@ -757,7 +757,7 @@
     <value>1, 585</value>
   </data>
   <data name="btnChords.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 60</value>
+    <value>98, 60</value>
   </data>
   <data name="btnChords.TabIndex" type="System.Int32, mscorlib">
     <value>19</value>
@@ -784,7 +784,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>90, 653</value>
+    <value>100, 653</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>SideBarControl</value>

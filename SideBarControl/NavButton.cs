@@ -207,7 +207,9 @@ namespace VBarControl.NavButton
 
         private void SetFontScheme()
         {            
-            lblButton.Font = SystemFonts.CaptionFont;
+            //lblButton.Font = SystemFonts.CaptionFont;
+
+            lblButton.Font = new System.Drawing.Font("Segoe UI", SystemFonts.MenuFont.Size, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             // Change height of resource ?
             //this.Height = (int)(60 * (SystemFonts.CaptionFont.Size / 8.25F));
             lblButton.Height = lblButton.Font.Height;

@@ -113,6 +113,8 @@ namespace Karaboss
             #region sideBarControl events             
 
             // The left bar  
+            sideBarControl.Width = 100;
+
             sideBarControl.DisplayHome += new EventHandler(SideBarControl_DisplayHome);
             sideBarControl.DisplaySearch += new EventHandler(SideBarControl_DisplaySearch);
             sideBarControl.DisplayFiles += new EventHandler(SideBarControl_DisplayFiles);

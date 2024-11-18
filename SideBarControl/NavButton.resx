@@ -162,10 +162,14 @@
 </value>
   </data>
   <data name="picButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>29, 6</value>
+    <value>34, 7</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="picButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 3, 4, 3</value>
   </data>
   <data name="picButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>32, 32</value>
+    <value>37, 37</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="picButton.TabIndex" type="System.Int32, mscorlib">
@@ -184,23 +188,22 @@
     <value>0</value>
   </data>
   <data name="lblButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 41</value>
+    <value>0, 47</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="lblButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>1, 0, 1, 0</value>
   </data>
   <data name="lblButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 13</value>
+    <value>100, 15</value>
   </data>
   <data name="lblButton.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
   <data name="lblButton.Text" xml:space="preserve">
-    <value>label1</value>
+    <value>Label1</value>
   </data>
   <data name="lblButton.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
+    <value>TopCenter</value>
   </data>
   <data name="&gt;&gt;lblButton.Name" xml:space="preserve">
     <value>lblButton</value>
@@ -220,8 +223,11 @@
   <data name="pnlButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
+  <data name="pnlButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 3, 4, 3</value>
+  </data>
   <data name="pnlButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 60</value>
+    <value>103, 69</value>
   </data>
   <data name="pnlButton.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -242,10 +248,16 @@
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
+    <value>7, 15</value>
+  </data>
+  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9pt</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 3, 4, 3</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 60</value>
+    <value>103, 69</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>NavButton</value>
