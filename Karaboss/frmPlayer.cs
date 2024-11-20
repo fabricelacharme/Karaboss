@@ -251,8 +251,8 @@ namespace Karaboss
         private int beat = 0;
         private int BeatIntervall = 0;
 
-
-        private int octave = 6;
+        // Enter notes
+        private int octave = 6;        
 
         // Output device
         private OutputDevice outDevice;
@@ -903,7 +903,34 @@ namespace Karaboss
             #endregion guard            
 
             // note number according to current octave
-            int newnote = nnote + octave * 12;
+            int lastnote = sheetmusic.CurrentNote.midinote.Number;
+            int min = 100;
+            int newoctave = 0;            
+
+            // 3 choices
+            // Take min of lastnote - a, lastnote - b, lastnote - c ?
+            int a = (nnote + (octave - 1) * 12);
+            if (Math.Abs(lastnote - a) < min)
+            {
+                min = Math.Abs(lastnote - a);
+                newoctave = octave - 1;
+            }
+            
+            int b = (nnote + octave * 12);
+            if (Math.Abs(lastnote - b) < min) 
+            {
+                min = Math.Abs(lastnote - b);
+                newoctave = octave;
+            }
+            
+            int c = (nnote + (octave + 1) * 12);
+            if (Math.Abs(lastnote - c) < min)
+            {
+                min = Math.Abs(lastnote - c);
+                newoctave = octave + 1;
+            }
+
+            int newnote = nnote + newoctave * 12;                                    
 
             // Retrieve new note duration according to button selected
             float newduration = GetNewNoteDuration();
@@ -920,7 +947,7 @@ namespace Karaboss
             {
                 PlayNote(mdnote.Number, numstaff);
                 sheetmusic.UpdateCurrentNote(sheetmusic.CurrentNote.numstaff, mdnote.Number, mdnote.StartTime, true);
-
+                
                 UpdateMidiTimes();
                 DisplaySongDuration();
 
