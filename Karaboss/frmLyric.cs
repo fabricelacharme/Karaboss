@@ -830,6 +830,11 @@ namespace Karaboss
         /// <param name="e"></param>
         private void BtnFrmWords_Click(object sender, EventArgs e)
         {
+            #region check
+            if (lyrics == null)
+                return;
+            #endregion
+
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             string file = path + "\\lyrics.txt";
             lyrics = lyrics.Replace(_InternalSepParagraphs, "\r\n\r\n");

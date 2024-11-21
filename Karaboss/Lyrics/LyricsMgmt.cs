@@ -1,7 +1,41 @@
-﻿using Sanford.Multimedia.Midi;
+﻿#region License
+
+/* Copyright (c) 2024 Fabrice Lacharme
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), to 
+ * deal in the Software without restriction, including without limitation the 
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+ * sell copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software. 
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+ * THE SOFTWARE.
+ */
+
+#endregion
+
+#region Contact
+
+/*
+ * Fabrice Lacharme
+ * Email: fabrice.lacharme@gmail.com
+ */
+
+#endregion
+
+using Karaboss.Lrc.SharedFramework;
+using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -10,10 +44,16 @@ namespace Karaboss.Lyrics
     public partial class LyricsMgmt
     {
 
-
         #region private
 
+        // Default List of lyrics
         public List<plLyric> plLyrics {get; set;}
+
+        // FAB 21/11/2024 : list of the 3 different types of lyric:
+        // 0 = lyric
+        // 1 = text
+        // 2 = chord
+        public List<List<plLyric>> lstpllyrics {get; set;}
 
         private Dictionary<int, string> LyricsLines = new Dictionary<int, string>();
         private Dictionary<int, int> LyricsTimes = new Dictionary<int, int>();
@@ -96,6 +136,7 @@ namespace Karaboss.Lyrics
             _lyrictype = LyricTypes.None;
 
             plLyrics = new List<plLyric>();
+            lstpllyrics = new List<List<plLyric>>();
 
             sequence1 = sequence;
             
@@ -104,9 +145,11 @@ namespace Karaboss.Lyrics
             // Extract lyrics
             _lyrics = ExtractLyrics();
 
-            // Guess spacing or not
+            
             if (plLyrics.Count > 0)
             {
+                #region rearrange lyrics
+                // Guess spacing or not and carriage return or not
                 GetLyricsSpacingModel();
                 
                 // Add a trailing space to each syllabe
@@ -120,23 +163,24 @@ namespace Karaboss.Lyrics
                 {
                     AddCarriageReturn();                    
                 }
+                #endregion rearrange lyrics
+
+                // Search for the melody track
+                _melodytracknum = GuessMelodyTrack();
+
+                // Fix lyrics endtime to notes of the melody track end time
+                CheckTimes();
+
             }
-
-            // Search for the melody track
-            _melodytracknum = GuessMelodyTrack();
-
-            // Fix lyrics endtime to notes of the melody track end time
-            CheckTimes();
-
-            
-            //LoadLyricsPerBeat();
-
-            //LoadLyricsLines();
+                                 
         }
 
 
         #region private func
 
+        /// <summary>
+        /// Guess if lyrics have carriage return and spaces between syllabes
+        /// </summary>
         private void GetLyricsSpacingModel() 
         {
             
@@ -167,6 +211,7 @@ namespace Karaboss.Lyrics
                     btest2 = true;
                 }
 
+                // Stop loop if spaces between syllabes AND carriage return is found 
                 if(btest2 && btest1)
                     return;
             }
@@ -176,9 +221,16 @@ namespace Karaboss.Lyrics
 
         /// <summary>
         /// Add a trailing space when the lyrics have no space.
+        /// Remove the '-' character
         /// </summary>
         private void SetTrailingSpace()
         {
+            #region check
+            // Concerns only lyrics without space
+            if (_lyricsspacing != lyricsSpacings.WithoutSpace)
+                return;
+            #endregion
+
             for (int k = 0; k < plLyrics.Count; k++)
             {
                 string s = plLyrics[k].Element;
@@ -186,20 +238,17 @@ namespace Karaboss.Lyrics
                 if (plLyrics[k].CharType == plLyric.CharTypes.Text)
                 {
                     if (s != string.Empty)
-                    {
-                        //FAB 28/05/2024 : lyriques sans espace ?
-                        if (_lyricsspacing == lyricsSpacings.WithoutSpace)
+                    {                        
+                        if (!(s.StartsWith(" ") || s.EndsWith(" ")) && (!s.EndsWith("-")))
                         {
-                            if (!(s.StartsWith(" ") || s.EndsWith(" ")) && (!s.EndsWith("-")))
-                            {
-                                s += " ";
-                            }
-                            else if (s.EndsWith("-") && s.Length > 1)
-                            {
-                                s = s.Substring(0, s.Length - 1);
-                            }
-                            plLyrics[k].Element = s;
+                            s += " ";
                         }
+                        else if (s.EndsWith("-") && s.Length > 1)
+                        {
+                            s = s.Substring(0, s.Length - 1);
+                        }
+                        plLyrics[k].Element = s;
+                        
                     }
                 }
             }
@@ -207,10 +256,15 @@ namespace Karaboss.Lyrics
 
 
         /// <summary>
-        /// Add a carriage return
+        /// Add a carriage return if Uppercase, ponctuation, too long
         /// </summary>
         private void AddCarriageReturn()
         {
+            #region check
+            if (_bHasCarriageReturn)
+                return;
+            #endregion
+
             int lyricLengh = 0;
             int linelength = 30;
             int minimumlinelength = 10;
@@ -222,8 +276,7 @@ namespace Karaboss.Lyrics
             {
                 if (plLyrics[k].CharType == plLyric.CharTypes.Text) // && char.IsUpper(plLyrics[k].Element,0) )
                 {
-                    element = plLyrics[k].Element;
-                    
+                    element = plLyrics[k].Element;                    
 
                     // Check if uppercase
                     if (char.IsUpper(element, 0))
@@ -271,13 +324,13 @@ namespace Karaboss.Lyrics
                             _tmpL.Add(plLyrics[k]);
                         }
                     }
-                }
-                
+                }                
             }
 
             plLyrics = _tmpL;
         }
 
+        /*
         private float GetTimeInMeasure(int ticks)
         {
             // Num measure
@@ -287,22 +340,18 @@ namespace Karaboss.Lyrics
 
             return timeinmeasure;
         }
+        */
 
         /// <summary>
         /// Lyrics extraction & display
         /// </summary>
         private string ExtractLyrics()
         {
-            string retval = string.Empty; //ret value (lyrics)
-
-            string lyrics = string.Empty;
-            string lyricstext = string.Empty;
-
             double l_text = 1;
             double l_lyric = 1;
+            string lyrics = string.Empty;
 
-            int nbBeatsPerMeasure = sequence1.Numerator;            
-            int beatDuration = _measurelen / nbBeatsPerMeasure;
+            plLyrics = new List<plLyric>();
 
             // ----------------------------------------------------------------------
             // Objectif : comparer texte et lyriques et choisir la meilleure solution
@@ -310,36 +359,82 @@ namespace Karaboss.Lyrics
 
             // track for text
             int trktext = HasLyricsText();     // Recherche si Textes
-            if (trktext >= 0)
-            {
-                lyricstext = sequence1.tracks[trktext].TotalLyricsT;
-                l_text = lyricstext.Length;
-            }
+            if (trktext >= 0)            
+                l_text = sequence1.tracks[trktext].TotalLyricsT.Length;
+                            
 
             // track for lyrics
             int trklyric = HasLyrics();              // Recherche si lyrics  
-            if (trklyric >= 0)
-            {
-                lyrics = sequence1.tracks[trklyric].TotalLyricsL;
-                l_lyric = lyrics.Length;
-            }
+            if (trklyric >= 0)            
+                l_lyric = sequence1.tracks[trklyric].TotalLyricsL.Length;                
+            
 
+
+            // if both types of lyrics are found: text and lyric
+            // Keep only the biggest one
+            _lyrictype = LyricTypes.None;
+            
+            // Initialyze the list of plLyrics to 3 items
+            lstpllyrics.Add(new List<plLyric>());       // lyric
+            lstpllyrics.Add(new List<plLyric>());       // text
+            lstpllyrics.Add(new List<plLyric>());       // chord
+
+
+            if (trklyric >= 0)
+                lstpllyrics[0] = LoadLyricsLyric(sequence1.tracks[trklyric]);
+            if (trktext >= 0)
+                lstpllyrics[1] = LoadLyricsText(sequence1.tracks[trktext]);     
+
+
+            // If both types: lyric & text
+            // Take the bigger one
             if (trktext >= 0 && trklyric >= 0)
             {
                 // regarde lequel est le plus gros... lol                
                 if (l_lyric >= l_text)
                 {
-                    // Elimine texte et choisi les lyrics
-                    trktext = -1;
+                    // Elimine texte et choisi les lyrics                    
+                    _lyrictype = LyricTypes.Lyric;
+                    _lyricstracknum = trklyric;
+                    lyrics = sequence1.tracks[trklyric].TotalLyricsL;
                 }
                 else
                 {
-                    // Elimine lyrics et choisi les textes
-                    trklyric = -1;
+                    // Elimine lyrics et choisi les textes                    
+                    _lyrictype = LyricTypes.Text;
+                    _lyricstracknum = trktext;
+                    lyrics = sequence1.tracks[trktext].TotalLyricsT;
                 }
             }
+            else if (trktext >= 0)
+            {
+                _lyrictype = LyricTypes.Text;
+                _lyricstracknum = trktext;
+                lyrics = sequence1.tracks[trktext].TotalLyricsT;
+            }
+            else if (trklyric >= 0)
+            {
+                _lyrictype = LyricTypes.Lyric;
+                _lyricstracknum = trklyric;
+                lyrics = sequence1.tracks[trklyric].TotalLyricsL;
+            }
+            else
+            {
+                _lyrictype = LyricTypes.None;
+                lyrics = string.Empty;
+            }
 
-            // if lyrics are in text events
+            if (_lyrictype == LyricTypes.Lyric)
+                plLyrics = lstpllyrics[0];
+            else if (_lyrictype == LyricTypes.Text)
+                plLyrics = lstpllyrics[1];
+            
+
+
+
+            #region deleteme
+            /*
+            // if lyrics types are text events
             if (trktext >= 0)
             {
                 _melodytracknum = -1;
@@ -371,85 +466,149 @@ namespace Karaboss.Lyrics
 
                     plLyrics.Add(new plLyric() { CharType = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
                 }
-
                 
                 return lyrics;
             }
-            // if lyrics are in lyric events
+            // if lyrics types are lyric events
+            else if (trklyric >= 0)
+            {                
+                lyrics = sequence1.tracks[trklyric].TotalLyricsL;
+
+                _melodytracknum = -1;
+                _lyricstracknum = trklyric;
+                _lyrictype = LyricTypes.Lyric;
+                    
+
+                // Charge listes            
+                if (plLyrics != null)
+                    plLyrics.Clear();
+
+                // Remove "[]" for the letter by letter lyrics
+                Sanford.Multimedia.Midi.Track track = sequence1.tracks[_lyricstracknum];
+                for (int k = 0; k < track.Lyrics.Count - 1; k++)
+                {
+                    if (track.Lyrics[k].Element == "[]")
+                    {
+                        if (track.Lyrics[k + 1].Type == Sanford.Multimedia.Midi.Track.Lyric.Types.Text)
+                        {
+                            track.Lyrics[k + 1].Element = " " + track.Lyrics[k + 1].Element;
+                        }
+                    }
+                }
+
+                int plTicksOn = 0;
+                int plTicksOff = 0;
+                string elm = string.Empty;
+                for (int k = 0; k < track.Lyrics.Count; k++)
+                {
+                    if (track.Lyrics[k].Element != "[]")
+                    {
+                        // Stockage dans liste plLyrics
+                        plLyric.CharTypes plType = (plLyric.CharTypes)track.Lyrics[k].Type;
+                        string plElement = track.Lyrics[k].Element;
+
+                        // Start time for a lyric
+                        plTicksOn = track.Lyrics[k].TicksOn;
+
+                        // Stop time for the lyric
+                        if (plType == plLyric.CharTypes.Text)
+                            plTicksOff = plTicksOn + _measurelen;    
+
+                        plLyrics.Add(new plLyric() { CharType = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                    }
+                }
+                    
+                return lyrics;                                               
+            }
             else
             {
+                // no choice was possible
                 if (trklyric >= 0)
                 {
-                    lyrics = sequence1.tracks[trklyric].TotalLyricsL;
-
-                    _melodytracknum = -1;
-                    _lyricstracknum = trklyric;
-                    _lyrictype = LyricTypes.Lyric;
-                    
-
-                    // Charge listes            
-                    if (plLyrics != null)
-                        plLyrics.Clear();
-
-                    // Remove "[]" for the letter by letter lyrics
-                    Sanford.Multimedia.Midi.Track track = sequence1.tracks[_lyricstracknum];
-                    for (int k = 0; k < track.Lyrics.Count - 1; k++)
-                    {
-                        if (track.Lyrics[k].Element == "[]")
-                        {
-                            if (track.Lyrics[k + 1].Type == Sanford.Multimedia.Midi.Track.Lyric.Types.Text)
-                            {
-                                track.Lyrics[k + 1].Element = " " + track.Lyrics[k + 1].Element;
-                            }
-                        }
-                    }
-
-                    int plTicksOn = 0;
-                    int plTicksOff = 0;
-                    string elm = string.Empty;
-                    for (int k = 0; k < track.Lyrics.Count; k++)
-                    {
-                        if (track.Lyrics[k].Element != "[]")
-                        {
-                            // Stockage dans liste plLyrics
-                            plLyric.CharTypes plType = (plLyric.CharTypes)track.Lyrics[k].Type;
-                            string plElement = track.Lyrics[k].Element;
-
-                            // Start time for a lyric
-                            plTicksOn = track.Lyrics[k].TicksOn;
-
-                            // Stop time for the lyric
-                            if (plType == plLyric.CharTypes.Text)
-                                plTicksOff = plTicksOn + _measurelen;    
-
-                            plLyrics.Add(new plLyric() { CharType = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
-                        }
-                    }
-
-                    
-                    return lyrics;
-
+                    MessageBox.Show("This file contains lyrics events, but I am unable to use them.");
                 }
-                // no choice was possible
-                else
-                {
-                    if (trklyric >= 0)
-                    {
-                        MessageBox.Show("This file contains lyrics events, but I am unable to use them.");
-                    }
 
-                    if (trktext >= 0)
+                if (trktext >= 0)
+                {
+                    MessageBox.Show("This file contains text events, but I am unable to use them.");
+                }
+            }
+            
+            */
+            #endregion deleme
+
+            return lyrics;
+        }
+
+        private List<plLyric> LoadLyricsText(Track track)
+        {                                    
+            List<plLyric> pll = new List<plLyric>();            
+
+            int plTicksOn = 0;
+            int plTicksOff = 0;
+
+            for (int k = 0; k < track.LyricsText.Count; k++)
+            {
+                // Stockage dans liste plLyrics
+                plLyric.CharTypes plType = (plLyric.CharTypes)track.LyricsText[k].Type;
+                string plElement = track.LyricsText[k].Element;
+
+                // Start time for a lyric
+                plTicksOn = track.LyricsText[k].TicksOn;
+
+                // Stop time for a lyric (maxi 1 beat ?)
+                if (plType == plLyric.CharTypes.Text)
+                    plTicksOff = plTicksOn + _measurelen;
+
+                pll.Add(new plLyric() { CharType = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
+            }
+            
+            return pll;
+        }
+
+        private List<plLyric> LoadLyricsLyric(Track track)
+        {
+            List<plLyric> pll = new List<plLyric>();            
+
+            // Remove "[]" for the letter by letter lyrics            
+            for (int k = 0; k < track.Lyrics.Count - 1; k++)
+            {
+                if (track.Lyrics[k].Element == "[]")
+                {
+                    if (track.Lyrics[k + 1].Type == Sanford.Multimedia.Midi.Track.Lyric.Types.Text)
                     {
-                        MessageBox.Show("This file contains text events, but I am unable to use them.");
+                        track.Lyrics[k + 1].Element = " " + track.Lyrics[k + 1].Element;
                     }
                 }
             }
-            return retval;
+
+            int plTicksOn = 0;
+            int plTicksOff = 0;            
+            for (int k = 0; k < track.Lyrics.Count; k++)
+            {
+                if (track.Lyrics[k].Element != "[]")
+                {
+                    // Stockage dans liste plLyrics
+                    plLyric.CharTypes plType = (plLyric.CharTypes)track.Lyrics[k].Type;
+                    string plElement = track.Lyrics[k].Element;
+
+                    // Start time for a lyric
+                    plTicksOn = track.Lyrics[k].TicksOn;
+
+                    // Stop time for the lyric
+                    if (plType == plLyric.CharTypes.Text)
+                        plTicksOff = plTicksOn + _measurelen;
+
+                    pll.Add(new plLyric() { CharType = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                }
+            }            
+
+            return pll;
         }
 
 
         /// <summary>
-        /// Lyrics type = Text
+        /// Return track number when lyrics of type = Text are found, -1 otherwise
         /// </summary>
         /// <returns></returns>
         private int HasLyricsText()
@@ -472,7 +631,7 @@ namespace Karaboss.Lyrics
         }
 
         /// <summary>
-        /// Lyrics type = Lyric
+        /// Return track number when lyrics of type = Lyric are found, -1 otherwise
         /// </summary>
         /// <returns></returns>
         private int HasLyrics()
@@ -643,12 +802,8 @@ namespace Karaboss.Lyrics
         private int GuessMelodyTrack()
         {
             // Comparer timing pistes à pistes
-            int tracknum = _lyricstracknum;
-            //Track trackly = sequence1.tracks[tracknum];
-            int nbfound = 0;
-            //int trackm = -1;
-            int max = 0;
-            int min = 5000;
+            int tracknum = _lyricstracknum;            
+            int nbfound = 0;                       
             int nbnotes = 0;
             int diff = 0;
 
@@ -677,7 +832,6 @@ namespace Karaboss.Lyrics
 
                 if (track.ContainsNotes == true && track.MidiChannel != 9)
                 {
-
                     // comparaison 1 : nombre de notes versus nombre de lyrics
                     // Plus le nombre de notes se rapproche de celui de lyrics, plus c'est mieux
                     nbnotes = track.Notes.Count;
@@ -724,67 +878,28 @@ namespace Karaboss.Lyrics
 
                         // Il faudrait supprimer les lyrics qui n'ont pas de notes                        
                         diff = nbnotes - nbfound;
-                        if (diff < 0) diff = -diff;
-
-                        // TODO, which algoritm is the best ????
-                        bool bchoice = false;
-                        bchoice = true;
-
-                        if (bchoice)
+                        if (diff < 0) diff = -diff;                        
+                       
+                        // 1st criteria "diff": tracks having the nearest number of notes than number of lyrics
+                        if (diff < maxDiff || maxDiff == -1)
                         {
-                            // 1st criteria "diff": tracks having the nearest number of notes than number of lyrics
-                            if (diff < maxDiff || maxDiff == -1)
+                            // 2nd criteria: 
+                            // ratio between the number of notes having the same start time than lyrics 
+                            // and the number of lyrics (ideally same number, ie 1)
+                            fRatioNotes = (float)nbfound / (float)nblyrics;
+                            if (fRatioNotes > 1) fRatioNotes = 1;   // FAB 04/07 origin = 1
+                            if (fRatioNotes >= maxRatioNotes)
                             {
-                                // 2nd criteria: 
-                                // ratio between the number of notes having the same start time than lyrics 
-                                // and the number of lyrics (ideally same number, ie 1)
-                                fRatioNotes = (float)nbfound / (float)nblyrics;
-                                if (fRatioNotes > 1) fRatioNotes = 1;   // FAB 04/07 origin = 1
-                                if (fRatioNotes >= maxRatioNotes)
-                                {
-                                    maxRatioNotes = fRatioNotes;
-                                    maxDiff = diff;
-                                    trackfnote = i;
-                                }
+                                maxRatioNotes = fRatioNotes;
+                                maxDiff = diff;
+                                trackfnote = i;
                             }
-                        }
-                        else
-                        {
-                            #region delete
-
-                            if (nbfound > 0)
-                            {
-                                // Plus diff est petit, mieux c'est (différence entre nombre de notes et lyrics)
-                                // Plus nbfound est grand, mieux c'est (notes jouées au même moment que les lyrics)
-                                if (nbfound > max || diff < min)
-                                {
-
-
-                                    if (nbfound > 4 * nblyrics / 5)
-                                    {
-                                        if (nbfound - diff > max - min)
-                                        {
-                                            min = diff;
-                                            max = nbfound;
-                                            trackfnote = i;
-                                        }
-                                    }
-                                }
-                            }
-
-                            #endregion
-                        }
+                        }                                                
                     }
-
-
                 } // contains notes                
-            }
-            //return trackm;
+            }            
             return trackfnote;
         }
-
-
-
 
 
         #endregion private func

@@ -148,6 +148,33 @@ namespace Karaboss
 
             InitGridView();
             
+            int l = myLyricsMgmt.lstpllyrics[0].Count;
+            int t = myLyricsMgmt.lstpllyrics[1].Count;
+            if (l > 0 && t > 0)
+            {
+                string tx = "2 formats of lyrics are available in this file: LYRIC and TEXT";
+                if (myLyricsMgmt.LyricType == LyricTypes.Text)
+                {
+                    tx += string.Format("\n\nTEXT format was choosen by Karaboss ({0} lyrics)", t);
+                    tx += string.Format("\n\nDo you want to change to LYRIC format? ({0} lyrics)", l);
+                }
+                else if (myLyricsMgmt.LyricType == LyricTypes.Lyric)
+                {
+                    tx += string.Format("\n\nLYRIC format was choosen by Karaboss ({0} lyrics)", l);
+                    tx += string.Format("\n\nDo you want to change to TEXT format? ({0} lyrics)", t);
+                }
+                
+                if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    myLyricsMgmt.LyricType = ((myLyricsMgmt.LyricType == LyricTypes.Text) ? LyricTypes.Lyric: LyricTypes.Text);
+
+                    if (myLyricsMgmt.LyricType == LyricTypes.Lyric)
+                        plLyrics = myLyricsMgmt.lstpllyrics[0];
+                    else if (myLyricsMgmt.LyricType == LyricTypes.Text)
+                        plLyrics = myLyricsMgmt.lstpllyrics[1];
+                }
+            }
+            
             // Track containing the melody
             melodytracknum = myLyricsMgmt.MelodyTrackNum;
             if (melodytracknum != -1)
