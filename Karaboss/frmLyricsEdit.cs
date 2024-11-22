@@ -31,6 +31,7 @@
  */
 
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -42,7 +43,6 @@ using System.Text.RegularExpressions;
 using Karaboss.Resources.Localization;
 using Karaboss.Lrc.SharedFramework;
 using Karaboss.Lyrics;
-using System.Xml.Linq;
 
 
 namespace Karaboss
@@ -66,6 +66,11 @@ namespace Karaboss
 
         frmPlayer frmPlayer;
 
+        private LyricsMgmt _myLyricsMgmt;
+        //List<plLyric> _plLyrics;
+        private List<plLyric> localplLyrics;
+
+
         #region Internal lyrics separators
 
         private string _InternalSepLines = "¼";
@@ -84,10 +89,9 @@ namespace Karaboss
         private bool bfilemodified = false;
 
         private Sequence sequence1;
-        private List<plLyric> localplLyrics;
+        
 
-        private Track melodyTrack;
-        //private CLyric myLyric;
+        private Track melodyTrack;        
 
         private ContextMenuStrip dgContextMenu;        
 
@@ -112,8 +116,7 @@ namespace Karaboss
 
         // Midifile characteristics
         private double _duration = 0;  // en secondes
-        private int _totalTicks = 0;
-        //private int _bpm = 0;
+        private int _totalTicks = 0;        
         private double _ppqn;
         private int _tempo;
         private int _measurelen;
@@ -147,34 +150,38 @@ namespace Karaboss
             InitTxtResult();
 
             InitGridView();
+
             
-            int l = myLyricsMgmt.lstpllyrics[0].Count;
-            int t = myLyricsMgmt.lstpllyrics[1].Count;
+            // If both formats of lyrics are available, dispay button allowing to switch
+            _myLyricsMgmt = myLyricsMgmt;
+            int l = _myLyricsMgmt.lstpllyrics[0].Count;
+            int t = _myLyricsMgmt.lstpllyrics[1].Count;
+            btnDisplayOtherLyrics.Visible = (l > 0 && t > 0 );
+                      
             if (l > 0 && t > 0)
             {
-                string tx = "2 formats of lyrics are available in this file: LYRIC and TEXT";
+                // "Two types of lyrics format are available in this file: LYRIC and TEXT"
+                string tx = Karaboss.Resources.Localization.Strings.TwoTypesOfLyrics;                
+                
                 if (myLyricsMgmt.LyricType == LyricTypes.Text)
                 {
-                    tx += string.Format("\n\nTEXT format was choosen by Karaboss ({0} lyrics)", t);
-                    tx += string.Format("\n\nDo you want to change to LYRIC format? ({0} lyrics)", l);
+                    // "The {0} format has been choosen by Karaboss because it contains more lyrics ({1} lyrics)"
+                    tx += string.Format("\n\n" + Karaboss.Resources.Localization.Strings.FormatLyricsChoosen, "TEXT", t);
+                    // "You can change to {0} format ({1} lyrics) by pressing the button 'Display Others'."
+                    tx += string.Format("\n\n" + Karaboss.Resources.Localization.Strings.ChangeFormatLyrics, "LYRIC", l);
                 }
                 else if (myLyricsMgmt.LyricType == LyricTypes.Lyric)
                 {
-                    tx += string.Format("\n\nLYRIC format was choosen by Karaboss ({0} lyrics)", l);
-                    tx += string.Format("\n\nDo you want to change to TEXT format? ({0} lyrics)", t);
+                    tx += string.Format("\n\n" + Karaboss.Resources.Localization.Strings.FormatLyricsChoosen, "LYRIC", l);                                        
+                    tx += string.Format("\n\n" + Karaboss.Resources.Localization.Strings.ChangeFormatLyrics, "TEXT", t);
                 }
-                
-                if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    myLyricsMgmt.LyricType = ((myLyricsMgmt.LyricType == LyricTypes.Text) ? LyricTypes.Lyric: LyricTypes.Text);
 
-                    if (myLyricsMgmt.LyricType == LyricTypes.Lyric)
-                        plLyrics = myLyricsMgmt.lstpllyrics[0];
-                    else if (myLyricsMgmt.LyricType == LyricTypes.Text)
-                        plLyrics = myLyricsMgmt.lstpllyrics[1];
-                }
+                MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             
+            
+            Cursor.Current = Cursors.WaitCursor;
+
             // Track containing the melody
             melodytracknum = myLyricsMgmt.MelodyTrackNum;
             if (melodytracknum != -1)
@@ -222,6 +229,8 @@ namespace Karaboss
             DisplayTags();
 
             ResizeMe();
+
+            Cursor.Current = Cursors.Default;
         }
 
 
@@ -266,6 +275,8 @@ namespace Karaboss
                 _measurelen = sequence1.Time.Measure;
         }
       
+
+        /*
         /// <summary>
         /// Retrieve Lyrics format from frmPlayer
         /// </summary>
@@ -294,7 +305,7 @@ namespace Karaboss
             }
             melodytracknum = frmPlayer.myLyricsMgmt.MelodyTrackNum;
         }
-
+        */
 
 
 
@@ -357,6 +368,8 @@ namespace Karaboss
                 melodytracknum = cbSelectTrack.SelectedIndex - 1;
                 melodyTrack = sequence1.tracks[melodytracknum];
 
+                Cursor.Current = Cursors.WaitCursor;
+
                 InitGridView();
                 // populate cells with existing Lyrics or notes
                 PopulateDataGridView(localplLyrics);
@@ -367,6 +380,8 @@ namespace Karaboss
 
                 // Color separators
                 ColorSepRows();
+
+                Cursor.Current = Cursors.Default;
             }
         }
 
@@ -816,6 +831,7 @@ namespace Karaboss
         }
 
         #endregion gridview
+
 
         #region TxtResult
 
@@ -3169,13 +3185,79 @@ namespace Karaboss
             track.Insert(currentTick, mtMsg);
         }
 
-
-
-
-
-
         #endregion
 
-       
+
+        #region switch to other available format
+        private void btnDisplayOtherLyrics_Click(object sender, EventArgs e)
+        {
+            int l = _myLyricsMgmt.lstpllyrics[0].Count;
+            int t = _myLyricsMgmt.lstpllyrics[1].Count;
+            
+            if (l > 0 && t > 0)
+            {
+                // "Two types of lyrics format are available in this file: LYRIC and TEXT"
+                string tx = Karaboss.Resources.Localization.Strings.TwoTypesOfLyrics;
+                if (_myLyricsMgmt.LyricType == LyricTypes.Text)
+                {
+                    // "The current format is {0} ({1} lyrics)"
+                    tx += string.Format("\n\n" + Karaboss.Resources.Localization.Strings.CurrentLyricFormatIs, "TEXT", t);                    
+                    // "Would you like to change to {0} format? ({1} lyrics)"
+                    tx += string.Format("\n\n" + Karaboss.Resources.Localization.Strings.WantToChangeFormatLyrics, "LYRIC", l);
+                }
+                else if (_myLyricsMgmt.LyricType == LyricTypes.Lyric)
+                {
+                    tx += string.Format("\n\n" + Karaboss.Resources.Localization.Strings.CurrentLyricFormatIs, "LYRIC", l);
+                    tx += string.Format("\n\n" + Karaboss.Resources.Localization.Strings.WantToChangeFormatLyrics, "TEXT", t);
+                }
+
+                if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    _myLyricsMgmt.LyricType = ((_myLyricsMgmt.LyricType == LyricTypes.Text) ? LyricTypes.Lyric : LyricTypes.Text);
+
+                    if (_myLyricsMgmt.LyricType == LyricTypes.Lyric)
+                    {
+                        localplLyrics = _myLyricsMgmt.lstpllyrics[0];
+                        TextLyricFormat = LyricFormats.Lyric;
+                        optFormatLyrics.Checked = true;
+                    }
+                    else if (_myLyricsMgmt.LyricType == LyricTypes.Text)
+                    {
+                        localplLyrics = _myLyricsMgmt.lstpllyrics[1];
+                        TextLyricFormat = LyricFormats.Text;
+                        optFormatText.Checked = true;
+                    }
+
+                    DisplayOtherFormat();
+
+                }
+            }
+        }
+
+        private void DisplayOtherFormat()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            InitGridView();
+            txtResult.Text = string.Empty;
+
+            // File was modified
+            FileModified();
+
+            // populate cells with existing Lyrics or notes
+            PopulateDataGridView(localplLyrics);
+            // populate viewer
+            PopulateTextBox(localplLyrics);
+           
+
+            // Adapt height of cells to duration between syllabes
+            HeightsToDurations();
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        #endregion switch to other available format
+
+
     }
 }
