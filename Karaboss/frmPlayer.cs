@@ -5671,14 +5671,20 @@ namespace Karaboss
                 if (bfilemodified == true)
                 {
                     string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
-                    if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    DialogResult dr = MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                    if (dr == DialogResult.Cancel)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+                    else if (dr == DialogResult.Yes) 
                     {
                         e.Cancel = true;
                         // turlututu
                         bClosingRequired = true;
                         SaveFileProc();
                         return;
-                    }
+                    }                   
                 }
                 
                 // enregistre la taille et la position de la forme

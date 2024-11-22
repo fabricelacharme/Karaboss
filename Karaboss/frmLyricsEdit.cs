@@ -898,7 +898,7 @@ namespace Karaboss
                     //Load modification into local list of lyrics
                     LoadModifiedLyrics();
 
-                    // Display new lyrics in frmLyrics
+                    // Display new lyrics in frmPlayer
                     ReplaceLyrics();
 
                     // Save file
@@ -999,7 +999,7 @@ namespace Karaboss
             //Load modification into local list of lyrics
             LoadModifiedLyrics();
 
-            // Display new lyrics in frmLyrics
+            // Display new lyrics in frmPlayer
             ReplaceLyrics();
         }
 
@@ -1192,7 +1192,7 @@ namespace Karaboss
             //Load modification into local list of lyrics
             LoadModifiedLyrics();
 
-            // Display new lyrics in frmLyrics
+            // Display new lyrics in frmPlayer
             ReplaceLyrics();
 
             // Save file
@@ -1239,7 +1239,7 @@ namespace Karaboss
             //Load modification into local list of lyrics
             LoadModifiedLyrics();
 
-            // Display new lyrics in frmLyrics
+            // Display new lyrics in frmPlayer
             ReplaceLyrics();
 
             if (dgView.CurrentRow != null)
@@ -1528,7 +1528,7 @@ namespace Karaboss
             //Load modification into local list of lyrics
             LoadModifiedLyrics();
 
-            // Display new lyrics in frmLyrics
+            // Display new lyrics in frmPlayer
             ReplaceLyrics();            
             
             // save file
@@ -3228,16 +3228,21 @@ namespace Karaboss
                         optFormatText.Checked = true;
                     }
 
+                    Cursor.Current = Cursors.WaitCursor;
+
+                    // Populate Grid & Textbox
                     DisplayOtherFormat();
 
+                    // Display new lyrics in frmPlayer
+                    ReplaceLyrics();
+
+                    Cursor.Current = Cursors.Default;
                 }
             }
         }
 
         private void DisplayOtherFormat()
-        {
-            Cursor.Current = Cursors.WaitCursor;
-
+        {            
             InitGridView();
             txtResult.Text = string.Empty;
 
@@ -3252,8 +3257,7 @@ namespace Karaboss
 
             // Adapt height of cells to duration between syllabes
             HeightsToDurations();
-
-            Cursor.Current = Cursors.Default;
+            
         }
 
         #endregion switch to other available format
