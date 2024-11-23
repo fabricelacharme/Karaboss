@@ -377,27 +377,27 @@ namespace ChordAnalyser.UI
             // ====================================================
             // Ligne noire sur la dernière case de chaque mesure
             // ====================================================                        
-            //x = _measurewidth; 
-            x = 0;
+            x = _measurewidth;             
             y = 0;
-            compteurmesure = -1;
+            int nbMeasuresPerLine = 1;
 
-            for (int i = 0; i <= NbMeasures + 1; i++)
+            for (int mes = 1; mes <= NbMeasures; mes++)
             {
-                compteurmesure++;
-                if (compteurmesure > _nbcolumns - 1)
-                {
-                    y += _beatheight; 
-                    x = _measurewidth; 
-                    compteurmesure = 0;
-                }
+                // Draw a black line every _measurewidth;
+                p1 = new Point(x, y);
+                p2 = new Point(x, y + (int)(_cellheight));
+                g.DrawLine(mesureSeparatorPen, p1, p2);
+                x += _measurewidth;
 
-                if (i % _nbcolumns != 0)
-                {
-                    p1 = new Point(x, y);
-                    p2 = new Point(x, y + (int)(_cellheight));
-                    g.DrawLine(mesureSeparatorPen, p1, p2);
-                    x += _measurewidth; 
+                // Increase line counter
+                nbMeasuresPerLine++;
+
+                // change line every _nbcolumns columns
+                if (nbMeasuresPerLine > _nbcolumns)
+                {                    
+                    y += _beatheight;
+                    x = _measurewidth;                     
+                    nbMeasuresPerLine = 1;                    
                 }
             }                        
         }

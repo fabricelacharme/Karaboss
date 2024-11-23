@@ -1291,7 +1291,8 @@ namespace Karaboss
             int curmeasure = 1 + pos / _measurelen;
 
             // which line ?                                
-            int curline = (int)(Math.Ceiling((double)(curmeasure + 1) / ChordMapControl1.NbColumns));
+            //int curline = (int)(Math.Ceiling((double)(curmeasure + 1) / ChordMapControl1.NbColumns));
+            int curline = (int)(Math.Ceiling((double)(curmeasure) / ChordMapControl1.NbColumns));
 
             // Change line => offset Chord map
             if (curline != _currentLine)
