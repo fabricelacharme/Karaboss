@@ -308,6 +308,7 @@ namespace ChordAnalyser.UI
 
             FillPen = new Pen(Color.Gray, _LinesWidth);
 
+            /*
             // ********************************
             // 1st place = false measuree
             // ********************************
@@ -329,12 +330,14 @@ namespace ChordAnalyser.UI
             var src = new Bitmap(Resources.silence_white);
             var bmp = new Bitmap((int)(src.Width * zoom), (int)(src.Height * zoom), PixelFormat.Format32bppPArgb);
             g.DrawImage(src, new Rectangle(x + 10, 10, bmp.Width, bmp.Height));
-
+            */
 
 
             // init variables
-            compteurmesure = 0;
-            x = _measurewidth; 
+            //compteurmesure = 0;
+            //x = _measurewidth; 
+            compteurmesure = -1;
+            x = 0;
 
             // ********************
             // Begin at 2nd place
@@ -374,7 +377,8 @@ namespace ChordAnalyser.UI
             // ====================================================
             // Ligne noire sur la dernière case de chaque mesure
             // ====================================================                        
-            x = _measurewidth; 
+            //x = _measurewidth; 
+            x = 0;
             y = 0;
             compteurmesure = -1;
 
@@ -410,19 +414,19 @@ namespace ChordAnalyser.UI
         /// <param name="clip"></param>
         private void DrawNotes(Graphics g, Rectangle clip)
         {
-            //int max = 3;
-            int compteurmesure = 0;
-
+            int compteurmesure = -1; //0;
+            
             SolidBrush ChordBrush = new SolidBrush(Color.Black);
             SolidBrush MeasureBrush = new SolidBrush(Color.Red);
 
             Font fontChord = new Font("Arial", 20 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontMeasure = new Font("Arial", 12 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
-            //int _LinesWidth = 2;            
+                      
             
             // Start after the 1st false measure
-            int x = ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator;
+            //int x = ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator;
+            int x = 0;
             int y_chord = ((int)(_cellheight) / 2) - (fontMeasure.Height / 2);
             int y_symbol = 10;
             int y_measurenumber = (int)(_cellheight) - fontMeasure.Height;
