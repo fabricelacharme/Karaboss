@@ -47,14 +47,6 @@ namespace Karaboss.Lyrics
 
         #region private
 
-        // Default List of lyrics
-        public List<plLyric> plLyrics {get; set;}
-
-        // FAB 21/11/2024 : list of the 3 different types of lyric:
-        // 0 = lyric
-        // 1 = text
-        // 2 = chord
-        public List<List<plLyric>> lstpllyrics {get; set;}
 
         private Dictionary<int, string> LyricsLines = new Dictionary<int, string>();
         private Dictionary<int, int> LyricsTimes = new Dictionary<int, int>();
@@ -80,7 +72,22 @@ namespace Karaboss.Lyrics
 
         #endregion private
 
+
         #region public
+        // Default List of lyrics
+        public List<plLyric> plLyrics { get; set; }
+
+        // List chords + lyrics
+        public List<plLyric> plChordsAndLyrics { get; set; }
+
+        // FAB 21/11/2024 : list of the 3 different types of lyric:
+        // 0 = lyric
+        // 1 = text
+        // 2 = chord
+        public List<List<plLyric>> lstpllyrics { get; set; }
+
+
+
         private string _lyrics = string.Empty;
         public string Lyrics
         {
@@ -174,8 +181,12 @@ namespace Karaboss.Lyrics
                 // Extract chords in lyrics
                 if (HasChords(_lyrics))
                 {
-                    if (lstpllyrics != null && lstpllyrics.Count > 1)
-                        lstpllyrics[2] = ExtractChords(_lyricstracknum);
+                    if (lstpllyrics != null && lstpllyrics.Count > 1) 
+                    { 
+                        //lstpllyrics[2] = ExtractChords(_lyricstracknum);
+
+                        //plLyrics = CombineChordsAndLyrics();
+                    }
                 }
             }
                                  
@@ -667,19 +678,7 @@ namespace Karaboss.Lyrics
             if (mc.Count > 0) 
                 return true;
             else
-                return false;
-            
-            /*
-            if (_lyrictype == LyricTypes.None)
-                return false;
-            if (_lyrics == null || _lyrics.Length == 0)
-                return false;
-
-            if (_lyrics.IndexOf("[") == -1 || _lyrics.IndexOf("]") == -1)
-                return false;
-
-            return true;
-            */
+                return false;                      
         }
 
 
@@ -689,41 +688,122 @@ namespace Karaboss.Lyrics
         /// <param name="tracknum"></param>
         private List<plLyric> ExtractChords(int tracknum)
         {
-            int plTicksOn;
-            int plTicksOff;
             string element;
             string chordname;
-            plLyric.CharTypes plType = plLyric.CharTypes.Chord;
+            int L;
+            string _InternalSepLines = "¼";
+
+            plLyric.CharTypes plType; // = plLyric.CharTypes.Chord;
 
             List<plLyric> pll = new List<plLyric>();
 
             for (int i = 0; i < plLyrics.Count; i++) 
             { 
                 plLyric pl = plLyrics[i];  
+
                 if (pl.CharType == plLyric.CharTypes.Text)
                 {
                     element = pl.Element;
+                    plType = plLyric.CharTypes.Chord;
 
                     Regex chordCheck = new Regex(@"\[[^\]]+\]");
                     MatchCollection mc = chordCheck.Matches(element);
 
                     if (mc.Count > 0) 
-                    {
-                        for (int j = 0; j < mc.Count; j++) 
-                        { 
-                            chordname = mc[j].Value;
-                            // Start time for a lyric
-                            plTicksOn = pl.TicksOn;
-                            plTicksOff = pl.TicksOff;
+                    {                        
+                        //for (int j = 0; j < mc.Count; j++) 
+                        //{ 
+                        chordname = mc[0].Value;
+                        if (chordname.Length > 2)
+                        {
+                            
+                            // Remove chords on syllabe
+                            string pattern = @"\[[^\]]+\]";
+                            string replace = @"";
+                            element = Regex.Replace(element, pattern, replace);
+                            pl.Element = element;
+                            L = element.Length;
 
-                            pll.Add(new plLyric() { CharType = plType, Element = chordname, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                            // create a chord on the other list                           
+                            
+                            // Remove '[' and ']'
+                            chordname = chordname.Substring(1, chordname.Length - 2);
+                            
+                            // Adjust length of chord to length of lyric
+                            if (chordname.Length < L)
+                                chordname += new string(' ', L - chordname.Length);
+
+                            pll.Add(new plLyric() { CharType = plType, Element = chordname, TicksOn = pl.TicksOn, TicksOff = pl.TicksOff });
                         }
+                        //}
+
                     }
+                }
+                else if (pl.CharType == plLyric.CharTypes.LineFeed)
+                {
+                    plType = pl.CharType;
+                    pll.Add(new plLyric() { CharType = plType, Element = _InternalSepLines, TicksOn = pl.TicksOn, TicksOff = pl.TicksOff });
+                }
+                else if (pl.CharType == plLyric.CharTypes.ParagraphSep)
+                {
+                    plType = pl.CharType;
+
                 }
             }
 
             return pll;
         }
+
+
+        private List<plLyric> CombineChordsAndLyrics()
+        {
+            List<plLyric> pll = new List<plLyric>();
+
+            // 1 line chord
+            // 1 line lyrics
+            plLyric.CharTypes plType = plLyric.CharTypes.Text;
+            String chordname = "C";
+            int plTicksOn = 0;
+            int plTicksOff = 0;
+            string _InternalSepLines = "¼";
+            int x = 0;
+            int t = 0;
+
+            pll.Add(new plLyric() { CharType = plType, Element = chordname, TicksOn = plTicksOn, TicksOff = plTicksOff });
+            pll.Add(new plLyric() { CharType = plLyric.CharTypes.LineFeed, Element = _InternalSepLines, TicksOn = 0, TicksOff = 0 });
+
+            while ( x < plLyrics.Count )
+            {
+                plLyric pl = plLyrics[x];
+                t = pl.TicksOn;
+
+                switch (pl.CharType)
+                {
+                    case plLyric.CharTypes.Text:
+                        pll.Add(pl);
+                        break;
+                    case plLyric.CharTypes.LineFeed:
+                        pll.Add(pl);
+                        
+                        plTicksOn = pl.TicksOn;
+                        plTicksOff = pl.TicksOff;
+                        pll.Add(new plLyric() { CharType = plType, Element = chordname, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                        pll.Add(new plLyric() { CharType = plLyric.CharTypes.LineFeed, Element = _InternalSepLines, TicksOn = 0, TicksOff = 0 });
+                        break;
+                    case plLyric.CharTypes.ParagraphSep:
+                        pll.Add(pl);
+                        plTicksOn = pl.TicksOn;
+                        plTicksOff = pl.TicksOff;
+                        pll.Add(new plLyric() { CharType = plType, Element = chordname, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                        pll.Add(new plLyric() { CharType = plLyric.CharTypes.LineFeed, Element = _InternalSepLines, TicksOn = 0, TicksOff = 0 });
+                        break;
+                }
+
+                x++;
+            }
+            return pll;
+        }
+        
 
 
         /// <summary>

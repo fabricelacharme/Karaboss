@@ -4243,6 +4243,8 @@ namespace Karaboss
 
             frmLyric.DisplaySinger(tx);
             frmLyric.LoadSong(myLyricsMgmt.plLyrics);
+            
+            
             frmLyric.LoadBallsTimes(myLyricsMgmt.plLyrics);
                       
             if (frmLyric.WindowState == FormWindowState.Minimized)
