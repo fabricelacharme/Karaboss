@@ -339,8 +339,9 @@ namespace Karaboss
         public enum CharTypes
         {
             Text = 1,
-            LineFeed = 2,
-            ParagraphSep = 3,
+            Chord = 2,
+            LineFeed = 3,
+            ParagraphSep = 4,
         }
         public CharTypes CharType { get; set; }
         public string Element { get; set; }

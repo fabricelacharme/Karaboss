@@ -32,12 +32,13 @@
 
 #endregion
 
-using Karaboss.Lrc.SharedFramework;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Karaboss.Lyrics
 {
@@ -131,8 +132,6 @@ namespace Karaboss.Lyrics
             _lyricstracknum = -1;
             _melodytracknum = -1;
             
-            // FAB 28/08
-            //_lyrictype = LyricTypes.Text;
             _lyrictype = LyricTypes.None;
 
             plLyrics = new List<plLyric>();
@@ -145,13 +144,13 @@ namespace Karaboss.Lyrics
             // Extract lyrics
             _lyrics = ExtractLyrics();
 
-            
+
             if (plLyrics.Count > 0)
             {
                 #region rearrange lyrics
                 // Guess spacing or not and carriage return or not
                 GetLyricsSpacingModel();
-                
+
                 // Add a trailing space to each syllabe
                 if (_lyricsspacing == lyricsSpacings.WithoutSpace)
                 {
@@ -161,7 +160,7 @@ namespace Karaboss.Lyrics
                 // If zero carriage return in the lyrics
                 if (!_bHasCarriageReturn)
                 {
-                    AddCarriageReturn();                    
+                    AddCarriageReturn();
                 }
                 #endregion rearrange lyrics
 
@@ -171,6 +170,13 @@ namespace Karaboss.Lyrics
                 // Fix lyrics endtime to notes of the melody track end time
                 CheckTimes();
 
+
+                // Extract chords in lyrics
+                if (HasChords(_lyrics))
+                {
+                    if (lstpllyrics != null && lstpllyrics.Count > 1)
+                        lstpllyrics[2] = ExtractChords(_lyricstracknum);
+                }
             }
                                  
         }
@@ -329,18 +335,7 @@ namespace Karaboss.Lyrics
 
             plLyrics = _tmpL;
         }
-
-        /*
-        private float GetTimeInMeasure(int ticks)
-        {
-            // Num measure
-            int curmeasure = 1 + ticks / _measurelen;
-            // Temps dans la mesure
-            float timeinmeasure = sequence1.Numerator - ((curmeasure * _measurelen - ticks) / (float)(_measurelen / sequence1.Numerator));
-
-            return timeinmeasure;
-        }
-        */
+       
 
         /// <summary>
         /// Lyrics extraction & display
@@ -659,6 +654,75 @@ namespace Karaboss.Lyrics
             }
 
             return -1;
+        }
+
+        /// <summary>
+        /// Return track number when chords are found in the lyrics, -1 otherwise
+        /// </summary>
+        /// <returns></returns>
+        private bool HasChords(string s)
+        {
+            Regex chordCheck = new Regex(@"\[[^\]]+\]");
+            MatchCollection mc = chordCheck.Matches(s);
+            if (mc.Count > 0) 
+                return true;
+            else
+                return false;
+            
+            /*
+            if (_lyrictype == LyricTypes.None)
+                return false;
+            if (_lyrics == null || _lyrics.Length == 0)
+                return false;
+
+            if (_lyrics.IndexOf("[") == -1 || _lyrics.IndexOf("]") == -1)
+                return false;
+
+            return true;
+            */
+        }
+
+
+        /// <summary>
+        /// Extract chords [A], [B] ... written in the lyrics
+        /// </summary>
+        /// <param name="tracknum"></param>
+        private List<plLyric> ExtractChords(int tracknum)
+        {
+            int plTicksOn;
+            int plTicksOff;
+            string element;
+            string chordname;
+            plLyric.CharTypes plType = plLyric.CharTypes.Chord;
+
+            List<plLyric> pll = new List<plLyric>();
+
+            for (int i = 0; i < plLyrics.Count; i++) 
+            { 
+                plLyric pl = plLyrics[i];  
+                if (pl.CharType == plLyric.CharTypes.Text)
+                {
+                    element = pl.Element;
+
+                    Regex chordCheck = new Regex(@"\[[^\]]+\]");
+                    MatchCollection mc = chordCheck.Matches(element);
+
+                    if (mc.Count > 0) 
+                    {
+                        for (int j = 0; j < mc.Count; j++) 
+                        { 
+                            chordname = mc[j].Value;
+                            // Start time for a lyric
+                            plTicksOn = pl.TicksOn;
+                            plTicksOff = pl.TicksOff;
+
+                            pll.Add(new plLyric() { CharType = plType, Element = chordname, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                        }
+                    }
+                }
+            }
+
+            return pll;
         }
 
 
