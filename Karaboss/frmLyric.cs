@@ -840,11 +840,20 @@ namespace Karaboss
                 return;
             #endregion
 
-            string tx = myLyricsMgmt.GetLyricsLinesWithChords();            
+            string tx;           
 
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);            
             string file = path + "\\lyrics.txt";
             
+            if (myLyricsMgmt.bHasChords)
+            {
+                tx = myLyricsMgmt.GetLyricsLinesWithChords();
+            }
+            else
+            {
+                tx = lyrics;
+            }
+
             /*
             lyrics = lyrics.Replace(_InternalSepParagraphs, "\r\n\r\n");
             lyrics = lyrics.Replace(_InternalSepLines, "\r\n");

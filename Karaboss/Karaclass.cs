@@ -62,10 +62,7 @@ namespace Karaboss
         public static bool m_ShowParagraph;     // Lyrics : Display a blanck line between paragraphs
         public static bool m_ForceUppercase;    // Lyrics : converts every character to uppercase
 
-        public static bool m_SaveDefaultOutputDevice;   // Save default MIDI output device
-
-
-        //public static LyricsMgmt myLyricsMgmt;
+        public static bool m_SaveDefaultOutputDevice;   // Save default MIDI output device        
 
         public enum OptionsDisplay
         {
@@ -342,10 +339,9 @@ namespace Karaboss
     {
         public enum CharTypes
         {
-            Text = 1,
-            Chord = 2,
-            LineFeed = 3,
-            ParagraphSep = 4,
+            Text = 1,            
+            LineFeed = 2,
+            ParagraphSep = 3,
         }
         public CharTypes CharType { get; set; }
         public (string, string) Element { get; set; }    // item1 = chord, item2 = lyric

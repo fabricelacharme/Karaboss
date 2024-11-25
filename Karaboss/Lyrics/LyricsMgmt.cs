@@ -56,8 +56,7 @@ namespace Karaboss.Lyrics
 
         // Midifile characteristics
         private double _duration = 0;  // en secondes
-        private int _totalTicks = 0;
-        //private int _bpm = 0;
+        private int _totalTicks = 0;        
         private double _ppqn;
         private int _tempo;
         private int _measurelen = 0;
@@ -76,15 +75,13 @@ namespace Karaboss.Lyrics
         // Default List of lyrics
         public List<plLyric> plLyrics { get; set; }
 
-        // List chords + lyrics
-        //public List<plLyric> plChordsAndLyrics { get; set; }
 
         // FAB 21/11/2024 : list of the 3 different types of lyric:
         // 0 = lyric
         // 1 = text        
         public List<List<plLyric>> lstpllyrics { get; set; }
 
-
+        public bool bHasChords { get; set; }
 
         private string _lyrics = string.Empty;
         public string Lyrics
@@ -177,7 +174,8 @@ namespace Karaboss.Lyrics
 
 
                 // Extract chords in lyrics
-                if (HasChords(_lyrics))
+                bHasChords = HasChords(_lyrics);
+                if (bHasChords)
                 {
                     ExtractChords(_lyricstracknum);
 
@@ -285,7 +283,7 @@ namespace Karaboss.Lyrics
             // test 1 : Add a CR to each uppercase
             for (int k = 0; k < plLyrics.Count; k++)
             {
-                if (plLyrics[k].CharType == plLyric.CharTypes.Text) // && char.IsUpper(plLyrics[k].Element,0) )
+                if (plLyrics[k].CharType == plLyric.CharTypes.Text) 
                 {
                     element = plLyrics[k].Element.Item2;                    
 
@@ -428,114 +426,7 @@ namespace Karaboss.Lyrics
                 plLyrics = lstpllyrics[0];
             else if (_lyrictype == LyricTypes.Text)
                 plLyrics = lstpllyrics[1];
-            
-
-
-
-            #region deleteme
-            /*
-            // if lyrics types are text events
-            if (trktext >= 0)
-            {
-                _melodytracknum = -1;
-                _lyricstracknum = trktext;
-                _lyrictype = LyricTypes.Text;
-
-                lyrics = sequence1.tracks[trktext].TotalLyricsT;
-                // Charge listes           
-                if (plLyrics != null)
-                    plLyrics.Clear();
-
-                Sanford.Multimedia.Midi.Track track = sequence1.tracks[_lyricstracknum];
-
-                int plTicksOn = 0;
-                int plTicksOff = 0;
-                
-                for (int k = 0; k < track.LyricsText.Count; k++)
-                {
-                    // Stockage dans liste plLyrics
-                    plLyric.CharTypes plType = (plLyric.CharTypes)track.LyricsText[k].Type;
-                    string plElement = track.LyricsText[k].Element;
-
-                    // Start time for a lyric
-                    plTicksOn = track.LyricsText[k].TicksOn;
-
-                    // Stop time for a lyric (maxi 1 beat ?)
-                    if (plType == plLyric.CharTypes.Text)
-                        plTicksOff = plTicksOn + _measurelen;
-
-                    plLyrics.Add(new plLyric() { CharType = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
-                }
-                
-                return lyrics;
-            }
-            // if lyrics types are lyric events
-            else if (trklyric >= 0)
-            {                
-                lyrics = sequence1.tracks[trklyric].TotalLyricsL;
-
-                _melodytracknum = -1;
-                _lyricstracknum = trklyric;
-                _lyrictype = LyricTypes.Lyric;
-                    
-
-                // Charge listes            
-                if (plLyrics != null)
-                    plLyrics.Clear();
-
-                // Remove "[]" for the letter by letter lyrics
-                Sanford.Multimedia.Midi.Track track = sequence1.tracks[_lyricstracknum];
-                for (int k = 0; k < track.Lyrics.Count - 1; k++)
-                {
-                    if (track.Lyrics[k].Element == "[]")
-                    {
-                        if (track.Lyrics[k + 1].Type == Sanford.Multimedia.Midi.Track.Lyric.Types.Text)
-                        {
-                            track.Lyrics[k + 1].Element = " " + track.Lyrics[k + 1].Element;
-                        }
-                    }
-                }
-
-                int plTicksOn = 0;
-                int plTicksOff = 0;
-                string elm = string.Empty;
-                for (int k = 0; k < track.Lyrics.Count; k++)
-                {
-                    if (track.Lyrics[k].Element != "[]")
-                    {
-                        // Stockage dans liste plLyrics
-                        plLyric.CharTypes plType = (plLyric.CharTypes)track.Lyrics[k].Type;
-                        string plElement = track.Lyrics[k].Element;
-
-                        // Start time for a lyric
-                        plTicksOn = track.Lyrics[k].TicksOn;
-
-                        // Stop time for the lyric
-                        if (plType == plLyric.CharTypes.Text)
-                            plTicksOff = plTicksOn + _measurelen;    
-
-                        plLyrics.Add(new plLyric() { CharType = plType, Element = plElement, TicksOn = plTicksOn, TicksOff = plTicksOff });
-                    }
-                }
-                    
-                return lyrics;                                               
-            }
-            else
-            {
-                // no choice was possible
-                if (trklyric >= 0)
-                {
-                    MessageBox.Show("This file contains lyrics events, but I am unable to use them.");
-                }
-
-                if (trktext >= 0)
-                {
-                    MessageBox.Show("This file contains text events, but I am unable to use them.");
-                }
-            }
-            
-            */
-            #endregion deleme
+                   
 
             return lyrics;
         }
@@ -710,15 +601,7 @@ namespace Karaboss.Lyrics
                             lyricElement = Regex.Replace(lyricElement, pattern, replace);                                                                                     
                             
                             // Remove '[' and ']'
-                            chordElement = chordElement.Substring(1, chordElement.Length - 2);
-
-                            /*
-                            // Adjust length of chord to length of lyric
-                            if (chordElement.Length < lyricElement.Length)
-                                chordElement += new string(' ', lyricElement.Length - chordElement.Length);
-                            else if (chordElement.Length > lyricElement.Length)
-                                lyricElement += new string(' ', chordElement.Length - lyricElement.Length);
-                            */
+                            chordElement = chordElement.Substring(1, chordElement.Length - 2);                            
 
                             // Update list item with chord
                             plLyrics[i].Element = (chordElement, lyricElement);
@@ -726,14 +609,6 @@ namespace Karaboss.Lyrics
                         //}
 
                     }
-                    /*
-                    else
-                    {
-                        // Chord => ajust length of item 1 with lenght of item2
-                        chordElement = new string(' ', lyricElement.Length);
-                        plLyrics[i].Element = (chordElement, plLyrics[i].Element.Item2);
-                    }
-                    */
                 }                
             }     
         }
@@ -1029,7 +904,7 @@ namespace Karaboss.Lyrics
                         currenttext = string.Empty;
                     }
                     // Add syllabe to currenttext
-                    currenttext += plLyrics[i].Element;
+                    currenttext += plLyrics[i].Element.Item2;
                 }
             }
 
@@ -1160,8 +1035,7 @@ namespace Karaboss.Lyrics
                         currenttime = newtime;
                     }
 
-                    // Add linefeed or paragraph
-                    //lines.Add(plLyrics[i].Element.Item2);
+                    // Add linefeed or paragraph                    
                     sep = plLyrics[i].Element.Item2;
                 }
                 else
