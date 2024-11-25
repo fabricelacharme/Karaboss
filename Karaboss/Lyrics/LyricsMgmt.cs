@@ -67,7 +67,8 @@ namespace Karaboss.Lyrics
 
         private bool _bHasCarriageReturn = false;
 
-
+        private string patternBracket = @"\[\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*)*)\]";
+        private string patternParenth = @"\(\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*)*)\)";
         #endregion private
 
 
@@ -558,9 +559,19 @@ namespace Karaboss.Lyrics
         /// <returns></returns>
         private bool HasChords(string s)
         {
-            Regex chordCheck = new Regex(@"\[[^\]]+\]");
+            // With brakets
+            Regex chordCheck = new Regex(patternBracket);
+            
+            // With parenthesis
+            Regex chordCheck2 = new Regex(patternParenth);
+            
+
+            //Regex chordCheck = new Regex(@"\[[^\]]+\]");
             MatchCollection mc = chordCheck.Matches(s);
-            if (mc.Count > 0) 
+            MatchCollection mc2 = chordCheck2.Matches(s);
+
+
+            if (mc.Count > 0 | mc2.Count > 0) 
                 return true;
             else
                 return false;                      
@@ -574,42 +585,79 @@ namespace Karaboss.Lyrics
         private void ExtractChords(int tracknum)
         {
             string lyricElement;
-            string chordElement;
+            string chordElement = string.Empty;
+            string pattern = string.Empty;
+            bool bFound;
 
             for (int i = 0; i < plLyrics.Count; i++) 
             { 
                 plLyric pl = plLyrics[i];  
                 if (pl.CharType == plLyric.CharTypes.Text)
                 {
-                    lyricElement = pl.Element.Item2;                    
+                    lyricElement = pl.Element.Item2;
 
-                    Regex chordCheck = new Regex(@"\[[^\]]+\]");
+                    //Regex chordCheck = new Regex(@"\[[^\]]+\]");
+
+                    // With brakets
+                    Regex chordCheck = new Regex(patternBracket);
+                    
+                    // With parenthesis                    
+                    Regex chordCheck2 = new Regex(patternParenth);
+
+
                     MatchCollection mc = chordCheck.Matches(lyricElement);
+                    MatchCollection mc2 = chordCheck2.Matches(lyricElement);
+
+                    bFound = false;
 
                     if (mc.Count > 0) 
                     {                        
                         //for (int j = 0; j < mc.Count; j++) 
                         //{ 
                         chordElement = mc[0].Value;
+                        pattern = @"\[[^\]]+\]";
+                        bFound = true;
 
                         if (chordElement.Length > 2)
                         {
-                            
-                            // Remove chords on syllabe
-                            string pattern = @"\[[^\]]+\]";
-                            string replace = @"";
-                            lyricElement = Regex.Replace(lyricElement, pattern, replace);                                                                                     
-                            
-                            // Remove '[' and ']'
-                            chordElement = chordElement.Substring(1, chordElement.Length - 2);                            
-
-                            // Update list item with chord
-                            plLyrics[i].Element = (chordElement, lyricElement);
+                            chordElement = chordElement.Substring(1, chordElement.Length - 2);
                         }
+
                         //}
 
+                    } 
+                    else if (mc2.Count > 0)
+                    {
+                        chordElement = mc2[0].Value;
+                        pattern = @"\([^\]]+\)";
+                        bFound = true;
+
+                        if (chordElement.Length > 2)
+                        {
+                            chordElement = chordElement.Substring(1, chordElement.Length - 2);
+                        }
                     }
-                }                
+
+                    if (bFound)
+                    {
+                        //if (chordElement.Length > 2)
+                        //{
+
+                        // Remove chords on syllabe
+                        //string pattern = @"\[[^\]]+\]";
+
+                        string replace = @"";
+                        lyricElement = Regex.Replace(lyricElement, pattern, replace);
+
+                        // Remove '[' and ']'
+                        //chordElement = chordElement.Substring(1, chordElement.Length - 2);
+
+                        // Update list item with chord
+                        plLyrics[i].Element = (chordElement, lyricElement);
+                        //}
+                    }
+
+                }
             }     
         }
      
