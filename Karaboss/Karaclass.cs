@@ -40,6 +40,7 @@ using System.Threading;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Collections.Generic; // DLL import
+using Karaboss.Lyrics;
 
 namespace Karaboss
 {
@@ -62,6 +63,9 @@ namespace Karaboss
         public static bool m_ForceUppercase;    // Lyrics : converts every character to uppercase
 
         public static bool m_SaveDefaultOutputDevice;   // Save default MIDI output device
+
+
+        //public static LyricsMgmt myLyricsMgmt;
 
         public enum OptionsDisplay
         {
@@ -344,7 +348,7 @@ namespace Karaboss
             ParagraphSep = 4,
         }
         public CharTypes CharType { get; set; }
-        public string Element { get; set; }
+        public (string, string) Element { get; set; }    // item1 = chord, item2 = lyric
         public int TicksOn { get; set; }
         public int TicksOff { get; set; }
         public int Beat { get; set; }        

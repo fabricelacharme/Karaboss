@@ -40,6 +40,7 @@ using PicControl;
 using System.Runtime.InteropServices;
 using System.Linq;
 using Karaboss.Resources.Localization;
+using Karaboss.Lyrics;
 using static PicControl.pictureBoxControl;
 using System.ComponentModel;
 
@@ -59,6 +60,8 @@ namespace Karaboss
 
         private HashSet<Control> controlsToMove = new HashSet<Control>();
         #endregion
+
+        private LyricsMgmt myLyricsMgmt;
 
         private Font _karaokeFont;
         private string lyrics;
@@ -318,9 +321,11 @@ namespace Karaboss
         
         private frmLyrOptions frmLyrOptions;               
        
-        public frmLyric(bool bPlayList = false)
+        public frmLyric(LyricsMgmt myLyricsMgmt, bool bPlayList = false)
         {
             InitializeComponent();
+
+            this.myLyricsMgmt = myLyricsMgmt;
 
             // Graphic optimization
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
@@ -513,7 +518,7 @@ namespace Karaboss
             lyrics = "";
             for (int i = 0; i < plLyrics.Count; i++)
             {
-                lyrics += plLyrics[i].Element; 
+                lyrics += plLyrics[i].Element.Item2; 
             }
 
             List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();           
@@ -521,7 +526,7 @@ namespace Karaboss
             {
                 pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric();
                 pcL.Type = (pictureBoxControl.plLyric.Types)plL.CharType;
-                pcL.Element = plL.Element;
+                pcL.Element = plL.Element.Item2;
                 pcL.TicksOn = plL.TicksOn;
                 pcL.TicksOff = plL.TicksOff;
 
@@ -835,11 +840,21 @@ namespace Karaboss
                 return;
             #endregion
 
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            string tx = myLyricsMgmt.GetLyricsLinesWithChords();            
+
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);            
             string file = path + "\\lyrics.txt";
+            
+            /*
             lyrics = lyrics.Replace(_InternalSepParagraphs, "\r\n\r\n");
             lyrics = lyrics.Replace(_InternalSepLines, "\r\n");
             System.IO.File.WriteAllText(@file, lyrics);
+            */
+
+            tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
+            tx = tx.Replace(_InternalSepLines, "\r\n");
+            System.IO.File.WriteAllText(@file, tx);
+
             try
             {
                 System.Diagnostics.Process.Start(@file);

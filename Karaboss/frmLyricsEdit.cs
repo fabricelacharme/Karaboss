@@ -667,7 +667,7 @@ namespace Karaboss
                     plRealTime = TicksToTime(plTicksOn);           
                     plNote = 0;
                     sNote = "";
-                    plElement = lLyrics[idx].Element;
+                    plElement = lLyrics[idx].Element.Item2;
                     plElement = plElement.Replace(" ", "_");
                     plType = lLyrics[idx].CharType;
 
@@ -696,7 +696,7 @@ namespace Karaboss
                     plTicksOn = lLyrics[i].TicksOn;                 
                     plRealTime = TicksToTime(plTicksOn);           
                     plNote = 0;
-                    plElement = lLyrics[i].Element;
+                    plElement = lLyrics[i].Element.Item2;
                     plElement = plElement.Replace(" ", "_");
                     plType = lLyrics[i].CharType;
 
@@ -2698,7 +2698,8 @@ namespace Karaboss
 
                     // replace again spaces
                     plElement = plElement.Replace("_", " ");
-                    localplLyrics.Add(new plLyric() { CharType = plType, Element = plElement, TicksOn = plTicksOn });
+                    
+                    localplLyrics.Add(new plLyric() { CharType = plType, Element =  ("", plElement), TicksOn = plTicksOn });
 
                     // TODO add TicksOff
                 }
@@ -2753,7 +2754,7 @@ namespace Karaboss
             for (int i = 0; i < lLyrics.Count; i++)
             {
                 // Affiche les blancs
-                plElement = lLyrics[i].Element;
+                plElement = lLyrics[i].Element.Item2;
                 iParagraph = plElement.LastIndexOf(_InternalSepParagraphs);
                 iLineFeed = plElement.LastIndexOf(_InternalSepLines);                
 

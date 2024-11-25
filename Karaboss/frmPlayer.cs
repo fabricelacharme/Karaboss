@@ -70,8 +70,6 @@ namespace Karaboss
         // Lyrics management
         public LyricsMgmt myLyricsMgmt;
         private bool bHasLyrics = false;        
-        //private List<plLyric> plLyrics;
-        //public CLyric myLyric;        
 
         // SlideShow directory
         public string dirSlideShow;
@@ -2681,21 +2679,10 @@ namespace Karaboss
                 return false;
             }
 
-
-            // NEW LYRICS
-            // FAB 28/08
-            // BEGIN
+            
             myLyricsMgmt = new LyricsMgmt(sequence1);
             bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;
-            //plLyrics = myLyricsMgmt.plLyrics;
-
-            /*
-            bHasLyrics = sequence1.HasLyrics;
-            if (bHasLyrics)
-                lyrics = ExtractLyrics();
-            */
-
-
+            
             laststart = 0;
             // Remove all MIDI events after last note
             sequence1.Clean();
@@ -4007,7 +3994,7 @@ namespace Karaboss
 
                         // Update Track.Lyrics List
                         Track.Lyric L = new Track.Lyric() {
-                            Element = myLyricsMgmt.plLyrics[idx].Element,
+                            Element = myLyricsMgmt.plLyrics[idx].Element.Item2,
                             TicksOn = myLyricsMgmt.plLyrics[idx].TicksOn,
                             Type = (Track.Lyric.Types)myLyricsMgmt.plLyrics[idx].CharType,
                         };
@@ -4226,9 +4213,9 @@ namespace Karaboss
             {
                 // Affiche les paroles
                 if (currentPlaylistItem != null)
-                    frmLyric = new frmLyric(true);
+                    frmLyric = new frmLyric(myLyricsMgmt, true);
                 else
-                    frmLyric = new frmLyric(false);
+                    frmLyric = new frmLyric(myLyricsMgmt, false);
 
                 frmLyric.Show();
             }
@@ -6785,7 +6772,7 @@ namespace Karaboss
                 // Display the Lyric form even if no lyrics in order to display the singer
                 if (Application.OpenForms.OfType<frmLyric>().Count() == 0)
                 {
-                    frmLyric = new frmLyric();
+                    frmLyric = new frmLyric(myLyricsMgmt);
                     frmLyric.Show();
                 }
 
@@ -6861,7 +6848,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmLyric>().Count() == 0)
             {
-                frmLyric = new frmLyric();
+                frmLyric = new frmLyric(myLyricsMgmt);
                 frmLyric.Show();
             }
 
