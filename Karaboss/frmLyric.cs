@@ -851,7 +851,9 @@ namespace Karaboss
             }
             else
             {
-                tx = lyrics;
+                myLyricsMgmt.PopulateEmbeddedChords();
+                tx = myLyricsMgmt.GetLyricsLinesWithChords();
+                //tx = lyrics;
             }
 
             /*

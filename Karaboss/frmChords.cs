@@ -653,7 +653,7 @@ namespace Karaboss
             // Chords by half measure
             Gridchords = Analyser.Gridchords;
             // Chords by beat
-            GridBeatChords = Analyser.GridBeatChords;            
+            //GridBeatChords = Analyser.GridBeatChords;            
            
             //Change labels displayed
             for (int i = 1; i <= Gridchords.Count; i++)

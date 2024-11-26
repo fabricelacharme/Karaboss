@@ -59,6 +59,9 @@ namespace ChordsAnalyser
         //public Dictionary<int, List<string>> GridBeatChords { get; set; }
         public Dictionary<int, string> GridBeatChords { get; set; }
 
+        // list of chords by ticks
+        public List<(int,string)> lstChords { get; set; }
+
         private Dictionary<int, List<int>> dictnotes = new Dictionary<int, List<int>>();
 
         #endregion properties
@@ -68,14 +71,13 @@ namespace ChordsAnalyser
         
         // Midifile characteristics
         private double _duration = 0;  // en secondes
-        private int _totalTicks = 0;
-        //private int _bpm = 0;
+        private int _totalTicks = 0;        
         private double _ppqn;
         private int _tempo;
         private int _measurelen = 0;
         private int NbMeasures;
 
-        private string NoChord = "<Chord not found>";
+        private string ChordNotFound = "<Chord not found>";
         private List<string> LstNoChords = new List<string>() { "<Chord not found>" };
         private string EmptyChord = "<Empty>";
         private List<string> LstEmptyChords = new List<string>() { "<Empty>" };
@@ -100,14 +102,18 @@ namespace ChordsAnalyser
 
             for (int i = 1; i <= NbMeasures; i++)
             {
-                Gridchords[i] = (NoChord, NoChord);
+                Gridchords[i] = (ChordNotFound, ChordNotFound);
             }
 
             // Search by half measure
             SearchByHalfMeasureMethod();
-            
+
             // Search by beat
-            SearchByBeatMethod();                        
+            //SearchByBeatMethod();
+
+            // Populate List of chords by ticks: lstChords
+            PopulateListChords();
+
         }
 
         
@@ -212,7 +218,7 @@ namespace ChordsAnalyser
                 }
                 else
                 {
-                    GridBeatChords[beat] = NoChord;
+                    GridBeatChords[beat] = ChordNotFound;
                 }
 
             }
@@ -321,7 +327,7 @@ namespace ChordsAnalyser
                 }
                 else
                 {
-                    GridBeatChords[beat] = NoChord;
+                    GridBeatChords[beat] = ChordNotFound;
                 }
 
             }
@@ -362,8 +368,7 @@ namespace ChordsAnalyser
                                 float st = GetTimeInMeasure(note.StartTime);
 
 
-                                // Ce n'est pas plutot le numérateur ???????????????????????????????????????????????????????
-                                //if (st < sequence1.Denominator / 2)
+                                // Ce n'est pas plutot le numérateur ???????????????????????????????????????????????????????                                
                                 if (st < sequence1.Numerator / 2)
                                 {
                                     // add note to first part of the measure
@@ -404,12 +409,12 @@ namespace ChordsAnalyser
             {
                 if (section == 1)
                 {
-                    if (Gridchords[_measure].Item1 == NoChord)
+                    if (Gridchords[_measure].Item1 == ChordNotFound)
                         Gridchords[_measure] = (EmptyChord, Gridchords[_measure].Item2);
                 }
                 else if (section == 2)
                 {
-                    if (Gridchords[_measure].Item2 == NoChord)
+                    if (Gridchords[_measure].Item2 == ChordNotFound)
                         Gridchords[_measure] = (Gridchords[_measure].Item1, EmptyChord);
                 }
             }
@@ -512,12 +517,12 @@ namespace ChordsAnalyser
                     string res = Analyser.determine(lroot);
                     if (section == 1)
                     {
-                        if (Gridchords[_measure].Item1 == NoChord)
+                        if (Gridchords[_measure].Item1 == ChordNotFound)
                             Gridchords[_measure] = (res, Gridchords[_measure].Item2);
                     }
                     else if (section == 2)
                     {
-                        if (Gridchords[_measure].Item2 == NoChord)
+                        if (Gridchords[_measure].Item2 == ChordNotFound)
                             Gridchords[_measure] = (Gridchords[_measure].Item1, res);
 
                     }
@@ -614,12 +619,12 @@ namespace ChordsAnalyser
                 string res = Analyser.determine(lroot);
                 if (section == 1)
                 {
-                    if (Gridchords[_measure].Item1 == NoChord)
+                    if (Gridchords[_measure].Item1 == ChordNotFound)
                         Gridchords[_measure] = (res, Gridchords[_measure].Item2);
                 }
                 else if (section == 2)
                 {
-                    if (Gridchords[_measure].Item2 == NoChord)
+                    if (Gridchords[_measure].Item2 == ChordNotFound)
                         Gridchords[_measure] = (Gridchords[_measure].Item1, res);
 
                 }
@@ -631,12 +636,12 @@ namespace ChordsAnalyser
                 {
                     if (section == 1)
                     {
-                        if (Gridchords[_measure].Item1 == NoChord)
+                        if (Gridchords[_measure].Item1 == ChordNotFound)
                             Gridchords[_measure] = (res, Gridchords[_measure].Item2);
                     }
                     else if (section == 2)
                     {
-                        if (Gridchords[_measure].Item2 == NoChord)
+                        if (Gridchords[_measure].Item2 == ChordNotFound)
                             Gridchords[_measure] = (Gridchords[_measure].Item1, res);
 
                     }
@@ -645,10 +650,53 @@ namespace ChordsAnalyser
 
 
         }
-       
+
         #endregion Search method
 
+        /// <summary>
+        /// Populate list of chords by ticks: lstChords
+        /// </summary>
+        private void PopulateListChords()
+        {
+            int nbBeatsPerMeasure = sequence1.Numerator;
+            int numerator = nbBeatsPerMeasure;
+            int measure;
+            int beat;            
+            int beatDuration = _measurelen / nbBeatsPerMeasure;
+            //int beats = (int)Math.Ceiling(_totalTicks / (float)beatDuration);
+            int ticks;
 
+            string chordName = string.Empty;
+            string lastChordName = "-1";
+
+
+            lstChords = new List<(int, string)> ();
+
+            for (int i = 1; i <= Gridchords.Count; i++)
+            {
+                measure = i;
+
+                // 1st half
+                chordName = Gridchords[i].Item1;
+                if (chordName != string.Empty && chordName != EmptyChord && chordName != ChordNotFound && chordName != lastChordName)
+                {
+                    lastChordName = chordName;
+                    beat = 1 + (measure - 1) * numerator;
+                    ticks = beatDuration * (beat - 1);
+                    lstChords.Add((ticks, chordName));
+                }
+
+                // 2nd half
+                chordName = Gridchords[i].Item2;
+                if (chordName != string.Empty && chordName != EmptyChord && chordName != ChordNotFound && chordName != lastChordName)
+                {
+                    lastChordName = chordName;
+                    beat = 1 + (measure - 1) * numerator + (numerator / 2);
+                    ticks = beatDuration * (beat - 1);
+                    lstChords.Add((ticks, chordName));
+                }
+            }
+        }
 
         List<int> GetChord(List<string> chord)
         {
@@ -743,6 +791,9 @@ namespace ChordsAnalyser
         }
 
 
+
+
+
         /// <summary>
         /// Upadate MIDI times
         /// </summary>
@@ -762,7 +813,7 @@ namespace ChordsAnalyser
 
 
         /// <summary>
-        /// In which measure is the chord
+        /// Return in which measure is the chord
         /// </summary>
         /// <param name="chord"></param>
         /// <returns></returns>

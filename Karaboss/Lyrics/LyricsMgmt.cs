@@ -36,6 +36,7 @@ using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -1173,6 +1174,7 @@ namespace Karaboss.Lyrics
             }
         }
 
+
         /// <summary>
         /// Display lyrics lines except line being played
         /// </summary>
@@ -1193,10 +1195,7 @@ namespace Karaboss.Lyrics
             return res;
            
         }
-
-
            
-
 
         /// <summary>
         /// TAB 3: Display words & lyrics
@@ -1779,8 +1778,61 @@ namespace Karaboss.Lyrics
 
             return res;
         }
-      
-        
+
+        /// <summary>
+        /// Include embedded chords into the list plLyrics
+        /// </summary>
+        public void PopulateEmbeddedChords()
+        {
+            int ticks = 0;
+            int TicksOn = 0;
+            int TicksOff = 0;
+
+
+            string chordName = string.Empty;
+            
+            ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
+
+            // list of chords by ticks
+            List<(int, string)> lstChords = Analyser.lstChords;
+
+            //int lastindex = 0;
+            bool bFound = false;
+            int insertIndex = 0;
+
+            for (int i = 0; i < lstChords.Count; i++)
+            {
+                ticks = lstChords[i].Item1;
+                chordName = lstChords[i].Item2;
+                bFound = false;
+
+                for (int j = 0; j < plLyrics.Count; j++)
+                {
+                    TicksOn = plLyrics[j].TicksOn;
+                    if (ticks < TicksOn) 
+                    {
+                        insertIndex = j;
+                        bFound = false;
+                        break;
+                    }
+                    if (ticks == TicksOn) 
+                    {                        
+                        plLyrics[j].Element = (chordName, plLyrics[j].Element.Item2);                        
+                        bFound = true;    
+                        break;
+                    }                    
+                }
+
+                if (!bFound)
+                {                    
+                    plLyrics.Insert(insertIndex, new plLyric() { CharType = plLyric.CharTypes.Text, Element = (chordName, ""), TicksOn = ticks, TicksOff = TicksOff });
+                }
+
+
+            }
+
+        }
+
 
         #endregion Display Lyrics
 
