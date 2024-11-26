@@ -45,10 +45,14 @@
             this.pBox = new PicControl.pictureBoxControl();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.mnuWords = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnuDisplayWords = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDisplayWordsAndChords = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlBalls.SuspendLayout();
             this.pnlTittle.SuspendLayout();
             this.panel1.SuspendLayout();
             this.pnlWindow.SuspendLayout();
+            this.mnuWords.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlBalls
@@ -207,6 +211,26 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
+            // mnuWords
+            // 
+            this.mnuWords.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuDisplayWords,
+            this.mnuDisplayWordsAndChords});
+            this.mnuWords.Name = "mnuWords";
+            resources.ApplyResources(this.mnuWords, "mnuWords");
+            // 
+            // mnuDisplayWords
+            // 
+            this.mnuDisplayWords.Name = "mnuDisplayWords";
+            resources.ApplyResources(this.mnuDisplayWords, "mnuDisplayWords");
+            this.mnuDisplayWords.Click += new System.EventHandler(this.mnuDisplayWords_Click);
+            // 
+            // mnuDisplayWordsAndChords
+            // 
+            this.mnuDisplayWordsAndChords.Name = "mnuDisplayWordsAndChords";
+            resources.ApplyResources(this.mnuDisplayWordsAndChords, "mnuDisplayWordsAndChords");
+            this.mnuDisplayWordsAndChords.Click += new System.EventHandler(this.mnuDisplayWordsAndChords_Click);
+            // 
             // frmLyric
             // 
             resources.ApplyResources(this, "$this");
@@ -226,6 +250,7 @@
             this.pnlTittle.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.pnlWindow.ResumeLayout(false);
+            this.mnuWords.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -247,5 +272,8 @@
         private System.Windows.Forms.Button btnFrmOptions;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button btnChangeWords;
+        private System.Windows.Forms.ContextMenuStrip mnuWords;
+        private System.Windows.Forms.ToolStripMenuItem mnuDisplayWords;
+        private System.Windows.Forms.ToolStripMenuItem mnuDisplayWordsAndChords;
     }
 }

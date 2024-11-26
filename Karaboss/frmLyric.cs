@@ -840,11 +840,41 @@ namespace Karaboss
                 return;
             #endregion
 
-            string tx;           
+            mnuWords.Show(btnFrmWords, 1, btnFrmWords.Height);                                  
+        }
 
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);            
+        /// <summary>
+        /// Display only words
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuDisplayWords_Click(object sender, EventArgs e)
+        {
+            string tx;
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             string file = path + "\\lyrics.txt";
-            
+
+            tx = lyrics;           
+            tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
+            tx = tx.Replace(_InternalSepLines, "\r\n");
+            System.IO.File.WriteAllText(@file, tx);
+
+            try
+            {
+                System.Diagnostics.Process.Start(@file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void mnuDisplayWordsAndChords_Click(object sender, EventArgs e)
+        {
+            string tx;
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            string file = path + "\\lyrics.txt";
+
             if (myLyricsMgmt.bHasChords)
             {
                 tx = myLyricsMgmt.GetLyricsLinesWithChords();
@@ -852,15 +882,8 @@ namespace Karaboss
             else
             {
                 myLyricsMgmt.PopulateEmbeddedChords();
-                tx = myLyricsMgmt.GetLyricsLinesWithChords();
-                //tx = lyrics;
+                tx = myLyricsMgmt.GetLyricsLinesWithChords();                
             }
-
-            /*
-            lyrics = lyrics.Replace(_InternalSepParagraphs, "\r\n\r\n");
-            lyrics = lyrics.Replace(_InternalSepLines, "\r\n");
-            System.IO.File.WriteAllText(@file, lyrics);
-            */
 
             tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
             tx = tx.Replace(_InternalSepLines, "\r\n");
@@ -950,6 +973,7 @@ namespace Karaboss
 
         #endregion
 
+      
     }
 
 
