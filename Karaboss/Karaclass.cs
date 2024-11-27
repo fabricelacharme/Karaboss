@@ -330,7 +330,12 @@ namespace Karaboss
         WithoutSpace = 1
     }
 
-   
+    public enum chordDelimiters
+    {
+        None = -1,
+        Bracket = 0,
+        Parenthesis = 1
+    }
 
     /// <summary>
     /// A class to store all lyric's syllabes

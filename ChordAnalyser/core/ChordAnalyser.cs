@@ -664,8 +664,7 @@ namespace ChordsAnalyser
             int numerator = nbBeatsPerMeasure;
             int measure;
             int beat;            
-            int beatDuration = _measurelen / nbBeatsPerMeasure;
-            //int beats = (int)Math.Ceiling(_totalTicks / (float)beatDuration);
+            int beatDuration = _measurelen / nbBeatsPerMeasure;            
             int ticks;
 
             string chordName = string.Empty;
