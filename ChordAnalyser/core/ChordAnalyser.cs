@@ -43,6 +43,9 @@ namespace ChordsAnalyser
     public class ChordAnalyser
     {
         
+        // ***************************** TOUT PASSER EN GRIDBEATCHORD même si on garde l'analyse actuelle ************************
+
+
         Analyser Analyser = new Analyser();
         
         static List<MidiNote[]> lnMidiNote = new List<MidiNote[]>();
@@ -111,7 +114,7 @@ namespace ChordsAnalyser
             SearchByHalfMeasureMethod();
 
             // Search by beat
-            //SearchByBeatMethod();
+            SearchByBeatMethod();
 
             // Populate List of chords by ticks: lstChords
             PopulateListChords();
@@ -149,13 +152,11 @@ namespace ChordsAnalyser
             int beatDuration = _measurelen / nbBeatsPerMeasure;
             int beats = (int)Math.Ceiling(_totalTicks / (float)beatDuration);
 
-            // init dictionary
-            //GridBeatChords = new Dictionary<int, List<string>>();
+            // init dictionary            
             GridBeatChords = new Dictionary<int, string>();
             for (int i = 1; i <= beats; i++)
             {
-                dictnotes[i] = new List<int>();
-                //GridBeatChords[i] = null;
+                dictnotes[i] = new List<int>();                
                 GridBeatChords[i] = EmptyChord;
             }
 

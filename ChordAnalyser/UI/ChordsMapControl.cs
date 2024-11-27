@@ -164,7 +164,7 @@ namespace ChordAnalyser.UI
         }
 
         public Dictionary<int, (string, string)> Gridchords { get; set; }
-
+        public Dictionary<int, string> GridBeatChords { get; set; }
 
         private float _cellwidth;
         private float _cellheight;

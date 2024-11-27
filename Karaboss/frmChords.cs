@@ -656,6 +656,7 @@ namespace Karaboss
             if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)
             {
                 Gridchords = myLyricsMgmt.CreateGridChords();
+                GridBeatChords = myLyricsMgmt.CreateGridBeatChords();
             }
             else
             {
@@ -666,20 +667,29 @@ namespace Karaboss
                 // Chords by half measure
                 Gridchords = Analyser.Gridchords;
                 // Chords by beat
-                //GridBeatChords = Analyser.GridBeatChords;            
+                GridBeatChords = Analyser.GridBeatChords;            
             }
 
 
             //Change labels displayed
             for (int i = 1; i <= Gridchords.Count; i++)
             {
-                Gridchords[i] = (InterpreteNote(Gridchords[i].Item1), InterpreteNote(Gridchords[i].Item2));
+                Gridchords[i] = (InterpreteChord(Gridchords[i].Item1), InterpreteChord(Gridchords[i].Item2));
             }
+
+            for (int i = 1; i <= GridBeatChords.Count; i++)
+            {
+                GridBeatChords[i] = InterpreteChord(GridBeatChords[i]);
+            }
+
 
             // Display Chords in horizontal cells
             ChordControl1.Gridchords = Gridchords;
             
 
+            // ********************************* TOUT PASSER EN GRIDBEATCHORD ***************************************
+            // TAB 1 ET 2
+            // TAB 3 OK
 
             // Display chords for guitar & piano
             ChordRendererGuitar.Gridchords = Gridchords;            
@@ -700,36 +710,36 @@ namespace Karaboss
         /// </summary>
         /// <param name="note"></param>
         /// <returns></returns>
-        private string InterpreteNote(string note)
+        private string InterpreteChord(string chord)
         {
             /*
-            note = note.Replace("sus", "");
+            chord = chord.Replace("sus", "");
 
-            note = note.Replace(" major", "");
-            note = note.Replace(" triad", "");
-            note = note.Replace("dominant", "");
+            chord = chord.Replace(" major", "");
+            chord = chord.Replace(" triad", "");
+            chord = chord.Replace("dominant", "");
 
-            note = note.Replace("first inversion", "");
-            note = note.Replace("second inversion", "");
-            note = note.Replace("third inversion", "");
+            chord = chord.Replace("first inversion", "");
+            chord = chord.Replace("second inversion", "");
+            chord = chord.Replace("third inversion", "");
 
-            note = note.Replace(" seventh", "7");
-            note = note.Replace(" minor", "m");
-            note = note.Replace("seventh", "7");
-            note = note.Replace("sixth", "6");
-            note = note.Replace("ninth", "9");
-            note = note.Replace("eleventh", "11");
+            chord = chord.Replace(" seventh", "7");
+            chord = chord.Replace(" minor", "m");
+            chord = chord.Replace("seventh", "7");
+            chord = chord.Replace("sixth", "6");
+            chord = chord.Replace("ninth", "9");
+            chord = chord.Replace("eleventh", "11");
 
-            note = note.Replace("6", "");
-            note = note.Replace("9", "");
-            note = note.Replace("11", "");
+            chord = chord.Replace("6", "");
+            chord = chord.Replace("9", "");
+            chord = chord.Replace("11", "");
             */
 
-            //note = note.Replace("<Chord not found>", "?");
-            note = note.Replace("<Chord not found>", "");
+            //chord = chord.Replace("<Chord not found>", "?");
+            chord = chord.Replace("<Chord not found>", "");
 
-            note = note.Trim();
-            return note;
+            chord = chord.Trim();
+            return chord;
         }
 
         

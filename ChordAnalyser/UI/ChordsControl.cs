@@ -163,7 +163,7 @@ namespace ChordAnalyser.UI
         // Chords
         // 2 chords by measure : Chord 1, chord 2
         public Dictionary<int, (string, string)> Gridchords { get; set; }        
-
+        public Dictionary<int, string> GridBeatChord { get; set; }
 
         //Lyrics
         public Dictionary<int,string> GridLyrics { get; set; }

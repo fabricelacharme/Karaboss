@@ -106,12 +106,11 @@ namespace ChordAnalyser.UI
         // Chords
         // 2 chords by measure : Chord 1, chord 2
         public Dictionary<int, (string, string)> Gridchords { get; set; }
+        public Dictionary<int, string> GridBeatChords { get; set; }
 
         // New search (by beat)        
         private int _chordsCount = 0;
-        private Dictionary<int, (int, string)> _filteredgridbeatchords;
-
-        public Dictionary<int, string> GridBeatChords { get; set; }
+        private Dictionary<int, (int, string)> _filteredgridbeatchords;        
         
         private Font _fontChord;
         public Font fontChord
