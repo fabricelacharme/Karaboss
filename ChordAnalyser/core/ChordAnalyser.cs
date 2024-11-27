@@ -42,17 +42,19 @@ namespace ChordsAnalyser
 {
     public class ChordAnalyser
     {
-        // Fabrice Method
+        
         Analyser Analyser = new Analyser();
-
-        //cchords.chords ch = new cchords.chords();
+        
         static List<MidiNote[]> lnMidiNote = new List<MidiNote[]>();
         static List<int[]> lnIntNote = new List<int[]>();
         static List<string[]> lnStringNote = new List<string[]>();
 
         #region properties
 
-        // Old Search (by half measure)
+        // Search by half measure
+        // int measure
+        // string Chord 1st half measure
+        // string chord 2nd half measure
         public Dictionary<int, (string, string)> Gridchords { get; set; }
 
         // New search (by beat)
@@ -168,7 +170,7 @@ namespace ChordsAnalyser
                         timeinmeasure = (int)GetTimeInMeasure(note.StartTime);
                         beat = 1 + (measure - 1) * nbBeatsPerMeasure + timeinmeasure;
                         
-                        // Harvest notes belanging to each beat
+                        // Harvest notes belonging to each beat
                         dictnotes[beat].Add(note.Number);
                     }
                 }

@@ -31,6 +31,7 @@
  */
 
 #endregion
+using ChordAnalyser;
 using ChordAnalyser.UI;
 using Karaboss.Display;
 using Karaboss.Lyrics;
@@ -139,8 +140,7 @@ namespace Karaboss
 
         // Midifile characteristics
         private double _duration = 0;  // en secondes
-        private int _totalTicks = 0;
-        //private int _bpm = 0;
+        private int _totalTicks = 0;        
         private double _ppqn;
         private int _tempo;
         private int _measurelen = 0;
@@ -151,9 +151,13 @@ namespace Karaboss
 
         // Lyrics 
         private LyricsMgmt myLyricsMgmt;
-        
-        // Old Search (by half measure)
+
+        // Search by half measure
+        // int measure
+        // string Chord 1st half measure
+        // string chord 2nd half measure
         Dictionary<int, (string, string)> Gridchords;
+        
         // New search (by beat)
         //public Dictionary<int, List<string>> GridBeatChords;
         public Dictionary<int, string> GridBeatChords;
@@ -412,8 +416,7 @@ namespace Karaboss
             #region bitmaps of chords
             // 4 : Add a panel in the middle
             // This panel will display a diagram for chords being played
-            //int imgsizeh = 216; // //278; //248 + 30 : 248 pour accord de guitare (200 taille de l'image + 1.24 * 200 accord jouée 25% plus gros et + 30 pour les onglets
-            //int imgsizew = 
+            // 278; //248 + 30 : 248 pour accord de guitare (200 taille de l'image + 1.24 * 200 accord jouée 25% plus gros et + 30 pour les onglets            
             int htotale = 280;
             
             pnlDisplayImagesOfChords = new Panel();
@@ -447,14 +450,13 @@ namespace Karaboss
             ChordRendererGuitar = new ChordRenderer();            
             ChordRendererGuitar.Parent = TabPageGuitar;            
             ChordRendererGuitar.Location = new Point(TabPageGuitar.Margin.Left, TabPageGuitar.Margin.Top);
-            //ChordRendererGuitar.Width = TabPageGuitar.ClientSize.Width;
+            
             ChordRendererGuitar.Height = htotale;
             ChordRendererGuitar.HeightChanged += new HeightChangedEventHandler(ChordRendererGuitar_HeightChanged);
             
-            ChordRendererGuitar.ColumnWidth = 162;  // 130 + 24% 
-            ChordRendererGuitar.ColumnHeight = 186; // 150 + 24%
+            ChordRendererGuitar.ColumnWidth = 162;  
+            ChordRendererGuitar.ColumnHeight = 186; 
             
-
             ChordRendererGuitar.DisplayMode = ChordRenderer.DiplayModes.Guitar;
             TabPageGuitar.Controls.Add(ChordRendererGuitar);
             #endregion ChordRenderer Guitar
@@ -472,8 +474,8 @@ namespace Karaboss
             ChordRendererPiano.Height = htotale;
             ChordRendererPiano.HeightChanged += new HeightChangedEventHandler(ChordRendererPiano_HeightChanged);
             
-            ChordRendererPiano.ColumnWidth = 286;   // 230 + 24%  
-            ChordRendererPiano.ColumnHeight = 137;  // 110 + 24%
+            ChordRendererPiano.ColumnWidth = 286;   
+            ChordRendererPiano.ColumnHeight = 137;  
 
             ChordRendererPiano.DisplayMode = ChordRenderer.DiplayModes.Piano;
             TabPagePiano.Controls.Add(ChordRendererPiano);
@@ -561,8 +563,7 @@ namespace Karaboss
 
             ChordMapControl1.Cursor = Cursors.Hand;
             ChordMapControl1.Sequence1 = this.sequence1;
-            ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
-            //pnlDisplayMap.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
+            ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);            
             pnlDisplayMap.Size = new Size(tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right, tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom);
             pnlDisplayMap.Controls.Add(ChordMapControl1);
             #endregion ChordMapControl
@@ -647,14 +648,28 @@ namespace Karaboss
         
         private void DisplayChords()
         {
-            // Display chords in the textbox
-            ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
-            
-            // Chords by half measure
-            Gridchords = Analyser.Gridchords;
-            // Chords by beat
-            //GridBeatChords = Analyser.GridBeatChords;            
-           
+            ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);            
+            // It can be used in DisplayChords if there are chords embedded in lyrics
+            myLyricsMgmt = new LyricsMgmt(sequence1);
+
+            // favors chords embedded in lyrics
+            if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)
+            {
+                Gridchords = myLyricsMgmt.CreateGridChords();
+            }
+            else
+            {
+                // No chords in lyrics => vertical analyse of notes to build a chord map
+                // Display chords in the textbox
+                //ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
+
+                // Chords by half measure
+                Gridchords = Analyser.Gridchords;
+                // Chords by beat
+                //GridBeatChords = Analyser.GridBeatChords;            
+            }
+
+
             //Change labels displayed
             for (int i = 1; i <= Gridchords.Count; i++)
             {
@@ -783,28 +798,7 @@ namespace Karaboss
         {
             if (e.Error == null && e.Cancelled == false)
             {
-                CommonLoadCompleted(sequence1);
-
-                #region deleteme
-                /*
-                LoadSequencer(sequence1);                
-
-                DrawControls();
-
-                UpdateMidiTimes();
-
-                DisplaySongDuration();
-
-                //TAB1, TAB2
-                DisplayChords();
-
-                // TAB1
-                DisplayLyrics();
-                       
-                //TAB3
-                DisplayWordsAndChords();
-                */
-                #endregion deleteme
+                CommonLoadCompleted(sequence1);                
             }
             else
             {
@@ -960,6 +954,7 @@ namespace Karaboss
 
                 DrawControls();
 
+               
                 UpdateMidiTimes();
 
                 DisplaySongDuration();
@@ -1030,8 +1025,7 @@ namespace Karaboss
         /// TAB1: Display lyrics
         /// </summary>
         private void DisplayLyrics()
-        {
-            myLyricsMgmt = new LyricsMgmt(sequence1);
+        {            
             myLyricsMgmt.LoadLyricsPerBeat();
             myLyricsMgmt.LoadLyricsLines();
 
@@ -1053,7 +1047,7 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// TAB3 : dispaly words + chords
+        /// TAB3 : display words + chords
         /// </summary>
         private void DisplayWordsAndChords()
         {

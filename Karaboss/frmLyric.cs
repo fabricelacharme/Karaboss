@@ -875,12 +875,14 @@ namespace Karaboss
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             string file = path + "\\lyrics.txt";
 
-            if (myLyricsMgmt.bHasChords)
+            // Chords are in the lyrics
+            if (myLyricsMgmt.bHasChordsInLyrics)
             {
                 tx = myLyricsMgmt.GetLyricsLinesWithChords();
             }
             else
             {
+                // Chords have to be guessed with a vertical search
                 myLyricsMgmt.PopulateEmbeddedChords();
                 tx = myLyricsMgmt.GetLyricsLinesWithChords();                
             }

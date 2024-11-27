@@ -276,39 +276,7 @@ namespace Karaboss
         }
       
 
-        /*
-        /// <summary>
-        /// Retrieve Lyrics format from frmPlayer
-        /// </summary>
-        private void GuessLyricsFormat()
-        {
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
-            {
-                frmPlayer = GetForm<frmPlayer>();
-            }
-            else
-            {
-                TextLyricFormat = LyricFormats.Text;
-                optFormatLyrics.Checked = true;
-                return;
-            }
-
-            if (frmPlayer.myLyricsMgmt.LyricType == LyricTypes.Text)
-            {
-                TextLyricFormat = LyricFormats.Text;
-                optFormatText.Checked = true;                                
-            }
-            else
-            {
-                TextLyricFormat = LyricFormats.Lyric;
-                optFormatLyrics.Checked = true;
-            }
-            melodytracknum = frmPlayer.myLyricsMgmt.MelodyTrackNum;
-        }
-        */
-
-
-
+       
         #region Tracks
 
         /// <summary>
