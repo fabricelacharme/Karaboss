@@ -426,6 +426,7 @@ namespace ChordAnalyser.UI
             int y_chord = ((int)(_cellheight) / 2) - (fontMeasure.Height / 2);
             int y_symbol = 10;
             int y_measurenumber = (int)(_cellheight) - fontMeasure.Height;
+            int m = -1;
 
             Point p1;
 
@@ -476,11 +477,15 @@ namespace ChordAnalyser.UI
                         g.DrawString(chordName, fontChord, ChordBrush, x + (_cellwidth - w) / 2, p1.Y);
                     }
 
-                    // Draw measure number
-                    tx = i.ToString();
-                    p1 = new Point(x + Offset, y_measurenumber);
-                    g.DrawString(tx, fontMeasure, MeasureBrush, p1.X, p1.Y);
-
+                    // Draw measure number                    
+                    m++;
+                    if (m % sequence1.Numerator == 0)
+                    {
+                        tx = (1 + i/sequence1.Numerator).ToString();
+                        p1 = new Point(x + Offset, y_measurenumber);
+                        g.DrawString(tx, fontMeasure, MeasureBrush, p1.X, p1.Y);
+                        m = 0;
+                    }
 
                     // Increment x (go to next beat / cell)                    
                     x += d;

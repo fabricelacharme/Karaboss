@@ -534,6 +534,8 @@ namespace ChordAnalyser.UI
 
             int x = (int)(_cellwidth) + (_LinesWidth - 1);
 
+
+
             if (GridBeatChords != null)
             {                
                 string chordName;                
@@ -543,7 +545,7 @@ namespace ChordAnalyser.UI
                 float h;
 
                 int d = (int)(_cellwidth) + (_LinesWidth - 1);
-
+                int m = -1;
                 var src = new Bitmap(Resources.silence_black);
                 var bmp = new Bitmap((int)(src.Width * zoom), (int)(src.Height * zoom), PixelFormat.Format32bppPArgb);
 
@@ -571,9 +573,14 @@ namespace ChordAnalyser.UI
                     }
 
                     // Draw measure number
-                    tx = i.ToString();
-                    g.DrawString(tx, fontMeasure, MeasureBrush, x + Offset, (int)(_cellheight) - fontMeasure.Height);
-                                        
+                    m++;
+                    if (m % sequence1.Numerator == 0)
+                    {
+                        tx = (1 + i / sequence1.Numerator).ToString();
+                        g.DrawString(tx, fontMeasure, MeasureBrush, x + Offset, (int)(_cellheight) - fontMeasure.Height);
+                        m = 0;
+                    }
+
                     // Increment x (go to the next beat / cell
                     x += d;
                 }
