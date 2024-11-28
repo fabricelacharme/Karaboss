@@ -162,15 +162,14 @@ namespace ChordAnalyser.UI
 
         // Chords
         // 2 chords by measure : Chord 1, chord 2
-        public Dictionary<int, (string, string)> Gridchords { get; set; }        
-        public Dictionary<int, string> GridBeatChord { get; set; }
+        //public Dictionary<int, (string, string)> Gridchords { get; set; }        
+        public Dictionary<int, string> GridBeatChords { get; set; }
 
         //Lyrics
         public Dictionary<int,string> GridLyrics { get; set; }
 
-
         private string EmptyChord = "<Empty>";
-        private string NoChord = "<Chord not found>";
+        private string ChordNotFound = "<Chord not found>";
 
         private float _cellwidth;
         private float _cellheight;
@@ -250,7 +249,8 @@ namespace ChordAnalyser.UI
         private double _ppqn;
         private int _tempo;
         private int _measurelen = 0;
-        private int NbMeasures;
+        private int _nbMeasures;
+        private int _nbBeats;
 
         private int _currentpos = 0;
         private int _currentmeasure = -1;
@@ -358,7 +358,7 @@ namespace ChordAnalyser.UI
 
             FillPen = new Pen(Color.Gray, _LinesWidth);
 
-            for (int i = 0; i < NbMeasures; i++)
+            for (int i = 0; i < _nbMeasures; i++)
             {
 
                 // Dessine autant de cases que le numerateur
@@ -386,7 +386,7 @@ namespace ChordAnalyser.UI
             // Ligne noire sur la dernière case de chaque mesure
             // ====================================================
             x = (int)(_cellwidth) + (_LinesWidth - 1);
-            for (int i = 0; i < NbMeasures; i++)
+            for (int i = 0; i < _nbMeasures; i++)
             {
                 p1 = new Point(x, clip.Y);
                 p2 = new Point(x, clip.Y + (int)(_cellheight));
@@ -401,14 +401,15 @@ namespace ChordAnalyser.UI
         #endregion Draw Canvas    
 
 
-        #region drawnotes   
+        #region drawnchords   
 
         /// <summary>
         /// Draw the name of the notes inside the cells using dictionnary gridchords
         /// </summary>
         /// <param name="g"></param>
         /// <param name="clip"></param>
-        private void DrawNotes(Graphics g, Rectangle clip)
+        /*
+        private void DrawChordsOld(Graphics g, Rectangle clip)
         {
             
             SolidBrush ChordBrush = new SolidBrush(Color.FromArgb(29,29,29));            
@@ -488,12 +489,13 @@ namespace ChordAnalyser.UI
                             _currentChordName = ChordName;
                             g.DrawString(ChordName, _fontChord, ChordBrush, z + x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
                         }
-                    }                    
+                    }
 
 
                     // Increment x (go to next measure)
+                    // Increment x (go to the next beat / cell
                     x += ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator;
-
+                    //x += (int)(_cellwidth) + (_LinesWidth - 1);
                 }
 
                 // ==============================
@@ -511,19 +513,94 @@ namespace ChordAnalyser.UI
                         currentlyric = z.Value;
                         w = MeasureString(fontLyric.FontFamily, currentlyric, fontLyric.Size);
                         h = MeasureStringHeight(fontLyric.FontFamily, currentlyric, fontLyric.Size);
-
-                        //x = (currentbeat + 1) * d;
+                        
                         x = currentbeat * d;
                         g.DrawString(currentlyric, fontLyric, LyricBrush, x + (_cellwidth - w)/2, _cellheight/2 + h);
                     }
                 }
             }
         }
+        */
 
+        private void DrawChords(Graphics g, Rectangle clip)
+        {
 
+            SolidBrush ChordBrush = new SolidBrush(Color.FromArgb(29, 29, 29));
+            SolidBrush MeasureBrush = new SolidBrush(Color.FromArgb(238, 17, 17));
+            SolidBrush LyricBrush = new SolidBrush(Color.FromArgb(45, 137, 239));
 
+            Font fontMeasure = new Font("Arial", 14 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font fontLyric = new Font("Arial", 14 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
-        #endregion drawnotes
+            int x = (int)(_cellwidth) + (_LinesWidth - 1);
+
+            if (GridBeatChords != null)
+            {                
+                string chordName;                
+                int Offset = 4;
+                string tx;
+                float w;
+                float h;
+
+                int d = (int)(_cellwidth) + (_LinesWidth - 1);
+
+                var src = new Bitmap(Resources.silence_black);
+                var bmp = new Bitmap((int)(src.Width * zoom), (int)(src.Height * zoom), PixelFormat.Format32bppPArgb);
+
+                // Filter chords
+                string _currentChordName = "<>";
+
+                for (int i = 1; i <= GridBeatChords.Count; i++)
+                {
+                    // Chord name                                                           
+                    chordName = GridBeatChords[i];
+                    
+                    w = MeasureString(_fontChord.FontFamily, chordName, _fontChord.Size);
+                    h = MeasureStringHeight(_fontChord.FontFamily, chordName, _fontChord.Size);
+
+                    // If empty, draw symbol
+                    if (chordName == EmptyChord)
+                    {
+                        g.DrawImage(src, new Rectangle(x + Offset, 10, bmp.Width, bmp.Height));
+                    }
+                    else if (chordName != "" && chordName != _currentChordName)
+                    {
+                        // Draw a chord only if different than previous one
+                        _currentChordName = chordName;
+                        g.DrawString(chordName, _fontChord, ChordBrush, x + (_cellwidth - w) / 2, (_cellheight / 2 - h) / 2);
+                    }
+
+                    // Draw measure number
+                    tx = i.ToString();
+                    g.DrawString(tx, fontMeasure, MeasureBrush, x + Offset, (int)(_cellheight) - fontMeasure.Height);
+                                        
+                    // Increment x (go to the next beat / cell
+                    x += d;
+                }
+
+                // ==============================
+                // Display Lyrics                
+                // ==============================
+                int currentbeat;
+                string currentlyric = string.Empty;                
+
+                if (GridLyrics != null)
+                {
+                    foreach (var z in GridLyrics)
+                    {
+                        currentbeat = z.Key;
+                        currentlyric = z.Value;
+                        w = MeasureString(fontLyric.FontFamily, currentlyric, fontLyric.Size);
+                        h = MeasureStringHeight(fontLyric.FontFamily, currentlyric, fontLyric.Size);
+
+                        x = currentbeat * d;
+                        g.DrawString(currentlyric, fontLyric, LyricBrush, x + (_cellwidth - w) / 2, _cellheight / 2 + h);
+                    }
+                }
+            }
+        }
+
+        #endregion drawchords
 
 
         #region public
@@ -614,7 +691,7 @@ namespace ChordAnalyser.UI
             {
                 DrawGrid(g, clip);
 
-                DrawNotes(g, clip);
+                DrawChords(g, clip);
 
                 g.TranslateTransform(clip.X, 0);
 
@@ -639,7 +716,11 @@ namespace ChordAnalyser.UI
             if (sequence1.Time != null)
             {
                 _measurelen = sequence1.Time.Measure;
-                NbMeasures = Convert.ToInt32(Math.Ceiling((double)_totalTicks / _measurelen)); // rounds up to the next full integer
+                _nbMeasures = Convert.ToInt32(Math.Ceiling((double)_totalTicks / _measurelen)); // rounds up to the next full integer
+
+                int nbBeatsPerMeasure = sequence1.Numerator;
+                int beatDuration = _measurelen / nbBeatsPerMeasure;
+                _nbBeats = (int)Math.Ceiling(_totalTicks / (float)beatDuration);
             }
         }
 

@@ -98,7 +98,7 @@ namespace ChordAnalyser.UI
         private int _currentmeasure = -1;
         private int _currentTimeInMeasure = -1;
 
-        //private string NoChord = "<Chord not found>";
+        private string ChordNotFound = "<Chord not found>";
         private string EmptyChord = "<Empty>";
 
         public const int PageWidth = 800;    /** The width of each page */
@@ -163,7 +163,7 @@ namespace ChordAnalyser.UI
             }
         }
 
-        public Dictionary<int, (string, string)> Gridchords { get; set; }
+        //public Dictionary<int, (string, string)> Gridchords { get; set; }
         public Dictionary<int, string> GridBeatChords { get; set; }
 
         private float _cellwidth;
@@ -412,20 +412,16 @@ namespace ChordAnalyser.UI
         /// </summary>
         /// <param name="g"></param>
         /// <param name="clip"></param>
-        private void DrawNotes(Graphics g, Rectangle clip)
+        private void DrawChords(Graphics g, Rectangle clip)
         {
-            int compteurmesure = -1; //0;
+            int compteurmesure = -1; 
             
             SolidBrush ChordBrush = new SolidBrush(Color.Black);
             SolidBrush MeasureBrush = new SolidBrush(Color.Red);
 
             Font fontChord = new Font("Arial", 20 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontMeasure = new Font("Arial", 12 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
-
-                      
-            
-            // Start after the 1st false measure
-            //int x = ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator;
+                                  
             int x = 0;
             int y_chord = ((int)(_cellheight) / 2) - (fontMeasure.Height / 2);
             int y_symbol = 10;
@@ -433,13 +429,13 @@ namespace ChordAnalyser.UI
 
             Point p1;
 
-            if (Gridchords != null)
-            {
-                (string, string) ttx;
+            if (GridBeatChords != null)
+            {                
                 string tx = string.Empty;
-                string ChordName = string.Empty;  
+                string chordName = string.Empty;  
                 int Offset = 4;
                 float w;
+                int d = (int)(_cellwidth) + (_LinesWidth - 1);
 
                 var src = new Bitmap(Resources.silence_black);
                 var bmp = new Bitmap((int)(src.Width * zoom), (int)(src.Height * zoom), PixelFormat.Format32bppPArgb);
@@ -447,10 +443,10 @@ namespace ChordAnalyser.UI
                 // Filter chords
                 string _currentChordName = "<>";
 
-                for (int i = 1; i <= Gridchords.Count; i++)
+                for (int i = 1; i <= GridBeatChords.Count; i++)
                 {
                     compteurmesure++;
-                    if (compteurmesure > _nbcolumns - 1)   // 4 measures per line
+                    if (compteurmesure > -1 + _nbcolumns * sequence1.Numerator)   // 4 measures per line
                     {
                         y_chord += (int)_cellheight + 1;
                         y_symbol += (int)_cellheight + 1;
@@ -459,25 +455,25 @@ namespace ChordAnalyser.UI
                         compteurmesure = 0;
                     }
 
-                    // Chord name                    
-                    ttx = Gridchords[i];
-                    ChordName = ttx.Item1;
-                    w = MeasureString(fontChord.FontFamily, ChordName, fontChord.Size);
+                    // Chord name                                        
+                    chordName = GridBeatChords[i];
+
+                    w = MeasureString(fontChord.FontFamily, chordName, fontChord.Size);
 
                     p1 = new Point(x + Offset, y_chord);
 
 
                     // If empty, draw symbol
-                    if (ChordName == EmptyChord)
+                    if (chordName == EmptyChord)
                     {
                         g.DrawImage(src, new Rectangle(p1.X, y_symbol, bmp.Width, bmp.Height));
 
                     }
-                    else if (ChordName != "" && ChordName != _currentChordName)
+                    else if (chordName != "" && chordName != _currentChordName)
                     {
-                        _currentChordName = ChordName;
+                        _currentChordName = chordName;
                         // If chord, print chord name
-                        g.DrawString(ChordName, fontChord, ChordBrush, x + (_cellwidth - w) / 2, p1.Y);
+                        g.DrawString(chordName, fontChord, ChordBrush, x + (_cellwidth - w) / 2, p1.Y);
                     }
 
                     // Draw measure number
@@ -485,36 +481,9 @@ namespace ChordAnalyser.UI
                     p1 = new Point(x + Offset, y_measurenumber);
                     g.DrawString(tx, fontMeasure, MeasureBrush, p1.X, p1.Y);
 
-                    // ===============================
-                    // Second part of mesure
-                    // ==============================
-                    if (sequence1.Numerator % 2 == 0)
-                    {
-                        ChordName = ttx.Item2;
-                        if (ChordName != "" && ChordName != ttx.Item1)
-                        {
-                            
-                            w = MeasureString(fontChord.FontFamily, ChordName, fontChord.Size);
 
-                            int z = ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator / 2;
-
-                            // If empty, draw symbol
-                            if (ChordName == EmptyChord)
-                            {
-                                g.DrawImage(src, new Rectangle(p1.X + z, y_symbol, bmp.Width, bmp.Height));
-                            }
-                            else if (ChordName != _currentChordName)
-                            {
-                                _currentChordName = ChordName;
-                                g.DrawString(ChordName, fontChord, ChordBrush, z + x + (_cellwidth - w) / 2, y_chord);
-                            }
-                        }
-                    }
-
-
-                    // Increment x (go to next measure)
-                    x += ((int)(_cellwidth) + (_LinesWidth - 1)) * sequence1.Numerator;
-
+                    // Increment x (go to next beat / cell)                    
+                    x += d;
                 }
             }
         }
@@ -582,7 +551,7 @@ namespace ChordAnalyser.UI
             {
                 DrawGrid(g, clip);
 
-                DrawNotes(g, clip);
+                DrawChords(g, clip);
 
                 g.TranslateTransform(0, clip.Y);
 

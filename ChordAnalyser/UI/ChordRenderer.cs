@@ -105,7 +105,7 @@ namespace ChordAnalyser.UI
 
         // Chords
         // 2 chords by measure : Chord 1, chord 2
-        public Dictionary<int, (string, string)> Gridchords { get; set; }
+        //public Dictionary<int, (string, string)> Gridchords { get; set; }
         public Dictionary<int, string> GridBeatChords { get; set; }
 
         // New search (by beat)        
@@ -223,7 +223,7 @@ namespace ChordAnalyser.UI
             this.SetStyle(ControlStyles.ResizeRedraw, true);
         }
 
-
+        /*
         public void TransferByMeasureToByBeat(int numerator, int measures)
         {
             GridBeatChords = new Dictionary<int, string>();
@@ -248,7 +248,8 @@ namespace ChordAnalyser.UI
 
             }
         }
-        
+        */
+
         /// <summary>
         /// Create a new dictionnary with only real chords (eliminate empty & no chords)
         /// </summary>
@@ -400,7 +401,7 @@ namespace ChordAnalyser.UI
         /// <param name="clip"></param>
         private void DrawChordsByBeat(Graphics g, Rectangle clip)
         {
-            if (Gridchords == null)
+            if (GridBeatChords == null)
                 return;
             
             string ChordName;
@@ -526,7 +527,7 @@ namespace ChordAnalyser.UI
 
         private void pnlCanvas_Paint(object sender, PaintEventArgs e)
         {                        
-            if (Gridchords !=null && Gridchords.Count > 0)
+            if (GridBeatChords !=null && GridBeatChords.Count > 0)
             {
                 Rectangle clip =
                     new Rectangle(
