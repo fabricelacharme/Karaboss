@@ -43,6 +43,7 @@ using Karaboss.Resources.Localization;
 using Karaboss.Lyrics;
 using static PicControl.pictureBoxControl;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace Karaboss
 {
@@ -345,7 +346,10 @@ namespace Karaboss
             _bplaylist = bPlayList;
 
             // couleurs pour texte, nombre de lignes
-            LoadKarOptions();                               
+            LoadKarOptions();
+
+            // parameters of chords included in lyrics
+            SetDisplayChordsOptions();
 
             AddMouseMoveHandler(this);           
         }
@@ -513,6 +517,7 @@ namespace Karaboss
         /// </summary>
         public void LoadSong(List<plLyric> plLyrics)
         {
+            string lyric;
             _plLyrics = plLyrics;
             currentTextPos = 0;
             lyrics = "";
@@ -526,7 +531,17 @@ namespace Karaboss
             {
                 pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric();
                 pcL.Type = (pictureBoxControl.plLyric.Types)plL.CharType;
-                pcL.Element = (plL.Element.Item1, plL.Element.Item2);
+
+                // Chord, lyric
+                lyric = plL.Element.Item2;
+                if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)
+                {
+                    // REmove chords included in lyrics
+                    lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
+                }
+                pcL.Element = (plL.Element.Item1, lyric);
+
+
                 pcL.TicksOn = plL.TicksOn;
                 pcL.TicksOff = plL.TicksOff;
 
@@ -600,6 +615,22 @@ namespace Karaboss
             pBox.Terminate();
         }
 
+        /// <summary>
+        /// Send to picturebox the parameters of chords included in lyrics if any
+        /// </summary>
+        private void SetDisplayChordsOptions()
+        {
+            if (myLyricsMgmt == null) 
+                return;
+
+            if (myLyricsMgmt.bHasChordsInLyrics)
+            {
+                pBox.bHasChordsInLyrics = true;
+                pBox.RemoveChordPattern = myLyricsMgmt.RemoveChordPattern;
+                pBox.ChordDelimiter = myLyricsMgmt.ChordDelimiter;
+            }
+            
+        }
 
         #region balls
         public void MoveBalls(int songposition)

@@ -90,6 +90,25 @@ namespace PicControl
 
 
         #region properties
+        public bool bHasChordsInLyrics { get; set; }
+
+        // character that surrounds each chord
+        // '(,)' pour (C), '[, ]' pour [C]
+        private (string, string) _chordDelimiter;
+        public (string, string) ChordDelimiter
+        {
+            get { return _chordDelimiter; }
+            set { _chordDelimiter = value; }
+        }
+
+        // Pattern to remove chords from lyrics
+        private string _removechordpattern;
+        public string RemoveChordPattern
+        {
+            get { return _removechordpattern; }
+            set { _removechordpattern = value; }
+        }
+
 
         #region Internal lyrics separators
 
@@ -1017,8 +1036,10 @@ namespace PicControl
                     if (ind < plLyrics.Count)
                     {
                         chordName = plLyrics[ind].Element.Item1;
-                        tx = plLyrics[ind].Element.Item2;
+                        tx = plLyrics[ind].Element.Item2;                        
                         tx = tx.Trim();
+                        
+                        
                         if (tx != "" && plLyrics[ind].Type != plLyric.Types.LineFeed && plLyrics[ind].Type != plLyric.Types.Paragraph)
                         {                            
                             // Si toutes les syllabes sont identiques dans la ligne (ex la la la la)
@@ -1152,6 +1173,8 @@ namespace PicControl
             float h = MeasureStringHeight("ABCDEFGHIJKLMNOPQRSTUVWXYZ", femsize);
             long H = (long)pboxWnd.ClientSize.Height;
 
+
+
             switch (_OptionDisplay)
             {
                 case OptionsDisplay.Top:
@@ -1163,13 +1186,24 @@ namespace PicControl
 
                 case OptionsDisplay.Center:
                     if (_txtNbLines == 1)
+                    {
                         ret = (H - ((_txtNbLines) * (h + 10))) / 2;
+                    }
                     else
-                        ret = (H - ((_txtNbLines - 1) * (h + 10))) / 2;
+                    {
+                        if (bHasChordsInLyrics)
+                            ret = (H - ((2*_txtNbLines - 1) * (h + 10))) / 2;
+                        else
+                            ret = (H - ((_txtNbLines - 1) * (h + 10))) / 2;
+                    }
                     break;
 
                 case OptionsDisplay.Bottom:
-                    ret = (H - _txtNbLines * _lineHeight) - 10;                    
+                    if (bHasChordsInLyrics)
+                        ret = (H - (int)(2.5*_txtNbLines) * _lineHeight) - 10;
+                    else
+                        ret = (H - _txtNbLines * _lineHeight) - 10;                    
+                    
                     break;
             }
 
@@ -1262,8 +1296,7 @@ namespace PicControl
                 Graphics g = pboxWnd.CreateGraphics();
                 float femsize;
 
-                long inisize = (long)pboxWnd.Font.Size;
-                //femsize = g.DpiY * inisize / 72;
+                long inisize = (long)pboxWnd.Font.Size;                
                 femsize = g.DpiX * inisize / 72;
 
                 float textSize = MeasureString(S, femsize);
@@ -1299,7 +1332,13 @@ namespace PicControl
 
                 float textHeight = MeasureStringHeight(S, inisize);
                 float totaltextHeight;
-                totaltextHeight = _txtNbLines * (textHeight + 10);                
+                totaltextHeight = _txtNbLines * (textHeight + 10);
+
+                if (bHasChordsInLyrics)
+                {
+                    // FAB CHROD
+                    totaltextHeight = (int)2.5*totaltextHeight;
+                }
 
                 long compHeight = (long)(0.95*pboxWnd.ClientSize.Height);
                 
@@ -1312,7 +1351,14 @@ namespace PicControl
                         {                            
                             femsize = g.DpiY * inisize / 72;                            
                             textHeight = MeasureStringHeight(S, femsize);
+                            
                             totaltextHeight = _txtNbLines * (textHeight + 10);
+                            if (bHasChordsInLyrics)
+                            {
+                                // FAB CHROD
+                                totaltextHeight = (int)2.5*totaltextHeight;
+                            }
+
                         }
                     } while (totaltextHeight > compHeight && inisize > 0);
                 }
@@ -1373,7 +1419,7 @@ namespace PicControl
                         rect.Width = sz.Width;
 
                         // FAB CHORDS
-                        if (!OptionShowChords)
+                        if (!bHasChordsInLyrics)
                         {
                             rect.Height = sz.Height + 1;
                         }
@@ -1440,7 +1486,7 @@ namespace PicControl
                             rect.Width = sz.Width + 1;
 
                             // FAB CHORDS
-                            if (!OptionShowChords)
+                            if (!bHasChordsInLyrics)
                             {
                                 rect.Height = sz.Height + 1;
                             }
@@ -1679,9 +1725,8 @@ namespace PicControl
             string chordName = syl.chord;
 
             // FAB CHORDS
-            if (OptionShowChords)
-            {
-                tx = Regex.Replace(tx, @"\[[^\]]+\]", @"");
+            if (bHasChordsInLyrics)
+            {                
                 tx = chordName + Environment.NewLine + tx;
             }
 
@@ -1704,6 +1749,49 @@ namespace PicControl
                 e.Graphics.FillPath(new SolidBrush(clr), path);
                 if (_bColorContour)
                     e.Graphics.DrawPath(new Pen(txtContourColor), path); 
+
+                path.Dispose();
+                #endregion
+            }
+            catch (Exception ed)
+            {
+                Console.Write("Error: " + ed.Message);
+            }
+        }
+
+
+        private void drawSyllabeNextLines(Color clr, syllabe syl, int x0, int y0, PaintEventArgs e)
+        {
+
+            var path = new GraphicsPath();
+            string tx = syl.text;
+            string chordName = syl.chord;
+
+            // FAB CHORDS
+            if (bHasChordsInLyrics)
+            {
+                tx = chordName + Environment.NewLine + tx;
+            }
+
+            try
+            {
+                //float x0 = rRect[syl.posline].X;
+
+                #region background of syllabe                              
+                if (_bTextBackGround)
+                {
+                    // Black background to make text more visible
+                    RectangleF R = new RectangleF(x0, y0, rRect[syl.posline].Width, rRect[syl.posline].Height);
+                    // background
+                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), R);
+                }
+                #endregion
+
+                #region Draw text of syllabe
+                path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
+                e.Graphics.FillPath(new SolidBrush(clr), path);
+                if (_bColorContour)
+                    e.Graphics.DrawPath(new Pen(txtContourColor), path);
 
                 path.Dispose();
                 #endregion
@@ -1767,7 +1855,7 @@ namespace PicControl
         /// <param name="e"></param>
         private void DrawNextLines(int y0, PaintEventArgs e)
         {
-
+            string tx;
             int x0 = 0;
             int i;
             int offset = _lineHeight;
@@ -1804,6 +1892,8 @@ namespace PicControl
                             int pos = syllabes[i].posline;
                             if (pos < rListNextRect[k].Count)
                             {
+                                
+                                // Rectangle for next lines
                                 float x1 = rListNextRect[k][pos].X;
                                 float y1 = y0 + (k + 1) * offset;
                                 // Black background to make text more visible
@@ -1824,7 +1914,65 @@ namespace PicControl
             #endregion
 
 
-            // Draw sentence
+            // Draw sentence               *************************** TO DO : Draw Sentence with rectangles *******************************
+
+            // NEW
+
+            if (_currentTextPos >= 0)
+                x0 = _currentTextPos - syllabes[_currentTextPos].posline;
+
+            for (int k = 0; k < _txtNbLines; k++)
+            {
+                int line = currentLine + k + 1;
+
+                if (_txtNbLines == 1)
+                {
+                    if (line > currentLine + 1) break;
+                }
+                else
+                {
+                    if (line > currentLine + _txtNbLines - 1) break;
+                }
+
+
+                for (i = x0; i < syllabes.Count; i++)
+                {
+                    if (syllabes[i].line == line)
+                    {
+                        int pos = syllabes[i].posline;
+                        if (pos < rListNextRect[k].Count)
+                        {
+                            // Rectangle for next lines
+                            float x1 = rListNextRect[k][pos].X;
+
+                            float y1;
+                            if (bHasChordsInLyrics)
+                            {
+                                y1 = (y0 + 2*(offset + 10)) + k*(2*(offset + 10));
+                            }
+                            else
+                            {
+                                y1 = y0 + (k + 1) * offset;
+                            }
+                            //float y1 = y0 + (k + 1) * offset + offset; // rListNextRect[k][pos].Y;
+                            
+                            drawSyllabeNextLines(txtNextColor, syllabes[i], (int)x1, (int)y1, e);
+
+                        }
+                    }
+                    else if (syllabes[i].line > line)
+                    {
+                        x0 = i;
+                        break;
+                    }
+                }
+
+            }
+
+            // END NEW
+            
+            /*
+            // OLD
             if (_txtNbLines > 1)
             {
                 for (i = 1; i < _txtNbLines; i++)
@@ -1833,22 +1981,19 @@ namespace PicControl
                     if (idx < lstLyricsLines.Count)
                     {
                         
-                        string tx = lstLyricsLines[idx];
-
-                        if (OptionShowChords)
-                        {
-                            // FAB CHORDS
-                            tx = Regex.Replace(tx, @"\[[^\]]+\]", @"");
-                            tx = "" + Environment.NewLine + tx;
-                        }
+                        tx = lstLyricsLines[idx];                        
 
                         x0 = getOffset(tx, emSize);
 
-                        var path = new GraphicsPath();
+                        var path = new GraphicsPath();                        
                         path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point(x0, y0 + i * offset), sf);
+                        
+                        
                         e.Graphics.FillPath(new SolidBrush(txtNextColor), path);
                         if (_bColorContour)
                             e.Graphics.DrawPath(new Pen(txtContourColor), path);
+                        
+                        
                         path.Dispose();
                     }
                 }
@@ -1858,7 +2003,7 @@ namespace PicControl
                 int idx = currentLine + 1;
                 if (idx < lstLyricsLines.Count)
                 {
-                    string tx = lstLyricsLines[idx];
+                    tx = lstLyricsLines[idx];
                     x0 = getOffset(tx, emSize);
 
                     var path = new GraphicsPath();
@@ -1870,6 +2015,9 @@ namespace PicControl
 
                 }
             }
+            // END OLD
+            */
+
         }
 
         #endregion draw
@@ -2164,8 +2312,10 @@ namespace PicControl
 
                     // Draw current line                    
                     DrawCurrentLine(_currentPosition, y0, e);
+
                     // Draw next lines                 
                     DrawNextLines(y0, e);
+                    
                 }
                 else
                 {
