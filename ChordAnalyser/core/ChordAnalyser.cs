@@ -67,7 +67,7 @@ namespace ChordsAnalyser
         public Dictionary<int, string> GridBeatChords { get; set; }
 
         // list of chords by ticks
-        public List<(int,string)> lstChords { get; set; }
+        //public List<(int,string)> lstChords { get; set; }
 
         private Dictionary<int, List<int>> dictnotes = new Dictionary<int, List<int>>();
 
@@ -120,16 +120,20 @@ namespace ChordsAnalyser
             // Search by half measure
             SearchByHalfMeasureMethod();
 
-            // Search by beat
-            //SearchByBeatMethod();
+            // Transfers gridchods to GridBeatChords
+            CreateGridBeatChords();
 
             // Populate List of chords by ticks: lstChords
-            PopulateListChords();
+            //PopulateListChords();
 
-            CreateGridBeatChords();
+            // Other method : Search by beat
+            //SearchByBeatMethod();
+
+
+
         }
 
-        
+
         private void SearchByHalfMeasureMethod()
         {
             // Search notes in measures
@@ -664,7 +668,7 @@ namespace ChordsAnalyser
 
 
         #region publish results
-
+        /*
         /// <summary>
         /// Populate list of chords by ticks: lstChords
         /// </summary>
@@ -708,7 +712,7 @@ namespace ChordsAnalyser
                 }
             }
         }
-
+        */
         
         /// <summary>
         /// Store results in dictionnary chords by beat GridBeatChord
@@ -827,7 +831,8 @@ namespace ChordsAnalyser
         #endregion MIDI
 
 
-        List<int> GetChord(List<string> chord)
+        #region private functions
+        private List<int> GetChord(List<string> chord)
         {
             if (chord.Count == 0)
                 return null;
@@ -1333,5 +1338,6 @@ namespace ChordsAnalyser
             return (notes[1] - notes[0] == 3) && (notes[2] - notes[0] == 7) && (notes[3] - notes[0] == 10);
         }
 
+        #endregion private functions
     }
 }

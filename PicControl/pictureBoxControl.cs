@@ -83,7 +83,7 @@ namespace PicControl
                 Paragraph = 3,
             }
             public Types Type { get; set; }
-            public string Element { get; set; }
+            public (string, string) Element { get; set; }    // item1 = chord, item2 = lyric
             public int TicksOn { get; set; }
             public int TicksOff { get; set; }
         }
@@ -103,7 +103,8 @@ namespace PicControl
         public Rectangle m_DisplayRectangle { get; set; }
         public int m_Alpha { get; set; }
 
-
+        // Display chords or not
+        public bool OptionShowChords { get; set; }
 
         /// <summary>
         /// Display lyrics option: top, Center, Bottom
@@ -134,8 +135,6 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
-
-
 
         public bool IsBusy
         {
@@ -480,7 +479,8 @@ namespace PicControl
         // Syllabes
         public class syllabe
         {
-            public string text;
+            public string chord;        // Chord to play with this syllabe
+            public string text;         // piece of text (text of Syllabe)
             public int time;            // temps de la syllabe 
             public int line;            // num de ligne  
             public int posline;         // position dans la ligne
@@ -508,7 +508,11 @@ namespace PicControl
         {
             InitializeComponent();
 
-            
+            // Dipslay chords or not
+            //OptionShowChords = false;
+            OptionShowChords = true;
+
+
             _karaokeFont = new Font("Arial", this.Font.Size);
 
             #region Move form without title bar
@@ -671,9 +675,9 @@ namespace PicControl
                 {
                     // Force uppercase
                     if (_bforceuppercase)
-                        plLyrics[i].Element = plLyrics[i].Element.ToUpper();
+                        plLyrics[i].Element = (plLyrics[i].Element.Item1, plLyrics[i].Element.Item2.ToUpper());
 
-                    lyrics += plLyrics[i].Element;
+                    lyrics += plLyrics[i].Element.Item2;
                 }
 
                 this.Txt = lyrics;
@@ -795,7 +799,7 @@ namespace PicControl
             List<plLyric> plLyrics = new List<plLyric>();
 
             string sx = string.Empty;
-            string plElement = string.Empty;
+            (string, string) plElement = (string.Empty, string.Empty);
             int plTime = 0;
             plLyric.Types plType = plLyric.Types.Text;
 
@@ -804,20 +808,20 @@ namespace PicControl
                 sx = strLyricSyllabes[i];
                 sx = sx.Replace(m_ProtectSpace, " ");    // retrieve spaces
 
-                plElement = sx;
+                plElement = ("", sx);
                 plTime = ticks + (i + 1) * 10;        // time each 10 ticks
 
                 if (sx.Length > 1 && sx.Substring(sx.Length - 1, 1) == _InternalSepLines)
                 {
-                    // String ended byr _InternalSepLines
+                    // String ended by _InternalSepLines
                     string reste = sx.Substring(0, sx.Length - 1);
                     
                     plType = plLyric.Types.Text;
-                    plElement = reste;
+                    plElement = ("", reste);
                     plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
 
                     plType =  plLyric.Types.LineFeed;
-                    plElement = _InternalSepLines;
+                    plElement = ("", _InternalSepLines);
                     plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
 
                 }
@@ -984,6 +988,7 @@ namespace PicControl
         {
             syllabes = new List<syllabe>();
 
+            string chordName = string.Empty;
             string tx = string.Empty;
             int itime = 0;
             int idx = -1;
@@ -1011,7 +1016,8 @@ namespace PicControl
                 {
                     if (ind < plLyrics.Count)
                     {
-                        tx = plLyrics[ind].Element;
+                        chordName = plLyrics[ind].Element.Item1;
+                        tx = plLyrics[ind].Element.Item2;
                         tx = tx.Trim();
                         if (tx != "" && plLyrics[ind].Type != plLyric.Types.LineFeed && plLyrics[ind].Type != plLyric.Types.Paragraph)
                         {                            
@@ -1052,7 +1058,8 @@ namespace PicControl
                 {
                     if (indexSyllabe < plLyrics.Count)
                     {
-                        tx = plLyrics[indexSyllabe].Element;
+                        chordName = plLyrics[indexSyllabe].Element.Item1;
+                        tx = plLyrics[indexSyllabe].Element.Item2;
                         string trimtx = tx.Trim();
                         itime = plLyrics[indexSyllabe].TicksOn;
 
@@ -1075,6 +1082,7 @@ namespace PicControl
                                 if (iline == 0)
                                     firstitem = idx;
 
+                                syl.chord = chordName;
                                 syl.line = line;                    // line number of syllabe
                                 syl.posline = iline;                // position dans la ligne
                                 syl.pos = idx;                      // position dans la chanson
@@ -1239,13 +1247,7 @@ namespace PicControl
                 }
             }
 
-            /*
-            if (max > 60)
-            {
-                max = 60;
-                tx = String.Empty.PadRight(max, 'X');
-            }
-            */
+           
             return tx;
         }
 
@@ -1369,7 +1371,16 @@ namespace PicControl
                         x += sz.Width;
 
                         rect.Width = sz.Width;
-                        rect.Height = sz.Height + 1;
+
+                        // FAB CHORDS
+                        if (!OptionShowChords)
+                        {
+                            rect.Height = sz.Height + 1;
+                        }
+                        else
+                        {
+                            rect.Height = 2 * (sz.Height + 1);
+                        }
 
                         if (idx == 0)
                         {
@@ -1427,7 +1438,16 @@ namespace PicControl
                             x += sz.Width;
 
                             rect.Width = sz.Width + 1;
-                            rect.Height = sz.Height + 1;
+
+                            // FAB CHORDS
+                            if (!OptionShowChords)
+                            {
+                                rect.Height = sz.Height + 1;
+                            }
+                            else
+                            {
+                                rect.Height = 2 * (sz.Height + 1);
+                            }
 
                             if (idx == 0)
                             {
@@ -1655,7 +1675,15 @@ namespace PicControl
         {
 
             var path = new GraphicsPath();
-            string tx = syl.text;            
+            string tx = syl.text;
+            string chordName = syl.chord;
+
+            // FAB CHORDS
+            if (OptionShowChords)
+            {
+                tx = Regex.Replace(tx, @"\[[^\]]+\]", @"");
+                tx = chordName + Environment.NewLine + tx;
+            }
 
             try
             {
@@ -1804,7 +1832,16 @@ namespace PicControl
                     int idx = currentLine + i;
                     if (idx < lstLyricsLines.Count)
                     {
+                        
                         string tx = lstLyricsLines[idx];
+
+                        if (OptionShowChords)
+                        {
+                            // FAB CHORDS
+                            tx = Regex.Replace(tx, @"\[[^\]]+\]", @"");
+                            tx = "" + Environment.NewLine + tx;
+                        }
+
                         x0 = getOffset(tx, emSize);
 
                         var path = new GraphicsPath();

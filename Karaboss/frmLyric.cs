@@ -526,7 +526,7 @@ namespace Karaboss
             {
                 pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric();
                 pcL.Type = (pictureBoxControl.plLyric.Types)plL.CharType;
-                pcL.Element = plL.Element.Item2;
+                pcL.Element = (plL.Element.Item1, plL.Element.Item2);
                 pcL.TicksOn = plL.TicksOn;
                 pcL.TicksOff = plL.TicksOff;
 
@@ -839,7 +839,7 @@ namespace Karaboss
             if (lyrics == null)
                 return;
             #endregion
-
+            
             mnuWords.Show(btnFrmWords, 1, btnFrmWords.Height);                                  
         }
 

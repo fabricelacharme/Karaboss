@@ -5495,7 +5495,9 @@ namespace Karaboss
                 
                 if (bfilemodified == true)
                 {
-                    string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
+                    
+                    // string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
+                    String tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
                     DialogResult dr = MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                     if (dr == DialogResult.Cancel)
                     {

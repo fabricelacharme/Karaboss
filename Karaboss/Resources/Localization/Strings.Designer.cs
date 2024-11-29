@@ -1253,5 +1253,12 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("WantToChangeFormatLyrics", resourceCulture);
             }
         }
+        internal static string QuestionSavefile
+        {
+            get
+            {
+                return ResourceManager.GetString("QuestionSaveFile", resourceCulture);
+            }
+        }
     }
 }

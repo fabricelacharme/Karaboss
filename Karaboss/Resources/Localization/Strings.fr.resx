@@ -504,4 +504,7 @@
   <data name="WantToChangeFormatLyrics" xml:space="preserve">
     <value>Voulez-vous changer pour le format  {0} ? ({1} syllabes)</value>
   </data>
+  <data name="QuestionSaveFile" xml:space="preserve">
+    <value>Le fichier a été modifié, voulez-vous l'enregistrer ?</value>
+  </data>
 </root>
