@@ -1133,6 +1133,7 @@ namespace PicControl
                         }
                         else
                         {
+                            
                             indexSyllabe++;
                         }
                     }
@@ -1457,15 +1458,35 @@ namespace PicControl
             {
                 using (Graphics g = pboxWnd.CreateGraphics())
                 {
+                    string strLine;
                     string tx = string.Empty;
+                    float Offset;
                     rListNextRect = new List<RectangleF>[_txtNbLines];
-                    int line = 0;
+                    int line = syllabes[pos].line;
+                    
+                    // si la ligne précédante est " " car saut de paragraphe, il faudrait ajouter une liste de rectangle fictogve à l'indice 0                    
+                    int start = 0;
+                    int end = _txtNbLines;
 
-                    for (int k = 0; k < _txtNbLines; k++)
+                    if (line > 0 && lstLyricsLines[line - 1] == " ")
+                    {                        
+                        start = 1;
+                        end = _txtNbLines + 1;
+                        rListNextRect = new List<RectangleF>[end];
+                        rListNextRect[0] = new List<RectangleF>();
+                    }
+                    else
                     {
-                        line = syllabes[pos].line;
-                        string strLine = lstLyricsLines[line];
-                        float Offset = getOffset(strLine, emSize);           // Offset de la ligne (centré)
+                        rListNextRect = new List<RectangleF>[end];
+                    }
+                    
+
+                    for (int k = start; k < end; k++)
+                    {
+                        strLine = lstLyricsLines[line];
+                        
+                        Offset = getOffset(strLine, emSize);           // Offset de la ligne (centré)
+                        
                         rNextRect = new List<RectangleF>();
 
                         int idx = -1;
@@ -1508,10 +1529,12 @@ namespace PicControl
 
                         rListNextRect[k] = rNextRect;
 
+                        line++;
+
                         pos = syllabes[pos].last + 1;
                         if (pos >= syllabes.Count)
                             break;                        
-                    }
+                    }                    
 
                     g.Dispose();   
                 }                
@@ -1592,6 +1615,16 @@ namespace PicControl
                 if (syllabes[syllabeposition].line != currentLine)
                 {
                     currentLine = syllabes[syllabeposition].line;
+
+                    /*
+                    Console.WriteLine("************* line : " + currentLine );
+
+                    if (currentLine == 2) 
+                    {
+                        Console.WriteLine("ici");
+                    }
+                    */
+
                     // Beginning of line
                     x0 = syllabeposition - syllabes[syllabeposition].posline;
                     // Create list of rectangles for current line
@@ -1922,8 +1955,14 @@ namespace PicControl
                 x0 = _currentTextPos - syllabes[_currentTextPos].posline;
 
             for (int k = 0; k < _txtNbLines; k++)
-            {
+            {              
                 int line = currentLine + k + 1;
+                // k = 0;
+                // Si currentline = 0 => line = 1
+                // mais si il y a un séparateur paragraphe, 
+                // on parcour la boucle for (i = x0; i < syllabes.Count; i++) sans rien faire 
+                // du coup, k passe à 1 et on utilise les rectangles de la ligne suivante
+
 
                 if (_txtNbLines == 1)
                 {
@@ -1933,7 +1972,6 @@ namespace PicControl
                 {
                     if (line > currentLine + _txtNbLines - 1) break;
                 }
-
 
                 for (i = x0; i < syllabes.Count; i++)
                 {
