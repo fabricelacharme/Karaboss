@@ -526,6 +526,7 @@ namespace Karaboss
                 lyrics += plLyrics[i].Element.Item2; 
             }
 
+                        
             List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();           
             foreach (plLyric plL in plLyrics)
             {
@@ -536,9 +537,21 @@ namespace Karaboss
                 lyric = plL.Element.Item2;
                 if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)
                 {
-                    // REmove chords included in lyrics
+                    // Remove chords included in lyrics
                     lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
                 }
+
+                // Add character '-' to lyrics when a chord and no lyric
+                if (plL.Element.Item1 != "" && lyric.Trim() == "")
+                {
+                    lyric = new string('-', plL.Element.Item1.Length) + new string('-', plL.Element.Item1.Length);
+                }
+                if (plL.Element.Item1 != "" && lyric.Trim() == "-")
+                {
+                    lyric = new string('-', plL.Element.Item1.Length) + new string('-', plL.Element.Item1.Length);
+                }
+
+
                 pcL.Element = (plL.Element.Item1, lyric);
 
 

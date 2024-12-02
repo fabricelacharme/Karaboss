@@ -626,8 +626,7 @@ namespace Karaboss.Lyrics
                 if (pl.CharType == plLyric.CharTypes.Text)
                 {
                     lyricElement = pl.Element.Item2;
-
-                    //Regex chordCheck = new Regex(@"\[[^\]]+\]");
+                    
 
                     // With brakets
                     Regex chordCheck = new Regex(patternBracket);
@@ -648,7 +647,9 @@ namespace Karaboss.Lyrics
 
                         _chordDelimiter = ("[", "]");
                         chordElement = mc[0].Value;
-                        _removechordpattern = @"\[[^\]]+\]";
+
+                        _removechordpattern = @"\[\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*)*)\]";
+                        //_removechordpattern = @"\[[^\]]+\]";
                         bFound = true;
 
                         if (chordElement.Length > 2)
@@ -663,7 +664,9 @@ namespace Karaboss.Lyrics
                     {
                         _chordDelimiter = ("(", ")");
                         chordElement = mc2[0].Value;
-                        _removechordpattern = @"\([^\]]+\)";
+
+                        _removechordpattern = @"\(\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*)*)\)";
+                        //_removechordpattern = @"\([^\]]+\)";
                         bFound = true;
 
                         if (chordElement.Length > 2)
