@@ -286,6 +286,37 @@ namespace PicControl
         }
 
         /// <summary>
+        /// Text to sing color
+        /// </summary>
+        private Color _chordNextColor;
+        public Color ChordNextColor
+        {
+            get
+            { return _chordNextColor; }
+            set
+            {
+                _chordNextColor = value;
+                pboxWnd.Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Chord Highligt color
+        /// </summary>
+        private Color _chordHighlightColor;
+        public Color ChordHighlightColor
+        {
+            get
+            { return _chordHighlightColor; }
+            set
+            {
+                _chordHighlightColor = value;
+                pboxWnd.Invalidate();
+            }
+        }
+
+
+        /// <summary>
         /// Text sung color
         /// </summary>
         private Color txtBeforeColor;
@@ -868,6 +899,10 @@ namespace PicControl
             txtNextColor = Color.White;
             txtBeforeColor = Color.YellowGreen;
             txtHighlightColor = Color.Red;
+
+            _chordNextColor = Color.FromArgb(255, 196, 13);         // modern ui Orange
+            _chordHighlightColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red
+
             _txtNbLines = 3;         
 
             OptionBackground = "SolidColor";                                    
@@ -1076,170 +1111,113 @@ namespace PicControl
             int pos = 0;
             int iline = -1;
             int lastpos = 0;
-            int line = 0;            
+            int line = 0;
 
-            // Pour chaque ligne            
-            do
+            try
             {
-                string strline = lstLyricsLines[line];
-                string strwrkline = strline;
-                pos = 0;
-                max = 0;
-                iline = -1;
-               
-                
-                // Paragraph = empty line
-                if (plLyrics[indexSyllabe].Type == plLyric.Types.Paragraph)
+                // Loop line by line           
+                do
                 {
-                    idx++;
-                    // Paragraphe = ligne vide
-                    // Crée un nouvel item syllabe
-                    syllabe syl = new syllabe();
-
-                    syl.chord = "";
-                    syl.line = line;                // line number of syllabe
-                    syl.pos = idx;                      // position dans la chanson
-                    syl.posline = 0;                    // position dans la ligne
-                    syl.text = " ";
-                    syl.SylCount = 1;                   // number of syllabes in this line
-                    syl.last = idx;                     // position of last syllabe
-                    syl.time = itime;                   // time of syllabe
-                    syl.offset = offset;
-                    syllabes.Add(syl);
-                    
-                    indexSyllabe++;
-                    line++;
-                }
-                else if (plLyrics[indexSyllabe].Type == plLyric.Types.LineFeed)
-                {                    
-                    indexSyllabe++;
-
-                    if (plLyrics[indexSyllabe].Type == plLyric.Types.LineFeed)
-                        line ++;
-                }
-                else
-                {
-                    // Normal line
-
-                    // Recherche le nombre max de syllabes dans la ligne                    
-                    max = 0;
-                    if (plLyrics[indexSyllabe].Element.Item2.Trim() != "")
-                    {
-                        max = GetMaxSyllabesInLine(indexSyllabe, line, plLyrics);
-
-                        if (max == 0)
-                            Console.WriteLine("ici");
-                    }
-                    
-                    // Faire la même chose si ligne d'accords (instrumental) ?
-
-
-                    lastpos = 0;
-
-                    // Offset de la ligne
-                    offset = 0;
+                    string strline = lstLyricsLines[line];
+                    string strwrkline = strline;
                     pos = 0;
+                    max = 0;
+                    iline = -1;
 
-                    strwrkline = strline;
 
-                    // Rechercher dans cette ligne l'occurence d'une syllabe la liste des syllabes
-                    do
-                    {                       
-                        if (indexSyllabe < plLyrics.Count)
+                    // Paragraph = empty line
+                    if (plLyrics[indexSyllabe].Type == plLyric.Types.Paragraph)
+                    {
+                        
+                        idx++;
+                        // Paragraphe = ligne vide
+                        // Crée un nouvel item syllabe
+                        syllabe syl = new syllabe();
+
+                        syl.chord = "";
+                        syl.line = line;                // line number of syllabe
+                        syl.pos = idx;                      // position dans la chanson
+                        syl.posline = 0;                    // position dans la ligne
+                        syl.text = " ";
+                        syl.SylCount = 1;                   // number of syllabes in this line
+                        syl.last = idx;                     // position of last syllabe
+                        syl.time = itime;                   // time of syllabe
+                        syl.offset = offset;
+                        syllabes.Add(syl);
+
+                        indexSyllabe++;
+                        
+                        line++;
+                    }
+                    else if (plLyrics[indexSyllabe].Type == plLyric.Types.LineFeed)
+                    {
+                        indexSyllabe++;
+
+                        if (plLyrics[indexSyllabe].Type == plLyric.Types.LineFeed)
+                            line++;
+                    }
+                    else
+                    {
+                        // Normal line
+
+                        // Recherche le nombre max de syllabes dans la ligne                    
+                        max = 0;
+                        if (plLyrics[indexSyllabe].Element.Item2.Trim() != "")
                         {
-                            chordName = plLyrics[indexSyllabe].Element.Item1;
-                            tx = plLyrics[indexSyllabe].Element.Item2;
-                            string trimtx = tx.Trim();
-                            itime = plLyrics[indexSyllabe].TicksOn;
+                            max = GetMaxSyllabesInLine(indexSyllabe, line, plLyrics);
 
-                            // ====================
-                            // CHORD ALONE
-                            // ====================
-                            if (trimtx == "" &&  chordName != "")
+                            if (max == 0)
+                                Console.WriteLine("ici");
+                        }
+
+                        // Faire la même chose si ligne d'accords (instrumental) ?
+
+
+                        lastpos = 0;
+
+                        // Offset de la ligne
+                        offset = 0;
+                        pos = 0;
+
+                        strwrkline = strline;
+
+                        // Rechercher dans cette ligne l'occurence d'une syllabe la liste des syllabes
+                        do
+                        {
+                            if (indexSyllabe < plLyrics.Count)
                             {
-                                offset = 0; // Offset de la ligne
-                                lastpos = pos;
-                                idx++;                                
+                                chordName = plLyrics[indexSyllabe].Element.Item1;
+                                tx = plLyrics[indexSyllabe].Element.Item2;
+                                string trimtx = tx.Trim();
+                                itime = plLyrics[indexSyllabe].TicksOn;
 
-                                // Crée un nouvel item syllabe
-                                syllabe syl = new syllabe();                                
-                                
-                                syl.chord = chordName + " ";
-                                syl.line = line;                    // line number of syllabe
-                                syl.posline = 0;                    // position dans la ligne
-                                syl.pos = idx;                      // position dans la chanson
-                                syl.text = tx;                      // text of syllabe
-                                syl.time = itime;                   // time of syllabe
-                                syl.SylCount = 1;                   // number of syllabes in this line
-                                syl.last = idx;                       // position of last syllabe
-                                syl.offset = offset;
-
-                                syllabes.Add(syl);
-
-                                // incrémente index syllabe & line number
-                                indexSyllabe++;
-
-                                
-                                #region exit if CR
-                                // if next syllabe is a linefeed => next line
-                                if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type == plLyric.Types.LineFeed)
-                                {
-                                    line++;                                    
-                                    break;
-                                }
-
-                                if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type == plLyric.Types.Paragraph)
-                                {
-                                    line++;                                    
-                                    break;
-                                }
-                                #endregion exit if CR
-
-                            }
-                            else
-                            {
                                 // ====================
-                                // NORMAL TEXT
+                                // CHORD ALONE
                                 // ====================
-                                pos = strwrkline.IndexOf(trimtx, lastpos);
-
-                                if (pos != -1)
+                                if (trimtx == "" && chordName != "")
                                 {
                                     offset = 0; // Offset de la ligne
                                     lastpos = pos;
+                                    idx++;
 
                                     // Crée un nouvel item syllabe
                                     syllabe syl = new syllabe();
 
-                                    idx++; 
-                                    iline++;
-
-                                    if (iline == 0)
-                                        firstitem = idx;
-                                    
-                                    if (max == 0)
-                                        max = 1;
-                                    
-
-                                    syl.chord = chordName;
+                                    syl.chord = chordName + " ";
                                     syl.line = line;                    // line number of syllabe
-                                    syl.posline = iline;                // position dans la ligne
+                                    syl.posline = 0;                    // position dans la ligne
                                     syl.pos = idx;                      // position dans la chanson
                                     syl.text = tx;                      // text of syllabe
                                     syl.time = itime;                   // time of syllabe
-                                    syl.SylCount = max;                 // number of syllabes in this line
-                                    syl.last = firstitem + max - 1;     // position of last syllabe
-                                    syl.offset = offset;                                    
+                                    syl.SylCount = 1;                   // number of syllabes in this line
+                                    syl.last = idx;                       // position of last syllabe
+                                    syl.offset = offset;
 
                                     syllabes.Add(syl);
 
-                                    if (syl.line == _nbLyricsLines && syl.posline == 0)
-                                    {
-                                        _lastLinePosition = syl.time;
-                                    }
-
-                                    // incrémente index
+                                    // incrémente index syllabe & line number
                                     indexSyllabe++;
+
 
                                     #region exit if CR
                                     // if next syllabe is a linefeed => next line
@@ -1256,23 +1234,90 @@ namespace PicControl
                                     }
                                     #endregion exit if CR
 
-                                    // Replace used letters by a "#"
-                                    string rep = new string('#', trimtx.Length);
-                                    var regex = new Regex(Regex.Escape(trimtx));
-                                    strwrkline = regex.Replace(strwrkline, rep, 1);
+                                }
+                                else
+                                {
+                                    // ====================
+                                    // NORMAL TEXT
+                                    // ====================
+                                    pos = strwrkline.IndexOf(trimtx, lastpos);
+
+                                    if (pos != -1)
+                                    {
+                                        offset = 0; // Offset de la ligne
+                                        lastpos = pos;
+
+                                        // Crée un nouvel item syllabe
+                                        syllabe syl = new syllabe();
+
+                                        idx++;
+                                        iline++;
+
+                                        if (iline == 0)
+                                            firstitem = idx;
+
+                                        if (max == 0)
+                                            max = 1;
+
+
+                                        syl.chord = chordName;
+                                        syl.line = line;                    // line number of syllabe
+                                        syl.posline = iline;                // position dans la ligne
+                                        syl.pos = idx;                      // position dans la chanson
+                                        syl.text = tx;                      // text of syllabe
+                                        syl.time = itime;                   // time of syllabe
+                                        syl.SylCount = max;                 // number of syllabes in this line
+                                        syl.last = firstitem + max - 1;     // position of last syllabe
+                                        syl.offset = offset;
+
+                                        syllabes.Add(syl);
+
+                                        if (syl.line == _nbLyricsLines && syl.posline == 0)
+                                        {
+                                            _lastLinePosition = syl.time;
+                                        }
+
+                                        // incrémente index
+                                        indexSyllabe++;
+
+                                        #region exit if CR
+                                        // if next syllabe is a linefeed => next line
+                                        if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type == plLyric.Types.LineFeed)
+                                        {
+                                            line++;
+                                            break;
+                                        }
+
+                                        if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type == plLyric.Types.Paragraph)
+                                        {
+                                            line++;
+                                            break;
+                                        }
+                                        #endregion exit if CR
+
+                                        // Replace used letters by a "#"
+                                        string rep = new string('#', trimtx.Length);
+                                        var regex = new Regex(Regex.Escape(trimtx));
+                                        strwrkline = regex.Replace(strwrkline, rep, 1);
+                                    }
+
                                 }
 
                             }
-                                                    
-                        }
 
-                    } while (pos != -1 && indexSyllabe < plLyrics.Count);
+                        } while (pos != -1 && indexSyllabe < plLyrics.Count);
 
-                } 
+                    }
 
 
 
-            } while (line <= lstLyricsLines.Count -1 && indexSyllabe < plLyrics.Count);
+                } while (line <= lstLyricsLines.Count - 1 && indexSyllabe < plLyrics.Count);
+
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         /// <summary>
@@ -1544,26 +1589,15 @@ namespace PicControl
 
                         // Taille de l'expace = caractère tiret
                         tx = syllabes[i].text;                        
-
-                        if (tx == "" && syllabes[i].chord != "")
-                            tx = syllabes[i].chord;
-
+                        
                         RectangleF rect = new RectangleF();
                         
                         SizeF sz = g.MeasureString(tx, m_font, new Point(0, 0), sf);
                         x += sz.Width;
 
                         rect.Width = sz.Width;
+                        rect.Height = sz.Height + 1;
 
-                        // FAB CHORDS
-                        if (!bHasChordsInLyrics)
-                        {
-                            rect.Height = sz.Height + 1;
-                        }
-                        else
-                        {
-                            rect.Height = 2 * (sz.Height + 1);
-                        }
 
                         if (idx == 0)
                         {
@@ -1625,25 +1659,14 @@ namespace PicControl
 
                             // Taille de l'expace = caractère tiret
                             tx = syllabes[i].text;
-                            if (tx == "" && syllabes[i].chord != "")
-                                tx = syllabes[i].chord;
-
+                            
                             RectangleF rect = new RectangleF();
 
                             SizeF sz = g.MeasureString(tx, m_font, new Point(0, 0), sf);
                             x += sz.Width;
 
                             rect.Width = sz.Width + 1;
-
-                            // FAB CHORDS
-                            if (!bHasChordsInLyrics)
-                            {
-                                rect.Height = sz.Height + 1;
-                            }
-                            else
-                            {
-                                rect.Height = 2 * (sz.Height + 1);
-                            }
+                            rect.Height = sz.Height + 1;
 
                             if (idx == 0)
                             {
@@ -1778,10 +1801,16 @@ namespace PicControl
         {            
             if (syllabes == null) return;
 
+            int W;
+            int H;
+
+            float x1;           
             string tx = string.Empty;
             int x0 = 0;            
             int i;
             syllabe syllab;
+            int offset = _lineHeight;
+
 
             if (_currentTextPos >= 0)
                 x0 = _currentTextPos - syllabes[_currentTextPos].posline;
@@ -1794,21 +1823,59 @@ namespace PicControl
                 // It is the current line
                 if (syllab.line == currentLine)
                 {
-                    
+
+                    // Rectangle
+                    x1 = rRect[syllab.posline].X;
+                    W = (int)rRect[syllab.posline].Width;
+                    H = (int)rRect[syllab.posline].Height;
+
                     if (syllabes[i].pos < _currentTextPos)
                     {
                         // syllabes avant celle active
-                        drawSyllabe(txtBeforeColor, syllab, y0, e);                            // déjà chanté
-                    }                    
+                        if (bHasChordsInLyrics)
+                        {
+                            if (syllab.chord != "")
+                                drawChord(_chordNextColor, syllab, (int)x1, y0, e);
+
+                            drawSyllabe(txtBeforeColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);                            // déjà chanté
+                        }
+                        else
+                        {
+                            drawSyllabe(txtBeforeColor, syllab, (int)x1, y0, W, H, e);                                            // déjà chanté
+                        }
+                    }
                     else if (syllab.pos == _currentTextPos)
                     {
 
                         // Surbrillance normale   
                         if (bHighLight)
-                            drawSyllabe(txtHighlightColor, syllab, y0, e);                       // surbrillance
+                        {
+                            if (bHasChordsInLyrics)
+                            {
+                                if (syllab.chord != "")
+                                    drawChord(_chordHighlightColor, syllab, (int)x1, y0, e);
+
+                                drawSyllabe(txtHighlightColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);                       // surbrillance
+                            }
+                            else
+                            {
+                                drawSyllabe(txtHighlightColor, syllab, (int)x1, y0, W, H, e);                                         // surbrillance     
+                            }
+                        }
                         else
-                            drawSyllabe(txtNextColor, syllab, y0, e);
-                        
+                        {
+                            if (bHasChordsInLyrics)
+                            {
+                                if (syllab.chord != "")
+                                    drawChord(_chordNextColor, syllab, (int)x1, y0, e);
+                                drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);
+                            }
+                            else
+                            {
+                                drawSyllabe(txtNextColor, syllab, (int)x1, y0, W, H, e);
+                            }
+                        }
+
 
                         #region EndOfLine & calculations
 
@@ -1821,17 +1888,17 @@ namespace PicControl
                         }
                         else if (syllab.SylCount > 1 && syllab.posline == syllab.SylCount - 1)
                         {
-                            bEndOfLine = true;                           
+                            bEndOfLine = true;
                         }
                         else
                         {
-                            bEndOfLine = false;                            
+                            bEndOfLine = false;
 
                             #region calculate next line
 
                             // Start of line
                             if (syllab.posline == 0)
-                            {                                                           
+                            {
                                 // calculate next time for next start of line                           
                                 int next = syllab.SylCount;
                                 if (i + next < syllabes.Count)
@@ -1840,7 +1907,7 @@ namespace PicControl
                                     // Soit le début de la prochaine ligne, soit la fin de la ligne courante
                                     int t1 = syllabes[i + next].time;
                                     int t2 = syllabes[i + next - 1].time + 2 * _beatDuration; // on passe à la ligne au bout de 2 temps
-                                                                        
+
                                     nextStartOfLineTime = t1 < t2 ? t1 : t2;
 
                                     // Duration until next line 
@@ -1848,13 +1915,23 @@ namespace PicControl
                                 }
                             }
                             #endregion
-                        }                        
-                        #endregion  
+                        }
+                        #endregion
                     }
                     // syllabes après celle active
                     else
                     {
-                        drawSyllabe(txtNextColor, syllab, y0, e);                           // pas encore chanté
+                        if (bHasChordsInLyrics)
+                        {
+                            if (syllab.chord != "")
+                                drawChord(_chordNextColor, syllab, (int)x1, (int)y0, e);
+
+                            drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);                           // pas encore chanté
+                        }
+                        else 
+                        { 
+                            drawSyllabe(txtNextColor, syllab, (int)x1, y0, W, H, e);                                      // pas encore chanté
+                        }
                     }                   
                 }
                 // Ligne immédiatement suivante
@@ -1882,28 +1959,20 @@ namespace PicControl
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="e"></param>
-        private void drawSyllabe(Color clr, syllabe syl, int y0, PaintEventArgs e)
+        private void drawSyllabe(Color clr, syllabe syl, int x0, int y0, int W, int H, PaintEventArgs e)
         {
-
             var path = new GraphicsPath();
             string tx = syl.text;
-            string chordName = syl.chord;
-
-            // FAB CHORDS
-            if (bHasChordsInLyrics)
-            {                
-                tx = chordName + Environment.NewLine + tx;
-            }
-
+                        
             try
             {
-                float x0 = rRect[syl.posline].X;
+                //float x0 = rRect[syl.posline].X;
 
                 #region background of syllabe                              
                 if (_bTextBackGround)
                 {
                     // Black background to make text more visible
-                    RectangleF R = new RectangleF(x0, y0, rRect[syl.posline].Width, rRect[syl.posline].Height);
+                    RectangleF R = new RectangleF(x0, y0, W, H);
                     // background
                     e.Graphics.FillRectangle(new SolidBrush(Color.Black), R);
                 }
@@ -1912,6 +1981,7 @@ namespace PicControl
                 #region Draw text of syllabe
                 path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
                 e.Graphics.FillPath(new SolidBrush(clr), path);
+                
                 if (_bColorContour)
                     e.Graphics.DrawPath(new Pen(txtContourColor), path); 
 
@@ -1925,38 +1995,16 @@ namespace PicControl
         }
 
 
-        private void drawSyllabeNextLines(Color clr, syllabe syl, int x0, int y0, PaintEventArgs e)
+        private void drawChord(Color clr, syllabe syl, int x0, int y0, PaintEventArgs e)
         {
-
             var path = new GraphicsPath();
-            string tx = syl.text;
-            string chordName = syl.chord;
-
-            // FAB CHORDS
-            if (bHasChordsInLyrics)
-            {
-                tx = chordName + Environment.NewLine + tx;
-            }
+            string tx = syl.chord;
 
             try
             {
-                //float x0 = rRect[syl.posline].X;
-
-                #region background of syllabe                              
-                if (_bTextBackGround)
-                {
-                    // Black background to make text more visible
-                    RectangleF R = new RectangleF(x0, y0, rRect[syl.posline].Width, rRect[syl.posline].Height);
-                    // background
-                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), R);
-                }
-                #endregion
-
-                #region Draw text of syllabe
-                path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
+                #region Draw text of chord
+                path.AddString(tx, m_font.FontFamily, (int)m_font.Style, 3 * emSize / 4, new Point((int)x0, y0), sf);
                 e.Graphics.FillPath(new SolidBrush(clr), path);
-                if (_bColorContour)
-                    e.Graphics.DrawPath(new Pen(txtContourColor), path);
 
                 path.Dispose();
                 #endregion
@@ -1966,6 +2014,74 @@ namespace PicControl
                 Console.Write("Error: " + ed.Message);
             }
         }
+
+        private void drawSyllabeNextLines(Color clr, syllabe syl, int x0, int y0, int W, int H, PaintEventArgs e)
+        {
+            var path = new GraphicsPath();
+            string tx = syl.text;            
+
+            try
+            {                
+
+                #region background of syllabe                              
+                
+                if (_bTextBackGround)
+                {
+                    // Black background to make text more visible                    
+                    RectangleF R = new RectangleF(x0, y0, W, H);
+                    // background
+                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), R);
+                }
+                
+                #endregion
+
+
+                #region Draw text of syllabe
+                
+                path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
+                e.Graphics.FillPath(new SolidBrush(clr), path);
+                
+                if (_bColorContour)
+                    e.Graphics.DrawPath(new Pen(txtContourColor), path);
+
+                path.Dispose();
+                
+                #endregion
+            }
+            catch (Exception ed)
+            {
+                Console.Write("Error: " + ed.Message);
+            }
+        }
+
+        /// <summary>
+        /// Draw chord
+        /// </summary>
+        /// <param name="clr"></param>
+        /// <param name="syl"></param>
+        /// <param name="x0"></param>
+        /// <param name="y0"></param>
+        /// <param name="e"></param>
+        private void drawChordNextLines(Color clr, syllabe syl, int x0, int y0, PaintEventArgs e)
+        {
+            var path = new GraphicsPath();
+            string tx = syl.chord;
+
+            try
+            {                               
+                #region Draw text of chord
+                path.AddString(tx, m_font.FontFamily, (int)m_font.Style, 3*emSize/4, new Point((int)x0, y0), sf);
+                e.Graphics.FillPath(new SolidBrush(clr), path);
+                
+                path.Dispose();
+                #endregion
+            }
+            catch (Exception ed)
+            {
+                Console.Write("Error: " + ed.Message);
+            }
+        }
+
 
         /// <summary>
         /// Pas utilisé
@@ -2019,69 +2135,23 @@ namespace PicControl
         /// </summary>
         /// <param name="e"></param>
         private void DrawNextLines(int y0, PaintEventArgs e)
-        {
-            string tx;
+        {            
             int x0 = 0;
             int i;
             int offset = _lineHeight;
 
+            int W;
+            int H;
+
+            float x1;
+            float y1;
+
             if (_txtNbLines == 1)
-                offset = 0;
-
-            // Background
-            #region draw background            
-            
-            if (_bTextBackGround && syllabes != null)
-            {
-                if (_currentTextPos >= 0)
-                    x0 = _currentTextPos - syllabes[_currentTextPos].posline;
+                offset = 0;                      
 
 
-                for (int k = 0; k < _txtNbLines; k++)
-                {
-                    int line = currentLine + k + 1;
-
-                    if (_txtNbLines == 1)
-                    {
-                        if (line > currentLine + 1) break;
-                    }
-                    else
-                    {
-                        if (line > currentLine + _txtNbLines - 1) break;
-                    }
-
-                    for (i = x0; i < syllabes.Count; i++)
-                    {
-                        if (syllabes[i].line == line)
-                        {
-                            int pos = syllabes[i].posline;
-                            if (pos < rListNextRect[k].Count)
-                            {
-                                
-                                // Rectangle for next lines
-                                float x1 = rListNextRect[k][pos].X;
-                                float y1 = y0 + (k + 1) * offset;
-                                // Black background to make text more visible
-                                RectangleF R = new RectangleF(x1, y1, rListNextRect[k][pos].Width, rListNextRect[k][pos].Height);
-                                // background
-                                e.Graphics.FillRectangle(new SolidBrush(Color.Black), R);
-                            }
-                        }
-                        else if (syllabes[i].line > line)
-                        {
-                            x0 = i;
-                            break;
-                        }
-                    }
-
-                }                
-            }
-            #endregion
-
-
-            // Draw sentence               *************************** TO DO : Draw Sentence with rectangles *******************************
-
-            // NEW
+            // Draw sentence                           
+            #region draw lyrics
 
             if (_currentTextPos >= 0)
                 x0 = _currentTextPos - syllabes[_currentTextPos].posline;
@@ -2113,21 +2183,28 @@ namespace PicControl
                         if (pos < rListNextRect[k].Count)
                         {
                             // Rectangle for next lines
-                            float x1 = rListNextRect[k][pos].X;
+                            x1 = rListNextRect[k][pos].X;
+                            W = (int)rListNextRect[k][pos].Width;
+                            H = (int)rListNextRect[k][pos].Height;
 
-                            float y1;
                             if (bHasChordsInLyrics)
                             {
-                                y1 = (y0 + 2*(offset + 10)) + k*(2*(offset + 10));
+                                y1 = y0 + 2 * (offset + 10) + k * 2 * (offset + 10);
+
+                                // Draw chord above
+                                if (syllabes[i].chord != "")
+                                    drawChordNextLines(_chordNextColor, syllabes[i], (int)x1, (int)y1, e);
+
+                                // Draw syllabe below at 3*offset/4
+                                drawSyllabeNextLines(txtNextColor, syllabes[i], (int)x1, (int)y1 + 3 * offset / 4, W, H, e);
                             }
                             else
                             {
+                                // No chords
                                 y1 = y0 + (k + 1) * offset;
+                                drawSyllabeNextLines(txtNextColor, syllabes[i], (int)x1, (int)y1, W, H, e);
                             }
-                            //float y1 = y0 + (k + 1) * offset + offset; // rListNextRect[k][pos].Y;
-                            
-                            drawSyllabeNextLines(txtNextColor, syllabes[i], (int)x1, (int)y1, e);
-
+                                                                                        
                         }
                     }
                     else if (syllabes[i].line > line)
@@ -2139,59 +2216,12 @@ namespace PicControl
 
             }
 
-            // END NEW
-            
-            /*
-            // OLD
-            if (_txtNbLines > 1)
-            {
-                for (i = 1; i < _txtNbLines; i++)
-                {
-                    int idx = currentLine + i;
-                    if (idx < lstLyricsLines.Count)
-                    {
-                        
-                        tx = lstLyricsLines[idx];                        
-
-                        x0 = getOffset(tx, emSize);
-
-                        var path = new GraphicsPath();                        
-                        path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point(x0, y0 + i * offset), sf);
-                        
-                        
-                        e.Graphics.FillPath(new SolidBrush(txtNextColor), path);
-                        if (_bColorContour)
-                            e.Graphics.DrawPath(new Pen(txtContourColor), path);
-                        
-                        
-                        path.Dispose();
-                    }
-                }
-            }
-            else
-            {
-                int idx = currentLine + 1;
-                if (idx < lstLyricsLines.Count)
-                {
-                    tx = lstLyricsLines[idx];
-                    x0 = getOffset(tx, emSize);
-
-                    var path = new GraphicsPath();
-                    path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point(x0, y0 + offset), sf);
-                    e.Graphics.FillPath(new SolidBrush(txtNextColor), path);
-                    if (_bColorContour)
-                        e.Graphics.DrawPath(new Pen(txtContourColor), path);
-                    path.Dispose();
-
-                }
-            }
-            // END OLD
-            */
+            #endregion draw lyrics               
 
         }
 
         #endregion draw
-   
+
 
         #region backgroundworker
 

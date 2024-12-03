@@ -67,8 +67,8 @@ namespace Karaboss.Lyrics
 
         private bool _bHasCarriageReturn = false;
 
-        private string patternBracket = @"\[\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*)*)\]";
-        private string patternParenth = @"\(\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*)*)\)";
+        private string patternBracket = @"\[\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\]";
+        private string patternParenth = @"\(\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\)";
 
         private string _InternalSepLines = "¼";
         private string _InternalSepParagraphs = "½";
@@ -595,9 +595,7 @@ namespace Karaboss.Lyrics
             
             // With parenthesis
             Regex chordCheck2 = new Regex(patternParenth);
-            
-
-            //Regex chordCheck = new Regex(@"\[[^\]]+\]");
+                        
             MatchCollection mc = chordCheck.Matches(s);
             MatchCollection mc2 = chordCheck2.Matches(s);
 
@@ -648,8 +646,8 @@ namespace Karaboss.Lyrics
                         _chordDelimiter = ("[", "]");
                         chordElement = mc[0].Value;
 
-                        _removechordpattern = @"\[\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*)*)\]";
-                        //_removechordpattern = @"\[[^\]]+\]";
+                        //_removechordpattern = @"\[\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*)*)\]";
+                        _removechordpattern = patternBracket;
                         bFound = true;
 
                         if (chordElement.Length > 2)
@@ -665,8 +663,9 @@ namespace Karaboss.Lyrics
                         _chordDelimiter = ("(", ")");
                         chordElement = mc2[0].Value;
 
-                        _removechordpattern = @"\(\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*)*)\)";
-                        //_removechordpattern = @"\([^\]]+\)";
+                        //_removechordpattern = @"\(\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug)*[\d\/]*)*)\)";
+                        _removechordpattern = patternParenth;
+
                         bFound = true;
 
                         if (chordElement.Length > 2)
