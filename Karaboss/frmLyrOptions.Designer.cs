@@ -73,6 +73,12 @@
             this.btnFonts = new System.Windows.Forms.Button();
             this.txtFont = new System.Windows.Forms.TextBox();
             this.chkTextUppercase = new System.Windows.Forms.CheckBox();
+            this.chkForceShowChords = new System.Windows.Forms.CheckBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.picChordHighlight = new System.Windows.Forms.PictureBox();
+            this.picChordBefore = new System.Windows.Forms.PictureBox();
+            this.btnChordHighlightColor = new System.Windows.Forms.Button();
+            this.btnChordNormalColor = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -82,6 +88,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictNext)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictHighlight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictBefore)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picChordHighlight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picChordBefore)).BeginInit();
             this.SuspendLayout();
             // 
             // btnBackColor
@@ -138,10 +146,6 @@
             resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
             // 
-            // folderBrowserDialog1
-            // 
-            resources.ApplyResources(this.folderBrowserDialog1, "folderBrowserDialog1");
-            // 
             // txtSlideShow
             // 
             resources.ApplyResources(this.txtSlideShow, "txtSlideShow");
@@ -191,7 +195,6 @@
             // 
             // cbSizeMode
             // 
-            resources.ApplyResources(this.cbSizeMode, "cbSizeMode");
             this.cbSizeMode.FormattingEnabled = true;
             this.cbSizeMode.Items.AddRange(new object[] {
             resources.GetString("cbSizeMode.Items"),
@@ -199,6 +202,7 @@
             resources.GetString("cbSizeMode.Items2"),
             resources.GetString("cbSizeMode.Items3"),
             resources.GetString("cbSizeMode.Items4")});
+            resources.ApplyResources(this.cbSizeMode, "cbSizeMode");
             this.cbSizeMode.Name = "cbSizeMode";
             this.cbSizeMode.SelectedIndexChanged += new System.EventHandler(this.CbSizeMode_SelectedIndexChanged);
             // 
@@ -272,69 +276,69 @@
             // 
             // pnlBalls
             // 
-            resources.ApplyResources(this.pnlBalls, "pnlBalls");
             this.pnlBalls.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.pnlBalls.Controls.Add(this.pictureBox2);
             this.pnlBalls.Controls.Add(this.pictureBox1);
+            resources.ApplyResources(this.pnlBalls, "pnlBalls");
             this.pnlBalls.Name = "pnlBalls";
             // 
             // pictureBox2
             // 
-            resources.ApplyResources(this.pictureBox2, "pictureBox2");
             this.pictureBox2.Image = global::Karaboss.Properties.Resources.ball;
+            resources.ApplyResources(this.pictureBox2, "pictureBox2");
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.TabStop = false;
             // 
             // pictureBox1
             // 
-            resources.ApplyResources(this.pictureBox1, "pictureBox1");
             this.pictureBox1.Image = global::Karaboss.Properties.Resources.ball;
+            resources.ApplyResources(this.pictureBox1, "pictureBox1");
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.TabStop = false;
             // 
             // pictBackColor
             // 
-            resources.ApplyResources(this.pictBackColor, "pictBackColor");
             this.pictBackColor.BackColor = System.Drawing.Color.Black;
+            resources.ApplyResources(this.pictBackColor, "pictBackColor");
             this.pictBackColor.Name = "pictBackColor";
             this.pictBackColor.TabStop = false;
             // 
             // pictContour
             // 
-            resources.ApplyResources(this.pictContour, "pictContour");
             this.pictContour.BackColor = System.Drawing.Color.Black;
+            resources.ApplyResources(this.pictContour, "pictContour");
             this.pictContour.Name = "pictContour";
             this.pictContour.TabStop = false;
             // 
             // pictNext
             // 
-            resources.ApplyResources(this.pictNext, "pictNext");
             this.pictNext.BackColor = System.Drawing.Color.White;
+            resources.ApplyResources(this.pictNext, "pictNext");
             this.pictNext.Name = "pictNext";
             this.pictNext.TabStop = false;
             // 
             // pictHighlight
             // 
-            resources.ApplyResources(this.pictHighlight, "pictHighlight");
             this.pictHighlight.BackColor = System.Drawing.Color.Red;
+            resources.ApplyResources(this.pictHighlight, "pictHighlight");
             this.pictHighlight.Name = "pictHighlight";
             this.pictHighlight.TabStop = false;
             // 
             // pictBefore
             // 
-            resources.ApplyResources(this.pictBefore, "pictBefore");
             this.pictBefore.BackColor = System.Drawing.Color.LightGreen;
+            resources.ApplyResources(this.pictBefore, "pictBefore");
             this.pictBefore.Name = "pictBefore";
             this.pictBefore.TabStop = false;
             // 
             // cbOptionsTextDisplay
             // 
-            resources.ApplyResources(this.cbOptionsTextDisplay, "cbOptionsTextDisplay");
             this.cbOptionsTextDisplay.FormattingEnabled = true;
             this.cbOptionsTextDisplay.Items.AddRange(new object[] {
             resources.GetString("cbOptionsTextDisplay.Items"),
             resources.GetString("cbOptionsTextDisplay.Items1"),
             resources.GetString("cbOptionsTextDisplay.Items2")});
+            resources.ApplyResources(this.cbOptionsTextDisplay, "cbOptionsTextDisplay");
             this.cbOptionsTextDisplay.Name = "cbOptionsTextDisplay";
             this.cbOptionsTextDisplay.SelectedIndexChanged += new System.EventHandler(this.cbOptionsTextDisplay_SelectedIndexChanged);
             // 
@@ -363,20 +367,24 @@
             // 
             // pBox
             // 
-            resources.ApplyResources(this.pBox, "pBox");
             this.pBox.BackColor = System.Drawing.Color.Black;
             this.pBox.bColorContour = true;
             this.pBox.bDemo = false;
             this.pBox.BeatDuration = 0;
             this.pBox.bforceUppercase = false;
+            this.pBox.bHasChordsInLyrics = false;
             this.pBox.bShowParagraphs = true;
             this.pBox.bTextBackGround = true;
+            this.pBox.ChordDelimiter = ((System.ValueTuple<string, string>)(resources.GetObject("pBox.ChordDelimiter")));
+            this.pBox.ChordHighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.pBox.ChordNextColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
             this.pBox.CurrentTextPos = 2;
             this.pBox.CurrentTime = 30;
             this.pBox.DirSlideShow = null;
             this.pBox.FreqDirSlideShow = 0;
             this.pBox.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pBox.KaraokeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            resources.ApplyResources(this.pBox, "pBox");
             this.pBox.LyricsTimes = ((System.Collections.Generic.List<int>)(resources.GetObject("pBox.LyricsTimes")));
             this.pBox.LyricsWords = ((System.Collections.Generic.List<string>)(resources.GetObject("pBox.LyricsWords")));
             this.pBox.m_Alpha = 255;
@@ -385,6 +393,8 @@
             this.pBox.Name = "pBox";
             this.pBox.OptionBackground = null;
             this.pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Bottom;
+            this.pBox.OptionShowChords = true;
+            this.pBox.RemoveChordPattern = null;
             this.pBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
             this.pBox.TransparencyKey = System.Drawing.Color.Lime;
             this.pBox.Txt = "Lorem ipsum dolor sit amet,\rconsectetur adipisicing elit,\rsed do eiusmod tempor i" +
@@ -417,10 +427,56 @@
             this.chkTextUppercase.UseVisualStyleBackColor = true;
             this.chkTextUppercase.CheckedChanged += new System.EventHandler(this.chkTextUppercase_CheckedChanged);
             // 
+            // chkForceShowChords
+            // 
+            resources.ApplyResources(this.chkForceShowChords, "chkForceShowChords");
+            this.chkForceShowChords.Name = "chkForceShowChords";
+            this.chkForceShowChords.UseVisualStyleBackColor = true;
+            this.chkForceShowChords.CheckedChanged += new System.EventHandler(this.chkForceShowChords_CheckedChanged);
+            // 
+            // label10
+            // 
+            resources.ApplyResources(this.label10, "label10");
+            this.label10.Name = "label10";
+            // 
+            // picChordHighlight
+            // 
+            this.picChordHighlight.BackColor = System.Drawing.Color.DarkRed;
+            resources.ApplyResources(this.picChordHighlight, "picChordHighlight");
+            this.picChordHighlight.Name = "picChordHighlight";
+            this.picChordHighlight.TabStop = false;
+            // 
+            // picChordBefore
+            // 
+            this.picChordBefore.BackColor = System.Drawing.Color.DarkOrange;
+            resources.ApplyResources(this.picChordBefore, "picChordBefore");
+            this.picChordBefore.Name = "picChordBefore";
+            this.picChordBefore.TabStop = false;
+            // 
+            // btnChordHighlightColor
+            // 
+            resources.ApplyResources(this.btnChordHighlightColor, "btnChordHighlightColor");
+            this.btnChordHighlightColor.Name = "btnChordHighlightColor";
+            this.btnChordHighlightColor.UseVisualStyleBackColor = true;
+            this.btnChordHighlightColor.Click += new System.EventHandler(this.btnChordHighlightColor_Click);
+            // 
+            // btnChordNormalColor
+            // 
+            resources.ApplyResources(this.btnChordNormalColor, "btnChordNormalColor");
+            this.btnChordNormalColor.Name = "btnChordNormalColor";
+            this.btnChordNormalColor.UseVisualStyleBackColor = true;
+            this.btnChordNormalColor.Click += new System.EventHandler(this.btnChordNormalColor_Click);
+            // 
             // frmLyrOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkForceShowChords);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.picChordHighlight);
+            this.Controls.Add(this.picChordBefore);
+            this.Controls.Add(this.btnChordHighlightColor);
+            this.Controls.Add(this.btnChordNormalColor);
             this.Controls.Add(this.chkTextUppercase);
             this.Controls.Add(this.txtFont);
             this.Controls.Add(this.btnFonts);
@@ -476,6 +532,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictNext)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictHighlight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictBefore)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picChordHighlight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picChordBefore)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -527,5 +585,11 @@
         private System.Windows.Forms.Button btnFonts;
         private System.Windows.Forms.TextBox txtFont;
         private System.Windows.Forms.CheckBox chkTextUppercase;
+        private System.Windows.Forms.CheckBox chkForceShowChords;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.PictureBox picChordHighlight;
+        private System.Windows.Forms.PictureBox picChordBefore;
+        private System.Windows.Forms.Button btnChordHighlightColor;
+        private System.Windows.Forms.Button btnChordNormalColor;
     }
 }

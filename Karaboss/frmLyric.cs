@@ -44,6 +44,7 @@ using Karaboss.Lyrics;
 using static PicControl.pictureBoxControl;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Runtime.Remoting.Messaging;
 
 namespace Karaboss
 {
@@ -92,6 +93,53 @@ namespace Karaboss
                 pnlBalls.Visible = _bShowBalls;
             }
         }
+
+        #region chords
+
+        // Chord color
+        private Color _chordNextColor;
+        public Color ChordNextColor
+        {
+            get { return _chordNextColor; }
+            set
+            {
+                _chordNextColor = value;
+                pBox.ChordNextColor = _chordNextColor;
+            }
+        }
+        // Chord highlight color
+        private Color _chordHighlightColor;
+        public Color ChordHighlightColor
+        {
+            get { return _chordHighlightColor; }
+            set
+            {
+                _chordHighlightColor = value;
+                pBox.ChordHighlightColor = _chordHighlightColor;
+            }
+        }
+
+        private bool _bShowChords = false;
+        public bool bShowChords
+        {
+            get { return _bShowChords; } 
+            set {
+                if (value != _bShowChords)
+                {
+                    _bShowChords = value;
+                    pBox.bShowChords = _bShowChords;
+                    if (_bShowChords)
+                    {
+                        // Recalculate to display chords
+                        myLyricsMgmt.bShowChords = true;
+                        pBox.Invalidate();
+                    }
+                }
+            }
+        }
+
+        #endregion chords
+
 
         #region text characteristics
 
@@ -217,8 +265,9 @@ namespace Karaboss
             }
         }
 
+
         #endregion
-       
+
 
         #region dirslideshow
 
@@ -480,6 +529,15 @@ namespace Karaboss
                 bColorContour = Properties.Settings.Default.bColorContour;
                 TxtContourColor = Properties.Settings.Default.TxtContourColor;
 
+                // Chords
+                _chordNextColor = Properties.Settings.Default.ChordNextColor;
+                _chordHighlightColor = Properties.Settings.Default.ChordHighlightColor;
+                bShowChords = Properties.Settings.Default.bShowChords;
+                
+                if (myLyricsMgmt != null)
+                    myLyricsMgmt.bShowChords = _bShowChords;
+
+
                 // Number of Lines to display
                 TxtNbLines = Properties.Settings.Default.TxtNbLines;
                 // Frequency of slide show
@@ -535,7 +593,7 @@ namespace Karaboss
 
                 // Chord, lyric
                 lyric = plL.Element.Item2;
-                if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)
+                if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics && bShowChords)
                 {
                     // Remove chords included in lyrics
                     lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
@@ -636,7 +694,7 @@ namespace Karaboss
             if (myLyricsMgmt == null) 
                 return;
 
-            if (myLyricsMgmt.bHasChordsInLyrics)
+            if (myLyricsMgmt.bHasChordsInLyrics && bShowChords)
             {
                 pBox.bHasChordsInLyrics = true;
                 pBox.RemoveChordPattern = myLyricsMgmt.RemoveChordPattern;
@@ -751,6 +809,10 @@ namespace Karaboss
                     Properties.Settings.Default.frmLyricLocation = Location;
                     Properties.Settings.Default.frmLyricSize = Size;
                     Properties.Settings.Default.frmLyricMaximized = false;
+
+                    //Properties.Settings.Default.ChordNextColor = Color.FromArgb(255, 196, 13);
+                    //Properties.Settings.Default.ChordHighlightColor = Color.FromArgb(238, 17, 17);
+
                 }
                 // Save settings
                 Properties.Settings.Default.Save();

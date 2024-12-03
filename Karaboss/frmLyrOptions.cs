@@ -55,12 +55,19 @@ namespace Karaboss
         private Color TxtHighlightColor;
         // Text sung color
         private Color TxtBeforeColor;
-        
         // Background color
         private Color TxtBackColor;
 
 
-        // Forece Uppercase
+        // Chord color
+        private Color _chordNextColor;
+        private Color _chordHighlightColor;
+
+        private bool _bShowChords = false;
+
+
+
+        // Force Uppercase
         private bool bForceUppercase = false;
 
         // Contour color
@@ -118,6 +125,11 @@ namespace Karaboss
                 TxtNextColor = Properties.Settings.Default.TxtNextColor;
                 TxtHighlightColor = Properties.Settings.Default.TxtHighlightColor;
                 TxtBeforeColor = Properties.Settings.Default.TxtBeforeColor;
+
+                // Chords
+                _chordNextColor = Properties.Settings.Default.ChordNextColor;
+                _chordHighlightColor = Properties.Settings.Default.ChordHighlightColor;
+                _bShowChords = Properties.Settings.Default.bShowChords;
 
                 bColorContour = Properties.Settings.Default.bColorContour;
                 TxtContourColor = Properties.Settings.Default.TxtContourColor;
@@ -247,6 +259,11 @@ namespace Karaboss
                 Properties.Settings.Default.TxtHighlightColor = TxtHighlightColor;
                 Properties.Settings.Default.TxtBeforeColor = TxtBeforeColor;
 
+                // chords
+                Properties.Settings.Default.ChordNextColor = _chordNextColor;
+                Properties.Settings.Default.ChordHighlightColor = _chordHighlightColor;
+                Properties.Settings.Default.bShowChords = _bShowChords;
+
                 // Contour
                 Properties.Settings.Default.bColorContour = bColorContour;
                 Properties.Settings.Default.TxtContourColor = TxtContourColor;
@@ -342,6 +359,11 @@ namespace Karaboss
                 pBox.TxtHighlightColor = TxtHighlightColor;
                 pBox.TxtBeforeColor = TxtBeforeColor;
 
+                // Chords
+                pBox.ChordNextColor = _chordNextColor;
+                pBox.ChordHighlightColor = _chordHighlightColor;
+                chkForceShowChords.Checked = _bShowChords;
+
                 cbSizeMode.SelectedText = SizeMode.ToString();
 
                 pBox.OptionBackground = bgOption;
@@ -369,6 +391,10 @@ namespace Karaboss
             pBox.TxtBeforeColor = TxtBeforeColor;
 
             pBox.OptionDisplay = (PicControl.pictureBoxControl.OptionsDisplay)OptionDisplay;
+
+            pBox.ChordNextColor = _chordNextColor;
+            pBox.ChordHighlightColor= _chordHighlightColor;
+
 
             //Color of buttons
             pictBackColor.BackColor = TxtBackColor;
@@ -571,6 +597,11 @@ namespace Karaboss
 
                 frmLyric.bColorContour = bColorContour;
                 frmLyric.TxtContourColor = TxtContourColor;
+
+                // Chords
+                frmLyric.ChordNextColor = _chordNextColor;
+                frmLyric.ChordHighlightColor = _chordHighlightColor;
+                frmLyric.bShowChords = _bShowChords;
 
                 // force uppercase
                 frmLyric.bForceUppercase = bForceUppercase;
@@ -886,6 +917,36 @@ namespace Karaboss
         }
 
         #endregion
+
+
+        #region chords
+        private void chkForceShowChords_CheckedChanged(object sender, EventArgs e)
+        {
+            _bShowChords = chkForceShowChords.Checked;
+            pBox.bShowChords = _bShowChords;
+
+        }
+
+        private void btnChordNormalColor_Click(object sender, EventArgs e)
+        {
+            Color clr = DlgGetColor(_chordNextColor);
+            if (clr == _chordNextColor)
+                return;
+            _chordNextColor = clr;            
+            picChordBefore.BackColor = clr;
+            ApplyNewColors();
+        }
+
+        private void btnChordHighlightColor_Click(object sender, EventArgs e)
+        {
+            Color clr = DlgGetColor(_chordHighlightColor);
+            if (clr == _chordHighlightColor)
+                return;
+            _chordHighlightColor = clr;
+            picChordHighlight.BackColor = clr;
+            ApplyNewColors();
+        }
+        #endregion chords
 
     }
 }

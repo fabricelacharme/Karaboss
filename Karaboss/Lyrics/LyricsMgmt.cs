@@ -89,6 +89,11 @@ namespace Karaboss.Lyrics
         // 1 = text        
         public List<List<plLyric>> lstpllyrics { get; set; }
 
+
+        // GForce show chords or not
+        public bool bShowChords {  get; set; }
+        
+        // Is there chords included in lyrics
         public bool bHasChordsInLyrics { get; set; }
 
         private string _lyrics = string.Empty;
@@ -406,8 +411,7 @@ namespace Karaboss.Lyrics
             
             // Initialyze the list of plLyrics to 3 items
             lstpllyrics.Add(new List<plLyric>());       // lyric
-            lstpllyrics.Add(new List<plLyric>());       // text
-            //lstpllyrics.Add(new List<plLyric>());       // chord
+            lstpllyrics.Add(new List<plLyric>());       // text            
 
 
             if (trklyric >= 0)
