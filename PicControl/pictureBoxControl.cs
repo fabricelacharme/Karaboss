@@ -407,6 +407,23 @@ namespace PicControl
             }
         }
 
+        private Font _chordFont;
+        public Font ChordFont
+        {
+            get { return _chordFont; }
+            set
+            {
+                try
+                {
+                    _chordFont = value;
+                    pboxWnd.Invalidate();
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Error: " + e.Message);
+                }
+            }
+        }
 
         /// <summary>
         /// Background color
@@ -576,6 +593,7 @@ namespace PicControl
 
 
             _karaokeFont = new Font("Arial", this.Font.Size);
+            _chordFont = new Font("Comic Sans MS", this._karaokeFont.Size);
 
             #region Move form without title bar
             Application.AddMessageFilter(this);
@@ -914,7 +932,8 @@ namespace PicControl
 
             _chordNextColor = Color.FromArgb(255, 196, 13);         // modern ui Orange
             _chordHighlightColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red
-
+            //_chordFont = new Font(Comic)
+            
             _txtNbLines = 3;         
 
             OptionBackground = "SolidColor";                                    
@@ -1985,7 +2004,8 @@ namespace PicControl
             try
             {
                 #region Draw text of chord
-                path.AddString(tx, m_font.FontFamily, (int)m_font.Style, 3 * emSize / 4, new Point((int)x0, y0), sf);
+                //path.AddString(tx, m_font.FontFamily, (int)m_font.Style, 3 * emSize / 4, new Point((int)x0, y0), sf);
+                path.AddString(tx, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x0, y0), sf);
                 e.Graphics.FillPath(new SolidBrush(clr), path);
 
                 path.Dispose();
@@ -2050,9 +2070,10 @@ namespace PicControl
             string tx = syl.chord;
 
             try
-            {                               
+            {
                 #region Draw text of chord
-                path.AddString(tx, m_font.FontFamily, (int)m_font.Style, 3*emSize/4, new Point((int)x0, y0), sf);
+                //path.AddString(tx, m_font.FontFamily, (int)m_font.Style, 3*emSize/4, new Point((int)x0, y0), sf);
+                path.AddString(tx, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x0, y0), sf);
                 e.Graphics.FillPath(new SolidBrush(clr), path);
                 
                 path.Dispose();
