@@ -45,6 +45,7 @@ using static PicControl.pictureBoxControl;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Runtime.Remoting.Messaging;
+using System.Diagnostics.Eventing.Reader;
 
 namespace Karaboss
 {
@@ -576,6 +577,11 @@ namespace Karaboss
         public void LoadSong(List<plLyric> plLyrics)
         {
             string lyric;
+            string chord;
+            int nblinefeeds = 0;
+            string lastlyric = "<>";
+            bool bAdd = false;
+
             _plLyrics = plLyrics;
             currentTextPos = 0;
             lyrics = "";
@@ -592,7 +598,9 @@ namespace Karaboss
                 pcL.Type = (pictureBoxControl.plLyric.Types)plL.CharType;
 
                 // Chord, lyric
+                chord = plL.Element.Item1;
                 lyric = plL.Element.Item2;
+                                
                 if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics && bShowChords)
                 {
                     // Remove chords included in lyrics
@@ -600,23 +608,48 @@ namespace Karaboss
                 }
 
                 // Add character '-' to lyrics when a chord and no lyric
-                if (plL.Element.Item1 != "" && lyric.Trim() == "")
+                if (chord != "" && lyric.Trim() == "")
                 {
-                    lyric = new string('-', plL.Element.Item1.Length) + new string('-', plL.Element.Item1.Length);
+                    lyric = new string('-', chord.Length) + new string('-', chord.Length);
                 }
-                if (plL.Element.Item1 != "" && lyric.Trim() == "-")
+                if (chord != "" && lyric.Trim() == "-")
                 {
-                    lyric = new string('-', plL.Element.Item1.Length) + new string('-', plL.Element.Item1.Length);
+                    lyric = new string('-', chord.Length) + new string('-', plL.Element.Item1.Length);
                 }
 
+                
+                bAdd = true;
 
-                pcL.Element = (plL.Element.Item1, lyric);
+                // Remove empty elements
+                if (chord.Trim() == "" && lyric.Trim() == "")
+                {
+                    bAdd = false;
+                }
+                if (bAdd)
+                {
+                    // Remove lists of linefeeds
+                    if (lyric.Trim() == _InternalSepLines)
+                    {
+                        if (lastlyric == _InternalSepLines)
+                            bAdd = false;
+
+                        lastlyric = _InternalSepLines;
+                    }
+                    else
+                    {
+                        lastlyric = "<>";
+                    }
 
 
-                pcL.TicksOn = plL.TicksOn;
-                pcL.TicksOff = plL.TicksOff;
+                    if (bAdd)
+                    {
+                        pcL.Element = (chord, lyric);
+                        pcL.TicksOn = plL.TicksOn;
+                        pcL.TicksOff = plL.TicksOff;
 
-                pcLyrics.Add(pcL);
+                        pcLyrics.Add(pcL);
+                    }
+                }
             }
 
             // Load song

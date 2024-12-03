@@ -1027,13 +1027,41 @@ namespace PicControl
             */
             
             string lyr = string.Empty;
-
+            int found;
+            
             // Display a blanck line between paragraphs
             if (_bshowparagraphs)
             {
 
                 // Replace double new lines by new paragraph
                 lyr = ly.Replace(_InternalSepLines + _InternalSepLines,  _InternalSepParagraphs);
+                
+                found = -1;
+                tx = _InternalSepLines + _InternalSepLines;
+                do
+                {
+                    lyr = lyr.Replace(tx, _InternalSepParagraphs);
+                    found = lyr.IndexOf(tx);
+                } while (found > -1);
+
+
+                found = -1;
+                tx = _InternalSepParagraphs + _InternalSepParagraphs;
+                do
+                {
+                    lyr = lyr.Replace(tx, _InternalSepParagraphs);
+                    found = lyr.IndexOf(tx);
+                } while (found > -1);
+
+
+                found = -1;
+                tx = _InternalSepParagraphs + _InternalSepLines + _InternalSepParagraphs;
+                do
+                {
+                    lyr = lyr.Replace(tx, _InternalSepParagraphs);
+                    found = lyr.IndexOf(tx);
+                } while (found > -1);
+
                 lyr = lyr.Replace(_InternalSepLines + _InternalSepParagraphs, _InternalSepParagraphs);
                 lyr = lyr.Replace(_InternalSepParagraphs + _InternalSepLines, _InternalSepParagraphs);
 
