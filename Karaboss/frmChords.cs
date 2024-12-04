@@ -654,30 +654,20 @@ namespace Karaboss
 
             // favors chords included in lyrics
             if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)
-            {
-                //Gridchords = myLyricsMgmt.CreateGridChords();
+            {                
                 GridBeatChords = myLyricsMgmt.CreateGridBeatChordsWithLyrics();
             }
             else
             {
                 // No chords in lyrics => vertical analyse of notes to build a chord map
-                // Display chords in the textbox
-                //ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
-
-                // Chords by half measure
-                //Gridchords = Analyser.Gridchords;
+                // Display chords in the textbox                
+                               
                 // Chords by beat
                 GridBeatChords = Analyser.GridBeatChords;            
             }
 
 
             //Change labels displayed
-            /*
-            for (int i = 1; i <= Gridchords.Count; i++)
-            {
-                Gridchords[i] = (InterpreteChord(Gridchords[i].Item1), InterpreteChord(Gridchords[i].Item2));
-            }
-            */
             for (int i = 1; i <= GridBeatChords.Count; i++)
             {
                 GridBeatChords[i] = InterpreteChord(GridBeatChords[i]);
@@ -685,26 +675,20 @@ namespace Karaboss
 
 
             // Display Chords in horizontal cells
-            //ChordControl1.Gridchords = Gridchords;
+            
             ChordControl1.GridBeatChords = GridBeatChords;
 
             // ********************************* TOUT PASSER EN GRIDBEATCHORD ***************************************
             // TAB 1 ET 2
             // TAB 3 OK
 
-            // Display chords for guitar & piano
-            //ChordRendererGuitar.Gridchords = Gridchords;            
-            //ChordRendererPiano.Gridchords = Gridchords;            
+            // Display chords for guitar & piano                        
             ChordRendererGuitar.GridBeatChords = GridBeatChords;
             ChordRendererPiano.GridBeatChords = GridBeatChords;
 
-            //ChordRendererGuitar.TransferByMeasureToByBeat(sequence1.Numerator, NbMeasures);
-            //ChordRendererPiano.TransferByMeasureToByBeat(sequence1.Numerator, NbMeasures);
-
             ChordRendererGuitar.FilterChords();
             ChordRendererPiano.FilterChords();
-
-            //ChordMapControl1.Gridchords = Gridchords;
+            
             ChordMapControl1.GridBeatChords = GridBeatChords;
         }
 
@@ -789,16 +773,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void HandleLoadProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            //loading = true;
-            try
-            {
-                //toolStripProgressBarPlayer.Value = e.ProgressPercentage;
-                //progressBarPlayer.Value = e.ProgressPercentage;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            }
+            
         }
 
 

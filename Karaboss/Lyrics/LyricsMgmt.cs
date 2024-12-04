@@ -212,9 +212,24 @@ namespace Karaboss.Lyrics
 
                 // Extract chords in lyrics
                 bHasChordsInLyrics = HasChordsInLyrics(_lyrics);
-                if (bHasChordsInLyrics)
+
+                // always show chords ?
+                bShowChords = Properties.Settings.Default.bShowChords;
+
+                if (bShowChords)
                 {
-                    ExtractChordsInLyrics(_lyricstracknum);
+                    if (bHasChordsInLyrics)
+                    {
+                        // Add chords found in lyrics in the list pllyrics
+                        ExtractChordsInLyrics(_lyricstracknum);
+
+                    }
+                    else
+                    {
+                        // Just add chords in list pllyrics
+                        
+                        PopulateEmbeddedChords();
+                    }
 
                 }
             }

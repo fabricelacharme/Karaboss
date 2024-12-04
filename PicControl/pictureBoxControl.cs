@@ -1399,7 +1399,7 @@ namespace PicControl
                     }
                     else
                     {
-                        if (bHasChordsInLyrics && _bShowChords)
+                        if (_bShowChords)
                             ret = (H - ((2*_txtNbLines - 1) * (h + 10))) / 2;
                         else
                             ret = (H - ((_txtNbLines - 1) * (h + 10))) / 2;
@@ -1407,7 +1407,7 @@ namespace PicControl
                     break;
 
                 case OptionsDisplay.Bottom:
-                    if (bHasChordsInLyrics && _bShowChords)
+                    if (_bShowChords)
                         ret = (H - (int)(2.5*_txtNbLines) * _lineHeight) - 10;
                     else
                         ret = (H - _txtNbLines * _lineHeight) - 10;                    
@@ -1542,9 +1542,9 @@ namespace PicControl
                 float totaltextHeight;
                 totaltextHeight = _txtNbLines * (textHeight + 10);
 
-                if (bHasChordsInLyrics && _bShowChords)
+                if (_bShowChords)
                 {
-                    // FAB CHROD
+                    // FAB CHORD
                     totaltextHeight = (int)2.5*totaltextHeight;
                 }
 
@@ -1561,7 +1561,7 @@ namespace PicControl
                             textHeight = MeasureStringHeight(S, femsize);
                             
                             totaltextHeight = _txtNbLines * (textHeight + 10);
-                            if (bHasChordsInLyrics && _bShowChords)
+                            if (_bShowChords)
                             {
                                 // FAB CHROD
                                 totaltextHeight = (int)2.5*totaltextHeight;
@@ -1861,7 +1861,7 @@ namespace PicControl
                     if (syllabes[i].pos < _currentTextPos)
                     {
                         // syllabes avant celle active
-                        if (bHasChordsInLyrics && _bShowChords)
+                        if (_bShowChords)
                         {
                             if (syllab.chord != "")
                                 drawChord(_chordNextColor, syllab, (int)x1, y0, e);
@@ -1879,7 +1879,7 @@ namespace PicControl
                         // Surbrillance normale   
                         if (bHighLight)
                         {
-                            if (bHasChordsInLyrics && _bShowChords)
+                            if (_bShowChords)
                             {
                                 if (syllab.chord != "")
                                     drawChord(_chordHighlightColor, syllab, (int)x1, y0, e);
@@ -1893,7 +1893,7 @@ namespace PicControl
                         }
                         else
                         {
-                            if (bHasChordsInLyrics && _bShowChords)
+                            if (_bShowChords)
                             {
                                 if (syllab.chord != "")
                                     drawChord(_chordNextColor, syllab, (int)x1, y0, e);
@@ -1950,7 +1950,7 @@ namespace PicControl
                     // syllabes après celle active
                     else
                     {
-                        if (bHasChordsInLyrics && _bShowChords)
+                        if (_bShowChords)
                         {
                             if (syllab.chord != "")
                                 drawChord(_chordNextColor, syllab, (int)x1, (int)y0, e);
@@ -2218,7 +2218,7 @@ namespace PicControl
                             W = (int)rListNextRect[k][pos].Width;
                             H = (int)rListNextRect[k][pos].Height;
 
-                            if (bHasChordsInLyrics && _bShowChords)
+                            if (_bShowChords)
                             {
                                 y1 = y0 + 2 * (offset + 10) + k * 2 * (offset + 10);
 

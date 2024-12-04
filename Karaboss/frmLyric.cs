@@ -727,11 +727,17 @@ namespace Karaboss
             if (myLyricsMgmt == null) 
                 return;
 
-            if (myLyricsMgmt.bHasChordsInLyrics && bShowChords)
-            {
-                pBox.bHasChordsInLyrics = true;
-                pBox.RemoveChordPattern = myLyricsMgmt.RemoveChordPattern;
-                pBox.ChordDelimiter = myLyricsMgmt.ChordDelimiter;
+            pBox.bShowChords = bShowChords;
+            pBox.bHasChordsInLyrics = myLyricsMgmt.bHasChordsInLyrics;
+
+            if (bShowChords)
+            {                
+                if (myLyricsMgmt.bHasChordsInLyrics)
+                {
+                    pBox.bHasChordsInLyrics = true;
+                    pBox.RemoveChordPattern = myLyricsMgmt.RemoveChordPattern;
+                    pBox.ChordDelimiter = myLyricsMgmt.ChordDelimiter;
+                }
             }
             
         }
