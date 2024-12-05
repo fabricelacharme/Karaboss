@@ -84,6 +84,9 @@ namespace Karaboss.Lyrics
         public List<plLyric> plLyrics { get; set; }
 
 
+        public int Numerator { get; set; }
+
+        
         // FAB 21/11/2024 : list of the 2 different types of lyric:
         // 0 = lyric
         // 1 = text        
@@ -1994,6 +1997,7 @@ namespace Karaboss.Lyrics
             _tempo = sequence1.Tempo;
             _ppqn = sequence1.Division;
             _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds            
+            Numerator = sequence1.Numerator;
 
             if (sequence1.Time != null)
             {
