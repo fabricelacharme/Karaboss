@@ -52,8 +52,7 @@ namespace PicControl
          * Si songposition <> currenttextpos (syllabe active a changé) => redessine
          */
 
-        bool disposed = false;
-
+        bool disposed = false;        
 
         private BackgroundWorker backgroundWorkerSlideShow;
 
@@ -90,26 +89,8 @@ namespace PicControl
 
 
         #region properties
-        public bool bHasChordsInLyrics { get; set; }
-
-        // character that surrounds each chord
-        // '(,)' pour (C), '[, ]' pour [C]
-        private (string, string) _chordDelimiter;
-        public (string, string) ChordDelimiter
-        {
-            get { return _chordDelimiter; }
-            set { _chordDelimiter = value; }
-        }
-
-        // Pattern to remove chords from lyrics
-        private string _removechordpattern;
-        public string RemoveChordPattern
-        {
-            get { return _removechordpattern; }
-            set { _removechordpattern = value; }
-        }
-
-
+               
+     
         #region Internal lyrics separators
 
         private string _InternalSepLines = "¼";
@@ -321,8 +302,12 @@ namespace PicControl
         public bool bShowChords
         {
             get { return _bShowChords; }
-            set { _bShowChords = value; 
-                pboxWnd?.Invalidate();
+            set {
+                if (value != _bShowChords)
+                {
+                    _bShowChords = value;
+                    pboxWnd?.Invalidate();
+                }
             }
          }
 
@@ -717,7 +702,7 @@ namespace PicControl
         /// </summary>
         /// <param name="songposition"></param>
         public void ColorLyric(int songposition)
-        {
+        {                        
             _currentPosition = songposition;           
             SetOffset();
         }
@@ -746,7 +731,8 @@ namespace PicControl
             string lyrics = string.Empty;          
 
             if (plLyrics.Count > 0)
-            {
+            {                
+                
                 lyrics = string.Empty;
                 pboxWnd.Invalidate();
 
@@ -787,6 +773,7 @@ namespace PicControl
                 createListRectangles(0);       
                 if (syllabes != null && syllabes.Count > 0)
                     createListNextRectangles(syllabes[0].last + 1);
+                            
             } 
                      
         }
@@ -1248,7 +1235,10 @@ namespace PicControl
                             max = GetMaxSyllabesInLine(indexSyllabe, line, plLyrics);
 
                             if (max == 0)
-                                Console.WriteLine("ici");
+                            {
+                                MessageBox.Show("Error: Syllabe not found", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);    
+                                return;
+                            }
                         }
 
                         nbLineFeeds = 0;
@@ -1735,11 +1725,12 @@ namespace PicControl
         {
             if (syllabes == null)
                 return 0;
-
+            
             int x0 = 0;
 
             // optimisation : partir de la dernière position connue si le temps de celle-ci est inférieur au temps actuel
-            if (_currentTextPos > 0 && syllabes[_currentTextPos].time < itime)
+                        
+            if (_currentTextPos > 0 && _currentTextPos < syllabes.Count && syllabes[_currentTextPos].time < itime)
                 x0 = _currentTextPos - 1;
 
             for (int i = x0; i < syllabes.Count; i++)
@@ -1840,9 +1831,12 @@ namespace PicControl
             syllabe syllab;
             int offset = _lineHeight;
 
+            if (_currentTextPos >= syllabes.Count)
+                return;
 
             if (_currentTextPos >= 0)
                 x0 = _currentTextPos - syllabes[_currentTextPos].posline;
+            
                         
             for (i = x0; i < syllabes.Count; i++)            
             {
@@ -2184,8 +2178,12 @@ namespace PicControl
             // Draw sentence                           
             #region draw lyrics
 
+            if (_currentTextPos >= syllabes.Count)
+                return;
+            
             if (_currentTextPos >= 0)
                 x0 = _currentTextPos - syllabes[_currentTextPos].posline;
+            
 
             for (int k = 0; k < _txtNbLines; k++)
             {              
@@ -2433,7 +2431,7 @@ namespace PicControl
         /// Paint should be done only if syllable has changed
         /// </summary>
         private void SetOffset()
-        {          
+        {                                  
             int ctp = findPosition(_currentPosition);  // index syllabe à chanter
             int newvOffset = 0;
 
@@ -2519,7 +2517,7 @@ namespace PicControl
 
 
             // draw text
-            #region draw text
+            #region draw text           
 
             if (lstLyricsLines is null || lstLyricsLines.Count == 0)
                 return;

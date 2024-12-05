@@ -2678,11 +2678,13 @@ namespace Karaboss
                     MessageBox.Show("Invalid MusicXml file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-
             
+            // load lyrics and chords if included in lyrics
+            //  ********************** Why not load embedded chords here if bShowChords is true ? *****************
             myLyricsMgmt = new LyricsMgmt(sequence1);
             bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;
-            
+                       
+
             laststart = 0;
             // Remove all MIDI events after last note
             sequence1.Clean();
@@ -4087,6 +4089,8 @@ namespace Karaboss
 
         }
 
+        #region deleteme
+        /*
         /// <summary>
         /// Lyrics type = Text
         /// </summary>
@@ -4140,6 +4144,8 @@ namespace Karaboss
 
             return -1;
         }
+        */
+        #endregion deleteme
 
         #endregion Lyrics
 
@@ -4206,13 +4212,9 @@ namespace Karaboss
 
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
-
-                // NEW LYRICS
-                // FAB 28/08
-                // BEGIN
+                
                 myLyricsMgmt = new LyricsMgmt(sequence1);
-                bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;
-                //plLyrics = myLyricsMgmt.plLyrics;
+                bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;                
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -4229,41 +4231,9 @@ namespace Karaboss
 
                     // Insert all lyric events
                     InsTrkEvents(tracknum);
-                }
+                }                
 
-                // END
-
-
-                // OLD LYRICS
-                //bHasLyrics = sequence1.HasLyrics;
-                if (bHasLyrics)
-                {
-                    //lyrics = ExtractLyrics();
-
-                    /*
-                     * Bug when format is 0, Karaboss change the format to 1.
-                     * If the file contains lyrics (not text), they are lost when the file is saved
-                     * Workaround is to rewrite the lyrics
-                    */
-                    
-                    /*
-                    if (sequence1.OrigFormat == 0)
-                    {
-                        if (myLyric.lyrictype == CLyric.LyricTypes.Lyric)
-                        {
-                            int tracknum = myLyric.lyricstracknum;
-                            Track track = sequence1.tracks[tracknum];
-
-                            // supprime tous les messages text & lyric
-                            track.deleteLyrics();
-
-                            // Insert all lyric events
-                            InsTrkEvents(tracknum);
-                        }
-                    }
-                    */
-                }
-                
+                              
                 // Remove all MIDI events after last note
                 sequence1.Clean();
                 UpdateMidiTimes();
@@ -4378,13 +4348,9 @@ namespace Karaboss
 
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
-
-                // NEW LYRICS
-                // FAB 28/08
-                // BEGIN
+                
                 myLyricsMgmt = new LyricsMgmt(sequence1);
-                bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;
-                //plLyrics = myLyricsMgmt.plLyrics;
+                bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;                
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -4523,13 +4489,9 @@ namespace Karaboss
 
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
-
-                // NEW LYRICS
-                // FAB 28/08
-                // BEGIN
+                
                 myLyricsMgmt = new LyricsMgmt(sequence1);
-                bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;
-                //plLyrics = myLyricsMgmt.plLyrics;
+                bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;                
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -4547,36 +4509,7 @@ namespace Karaboss
                     // Insert all lyric events
                     InsTrkEvents(tracknum);
                 }
-
-                // END
-
-                // OLD
-                /*
-                bHasLyrics = sequence1.HasLyrics;
-                if (bHasLyrics)
-                {
-                    lyrics = ExtractLyrics();
-
-
-                    // Bug when format is 0, Karaboss change the format to 1.
-                    // If the file contains lyrics (not text), they are lost when the file is saved
-                    // Workaround is to rewrite the lyrics                    
-                    if (sequence1.OrigFormat == 0)
-                    {
-                        if (myLyric.lyrictype == CLyric.LyricTypes.Lyric)
-                        {
-                            int tracknum = myLyric.lyricstracknum;
-                            Track track = sequence1.tracks[tracknum];
-
-                            // supprime tous les messages text & lyric
-                            track.deleteLyrics();
-
-                            // Insert all lyric events
-                            InsTrkEvents(tracknum);
-                        }
-                    }
-                }
-                */
+                               
 
                 // Remove all MIDI events after last note
                 sequence1.Clean();
@@ -7417,8 +7350,7 @@ namespace Karaboss
             SetTitle("New.mid");
 
             myLyricsMgmt = new LyricsMgmt(sequence1);
-            bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;
-            //plLyrics = myLyricsMgmt.plLyrics;
+            bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;            
 
             // Display midi file infos
             DisplayFileInfos();

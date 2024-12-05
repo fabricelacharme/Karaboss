@@ -318,7 +318,6 @@ namespace Karaboss
         /// </summary>
         private void SetOptions()
         {
-
             try
             {
                 pnlBalls.Visible = chkDisplayBalls.Checked;
@@ -339,6 +338,11 @@ namespace Karaboss
 
                 pictHighlight.BackColor = TxtHighlightColor;
                 pictNext.BackColor = TxtNextColor;
+
+                // Chords
+                picChordBefore.BackColor = _chordNextColor;
+                picChordHighlight.BackColor = _chordHighlightColor;
+                pBox.bShowChords = _bShowChords;
 
                 // Force uppercase
                 chkTextUppercase.Checked = bForceUppercase;
@@ -392,6 +396,7 @@ namespace Karaboss
 
             pBox.OptionDisplay = (PicControl.pictureBoxControl.OptionsDisplay)OptionDisplay;
 
+            // Chords
             pBox.ChordNextColor = _chordNextColor;
             pBox.ChordHighlightColor= _chordHighlightColor;
 

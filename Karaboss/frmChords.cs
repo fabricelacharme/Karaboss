@@ -654,8 +654,9 @@ namespace Karaboss
 
             // favors chords included in lyrics
             if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)
-            {                
-                GridBeatChords = myLyricsMgmt.CreateGridBeatChordsWithLyrics();
+            {
+                // Chords by beat
+                GridBeatChords = myLyricsMgmt.FillGridBeatChordsWithLyrics();
             }
             else
             {
@@ -728,9 +729,7 @@ namespace Karaboss
             chord = chord.Trim();
             return chord;
         }
-
         
-
 
         /// <summary>
         /// Display gray cells
@@ -941,7 +940,6 @@ namespace Karaboss
                 LoadSequencer(seq);
 
                 DrawControls();
-
                
                 UpdateMidiTimes();
 

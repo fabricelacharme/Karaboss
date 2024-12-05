@@ -371,11 +371,9 @@
             this.pBox.bColorContour = true;
             this.pBox.bDemo = false;
             this.pBox.BeatDuration = 0;
-            this.pBox.bforceUppercase = false;
-            this.pBox.bHasChordsInLyrics = false;
+            this.pBox.bforceUppercase = false;            
             this.pBox.bShowParagraphs = true;
             this.pBox.bTextBackGround = true;
-            this.pBox.ChordDelimiter = ((System.ValueTuple<string, string>)(resources.GetObject("pBox.ChordDelimiter")));
             this.pBox.ChordHighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
             this.pBox.ChordNextColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
             this.pBox.CurrentTextPos = 2;
@@ -393,8 +391,7 @@
             this.pBox.Name = "pBox";
             this.pBox.OptionBackground = null;
             this.pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Bottom;
-            this.pBox.OptionShowChords = true;
-            this.pBox.RemoveChordPattern = null;
+            this.pBox.OptionShowChords = true;            
             this.pBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
             this.pBox.TransparencyKey = System.Drawing.Color.Lime;
             this.pBox.Txt = "Lorem ipsum dolor sit amet,\rconsectetur adipisicing elit,\rsed do eiusmod tempor i" +

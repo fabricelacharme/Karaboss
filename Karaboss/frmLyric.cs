@@ -31,6 +31,7 @@
  */
 
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -39,13 +40,9 @@ using System.IO;
 using PicControl;
 using System.Runtime.InteropServices;
 using System.Linq;
-using Karaboss.Resources.Localization;
 using Karaboss.Lyrics;
-using static PicControl.pictureBoxControl;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
-using System.Runtime.Remoting.Messaging;
-using System.Diagnostics.Eventing.Reader;
 
 namespace Karaboss
 {
@@ -75,8 +72,9 @@ namespace Karaboss
 
         private bool closing = false;
 
-        #region properties
+        //private bool busy = false;
 
+        #region properties
 
         #region Internal lyrics separators
 
@@ -128,13 +126,11 @@ namespace Karaboss
                 if (value != _bShowChords)
                 {
                     _bShowChords = value;
+                    // Reload myLyricsMgmt ???
+                    ResetDisplayChordsOptions();
                     pBox.bShowChords = _bShowChords;
-                    if (_bShowChords)
-                    {
-                        // Recalculate to display chords
-                        myLyricsMgmt.bShowChords = true;
-                        pBox.Invalidate();
-                    }
+                    
+
                 }
             }
         }
@@ -534,10 +530,7 @@ namespace Karaboss
                 _chordNextColor = Properties.Settings.Default.ChordNextColor;
                 _chordHighlightColor = Properties.Settings.Default.ChordHighlightColor;
                 bShowChords = Properties.Settings.Default.bShowChords;
-                
-                if (myLyricsMgmt != null)
-                    myLyricsMgmt.bShowChords = _bShowChords;
-
+                              
 
                 // Number of Lines to display
                 TxtNbLines = Properties.Settings.Default.TxtNbLines;
@@ -577,8 +570,7 @@ namespace Karaboss
         public void LoadSong(List<plLyric> plLyrics)
         {
             string lyric;
-            string chord;
-            int nblinefeeds = 0;
+            string chord;            
             string lastlyric = "<>";
             bool bAdd = false;
 
@@ -589,7 +581,6 @@ namespace Karaboss
             {
                 lyrics += plLyrics[i].Element.Item2; 
             }
-
                         
             List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();           
             foreach (plLyric plL in plLyrics)
@@ -600,27 +591,30 @@ namespace Karaboss
                 // Chord, lyric
                 chord = plL.Element.Item1;
                 lyric = plL.Element.Item2;
-                                
+
+                // if bShowChords, the chords will be displayed aboce the lyrics, so clean chords included in lyrics
                 if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics && bShowChords)
-                {
-                    // Remove chords included in lyrics
+                {                    
                     lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
                 }
 
-                // Add character '-' to lyrics when a chord and no lyric
-                if (chord != "" && lyric.Trim() == "")
+                if (bShowChords)
                 {
-                    lyric = new string('-', chord.Length) + new string('-', chord.Length);
+                    // Add character '-' to lyrics when a chord and no lyric
+                    if (chord != "" && lyric.Trim() == "")
+                    {
+                        lyric = new string('-', chord.Length) + new string('-', chord.Length);
+                    }
+                    if (chord != "" && lyric.Trim() == "-")
+                    {
+                        lyric = new string('-', chord.Length) + new string('-', plL.Element.Item1.Length);
+                    }
                 }
-                if (chord != "" && lyric.Trim() == "-")
-                {
-                    lyric = new string('-', chord.Length) + new string('-', plL.Element.Item1.Length);
-                }
-
                 
                 bAdd = true;
 
-                // Remove empty elements
+                
+                // Filter unwanted sequences of characters like numerous linefeeds or empty lines                
                 if (chord.Trim() == "" && lyric.Trim() == "")
                 {
                     bAdd = false;
@@ -698,6 +692,8 @@ namespace Karaboss
         /// <param name="songposition"></param>
         public void ColorLyric(int songposition)
         {
+            //if (busy) return;
+            
             // déclencheur : timer_2
             // IMPERATIF : calculer ici la position de la syllabe, utilisée pour l'animation des balles
             // drivé par timer_2 de frmplayer            
@@ -728,19 +724,55 @@ namespace Karaboss
                 return;
 
             pBox.bShowChords = bShowChords;
-            pBox.bHasChordsInLyrics = myLyricsMgmt.bHasChordsInLyrics;
 
             if (bShowChords)
             {                
-                if (myLyricsMgmt.bHasChordsInLyrics)
+                // If no chords in lyrics, add embedded chords
+                if (!myLyricsMgmt.bHasChordsInLyrics)
                 {
-                    pBox.bHasChordsInLyrics = true;
-                    pBox.RemoveChordPattern = myLyricsMgmt.RemoveChordPattern;
-                    pBox.ChordDelimiter = myLyricsMgmt.ChordDelimiter;
+                    myLyricsMgmt.PopulateEmbeddedChords();
+
+                }
+            }                        
+        }
+
+        private void ResetDisplayChordsOptions()
+        {
+            if (myLyricsMgmt == null)
+                return;
+
+            //busy = true;
+            
+            pBox.bShowChords = bShowChords;
+
+            if (bShowChords)
+            {
+                // Show chords
+                
+                // If no chords in lyrics, add embedded chords
+                if (!myLyricsMgmt.bHasChordsInLyrics)
+                {
+                    myLyricsMgmt.PopulateEmbeddedChords();
+
                 }
             }
-            
+            else
+            {
+                // Do not show chords
+                // Remove characters added by chords in the lyrics
+                // > reload song
+                if (!myLyricsMgmt.bHasChordsInLyrics)
+                {
+                    // Remove embedded chords
+                    myLyricsMgmt.RemoveEnbeddedChords();
+                    _plLyrics = myLyricsMgmt.plLyrics;
+                }
+                LoadSong(_plLyrics);
+            }
+
+            //busy = false;
         }
+
 
         #region balls
         public void MoveBalls(int songposition)
@@ -1023,13 +1055,17 @@ namespace Karaboss
             // Chords are in the lyrics
             if (myLyricsMgmt.bHasChordsInLyrics)
             {
-                tx = myLyricsMgmt.GetLyricsLinesWithChords();
+                //tx = myLyricsMgmt.GetLyricsLinesWithChords();                
+                tx = myLyricsMgmt.DisplayWordsAndChords();
             }
             else
             {
                 // Chords have to be guessed with a vertical search
                 myLyricsMgmt.PopulateEmbeddedChords();
-                tx = myLyricsMgmt.GetLyricsLinesWithChords();                
+                
+                //tx = myLyricsMgmt.GetLyricsLinesWithChords();                
+                myLyricsMgmt.CleanGridBeatChords();
+                tx = myLyricsMgmt.DisplayWordsAndChords();
             }
 
             tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
