@@ -36,6 +36,8 @@
             this.picBalls = new BallsControl.Balls();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlWindow = new System.Windows.Forms.Panel();
+            this.btnLyricsChords = new System.Windows.Forms.Button();
+            this.chkChords = new System.Windows.Forms.CheckBox();
             this.btnChangeWords = new System.Windows.Forms.Button();
             this.btnFrmWords = new System.Windows.Forms.Button();
             this.btnFrmOptions = new System.Windows.Forms.Button();
@@ -45,14 +47,10 @@
             this.pBox = new PicControl.pictureBoxControl();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.mnuWords = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.mnuDisplayWords = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuDisplayWordsAndChords = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlBalls.SuspendLayout();
             this.pnlTittle.SuspendLayout();
             this.panel1.SuspendLayout();
             this.pnlWindow.SuspendLayout();
-            this.mnuWords.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlBalls
@@ -93,6 +91,8 @@
             // pnlWindow
             // 
             this.pnlWindow.BackColor = System.Drawing.Color.Gray;
+            this.pnlWindow.Controls.Add(this.btnLyricsChords);
+            this.pnlWindow.Controls.Add(this.chkChords);
             this.pnlWindow.Controls.Add(this.btnChangeWords);
             this.pnlWindow.Controls.Add(this.btnFrmWords);
             this.pnlWindow.Controls.Add(this.btnFrmOptions);
@@ -105,6 +105,25 @@
             this.pnlWindow.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PnlWindow_MouseMove);
             this.pnlWindow.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PnlWindow_MouseUp);
             this.pnlWindow.Resize += new System.EventHandler(this.PnlWindow_Resize);
+            // 
+            // btnLyricsChords
+            // 
+            this.btnLyricsChords.BackColor = System.Drawing.Color.Gray;
+            this.btnLyricsChords.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnLyricsChords, "btnLyricsChords");
+            this.btnLyricsChords.Name = "btnLyricsChords";
+            this.btnLyricsChords.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnLyricsChords, resources.GetString("btnLyricsChords.ToolTip"));
+            this.btnLyricsChords.UseVisualStyleBackColor = false;
+            this.btnLyricsChords.Click += new System.EventHandler(this.btnLyricsChords_Click);
+            // 
+            // chkChords
+            // 
+            resources.ApplyResources(this.chkChords, "chkChords");
+            this.chkChords.Name = "chkChords";
+            this.toolTip1.SetToolTip(this.chkChords, resources.GetString("chkChords.ToolTip"));
+            this.chkChords.UseVisualStyleBackColor = true;
+            this.chkChords.CheckedChanged += new System.EventHandler(this.chkChords_CheckedChanged);
             // 
             // btnChangeWords
             // 
@@ -216,26 +235,6 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
-            // mnuWords
-            // 
-            this.mnuWords.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuDisplayWords,
-            this.mnuDisplayWordsAndChords});
-            this.mnuWords.Name = "mnuWords";
-            resources.ApplyResources(this.mnuWords, "mnuWords");
-            // 
-            // mnuDisplayWords
-            // 
-            this.mnuDisplayWords.Name = "mnuDisplayWords";
-            resources.ApplyResources(this.mnuDisplayWords, "mnuDisplayWords");
-            this.mnuDisplayWords.Click += new System.EventHandler(this.mnuDisplayWords_Click);
-            // 
-            // mnuDisplayWordsAndChords
-            // 
-            this.mnuDisplayWordsAndChords.Name = "mnuDisplayWordsAndChords";
-            resources.ApplyResources(this.mnuDisplayWordsAndChords, "mnuDisplayWordsAndChords");
-            this.mnuDisplayWordsAndChords.Click += new System.EventHandler(this.mnuDisplayWordsAndChords_Click);
-            // 
             // frmLyric
             // 
             resources.ApplyResources(this, "$this");
@@ -255,7 +254,7 @@
             this.pnlTittle.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.pnlWindow.ResumeLayout(false);
-            this.mnuWords.ResumeLayout(false);
+            this.pnlWindow.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -277,8 +276,7 @@
         private System.Windows.Forms.Button btnFrmOptions;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button btnChangeWords;
-        private System.Windows.Forms.ContextMenuStrip mnuWords;
-        private System.Windows.Forms.ToolStripMenuItem mnuDisplayWords;
-        private System.Windows.Forms.ToolStripMenuItem mnuDisplayWordsAndChords;
+        private System.Windows.Forms.Button btnLyricsChords;
+        private System.Windows.Forms.CheckBox chkChords;
     }
 }

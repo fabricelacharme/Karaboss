@@ -126,9 +126,9 @@ namespace Karaboss
                 if (value != _bShowChords)
                 {
                     _bShowChords = value;
-                    // Reload myLyricsMgmt ???
+                    
                     ResetDisplayChordsOptions();
-                    pBox.bShowChords = _bShowChords;
+                    //pBox.bShowChords = _bShowChords;
                     
 
                 }
@@ -530,7 +530,7 @@ namespace Karaboss
                 _chordNextColor = Properties.Settings.Default.ChordNextColor;
                 _chordHighlightColor = Properties.Settings.Default.ChordHighlightColor;
                 bShowChords = Properties.Settings.Default.bShowChords;
-                              
+                chkChords.Checked = bShowChords;              
 
                 // Number of Lines to display
                 TxtNbLines = Properties.Settings.Default.TxtNbLines;
@@ -788,6 +788,7 @@ namespace Karaboss
         /// </summary>
         private void SetDisplayChordsOptions()
         {
+            /*
             if (myLyricsMgmt == null) 
                 return;
 
@@ -807,7 +808,8 @@ namespace Karaboss
                     myLyricsMgmt.PopulateEmbeddedChords();
 
                 }
-            }                        
+            }
+            */
         }
 
         private void ResetDisplayChordsOptions()
@@ -815,42 +817,43 @@ namespace Karaboss
             if (myLyricsMgmt == null)
                 return;
 
-            //busy = true;
-            
+            chkChords.Checked = bShowChords;
             pBox.bShowChords = bShowChords;
 
             if (bShowChords)
             {
-                // Show chords
-                
-                // If no chords in lyrics, add embedded chords
+                // Show chords                                
                 if (myLyricsMgmt.bHasChordsInLyrics)
                 {                    
+                    // chords are included in lyrics
                     myLyricsMgmt.FillGridBeatChordsWithLyrics();
                     myLyricsMgmt.CleanGridBeatChords();
                 }
                 else if (!myLyricsMgmt.bHasChordsInLyrics)
                 {
-                    myLyricsMgmt.PopulateEmbeddedChords();
-
+                    // If no chords in lyrics, add detected chords
+                    myLyricsMgmt.PopulateEmbeddedChords();                    
                 }
+                
+                // Reload lyrics
+                _plLyrics = myLyricsMgmt.plLyrics;
+                LoadSong(_plLyrics);
 
             }
             else
             {
                 // Do not show chords
                 // Remove characters added by chords in the lyrics
-                // > reload song
+                // > reload song                
                 if (!myLyricsMgmt.bHasChordsInLyrics)
                 {
-                    // Remove embedded chords
+                    // Remove detected chords
                     myLyricsMgmt.RemoveEnbeddedChords();
                     _plLyrics = myLyricsMgmt.plLyrics;
                 }
                 LoadSong(_plLyrics);
             }
-
-            //busy = false;
+            
         }
 
 
@@ -1096,10 +1099,31 @@ namespace Karaboss
             if (lyrics == null)
                 return;
             #endregion
-            
-            mnuWords.Show(btnFrmWords, 1, btnFrmWords.Height);                                  
+
+            //mnuWords.Show(btnFrmWords, 1, btnFrmWords.Height);
+
+            string tx;
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            string file = path + "\\lyrics.txt";
+
+            tx = lyrics;
+            tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
+            tx = tx.Replace(_InternalSepLines, "\r\n");
+            System.IO.File.WriteAllText(@file, tx);
+
+            try
+            {
+                System.Diagnostics.Process.Start(@file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
         }
 
+        #region deleteme
+        /*
         /// <summary>
         /// Display only words
         /// </summary>
@@ -1161,6 +1185,66 @@ namespace Karaboss
                 MessageBox.Show(ex.Message);
             }
         }
+        */
+        #endregion deleteme
+
+        /// <summary>
+        /// Display chords when checked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkChords_CheckedChanged(object sender, EventArgs e)
+        {
+            bShowChords = chkChords.Checked;
+            btnLyricsChords.Visible = chkChords.Checked;
+            
+            // Save option
+            Properties.Settings.Default.bShowChords = bShowChords;
+            Properties.Settings.Default.Save();
+        }
+
+        /// <summary>
+        /// Display Words with lyrics in a text file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnLyricsChords_Click(object sender, EventArgs e)
+        {
+            string tx;
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            string file = path + "\\lyrics.txt";
+
+            // Chords are in the lyrics
+            if (myLyricsMgmt.bHasChordsInLyrics)
+            {
+                //tx = myLyricsMgmt.GetLyricsLinesWithChords();                
+                tx = myLyricsMgmt.DisplayWordsAndChords();
+            }
+            else
+            {
+                // Chords have to be guessed with a vertical search
+                myLyricsMgmt.PopulateEmbeddedChords();
+
+                //tx = myLyricsMgmt.GetLyricsLinesWithChords();                
+                myLyricsMgmt.CleanGridBeatChords();
+                tx = myLyricsMgmt.DisplayWordsAndChords();
+            }
+
+            tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
+            tx = tx.Replace(_InternalSepLines, "\r\n");
+            System.IO.File.WriteAllText(@file, tx);
+
+            try
+            {
+                System.Diagnostics.Process.Start(@file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
 
         private void PnlWindow_Resize(object sender, EventArgs e)
         {
@@ -1234,9 +1318,10 @@ namespace Karaboss
             return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
         }
 
+
         #endregion
 
-      
+       
     }
 
 

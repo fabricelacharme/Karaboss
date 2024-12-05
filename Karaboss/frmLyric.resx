@@ -229,7 +229,79 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pnlBalls.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>1</value>
+  </data>
+  <data name="btnLyricsChords.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnLyricsChords.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
+        DAAACwwBP0AiyAAAAAd0SU1FB+ADBg01FAhoEbYAAACWSURBVEhL7ZBBCoBADMS8+v8H63UZUgPt6snA
+        XDTE4nH87OPMB09cL68kxd0rUaGJdlchr+0uuwjJ02UXUaGJdunK6bKLkDxddhEVmmiXrpwuuwjJ02UX
+        UaGJdunK6bKLkDxddhEVmmiXrpwuuwjJ02UXUaGJdlVool0VCvL3rlvfl6hQkB/77MOGdvPa3StJcfd+
+        vucGh8Bwpwi9K20AAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="btnLyricsChords.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnLyricsChords.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1, 246</value>
+  </data>
+  <data name="btnLyricsChords.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 32</value>
+  </data>
+  <data name="btnLyricsChords.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>219, 17</value>
+  </metadata>
+  <data name="btnLyricsChords.ToolTip" xml:space="preserve">
+    <value>Display words with chords</value>
+  </data>
+  <data name="btnLyricsChords.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;btnLyricsChords.Name" xml:space="preserve">
+    <value>btnLyricsChords</value>
+  </data>
+  <data name="&gt;&gt;btnLyricsChords.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnLyricsChords.Parent" xml:space="preserve">
+    <value>pnlWindow</value>
+  </data>
+  <data name="&gt;&gt;btnLyricsChords.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="chkChords.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkChords.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 226</value>
+  </data>
+  <data name="chkChords.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="chkChords.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="chkChords.ToolTip" xml:space="preserve">
+    <value>Display chords</value>
+  </data>
+  <data name="&gt;&gt;chkChords.Name" xml:space="preserve">
+    <value>chkChords</value>
+  </data>
+  <data name="&gt;&gt;chkChords.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkChords.Parent" xml:space="preserve">
+    <value>pnlWindow</value>
+  </data>
+  <data name="&gt;&gt;chkChords.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="btnChangeWords.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -260,9 +332,6 @@
   <data name="btnChangeWords.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
   </data>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>219, 17</value>
-  </metadata>
   <data name="btnChangeWords.ToolTip" xml:space="preserve">
     <value>Edit words</value>
   </data>
@@ -276,7 +345,7 @@
     <value>pnlWindow</value>
   </data>
   <data name="&gt;&gt;btnChangeWords.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="btnFrmWords.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -315,7 +384,7 @@
     <value>pnlWindow</value>
   </data>
   <data name="&gt;&gt;btnFrmWords.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="btnFrmOptions.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -358,7 +427,7 @@
     <value>pnlWindow</value>
   </data>
   <data name="&gt;&gt;btnFrmOptions.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="btnFrmMin.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -395,7 +464,7 @@
     <value>pnlWindow</value>
   </data>
   <data name="&gt;&gt;btnFrmMin.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="btnFrmMax.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -433,7 +502,7 @@
     <value>pnlWindow</value>
   </data>
   <data name="&gt;&gt;btnFrmMax.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
   </data>
   <data name="btnFrmClose.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -476,7 +545,7 @@
     <value>pnlWindow</value>
   </data>
   <data name="&gt;&gt;btnFrmClose.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <data name="pnlWindow.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Right</value>
@@ -582,35 +651,11 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>0</value>
   </data>
   <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>132, 17</value>
   </metadata>
-  <metadata name="mnuWords.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>317, 17</value>
-  </metadata>
-  <data name="mnuDisplayWords.Size" type="System.Drawing.Size, System.Drawing">
-    <value>213, 22</value>
-  </data>
-  <data name="mnuDisplayWords.Text" xml:space="preserve">
-    <value>Display Words</value>
-  </data>
-  <data name="mnuDisplayWordsAndChords.Size" type="System.Drawing.Size, System.Drawing">
-    <value>213, 22</value>
-  </data>
-  <data name="mnuDisplayWordsAndChords.Text" xml:space="preserve">
-    <value>Display Words and Chords</value>
-  </data>
-  <data name="mnuWords.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 48</value>
-  </data>
-  <data name="&gt;&gt;mnuWords.Name" xml:space="preserve">
-    <value>mnuWords</value>
-  </data>
-  <data name="&gt;&gt;mnuWords.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -6847,18 +6892,6 @@
   </data>
   <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mnuDisplayWords.Name" xml:space="preserve">
-    <value>mnuDisplayWords</value>
-  </data>
-  <data name="&gt;&gt;mnuDisplayWords.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mnuDisplayWordsAndChords.Name" xml:space="preserve">
-    <value>mnuDisplayWordsAndChords</value>
-  </data>
-  <data name="&gt;&gt;mnuDisplayWordsAndChords.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmLyric</value>
