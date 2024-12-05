@@ -591,6 +591,9 @@ namespace Karaboss
             for (int i = 0; i < plLyrics.Count; i++)
             //foreach (plLyric plL in plLyrics)
             {
+                if (i == 32)
+                    Console.Write("ici");
+                
                 plLyric plL = plLyrics[i];
                 
                 pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric();
@@ -621,14 +624,14 @@ namespace Karaboss
                         if (lyric.Trim() == "")
                         {
                             lyric = new string('-', chord.Length) + new string('-', chord.Length);
-                            //isChord = true;
+                            nbChords++;
                         }
                         else if (lyric.Trim() == "-")
                         {
                             lyric = new string('-', chord.Length) + new string('-', plL.Element.Item1.Length);
-                            //isChord = true;
+                            nbChords++;
                         }
-                        nbChords++;
+                        
                     }
                     else
                     {
@@ -793,7 +796,13 @@ namespace Karaboss
             if (bShowChords)
             {                
                 // If no chords in lyrics, add embedded chords
-                if (!myLyricsMgmt.bHasChordsInLyrics)
+                if (myLyricsMgmt.bHasChordsInLyrics)
+                {
+                    
+                    myLyricsMgmt.FillGridBeatChordsWithLyrics();
+                    myLyricsMgmt.CleanGridBeatChords();
+                }
+                else if (!myLyricsMgmt.bHasChordsInLyrics)
                 {
                     myLyricsMgmt.PopulateEmbeddedChords();
 
@@ -815,11 +824,17 @@ namespace Karaboss
                 // Show chords
                 
                 // If no chords in lyrics, add embedded chords
-                if (!myLyricsMgmt.bHasChordsInLyrics)
+                if (myLyricsMgmt.bHasChordsInLyrics)
+                {                    
+                    myLyricsMgmt.FillGridBeatChordsWithLyrics();
+                    myLyricsMgmt.CleanGridBeatChords();
+                }
+                else if (!myLyricsMgmt.bHasChordsInLyrics)
                 {
                     myLyricsMgmt.PopulateEmbeddedChords();
 
                 }
+
             }
             else
             {

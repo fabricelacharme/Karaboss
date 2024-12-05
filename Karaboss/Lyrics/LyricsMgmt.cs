@@ -603,8 +603,8 @@ namespace Karaboss.Lyrics
             MatchCollection mc = chordCheck.Matches(s);
             MatchCollection mc2 = chordCheck2.Matches(s);
 
-
-            if (mc.Count > 0 | mc2.Count > 0) 
+            // Exlude copyright (C)
+            if (mc.Count > 1 | mc2.Count > 1) 
                 return true;
             else
                 return false;                      
@@ -1960,6 +1960,9 @@ namespace Karaboss.Lyrics
             #endregion check
 
             // Initialize dictionary
+            if (plLyrics[plLyrics.Count - 1].Beat > beats)
+                beats = plLyrics[plLyrics.Count - 1].Beat;
+
             for (int i = 1; i <= beats; i++)
             {
                 _gridbeatchords[i] = ChordNotFound;
