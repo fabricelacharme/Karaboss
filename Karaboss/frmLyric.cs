@@ -43,6 +43,7 @@ using System.Linq;
 using Karaboss.Lyrics;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace Karaboss
 {
@@ -484,89 +485,66 @@ namespace Karaboss
             //AlloModifyDirSlideShow = false;
         }
 
+
         /// <summary>
-        /// Load song in picturebox control
-        ///  1/4 = LineFeed
-        ///  1/2 = Paragraph
+        /// Formate lyrics
         /// </summary>
-        public void LoadSong(List<plLyric> plLyrics)
+        /// <returns></returns>
+        private List<plLyric> CleanLyrics(List<plLyric> plLs)
         {
-            string lyric;
             string chord;
-            string lastlyric = "<>";
-            bool bAdd = false;
-
-            //bool isChord = false;
+            string lyric;
+            string lastlyric = string.Empty;
+            bool bAdd;
             int nbChords = 0;
-            //plLyric.CharTypes LastType;
+            plLyric pcL2 = new plLyric();
 
-            _plLyrics = plLyrics;
-            currentTextPos = 0;
-            lyrics = "";
-            for (int i = 0; i < plLyrics.Count; i++)
+            List<plLyric> lst = new List<plLyric>();
+            
+            for (int i = 0; i < plLs.Count; i++)
             {
-                lyrics += plLyrics[i].Element.Item2;
-            }
-
-            List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
-
-            for (int i = 0; i < plLyrics.Count; i++)
-            //foreach (plLyric plL in plLyrics)
-            {
-                
-                plLyric plL = plLyrics[i];
-
-                pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric();
-                pcL.Type = (pictureBoxControl.plLyric.Types)plL.CharType;
-
-                bAdd = true;                                
-
-                // Chord, lyric
+                bAdd = true;
+                plLyric plL = plLs[i];
                 chord = plL.Element.Item1;
                 lyric = plL.Element.Item2;
 
                 if (bShowChords)
                 {
-
                     // if bShowChords, the chords will be displayed above the lyrics, so clean chords included in lyrics
                     if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)
                     {
                         lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
                     }
 
+                    if (chord != "")
+                    {
+                        // Add character '-' to lyrics when a chord and no lyric
+                        if (lyric.Trim() == "")
+                        {
+                            lyric = new string('-', chord.Length + 1) + " ";
+                        }
+                        else if (lyric.Trim() == "-")
+                        {
+                            lyric = new string('-', chord.Length + 1) + " ";
+                        }                        
+                    }
 
+                    // Search for a long list of chords (instrumental)
                     if (chord != "")
                     {
                         if (lyric == new string('-', chord.Length + 1) + " ")
                         {
                             nbChords++;
                         }
-                        
-                        /*
-                        // Add character '-' to lyrics when a chord and no lyric
-                        if (lyric.Trim() == "")
-                        {
-                            lyric = new string('-', chord.Length) + "- ";
-                            //lyric = new string('-', chord.Length) + new string('-', chord.Length);
-                            nbChords++;
-                        }
-                        else if (lyric.Trim() == "-")
-                        {
-                            //lyric = new string('-', chord.Length) + new string('-', chord.Length);
-                            lyric = new string('-', chord.Length - 1) + "-- ";
-                            nbChords++;
-                        }
-                        */
-
                     }
                     else
                     {
-                        // No chord in this element
+                        // reset if no chord in this element
                         nbChords = 0;
                     }
                 }
 
-                // Remove empty lines
+                // Remove empty elements
                 if (chord.Trim() == "" && lyric.Trim() == "")
                 {
                     bAdd = false;
@@ -588,56 +566,102 @@ namespace Karaboss
                     }
                 }
 
-
                 if (bAdd)
                 {
-
-                    // Linefeed before Text following an instrumental
-                    if (pcL.Type == pictureBoxControl.plLyric.Types.Text && nbChords > 1 && lyric.IndexOf("-") == -1)
+                    // Add a Linefeed before Text following an instrumental
+                    if (plL.CharType == plLyric.CharTypes.Text && nbChords > 1 && lyric.IndexOf("-") == -1)
                     {
+                        pcL2 = new plLyric();
 
-                        pictureBoxControl.plLyric pcL2 = new pictureBoxControl.plLyric();
-
-                        pcL2.Type = pictureBoxControl.plLyric.Types.LineFeed;
+                        pcL2.CharType = plLyric.CharTypes.LineFeed;
                         pcL2.Element = ("", _InternalSepLines);
                         pcL2.TicksOn = plL.TicksOn;
                         pcL2.TicksOff = plL.TicksOff;
-                        pcLyrics.Add(pcL2);
+                        lst.Add(pcL2);
                     }
 
-                    // Start of an instrumental
+                    // Add normal element
+                    pcL2 = new plLyric();
+                    pcL2.CharType = plL.CharType;
+                    pcL2.Element = (chord, lyric);
+                    pcL2.TicksOff = plL.TicksOff;
+                    pcL2.TicksOn = plL.TicksOn;                                        
+                    lst.Add(pcL2);
 
 
-                    pcL.Element = (chord, lyric);
-                    pcL.TicksOn = plL.TicksOn;
-                    pcL.TicksOff = plL.TicksOff;
-
-                    pcLyrics.Add(pcL);
-
-                    // Linefeed too many chords
-                    if (i < plLyrics.Count - 1)
+                    // Add a Linefeed when too many chords
+                    if (i < plLs.Count - 1)
                     {
-                        plLyric p = plLyrics[i + 1];
+                        plLyric p = plLs[i + 1];
                         if (p.CharType != plLyric.CharTypes.LineFeed && p.CharType != plLyric.CharTypes.ParagraphSep)
                         {
-
                             if ((myLyricsMgmt.Numerator > 2 && nbChords > myLyricsMgmt.Numerator - 1) || myLyricsMgmt.Numerator < 3 && nbChords > 3)
                             {
                                 nbChords = 0;
+                                pcL2 = new plLyric();
 
-                                pictureBoxControl.plLyric pcL2 = new pictureBoxControl.plLyric();
-
-                                pcL2.Type = pictureBoxControl.plLyric.Types.LineFeed;
+                                pcL2.CharType = plLyric.CharTypes.LineFeed;
                                 pcL2.Element = ("", _InternalSepLines);
                                 pcL2.TicksOn = plL.TicksOn;
                                 pcL2.TicksOff = plL.TicksOff;
-                                pcLyrics.Add(pcL2);
+                                lst.Add(pcL2);
                             }
                         }
-
                     }
-                }
 
+
+                }
+            }
+
+            return lst;
+        }
+
+
+        /// <summary>
+        /// Load song in picturebox control
+        ///  1/4 = LineFeed
+        ///  1/2 = Paragraph
+        /// </summary>
+        public void LoadSong(List<plLyric> plLyrics)
+        {
+            string lyric;
+            string chord;
+
+            List<plLyric> plLs = plLyrics;
+            
+            // Formate lyrics
+            plLs = CleanLyrics(plLs);                                         
+
+            // surtout pas car on l'a modifié et il faut pouvoir revenir en arrière
+            // Si on swiche
+            //_plLyrics = plLyrics;
+            currentTextPos = 0;
+            
+            lyrics = "";
+            for (int i = 0; i < plLs.Count; i++)
+            {
+                lyrics += plLs[i].Element.Item2;
+            }
+
+            List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
+
+            for (int i = 0; i < plLs.Count; i++)           
+            {                
+                plLyric plL = plLs[i];
+
+                pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric();
+                pcL.Type = (pictureBoxControl.plLyric.Types)plL.CharType;                                          
+
+                // Chord, lyric
+                chord = plL.Element.Item1;
+                lyric = plL.Element.Item2;
+                                                                    
+
+                // Add element
+                pcL.Element = (chord, lyric);
+                pcL.TicksOn = plL.TicksOn;
+                pcL.TicksOff = plL.TicksOff;
+                pcLyrics.Add(pcL);                               
             }
 
             // Load song
@@ -675,7 +699,7 @@ namespace Karaboss
 
                     if (plType == plLyric.CharTypes.Text)
                     {
-                        if (!bShowChords)
+                        //if (!bShowChords)
                             LyricsTimes.Add(plTime);
 
                     }
@@ -855,7 +879,7 @@ namespace Karaboss
             }
 
             // Load lyrics (first operture of frmLyric) or reload lyrics if we have switched form "show chords" to "do not show chords" or reverse.
-            _plLyrics = myLyricsMgmt.plLyrics;
+            _plLyrics = myLyricsMgmt.plLyrics;            
             LoadSong(_plLyrics);
             LoadBallsTimes(_plLyrics);
 

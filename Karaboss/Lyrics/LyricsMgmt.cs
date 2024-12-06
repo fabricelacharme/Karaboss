@@ -865,7 +865,7 @@ namespace Karaboss.Lyrics
             string lyric = string.Empty;
             List<plLyric> lst = new List<plLyric>();
             int nbRemoved = 0;
-            for (int i = 0; i < plLyrics.Count - 1; i++) 
+            for (int i = 0; i < plLyrics.Count; i++) 
             {
                 lyric = plLyrics[i].Element.Item2;
                 if (lyric.Trim().Length > 0)
@@ -923,7 +923,7 @@ namespace Karaboss.Lyrics
                         //for (int j = 0; j < mc.Count; j++) 
                         //{ 
 
-                        _chordDelimiter = ("[", "]");
+                        //_chordDelimiter = ("[", "]");
                         chordElement = mc[0].Value;
                         _removechordpattern = patternBracket;
                         bFound = true;
@@ -938,7 +938,7 @@ namespace Karaboss.Lyrics
                     } 
                     else if (mc2.Count > 0)
                     {
-                        _chordDelimiter = ("(", ")");
+                        //_chordDelimiter = ("(", ")");
                         chordElement = mc2[0].Value;
                         _removechordpattern = patternParenth;
 
@@ -952,7 +952,7 @@ namespace Karaboss.Lyrics
 
                     if (bFound)
                     {                       
-                        // Update list item with chord
+                        // Update list item with chord                        
                         plLyrics[i].Element = (chordElement, lyricElement);
                         
                     }
