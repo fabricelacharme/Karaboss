@@ -403,7 +403,7 @@ namespace Karaboss
             {
                 _plLyrics = myLyricsMgmt.plLyrics;
                 LoadSong(_plLyrics);
-                LoadBallsTimes(_plLyrics);
+                //LoadBallsTimes(_plLyrics);
             }
             
 
@@ -672,6 +672,8 @@ namespace Karaboss
             //Initial position
             pBox.CurrentTextPos = -1;
 
+
+            LoadBallsTimes(plLs);
         }
 
         /// <summary>
@@ -682,7 +684,7 @@ namespace Karaboss
         {
             string lyric;
             string chord;
-
+            bool b;
             if (plLyrics.Count > 0)
             {
                 LyricsTimes = new List<int>();
@@ -699,9 +701,18 @@ namespace Karaboss
 
                     if (plType == plLyric.CharTypes.Text)
                     {
-                        //if (!bShowChords)
+                        if (!bShowChords)
+                        {
                             LyricsTimes.Add(plTime);
-
+                        }
+                        else
+                        {
+                            b = (chord != "" & lyric == new string('-', chord.Length + 1) + " ");
+                            if (!b)
+                            {
+                                LyricsTimes.Add(plTime);
+                            }
+                        }
                     }
                 }
                 picBalls.LoadTimes(LyricsTimes);
@@ -881,7 +892,7 @@ namespace Karaboss
             // Load lyrics (first operture of frmLyric) or reload lyrics if we have switched form "show chords" to "do not show chords" or reverse.
             _plLyrics = myLyricsMgmt.plLyrics;            
             LoadSong(_plLyrics);
-            LoadBallsTimes(_plLyrics);
+            //LoadBallsTimes(_plLyrics);
 
 
         }

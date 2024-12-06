@@ -1729,8 +1729,8 @@ namespace PicControl
             int x0 = 0;
 
             // optimisation : partir de la dernière position connue si le temps de celle-ci est inférieur au temps actuel
-                        
-            if (_currentTextPos > 0 && _currentTextPos < syllabes.Count && syllabes[_currentTextPos].time < itime)
+
+            if (_currentTextPos > 0 && _currentTextPos < syllabes.Count && syllabes[_currentTextPos].time < itime)            
                 x0 = _currentTextPos - 1;
 
             for (int i = x0; i < syllabes.Count; i++)
