@@ -4067,10 +4067,10 @@ namespace Karaboss
                 tx = sSong + " - " + Strings.Singer + ": " + sSinger;
 
             frmLyric.DisplaySinger(tx);
-            frmLyric.LoadSong(myLyricsMgmt.plLyrics);
+            //frmLyric.LoadSong(myLyricsMgmt.plLyrics);
             
             
-            frmLyric.LoadBallsTimes(myLyricsMgmt.plLyrics);
+            //frmLyric.LoadBallsTimes(myLyricsMgmt.plLyrics);
                       
             if (frmLyric.WindowState == FormWindowState.Minimized)
                 frmLyric.WindowState = FormWindowState.Normal;
@@ -5095,7 +5095,7 @@ namespace Karaboss
             if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
             {
                 if (frmLyric != null)
-                frmLyric.MoveBalls(sequencer1.Position);
+                    frmLyric.MoveBalls(sequencer1.Position);
             }
         }
 
@@ -5220,8 +5220,7 @@ namespace Karaboss
         /// </summary>
         private void StopTimerBalls()
         {
-            timer3.Stop();
-            //timerBalls.Stop();
+            timer3.Stop();            
 
             if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
                 frmLyric.StopTimerBalls();

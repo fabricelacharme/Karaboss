@@ -675,13 +675,8 @@ namespace Karaboss
             }
 
 
-            // Display Chords in horizontal cells
-            
-            ChordControl1.GridBeatChords = GridBeatChords;
-
-            // ********************************* TOUT PASSER EN GRIDBEATCHORD ***************************************
-            // TAB 1 ET 2
-            // TAB 3 OK
+            // Display Chords in horizontal cells            
+            ChordControl1.GridBeatChords = GridBeatChords;           
 
             // Display chords for guitar & piano                        
             ChordRendererGuitar.GridBeatChords = GridBeatChords;
