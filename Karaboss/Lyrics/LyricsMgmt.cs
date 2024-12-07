@@ -85,7 +85,7 @@ namespace Karaboss.Lyrics
 
 
         public int Numerator { get; set; }
-
+        public int Division { get; set; }
         
         // FAB 21/11/2024 : list of the 2 different types of lyric:
         // 0 = lyric
@@ -418,7 +418,9 @@ namespace Karaboss.Lyrics
                             elm = plLyrics[k - 1].Element.Item2;
                             if (elm.Length > 0)
                             {
-                                if (elm.Substring(1, elm.Length - 1) != " ")
+                                // FAB 07/12
+                                //if (elm.Substring(1, elm.Length - 1) != " ")
+                                if (elm.Substring(elm.Length - 1, 1) != " ")
                                 {
                                     plLyrics[k - 1].Element = (plLyrics[k - 1].Element.Item1, elm + " ");
                                     //nbmodified++;
@@ -864,7 +866,7 @@ namespace Karaboss.Lyrics
         {
             string lyric = string.Empty;
             List<plLyric> lst = new List<plLyric>();
-            int nbRemoved = 0;
+            //int nbRemoved = 0;
             for (int i = 0; i < plLyrics.Count; i++) 
             {
                 lyric = plLyrics[i].Element.Item2;
@@ -872,13 +874,13 @@ namespace Karaboss.Lyrics
                 {
                     lst.Add(plLyrics[i]);
                 }
-                else
-                {
-                    nbRemoved++;
-                }
+                //else
+                //{
+                //    nbRemoved++;
+                //}
             }
 
-            Console.WriteLine("*********************** Empty lyrics removed = " + nbRemoved);
+            //Console.WriteLine("*********************** Empty lyrics removed = " + nbRemoved);
             return lst;
 
         }
@@ -1375,6 +1377,13 @@ namespace Karaboss.Lyrics
 
             string chordName = string.Empty;
 
+            #region guard
+            if (GridBeatChords == null || plLyrics == null)
+            {
+                MessageBox.Show("Error: GridBeatChords is null", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return "";
+            }
+            #endregion guard
 
             // Create a dictionary key = beat, value = list of lyrics in this beat
             Dictionary<int, List<plLyric>> diclyr = new Dictionary<int, List<plLyric>>();
@@ -2085,6 +2094,7 @@ namespace Karaboss.Lyrics
             _ppqn = sequence1.Division;
             _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds            
             Numerator = sequence1.Numerator;
+            Division = sequence1.Division;
 
             if (sequence1.Time != null)
             {

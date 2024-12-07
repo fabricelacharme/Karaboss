@@ -568,7 +568,9 @@ namespace Karaboss
 
                 if (bAdd)
                 {
+                    // ===========================
                     // Add a Linefeed before Text following an instrumental
+                    // ===========================
                     if (plL.CharType == plLyric.CharTypes.Text && nbChords > 1 && lyric.IndexOf("-") == -1)
                     {
                         pcL2 = new plLyric();
@@ -579,8 +581,11 @@ namespace Karaboss
                         pcL2.TicksOff = plL.TicksOff;
                         lst.Add(pcL2);
                     }
+                  
 
+                    // ===========================
                     // Add normal element
+                    // ===========================
                     pcL2 = new plLyric();
                     pcL2.CharType = plL.CharType;
                     pcL2.Element = (chord, lyric);
@@ -589,7 +594,9 @@ namespace Karaboss
                     lst.Add(pcL2);
 
 
-                    // Add a Linefeed when too many chords
+                    // ===========================
+                    // Add a Linefeed after 4 chords
+                    // ===========================
                     if (i < plLs.Count - 1)
                     {
                         plLyric p = plLs[i + 1];
@@ -610,6 +617,61 @@ namespace Karaboss
                     }
 
 
+                    // ===========================
+                    // Add a linefeed after a lyric before a serie of chords
+                    // ===========================
+                    if (plL.CharType == plLyric.CharTypes.Text && i < plLs.Count - 4)
+                    {
+                        chord = plL.Element.Item1;
+                        lyric = plL.Element.Item2;
+
+                        // if lyric normal
+                        if (lyric != new string('-', chord.Length + 1) + " ")
+                        {
+                            // Check if next is a chord alone
+                            plLyric p = plLs[i + 1];
+                            if (p.CharType == plLyric.CharTypes.Text)
+                            {
+                                chord = p.Element.Item1;
+                                lyric = p.Element.Item2;
+                                if (chord != "" && lyric == new string('-', chord.Length + 1) + " ")
+                                {
+
+                                    p = plLs[i + 2];
+                                    if (p.CharType == plLyric.CharTypes.Text)
+                                    {
+                                        chord = p.Element.Item1;
+                                        lyric = p.Element.Item2;
+
+                                        if (chord != "" && lyric == new string('-', chord.Length + 1) + " ")
+                                        {
+                                            p = plLs[i + 3];
+                                            if (p.CharType == plLyric.CharTypes.Text)
+                                            {
+                                                chord = p.Element.Item1;
+                                                lyric = p.Element.Item2;
+
+                                                if (chord != "" && lyric == new string('-', chord.Length + 1) + " ")
+                                                {
+                                                    // ====================
+                                                    // add a linefeed
+                                                    pcL2 = new plLyric();
+
+                                                    pcL2.CharType = plLyric.CharTypes.LineFeed;
+                                                    pcL2.Element = ("", _InternalSepLines);
+                                                    pcL2.TicksOn = plL.TicksOn;
+                                                    pcL2.TicksOff = plL.TicksOff;
+                                                    lst.Add(pcL2);
+                                                    // ====================
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -699,8 +761,10 @@ namespace Karaboss
                     plType = plLyrics[i].CharType;
                     plTime = plLyrics[i].TicksOn;
 
-                    if (plType == plLyric.CharTypes.Text)
+                    if (plType == plLyric.CharTypes.Text || plType == plLyric.CharTypes.ParagraphSep)
                     {
+                        LyricsTimes.Add(plTime);
+                        /*
                         if (!bShowChords)
                         {
                             LyricsTimes.Add(plTime);
@@ -713,8 +777,11 @@ namespace Karaboss
                                 LyricsTimes.Add(plTime);
                             }
                         }
+                        */
                     }
                 }
+                
+                picBalls.Division = myLyricsMgmt.Division;
                 picBalls.LoadTimes(LyricsTimes);
 
                 // FAB 26/10/16
@@ -1260,6 +1327,12 @@ namespace Karaboss
             if (myLyricsMgmt.bHasChordsInLyrics)
             {
                 //tx = myLyricsMgmt.GetLyricsLinesWithChords();                
+                if (myLyricsMgmt.GridBeatChords == null)
+                {
+                    myLyricsMgmt.FillGridBeatChordsWithLyrics();
+                    myLyricsMgmt.CleanGridBeatChords();
+                }
+                
                 tx = myLyricsMgmt.DisplayWordsAndChords();
             }
             else

@@ -47,7 +47,7 @@ namespace BallsControl
 
         private int _x;
         private int _y;
-        private int _speed;
+        private float _speed;
         #endregion
 
         #region Properties
@@ -76,7 +76,7 @@ namespace BallsControl
         }
 
 
-        public int Speed
+        public float Speed
         {
             set
             {

@@ -1016,6 +1016,7 @@ namespace PicControl
             string lyr = string.Empty;
             int found;
             
+            /*
             // Display a blanck line between paragraphs
             if (_bshowparagraphs)
             {
@@ -1058,6 +1059,19 @@ namespace PicControl
             else
             {
                 lyr = ly.Replace(_InternalSepParagraphs, _InternalSepLines);
+            }
+            */
+
+            lyr = ly;
+            if (_bshowparagraphs) 
+            {
+                // Replace new paragraph by newline + new paragraph + new line to allow split by linefeed
+                lyr = lyr.Replace(_InternalSepParagraphs, _InternalSepLines + _InternalSepParagraphs + _InternalSepLines);
+
+            }
+            else
+            {
+                lyr = ly.Replace(_InternalSepParagraphs, _InternalSepLines); 
             }
 
             // TO BE MODIFIED
