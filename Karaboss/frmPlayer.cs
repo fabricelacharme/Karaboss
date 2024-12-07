@@ -69,7 +69,8 @@ namespace Karaboss
 
         // Lyrics management
         public LyricsMgmt myLyricsMgmt;
-        private bool bHasLyrics = false;        
+        private bool bHasLyrics = false;  
+        private bool bShowChords = false;
 
         // SlideShow directory
         public string dirSlideShow;
@@ -371,6 +372,9 @@ namespace Karaboss
 
             // Lyrics
             timer2.Interval = 50;
+
+            bShowChords = Properties.Settings.Default.bShowChords;
+
         }      
 
         #region SheetMusic
@@ -2681,7 +2685,7 @@ namespace Karaboss
             
             // load lyrics and chords if included in lyrics
             //  ********************** Why not load embedded chords here if bShowChords is true ? *****************
-            myLyricsMgmt = new LyricsMgmt(sequence1);
+            myLyricsMgmt = new LyricsMgmt(sequence1);            
             bHasLyrics = myLyricsMgmt.LyricType != LyricTypes.None;
                        
 
@@ -2932,6 +2936,12 @@ namespace Karaboss
                     }
 
                     // Lyrics exist
+                    if (!myLyricsMgmt.bHasChordsInLyrics)
+                    {
+                        // Remove detected chords
+                        myLyricsMgmt.NormalExtractLyrics();
+                    }
+
                     frmLyricsEdit frmLyricsEdit;
                     frmLyricsEdit = new frmLyricsEdit(sequence1, myLyricsMgmt.plLyrics, myLyricsMgmt, MIDIfileFullPath);
 

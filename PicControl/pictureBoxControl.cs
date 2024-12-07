@@ -1014,7 +1014,7 @@ namespace PicControl
             */
             
             string lyr = string.Empty;
-            int found;
+            //int found;
             
             /*
             // Display a blanck line between paragraphs
