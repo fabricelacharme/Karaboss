@@ -2180,10 +2180,16 @@ namespace Karaboss.Lyrics
         public void OrgExtractLyrics()
         {
             OrgplLyrics = ExtractLyrics();
+            
             // Search for the melody track
             _melodytracknum = GuessMelodyTrack(OrgplLyrics);
+
+
+
         }
         
+        
+
         public void NormalExtractLyrics()
         {
             plLyrics = ExtractLyrics();

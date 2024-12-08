@@ -255,6 +255,7 @@ namespace Karaboss
             try
             {
                 Properties.Settings.Default.LyricsEditFont = _lyricseditfont;
+                //Properties.Settings.Default.Save();
             }
             catch (Exception e) 
             {
@@ -2714,11 +2715,17 @@ namespace Karaboss
             else
                 ltype = LyricTypes.Lyric;
 
+            
+            
+            
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
                 frmPlayer frmPlayer = GetForm<frmPlayer>();
                 frmPlayer.ReplaceLyrics(localplLyrics, ltype, melodytracknum);
             }
+
+
+
 
         }
 

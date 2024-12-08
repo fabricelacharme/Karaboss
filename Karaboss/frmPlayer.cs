@@ -3710,7 +3710,7 @@ namespace Karaboss
             }
 
         }
-       
+
 
         /// <summary>
         /// Replace existing lyrics by others
@@ -3718,10 +3718,146 @@ namespace Karaboss
         /// <param name="pLyrics"></param>
         public void ReplaceLyrics(List<plLyric> newpLyrics, LyricTypes newLyricType, int melodytracknum)
         {
+            Track track = sequence1.tracks[melodytracknum];
+
+            // supprime tous les messages text & lyric
+            track.deleteLyrics();
+
+            // Insert all lyric events
+            TrkInsertLyrics(track, newpLyrics, newLyricType);
+
+            // Reload myLyricMgmt
+            myLyricsMgmt = new LyricsMgmt(sequence1);
+
+            // Refresh frmLyric
+            frmLyric.LoadSong(myLyricsMgmt.plLyrics);
+
+            // File was modified
+            FileModified();
+
+        }
+
+        /// <summary>
+        /// Insert new lyrics in the target track
+        /// </summary>
+        /// <param name="Track"></param>
+        /// <param name="l"></param>
+        /// <param name="LyricType"></param>
+        private void TrkInsertLyrics(Track Track, List<plLyric> l, LyricTypes LyricType)
+        {
+            int currentTick = 0;
+            int lastcurrenttick = 0;
+
+            string currentElement = string.Empty;
+            string currentType = string.Empty;
+            string currentCR = string.Empty;
+                        
+            Track.Lyrics.Clear();
+            Track.LyricsText.Clear();
+
+            Track.TotalLyricsL = "";
+            Track.TotalLyricsT = "";
+
+
+            // Recréé tout les textes et lyrics
+            for (int idx = 0; idx < l.Count; idx++)
+            {
+                plLyric pll = l[idx];
+
+                // Si c'est un CR, le stocke et le collera au prochain lyric
+                if (pll.CharType == plLyric.CharTypes.LineFeed)
+                {
+                    if (LyricType == LyricTypes.Text)
+                        currentCR = m_SepLine;
+                    else
+                        currentCR = "\r";
+                }
+                else if (pll.CharType == plLyric.CharTypes.ParagraphSep)
+                {
+                    if (LyricType == LyricTypes.Text)
+                        currentCR = m_SepParagraph;
+                    else
+                        currentCR = "\r\r";
+                }
+                else
+                {
+                    // C'est un lyric
+                    currentTick = pll.TicksOn;
+                    if (currentTick >= lastcurrenttick)
+                    {
+                        lastcurrenttick = currentTick;
+                        currentElement = currentCR + pll.Element.Item2;
+
+                        // Transforme en byte la nouvelle chaine
+                        // ERROR FAB 16-01-2021 : must tyake into accout encoding selected by end user !!!
+                        byte[] newdata; // = Encoding.Default.GetBytes(currentElement);
+
+                        switch (OpenMidiFileOptions.TextEncoding)
+                        {
+                            case "Ascii":
+                                //sy = System.Text.Encoding.Default.GetString(data);
+                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
+                                break;
+                            case "Chinese":
+                                System.Text.Encoding chinese = System.Text.Encoding.GetEncoding("gb2312");
+                                newdata = chinese.GetBytes(currentElement);
+                                break;
+                            case "Japanese":
+                                System.Text.Encoding japanese = System.Text.Encoding.GetEncoding("shift_jis");
+                                newdata = japanese.GetBytes(currentElement);
+                                break;
+                            case "Korean":
+                                System.Text.Encoding korean = System.Text.Encoding.GetEncoding("ks_c_5601-1987");
+                                newdata = korean.GetBytes(currentElement);
+                                break;
+                            case "Vietnamese":
+                                System.Text.Encoding vietnamese = System.Text.Encoding.GetEncoding("windows-1258");
+                                newdata = vietnamese.GetBytes(currentElement);
+                                break;
+                            default:
+                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
+                                break;
+                        }
+                                               
+
+                        MetaMessage mtMsg;
+
+                        // Update Track.Lyrics List
+                        Track.Lyric L = new Track.Lyric()
+                        {
+                            Element = pll.Element.Item2,
+                            TicksOn = pll.TicksOn,
+                            Type = (Track.Lyric.Types)pll.CharType,
+                        };
+
+
+                        if (LyricType == LyricTypes.Text)
+                        {
+                            // si lyrics de type text
+                            mtMsg = new MetaMessage(MetaType.Text, newdata);
+                            Track.LyricsText.Add(L);
+                        }
+                        else
+                        {
+                            // si lyrics de type lyrics
+                            mtMsg = new MetaMessage(MetaType.Lyric, newdata);
+                            Track.Lyrics.Add(L);
+                        }
+
+                        // Insert new message
+                        Track.Insert(currentTick, mtMsg);
+                    }
+                    currentCR = "";
+                }
+            }
+        }
+
+
+        public void ReplaceLyrics2(List<plLyric> newpLyrics, LyricTypes newLyricType, int melodytracknum)
+        {
             bool bRefreshDisplay = false;
 
-            // FAB 28/08
-            //this.plLyrics = newpLyrics;
+            // FAB 28/08            
             myLyricsMgmt.plLyrics = newpLyrics;
 
             if (myLyricsMgmt.plLyrics.Count == 0)

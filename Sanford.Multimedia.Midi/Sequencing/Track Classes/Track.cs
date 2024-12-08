@@ -2626,6 +2626,8 @@ namespace Sanford.Multimedia.Midi
         #endregion measures
 
         #region lyrics
+        
+        
         /// <summary>
         /// Delete all lyrics (text or lyric)
         /// </summary>
@@ -2661,6 +2663,25 @@ namespace Sanford.Multimedia.Midi
             }
         }
 
+        public string GetLyricsL()
+        {
+            string tx = string.Empty;
+            for (int i = 0; i < Lyrics.Count;i++)
+            {
+                tx += Lyrics[i].Element;
+            }
+            return tx;
+        }
+
+        public string GetLyricsT()
+        {
+            string tx = string.Empty;
+            for (int i = 0; i < LyricsText.Count; i++)
+            {
+                tx += LyricsText[i].Element;
+            }
+            return tx;
+        }
         #endregion lyrics
 
 
@@ -3604,7 +3625,8 @@ namespace Sanford.Multimedia.Midi
         {
             get
             {
-                return ( (totallyricst != null && totallyricst.Length > 2) || (totallyricsl != null && totallyricsl.Length > 2));
+                //return ( (totallyricst != null && totallyricst.Length > 2) || (totallyricsl != null && totallyricsl.Length > 2));
+                return (TotalLyricsT != null && TotalLyricsT.Length > 2) || (TotalLyricsL != null && TotalLyricsL.Length > 2);
             }
         }
 
@@ -3613,8 +3635,8 @@ namespace Sanford.Multimedia.Midi
         public string TotalLyricsT
         {
             get
-            {                
-                return totallyricst;
+            {
+                return GetLyricsT(); // totallyricst;
             }
             set
             {
@@ -3627,8 +3649,8 @@ namespace Sanford.Multimedia.Midi
         public string TotalLyricsL
         {
             get
-            {                
-                return totallyricsl;
+            {
+                return GetLyricsL();// totallyricsl;
             }
             set
             {
