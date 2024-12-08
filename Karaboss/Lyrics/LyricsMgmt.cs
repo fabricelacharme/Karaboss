@@ -971,7 +971,7 @@ namespace Karaboss.Lyrics
         }
 
         /// <summary>
-        /// Truncate instrmental / Add a linefeed 
+        /// Truncate instrumental / Add a linefeed 
         /// </summary>
         /// <param name="l"></param>
         /// <returns></returns>
@@ -1196,7 +1196,7 @@ namespace Karaboss.Lyrics
                         //for (int j = 0; j < mc.Count; j++) 
                         //{ 
 
-                        //_chordDelimiter = ("[", "]");
+                        _chordDelimiter = ("[", "]");
                         chordElement = mc[0].Value;
                         _removechordpattern = patternBracket;
                         bFound = true;
@@ -1211,7 +1211,7 @@ namespace Karaboss.Lyrics
                     } 
                     else if (mc2.Count > 0)
                     {
-                        //_chordDelimiter = ("(", ")");
+                        _chordDelimiter = ("(", ")");
                         chordElement = mc2[0].Value;
                         _removechordpattern = patternParenth;
 
@@ -1224,7 +1224,9 @@ namespace Karaboss.Lyrics
                     }
 
                     if (bFound)
-                    {                       
+                    {
+
+                        lyricElement = formateLyricOfDetectedChord(chordElement, lyricElement);
                         // Update list item with chord                        
                         plLyrics[i].Element = (chordElement, lyricElement);
                         
@@ -2150,7 +2152,31 @@ namespace Karaboss.Lyrics
             return lyric;
         }
 
-        
+        private string formateLyricOfDetectedChord(string chord, string lyric)
+        {
+            
+            string s = lyric;
+
+            if (chord != "")
+            {
+                s = Regex.Replace(lyric, RemoveChordPattern, @"");
+                
+                // Add character '-' to lyrics when a chord and no lyric
+                if (s.Trim() == "")
+                {
+                    s = new string('-', chord.Length + 1) + " ";
+                }
+                else if (s.Trim() == "-")
+                {
+                    s = new string('-', chord.Length + 1) + " ";
+                }
+                return _chordDelimiter.Item1 + chord + _chordDelimiter.Item2 + s;
+            }
+
+            return s;
+        }
+
+
         public void OrgExtractLyrics()
         {
             OrgplLyrics = ExtractLyrics();
