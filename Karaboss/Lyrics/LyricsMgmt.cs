@@ -83,6 +83,7 @@ namespace Karaboss.Lyrics
         // Default List of lyrics
         public List<plLyric> plLyrics { get; set; }
 
+        public List<plLyric> OrgplLyrics { get; set; }
 
         public int Numerator { get; set; }
         public int Division { get; set; }
@@ -179,6 +180,8 @@ namespace Karaboss.Lyrics
             sequence1 = sequence;
             
             UpdateMidiTimes();
+
+            OrgExtractLyrics();
 
             NormalExtractLyrics();
 
@@ -486,13 +489,14 @@ namespace Karaboss.Lyrics
         /// <summary>
         /// Lyrics extraction & display
         /// </summary>
-        private string ExtractLyrics()
+        private List<plLyric> ExtractLyrics()
         {
             double l_text = 1;
             double l_lyric = 1;
-            string lyrics = string.Empty;
+            //string lyrics = string.Empty;
 
-            plLyrics = new List<plLyric>();
+            List<plLyric> lst = new List<plLyric>();
+            //plLyrics = new List<plLyric>();
 
             // ----------------------------------------------------------------------
             // Objectif : comparer texte et lyriques et choisir la meilleure solution
@@ -536,41 +540,41 @@ namespace Karaboss.Lyrics
                     // Elimine texte et choisi les lyrics                    
                     _lyrictype = LyricTypes.Lyric;
                     _lyricstracknum = trklyric;
-                    lyrics = sequence1.tracks[trklyric].TotalLyricsL;
+                    _lyrics = sequence1.tracks[trklyric].TotalLyricsL;
                 }
                 else
                 {
                     // Elimine lyrics et choisi les textes                    
                     _lyrictype = LyricTypes.Text;
                     _lyricstracknum = trktext;
-                    lyrics = sequence1.tracks[trktext].TotalLyricsT;
+                    _lyrics = sequence1.tracks[trktext].TotalLyricsT;
                 }
             }
             else if (trktext >= 0)
             {
                 _lyrictype = LyricTypes.Text;
                 _lyricstracknum = trktext;
-                lyrics = sequence1.tracks[trktext].TotalLyricsT;
+                _lyrics = sequence1.tracks[trktext].TotalLyricsT;
             }
             else if (trklyric >= 0)
             {
                 _lyrictype = LyricTypes.Lyric;
                 _lyricstracknum = trklyric;
-                lyrics = sequence1.tracks[trklyric].TotalLyricsL;
+                _lyrics = sequence1.tracks[trklyric].TotalLyricsL;
             }
             else
             {
                 _lyrictype = LyricTypes.None;
-                lyrics = string.Empty;
+                _lyrics = string.Empty;
             }
 
             if (_lyrictype == LyricTypes.Lyric)
-                plLyrics = lstpllyrics[0];
+                lst = lstpllyrics[0];
             else if (_lyrictype == LyricTypes.Text)
-                plLyrics = lstpllyrics[1];
+                lst = lstpllyrics[1];
                    
 
-            return lyrics;
+            return lst;
         }
 
         private List<plLyric> LoadLyricsText(Sanford.Multimedia.Midi.Track track)
@@ -766,7 +770,7 @@ namespace Karaboss.Lyrics
         /// A very complex search :-)
         /// </summary>
         /// <returns></returns>
-        private int GuessMelodyTrack()
+        private int GuessMelodyTrack(List<plLyric> l)
         {
             // Comparer timing pistes à pistes
             int tracknum = _lyricstracknum;
@@ -784,9 +788,9 @@ namespace Karaboss.Lyrics
 
             // Eliminer les cr
             int nblyrics = 0;
-            for (int i = 0; i < plLyrics.Count; i++)
+            for (int i = 0; i < l.Count; i++)
             {
-                if (plLyrics[i].CharType == plLyric.CharTypes.Text && plLyrics[i].TicksOn > 0)
+                if (l[i].CharType == plLyric.CharTypes.Text && l[i].TicksOn > 0)
                     nblyrics++;
             }
 
@@ -820,9 +824,9 @@ namespace Karaboss.Lyrics
                             if (tn > oldtn) // Avoid to search for all the notes belonging to a chords having the same time
                             {
                                 // Search lyrics 
-                                for (int k = 0; k < plLyrics.Count; k++)
+                                for (int k = 0; k < l.Count; k++)
                                 {
-                                    int tl = plLyrics[k].TicksOn;
+                                    int tl = l[k].TicksOn;
                                     if (tl > tn - delta && tl < tn + delta)
                                     {
                                         nbfound++;
@@ -925,6 +929,8 @@ namespace Karaboss.Lyrics
                 chord = plL.Element.Item1;
                 lyric = plL.Element.Item2;
 
+              
+
                 // Search for a long list of chords (instrumental)
                 if (chord != "")
                 {
@@ -933,7 +939,11 @@ namespace Karaboss.Lyrics
                         nbChords++;
                     }
                 }
-                if (plL.CharType == plLyric.CharTypes.LineFeed || plL.CharType == plLyric.CharTypes.ParagraphSep)
+                if (plL.CharType == plLyric.CharTypes.Text && nbChords <= 1 && lyric.IndexOf("-") == -1)
+                {
+                    nbChords = 0;
+                }
+                else  if (plL.CharType == plLyric.CharTypes.LineFeed || plL.CharType == plLyric.CharTypes.ParagraphSep)
                 {
                     nbChords = 0;
                 }
@@ -989,7 +999,11 @@ namespace Karaboss.Lyrics
                     }
                 }
 
-                if (plL.CharType == plLyric.CharTypes.LineFeed || plL.CharType == plLyric.CharTypes.ParagraphSep)
+                if (plL.CharType == plLyric.CharTypes.Text && nbChords <= 1 && lyric.IndexOf("-") == -1)
+                {
+                    nbChords = 0;
+                }
+                else if (plL.CharType == plLyric.CharTypes.LineFeed || plL.CharType == plLyric.CharTypes.ParagraphSep)
                 {
                     nbChords = 0;
                 }
@@ -2136,13 +2150,27 @@ namespace Karaboss.Lyrics
             return lyric;
         }
 
+        
+        public void OrgExtractLyrics()
+        {
+            OrgplLyrics = ExtractLyrics();
+            // Search for the melody track
+            _melodytracknum = GuessMelodyTrack(OrgplLyrics);
+        }
+        
         public void NormalExtractLyrics()
         {
-            _lyrics = ExtractLyrics();
+            plLyrics = ExtractLyrics();
 
+
+            // FAB !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // Search for the melody track
+            //_melodytracknum = GuessMelodyTrack();
+            //return;
+            // FAB !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             if (plLyrics.Count > 0)
-            {
+            {                                
                 #region rearrange lyrics
                 // Guess spacing or not and carriage return or not
                 GetLyricsSpacingModel();
@@ -2161,7 +2189,7 @@ namespace Karaboss.Lyrics
                 #endregion rearrange lyrics
 
                 // Search for the melody track
-                _melodytracknum = GuessMelodyTrack();
+                _melodytracknum = GuessMelodyTrack(plLyrics);
 
                 // Fix lyrics endtime to notes of the melody track end time
                 CheckTimes();

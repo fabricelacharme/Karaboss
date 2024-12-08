@@ -2943,7 +2943,8 @@ namespace Karaboss
                     }
 
                     frmLyricsEdit frmLyricsEdit;
-                    frmLyricsEdit = new frmLyricsEdit(sequence1, myLyricsMgmt.plLyrics, myLyricsMgmt, MIDIfileFullPath);
+                    //frmLyricsEdit = new frmLyricsEdit(sequence1, myLyricsMgmt.plLyrics, myLyricsMgmt, MIDIfileFullPath);
+                    frmLyricsEdit = new frmLyricsEdit(sequence1, myLyricsMgmt.OrgplLyrics, myLyricsMgmt, MIDIfileFullPath);
 
                     frmLyricsEdit.Show();
                 }

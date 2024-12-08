@@ -657,6 +657,8 @@ namespace Karaboss
             }
             else
             {                
+                //     A REVOIR, TROP COMPLIQUE *****************************************************
+                
                 // Variante 1 : on affiche les lyrics par défaut et on essaye de raccrocher les notes 
                 for (int i = 0; i < lLyrics.Count; i++)
                 {
@@ -741,7 +743,8 @@ namespace Karaboss
                     }
                 }
 
-                // Il reste des notes ?                
+                // Il reste des notes ?
+                //  BUG AVEC HEY JUDE 2 notes à la fin et LET IT BE
                 while (idx < melodyTrack.Notes.Count)
                 {
                     int afterplTime = melodyTrack.Notes[idx].StartTime;                                        
