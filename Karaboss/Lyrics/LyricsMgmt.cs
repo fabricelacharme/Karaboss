@@ -295,41 +295,29 @@ namespace Karaboss.Lyrics
             // test 1 : Add a CR to each uppercase
             for (int k = 0; k < plLyrics.Count; k++)
             {
-                if (plLyrics[k].CharType == plLyric.CharTypes.Text) 
+                if (plLyrics[k].CharType == plLyric.CharTypes.Text)
                 {
-                    element = plLyrics[k].Element.Item2;                    
-
-                    // Check if uppercase
-                    if (char.IsUpper(element, 0))
-                    {
-                        if (lyricLengh > minimumlinelength)
+                    element = plLyrics[k].Element.Item2;
+                    if (element.Trim().Length > 0)
+                    { 
+                        // Check if uppercase
+                        if (char.IsUpper(element, 0))
                         {
-                            // Add linefeed first
-                            _tmpL.Add(new plLyric() { CharType = plLyric.CharTypes.LineFeed, Element = ("", _InternalSepLines), TicksOn = plLyrics[k].TicksOn, TicksOff = plLyrics[k].TicksOff });
-                            lyricLengh = 0;
-                            // Add lyric after
-                            _tmpL.Add(plLyrics[k]);
+                            if (lyricLengh > minimumlinelength)
+                            {
+                                // Add linefeed first
+                                _tmpL.Add(new plLyric() { CharType = plLyric.CharTypes.LineFeed, Element = ("", _InternalSepLines), TicksOn = plLyrics[k].TicksOn, TicksOff = plLyrics[k].TicksOff });
+                                lyricLengh = 0;
+                                // Add lyric after
+                                _tmpL.Add(plLyrics[k]);
+                            }
+                            else
+                            {
+                                lyricLengh += element.Length;
+                                _tmpL.Add(plLyrics[k]);
+                            }
                         }
-                        else
-                        {
-                            lyricLengh += element.Length;
-                            _tmpL.Add(plLyrics[k]);
-                        }
-                    }
-                    else if (char.IsPunctuation(element.Trim(), element.Trim().Length - 1))
-                    {
-                        // Add lyric first
-                        _tmpL.Add(plLyrics[k]);
-
-                        // Add linefeed after
-                        _tmpL.Add(new plLyric() { CharType = plLyric.CharTypes.LineFeed, Element = ("", _InternalSepLines), TicksOn = plLyrics[k].TicksOn, TicksOff = plLyrics[k].TicksOff });
-                        lyricLengh = 0;
-                    }
-                    else 
-                    {
-                        // No upper case, but too long
-                        // Cut if blank
-                        if (lyricLengh > linelength && element.IndexOf(" ") > -1)
+                        else if (char.IsPunctuation(element.Trim(), element.Trim().Length - 1))
                         {
                             // Add lyric first
                             _tmpL.Add(plLyrics[k]);
@@ -337,13 +325,28 @@ namespace Karaboss.Lyrics
                             // Add linefeed after
                             _tmpL.Add(new plLyric() { CharType = plLyric.CharTypes.LineFeed, Element = ("", _InternalSepLines), TicksOn = plLyrics[k].TicksOn, TicksOff = plLyrics[k].TicksOff });
                             lyricLengh = 0;
-                            
                         }
                         else
                         {
-                            lyricLengh += element.Length;
-                            _tmpL.Add(plLyrics[k]);
+                            // No upper case, but too long
+                            // Cut if blank
+                            if (lyricLengh > linelength && element.IndexOf(" ") > -1)
+                            {
+                                // Add lyric first
+                                _tmpL.Add(plLyrics[k]);
+
+                                // Add linefeed after
+                                _tmpL.Add(new plLyric() { CharType = plLyric.CharTypes.LineFeed, Element = ("", _InternalSepLines), TicksOn = plLyrics[k].TicksOn, TicksOff = plLyrics[k].TicksOff });
+                                lyricLengh = 0;
+
+                            }
+                            else
+                            {
+                                lyricLengh += element.Length;
+                                _tmpL.Add(plLyrics[k]);
+                            }
                         }
+
                     }
                 }                
             }

@@ -616,7 +616,7 @@ namespace Karaboss
         /// <param name="plLyrics"></param>
         private void PopulateDataGridView(List<plLyric> lLyrics)
         {          
-            bool bfound = false;
+            //bool bfound = false;
 
             int plTicksOn = 0;
             string plRealTime = "00:00.00";

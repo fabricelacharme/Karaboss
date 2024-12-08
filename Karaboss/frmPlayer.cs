@@ -52,6 +52,7 @@ using System.Text;
 using Karaboss.Lyrics;
 using MusicXml.Domain;
 using System.Xml;
+using FlShell.Interop;
 
 namespace Karaboss
 {
@@ -3730,7 +3731,8 @@ namespace Karaboss
             myLyricsMgmt = new LyricsMgmt(sequence1);
 
             // Refresh frmLyric
-            frmLyric.LoadSong(myLyricsMgmt.plLyrics);
+            //frmLyric.LoadSong(myLyricsMgmt.plLyrics);
+            frmLyric.ResetDisplayChordsOptions(myLyricsMgmt);
 
             // File was modified
             FileModified();
@@ -3771,6 +3773,25 @@ namespace Karaboss
                         currentCR = m_SepLine;
                     else
                         currentCR = "\r";
+
+                    // Update Track.Lyrics List
+                    Track.Lyric L = new Track.Lyric()
+                    {
+                        Element = pll.Element.Item2,
+                        TicksOn = pll.TicksOn,
+                        Type = (Track.Lyric.Types)pll.CharType,
+                    };
+                    if (LyricType == LyricTypes.Text)
+                    {
+                        // si lyrics de type text                     
+                        Track.LyricsText.Add(L);
+                    }
+                    else
+                    {
+                        // si lyrics de type lyrics
+                        Track.Lyrics.Add(L);
+                    }
+
                 }
                 else if (pll.CharType == plLyric.CharTypes.ParagraphSep)
                 {
@@ -3778,8 +3799,27 @@ namespace Karaboss
                         currentCR = m_SepParagraph;
                     else
                         currentCR = "\r\r";
+
+
+                    // Update Track.Lyrics List
+                    Track.Lyric L = new Track.Lyric()
+                    {
+                        Element = pll.Element.Item2,
+                        TicksOn = pll.TicksOn,
+                        Type = (Track.Lyric.Types)pll.CharType,
+                    };
+                    if (LyricType == LyricTypes.Text)
+                    {
+                        // si lyrics de type text                     
+                        Track.LyricsText.Add(L);
+                    }
+                    else
+                    {
+                        // si lyrics de type lyrics
+                        Track.Lyrics.Add(L);
+                    }
                 }
-                else
+                else if (pll.CharType == plLyric.CharTypes.Text)
                 {
                     // C'est un lyric
                     currentTick = pll.TicksOn;
@@ -4161,7 +4201,6 @@ namespace Karaboss
                             mtMsg = new MetaMessage(MetaType.Lyric, newdata);                            
                             Track.Lyrics.Add(L);
                         }
-
 
                         // Insert new message
                         Track.Insert(currentTick, mtMsg);
