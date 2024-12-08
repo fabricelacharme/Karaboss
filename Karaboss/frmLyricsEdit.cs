@@ -43,6 +43,8 @@ using System.Text.RegularExpressions;
 using Karaboss.Resources.Localization;
 using Karaboss.Lrc.SharedFramework;
 using Karaboss.Lyrics;
+using System.Reflection;
+using Sanford.Multimedia.Midi.PianoRoll;
 
 
 namespace Karaboss
@@ -619,7 +621,7 @@ namespace Karaboss
             string plRealTime = "00:00.00";
             plLyric.CharTypes plType = plLyric.CharTypes.Text;             
 
-            int plNote = 0;
+            //int plNote = 0;
             string sNote = string.Empty;
             string plElement = string.Empty;
 
@@ -633,7 +635,7 @@ namespace Karaboss
                 {
                     plTicksOn = lLyrics[idx].TicksOn;
                     plRealTime = TicksToTime(plTicksOn);           
-                    plNote = 0;
+                    //plNote = 0;
                     sNote = "";
                     plElement = lLyrics[idx].Element.Item2;
                     plElement = plElement.Replace(" ", "_");
@@ -656,112 +658,133 @@ namespace Karaboss
                 }
             }
             else
-            {                
-                //     A REVOIR, TROP COMPLIQUE *****************************************************
+            {
+                PopulateDataGridViewWithMelodyTrack(lLyrics);                                                             
+            }                             
+        }
+
+
+        private void PopulateDataGridViewWithMelodyTrack(List<plLyric> lLyrics)
+        {
+            int plTicksOn;
+            string plRealTime;
+            string plElement;
+            plLyric.CharTypes plType;
+            int t;
+            string[] rowline;
+            int plNote;
+            bool bFound;
+            string sNote;
+            // Not found notes
+            List<MidiNote> lstNotFound = new List<MidiNote>();
+
+            // 1. First add rows for all the lyrics (so the order of the lyrics will be kept)
+            for (int i = 0; i < lLyrics.Count; i++)
+            {
+                plTicksOn = lLyrics[i].TicksOn;
+                plRealTime = TicksToTime(plTicksOn);
+                plElement = lLyrics[i].Element.Item2;
+                plType = lLyrics[i].CharType;
+                sNote = "";
                 
-                // Variante 1 : on affiche les lyrics par défaut et on essaye de raccrocher les notes 
-                for (int i = 0; i < lLyrics.Count; i++)
+                switch (plType)
                 {
-                    bfound = false;
-                    plTicksOn = lLyrics[i].TicksOn;                 
-                    plRealTime = TicksToTime(plTicksOn);           
-                    plNote = 0;
-                    plElement = lLyrics[i].Element.Item2;
-                    plElement = plElement.Replace(" ", "_");
-                    plType = lLyrics[i].CharType;
+                    case plLyric.CharTypes.Text:
+                        // Replace blank spaces by underscore
+                        plElement = plElement.Replace(" ", "_");
+                        break;
+                    case plLyric.CharTypes.LineFeed:
+                        plElement = m_SepLine;
+                        break;
+                    case plLyric.CharTypes.ParagraphSep:
+                        plElement = m_SepParagraph;
+                        break;
+                    default:
+                        break;
+                }
 
-                    if (idx < lLyrics.Count)
+                rowline = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
+                dgView.Rows.Add(rowline);
+            }
+
+            // 2. Second, try to associate notes to existing rows
+            for (int i = 0; i < melodyTrack.Notes.Count; i++)
+            {
+                plTicksOn = melodyTrack.Notes[i].StartTime;
+                plRealTime = TicksToTime(plTicksOn);
+                plNote = melodyTrack.Notes[i].Number;
+                bFound = false;
+                for (int row = 0; row < dgView.Rows.Count; row++)
+                {
+                    if (dgView.Rows[row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
                     {
-                        int beforeLastStartTime = -1;
-                        // Afficher les notes dont le start est avant celui du Lyric courant                        
-                        while (idx < melodyTrack.Notes.Count && melodyTrack.Notes[idx].StartTime < plTicksOn)
+                        t = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
+                                                
+                        if (t == plTicksOn)
                         {
-                            int beforeplTime = melodyTrack.Notes[idx].StartTime;
-                            if (beforeplTime != beforeLastStartTime)
+                            // Associate notes only to text rows (lyrics)
+                            if (dgView.Rows[row].Cells[COL_TYPE].Value.ToString() == "text")
                             {
-                                beforeLastStartTime = beforeplTime;
-
-                                string beforeplRealTime = TicksToTime(beforeplTime);
-                                int beforeplNote = melodyTrack.Notes[idx].Number;
-                                string beforeplElement = "";
-                                string beforeplType = "text";
-                                string[] rownote = { beforeplTime.ToString(), beforeplRealTime, beforeplType, beforeplNote.ToString(), beforeplElement };
-                                dgView.Rows.Add(rownote);
+                                dgView.Rows[row].Cells[COL_NOTE].Value = plNote.ToString();
+                                bFound = true;
+                                break;
                             }
-                            idx++;
-                            if (idx >= melodyTrack.Notes.Count)
-                                break;                            
                         }
-
-                        // Afficher la note dont le start est égal à celui du lyric courant
-                        if (idx < melodyTrack.Notes.Count && melodyTrack.Notes[idx].StartTime == plTicksOn) 
-                        {                            
-                            plNote = melodyTrack.Notes[idx].Number;
-                            sNote = plNote.ToString();
-                            switch (plType)
-                            {
-                                case plLyric.CharTypes.LineFeed:
-                                    sNote = "";
-                                    plElement = m_SepLine;
-                                    break;
-                                case plLyric.CharTypes.ParagraphSep:
-                                    sNote = "";
-                                    plElement = m_SepParagraph;
-                                    break;
-                                default:
-                                    break;
-                            }
-                            string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
-                            dgView.Rows.Add(rowlyric);
-                            bfound = true; // lyric inscrit dans la grille
-                            // Incrémente le compteur de notes si différent de retour chariot
-                            if (plType != plLyric.CharTypes.LineFeed && plType != plLyric.CharTypes.ParagraphSep)
-                                idx++;
-                        }
-                       
-                    }
-
-                    // Lyric courant pas inscrit dans la grille ?
-                    if (bfound == false )
-                    {
-                        sNote = plNote.ToString();
-                        switch (plType)
+                        else if (t > plTicksOn)
                         {
-                            case plLyric.CharTypes.LineFeed:
-                                sNote = "";
-                                plElement = m_SepLine;
-                                break;
-                            case plLyric.CharTypes.ParagraphSep:
-                                sNote = "";
-                                plElement = m_SepParagraph;
-                                break;
-                            default:
-                                break;
+                            break;
                         }                        
-                        string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
-                        dgView.Rows.Add(rowlyric);
                     }
                 }
 
-                // Il reste des notes ?
-                //  BUG AVEC HEY JUDE 2 notes à la fin et LET IT BE
-                while (idx < melodyTrack.Notes.Count)
+                if (!bFound) 
                 {
-                    int afterplTime = melodyTrack.Notes[idx].StartTime;                                        
-                    string afterplRealTime = TicksToTime(afterplTime);
-                    int afterplNote = melodyTrack.Notes[idx].Number;
-                    string afterplElement = "";
-                    string afterplType = "text";
-                    string[] rownote = { afterplTime.ToString(), afterplRealTime, afterplType, afterplNote.ToString(), afterplElement };
-                    dgView.Rows.Add(rownote);
-                    
-                    idx++;
-                    if (idx >= melodyTrack.Notes.Count)
-                        break;
+                    // Notes having no row
+                    lstNotFound.Add(melodyTrack.Notes[i]);
+                }
+            }
 
-                }               
-            }                             
+
+            // 3. insert Lost notes  on new rows
+            if (lstNotFound.Count > 0)
+            {                
+                List<MidiNote> lstNotes = new List<MidiNote>();
+
+                for (int i = 0; i < lstNotFound.Count; i++)
+                {
+                    plTicksOn = lstNotFound[i].StartTime;
+                    plRealTime = TicksToTime(plTicksOn);
+                    plNote = lstNotFound[i].Number;
+
+                    bFound = false;
+                    for (int row = 0; row < dgView.Rows.Count; row++)
+                    {
+                        // insert is possible if the notes are before the last row
+                        if (dgView.Rows[row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
+                        {
+                            t = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
+                            // Insert note
+                            if (t > plTicksOn)
+                            {                                
+                                dgView.Rows.Insert(row, plTicksOn, plRealTime, "text", plNote.ToString(), "");
+                                bFound = true;                                
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!bFound)
+                    {
+                        // Missing notes must be added at the end of the gridview, after the last row                        
+                        rowline = new string[] { plTicksOn.ToString(), plRealTime, "text", plNote.ToString(), "" };
+                        dgView.Rows.Add(rowline);
+                    }
+
+                }                
+            }
         }
+
+      
 
         /// <summary>
         /// Populate DataGridView with only notes of a track
