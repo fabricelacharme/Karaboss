@@ -119,7 +119,7 @@ namespace Karaboss.Lyrics
         }
 
         
-        private LyricTypes _lyrictype;            // type lyric or text   
+        private LyricTypes _lyrictype = LyricTypes.None;            // type lyric or text   
         public LyricTypes LyricType 
         {
             get { return _lyrictype; }
@@ -704,7 +704,7 @@ namespace Karaboss.Lyrics
             {
                 if (sequence1.tracks[i].TotalLyricsT != null)
                 {
-                    if (sequence1.tracks[i].TotalLyricsT.Length > max)
+                    if (sequence1.tracks[i].TotalLyricsT.Length > 0 && sequence1.tracks[i].TotalLyricsT.Length > max)
                     {
                         // BUG : on écrit des lyrics text dans n'importe quelle piste  ???
                         max = sequence1.tracks[i].TotalLyricsT.Length;
@@ -722,28 +722,24 @@ namespace Karaboss.Lyrics
         private int HasLyrics()
         {
             string tx = string.Empty;
-            int max = 0;
-            int trk = -1;
+            int max = -1;
+            int track = -1;
 
             for (int i = 0; i < sequence1.tracks.Count; i++)
-            {
-                tx = string.Empty;
+            {                
                 if (sequence1.tracks[i].TotalLyricsL != null)
                 {
                     tx = sequence1.tracks[i].TotalLyricsL;
-                    if (tx.Length > max)
+                    if (sequence1.tracks[i].TotalLyricsL.Length > 0 && sequence1.tracks[i].TotalLyricsL.Length > max)
                     {
-                        max = tx.Length;
-                        trk = i;
+                        max = sequence1.tracks[i].TotalLyricsL.Length;
+                        track = i;
                     }
                 }
             }
-            if (max > 0)
-            {
-                return trk;
-            }
-
-            return -1;
+                        
+            return track;
+                        
         }
 
         /// <summary>
@@ -2186,9 +2182,6 @@ namespace Karaboss.Lyrics
             
             // Search for the melody track
             _melodytracknum = GuessMelodyTrack(OrgplLyrics);
-
-
-
         }
         
         
