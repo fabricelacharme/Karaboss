@@ -3715,15 +3715,30 @@ namespace Karaboss
 
         /// <summary>
         /// Replace existing lyrics by others
+        /// MelodyTrackNum: track hosting the melody
+        /// LyricsTrackNum: track hosting the lyrics (text or lyric types)
+        /// The target is to host the lyrics in the melody track
         /// </summary>
         /// <param name="pLyrics"></param>
         public void ReplaceLyrics(List<plLyric> newpLyrics, LyricTypes newLyricType, int melodytracknum)
         {
+            bool bRefreshDisplay = (newLyricType != myLyricsMgmt.LyricType);
+
+            
+            // Delete all lyrics of all types
+            foreach (Track T in sequence1.tracks)
+            {
+                T.deleteLyrics();
+                T.LyricsText.Clear();
+                T.Lyrics.Clear();
+            }
+            // Tags associated to the sequence have been deleted
+            restoreSequenceTags();
+
+
+            // By default, insert the lyrics (either text or lyric) into the melodytrack
             Track track = sequence1.tracks[melodytracknum];
-
-            // supprime tous les messages text & lyric
-            track.deleteLyrics();
-
+            
             // Insert all lyric events
             TrkInsertLyrics(track, newpLyrics, newLyricType);
 
@@ -3734,10 +3749,20 @@ namespace Karaboss
             //frmLyric.LoadSong(myLyricsMgmt.plLyrics);
             frmLyric.ResetDisplayChordsOptions(myLyricsMgmt);
 
+            // Refresh display of lyrics
+            // if switch between Text & Lyric or
+            // if Lyric because we need to display the new lyrics on the scores
+            if (bRefreshDisplay || myLyricsMgmt.LyricType == LyricTypes.Lyric)
+            {
+                RefreshDisplay();
+            }
+
+
             // File was modified
             FileModified();
 
         }
+
 
         /// <summary>
         /// Insert new lyrics in the target track
@@ -3781,6 +3806,7 @@ namespace Karaboss
                         TicksOn = pll.TicksOn,
                         Type = (Track.Lyric.Types)pll.CharType,
                     };
+                    
                     if (LyricType == LyricTypes.Text)
                     {
                         // si lyrics de type text                     
@@ -3808,6 +3834,7 @@ namespace Karaboss
                         TicksOn = pll.TicksOn,
                         Type = (Track.Lyric.Types)pll.CharType,
                     };
+
                     if (LyricType == LyricTypes.Text)
                     {
                         // si lyrics de type text                     

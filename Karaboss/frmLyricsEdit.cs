@@ -113,6 +113,7 @@ namespace Karaboss
         LyricFormats TextLyricFormat;        
 
         int melodytracknum = 0;
+        int lyricstracknum = 0;
 
         private string MIDIfileName = string.Empty;
 
@@ -153,7 +154,7 @@ namespace Karaboss
 
             InitGridView();
 
-            
+            #region inform 2 types of lyrics are present
             // If both formats of lyrics are available, dispay button allowing to switch
             _myLyricsMgmt = myLyricsMgmt;
             int l = _myLyricsMgmt.lstpllyrics[0].Count;
@@ -180,14 +181,18 @@ namespace Karaboss
 
                 MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            
-            
+            #endregion inform 2 types of lyrics are present
+
             Cursor.Current = Cursors.WaitCursor;
 
             // Track containing the melody
             melodytracknum = myLyricsMgmt.MelodyTrackNum;
             if (melodytracknum != -1)
                 melodyTrack = sequence1.tracks[melodytracknum];
+
+            // Track containing the lyrics
+            lyricstracknum = myLyricsMgmt.LyricsTrackNum;
+
 
             DisplaySelectedTrack();
 
@@ -322,7 +327,8 @@ namespace Karaboss
         {
             try
             {
-                cbSelectTrack.SelectedIndex = melodytracknum + 1;
+                //cbSelectTrack.SelectedIndex = melodytracknum + 1;
+                cbSelectTrack.SelectedIndex = lyricstracknum + 1;
             }
             catch (Exception ex)
             {
