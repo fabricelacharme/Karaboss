@@ -1101,7 +1101,6 @@ namespace PicControl
 
         }
 
-
         private int GetMaxSyllabesInLine(int ind, int line, List<plLyric> plLyrics)
         {
             int max = 0;
@@ -1353,149 +1352,6 @@ namespace PicControl
             }
         }
 
-        /// <summary>
-        /// Get offset to center text
-        /// </summary>
-        /// <param name="tx"></param>
-        /// <returns></returns>
-        private int getOffset(string tx, float femsize)
-        {
-            float ret = 0;
-            float L = MeasureString(tx, femsize);
-            float W = pboxWnd.ClientSize.Width;
-
-            ret = (W - L) / 2;
-
-            if (ret < 0)
-                ret = 0;
-
-            
-            return (int)ret;
-        }
-
-        /// <summary>
-        /// Get offset height
-        /// </summary>
-        /// <param name="femsize"></param>
-        /// <returns></returns>
-        private int getOffsetHeight(float femsize)
-        {
-            float ret = 0;
-
-            float h = MeasureStringHeight("ABCDEFGHIJKLMNOPQRSTUVWXYZ", femsize);
-            long H = (long)pboxWnd.ClientSize.Height;
-
-
-
-            switch (_OptionDisplay)
-            {
-                case OptionsDisplay.Top:
-                    if (_txtNbLines == 1)
-                        ret = 10;
-                    else
-                        ret = _lineHeight;
-                    break;
-
-                case OptionsDisplay.Center:
-                    if (_txtNbLines == 1)
-                    {
-                        ret = (H - ((_txtNbLines) * (h + 10))) / 2;
-                    }
-                    else
-                    {
-                        if (_bShowChords)
-                            ret = (H - ((2*_txtNbLines - 1) * (h + 10))) / 2;
-                        else
-                            ret = (H - ((_txtNbLines - 1) * (h + 10))) / 2;
-                    }
-                    break;
-
-                case OptionsDisplay.Bottom:
-                    if (_bShowChords)
-                        ret = (H - (int)(2.5*_txtNbLines) * _lineHeight) - 10;
-                    else
-                        ret = (H - _txtNbLines * _lineHeight) - 10;                    
-                    
-                    break;
-            }
-
-            return (int)ret;
-        }
-
-        /// <summary>
-        /// Measure the length of a string
-        /// </summary>
-        /// <param name="line"></param>
-        /// <param name="fSize"></param>
-        /// <returns></returns>
-        private float MeasureString(string line, float femSize)
-        {
-            float ret = 0;
-
-            if (line != "")
-            {
-                using (Graphics g = pboxWnd.CreateGraphics())
-                {                    
-                    m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
-
-                    SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
-                    ret = sz.Width;
-
-                    g.Dispose();
-                }
-                
-            }            
-            return ret;
-        }
-
-        /// <summary>
-        /// Measure the height of a string
-        /// </summary>
-        /// <param name="line"></param>
-        /// <param name="femSize"></param>
-        /// <returns></returns>
-        private float MeasureStringHeight(string line, float femSize)
-        {            
-            float ret = 0;
-
-            if (line != "")
-            {
-                using (Graphics g = pboxWnd.CreateGraphics())
-                {
-
-                    if (femSize > 0)                                            
-                        m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);                    
-
-                    SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
-                    ret = sz.Height;
-                    
-                    g.Dispose();                    
-                }
-            }                        
-            return ret;
-        }
-
-        /// <summary>
-        /// Return the line with maxi number of characters
-        /// </summary>
-        /// <returns></returns>
-        private string GetMaxLength()
-        {
-            int max = 0;
-            string tx = string.Empty;
-
-            for (int i = 0; i < lstLyricsLines.Count; i++)
-            {
-                if (lstLyricsLines[i].Length > max)
-                {
-                    max = lstLyricsLines[i].Length;
-                    tx = lstLyricsLines[i];
-                }
-            }
-
-           
-            return tx;
-        }
 
         /// <summary>
         /// Ajuste la taille de la fonte en fonction de la taille de pictureBox1
@@ -1825,162 +1681,158 @@ namespace PicControl
             }
         }
 
+        #endregion Text
+
+
+        #region measures
+
         /// <summary>
-        /// Draw syllabes of the current line according to its position
-        /// already sung, currently sung and not yet sung
+        /// Get offset to center text
         /// </summary>
-        /// <param name="itime"></param>
-        /// <param name="e"></param>
-        private void DrawCurrentLine(int itime, int y0, PaintEventArgs e)
-        {            
-            if (syllabes == null) return;
+        /// <param name="tx"></param>
+        /// <returns></returns>
+        private int getOffset(string tx, float femsize)
+        {
+            float ret = 0;
+            float L = MeasureString(tx, femsize);
+            float W = pboxWnd.ClientSize.Width;
 
-            int W;
-            int H;
+            ret = (W - L) / 2;
 
-            float x1;           
-            string tx = string.Empty;
-            int x0 = 0;            
-            int i;
-            syllabe syllab;
-            int offset = _lineHeight;
+            if (ret < 0)
+                ret = 0;
 
-            if (_currentTextPos >= syllabes.Count)
-                return;
 
-            if (_currentTextPos >= 0)
-                x0 = _currentTextPos - syllabes[_currentTextPos].posline;
-            
-                        
-            for (i = x0; i < syllabes.Count; i++)            
+            return (int)ret;
+        }
+
+        /// <summary>
+        /// Get offset height
+        /// </summary>
+        /// <param name="femsize"></param>
+        /// <returns></returns>
+        private int getOffsetHeight(float femsize)
+        {
+            float ret = 0;
+
+            float h = MeasureStringHeight("ABCDEFGHIJKLMNOPQRSTUVWXYZ", femsize);
+            long H = (long)pboxWnd.ClientSize.Height;
+
+
+
+            switch (_OptionDisplay)
             {
-                // dessine la ligne courante en mettant en surbrillance la syllabe correspondante à currentTextPos
-                syllab = syllabes[i];
+                case OptionsDisplay.Top:
+                    if (_txtNbLines == 1)
+                        ret = 10;
+                    else
+                        ret = _lineHeight;
+                    break;
 
-                // It is the current line
-                if (syllab.line == currentLine)
-                {
-
-                    // Rectangle
-                    x1 = rRect[syllab.posline].X;
-                    W = (int)rRect[syllab.posline].Width;
-                    H = (int)rRect[syllab.posline].Height;
-
-                    if (syllabes[i].pos < _currentTextPos)
+                case OptionsDisplay.Center:
+                    if (_txtNbLines == 1)
                     {
-                        // syllabes avant celle active
-                        if (_bShowChords)
-                        {
-                            if (syllab.chord != "")
-                                drawChord(_chordNextColor, syllab, (int)x1, y0, e);
-
-                            drawSyllabe(txtBeforeColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);                            // déjà chanté
-                        }
-                        else
-                        {
-                            drawSyllabe(txtBeforeColor, syllab, (int)x1, y0, W, H, e);                                            // déjà chanté
-                        }
+                        ret = (H - ((_txtNbLines) * (h + 10))) / 2;
                     }
-                    else if (syllab.pos == _currentTextPos)
-                    {
-
-                        // Surbrillance normale   
-                        if (bHighLight)
-                        {
-                            if (_bShowChords)
-                            {
-                                if (syllab.chord != "")
-                                    drawChord(_chordHighlightColor, syllab, (int)x1, y0, e);
-
-                                drawSyllabe(txtHighlightColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);                       // surbrillance
-                            }
-                            else
-                            {
-                                drawSyllabe(txtHighlightColor, syllab, (int)x1, y0, W, H, e);                                         // surbrillance     
-                            }
-                        }
-                        else
-                        {
-                            if (_bShowChords)
-                            {
-                                if (syllab.chord != "")
-                                    drawChord(_chordNextColor, syllab, (int)x1, y0, e);
-                                drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);
-                            }
-                            else
-                            {
-                                drawSyllabe(txtNextColor, syllab, (int)x1, y0, W, H, e);
-                            }
-                        }
-
-
-                        #region EndOfLine & calculations
-
-                        // Calculations are made on active syllabe (celle qui correspond à currentpos !)
-
-                        // End of line
-                        if (syllab.SylCount == 1)
-                        {
-                            bEndOfLine = true;
-                        }
-                        else if (syllab.SylCount > 1 && syllab.posline == syllab.SylCount - 1)
-                        {
-                            bEndOfLine = true;
-                        }
-                        else
-                        {
-                            bEndOfLine = false;
-
-                            #region calculate next line
-
-                            // Start of line
-                            if (syllab.posline == 0)
-                            {
-                                // calculate next time for next start of line                           
-                                int next = syllab.SylCount;
-                                if (i + next < syllabes.Count)
-                                {
-                                    // Time of start of next line
-                                    // Soit le début de la prochaine ligne, soit la fin de la ligne courante
-                                    int t1 = syllabes[i + next].time;
-                                    int t2 = syllabes[i + next - 1].time + 2 * _beatDuration; // on passe à la ligne au bout de 2 temps
-
-                                    nextStartOfLineTime = t1 < t2 ? t1 : t2;
-
-                                    // Duration until next line 
-                                    TimeToNextLineDuration = nextStartOfLineTime - _currentPosition;
-                                }
-                            }
-                            #endregion
-                        }
-                        #endregion
-                    }
-                    // syllabes après celle active
                     else
                     {
                         if (_bShowChords)
-                        {
-                            if (syllab.chord != "")
-                                drawChord(_chordNextColor, syllab, (int)x1, (int)y0, e);
-
-                            drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);                           // pas encore chanté
-                        }
-                        else 
-                        { 
-                            drawSyllabe(txtNextColor, syllab, (int)x1, y0, W, H, e);                                      // pas encore chanté
-                        }
-                    }                   
-                }
-                // Ligne immédiatement suivante
-                else if (syllab.line > currentLine + 1)
-                {
+                            ret = (H - ((2 * _txtNbLines - 1) * (h + 10))) / 2;
+                        else
+                            ret = (H - ((_txtNbLines - 1) * (h + 10))) / 2;
+                    }
                     break;
+
+                case OptionsDisplay.Bottom:
+                    if (_bShowChords)
+                        ret = (H - (int)(2.5 * _txtNbLines) * _lineHeight) - 10;
+                    else
+                        ret = (H - _txtNbLines * _lineHeight) - 10;
+
+                    break;
+            }
+
+            return (int)ret;
+        }
+
+        /// <summary>
+        /// Measure the length of a string
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="fSize"></param>
+        /// <returns></returns>
+        private float MeasureString(string line, float femSize)
+        {
+            float ret = 0;
+
+            if (line != "")
+            {
+                using (Graphics g = pboxWnd.CreateGraphics())
+                {
+                    m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+
+                    SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
+                    ret = sz.Width;
+
+                    g.Dispose();
+                }
+
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// Measure the height of a string
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="femSize"></param>
+        /// <returns></returns>
+        private float MeasureStringHeight(string line, float femSize)
+        {
+            float ret = 0;
+
+            if (line != "")
+            {
+                using (Graphics g = pboxWnd.CreateGraphics())
+                {
+
+                    if (femSize > 0)
+                        m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+
+                    SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
+                    ret = sz.Height;
+
+                    g.Dispose();
                 }
             }
+            return ret;
+        }
+
+        /// <summary>
+        /// Return the line with maxi number of characters
+        /// </summary>
+        /// <returns></returns>
+        private string GetMaxLength()
+        {
+            int max = 0;
+            string tx = string.Empty;
+
+            for (int i = 0; i < lstLyricsLines.Count; i++)
+            {
+                if (lstLyricsLines[i].Length > max)
+                {
+                    max = lstLyricsLines[i].Length;
+                    tx = lstLyricsLines[i];
+                }
+            }
+
+
+            return tx;
         }
 
 
-        #endregion Text
+
+        #endregion measures
 
 
         #region draw
@@ -2167,8 +2019,167 @@ namespace PicControl
             }
 
         }
-           
-      
+
+
+
+        /// <summary>
+        /// Draw syllabes of the current line according to its position
+        /// already sung, currently sung and not yet sung
+        /// </summary>
+        /// <param name="itime"></param>
+        /// <param name="e"></param>
+        private void DrawCurrentLine(int itime, int y0, PaintEventArgs e)
+        {
+            if (syllabes == null) return;
+
+            int W;
+            int H;
+
+            float x1;
+            string tx = string.Empty;
+            int x0 = 0;
+            int i;
+            syllabe syllab;
+            int offset = _lineHeight;
+
+            if (_currentTextPos >= syllabes.Count)
+                return;
+
+            if (_currentTextPos >= 0)
+                x0 = _currentTextPos - syllabes[_currentTextPos].posline;
+
+
+            for (i = x0; i < syllabes.Count; i++)
+            {
+                // dessine la ligne courante en mettant en surbrillance la syllabe correspondante à currentTextPos
+                syllab = syllabes[i];
+
+                // It is the current line
+                if (syllab.line == currentLine)
+                {
+
+                    // Rectangle
+                    x1 = rRect[syllab.posline].X;
+                    W = (int)rRect[syllab.posline].Width;
+                    H = (int)rRect[syllab.posline].Height;
+
+                    if (syllabes[i].pos < _currentTextPos)
+                    {
+                        // syllabes avant celle active
+                        if (_bShowChords)
+                        {
+                            if (syllab.chord != "")
+                                drawChord(_chordNextColor, syllab, (int)x1, y0, e);
+
+                            //drawSyllabe(txtBeforeColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);                            // déjà chanté
+                            drawSyllabe(txtBeforeColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                            // déjà chanté
+                        }
+                        else
+                        {
+                            drawSyllabe(txtBeforeColor, syllab, (int)x1, y0, W, H, e);                                            // déjà chanté
+                        }
+                    }
+                    else if (syllab.pos == _currentTextPos)
+                    {
+
+                        // Surbrillance normale   
+                        if (bHighLight)
+                        {
+                            if (_bShowChords)
+                            {
+                                if (syllab.chord != "")
+                                    drawChord(_chordHighlightColor, syllab, (int)x1, y0, e);
+
+                                //drawSyllabe(txtHighlightColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);                       // surbrillance
+                                drawSyllabe(txtHighlightColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                       // surbrillance
+                            }
+                            else
+                            {
+                                drawSyllabe(txtHighlightColor, syllab, (int)x1, y0, W, H, e);                                         // surbrillance     
+                            }
+                        }
+                        else
+                        {
+                            if (_bShowChords)
+                            {
+                                if (syllab.chord != "")
+                                    drawChord(_chordNextColor, syllab, (int)x1, y0, e);
+                                //drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);
+                                drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);
+                            }
+                            else
+                            {
+                                drawSyllabe(txtNextColor, syllab, (int)x1, y0, W, H, e);
+                            }
+                        }
+
+
+                        #region EndOfLine & calculations
+
+                        // Calculations are made on active syllabe (celle qui correspond à currentpos !)
+
+                        // End of line
+                        if (syllab.SylCount == 1)
+                        {
+                            bEndOfLine = true;
+                        }
+                        else if (syllab.SylCount > 1 && syllab.posline == syllab.SylCount - 1)
+                        {
+                            bEndOfLine = true;
+                        }
+                        else
+                        {
+                            bEndOfLine = false;
+
+                            #region calculate next line
+
+                            // Start of line
+                            if (syllab.posline == 0)
+                            {
+                                // calculate next time for next start of line                           
+                                int next = syllab.SylCount;
+                                if (i + next < syllabes.Count)
+                                {
+                                    // Time of start of next line
+                                    // Soit le début de la prochaine ligne, soit la fin de la ligne courante
+                                    int t1 = syllabes[i + next].time;
+                                    int t2 = syllabes[i + next - 1].time + 2 * _beatDuration; // on passe à la ligne au bout de 2 temps
+
+                                    nextStartOfLineTime = t1 < t2 ? t1 : t2;
+
+                                    // Duration until next line 
+                                    TimeToNextLineDuration = nextStartOfLineTime - _currentPosition;
+                                }
+                            }
+                            #endregion
+                        }
+                        #endregion
+                    }
+                    // syllabes après celle active
+                    else
+                    {
+                        if (_bShowChords)
+                        {
+                            if (syllab.chord != "")
+                                drawChord(_chordNextColor, syllab, (int)x1, (int)y0, e);
+
+                            //drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);                           // pas encore chanté
+                            drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                           // pas encore chanté
+                        }
+                        else
+                        {
+                            drawSyllabe(txtNextColor, syllab, (int)x1, y0, W, H, e);                                      // pas encore chanté
+                        }
+                    }
+                }
+                // Ligne immédiatement suivante
+                else if (syllab.line > currentLine + 1)
+                {
+                    break;
+                }
+            }
+        }
+
         /// <summary>
         /// Draw next full lines with color txtNextColor
         /// </summary>
@@ -2192,7 +2203,7 @@ namespace PicControl
             // Draw sentence                           
             #region draw lyrics
 
-            if (_currentTextPos >= syllabes.Count)
+            if (syllabes == null | _currentTextPos >= syllabes.Count)
                 return;
             
             if (_currentTextPos >= 0)
@@ -2232,14 +2243,17 @@ namespace PicControl
 
                             if (_bShowChords)
                             {
-                                y1 = y0 + 2 * (offset + 10) + k * 2 * (offset + 10);
-
+                                //y1 = y0 + 2 * (offset + 10) + k * 2 * (offset + 10);
+                                //y1 = y0 + (k + 1) * offset + (k + 1) * 3*offset/4;
+                                y1 = y0 + (k + 1) * offset + (k + 1) * offset;
+                                
                                 // Draw chord above
                                 if (syllabes[i].chord != "")
                                     drawChordNextLines(_chordNextColor, syllabes[i], (int)x1, (int)y1, e);
 
                                 // Draw syllabe below at 3*offset/4
-                                drawSyllabeNextLines(txtNextColor, syllabes[i], (int)x1, (int)y1 + 3 * offset / 4, W, H, e);
+                                //drawSyllabeNextLines(txtNextColor, syllabes[i], (int)x1, (int)y1 + 3 * offset / 4, W, H, e);
+                                drawSyllabeNextLines(txtNextColor, syllabes[i], (int)x1, (int)y1 + 2 * offset / 3, W, H, e);
                             }
                             else
                             {

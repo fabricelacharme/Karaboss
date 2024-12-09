@@ -2145,16 +2145,20 @@ namespace Karaboss
                         {
                             if (pnlTracks.Controls[i].Tag != null)
                             {
-                                TrkControl.TrackControl trkctrl = ((TrkControl.TrackControl)pnlTracks.Controls[i]);
-                                // Volume
-                                Track trk = sequence1.tracks[trkctrl.Track];
-                                trkctrl.SetVolume(trk.Volume);
-                                // Pan
-                                trkctrl.SetPan(trk.Pan);
-                                // Reverb
-                                trkctrl.SetReverb(trk.Reverb);
-                                // Patch
-                                trkctrl.SetPatch(trk.ProgramChange);
+                                try
+                                {
+                                    TrkControl.TrackControl trkctrl = ((TrkControl.TrackControl)pnlTracks.Controls[i]);
+                                    // Volume                                
+                                    Track trk = sequence1.tracks[trkctrl.Track];
+                                    trkctrl.SetVolume(trk.Volume);
+                                    // Pan
+                                    trkctrl.SetPan(trk.Pan);
+                                    // Reverb
+                                    trkctrl.SetReverb(trk.Reverb);
+                                    // Patch
+                                    trkctrl.SetPatch(trk.ProgramChange);
+                                }
+                                catch (Exception ex) { Console.WriteLine(ex.Message.ToString()); }
                             }
                         }
                     }                   
