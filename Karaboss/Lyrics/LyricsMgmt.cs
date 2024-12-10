@@ -2079,6 +2079,7 @@ namespace Karaboss.Lyrics
             string lastChordName = "<>";
             bool bFound = false;
             int insertIndex = 0;
+            
 
             ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
 
@@ -2087,13 +2088,14 @@ namespace Karaboss.Lyrics
             GridBeatChords = Analyser.GridBeatChords;
                         
             for (int beat = 1; beat <= GridBeatChords.Count; beat++)
-            {
+            {                                
                 chordName = GridBeatChords[beat];
                 if (chordName != string.Empty && chordName != EmptyChord && chordName != ChordNotFound && chordName != lastChordName)
                 {
                     lastChordName = chordName;
                     ticks = (beat - 1) * beatDuration;
                     bFound = false;
+                    insertIndex = -1;
 
                     for (int j = 0; j < plLyrics.Count; j++)
                     {
@@ -2125,13 +2127,22 @@ namespace Karaboss.Lyrics
                     }
 
                     if (!bFound)
-                    {
+                    {                                                
                         lyric = formateLyricOfChord(chordName, "");
-                        plLyrics.Insert(insertIndex, new plLyric() { Beat = beat, CharType = plLyric.CharTypes.Text, Element = (chordName, lyric), TicksOn = ticks, TicksOff = TicksOff });
+                        
+                        if (insertIndex == -1)
+                        {
+                            plLyrics.Add(new plLyric() { Beat = beat, CharType = plLyric.CharTypes.Text, Element = (chordName, lyric), TicksOn = ticks, TicksOff = TicksOff });
+                        }
+                        else
+                        {
+                            plLyrics.Insert(insertIndex, new plLyric() { Beat = beat, CharType = plLyric.CharTypes.Text, Element = (chordName, lyric), TicksOn = ticks, TicksOff = TicksOff });
+                        }
+                        
                     }
                 }
-            }                   
-
+            }
+            //TestCheckTimes();
         }
 
         private string formateLyricOfChord(string chord, string lyric)
@@ -2143,7 +2154,7 @@ namespace Karaboss.Lyrics
                 {
                     lyric = new string('-', chord.Length + 1) + " ";                 
                 }
-                else if (lyric.Trim() == "-")
+                else if (lyric.Trim() == "-" || lyric.Trim() == ".")
                 {
                     lyric = new string('-', chord.Length + 1) + " ";
                 }
@@ -2165,7 +2176,7 @@ namespace Karaboss.Lyrics
                 {
                     s = new string('-', chord.Length + 1) + " ";
                 }
-                else if (s.Trim() == "-")
+                else if (s.Trim() == "-" || s.Trim() == ".")
                 {
                     s = new string('-', chord.Length + 1) + " ";
                 }
@@ -2231,6 +2242,8 @@ namespace Karaboss.Lyrics
                     ExtractChordsInLyrics(_lyricstracknum);
                 }
 
+                //TestCheckTimes();
+
                 #region clean lyrics
 
                 // Remove empty lyrics
@@ -2240,6 +2253,27 @@ namespace Karaboss.Lyrics
                 #endregion clean lyrics
             }
         }
+
+        #region tests
+
+        private void TestCheckTimes()
+        {
+            int lastTime = -1;
+            int t = -1;
+            for (int i = 0; i < plLyrics.Count; i++)
+            {
+                t = plLyrics[i].TicksOn;
+                if (t < lastTime)
+                {
+                    MessageBox.Show("Error: times not in order", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                lastTime = t;
+            }
+        }
+        #endregion tests
+
+
 
         #endregion include remove detected chords in plLyrics
 
@@ -2295,8 +2329,91 @@ namespace Karaboss.Lyrics
 
             return _gridbeatchords;
         }
-       
+
+
+
+        #region Display
         
+        public string GetLyricsLinesWithChords()
+        {
+            string tx = string.Empty;
+            string chord;
+            string lyric;
+            string lineChords = string.Empty;
+            string lineLyrics = string.Empty;
+            string cr = Environment.NewLine;
+
+            for (int i = 0; i < plLyrics.Count; i++)
+            {
+                plLyric pll = plLyrics[i];
+
+                if (pll.CharType == plLyric.CharTypes.Text)
+                {
+                    chord = pll.Element.Item1;
+                    lyric = pll.Element.Item2;
+
+                    if (bHasChordsInLyrics)
+                    {
+                        lyric = Regex.Replace(lyric, RemoveChordPattern, @"");
+                    }
+
+                    if (chord.Length > lyric.Length)
+                    {
+                        lyric += new string(' ', chord.Length - lyric.Length);
+                    }
+                    else if (chord.Length < lyric.Length)
+                    {
+                        chord += new string(' ', lyric.Length - chord.Length);
+                    }
+
+                    lineChords += chord;
+                    lineLyrics += lyric;
+                }
+                else if (pll.CharType == plLyric.CharTypes.LineFeed)
+                {
+                    // New line
+                    if (lineChords.Trim() != string.Empty)
+                        tx += lineChords + cr;
+                    if (lineLyrics.Trim() != string.Empty)
+                        tx += lineLyrics + cr;
+
+                    //tx += lineChords + cr + lineLyrics + cr;
+                    lineChords = string.Empty;
+                    lineLyrics = string.Empty;
+                }
+                else if (pll.CharType == plLyric.CharTypes.ParagraphSep)
+                {
+                    // Paragraph
+                    if (lineChords.Trim() != string.Empty)
+                        tx += lineChords + cr;
+                    if (lineLyrics.Trim() != string.Empty)
+                        tx += lineLyrics + cr;
+
+                    //tx += lineChords + cr + lineLyrics + cr + cr;
+                    tx += cr;
+                    lineChords = string.Empty;
+                    lineLyrics = string.Empty;
+                }
+
+            }
+
+            if (lineChords.Length > 0 || lineLyrics.Length > 0)
+            {
+                //tx += lineChords + cr + lineLyrics;
+                if (lineChords.Trim() != string.Empty)
+                    tx += lineChords + cr;
+                if (lineLyrics.Trim() != string.Empty)
+                    tx += lineLyrics;
+
+            }
+
+            return tx;
+        }
+
+        
+
+        #endregion Display
+
 
         #region midi mesures
 

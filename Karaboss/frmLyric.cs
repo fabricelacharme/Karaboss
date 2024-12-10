@@ -1128,28 +1128,25 @@ namespace Karaboss
 
             // Chords are in the lyrics
             if (myLyricsMgmt.bHasChordsInLyrics)
-            {
-                //tx = myLyricsMgmt.GetLyricsLinesWithChords();                
+            {                
                 if (myLyricsMgmt.GridBeatChords == null)
                 {
-                    myLyricsMgmt.FillGridBeatChordsWithLyrics();
-                    myLyricsMgmt.CleanGridBeatChords();
-                }
-                
-                tx = myLyricsMgmt.DisplayWordsAndChords();
+                    myLyricsMgmt.FillGridBeatChordsWithLyrics();            
+                }                                
             }
             else
             {
                 // Chords have to be guessed with a vertical search
-                myLyricsMgmt.PopulateEmbeddedChords();
-
-                //tx = myLyricsMgmt.GetLyricsLinesWithChords();                
-                myLyricsMgmt.CleanGridBeatChords();
-                tx = myLyricsMgmt.DisplayWordsAndChords();
+                myLyricsMgmt.PopulateEmbeddedChords();                                                
             }
 
-            tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
-            tx = tx.Replace(_InternalSepLines, "\r\n");
+            tx = myLyricsMgmt.GetLyricsLinesWithChords();
+
+            //myLyricsMgmt.CleanGridBeatChords();
+            //tx = myLyricsMgmt.DisplayWordsAndChords();
+            //tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
+            //tx = tx.Replace(_InternalSepLines, "\r\n");
+
             System.IO.File.WriteAllText(@file, tx);
 
             try

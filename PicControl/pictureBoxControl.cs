@@ -753,6 +753,8 @@ namespace PicControl
                 lineMax = GetMaxLength();
                 AjustText(lineMax);
 
+                //TestCheckTimes(plLyrics);
+
                 // Store syllabes
                 StoreLyricsSyllabes(plLyrics);
 
@@ -780,7 +782,26 @@ namespace PicControl
 
         #endregion methods
 
-        
+        #region tests
+
+        private void TestCheckTimes(List<plLyric> plLyrics)
+        {
+            int lastTime = -1;
+            int t = -1;
+            for (int i = 0; i < plLyrics.Count; i++)
+            {
+                t = plLyrics[i].TicksOn;
+                if (t < lastTime)
+                {
+                    MessageBox.Show("Error: times not in order", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                lastTime = t;
+            }
+        }
+        #endregion tests
+
+
         #region SlideShow functions
 
         private void LoadImageList(string dir)
@@ -1176,7 +1197,7 @@ namespace PicControl
             int lastpos;
             int line = 0;
 
-            int nbLineFeeds = 0;
+            //int nbLineFeeds = 0;
 
             try
             {
@@ -1195,7 +1216,7 @@ namespace PicControl
                     if (plLyrics[indexSyllabe].Type == plLyric.Types.Paragraph)
                     {
                         #region add paragraph
-                        nbLineFeeds = 0;
+                        //nbLineFeeds = 0;
 
                         idx++;
                         // Paragraphe = ligne vide
@@ -1226,7 +1247,7 @@ namespace PicControl
                         // LINEFEED
                         // ==============================
                         indexSyllabe++;
-                        nbLineFeeds++;
+                        //nbLineFeeds++;
 
                         #endregion linefeed
                     }
@@ -1238,8 +1259,8 @@ namespace PicControl
                         // ==============================                        
 
                         // numerous linefeeds before this text
-                        if (nbLineFeeds > 1)                                                
-                            line++;                                                
+                        //if (nbLineFeeds > 1)                                                
+                        //    line++;                                                
 
                         // Search for number of syllabes in this line                    
                         max = 0;
@@ -1254,7 +1275,7 @@ namespace PicControl
                             }
                         }
 
-                        nbLineFeeds = 0;
+                        //nbLineFeeds = 0;
                         lastpos = 0;
                         // Offset de la ligne
                         offset = 0;
@@ -1319,14 +1340,14 @@ namespace PicControl
                                     // if next syllabe is a linefeed => next line
                                     if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type == plLyric.Types.LineFeed)
                                     {
-                                        nbLineFeeds = 0;
+                                        //nbLineFeeds = 0;
                                         line++;
                                         break;
                                     }
 
                                     if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type == plLyric.Types.Paragraph)
                                     {
-                                        nbLineFeeds = 0;
+                                        //nbLineFeeds = 0;
                                         line++;
                                         break;
                                     }
