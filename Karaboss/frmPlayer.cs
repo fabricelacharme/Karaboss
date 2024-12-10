@@ -1991,12 +1991,13 @@ namespace Karaboss
                 ValideMenus(false);
 
                 // Load lyrics
-                if (bKaraokeAlwaysOn && bHasLyrics)
+                if (bKaraokeAlwaysOn && bHasLyrics)                
                     DisplayLyricsForm();
-                
                 
                 if (currentPlaylist != null)
                 {
+                    
+                    
                     // Case of a playlist, with no lyrics
                     // frmLyrics is displayed with "Next Song: "
                     if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
@@ -2012,7 +2013,8 @@ namespace Karaboss
                         frmLyric.DisplayText(sSong, _totalTicks);
 
                         // FAB 09/12/2024
-                        frmLyric.LoadSong(myLyricsMgmt.plLyrics);
+                        frmLyric.ResetDisplayChordsOptions(myLyricsMgmt);
+                        //frmLyric.LoadSong(myLyricsMgmt.plLyrics);
 
                     }
 
