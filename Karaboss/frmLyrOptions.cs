@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2018 Fabrice Lacharme
+/* Copyright (c) 2024 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -42,6 +42,8 @@ namespace Karaboss
 {
     public partial class frmLyrOptions : Form
     {
+
+        #region private properties
 
         private Karaclass.OptionsDisplay OptionDisplay;        
 
@@ -85,8 +87,9 @@ namespace Karaboss
         private PictureBoxSizeMode SizeMode;
 
         private frmLyric frmLyric;
-
         
+        #endregion private properties
+
         public frmLyrOptions()
         {
             InitializeComponent();            

@@ -602,7 +602,7 @@ namespace Karaboss.Lyrics
                 plTicksOn = track.LyricsText[k].TicksOn;
 
                 // Stop time for a lyric (maxi 1 beat ?)
-                if (plType == plLyric.CharTypes.Text)
+                //if (plType == plLyric.CharTypes.Text)
                     plTicksOff = plTicksOn + _measurelen;
 
                 pll.Add(new plLyric() { CharType = plType, Element = ("", plElement), TicksOn = plTicksOn, TicksOff = plTicksOff });
@@ -641,7 +641,7 @@ namespace Karaboss.Lyrics
                     plTicksOn = track.Lyrics[k].TicksOn;
 
                     // Stop time for the lyric
-                    if (plType == plLyric.CharTypes.Text)
+                    //if (plType == plLyric.CharTypes.Text)
                         plTicksOff = plTicksOn + _measurelen;
 
                     pll.Add(new plLyric() { CharType = plType, Element = ("", plElement), TicksOn = plTicksOn, TicksOff = plTicksOff });
@@ -2109,14 +2109,17 @@ namespace Karaboss.Lyrics
                     for (int j = 0; j < plLyrics.Count; j++)
                     {
                         TicksOn = plLyrics[j].TicksOn;
+                        TicksOff = plLyrics[j].TicksOff;
                         if (ticks < TicksOn)
                         {
+                            // ticks is smaller than this TicksOn => the chord has to be inserted at its place as a new element
                             insertIndex = j;
-                            bFound = false;
+                            bFound = false;                            
                             break;
                         }
                         if (ticks == TicksOn)
                         {
+                            // ticks has the same value than a TicksOn, the chord has to be added in the field 'chord'
                             if (plLyrics[j].CharType == plLyric.CharTypes.Text) 
                             {
                                 lyric = plLyrics[j].Element.Item2;
@@ -2128,8 +2131,15 @@ namespace Karaboss.Lyrics
                             {
                                 // This is a linefeed or paragraph => insert a new lyric
                                 // Case of Alexandry Alexandra song                                
-                                insertIndex = j;
-                                bFound = false;
+                                
+                                // Insert the chord after the linefeed of the lyrics line
+                                //insertIndex = j;
+                                if (j + 1 < plLyrics.Count)
+                                    insertIndex = j + 1;
+                                else
+                                    insertIndex = j;
+
+                                bFound = false;                                
                             }
                             break;
                         }
@@ -2139,12 +2149,14 @@ namespace Karaboss.Lyrics
                     {                                                
                         lyric = formateLyricOfChord(chordName, "");
                         
+                        // Ticks was never smaller or equal to an existing TickOn => is has to be added at the end
                         if (insertIndex == -1)
                         {
                             plLyrics.Add(new plLyric() { Beat = beat, CharType = plLyric.CharTypes.Text, Element = (chordName, lyric), TicksOn = ticks, TicksOff = TicksOff });
                         }
                         else
                         {
+                            // ticks was found smaller or equal to an existing TicksOn
                             plLyrics.Insert(insertIndex, new plLyric() { Beat = beat, CharType = plLyric.CharTypes.Text, Element = (chordName, lyric), TicksOn = ticks, TicksOff = TicksOff });
                         }
                         
@@ -2152,6 +2164,10 @@ namespace Karaboss.Lyrics
                 }
             }
             //TestCheckTimes();
+
+            // Add tickoff to new elements chord ?
+            CheckTimes();
+
         }
 
         /// <summary>
@@ -2269,7 +2285,8 @@ namespace Karaboss.Lyrics
                     ExtractChordsInLyrics(_lyricstracknum);
                 }
 
-                //TestCheckTimes();
+
+                //TestCheckTimes();                             
 
                 #region clean lyrics
 
