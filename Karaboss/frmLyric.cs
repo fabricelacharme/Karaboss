@@ -478,7 +478,7 @@ namespace Karaboss
         /// <param name="dirSlideShow"></param>
         public void SetKarOptions(string dirSlideShow)
         {
-            LoadKarOptions();
+            //LoadKarOptions();
 
             //AlloModifyDirSlideShow = true;
             DirSlideShow = dirSlideShow;
@@ -714,6 +714,7 @@ namespace Karaboss
             if (myLyricsMgmt == null)
                 return;
             
+            myLyricsMgmt.BshowChords = bShowChords;
             chkChords.Checked = bShowChords;
             pBox.bShowChords = bShowChords;
 
@@ -725,11 +726,14 @@ namespace Karaboss
                 // ===================
 
                 // 1. If chords are  already included in lyrics
-                // No need to do anything
-
+                // Add false lyrics in chords alone (instrumental) ???
+                if (myLyricsMgmt.bHasChordsInLyrics) 
+                {
+                    myLyricsMgmt.NormalExtractLyrics();
+                }
                 // 2. If chords are not included in lyrics,
                 // we have to detect chords and add them to the lyrics or add them to an extra
-                if (!myLyricsMgmt.bHasChordsInLyrics)
+                else if (!myLyricsMgmt.bHasChordsInLyrics)
                 {
                     myLyricsMgmt.PopulateEmbeddedChords();
 
@@ -745,12 +749,15 @@ namespace Karaboss
                 // ===================
 
                 // 1. If chords are already included in lyrics
-                // do nothing, because lyrics are unchanged
-
+                // Remove false lyrics added to chords alone (instrumental)
+                if (myLyricsMgmt.bHasChordsInLyrics)
+                {
+                    myLyricsMgmt.NormalExtractLyrics();
+                }
                 // 2. If chords are not included in lyrics
                 // Chords have been added by detection to existing lyrics but also on additional false lyrics (chords alone in instrumentals)
                 // So we have to delete all additions made by the chord analysis.                
-                if (!myLyricsMgmt.bHasChordsInLyrics)
+                else if (!myLyricsMgmt.bHasChordsInLyrics)
                 {
                     // Remove detected chords
                     myLyricsMgmt.NormalExtractLyrics();                    

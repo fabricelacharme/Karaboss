@@ -900,10 +900,12 @@ namespace TrkControl
         {
             // Fab pour correction patch = -1 12/04/2014
             if (lstInstruments.SelectedIndex != -1)
+            {
                 patch = lstInstruments.SelectedIndex;
 
-            // Delegate the event to the caller
-            OntrkControllblPatchChanged?.Invoke(this, e, patch);
+                // Delegate the event to the caller
+                OntrkControllblPatchChanged?.Invoke(this, e, patch);
+            }
         }
 
         #endregion instrument

@@ -159,7 +159,10 @@ namespace Karaboss.Lyrics
             get { return _gridbeatchords; }
             set { _gridbeatchords = value; } 
         }
-
+       
+        public bool BshowChords { get; set; }
+              
+        
         #endregion public
 
 
@@ -167,8 +170,10 @@ namespace Karaboss.Lyrics
         /// Constructor
         /// </summary>
         /// <param name="sequence"></param>
-        public LyricsMgmt(Sequence sequence) 
+        public LyricsMgmt(Sequence sequence, bool ShowChords) 
         {                        
+            BshowChords = ShowChords;
+            
             _lyricstracknum = -1;
             _melodytracknum = -1;
             
@@ -1225,7 +1230,11 @@ namespace Karaboss.Lyrics
                     if (bFound)
                     {
 
-                        lyricElement = formateLyricOfDetectedChord(chordElement, lyricElement);
+                        if (BshowChords)
+                        {
+                            lyricElement = formateLyricOfDetectedChord(chordElement, lyricElement);
+                        }
+
                         // Update list item with chord                        
                         plLyrics[i].Element = (chordElement, lyricElement);
                         
@@ -2145,40 +2154,58 @@ namespace Karaboss.Lyrics
             //TestCheckTimes();
         }
 
+        /// <summary>
+        /// Use case: chords are detected
+        /// Create false lyrics when chord is alone (instrumental)
+        /// </summary>
+        /// <param name="chord"></param>
+        /// <param name="lyric"></param>
+        /// <returns></returns>
         private string formateLyricOfChord(string chord, string lyric)
-        {
-            if (chord != "")
+        {                                    
+            if (chord != string.Empty)
             {
+                int L = (chord.Length > 3) ? chord.Length + 2 : chord.Length + 1;
+
                 // Add character '-' to lyrics when a chord and no lyric
                 if (lyric.Trim() == "")
                 {
-                    lyric = new string('-', chord.Length + 1) + " ";                 
+                    lyric = new string('-', L) + " ";                 
                 }
                 else if (lyric.Trim() == "-" || lyric.Trim() == ".")
                 {
-                    lyric = new string('-', chord.Length + 1) + " ";
+                    lyric = new string('-', L) + " ";
                 }
             }
             return lyric;
         }
 
+        /// <summary>
+        /// Use case: Chords are in lyrics
+        /// Create false lyric when chord is alone (instrumental)
+        /// </summary>
+        /// <param name="chord"></param>
+        /// <param name="lyric"></param>
+        /// <returns></returns>
         private string formateLyricOfDetectedChord(string chord, string lyric)
-        {
-            
+        {            
             string s = lyric;
 
-            if (chord != "")
+            if (chord != string.Empty)
             {
+                int L = (chord.Length > 3) ? chord.Length + 2 : chord.Length + 1;
+
+                // Remove chord in the lyric
                 s = Regex.Replace(lyric, RemoveChordPattern, @"");
                 
                 // Add character '-' to lyrics when a chord and no lyric
                 if (s.Trim() == "")
                 {
-                    s = new string('-', chord.Length + 1) + " ";
-                }
+                    s = new string('-', L) + " ";
+                }       
                 else if (s.Trim() == "-" || s.Trim() == ".")
                 {
-                    s = new string('-', chord.Length + 1) + " ";
+                    s = new string('-', L) + " ";
                 }
                 return _chordDelimiter.Item1 + chord + _chordDelimiter.Item2 + s;
             }

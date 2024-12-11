@@ -650,7 +650,7 @@ namespace Karaboss
         {
             ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);            
             // It can be used in DisplayChords if there are chords embedded in lyrics
-            myLyricsMgmt = new LyricsMgmt(sequence1);
+            myLyricsMgmt = new LyricsMgmt(sequence1, true);
 
             // favors chords included in lyrics
             if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)

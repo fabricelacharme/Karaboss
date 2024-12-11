@@ -935,8 +935,8 @@ namespace PicControl
             txtBackColor = Color.Black;     
             txtContourColor = Color.Black;
             txtNextColor = Color.White;
-            txtBeforeColor = Color.YellowGreen;
-            txtHighlightColor = Color.Red;
+            txtBeforeColor = Color.FromArgb(153, 180, 51);      // modern ui light green
+            txtHighlightColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red;
 
             _chordNextColor = Color.FromArgb(255, 196, 13);         // modern ui Orange
             _chordHighlightColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red

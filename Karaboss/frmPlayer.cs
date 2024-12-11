@@ -2697,7 +2697,7 @@ namespace Karaboss
             
             // load lyrics and chords if included in lyrics
             //  ********************** Why not load embedded chords here if bShowChords is true ? *****************
-            myLyricsMgmt = new LyricsMgmt(sequence1);
+            myLyricsMgmt = new LyricsMgmt(sequence1, bShowChords);
             bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0; // myLyricsMgmt.LyricType != LyricTypes.None;
                        
 
@@ -2805,7 +2805,7 @@ namespace Karaboss
         {
             if (myLyricsMgmt == null)
             {
-                myLyricsMgmt = new LyricsMgmt(sequence1);
+                myLyricsMgmt = new LyricsMgmt(sequence1, bShowChords);
             }
             myLyricsMgmt.MelodyTrackNum = melodytracknum;
             myLyricsMgmt.LyricsTrackNum = lyricstracknum;            
@@ -3754,7 +3754,7 @@ namespace Karaboss
             TrkInsertLyrics(track, newpLyrics, newLyricType);
 
             // Reload myLyricMgmt
-            myLyricsMgmt = new LyricsMgmt(sequence1);
+            myLyricsMgmt = new LyricsMgmt(sequence1, bShowChords);
 
             // Refresh frmLyric
 
@@ -4455,7 +4455,7 @@ namespace Karaboss
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
                 
-                myLyricsMgmt = new LyricsMgmt(sequence1);
+                myLyricsMgmt = new LyricsMgmt(sequence1, bShowChords);
                 bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0; //myLyricsMgmt.LyricType != LyricTypes.None;                
 
                 /*
@@ -4592,7 +4592,7 @@ namespace Karaboss
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
                 
-                myLyricsMgmt = new LyricsMgmt(sequence1);
+                myLyricsMgmt = new LyricsMgmt(sequence1, bShowChords);
                 bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0; //  myLyricsMgmt.LyricType != LyricTypes.None;                
 
                 /*
@@ -4734,7 +4734,7 @@ namespace Karaboss
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
                 
-                myLyricsMgmt = new LyricsMgmt(sequence1);
+                myLyricsMgmt = new LyricsMgmt(sequence1, bShowChords);
                 bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0; // myLyricsMgmt.LyricType != LyricTypes.None;                
 
                 /*
@@ -7593,7 +7593,7 @@ namespace Karaboss
             // FAB
             SetTitle("New.mid");
 
-            myLyricsMgmt = new LyricsMgmt(sequence1);
+            myLyricsMgmt = new LyricsMgmt(sequence1, bShowChords);
             bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0; // myLyricsMgmt.LyricType != LyricTypes.None;            
 
             // Display midi file infos
