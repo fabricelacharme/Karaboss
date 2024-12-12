@@ -42,10 +42,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 namespace ChordsAnalyser
 {
     public class ChordAnalyser
-    {
-        
-        // ***************************** TOUT PASSER EN GRIDBEATCHORD même si on garde l'analyse actuelle ************************
-
+    {        
 
         Analyser Analyser = new Analyser();
         
@@ -381,16 +378,32 @@ namespace ChordsAnalyser
                                 float st = GetTimeInMeasure(note.StartTime);
 
 
-                                // Ce n'est pas plutot le numérateur ???????????????????????????????????????????????????????                                
-                                if (st < sequence1.Numerator / 2)
+                                // Treat differently 3/4 and 4/4                                
+                                if (sequence1.Numerator % 3 == 0)
                                 {
-                                    // add note to first part of the measure
-                                    lstfirstmidiNotes.Add(note.Number);
+                                    if (st <= 2* sequence1.Numerator / 3)
+                                    {
+                                        // add note to first part of the measure
+                                        lstfirstmidiNotes.Add(note.Number);
+                                    }
+                                    else
+                                    {
+                                        // Add note to second part of the measure
+                                        lstSecmidiNotes.Add(note.Number);
+                                    }
                                 }
                                 else
                                 {
-                                    // Add note to second part of the measure
-                                    lstSecmidiNotes.Add(note.Number);
+                                    if (st < sequence1.Numerator / 2)
+                                    {
+                                        // add note to first part of the measure
+                                        lstfirstmidiNotes.Add(note.Number);
+                                    }
+                                    else
+                                    {
+                                        // Add note to second part of the measure
+                                        lstSecmidiNotes.Add(note.Number);
+                                    }
                                 }
                             }
                         }

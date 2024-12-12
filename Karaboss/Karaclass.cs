@@ -353,6 +353,13 @@ namespace Karaboss
         public int TicksOn { get; set; }
         public int TicksOff { get; set; }
         public int Beat { get; set; }        
+        public bool IsChord {  get; set; }
+
+        public plLyric()
+        {
+            IsChord = false;
+        }
+
     }
 
     #endregion lyrics
