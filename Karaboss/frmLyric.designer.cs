@@ -36,6 +36,7 @@
             this.picBalls = new BallsControl.Balls();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlWindow = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.btnLyricsChords = new System.Windows.Forms.Button();
             this.chkChords = new System.Windows.Forms.CheckBox();
             this.btnChangeWords = new System.Windows.Forms.Button();
@@ -76,6 +77,7 @@
             // 
             // picBalls
             // 
+            this.picBalls.Division = 0F;
             resources.ApplyResources(this.picBalls, "picBalls");
             this.picBalls.Name = "picBalls";
             this.picBalls.pBackColor = System.Drawing.SystemColors.ControlDarkDark;
@@ -91,6 +93,7 @@
             // pnlWindow
             // 
             this.pnlWindow.BackColor = System.Drawing.Color.Gray;
+            this.pnlWindow.Controls.Add(this.label1);
             this.pnlWindow.Controls.Add(this.btnLyricsChords);
             this.pnlWindow.Controls.Add(this.chkChords);
             this.pnlWindow.Controls.Add(this.btnChangeWords);
@@ -105,6 +108,11 @@
             this.pnlWindow.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PnlWindow_MouseMove);
             this.pnlWindow.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PnlWindow_MouseUp);
             this.pnlWindow.Resize += new System.EventHandler(this.PnlWindow_Resize);
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Name = "label1";
             // 
             // btnLyricsChords
             // 
@@ -278,5 +286,6 @@
         private System.Windows.Forms.Button btnChangeWords;
         private System.Windows.Forms.Button btnLyricsChords;
         private System.Windows.Forms.CheckBox chkChords;
+        private System.Windows.Forms.Label label1;
     }
 }

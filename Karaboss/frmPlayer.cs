@@ -2881,6 +2881,9 @@ namespace Karaboss
             {
                 try
                 {
+                    
+                    
+                    
                     // Cas
                     if (myLyricsMgmt.plLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum >= 0)
                     {

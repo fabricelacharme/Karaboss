@@ -199,7 +199,7 @@
     <value>picBalls</value>
   </data>
   <data name="&gt;&gt;picBalls.Type" xml:space="preserve">
-    <value>BallsControl.Balls, BallsControl, Version=1.0.0.3, Culture=neutral, PublicKeyToken=null</value>
+    <value>BallsControl.Balls, BallsControl, Version=1.0.0.4, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;picBalls.Parent" xml:space="preserve">
     <value>pnlBalls</value>
@@ -231,23 +231,50 @@
   <data name="&gt;&gt;pnlBalls.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>-1, 250</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>40, 13</value>
+  </data>
+  <data name="label1.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Chords</value>
+  </data>
+  <data name="&gt;&gt;label1.Name" xml:space="preserve">
+    <value>label1</value>
+  </data>
+  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
+    <value>pnlWindow</value>
+  </data>
+  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="btnLyricsChords.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
   <data name="btnLyricsChords.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DAAACwwBP0AiyAAAAAd0SU1FB+ADBg01FAhoEbYAAACYSURBVEhL7c1BCgMxDEPRbHv/A7cIatDiB4/t
-        TBdlHohooeD1OOj1fS9535wtGp/MVjpoKh2OPo14RzSeRryjdNBUOhx9GvGOaDyNeEfpoKl0OPo04h3R
-        eBrxjtJBU+lw9GnEO6LxNOIdpYOm0uHo04h3RONpxDtKB03/dzj+UcQ7Sgcb8Y8i3lE6aLp8+K5s0fhk
-        Hr+21geHwHCnqYBoaAAAAABJRU5ErkJggg==
+        DAAACwwBP0AiyAAAAAd0SU1FB+ADBg01FAhoEbYAAACWSURBVEhL7ZBBCoBADMS8+v8H63UZUgPt6snA
+        XDTE4nH87OPMB09cL68kxd0rUaGJdlchr+0uuwjJ02UXUaGJdunK6bKLkDxddhEVmmiXrpwuuwjJ02UX
+        UaGJdunK6bKLkDxddhEVmmiXrpwuuwjJ02UXUaGJdlVool0VCvL3rlvfl6hQkB/77MOGdvPa3StJcfd+
+        vucGh8Bwpwi9K20AAAAASUVORK5CYII=
 </value>
   </data>
   <data name="btnLyricsChords.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnLyricsChords.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1, 246</value>
+    <value>1, 263</value>
   </data>
   <data name="btnLyricsChords.Size" type="System.Drawing.Size, System.Drawing">
     <value>32, 32</value>
@@ -274,22 +301,19 @@
     <value>pnlWindow</value>
   </data>
   <data name="&gt;&gt;btnLyricsChords.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="chkChords.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="chkChords.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 226</value>
+    <value>3, 233</value>
   </data>
   <data name="chkChords.Size" type="System.Drawing.Size, System.Drawing">
-    <value>33, 17</value>
+    <value>15, 14</value>
   </data>
   <data name="chkChords.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
-  </data>
-  <data name="chkChords.Text" xml:space="preserve">
-    <value>C</value>
   </data>
   <data name="chkChords.ToolTip" xml:space="preserve">
     <value>Display chords</value>
@@ -304,7 +328,7 @@
     <value>pnlWindow</value>
   </data>
   <data name="&gt;&gt;chkChords.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="btnChangeWords.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -312,15 +336,15 @@
   <data name="btnChangeWords.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DAAACwwBP0AiyAAAAAd0SU1FB+ELCw8xBQx2YJcAAAHHSURBVEhL7dbNKwRxAMbx9f5ORInclLwflKIo
-        pZQrB/kDXOREigMHJQd5OTg5SA44cOXiKlc37wmRl4Mc5C18n9n9bdMyY8ZuTp76tDu/nZlnZ5rfzARC
-        KcManvDh4gbdSIDvqOQO2tEVjhzcwhROIQ2+oiPRxitoRPU3KtGDe5iyeaTDc3S6dCQqcYsKj2GKZAbx
-        8BRtoFOjHblFv2s9e5HMwVOiKXoPfU4iDq7xWlSLU9iL7IbhGq3kpSgPm3i0eYUpOkAxHOO1SNH8SbJR
-        WqF9nKFGA07xU/RdNJ/+pCgT/0W/ir1IU8BEF04GwvMrVkUXqNAAScEAttGmASVWReNI1ABph8ZEd32r
-        LNqifIwFvwayUALd1RdgyvYRdZGJJvA0tL96pGI5tDyEmBTpUTEI7ctoQQG6YCUWRfrH9hJ5QDPC0eAh
-        qqwl/xnFGyKLdqAjCucFl2iwlvylD8+ILNmFuQLDMe8MSyiFbvVu9LhQCjGLTqzDlOhIvpQo5dA7g1bS
-        M+bahc77CJQm9Ae/Wq9g2n4LutwdU4dFnENvOk706DYvMb04gWb/HlZRhB+j20Y2clzkQpdyMiawgQ7o
-        dGreOCQQ+ATK5rzyFL7c7AAAAABJRU5ErkJggg==
+        DAAACwwBP0AiyAAAAAd0SU1FB+ELCw8xBQx2YJcAAAHWSURBVEhL7dbLy41RFMfxj/udiBKZKbkPlKIo
+        pZQpA/kDTGREigEDJQPxGhgZSAYYMGViKlMz94TIZSADuYUW63nbtuc8zuk9GfnW6jxnPWut39n77LX3
+        5hfLcBUf8b3DXmM3JmTeQITI2yz0Eg972JtC8BSm1YX+Rowkki9jI1a32ErswbtC7Bym18W6iOmKkYRI
+        FyH4qJrKEYyvA3sRCTE1UaiLeB9x9f92tg7sxViEvuXnSYyrE2r6FVqLJy0jauxwnVDTr9A83MCHwr4U
+        QvexuE4q6VcoiP6ZVFiwNWs8xZoq/jcGEWoj+umfCM38LzQMoWiBhlg4M8r+GpbQc6xI3xQcwC1sawKH
+        JXQcE9O3PX1hsev/FBur0Hwcy+dZWJK7+vlC7F68HKtQQzTw6ay3HlNxKb8fioBhCMVRcbAYQdgWLMCu
+        JmgYQvGLS5Gw99hcBoXzAVaVzgE4iq8tQrdzRKN8xgtsKJ19sg+fWkTuFCtwlObOcBFLc6vvsjgugoU4
+        g524Vo3kD5Fged4ZIijOmFcdFvN+JPM2YX8+xxUs8m/mcu/JOlzAs7zp9LI4uptLzF48zu6/iytYVNVt
+        JbaN2ZjTYXNzKU/GCVzHjpzO6Jue/ADK5rzyV553XwAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="btnChangeWords.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
@@ -348,7 +372,7 @@
     <value>pnlWindow</value>
   </data>
   <data name="&gt;&gt;btnChangeWords.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="btnFrmWords.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -356,10 +380,10 @@
   <data name="btnFrmWords.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DAAACwwBP0AiyAAAAAd0SU1FB+ADBg01FAhoEbYAAACYSURBVEhL7c1BCgMxDEPRbHv/A7cIatDiB4/t
-        TBdlHohooeD1OOj1fS9535wtGp/MVjpoKh2OPo14RzSeRryjdNBUOhx9GvGOaDyNeEfpoKl0OPo04h3R
-        eBrxjtJBU+lw9GnEO6LxNOIdpYOm0uHo04h3RONpxDtKB03/dzj+UcQ7Sgcb8Y8i3lE6aLp8+K5s0fhk
-        Hr+21geHwHCnqYBoaAAAAABJRU5ErkJggg==
+        DAAACwwBP0AiyAAAAAd0SU1FB+ADBg01FAhoEbYAAACWSURBVEhL7ZBBCoBADMS8+v8H63UZUgPt6snA
+        XDTE4nH87OPMB09cL68kxd0rUaGJdlchr+0uuwjJ02UXUaGJdunK6bKLkDxddhEVmmiXrpwuuwjJ02UX
+        UaGJdunK6bKLkDxddhEVmmiXrpwuuwjJ02UXUaGJdlVool0VCvL3rlvfl6hQkB/77MOGdvPa3StJcfd+
+        vucGh8Bwpwi9K20AAAAASUVORK5CYII=
 </value>
   </data>
   <data name="btnFrmWords.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
@@ -387,7 +411,7 @@
     <value>pnlWindow</value>
   </data>
   <data name="&gt;&gt;btnFrmWords.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="btnFrmOptions.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -395,12 +419,11 @@
   <data name="btnFrmOptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DAAACwwBP0AiyAAAAAd0SU1FB+ADBg0mNFLpcOwAAAEBSURBVEhL7ZThCcIwEEY7iuBIzuE/B3AUd3Ek
-        B9A86IOjmNI7Sorgg4+GS/Jd75J2+vMLvGcNZ2jic9Ot6dn0msWYGHO7ECvClATGemKNL2AsTTSMejRd
-        mk6zGBP7thaViAaYk6gHc8sXuDeloWUaXAlshLXuK527Z0oVWawcjxSx2rX29mCP+1NV83mwqVKtWDVe
-        m7HN3Ngq7MVjU7tZiPgx8Ky0WWy3XqiLC4YnluGtlsMu12GfE9juStVWm2qzxKqH/jJBA0QVa21nzkpV
-        iWgQhTk3lkSI8TJhVJq4kZZ55mtije01tguY8nmQgB8DYkysfJ5Zdq0ow2GJ/ySYpg8lGpX53E7RzwAA
-        AABJRU5ErkJggg==
+        DAAACwwBP0AiyAAAAAd0SU1FB+ADBg0mNFLpcOwAAADgSURBVEhL7ZZtCsIwEETnKIJH8hz+8wAexbt4
+        JA+gPOhAWJrYLDVB6IOFko/dzCRNKx38Ae8lhjO08FnSTdJT0msJnmmjbxdKRSSlgNtqwRgvIO1ITOp4
+        SLpIOi3BM21xXLowxIIUqkFfXMA9DtoCljnBNXY2YKznpfbde4qKXqycHF2Ualv21mBOSjWvR1atsWpy
+        bcY2c2KzMHez3baHiyFrs7HdzkVUmVbYDLfaTDtc014nmHKBwLQrE5zAylu2r30kUpQJ4gJ++lksJw79
+        EVhjyK/PN3ZV1MO0wgddfAAlGpX5wAv7+gAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="btnFrmOptions.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
@@ -431,7 +454,7 @@
     <value>pnlWindow</value>
   </data>
   <data name="&gt;&gt;btnFrmOptions.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="btnFrmMin.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -439,8 +462,8 @@
   <data name="btnFrmMin.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DAAACwwBP0AiyAAAAAd0SU1FB+ADBg0vNfQs+zMAAAApSURBVEhL7cuxCQAwDASx339pZ4EUAaewQYIr
-        LwCwRn3u2W3uBADjJQdfWCfZn8zG2QAAAABJRU5ErkJggg==
+        DAAACwwBP0AiyAAAAAd0SU1FB+ADBg0vNfQs+zMAAAAmSURBVEhL7cuxCQAACMAw/39adydBFyGBjo0A
+        gC/yuLE+bgOABwpfWCfZD7KRHwAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="btnFrmMin.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
@@ -468,7 +491,7 @@
     <value>pnlWindow</value>
   </data>
   <data name="&gt;&gt;btnFrmMin.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="btnFrmMax.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -476,8 +499,9 @@
   <data name="btnFrmMax.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DAAACwwBP0AiyAAAAAd0SU1FB+ADBg0oNiJkPE4AAABBSURBVEhL7c1BCgAgDAPB/v/T+oC0CCXVgzuQ
-        W2ADr6zhlbKzc6XjoYmwIOxCWBB2ISwIuxAW/4anVsrOzuG2iA1ALK9RTT9EKgAAAABJRU5ErkJggg==
+        DAAACwwBP0AiyAAAAAd0SU1FB+ADBg0oNiJkPE4AAABzSURBVEhL7cwxCoAwAATB/P/TWtkEwsCSaOPA
+        dcuN8fvIdXhLc7h7Swwi/jKI+Msg4i+DiL8MIv4yiPjLIOIvg4i/DCL+Moj4yyDiL4OIvwwi/jKI+Msg
+        4i+DiL8MIv4yiPjLIOIvg4i/T3BqS3O4e7/33UAsr1FzaC8EAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="btnFrmMax.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
@@ -505,7 +529,7 @@
     <value>pnlWindow</value>
   </data>
   <data name="&gt;&gt;btnFrmMax.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="btnFrmClose.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -513,11 +537,11 @@
   <data name="btnFrmClose.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DAAACwwBP0AiyAAAAAd0SU1FB+ADBg0cFTspvssAAADgSURBVEhLxdQBasQgGAVhofc/cxtDBsz4NO5u
-        awOD7/8OkPJdyr8UcUcRdxRxRz0cj+3T6tNZB9e0vxuzc8OJ17S/GtNe64CY9tWYdopITPtTTHtbxDam
-        fRTT7iI6pt0x7amIKaadmPZREUcxV31WxFnM0b1axKeaeXY7FrsfpXy196hmnt2OxSLOYo7u1SKOYq76
-        rIgppp2Y9lERHdPumPZUxDamfRTT7iIS0/4U094Wsca0r8a0U8Zr2l+Naa/1cE37uzE77+B4bJ9Wn84M
-        v9XxTX+/EXcUcUcR/75SfgBEiX6y5m/2wQAAAABJRU5ErkJggg==
+        DAAACwwBP0AiyAAAAAd0SU1FB+ADBg0cFTspvssAAADNSURBVEhLxZRBDgMhDAMj9f9v3mpRc6gHgmEr
+        ehhhJg5H4oqIfwBxCohTQJyCIuJS95T7gIP4RPW7ZIRXUZVXyai+zVQ4Sw6zfYiV5RHOHoTiPLLTh+iR
+        Ub3i9lpXxYiM6t25AlGR0fUVEDMyju4uEA6qdO7wfYl4aaGHKp07QMzIOLq7QFRkdH0FxIiM6t25AtEj
+        o3rF7bWuCiWj+hFuH2LnEcXZg1hZrpjtQzhLLhnVtxlEUd4hIzxEp/SU+4BT8Stm3y/EKSBOAXGKN0SJ
+        frLoyVrmAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="btnFrmClose.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
@@ -548,16 +572,16 @@
     <value>pnlWindow</value>
   </data>
   <data name="&gt;&gt;btnFrmClose.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="pnlWindow.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Right</value>
   </data>
   <data name="pnlWindow.Location" type="System.Drawing.Point, System.Drawing">
-    <value>735, 0</value>
+    <value>727, 0</value>
   </data>
   <data name="pnlWindow.Size" type="System.Drawing.Size, System.Drawing">
-    <value>34, 355</value>
+    <value>42, 355</value>
   </data>
   <data name="pnlWindow.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -624,7 +648,7 @@
     <value>pBox</value>
   </data>
   <data name="&gt;&gt;pBox.Type" xml:space="preserve">
-    <value>PicControl.pictureBoxControl, PicControl, Version=1.0.0.7, Culture=neutral, PublicKeyToken=null</value>
+    <value>PicControl.pictureBoxControl, PicControl, Version=1.0.0.8, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pBox.Parent" xml:space="preserve">
     <value>panel1</value>
