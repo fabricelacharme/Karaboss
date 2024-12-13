@@ -185,9 +185,7 @@ namespace Karaboss.Lyrics
 
             sequence1 = sequence;
             
-            UpdateMidiTimes();
-
-            //OrgExtractLyrics();
+            UpdateMidiTimes();            
 
             NormalExtractLyrics();
 
@@ -650,18 +648,10 @@ namespace Karaboss.Lyrics
 
             return pll;
         }
-
-
-        public void OrgExtractLyrics()
-        {
-            OrgplLyrics = ExtractLyrics();
-
-            // Search for the melody track
-            _melodytracknum = GuessMelodyTrack(OrgplLyrics);
-        }
-
-
-
+      
+        /// <summary>
+        /// Extract all
+        /// </summary>
         public void NormalExtractLyrics()
         {
             OrgplLyrics = ExtractLyrics();
@@ -711,7 +701,6 @@ namespace Karaboss.Lyrics
                     // Add chords found in lyrics in the list pllyrics
                     ExtractChordsInLyrics(_lyricstracknum);
                 }
-
 
                 //TestCheckTimes();                             
 
@@ -958,6 +947,9 @@ namespace Karaboss.Lyrics
 
         #region clean
 
+        /// <summary>
+        /// Clean for embedded chords
+        /// </summary>
         public void CleanLyrics()
         {            
             plLyrics = RemoveEmptyLyrics(plLyrics);            
@@ -1009,25 +1001,28 @@ namespace Karaboss.Lyrics
 
                 if (plL.IsChord)
                     nbChords++;
-                else
-                    nbChords = 0;
-
-                // Add Linefeed before the normal element
-                //if (plL.CharType == plLyric.CharTypes.Text && nbChords > 1 && lyric.IndexOf("-") == -1)
-                if (plL.CharType == plLyric.CharTypes.Text && nbChords > 1 && !plL.IsChord)
+                else if (plL.CharType == plLyric.CharTypes.Text)
                 {
-                    nbChords = 0;
+                    // Add Linefeed before the normal element
+                    //if (plL.CharType == plLyric.CharTypes.Text && nbChords > 1 && lyric.IndexOf("-") == -1)
+                    if (nbChords > 1 && !plL.IsChord)
+                    {
+                        nbChords = 0;
 
-                    pcL2 = new plLyric();
+                        pcL2 = new plLyric();
 
-                    pcL2.Beat = plL.Beat;
-                    pcL2.CharType = plLyric.CharTypes.LineFeed;
-                    pcL2.Element = ("", _InternalSepLines);
-                    pcL2.TicksOn = plL.TicksOn;
-                    pcL2.TicksOff = plL.TicksOff;                    
-                    lst.Add(pcL2);
+                        pcL2.Beat = plL.Beat;
+                        pcL2.CharType = plLyric.CharTypes.LineFeed;
+                        pcL2.Element = ("", _InternalSepLines);
+                        pcL2.TicksOn = plL.TicksOn;
+                        pcL2.TicksOff = plL.TicksOff;
+                        lst.Add(pcL2);
+                    }
+                    else
+                    {
+                        nbChords = 0;
+                    }
                 }
-                
                 // Add normal element
                 lst.Add(plL);
             }
@@ -1096,56 +1091,56 @@ namespace Karaboss.Lyrics
         /// <returns></returns>
         private List<plLyric> AddLineFeedBeforeInstrumental(List<plLyric> l)
         {
+            int nbChords = 0;            
+            string chord;
+            string lyric;
             List<plLyric> lst = new List<plLyric>();
             plLyric plL = new plLyric();
             plLyric pcL2 = new plLyric();
 
-            for (int i = 0; i < l.Count; i++)
+            // Descending loop !!!!!
+            for (int i = l.Count - 1; i >= 0; i--)
             {
-                plL = l[i];                                
-                // Add normal element
-                lst.Add(plL);
-                
-                // Check if next elements are a list of chords
-                // if yes, add a linefeed
-                if (plL.CharType == plLyric.CharTypes.Text && i < l.Count - 4)
+                              
+                plL = l[i];
+                chord = plL.Element.Item1;
+                lyric = plL.Element.Item2;
+
+                // Search for a long list of chords (instrumental)
+                if (plL.IsChord)
                 {
-                    // if lyric normal
-                    if (!plL.IsChord)
-                    {
-                        // Check if first next is a chord alone
-                        plLyric p = l[i + 1];
-                        if (p.CharType == plLyric.CharTypes.Text && p.IsChord)
-                        {                            
-                            // Check if second next is a chord alone
-                            p = l[i + 2];
-                            if (p.CharType == plLyric.CharTypes.Text && p.IsChord)
-                            {
-                                // Check if third next is a chord alone
-                                p = l[i + 3];
-                                if (p.CharType == plLyric.CharTypes.Text && p.IsChord)
-                                {
-                                    // if third is also a chord: 
-                                    // add a linefeed
-                                    pcL2 = new plLyric();
-
-                                    pcL2.Beat = plL.Beat;
-                                    pcL2.CharType = plLyric.CharTypes.LineFeed;
-                                    pcL2.Element = ("", _InternalSepLines);
-                                    pcL2.TicksOn = plL.TicksOn;
-                                    pcL2.TicksOff = plL.TicksOff;
-                                    lst.Add(pcL2);                                                                                        
-                                }                                    
-                            }
-
-                            
-                        }
-                    }
+                    nbChords++;
                 }
+                else if (plL.CharType == plLyric.CharTypes.Text)
+                {
+                    // on the way down, we found a lyric preceded by several chords
+                    // We must have <lyric> <linefeed> <chord1> <chord2> ....
+                    // So insert a linefeed at position 0 and the lyric at position 0
+                    if (nbChords > 1 && !plL.IsChord)
+                    {
+                        nbChords = 0;
+
+                        pcL2 = new plLyric();
+
+                        pcL2.Beat = plL.Beat;
+                        pcL2.CharType = plLyric.CharTypes.LineFeed;
+                        pcL2.Element = ("", _InternalSepLines);
+                        pcL2.TicksOn = plL.TicksOn;
+                        pcL2.TicksOff = plL.TicksOff;
+                        lst.Insert(0, pcL2);
+                    }
+                    else
+                    {
+                        nbChords = 0;
+                    }
+
+                }
+                // Add normal element at position 0
+                lst.Insert(0, plL);
+
             }
 
             return lst;
-
         }
 
         /// <summary>
