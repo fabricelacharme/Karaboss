@@ -413,6 +413,9 @@ namespace Karaboss
             // so we have to load lyrics here
             if (!bShowChords)
             {                
+                if (myLyricsMgmt.plLyrics.Count == 0)
+                    myLyricsMgmt.NormalExtractLyrics();
+
                 _plLyrics = myLyricsMgmt.plLyrics;
                 LoadSong(_plLyrics);
                 //LoadBallsTimes(_plLyrics);
@@ -737,6 +740,9 @@ namespace Karaboss
                 // we have to detect chords and add them to the lyrics or add them to an extra
                 else if (!myLyricsMgmt.bHasChordsInLyrics)
                 {
+                    if (myLyricsMgmt.plLyrics.Count == 0)
+                        myLyricsMgmt.NormalExtractLyrics();
+
                     myLyricsMgmt.PopulateEmbeddedChords();
 
                     // Clean lyrics HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

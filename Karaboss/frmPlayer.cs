@@ -4269,8 +4269,7 @@ namespace Karaboss
         /// Load form frmLyrics       
         /// </summary>
         private void DisplayLyricsForm()
-        {
-                       
+        {                       
             string sSong = string.Empty;
             string sSinger = string.Empty;
             

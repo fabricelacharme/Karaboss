@@ -1035,53 +1035,7 @@ namespace PicControl
             */
             
             string lyr = string.Empty;
-            //int found;
-            
-            /*
-            // Display a blanck line between paragraphs
-            if (_bshowparagraphs)
-            {
-
-                // Replace double new lines by new paragraph
-                lyr = ly.Replace(_InternalSepLines + _InternalSepLines,  _InternalSepParagraphs);
-                
-                found = -1;
-                tx = _InternalSepLines + _InternalSepLines;
-                do
-                {
-                    lyr = lyr.Replace(tx, _InternalSepParagraphs);
-                    found = lyr.IndexOf(tx);
-                } while (found > -1);
-
-
-                found = -1;
-                tx = _InternalSepParagraphs + _InternalSepParagraphs;
-                do
-                {
-                    lyr = lyr.Replace(tx, _InternalSepParagraphs);
-                    found = lyr.IndexOf(tx);
-                } while (found > -1);
-
-
-                found = -1;
-                tx = _InternalSepParagraphs + _InternalSepLines + _InternalSepParagraphs;
-                do
-                {
-                    lyr = lyr.Replace(tx, _InternalSepParagraphs);
-                    found = lyr.IndexOf(tx);
-                } while (found > -1);
-
-                lyr = lyr.Replace(_InternalSepLines + _InternalSepParagraphs, _InternalSepParagraphs);
-                lyr = lyr.Replace(_InternalSepParagraphs + _InternalSepLines, _InternalSepParagraphs);
-
-                // Replace new paragraph by newline + new paragraph + new line
-                lyr = lyr.Replace(_InternalSepParagraphs, _InternalSepLines + _InternalSepParagraphs + _InternalSepLines);
-            }
-            else
-            {
-                lyr = ly.Replace(_InternalSepParagraphs, _InternalSepLines);
-            }
-            */
+                             
 
             lyr = ly;
             if (_bshowparagraphs) 
@@ -1195,9 +1149,7 @@ namespace PicControl
             int pos;
             int iline;
             int lastpos;
-            int line = 0;
-
-            //int nbLineFeeds = 0;
+            int line = 0;            
 
             try
             {
@@ -1215,8 +1167,7 @@ namespace PicControl
                     // ==============================
                     if (plLyrics[indexSyllabe].Type == plLyric.Types.Paragraph)
                     {
-                        #region add paragraph
-                        //nbLineFeeds = 0;
+                        #region add paragraph                        
 
                         idx++;
                         // Paragraphe = ligne vide
@@ -1229,8 +1180,8 @@ namespace PicControl
                         syl.posline = 0;                    // position dans la ligne
                         syl.text = " ";
                         syl.SylCount = 1;                   // number of syllabes in this line
-                        syl.last = idx;                     // position of last syllabe
-                        syl.time = itime;                   // time of syllabe
+                        syl.last = idx;                     // position of last syllabe                        
+                        syl.time = plLyrics[indexSyllabe].TicksOn; // time of syllabe
                         syl.offset = offset;
                         syllabes.Add(syl);
 
@@ -1246,8 +1197,7 @@ namespace PicControl
                         // ==============================
                         // LINEFEED
                         // ==============================
-                        indexSyllabe++;
-                        //nbLineFeeds++;
+                        indexSyllabe++;                        
 
                         #endregion linefeed
                     }
@@ -1256,11 +1206,7 @@ namespace PicControl
                         #region Text
                         // ==============================
                         // Normal line
-                        // ==============================                        
-
-                        // numerous linefeeds before this text
-                        //if (nbLineFeeds > 1)                                                
-                        //    line++;                                                
+                        // ==============================                                                                                              
 
                         // Search for number of syllabes in this line                    
                         max = 0;
@@ -1338,19 +1284,25 @@ namespace PicControl
 
                                     #region exit if CR
                                     // if next syllabe is a linefeed => next line
-                                    if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type == plLyric.Types.LineFeed)
+                                    if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type != plLyric.Types.Text)
                                     {
-                                        //nbLineFeeds = 0;
+                                        line++;
+                                        break;
+                                    }
+
+                                    /*
+                                    if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type == plLyric.Types.LineFeed)
+                                    {                                        
                                         line++;
                                         break;
                                     }
 
                                     if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type == plLyric.Types.Paragraph)
-                                    {
-                                        //nbLineFeeds = 0;
+                                    {                                        
                                         line++;
                                         break;
                                     }
+                                    */
                                     #endregion exit if CR
 
                                     // Replace used letters by a "#"
@@ -2237,7 +2189,7 @@ namespace PicControl
                 // k = 0;
                 // Si currentline = 0 => line = 1
                 // mais si il y a un séparateur paragraphe, 
-                // on parcour la boucle for (i = x0; i < syllabes.Count; i++) sans rien faire 
+                // on parcourt la boucle for (i = x0; i < syllabes.Count; i++) sans rien faire 
                 // du coup, k passe à 1 et on utilise les rectangles de la ligne suivante
 
 
@@ -2254,6 +2206,12 @@ namespace PicControl
                 {
                     if (syllabes[i].line == line)
                     {
+                        /*
+                        if (syllabes[i].text == " ")
+                        {
+                            Console.WriteLine("");
+                        }
+                        */
                         int pos = syllabes[i].posline;
                         if (pos < rListNextRect[k].Count)
                         {
