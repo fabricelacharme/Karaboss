@@ -52,9 +52,7 @@ namespace PicControl
          * Si songposition <> currenttextpos (syllabe active a changé) => redessine
          */
 
-        bool disposed = false;        
-
-        private BackgroundWorker backgroundWorkerSlideShow;
+        
 
         #region Move form without title bar
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -69,10 +67,9 @@ namespace PicControl
         #endregion
 
 
-        private string strCurrentImage; // current image to insure that random will provide a different one
-        private int rndIter = 0;
-        
+       
 
+        #region classes
         public class plLyric
         {
             public enum Types
@@ -87,10 +84,26 @@ namespace PicControl
             public int TicksOff { get; set; }
         }
 
+        // Syllabes
+        public class syllabe
+        {
+            public string chord;        // Chord to play with this syllabe
+            public string text;         // piece of text (text of Syllabe)
+            public int time;            // temps de la syllabe 
+            public int line;            // num de ligne  
+            public int posline;         // position dans la ligne
+            public int pos;             // position dans la chanson
+            public int SylCount;        // Nombre de syllabes sur la meme ligne
+            public int last;            // position derniére syllabe
+            public int offset;          // offset horizontal
+        }
+
+        #endregion classes
+
 
         #region properties
-               
-     
+
+
         #region Internal lyrics separators
 
         private string _InternalSepLines = "¼";
@@ -496,6 +509,8 @@ namespace PicControl
             }
         }
 
+
+
         #endregion properties
     
 
@@ -521,6 +536,16 @@ namespace PicControl
         #endregion SlideShow
 
 
+        #region private
+
+        private bool disposed = false;
+
+        private BackgroundWorker backgroundWorkerSlideShow;
+
+        private string strCurrentImage; // current image to insure that random will provide a different one
+        private int rndIter = 0;
+
+
         private int vOffset = 0;
         private int _lineHeight = 0;
 
@@ -539,20 +564,8 @@ namespace PicControl
         
         private int currentLine = 0;
         private string lineMax; // Ligne longueur max
-
-        // Syllabes
-        public class syllabe
-        {
-            public string chord;        // Chord to play with this syllabe
-            public string text;         // piece of text (text of Syllabe)
-            public int time;            // temps de la syllabe 
-            public int line;            // num de ligne  
-            public int posline;         // position dans la ligne
-            public int pos;             // position dans la chanson
-            public int SylCount;        // Nombre de syllabes sur la meme ligne
-            public int last;            // position derniére syllabe
-            public int offset;          // offset horizontal
-        }
+        
+ 
         private List<syllabe> syllabes;
 
         private Font m_font;
@@ -567,6 +580,8 @@ namespace PicControl
         private List<RectangleF> rNextRect;
         private List<RectangleF>[] rListNextRect;
 
+        #endregion private
+
         // Constructor
         public pictureBoxControl()
         {
@@ -575,7 +590,6 @@ namespace PicControl
             // Dipslay chords or not
             //OptionShowChords = false;
             OptionShowChords = true;
-
 
             _karaokeFont = new Font("Arial", this.Font.Size);
             _chordFont = new Font("Comic Sans MS", this._karaokeFont.Size);
@@ -600,6 +614,12 @@ namespace PicControl
             SetDefaultValues();
         }
 
+
+
+
+
+        #region methods
+
         /// <summary>
         /// Move form without title bar
         /// The message is sent to the parent Form (this.ParentForm.Handle)
@@ -617,9 +637,6 @@ namespace PicControl
             }
             return false;
         }
-
-
-        #region methods
 
         /// <summary>
         /// Define new slideShow directory and frequency
@@ -1857,7 +1874,14 @@ namespace PicControl
             }
         }
 
-
+        /// <summary>
+        /// Draw chords on current line
+        /// </summary>
+        /// <param name="clr"></param>
+        /// <param name="syl"></param>
+        /// <param name="x0"></param>
+        /// <param name="y0"></param>
+        /// <param name="e"></param>
         private void drawChord(Color clr, syllabe syl, int x0, int y0, PaintEventArgs e)
         {
             var path = new GraphicsPath();
@@ -1879,6 +1903,16 @@ namespace PicControl
             }
         }
 
+        /// <summary>
+        /// Draw syllabes on next lines
+        /// </summary>
+        /// <param name="clr"></param>
+        /// <param name="syl"></param>
+        /// <param name="x0"></param>
+        /// <param name="y0"></param>
+        /// <param name="W"></param>
+        /// <param name="H"></param>
+        /// <param name="e"></param>
         private void drawSyllabeNextLines(Color clr, syllabe syl, int x0, int y0, int W, int H, PaintEventArgs e)
         {
             var path = new GraphicsPath();
@@ -1919,7 +1953,7 @@ namespace PicControl
         }
 
         /// <summary>
-        /// Draw chord
+        /// Draw chord on next lines
         /// </summary>
         /// <param name="clr"></param>
         /// <param name="syl"></param>
@@ -2044,8 +2078,7 @@ namespace PicControl
                         {
                             if (syllab.chord != "")
                                 drawChord(_chordNextColor, syllab, (int)x1, y0, e);
-
-                            //drawSyllabe(txtBeforeColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);                            // déjà chanté
+                            
                             drawSyllabe(txtBeforeColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                            // déjà chanté
                         }
                         else
@@ -2063,8 +2096,7 @@ namespace PicControl
                             {
                                 if (syllab.chord != "")
                                     drawChord(_chordHighlightColor, syllab, (int)x1, y0, e);
-
-                                //drawSyllabe(txtHighlightColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);                       // surbrillance
+                                
                                 drawSyllabe(txtHighlightColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                       // surbrillance
                             }
                             else
@@ -2078,7 +2110,7 @@ namespace PicControl
                             {
                                 if (syllab.chord != "")
                                     drawChord(_chordNextColor, syllab, (int)x1, y0, e);
-                                //drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);
+                                
                                 drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);
                             }
                             else
@@ -2104,6 +2136,7 @@ namespace PicControl
                         else
                         {
                             bEndOfLine = false;
+
 
                             #region calculate next line
 
@@ -2136,8 +2169,7 @@ namespace PicControl
                         {
                             if (syllab.chord != "")
                                 drawChord(_chordNextColor, syllab, (int)x1, (int)y0, e);
-
-                            //drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 3 * offset / 4, W, H, e);                           // pas encore chanté
+                            
                             drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                           // pas encore chanté
                         }
                         else
@@ -2169,6 +2201,8 @@ namespace PicControl
 
             float x1;
             float y1;
+
+            int ChordOffset = offset;  // To manage when offset = 0 
 
             if (_txtNbLines == 1)
                 offset = 0;                      
@@ -2206,13 +2240,7 @@ namespace PicControl
                 for (i = x0; i < syllabes.Count; i++)
                 {
                     if (syllabes[i].line == line)
-                    {
-                        /*
-                        if (syllabes[i].text == " ")
-                        {
-                            Console.WriteLine("");
-                        }
-                        */
+                    {                        
                         int pos = syllabes[i].posline;
                         if (pos < rListNextRect[k].Count)
                         {
@@ -2223,17 +2251,14 @@ namespace PicControl
 
                             if (_bShowChords)
                             {
-                                //y1 = y0 + 2 * (offset + 10) + k * 2 * (offset + 10);
-                                //y1 = y0 + (k + 1) * offset + (k + 1) * 3*offset/4;
                                 y1 = y0 + (k + 1) * offset + (k + 1) * offset;
                                 
                                 // Draw chord above
                                 if (syllabes[i].chord != "")
                                     drawChordNextLines(_chordNextColor, syllabes[i], (int)x1, (int)y1, e);
 
-                                // Draw syllabe below at 3*offset/4
-                                //drawSyllabeNextLines(txtNextColor, syllabes[i], (int)x1, (int)y1 + 3 * offset / 4, W, H, e);
-                                drawSyllabeNextLines(txtNextColor, syllabes[i], (int)x1, (int)y1 + 2 * offset / 3, W, H, e);
+                                // Draw syllabe below at 2*ChordOffset/3
+                                drawSyllabeNextLines(txtNextColor, syllabes[i], (int)x1, (int)y1 + 2 * ChordOffset / 3, W, H, e);
                             }
                             else
                             {
@@ -2675,6 +2700,7 @@ namespace PicControl
         }
 
         #endregion paint resize
+
 
         #region Dispose
         protected virtual void Dispose(bool disposing)
