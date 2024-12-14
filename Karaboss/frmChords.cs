@@ -643,7 +643,7 @@ namespace Karaboss
         #endregion timer
 
 
-        #region Display Notes
+        #region Display Chords
 
         
         private void DisplayChords()
@@ -1007,6 +1007,9 @@ namespace Karaboss
         /// </summary>
         private void DisplayLyrics()
         {            
+            // New
+            myLyricsMgmt.FullExtractLyrics();
+            
             myLyricsMgmt.LoadLyricsPerBeat();
             myLyricsMgmt.LoadLyricsLines();
 
