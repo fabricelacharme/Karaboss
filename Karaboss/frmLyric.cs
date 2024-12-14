@@ -414,7 +414,7 @@ namespace Karaboss
             if (!bShowChords)
             {                
                 if (myLyricsMgmt.plLyrics.Count == 0)
-                    myLyricsMgmt.NormalExtractLyrics();
+                    myLyricsMgmt.FullExtractLyrics();
 
                 _plLyrics = myLyricsMgmt.plLyrics;
                 LoadSong(_plLyrics);
@@ -734,14 +734,14 @@ namespace Karaboss
                 // Add false lyrics in chords alone (instrumental) ???
                 if (myLyricsMgmt.bHasChordsInLyrics) 
                 {
-                    myLyricsMgmt.NormalExtractLyrics();
+                    myLyricsMgmt.FullExtractLyrics();
                 }
                 // 2. If chords are not included in lyrics,
                 // we have to detect chords and add them to the lyrics or add them to an extra
                 else if (!myLyricsMgmt.bHasChordsInLyrics)
                 {
                     if (myLyricsMgmt.plLyrics.Count == 0)
-                        myLyricsMgmt.NormalExtractLyrics();
+                        myLyricsMgmt.FullExtractLyrics();
 
                     myLyricsMgmt.PopulateEmbeddedChords();
 
@@ -760,7 +760,7 @@ namespace Karaboss
                 // Remove false lyrics added to chords alone (instrumental)
                 if (myLyricsMgmt.bHasChordsInLyrics)
                 {
-                    myLyricsMgmt.NormalExtractLyrics();
+                    myLyricsMgmt.FullExtractLyrics();
                 }
                 // 2. If chords are not included in lyrics
                 // Chords have been added by detection to existing lyrics but also on additional false lyrics (chords alone in instrumentals)
@@ -768,7 +768,7 @@ namespace Karaboss
                 else if (!myLyricsMgmt.bHasChordsInLyrics)
                 {
                     // Remove detected chords
-                    myLyricsMgmt.NormalExtractLyrics();                    
+                    myLyricsMgmt.FullExtractLyrics();                    
                 }
             }
 
@@ -778,6 +778,19 @@ namespace Karaboss
             //LoadBallsTimes(_plLyrics);
 
 
+        }
+
+
+
+        /// <summary>
+        /// Locate form
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <returns></returns>
+        private TForm GetForm<TForm>()
+            where TForm : Form
+        {
+            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
         }
 
         #endregion private methods
@@ -810,7 +823,6 @@ namespace Karaboss
         }
 
         #endregion
-
         
 
         #region form load close resize
@@ -974,6 +986,11 @@ namespace Karaboss
             }
         }
     
+        /// <summary>
+        /// Timer used to hide panel
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Timer1_Tick(object sender, EventArgs e)
         {
             TimeSpan dur = DateTime.Now - startTime;
@@ -988,11 +1005,21 @@ namespace Karaboss
             }
         }
         
+        /// <summary>
+        /// Close form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnFrmClose_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        /// <summary>
+        /// Maximize form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnFrmMax_Click(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Maximized)
@@ -1001,11 +1028,21 @@ namespace Karaboss
                 WindowState = FormWindowState.Maximized;
         }
 
+        /// <summary>
+        /// Minimize form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnFrmMin_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
         }
 
+        /// <summary>
+        /// Open form frmLyrOptions
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnFrmOptions_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -1081,7 +1118,7 @@ namespace Karaboss
             {                
                 if (myLyricsMgmt.GridBeatChords == null)
                 {
-                    myLyricsMgmt.FillGridBeatChordsWithLyrics();            
+                    myLyricsMgmt.FillGridBeatChordsWithLyricsChords();            
                 }                                
             }
             else
@@ -1172,21 +1209,8 @@ namespace Karaboss
 
         }
 
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
+        #endregion pnlWindow        
 
-
-        #endregion
-
-       
     }
 
 

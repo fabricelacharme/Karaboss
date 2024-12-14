@@ -2872,7 +2872,9 @@ namespace Karaboss
             DisplayEditLyricsForm();
         }
 
-
+        /// <summary>
+        /// Display the form for lyrics edition
+        /// </summary>
         public void DisplayEditLyricsForm()
         {            
             int melodytracknum = 0;
@@ -2880,10 +2882,7 @@ namespace Karaboss
             if (Application.OpenForms.OfType<frmLyricsEdit>().Count() == 0)
             {
                 try
-                {
-                    
-                    
-                    
+                {                                                            
                     // Cas
                     if (myLyricsMgmt.plLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum >= 0)
                     {
@@ -2914,26 +2913,15 @@ namespace Karaboss
 
                         // Get track number for melody
                         // -1 if no track
-                        melodytracknum = TrackDialog.TrackNumber - 1;
-
-                        // FAB 28/08
-                        /*
-                        myLyric = new CLyric()
-                        {
-                            MelodyTrackNum = melodytracknum  // can be -1
-                        };
-                        */
-
+                        melodytracknum = TrackDialog.TrackNumber - 1;                        
                         myLyricsMgmt.MelodyTrackNum = melodytracknum;
-
-
 
                         if (TrackDialog.TextLyricFormat == 0)
                         {
                             // TEXT FORMAT
                             // Create track at position 2 for text lyrics           
                             // Set myLyrics.melodytracknum & myMyrics.lyricstracknum
-                            AddTrackWords();
+                            //AddTrackWords();
                             myLyricsMgmt.LyricType = LyricTypes.Text;
                         }
                         else
@@ -2953,12 +2941,12 @@ namespace Karaboss
                     // Lyrics exist
                     if (!myLyricsMgmt.bHasChordsInLyrics)
                     {
-                        // Remove detected chords
-                        myLyricsMgmt.NormalExtractLyrics();
+                        // Remove detected chords: redo the lyrics extraction
+                        myLyricsMgmt.FullExtractLyrics();
                     }
 
                     frmLyricsEdit frmLyricsEdit;
-                    //frmLyricsEdit = new frmLyricsEdit(sequence1, myLyricsMgmt.plLyrics, myLyricsMgmt, MIDIfileFullPath);
+                    // Caution: Load the original lyrics, not the lyrics internally transformed by FullExtractLyrics
                     frmLyricsEdit = new frmLyricsEdit(sequence1, myLyricsMgmt.OrgplLyrics, myLyricsMgmt, MIDIfileFullPath);
 
                     frmLyricsEdit.Show();
@@ -3938,234 +3926,7 @@ namespace Karaboss
                 }
             }
         }
-
-        #region deleteme
-        /*
-        public void ReplaceLyrics2(List<plLyric> newpLyrics, LyricTypes newLyricType, int melodytracknum)
-        {
-            bool bRefreshDisplay = false;
-
-            // FAB 28/08            
-            myLyricsMgmt.plLyrics = newpLyrics;
-
-            if (myLyricsMgmt.plLyrics.Count == 0)
-                return;
-            else
-                bHasLyrics = true;
-
-
-            // si on repart de zéro
-            if (myLyricsMgmt.LyricsTrackNum == -1 && myLyricsMgmt.MelodyTrackNum == -1)
-            {
-                myLyricsMgmt.LyricType = newLyricType;
-                myLyricsMgmt.MelodyTrackNum = melodytracknum;
-                myLyricsMgmt.LyricsTrackNum = melodytracknum;
-            } 
-            else if (myLyricsMgmt.LyricsTrackNum != melodytracknum && melodytracknum != -1)
-            {
-                // FAB 02/07/20
-                foreach (Track T in sequence1.tracks)
-                {
-                    T.deleteLyrics();
-                    T.Lyrics.Clear();
-                }                
-                myLyricsMgmt.LyricsTrackNum = melodytracknum;     
-                
-                // Tags associated to the sequence have been deleted
-                restoreSequenceTags();
-            }
-
-            if (myLyricsMgmt == null)
-            {
-                NewMyLyric(melodytracknum, melodytracknum);
-
-                // TODO : Décharger la forme frmLyrics ?
-
-            }
-
-            // Warning change of type of lyric (lyric or text)
-            if (newLyricType != myLyricsMgmt.LyricType)
-            {
-                // Todo : check if track for words exists
-                if (newLyricType == LyricTypes.Text)
-                {
-                    // Changement de lyric à text
-                    // => effacer l'affichage des lyrics sur la piste melodytracknum
-                    if (myLyricsMgmt.MelodyTrackNum > -1)
-                    {
-                        sequence1.tracks[myLyricsMgmt.MelodyTrackNum].deleteLyrics();
-                        sequence1.tracks[myLyricsMgmt.MelodyTrackNum].Lyrics.Clear();
-                    }
-                    // Ajouter éventuellement une piste en position 2
-                    // Change la valeur de myLyric.melodytracknum
-                    AddTrackWords();
-
-                }
-                else if (newLyricType == LyricTypes.Lyric)
-                {
-                    //Changement de text à lyric 
-                    if (myLyricsMgmt.LyricsTrackNum > -1)
-                    {
-                        sequence1.tracks[myLyricsMgmt.LyricsTrackNum].deleteLyrics();
-                        sequence1.tracks[myLyricsMgmt.LyricsTrackNum].LyricsText.Clear();
-                    }
-                    // mettre les lyrics sur la piste de la mélodie (tracknum = melodytracknum)
-                    if (melodytracknum > -1)
-                        myLyricsMgmt.LyricsTrackNum = melodytracknum;
-                    else
-                        myLyricsMgmt.LyricsTrackNum = 0;
-                }
-
-                bRefreshDisplay = true;
-                myLyricsMgmt.LyricType = newLyricType;
-            }
-
-            // Display the form frmLyrics
-            DisplayLyricsForm();
-
-            int tracknum = myLyricsMgmt.LyricsTrackNum;
-            if (tracknum != -1)
-            {
-                Track track = sequence1.tracks[tracknum];
-
-                // supprime tous les messages text & lyric
-                track.deleteLyrics();
-
-                // Insert all lyric events
-                InsTrkEvents(tracknum);
-
-                // Restore tags
-                //restoreSequenceTags();
-
-            }
-
-            // Refresh display of lyrics
-            if (bRefreshDisplay || myLyricsMgmt.LyricType == LyricTypes.Lyric) {                
-                RefreshDisplay();               
-            }
-
-            // File was modified
-            FileModified();
-        }
-        
-
-
-        /// <summary>
-        /// insert all lyric events
-        /// </summary>
-        /// <param name="tracknum"></param>
-        private void InsTrkEvents2(int tracknum)
-        {
-            int currentTick = 0;
-            int lastcurrenttick = 0;
-
-            string currentElement = string.Empty;
-            string currentType = string.Empty;
-            string currentCR = string.Empty;
-
-            Track Track = sequence1.tracks[tracknum];
-            //int midiEventCount = Track.Count;
-
-            // FAB 17/03/16
-            Track.Lyrics.Clear();
-            Track.LyricsText.Clear();
-
-
-            // Recréé tout les textes et lyrics
-            for (int idx = 0; idx < myLyricsMgmt.plLyrics.Count; idx++)
-            {
-
-                // Si c'est un CR, le stocke et le collera au prochain lyric
-                if (myLyricsMgmt.plLyrics[idx].CharType == plLyric.CharTypes.LineFeed)
-                {
-                    if (myLyricsMgmt.LyricType == LyricTypes.Text)
-                        currentCR = m_SepLine;
-                    else
-                        currentCR = "\r";
-                }
-                else if (myLyricsMgmt.plLyrics[idx].CharType == plLyric.CharTypes.ParagraphSep)
-                {
-                    if (myLyricsMgmt.LyricType == LyricTypes.Text)
-                        currentCR = m_SepParagraph;
-                    else
-                        currentCR = "\r\r";
-                }
-                else
-                {
-                    // C'est un lyric
-                    currentTick = myLyricsMgmt.plLyrics[idx].TicksOn;
-                    if (currentTick >= lastcurrenttick)
-                    {
-                        lastcurrenttick = currentTick;
-                        currentElement = currentCR + myLyricsMgmt.plLyrics[idx].Element.Item2;
-
-                        // Transforme en byte la nouvelle chaine
-                        // ERROR FAB 16-01-2021 : must tyake into accout encoding selected by end user !!!
-                        byte[] newdata; // = Encoding.Default.GetBytes(currentElement);
-
-                        switch (OpenMidiFileOptions.TextEncoding)
-                        {
-                            case "Ascii":
-                                //sy = System.Text.Encoding.Default.GetString(data);
-                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
-                                break;
-                            case "Chinese":
-                                System.Text.Encoding chinese = System.Text.Encoding.GetEncoding("gb2312");
-                                newdata = chinese.GetBytes(currentElement);
-                                break;
-                            case "Japanese":
-                                System.Text.Encoding japanese = System.Text.Encoding.GetEncoding("shift_jis");
-                                newdata = japanese.GetBytes(currentElement);
-                                break;
-                            case "Korean":
-                                System.Text.Encoding korean = System.Text.Encoding.GetEncoding("ks_c_5601-1987");
-                                newdata = korean.GetBytes(currentElement);
-                                break;
-                            case "Vietnamese":
-                                System.Text.Encoding vietnamese = System.Text.Encoding.GetEncoding("windows-1258");
-                                newdata = vietnamese.GetBytes(currentElement);
-                                break;
-                            default:
-                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
-                                break;
-                        }
-                        //byte[] newdata = Encoding.Default.GetBytes(currentElement);                       
-
-                        MetaMessage mtMsg;
-
-                        // Update Track.Lyrics List
-                        Track.Lyric L = new Track.Lyric()
-                        {
-                            Element = myLyricsMgmt.plLyrics[idx].Element.Item2,
-                            TicksOn = myLyricsMgmt.plLyrics[idx].TicksOn,
-                            Type = (Track.Lyric.Types)myLyricsMgmt.plLyrics[idx].CharType,
-                        };
-
-
-                        if (myLyricsMgmt.LyricType == LyricTypes.Text)
-                        {
-                            // si lyrics de type text
-                            mtMsg = new MetaMessage(MetaType.Text, newdata);
-                            Track.LyricsText.Add(L);
-                        }
-                        else
-                        {
-                            // si lyrics de type lyrics
-                            mtMsg = new MetaMessage(MetaType.Lyric, newdata);
-                            Track.Lyrics.Add(L);
-                        }
-
-                        // Insert new message
-                        Track.Insert(currentTick, mtMsg);
-                    }
-                    currentCR = "";
-                }
-            }
-        }
-
-        */
-
-        #endregion deleteme
+      
 
         #region restore sequence tags
         /// <summary>
@@ -4258,7 +4019,6 @@ namespace Karaboss
             {
                 frmLyric.Close();
             }
-
 
             // File was modified
             FileModified();

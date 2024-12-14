@@ -1561,6 +1561,7 @@ namespace PicControl
 
         /// <summary>
         /// Find index of syllabe to sing according to time
+        /// TODO : remove chords ?
         /// </summary>
         /// <param name="itime"></param>
         /// <returns></returns>

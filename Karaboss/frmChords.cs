@@ -656,7 +656,7 @@ namespace Karaboss
             if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)
             {
                 // Chords by beat
-                GridBeatChords = myLyricsMgmt.FillGridBeatChordsWithLyrics();
+                GridBeatChords = myLyricsMgmt.FillGridBeatChordsWithLyricsChords();
             }
             else
             {
