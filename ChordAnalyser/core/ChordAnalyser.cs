@@ -365,7 +365,7 @@ namespace ChordsAnalyser
             for (int _measure = 1; _measure <= _nbMeasures; _measure++)
             {
 
-                //if (_measure == 30)
+                //if (_measure == 11)
                 //    Console.WriteLine("");
 
                 // Create a list only for permutations                
@@ -380,25 +380,52 @@ namespace ChordsAnalyser
                     {
                         foreach (MidiNote note in track.Notes)
                         {
-                            
+                            // Bornes de la mesure courante
+                            int startmeasureticks = (_measure - 1) * _measurelen;
+                            int endmeasureticks = _measure * _measurelen;
+
                             tStart = note.StartTime;
                             tEnd = note.EndTime;
 
-                            //MeasureStart = DetermineMeasure(tStart);
+                            
+
+                            MeasureStart = DetermineMeasure(tStart);
                             MeasureEnd = DetermineMeasure(tEnd);
 
-                            if (MeasureEnd > _measure)
-                                break;
+                            // Comment déterminer qu'une note est située dans une mesure
+                            // Une note
+                            
+                            //if (MeasureEnd > _measure)
+                            //    break;
 
                             //if (MeasureStart > _measure && MeasureEnd > _measure)
                             //    break;
 
                             st = -1;
+                            
+                            if (MeasureStart < _measure && MeasureEnd == _measure)
+                            {
+                                // Si la note démarre dans la mesure précédente, mais que la note est plus dans la mesure courante, on prend
+                                if (tEnd - startmeasureticks > startmeasureticks - tStart)
+                                    st = 0;
+                            }
+                            else if (MeasureStart == _measure && MeasureEnd == _measure)
+                            {
+                                st = GetTimeInMeasure(tStart);
+                            }
+                            else if (MeasureStart == _measure &&  MeasureEnd > _measure)
+                            {
+                                // Si la note démarre dans la mesure courante et fini dans la suivante
+                                // On prend si elle est plus dans la mesure courante
+                                if(endmeasureticks - tStart > tEnd - endmeasureticks)
+                                    st = GetTimeInMeasure(tStart);
+                            }
+                            
                             //if (MeasureStart == _measure)
                             //    st = GetTimeInMeasure(tStart);
                             
-                            if (MeasureEnd == _measure)
-                                st = GetTimeInMeasure(tEnd);
+                            //if (MeasureEnd == _measure)
+                            //    st = GetTimeInMeasure(tEnd);
                             
 
                             //if (Measure == _measure)
@@ -961,6 +988,17 @@ namespace ChordsAnalyser
             chord = dict.ElementAt(0).Key;
             res.Add(dict.ElementAt(0).Key,dict.ElementAt(0).Value);
 
+            int x = TransposeToInt(chord);
+            int y;
+            for (int i = 1; i < dict.Count; i++)
+            {
+                chord = dict.ElementAt(i).Key;
+                y = TransposeToInt(chord);
+                if (y != x - 1 && y != x + 1)
+                    res.Add(dict.ElementAt(i).Key, dict.ElementAt(i).Value);
+            }
+
+            /*
             if (chord.Length == 1)
             {
                 for (int i = 1; i < dict.Count; i++)
@@ -984,10 +1022,12 @@ namespace ChordsAnalyser
                     }
                 }
             }
-
+            */
             return res;
 
         }
+
+        
 
         private List<string> CheckImpossibleChordString(List<string> lstString)
         {
@@ -1088,6 +1128,28 @@ namespace ChordsAnalyser
                 res.Add(x);
             }
             return res;
+        }
+
+        private int TransposeToInt(string n)
+        {            
+            Dictionary<string, int> _note_dict = new Dictionary<string, int>() { { "C", 0 }, { "D", 2 }, { "E", 4 }, { "F", 5 }, { "G", 7 }, { "A", 9 }, { "B", 11 } };
+            string n0 = n.Substring(0, 1);
+            int x = _note_dict[n0];
+            if (n.Length > 1)
+            {
+                if (n.Substring(1, 1) == "#")
+                {
+                    x += 1;
+                }
+                else
+                {
+                    x -= 1;
+                    if (x < 0)  // Cb = B
+                        x = 11;
+                }
+            }
+
+            return x;
         }
 
 
