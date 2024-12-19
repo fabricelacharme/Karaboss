@@ -137,7 +137,7 @@ namespace ChordsAnalyser
             SearchByHalfMeasure();
 
             // if search notes fails, take the bass line
-            SearchByBass();
+            //SearchByBass();
 
             // display results
             //PublishResults(Gridchords);
@@ -196,6 +196,8 @@ namespace ChordsAnalyser
         {            
             if (dictnotes[beat].Count > 0)
             {
+                int rootnote;
+                
                 List<string> notletters = TransposeToLetterChord(dictnotes[beat]);
                 
                 // Remove doubles
@@ -206,7 +208,7 @@ namespace ChordsAnalyser
 
                 // Translate strings to int
                 List<int> lstInt = TransposeToIntChord(notletters);
-
+                rootnote = lstInt[0];
 
                 // Get all Combinations of notes numbers          
                 List<List<int>> llnotes = GetAllChordsCombinations(lstInt);
@@ -217,7 +219,7 @@ namespace ChordsAnalyser
 
 
                 // Search major or minor triads note                    
-                List<int> lroot = DetermineRoot(llnotes);
+                List<int> lroot = DetermineRoot(llnotes, rootnote);
 
                 List<List<List<int>>> lroots = DetermineRoots(llnotes);
 
@@ -353,9 +355,19 @@ namespace ChordsAnalyser
         /// </summary>
         private void SearchByHalfMeasure()
         {
+            int tStart;
+            int tEnd;
+            int MeasureEnd;
+            int MeasureStart;
+            float st;
+            
             // Collect all notes of all tracks for each measure and try to fing a chord
             for (int _measure = 1; _measure <= _nbMeasures; _measure++)
-            {                
+            {
+
+                //if (_measure == 30)
+                //    Console.WriteLine("");
+
                 // Create a list only for permutations                
                 List<int> lstfirstmidiNotes = new List<int>();
                 List<int> lstSecmidiNotes = new List<int>();
@@ -368,14 +380,31 @@ namespace ChordsAnalyser
                     {
                         foreach (MidiNote note in track.Notes)
                         {
-                            int Measure = DetermineMeasure(note.StartTime);
+                            
+                            tStart = note.StartTime;
+                            tEnd = note.EndTime;
 
-                            if (Measure > _measure)
+                            //MeasureStart = DetermineMeasure(tStart);
+                            MeasureEnd = DetermineMeasure(tEnd);
+
+                            if (MeasureEnd > _measure)
                                 break;
 
-                            if (Measure == _measure)
+                            //if (MeasureStart > _measure && MeasureEnd > _measure)
+                            //    break;
+
+                            st = -1;
+                            //if (MeasureStart == _measure)
+                            //    st = GetTimeInMeasure(tStart);
+                            
+                            if (MeasureEnd == _measure)
+                                st = GetTimeInMeasure(tEnd);
+                            
+
+                            //if (Measure == _measure)
+                            if (st != -1)
                             {
-                                float st = GetTimeInMeasure(note.StartTime);
+                                //st = GetTimeInMeasure(tEnd);
 
 
                                 // Treat differently 3/4 and 4/4                                
@@ -405,6 +434,7 @@ namespace ChordsAnalyser
                                         lstSecmidiNotes.Add(note.Number);
                                     }
                                 }
+
                             }
                         }
                     }
@@ -462,14 +492,23 @@ namespace ChordsAnalyser
                 // If more than 3 notes => search first 3 more frequent notes
                 var sortedDict = from entry in dictbestnotes orderby entry.Value descending select entry;
                 dictbestnotes = sortedDict.ToDictionary<KeyValuePair<string, int>, string, int>(pair => pair.Key, pair => pair.Value);
-                
-                
-                List<string> bestnotletters = new List<string>();
-                //List<string> bestnotlettersbis = new List<string>();
-                List<string> bestnotletters4 = new List<string>();
 
-                // Hard selection => bestnotletters
-                //List<string> v = dictbestnotes.Take(3);
+                // 19/12/2024
+                // Traiter ce cas de figure : supprimer le C# pas compatible avec le C
+                /*
+                    {[C, 14]}
+                    {[A, 4]}
+                    {[G, 3]}
+                    {[C#, 2]}
+                    {[E, 2]}
+                    {[D, 1]}
+                */
+                dictbestnotes = FilterBestNotes(dictbestnotes);   
+
+
+                List<string> bestnotletters = new List<string>();                
+                List<string> bestnotletters4 = new List<string>();
+                
 
                 int moy = 0;
                 int lastvalue = 0;
@@ -477,8 +516,7 @@ namespace ChordsAnalyser
                 {
                     for (int i = 0; i < 3; i++)
                     {
-                        bestnotletters.Add(dictbestnotes.ElementAt(i).Key);
-                        //bestnotlettersbis.Add(dictbestnotes.ElementAt(i).Key);
+                        bestnotletters.Add(dictbestnotes.ElementAt(i).Key);                        
                         bestnotletters4.Add(dictbestnotes.ElementAt(i).Key);
                         moy += dictbestnotes.ElementAt(i).Value;                        
                     }
@@ -487,16 +525,7 @@ namespace ChordsAnalyser
 
                     if (dictbestnotes.Count > 3)
                     {
-                        /*
-                        if (lastvalue > 1)
-                        {
-                            for (int i = 3; i < dictbestnotes.Count; i++)
-                            {
-                                if (dictbestnotes.ElementAt(i).Value >= lastvalue - 1)
-                                    bestnotletters.Add(dictbestnotes.ElementAt(i).Key);
-                            }
-                        }
-                        */
+                        
                         for (int i = 3; i < dictbestnotes.Count; i++)
                         {
                             if (dictbestnotes.ElementAt(i).Value >= moy)
@@ -504,28 +533,18 @@ namespace ChordsAnalyser
                         }
 
                         bestnotletters4.Add(dictbestnotes.ElementAt(3).Key);
-                        //bestnotlettersbis[2] = bestnotletters4[3];
+                        
                     }
                 }
 
 
-                // Try best notes, if not, try all notes                
-                //notletters = notletters.Distinct().ToList();
-                //notletters = bestnotletters;
+                // Try best notes, if not, try all notes                                
                 List<int> lroot = null;
                 
                 // Try with best notes
                 if (bestnotletters.Count > 2)
                     lroot = GetChord(bestnotletters);
-
-                /*
-                if (lroot == null && bestnotlettersbis.Count > 2)
-                {
-                    lroot = GetChord(bestnotlettersbis);
-                    if (lroot != null)
-                        Console.WriteLine("************ best note bis succeeded");
-                }
-                */
+                
 
                 if (lroot == null && bestnotletters4.Count == 4)                
                     lroot = GetChord(bestnotletters4);
@@ -617,6 +636,8 @@ namespace ChordsAnalyser
             if (notes.Count == 0)
                 return;
 
+            int rootnote;
+
             List<string> notletters = TransposeToLetterChord(notes);
             
 
@@ -628,7 +649,7 @@ namespace ChordsAnalyser
 
             // Translate strings to int
             List<int> lstInt = TransposeToIntChord(notletters);
-
+            rootnote = lstInt[0];
 
             // Get all Combinations of notes numbers          
             List<List<int>> llnotes = GetAllChordsCombinations(lstInt);
@@ -638,7 +659,7 @@ namespace ChordsAnalyser
 
 
             // Search major or minor triads note                    
-            List<int> lroot = DetermineRoot(llnotes);
+            List<int> lroot = DetermineRoot(llnotes, rootnote);
 
             if (lroot != null)
             {
@@ -726,10 +747,10 @@ namespace ChordsAnalyser
             }
         }
         */
-        
-        /// <summary>
-        /// Store results in dictionnary chords by beat GridBeatChord
-        /// </summary>
+
+                /// <summary>
+                /// Store results in dictionnary chords by beat GridBeatChord
+                /// </summary>
         private void CreateGridBeatChords()
         {
             int measure;
@@ -764,12 +785,12 @@ namespace ChordsAnalyser
                 {
                     lastChordName = chordName;
                     beat = 1 + (measure - 1) * numerator + (numerator / 2);
+
+
+
                     GridBeatChords[beat] = chordName;
                 }
             }
-
-
-
         }
         
 
@@ -809,7 +830,8 @@ namespace ChordsAnalyser
 
                 int nbBeatsPerMeasure = sequence1.Numerator;
                 int beatDuration = _measurelen / nbBeatsPerMeasure;
-                _nbBeats = (int)Math.Ceiling(_totalTicks / (float)beatDuration);
+                //_nbBeats = (int)Math.Ceiling(_totalTicks / (float)beatDuration);
+                _nbBeats = _nbMeasures * nbBeatsPerMeasure;
             }
         }
 
@@ -849,12 +871,16 @@ namespace ChordsAnalyser
         {
             if (chord.Count == 0)
                 return null;
+            
 
             // Remove impossible chords
             chord = CheckImpossibleChordString(chord);
 
             // Translate strings to int                
             List<int> lstInt = TransposeToIntChord(chord);
+
+            // La note la plus trouvée est la première
+            int rootnote = lstInt[0];
 
             // Get all Combinations of notes numbers          
             List<List<int>> llnotes = GetAllChordsCombinations(lstInt);
@@ -864,7 +890,7 @@ namespace ChordsAnalyser
 
 
             // Search major or minor triads note                    
-            List<int> lroot = DetermineRoot(llnotes);
+            List<int> lroot = DetermineRoot(llnotes, rootnote);
 
             // Alternative
             /*
@@ -905,6 +931,62 @@ namespace ChordsAnalyser
             }
 
             return res;
+        }
+
+
+        /// <summary>
+        /// Remove impossible notes from the dictionary 
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <returns></returns>
+        Dictionary<string, int> FilterBestNotes(Dictionary<string, int> dict)
+        {
+
+            /*
+                {[C, 14]}
+                {[A, 4]}
+                {[G, 3]}
+                {[C#, 2]}
+                {[E, 2]}
+                {[D, 1]}
+                */
+            Dictionary<string, int> res = new Dictionary<string, int>();
+            string chord;
+            string s;
+
+            if (dict.Count <= 3)
+                return dict;
+            
+            // Filter best chord 
+            chord = dict.ElementAt(0).Key;
+            res.Add(dict.ElementAt(0).Key,dict.ElementAt(0).Value);
+
+            if (chord.Length == 1)
+            {
+                for (int i = 1; i < dict.Count; i++)
+                {
+                    s = dict.ElementAt(i).Key;
+                    if (s != chord + "#")
+                    {
+                        res.Add(dict.ElementAt(i).Key, dict.ElementAt(i).Value);
+                    }
+                }
+
+            }
+            else if (chord.Length == 2) 
+            {
+                for (int i = 1; i < dict.Count; i++)
+                {
+                    s = dict.ElementAt(i).Key;
+                    if (s != chord.Substring(0, 1))
+                    {
+                        res.Add(dict.ElementAt(i).Key, dict.ElementAt(i).Value);
+                    }
+                }
+            }
+
+            return res;
+
         }
 
         private List<string> CheckImpossibleChordString(List<string> lstString)
@@ -1202,14 +1284,34 @@ namespace ChordsAnalyser
         /// </summary>
         /// <param name="lsnotes"></param>
         /// <returns></returns>
-        private List<int> DetermineRoot(List<List<int>> lsnotes)
+        private List<int> DetermineRoot(List<List<int>> lsnotes, int rootnote)
         {
             /* {0,1,2} => 1 - 0, 2 - 0 ET {0,2,1} ????
              * {1,2,0} => 2 - 1, 0 - 1 ET {1,0,2}
              * {2,0,1} => 0 - 2, 1 - 2
              * 
              */
+
+            // Search chords having rootnote            
+            foreach (List<int> chord in lsnotes)
+            {
+                if (chord.Count > 3 && chord[0] == rootnote)
+                {
+                    if (IsMajorChord7(chord) || IsMinorChord7(chord))
+                        return chord;
+                }
+            }
+
+            foreach (List<int> chord in lsnotes)
+            {
+                if (chord.Count > 2 && chord[0] == rootnote)
+                {
+                    if (IsMajorChord(chord) || IsMinorChord(chord))
+                        return chord;
+                }
+            }
             
+
             foreach (List<int> chord in lsnotes)
             {
                 if (chord.Count > 3)
