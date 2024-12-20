@@ -615,9 +615,6 @@ namespace PicControl
         }
 
 
-
-
-
         #region methods
 
         /// <summary>
@@ -798,6 +795,7 @@ namespace PicControl
         }
 
         #endregion methods
+
 
         #region tests
 

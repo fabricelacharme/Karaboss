@@ -490,7 +490,7 @@ namespace Karaboss
         /// La cinématique d'attente bouzille tout
         /// </summary>
         /// <param name="dirSlideShow"></param>
-        public void SetKarOptions(string dirSlideShow)
+        public void SetSlideShow(string dirSlideShow)
         {            
             DirSlideShow = dirSlideShow;         
         }
@@ -613,18 +613,86 @@ namespace Karaboss
             pBox.Terminate();
         }
 
-        #endregion public methods
+
+        /// <summary>
+        /// Send to picturebox the parameters of chords included in lyrics if any
+        /// </summary>
+        public void ResetDisplayChordsOptions(LyricsMgmt LMgmt)
+        {
+            this.myLyricsMgmt = LMgmt;
+
+            if (myLyricsMgmt == null)
+                return;
+
+            myLyricsMgmt.BshowChords = bShowChords;
+            chkChords.Checked = bShowChords;
+            pBox.bShowChords = bShowChords;
 
 
-        #region private methods   
+            if (bShowChords)
+            {
+                // ===================
+                // Show chords                                
+                // ===================
+
+                // 1. If chords are  already included in lyrics
+                // Add false lyrics in chords alone (instrumental) ???
+                if (myLyricsMgmt.bHasChordsInLyrics)
+                {
+                    myLyricsMgmt.FullExtractLyrics();
+                }
+                // 2. If chords are not included in lyrics,
+                // we have to detect chords and add them to the lyrics or add them to an extra
+                else if (!myLyricsMgmt.bHasChordsInLyrics)
+                {
+                    if (myLyricsMgmt.plLyrics.Count == 0)
+                        myLyricsMgmt.FullExtractLyrics();
+
+                    myLyricsMgmt.PopulateEmbeddedChords();
+
+                    // Clean lyrics HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    myLyricsMgmt.CleanLyrics();
+
+                }
+            }
+            else
+            {
+                // ===================
+                // Do not show chords
+                // ===================
+
+                // 1. If chords are already included in lyrics
+                // Remove false lyrics added to chords alone (instrumental)
+                if (myLyricsMgmt.bHasChordsInLyrics)
+                {
+                    myLyricsMgmt.FullExtractLyrics();
+                }
+                // 2. If chords are not included in lyrics
+                // Chords have been added by detection to existing lyrics but also on additional false lyrics (chords alone in instrumentals)
+                // So we have to delete all additions made by the chord analysis.                
+                else if (!myLyricsMgmt.bHasChordsInLyrics)
+                {
+                    // Remove detected chords
+                    myLyricsMgmt.FullExtractLyrics();
+                }
+            }
+
+            // Load lyrics (first operture of frmLyric) or reload lyrics if we have switched form "show chords" to "do not show chords" or reverse.
+            _plLyrics = myLyricsMgmt.plLyrics;
+            LoadSong(_plLyrics);
+            //LoadBallsTimes(_plLyrics);
+
+
+        }
+
 
         /// <summary>
         /// Load options (text color, 
         /// </summary>
-        private void LoadKarOptions()
+        public void LoadKarOptions()
         {
             try
-            {                
+            {
                 _karaokeFont = Properties.Settings.Default.KaraokeFont;
                 pBox.KaraokeFont = _karaokeFont;
                 pBox.bShowParagraphs = Karaclass.m_ShowParagraph;
@@ -659,16 +727,16 @@ namespace Karaboss
                 switch (Properties.Settings.Default.LyricsOptionDisplay)
                 {
                     case "Top":
-                        _OptionDisplay = Karaclass.OptionsDisplay.Top;                      
+                        _OptionDisplay = Karaclass.OptionsDisplay.Top;
                         break;
                     case "Center":
-                        _OptionDisplay = Karaclass.OptionsDisplay.Center;                        
+                        _OptionDisplay = Karaclass.OptionsDisplay.Center;
                         break;
                     case "Bottom":
-                        _OptionDisplay = Karaclass.OptionsDisplay.Bottom;                        
+                        _OptionDisplay = Karaclass.OptionsDisplay.Bottom;
                         break;
                     default:
-                        _OptionDisplay = Karaclass.OptionsDisplay.Center;                        
+                        _OptionDisplay = Karaclass.OptionsDisplay.Center;
                         break;
                 }
                 OptionDisplay = _OptionDisplay;
@@ -688,7 +756,7 @@ namespace Karaboss
                 _chordNextColor = Properties.Settings.Default.ChordNextColor;
                 _chordHighlightColor = Properties.Settings.Default.ChordHighlightColor;
                 bShowChords = Properties.Settings.Default.bShowChords;
-                chkChords.Checked = bShowChords;              
+                chkChords.Checked = bShowChords;
 
                 // Number of Lines to display
                 TxtNbLines = Properties.Settings.Default.TxtNbLines;
@@ -696,7 +764,7 @@ namespace Karaboss
                 FreqSlideShow = Properties.Settings.Default.freqSlideShow;
                 // Position image
                 SizeMode = Properties.Settings.Default.SizeMode;
-                
+
             }
             catch (Exception e)
             {
@@ -704,77 +772,15 @@ namespace Karaboss
             }
         }
 
-
-        /// <summary>
-        /// Send to picturebox the parameters of chords included in lyrics if any
-        /// </summary>
-        public void ResetDisplayChordsOptions(LyricsMgmt LMgmt)
-        {
-            this.myLyricsMgmt = LMgmt;
-
-            if (myLyricsMgmt == null)
-                return;
-            
-            myLyricsMgmt.BshowChords = bShowChords;
-            chkChords.Checked = bShowChords;
-            pBox.bShowChords = bShowChords;
+        #endregion public methods
 
 
-            if (bShowChords)
-            {
-                // ===================
-                // Show chords                                
-                // ===================
-
-                // 1. If chords are  already included in lyrics
-                // Add false lyrics in chords alone (instrumental) ???
-                if (myLyricsMgmt.bHasChordsInLyrics) 
-                {
-                    myLyricsMgmt.FullExtractLyrics();
-                }
-                // 2. If chords are not included in lyrics,
-                // we have to detect chords and add them to the lyrics or add them to an extra
-                else if (!myLyricsMgmt.bHasChordsInLyrics)
-                {
-                    if (myLyricsMgmt.plLyrics.Count == 0)
-                        myLyricsMgmt.FullExtractLyrics();
-
-                    myLyricsMgmt.PopulateEmbeddedChords();
-
-                    // Clean lyrics HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    myLyricsMgmt.CleanLyrics();
-                    
-                }                               
-            }
-            else
-            {
-                // ===================
-                // Do not show chords
-                // ===================
-
-                // 1. If chords are already included in lyrics
-                // Remove false lyrics added to chords alone (instrumental)
-                if (myLyricsMgmt.bHasChordsInLyrics)
-                {
-                    myLyricsMgmt.FullExtractLyrics();
-                }
-                // 2. If chords are not included in lyrics
-                // Chords have been added by detection to existing lyrics but also on additional false lyrics (chords alone in instrumentals)
-                // So we have to delete all additions made by the chord analysis.                
-                else if (!myLyricsMgmt.bHasChordsInLyrics)
-                {
-                    // Remove detected chords
-                    myLyricsMgmt.FullExtractLyrics();                    
-                }
-            }
-
-            // Load lyrics (first operture of frmLyric) or reload lyrics if we have switched form "show chords" to "do not show chords" or reverse.
-            _plLyrics = myLyricsMgmt.plLyrics;            
-            LoadSong(_plLyrics);
-            //LoadBallsTimes(_plLyrics);
+        #region private methods   
 
 
-        }
+
+
+
 
 
 
