@@ -35,6 +35,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace VBarControl.NavButton
 {
@@ -46,7 +47,7 @@ namespace VBarControl.NavButton
      
     public partial class NavButton : UserControl
     {
-        ToolTip tooltipBtn;
+        System.Windows.Forms.ToolTip tooltipBtn;
         public new event EventHandler Click;
 
 
@@ -158,7 +159,10 @@ namespace VBarControl.NavButton
         {
             InitializeComponent();
             lblButton.Text = _text;
-            tooltipBtn = new ToolTip();                      
+
+            SetFontScheme();
+
+            tooltipBtn = new System.Windows.Forms.ToolTip();                      
             _selected = false;
                       
             picButton.MouseHover += new EventHandler(navButton_MouseHover);
@@ -170,7 +174,11 @@ namespace VBarControl.NavButton
             pnlButton.MouseLeave += new EventHandler(navButton_MouseLeave);
             pnlButton.MouseHover += new EventHandler(navButton_MouseHover);
             pnlButton.MouseUp += new MouseEventHandler(navButton_MouseUp);
-            pnlButton.Click += new EventHandler(navButton_Click);            
+            pnlButton.Click += new EventHandler(navButton_Click);
+
+            // Accessibility : manage user size of font
+            Microsoft.Win32.SystemEvents.UserPreferenceChanged += new Microsoft.Win32.UserPreferenceChangedEventHandler(this.UserPreferenceChanged);
+
         }
 
        
@@ -191,6 +199,24 @@ namespace VBarControl.NavButton
 
 
         #region Private Functions
+
+        private void UserPreferenceChanged(object sender, Microsoft.Win32.UserPreferenceChangedEventArgs e)
+        {
+            SetFontScheme();
+        }
+
+        private void SetFontScheme()
+        {            
+            //lblButton.Font = SystemFonts.CaptionFont;
+
+            lblButton.Font = new System.Drawing.Font("Segoe UI", SystemFonts.MenuFont.Size, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            // Change height of resource ?
+            //this.Height = (int)(60 * (SystemFonts.CaptionFont.Size / 8.25F));
+            lblButton.Height = lblButton.Font.Height;
+            this.Height += lblButton.Height - 13;
+
+        }
+
 
         /// <summary>
         /// Unselect all buttons
@@ -290,5 +316,7 @@ namespace VBarControl.NavButton
 
 
         #endregion
+      
+
     }
 }

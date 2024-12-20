@@ -73,6 +73,12 @@
             this.btnFonts = new System.Windows.Forms.Button();
             this.txtFont = new System.Windows.Forms.TextBox();
             this.chkTextUppercase = new System.Windows.Forms.CheckBox();
+            this.chkForceShowChords = new System.Windows.Forms.CheckBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.picChordHighlight = new System.Windows.Forms.PictureBox();
+            this.picChordBefore = new System.Windows.Forms.PictureBox();
+            this.btnChordHighlightColor = new System.Windows.Forms.Button();
+            this.btnChordNormalColor = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -82,6 +88,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictNext)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictHighlight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictBefore)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picChordHighlight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picChordBefore)).BeginInit();
             this.SuspendLayout();
             // 
             // btnBackColor
@@ -369,8 +377,12 @@
             this.pBox.bDemo = false;
             this.pBox.BeatDuration = 0;
             this.pBox.bforceUppercase = false;
+            this.pBox.bShowChords = false;
             this.pBox.bShowParagraphs = true;
             this.pBox.bTextBackGround = true;
+            this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);
+            this.pBox.ChordHighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.pBox.ChordNextColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
             this.pBox.CurrentTextPos = 2;
             this.pBox.CurrentTime = 30;
             this.pBox.DirSlideShow = null;
@@ -385,6 +397,7 @@
             this.pBox.Name = "pBox";
             this.pBox.OptionBackground = null;
             this.pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Bottom;
+            this.pBox.OptionShowChords = true;
             this.pBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
             this.pBox.TransparencyKey = System.Drawing.Color.Lime;
             this.pBox.Txt = "Lorem ipsum dolor sit amet,\rconsectetur adipisicing elit,\rsed do eiusmod tempor i" +
@@ -417,10 +430,56 @@
             this.chkTextUppercase.UseVisualStyleBackColor = true;
             this.chkTextUppercase.CheckedChanged += new System.EventHandler(this.chkTextUppercase_CheckedChanged);
             // 
+            // chkForceShowChords
+            // 
+            resources.ApplyResources(this.chkForceShowChords, "chkForceShowChords");
+            this.chkForceShowChords.Name = "chkForceShowChords";
+            this.chkForceShowChords.UseVisualStyleBackColor = true;
+            this.chkForceShowChords.CheckedChanged += new System.EventHandler(this.chkForceShowChords_CheckedChanged);
+            // 
+            // label10
+            // 
+            resources.ApplyResources(this.label10, "label10");
+            this.label10.Name = "label10";
+            // 
+            // picChordHighlight
+            // 
+            resources.ApplyResources(this.picChordHighlight, "picChordHighlight");
+            this.picChordHighlight.BackColor = System.Drawing.Color.DarkRed;
+            this.picChordHighlight.Name = "picChordHighlight";
+            this.picChordHighlight.TabStop = false;
+            // 
+            // picChordBefore
+            // 
+            resources.ApplyResources(this.picChordBefore, "picChordBefore");
+            this.picChordBefore.BackColor = System.Drawing.Color.DarkOrange;
+            this.picChordBefore.Name = "picChordBefore";
+            this.picChordBefore.TabStop = false;
+            // 
+            // btnChordHighlightColor
+            // 
+            resources.ApplyResources(this.btnChordHighlightColor, "btnChordHighlightColor");
+            this.btnChordHighlightColor.Name = "btnChordHighlightColor";
+            this.btnChordHighlightColor.UseVisualStyleBackColor = true;
+            this.btnChordHighlightColor.Click += new System.EventHandler(this.btnChordHighlightColor_Click);
+            // 
+            // btnChordNormalColor
+            // 
+            resources.ApplyResources(this.btnChordNormalColor, "btnChordNormalColor");
+            this.btnChordNormalColor.Name = "btnChordNormalColor";
+            this.btnChordNormalColor.UseVisualStyleBackColor = true;
+            this.btnChordNormalColor.Click += new System.EventHandler(this.btnChordNormalColor_Click);
+            // 
             // frmLyrOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkForceShowChords);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.picChordHighlight);
+            this.Controls.Add(this.picChordBefore);
+            this.Controls.Add(this.btnChordHighlightColor);
+            this.Controls.Add(this.btnChordNormalColor);
             this.Controls.Add(this.chkTextUppercase);
             this.Controls.Add(this.txtFont);
             this.Controls.Add(this.btnFonts);
@@ -476,6 +535,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictNext)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictHighlight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictBefore)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picChordHighlight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picChordBefore)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -527,5 +588,11 @@
         private System.Windows.Forms.Button btnFonts;
         private System.Windows.Forms.TextBox txtFont;
         private System.Windows.Forms.CheckBox chkTextUppercase;
+        private System.Windows.Forms.CheckBox chkForceShowChords;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.PictureBox picChordHighlight;
+        private System.Windows.Forms.PictureBox picChordBefore;
+        private System.Windows.Forms.Button btnChordHighlightColor;
+        private System.Windows.Forms.Button btnChordNormalColor;
     }
 }

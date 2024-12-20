@@ -36,6 +36,9 @@
             this.picBalls = new BallsControl.Balls();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlWindow = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnLyricsChords = new System.Windows.Forms.Button();
+            this.chkChords = new System.Windows.Forms.CheckBox();
             this.btnChangeWords = new System.Windows.Forms.Button();
             this.btnFrmWords = new System.Windows.Forms.Button();
             this.btnFrmOptions = new System.Windows.Forms.Button();
@@ -74,6 +77,7 @@
             // 
             // picBalls
             // 
+            this.picBalls.Division = 0F;
             resources.ApplyResources(this.picBalls, "picBalls");
             this.picBalls.Name = "picBalls";
             this.picBalls.pBackColor = System.Drawing.SystemColors.ControlDarkDark;
@@ -89,6 +93,9 @@
             // pnlWindow
             // 
             this.pnlWindow.BackColor = System.Drawing.Color.Gray;
+            this.pnlWindow.Controls.Add(this.label1);
+            this.pnlWindow.Controls.Add(this.btnLyricsChords);
+            this.pnlWindow.Controls.Add(this.chkChords);
             this.pnlWindow.Controls.Add(this.btnChangeWords);
             this.pnlWindow.Controls.Add(this.btnFrmWords);
             this.pnlWindow.Controls.Add(this.btnFrmOptions);
@@ -101,6 +108,30 @@
             this.pnlWindow.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PnlWindow_MouseMove);
             this.pnlWindow.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PnlWindow_MouseUp);
             this.pnlWindow.Resize += new System.EventHandler(this.PnlWindow_Resize);
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Name = "label1";
+            // 
+            // btnLyricsChords
+            // 
+            this.btnLyricsChords.BackColor = System.Drawing.Color.Gray;
+            this.btnLyricsChords.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnLyricsChords, "btnLyricsChords");
+            this.btnLyricsChords.Name = "btnLyricsChords";
+            this.btnLyricsChords.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnLyricsChords, resources.GetString("btnLyricsChords.ToolTip"));
+            this.btnLyricsChords.UseVisualStyleBackColor = false;
+            this.btnLyricsChords.Click += new System.EventHandler(this.btnLyricsChords_Click);
+            // 
+            // chkChords
+            // 
+            resources.ApplyResources(this.chkChords, "chkChords");
+            this.chkChords.Name = "chkChords";
+            this.toolTip1.SetToolTip(this.chkChords, resources.GetString("chkChords.ToolTip"));
+            this.chkChords.UseVisualStyleBackColor = true;
+            this.chkChords.CheckedChanged += new System.EventHandler(this.chkChords_CheckedChanged);
             // 
             // btnChangeWords
             // 
@@ -176,8 +207,12 @@
             this.pBox.bDemo = false;
             this.pBox.BeatDuration = 0;
             this.pBox.bforceUppercase = false;
+            this.pBox.bShowChords = false;
             this.pBox.bShowParagraphs = true;
             this.pBox.bTextBackGround = true;
+            this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);
+            this.pBox.ChordHighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.pBox.ChordNextColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
             this.pBox.CurrentTextPos = 2;
             this.pBox.CurrentTime = 3;
             this.pBox.DirSlideShow = null;
@@ -193,6 +228,7 @@
             this.pBox.Name = "pBox";
             this.pBox.OptionBackground = "SolidColor";
             this.pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Top;
+            this.pBox.OptionShowChords = true;
             this.pBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
             this.pBox.TransparencyKey = System.Drawing.Color.Lime;
             this.pBox.Txt = "";
@@ -226,6 +262,7 @@
             this.pnlTittle.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.pnlWindow.ResumeLayout(false);
+            this.pnlWindow.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -247,5 +284,8 @@
         private System.Windows.Forms.Button btnFrmOptions;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button btnChangeWords;
+        private System.Windows.Forms.Button btnLyricsChords;
+        private System.Windows.Forms.CheckBox chkChords;
+        private System.Windows.Forms.Label label1;
     }
 }

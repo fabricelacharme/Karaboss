@@ -41,22 +41,22 @@
             // 
             // cbSelectTrack
             // 
-            resources.ApplyResources(this.cbSelectTrack, "cbSelectTrack");
             this.cbSelectTrack.FormattingEnabled = true;
+            resources.ApplyResources(this.cbSelectTrack, "cbSelectTrack");
             this.cbSelectTrack.Name = "cbSelectTrack";
             // 
             // btnOk
             // 
-            resources.ApplyResources(this.btnOk, "btnOk");
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+            resources.ApplyResources(this.btnOk, "btnOk");
             this.btnOk.Name = "btnOk";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.BtnOk_Click);
             // 
             // btnCancel
             // 
-            resources.ApplyResources(this.btnCancel, "btnCancel");
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            resources.ApplyResources(this.btnCancel, "btnCancel");
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.BtnCancel_Click);
@@ -79,15 +79,15 @@
             // optTextFormat
             // 
             resources.ApplyResources(this.optTextFormat, "optTextFormat");
-            this.optTextFormat.Checked = true;
             this.optTextFormat.Name = "optTextFormat";
-            this.optTextFormat.TabStop = true;
             this.optTextFormat.UseVisualStyleBackColor = true;
             // 
             // optLyricFormat
             // 
             resources.ApplyResources(this.optLyricFormat, "optLyricFormat");
+            this.optLyricFormat.Checked = true;
             this.optLyricFormat.Name = "optLyricFormat";
+            this.optLyricFormat.TabStop = true;
             this.optLyricFormat.UseVisualStyleBackColor = true;
             // 
             // frmLyricsSelectTrack

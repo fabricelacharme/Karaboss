@@ -1,7 +1,35 @@
-﻿#region license
+﻿#region License
+
+/* Copyright (c) 2024 Fabrice Lacharme
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), to 
+ * deal in the Software without restriction, including without limitation the 
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+ * sell copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software. 
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+ * THE SOFTWARE.
+ */
+
+#endregion
+
+#region Contact
+
 /*
- * Based on https://github.com/bspaans/python-mingus/
-*/
+ * Fabrice Lacharme
+ * Email: fabrice.lacharme@gmail.com
+ */
+
 #endregion
 
 using System;
@@ -9,28 +37,34 @@ using System.Collections.Generic;
 using System.Linq;
 using Sanford.Multimedia.Midi;
 using ChordAnalyser;
-using static System.Collections.Specialized.BitVector32;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace ChordsAnalyser
 {
     public class ChordAnalyser
-    {
-        // Fabrice Method
-        Analyser Analyser = new Analyser();
+    {        
 
-        //cchords.chords ch = new cchords.chords();
+        Analyser Analyser = new Analyser();
+        
         static List<MidiNote[]> lnMidiNote = new List<MidiNote[]>();
         static List<int[]> lnIntNote = new List<int[]>();
         static List<string[]> lnStringNote = new List<string[]>();
 
         #region properties
 
-        // Old Search (by half measure)
+        // Search by half measure
+        // int measure
+        // string Chord 1st half measure
+        // string chord 2nd half measure
         public Dictionary<int, (string, string)> Gridchords { get; set; }
 
-        // New search (by beat)
-        //public Dictionary<int, List<string>> GridBeatChords { get; set; }
+        // Dictionary chodr by beat      
+       // int beat
+       // string chord
         public Dictionary<int, string> GridBeatChords { get; set; }
+
+        // list of chords by ticks
+        //public List<(int,string)> lstChords { get; set; }
 
         private Dictionary<int, List<int>> dictnotes = new Dictionary<int, List<int>>();
 
@@ -41,14 +75,14 @@ namespace ChordsAnalyser
         
         // Midifile characteristics
         private double _duration = 0;  // en secondes
-        private int _totalTicks = 0;
-        //private int _bpm = 0;
+        private int _totalTicks = 0;        
         private double _ppqn;
         private int _tempo;
         private int _measurelen = 0;
-        private int NbMeasures;
+        private int _nbMeasures;
+        private int _nbBeats;
 
-        private string NoChord = "<Chord not found>";
+        private string ChordNotFound = "<Chord not found>";
         private List<string> LstNoChords = new List<string>() { "<Chord not found>" };
         private string EmptyChord = "<Empty>";
         private List<string> LstEmptyChords = new List<string>() { "<Empty>" };
@@ -61,36 +95,49 @@ namespace ChordsAnalyser
         public ChordAnalyser(Sequence seq)
         {
             sequence1 = seq;
-            //sheetmusic = sheetmus;
 
             UpdateMidiTimes();
+
+            Gridchords = new Dictionary<int, (string, string)>(_nbMeasures);
+            for (int i = 1; i <= _nbMeasures; i++)
+            {
+                Gridchords[i] = (ChordNotFound, ChordNotFound); 
+            }
+
 
             // Dictionary :
             // int = measure number
             // string : chord
-            // 2 chords per measure
-            Gridchords = new Dictionary<int, (string,string)>(NbMeasures);
-
-            for (int i = 1; i <= NbMeasures; i++)
+            GridBeatChords = new Dictionary<int, string>(_nbBeats);
+            for (int i = 1; i <= _nbBeats; i++)
             {
-                Gridchords[i] = (NoChord, NoChord);
+                GridBeatChords[i] = ChordNotFound;
             }
-
+            
             // Search by half measure
             SearchByHalfMeasureMethod();
-            
-            // Search by beat
-            SearchByBeatMethod();                        
+
+            // Transfers gridchods to GridBeatChords
+            CreateGridBeatChords();
+
+            // Populate List of chords by ticks: lstChords
+            //PopulateListChords();
+
+            // Other method : Search by beat
+            //SearchByBeatMethod();
+
+
+
         }
 
-        
+
         private void SearchByHalfMeasureMethod()
         {
             // Search notes in measures
             SearchByHalfMeasure();
 
             // if search notes fails, take the bass line
-            SearchByBass();
+            //SearchByBass();
 
             // display results
             //PublishResults(Gridchords);
@@ -111,21 +158,17 @@ namespace ChordsAnalyser
             int measure;
             int beat;
             int timeinmeasure;
-            int beatDuration = _measurelen / nbBeatsPerMeasure;
-            int beats = (int)Math.Ceiling(_totalTicks / (float)beatDuration);
 
-            // init dictionary
-            //GridBeatChords = new Dictionary<int, List<string>>();
-            GridBeatChords = new Dictionary<int, string>();
-            for (int i = 1; i <= beats; i++)
+            // init dictionary            
+            //GridBeatChords = new Dictionary<int, string>();
+            for (int i = 1; i <= _nbBeats; i++)
             {
-                dictnotes[i] = new List<int>();
-                //GridBeatChords[i] = null;
-                GridBeatChords[i] = EmptyChord;
+                dictnotes[i] = new List<int>();                
+                //GridBeatChords[i] = ChordNotFound;
             }
 
             //Search notes
-            foreach (Track track in sequence1)
+            foreach (Sanford.Multimedia.Midi.Track track in sequence1)
             {
                 if (track.ContainsNotes && track.MidiChannel != 9)
                 {
@@ -135,13 +178,13 @@ namespace ChordsAnalyser
                         timeinmeasure = (int)GetTimeInMeasure(note.StartTime);
                         beat = 1 + (measure - 1) * nbBeatsPerMeasure + timeinmeasure;
                         
-                        // Harvest notes belanging to each beat
+                        // Harvest notes belonging to each beat
                         dictnotes[beat].Add(note.Number);
                     }
                 }
             }  
             
-            for (int ibeat = 1; ibeat <= beats; ibeat++)
+            for (int ibeat = 1; ibeat <= _nbBeats; ibeat++)
             {
                 SearchBeat(ibeat);
             } 
@@ -153,6 +196,8 @@ namespace ChordsAnalyser
         {            
             if (dictnotes[beat].Count > 0)
             {
+                int rootnote;
+                
                 List<string> notletters = TransposeToLetterChord(dictnotes[beat]);
                 
                 // Remove doubles
@@ -163,7 +208,7 @@ namespace ChordsAnalyser
 
                 // Translate strings to int
                 List<int> lstInt = TransposeToIntChord(notletters);
-
+                rootnote = lstInt[0];
 
                 // Get all Combinations of notes numbers          
                 List<List<int>> llnotes = GetAllChordsCombinations(lstInt);
@@ -174,7 +219,7 @@ namespace ChordsAnalyser
 
 
                 // Search major or minor triads note                    
-                List<int> lroot = DetermineRoot(llnotes);
+                List<int> lroot = DetermineRoot(llnotes, rootnote);
 
                 List<List<List<int>>> lroots = DetermineRoots(llnotes);
 
@@ -185,7 +230,7 @@ namespace ChordsAnalyser
                 }
                 else
                 {
-                    GridBeatChords[beat] = NoChord;
+                    GridBeatChords[beat] = ChordNotFound;
                 }
 
             }
@@ -294,7 +339,7 @@ namespace ChordsAnalyser
                 }
                 else
                 {
-                    GridBeatChords[beat] = NoChord;
+                    GridBeatChords[beat] = ChordNotFound;
                 }
 
             }
@@ -310,43 +355,94 @@ namespace ChordsAnalyser
         /// </summary>
         private void SearchByHalfMeasure()
         {
+            int tStart;
+            int tEnd;
+            int MeasureEnd;
+            int MeasureStart;
+            float st;
+            
             // Collect all notes of all tracks for each measure and try to fing a chord
-            for (int _measure = 1; _measure <= NbMeasures; _measure++)
-            {                
+            for (int _measure = 1; _measure <= _nbMeasures; _measure++)
+            {
+
                 // Create a list only for permutations                
                 List<int> lstfirstmidiNotes = new List<int>();
                 List<int> lstSecmidiNotes = new List<int>();
 
                 #region harvest notes per measure
                 // Harvest notes on each measure
-                foreach (Track track in sequence1)
+                foreach (Sanford.Multimedia.Midi.Track track in sequence1)
                 {
                     if (track.ContainsNotes && track.MidiChannel != 9)
                     {
                         foreach (MidiNote note in track.Notes)
                         {
-                            int Measure = DetermineMeasure(note.StartTime);
-
-                            if (Measure > _measure)
+                            tStart = note.StartTime;                                                        
+                            MeasureStart = DetermineMeasure(tStart);
+                            
+                            // Note after current measure => exit
+                            if (MeasureStart > _measure)
                                 break;
 
-                            if (Measure == _measure)
+                            // Bornes de la mesure courante
+                            int startmeasureticks = (_measure - 1) * _measurelen;
+                            int endmeasureticks = _measure * _measurelen;
+
+                            tEnd = note.EndTime;
+                            MeasureEnd = DetermineMeasure(tEnd);
+                           
+
+                            st = -1;
+                            
+                            if (MeasureStart < _measure && MeasureEnd >= _measure)
                             {
-                                float st = GetTimeInMeasure(note.StartTime);
-
-
-                                // Ce n'est pas plutot le numérateur ???????????????????????????????????????????????????????
-                                //if (st < sequence1.Denominator / 2)
-                                if (st < sequence1.Numerator / 2)
+                                // Keep note if note starts in previous measure, but is mostly in current measure (or next ones)                                
+                                if (tEnd - startmeasureticks > startmeasureticks - tStart)
+                                    st = 0;
+                            }
+                            else if (MeasureStart == _measure && MeasureEnd == _measure)
+                            {
+                                // Keep note if note entirely located in current measure
+                                st = GetTimeInMeasure(tStart);
+                            }
+                            else if (MeasureStart == _measure &&  MeasureEnd > _measure)
+                            {
+                                // Keep note if note starts in current measure, and continue in next one, but is mostly in current measure                                
+                                if(endmeasureticks - tStart > tEnd - endmeasureticks)
+                                    st = GetTimeInMeasure(tStart);
+                            }
+                                                        
+                            
+                            if (st != -1)
+                            {
+                                // Treat differently 3/4 and 4/4                                
+                                if (sequence1.Numerator % 3 == 0)
                                 {
-                                    // add note to first part of the measure
-                                    lstfirstmidiNotes.Add(note.Number);
+                                    if (st <= 2* sequence1.Numerator / 3)
+                                    {
+                                        // add note to first part of the measure
+                                        lstfirstmidiNotes.Add(note.Number);
+                                    }
+                                    else
+                                    {
+                                        // Add note to second part of the measure
+                                        lstSecmidiNotes.Add(note.Number);
+                                    }
                                 }
                                 else
                                 {
-                                    // Add note to second part of the measure
-                                    lstSecmidiNotes.Add(note.Number);
+                                    if (st < sequence1.Numerator / 2)
+                                    {
+                                        // add note to first part of the measure
+                                        lstfirstmidiNotes.Add(note.Number);
+                                    }
+                                    else
+                                    {
+                                        // Add note to second part of the measure
+                                        lstSecmidiNotes.Add(note.Number);
+                                    }
                                 }
+
                             }
                         }
                     }
@@ -377,12 +473,12 @@ namespace ChordsAnalyser
             {
                 if (section == 1)
                 {
-                    if (Gridchords[_measure].Item1 == NoChord)
+                    if (Gridchords[_measure].Item1 == ChordNotFound)
                         Gridchords[_measure] = (EmptyChord, Gridchords[_measure].Item2);
                 }
                 else if (section == 2)
                 {
-                    if (Gridchords[_measure].Item2 == NoChord)
+                    if (Gridchords[_measure].Item2 == ChordNotFound)
                         Gridchords[_measure] = (Gridchords[_measure].Item1, EmptyChord);
                 }
             }
@@ -404,14 +500,23 @@ namespace ChordsAnalyser
                 // If more than 3 notes => search first 3 more frequent notes
                 var sortedDict = from entry in dictbestnotes orderby entry.Value descending select entry;
                 dictbestnotes = sortedDict.ToDictionary<KeyValuePair<string, int>, string, int>(pair => pair.Key, pair => pair.Value);
-                
-                
-                List<string> bestnotletters = new List<string>();
-                //List<string> bestnotlettersbis = new List<string>();
-                List<string> bestnotletters4 = new List<string>();
 
-                // Hard selection => bestnotletters
-                //List<string> v = dictbestnotes.Take(3);
+                // 19/12/2024
+                // Traiter ce cas de figure : supprimer le C# pas compatible avec le C
+                /*
+                    {[C, 14]}
+                    {[A, 4]}
+                    {[G, 3]}
+                    {[C#, 2]}
+                    {[E, 2]}
+                    {[D, 1]}
+                */
+                dictbestnotes = FilterBestNotes(dictbestnotes);   
+
+
+                List<string> bestnotletters = new List<string>();                
+                List<string> bestnotletters4 = new List<string>();
+                
 
                 int moy = 0;
                 int lastvalue = 0;
@@ -419,8 +524,7 @@ namespace ChordsAnalyser
                 {
                     for (int i = 0; i < 3; i++)
                     {
-                        bestnotletters.Add(dictbestnotes.ElementAt(i).Key);
-                        //bestnotlettersbis.Add(dictbestnotes.ElementAt(i).Key);
+                        bestnotletters.Add(dictbestnotes.ElementAt(i).Key);                        
                         bestnotletters4.Add(dictbestnotes.ElementAt(i).Key);
                         moy += dictbestnotes.ElementAt(i).Value;                        
                     }
@@ -429,16 +533,7 @@ namespace ChordsAnalyser
 
                     if (dictbestnotes.Count > 3)
                     {
-                        /*
-                        if (lastvalue > 1)
-                        {
-                            for (int i = 3; i < dictbestnotes.Count; i++)
-                            {
-                                if (dictbestnotes.ElementAt(i).Value >= lastvalue - 1)
-                                    bestnotletters.Add(dictbestnotes.ElementAt(i).Key);
-                            }
-                        }
-                        */
+                        
                         for (int i = 3; i < dictbestnotes.Count; i++)
                         {
                             if (dictbestnotes.ElementAt(i).Value >= moy)
@@ -446,28 +541,18 @@ namespace ChordsAnalyser
                         }
 
                         bestnotletters4.Add(dictbestnotes.ElementAt(3).Key);
-                        //bestnotlettersbis[2] = bestnotletters4[3];
+                        
                     }
-                }
+                } 
 
 
-                // Try best notes, if not, try all notes                
-                //notletters = notletters.Distinct().ToList();
-                //notletters = bestnotletters;
+                // Try best notes, if not, try all notes                                
                 List<int> lroot = null;
                 
                 // Try with best notes
                 if (bestnotletters.Count > 2)
                     lroot = GetChord(bestnotletters);
-
-                /*
-                if (lroot == null && bestnotlettersbis.Count > 2)
-                {
-                    lroot = GetChord(bestnotlettersbis);
-                    if (lroot != null)
-                        Console.WriteLine("************ best note bis succeeded");
-                }
-                */
+                
 
                 if (lroot == null && bestnotletters4.Count == 4)                
                     lroot = GetChord(bestnotletters4);
@@ -485,12 +570,12 @@ namespace ChordsAnalyser
                     string res = Analyser.determine(lroot);
                     if (section == 1)
                     {
-                        if (Gridchords[_measure].Item1 == NoChord)
+                        if (Gridchords[_measure].Item1 == ChordNotFound)
                             Gridchords[_measure] = (res, Gridchords[_measure].Item2);
                     }
                     else if (section == 2)
                     {
-                        if (Gridchords[_measure].Item2 == NoChord)
+                        if (Gridchords[_measure].Item2 == ChordNotFound)
                             Gridchords[_measure] = (Gridchords[_measure].Item1, res);
 
                     }
@@ -501,7 +586,7 @@ namespace ChordsAnalyser
         private void SearchByBass()
         {
             // Collect all notes of all tracks for each measure and try to fing a chord
-            for (int _measure = 1; _measure <= NbMeasures; _measure++)
+            for (int _measure = 1; _measure <= _nbMeasures; _measure++)
             {
                 // Create a list only for permutations                
                 List<int> lstfirstmidiNotes = new List<int>();
@@ -509,7 +594,7 @@ namespace ChordsAnalyser
 
                 #region harvest notes per measure
                 // Search bass track
-                foreach (Track track in sequence1)
+                foreach (Sanford.Multimedia.Midi.Track track in sequence1)
                 {
                     // Consider only bass tracks
                     if (32 <= track.ProgramChange && track.ProgramChange <= 39 && track.ContainsNotes)
@@ -559,6 +644,8 @@ namespace ChordsAnalyser
             if (notes.Count == 0)
                 return;
 
+            int rootnote;
+
             List<string> notletters = TransposeToLetterChord(notes);
             
 
@@ -570,7 +657,7 @@ namespace ChordsAnalyser
 
             // Translate strings to int
             List<int> lstInt = TransposeToIntChord(notletters);
-
+            rootnote = lstInt[0];
 
             // Get all Combinations of notes numbers          
             List<List<int>> llnotes = GetAllChordsCombinations(lstInt);
@@ -580,19 +667,19 @@ namespace ChordsAnalyser
 
 
             // Search major or minor triads note                    
-            List<int> lroot = DetermineRoot(llnotes);
+            List<int> lroot = DetermineRoot(llnotes, rootnote);
 
             if (lroot != null)
             {
                 string res = Analyser.determine(lroot);
                 if (section == 1)
                 {
-                    if (Gridchords[_measure].Item1 == NoChord)
+                    if (Gridchords[_measure].Item1 == ChordNotFound)
                         Gridchords[_measure] = (res, Gridchords[_measure].Item2);
                 }
                 else if (section == 2)
                 {
-                    if (Gridchords[_measure].Item2 == NoChord)
+                    if (Gridchords[_measure].Item2 == ChordNotFound)
                         Gridchords[_measure] = (Gridchords[_measure].Item1, res);
 
                 }
@@ -604,12 +691,12 @@ namespace ChordsAnalyser
                 {
                     if (section == 1)
                     {
-                        if (Gridchords[_measure].Item1 == NoChord)
+                        if (Gridchords[_measure].Item1 == ChordNotFound)
                             Gridchords[_measure] = (res, Gridchords[_measure].Item2);
                     }
                     else if (section == 2)
                     {
-                        if (Gridchords[_measure].Item2 == NoChord)
+                        if (Gridchords[_measure].Item2 == ChordNotFound)
                             Gridchords[_measure] = (Gridchords[_measure].Item1, res);
 
                     }
@@ -618,21 +705,190 @@ namespace ChordsAnalyser
 
 
         }
-       
+
         #endregion Search method
 
 
+        #region publish results
+        /*
+        /// <summary>
+        /// Populate list of chords by ticks: lstChords
+        /// </summary>
+        private void PopulateListChords()
+        {
+            int nbBeatsPerMeasure = sequence1.Numerator;
+            int numerator = nbBeatsPerMeasure;
+            int measure;
+            int beat;            
+            int beatDuration = _measurelen / nbBeatsPerMeasure;            
+            int ticks;
 
-        List<int> GetChord(List<string> chord)
+            string chordName = string.Empty;
+            string lastChordName = "-1";
+
+
+            lstChords = new List<(int, string)> ();
+
+            for (int i = 1; i <= Gridchords.Count; i++)
+            {
+                measure = i;
+
+                // 1st half
+                chordName = Gridchords[i].Item1;
+                if (chordName != string.Empty && chordName != EmptyChord && chordName != ChordNotFound && chordName != lastChordName)
+                {
+                    lastChordName = chordName;
+                    beat = 1 + (measure - 1) * numerator;
+                    ticks = beatDuration * (beat - 1);
+                    lstChords.Add((ticks, chordName));
+                }
+
+                // 2nd half
+                chordName = Gridchords[i].Item2;
+                if (chordName != string.Empty && chordName != EmptyChord && chordName != ChordNotFound && chordName != lastChordName)
+                {
+                    lastChordName = chordName;
+                    beat = 1 + (measure - 1) * numerator + (numerator / 2);
+                    ticks = beatDuration * (beat - 1);
+                    lstChords.Add((ticks, chordName));
+                }
+            }
+        }
+        */
+
+                /// <summary>
+                /// Store results in dictionnary chords by beat GridBeatChord
+                /// </summary>
+        private void CreateGridBeatChords()
+        {
+            int measure;
+            int beat;
+            string chordName;
+            string lastChordName = "-1";
+            int numerator = sequence1.Numerator;
+
+            GridBeatChords = new Dictionary<int, string>(_nbBeats);
+            for (int i = 1; i <= _nbBeats; i++) 
+            {
+                GridBeatChords[i] = ChordNotFound;            
+            }
+
+            for (int i = 1; i <= Gridchords.Count; i++)
+            {
+                measure = i;
+
+                // 1st half
+                chordName = Gridchords[i].Item1;
+                if (chordName != string.Empty && chordName != EmptyChord && chordName != ChordNotFound && chordName != lastChordName)
+                {
+                    lastChordName = chordName;
+                    beat = 1 + (measure - 1) * numerator;
+                    GridBeatChords[beat] = chordName;
+
+                }
+
+                // 2nd half
+                chordName = Gridchords[i].Item2;
+                if (chordName != string.Empty && chordName != EmptyChord && chordName != ChordNotFound && chordName != lastChordName)
+                {
+                    lastChordName = chordName;
+                    beat = 1 + (measure - 1) * numerator + (numerator / 2);
+
+
+
+                    GridBeatChords[beat] = chordName;
+                }
+            }
+        }
+        
+
+        /// <summary>
+        /// DEBUG /Display result
+        /// </summary>
+        /// <param name="dict"></param>
+        private void PublishResults(Dictionary<int, (string, string)> dict)
+        {
+
+            foreach (KeyValuePair<int, (string, string)> pair in dict)
+            {
+                Console.WriteLine(string.Format("{0} - {1}", pair.Key, pair.Value));
+            }
+        }
+
+        #endregion publish results
+
+
+
+        #region MIDI
+
+        /// <summary>
+        /// Upadate MIDI times
+        /// </summary>
+        private void UpdateMidiTimes()
+        {
+            _totalTicks = sequence1.GetLength();
+            _tempo = sequence1.Tempo;            
+            _ppqn = sequence1.Division;
+            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds            
+                        
+            if (sequence1.Time != null)
+            {                
+                _measurelen = sequence1.Time.Measure;                                
+                _nbMeasures = Convert.ToInt32(Math.Ceiling((double)_totalTicks / _measurelen)); // rounds up to the next full integer                 
+
+                int nbBeatsPerMeasure = sequence1.Numerator;
+                int beatDuration = _measurelen / nbBeatsPerMeasure;
+                //_nbBeats = (int)Math.Ceiling(_totalTicks / (float)beatDuration);
+                _nbBeats = _nbMeasures * nbBeatsPerMeasure;
+            }
+        }
+
+
+        /// <summary>
+        /// Return in which measure is the chord
+        /// </summary>
+        /// <param name="chord"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private int DetermineMeasure(int ticks)
+        {
+            return 1 + ticks / _measurelen;            
+        }
+
+
+        /// <summary>
+        /// Get time inside measure
+        /// </summary>
+        /// <param name="ticks"></param>
+        /// <returns></returns>
+        public float GetTimeInMeasure(int ticks)
+        {
+            // Num measure
+            int curmeasure = 1 + ticks / _measurelen;
+            // Temps dans la mesure
+            float timeinmeasure = sequence1.Numerator - ((curmeasure * _measurelen - ticks) / (float)(_measurelen / sequence1.Numerator));
+            
+            return timeinmeasure;                       
+        }
+
+        #endregion MIDI
+
+
+        #region private functions
+        private List<int> GetChord(List<string> chord)
         {
             if (chord.Count == 0)
                 return null;
+            
 
             // Remove impossible chords
             chord = CheckImpossibleChordString(chord);
 
             // Translate strings to int                
             List<int> lstInt = TransposeToIntChord(chord);
+
+            // La note la plus trouvée est la première
+            int rootnote = lstInt[0];
 
             // Get all Combinations of notes numbers          
             List<List<int>> llnotes = GetAllChordsCombinations(lstInt);
@@ -642,7 +898,7 @@ namespace ChordsAnalyser
 
 
             // Search major or minor triads note                    
-            List<int> lroot = DetermineRoot(llnotes);
+            List<int> lroot = DetermineRoot(llnotes, rootnote);
 
             // Alternative
             /*
@@ -671,10 +927,10 @@ namespace ChordsAnalyser
             List<string> letters = new List<string>() { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
 
             foreach (string s in notletters)
-            {                
-                if (s.Length == 1)                
-                    if (notletters.Contains(s + "#"))                     
-                        ress.Remove(s + "#");                                     
+            {
+                if (s.Length == 1)
+                    if (notletters.Contains(s + "#"))
+                        ress.Remove(s + "#");
             }
 
             for (int i = 0; i < ress.Count; i++)
@@ -685,13 +941,82 @@ namespace ChordsAnalyser
             return res;
         }
 
+
+        /// <summary>
+        /// Remove impossible notes from the dictionary 
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <returns></returns>
+        Dictionary<string, int> FilterBestNotes(Dictionary<string, int> dict)
+        {
+
+            /*
+                {[C, 14]}
+                {[A, 4]}
+                {[G, 3]}
+                {[C#, 2]}
+                {[E, 2]}
+                {[D, 1]}
+                */
+            Dictionary<string, int> res = new Dictionary<string, int>();
+            string chord;
+            string s;
+
+            if (dict.Count <= 3)
+                return dict;
+            
+            // Filter best chord 
+            chord = dict.ElementAt(0).Key;
+            res.Add(dict.ElementAt(0).Key,dict.ElementAt(0).Value);
+
+            int x = TransposeToInt(chord);
+            int y;
+            for (int i = 1; i < dict.Count; i++)
+            {
+                chord = dict.ElementAt(i).Key;
+                y = TransposeToInt(chord);
+                if (y != x - 1 && y != x + 1)
+                    res.Add(dict.ElementAt(i).Key, dict.ElementAt(i).Value);
+            }
+
+            /*
+            if (chord.Length == 1)
+            {
+                for (int i = 1; i < dict.Count; i++)
+                {
+                    s = dict.ElementAt(i).Key;
+                    if (s != chord + "#")
+                    {
+                        res.Add(dict.ElementAt(i).Key, dict.ElementAt(i).Value);
+                    }
+                }
+
+            }
+            else if (chord.Length == 2) 
+            {
+                for (int i = 1; i < dict.Count; i++)
+                {
+                    s = dict.ElementAt(i).Key;
+                    if (s != chord.Substring(0, 1))
+                    {
+                        res.Add(dict.ElementAt(i).Key, dict.ElementAt(i).Value);
+                    }
+                }
+            }
+            */
+            return res;
+
+        }
+
+        
+
         private List<string> CheckImpossibleChordString(List<string> lstString)
         {
             List<string> res = new List<string>();
             foreach (string s in lstString)
                 res.Add(s);
 
-            foreach (string s in lstString) 
+            foreach (string s in lstString)
             {
                 if (s.Length == 1)
                 {
@@ -706,60 +1031,7 @@ namespace ChordsAnalyser
 
         }
 
-        private void PublishResults(Dictionary<int, (string, string)> dict)
-        {
-            
-            foreach (KeyValuePair<int, (string, string)> pair in dict)
-            {
-                Console.WriteLine(string.Format("{0} - {1}", pair.Key, pair.Value));
-            }            
-        }
-
-
-        /// <summary>
-        /// Upadate MIDI times
-        /// </summary>
-        private void UpdateMidiTimes()
-        {
-            _totalTicks = sequence1.GetLength();
-            _tempo = sequence1.Tempo;            
-            _ppqn = sequence1.Division;
-            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds            
-
-            if (sequence1.Time != null)
-            {
-                _measurelen = sequence1.Time.Measure;                
-                NbMeasures = Convert.ToInt32(Math.Ceiling((double)_totalTicks / _measurelen)); // rounds up to the next full integer 
-            }
-        }
-
-
-        /// <summary>
-        /// In which measure is the chord
-        /// </summary>
-        /// <param name="chord"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        private int DetermineMeasure(int ticks)
-        {
-            return 1 + ticks / _measurelen;            
-        }
-
-
-        /// <summary>
-        /// Get time inside measure
-        /// </summary>
-        /// <param name="ticks"></param>
-        /// <returns></returns>
-        public float GetTimeInMeasure(int ticks)
-        {
-            // Num measure
-            int curmeasure = 1 + ticks / _measurelen;
-            // Temps dans la mesure
-            float timeinmeasure = sequence1.Numerator - ((curmeasure * _measurelen - ticks) / (float)(_measurelen / sequence1.Numerator));
-            
-            return timeinmeasure;                       
-        }
+       
 
         /// <summary>
         /// Remove a note if in double inside a chord
@@ -837,6 +1109,28 @@ namespace ChordsAnalyser
                 res.Add(x);
             }
             return res;
+        }
+
+        private int TransposeToInt(string n)
+        {            
+            Dictionary<string, int> _note_dict = new Dictionary<string, int>() { { "C", 0 }, { "D", 2 }, { "E", 4 }, { "F", 5 }, { "G", 7 }, { "A", 9 }, { "B", 11 } };
+            string n0 = n.Substring(0, 1);
+            int x = _note_dict[n0];
+            if (n.Length > 1)
+            {
+                if (n.Substring(1, 1) == "#")
+                {
+                    x += 1;
+                }
+                else
+                {
+                    x -= 1;
+                    if (x < 0)  // Cb = B
+                        x = 11;
+                }
+            }
+
+            return x;
         }
 
 
@@ -1033,14 +1327,34 @@ namespace ChordsAnalyser
         /// </summary>
         /// <param name="lsnotes"></param>
         /// <returns></returns>
-        private List<int> DetermineRoot(List<List<int>> lsnotes)
+        private List<int> DetermineRoot(List<List<int>> lsnotes, int rootnote)
         {
             /* {0,1,2} => 1 - 0, 2 - 0 ET {0,2,1} ????
              * {1,2,0} => 2 - 1, 0 - 1 ET {1,0,2}
              * {2,0,1} => 0 - 2, 1 - 2
              * 
              */
+
+            // Search chords having rootnote            
+            foreach (List<int> chord in lsnotes)
+            {
+                if (chord.Count > 3 && chord[0] == rootnote)
+                {
+                    if (IsMajorChord7(chord) || IsMinorChord7(chord))
+                        return chord;
+                }
+            }
+
+            foreach (List<int> chord in lsnotes)
+            {
+                if (chord.Count > 2 && chord[0] == rootnote)
+                {
+                    if (IsMajorChord(chord) || IsMinorChord(chord))
+                        return chord;
+                }
+            }
             
+
             foreach (List<int> chord in lsnotes)
             {
                 if (chord.Count > 3)
@@ -1182,5 +1496,6 @@ namespace ChordsAnalyser
             return (notes[1] - notes[0] == 3) && (notes[2] - notes[0] == 7) && (notes[3] - notes[0] == 10);
         }
 
+        #endregion private functions
     }
 }

@@ -40,6 +40,7 @@
             this.pnlBottom = new System.Windows.Forms.Panel();
             this.txtResult = new System.Windows.Forms.RichTextBox();
             this.pnlTop = new System.Windows.Forms.Panel();
+            this.btnDisplayOtherLyrics = new System.Windows.Forms.Button();
             this.btnDeleteAllLyrics = new System.Windows.Forms.Button();
             this.btnInsertParagraph = new System.Windows.Forms.Button();
             this.BtnFontMoins = new System.Windows.Forms.Button();
@@ -183,6 +184,7 @@
             // 
             // pnlTop
             // 
+            this.pnlTop.Controls.Add(this.btnDisplayOtherLyrics);
             this.pnlTop.Controls.Add(this.btnDeleteAllLyrics);
             this.pnlTop.Controls.Add(this.btnInsertParagraph);
             this.pnlTop.Controls.Add(this.BtnFontMoins);
@@ -199,6 +201,14 @@
             this.pnlTop.Controls.Add(this.btnSave);
             resources.ApplyResources(this.pnlTop, "pnlTop");
             this.pnlTop.Name = "pnlTop";
+            // 
+            // btnDisplayOtherLyrics
+            // 
+            resources.ApplyResources(this.btnDisplayOtherLyrics, "btnDisplayOtherLyrics");
+            this.btnDisplayOtherLyrics.Name = "btnDisplayOtherLyrics";
+            this.toolTip1.SetToolTip(this.btnDisplayOtherLyrics, resources.GetString("btnDisplayOtherLyrics.ToolTip"));
+            this.btnDisplayOtherLyrics.UseVisualStyleBackColor = true;
+            this.btnDisplayOtherLyrics.Click += new System.EventHandler(this.btnDisplayOtherLyrics_Click);
             // 
             // btnDeleteAllLyrics
             // 
@@ -659,5 +669,6 @@
         private System.Windows.Forms.Panel pnlMenus;
         private System.Windows.Forms.ComboBox cbSelectTrack;
         private System.Windows.Forms.Label lblSelectTrack;
+        private System.Windows.Forms.Button btnDisplayOtherLyrics;
     }
 }

@@ -489,4 +489,22 @@
   <data name="NewTempo" xml:space="preserve">
     <value>Nouveau Tempo</value>
   </data>
+  <data name="TwoTypesOfLyrics" xml:space="preserve">
+    <value>Deux types de formats de paroles sont disponibles dans ce fichier.</value>
+  </data>
+  <data name="FormatLyricsChoosen" xml:space="preserve">
+    <value>Le format  {0} a été choisi par  Karaboss car il possède plus de paroles ({1} syllabes)</value>
+  </data>
+  <data name="ChangeFormatLyrics" xml:space="preserve">
+    <value>Vous pourvez choisir le format {0}  ({1} syllabes) en cliquant sur le bouton 'Autres'</value>
+  </data>
+  <data name="CurrentLyricFormatIs" xml:space="preserve">
+    <value>The format actuel est  {0} ({1} syllabes)</value>
+  </data>
+  <data name="WantToChangeFormatLyrics" xml:space="preserve">
+    <value>Voulez-vous changer pour le format  {0} ? ({1} syllabes)</value>
+  </data>
+  <data name="QuestionSaveFile" xml:space="preserve">
+    <value>Le fichier a été modifié, voulez-vous l'enregistrer ?</value>
+  </data>
 </root>

@@ -79,7 +79,7 @@ namespace BallsControl
         private bool started = false;
 
         private int DIAMETRE = 26;
-        private int SPEED = 10;
+        private float SPEED = 10;
      
 
         private int CurrentLyricsPos = 0;
@@ -96,6 +96,19 @@ namespace BallsControl
             get
             {
                 return picWnd.BackColor;
+            }
+        }
+
+        private float _division;
+        public float Division
+        {
+            get { return _division; }
+            set {
+                if (value > 0)
+                {
+                    _division = value;
+                    SPEED = 192/_division;
+                }            
             }
         }
 
@@ -262,7 +275,7 @@ namespace BallsControl
                     LyricPosition = LyricsTimes[idLyric];
 
                     // substract lyric time to position of song
-                    delta = X0 + LyricPosition - SongPosition;
+                    delta = X0 + (int)((LyricPosition - SongPosition) * SPEED);
 
                     // move ball to the result of soustraction + offset corresponding to the fixed ball
                     if (manyBall != null && j < manyBall.Length && manyBall[j] != null)

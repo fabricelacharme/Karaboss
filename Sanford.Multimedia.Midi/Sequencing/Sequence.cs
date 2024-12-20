@@ -714,22 +714,25 @@ namespace Sanford.Multimedia.Midi
 
                         // FAB : MTRK not found in TrackReader.cs FindTrack()
                         if (reader.Track != null)
+                        {
                             newTracks.Add(reader.Track);
 
-                        #region tempo
-                        // ----------------------------------------------------
+                            #region tempo
+                            // ----------------------------------------------------
 
-                        if (newProperties.Tempo == 0)
-                        {
-                            newProperties.Tempo = reader.Track.Tempo;
+                            if (newProperties.Tempo == 0)
+                            {
+                                newProperties.Tempo = reader.Track.Tempo;
+                            }
+                            if (newProperties.Numerator == 0)
+                            {
+                                newProperties.Numerator = reader.Track.Numerator;
+                                newProperties.Denominator = reader.Track.Denominator;
+                            }
+                            // ----------------------------------------------------
+                            #endregion tempo
                         }
-                        if (newProperties.Numerator == 0)
-                        {
-                            newProperties.Numerator = reader.Track.Numerator;
-                            newProperties.Denominator = reader.Track.Denominator;
-                        }
-                        // ----------------------------------------------------
-                        #endregion tempo
+
 
                         percentage = (i + 1f) / newProperties.TrackCount;
                         loadWorker.ReportProgress((int)(100 * percentage));

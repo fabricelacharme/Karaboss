@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2018 Fabrice Lacharme
+/* Copyright (c) 2024 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -31,6 +31,7 @@
  */
 
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -39,9 +40,10 @@ using System.IO;
 using PicControl;
 using System.Runtime.InteropServices;
 using System.Linq;
-using Karaboss.Resources.Localization;
-using static PicControl.pictureBoxControl;
+using Karaboss.Lyrics;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace Karaboss
 {
@@ -57,28 +59,40 @@ namespace Karaboss
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
 
-        private HashSet<Control> controlsToMove = new HashSet<Control>();
+        private readonly HashSet<Control> controlsToMove = new HashSet<Control>();
         #endregion
 
+
+        #region private
+
+        private LyricsMgmt myLyricsMgmt;
+
         private Font _karaokeFont;
-        private string lyrics;
+        //private string lyrics;
         private int currentTextPos = 0;
         private Point Mouselocation;
 
-        private bool _bplaylist;
+        //private bool _bplaylist;
 
-        private bool closing = false;
+        //private bool closing = false;
+
+        private frmLyrOptions frmLyrOptions;
+        private List<int> LyricsTimes;
+
+        #endregion private
+
 
         #region properties
 
-
         #region Internal lyrics separators
 
-        private string _InternalSepLines = "¼";        
-        private string _InternalSepParagraphs = "½";
-        
+        private readonly string _InternalSepLines = "¼";        
+        private readonly string _InternalSepParagraphs = "½";
+
         #endregion
 
+
+        #region balls
         // Show balls
         private bool _bShowBalls = true;
         public bool bShowBalls
@@ -88,6 +102,51 @@ namespace Karaboss
                 pnlBalls.Visible = _bShowBalls;
             }
         }
+
+        #endregion balls
+
+
+        #region chords
+
+        // Chord color
+        private Color _chordNextColor;
+        public Color ChordNextColor
+        {
+            get { return _chordNextColor; }
+            set
+            {
+                _chordNextColor = value;
+                pBox.ChordNextColor = _chordNextColor;
+            }
+        }
+        // Chord highlight color
+        private Color _chordHighlightColor;
+        public Color ChordHighlightColor
+        {
+            get { return _chordHighlightColor; }
+            set
+            {
+                _chordHighlightColor = value;
+                pBox.ChordHighlightColor = _chordHighlightColor;
+            }
+        }
+
+        private bool _bShowChords = false;
+        public bool bShowChords
+        {
+            get { return _bShowChords; } 
+            set {
+                if (value != _bShowChords)
+                {
+                    _bShowChords = value;
+                    
+                    ResetDisplayChordsOptions(myLyricsMgmt);                                        
+                }
+            }
+        }
+
+        #endregion chords
+
 
         #region text characteristics
 
@@ -213,8 +272,9 @@ namespace Karaboss
             }
         }
 
+
         #endregion
-       
+
 
         #region dirslideshow
 
@@ -256,7 +316,7 @@ namespace Karaboss
                 pBox.FreqDirSlideShow = _freqSlideShow;
             }
         }
-        #endregion
+
 
         private PictureBoxSizeMode _sizeMode;
         public PictureBoxSizeMode SizeMode {
@@ -266,7 +326,7 @@ namespace Karaboss
                 pBox.SizeMode = _sizeMode;
             }
         }
-        
+
         /// <summary>
         /// Background option : Diaporam, SolidColor, Transparent
         /// </summary>
@@ -298,6 +358,8 @@ namespace Karaboss
             }
         }
 
+        #endregion dirslideshow
+
 
         private int _beatDuration = 0;
         public int BeatDuration
@@ -309,18 +371,18 @@ namespace Karaboss
             }
         }
 
-
         #endregion properties
 
-        public List<pictureBoxControl.plLyric> plLyrics;
-        private List<int> LyricsTimes;
 
+        public List<pictureBoxControl.plLyric> plLyrics;
         
-        private frmLyrOptions frmLyrOptions;               
+                                    
        
-        public frmLyric(bool bPlayList = false)
+        public frmLyric(LyricsMgmt myLyricsMgmt)
         {
             InitializeComponent();
+
+            this.myLyricsMgmt = myLyricsMgmt;
 
             // Graphic optimization
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
@@ -337,14 +399,30 @@ namespace Karaboss
             #endregion
 
             // Check if a playlist is played
-            _bplaylist = bPlayList;
+            //_bplaylist = bPlayList;
 
             // couleurs pour texte, nombre de lignes
-            LoadKarOptions();                               
+            LoadKarOptions();
+
+            // parameters of chords included in lyrics
+            // if "Show Chords" is choosen,  ResetDisplayChordsOptions will be called by the change of the property bShowChords
+            // if "Do not show chords" is choosen, this is the default value for the property bShowChords and therefore nothing happens
+            // so we have to load lyrics here
+            if (!bShowChords)
+            {                
+                if (myLyricsMgmt.plLyrics.Count == 0)
+                    myLyricsMgmt.FullExtractLyrics();
+
+                _plLyrics = myLyricsMgmt.plLyrics;
+                LoadSong(_plLyrics);                
+            }
+            
 
             AddMouseMoveHandler(this);           
         }
 
+
+        #region Move Window
         /// <summary>
         /// Move form without title bar
         /// UserControls of the form manage themselves this move
@@ -373,8 +451,11 @@ namespace Karaboss
                     AddMouseMoveHandler(ct);
             }
         }
-  
-        #region methods        
+
+        #endregion Move Window
+
+
+        #region public methods
 
         /// <summary>
         /// Display singer and song names
@@ -402,16 +483,217 @@ namespace Karaboss
         public void DisplayText(string tx, int ticks = 0)
         {
             pBox.DisplayText(tx, ticks);
-        }     
+        }
 
+        /// <summary>
+        /// Remet les options courante pour le cas des playlists
+        /// La cinématique d'attente bouzille tout
+        /// </summary>
+        /// <param name="dirSlideShow"></param>
+        public void SetSlideShow(string dirSlideShow)
+        {            
+            DirSlideShow = dirSlideShow;         
+        }
+   
+
+        /// <summary>
+        /// Load song in picturebox control
+        ///  1/4 = LineFeed
+        ///  1/2 = Paragraph
+        /// </summary>
+        public void LoadSong(List<plLyric> plLs)
+        {
+            string lyric;
+            string chord;
+                                                
+            currentTextPos = 0;                        
+
+            List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
+
+            for (int i = 0; i < plLs.Count; i++)           
+            {                
+                plLyric plL = plLs[i];
+
+                pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric() {
+                    Type = (pictureBoxControl.plLyric.Types)plL.CharType,
+                };
+
+                // Chord, lyric
+                chord = plL.Element.Item1;
+                lyric = plL.Element.Item2;
+
+                if (bShowChords)
+                {
+                    // if bShowChords, the chords will be displayed above the lyrics, so clean chords included in lyrics
+                    if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)
+                    {
+                        lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
+                    }
+                }
+
+                // Add element
+                pcL.Element = (chord, lyric);
+                pcL.TicksOn = plL.TicksOn;
+                pcL.TicksOff = plL.TicksOff;
+                pcLyrics.Add(pcL);                               
+            }
+
+            // Load song
+            // Force Uppercase
+            pBox.bforceUppercase = _bForceUppercase;
+            pBox.LoadSong(pcLyrics);
+
+            //Initial position
+            pBox.CurrentTextPos = -1;
+
+            if (bShowBalls)
+                LoadBallsTimes(plLs);
+        }
+
+        /// <summary>
+        /// Load times for the Ball animation
+        /// </summary>
+        /// <param name="plLyrics"></param>
+        public void LoadBallsTimes(List<plLyric> plLyrics)
+        {
+            if (!bShowBalls || plLyrics.Count == 0)
+                { return; }
+            
+            //string lyric;
+            //string chord;
+                        
+            LyricsTimes = new List<int>();
+
+            plLyric.CharTypes plType; // = plLyric.CharTypes.Text;
+            int plTime; // = 0;
+
+            for (int i = 0; i < plLyrics.Count; i++)
+            {
+                //chord = plLyrics[i].Element.Item1;
+                //lyric = plLyrics[i].Element.Item2;
+                plType = plLyrics[i].CharType;
+                plTime = plLyrics[i].TicksOn;
+
+                if ( plType == plLyric.CharTypes.Text || plType == plLyric.CharTypes.ParagraphSep)
+                {                    
+                     LyricsTimes.Add(plTime);                       
+                }
+            }
                 
+            picBalls.Division = myLyricsMgmt.Division;
+            picBalls.LoadTimes(LyricsTimes);
+                
+            picBalls.Start();
+            
+        }
+
+        /// <summary>
+        /// Color the syllabe according to song position
+        /// </summary>
+        /// <param name="songposition"></param>
+        public void ColorLyric(int songposition)
+        {            
+            // déclencheur : timer_2
+            // IMPERATIF : calculer ici la position de la syllabe, utilisée pour l'animation des balles
+            // drivé par timer_2 de frmplayer            
+            currentTextPos = pBox.CurrentTextPos;
+            pBox.ColorLyric(songposition);
+        }
+
+        /// <summary>
+        /// Reset display at begining
+        /// </summary>
+        public void ResetTop()
+        {
+            currentTextPos = 0;
+            pBox.ResetTop();
+        }
+
+        public void StopDiaporama()
+        {
+            pBox.Terminate();
+        }
+
+
+        /// <summary>
+        /// Send to picturebox the parameters of chords included in lyrics if any
+        /// </summary>
+        public void ResetDisplayChordsOptions(LyricsMgmt LMgmt)
+        {
+            this.myLyricsMgmt = LMgmt;
+
+            if (myLyricsMgmt == null)
+                return;
+
+            myLyricsMgmt.BshowChords = bShowChords;
+            chkChords.Checked = bShowChords;
+            pBox.bShowChords = bShowChords;
+
+
+            if (bShowChords)
+            {
+                // ===================
+                // Show chords                                
+                // ===================
+
+                // 1. If chords are  already included in lyrics
+                // Add false lyrics in chords alone (instrumental) ???
+                if (myLyricsMgmt.bHasChordsInLyrics)
+                {
+                    myLyricsMgmt.FullExtractLyrics();
+                }
+                // 2. If chords are not included in lyrics,
+                // we have to detect chords and add them to the lyrics or add them to an extra
+                else if (!myLyricsMgmt.bHasChordsInLyrics)
+                {
+                    if (myLyricsMgmt.plLyrics.Count == 0)
+                        myLyricsMgmt.FullExtractLyrics();
+
+                    myLyricsMgmt.PopulateEmbeddedChords();
+
+                    // Clean lyrics HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    myLyricsMgmt.CleanLyrics();
+
+                }
+            }
+            else
+            {
+                // ===================
+                // Do not show chords
+                // ===================
+
+                // 1. If chords are already included in lyrics
+                // Remove false lyrics added to chords alone (instrumental)
+                if (myLyricsMgmt.bHasChordsInLyrics)
+                {
+                    myLyricsMgmt.FullExtractLyrics();
+                }
+                // 2. If chords are not included in lyrics
+                // Chords have been added by detection to existing lyrics but also on additional false lyrics (chords alone in instrumentals)
+                // So we have to delete all additions made by the chord analysis.                
+                else if (!myLyricsMgmt.bHasChordsInLyrics)
+                {
+                    // Remove detected chords
+                    myLyricsMgmt.FullExtractLyrics();
+                }
+            }
+
+            // Load lyrics (first operture of frmLyric) or reload lyrics if we have switched form "show chords" to "do not show chords" or reverse.
+            _plLyrics = myLyricsMgmt.plLyrics;
+            LoadSong(_plLyrics);
+            //LoadBallsTimes(_plLyrics);
+
+
+        }
+
+
         /// <summary>
         /// Load options (text color, 
         /// </summary>
-        private void LoadKarOptions()
+        public void LoadKarOptions()
         {
             try
-            {                
+            {
                 _karaokeFont = Properties.Settings.Default.KaraokeFont;
                 pBox.KaraokeFont = _karaokeFont;
                 pBox.bShowParagraphs = Karaclass.m_ShowParagraph;
@@ -446,16 +728,16 @@ namespace Karaboss
                 switch (Properties.Settings.Default.LyricsOptionDisplay)
                 {
                     case "Top":
-                        _OptionDisplay = Karaclass.OptionsDisplay.Top;                      
+                        _OptionDisplay = Karaclass.OptionsDisplay.Top;
                         break;
                     case "Center":
-                        _OptionDisplay = Karaclass.OptionsDisplay.Center;                        
+                        _OptionDisplay = Karaclass.OptionsDisplay.Center;
                         break;
                     case "Bottom":
-                        _OptionDisplay = Karaclass.OptionsDisplay.Bottom;                        
+                        _OptionDisplay = Karaclass.OptionsDisplay.Bottom;
                         break;
                     default:
-                        _OptionDisplay = Karaclass.OptionsDisplay.Center;                        
+                        _OptionDisplay = Karaclass.OptionsDisplay.Center;
                         break;
                 }
                 OptionDisplay = _OptionDisplay;
@@ -471,6 +753,12 @@ namespace Karaboss
                 bColorContour = Properties.Settings.Default.bColorContour;
                 TxtContourColor = Properties.Settings.Default.TxtContourColor;
 
+                // Chords
+                _chordNextColor = Properties.Settings.Default.ChordNextColor;
+                _chordHighlightColor = Properties.Settings.Default.ChordHighlightColor;
+                bShowChords = Properties.Settings.Default.bShowChords;
+                chkChords.Checked = bShowChords;
+
                 // Number of Lines to display
                 TxtNbLines = Properties.Settings.Default.TxtNbLines;
                 // Frequency of slide show
@@ -478,8 +766,6 @@ namespace Karaboss
                 // Position image
                 SizeMode = Properties.Settings.Default.SizeMode;
 
-                // Show panel balls
-                bShowBalls = Karaclass.m_DisplayBalls;
             }
             catch (Exception e)
             {
@@ -487,113 +773,30 @@ namespace Karaboss
             }
         }
 
-        /// <summary>
-        /// Remet les options courante pour le cas des playlists
-        /// La cinématique d'attente bouzille tout
-        /// </summary>
-        /// <param name="dirSlideShow"></param>
-        public void SetKarOptions(string dirSlideShow)
-        {
-            LoadKarOptions();
+        #endregion public methods
 
-            //AlloModifyDirSlideShow = true;
-            DirSlideShow = dirSlideShow;
-            //AlloModifyDirSlideShow = false;
-        }
+
+        #region private methods   
+
+
+
+
+
+
+
 
         /// <summary>
-        /// Load song in picturebox control
-        ///  1/4 = LineFeed
-        ///  1/2 = Paragraph
+        /// Locate form
         /// </summary>
-        public void LoadSong(List<plLyric> plLyrics)
+        /// <typeparam name="TForm"></typeparam>
+        /// <returns></returns>
+        private TForm GetForm<TForm>()
+            where TForm : Form
         {
-            _plLyrics = plLyrics;
-            currentTextPos = 0;
-            lyrics = "";
-            for (int i = 0; i < plLyrics.Count; i++)
-            {
-                lyrics += plLyrics[i].Element; 
-            }
-
-            List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();           
-            foreach (plLyric plL in plLyrics)
-            {
-                pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric();
-                pcL.Type = (pictureBoxControl.plLyric.Types)plL.CharType;
-                pcL.Element = plL.Element;
-                pcL.TicksOn = plL.TicksOn;
-                pcL.TicksOff = plL.TicksOff;
-
-                pcLyrics.Add(pcL);
-            }
-
-            // Load song
-            // Force Uppercase
-            pBox.bforceUppercase = _bForceUppercase;
-            pBox.LoadSong(pcLyrics);
-            
-            //Initial position
-            pBox.CurrentTextPos = -1;
-           
+            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
         }
 
-        /// <summary>
-        /// Load times for the Ball animation
-        /// </summary>
-        /// <param name="plLyrics"></param>
-        public void LoadBallsTimes(List<plLyric> plLyrics)
-        {
-            if (plLyrics.Count > 0)
-            {
-                LyricsTimes = new List<int>();
-
-                plLyric.CharTypes plType = plLyric.CharTypes.Text;
-                int plTime = 0;
-
-                for (int i = 0; i < plLyrics.Count; i++)
-                {
-                    plType = plLyrics[i].CharType;
-                    plTime = plLyrics[i].TicksOn;
-
-                    if (plType == plLyric.CharTypes.Text)
-                    {
-                        LyricsTimes.Add(plTime);
-                    }
-                }
-                picBalls.LoadTimes(LyricsTimes);
-
-                // FAB 26/10/16
-                picBalls.Start();
-            }
-        }
-
-        /// <summary>
-        /// Color the syllabe according to song position
-        /// </summary>
-        /// <param name="songposition"></param>
-        public void ColorLyric(int songposition)
-        {
-            // déclencheur : timer_2
-            // IMPERATIF : calculer ici la position de la syllabe, utilisée pour l'animation des balles
-            // drivé par timer_2 de frmplayer            
-            currentTextPos = pBox.CurrentTextPos;
-            pBox.ColorLyric(songposition);
-        }
-
-        /// <summary>
-        /// Reset display at begining
-        /// </summary>
-        public void ResetTop()
-        {
-            currentTextPos = 0;
-            pBox.ResetTop();
-        }
-
-        public void StopDiaporama()
-        {
-            pBox.Terminate();
-        }
+        #endregion private methods
 
 
         #region balls
@@ -623,15 +826,13 @@ namespace Karaboss
         }
 
         #endregion
-
-        #endregion methods
-
+        
 
         #region form load close resize
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            closing = true;
+            //closing = true;
             base.OnClosing(e);
         }
 
@@ -702,6 +903,10 @@ namespace Karaboss
                     Properties.Settings.Default.frmLyricLocation = Location;
                     Properties.Settings.Default.frmLyricSize = Size;
                     Properties.Settings.Default.frmLyricMaximized = false;
+
+                    //Properties.Settings.Default.ChordNextColor = Color.FromArgb(255, 196, 13);
+                    //Properties.Settings.Default.ChordHighlightColor = Color.FromArgb(238, 17, 17);
+
                 }
                 // Save settings
                 Properties.Settings.Default.Save();
@@ -723,13 +928,15 @@ namespace Karaboss
             {
                 btnFrmMax.Image = global::Karaboss.Properties.Resources.Max;
             }
-        }     
+        }
 
         #endregion form load close resize
 
 
         #region loadfile
-        
+
+        #region deleteme
+        /*
         private string LoadLyricsFile()
         {            
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
@@ -737,6 +944,7 @@ namespace Karaboss
 
             return ReadFile(file);
         }
+        
 
         private string ReadFile(string file)
         {
@@ -756,9 +964,13 @@ namespace Karaboss
 
             return retval;
         }
+        */
+        #endregion deleteme
+
+
         #endregion loadfile
 
-   
+
         #region pnlWindow
 
         bool bPnlVisible = false;
@@ -784,6 +996,11 @@ namespace Karaboss
             }
         }
     
+        /// <summary>
+        /// Timer used to hide panel
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Timer1_Tick(object sender, EventArgs e)
         {
             TimeSpan dur = DateTime.Now - startTime;
@@ -798,11 +1015,21 @@ namespace Karaboss
             }
         }
         
+        /// <summary>
+        /// Close form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnFrmClose_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        /// <summary>
+        /// Maximize form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnFrmMax_Click(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Maximized)
@@ -811,11 +1038,21 @@ namespace Karaboss
                 WindowState = FormWindowState.Maximized;
         }
 
+        /// <summary>
+        /// Minimize form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnFrmMin_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
         }
 
+        /// <summary>
+        /// Open form frmLyrOptions
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnFrmOptions_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -830,11 +1067,24 @@ namespace Karaboss
         /// <param name="e"></param>
         private void BtnFrmWords_Click(object sender, EventArgs e)
         {
+            #region check
+            if (myLyricsMgmt.Lyrics == null || myLyricsMgmt.Lyrics == "")
+                return;
+            #endregion
+
+            //mnuWords.Show(btnFrmWords, 1, btnFrmWords.Height);
+
+            string tx;
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             string file = path + "\\lyrics.txt";
-            lyrics = lyrics.Replace(_InternalSepParagraphs, "\r\n\r\n");
-            lyrics = lyrics.Replace(_InternalSepLines, "\r\n");
-            System.IO.File.WriteAllText(@file, lyrics);
+
+            //tx = lyrics;
+            // Lyrics not modified
+            tx = myLyricsMgmt.Lyrics;
+            tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
+            tx = tx.Replace(_InternalSepLines, "\r\n");
+            System.IO.File.WriteAllText(@file, tx);
+
             try
             {
                 System.Diagnostics.Process.Start(@file);
@@ -843,7 +1093,70 @@ namespace Karaboss
             {
                 MessageBox.Show(ex.Message);
             }
+
         }
+    
+
+        /// <summary>
+        /// Display chords when checked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkChords_CheckedChanged(object sender, EventArgs e)
+        {
+            bShowChords = chkChords.Checked;
+            btnLyricsChords.Visible = chkChords.Checked;
+            
+            // Save option
+            Properties.Settings.Default.bShowChords = bShowChords;
+            Properties.Settings.Default.Save();
+        }
+
+        /// <summary>
+        /// Display Words with lyrics in a text file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnLyricsChords_Click(object sender, EventArgs e)
+        {
+            string tx;
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            string file = path + "\\lyrics.txt";
+
+            // Chords are in the lyrics
+            if (myLyricsMgmt.bHasChordsInLyrics)
+            {                
+                if (myLyricsMgmt.GridBeatChords == null)
+                {
+                    myLyricsMgmt.FillGridBeatChordsWithLyricsChords();            
+                }                                
+            }
+            else
+            {
+                // Chords have to be guessed with a vertical search
+                myLyricsMgmt.PopulateEmbeddedChords();                                                
+            }
+
+            tx = myLyricsMgmt.GetLyricsLinesWithChords();
+
+            //myLyricsMgmt.CleanGridBeatChords();
+            //tx = myLyricsMgmt.DisplayWordsAndChords();
+            //tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
+            //tx = tx.Replace(_InternalSepLines, "\r\n");
+
+            System.IO.File.WriteAllText(@file, tx);
+
+            try
+            {
+                System.Diagnostics.Process.Start(@file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
 
         private void PnlWindow_Resize(object sender, EventArgs e)
         {
@@ -906,18 +1219,7 @@ namespace Karaboss
 
         }
 
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
-
-        #endregion
+        #endregion pnlWindow        
 
     }
 

@@ -168,7 +168,7 @@
       <Value Profile="(Default)">0, 0</Value>
     </Setting>
     <Setting Name="frmExplorerSize" Type="System.Drawing.Size" Scope="User">
-      <Value Profile="(Default)">600, 600</Value>
+      <Value Profile="(Default)">1200, 800</Value>
     </Setting>
     <Setting Name="frmExplorerSplitterDistance" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">300</Value>
@@ -319,6 +319,15 @@
     </Setting>
     <Setting Name="LyricsEditFont" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Segoe UI, 9pt</Value>
+    </Setting>
+    <Setting Name="ChordNextColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">DarkOrange</Value>
+    </Setting>
+    <Setting Name="ChordHighlightColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Red</Value>
+    </Setting>
+    <Setting Name="bShowChords" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -226,7 +226,7 @@
     <value>0, 0</value>
   </data>
   <data name="txtResult.Size" type="System.Drawing.Size, System.Drawing">
-    <value>567, 337</value>
+    <value>567, 310</value>
   </data>
   <data name="txtResult.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -250,10 +250,10 @@
     <value>Fill</value>
   </data>
   <data name="pnlBottom.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 123</value>
+    <value>0, 150</value>
   </data>
   <data name="pnlBottom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>567, 337</value>
+    <value>567, 310</value>
   </data>
   <data name="pnlBottom.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -270,14 +270,44 @@
   <data name="&gt;&gt;pnlBottom.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="btnDisplayOtherLyrics.Location" type="System.Drawing.Point, System.Drawing">
+    <value>149, 50</value>
+  </data>
+  <data name="btnDisplayOtherLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>87, 23</value>
+  </data>
+  <data name="btnDisplayOtherLyrics.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="btnDisplayOtherLyrics.Text" xml:space="preserve">
+    <value>Display others</value>
+  </data>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>436, 18</value>
+  </metadata>
+  <data name="btnDisplayOtherLyrics.ToolTip" xml:space="preserve">
+    <value>Another format of lyrics is available</value>
+  </data>
+  <data name="&gt;&gt;btnDisplayOtherLyrics.Name" xml:space="preserve">
+    <value>btnDisplayOtherLyrics</value>
+  </data>
+  <data name="&gt;&gt;btnDisplayOtherLyrics.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnDisplayOtherLyrics.Parent" xml:space="preserve">
+    <value>pnlTop</value>
+  </data>
+  <data name="&gt;&gt;btnDisplayOtherLyrics.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="btnDeleteAllLyrics.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+    <value>MiddleRight</value>
   </data>
   <data name="btnDeleteAllLyrics.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnDeleteAllLyrics.Location" type="System.Drawing.Point, System.Drawing">
-    <value>248, 58</value>
+    <value>248, 78</value>
   </data>
   <data name="btnDeleteAllLyrics.Size" type="System.Drawing.Size, System.Drawing">
     <value>158, 23</value>
@@ -288,9 +318,12 @@
   <data name="btnDeleteAllLyrics.Text" xml:space="preserve">
     <value>&amp;Delete All Lyrics</value>
   </data>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>436, 18</value>
-  </metadata>
+  <data name="btnDeleteAllLyrics.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="btnDeleteAllLyrics.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
+    <value>TextBeforeImage</value>
+  </data>
   <data name="btnDeleteAllLyrics.ToolTip" xml:space="preserve">
     <value>Delete all the lyrics</value>
   </data>
@@ -304,7 +337,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;btnDeleteAllLyrics.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="btnInsertParagraph.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -337,10 +370,10 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;btnInsertParagraph.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="BtnFontMoins.Location" type="System.Drawing.Point, System.Drawing">
-    <value>201, 92</value>
+    <value>201, 112</value>
   </data>
   <data name="BtnFontMoins.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 23</value>
@@ -364,10 +397,10 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;BtnFontMoins.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="BtnFontPlus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>201, 67</value>
+    <value>201, 87</value>
   </data>
   <data name="BtnFontPlus.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 23</value>
@@ -391,7 +424,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;BtnFontPlus.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="btnInsertCr.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 3</value>
@@ -421,10 +454,10 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;btnInsertCr.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="btnSpaceRight.Location" type="System.Drawing.Point, System.Drawing">
-    <value>149, 92</value>
+    <value>149, 112</value>
   </data>
   <data name="btnSpaceRight.Size" type="System.Drawing.Size, System.Drawing">
     <value>35, 23</value>
@@ -448,10 +481,10 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;btnSpaceRight.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="btnSpaceLeft.Location" type="System.Drawing.Point, System.Drawing">
-    <value>149, 67</value>
+    <value>149, 87</value>
   </data>
   <data name="btnSpaceLeft.Size" type="System.Drawing.Size, System.Drawing">
     <value>35, 23</value>
@@ -475,7 +508,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;btnSpaceLeft.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="optFormatLyrics.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -508,10 +541,10 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;optFormatLyrics.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="btnInsertText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 67</value>
+    <value>3, 87</value>
   </data>
   <data name="btnInsertText.Size" type="System.Drawing.Size, System.Drawing">
     <value>130, 23</value>
@@ -538,7 +571,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;btnInsertText.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="optFormatText.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -568,10 +601,10 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;optFormatText.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="btnDelete.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 92</value>
+    <value>3, 112</value>
   </data>
   <data name="btnDelete.Size" type="System.Drawing.Size, System.Drawing">
     <value>130, 23</value>
@@ -598,16 +631,16 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;btnDelete.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="btnPlay.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+    <value>MiddleRight</value>
   </data>
   <data name="btnPlay.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnPlay.Location" type="System.Drawing.Point, System.Drawing">
-    <value>248, 92</value>
+    <value>248, 112</value>
   </data>
   <data name="btnPlay.Size" type="System.Drawing.Size, System.Drawing">
     <value>158, 23</value>
@@ -619,7 +652,10 @@
     <value>&amp;Play from cursor</value>
   </data>
   <data name="btnPlay.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleRight</value>
+    <value>MiddleLeft</value>
+  </data>
+  <data name="btnPlay.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
+    <value>TextBeforeImage</value>
   </data>
   <data name="btnPlay.ToolTip" xml:space="preserve">
     <value>Play starting from the current cell</value>
@@ -634,7 +670,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;btnPlay.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <data name="btnView.Location" type="System.Drawing.Point, System.Drawing">
     <value>248, 27</value>
@@ -647,6 +683,9 @@
   </data>
   <data name="btnView.Text" xml:space="preserve">
     <value>&amp;View lyrics</value>
+  </data>
+  <data name="btnView.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="btnView.ToolTip" xml:space="preserve">
     <value>Display lyric's form</value>
@@ -661,10 +700,10 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;btnView.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>13</value>
   </data>
   <data name="btnSave.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+    <value>MiddleRight</value>
   </data>
   <data name="btnSave.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -681,6 +720,12 @@
   <data name="btnSave.Text" xml:space="preserve">
     <value>&amp;Save lyrics</value>
   </data>
+  <data name="btnSave.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="btnSave.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
+    <value>TextBeforeImage</value>
+  </data>
   <data name="btnSave.ToolTip" xml:space="preserve">
     <value>Save lyrics</value>
   </data>
@@ -694,7 +739,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;btnSave.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>14</value>
   </data>
   <data name="pnlTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
@@ -703,7 +748,7 @@
     <value>0, 0</value>
   </data>
   <data name="pnlTop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>567, 123</value>
+    <value>567, 150</value>
   </data>
   <data name="pnlTop.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -757,19 +802,19 @@
     <value>17, 17</value>
   </metadata>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>173, 22</value>
   </data>
   <data name="mnuFileSave.Text" xml:space="preserve">
     <value>&amp;Save</value>
   </data>
   <data name="mnuFileSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>173, 22</value>
   </data>
   <data name="mnuFileSaveAs.Text" xml:space="preserve">
     <value>Save &amp;as</value>
   </data>
   <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>171, 6</value>
+    <value>170, 6</value>
   </data>
   <data name="mnuFileSaveAsLrcLines.Size" type="System.Drawing.Size, System.Drawing">
     <value>116, 22</value>
@@ -784,22 +829,22 @@
     <value>Syllabes</value>
   </data>
   <data name="mnuFileSaveAsLrc.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>173, 22</value>
   </data>
   <data name="mnuFileSaveAsLrc.Text" xml:space="preserve">
     <value>Save as .lrc format</value>
   </data>
   <data name="MnuSaveAsText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>173, 22</value>
   </data>
   <data name="MnuSaveAsText.Text" xml:space="preserve">
     <value>Save as text format</value>
   </data>
   <data name="mnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>171, 6</value>
+    <value>170, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>173, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quit</value>
@@ -811,7 +856,7 @@
     <value>&amp;File</value>
   </data>
   <data name="mnuEditLoadTrack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>216, 22</value>
   </data>
   <data name="mnuEditLoadTrack.Text" xml:space="preserve">
     <value>&amp;Load a track</value>
@@ -820,10 +865,10 @@
     <value>Load a track containing notes</value>
   </data>
   <data name="mnuEditSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 6</value>
+    <value>213, 6</value>
   </data>
   <data name="mnuEditLoadMelodyText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>216, 22</value>
   </data>
   <data name="mnuEditLoadMelodyText.Text" xml:space="preserve">
     <value>Load a text file</value>
@@ -832,7 +877,7 @@
     <value>Load a pure text  file (no times, only text)</value>
   </data>
   <data name="mnuEditLoadLRCFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>216, 22</value>
   </data>
   <data name="mnuEditLoadLRCFile.Text" xml:space="preserve">
     <value>Load a text file (.lrc format)</value>

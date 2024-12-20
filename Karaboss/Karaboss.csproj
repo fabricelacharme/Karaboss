@@ -420,6 +420,7 @@
     <Compile Include="Mp3 Video\frmVideoRecorder.Designer.cs">
       <DependentUpon>frmVideoRecorder.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <EmbeddedResource Include="Buttons\CheckButtonControl.resx">
       <DependentUpon>CheckButtonControl.cs</DependentUpon>
       <SubType>Designer</SubType>

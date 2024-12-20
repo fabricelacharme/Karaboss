@@ -40,6 +40,7 @@ using System.Threading;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Collections.Generic; // DLL import
+using Karaboss.Lyrics;
 
 namespace Karaboss
 {
@@ -61,7 +62,7 @@ namespace Karaboss
         public static bool m_ShowParagraph;     // Lyrics : Display a blanck line between paragraphs
         public static bool m_ForceUppercase;    // Lyrics : converts every character to uppercase
 
-        public static bool m_SaveDefaultOutputDevice;   // Save default MIDI output device
+        public static bool m_SaveDefaultOutputDevice;   // Save default MIDI output device        
 
         public enum OptionsDisplay
         {
@@ -98,7 +99,7 @@ namespace Karaboss
         /// <returns></returns>
         public static string GetStartDirectory()
         {
-            string inipath = string.Empty;
+            string inipath; // = string.Empty;
             inipath = Properties.Settings.Default.StartDirectory;
 
             if (inipath == null || inipath == "" || inipath == "C:\\\\")
@@ -129,7 +130,7 @@ namespace Karaboss
         /// <returns></returns>
         public static string GetPlaylistGroupFile(string defFileName)
         {
-            string fileName = string.Empty;
+            string fileName; // = string.Empty;
 
             if (_m_fileplaylistGroups != null && _m_fileplaylistGroups != "")
             {
@@ -329,7 +330,12 @@ namespace Karaboss
         WithoutSpace = 1
     }
 
-   
+    public enum chordDelimiters
+    {
+        None = -1,
+        Bracket = 0,
+        Parenthesis = 1
+    }
 
     /// <summary>
     /// A class to store all lyric's syllabes
@@ -338,15 +344,22 @@ namespace Karaboss
     {
         public enum CharTypes
         {
-            Text = 1,
+            Text = 1,            
             LineFeed = 2,
             ParagraphSep = 3,
         }
         public CharTypes CharType { get; set; }
-        public string Element { get; set; }
+        public (string, string) Element { get; set; }    // item1 = chord, item2 = lyric
         public int TicksOn { get; set; }
         public int TicksOff { get; set; }
         public int Beat { get; set; }        
+        public bool IsChord {  get; set; }
+
+        public plLyric()
+        {
+            IsChord = false;
+        }
+
     }
 
     #endregion lyrics
@@ -398,7 +411,7 @@ namespace Karaboss
         /// <param name="lang"></param>
         private static void ApplyResourceToControl(ComponentResourceManager resources, Control control, CultureInfo lang)
         {
-            string text = string.Empty;
+            //string text; // = string.Empty;
 
             if (control.GetType() == typeof(MenuStrip))  // See if this is a menuStrip
             {

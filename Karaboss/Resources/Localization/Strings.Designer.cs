@@ -1218,5 +1218,47 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("NewTempo", resourceCulture);
             }
         }
+        internal static string TwoTypesOfLyrics
+        {
+            get
+            {
+                return ResourceManager.GetString("TwoTypesOfLyrics", resourceCulture);
+            }
+        }
+        internal static string FormatLyricsChoosen
+        {
+            get
+            {
+                return ResourceManager.GetString("FormatLyricsChoosen", resourceCulture);
+            }
+        }
+        internal static string ChangeFormatLyrics
+        {
+            get
+            {
+                return ResourceManager.GetString("ChangeFormatLyrics", resourceCulture);
+            }
+        }        
+        internal static string CurrentLyricFormatIs
+        {
+            get
+            {
+                return ResourceManager.GetString("CurrentLyricFormatIs", resourceCulture);
+            }
+        }        
+        internal static string WantToChangeFormatLyrics
+        {
+            get
+            {
+                return ResourceManager.GetString("WantToChangeFormatLyrics", resourceCulture);
+            }
+        }
+        internal static string QuestionSavefile
+        {
+            get
+            {
+                return ResourceManager.GetString("QuestionSaveFile", resourceCulture);
+            }
+        }
     }
 }

@@ -489,4 +489,22 @@
   <data name="NewTempo" xml:space="preserve">
     <value>New Tempo</value>
   </data>
+  <data name="TwoTypesOfLyrics" xml:space="preserve">
+    <value>Two types of lyrics format are available in this file: LYRIC and TEXT</value>
+  </data>
+  <data name="FormatLyricsChoosen" xml:space="preserve">
+    <value>The {0} format has been choosen by Karaboss because it contains more lyrics ({1} lyrics)</value>
+  </data>
+  <data name="ChangeFormatLyrics" xml:space="preserve">
+    <value>You can change to {0} format ({1} lyrics) by pressing the button 'Display Others'</value>
+  </data>
+  <data name="CurrentLyricFormatIs" xml:space="preserve">
+    <value>The current format is {0} ({1} lyrics)</value>
+  </data>
+  <data name="WantToChangeFormatLyrics" xml:space="preserve">
+    <value>Would you like to change to {0} format? ({1} lyrics)</value>
+  </data>
+  <data name="QuestionSaveFile" xml:space="preserve">
+    <value>The file has been modified, do you want to save it?</value>
+  </data>
 </root>

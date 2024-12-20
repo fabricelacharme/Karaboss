@@ -144,9 +144,7 @@ namespace FlShell
 
         public ShellListView()
         {
-            bDoSelect = true;
-
-            //m_allPlaylists = new List<string>();
+            bDoSelect = true;            
             
             m_ListView = new System.Windows.Forms.ListView();
 
@@ -209,7 +207,9 @@ namespace FlShell
 
             m_ListView.AllowDrop = true;
             m_ListView.Dock = DockStyle.Fill;
-            m_ListView.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        
+            SetFontScheme();
+
             m_ListView.HideSelection = false;
             m_ListView.HotTracking = false;
 
@@ -287,6 +287,11 @@ namespace FlShell
 
             m_ShellListener.ItemUpdated += new ShellItemEventHandler(m_ShellListener_ItemUpdated);
             m_ShellListener.SharingChanged += new ShellItemEventHandler(m_ShellListener_ItemUpdated);
+
+
+            // Accessibility : manage user size of font
+            Microsoft.Win32.SystemEvents.UserPreferenceChanged += new Microsoft.Win32.UserPreferenceChangedEventHandler(this.UserPreferenceChanged);
+
             #endregion
 
 
@@ -323,6 +328,9 @@ namespace FlShell
                 m_ShellListener.SharingChanged -= new ShellItemEventHandler(m_ShellListener_ItemUpdated);
 
                 //Marshal.ThrowExceptionForHR(Ole32.RevokeDragDrop(m_ListView.Handle));
+
+                Microsoft.Win32.SystemEvents.UserPreferenceChanged -= new Microsoft.Win32.UserPreferenceChangedEventHandler(this.UserPreferenceChanged);
+
             }
 
             base.Dispose(disposing);
@@ -1241,6 +1249,18 @@ namespace FlShell
         #endregion properties
 
 
+        #region internal
+
+        private void UserPreferenceChanged(object sender, Microsoft.Win32.UserPreferenceChangedEventArgs e)
+        {
+            SetFontScheme();
+        }
+
+        private void SetFontScheme()
+        {            
+            m_ListView.Font = new System.Drawing.Font("Segoe UI", SystemFonts.MenuFont.Size, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+        }
+
         private ListViewItem FindItem(ShellItem item)
         {
             if (item == null) return null;
@@ -1284,6 +1304,8 @@ namespace FlShell
             }
         }
 
+
+        #endregion
 
         #region menus
 

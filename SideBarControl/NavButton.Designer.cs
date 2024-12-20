@@ -14,9 +14,11 @@
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
-            {
-                components.Dispose();
+            {                
+                components.Dispose();                
             }
+            Microsoft.Win32.SystemEvents.UserPreferenceChanged -= new Microsoft.Win32.UserPreferenceChangedEventHandler(this.UserPreferenceChanged);
+
             base.Dispose(disposing);
         }
 

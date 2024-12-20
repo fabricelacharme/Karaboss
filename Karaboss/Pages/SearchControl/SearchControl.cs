@@ -113,6 +113,7 @@ namespace Karaboss.Search
         FlShell.ShellNotificationListener m_ShellListener = new FlShell.ShellNotificationListener();
 
         private string ScanfileName;
+        private string refMD5fileName;
 
         private List<Recording> allFiles = new List<Recording>(); // Try to serialize above list   
         private List<FileInfo> filesFound = new List<FileInfo>();  // List that will hold the found files and subfiles in path
@@ -214,7 +215,9 @@ namespace Karaboss.Search
            
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             ScanfileName = path + "\\mylibrary.xml";
-           
+
+            refMD5fileName = path + "\\mylibrarymd5.xml";
+
             // Populate songs
             GuessScanFiles();
             
@@ -1153,6 +1156,9 @@ namespace Karaboss.Search
                 // Save scanned file                
                 SaveScanFiles(ScanfileName);
 
+                // Library has changed => delete MD5 filename
+                DeleteMD5FileName(refMD5fileName);
+
                 // Raise event songRoot changed
                 _songroot = inipath;
                 SongRootChanged?.Invoke(this, _songroot);
@@ -1232,7 +1238,28 @@ namespace Karaboss.Search
             
             Cursor.Current = Cursors.Default;
             btnScan.Enabled = true;            
-        }   
+        }
+
+        /// <summary>
+        /// When library location is changed, the reference MD5 file is no more accurate, so delete it
+        /// </summary>
+        /// <param name="filename"></param>
+        private void DeleteMD5FileName(string filename)
+        {
+            try
+            {
+                FileInfo fi = new FileInfo(filename);
+                if (fi.Exists)
+                {
+                    fi.Delete();                    
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
 
         /// <summary>
         /// Toolbar

@@ -36,12 +36,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 using Karaboss.Resources.Localization;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
@@ -72,10 +75,11 @@ namespace Karaboss
             /// <param name="song"></param>
             /// <param name="md5"></param>
             /// <param name="size"></param>
-            public MFile(string path, string filename, string song ,string md5, long size)
+            public MFile(string path, string filename, string cleansong, string song ,string md5, long size)
             {
                 this._path = path;              // Full path
                 this._filename = filename;      // file with extension (artist - song.kar)
+                this._cleansong = cleansong;
                 this._song = song;              // only song
                 this._md5 = md5;
                 this._size = size;
@@ -83,6 +87,7 @@ namespace Karaboss
 
             public string _path { get; set; }
             public string _filename { get; set; }
+            public string _cleansong { get; set; }
             public string _song { get; set; }
             public string _md5 { get; set; }
             public long _size { get; set; }
@@ -159,7 +164,18 @@ namespace Karaboss
                         else
                             song = filename;
 
-                        MFile data = new MFile(fpath, filename, song, GetMD5(fpath), size);
+
+                        // Create CleanSong
+                        // Remove additional infos like (2) (3) (4) when double files...
+                        // Remove extension
+                        string pattern = @"[ (\d)]";
+                        string replace = @"";
+                        string cleansong = Regex.Replace(song, pattern, replace);
+                        cleansong = cleansong.Replace(".mid", "");
+                        cleansong = cleansong.Replace(".kar", "");
+                        cleansong = RemoveDiacritics(cleansong);
+
+                        MFile data = new MFile(fpath, filename, cleansong, song, GetMD5(fpath), size);
                         lstMyFiles.Add(data);
 
 
@@ -196,6 +212,16 @@ namespace Karaboss
                     }
                 }
             }
+
+            static string RemoveDiacritics(string text)
+            {
+                return string.Concat(
+                    text.Normalize(NormalizationForm.FormD)
+                    .Where(ch => CharUnicodeInfo.GetUnicodeCategory(ch) !=
+                                                  UnicodeCategory.NonSpacingMark)
+                  ).Normalize(NormalizationForm.FormC);
+            }
+
         }
 
 
@@ -494,7 +520,8 @@ namespace Karaboss
             FileInfo fi = new FileInfo(refMD5fileName);
             if (fi.Exists)
             {
-                var diffOfDates = DateTime.Now - fi.CreationTime;
+                //var diffOfDates = DateTime.Now - fi.CreationTime;
+                var diffOfDates = DateTime.Now - fi.LastWriteTime;
                 if (diffOfDates.Days == 0)
                 {
                     string strQuestion = "You've recently scanned your library - do you want to skip this step?";
@@ -756,9 +783,10 @@ namespace Karaboss
                 // Case of comparison between reference directory with a second directory
                 // => delete all doubles in the second directory
 
+                
                 for (int i = 0; i < listSelFiles.Count; i++)
                 {
-                    if (listRefFiles.Any(F => F._song == listSelFiles[i]._song))
+                    if (listRefFiles.Any(F => F._cleansong == listSelFiles[i]._cleansong))
                     {
                         lstDoubles.Add(listSelFiles[i]._path);
                         nb++;
