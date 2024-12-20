@@ -1641,6 +1641,9 @@ namespace Karaboss.Lyrics
                         {
                             TicksOn = plLyrics[j].TicksOn;
                             TicksOff = plLyrics[j].TicksOff;
+
+                            
+                            /*
                             if (ticks < TicksOn)
                             {
                                 // ticks is smaller than this TicksOn => the chord has to be inserted at its place as a new element
@@ -1648,6 +1651,8 @@ namespace Karaboss.Lyrics
                                 bFound = false;
                                 break;
                             }
+                            */
+
                             if (ticks == TicksOn)
                             {
                                 // ticks has the same value than a TicksOn, the chord has to be added to the lyric in the field 'chord'
@@ -1690,6 +1695,24 @@ namespace Karaboss.Lyrics
                                 }
                                 break;
                             }
+                            
+                            else if (ticks > TicksOn && ticks < TicksOff && plLyrics[j].CharType == plLyric.CharTypes.Text && plLyrics[j].IsChord == false)
+                            {
+                                lyric = plLyrics[j].Element.Item2;
+                                lyric = formateLyricOfChord(chordName, lyric);
+                                plLyrics[j].Element = (chordName, lyric);
+                                plLyrics[j].IsChord = false;
+                                bFound = true;
+                                break;
+                            }
+                            else if (ticks < TicksOn)
+                            {
+                                // ticks is smaller than this TicksOn => the chord has to be inserted at its place as a new element
+                                insertIndex = j;
+                                bFound = false;
+                                break;
+                            }
+                            
                         }
 
                         if (!bFound)
@@ -2406,7 +2429,7 @@ namespace Karaboss.Lyrics
 
 
         /// <summary>
-        /// USe case: Display Lyrivs & chords
+        /// USe case: Display Lyrics & chords
         /// </summary>
         /// <returns></returns>
         public string GetLyricsLinesWithChords()

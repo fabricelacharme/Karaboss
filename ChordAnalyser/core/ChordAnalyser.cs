@@ -365,9 +365,6 @@ namespace ChordsAnalyser
             for (int _measure = 1; _measure <= _nbMeasures; _measure++)
             {
 
-                //if (_measure == 11)
-                //    Console.WriteLine("");
-
                 // Create a list only for permutations                
                 List<int> lstfirstmidiNotes = new List<int>();
                 List<int> lstSecmidiNotes = new List<int>();
@@ -380,60 +377,44 @@ namespace ChordsAnalyser
                     {
                         foreach (MidiNote note in track.Notes)
                         {
+                            tStart = note.StartTime;                                                        
+                            MeasureStart = DetermineMeasure(tStart);
+                            
+                            // Note after current measure => exit
+                            if (MeasureStart > _measure)
+                                break;
+
                             // Bornes de la mesure courante
                             int startmeasureticks = (_measure - 1) * _measurelen;
                             int endmeasureticks = _measure * _measurelen;
 
-                            tStart = note.StartTime;
                             tEnd = note.EndTime;
-
-                            
-
-                            MeasureStart = DetermineMeasure(tStart);
                             MeasureEnd = DetermineMeasure(tEnd);
-
-                            // Comment déterminer qu'une note est située dans une mesure
-                            // Une note
-                            
-                            //if (MeasureEnd > _measure)
-                            //    break;
-
-                            //if (MeasureStart > _measure && MeasureEnd > _measure)
-                            //    break;
+                           
 
                             st = -1;
                             
-                            if (MeasureStart < _measure && MeasureEnd == _measure)
+                            if (MeasureStart < _measure && MeasureEnd >= _measure)
                             {
-                                // Si la note démarre dans la mesure précédente, mais que la note est plus dans la mesure courante, on prend
+                                // Keep note if note starts in previous measure, but is mostly in current measure (or next ones)                                
                                 if (tEnd - startmeasureticks > startmeasureticks - tStart)
                                     st = 0;
                             }
                             else if (MeasureStart == _measure && MeasureEnd == _measure)
                             {
+                                // Keep note if note entirely located in current measure
                                 st = GetTimeInMeasure(tStart);
                             }
                             else if (MeasureStart == _measure &&  MeasureEnd > _measure)
                             {
-                                // Si la note démarre dans la mesure courante et fini dans la suivante
-                                // On prend si elle est plus dans la mesure courante
+                                // Keep note if note starts in current measure, and continue in next one, but is mostly in current measure                                
                                 if(endmeasureticks - tStart > tEnd - endmeasureticks)
                                     st = GetTimeInMeasure(tStart);
                             }
+                                                        
                             
-                            //if (MeasureStart == _measure)
-                            //    st = GetTimeInMeasure(tStart);
-                            
-                            //if (MeasureEnd == _measure)
-                            //    st = GetTimeInMeasure(tEnd);
-                            
-
-                            //if (Measure == _measure)
                             if (st != -1)
                             {
-                                //st = GetTimeInMeasure(tEnd);
-
-
                                 // Treat differently 3/4 and 4/4                                
                                 if (sequence1.Numerator % 3 == 0)
                                 {
@@ -562,7 +543,7 @@ namespace ChordsAnalyser
                         bestnotletters4.Add(dictbestnotes.ElementAt(3).Key);
                         
                     }
-                }
+                } 
 
 
                 // Try best notes, if not, try all notes                                

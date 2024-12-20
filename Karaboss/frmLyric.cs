@@ -140,10 +140,7 @@ namespace Karaboss
                 {
                     _bShowChords = value;
                     
-                    ResetDisplayChordsOptions(myLyricsMgmt);
-                    //pBox.bShowChords = _bShowChords;
-                    
-
+                    ResetDisplayChordsOptions(myLyricsMgmt);                                        
                 }
             }
         }
@@ -417,8 +414,7 @@ namespace Karaboss
                     myLyricsMgmt.FullExtractLyrics();
 
                 _plLyrics = myLyricsMgmt.plLyrics;
-                LoadSong(_plLyrics);
-                //LoadBallsTimes(_plLyrics);
+                LoadSong(_plLyrics);                
             }
             
 

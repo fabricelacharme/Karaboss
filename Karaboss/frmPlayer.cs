@@ -1995,9 +1995,7 @@ namespace Karaboss
                     DisplayLyricsForm();
                 
                 if (currentPlaylist != null)
-                {
-                    
-                    
+                {                                        
                     // Case of a playlist, with no lyrics
                     // frmLyrics is displayed with "Next Song: "
                     if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
@@ -2012,9 +2010,9 @@ namespace Karaboss
                         frmLyric.DisplaySinger(tx);
                         frmLyric.DisplayText(sSong, _totalTicks);
 
-                        // FAB 09/12/2024
+                        // FAB 09/12/2024                        
                         frmLyric.ResetDisplayChordsOptions(myLyricsMgmt);
-                        //frmLyric.LoadSong(myLyricsMgmt.plLyrics);
+                        
 
                     }
 
