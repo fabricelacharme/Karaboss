@@ -85,10 +85,10 @@ namespace Karaboss
 
         private string commandlinePath = string.Empty;
         public int NumInstance = 1;     
-        private DisplayMidiInfos MidiInfos;
+        private readonly DisplayMidiInfos MidiInfos;
 
         // The MruList
-        int MruFilesCount = 10;
+        private const int MruFilesCount = 10;
         MruList MyMruList;
 
         private string mTempDir;
@@ -499,16 +499,19 @@ namespace Karaboss
             }
 
             // Ferme le formulaire frmPianoTraining            
-            if (Application.OpenForms["frmPianoTraining"] != null)
-                Application.OpenForms["frmPianoTraining"].Close();
+            //if (Application.OpenForms["frmPianoTraining"] != null)
+            //    Application.OpenForms["frmPianoTraining"].Close();
+            Application.OpenForms["frmPianoTraining"]?.Close();
 
             // Ferme le formulaire frmChords
-            if (Application.OpenForms["frmChords"] != null)
-                Application.OpenForms["frmChords"].Close();
+            //if (Application.OpenForms["frmChords"] != null)
+            //    Application.OpenForms["frmChords"].Close();
+            Application.OpenForms["frmChords"]?.Close();
 
             // Ferme le formulaire frmGuitarTraining            
-            if (Application.OpenForms["frmGuitarTraining"] != null)
-                Application.OpenForms["frmGuitarTraining"].Close();
+            //if (Application.OpenForms["frmGuitarTraining"] != null)
+            //    Application.OpenForms["frmGuitarTraining"].Close();
+            Application.OpenForms["frmGuitarTraining"]?.Close();
 
             ResetOutPutDevice();
             // Affiche le formulaire frmPianoTraining 
@@ -565,18 +568,19 @@ namespace Karaboss
             }
 
             // Ferme le formulaire frmPianoTraining            
-            if (Application.OpenForms["frmPianoTraining"] != null)
-                Application.OpenForms["frmPianoTraining"].Close();
+            //if (Application.OpenForms["frmPianoTraining"] != null)
+            //    Application.OpenForms["frmPianoTraining"].Close();
+            Application.OpenForms["frmPianoTraining"]?.Close();
 
             // Ferme le formulaire frmChords
-            if (Application.OpenForms["frmChords"] != null)
-                Application.OpenForms["frmChords"].Close();
-
+            //if (Application.OpenForms["frmChords"] != null)
+            //    Application.OpenForms["frmChords"].Close();
+            Application.OpenForms["frmChords"]?.Close();
 
             // Ferme le formulaire frmGuitarTraining            
-            if (Application.OpenForms["frmGuitarTraining"] != null)
-                Application.OpenForms["frmGuitarTraining"].Close();
-
+            //if (Application.OpenForms["frmGuitarTraining"] != null)
+            //    Application.OpenForms["frmGuitarTraining"].Close();
+            Application.OpenForms["frmGuitarTraining"]?.Close();
 
             ResetOutPutDevice();
             // Affiche le formulaire frmGuitarTraining 
@@ -627,17 +631,19 @@ namespace Karaboss
             }
 
             // Ferme le formulaire frmPianoTraining            
-            if (Application.OpenForms["frmPianoTraining"] != null)
-                Application.OpenForms["frmPianoTraining"].Close();
+            //if (Application.OpenForms["frmPianoTraining"] != null)
+            //    Application.OpenForms["frmPianoTraining"].Close();
+            Application.OpenForms["frmPianoTraining"]?.Close();
 
             // Ferme le formulaire frmGuitarTraining            
-            if (Application.OpenForms["frmGuitarTraining"] != null)
-                Application.OpenForms["frmGuitarTraining"].Close();
+            //if (Application.OpenForms["frmGuitarTraining"] != null)
+            //    Application.OpenForms["frmGuitarTraining"].Close();
+            Application.OpenForms["frmGuitarTraining"]?.Close();
 
             // Ferme le formulaire frmChords
-            if (Application.OpenForms["frmChords"] != null)
-                Application.OpenForms["frmChords"].Close();
-
+            //if (Application.OpenForms["frmChords"] != null)
+            //    Application.OpenForms["frmChords"].Close();
+            Application.OpenForms["frmChords"]?.Close();
 
             ResetOutPutDevice();
             // Affiche le formulaire frmChords 
@@ -765,7 +771,7 @@ namespace Karaboss
         /// <returns></returns>
         private string GetSongsDirectory()
         {
-            string inipath = string.Empty;
+            string inipath; // = string.Empty;
             inipath = Properties.Settings.Default.SongRoot;
 
             // Cas de la première fois (string empty)
@@ -995,8 +1001,8 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void HandleLoadCompleted(object sender, AsyncCompletedEventArgs e)
-        {           
-            string tx = string.Empty;
+        {
+            string tx; // = string.Empty;
             int i;
             string cr = Environment.NewLine;
 
@@ -1543,8 +1549,9 @@ namespace Karaboss
             #endregion
 
             // Affiche le formulaire frmPlay 
-            if (Application.OpenForms["FrmTextPlayer"] != null)
-                Application.OpenForms["FrmTextPlayer"].Close();
+            //if (Application.OpenForms["FrmTextPlayer"] != null)
+            //    Application.OpenForms["FrmTextPlayer"].Close();
+            Application.OpenForms["FrmTextPlayer"]?.Close();
 
             ResetOutPutDevice();
            
@@ -1629,15 +1636,15 @@ namespace Karaboss
             #endregion
 
             // Affiche le formulaire frmPlay 
-            if (Application.OpenForms["frmPlayer"] != null)
-                Application.OpenForms["frmPlayer"].Close();
-
+            //if (Application.OpenForms["frmPlayer"] != null)
+            //    Application.OpenForms["frmPlayer"].Close();
+            Application.OpenForms["frmPlayer"]?.Close();
             ResetOutPutDevice();
 
             // Add the file to the MRU list.
             MyMruList.AddFile(fpath);
 
-            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice, songRoot);
+            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
             frmPlayer.Show();
             frmPlayer.Activate();
 
@@ -1705,15 +1712,16 @@ namespace Karaboss
             #endregion
 
             // Close form frmPlay 
-            if (Application.OpenForms["frmPlayer"] != null)
-                Application.OpenForms["frmPlayer"].Close();
+            //if (Application.OpenForms["frmPlayer"] != null)
+            //    Application.OpenForms["frmPlayer"].Close();
 
+            Application.OpenForms["frmPlayer"]?.Close();
             ResetOutPutDevice();
 
             // Add the file to the MRU list.
             MyMruList.AddFile(fpath);
 
-            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice, songRoot);
+            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
             frmPlayer.Show();
             frmPlayer.Activate();
 
@@ -1807,15 +1815,16 @@ namespace Karaboss
             #endregion
 
             // Close form frmPlay 
-            if (Application.OpenForms["frmPlayer"] != null)
-                Application.OpenForms["frmPlayer"].Close();
+            //if (Application.OpenForms["frmPlayer"] != null)
+            //    Application.OpenForms["frmPlayer"].Close();
+            Application.OpenForms["frmPlayer"]?.Close();
 
             ResetOutPutDevice();
 
             // Add the file to the MRU list.
             MyMruList.AddFile(fpath);
 
-            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice, songRoot);
+            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
             frmPlayer.Show();
             frmPlayer.Activate();
 
@@ -2353,7 +2362,7 @@ namespace Karaboss
             int measures = 35;
 
             // Display dialog windows new midi file
-            DialogResult dr = new DialogResult();
+            DialogResult dr; // = new DialogResult();
             Sanford.Multimedia.Midi.Score.UI.frmNewMidiFile MidiFileDialog = new Sanford.Multimedia.Midi.Score.UI.frmNewMidiFile(numerator, denominator, division, tempo, measures);
             dr = MidiFileDialog.ShowDialog();
 
@@ -2377,7 +2386,7 @@ namespace Karaboss
             decimal trkindex = 0;
             int clef = 0;
 
-            dr = new DialogResult();
+            //dr = new DialogResult();
             Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog TrackDialog = new Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog(trackname, programchange, channel, trkindex, clef);
             dr = TrackDialog.ShowDialog();
 
@@ -2540,7 +2549,7 @@ namespace Karaboss
                 return;
             }
 
-            DialogResult dr = new DialogResult();
+            DialogResult dr; // = new DialogResult();
             Sanford.Multimedia.Midi.UI.InputDeviceDialog MidiInputDialog = new Sanford.Multimedia.Midi.UI.InputDeviceDialog(inDeviceID);
             dr = MidiInputDialog.ShowDialog();
 
@@ -2558,7 +2567,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuMidiOutputDevice_Click(object sender, EventArgs e)
         {
-            DialogResult dr = new DialogResult();
+            DialogResult dr; // = new DialogResult();
             OutputDeviceDialog MidiOutputDialog = new OutputDeviceDialog(outDeviceID, Karaclass.m_SaveDefaultOutputDevice);
             
 
@@ -2921,8 +2930,8 @@ namespace Karaboss
             
             if ((xplorerControl.SelectedFolder != null) && xplorerControl.SelectedFolder.IsFolder)
             {
-                string tx = string.Empty;
-                string item = string.Empty;
+                string tx; // = string.Empty;
+                string item; // = string.Empty;
                 string fullpath = xplorerControl.SelectedFolder.FileSystemPath;
                 iNbDelete = 0;
 
@@ -2970,7 +2979,7 @@ namespace Karaboss
             if (bAbortDelete)
                 return;
 
-            string tx = string.Empty;
+            string tx; // = string.Empty;
 
             try
             {
@@ -2994,8 +3003,9 @@ namespace Karaboss
                                 bAbortDelete = false;
                                 try
                                 {
-                                    DirectoryInfo dir = new DirectoryInfo(directory);
-                                    dir.Attributes = FileAttributes.Normal;
+                                    DirectoryInfo dir = new DirectoryInfo(directory) {
+                                        Attributes = FileAttributes.Normal,
+                                    };
                                     
                                     Directory.Delete(directory, false);
                                     iNbDelete++;
@@ -3018,8 +3028,9 @@ namespace Karaboss
                         {
                             try
                             {
-                                DirectoryInfo dir = new DirectoryInfo(directory);
-                                dir.Attributes = FileAttributes.Normal;
+                                DirectoryInfo dir = new DirectoryInfo(directory) {
+                                    Attributes = FileAttributes.Normal,
+                                };
 
                                 Directory.Delete(directory, false);
                                 iNbDelete++;
@@ -3082,12 +3093,12 @@ namespace Karaboss
                 string[] result = new string[2];
 
                 Label textLabel1 = new Label() { Left = 10, Top = 20, Text = "String to search" };
-                TextBox inputBox1 = new TextBox() { Left = 120, Top = 20, Width = 180 };
-                inputBox1.Text = value[0];
+                TextBox inputBox1 = new TextBox() { Left = 120, Top = 20, Width = 180, Text = value[0] };
+                //inputBox1.Text = value[0];
 
                 Label textLabel2 = new Label() { Left = 10, Top = 50, Text = "String to replace" };
-                TextBox inputBox2 = new TextBox() { Left = 120, Top = 50, Width = 180 };
-                inputBox2.Text = value[1];
+                TextBox inputBox2 = new TextBox() { Left = 120, Top = 50, Width = 180, Text = value[1] };
+                //inputBox2.Text = value[1];
 
                 Button btnConfirmation = new Button() { Text = "Ok", Left = wd / 2 - 100 - 10, Width = 100, Top = 100 };
                 Button btnCancel = new Button() { Text = "Cancel", Left = wd / 2 + 10, Width = 100, Top = 100 };
@@ -3156,8 +3167,10 @@ namespace Karaboss
         {            
             try
             {
-                if (outDevice != null)
-                    outDevice.Dispose();
+                //if (outDevice != null)
+                //    outDevice.Dispose();
+
+                outDevice?.Dispose();
                 outDevice = new OutputDevice(outDeviceID);
 
             }

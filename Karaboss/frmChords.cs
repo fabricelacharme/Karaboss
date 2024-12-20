@@ -31,7 +31,6 @@
  */
 
 #endregion
-using ChordAnalyser;
 using ChordAnalyser.UI;
 using Karaboss.Display;
 using Karaboss.Lyrics;
@@ -42,12 +41,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using System.Xml;
 
 namespace Karaboss
 {
@@ -63,9 +59,9 @@ namespace Karaboss
         private bool scrolling = false;
 
         // Current file beeing edited
-        private string MIDIfileName = string.Empty;
-        private string MIDIfilePath = string.Empty;
-        private string MIDIfileFullPath = string.Empty;
+        private readonly string MIDIfileName; // = string.Empty;
+        //private readonly string MIDIfilePath; // = string.Empty;
+        private readonly string MIDIfileFullPath; // = string.Empty;
 
         //private int bouclestart = 0;
         private int newstart = 0;
@@ -89,7 +85,7 @@ namespace Karaboss
 
         #region controls
         private Sequence sequence1 = new Sequence();               
-        private OutputDevice outDevice;
+        private readonly OutputDevice outDevice;
         private Sequencer sequencer1 = new Sequencer();
 
         private System.Windows.Forms.Timer timer1;
@@ -112,14 +108,14 @@ namespace Karaboss
 
         //Panels
         private Panel pnlDisplayHorz;           // chords in horizontal mode
-        private int padding = 10;
+        private readonly int padding = 10;
         private Panel pnlDisplayImagesOfChords; // images of chords
         private Panel pnlBottom;                // Lyrics
 
         // Tabpage for image of chord (Guitar & Piano)        
         private TabControl tbPChords;
-        private TabPage TabPageGuitar = new TabPage();
-        private TabPage TabPagePiano = new TabPage();
+        //private readonly TabPage TabPageGuitar; // = new TabPage();
+        //private readonly TabPage TabPagePiano; // = new TabPage();
 
 
         private Label lblLyrics;
@@ -156,7 +152,7 @@ namespace Karaboss
         // int measure
         // string Chord 1st half measure
         // string chord 2nd half measure
-        Dictionary<int, (string, string)> Gridchords;
+        //Dictionary<int, (string, string)> Gridchords;
         
         // New search (by beat)
         //public Dictionary<int, List<string>> GridBeatChords;
@@ -173,7 +169,7 @@ namespace Karaboss
             // Sequence
             MIDIfileFullPath = FileName;
             MIDIfileName = Path.GetFileName(FileName);
-            MIDIfilePath = Path.GetDirectoryName(FileName);
+            //MIDIfilePath = Path.GetDirectoryName(FileName);
                         
             outDevice = OtpDev;
 
@@ -201,9 +197,10 @@ namespace Karaboss
             {
                 sequence1 = seq;
 
-                sequencer1 = new Sequencer();
-                sequencer1.Position = 0;
-                sequencer1.Sequence = sequence1;    // primordial !!!!!
+                sequencer1 = new Sequencer() {
+                    Position = 0,
+                    Sequence = sequence1,    // primordial !!!!!
+                };
                 this.sequencer1.PlayingCompleted += new System.EventHandler(this.HandlePlayingCompleted);
                 this.sequencer1.ChannelMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.ChannelMessageEventArgs>(this.HandleChannelMessagePlayed);                
                 this.sequencer1.SysExMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.SysExMessageEventArgs>(this.HandleSysExMessagePlayed);
@@ -230,9 +227,11 @@ namespace Karaboss
         private void DrawControls()
         {
             // Timer
-            timer1 = new Timer();
-            timer1.Interval = 20;
+            timer1 = new Timer() {
+                Interval = 20,
+            };
             timer1.Tick += new EventHandler(timer1_Tick);
+            
 
             #region Toolbar
             pnlToolbar.Location = new Point(0, menuStrip1.Height);
@@ -271,9 +270,10 @@ namespace Karaboss
 
             #region PanelPlay
 
-            panelPlayer = new PanelPlayer();
-            panelPlayer.Parent = pnlToolbar;
-            panelPlayer.Location = new Point(30 + btnPlay.Left + btnPlay.Width, 5);
+            panelPlayer = new PanelPlayer() {
+                Parent = pnlToolbar,
+                Location = new Point(30 + btnPlay.Left + btnPlay.Width, 5),
+            };
             pnlToolbar.Controls.Add(panelPlayer);
 
             #endregion PanelPlay
@@ -281,57 +281,62 @@ namespace Karaboss
 
             #region zoom
 
-            btnZoomPlus = new NoSelectButton();
-            btnZoomPlus.Parent = pnlToolbar;
-            btnZoomPlus.Image = Karaboss.Properties.Resources.magnifyplus24;
-            toolTip1.SetToolTip(btnZoomPlus, "100%");
-            btnZoomPlus.UseVisualStyleBackColor = true;
-            btnZoomPlus.Location = new Point(34 + panelPlayer.Left + panelPlayer.Width, 2);
-            btnZoomPlus.Size = new Size(50, 50);
-            btnZoomPlus.Text = "";            
-            btnZoomPlus.Click += new EventHandler(btnZoomPlus_Click);
-            
+            btnZoomPlus = new NoSelectButton() {
+                Parent = pnlToolbar,
+                Image = Karaboss.Properties.Resources.magnifyplus24,
+                UseVisualStyleBackColor = true,
+                Location = new Point(34 + panelPlayer.Left + panelPlayer.Width, 2),
+                Size = new Size(50, 50),
+                Text = "",
+            };
+            btnZoomPlus.Click += new EventHandler(btnZoomPlus_Click);            
             pnlToolbar.Controls.Add(btnZoomPlus);
+            toolTip1.SetToolTip(btnZoomPlus, "100%");
 
-            btnZoomMinus = new NoSelectButton();
-            btnZoomMinus.Parent = pnlToolbar;
-            btnZoomMinus.Image = Karaboss.Properties.Resources.magnifyminus24;
-            toolTip1.SetToolTip(btnZoomMinus, "100%");
-            btnZoomMinus.UseVisualStyleBackColor = true;
-            btnZoomMinus.Location = new Point(2 + btnZoomPlus.Left + btnZoomPlus.Width, 2);
-            btnZoomMinus.Size = new Size(50, 50);
-            btnZoomMinus.Text = "";
+            btnZoomMinus = new NoSelectButton() {
+                Parent = pnlToolbar,
+                Image = Karaboss.Properties.Resources.magnifyminus24,
+                UseVisualStyleBackColor = true,
+                Location = new Point(2 + btnZoomPlus.Left + btnZoomPlus.Width, 2),
+                Size = new Size(50, 50),
+                Text = ""
+            };                        
             btnZoomMinus.Click += new EventHandler(btnZoomMinus_Click);
             pnlToolbar.Controls.Add(btnZoomMinus);
+            
+            toolTip1.SetToolTip(btnZoomMinus, "100%");
 
             #endregion zoom
 
-            #region export pdf text
-            btnPrintPDF = new NoSelectButton();
-            btnPrintPDF.Parent = pnlToolbar;
-            //btnPrintPDF.Image = Properties.Resources.Apps_Pdf_icon;
-            btnPrintPDF.Image = Properties.Resources.export_pdf32;
-            toolTip1.SetToolTip(btnPrintPDF, "Export to PDF");
-            btnPrintPDF.UseVisualStyleBackColor = true;
-            btnPrintPDF.Location = new Point(2 + btnZoomMinus.Left + btnZoomMinus.Width);
-            btnPrintPDF.Size = new Size(50, 50);
-            btnPrintPDF.Text = "";
-            btnPrintPDF.Click += new EventHandler(btnPrintPDF_Click);
-            btnPrintPDF.Visible = false;
-            pnlToolbar.Controls.Add((btnPrintPDF));
 
-            btnPrintTXT = new NoSelectButton();
-            btnPrintTXT.Parent = pnlToolbar;
-            //btnPrintTXT.Image = Properties.Resources.table_multiple;
-            btnPrintTXT.Image = Properties.Resources.export_txt48_2;
-            toolTip1.SetToolTip(btnPrintTXT, "Export to Text");
-            btnPrintTXT.UseVisualStyleBackColor = true;
-            btnPrintTXT.Location = new Point(2 + btnPrintPDF.Left + btnPrintPDF.Width);
-            btnPrintTXT.Size = new Size(50, 50);
-            btnPrintTXT.Text = "";
+            #region export pdf text
+
+            btnPrintPDF = new NoSelectButton() {
+                Parent = pnlToolbar,
+                Image = Properties.Resources.export_pdf32,
+                UseVisualStyleBackColor = true,
+                Location = new Point(2 + btnZoomMinus.Left + btnZoomMinus.Width),
+                Size = new Size(50, 50),
+                Text = "",
+                Visible = false,
+            };
+
+            btnPrintPDF.Click += new EventHandler(btnPrintPDF_Click);            
+            pnlToolbar.Controls.Add((btnPrintPDF));
+            toolTip1.SetToolTip(btnPrintPDF, "Export to PDF");
+
+            btnPrintTXT = new NoSelectButton() {
+                Parent = pnlToolbar,
+                Image = Properties.Resources.export_txt48_2,
+                UseVisualStyleBackColor = true,
+                Location = new Point(2 + btnPrintPDF.Left + btnPrintPDF.Width),
+                Size = new Size(50, 50),
+                Text = "",  
+                Visible = false,
+            };
             btnPrintTXT.Click += new EventHandler(btnPrintTXT_Click);
-            btnPrintTXT.Visible = false;
             pnlToolbar.Controls.Add((btnPrintTXT));
+            toolTip1.SetToolTip(btnPrintTXT, "Export to Text");
 
             #endregion export pdf text
 
@@ -355,58 +360,64 @@ namespace Karaboss
             #region Panel Display horizontal chords
             // 1 : add a panel on top
             // this panel will host the chrod control and the colorslider
-            pnlDisplayHorz = new Panel();
-            pnlDisplayHorz.Parent = tabPageDiagrams;
-            pnlDisplayHorz.Location = new Point(tabPageDiagrams.Margin.Left, tabPageDiagrams.Margin.Top);            
-            pnlDisplayHorz.Size = new Size(tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, 150);                    
-            pnlDisplayHorz.BackColor = Color.FromArgb(239, 244, 255); //Color.Chocolate;
+            pnlDisplayHorz = new Panel() {
+                Parent = tabPageDiagrams,
+                Location = new Point(tabPageDiagrams.Margin.Left, tabPageDiagrams.Margin.Top),
+                Size = new Size(tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, 150),
+                BackColor = Color.FromArgb(239, 244, 255), //Color.Chocolate;
+            };
             tabPageDiagrams.Controls.Add(pnlDisplayHorz);
+
             #endregion Panel Display horizontal chords
-            
+
 
             #region ChordControl
             // 2 : add a chord control on top
-            ChordControl1 = new ChordsControl();
-            ChordControl1.Parent = pnlDisplayHorz;
-            ChordControl1.Location = new Point(0, 0);            
+            ChordControl1 = new ChordsControl() {
+                Parent = pnlDisplayHorz,
+                Location = new Point(0, 0),
+                ColumnWidth = 180,
+                ColumnHeight = 180,
+
+                Cursor = Cursors.Hand,
+                Sequence1 = this.sequence1,
+            };
 
             // Set size mandatory ??? unless, the control is not shown correctly
             ChordControl1.Size = new Size(pnlDisplayHorz.Width, ChordControl1.Height);
-            
+
+            pnlDisplayHorz.Controls.Add(ChordControl1);
+
             ChordControl1.WidthChanged += new WidthChangedEventHandler(ChordControl_WidthChanged);
             ChordControl1.HeightChanged += new HeightChangedEventHandler(ChordControl_HeightChanged);
             ChordControl1.MouseDown += new MouseEventHandler(ChordControl_MouseDown);
 
-            ChordControl1.ColumnWidth = 180;
-            ChordControl1.ColumnHeight = 180;
 
-            ChordControl1.Cursor = Cursors.Hand;
-            ChordControl1.Sequence1 = this.sequence1;
-            pnlDisplayHorz.Controls.Add(ChordControl1);
             #endregion
 
 
             #region positionHScrollBar
             // 3 : add a colorslider
-            positionHScrollBar = new ColorSlider.ColorSlider();
-            positionHScrollBar.Parent = pnlDisplayHorz;
-            positionHScrollBar.ThumbImage = Properties.Resources.BTN_Thumb_Blue;
-            positionHScrollBar.Size = new Size(pnlDisplayHorz.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, 20);
-            positionHScrollBar.Location = new Point(0, ChordControl1.Height);
-            positionHScrollBar.Value = 0;
-            positionHScrollBar.Minimum = 0;
+            positionHScrollBar = new ColorSlider.ColorSlider() {
+                Parent = pnlDisplayHorz,
+                ThumbImage = Properties.Resources.BTN_Thumb_Blue,
+                Size = new Size(pnlDisplayHorz.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, 20),
+                Location = new Point(0, ChordControl1.Height),
+                Value = 0,
+                Minimum = 0,
 
+                TickStyle = TickStyle.None,
+                SmallChange = 1,
+                LargeChange = 1 + NbMeasures * sequence1.Numerator,
+                ShowDivisionsText = false,
+                ShowSmallScale = false,
+                MouseWheelBarPartitions = 1 + NbMeasures * sequence1.Numerator,
+            };
+            
+            pnlDisplayHorz.Controls.Add(positionHScrollBar);
+            positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(PositionHScrollBar_Scroll);
             // Set maximum & visibility
             SetScrollBarValues();
-
-            positionHScrollBar.TickStyle = TickStyle.None;
-            positionHScrollBar.SmallChange = 1;
-            positionHScrollBar.LargeChange = 1 + NbMeasures * sequence1.Numerator;
-            positionHScrollBar.ShowDivisionsText = false;
-            positionHScrollBar.ShowSmallScale = false;
-            positionHScrollBar.MouseWheelBarPartitions = 1 + NbMeasures * sequence1.Numerator;
-            positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(PositionHScrollBar_Scroll);
-            pnlDisplayHorz.Controls.Add(positionHScrollBar);
 
             pnlDisplayHorz.Height = ChordControl1.Height + positionHScrollBar.Height + padding;
 
@@ -418,22 +429,23 @@ namespace Karaboss
             // This panel will display a diagram for chords being played
             // 278; //248 + 30 : 248 pour accord de guitare (200 taille de l'image + 1.24 * 200 accord jouée 25% plus gros et + 30 pour les onglets            
             int htotale = 280;
-            
-            pnlDisplayImagesOfChords = new Panel();
-            pnlDisplayImagesOfChords.Parent = tabPageDiagrams;
-            pnlDisplayImagesOfChords.Location = new Point(tabPageDiagrams.Margin.Left, pnlDisplayHorz.Top + pnlDisplayHorz.Height);
-            pnlDisplayImagesOfChords.Height = htotale;
-            pnlDisplayImagesOfChords.BackColor = Color.FromArgb(239, 244, 255);
-            pnlDisplayImagesOfChords.Width = pnlDisplayHorz.Width;
+
+            pnlDisplayImagesOfChords = new Panel() {
+                Parent = tabPageDiagrams,
+                Location = new Point(tabPageDiagrams.Margin.Left, pnlDisplayHorz.Top + pnlDisplayHorz.Height),
+                Height = htotale,
+                BackColor = Color.FromArgb(239, 244, 255),
+                Width = pnlDisplayHorz.Width,
+            };
             tabPageDiagrams.Controls.Add(pnlDisplayImagesOfChords);
 
 
             #region tabPage to select Guitar or Piano
             // =======================================
-            tbPChords = new TabControl();
-            tbPChords.Parent = pnlDisplayImagesOfChords;
-            tbPChords.Location = new Point(0, 0);            
-
+            tbPChords = new TabControl() {
+                Parent = pnlDisplayImagesOfChords,
+                Location = new Point(0, 0),
+            };
             TabPage TabPageGuitar = new TabPage("Guitar");
             tbPChords.Controls.Add(TabPageGuitar);
             TabPage TabPagePiano = new TabPage("Piano");
@@ -447,18 +459,17 @@ namespace Karaboss
 
             #region ChordRenderer Guitar
             // =======================================
-            ChordRendererGuitar = new ChordRenderer();            
-            ChordRendererGuitar.Parent = TabPageGuitar;            
-            ChordRendererGuitar.Location = new Point(TabPageGuitar.Margin.Left, TabPageGuitar.Margin.Top);
-            
-            ChordRendererGuitar.Height = htotale;
-            ChordRendererGuitar.HeightChanged += new HeightChangedEventHandler(ChordRendererGuitar_HeightChanged);
-            
-            ChordRendererGuitar.ColumnWidth = 162;  
-            ChordRendererGuitar.ColumnHeight = 186; 
-            
-            ChordRendererGuitar.DisplayMode = ChordRenderer.DiplayModes.Guitar;
+            ChordRendererGuitar = new ChordRenderer() {
+                Parent = TabPageGuitar,
+                Location = new Point(TabPageGuitar.Margin.Left, TabPageGuitar.Margin.Top),
+                Height = htotale,
+                ColumnWidth = 162,
+                ColumnHeight = 186,
+                DisplayMode = ChordRenderer.DiplayModes.Guitar,
+            };
             TabPageGuitar.Controls.Add(ChordRendererGuitar);
+            ChordRendererGuitar.HeightChanged += new HeightChangedEventHandler(ChordRendererGuitar_HeightChanged);
+
             #endregion ChordRenderer Guitar
 
 
@@ -467,18 +478,19 @@ namespace Karaboss
             // Tabpages dimension are not set if not visible => force redim
             TabPagePiano.Width = TabPageGuitar.Width;
 
-            ChordRendererPiano = new ChordRenderer();
-            ChordRendererPiano.Parent = TabPagePiano;
-            ChordRendererPiano.Location = new Point(TabPagePiano.Margin.Left, TabPagePiano.Margin.Top);
-            ChordRendererPiano.Width = TabPagePiano.ClientSize.Width;
-            ChordRendererPiano.Height = htotale;
-            ChordRendererPiano.HeightChanged += new HeightChangedEventHandler(ChordRendererPiano_HeightChanged);
-            
-            ChordRendererPiano.ColumnWidth = 286;   
-            ChordRendererPiano.ColumnHeight = 137;  
-
-            ChordRendererPiano.DisplayMode = ChordRenderer.DiplayModes.Piano;
+            ChordRendererPiano = new ChordRenderer()
+            {
+                Parent = TabPagePiano,
+                Location = new Point(TabPagePiano.Margin.Left, TabPagePiano.Margin.Top),
+                Width = TabPagePiano.ClientSize.Width,
+                Height = htotale,
+                ColumnWidth = 286,
+                ColumnHeight = 137,
+                DisplayMode = ChordRenderer.DiplayModes.Piano,
+            };
             TabPagePiano.Controls.Add(ChordRendererPiano);
+            ChordRendererPiano.HeightChanged += new HeightChangedEventHandler(ChordRendererPiano_HeightChanged);
+
             #endregion ChordRenderer Guitar
 
 
@@ -489,41 +501,42 @@ namespace Karaboss
             #region Panel Bottom
             // 5 : add a panel at the bottom
             // This panel will host the lyrics
-            pnlBottom = new Panel();
-            pnlBottom.Parent = this.tabPageDiagrams;
-            pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
-            pnlBottom.BackColor = Color.White;
-            pnlBottom.Dock = DockStyle.Bottom;            
+            pnlBottom = new Panel() {
+                Parent = this.tabPageDiagrams,
+                Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height,
+                BackColor = Color.White,
+                Dock = DockStyle.Bottom,
+            };
             tabPageDiagrams.Controls.Add(pnlBottom);
 
             // 6 add a label for text being sung
-            lblLyrics = new Label();
-            lblLyrics.Parent = pnlBottom;
-            lblLyrics.Location = new Point(0, 0);
-            lblLyrics.BackColor = Color.FromArgb(239, 244, 255);
-            lblLyrics.AutoSize = false;            
             Font fontLyrics = new Font("Arial", 32, FontStyle.Regular, GraphicsUnit.Pixel);
-            lblLyrics.Height =fontLyrics.Height + 20;
-            lblLyrics.Font = fontLyrics;
-            lblLyrics.TextAlign = ContentAlignment.MiddleCenter;           
-            lblLyrics.Dock = DockStyle.Top;
-            lblLyrics.Text = "AD Lorem ipsus";
-            
-            
+
+            lblLyrics = new Label() {
+                Parent = pnlBottom,
+                Location = new Point(0, 0),
+                BackColor = Color.FromArgb(239, 244, 255),
+                AutoSize = false,
+                Height = fontLyrics.Height + 20,
+                Font = fontLyrics,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Dock = DockStyle.Top,
+                Text = "AD Lorem ipsus",
+            };
+
 
             // 7 : add a label for text to be sung
-            lblOtherLyrics = new Label();
-            lblOtherLyrics.Parent = pnlBottom;
-            lblOtherLyrics.Location = new Point(0, lblLyrics.Height);
-            lblOtherLyrics.Size = new Size(pnlBottom.Width, pnlBottom.Height - lblLyrics.Height);
-            //lblOtherLyrics.BackColor = Color.YellowGreen; 
-            lblOtherLyrics.BackColor = Color.FromArgb(0, 163, 0);
-            lblOtherLyrics.AutoSize = false;                      
-            lblOtherLyrics.Font = fontLyrics;
-            lblOtherLyrics.TextAlign = ContentAlignment.TopCenter;                        
-            lblOtherLyrics.Dock = DockStyle.Fill;
-            lblOtherLyrics.Text = "Other lyrics";            
-            
+            lblOtherLyrics = new Label() {
+                Parent = pnlBottom,
+                Location = new Point(0, lblLyrics.Height),
+                Size = new Size(pnlBottom.Width, pnlBottom.Height - lblLyrics.Height),
+                BackColor = Color.FromArgb(0, 163, 0),
+                AutoSize = false,
+                Font = fontLyrics,
+                TextAlign = ContentAlignment.TopCenter,
+                Dock = DockStyle.Fill,
+                Text = "Other lyrics",
+            };
             
             // Add controls in reverse order, to insure that DockStyle.Fill will work properly
             pnlBottom.Controls.Add(lblOtherLyrics);
@@ -538,59 +551,64 @@ namespace Karaboss
             #region 2eme TAB
 
             #region display map chords
-            pnlDisplayMap = new Panel();
-            pnlDisplayMap.Parent = tabPageOverview;
-            pnlDisplayMap.Location = new Point(tabPageOverview.Margin.Left, tabPageOverview.Margin.Top);
-            pnlDisplayMap.Size = new Size(tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right, tabPageOverview.Height -  tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom);    
-            pnlDisplayMap.BackColor = Color.White;
-            pnlDisplayMap.AutoScroll = true;            
+            pnlDisplayMap = new Panel() {
+                Parent = tabPageOverview,
+                Location = new Point(tabPageOverview.Margin.Left, tabPageOverview.Margin.Top),
+                Size = new Size(tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right, tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom),
+                BackColor = Color.White,
+                AutoScroll = true,
+            };
             tabPageOverview.Controls.Add(pnlDisplayMap);
+
             #endregion display map chords
 
 
             #region ChordMapControl
-            ChordMapControl1 = new ChordsMapControl();
-            ChordMapControl1.Parent = pnlDisplayMap;
-            ChordMapControl1.Location = new Point(0, 0);            
-            
+            ChordMapControl1 = new ChordsMapControl() {
+                Parent = pnlDisplayMap,
+                Location = new Point(0, 0),
+                ColumnWidth = 80,
+                ColumnHeight = 80,
+                Cursor = Cursors.Hand,
+                Sequence1 = this.sequence1,
+            };
+
+            ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
+            pnlDisplayMap.Size = new Size(tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right, tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom);
 
             ChordMapControl1.WidthChanged += new MapWidthChangedEventHandler(ChordMapControl1_WidthChanged);
-            ChordMapControl1.HeightChanged += new MapHeightChangedEventHandler(ChordMapControl1_HeightChanged);            
+            ChordMapControl1.HeightChanged += new MapHeightChangedEventHandler(ChordMapControl1_HeightChanged);
             ChordMapControl1.MouseDown += new MouseEventHandler(ChordMapControl1_MouseDown);
 
-            ChordMapControl1.ColumnWidth = 80;
-            ChordMapControl1.ColumnHeight = 80;
-
-            ChordMapControl1.Cursor = Cursors.Hand;
-            ChordMapControl1.Sequence1 = this.sequence1;
-            ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);            
-            pnlDisplayMap.Size = new Size(tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right, tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom);
             pnlDisplayMap.Controls.Add(ChordMapControl1);
+
             #endregion ChordMapControl
 
             #endregion 2eme TAB 
 
 
             #region 3eme TAB
-            pnlDisplayWords = new Panel();
-            pnlDisplayWords.Parent = tabPageEdit;
-            pnlDisplayWords.Location = new Point(tabPageEdit.Margin.Left, tabPageEdit.Margin.Top);
-            pnlDisplayWords.Size = new Size(tabPageEdit.Width - tabPageEdit.Margin.Left - tabPageEdit.Margin.Right, tabPageEdit.Height - tabPageEdit.Margin.Top - tabPageEdit.Margin.Bottom);
-            pnlDisplayWords.BackColor = Color.Coral;
-            pnlDisplayWords.AutoScroll = true;
+            pnlDisplayWords = new Panel() {
+                Parent = tabPageEdit,
+                Location = new Point(tabPageEdit.Margin.Left, tabPageEdit.Margin.Top),
+                Size = new Size(tabPageEdit.Width - tabPageEdit.Margin.Left - tabPageEdit.Margin.Right, tabPageEdit.Height - tabPageEdit.Margin.Top - tabPageEdit.Margin.Bottom),
+                BackColor = Color.Coral,
+                AutoScroll = true,
+            };
             tabPageEdit.Controls.Add(pnlDisplayWords);
 
             Font fontWords = new Font("Courier New", 22, FontStyle.Regular, GraphicsUnit.Pixel);
-            txtDisplayWords = new System.Windows.Forms.TextBox();
-            txtDisplayWords.Parent = pnlDisplayWords;
-            txtDisplayWords.Location = new Point(0, 0);
-            txtDisplayWords.Multiline = true;
-            txtDisplayWords.TextAlign = HorizontalAlignment.Center;
-            txtDisplayWords.ScrollBars = ScrollBars.Both;
-            txtDisplayWords.Size = new Size(pnlDisplayWords.Width, pnlDisplayWords.Height); 
-            txtDisplayWords.Font = fontWords;
-            txtDisplayWords.Text = "La petite maison dans la prairie\r\nIl était une fois dans l'ouest";
-            txtDisplayWords.Dock = DockStyle.Fill;
+            txtDisplayWords = new System.Windows.Forms.TextBox() {
+                Parent = pnlDisplayWords,
+                Location = new Point(0, 0),
+                Multiline = true,
+                TextAlign = HorizontalAlignment.Center,
+                ScrollBars = ScrollBars.Both,
+                Size = new Size(pnlDisplayWords.Width, pnlDisplayWords.Height),
+                Font = fontWords,
+                Text = "La petite maison dans la prairie\r\nIl était une fois dans l'ouest",
+                Dock = DockStyle.Fill,
+            };
             pnlDisplayWords.Controls.Add(txtDisplayWords);
 
             #endregion 3eme TAB
@@ -1731,15 +1749,18 @@ namespace Karaboss
 
         private void ResetSequencer()
         {
-            if (timer1 != null)
-                timer1.Stop();
+            //if (timer1 != null)
+            //    timer1.Stop();
+            timer1?.Stop();
+
             scrolling = false;
             newstart = 0;
             //laststart = 0;
             _currentMeasure = -1;
             
-            if (sequencer1 != null) 
-                sequencer1.Stop();
+            //if (sequencer1 != null) 
+            //    sequencer1.Stop();
+            sequencer1?.Stop();
             PlayerState = PlayerStates.Stopped;
         }
 
@@ -2112,7 +2133,7 @@ namespace Karaboss
         private void PrintText()
         {
             String tx = txtDisplayWords.Text;
-            string message = string.Empty;
+            string message; // = string.Empty;
             string initname = Path.GetFileNameWithoutExtension(MIDIfileFullPath);
             initname += ".txt";
 
@@ -2123,8 +2144,9 @@ namespace Karaboss
                 OverwritePrompt = true,
                 DefaultExt = "txt",
                 Filter = "Text Document (*.txt)|*.txt",
+                FileName = initname,
             };
-            dialog.FileName = initname;
+            //dialog.FileName = initname;
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
@@ -2187,7 +2209,7 @@ namespace Karaboss
         /// </summary>
         private void PrintPDF()
         {
-            string message = string.Empty;
+            string message; // = string.Empty;
             string initname = Path.GetFileNameWithoutExtension(MIDIfileFullPath);
             //initname += ".pdf";
 
@@ -2230,9 +2252,10 @@ namespace Karaboss
                 OverwritePrompt = true,
                 DefaultExt = "pdf",
                 Filter = "PDF Document (*.pdf)|*.pdf",
+                FileName = initname,
             };
 
-            dialog.FileName = initname;
+            //dialog.FileName = initname;
             int numpages = 2; // (int)Math.Ceiling(height / (float)PageHeight);
 
             if (dialog.ShowDialog() == DialogResult.OK)
@@ -2267,11 +2290,11 @@ namespace Karaboss
                     FileStream stream = new FileStream(filename, FileMode.Create);
                     string title = Path.GetFileName(filename);
 
-                    Karaboss.PDFWithImages pdfdocument = new PDFWithImages(stream, title, numpages);
+                    Karaboss.PDFWithImages pdfdocument = new PDFWithImages(stream, title, numpages) {
 
-                    pdfdocument.DocWidth = width;
-                    pdfdocument.DocHeight = height;
-
+                        DocWidth = width,
+                        DocHeight = height,
+                    };
 
                     Bitmap MemoryImage = new Bitmap(width, height);
                     System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, width, height);

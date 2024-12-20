@@ -23,7 +23,7 @@ namespace Karaboss
         private float _starttime;
         private decimal _division;
 
-        frmPlayer FrmPlayer;
+        //frmPlayer FrmPlayer;
 
         private SheetMusic sheetmusic;
         TempoSymbol _tempoSymbol;
@@ -198,7 +198,7 @@ namespace Karaboss
 
         private void updDivision_ValueChanged(object sender, EventArgs e)
         {
-            decimal division = 0;
+            decimal division; // = 0;
             decimal val = updDivision.Value;
             division = val;
             if (val % PpqnClock.PpqnMinValue != 0)
@@ -257,9 +257,9 @@ namespace Karaboss
         {
             List<TempoSymbol> l = sheetmusic.lstTempoSymbols;            
             float starttime = float.Parse(txtStartTime.Text);
-            
+
             // Case of existing tempo displayed
-            int index = -1;
+            int index; // = -1;
             if (_tempoSymbol != null)
             {
                 index = l.IndexOf(_tempoSymbol);
@@ -294,7 +294,7 @@ namespace Karaboss
             float starttime = float.Parse(txtStartTime.Text);
 
             // Case of existing tempo displayed
-            int index = -1;
+            int index; // = -1;
             if (_tempoSymbol != null)
             {
                 index = l.IndexOf(_tempoSymbol);
@@ -549,8 +549,8 @@ namespace Karaboss
         /// <returns></returns>
         private bool IsNumeric(string input)
         {
-            int test;
-            return int.TryParse(input, out test);
+            //int test;
+            return int.TryParse(input, out int test);
         }
 
 

@@ -59,7 +59,7 @@ namespace Karaboss
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
 
-        private HashSet<Control> controlsToMove = new HashSet<Control>();
+        private readonly HashSet<Control> controlsToMove = new HashSet<Control>();
         #endregion
 
 
@@ -72,9 +72,9 @@ namespace Karaboss
         private int currentTextPos = 0;
         private Point Mouselocation;
 
-        private bool _bplaylist;
+        //private bool _bplaylist;
 
-        private bool closing = false;
+        //private bool closing = false;
 
         private frmLyrOptions frmLyrOptions;
         private List<int> LyricsTimes;
@@ -86,8 +86,8 @@ namespace Karaboss
 
         #region Internal lyrics separators
 
-        private string _InternalSepLines = "¼";        
-        private string _InternalSepParagraphs = "½";
+        private readonly string _InternalSepLines = "¼";        
+        private readonly string _InternalSepParagraphs = "½";
 
         #endregion
 
@@ -378,7 +378,7 @@ namespace Karaboss
         
                                     
        
-        public frmLyric(LyricsMgmt myLyricsMgmt, bool bPlayList = false)
+        public frmLyric(LyricsMgmt myLyricsMgmt)
         {
             InitializeComponent();
 
@@ -399,7 +399,7 @@ namespace Karaboss
             #endregion
 
             // Check if a playlist is played
-            _bplaylist = bPlayList;
+            //_bplaylist = bPlayList;
 
             // couleurs pour texte, nombre de lignes
             LoadKarOptions();
@@ -514,8 +514,9 @@ namespace Karaboss
             {                
                 plLyric plL = plLs[i];
 
-                pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric();
-                pcL.Type = (pictureBoxControl.plLyric.Types)plL.CharType;                                          
+                pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric() {
+                    Type = (pictureBoxControl.plLyric.Types)plL.CharType,
+                };
 
                 // Chord, lyric
                 chord = plL.Element.Item1;
@@ -558,18 +559,18 @@ namespace Karaboss
             if (!bShowBalls || plLyrics.Count == 0)
                 { return; }
             
-            string lyric;
-            string chord;
+            //string lyric;
+            //string chord;
                         
             LyricsTimes = new List<int>();
 
-            plLyric.CharTypes plType = plLyric.CharTypes.Text;
-            int plTime = 0;
+            plLyric.CharTypes plType; // = plLyric.CharTypes.Text;
+            int plTime; // = 0;
 
             for (int i = 0; i < plLyrics.Count; i++)
             {
-                chord = plLyrics[i].Element.Item1;
-                lyric = plLyrics[i].Element.Item2;
+                //chord = plLyrics[i].Element.Item1;
+                //lyric = plLyrics[i].Element.Item2;
                 plType = plLyrics[i].CharType;
                 plTime = plLyrics[i].TicksOn;
 
@@ -831,7 +832,7 @@ namespace Karaboss
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            closing = true;
+            //closing = true;
             base.OnClosing(e);
         }
 
@@ -927,13 +928,15 @@ namespace Karaboss
             {
                 btnFrmMax.Image = global::Karaboss.Properties.Resources.Max;
             }
-        }     
+        }
 
         #endregion form load close resize
 
 
         #region loadfile
-        
+
+        #region deleteme
+        /*
         private string LoadLyricsFile()
         {            
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
@@ -941,6 +944,7 @@ namespace Karaboss
 
             return ReadFile(file);
         }
+        
 
         private string ReadFile(string file)
         {
@@ -960,9 +964,13 @@ namespace Karaboss
 
             return retval;
         }
+        */
+        #endregion deleteme
+
+
         #endregion loadfile
 
-   
+
         #region pnlWindow
 
         bool bPnlVisible = false;

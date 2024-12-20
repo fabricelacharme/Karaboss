@@ -1168,6 +1168,10 @@ namespace PicControl
 
             try
             {
+                
+                if (lstLyricsLines.Count == 0)
+                    return;
+
                 // Loop line by line           
                 do
                 {

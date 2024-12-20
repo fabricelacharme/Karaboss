@@ -99,7 +99,7 @@ namespace Karaboss
         /// <returns></returns>
         public static string GetStartDirectory()
         {
-            string inipath = string.Empty;
+            string inipath; // = string.Empty;
             inipath = Properties.Settings.Default.StartDirectory;
 
             if (inipath == null || inipath == "" || inipath == "C:\\\\")
@@ -130,7 +130,7 @@ namespace Karaboss
         /// <returns></returns>
         public static string GetPlaylistGroupFile(string defFileName)
         {
-            string fileName = string.Empty;
+            string fileName; // = string.Empty;
 
             if (_m_fileplaylistGroups != null && _m_fileplaylistGroups != "")
             {
@@ -411,7 +411,7 @@ namespace Karaboss
         /// <param name="lang"></param>
         private static void ApplyResourceToControl(ComponentResourceManager resources, Control control, CultureInfo lang)
         {
-            string text = string.Empty;
+            //string text; // = string.Empty;
 
             if (control.GetType() == typeof(MenuStrip))  // See if this is a menuStrip
             {

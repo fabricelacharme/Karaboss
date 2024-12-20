@@ -64,27 +64,24 @@ namespace Karaboss
          * Paragraph is '\'  - par
          * Syllabe separator is '*'
          */
-       
+               
 
-        frmPlayer frmPlayer;
-
-        private LyricsMgmt _myLyricsMgmt;
-        //List<plLyric> _plLyrics;
+        private LyricsMgmt _myLyricsMgmt;        
         private List<plLyric> localplLyrics;
 
 
         #region Internal lyrics separators
 
-        private string _InternalSepLines = "¼";
-        private string _InternalSepParagraphs = "½";
+        private readonly string _InternalSepLines = "¼";
+        private readonly string _InternalSepParagraphs = "½";
 
         #endregion
 
 
         #region External lyrics separators
 
-        private string m_SepLine = "/";
-        private string m_SepParagraph = "\\";
+        private readonly string m_SepLine = "/";
+        private readonly string m_SepParagraph = "\\";
         
         #endregion
 
@@ -118,7 +115,7 @@ namespace Karaboss
         private string MIDIfileName = string.Empty;
 
         // Midifile characteristics
-        private double _duration = 0;  // en secondes
+        //private double _duration = 0;  // en secondes
         private int _totalTicks = 0;        
         private double _ppqn;
         private int _tempo;
@@ -129,7 +126,7 @@ namespace Karaboss
         private Font _lyricseditfont;
         private float _fontSize = 8.25f;
 
-        private List<string> lsInstruments = Sanford.Multimedia.Midi.MidiFile.LoadInstruments();
+        private readonly List<string> lsInstruments = Sanford.Multimedia.Midi.MidiFile.LoadInstruments();
 
         public frmLyricsEdit(Sequence sequence, List<plLyric> plLyrics, LyricsMgmt myLyricsMgmt, string fileName)
         {
@@ -277,7 +274,7 @@ namespace Karaboss
             _totalTicks = sequence1.GetLength();
             _tempo = sequence1.Tempo;            
             _ppqn = sequence1.Division;
-            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds            
+            //_duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds            
 
             if (sequence1.Time != null)
                 _measurelen = sequence1.Time.Measure;
@@ -293,8 +290,8 @@ namespace Karaboss
         /// <param name="sequence1"></param>
         private void LoadTracks(Sequence sequence1)
         {
-            string name = string.Empty;
-            string item = string.Empty;
+            string name; // = string.Empty;
+            string item; // = string.Empty;
 
             //item = "No melody track";
             item = Karaboss.Resources.Localization.Strings.NoMelodyTrack;
@@ -368,8 +365,8 @@ namespace Karaboss
         #region gridview
         public bool IsNumeric(string input)
         {
-            int test;
-            return int.TryParse(input, out test);
+            //int test;
+            return int.TryParse(input, out int test);
         }
 
         /// <summary>
@@ -621,18 +618,18 @@ namespace Karaboss
         /// </summary>
         /// <param name="plLyrics"></param>
         private void PopulateDataGridView(List<plLyric> lLyrics)
-        {          
+        {
             //bool bfound = false;
 
-            int plTicksOn = 0;
-            string plRealTime = "00:00.00";
-            plLyric.CharTypes plType = plLyric.CharTypes.Text;             
+            int plTicksOn; // = 0;
+            string plRealTime; // = "00:00.00";
+            plLyric.CharTypes plType; // = plLyric.CharTypes.Text;             
 
             //int plNote = 0;
-            string sNote = string.Empty;
-            string plElement = string.Empty;
+            string sNote; // = string.Empty;
+            string plElement; // = string.Empty;
 
-            int idx = 0;
+            int idx; // = 0;
 
 
             if (melodyTrack == null)
@@ -718,7 +715,7 @@ namespace Karaboss
             for (int i = 0; i < melodyTrack.Notes.Count; i++)
             {
                 plTicksOn = melodyTrack.Notes[i].StartTime;
-                plRealTime = TicksToTime(plTicksOn);
+                //plRealTime = TicksToTime(plTicksOn);
                 plNote = melodyTrack.Notes[i].Number;
                 bFound = false;
                 for (int row = 0; row < dgView.Rows.Count; row++)
@@ -755,7 +752,7 @@ namespace Karaboss
             // 3. insert Lost notes  on new rows
             if (lstNotFound.Count > 0)
             {                
-                List<MidiNote> lstNotes = new List<MidiNote>();
+                //List<MidiNote> lstNotes = new List<MidiNote>();
 
                 for (int i = 0; i < lstNotFound.Count; i++)
                 {
@@ -804,11 +801,11 @@ namespace Karaboss
             if (tracknumber >= 0 && tracknumber < sequence1.tracks.Count)
             {
                 Track track = sequence1.tracks[tracknumber];
-                int plTicksOn = 0;
-                string plRealTime = string.Empty;
-                string plType = string.Empty;
-                int plNote = 0;
-                string plElement = string.Empty;
+                int plTicksOn; // = 0;
+                string plRealTime; // = string.Empty;
+                string plType; // = string.Empty;
+                int plNote; // = 0;
+                string plElement; // = string.Empty;
 
                 int lastStartTime = -1;
 
@@ -1038,7 +1035,7 @@ namespace Karaboss
             int Row = dgView.CurrentRow.Index;
             int plTicksOn = 0;
             string plRealTime = "00:00.00";
-            string plElement = string.Empty;
+            string plElement; // = string.Empty;
 
             if (dgView.Rows[Row].Cells[COL_TICKS].Value!= null && IsNumeric(dgView.Rows[Row].Cells[COL_TICKS].Value.ToString()))
             {
@@ -1091,8 +1088,8 @@ namespace Karaboss
             int plTicksOn = 0;
             string plRealTime = "00:00.00";
             int pNote = 0;
-            string pElement = string.Empty;
-            string pReplace = string.Empty;
+            string pElement; // = string.Empty;
+            string pReplace; // = string.Empty;
 
             if (dgView.Rows[Row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[Row].Cells[COL_TICKS].Value.ToString()))
             {
@@ -1323,7 +1320,7 @@ namespace Karaboss
         private int TimeToTicks(string time)
         {
             int ti = 0;
-            double dur = 0;
+            double dur; // = 0;
 
             string[] split1 = time.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
             if (split1.Length != 2)
@@ -1358,8 +1355,8 @@ namespace Karaboss
         /// <param name="FileName"></param>
         private void SaveLRCSyllabes(string File, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
         {
-            string sTime = string.Empty;
-            string sLyric = string.Empty;
+            string sTime; // = string.Empty;
+            string sLyric; // = string.Empty;
             object vLyric;
             object vTime;
             string lrcs = string.Empty;
@@ -1422,10 +1419,10 @@ namespace Karaboss
         /// <param name="Tag_DPlus"></param>
         private void SaveLRCLines(string File, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
         {
-            string sTime = string.Empty;
-            string sLyric = string.Empty;
+            string sTime; // = string.Empty;
+            string sLyric; // = string.Empty;
             string sLine = string.Empty;
-            string sType = string.Empty;
+            string sType; // = string.Empty;
             object vLyric;
             object vTime;
             object vType;
@@ -1558,8 +1555,8 @@ namespace Karaboss
             string fName = "New.lrc";
             string fPath = Path.GetDirectoryName(MIDIfileName);
 
-            string fullName = string.Empty;
-            string defName = string.Empty;
+            string fullName; // = string.Empty;
+            string defName; // = string.Empty;
 
             #region search name
             if (fPath == null || fPath == "")
@@ -1653,8 +1650,8 @@ namespace Karaboss
             string fName = "New.lrc";
             string fPath = Path.GetDirectoryName(MIDIfileName);
 
-            string fullName = string.Empty;
-            string defName = string.Empty;
+            string fullName; // = string.Empty;
+            string defName; // = string.Empty;
 
             #region search name
             if (fPath == null || fPath == "")
@@ -1748,8 +1745,8 @@ namespace Karaboss
             string fName = "New.txt";
             string fPath = Path.GetDirectoryName(MIDIfileName);
 
-            string fullName = string.Empty;
-            string defName = string.Empty;
+            string fullName; // = string.Empty;
+            string defName; // = string.Empty;
 
             #region search name
             if (fPath == null || fPath == "")
@@ -1813,10 +1810,10 @@ namespace Karaboss
 
         private void SaveTextWithSep(string File)
         {
-            string sTime = string.Empty;
-            string sLyric = string.Empty;
+            //string sTime; // = string.Empty;
+            string sLyric; // = string.Empty;
             string sLine = string.Empty;
-            string sType = string.Empty;
+            string sType; // = string.Empty;
             object vLyric;
             object vTime;
             object vType;
@@ -1917,7 +1914,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuEditLoadTrack_Click(object sender, EventArgs e)
         {
-            DialogResult dr = new DialogResult();
+            DialogResult dr; // = new DialogResult();
             frmLyricsSelectTrack TrackDialog = new frmLyricsSelectTrack(sequence1);
             dr = TrackDialog.ShowDialog();
 
@@ -2016,13 +2013,13 @@ namespace Karaboss
             }
 
             // write lyrics on each line
-            string s = string.Empty;
+            string s; // = string.Empty;
 
             int plTicksOn = 0;
             string plRealTime = "00:00.00";
             int plNote = 0;
-            string plType = "text";            
-            string plElement = "";
+            string plType; // = "text";            
+            string plElement; // = "";
 
 
             for (int i = 0; i < result.Length; i++)
@@ -2173,10 +2170,10 @@ namespace Karaboss
             }
 
             int plTicksOn = 0;
-            string plRealTime = string.Empty;
-            string plType = string.Empty;
+            string plRealTime; // = string.Empty;
+            string plType; // = string.Empty;
             string plNote = string.Empty;
-            string plElement = string.Empty;            
+            string plElement; // = string.Empty;            
             int row = 0;
 
             for (int i = 0; i < lyrics.Count; i++)
@@ -2456,7 +2453,7 @@ namespace Karaboss
         private void MnuOffsetDown_Click(object sender, EventArgs e)
         {
             int r = dgView.CurrentRow.Index;
-            int row = 0;
+            int row; // = 0;
 
             for (row = dgView.Rows.Count - 1; row > r; row--) 
             {
@@ -2475,7 +2472,7 @@ namespace Karaboss
         private void MnuOffsetUp_Click(object sender, EventArgs e)
         {
             int r = dgView.CurrentRow.Index;
-            int row = 0;
+            int row; // = 0;
 
             for (row = r; row <= dgView.Rows.Count - 2; row++)
             {
@@ -2504,9 +2501,9 @@ namespace Karaboss
 
                 string fShortName = fName.Replace("*", "");
                 if (fShortName == fName)
-                    fName = fName + "*";
+                    fName += "*";
 
-                fName = fName + fExt;         
+                fName += fExt;         
                 SetTitle(fName);
             }
         }
@@ -2558,9 +2555,9 @@ namespace Karaboss
         {
             string fName = "New.kar";
             string fPath = Path.GetDirectoryName(MIDIfileName);
-            
-            string fullName = string.Empty;
-            string defName = string.Empty;
+
+            string fullName; // = string.Empty;
+            string defName; // = string.Empty;
 
             #region search name
             if (fPath == null || fPath == "")
@@ -2641,11 +2638,11 @@ namespace Karaboss
         /// </summary>
         private void LoadModifiedLyrics()
         {
-            int plTicksOn = 0;
-            string val = string.Empty;
-            plLyric.CharTypes plType = plLyric.CharTypes.Text;
-            string plElement = string.Empty;
-            string plReplace = string.Empty;
+            int plTicksOn; // = 0;
+            string val; // = string.Empty;
+            plLyric.CharTypes plType; // = plLyric.CharTypes.Text;
+            string plElement; // = string.Empty;
+            //string plReplace; // = string.Empty;
 
 
             localplLyrics = new List<plLyric>();
@@ -2752,11 +2749,11 @@ namespace Karaboss
         /// <param name="lLyrics"></param>
         private void PopulateTextBox(List<plLyric> lLyrics)
         {
-            string plElement = string.Empty;            
-            string tx = string.Empty;            
-            int iParagraph = -1;            
-            int iLineFeed = -1;
-            string reste = string.Empty;
+            string plElement; // = string.Empty;            
+            string tx = string.Empty;
+            int iParagraph; // = -1;            
+            int iLineFeed; // = -1;
+            string reste; // = string.Empty;
 
             for (int i = 0; i < lLyrics.Count; i++)
             {
@@ -2809,7 +2806,7 @@ namespace Karaboss
                        
             // Text before current
             string tx = string.Empty;
-            string s = string.Empty;
+            string s; // = string.Empty;
 
             for (int row = 0; row < r; row++)
             {
@@ -2854,14 +2851,14 @@ namespace Karaboss
         /// </summary>
         private void HeightsToDurations()
         {
-            int plTicksOn = 0;
+            int plTicksOn; // = 0;
             int n = 0;
             int averageDuration = 0;
-            int Duration = 0;
-            int H = 0;
+            int Duration; // = 0;
+            int H; // = 0;
             int H0 = 22;
-            int newH = 0;
-            int delta = 0;
+            int newH; // = 0;
+            int delta; // = 0;
             int previousTime = 0;
 
             // Average duration
@@ -2951,7 +2948,7 @@ namespace Karaboss
         private void DisplayTags()
         {
             string cr = Environment.NewLine;
-            int i = 0;
+            //int i = 0;
 
             // Classic Karaoke Midi tags
             /*
@@ -2964,27 +2961,27 @@ namespace Karaboss
             */
             if (sequence1.KTag != null)
             {
-                for (i = 0; i < sequence1.KTag.Count; i++)
+                for (int i = 0; i < sequence1.KTag.Count; i++)
                 {
                     txtKTag.Text += sequence1.KTag[i] + cr;
                 }
-                for (i = 0; i < sequence1.WTag.Count; i++)
+                for (int i = 0; i < sequence1.WTag.Count; i++)
                 {
                     txtWTag.Text += sequence1.WTag[i] + cr;
                 }
-                for (i = 0; i < sequence1.TTag.Count; i++)
+                for (int i = 0; i < sequence1.TTag.Count; i++)
                 {
                     txtTTag.Text += sequence1.TTag[i] + cr;
                 }
-                for (i = 0; i < sequence1.ITag.Count; i++)
+                for (int i = 0; i < sequence1.ITag.Count; i++)
                 {
                     txtITag.Text += sequence1.ITag[i] + cr;
                 }
-                for (i = 0; i < sequence1.VTag.Count; i++)
+                for (int i = 0; i < sequence1.VTag.Count; i++)
                 {
                     txtVTag.Text += sequence1.VTag[i] + cr;
                 }
-                for (i = 0; i < sequence1.LTag.Count; i++)
+                for (int i = 0; i < sequence1.LTag.Count; i++)
                 {
                     txtLTag.Text += sequence1.LTag[i] + cr;
                 }
@@ -2999,10 +2996,10 @@ namespace Karaboss
         private void btnSaveTags_Click(object sender, EventArgs e)
         {
             bool bModified = false;
-            string tx = string.Empty;         
+            string tx; // = string.Empty;         
 
             string[] S;
-            string newline = string.Empty;
+            string newline; // = string.Empty;
 
             sequence1.ITag.Clear();
             sequence1.KTag.Clear();
@@ -3084,7 +3081,7 @@ namespace Karaboss
         /// </summary>
         private void AddTags()
         {
-            int i = 0;
+            int i; // = 0;
 
             // @#Title      Title
             // @#Artist     Artist
@@ -3128,7 +3125,7 @@ namespace Karaboss
             AddTag(Title);
 
             // Classic Karaoke tags
-            string tx = string.Empty;
+            string tx; // = string.Empty;
             track.RemoveTagsEvent("@I");
             track.RemoveTagsEvent("@K");
             track.RemoveTagsEvent("@L");
