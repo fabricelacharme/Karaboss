@@ -2002,8 +2002,11 @@ namespace Karaboss
                 {
                     if (Application.OpenForms.OfType<frmLyric>().Count() == 0)
                     {
-                        // this is the first item of the playlist => load frmLyrics
-                        DisplayLyricsForm();
+                        if ((bKaraokeAlwaysOn && myLyricsMgmt.bHasLyrics) || bShowChords)
+                        {
+                            // this is the first item of the playlist => load frmLyrics
+                            DisplayLyricsForm();
+                        }
                     }
                     else if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
                     {
