@@ -127,6 +127,19 @@ namespace Karaboss.Lyrics
             set { _lyrictype = value; }
         }
 
+
+        public bool bHasLyrics
+        {
+            get {
+                if (OrgplLyrics.Count > 0)
+                    return true;
+                else if (plLyrics != null && plLyrics.Count > 0)
+                    return true;
+                else
+                    return false; }
+        }
+
+
         // character that surrounds each chord
         // '(,)' pour (C), '[, ]' pour [C]
         private (string, string) _chordDelimiter;

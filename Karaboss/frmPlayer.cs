@@ -70,7 +70,7 @@ namespace Karaboss
 
         // Lyrics management
         public LyricsMgmt myLyricsMgmt;
-        private bool bHasLyrics = false;
+        //private bool bHasLyrics = false;
         private readonly bool bShowChords;
 
         // SlideShow directory
@@ -2024,7 +2024,7 @@ namespace Karaboss
                     }
                 }
                 // N0 playlist
-                else if (bKaraokeAlwaysOn && bHasLyrics)
+                else if ((bKaraokeAlwaysOn && myLyricsMgmt.bHasLyrics) || bShowChords)
                 {
                     DisplayLyricsForm();
                 }
@@ -2709,7 +2709,7 @@ namespace Karaboss
             // load lyrics and chords if included in lyrics
             //  ********************** Why not load embedded chords here if bShowChords is true ? *****************
             myLyricsMgmt = new LyricsMgmt(sequence1, bShowChords);
-            bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0; // myLyricsMgmt.LyricType != LyricTypes.None;
+            //bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0; 
                        
 
             laststart = 0;
@@ -2742,7 +2742,7 @@ namespace Karaboss
             // Recherche si des lyrics existent et affiche la forme frmLyric
             mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
 
-            if (bKaraokeAlwaysOn && bHasLyrics)
+            if (bKaraokeAlwaysOn && myLyricsMgmt.bHasLyrics)
                 DisplayLyricsForm();
 
             // Display log file
@@ -4028,10 +4028,8 @@ namespace Karaboss
                 trk.LyricsText.Clear();
             }
 
-            myLyricsMgmt.plLyrics.Clear();
-            // FAB 28/08
-            //myLyric = new CLyric();
-            bHasLyrics = false;
+            myLyricsMgmt.plLyrics.Clear();            
+            //bHasLyrics = false;
 
             // Ferme le formulaire frmLyric
             if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
@@ -4042,10 +4040,7 @@ namespace Karaboss
             // File was modified
             FileModified();
         }
-
-
-        
-      
+             
 
         /// <summary>
         /// Load form frmLyrics       
@@ -4116,69 +4111,12 @@ namespace Karaboss
 
             }
         }
+        
 
-        #region deleteme
-            /*
-            /// <summary>
-            /// Lyrics type = Text
-            /// </summary>
-            /// <returns></returns>
-            private int HasLyricsText()
-            {
-                int max = -1;
-                int track = -1;
-                for (int i = 0; i < sequence1.tracks.Count; i++)
-                {
-                    if ( sequence1.tracks[i].TotalLyricsT != null )
-                    {
-                        if (sequence1.tracks[i].TotalLyricsT.Length > max)
-                        {
-                            // BUG : on écrit des lyrics text dans n'importe quelle piste  ???
-                            max = sequence1.tracks[i].TotalLyricsT.Length;
-                            track = i;
-                        }                    
-                    }
-                }
-                return track;
-            }
-
-            /// <summary>
-            /// Lyrics type = Lyric
-            /// </summary>
-            /// <returns></returns>
-            private int HasLyrics()
-            {
-                string tx = string.Empty;
-                int max = 0;
-                int trk = -1;
-
-                for (int i = 0; i < sequence1.tracks.Count; i++)
-                {
-                    tx = string.Empty;
-                    if (sequence1.tracks[i].TotalLyricsL != null)
-                    {
-                        tx = sequence1.tracks[i].TotalLyricsL;
-                        if (tx.Length > max)
-                        {
-                            max = tx.Length;
-                            trk = i;
-                        }                    
-                    }
-                }
-                if (max > 0)
-                {
-                    return trk;
-                }
-
-                return -1;
-            }
-            */
-            #endregion deleteme
-
-            #endregion Lyrics
+        #endregion Lyrics
 
 
-            #region handle messages
+        #region handle messages
 
         private void SheetMusic_CurrentNoteChanged(MidiNote n)
         {            
@@ -4242,7 +4180,7 @@ namespace Karaboss
                 sequence1.Format = 1;
                 
                 myLyricsMgmt = new LyricsMgmt(sequence1, bShowChords);
-                bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0; //myLyricsMgmt.LyricType != LyricTypes.None;                
+                //bHasLyrics =  myLyricsMgmt.OrgplLyrics.Count > 0;                 
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -4322,7 +4260,7 @@ namespace Karaboss
                     else
                     {
                         // the user wants to edit the file 
-                        if (bKaraokeAlwaysOn && bHasLyrics)
+                        if (bKaraokeAlwaysOn && myLyricsMgmt.bHasLyrics)
                             DisplayLyricsForm();
                     }
                 }
@@ -4380,7 +4318,7 @@ namespace Karaboss
                 sequence1.Format = 1;
                 
                 myLyricsMgmt = new LyricsMgmt(sequence1, bShowChords);
-                bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0; //  myLyricsMgmt.LyricType != LyricTypes.None;                
+                //bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0;                 
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -4462,7 +4400,7 @@ namespace Karaboss
                         PlayPauseMusic();
                     else
                     {
-                        if (bKaraokeAlwaysOn && bHasLyrics)
+                        if (bKaraokeAlwaysOn && myLyricsMgmt.bHasLyrics)
                             DisplayLyricsForm();
                     }
                 }
@@ -4522,7 +4460,7 @@ namespace Karaboss
                 sequence1.Format = 1;
                 
                 myLyricsMgmt = new LyricsMgmt(sequence1, bShowChords);
-                bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0; // myLyricsMgmt.LyricType != LyricTypes.None;                
+                //bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0;                 
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -4607,7 +4545,7 @@ namespace Karaboss
                         PlayPauseMusic();
                     else
                     {
-                        if (bKaraokeAlwaysOn && bHasLyrics)
+                        if (bKaraokeAlwaysOn && myLyricsMgmt.bHasLyrics)
                             DisplayLyricsForm();
                     }
                 }
@@ -7404,7 +7342,7 @@ namespace Karaboss
             SetTitle("New.mid");
 
             myLyricsMgmt = new LyricsMgmt(sequence1, bShowChords);
-            bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0; // myLyricsMgmt.LyricType != LyricTypes.None;            
+            //bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0;             
 
             // Display midi file infos
             DisplayFileInfos();
