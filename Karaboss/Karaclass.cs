@@ -61,6 +61,7 @@ namespace Karaboss
         public static string m_SepParagraph;
         public static bool m_ShowParagraph;     // Lyrics : Display a blanck line between paragraphs
         public static bool m_ForceUppercase;    // Lyrics : converts every character to uppercase
+        public static bool m_ShowChords;        // Display chords with the lyrics (included in lyrics or discovered by Karaboss)
 
         public static bool m_SaveDefaultOutputDevice;   // Save default MIDI output device        
 

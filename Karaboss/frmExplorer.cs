@@ -799,6 +799,7 @@ namespace Karaboss
             Karaclass.m_SepParagraph = Properties.Settings.Default.SepParagraph;
             Karaclass.m_ShowParagraph = Properties.Settings.Default.bShowParagraph;
             Karaclass.m_ForceUppercase = Properties.Settings.Default.bForceUppercase;
+            Karaclass.m_ShowChords = Properties.Settings.Default.bShowChords;
 
             Karaclass.m_SaveDefaultOutputDevice = Properties.Settings.Default.SaveDefaultOutputDevice;
 
@@ -2897,6 +2898,9 @@ namespace Karaboss
             m_configurationForm.AddConfigItem(config);
 
             config = new ConfigurationTreeNode(Strings.MidiEditor, new MidiEditorControl(Strings.MidiEditor));
+            m_configurationForm.AddConfigItem(config);
+
+            config = new ConfigurationTreeNode(Strings.Chords, new ChordsControl(Strings.Chords));
             m_configurationForm.AddConfigItem(config);
 
 

@@ -1260,5 +1260,12 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("QuestionSaveFile", resourceCulture);
             }
         }
+        internal static string Chords
+        {
+            get
+            {
+                return ResourceManager.GetString("Chords", resourceCulture);
+            }
+        }
     }
 }

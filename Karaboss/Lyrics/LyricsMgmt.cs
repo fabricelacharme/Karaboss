@@ -174,7 +174,7 @@ namespace Karaboss.Lyrics
             set { _gridbeatchords = value; } 
         }
        
-        public bool BshowChords { get; set; }
+        public bool bShowChords { get; set; }
               
         
         #endregion public
@@ -186,7 +186,7 @@ namespace Karaboss.Lyrics
         /// <param name="sequence"></param>
         public LyricsMgmt(Sequence sequence, bool ShowChords) 
         {                        
-            BshowChords = ShowChords;
+            bShowChords = ShowChords;
             
             _lyricstracknum = -1;
             _melodytracknum = -1;
@@ -215,6 +215,61 @@ namespace Karaboss.Lyrics
 
         }
 
+        /// <summary>
+        /// Reload lyrics with choosen options
+        /// </summary>
+        public void ResetDisplayChordsOptions(bool ShowChords)
+        {
+            bShowChords = ShowChords;
+
+            if (bShowChords)
+            {
+                // ===================
+                // Show chords                                
+                // ===================
+
+                // 1. If chords are  already included in lyrics
+                // Add false lyrics in chords alone (instrumental) ???
+                if (bHasChordsInLyrics)
+                {
+                    FullExtractLyrics();
+                }
+                // 2. If chords are not included in lyrics,
+                // we have to detect chords and add them to the lyrics or add them to an extra
+                else if (!bHasChordsInLyrics)
+                {
+                    if (plLyrics.Count == 0)
+                        FullExtractLyrics();
+
+                    PopulateEmbeddedChords();
+
+                    // Clean lyrics HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    CleanLyrics();
+
+                }
+            }
+            else
+            {
+                // ===================
+                // Do not show chords
+                // ===================
+
+                // 1. If chords are already included in lyrics
+                // Remove false lyrics added to chords alone (instrumental)
+                if (bHasChordsInLyrics)
+                {
+                    FullExtractLyrics();
+                }
+                // 2. If chords are not included in lyrics
+                // Chords have been added by detection to existing lyrics but also on additional false lyrics (chords alone in instrumentals)
+                // So we have to delete all additions made by the chord analysis.                
+                else if (!bHasChordsInLyrics)
+                {
+                    // Remove detected chords by re-extracting all
+                    FullExtractLyrics();
+                }
+            }
+        }
 
         #region arrange lyrics
 
@@ -750,7 +805,7 @@ namespace Karaboss.Lyrics
                 // Move linefeeds to the end of the previous lyric
                 FixLinefeeds();
 
-                if (bHasChordsInLyrics & BshowChords)
+                if (bHasChordsInLyrics & bShowChords)
                 {
                     // Add chords found in lyrics in the list pllyrics
                     ExtractChordsInLyrics();
@@ -1322,7 +1377,7 @@ namespace Karaboss.Lyrics
                     if (bFound)
                     {
 
-                        if (BshowChords)
+                        if (bShowChords)
                         {
                             lyricElement = formateLyricOfDetectedChord(chordElement, lyricElement);
                         }
@@ -2561,26 +2616,7 @@ namespace Karaboss.Lyrics
                 //_nbBeats = (int)Math.Ceiling(_totalTicks / (float)beatDuration);
                 _nbBeats = _nbMeasures * nbBeatsPerMeasure;
             }
-        }
-
-        #region deleteme
-        /*
-        /// <summary>
-        /// Get time inside measure
-        /// </summary>
-        /// <param name="ticks"></param>
-        /// <returns></returns>
-        private float GetTimeInMeasure(int ticks)
-        {
-            // Num measure
-            int curmeasure = 1 + ticks / _measurelen;
-            // Temps dans la mesure
-            float timeinmeasure = sequence1.Numerator - ((curmeasure * _measurelen - ticks) / (float)(_measurelen / sequence1.Numerator));
-
-            return timeinmeasure;
-        }
-        */
-        #endregion deleteme
+        }     
 
         #endregion midi mesures
     }

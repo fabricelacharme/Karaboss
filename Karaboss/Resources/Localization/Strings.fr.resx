@@ -507,4 +507,7 @@
   <data name="QuestionSaveFile" xml:space="preserve">
     <value>Le fichier a été modifié, voulez-vous l'enregistrer ?</value>
   </data>
+  <data name="Chords" xml:space="preserve">
+    <value>Accords</value>
+  </data>
 </root>
