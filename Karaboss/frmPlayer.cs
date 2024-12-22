@@ -3747,7 +3747,8 @@ namespace Karaboss
                 // Window closed
                 DisplayLyricsForm();
                 // Reset display
-                myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);                
+                myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
+                frmLyric.LoadSong(myLyricsMgmt.plLyrics);
             }
 
             // Refresh display of lyrics
