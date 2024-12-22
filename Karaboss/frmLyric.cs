@@ -393,29 +393,11 @@ namespace Karaboss
             controlsToMove.Add(this.pnlTittle);
             controlsToMove.Add(this.lblTittle);
             #endregion
-
-            // Check if a playlist is played
-            //_bplaylist = bPlayList;
+           
 
             // colours for text, chords, number of lines etc...
             LoadKarOptions();
-
-            // parameters of chords included in lyrics
-            // if "Show Chords" is choosen,  ResetDisplayChordsOptions will be called by the change of the property bShowChords
-            // if "Do not show chords" is choosen, this is the default value for the property bShowChords and therefore nothing happens
-            // so we have to load lyrics here
-            
-            /*
-            if (!bShowChords)
-            {                
-                if (myLyricsMgmt.plLyrics.Count == 0)
-                    myLyricsMgmt.FullExtractLyrics();
-
-                _plLyrics = myLyricsMgmt.plLyrics;
-                LoadSong(_plLyrics);                
-            }
-            */
-
+           
             AddMouseMoveHandler(this);           
         }
 
@@ -684,10 +666,8 @@ namespace Karaboss
 
                 // Chords
                 _chordNextColor = Properties.Settings.Default.ChordNextColor;
-                _chordHighlightColor = Properties.Settings.Default.ChordHighlightColor;
-                //bShowChords = Properties.Settings.Default.bShowChords;
-                chkChords.Checked = Karaclass.m_ShowChords;
-                //_bShowChords = Karaclass.m_ShowChords;
+                _chordHighlightColor = Properties.Settings.Default.ChordHighlightColor;                
+                chkChords.Checked = Karaclass.m_ShowChords;                
 
 
                 // Number of Lines to display
@@ -1000,7 +980,9 @@ namespace Karaboss
             {
                 Karaclass.m_ShowChords = chkChords.Checked;
 
-                bShowChords = chkChords.Checked;
+
+                // ??????????????
+                //bShowChords = chkChords.Checked;
 
                 // Save option
                 Properties.Settings.Default.bShowChords = Karaclass.m_ShowChords;
