@@ -1819,7 +1819,7 @@ namespace Karaboss
             object vType;
             string lrcs = string.Empty;
             string cr = "\r\n";
-            string sep = "!";
+            //string sep = "!";
             
             bool bStartLine = true;
 
@@ -1842,13 +1842,13 @@ namespace Karaboss
                     {
                         if (bStartLine)
                         {                                                        
-                            sLine = sLyric + sep;
+                            sLine = sLyric + _InternalSepLines;
                             bStartLine = false;
                         }
                         else
                         {
                             // Line continuation
-                            sLine += sLyric + sep;
+                            sLine += sLyric + _InternalSepLines;
                         }
                     }
                     else if (sType == "cr" || sType == "par")
@@ -1871,19 +1871,24 @@ namespace Karaboss
                         
             // Save last line
             if (sLine != "")
-            {
-                sLine = sLine.Replace("_", " ");
-                lrcs += sLine + cr;
+            {                
+                lrcs += sLine; // + cr;
             }
 
             
             // * "Oh!_la!_la_la!_vie!_en!_rose!\r\nLe!_rose!_qu'on!_nous!_pro!pose!\r\nD'avoir!_les!_quan!ti!tés!_d'choses!\r\nQui!_donnent!_en!vie!_d'autre!_chose!\r\nAie!_on!_nous!_fait!_croire!\r\nQue!_le!_bonheur!_c'est!_d'a!voir!\r\nDe!_l'avoir!_plein!_nos!_ar!moires!\r\nDérisions!_de!_nous!_dé!ri!soires!\r\ncar...!\r\nFoule!_sen!ti!men!tale!\r\nOn_a!_soif!_d'idéal!\r\nAttiré!_par!_les!_é!toiles,!_les!_voiles!\r\nQue!_des!_choses!_pas!_com!mer!ciales!\r\nFoule!_sen!ti!men!tale!\r\nIl!_faut!_voir!_comme!_on!_nous!_parle!\r\nComme!_on!_nous!_parle!\r\nIl!_se!_dé!ga!ge!\r\nDe!_ces!_cartons!_d'em!bal!lage!\r\nDes!_gens!_lavés!_hors!_d'u!sage!\r\nEt!_triste!_et!_sans_au!cun!_a!van!tage!\r\nOn!_nous!_in!flige!\r\nDes!_désirs!_qui!_nous!_af!fligent!\r\nOn!_nous!_prend!_faut!_pas!_dé!con!ner!_dès!_qu'on!_est!_né!\r\nPour!_des!_cons!_alors!_qu'on!_est!\r\nDes!_foule!_sen!ti!men!tale!\r\nOn_a!_soif!_d'idéal!\r\nAttiré!_par!_les!_é!toiles,!_les!_voiles!\r\nQue!_des!_choses!_pas!_com!mer!ciales!\r\nFoule!_sen!ti!men!tale!\r\nIl!_faut
             
-            lrcs = lrcs.Replace(sep + "_", " ");
-            lrcs = lrcs.Replace("_" + sep, " ");
-            lrcs = lrcs.Replace(sep + cr, cr);
+            lrcs = lrcs.Replace(_InternalSepLines + "_", " ");
+            lrcs = lrcs.Replace("_" + _InternalSepLines, " ");
+            lrcs = lrcs.Replace(_InternalSepLines + cr, cr);
             lrcs = lrcs.Replace(" " + cr, cr);
-            lrcs = lrcs.Replace(sep, "*");
+            lrcs = lrcs.Replace(_InternalSepLines, "*");
+
+            // Delete last sep
+            if (lrcs.Length > 0 && (lrcs.Substring(lrcs.Length - 1, 1) == "*") )
+            {
+                lrcs = lrcs.Substring(0, lrcs.Length - 1);                
+            }
 
             try
             {
@@ -1979,11 +1984,17 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Load text without times
+        /// Use case : create from scratch, no lyrics at all 
+        /// 1. select a track with notes
+        /// 2. Loadt text file
         /// </summary>
         /// <param name="source"></param>
         private void LoadTextFile(string source)
         {
+            bool bUpdateMode = false;
+            string s;
+
+
             // Split into peaces of words
             source = source.Replace("\r\n", " <cr> ");
             source = source.Replace(" <cr>  <cr> ", " <cr> <cr> ");
@@ -2002,6 +2013,17 @@ namespace Karaboss
                     result[i] = "<cr>";
             }
 
+            // Check existence of cr or par
+            for (int i = 0; i < dgView.Rows.Count - 1; i++)
+            {
+                s = dgView.Rows[i].Cells[COL_TYPE].Value.ToString();
+                if (s == "cr" || s == "par")
+                {
+                    bUpdateMode = true;
+                    break;
+                }
+            }
+
             // Add missing lines before
             int addl = result.Length - dgView.Rows.Count;
             if (addl > 0)
@@ -2012,14 +2034,12 @@ namespace Karaboss
                 }
             }
 
-            // write lyrics on each line
-            string s; // = string.Empty;
-
+            // write lyrics on each line            
             int plTicksOn = 0;
             string plRealTime = "00:00.00";
             int plNote = 0;
-            string plType; // = "text";            
-            string plElement; // = "";
+            string plType;         
+            string plElement; 
 
 
             for (int i = 0; i < result.Length; i++)
@@ -2082,11 +2102,30 @@ namespace Karaboss
                             dgView.Rows[i].Cells[COL_NOTE].Value = 0;
 
                         if (dgView.Rows[i].Cells[COL_NOTE].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_NOTE].Value.ToString()))
-                            plNote = Convert.ToInt32(dgView.Rows[i].Cells[COL_NOTE].Value);                        
+                            plNote = Convert.ToInt32(dgView.Rows[i].Cells[COL_NOTE].Value);
 
-                        // Insert new row
-                        dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);                      
 
+                        // When we start from scratch, ie select a track with notes and add lyrics from text, there is no linefeed
+                        // So we have to unsert new rows with linefeeds
+                        // Insert new row 
+                        if (!bUpdateMode)
+                        {
+                            dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);
+                        }
+                        else
+                        {
+
+                            // other use case: When we want to update the lyrics, the linefeeds already exist
+                            // So we just have to update the lines
+                            // Udpdate
+                            
+                            dgView.Rows[i].Cells[COL_TICKS].Value = plTicksOn;
+                            dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
+                            dgView.Rows[i].Cells[COL_TYPE].Value = plType;
+                            dgView.Rows[i].Cells[COL_NOTE].Value = plNote;
+                            dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
+                            
+                        }
                     }
                 }
             }
@@ -2144,6 +2183,135 @@ namespace Karaboss
         /// </summary>
         /// <param name="Source"></param>
         private void LoadLRCFile(string Source)
+        {
+            bool bUpdateMode = false;
+            int plTicksOn = 0;
+            string plRealTime; 
+            string plType;
+            int plNote = 0; // = string.Empty;
+            string plElement; 
+            //int row = 0;
+            string s;
+
+
+            // Check existence of cr or par
+            for (int i = 0; i < dgView.Rows.Count - 1; i++)
+            {
+                s = dgView.Rows[i].Cells[COL_TYPE].Value.ToString();
+                if (s == "cr" || s == "par")
+                {
+                    bUpdateMode = true;
+                    break;
+                }
+            }
+
+
+            Karaboss.Lrc.SharedFramework.Lyrics lyrics = new Karaboss.Lrc.SharedFramework.Lyrics();
+            lyrics.ArrangeLyrics(Source);
+
+            for (int i = 0; i < lyrics.Count; i++)
+            {
+                if (i < dgView.Rows.Count)
+                {
+                    LyricsLine lyline = lyrics[i];
+                    plRealTime = lyline.Timeline;
+                    s = lyline.OriLyrics;
+
+                    if (s != m_SepLine && s != m_SepParagraph)
+                    {
+                        // insert TEXT
+                        plType = "text";
+
+                        if (dgView.Rows[i].Cells[COL_TICKS].Value == null)
+                        {
+                            dgView.Rows[i].Cells[COL_TICKS].Value = plTicksOn;
+                            plRealTime = TicksToTime(plTicksOn);
+                            dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
+                        }
+                        else
+                        {
+                            plTicksOn = 0;
+                            if (IsNumeric(dgView.Rows[i].Cells[COL_TICKS].Value.ToString()))
+                                plTicksOn = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
+                        }
+
+                        dgView.Rows[i].Cells[COL_TYPE].Value = plType;
+
+                        if (dgView.Rows[i].Cells[COL_NOTE].Value == null)
+                            dgView.Rows[i].Cells[COL_NOTE].Value = 0;
+
+                        if (s.EndsWith("#"))
+                            plElement = s.Substring(0, s.Length - 1);
+                        else
+                            plElement = s + "_";
+
+                        dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
+
+                    }
+                    else if (s == m_SepLine || s == m_SepParagraph)
+                    {
+                        if (s == m_SepLine)
+                        {                            
+                            plType = "cr";
+                            plElement = m_SepLine;
+                        }
+                        else
+                        {
+                            plType = "par";
+                            plElement = m_SepParagraph;
+                        }
+
+                        if (dgView.Rows[i].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_TICKS].Value.ToString()))
+                        {
+                            plTicksOn = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
+                            plRealTime = TicksToTime(plTicksOn);
+                        }
+                        if (dgView.Rows[i].Cells[COL_NOTE].Value == null)
+                            dgView.Rows[i].Cells[COL_NOTE].Value = 0;
+
+                        if (dgView.Rows[i].Cells[COL_NOTE].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_NOTE].Value.ToString()))
+                            plNote = Convert.ToInt32(dgView.Rows[i].Cells[COL_NOTE].Value);
+
+
+                        // When we start from scratch, ie select a track with notes and add lyrics from text, there is no linefeed
+                        // So we have to unsert new rows with linefeeds
+                        // Insert new row 
+                        if (!bUpdateMode)
+                        {
+                            dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);
+                        }
+                        else
+                        {
+
+                            // other use case: When we want to update the lyrics, the linefeeds already exist
+                            // So we just have to update the lines
+                            // Udpdate
+
+                            dgView.Rows[i].Cells[COL_TICKS].Value = plTicksOn;
+                            dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
+                            dgView.Rows[i].Cells[COL_TYPE].Value = plType;
+                            dgView.Rows[i].Cells[COL_NOTE].Value = plNote;
+                            dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
+
+                        }
+                    }
+
+                }
+            }
+
+
+            //Load modification into local list of lyrics
+            LoadModifiedLyrics();
+            PopulateTextBox(localplLyrics);
+
+            // Color separators
+            ColorSepRows();
+
+            // File was modified
+            FileModified();
+
+        }
+        private void LoadLRCFile2(string Source)
         {
             Karaboss.Lrc.SharedFramework.Lyrics lyrics = new Karaboss.Lrc.SharedFramework.Lyrics();
             lyrics.ArrangeLyrics(Source);
