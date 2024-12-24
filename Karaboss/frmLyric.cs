@@ -979,10 +979,7 @@ namespace Karaboss
             if (chkChords.Checked != Karaclass.m_ShowChords)
             {
                 Karaclass.m_ShowChords = chkChords.Checked;
-
-
-                // ??????????????
-                //bShowChords = chkChords.Checked;
+                pBox.bShowChords = Karaclass.m_ShowChords;
 
                 // Save option
                 Properties.Settings.Default.bShowChords = Karaclass.m_ShowChords;
@@ -990,11 +987,9 @@ namespace Karaboss
 
                 // Reload lyrics with choosen options
                 myLyricsMgmt.ResetDisplayChordsOptions(chkChords.Checked);
-
-                pBox.bShowChords = Karaclass.m_ShowChords;
-
+                                               
                 // Load modified lyrics into the picturebox
-                LoadSong(myLyricsMgmt.plLyrics);
+                LoadSong(myLyricsMgmt.plLyrics);                
 
             }
 

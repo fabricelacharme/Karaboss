@@ -4030,6 +4030,7 @@ namespace Karaboss
             
 
             DisplayLyricsForm();
+            
             myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
 
             // If no lyrics and a playlist, display something in the center
