@@ -4034,10 +4034,19 @@ namespace Karaboss
 
             // If no lyrics and a playlist, display something in the center
             if (currentPlaylistItem != null && myLyricsMgmt.OrgplLyrics.Count == 0 && !Karaclass.m_PauseBetweenSongs && Karaclass.m_CountdownSongs == 0 && !Karaclass.m_ShowChords)
-            {
-                string centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song)
+            {                
+                string sSinger = currentPlaylistItem.KaraokeSinger;
+                string centertxt;
+                if (sSinger == "" || sSinger == "<Song reserved by>")
+                {
+                    centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
+                }
+                else
+                {
+                    centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song)
                 + _InternalSepLines + Strings.SungBy
                 + _InternalSepLines + currentPlaylistItem.KaraokeSinger;
+                }
 
                 frmLyric.DisplayText(centertxt, (int)_duration);
             }
