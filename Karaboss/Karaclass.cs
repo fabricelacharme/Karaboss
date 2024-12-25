@@ -65,6 +65,9 @@ namespace Karaboss
 
         public static bool m_SaveDefaultOutputDevice;   // Save default MIDI output device        
 
+
+        public static string m_MxmlPath;        // Path of compressed XML File
+
         public enum OptionsDisplay
         {
             Top = 0,

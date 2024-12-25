@@ -2248,11 +2248,7 @@ namespace Karaboss
             if (Application.OpenForms.OfType<frmPianoRoll>().Count() > 0)
             {
                 Application.OpenForms["frmPianoRoll"].Close();
-            }
-
-            
-            //plLyrics.Clear();            
-            //myLyric = null;          
+            }            
 
             // Create a new Midi File with above parameters
             NewMidiFile();            
@@ -3929,38 +3925,57 @@ namespace Karaboss
         /// </summary>
         private void restoreSequenceTags()
         {
-            string tx;// = string.Empty;
+            string tx;
             int i;
 
-            for (i = sequence1.ITag.Count - 1; i >= 0; i--)
+            if (sequence1.ITag != null)
             {
-                tx = "@I" + sequence1.ITag[i];
-                AddTag(tx);
+                for (i = sequence1.ITag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@I" + sequence1.ITag[i];
+                    AddTag(tx);
+                }
             }
-            for (i = sequence1.KTag.Count - 1; i >= 0; i--)
+
+            if (sequence1.KTag != null)
             {
-                tx = "@K" + sequence1.KTag[i];
-                AddTag(tx);
+                for (i = sequence1.KTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@K" + sequence1.KTag[i];
+                    AddTag(tx);
+                }
             }
-            for (i = sequence1.LTag.Count - 1; i >= 0; i--)
+            if (sequence1.LTag != null)
             {
-                tx = "@L" + sequence1.LTag[i];
-                AddTag(tx);
+                for (i = sequence1.LTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@L" + sequence1.LTag[i];
+                    AddTag(tx);
+                }
             }
-            for (i = sequence1.TTag.Count - 1; i >= 0; i--)
+            if (sequence1.TTag != null)
             {
-                tx = "@T" + sequence1.TTag[i];
-                AddTag(tx);
+                for (i = sequence1.TTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@T" + sequence1.TTag[i];
+                    AddTag(tx);
+                }
             }
-            for (i = sequence1.VTag.Count - 1; i >= 0; i--)
+            if (sequence1.VTag != null)
             {
-                tx = "@V" + sequence1.VTag[i];
-                AddTag(tx);
+                for (i = sequence1.VTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@V" + sequence1.VTag[i];
+                    AddTag(tx);
+                }
             }
-            for (i = sequence1.WTag.Count - 1; i >= 0; i--)
+            if (sequence1.WTag != null)
             {
-                tx = "@W" + sequence1.WTag[i];
-                AddTag(tx);
+                for (i = sequence1.WTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@W" + sequence1.WTag[i];
+                    AddTag(tx);
+                }
             }
 
         }
@@ -4308,11 +4323,22 @@ namespace Karaboss
             // ====================================
             // AJOUT par arraport au standard
             // ====================================
-            MIDIfilePath = Path.GetDirectoryName(MIDIfileFullPath);
-            string fExt = Path.GetExtension(MIDIfileFullPath);             // Extension
-            string fName = Path.GetFileNameWithoutExtension(MIDIfileFullPath);    // name without extension
-            MIDIfileName = fName + ".mid";
-            MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
+            if (Karaclass.m_MxmlPath != null && Karaclass.m_MxmlPath != "") 
+            {
+                string fName = Path.GetFileNameWithoutExtension(Karaclass.m_MxmlPath);    // name without extension
+                MIDIfilePath = Path.GetDirectoryName(Karaclass.m_MxmlPath);                            
+                MIDIfileName = fName + ".mid";
+                MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
+
+            }
+            else
+            {
+
+                MIDIfilePath = Path.GetDirectoryName(MIDIfileFullPath);                
+                string fName = Path.GetFileNameWithoutExtension(MIDIfileFullPath);    // name without extension
+                MIDIfileName = fName + ".mid";
+                MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
+            }
             // fin ajout
 
 
