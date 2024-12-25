@@ -427,16 +427,27 @@ namespace MusicXml
                                         offset = note.Duration;
 
                                         starttime = timeline;
+
+
                                         int octave = note.Pitch.Octave;
                                         string letter = note.Pitch.Step.ToString();
-                                        notenumber = 12 + Notes.IndexOf(letter) + 12 * octave;
 
-                                        notenumber += note.Transpose;
-                                        
-                                        if (note.Pitch.Alter != 0)
+                                        if (note.IsDrums)
                                         {
-                                            int alter = note.Pitch.Alter;
-                                            notenumber += alter;
+                                            notenumber = note.DrumPitch;
+                                        }
+                                        else
+                                        {
+                                            notenumber = 12 + Notes.IndexOf(letter) + 12 * octave;
+                                            notenumber += note.ChromaticTranspose;
+                                            notenumber += 12 * note.OctaveChange;
+
+                                            if (note.Pitch.Alter != 0)
+                                            {
+                                                int alter = note.Pitch.Alter;
+                                                notenumber += alter;
+                                            }
+
                                         }
 
                                         // Create note
@@ -445,13 +456,7 @@ namespace MusicXml
                                         else
                                             CreateMidiNote2(note, notenumber, starttime);
                                         
-                                        /*
-                                        if (measure.Number == 4)
-                                        {
-                                            Console.WriteLine("ici");
-                                        }
-                                        */
-
+                                        
                                         if (note.Lyrics.Count > 0 && note.Lyrics[0].Text != null)
                                         {
                                             CreateLyric(note, starttime, versenumber);

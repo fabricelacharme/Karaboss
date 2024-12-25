@@ -76,6 +76,7 @@ namespace MusicXml.Domain
         public int Denominator { get; internal set; }
 
         public int _chromatictranspose {get; internal set; }
+        public int _octavechange { get; internal set; }
 
         public Part()
 		{
@@ -86,6 +87,7 @@ namespace MusicXml.Domain
             Volume = 80; // 101;
 			Pan = 80;
             _chromatictranspose = 0;
+            _octavechange = 0;
 		}
 
 
@@ -156,11 +158,20 @@ namespace MusicXml.Domain
                         XElement transpose = attributes.Descendants("transpose").FirstOrDefault();
                         if (transpose != null)
                         {
-                            string diatonic = transpose.Descendants("diatonic").FirstOrDefault()?.Value;
+                            // Chromatic transpose
+                            //string diatonic = transpose.Descendants("diatonic").FirstOrDefault()?.Value;
                             string chromatic = transpose.Descendants("chromatic").FirstOrDefault()?.Value;
                             try
                             {
                                 _part._chromatictranspose = Convert.ToInt32(chromatic);
+                            }
+                            catch (Exception ex) { Console.WriteLine(ex.Message); }
+
+                            // Octave transpose
+                            string octave = transpose.Descendants("octave-change").FirstOrDefault()?.Value;
+                            try
+                            {
+                                _part._octavechange = Convert.ToInt32(octave);
                             }
                             catch (Exception ex) { Console.WriteLine(ex.Message); }
                         }
@@ -306,7 +317,7 @@ namespace MusicXml.Domain
                             {
                                 
                                 // Get notes information
-                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose);
+                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange);
 
                                 if (note.Lyrics != null && note.Lyrics.Count > 0)
                                 {
@@ -571,18 +582,23 @@ namespace MusicXml.Domain
            
         }
 
-        private static Note GetNote(XElement node, int mult, int transpose)
+        private static Note GetNote(XElement node, int mult, int chromatictranspose, int octavechange)
         {
             var rest = node.Descendants("rest").FirstOrDefault();
-            var step = node.Descendants("step").FirstOrDefault();
+            var step = node.Descendants("step").FirstOrDefault();            
             var alter = node.Descendants("alter").FirstOrDefault();
-            var octave = node.Descendants("octave").FirstOrDefault();
+            var octave = node.Descendants("octave").FirstOrDefault();            
             var duration = node.Descendants("duration").FirstOrDefault();
             var chord = node.Descendants("chord").FirstOrDefault();
             var voice = node.Descendants("voice").FirstOrDefault();
             var staff = node.Descendants("staff").FirstOrDefault();
             var type = node.Descendants("type").FirstOrDefault();
             var grace = node.Descendants("grace").FirstOrDefault();
+
+            // Drums ?
+            var displaystep = node.Descendants("display-step").FirstOrDefault();
+            var displayoctave = node.Descendants("display-octave").FirstOrDefault();
+            var instrument = node.Descendants("instrument").FirstOrDefault();
 
             bool bgrace = false;
 
@@ -606,8 +622,31 @@ namespace MusicXml.Domain
             {
                 stp = step.Value;
                 note.Pitch.Step = stp[0];
-                note.Transpose = transpose;                                
+                note.ChromaticTranspose = chromatictranspose;
+                note.OctaveChange = octavechange;
             }
+            // Drums
+            else if (displaystep != null)
+            {
+                stp = displaystep.Value;
+                note.Pitch.Step = stp[0];
+                note.IsDrums = true;
+
+
+                if (instrument != null)
+                {
+                    // <instrument id="P7-I37"/>
+                    // Extract 2 last digits => 37 (36 in Karaboss)
+                    stp = instrument.LastAttribute.Value;
+                    if (stp.Length > 2)
+                    {
+                        stp = stp.Substring(stp.Length - 2, 2);
+                        note.DrumPitch = Convert.ToInt32(stp) - 1;
+                    }
+                }
+            }
+                
+            
 
             string accidental = "";
             if (alter != null)
@@ -630,7 +669,10 @@ namespace MusicXml.Domain
 
             if (octave != null)
                 note.Pitch.Octave = int.Parse(octave.Value);
-
+            else if (displayoctave != null)
+                note.Pitch.Octave = int.Parse(displayoctave.Value);
+            
+            
             if (grace != null)
             {
                 if (grace.FirstAttribute != null && grace.FirstAttribute.Value == "yes")
