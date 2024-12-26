@@ -817,10 +817,15 @@ namespace MusicXml
             ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, track1.MidiChannel, track1.ProgramChange, 0);
             track1.Insert(0, message);
            
-            track1.insertTimesignature(Numerator, Denominator);
+            if (Numerator > 0 && Denominator > 0) 
+                track1.insertTimesignature(Numerator, Denominator);            
             track1.insertTrackname(TrackName);
-            track1.insertVolume(Channel, Volume);
-            track1.insertPan(Channel, Pan);            
+
+            if (Volume >  0)
+                track1.insertVolume(Channel, Volume);
+            
+            if (Pan > 0)
+                track1.insertPan(Channel, Pan);            
 
             newTracks.Add(track1);
         }
