@@ -27,7 +27,11 @@ namespace MusicXml.Domain
         public int Number { get; set; }
 
 		// FAB : is measure belonging to a Verse?
-		public List<int> lstVerseNumber { get; internal set; }	
+		public List<int> lstVerseNumber { get; internal set; }
+
+        // <sound dynamics="THE_DYNAMIC_YOU_WANT"/>
+        // <sound dynamics="88.89"/>
+        public int SoundDynamic { get; internal set; }
 		
 
     }

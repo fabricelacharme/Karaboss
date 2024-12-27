@@ -298,21 +298,17 @@ namespace MusicXml.Domain
                                 }
 
                             }
-                            /*
+                            
                             else if (childnode.Name == "sound")
                             {
-                                if (childnode.Attribute("tempo") != null)
-                                {
-                                    
-                                    double curTempo = Convert.ToDouble(childnode.Attribute("tempo").Value, (CultureInfo.InvariantCulture));
-                                    const float kOneMinuteInMicroseconds = 60000000;
-                                    float ttempo = kOneMinuteInMicroseconds / (float)curTempo;
-
-                                    _part.Tempo = (int)ttempo;                                    
-
+                                // FAB
+                                if (childnode.Attribute("dynamics") != null)
+                                {                                    
+                                    double curSoundDynamics = Convert.ToDouble(childnode.Attribute("dynamics").Value, (CultureInfo.InvariantCulture));
+                                    curMeasure.SoundDynamic = (int)curSoundDynamics;                                    
                                 }
                             }
-                            */
+                            
                             else if (childnode.Name == "note")
                             {
                                 
