@@ -1,6 +1,40 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+#region License
+
+/* Copyright (c) 2024 Fabrice Lacharme
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), to 
+ * deal in the Software without restriction, including without limitation the 
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+ * sell copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software. 
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+ * THE SOFTWARE.
+ */
+
+#endregion
+
+#region Contact
+
+/*
+ * Fabrice Lacharme
+ * Email: fabrice.lacharme@gmail.com
+ */
+
+#endregion
+
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Security.Policy;
@@ -13,6 +47,10 @@ namespace MusicXml.Domain
 {
     public class Part
 	{
+
+        // <sound dynamics="THE_DYNAMIC_YOU_WANT"/>
+        // <sound dynamics="88.89"/>
+        public int SoundDynamics { get; set; }
         public List<Measure> Measures { get; set; } = new List<Measure>();
 
         public List<string> Notes
@@ -85,6 +123,7 @@ namespace MusicXml.Domain
 			MidiChannel = 1;
 			MidiProgram = 1;
             Volume = 80; // 101;
+            SoundDynamics = 80;
 			Pan = 80;
             _chromatictranspose = 0;
             _octavechange = 0;
@@ -131,14 +170,24 @@ namespace MusicXml.Domain
             _part.Volume = vol * 127/100;
 
 
+            // ======================================
             // PAN
-            _part.Pan = (int?)partlistElement.Descendants("pan").FirstOrDefault() ?? 0;
-            _part.Pan += 65;
-          
-            // Default
-            // Division 480 + Tempo 500000 => BPM 120
-            //_part.Tempo = 500000;            
+            // 0 = -50%, 64 = 0%, 128 = 50%
+            // ======================================
+            int pan = 64;
+            if (partlistElement.Descendants("pan").FirstOrDefault() != null)
+            {
+                string pa = partlistElement.Descendants("pan").FirstOrDefault()?.Value;
+                if (pa.IndexOf(".") > 0 || pa.IndexOf(",") > 0)
+                {
+                    pan = ConvertStringValue(pa);
+                }
+                else
+                    pan = Convert.ToInt32(pa);
+            }
+            _part.Pan = 64 * (1 + pan / 90);                 
             
+
             foreach (var partElement in doc.Descendants("part"))
             {
                 // Check if goof Id for this part
@@ -190,7 +239,7 @@ namespace MusicXml.Domain
                         {
                             _part.Division = (int)attributes.Descendants("divisions").FirstOrDefault();
                             _part.coeffmult = 480 / _part.Division;
-                            _part.Division = 480; // = _part.coeffmult * _part.Division;
+                            _part.Division = 480; 
                         }
                     }
 
@@ -219,13 +268,7 @@ namespace MusicXml.Domain
                         // Why ?: the measures between ending.start and ending.stop are reserved for one or several verses
                         // So we must set the list of verses to these measures
                         if (bReserved) 
-                        {
-                            /*
-                            if (curMeasure.Number == 5)
-                            {
-                                Console.Write("ici");
-                            }
-                            */
+                        {                           
                             curMeasure.lstVerseNumber = lstVerseNumber;
                         }
 
@@ -264,13 +307,6 @@ namespace MusicXml.Domain
                             Console.WriteLine(ex.Message);
                         }
 
-                        /*
-                        if (curMeasure.Number == 14)
-                        {
-                            Console.WriteLine("ici");
-                        }
-                        */
-
                         #endregion measure number
 
 
@@ -297,15 +333,20 @@ namespace MusicXml.Domain
                                         _part.Tempo = (int)ttempo;
                                 }
 
-                            }
-                            
+                            }                            
                             else if (childnode.Name == "sound")
                             {
-                                // FAB
+                                // Velocity of notes
                                 if (childnode.Attribute("dynamics") != null)
                                 {                                    
-                                    double curSoundDynamics = Convert.ToDouble(childnode.Attribute("dynamics").Value, (CultureInfo.InvariantCulture));
-                                    curMeasure.SoundDynamic = (int)curSoundDynamics;                                    
+                                    double curSoundDynamics = Convert.ToDouble(childnode.Attribute("dynamics").Value, (CultureInfo.InvariantCulture));                                    
+
+                                    curSoundDynamics = (int)(curSoundDynamics * 80 / 88);
+                                    if (curSoundDynamics > 127)
+                                    {
+                                        curSoundDynamics = 127;                                        
+                                    }                                    
+                                    _part.SoundDynamics = (int)curSoundDynamics;
                                 }
                             }
                             
@@ -313,18 +354,11 @@ namespace MusicXml.Domain
                             {
                                 
                                 // Get notes information
-                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange);
+                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics);
 
+                                #region note lyrics
                                 if (note.Lyrics != null && note.Lyrics.Count > 0)
-                                {
-                                    
-                                    /*
-                                    if (curMeasure.Number == 4)
-                                    {
-                                        Console.Write("ici");
-                                    }
-                                     */                                   
-
+                                {                                                               
                                     // case not reserved and normally 3 verses, but only one lyric on this note
                                     // add a space as a lyric on missing ones
                                     if (!bReserved &&  (note.Lyrics.Count < curMeasure.lstVerseNumber.Count))
@@ -425,6 +459,7 @@ namespace MusicXml.Domain
                                     }
                                     
                                 }
+                                #endregion note lyrics
 
                                 // Create new element
                                 MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
@@ -578,7 +613,7 @@ namespace MusicXml.Domain
            
         }
 
-        private static Note GetNote(XElement node, int mult, int chromatictranspose, int octavechange)
+        private static Note GetNote(XElement node, int mult, int chromatictranspose, int octavechange, int SoundDynamics)
         {
             var rest = node.Descendants("rest").FirstOrDefault();
             var step = node.Descendants("step").FirstOrDefault();            
@@ -641,8 +676,9 @@ namespace MusicXml.Domain
                     }
                 }
             }
-                
-            
+
+            // Velocity
+            note.Velocity = SoundDynamics;
 
             string accidental = "";
             if (alter != null)

@@ -15,6 +15,8 @@ namespace MusicXml.Domain
 
 			IsDrums = false;
 			DrumPitch = 0;
+
+			Velocity = 80;
 			
 			OctaveChange = 0;
 			ChromaticTranspose = 0;
@@ -28,7 +30,9 @@ namespace MusicXml.Domain
 		public int Voice { get; internal set; }
 
 		public int Duration { get; internal set; }
-        //public int DurationOld { get; internal set; }
+        
+		
+		public int Velocity { get; internal set; }
 
 
 
