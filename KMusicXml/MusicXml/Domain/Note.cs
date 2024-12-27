@@ -28,10 +28,12 @@ namespace MusicXml.Domain
 		public int Voice { get; internal set; }
 
 		public int Duration { get; internal set; }
-		
-		
-		// FAB : for verses (several lyrics on the same note with different "number")
-		public List<Lyric> Lyrics { get; internal set; }
+        //public int DurationOld { get; internal set; }
+
+
+
+        // FAB : for verses (several lyrics on the same note with different "number")
+        public List<Lyric> Lyrics { get; internal set; }
 
 		public int ChromaticTranspose { get; internal set; }
 		public int OctaveChange { get; internal set; }

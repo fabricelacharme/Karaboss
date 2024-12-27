@@ -11,6 +11,7 @@ using System.Xml.Linq;
 using MusicXml.Domain;
 using Sanford.Multimedia.Midi;
 using System.Runtime.CompilerServices;
+using System.Data.Sql;
 
 namespace MusicXml
 {
@@ -39,9 +40,8 @@ namespace MusicXml
         private Sequence sequence;
         private int Format = 1;
         private int Numerator = 4;
-        private int Denominator = 4;
-        //private int Division = 24;
-        private int Division = 480; // 20 fois plus que 24
+        private int Denominator = 4;        
+        private int Division = 480; 
         private int Tempo = 500000;
 
 
@@ -410,7 +410,47 @@ namespace MusicXml
                                         
                                         string ntype = note.Type;
 
+
+                                        // Note duration
+                                        //int t = part.Division;
                                         note.Duration = (int)(note.Duration * multcoeff);
+                                        
+                                        /*
+                                        switch (note.Type)
+                                        {
+                                            case "whole":
+                                                t = t/8;                                                
+                                                break;
+                                            case "half":
+                                                t = t/8;
+                                                break;
+                                            case "quarter":
+                                                t = t/8;                                                
+                                                break;
+                                            case "eighth":
+                                                t = t/8;                                               
+                                                break;
+                                            case "16th":
+                                                t = t/8;                                                
+                                                break;
+                                            case "32nd":
+                                                t = t/8;                                                
+                                                break;
+                                            case "":
+                                                t = t/8; // part.Division;
+                                                break;
+                                            default:
+                                                break;
+                                        }
+
+                                        int test1 = (int)(note.DurationOld * multcoeff); ;
+                                        int test2 = t * note.Duration;
+
+                                        if (test1 != test2)
+                                            Console.WriteLine("");
+
+                                        note.Duration = test2;
+                                        */
 
                                         if (note.IsRest)
                                         {
