@@ -1,4 +1,38 @@
-﻿using System;
+﻿#region License
+
+/* Copyright (c) 2024 Fabrice Lacharme
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), to 
+ * deal in the Software without restriction, including without limitation the 
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+ * sell copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software. 
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+ * THE SOFTWARE.
+ */
+
+#endregion
+
+#region Contact
+
+/*
+ * Fabrice Lacharme
+ * Email: fabrice.lacharme@gmail.com
+ */
+
+#endregion
+
+using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +45,7 @@ using System.Xml.Linq;
 using MusicXml.Domain;
 using Sanford.Multimedia.Midi;
 using System.Runtime.CompilerServices;
+using System.Data.Sql;
 
 namespace MusicXml
 {
@@ -39,9 +74,8 @@ namespace MusicXml
         private Sequence sequence;
         private int Format = 1;
         private int Numerator = 4;
-        private int Denominator = 4;
-        //private int Division = 24;
-        private int Division = 480; // 20 fois plus que 24
+        private int Denominator = 4;        
+        private int Division = 480; 
         private int Tempo = 500000;
 
 
@@ -410,7 +444,47 @@ namespace MusicXml
                                         
                                         string ntype = note.Type;
 
+
+                                        // Note duration
+                                        //int t = part.Division;
                                         note.Duration = (int)(note.Duration * multcoeff);
+                                        
+                                        /*
+                                        switch (note.Type)
+                                        {
+                                            case "whole":
+                                                t = t/8;                                                
+                                                break;
+                                            case "half":
+                                                t = t/8;
+                                                break;
+                                            case "quarter":
+                                                t = t/8;                                                
+                                                break;
+                                            case "eighth":
+                                                t = t/8;                                               
+                                                break;
+                                            case "16th":
+                                                t = t/8;                                                
+                                                break;
+                                            case "32nd":
+                                                t = t/8;                                                
+                                                break;
+                                            case "":
+                                                t = t/8; // part.Division;
+                                                break;
+                                            default:
+                                                break;
+                                        }
+
+                                        int test1 = (int)(note.DurationOld * multcoeff); ;
+                                        int test2 = t * note.Duration;
+
+                                        if (test1 != test2)
+                                            Console.WriteLine("");
+
+                                        note.Duration = test2;
+                                        */
 
                                         if (note.IsRest)
                                         {
@@ -427,16 +501,27 @@ namespace MusicXml
                                         offset = note.Duration;
 
                                         starttime = timeline;
+
+
                                         int octave = note.Pitch.Octave;
                                         string letter = note.Pitch.Step.ToString();
-                                        notenumber = 12 + Notes.IndexOf(letter) + 12 * octave;
 
-                                        notenumber += note.Transpose;
-                                        
-                                        if (note.Pitch.Alter != 0)
+                                        if (note.IsDrums)
                                         {
-                                            int alter = note.Pitch.Alter;
-                                            notenumber += alter;
+                                            notenumber = note.DrumPitch;
+                                        }
+                                        else
+                                        {
+                                            notenumber = 12 + Notes.IndexOf(letter) + 12 * octave;
+                                            notenumber += note.ChromaticTranspose;
+                                            notenumber += 12 * note.OctaveChange;
+
+                                            if (note.Pitch.Alter != 0)
+                                            {
+                                                int alter = note.Pitch.Alter;
+                                                notenumber += alter;
+                                            }
+
                                         }
 
                                         // Create note
@@ -445,13 +530,7 @@ namespace MusicXml
                                         else
                                             CreateMidiNote2(note, notenumber, starttime);
                                         
-                                        /*
-                                        if (measure.Number == 4)
-                                        {
-                                            Console.WriteLine("ici");
-                                        }
-                                        */
-
+                                        
                                         if (note.Lyrics.Count > 0 && note.Lyrics[0].Text != null)
                                         {
                                             CreateLyric(note, starttime, versenumber);
@@ -812,10 +891,15 @@ namespace MusicXml
             ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, track1.MidiChannel, track1.ProgramChange, 0);
             track1.Insert(0, message);
            
-            track1.insertTimesignature(Numerator, Denominator);
+            if (Numerator > 0 && Denominator > 0) 
+                track1.insertTimesignature(Numerator, Denominator);            
             track1.insertTrackname(TrackName);
-            track1.insertVolume(Channel, Volume);
-            track1.insertPan(Channel, Pan);            
+
+            if (Volume >  0)
+                track1.insertVolume(Channel, Volume);
+            
+            if (Pan > 0)
+                track1.insertPan(Channel, Pan);            
 
             newTracks.Add(track1);
         }
@@ -878,7 +962,7 @@ namespace MusicXml
             // if 2 tracks in the same Part (piano left & right for ex)
             try
             {
-                MidiNote note = new MidiNote(st, Channel, v, n.Duration, 80, false);
+                MidiNote note = new MidiNote(st, Channel, v, n.Duration, n.Velocity, false);
                 newNotes.Add(note);
                 track1.addNote(note, false);
             }
@@ -897,7 +981,7 @@ namespace MusicXml
             // if 2 tracks in the same Part (piano left & right for ex)
             try
             {
-                MidiNote note = new MidiNote(st, Channel, v, n.Duration, 80, false);
+                MidiNote note = new MidiNote(st, Channel, v, n.Duration, n.Velocity, false);
                 newNotes.Add(note);
                 track2.addNote(note, false);
             }
@@ -1126,7 +1210,7 @@ namespace MusicXml
                 Time = new TimeSignature(Numerator, Denominator, Division, Tempo),
             };
 
-            // FAB
+            // 
             if (sequence.Division == 0)
                 sequence.Division = 1;
 

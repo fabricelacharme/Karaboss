@@ -742,7 +742,9 @@ namespace PicControl
         /// <param name="toto"></param>
         public void LoadSong(List<plLyric> plLyrics, bool bDemoMode = false)
         {
-            string lyrics = string.Empty;          
+            string lyrics = string.Empty;
+            lstLyricsLines = new List<string>();
+            syllabes = new List<syllabe>();
 
             if (plLyrics.Count > 0)
             {                
@@ -2213,7 +2215,7 @@ namespace PicControl
             // Draw sentence                           
             #region draw lyrics
 
-            if (syllabes == null | _currentTextPos >= syllabes.Count)
+            if (syllabes == null || _currentTextPos >= syllabes.Count)
                 return;
             
             if (_currentTextPos >= 0)

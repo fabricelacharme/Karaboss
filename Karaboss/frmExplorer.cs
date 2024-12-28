@@ -799,6 +799,7 @@ namespace Karaboss
             Karaclass.m_SepParagraph = Properties.Settings.Default.SepParagraph;
             Karaclass.m_ShowParagraph = Properties.Settings.Default.bShowParagraph;
             Karaclass.m_ForceUppercase = Properties.Settings.Default.bForceUppercase;
+            Karaclass.m_ShowChords = Properties.Settings.Default.bShowChords;
 
             Karaclass.m_SaveDefaultOutputDevice = Properties.Settings.Default.SaveDefaultOutputDevice;
 
@@ -1406,6 +1407,7 @@ namespace Karaboss
         // Lauch a file from explorer, no playlist
         private void Global_xPlayMidi(object sender, FileInfo fi, bool bplay)
         {
+            Karaclass.m_MxmlPath = "";
             DisplayMidiPlayer(fi.FullName, null, bplay);
         }
 
@@ -1416,17 +1418,20 @@ namespace Karaboss
 
         private void Global_xPlayXml(object sender, FileInfo fi, bool bplay)
         {
+            Karaclass.m_MxmlPath = "";
             DisplayXmlPlayer(fi.FullName, null, bplay);
         }
 
         private void Global_xPlayMxl(object sender, FileInfo fi, bool bplay)
         {
+            Karaclass.m_MxmlPath = fi.FullName;
             DisplayMxlPlayer(fi.FullName, null, bplay);
         }
 
 
         private void Global_xPlayTxt(object sender, FileInfo fi, bool bplay)
         {
+            Karaclass.m_MxmlPath = "";
             DisplayTxtPlayer(fi.FullName, null, bplay);
         }
 
@@ -1442,6 +1447,7 @@ namespace Karaboss
 
         private void Global_PlayMidi(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
+            Karaclass.m_MxmlPath = "";
             DisplayMidiPlayer(fi.FullName, pl, bplay);
         }
 
@@ -1452,16 +1458,19 @@ namespace Karaboss
 
         private void Global_PlayXml(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
+            Karaclass.m_MxmlPath = "";
             DisplayXmlPlayer(fi.FullName, pl, bplay);
         }
 
         private void Global_PlayMxl(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
+            Karaclass.m_MxmlPath = fi.FullName;
             DisplayMxlPlayer(fi.FullName, pl, bplay);
         }
 
         private void Global_PlayTxt(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
+            Karaclass.m_MxmlPath = "";
             DisplayTxtPlayer(fi.FullName, pl, bplay);
         }
 
@@ -1525,6 +1534,7 @@ namespace Karaboss
                 fpath = null;
             }
 
+            // Launch player            
             Cursor.Current = Cursors.WaitCursor;
 
             #region Close Windows
@@ -1548,9 +1558,7 @@ namespace Karaboss
 
             #endregion
 
-            // Affiche le formulaire frmPlay 
-            //if (Application.OpenForms["FrmTextPlayer"] != null)
-            //    Application.OpenForms["FrmTextPlayer"].Close();
+            // Affiche le formulaire frmPlay             
             Application.OpenForms["FrmTextPlayer"]?.Close();
 
             ResetOutPutDevice();
@@ -1605,7 +1613,7 @@ namespace Karaboss
                 #endregion
             }
 
-            // Launch player with a Playlist                               
+            // Launch player            
             Cursor.Current = Cursors.WaitCursor;
 
             #region Close Windows
@@ -1635,9 +1643,7 @@ namespace Karaboss
 
             #endregion
 
-            // Affiche le formulaire frmPlay 
-            //if (Application.OpenForms["frmPlayer"] != null)
-            //    Application.OpenForms["frmPlayer"].Close();
+            // Affiche le formulaire frmPlay             
             Application.OpenForms["frmPlayer"]?.Close();
             ResetOutPutDevice();
 
@@ -1681,7 +1687,7 @@ namespace Karaboss
                 return;
             }
 
-            // Launch player with a Playlist                               
+            // Launch player                         
             Cursor.Current = Cursors.WaitCursor;
             Application.DoEvents();
 
@@ -1711,10 +1717,7 @@ namespace Karaboss
             }
             #endregion
 
-            // Close form frmPlay 
-            //if (Application.OpenForms["frmPlayer"] != null)
-            //    Application.OpenForms["frmPlayer"].Close();
-
+            // Close form frmPlay             
             Application.OpenForms["frmPlayer"]?.Close();
             ResetOutPutDevice();
 
@@ -1784,7 +1787,7 @@ namespace Karaboss
                 return;
             }
 
-            // Launch player with a Playlist                               
+            // Launch player                               
             Cursor.Current = Cursors.WaitCursor;
             Application.DoEvents();
 
@@ -1980,6 +1983,7 @@ namespace Karaboss
                 case ".mid":
                 case ".kar":
                     {
+                        Karaclass.m_MxmlPath = "";
                         DisplayMidiPlayer(cmdpath, null, bPlayNow);
                         break;
                     }
@@ -2008,12 +2012,14 @@ namespace Karaboss
                         * - transform xml to midi file
                         * - launch player
                         */
+                        Karaclass.m_MxmlPath = "";
                         DisplayXmlPlayer(cmdpath, null, bPlayNow);
                         break;
                     }
                 case ".mxl":
                     {
                         // Compressed musix xml file
+                        Karaclass.m_MxmlPath = cmdpath;             // Backup original path
                         DisplayMxlPlayer(cmdpath, null, bPlayNow);
                         break;
                     }
@@ -2027,6 +2033,7 @@ namespace Karaboss
                         * - transform txt to midi file
                         * - launch player
                         */
+                        Karaclass.m_MxmlPath = "";
                         DisplayTxtPlayer(cmdpath, null, bPlayNow);
                         break;
                     }
@@ -2897,6 +2904,9 @@ namespace Karaboss
             m_configurationForm.AddConfigItem(config);
 
             config = new ConfigurationTreeNode(Strings.MidiEditor, new MidiEditorControl(Strings.MidiEditor));
+            m_configurationForm.AddConfigItem(config);
+
+            config = new ConfigurationTreeNode(Strings.Chords, new ChordsControl(Strings.Chords));
             m_configurationForm.AddConfigItem(config);
 
 

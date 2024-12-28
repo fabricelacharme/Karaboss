@@ -13,6 +13,14 @@ namespace MusicXml.Domain
 			Staff = -1;
 			IsChordTone = false;
 
+			IsDrums = false;
+			DrumPitch = 0;
+
+			Velocity = 80;
+			
+			OctaveChange = 0;
+			ChromaticTranspose = 0;
+
 			// Fab
 			Pitch = new Pitch();
 		}
@@ -22,18 +30,26 @@ namespace MusicXml.Domain
 		public int Voice { get; internal set; }
 
 		public int Duration { get; internal set; }
+        
 		
-		
-		// FAB : for verses (several lyrics on the same note with different "number")
-		public List<Lyric> Lyrics { get; internal set; }
+		public int Velocity { get; internal set; }
 
-		public int Transpose { get; internal set; }
+
+
+        // FAB : for verses (several lyrics on the same note with different "number")
+        public List<Lyric> Lyrics { get; internal set; }
+
+		public int ChromaticTranspose { get; internal set; }
+		public int OctaveChange { get; internal set; }
 
 		public Pitch Pitch { get; internal set; }
 
 		public int Staff { get; internal set; }
 
 		public bool IsChordTone { get; internal set; }
+
+		public bool IsDrums { get; internal set; }
+		public int DrumPitch { get; internal set; }
 
 		public bool IsRest { get; internal set; }
 		

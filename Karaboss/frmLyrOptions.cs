@@ -106,7 +106,7 @@ namespace Karaboss
        
 
         /// <summary>
-        /// Load stored options
+        /// Load options stored in properties
         /// </summary>
         private void LoadOptions()
         {
@@ -242,7 +242,7 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Save options
+        /// Save options in properties
         /// </summary>
         private void SaveOptions()
         {
@@ -610,6 +610,7 @@ namespace Karaboss
                 frmLyric.ChordNextColor = _chordNextColor;
                 frmLyric.ChordHighlightColor = _chordHighlightColor;
                 frmLyric.bShowChords = _bShowChords;
+                
 
                 // force uppercase
                 frmLyric.bForceUppercase = bForceUppercase;
