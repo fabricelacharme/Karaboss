@@ -121,6 +121,18 @@
     <value>127, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="tssLeft.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 17</value>
+  </data>
+  <data name="tssLeft.Text" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="tssMiddle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>722, 17</value>
+  </data>
+  <data name="tssRight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>0, 17</value>
+  </data>
   <data name="statusBar.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 713</value>
   </data>
@@ -143,52 +155,10 @@
   <data name="&gt;&gt;statusBar.ZOrder" xml:space="preserve">
     <value>6</value>
   </data>
-  <data name="tssLeft.Size" type="System.Drawing.Size, System.Drawing">
-    <value>39, 17</value>
-  </data>
-  <data name="tssLeft.Text" xml:space="preserve">
-    <value>Ready</value>
-  </data>
-  <data name="tssMiddle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>722, 17</value>
-  </data>
-  <data name="tssRight.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 17</value>
-  </data>
   <metadata name="mnuExplorer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>243, 3</value>
   </metadata>
-  <data name="mnuExplorer.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="mnuExplorer.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 2, 0, 2</value>
-  </data>
-  <data name="mnuExplorer.Size" type="System.Drawing.Size, System.Drawing">
-    <value>776, 24</value>
-  </data>
-  <data name="mnuExplorer.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;mnuExplorer.Name" xml:space="preserve">
-    <value>mnuExplorer</value>
-  </data>
-  <data name="&gt;&gt;mnuExplorer.Type" xml:space="preserve">
-    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mnuExplorer.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;mnuExplorer.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>37, 20</value>
-  </data>
-  <data name="mnuFile.Text" xml:space="preserve">
-    <value>&amp;File</value>
-  </data>
   <data name="mnuFileNew.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>Ctrl+N</value>
   </data>
@@ -228,20 +198,11 @@
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quit</value>
   </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>39, 20</value>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>37, 20</value>
   </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>Edit</value>
-  </data>
-  <data name="mnuEditRename.Size" type="System.Drawing.Size, System.Drawing">
-    <value>155, 22</value>
-  </data>
-  <data name="mnuEditRename.Text" xml:space="preserve">
-    <value>Rename</value>
-  </data>
-  <data name="mnuEditRename.ToolTipText" xml:space="preserve">
-    <value>Rename all songs</value>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;File</value>
   </data>
   <data name="mnuEditRenameAll.Size" type="System.Drawing.Size, System.Drawing">
     <value>217, 22</value>
@@ -255,17 +216,26 @@
   <data name="invertAuthorAndSongToolStripMenuItem.Text" xml:space="preserve">
     <value>Invert author and song (F7)</value>
   </data>
+  <data name="mnuEditRename.Size" type="System.Drawing.Size, System.Drawing">
+    <value>155, 22</value>
+  </data>
+  <data name="mnuEditRename.Text" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="mnuEditRename.ToolTipText" xml:space="preserve">
+    <value>Rename all songs</value>
+  </data>
   <data name="mnuEditReplaceAll.Size" type="System.Drawing.Size, System.Drawing">
     <value>155, 22</value>
   </data>
   <data name="mnuEditReplaceAll.Text" xml:space="preserve">
     <value>Replace All (F4)</value>
   </data>
-  <data name="mnuDisplay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>57, 20</value>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 20</value>
   </data>
-  <data name="mnuDisplay.Text" xml:space="preserve">
-    <value>&amp;Display</value>
+  <data name="mnuEdit.Text" xml:space="preserve">
+    <value>Edit</value>
   </data>
   <data name="mnuDisplaySearch.Size" type="System.Drawing.Size, System.Drawing">
     <value>273, 22</value>
@@ -303,11 +273,11 @@
   <data name="MnuDisplayGuitarTraining.Text" xml:space="preserve">
     <value>Guitar training</value>
   </data>
-  <data name="mnuTools.Size" type="System.Drawing.Size, System.Drawing">
-    <value>47, 20</value>
+  <data name="mnuDisplay.Size" type="System.Drawing.Size, System.Drawing">
+    <value>57, 20</value>
   </data>
-  <data name="mnuTools.Text" xml:space="preserve">
-    <value>&amp;Tools</value>
+  <data name="mnuDisplay.Text" xml:space="preserve">
+    <value>&amp;Display</value>
   </data>
   <data name="mnuToolsOption.Size" type="System.Drawing.Size, System.Drawing">
     <value>168, 22</value>
@@ -317,12 +287,6 @@
   </data>
   <data name="MnuToolsSep1.Size" type="System.Drawing.Size, System.Drawing">
     <value>165, 6</value>
-  </data>
-  <data name="mnuToolsMngtFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>168, 22</value>
-  </data>
-  <data name="mnuToolsMngtFiles.Text" xml:space="preserve">
-    <value>Manage Midi files</value>
   </data>
   <data name="mnuToolsMngtFilesDeleteEmptyDirs.Size" type="System.Drawing.Size, System.Drawing">
     <value>296, 22</value>
@@ -375,14 +339,20 @@
   <data name="mnuToolsMngtFilesSearchSameNameInASingleDirectory.Text" xml:space="preserve">
     <value>Search same name in a single directory</value>
   </data>
+  <data name="mnuToolsMngtFiles.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 22</value>
+  </data>
+  <data name="mnuToolsMngtFiles.Text" xml:space="preserve">
+    <value>Manage Midi files</value>
+  </data>
   <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
     <value>165, 6</value>
   </data>
-  <data name="mnuMidi.Size" type="System.Drawing.Size, System.Drawing">
-    <value>43, 20</value>
+  <data name="mnuTools.Size" type="System.Drawing.Size, System.Drawing">
+    <value>47, 20</value>
   </data>
-  <data name="mnuMidi.Text" xml:space="preserve">
-    <value>&amp;Midi</value>
+  <data name="mnuTools.Text" xml:space="preserve">
+    <value>&amp;Tools</value>
   </data>
   <data name="mnuMidiInputDevice.Size" type="System.Drawing.Size, System.Drawing">
     <value>176, 22</value>
@@ -399,12 +369,6 @@
   <data name="MnuMidiSep1.Size" type="System.Drawing.Size, System.Drawing">
     <value>173, 6</value>
   </data>
-  <data name="MnuMidiExternal.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 22</value>
-  </data>
-  <data name="MnuMidiExternal.Text" xml:space="preserve">
-    <value>External Instrument</value>
-  </data>
   <data name="MnuMidiExternalPlay.Size" type="System.Drawing.Size, System.Drawing">
     <value>111, 22</value>
   </data>
@@ -417,171 +381,63 @@
   <data name="MnuMidiExternalRecord.Text" xml:space="preserve">
     <value>Record</value>
   </data>
+  <data name="MnuMidiExternal.Size" type="System.Drawing.Size, System.Drawing">
+    <value>176, 22</value>
+  </data>
+  <data name="MnuMidiExternal.Text" xml:space="preserve">
+    <value>External Instrument</value>
+  </data>
+  <data name="mnuMidi.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 20</value>
+  </data>
+  <data name="mnuMidi.Text" xml:space="preserve">
+    <value>&amp;Midi</value>
+  </data>
+  <data name="MnuHelpCheckNewVersion.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="MnuHelpCheckNewVersion.Text" xml:space="preserve">
+    <value>Check new version</value>
+  </data>
+  <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuHelpAbout.Text" xml:space="preserve">
+    <value>About Karaboss</value>
+  </data>
   <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 20</value>
   </data>
   <data name="mnuHelp.Text" xml:space="preserve">
     <value>&amp;Help</value>
   </data>
-  <data name="MnuHelpCheckNewVersion.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+  <data name="mnuExplorer.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
   </data>
-  <data name="MnuHelpCheckNewVersion.Text" xml:space="preserve">
-    <value>Check new version</value>
+  <data name="mnuExplorer.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 2, 0, 2</value>
   </data>
-  <data name="MnuHelpCheckNewVersion.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
+  <data name="mnuExplorer.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 24</value>
   </data>
-  <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+  <data name="mnuExplorer.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
   </data>
-  <data name="mnuHelpAbout.Text" xml:space="preserve">
-    <value>About Karaboss</value>
+  <data name="&gt;&gt;mnuExplorer.Name" xml:space="preserve">
+    <value>mnuExplorer</value>
+  </data>
+  <data name="&gt;&gt;mnuExplorer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuExplorer.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;mnuExplorer.ZOrder" xml:space="preserve">
+    <value>7</value>
   </data>
   <metadata name="sequence1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="&gt;&gt;lblLyrics.Name" xml:space="preserve">
-    <value>lblLyrics</value>
-  </data>
-  <data name="&gt;&gt;lblLyrics.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblLyrics.Parent" xml:space="preserve">
-    <value>pnlFileInfos</value>
-  </data>
-  <data name="&gt;&gt;lblLyrics.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;lblWtags.Name" xml:space="preserve">
-    <value>lblWtags</value>
-  </data>
-  <data name="&gt;&gt;lblWtags.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblWtags.Parent" xml:space="preserve">
-    <value>pnlFileInfos</value>
-  </data>
-  <data name="&gt;&gt;lblWtags.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;lblVtags.Name" xml:space="preserve">
-    <value>lblVtags</value>
-  </data>
-  <data name="&gt;&gt;lblVtags.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblVtags.Parent" xml:space="preserve">
-    <value>pnlFileInfos</value>
-  </data>
-  <data name="&gt;&gt;lblVtags.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;lblTtags.Name" xml:space="preserve">
-    <value>lblTtags</value>
-  </data>
-  <data name="&gt;&gt;lblTtags.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblTtags.Parent" xml:space="preserve">
-    <value>pnlFileInfos</value>
-  </data>
-  <data name="&gt;&gt;lblTtags.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;lblLtags.Name" xml:space="preserve">
-    <value>lblLtags</value>
-  </data>
-  <data name="&gt;&gt;lblLtags.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblLtags.Parent" xml:space="preserve">
-    <value>pnlFileInfos</value>
-  </data>
-  <data name="&gt;&gt;lblLtags.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;lblKtags.Name" xml:space="preserve">
-    <value>lblKtags</value>
-  </data>
-  <data name="&gt;&gt;lblKtags.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblKtags.Parent" xml:space="preserve">
-    <value>pnlFileInfos</value>
-  </data>
-  <data name="&gt;&gt;lblKtags.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;lblItags.Name" xml:space="preserve">
-    <value>lblItags</value>
-  </data>
-  <data name="&gt;&gt;lblItags.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblItags.Parent" xml:space="preserve">
-    <value>pnlFileInfos</value>
-  </data>
-  <data name="&gt;&gt;lblItags.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;lblDuration.Name" xml:space="preserve">
-    <value>lblDuration</value>
-  </data>
-  <data name="&gt;&gt;lblDuration.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblDuration.Parent" xml:space="preserve">
-    <value>pnlFileInfos</value>
-  </data>
-  <data name="&gt;&gt;lblDuration.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;lblFormat.Name" xml:space="preserve">
-    <value>lblFormat</value>
-  </data>
-  <data name="&gt;&gt;lblFormat.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblFormat.Parent" xml:space="preserve">
-    <value>pnlFileInfos</value>
-  </data>
-  <data name="&gt;&gt;lblFormat.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;lblTracks.Name" xml:space="preserve">
-    <value>lblTracks</value>
-  </data>
-  <data name="&gt;&gt;lblTracks.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblTracks.Parent" xml:space="preserve">
-    <value>pnlFileInfos</value>
-  </data>
-  <data name="&gt;&gt;lblTracks.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="pnlFileInfos.Location" type="System.Drawing.Point, System.Drawing">
-    <value>178, 347</value>
-  </data>
-  <data name="pnlFileInfos.Size" type="System.Drawing.Size, System.Drawing">
-    <value>586, 60</value>
-  </data>
-  <data name="pnlFileInfos.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;pnlFileInfos.Name" xml:space="preserve">
-    <value>pnlFileInfos</value>
-  </data>
-  <data name="&gt;&gt;pnlFileInfos.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlFileInfos.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pnlFileInfos.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="lblLyrics.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -882,6 +738,27 @@
   <data name="&gt;&gt;lblTracks.ZOrder" xml:space="preserve">
     <value>9</value>
   </data>
+  <data name="pnlFileInfos.Location" type="System.Drawing.Point, System.Drawing">
+    <value>178, 347</value>
+  </data>
+  <data name="pnlFileInfos.Size" type="System.Drawing.Size, System.Drawing">
+    <value>586, 60</value>
+  </data>
+  <data name="pnlFileInfos.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;pnlFileInfos.Name" xml:space="preserve">
+    <value>pnlFileInfos</value>
+  </data>
+  <data name="&gt;&gt;pnlFileInfos.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlFileInfos.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pnlFileInfos.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="sideBarControl.Location" type="System.Drawing.Point, System.Drawing">
     <value>65, 36</value>
   </data>
@@ -898,7 +775,7 @@
     <value>sideBarControl</value>
   </data>
   <data name="&gt;&gt;sideBarControl.Type" xml:space="preserve">
-    <value>VBarControl.SideBarControl.SideBarControl, VBarControl, Version=1.0.0.5, Culture=neutral, PublicKeyToken=null</value>
+    <value>VBarControl.SideBarControl.SideBarControl, VBarControl, Version=1.0.0.6, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;sideBarControl.Parent" xml:space="preserve">
     <value>$this</value>
@@ -922,7 +799,7 @@
     <value>connectedControl</value>
   </data>
   <data name="&gt;&gt;connectedControl.Type" xml:space="preserve">
-    <value>Karaboss.Pages.ConnectedControl, Karaboss, Version=1.0.9.5, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Pages.ConnectedControl, Karaboss, Version=1.0.10.2, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;connectedControl.Parent" xml:space="preserve">
     <value>$this</value>
@@ -946,7 +823,7 @@
     <value>xplorerControl</value>
   </data>
   <data name="&gt;&gt;xplorerControl.Type" xml:space="preserve">
-    <value>Karaboss.xplorer.xplorerControl, Karaboss, Version=1.0.9.5, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.xplorer.xplorerControl, Karaboss, Version=1.0.10.2, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;xplorerControl.Parent" xml:space="preserve">
     <value>$this</value>
@@ -970,7 +847,7 @@
     <value>playlistsControl</value>
   </data>
   <data name="&gt;&gt;playlistsControl.Type" xml:space="preserve">
-    <value>Karaboss.playlists.PlaylistsControl, Karaboss, Version=1.0.9.5, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.playlists.PlaylistsControl, Karaboss, Version=1.0.10.2, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;playlistsControl.Parent" xml:space="preserve">
     <value>$this</value>
@@ -994,7 +871,7 @@
     <value>searchControl</value>
   </data>
   <data name="&gt;&gt;searchControl.Type" xml:space="preserve">
-    <value>Karaboss.Search.SearchControl, Karaboss, Version=1.0.9.5, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Search.SearchControl, Karaboss, Version=1.0.10.2, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;searchControl.Parent" xml:space="preserve">
     <value>$this</value>
