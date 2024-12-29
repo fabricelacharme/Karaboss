@@ -893,12 +893,13 @@ namespace MusicXml
            
             if (Numerator > 0 && Denominator > 0) 
                 track1.insertTimesignature(Numerator, Denominator);            
+            
             track1.insertTrackname(TrackName);
 
-            if (Volume >  0)
+            if (Volume >=  0)
                 track1.insertVolume(Channel, Volume);
             
-            if (Pan > 0)
+            if (Pan >= 0)
                 track1.insertPan(Channel, Pan);            
 
             newTracks.Add(track1);
@@ -925,10 +926,15 @@ namespace MusicXml
             ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, track2.MidiChannel, track2.ProgramChange, 0);
             track2.Insert(0, message);
 
-            track2.insertTimesignature(Numerator, Denominator);
+            if (Numerator > 0 && Denominator > 0)
+                track2.insertTimesignature(Numerator, Denominator);
+            
             track2.insertTrackname(TrackName);
-            track2.insertVolume(Channel, Volume);
-            track2.insertPan(Channel, Pan);
+            
+            if (Volume >= 0)
+                track2.insertVolume(Channel, Volume);
+            if (Pan >= 0)
+                track2.insertPan(Channel, Pan);
 
             newTracks.Add(track2);
         }
