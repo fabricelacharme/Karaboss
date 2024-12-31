@@ -186,6 +186,10 @@ namespace MusicXml
 									var newNote = GetNote(node);
 									measureElement = new MeasureElement {Type = MeasureElementType.Note, Element = newNote};
 								}
+								else if (node.Name == "harmony")
+								{
+									Console.WriteLine("");
+								}
 								else if (node.Name == "backup")
 								{
 									measureElement = new MeasureElement {Type = MeasureElementType.Backup, Element = GetBackupElement(node)};

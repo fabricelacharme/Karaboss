@@ -1,3 +1,5 @@
+using KMusicXml.MusicXml.Domain;
+using Sanford.Multimedia.Midi.Score;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -351,8 +353,7 @@ namespace MusicXml.Domain
                             }
                             
                             else if (childnode.Name == "note")
-                            {
-                                
+                            {                                
                                 // Get notes information
                                 Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics);
 
@@ -466,6 +467,18 @@ namespace MusicXml.Domain
                                 curMeasure.MeasureElements.Add(trucmeasureElement);
 
                             }
+                            
+                            else if (childnode.Name == "harmony")
+                            {
+                                // Chords
+                                // < root - step > B </ root - step >
+                                Chord chord = GetChord(childnode);
+
+                                // Create new element
+                                MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Chord, Element = chord };
+                                curMeasure.MeasureElements.Add(trucmeasureElement);
+                            }
+                            
                             else if (childnode.Name == "backup")
                             {
                                 // voir https://www.w3.org/2021/06/musicxml40/tutorial/midi-compatible-part/
@@ -613,6 +626,29 @@ namespace MusicXml.Domain
            
         }
 
+        private static Chord GetChord(XElement node)
+        {
+            var step = node.Descendants("root-step").FirstOrDefault();
+            var alter = node.Descendants("root-alter").FirstOrDefault();
+
+            Chord chord = new Chord();
+
+            string stp = "";
+            if (step != null)
+            {
+                stp = step.Value;
+                chord.Pitch.Step = stp[0];
+            }
+
+                
+            if (alter != null)
+            {
+                chord.Pitch.Alter = int.Parse(alter.Value);
+            }
+                        
+            return chord;
+        }
+
         private static Note GetNote(XElement node, int mult, int chromatictranspose, int octavechange, int SoundDynamics)
         {
             var rest = node.Descendants("rest").FirstOrDefault();
@@ -711,7 +747,6 @@ namespace MusicXml.Domain
                     bgrace = true;                
             }
 
-
             if (duration != null)
             {
                 note.Duration = int.Parse(duration.Value);                
@@ -719,8 +754,7 @@ namespace MusicXml.Domain
             }
             else
             {
-                note.Duration = 0;                               
-                
+                note.Duration = 0;                                               
             }
 
             if (chord != null)            
@@ -734,8 +768,7 @@ namespace MusicXml.Domain
 
             return note;
         }
-      
-        
+              
 
         /// <summary>
         /// Extract the list of lyrics for a single note 

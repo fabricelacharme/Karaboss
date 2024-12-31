@@ -46,6 +46,7 @@ using MusicXml.Domain;
 using Sanford.Multimedia.Midi;
 using System.Runtime.CompilerServices;
 using System.Data.Sql;
+using KMusicXml.MusicXml.Domain;
 
 namespace MusicXml
 {
@@ -393,6 +394,10 @@ namespace MusicXml
                             Key k = measure.Attributes.Key;
                             int fif = k.Fifths;
                             string mod = k.Mode;
+                            Pitch pitch;
+                            string letter;
+                            int octave;
+                            Note note;
 
 
                             // *************** TAKE INTO ACCOUNT THOSE THINGS !!!!! ***************
@@ -428,22 +433,35 @@ namespace MusicXml
                                         break;
 
 
+                                    case MeasureElementType.Chord:
+                                        Chord chord = (Chord)obj;
+                                        pitch = chord.Pitch;
+                                        letter = chord.Pitch.Step.ToString();
+
+                                        note = new Note();
+                                        octave = 4;
+                                        note.Duration = 480;
+                                        notenumber = 12 + Notes.IndexOf(letter) + 12 * octave;
+                                        starttime = timeline + offset;
+
+                                        CreateMidiNote1(note, notenumber, starttime);
+
+                                        break;
+                                    
                                     case MeasureElementType.Note:
-                                        Note note = (Note)obj;
+                                        note = (Note)obj;
 
                                         string accidental = note.Accidental;
                                         int staff = note.Staff;
                                         bool isrest = note.IsRest;
                                         bool ischordtone = note.IsChordTone;
-                                        Pitch pitch = note.Pitch;
+                                        pitch = note.Pitch;
                                         int voice = note.Voice;
                                         
-
                                         // keep only the good number of the verse             
                                         List<Lyric> lyrics = note.Lyrics;
                                         
                                         string ntype = note.Type;
-
 
                                         // Note duration
                                         //int t = part.Division;
@@ -503,8 +521,8 @@ namespace MusicXml
                                         starttime = timeline;
 
 
-                                        int octave = note.Pitch.Octave;
-                                        string letter = note.Pitch.Step.ToString();
+                                        octave = note.Pitch.Octave;
+                                        letter = note.Pitch.Step.ToString();
 
                                         if (note.IsDrums)
                                         {
