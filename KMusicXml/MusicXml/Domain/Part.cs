@@ -118,6 +118,16 @@ namespace MusicXml.Domain
         public int _chromatictranspose {get; internal set; }
         public int _octavechange { get; internal set; }
 
+        public enum ScoreTypes 
+        {
+            None = 0,
+            Notes = 1,
+            Chords = 2,
+            Both = 3,
+        }
+
+        public ScoreTypes ScoreType { get; set; }
+
         public Part()
 		{
 			Id = string.Empty;						
@@ -129,6 +139,8 @@ namespace MusicXml.Domain
 			Pan = 80;
             _chromatictranspose = 0;
             _octavechange = 0;
+
+            ScoreType = ScoreTypes.Notes;
 		}
 
 
@@ -245,7 +257,7 @@ namespace MusicXml.Domain
                         }
                     }
 
-
+                    // Search for VOICE
                     XElement pnote = partElement.Descendants("note").FirstOrDefault();
                     int v = (int?)pnote.Descendants("voice").FirstOrDefault() ?? -1;
                     if (v != -1 & _part.Voice == 0)
@@ -254,6 +266,13 @@ namespace MusicXml.Domain
                     if (v != -1 && _part.Staff == 0)
                         _part.Staff = v;
 
+
+                    // Search for CHORDS OR NOTES mode
+                    XElement pchord = partElement.Descendants("harmony").FirstOrDefault();
+                    if (pchord != null)
+                    {
+                        _part.ScoreType = ScoreTypes.Chords;
+                    }
 
                     bool bReserved = false;
                     List<int> lstVerseNumber = new List<int>();
@@ -471,7 +490,9 @@ namespace MusicXml.Domain
                             else if (childnode.Name == "harmony")
                             {
                                 // Chords
-                                // < root - step > B </ root - step >
+                                // <root-step>B</root-step>
+                                // <root-alter>B</root-step>
+                                // <kind>B</root-step>
                                 Chord chord = GetChord(childnode);
 
                                 // Create new element
@@ -628,24 +649,56 @@ namespace MusicXml.Domain
 
         private static Chord GetChord(XElement node)
         {
+            string stp = "";
+
             var step = node.Descendants("root-step").FirstOrDefault();
             var alter = node.Descendants("root-alter").FirstOrDefault();
+            var kind = node.Descendants("kind").FirstOrDefault();
+
+            var bassstep = node.Descendants("bass-step").FirstOrDefault();
+            var bassalter = node.Descendants("bass-alter").FirstOrDefault();
 
             Chord chord = new Chord();
 
-            string stp = "";
+            // Letter            
             if (step != null)
             {
                 stp = step.Value;
                 chord.Pitch.Step = stp[0];
+
+                // # or b
+                if (alter != null)
+                {
+                    chord.Pitch.Alter = int.Parse(alter.Value);
+                }            
+
+                // Major, Dominant, ...
+                if (kind != null)
+                {
+                    chord.Kind = kind.Value;
+                }
             }
 
-                
-            if (alter != null)
+            // Bass of the chord
+            if (bassstep != null)
             {
-                chord.Pitch.Alter = int.Parse(alter.Value);
+                // Bass is different than chord root. ex Ab/C
+                stp = bassstep.Value;
+                chord.BassPitch.Step = stp[0];
+
+                if (bassalter != null)
+                {
+                    chord.BassPitch.Alter = int.Parse(bassalter.Value);
+                }
             }
-                        
+            else
+            {
+                // Bass is identical as chord root
+                chord.BassPitch.Step = chord.Pitch.Step;
+                chord.BassPitch.Alter = chord.Pitch.Alter;
+            }
+
+
             return chord;
         }
 

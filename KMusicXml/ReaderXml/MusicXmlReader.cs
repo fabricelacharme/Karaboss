@@ -36,16 +36,10 @@ using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using MusicXml.Domain;
 using Sanford.Multimedia.Midi;
-using System.Runtime.CompilerServices;
-using System.Data.Sql;
 using KMusicXml.MusicXml.Domain;
 
 namespace MusicXml
@@ -397,6 +391,7 @@ namespace MusicXml
                             Pitch pitch;
                             string letter;
                             int octave;
+                            int alter;
                             Note note;
 
 
@@ -436,13 +431,36 @@ namespace MusicXml
                                     case MeasureElementType.Chord:
                                         Chord chord = (Chord)obj;
                                         pitch = chord.Pitch;
-                                        letter = chord.Pitch.Step.ToString();
+                                        letter = chord.Pitch.Step.ToString();                                       
 
+                                        // Create chord
                                         note = new Note();
                                         octave = 4;
                                         note.Duration = 480;
                                         notenumber = 12 + Notes.IndexOf(letter) + 12 * octave;
+                                        if (chord.Pitch.Alter != 0)
+                                        {
+                                            alter = chord.Pitch.Alter;
+                                            notenumber += alter;
+                                        }
                                         starttime = timeline + offset;
+
+                                        // Create chord
+                                        CreateMidiNote1(note, notenumber, starttime);
+
+
+                                        // Create Bass
+                                        note = new Note();
+                                        pitch = chord.BassPitch;
+                                        letter = chord.BassPitch.Step.ToString();
+                                        octave = 4;
+                                        note.Duration = 480;
+                                        notenumber = 12 + Notes.IndexOf(letter) + 12 * (octave - 2);
+                                        if (chord.BassPitch.Alter != 0)
+                                        {
+                                            alter = chord.BassPitch.Alter;
+                                            notenumber += alter;
+                                        }
 
                                         CreateMidiNote1(note, notenumber, starttime);
 
@@ -458,6 +476,7 @@ namespace MusicXml
                                         pitch = note.Pitch;
                                         int voice = note.Voice;
                                         
+
                                         // keep only the good number of the verse             
                                         List<Lyric> lyrics = note.Lyrics;
                                         
@@ -536,22 +555,24 @@ namespace MusicXml
 
                                             if (note.Pitch.Alter != 0)
                                             {
-                                                int alter = note.Pitch.Alter;
+                                                alter = note.Pitch.Alter;
                                                 notenumber += alter;
                                             }
-
                                         }
 
                                         // Create note
-                                        if (note.Staff <= 1)
-                                            CreateMidiNote1(note, notenumber, starttime);
-                                        else
-                                            CreateMidiNote2(note, notenumber, starttime);
-                                        
-                                        
-                                        if (note.Lyrics.Count > 0 && note.Lyrics[0].Text != null)
+                                        if (part.ScoreType == Part.ScoreTypes.Notes)
                                         {
-                                            CreateLyric(note, starttime, versenumber);
+                                            if (note.Staff <= 1)
+                                                CreateMidiNote1(note, notenumber, starttime);
+                                            else
+                                                CreateMidiNote2(note, notenumber, starttime);
+
+
+                                            if (note.Lyrics.Count > 0 && note.Lyrics[0].Text != null)
+                                            {
+                                                CreateLyric(note, starttime, versenumber);
+                                            }
                                         }
                                         break;
 

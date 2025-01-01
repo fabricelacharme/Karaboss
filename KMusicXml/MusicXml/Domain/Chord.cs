@@ -14,10 +14,12 @@ namespace KMusicXml.MusicXml.Domain
             
             // Fab
             Pitch = new Pitch();
+            BassPitch = new Pitch();
         }
 
-        //public string RootNote { get; internal set; }
+        public string Kind { get; internal set; }
 
         public Pitch Pitch { get; internal set; }
+        public Pitch BassPitch { get; internal set; }
     }
 }
