@@ -119,7 +119,17 @@
             // updIndex
             // 
             resources.ApplyResources(this.updIndex, "updIndex");
+            this.updIndex.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.updIndex.Name = "updIndex";
+            this.updIndex.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.updIndex.ValueChanged += new System.EventHandler(this.updIndex_ValueChanged);
             // 
             // lblIndex

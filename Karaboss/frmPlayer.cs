@@ -7217,7 +7217,7 @@ namespace Karaboss
             #endregion channel
 
             #region trackindex
-            decimal trkindex = sequence1.tracks.Count;
+            decimal trkindex = sequence1.tracks.Count + 1;
 
             #endregion trackindex
 
@@ -7237,7 +7237,7 @@ namespace Karaboss
             programchange = TrackDialog.ProgramChange;
             string instrumentname = TrackDialog.InstrumentName;
             channel = TrackDialog.MidiChannel;
-            int tindex = Convert.ToInt32(TrackDialog.trackindex);  // index of new track
+            int tindex = Convert.ToInt32(TrackDialog.trackindex) - 1;  // index of new track (-1 to convert to 0 base)
 
 
             int volume = 79;

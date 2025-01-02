@@ -2390,7 +2390,7 @@ namespace Karaboss
             string trackname = "Track1";
             int programchange = 0;
             int channel = 0;
-            decimal trkindex = 0;
+            decimal trkindex = 1;
             int clef = 0;
 
             //dr = new DialogResult();
