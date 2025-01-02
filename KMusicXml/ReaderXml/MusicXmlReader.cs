@@ -276,7 +276,9 @@ namespace MusicXml
                     commondivision = part.Division;
             }
 
+            // ================================
             // For each track
+            // ================================
             foreach (Part part in Parts)
             {
                 TrackName = part.Name.Trim();
@@ -436,15 +438,23 @@ namespace MusicXml
                                         // Create chord
                                         note = new Note();
                                         octave = 4;
-                                        note.Duration = 480;
+                                        
                                         notenumber = 12 + Notes.IndexOf(letter) + 12 * octave;
                                         if (chord.Pitch.Alter != 0)
                                         {
                                             alter = chord.Pitch.Alter;
                                             notenumber += alter;
                                         }
+                                        
                                         starttime = timeline + offset;
+                                        
+                                        // Duration of chord
+                                        // Distance between end of measure or distance between next chord                                        
+                                        int d = chord.RemainDuration;
+                                        note.Duration = (int)(d * multcoeff);
 
+                                        List<int> notes = chord.GetNotes();
+                                        
                                         // Create chord
                                         CreateMidiNote1(note, notenumber, starttime);
 
@@ -454,7 +464,7 @@ namespace MusicXml
                                         pitch = chord.BassPitch;
                                         letter = chord.BassPitch.Step.ToString();
                                         octave = 4;
-                                        note.Duration = 480;
+                                        note.Duration = d;
                                         notenumber = 12 + Notes.IndexOf(letter) + 12 * (octave - 2);
                                         if (chord.BassPitch.Alter != 0)
                                         {
@@ -1035,7 +1045,7 @@ namespace MusicXml
                 Console.WriteLine(e.ToString());
             }
         }
-        #endregion notes
+        #endregion notes    
 
 
         #region lyrics

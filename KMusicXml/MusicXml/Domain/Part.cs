@@ -199,9 +199,12 @@ namespace MusicXml.Domain
                 else
                     pan = Convert.ToInt32(pa);
             }
-            _part.Pan = 64 * (1 + pan / 90);                 
-            
+            _part.Pan = 64 * (1 + pan / 90);
 
+
+            // ====================================================
+            // For each track
+            // ====================================================
             foreach (var partElement in doc.Descendants("part"))
             {
                 // Check if goof Id for this part
@@ -278,12 +281,24 @@ namespace MusicXml.Domain
                     List<int> lstVerseNumber = new List<int>();
 
                     var measuresXpath = string.Format("//part[@id='{0}']/measure", _part.Id);
-                    var measureNodes = doc.XPathSelectElements(measuresXpath);                    
-                    
-                    
-                    
+                    var measureNodes = doc.XPathSelectElements(measuresXpath);
+
+                    IEnumerable<XElement> Vharmony;
+                    IEnumerable<XElement> vChords;
+
+                    int idChord = 0;
+                    //int elapse = 0;
+
+                    // ====================================================
+                    // For each measure
+                    // ====================================================
                     foreach ( XElement measureNode in measureNodes )
-                    {                        
+                    {
+                        Vharmony = new List<XElement>();
+                        vChords = new List<XElement>();
+                        idChord = 0;
+                        //elapse = 0;
+
                         Measure curMeasure = new Measure();
                                                 
                         // Why ?: the measures between ending.start and ending.stop are reserved for one or several verses
@@ -291,6 +306,13 @@ namespace MusicXml.Domain
                         if (bReserved) 
                         {                           
                             curMeasure.lstVerseNumber = lstVerseNumber;
+                        }
+
+                        if (_part.ScoreType == ScoreTypes.Chords)
+                        {
+                            // Search how many harmony tags
+                            Vharmony = measureNode.Descendants("harmony");
+                            vChords = measureNode.Descendants().Where(x => x.Name.LocalName == "harmony" || x.Name.LocalName == "note");
                         }
 
                         // Attributes containing everything
@@ -355,6 +377,7 @@ namespace MusicXml.Domain
                                 }
 
                             }                            
+                            
                             else if (childnode.Name == "sound")
                             {
                                 // Velocity of notes
@@ -485,6 +508,7 @@ namespace MusicXml.Domain
                                 MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
                                 curMeasure.MeasureElements.Add(trucmeasureElement);
 
+                                //elapse += note.Duration;
                             }
                             
                             else if (childnode.Name == "harmony")
@@ -493,11 +517,14 @@ namespace MusicXml.Domain
                                 // <root-step>B</root-step>
                                 // <root-alter>B</root-step>
                                 // <kind>B</root-step>
-                                Chord chord = GetChord(childnode);
+                                Chord chord = GetChord(childnode, _part.coeffmult, vChords);
+
 
                                 // Create new element
                                 MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Chord, Element = chord };
                                 curMeasure.MeasureElements.Add(trucmeasureElement);
+
+                                idChord++;
                             }
                             
                             else if (childnode.Name == "backup")
@@ -647,7 +674,7 @@ namespace MusicXml.Domain
            
         }
 
-        private static Chord GetChord(XElement node)
+        private static Chord GetChord(XElement node, int mult, IEnumerable<XElement> c)
         {
             string stp = "";
 
@@ -697,6 +724,43 @@ namespace MusicXml.Domain
                 chord.BassPitch.Step = chord.Pitch.Step;
                 chord.BassPitch.Alter = chord.Pitch.Alter;
             }
+
+            // Number of chords in this measure
+            //chord.Count = h.Count();
+
+
+            int Duration = 0;
+            bool bStart = false;
+
+            // loop into harmony and notes in ordrer to calculate the time elapse between the current chord
+            // and the next chord, or end of measure 
+            foreach (XElement e in c)
+            {
+                if (e.Name == "note")
+                {
+                    if (bStart)
+                    {
+                        // Calculate duration starting form current harmony
+                        var duration = e.Descendants("duration").FirstOrDefault();
+                        Duration += int.Parse(duration.Value);
+                    }
+                }
+                else if (e.Name == "harmony")
+                {                    
+                    if (e == node)
+                    {
+                        // Start counting duration from this point until end of measure or next harmony
+                        bStart = true;                        
+                    } 
+                    else
+                    {
+                        // A new harmony is encountered => stop calculation
+                        bStart = false;
+                    }
+
+                }
+            }
+            chord.RemainDuration = Duration * mult;
 
 
             return chord;

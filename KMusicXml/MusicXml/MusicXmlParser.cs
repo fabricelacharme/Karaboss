@@ -32,6 +32,7 @@
 
 #endregion
 
+using KMusicXml.MusicXml.Domain;
 using MusicXml.Domain;
 using System;
 using System.Collections.Generic;
@@ -188,8 +189,9 @@ namespace MusicXml
 								}
 								else if (node.Name == "harmony")
 								{
-									Console.WriteLine("");
-								}
+									var newChord = GetChord(node);
+                                    measureElement = new MeasureElement { Type = MeasureElementType.Chord, Element = newChord };
+                                }
 								else if (node.Name == "backup")
 								{
 									measureElement = new MeasureElement {Type = MeasureElementType.Backup, Element = GetBackupElement(node)};
@@ -269,6 +271,14 @@ namespace MusicXml
 			}
 
 			return backup;
+		}
+
+
+		private static Chord GetChord(XmlNode chordNode)
+		{
+			var chord = new Chord();
+
+			return chord;
 		}
 
 		private static Note GetNote(XmlNode noteNode)
