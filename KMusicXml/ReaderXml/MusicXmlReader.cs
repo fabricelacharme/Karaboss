@@ -445,8 +445,12 @@ namespace MusicXml
                                             alter = chord.Pitch.Alter;
                                             notenumber += alter;
                                         }
-                                        
+
                                         starttime = timeline + offset;
+                                        if (chord.Offset > 0)
+                                        {
+                                            starttime += (int)(chord.Offset * multcoeff);
+                                        }
                                         
                                         // Duration of chord
                                         // Distance between end of measure or distance between next chord                                        
@@ -455,27 +459,7 @@ namespace MusicXml
 
                                         List<int> lnotes = chord.GetNotes(notenumber);
 
-                                        // Create chord
-                                        /*
-                                        if (starttime > 134400)
-                                        {
-                                            break;
-                                        }
-
-                                        if (lnotes.Count == 0)
-                                            Console.WriteLine("");
-                                        */
-                                        /*
-                                        CreateMidiNote1(note, notenumber, starttime);
-                                        if (lnotes.Count > 1)
-                                            CreateMidiNote1(note, lnotes[1] - 12, starttime);
-                                        if (lnotes.Count > 2)
-                                            CreateMidiNote1(note, lnotes[2] - 12, starttime);
-                                        if (lnotes.Count > 3)
-                                            CreateMidiNote1(note, lnotes[3] - 12, starttime);
-                                        if (lnotes.Count > 4)
-                                            CreateMidiNote1(note, lnotes[4] - 12, starttime);
-                                        */
+                                        // Create chord                                                                                
                                         for (int idx = 0; idx < lnotes.Count; idx++)
                                         {
                                             CreateMidiNote1(note, lnotes[idx], starttime);
@@ -520,42 +504,8 @@ namespace MusicXml
                                         //int t = part.Division;
                                         note.Duration = (int)(note.Duration * multcoeff);
                                         
-                                        /*
-                                        switch (note.Type)
-                                        {
-                                            case "whole":
-                                                t = t/8;                                                
-                                                break;
-                                            case "half":
-                                                t = t/8;
-                                                break;
-                                            case "quarter":
-                                                t = t/8;                                                
-                                                break;
-                                            case "eighth":
-                                                t = t/8;                                               
-                                                break;
-                                            case "16th":
-                                                t = t/8;                                                
-                                                break;
-                                            case "32nd":
-                                                t = t/8;                                                
-                                                break;
-                                            case "":
-                                                t = t/8; // part.Division;
-                                                break;
-                                            default:
-                                                break;
-                                        }
-
-                                        int test1 = (int)(note.DurationOld * multcoeff); ;
-                                        int test2 = t * note.Duration;
-
-                                        if (test1 != test2)
-                                            Console.WriteLine("");
-
-                                        note.Duration = test2;
-                                        */
+                                        // REVOIR les mult & multcoeff
+                                        
 
                                         if (note.IsRest)
                                         {

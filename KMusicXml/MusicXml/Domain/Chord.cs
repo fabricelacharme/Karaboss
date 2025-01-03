@@ -14,12 +14,13 @@ namespace KMusicXml.MusicXml.Domain
         internal Chord()
         {
             Pitch = new Pitch();
-            BassPitch = new Pitch();            
+            BassPitch = new Pitch();
+            Offset = 0;
         }
 
         public string Kind { get; internal set; }
 
-
+        public int Offset { get; internal set; }
         public List<int> Notes { get; internal set; }
 
         // Time until next chord or end of measure

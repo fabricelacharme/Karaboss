@@ -286,8 +286,6 @@ namespace MusicXml.Domain
                     IEnumerable<XElement> Vharmony;
                     IEnumerable<XElement> vChords;
 
-                    int idChord = 0;
-                    //int elapse = 0;
 
                     // ====================================================
                     // For each measure
@@ -296,8 +294,6 @@ namespace MusicXml.Domain
                     {
                         Vharmony = new List<XElement>();
                         vChords = new List<XElement>();
-                        idChord = 0;
-                        //elapse = 0;
 
                         Measure curMeasure = new Measure();
                                                 
@@ -507,8 +503,7 @@ namespace MusicXml.Domain
                                 // Create new element
                                 MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
                                 curMeasure.MeasureElements.Add(trucmeasureElement);
-
-                                //elapse += note.Duration;
+                                
                             }
                             
                             else if (childnode.Name == "harmony")
@@ -519,12 +514,12 @@ namespace MusicXml.Domain
                                 // <kind>B</root-step>
                                 Chord chord = GetChord(childnode, _part.coeffmult, vChords);
 
-
-                                // Create new element
-                                MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Chord, Element = chord };
-                                curMeasure.MeasureElements.Add(trucmeasureElement);
-
-                                idChord++;
+                                if (chord.Kind != "none")
+                                {
+                                    // Create new element
+                                    MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Chord, Element = chord };
+                                    curMeasure.MeasureElements.Add(trucmeasureElement);
+                                }                                
                             }
                             
                             else if (childnode.Name == "backup")
@@ -681,6 +676,7 @@ namespace MusicXml.Domain
             var step = node.Descendants("root-step").FirstOrDefault();
             var alter = node.Descendants("root-alter").FirstOrDefault();
             var kind = node.Descendants("kind").FirstOrDefault();
+            var offset = node.Descendants("offset").FirstOrDefault();
 
             var bassstep = node.Descendants("bass-step").FirstOrDefault();
             var bassalter = node.Descendants("bass-alter").FirstOrDefault();
@@ -704,9 +700,15 @@ namespace MusicXml.Domain
                 {
                     chord.Kind = kind.Value;
                 }
+
+                if (offset != null)
+                {
+                    chord.Offset = int.Parse(offset.Value) * mult;
+                }
             }
 
             // Bass of the chord
+            #region bass
             if (bassstep != null)
             {
                 // Bass is different than chord root. ex Ab/C
@@ -724,42 +726,60 @@ namespace MusicXml.Domain
                 chord.BassPitch.Step = chord.Pitch.Step;
                 chord.BassPitch.Alter = chord.Pitch.Alter;
             }
-
-            // Number of chords in this measure
-            //chord.Count = h.Count();
-
+            #endregion bass
 
             int Duration = 0;
             bool bStart = false;
 
-            // loop into harmony and notes in ordrer to calculate the time elapse between the current chord
-            // and the next chord, or end of measure 
-            foreach (XElement e in c)
+            if (chord.Offset > 0)
             {
-                if (e.Name == "note")
-                {
-                    if (bStart)
-                    {
-                        // Calculate duration starting form current harmony
-                        var duration = e.Descendants("duration").FirstOrDefault();
-                        Duration += int.Parse(duration.Value);
-                    }
-                }
-                else if (e.Name == "harmony")
-                {                    
-                    if (e == node)
-                    {
-                        // Start counting duration from this point until end of measure or next harmony
-                        bStart = true;                        
-                    } 
-                    else
-                    {
-                        // A new harmony is encountered => stop calculation
-                        bStart = false;
-                    }
-
-                }
+                Duration = int.Parse(offset.Value);
             }
+            else
+            {
+
+                // loop into harmony and notes in ordrer to calculate the time elapse between the current chord
+                // and the next chord, or end of measure 
+                foreach (XElement e in c)
+                {
+                    if (e.Name == "note")
+                    {
+                        if (bStart)
+                        {
+                            // Calculate duration starting form current harmony
+                            var duration = e.Descendants("duration").FirstOrDefault();
+                            Duration += int.Parse(duration.Value);
+                        }
+                    }
+                    else if (e.Name == "harmony")
+                    {
+                        if (e == node)
+                        {
+                            // Start counting duration from this point until end of measure or next harmony
+                            bStart = true;
+                        }
+                        else
+                        {
+                            // A new harmony is encountered => stop calculation
+                            if (e.Descendants("offset").FirstOrDefault() == null)
+                            {
+                                bStart = false;
+                            }
+                            else
+                            {
+                                // !!!! case of harmony juts after but with an offset
+                                int d = int.Parse(e.Descendants("offset").FirstOrDefault().Value);
+                                Duration += d;
+                                break;
+                            }
+
+                        }
+
+                    }
+                }
+
+            }
+
             chord.RemainDuration = Duration * mult;
 
 
