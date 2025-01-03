@@ -506,12 +506,16 @@ namespace MusicXml
                                         
                                         // REVOIR les mult & multcoeff
                                         
+                                        if (note.Duration == 0)
+                                            break;
 
                                         if (note.IsRest)
                                         {
                                             timeline += note.Duration;
                                             break;
                                         }
+
+
 
                                         // Take into account previous note                                
                                         if (note.IsChordTone)
@@ -545,8 +549,8 @@ namespace MusicXml
                                         }
 
                                         // Create note
-                                        //if (part.ScoreType == Part.ScoreTypes.Notes)
-                                        //{
+                                        if (part.ScoreType == Part.ScoreTypes.Notes || part.ScoreType == Part.ScoreTypes.Chords && note.Stem != null && note.Stem != "none")
+                                        {
                                             if (note.Staff <= 1)
                                                 CreateMidiNote1(note, notenumber, starttime);
                                             else
@@ -557,7 +561,7 @@ namespace MusicXml
                                             {
                                                 CreateLyric(note, starttime, versenumber);
                                             }
-                                        //}
+                                        }
                                         break;
 
 

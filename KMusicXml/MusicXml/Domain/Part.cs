@@ -393,7 +393,7 @@ namespace MusicXml.Domain
                             else if (childnode.Name == "note")
                             {                                
                                 // Get notes information
-                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics);
+                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics, vChords);
 
                                 #region note lyrics
                                 if (note.Lyrics != null && note.Lyrics.Count > 0)
@@ -786,7 +786,7 @@ namespace MusicXml.Domain
             return chord;
         }
 
-        private static Note GetNote(XElement node, int mult, int chromatictranspose, int octavechange, int SoundDynamics)
+        private static Note GetNote(XElement node, int mult, int chromatictranspose, int octavechange, int SoundDynamics, IEnumerable<XElement> c)
         {
             var rest = node.Descendants("rest").FirstOrDefault();
             var step = node.Descendants("step").FirstOrDefault();            
@@ -798,6 +798,8 @@ namespace MusicXml.Domain
             var staff = node.Descendants("staff").FirstOrDefault();
             var type = node.Descendants("type").FirstOrDefault();
             var grace = node.Descendants("grace").FirstOrDefault();
+            var stem = node.Descendants("stem").FirstOrDefault();           // If stem, notes is drawed so it must be played (otherwise, this is just a timeline)
+            var tie = node.Descendants("tie").FirstOrDefault();             // Linked notes
 
             // Drums ?
             var displaystep = node.Descendants("display-step").FirstOrDefault();
@@ -884,18 +886,75 @@ namespace MusicXml.Domain
                     bgrace = true;                
             }
 
+            #region duration
+
+            // Linked notes
+            string ti;
+            if (tie != null)
+            {
+                ti = tie.Attribute("type").Value;
+                note.TieType = (ti == "start") ? Note.TieTypes.Start : Note.TieTypes.Stop;
+            }
+
+
             if (duration != null)
             {
-                note.Duration = int.Parse(duration.Value);                
+                note.Duration = int.Parse(duration.Value);
                 note.Duration = note.Duration * mult;
             }
             else
             {
-                note.Duration = 0;                                               
+                note.Duration = 0;
             }
+
+            // Ajust calculation with notes having tie
+            if (note.TieType == Note.TieTypes.Start)
+            {
+                bool bStart = false;
+                // Start of a linked note: add duration of Tie Stop note
+                foreach (XElement e in c)
+                {
+                    if (e.Name == "note")
+                    { 
+                        if (e == node)
+                        {
+                            bStart = true;
+                        }
+                        else
+                        {
+                            var ttie = e.Descendants("tie").FirstOrDefault();
+                            if (ttie != null)
+                            {
+                                if (bStart && ttie.Attribute("type").Value == "stop")
+                                {
+                                    var ddur = e.Descendants("duration").FirstOrDefault();
+                                    if (ddur != null)
+                                    {
+                                        int ddd = int.Parse(ddur.Value) * mult;
+                                        note.Duration += ddd;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else if (note.TieType == Note.TieTypes.Stop)
+            {
+                note.Duration = 0;
+                
+            }
+            #endregion duration
+
 
             if (chord != null)            
                 note.IsChordTone = true;
+
+            if (stem != null)
+                note.Stem = stem.Value;
+
+            
 
             // Manage several lyrics per note (a note can be used by several verses)
             note.Lyrics = GetLyrics(node);

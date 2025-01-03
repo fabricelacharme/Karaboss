@@ -5,6 +5,13 @@ namespace MusicXml.Domain
 {
 	public class Note
 	{
+		public enum TieTypes
+		{
+			None,
+			Start,
+			Stop,
+		}
+		
 		internal Note()
 		{
 			Type = string.Empty;
@@ -23,18 +30,23 @@ namespace MusicXml.Domain
 
 			// Fab
 			Pitch = new Pitch();
+
+			TieType = TieTypes.None;
 		}
+
+		
+		public TieTypes TieType {  get; internal set; }
+		
+		// Just to determinate if the note has to be played or not (pulsation with harmony)
+		public string Stem {  get; internal set; }
 
 		public string Type { get; internal set; }
 		
 		public int Voice { get; internal set; }
 
 		public int Duration { get; internal set; }
-        
-		
+        		
 		public int Velocity { get; internal set; }
-
-
 
         // FAB : for verses (several lyrics on the same note with different "number")
         public List<Lyric> Lyrics { get; internal set; }
@@ -49,6 +61,7 @@ namespace MusicXml.Domain
 		public bool IsChordTone { get; internal set; }
 
 		public bool IsDrums { get; internal set; }
+
 		public int DrumPitch { get; internal set; }
 
 		public bool IsRest { get; internal set; }
