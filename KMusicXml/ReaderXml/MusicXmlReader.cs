@@ -453,11 +453,34 @@ namespace MusicXml
                                         int d = chord.RemainDuration;
                                         note.Duration = (int)(d * multcoeff);
 
-                                        List<int> notes = chord.GetNotes();
-                                        
-                                        // Create chord
-                                        CreateMidiNote1(note, notenumber, starttime);
+                                        List<int> lnotes = chord.GetNotes(notenumber);
 
+                                        // Create chord
+                                        /*
+                                        if (starttime > 134400)
+                                        {
+                                            break;
+                                        }
+
+                                        if (lnotes.Count == 0)
+                                            Console.WriteLine("");
+                                        */
+
+                                        CreateMidiNote1(note, notenumber, starttime);
+                                        if (lnotes.Count > 1)
+                                            CreateMidiNote1(note, lnotes[1] - 12, starttime);
+                                        if (lnotes.Count > 2)
+                                            CreateMidiNote1(note, lnotes[2] - 12, starttime);
+                                        if (lnotes.Count > 3)
+                                            CreateMidiNote1(note, lnotes[3] - 12, starttime);
+                                        if (lnotes.Count > 4)
+                                            CreateMidiNote1(note, lnotes[4] - 12, starttime);
+                                        /*
+                                        for (i = 0; i < lnotes.Count; i++)
+                                        {
+                                            CreateMidiNote1(note, lnotes[i], starttime);
+                                        }
+                                        */
 
                                         // Create Bass
                                         note = new Note();
