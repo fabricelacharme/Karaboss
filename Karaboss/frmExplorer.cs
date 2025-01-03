@@ -1419,6 +1419,7 @@ namespace Karaboss
         private void Global_xPlayXml(object sender, FileInfo fi, bool bplay)
         {
             Karaclass.m_MxmlPath = "";
+            Karaclass.m_XmlPath = fi.FullName;
             DisplayXmlPlayer(fi.FullName, null, bplay);
         }
 
@@ -1431,6 +1432,7 @@ namespace Karaboss
 
         private void Global_xPlayTxt(object sender, FileInfo fi, bool bplay)
         {
+            Karaclass.m_XmlPath = "";
             Karaclass.m_MxmlPath = "";
             DisplayTxtPlayer(fi.FullName, null, bplay);
         }
@@ -1447,6 +1449,7 @@ namespace Karaboss
 
         private void Global_PlayMidi(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
+            Karaclass.m_XmlPath = "";
             Karaclass.m_MxmlPath = "";
             DisplayMidiPlayer(fi.FullName, pl, bplay);
         }
@@ -1458,6 +1461,7 @@ namespace Karaboss
 
         private void Global_PlayXml(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
+            Karaclass.m_MxmlPath = fi.FullName;
             Karaclass.m_MxmlPath = "";
             DisplayXmlPlayer(fi.FullName, pl, bplay);
         }
@@ -1470,6 +1474,7 @@ namespace Karaboss
 
         private void Global_PlayTxt(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
+            Karaclass.m_XmlPath = "";
             Karaclass.m_MxmlPath = "";
             DisplayTxtPlayer(fi.FullName, pl, bplay);
         }
@@ -1749,6 +1754,7 @@ namespace Karaboss
             string myXMLFileName = UnzipFile(fpath);            
             if (File.Exists(myXMLFileName))
             {
+                Karaclass.m_XmlPath = myXMLFileName;
                 DisplayXmlPlayer(myXMLFileName, pl, bPlayNow);
             }
 

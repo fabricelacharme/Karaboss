@@ -311,12 +311,17 @@ namespace Karaboss
             m_SepLine = Karaclass.m_SepLine;
             m_SepParagraph = Karaclass.m_SepParagraph;
 
-            //songRoot = songsDir;
-
+            // Don't work with unzipped file            
+            /*
+            if (Karaclass.m_MxmlPath != "") 
+            {
+                FileName = Karaclass.m_MxmlPath;
+            }
+            */
             MIDIfileFullPath = FileName;
             MIDIfileName = Path.GetFileName(FileName);
             MIDIfilePath = Path.GetDirectoryName(FileName);
-
+            
             this.MouseWheel += new MouseEventHandler(FrmPlayer_MouseWheel);
             
             outDevice = outputDevice;           
@@ -344,11 +349,21 @@ namespace Karaboss
             #region playlists
             if (myPlayList != null)
             {
+                string f;
+                if (Karaclass.m_MxmlPath != "")
+                {
+                    f = Karaclass.m_MxmlPath;
+                }
+                else
+                {
+                    f = MIDIfileFullPath;
+                }
                 currentPlaylist = myPlayList;
                 // Search file to play with its filename
-                currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == MIDIfileFullPath).FirstOrDefault();
+                //currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == MIDIfileFullPath).FirstOrDefault();
+                currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == f).FirstOrDefault();
 
-                MIDIfileFullPath = currentPlaylistItem.File;
+                //MIDIfileFullPath = currentPlaylistItem.File;
                 MIDIfileName = currentPlaylistItem.Song; 
 
                 lblPlaylist.Visible = true;
@@ -5396,6 +5411,17 @@ namespace Karaboss
                 // Play a single MIDI file
                 LoadAsyncMidiFile(MIDIfileFullPath);
             }
+            else if (ext == ".mxl")
+            {
+                // mxl file must be unzipped before
+                string myXMLFileName = UnzipFile(MIDIfileFullPath);
+                if (File.Exists(myXMLFileName))
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                    Application.DoEvents();
+                    LoadAsyncXmlFile(myXMLFileName);
+                }
+            }
             else if (ext == ".xml" || ext == ".musicxml")
             {
                 Cursor.Current = Cursors.WaitCursor;
@@ -5414,6 +5440,17 @@ namespace Karaboss
             }
         }
 
+        private string UnzipFile(string f)
+        {
+            string mTempDir = Path.GetTempPath() + "karaboss\\";
+            string myTempDir = mTempDir + Path.GetRandomFileName();
+            Directory.CreateDirectory(myTempDir);
+
+            List<string> lsextensions = new List<string> { "*.musicxml", "*.xml" };
+            return Karaclass.UnzipFiles(f, lsextensions, myTempDir);
+
+
+        }
 
         protected override void OnClosing(CancelEventArgs e)
         {

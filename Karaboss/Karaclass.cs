@@ -67,6 +67,7 @@ namespace Karaboss
 
 
         public static string m_MxmlPath;        // Path of compressed XML File
+        public static string m_XmlPath;         // Path of uncompressed XML File
 
         public enum OptionsDisplay
         {
