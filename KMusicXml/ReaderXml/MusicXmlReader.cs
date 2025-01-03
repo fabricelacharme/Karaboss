@@ -499,6 +499,7 @@ namespace MusicXml
 
                                         break;
                                     
+
                                     case MeasureElementType.Note:
                                         note = (Note)obj;
 
@@ -594,8 +595,8 @@ namespace MusicXml
                                         }
 
                                         // Create note
-                                        if (part.ScoreType == Part.ScoreTypes.Notes)
-                                        {
+                                        //if (part.ScoreType == Part.ScoreTypes.Notes)
+                                        //{
                                             if (note.Staff <= 1)
                                                 CreateMidiNote1(note, notenumber, starttime);
                                             else
@@ -606,7 +607,7 @@ namespace MusicXml
                                             {
                                                 CreateLyric(note, starttime, versenumber);
                                             }
-                                        }
+                                        //}
                                         break;
 
 
