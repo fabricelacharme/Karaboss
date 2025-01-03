@@ -465,7 +465,7 @@ namespace MusicXml
                                         if (lnotes.Count == 0)
                                             Console.WriteLine("");
                                         */
-
+                                        /*
                                         CreateMidiNote1(note, notenumber, starttime);
                                         if (lnotes.Count > 1)
                                             CreateMidiNote1(note, lnotes[1] - 12, starttime);
@@ -475,12 +475,12 @@ namespace MusicXml
                                             CreateMidiNote1(note, lnotes[3] - 12, starttime);
                                         if (lnotes.Count > 4)
                                             CreateMidiNote1(note, lnotes[4] - 12, starttime);
-                                        /*
-                                        for (i = 0; i < lnotes.Count; i++)
-                                        {
-                                            CreateMidiNote1(note, lnotes[i], starttime);
-                                        }
                                         */
+                                        for (int idx = 0; idx < lnotes.Count; idx++)
+                                        {
+                                            CreateMidiNote1(note, lnotes[idx], starttime);
+                                        }
+                                        
 
                                         // Create Bass
                                         note = new Note();
