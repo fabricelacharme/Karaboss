@@ -118,6 +118,8 @@ namespace MusicXml.Domain
         public int _chromatictranspose {get; internal set; }
         public int _octavechange { get; internal set; }
 
+        public int _measurelength { get; internal set; }
+
         public enum ScoreTypes 
         {
             None = 0,
@@ -255,6 +257,7 @@ namespace MusicXml.Domain
                         if (quarterlength != null)
                         {
                             _part.Division = (int)attributes.Descendants("divisions").FirstOrDefault();
+                            _part._measurelength = _part.Division * _part.Numerator; // FAB pour avoir la longueur d'une mesure
                             _part.coeffmult = 480 / _part.Division;
                             _part.Division = 480; 
                         }
@@ -283,8 +286,8 @@ namespace MusicXml.Domain
                     var measuresXpath = string.Format("//part[@id='{0}']/measure", _part.Id);
                     var measureNodes = doc.XPathSelectElements(measuresXpath);
 
-                    IEnumerable<XElement> Vharmony;
-                    IEnumerable<XElement> vChords;
+                    IEnumerable<XElement> vHarmony; // both chords & notes
+                    IEnumerable<XElement> vNotes = measureNodes.Descendants("note");  // only notes
 
 
                     // ====================================================
@@ -292,8 +295,9 @@ namespace MusicXml.Domain
                     // ====================================================
                     foreach ( XElement measureNode in measureNodes )
                     {
-                        Vharmony = new List<XElement>();
-                        vChords = new List<XElement>();
+                        // Reset harmony (chords) elements of this measure
+                        // hamony tags are to be managed inside a measure
+                        vHarmony = new List<XElement>();                        
 
                         Measure curMeasure = new Measure();
                                                 
@@ -306,9 +310,8 @@ namespace MusicXml.Domain
 
                         if (_part.ScoreType == ScoreTypes.Chords)
                         {
-                            // Search how many harmony tags
-                            Vharmony = measureNode.Descendants("harmony");
-                            vChords = measureNode.Descendants().Where(x => x.Name.LocalName == "harmony" || x.Name.LocalName == "note");
+                            // Search how many harmony tags                            
+                            vHarmony = measureNode.Descendants().Where(x => x.Name.LocalName == "harmony" || x.Name.LocalName == "note");
                         }
 
                         // Attributes containing everything
@@ -329,6 +332,15 @@ namespace MusicXml.Domain
                                 curMeasure.Attributes.Key.Mode = mod.Value.ToString();
                         }
 
+                        /*
+                        XElement attrb = partElement.Descendants("attributes").FirstOrDefault();
+                        if (attrb != null)
+                        {
+                            _part.Division = (int)attributes.Descendants("divisions").FirstOrDefault();
+                            _part._measurelength = _part.Division * _part.Numerator; // FAB pour avoir la longueur d'une mesure
+                            _part.coeffmult = 480 / _part.Division;
+                        }
+                        */
                         
                         #region measure number
                         /* 
@@ -351,6 +363,7 @@ namespace MusicXml.Domain
 
                         foreach (XElement childnode in measureNode.Descendants())
                         {                            
+                            // Speed
                             if (childnode.Name == "metronome")
                             {
                                 var pm = childnode.Descendants("per-minute").FirstOrDefault();
@@ -392,8 +405,8 @@ namespace MusicXml.Domain
                             
                             else if (childnode.Name == "note")
                             {                                
-                                // Get notes information
-                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics, vChords);
+                                // Get notes information                                
+                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics, vNotes, _part._measurelength);
 
                                 #region note lyrics
                                 if (note.Lyrics != null && note.Lyrics.Count > 0)
@@ -511,9 +524,11 @@ namespace MusicXml.Domain
                                 // Chords
                                 // <root-step>B</root-step>
                                 // <root-alter>B</root-step>
-                                // <kind>B</root-step>
-                                Chord chord = GetChord(childnode, _part.coeffmult, vChords);
-
+                                // <kind>B</root-step>                                
+                                
+                                
+                                Chord chord = GetChord(childnode, _part.coeffmult, vHarmony);
+                                
                                 if (chord.Kind != "none")
                                 {
                                     // Create new element
@@ -748,7 +763,8 @@ namespace MusicXml.Domain
                         {
                             // Calculate duration starting form current harmony
                             var duration = e.Descendants("duration").FirstOrDefault();
-                            Duration += int.Parse(duration.Value);
+                            if (duration != null)
+                                Duration += int.Parse(duration.Value);
                         }
                     }
                     else if (e.Name == "harmony")
@@ -777,16 +793,13 @@ namespace MusicXml.Domain
 
                     }
                 }
-
             }
 
             chord.RemainDuration = Duration * mult;
-
-
             return chord;
         }
 
-        private static Note GetNote(XElement node, int mult, int chromatictranspose, int octavechange, int SoundDynamics, IEnumerable<XElement> c)
+        private static Note GetNote(XElement node, int mult, int chromatictranspose, int octavechange, int SoundDynamics, IEnumerable<XElement> c, int mesurelength)
         {
             var rest = node.Descendants("rest").FirstOrDefault();
             var step = node.Descendants("step").FirstOrDefault();            
@@ -816,13 +829,24 @@ namespace MusicXml.Domain
             if (voice != null)
                 note.Voice = int.Parse(voice.Value);
 
+            int nDuration = 0;
+            if (duration != null)
+            {
+                nDuration = int.Parse(duration.Value);
+            }
+
             if (rest != null)
+            {                
                 note.IsRest = true;
+                if (rest.Attribute("measure") != null && rest.Attribute("measure").Value == "yes")
+                {
+                    nDuration = mesurelength;
+                }
+            }
             
             if (type != null)          
                 note.Type = type.Value;
             
-
             string stp = "";
             if (step != null)
             {
@@ -897,6 +921,8 @@ namespace MusicXml.Domain
             }
 
 
+            note.Duration = nDuration * mult;
+            /*
             if (duration != null)
             {
                 note.Duration = int.Parse(duration.Value);
@@ -906,6 +932,7 @@ namespace MusicXml.Domain
             {
                 note.Duration = 0;
             }
+            */
 
             // Ajust calculation with notes having tie
             if (note.TieType == Note.TieTypes.Start)

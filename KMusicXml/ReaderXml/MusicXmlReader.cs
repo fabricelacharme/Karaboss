@@ -387,9 +387,15 @@ namespace MusicXml
                             decimal W = measure.Width;
                             int notenumber = 0;
 
+                            int fif;
+                            string mod;
                             Key k = measure.Attributes.Key;
-                            int fif = k.Fifths;
-                            string mod = k.Mode;
+                            if (k != null)
+                            {
+                                fif = k.Fifths;
+                                mod = k.Mode;
+                            }
+
                             Pitch pitch;
                             string letter;
                             int octave;
@@ -431,6 +437,7 @@ namespace MusicXml
 
 
                                     case MeasureElementType.Chord:
+                                        break;
                                         Chord chord = (Chord)obj;
                                         pitch = chord.Pitch;
                                         letter = chord.Pitch.Step.ToString();                                       
@@ -480,7 +487,6 @@ namespace MusicXml
                                         }
 
                                         CreateMidiNote1(note, notenumber, starttime);
-
                                         break;
                                     
 
@@ -515,8 +521,6 @@ namespace MusicXml
                                             break;
                                         }
 
-
-
                                         // Take into account previous note                                
                                         if (note.IsChordTone)
                                             offset = 0;
@@ -549,8 +553,8 @@ namespace MusicXml
                                         }
 
                                         // Create note
-                                        if (part.ScoreType == Part.ScoreTypes.Notes || part.ScoreType == Part.ScoreTypes.Chords && note.Stem != null && note.Stem != "none")
-                                        {
+                                        //if (part.ScoreType == Part.ScoreTypes.Notes || part.ScoreType == Part.ScoreTypes.Chords && note.Stem != null && note.Stem != "none")
+                                        //{
                                             if (note.Staff <= 1)
                                                 CreateMidiNote1(note, notenumber, starttime);
                                             else
@@ -561,7 +565,7 @@ namespace MusicXml
                                             {
                                                 CreateLyric(note, starttime, versenumber);
                                             }
-                                        }
+                                        //}
                                         break;
 
 
