@@ -285,10 +285,11 @@ namespace MusicXml
                 
                 Id = part.Id.Trim();
                 Channel = part.MidiChannel - 1;
-                if (Channel > 15)
-                    break;
+                if (Channel < 0 || Channel > 15) break;
 
                 ProgramChange = part.MidiProgram - 1;
+                if (ProgramChange < 0 || ProgramChange > 127) 
+                    break;
                 Volume = part.Volume;
                 Pan = part.Pan;
 
@@ -536,7 +537,7 @@ namespace MusicXml
 
                                         if (note.IsDrums)
                                         {
-                                            notenumber = note.DrumPitch;
+                                            notenumber = note.DrumInstrument;
                                         }
                                         else
                                         {

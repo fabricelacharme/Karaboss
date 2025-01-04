@@ -21,7 +21,7 @@ namespace MusicXml.Domain
 			IsChordTone = false;
 
 			IsDrums = false;
-			DrumPitch = 0;
+			DrumInstrument = 0;
 
 			Velocity = 80;
 			
@@ -30,6 +30,7 @@ namespace MusicXml.Domain
 
 			// Fab
 			Pitch = new Pitch();
+			PitchDrums = new Pitch();
 
 			TieType = TieTypes.None;
 		}
@@ -56,13 +57,15 @@ namespace MusicXml.Domain
 
 		public Pitch Pitch { get; internal set; }
 
+		public Pitch PitchDrums { get; internal set; }
+
 		public int Staff { get; internal set; }
 
 		public bool IsChordTone { get; internal set; }
 
 		public bool IsDrums { get; internal set; }
 
-		public int DrumPitch { get; internal set; }
+		public int DrumInstrument { get; internal set; }
 
 		public bool IsRest { get; internal set; }
 		

@@ -332,16 +332,7 @@ namespace MusicXml.Domain
                                 curMeasure.Attributes.Key.Mode = mod.Value.ToString();
                         }
 
-                        /*
-                        XElement attrb = partElement.Descendants("attributes").FirstOrDefault();
-                        if (attrb != null)
-                        {
-                            _part.Division = (int)attributes.Descendants("divisions").FirstOrDefault();
-                            _part._measurelength = _part.Division * _part.Numerator; // FAB pour avoir la longueur d'une mesure
-                            _part.coeffmult = 480 / _part.Division;
-                        }
-                        */
-                        
+                                                
                         #region measure number
                         /* 
                         * TODO
@@ -871,8 +862,12 @@ namespace MusicXml.Domain
                     if (stp.Length > 2)
                     {
                         stp = stp.Substring(stp.Length - 2, 2);
-                        note.DrumPitch = Convert.ToInt32(stp) - 1;
+                        note.DrumInstrument = Convert.ToInt32(stp) - 1;
                     }
+                }
+                else
+                {
+                    note.DrumInstrument = note.Pitch.Step;
                 }
             }
 
@@ -922,18 +917,7 @@ namespace MusicXml.Domain
 
 
             note.Duration = nDuration * mult;
-            /*
-            if (duration != null)
-            {
-                note.Duration = int.Parse(duration.Value);
-                note.Duration = note.Duration * mult;
-            }
-            else
-            {
-                note.Duration = 0;
-            }
-            */
-
+            
             // Ajust calculation with notes having tie
             if (note.TieType == Note.TieTypes.Start)
             {
