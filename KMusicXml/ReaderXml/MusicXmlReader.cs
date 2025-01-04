@@ -436,8 +436,7 @@ namespace MusicXml
                                         break;
 
 
-                                    case MeasureElementType.Chord:
-                                        break;
+                                    case MeasureElementType.Chord:                                        
                                         Chord chord = (Chord)obj;
                                         pitch = chord.Pitch;
                                         letter = chord.Pitch.Step.ToString();                                       
@@ -553,8 +552,8 @@ namespace MusicXml
                                         }
 
                                         // Create note
-                                        //if (part.ScoreType == Part.ScoreTypes.Notes || part.ScoreType == Part.ScoreTypes.Chords && note.Stem != null && note.Stem != "none")
-                                        //{
+                                        if (part.ScoreType == Part.ScoreTypes.Notes || part.ScoreType == Part.ScoreTypes.Chords && note.Stem != null && note.Stem != "none")
+                                        {
                                             if (note.Staff <= 1)
                                                 CreateMidiNote1(note, notenumber, starttime);
                                             else
@@ -565,7 +564,7 @@ namespace MusicXml
                                             {
                                                 CreateLyric(note, starttime, versenumber);
                                             }
-                                        //}
+                                        }
                                         break;
 
 
