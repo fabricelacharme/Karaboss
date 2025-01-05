@@ -520,9 +520,8 @@ namespace MusicXml.Domain
                                 // Chords
                                 // <root-step>B</root-step>
                                 // <root-alter>B</root-step>
-                                // <kind>B</root-step>                                
-                                
-                                
+                                // <kind>B</root-step>                                                                
+                                /*
                                 Chord chord = GetChord(childnode, _part.coeffmult, vHarmony);
                                 
                                 if (chord.Kind != "none")
@@ -530,7 +529,8 @@ namespace MusicXml.Domain
                                     // Create new element
                                     MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Chord, Element = chord };
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
-                                }                                
+                                } 
+                                */
                             }
                             
                             else if (childnode.Name == "backup")
@@ -833,6 +833,7 @@ namespace MusicXml.Domain
 
             if (rest != null)
             {                
+                // If rest and whole measure => duration = measure length
                 note.IsRest = true;
                 if (rest.Attribute("measure") != null && rest.Attribute("measure").Value == "yes")
                 {
@@ -854,6 +855,7 @@ namespace MusicXml.Domain
             // Drums
             else if (displaystep != null)
             {
+                #region drums
                 stp = displaystep.Value;
                 note.Pitch.Step = stp[0];
                 note.IsDrums = true;
@@ -881,6 +883,7 @@ namespace MusicXml.Domain
                 {
                     //note.DrumInstrument = note.Pitch.Step;
                 }
+                #endregion drums
             }
 
             // Velocity
@@ -927,16 +930,19 @@ namespace MusicXml.Domain
                 note.TieType = (ti == "start") ? Note.TieTypes.Start : Note.TieTypes.Stop;
             }
 
-
+            // Real duration
             note.Duration = nDuration * mult;
             
             // Ajust calculation with notes having tie
             if (note.TieType == Note.TieTypes.Start)
             {
-                
-                note.TieDuration = note.Duration;
+                // Save initial duration
+                // USe case: a single note linked to a note belonging to a chord
+                if (!note.IsChordTone)
+                    note.TieDuration = note.Duration;
 
                 bool bStart = false;
+                
                 // Start of a linked note: add duration of Tie Stop note
                 foreach (XElement e in c)
                 {
@@ -974,10 +980,11 @@ namespace MusicXml.Domain
             }
             #endregion duration
 
-
+            // Note is part of a chord
             if (chord != null)            
                 note.IsChordTone = true;
 
+            // Note has a stem to draw (help to determine if it is a real note to be played and not a placeholder) 
             if (stem != null)
                 note.Stem = stem.Value;
 

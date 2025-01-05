@@ -338,7 +338,9 @@ namespace MusicXml
 
                 // Manage the start time of notes
                 int timeline = 0;
-                int offset = 0;                
+                int offset = 0;
+                int offsetTie = 0;
+                int offsetTieNumber = 0;
                 int starttime = 0;
 
                 int versenumber = 0;
@@ -433,11 +435,14 @@ namespace MusicXml
                                     
                                     case MeasureElementType.Backup:
                                         Backup bkp = (Backup)obj;
+                                        //offset = 0;
                                         timeline -= (int)(bkp.Duration * multcoeff);
                                         break;
 
 
-                                    case MeasureElementType.Chord:                                        
+                                    case MeasureElementType.Chord:
+
+                                        break;
                                         Chord chord = (Chord)obj;
                                         pitch = chord.Pitch;
                                         letter = chord.Pitch.Step.ToString();                                       
@@ -536,7 +541,8 @@ namespace MusicXml
                                         if (note.IsChordTone)
                                             offset = 0;
                                         
-                                        timeline += offset;
+                                        if (offset > 0)
+                                            timeline += offset;
 
 
                                         // JE_NE_PEUX_PLUS_DIRE_JE_TAIME_-_Jacques_HIGELIN.xml
@@ -547,19 +553,9 @@ namespace MusicXml
                                         // ou mesure 5 dans musescore.
 
                                         // For the next note (if not chord)
-                                        if (note.TieType == Note.TieTypes.Start)
-                                        {
-                                            //offset = note.TieDuration;
-                                            offset = note.Duration;
-                                        }                                        
-                                        else
-                                        {
-                                            offset = note.Duration;
-                                        }
+                                        offset = note.Duration;
 
-                                        starttime = timeline;
-
-
+                                                                               
                                         octave = note.Pitch.Octave;
                                         letter = note.Pitch.Step.ToString();
 
@@ -580,8 +576,33 @@ namespace MusicXml
                                             }
                                         }
 
+                                        // Startime calculation
+                                        if (note.TieDuration != 0)
+                                        {
+                                            // Note is linked to another note
+                                            offsetTie = note.TieDuration;
+                                            offsetTieNumber = notenumber;
+                                        }
+                                        else if (offsetTie > 0 && note.TieDuration == 0 && !note.IsChordTone && notenumber != offsetTieNumber)
+                                        {
+                                            offsetTie = 0;
+                                        }
+                                        
+                                        
+                                        if (offsetTie != 0 && note.TieDuration == 0 && note.IsChordTone)
+                                        {                                            
+                                            timeline += offsetTie;
+                                            offsetTie = 0;
+                                        }
+
+                                        // Start time of note
+                                        starttime = timeline;
+
+
+
                                         // Create note
-                                        if (part.ScoreType == Part.ScoreTypes.Notes || part.ScoreType == Part.ScoreTypes.Chords && note.Stem != null && note.Stem != "none")
+                                        // in case of harmony, eliminate notes having no stem (and not whole)
+                                        if (part.ScoreType == Part.ScoreTypes.Notes || part.ScoreType == Part.ScoreTypes.Chords && (note.Duration == MeasureLength || (note.Stem != null && note.Stem != "none")))
                                         {
                                             if (note.Staff <= 1)
                                                 CreateMidiNote1(note, Channel, notenumber, starttime);
