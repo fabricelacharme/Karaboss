@@ -401,7 +401,11 @@ namespace MusicXml.Domain
                             
                             else if (childnode.Name == "note")
                             {                                
-                                // Get notes information                                
+                                // Get notes information
+                                var t = measureNode.Attribute("number").Value;
+                                if (int.Parse(t) == 5 && _part.Id == "P2")
+                                    Console.Write("");
+
                                 Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics, vNotes, _part._measurelength);
 
                                 #region note lyrics
@@ -809,6 +813,7 @@ namespace MusicXml.Domain
             var grace = node.Descendants("grace").FirstOrDefault();
             var stem = node.Descendants("stem").FirstOrDefault();           // If stem, notes is drawed so it must be played (otherwise, this is just a timeline)
             var tie = node.Descendants("tie").FirstOrDefault();             // Linked notes
+            var tied = node.Descendants("tied").FirstOrDefault();             // Linked notes
 
             // Drums ?
             var displaystep = node.Descendants("display-step").FirstOrDefault();
@@ -932,6 +937,9 @@ namespace MusicXml.Domain
 
             // Real duration
             note.Duration = nDuration * mult;
+
+            //if (note.Duration == 1920 && step != null)
+            //    Console.WriteLine("");
             
             // Ajust calculation with notes having tie
             if (note.TieType == Note.TieTypes.Start)

@@ -385,7 +385,11 @@ namespace MusicXml
                         { 
 
                             Measure measure = Measures[indice];
-                            
+
+                            //if (measure.Number == 5)
+                            //    if (part.Id == "P2")
+                            //        Console.WriteLine("");
+
                             // BEGIN RECUP
                             decimal W = measure.Width;
                             int notenumber = 0;
@@ -525,11 +529,22 @@ namespace MusicXml
                                         //int t = part.Division;
                                         note.Duration = (int)(note.Duration * multcoeff);
                                         note.TieDuration = (int)(note.TieDuration * multcoeff);
-                                        
+
+
+                                        if (measure.Number == 5)
+                                            if (part.Id == "P2")
+                                                Console.WriteLine("");
+
+
                                         // REVOIR les mult & multcoeff
-                                        
+
                                         if (note.Duration == 0)
+                                        {
+                                            offsetTieNumber--;
+                                            if (offsetTieNumber <= 0)
+                                                offsetTie = 0;
                                             break;
+                                        }
 
                                         if (note.IsRest)
                                         {
@@ -540,8 +555,8 @@ namespace MusicXml
                                         // Take into account previous note                                
                                         if (note.IsChordTone)
                                             offset = 0;
-                                        
-                                        if (offset > 0)
+
+                                        if (offset > 0 && offsetTie == 0)                                        
                                             timeline += offset;
 
 
@@ -581,15 +596,12 @@ namespace MusicXml
                                         {
                                             // Note is linked to another note
                                             offsetTie = note.TieDuration;
-                                            offsetTieNumber = notenumber;
-                                        }
-                                        else if (offsetTie > 0 && note.TieDuration == 0 && !note.IsChordTone && notenumber != offsetTieNumber)
-                                        {
-                                            offsetTie = 0;
+                                            offsetTieNumber++;
                                         }
                                         
                                         
-                                        if (offsetTie != 0 && note.TieDuration == 0 && note.IsChordTone)
+                                        
+                                        if (offsetTie > 0 && note.TieDuration == 0)
                                         {                                            
                                             timeline += offsetTie;
                                             offsetTie = 0;
