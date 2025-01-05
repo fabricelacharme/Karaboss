@@ -15,7 +15,8 @@ namespace MusicXml.Domain
 		internal Note()
 		{
 			Type = string.Empty;
-			Duration = -1;
+			Duration = 0;
+			TieDuration = 0;
 			Voice = 1;
 			Staff = -1;
 			IsChordTone = false;
@@ -46,6 +47,7 @@ namespace MusicXml.Domain
 		public int Voice { get; internal set; }
 
 		public int Duration { get; internal set; }
+		public int TieDuration { get; internal set; }
         		
 		public int Velocity { get; internal set; }
 

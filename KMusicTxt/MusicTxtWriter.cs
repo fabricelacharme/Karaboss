@@ -239,14 +239,14 @@ namespace MusicTxt
             @I	Information  ex Date(of Karaoke file, not song)
             @V	(single) Version ex 0100 ?             
             */
-            if (sequence.KTag.Count == 0)
+            if (sequence.KTag == null || sequence.KTag.Count == 0)
                 stream.WriteLine("0, 0, Text_t, \"@KMIDI KARAOKE FILE\"");
-            if (sequence.VTag.Count == 0)
+            if (sequence.VTag == null || sequence.VTag.Count == 0)
                 stream.WriteLine("0, 0, Text_t, \"@V0100\"");
-            if (sequence.TTag.Count == 0)
+            if (sequence.TTag == null || sequence.TTag.Count == 0)
                 stream.WriteLine(string.Format("0, 0, Text_t, \"@T{0}\"", song));
 
-            if (sequence.ITag.Count == 0)
+            if (sequence.ITag == null || sequence.ITag.Count == 0)
                 stream.WriteLine("0, 0, Text_t, \"@IMidi file dump made with Karaboss\"");
 
             stream.WriteLine("0, 0, Copyright_t, \"No copyright\"");

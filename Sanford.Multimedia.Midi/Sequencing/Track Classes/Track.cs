@@ -1572,6 +1572,11 @@ namespace Sanford.Multimedia.Midi
             Insert(0, message);
         }
 
+        public void insertPatch(int channel, int programchange, int position)
+        {
+            ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, channel, programchange, 0);
+            Insert(position, message);
+        }
         #endregion
 
         #region pitchbend

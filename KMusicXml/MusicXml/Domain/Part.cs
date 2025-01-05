@@ -257,7 +257,12 @@ namespace MusicXml.Domain
                         if (quarterlength != null)
                         {
                             _part.Division = (int)attributes.Descendants("divisions").FirstOrDefault();
-                            _part._measurelength = _part.Division * _part.Numerator; // FAB pour avoir la longueur d'une mesure
+                            
+                            int m = (int)(_part.Division * _part.Numerator * (4f/ _part.Denominator));                            
+                            //_part._measurelength = _part.Division * _part.Numerator; // FAB pour avoir la longueur d'une mesure
+                            _part._measurelength = m;
+                            
+                            
                             _part.coeffmult = 480 / _part.Division;
                             _part.Division = 480; 
                         }
@@ -862,12 +867,19 @@ namespace MusicXml.Domain
                     if (stp.Length > 2)
                     {
                         stp = stp.Substring(stp.Length - 2, 2);
-                        note.DrumInstrument = Convert.ToInt32(stp) - 1;
+                        if (isNumeric(stp))
+                            note.DrumInstrument = Convert.ToInt32(stp) - 1;
+                        else
+                        {
+                            stp = stp.Substring(stp.Length - 1, 1);
+                            if (isNumeric(stp))
+                                note.DrumInstrument = Convert.ToInt32(stp) - 1;
+                        }
                     }
                 }
                 else
                 {
-                    note.DrumInstrument = note.Pitch.Step;
+                    //note.DrumInstrument = note.Pitch.Step;
                 }
             }
 
@@ -921,6 +933,9 @@ namespace MusicXml.Domain
             // Ajust calculation with notes having tie
             if (note.TieType == Note.TieTypes.Start)
             {
+                
+                note.TieDuration = note.Duration;
+
                 bool bStart = false;
                 // Start of a linked note: add duration of Tie Stop note
                 foreach (XElement e in c)
@@ -936,7 +951,8 @@ namespace MusicXml.Domain
                             var ttie = e.Descendants("tie").FirstOrDefault();
                             if (ttie != null)
                             {
-                                if (bStart && ttie.Attribute("type").Value == "stop")
+                                var steep = e.Descendants("step").FirstOrDefault();
+                                if (bStart && steep.Value == step.Value  && ttie.Attribute("type").Value == "stop")
                                 {
                                     var ddur = e.Descendants("duration").FirstOrDefault();
                                     if (ddur != null)
@@ -975,7 +991,12 @@ namespace MusicXml.Domain
 
             return note;
         }
-              
+
+        private static bool isNumeric(string stp)
+        {
+            return int.TryParse(stp, out int test);
+        }
+
 
         /// <summary>
         /// Extract the list of lyrics for a single note 
@@ -1048,7 +1069,8 @@ namespace MusicXml.Domain
             return lstLyrics;
         }
 
-      
+
+       
 
     }
 }

@@ -464,12 +464,19 @@ namespace MusicXml
                                         int d = chord.RemainDuration;
                                         note.Duration = (int)(d * multcoeff);
 
+
+                                        // Change patch & channel in order to play piano for the chords
+                                        int chordchannel = Channel;
+                                        if (track1.ProgramChange != 0)
+                                            chordchannel = 15;
+                                        
+
                                         List<int> lnotes = chord.GetNotes(notenumber);
 
                                         // Create chord                                                                                
                                         for (int idx = 0; idx < lnotes.Count; idx++)
                                         {
-                                            CreateMidiNote1(note, lnotes[idx], starttime);
+                                            CreateMidiNote1(note, chordchannel, lnotes[idx], starttime);
                                         }
                                         
 
@@ -486,7 +493,10 @@ namespace MusicXml
                                             notenumber += alter;
                                         }
 
-                                        CreateMidiNote1(note, notenumber, starttime);
+                                        CreateMidiNote1(note, chordchannel, notenumber, starttime);
+
+                                        // Restore patch
+                                        //track1.insertPatch(Channel, pc, starttime + 10);
                                         break;
                                     
 
@@ -509,6 +519,7 @@ namespace MusicXml
                                         // Note duration
                                         //int t = part.Division;
                                         note.Duration = (int)(note.Duration * multcoeff);
+                                        note.TieDuration = (int)(note.TieDuration * multcoeff);
                                         
                                         // REVOIR les mult & multcoeff
                                         
@@ -524,10 +535,27 @@ namespace MusicXml
                                         // Take into account previous note                                
                                         if (note.IsChordTone)
                                             offset = 0;
+                                        
                                         timeline += offset;
 
+
+                                        // JE_NE_PEUX_PLUS_DIRE_JE_TAIME_-_Jacques_HIGELIN.xml
+                                        //pb avec les notes liées / accords à approfondir
+                                        // Quand toutes les notes de l'accord sonbt liées c'st bon
+                                        // Quand une seule note liée avec l'accord qui suit, c'est la merde
+                                        // Voir mesure 9 en midi, je ne peux plus dire je t'aime
+                                        // ou mesure 5 dans musescore.
+
                                         // For the next note (if not chord)
-                                        offset = note.Duration;
+                                        if (note.TieType == Note.TieTypes.Start)
+                                        {
+                                            //offset = note.TieDuration;
+                                            offset = note.Duration;
+                                        }                                        
+                                        else
+                                        {
+                                            offset = note.Duration;
+                                        }
 
                                         starttime = timeline;
 
@@ -535,7 +563,7 @@ namespace MusicXml
                                         octave = note.Pitch.Octave;
                                         letter = note.Pitch.Step.ToString();
 
-                                        if (note.IsDrums)
+                                        if (note.IsDrums && note.DrumInstrument != 0)
                                         {
                                             notenumber = note.DrumInstrument;
                                         }
@@ -556,9 +584,9 @@ namespace MusicXml
                                         if (part.ScoreType == Part.ScoreTypes.Notes || part.ScoreType == Part.ScoreTypes.Chords && note.Stem != null && note.Stem != "none")
                                         {
                                             if (note.Staff <= 1)
-                                                CreateMidiNote1(note, notenumber, starttime);
+                                                CreateMidiNote1(note, Channel, notenumber, starttime);
                                             else
-                                                CreateMidiNote2(note, notenumber, starttime);
+                                                CreateMidiNote2(note, Channel, notenumber, starttime);
 
 
                                             if (note.Lyrics.Count > 0 && note.Lyrics[0].Text != null)
@@ -927,10 +955,10 @@ namespace MusicXml
             
             track1.insertTrackname(TrackName);
 
-            if (Volume >=  0)
+            if (Volume >= 0 && Volume <= 15)
                 track1.insertVolume(Channel, Volume);
             
-            if (Pan >= 0)
+            if (Pan >= 0 && Pan <= 127)
                 track1.insertPan(Channel, Pan);            
 
             newTracks.Add(track1);
@@ -962,9 +990,9 @@ namespace MusicXml
             
             track2.insertTrackname(TrackName);
             
-            if (Volume >= 0)
+            if (Volume >= 0 && Volume <= 127)
                 track2.insertVolume(Channel, Volume);
-            if (Pan >= 0)
+            if (Pan >= 0 && Pan <= 127)
                 track2.insertPan(Channel, Pan);
 
             newTracks.Add(track2);
@@ -983,13 +1011,14 @@ namespace MusicXml
 
         #region notes
 
+      
         /// <summary>
         /// Create a MIDI note in the current rack
         /// </summary>
         /// <param name="n"></param>
         /// <param name="v"></param>
         /// <param name="st"></param>
-        private void CreateMidiNote1(Note n, int v, int st)
+        private void CreateMidiNote1(Note n, int Channel, int v, int st)
         {
             
             if (v < 21)
@@ -1009,7 +1038,7 @@ namespace MusicXml
             }
         }
 
-        private void CreateMidiNote2(Note n, int v, int st)
+        private void CreateMidiNote2(Note n, int Channel, int v, int st)
         {
             if (v < 21)
                 return;
