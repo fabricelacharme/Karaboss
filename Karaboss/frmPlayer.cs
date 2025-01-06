@@ -1313,7 +1313,7 @@ namespace Karaboss
         private void DisplaySongDuration()
         {
             // Affichage du BEAT
-            lblBeat.Text = "1|" + sequence1.Numerator;
+            //lblBeat.Text = "1|" + sequence1.Numerator;
           
             int Min = (int)(_duration / 60);
             int Sec = (int)(_duration - (Min * 60));
@@ -1371,7 +1371,8 @@ namespace Karaboss
         {                        
             // BEAT
             beat = 1;
-           
+            lblBeat.Text = "1|" + sequence1.Numerator;
+
             int Min = (int)(_duration / 60);
             int Sec = (int)(_duration - (Min * 60));
 
@@ -1392,8 +1393,13 @@ namespace Karaboss
 
         private void DisplayFileInfos(int tempo)
         {
+            _tempoplayed = tempo;
+            _duration = _tempoplayed * (_totalTicks / _ppqn) / 1000000; //seconds
+            
+            DisplaySongDuration();
+
             // BEAT
-            beat = 1;
+            //beat = 1;
             int bpm = GetBPM(tempo);
 
             int Min = (int)(_duration / 60);
@@ -4805,19 +4811,14 @@ namespace Karaboss
             {
                 return;
             }
-            //var a = e.Message.MessageType;
-
+            
+            // Tempo change            
             if (e.Message.MetaType == MetaType.Tempo)
             {
                 MetaMessage msg = e.Message;
                 byte[] data = msg.GetBytes();
-                _tempoplayed = ((data[0] << 16) | (data[1] << 8) | data[2]);
-
-                
-                
-
+                _tempoplayed = ((data[0] << 16) | (data[1] << 8) | data[2]);                                
             }
-
         }
 
         private void HandleChannelMessagePlayed(object sender, ChannelMessageEventArgs e)
@@ -5213,7 +5214,7 @@ namespace Karaboss
 
 
             // Tempo change during play
-            //if (_tempoplayed != _tempo)
+            if (_tempoplayed != _tempo)
                 DisplayFileInfos(_tempoplayed);
 
         }
