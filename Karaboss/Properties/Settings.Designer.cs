@@ -1333,5 +1333,17 @@ namespace Karaboss.Properties {
                 this["bShowChords"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool bShowXmlChords {
+            get {
+                return ((bool)(this["bShowXmlChords"]));
+            }
+            set {
+                this["bShowXmlChords"] = value;
+            }
+        }
     }
 }

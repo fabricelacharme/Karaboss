@@ -122,12 +122,25 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="lblPauseSongs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 13</value>
+    <value>122, 13</value>
   </data>
   <data name="lblPauseSongs.Text" xml:space="preserve">
-    <value>Afficher les accords</value>
+    <value>Afficher les accords Midi</value>
   </data>
   <data name="lblDescription.Text" xml:space="preserve">
-    <value>Cette option permet d'afficher les accords contenus dans un fichier MIDI. Les accords peuvent être  inclus dans les paroles ou découverts par Karaboss.</value>
+    <value>Cette option permet de gérer l'affichage des accords dans les deux cas suivants :
+
+* Fichiers Midi : les accords peuvent être associés aux paroles ou découverts par Karaboss.
+
+* Fichiers Xml et Mxl : dans certains cas, les accords peuvent être présents et mélangés aux notes. </value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Coché : Les accords sont affichés en plus des notes et sont joués. Non coché : les accords ne sont pas affichés et ne sont pas joués.</value>
+  </data>
+  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>120, 13</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Afficher les accords Xml</value>
   </data>
 </root>

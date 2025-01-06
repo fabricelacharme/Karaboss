@@ -800,6 +800,7 @@ namespace Karaboss
             Karaclass.m_ShowParagraph = Properties.Settings.Default.bShowParagraph;
             Karaclass.m_ForceUppercase = Properties.Settings.Default.bForceUppercase;
             Karaclass.m_ShowChords = Properties.Settings.Default.bShowChords;
+            Karaclass.m_ShowXmlChords = Properties.Settings.Default.bShowXmlChords;
 
             Karaclass.m_SaveDefaultOutputDevice = Properties.Settings.Default.SaveDefaultOutputDevice;
 

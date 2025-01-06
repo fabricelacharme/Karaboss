@@ -60,7 +60,7 @@ namespace Karaboss
     public partial class frmPlayer : Form
     {
         // FAB 2710
-        MusicXmlReader MXmlReader; // = new MusicXmlReader();
+        MusicXmlReader MXmlReader; 
         MusicTxtReader MTxtReader; 
         MusicTxtWriter MTxtWriter;
 
@@ -2502,6 +2502,10 @@ namespace Karaboss
                 {
                     // FAB 2710
                     MXmlReader = new MusicXmlReader();
+                    
+                    // Show Xml chords?
+                    MXmlReader.PlayXmlChords = Karaclass.m_ShowXmlChords;
+
                     MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
                     // ========
 
@@ -2684,6 +2688,10 @@ namespace Karaboss
           
             // Load xml file                
             MusicXmlReader M = new MusicXmlReader();
+            
+            // Show Xml chords?
+            M.PlayXmlChords = Karaclass.m_ShowXmlChords;
+
             sequence1 = M.Read(fileName, false);
 
             if (sequence1 == null)
@@ -3646,45 +3654,65 @@ namespace Karaboss
             string cr = Environment.NewLine;
 
             // Karaoke infos
-            for (i = 0; i < sequence1.KTag.Count; i++)
+            if (sequence1.KTag != null)
             {
-                tx += sequence1.KTag[i] + cr;
+                for (i = 0; i < sequence1.KTag.Count; i++)
+                {
+                    tx += sequence1.KTag[i] + cr;
+                }
             }
             
-            tx += cr;
+            if (tx != "") tx += cr;
             // Version
-            for (i = 0; i < sequence1.VTag.Count; i++)
+            if (sequence1.VTag != null)
             {
-                tx += sequence1.VTag[i] + cr;
+                for (i = 0; i < sequence1.VTag.Count; i++)
+                {
+                    tx += sequence1.VTag[i] + cr;
+                }
             }
+
             // Lang
-            for (i = 0; i < sequence1.LTag.Count; i++)
+            if (sequence1.LTag != null)
             {
-                tx += sequence1.LTag[i] + cr;
+                for (i = 0; i < sequence1.LTag.Count; i++)
+                {
+                    tx += sequence1.LTag[i] + cr;
+                }
             }
             
-            tx += cr;
+            if (tx != "") tx += cr;
+
             // Copyright of karaoke
-            for (i = 0; i < sequence1.WTag.Count; i++)
+            if (sequence1.WTag != null)
             {
-                tx += sequence1.WTag[i] + cr;
+                for (i = 0; i < sequence1.WTag.Count; i++)
+                {
+                    tx += sequence1.WTag[i] + cr;
+                }
             }
             
-            tx += cr;
+            if (tx != "") tx += cr;
             // Song infos
-            for (i = 0; i < sequence1.TTag.Count; i++)
+            if (sequence1.TTag != null)
             {
-                tx += sequence1.TTag[i] + cr;
+                for (i = 0; i < sequence1.TTag.Count; i++)
+                {
+                    tx += sequence1.TTag[i] + cr;
+                }
             }
             
-            tx += cr;
+            if (tx != "") tx += cr;
             // Infos
-            for (i = 0; i < sequence1.ITag.Count; i++)
+            if (sequence1.ITag != null)
             {
-                tx += sequence1.ITag[i] + cr;
+                for (i = 0; i < sequence1.ITag.Count; i++)
+                {
+                    tx += sequence1.ITag[i] + cr;
+                }
             }
 
-
+            if (tx == "") tx = "No information yet";
             MessageBox.Show(tx, "About this song", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 

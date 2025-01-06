@@ -376,11 +376,9 @@ namespace MusicXml.Domain
                                     MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Time, Element = newTime };
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
 
-
                                     if (_part.Tempo == 0)
                                         _part.Tempo = (int)ttempo;
                                 }
-
                             }                            
                             
                             else if (childnode.Name == "sound")
@@ -402,21 +400,21 @@ namespace MusicXml.Domain
                             else if (childnode.Name == "note")
                             {                                
                                 // Get notes information
-                                var t = measureNode.Attribute("number").Value;
-                                if (int.Parse(t) == 5 && _part.Id == "P2")
-                                    Console.Write("");
+                                //var t = measureNode.Attribute("number").Value;
+                                //if (int.Parse(t) == 11 && _part.Id == "P2")
+                                //    Console.Write("");
 
-                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics, vNotes, _part._measurelength);
+                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics, vNotes, _part._measurelength);                              
 
                                 #region note lyrics
                                 if (note.Lyrics != null && note.Lyrics.Count > 0)
-                                {                                                               
+                                {
                                     // case not reserved and normally 3 verses, but only one lyric on this note
                                     // add a space as a lyric on missing ones
-                                    if (!bReserved &&  (note.Lyrics.Count < curMeasure.lstVerseNumber.Count))
+                                    if (!bReserved && (note.Lyrics.Count < curMeasure.lstVerseNumber.Count))
                                     {
                                         int versenumber;
-                                        List<Lyric> lstlyrics = new List<Lyric>();  
+                                        List<Lyric> lstlyrics = new List<Lyric>();
                                         for (int i = 0; i < curMeasure.lstVerseNumber.Count; i++)
                                         {
                                             Lyric lyric = new Lyric();
@@ -434,9 +432,9 @@ namespace MusicXml.Domain
                                                     lstlyrics[i] = note.Lyrics[j];
                                                     break;
                                                 }
-                                            }                                            
+                                            }
                                         }
-                                        note.Lyrics = lstlyrics;                                       
+                                        note.Lyrics = lstlyrics;
                                     }
 
 
@@ -448,10 +446,10 @@ namespace MusicXml.Domain
                                         foreach (Lyric lyric in note.Lyrics)
                                         {
                                             if (bReserved || note.Lyrics.Count > 1)
-                                            {                                                                                                
+                                            {
                                                 // real number for reserved                                                 
                                                 tmpVerseNumber.Add(lyric.VerseNumber);
-                                                
+
                                             }
                                             else
                                             {
@@ -465,7 +463,7 @@ namespace MusicXml.Domain
                                     // case reserved and verse numbers wrong
                                     // Ajust for the notes (1,2) => (2,3)                                    
                                     if (bReserved && lstVerseNumber.Count > 1 && lstVerseNumber.Count == note.Lyrics.Count)
-                                    {                                        
+                                    {
                                         for (int i = 0; i < note.Lyrics.Count; i++)
                                         {
                                             note.Lyrics[i].VerseNumber = lstVerseNumber[i];
@@ -476,19 +474,19 @@ namespace MusicXml.Domain
                                     // Case of reserved for several verses, 
                                     if (bReserved && note.Lyrics.Count == 1 && curMeasure.lstVerseNumber.Count > note.Lyrics.Count)
                                     {
-                                        
+
                                         // only one lyric common to all
-                                        if (note.Lyrics[0].VerseNumber == 1 && curMeasure.lstVerseNumber[0] > 1) 
+                                        if (note.Lyrics[0].VerseNumber == 1 && curMeasure.lstVerseNumber[0] > 1)
                                         {
                                             // One lyric with versnumber = 1
                                             note.Lyrics[0].VerseNumber = curMeasure.lstVerseNumber[0];
                                             Lyric lyric = new Lyric();
-                                            lyric.Text =  note.Lyrics[0].Text;
+                                            lyric.Text = note.Lyrics[0].Text;
                                             lyric.Syllabic = note.Lyrics[0].Syllabic;
                                             lyric.VerseNumber = note.Lyrics[0].VerseNumber;
-                                            
+
                                             for (int i = 1; i < curMeasure.lstVerseNumber.Count; i++)
-                                            {                                                
+                                            {
                                                 lyric.VerseNumber = curMeasure.lstVerseNumber[i];
                                                 note.Lyrics.Add(lyric);
                                             }
@@ -507,16 +505,16 @@ namespace MusicXml.Domain
                                             lyric.VerseNumber = 2;
                                             note.Lyrics.Insert(0, lyric);
 
-                                        }                                                                                                                             
+                                        }
                                     }
-                                    
+
                                 }
                                 #endregion note lyrics
 
                                 // Create new element
                                 MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
-                                curMeasure.MeasureElements.Add(trucmeasureElement);
-                                
+                                curMeasure.MeasureElements.Add(trucmeasureElement);                                
+
                             }
                             
                             else if (childnode.Name == "harmony")
@@ -525,7 +523,7 @@ namespace MusicXml.Domain
                                 // <root-step>B</root-step>
                                 // <root-alter>B</root-step>
                                 // <kind>B</root-step>                                                                
-                                /*
+                                
                                 Chord chord = GetChord(childnode, _part.coeffmult, vHarmony);
                                 
                                 if (chord.Kind != "none")
@@ -534,7 +532,7 @@ namespace MusicXml.Domain
                                     MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Chord, Element = chord };
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
                                 } 
-                                */
+                                
                             }
                             
                             else if (childnode.Name == "backup")
@@ -815,6 +813,8 @@ namespace MusicXml.Domain
             var tie = node.Descendants("tie").FirstOrDefault();             // Linked notes
             var tied = node.Descendants("tied").FirstOrDefault();             // Linked notes
 
+            var ties = node.Descendants("tie");
+
             // Drums ?
             var displaystep = node.Descendants("display-step").FirstOrDefault();
             var displayoctave = node.Descendants("display-octave").FirstOrDefault();
@@ -929,26 +929,29 @@ namespace MusicXml.Domain
 
             // Linked notes
             string ti;
-            if (tie != null)
+            if (ties != null && ties.Count() > 0)
             {
-                ti = tie.Attribute("type").Value;
-                note.TieType = (ti == "start") ? Note.TieTypes.Start : Note.TieTypes.Stop;
+                if (ties.Count() == 1)
+                {
+                    ti = tie.Attribute("type").Value;
+                    note.TieType = (ti == "start") ? Note.TieTypes.Start : Note.TieTypes.Stop;
+                }
+                else if (ties.Count() == 2)
+                {
+                    note.TieType = Note.TieTypes.Both;
+                }
+
+                // Duration inside the current measure
+                note.TieDuration = nDuration * mult;
             }
 
             // Real duration
             note.Duration = nDuration * mult;
-
-            //if (note.Duration == 1920 && step != null)
-            //    Console.WriteLine("");
+         
             
             // Ajust calculation with notes having tie
             if (note.TieType == Note.TieTypes.Start)
-            {
-                // Save initial duration
-                // USe case: a single note linked to a note belonging to a chord
-                if (!note.IsChordTone)
-                    note.TieDuration = note.Duration;
-
+            {                
                 bool bStart = false;
                 
                 // Start of a linked note: add duration of Tie Stop note
@@ -963,17 +966,25 @@ namespace MusicXml.Domain
                         else
                         {
                             var ttie = e.Descendants("tie").FirstOrDefault();
-                            if (ttie != null)
+                            var tiesnext = e.Descendants("tie");
+
+                            if (tiesnext != null && tiesnext.Count() > 0)
                             {
-                                var steep = e.Descendants("step").FirstOrDefault();
-                                if (bStart && steep.Value == step.Value  && ttie.Attribute("type").Value == "stop")
-                                {
-                                    var ddur = e.Descendants("duration").FirstOrDefault();
+                                var stepnext = e.Descendants("step").FirstOrDefault();
+                                
+                                if (bStart && stepnext.Value == step.Value)
+                                {                                    
+                                    var ddur = e.Descendants("duration").FirstOrDefault();                                    
                                     if (ddur != null)
-                                    {
+                                    {                                        
                                         int ddd = int.Parse(ddur.Value) * mult;
                                         note.Duration += ddd;
-                                        break;
+
+                                        // Only one linked note => break
+                                        if (tiesnext.Count() == 1 && ttie.Attribute("type").Value == "stop")
+                                            break;
+                                        //else if (tiesnext.Count() == 2)
+                                        //    Console.WriteLine("");
                                     }
                                 }
                             }
@@ -985,6 +996,10 @@ namespace MusicXml.Domain
             {
                 note.Duration = 0;
                 
+            }
+            else if (note.TieType == Note.TieTypes.Both)
+            {
+                note.Duration = 0;
             }
             #endregion duration
 

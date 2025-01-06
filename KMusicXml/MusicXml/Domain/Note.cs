@@ -10,6 +10,7 @@ namespace MusicXml.Domain
 			None,
 			Start,
 			Stop,
+			Both,
 		}
 		
 		internal Note()
