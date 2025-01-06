@@ -894,10 +894,12 @@ namespace MusicXml.Domain
             // Velocity
             note.Velocity = SoundDynamics;
 
+            // Warning: alter maybe -1.5
             string accidental = "";
             if (alter != null)
             {
-                switch (int.Parse(alter.Value))
+                //switch (int.Parse(alter.Value))
+                switch (ConvertStringValue(alter.Value))
                 {
                     case 1:
                         accidental = "S";
@@ -908,7 +910,7 @@ namespace MusicXml.Domain
                     default:
                         break;
                 }
-                note.Pitch.Alter = int.Parse(alter.Value);
+                note.Pitch.Alter = ConvertStringValue(alter.Value);
             }
 
             note.Accidental = accidental;
@@ -970,21 +972,39 @@ namespace MusicXml.Domain
 
                             if (tiesnext != null && tiesnext.Count() > 0)
                             {
-                                var stepnext = e.Descendants("step").FirstOrDefault();
-                                
-                                if (bStart && stepnext.Value == step.Value)
-                                {                                    
-                                    var ddur = e.Descendants("duration").FirstOrDefault();                                    
-                                    if (ddur != null)
-                                    {                                        
-                                        int ddd = int.Parse(ddur.Value) * mult;
-                                        note.Duration += ddd;
+                                if (!note.IsDrums)
+                                {
+                                    var stepnext = e.Descendants("step").FirstOrDefault();
+                                    if (bStart && stepnext.Value == step.Value)
+                                    {
+                                        var ddur = e.Descendants("duration").FirstOrDefault();
+                                        if (ddur != null)
+                                        {
+                                            int ddd = int.Parse(ddur.Value) * mult;
+                                            note.Duration += ddd;
 
-                                        // Only one linked note => break
-                                        if (tiesnext.Count() == 1 && ttie.Attribute("type").Value == "stop")
-                                            break;
-                                        //else if (tiesnext.Count() == 2)
-                                        //    Console.WriteLine("");
+                                            // Only one linked note => break
+                                            if (tiesnext.Count() == 1 && ttie.Attribute("type").Value == "stop")
+                                                break;                                            
+                                        }
+                                    }
+                                } 
+                                else
+                                {
+                                    // Drums
+                                    var displaystepnext = e.Descendants("display-step").FirstOrDefault();
+                                    if (bStart && displaystepnext.Value == displaystep.Value)
+                                    {
+                                        var ddur = e.Descendants("duration").FirstOrDefault();
+                                        if (ddur != null)
+                                        {
+                                            int ddd = int.Parse(ddur.Value) * mult;
+                                            note.Duration += ddd;
+
+                                            // Only one linked note => break
+                                            if (tiesnext.Count() == 1 && ttie.Attribute("type").Value == "stop")
+                                                break;
+                                        }
                                     }
                                 }
                             }
