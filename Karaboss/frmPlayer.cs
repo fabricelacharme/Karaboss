@@ -8421,6 +8421,7 @@ namespace Karaboss
         private void ModTempo()
         {
             _tempo = TempoDelta * TempoOrig / 100;
+            _tempoplayed = _tempo;
 
             // Change clock tempo
             sequencer1.Tempo = _tempo;
