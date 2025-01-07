@@ -569,7 +569,7 @@ namespace Karaboss
             this.Focus();
 
             // Display song duration
-            DisplaySongDuration();
+            DisplaySongDuration(_duration);
             DisplayFileInfos();
             DisplayLyricsInfos();
 
@@ -966,7 +966,7 @@ namespace Karaboss
                 sheetmusic.UpdateCurrentNote(sheetmusic.CurrentNote.numstaff, mdnote.Number, mdnote.StartTime, true);
                 
                 UpdateMidiTimes();
-                DisplaySongDuration();
+                DisplaySongDuration(_duration);
 
                 // Redraw scores
                 FileModified();
@@ -989,7 +989,7 @@ namespace Karaboss
 
             sheetmusic.DeleteNote(sheetmusic.CurrentNote.numstaff, sheetmusic.CurrentNote.midinote.Number, sheetmusic.CurrentNote.midinote.StartTime);
             UpdateMidiTimes();
-            DisplaySongDuration();
+            DisplaySongDuration(_duration);
 
             ScrollTo(sheetmusic.CurrentNote.midinote.StartTime);
 
@@ -1310,13 +1310,13 @@ namespace Karaboss
         /// <summary>
         /// Things to do when song is loaded
         /// </summary>
-        private void DisplaySongDuration()
+        private void DisplaySongDuration(double dur)
         {
             // Affichage du BEAT
             //lblBeat.Text = "1|" + sequence1.Numerator;
           
-            int Min = (int)(_duration / 60);
-            int Sec = (int)(_duration - (Min * 60));
+            int Min = (int)(dur / 60);
+            int Sec = (int)(dur - (Min * 60));
 
             lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
             
@@ -1342,7 +1342,6 @@ namespace Karaboss
                 { 
                     track.MeasureLength = _measurelen;
                 }
-
             }
         }
 
@@ -1355,10 +1354,6 @@ namespace Karaboss
         {
             // see http://midi.teragonaudio.com/tech/midifile/ppqn.htm
             const float kOneMinuteInMicroseconds = 60000000;
-            //float kTimeSignatureNumerator = (float)sequence1.Numerator; 
-            //float kTimeSignatureDenominator = (float)sequence1.Denominator;
-
-            //float BPM = (kOneMinuteInMicroseconds / (float)tempo) * (kTimeSignatureDenominator / 4.0f);            
             float BPM = kOneMinuteInMicroseconds / (float)tempo;
 
             return (int)BPM;
@@ -1394,16 +1389,15 @@ namespace Karaboss
         private void DisplayFileInfos(int tempo)
         {
             _tempoplayed = tempo;
-            _duration = _tempoplayed * (_totalTicks / _ppqn) / 1000000; //seconds
-            
-            DisplaySongDuration();
+            double dur = _tempoplayed * (_totalTicks / _ppqn) / 1000000; //seconds            
+            DisplaySongDuration(dur);
 
             // BEAT
             //beat = 1;
             int bpm = GetBPM(tempo);
 
-            int Min = (int)(_duration / 60);
-            int Sec = (int)(_duration - (Min * 60));
+            int Min = (int)(dur / 60);
+            int Sec = (int)(dur - (Min * 60));
 
             string tx;
             tx = string.Format("Division: {0}", _ppqn) + "\n";
@@ -2721,7 +2715,7 @@ namespace Karaboss
 
             sequencer1.Sequence = sequence1;
             UpdateMidiTimes();
-            DisplaySongDuration();
+            DisplaySongDuration(_duration);
 
             positionHScrollBarNew.Value = 0;
             positionHScrollBarNew.Maximum = _totalTicks;
@@ -2732,7 +2726,7 @@ namespace Karaboss
             DisplayScores();
 
             // Display song duration
-            DisplaySongDuration();
+            DisplaySongDuration(_duration);
 
             // Display track controls             
             DisplayTrackControls();
@@ -3322,7 +3316,7 @@ namespace Karaboss
             AddTrackControl(track, sequence1.tracks.Count - 1);
 
             UpdateMidiTimes();
-            DisplaySongDuration();
+            DisplaySongDuration(_duration);
 
             positionHScrollBarNew.Value = 0;
             positionHScrollBarNew.Maximum = _totalTicks;
@@ -3375,7 +3369,7 @@ namespace Karaboss
 
 
             UpdateMidiTimes();
-            DisplaySongDuration();
+            DisplaySongDuration(_duration);
 
             positionHScrollBarNew.Value = 0;
             positionHScrollBarNew.Maximum = _totalTicks;
@@ -3496,7 +3490,7 @@ namespace Karaboss
             
             // Update GUI
             UpdateMidiTimes();
-            DisplaySongDuration();
+            DisplaySongDuration(_duration);
 
             RedrawSheetMusic();
             SetScrollBarValues();
@@ -4299,7 +4293,7 @@ namespace Karaboss
                 DisplayScores();
                
                 // Display song duration
-                DisplaySongDuration();
+                DisplaySongDuration(_duration);
                 
                 // Display track controls             
                 DisplayTrackControls();
@@ -4453,7 +4447,7 @@ namespace Karaboss
                 DisplayScores();
 
                 // Display song duration
-                DisplaySongDuration();
+                DisplaySongDuration(_duration);
 
                 // Display track controls             
                 DisplayTrackControls();
@@ -4595,7 +4589,7 @@ namespace Karaboss
                 DisplayScores();
 
                 // Display song duration
-                DisplaySongDuration();
+                DisplaySongDuration(_duration);
 
                 // Display track controls             
                 DisplayTrackControls();
@@ -7430,7 +7424,7 @@ namespace Karaboss
 
 
             UpdateMidiTimes();
-            DisplaySongDuration();
+            DisplaySongDuration(_duration);
 
             positionHScrollBarNew.Value = 0;
             positionHScrollBarNew.Maximum = _totalTicks;

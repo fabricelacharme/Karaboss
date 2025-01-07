@@ -1,4 +1,5 @@
 using KMusicXml.MusicXml.Domain;
+using Sanford.Multimedia.Midi;
 using Sanford.Multimedia.Midi.Score;
 using System;
 using System.Collections.Generic;
@@ -127,7 +128,6 @@ namespace MusicXml.Domain
             Chords = 2,
             Both = 3,
         }
-
         public ScoreTypes ScoreType { get; set; }
 
         public Part()
@@ -142,12 +142,10 @@ namespace MusicXml.Domain
             _chromatictranspose = 0;
             _octavechange = 0;
 
-            ScoreType = ScoreTypes.Notes;
-		}
+            ScoreType = ScoreTypes.Notes;            
+		}        
 
-
-
-        public int coeffmult { get; set; }
+        public float coeffmult { get; set; }
 
         /// <summary>
         /// Create each part
@@ -165,42 +163,71 @@ namespace MusicXml.Domain
             _part.MidiChannel = (int?)partlistElement.Descendants("midi-channel").FirstOrDefault() ?? 1;
             _part.MidiProgram = (int?)partlistElement.Descendants("midi-program").FirstOrDefault() ?? 1;
 
-
             _part.coeffmult = 6;
 
+
+            // ======================================
+            // Credits
+            // ======================================
+            MidiTags.ResetTags();
+            MidiTags.KTag.Add("MIDI KARAOKE FILE");
+            MidiTags.VTag.Add("0100");
+            string s;
+
+            foreach (var partIdent in doc.Descendants("identification"))
+            {
+                string creator = partIdent.Descendants("creator").FirstOrDefault()?.Value;
+                if (creator != null)
+                    MidiTags.ITag.Add(string.Format("Composer: {0}", creator) );
+                
+                var encod = partIdent.Descendants("encoding").FirstOrDefault();
+                if (encod != null)
+                {
+                    s = encod.Descendants("software").FirstOrDefault()?.Value;
+                    if (s != null)
+                        MidiTags.ITag.Add(string.Format("Encoding: {0}", s));
+                }
+
+            }
+
+            foreach (var partCredit in doc.Descendants("credit"))
+            {                
+                var type = partCredit.Descendants("credit-type").FirstOrDefault()?.Value;
+                if (type != null)
+                {
+                    switch (type)
+                    {
+                        case "title":
+                            s = partCredit.Descendants("credit-words").FirstOrDefault()?.Value;
+                            MidiTags.TTag.Add(s);
+                            MidiTags.TagTitle = s;
+                            break;
+                        case "composer":
+                            s = partCredit.Descendants("credit-words").FirstOrDefault()?.Value;
+                            MidiTags.TTag.Add(s);
+                            MidiTags.TagArtist = s; 
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+            }
+
+
+            // ======================================
             // VOLUME
             // ******************************* The result is wrong => convert value to midi value *************************************************
-            //_part.Volume = (int?)partlistElement.Descendants("volume").FirstOrDefault() ?? 80;
-            int vol = 80;
-            string volu;
-            if (partlistElement.Descendants("volume").FirstOrDefault() != null) 
-            { 
-                volu = partlistElement.Descendants("volume").FirstOrDefault().Value;
-                if (volu.IndexOf(".") > 0 || volu.IndexOf(",") > 0)
-                {
-                    vol = ConvertStringValue(volu);
-                }
-                else
-                    vol = Convert.ToInt32(volu);
-            }
+            int vol = ConvertStringValue(partlistElement.Descendants("volume").FirstOrDefault()?.Value, 80);
             _part.Volume = vol * 127/100;
 
 
             // ======================================
             // PAN
             // 0 = -50%, 64 = 0%, 128 = 50%
-            // ======================================
-            int pan = 64;
-            if (partlistElement.Descendants("pan").FirstOrDefault() != null)
-            {
-                string pa = partlistElement.Descendants("pan").FirstOrDefault()?.Value;
-                if (pa.IndexOf(".") > 0 || pa.IndexOf(",") > 0)
-                {
-                    pan = ConvertStringValue(pa);
-                }
-                else
-                    pan = Convert.ToInt32(pa);
-            }
+            // ======================================            
+            int pan = ConvertStringValue(partlistElement.Descendants("pan").FirstOrDefault()?.Value, 0);
+            // pan = 0 in xml, means 64 in Midi (no pan)
             _part.Pan = 64 * (1 + pan / 90);
 
 
@@ -248,22 +275,23 @@ namespace MusicXml.Domain
                         XElement ptime = attributes.Descendants("time").FirstOrDefault();
                         if (ptime != null)
                         {
-                            _part.Numerator = (int?)ptime.Descendants("beats").FirstOrDefault() ?? 4;
-                            _part.Denominator = (int?)ptime.Descendants("beat-type").FirstOrDefault() ?? 4;
+                            _part.Numerator = ConvertStringValue(ptime.Descendants("beats").FirstOrDefault()?.Value, 4);
+                            _part.Denominator = ConvertStringValue(ptime.Descendants("beat-type").FirstOrDefault()?.Value, 4);
                         }
 
-                        // Divisions
+                        // Divisions (forced to 480)
                         XElement quarterlength = attributes.Descendants("divisions").FirstOrDefault();
                         if (quarterlength != null)
-                        {
-                            _part.Division = (int)attributes.Descendants("divisions").FirstOrDefault();
-                            
-                            int m = (int)(_part.Division * _part.Numerator * (4f/ _part.Denominator));                            
-                            //_part._measurelength = _part.Division * _part.Numerator; // FAB pour avoir la longueur d'une mesure
+                        {                            
+                            // Real division
+                            _part.Division = ConvertStringValue(attributes.Descendants("divisions").FirstOrDefault().Value, 1);                            
+
+                            // FAB pour avoir la longueur d'une mesure
+                            int m = (int)(_part.Division * _part.Numerator * (4f / _part.Denominator));
                             _part._measurelength = m;
                             
-                            
-                            _part.coeffmult = 480 / _part.Division;
+                            // Force division to 480 with a coeff
+                            _part.coeffmult = 480f / _part.Division;
                             _part.Division = 480; 
                         }
                     }
@@ -544,7 +572,7 @@ namespace MusicXml.Domain
                                 {
                                     var backup = new Backup();
                                     //int duration = 480 * int.Parse(dur.Value);
-                                    int duration = _part.coeffmult * int.Parse(dur.Value);
+                                    int duration = (int)(_part.coeffmult * int.Parse(dur.Value));
 
                                     backup.Duration = duration;
                                     MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Backup, Element = backup };
@@ -558,7 +586,7 @@ namespace MusicXml.Domain
                                 {
                                     var forward = new Forward();
                                     //int duration = 480 * int.Parse(dur.Value);
-                                    int duration = _part.coeffmult * int.Parse(dur.Value);
+                                    int duration = (int)(_part.coeffmult * int.Parse(dur.Value));
                                     forward.Duration = duration;
                                     MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Forward, Element = forward };
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
@@ -580,7 +608,7 @@ namespace MusicXml.Domain
                                     var ending = new Ending();
                                     // New case: list of numbers
                                     // <ending number="2, 3" type="start" default-y="44.97"/>
-                                    string s = nending.Attribute("number").Value;
+                                    s = nending.Attribute("number").Value;
                                     List<string> lststrnumbers = s.Split(',').Select(p => p.Trim()).ToList(); 
                                     List<int> lstnumbers = new List<int>();
                                     for (int i = 0; i < lststrnumbers.Count; i++)
@@ -673,16 +701,30 @@ namespace MusicXml.Domain
             return _part;
         }
 
-        private static int ConvertStringValue(string value)
-        {
-            var comma = (NumberFormatInfo)CultureInfo.InstalledUICulture.NumberFormat.Clone();
-            value = value.Replace(".", comma.NumberDecimalSeparator);
+        /// <summary>
+        /// Return an int from any input, even with comma or point separator
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static int ConvertStringValue(string value, int defvalue)
+        {            
+            try
+            {
+                if (value == null) { return defvalue; }
+                
+                var comma = (NumberFormatInfo)CultureInfo.InstalledUICulture.NumberFormat.Clone();
+                value = value.Replace(".", comma.NumberDecimalSeparator);
 
-            return Convert.ToInt32(Convert.ToDouble(value));
+                return Convert.ToInt32(Convert.ToDouble(value));
+            }
+            catch (Exception e)
+            { 
+                return defvalue;
+            }
            
         }
 
-        private static Chord GetChord(XElement node, int mult, IEnumerable<XElement> c)
+        private static Chord GetChord(XElement node, float mult, IEnumerable<XElement> c)
         {
             string stp = "";
 
@@ -716,7 +758,7 @@ namespace MusicXml.Domain
 
                 if (offset != null)
                 {
-                    chord.Offset = int.Parse(offset.Value) * mult;
+                    chord.Offset = (int)(int.Parse(offset.Value) * mult);
                 }
             }
 
@@ -793,11 +835,11 @@ namespace MusicXml.Domain
                 }
             }
 
-            chord.RemainDuration = Duration * mult;
+            chord.RemainDuration = (int)(Duration * mult);
             return chord;
         }
 
-        private static Note GetNote(XElement node, int mult, int chromatictranspose, int octavechange, int SoundDynamics, IEnumerable<XElement> c, int mesurelength)
+        private static Note GetNote(XElement node, float mult, int chromatictranspose, int octavechange, int SoundDynamics, IEnumerable<XElement> c, int mesurelength)
         {
             var rest = node.Descendants("rest").FirstOrDefault();
             var step = node.Descendants("step").FirstOrDefault();            
@@ -828,13 +870,12 @@ namespace MusicXml.Domain
                 note.Staff = int.Parse(staff.Value);
 
             if (voice != null)
-                note.Voice = int.Parse(voice.Value);
+                note.Voice = ConvertStringValue(voice.Value, 1);
 
             int nDuration = 0;
-            if (duration != null)
-            {
-                nDuration = int.Parse(duration.Value);
-            }
+            if (duration != null)           
+                nDuration = ConvertStringValue(duration.Value, 0); //int.Parse(duration.Value);
+            
 
             if (rest != null)
             {                
@@ -899,7 +940,7 @@ namespace MusicXml.Domain
             if (alter != null)
             {
                 //switch (int.Parse(alter.Value))
-                switch (ConvertStringValue(alter.Value))
+                switch (ConvertStringValue(alter.Value, 0))
                 {
                     case 1:
                         accidental = "S";
@@ -910,15 +951,15 @@ namespace MusicXml.Domain
                     default:
                         break;
                 }
-                note.Pitch.Alter = ConvertStringValue(alter.Value);
+                note.Pitch.Alter = ConvertStringValue(alter.Value, 0);
             }
 
             note.Accidental = accidental;
 
             if (octave != null)
-                note.Pitch.Octave = int.Parse(octave.Value);
+                note.Pitch.Octave = ConvertStringValue(octave.Value, 4); //int.Parse(octave.Value);
             else if (displayoctave != null)
-                note.Pitch.Octave = int.Parse(displayoctave.Value);
+                note.Pitch.Octave = ConvertStringValue(displayoctave.Value, 4); //int.Parse(displayoctave.Value);
             
             
             if (grace != null)
@@ -944,11 +985,11 @@ namespace MusicXml.Domain
                 }
 
                 // Duration inside the current measure
-                note.TieDuration = nDuration * mult;
+                note.TieDuration = (int)(nDuration * mult);
             }
 
             // Real duration
-            note.Duration = nDuration * mult;
+            note.Duration = (int)(nDuration * mult);
          
             
             // Ajust calculation with notes having tie
@@ -980,7 +1021,7 @@ namespace MusicXml.Domain
                                         var ddur = e.Descendants("duration").FirstOrDefault();
                                         if (ddur != null)
                                         {
-                                            int ddd = int.Parse(ddur.Value) * mult;
+                                            int ddd = (int)(int.Parse(ddur.Value) * mult);
                                             note.Duration += ddd;
 
                                             // Only one linked note => break
@@ -998,7 +1039,7 @@ namespace MusicXml.Domain
                                         var ddur = e.Descendants("duration").FirstOrDefault();
                                         if (ddur != null)
                                         {
-                                            int ddd = int.Parse(ddur.Value) * mult;
+                                            int ddd = (int)(int.Parse(ddur.Value) * mult);
                                             note.Duration += ddd;
 
                                             // Only one linked note => break

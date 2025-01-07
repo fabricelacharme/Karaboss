@@ -345,8 +345,6 @@ namespace MusicXml
                 // Manage the start time of notes
                 int timeline = 0;
                 int offset = 0;
-                //int offsetTie = 0;
-                //int offsetTieNumber = 0;
                 int starttime = 0;
 
                 int versenumber = 0;
@@ -1322,7 +1320,7 @@ namespace MusicXml
                 sequence.tracks[0].insertTempo(Tempo, 0);
 
             // Tags to sequence
-            //sequence.CloneTags();
+            sequence.CloneTags();
         }
 
         #endregion sequence

@@ -474,6 +474,15 @@ namespace Sanford.Multimedia.Midi
 
         public static void ResetTags()
         {
+            /*
+            Midi file tags
+            @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
+            @L	(single) Language	FRAN, ENGL        
+            @W	(multiple) Copyright (of Karaoke file, not song)        
+            @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
+            @I	Information  ex Date(of Karaoke file, not song)
+            @V	(single) Version ex 0100 ?        
+            */
             MidiTags.Copyright = "";
             MidiTags.ITag = new List<string>();
             MidiTags.KTag = new List<string>();
