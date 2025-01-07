@@ -35,6 +35,8 @@ namespace MusicXml.Domain
 			PitchDrums = new Pitch();
 
 			TieType = TieTypes.None;
+
+			//MeasureNumber = 0;
 		}
 
 		
@@ -73,5 +75,7 @@ namespace MusicXml.Domain
 		public bool IsRest { get; internal set; }
 		
         public string Accidental { get; internal set; }
+
+		//public int MeasureNumber { get; internal set; }
     }
 }

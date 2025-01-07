@@ -178,7 +178,7 @@ namespace MusicXml.Domain
             {
                 string creator = partIdent.Descendants("creator").FirstOrDefault()?.Value;
                 if (creator != null)
-                    MidiTags.ITag.Add(string.Format("Composer: {0}", creator) );
+                    MidiTags.ITag.Add(string.Format("Arranger: {0}", creator) );
                 
                 var encod = partIdent.Descendants("encoding").FirstOrDefault();
                 if (encod != null)
@@ -375,7 +375,7 @@ namespace MusicXml.Domain
                         */
                         try
                         {
-                            curMeasure.Number = int.Parse(measureNode.Attribute("number").Value);                            
+                            curMeasure.Number = int.Parse(measureNode.Attribute("number").Value);                        
                         }
                         catch (Exception ex)
                         {
@@ -383,6 +383,48 @@ namespace MusicXml.Domain
                         }
 
                         #endregion measure number
+
+
+                        // if number = 0, this measure is different than other ones (shorter)
+                        // ?? add additional rests ?
+                        // <measure implicit="yes" number="0" width="167">
+                        if (curMeasure.Number == 0)
+                        {
+                            var vLocalNotes  = measureNode.Descendants("note");
+
+                            int d = 0;
+                            int curstaff = -1;
+                            int x = -1;
+                            foreach (XElement e in vLocalNotes)
+                            {
+                                var ddur = e.Descendants("duration").FirstOrDefault();
+                                var chord = e.Descendants("chord").FirstOrDefault();
+                                var staf = e.Descendants("staff").FirstOrDefault();
+                                if (staf != null)
+                                {
+                                    x = ConvertStringValue(staf.Value, -1);
+                                    if (x != curstaff)
+                                    {
+                                        curstaff = x;
+                                        d = 0;
+                                    }
+                                }                                
+
+                                if (ddur != null && chord == null && (x == curstaff))
+                                {
+                                    d += ConvertStringValue(ddur.Value, 0);
+                                }                                
+                            }
+                            if (d < _part._measurelength)
+                            {                                
+                                // Add a rest note to complete the measure
+                                Note note = new Note();
+                                note.IsRest = true;
+                                note.Duration = (int)((_part._measurelength - d) * _part.coeffmult);
+                                MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
+                                curMeasure.MeasureElements.Add(trucmeasureElement);
+                            }
+                        }
 
 
                         foreach (XElement childnode in measureNode.Descendants())
@@ -432,7 +474,8 @@ namespace MusicXml.Domain
                                 //if (int.Parse(t) == 11 && _part.Id == "P2")
                                 //    Console.Write("");
 
-                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics, vNotes, _part._measurelength);                              
+                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics, vNotes, _part._measurelength);
+                                //note.MeasureNumber = curMeasure.Number;
 
                                 #region note lyrics
                                 if (note.Lyrics != null && note.Lyrics.Count > 0)
@@ -542,9 +585,7 @@ namespace MusicXml.Domain
                                 // Create new element
                                 MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
                                 curMeasure.MeasureElements.Add(trucmeasureElement);                                
-
-                            }
-                            
+                            }                            
                             else if (childnode.Name == "harmony")
                             {
                                 // Chords
@@ -561,8 +602,7 @@ namespace MusicXml.Domain
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
                                 } 
                                 
-                            }
-                            
+                            }                            
                             else if (childnode.Name == "backup")
                             {
                                 // voir https://www.w3.org/2021/06/musicxml40/tutorial/midi-compatible-part/
@@ -996,10 +1036,17 @@ namespace MusicXml.Domain
             if (note.TieType == Note.TieTypes.Start)
             {                
                 bool bStart = false;
-                
+                int curstaff = -1;
+                int x = -1;
+                if (staff != null)
+                {
+                    curstaff = ConvertStringValue(staff.Value, -1);
+                }
+
                 // Start of a linked note: add duration of Tie Stop note
                 foreach (XElement e in c)
                 {
+                    x = -1;
                     if (e.Name == "note")
                     { 
                         if (e == node)
@@ -1016,7 +1063,11 @@ namespace MusicXml.Domain
                                 if (!note.IsDrums)
                                 {
                                     var stepnext = e.Descendants("step").FirstOrDefault();
-                                    if (bStart && stepnext.Value == step.Value)
+                                    var staffnext = e.Descendants("staff").FirstOrDefault();
+                                    if (staffnext != null)
+                                        x = ConvertStringValue(staffnext.Value, -1);
+
+                                    if (bStart && stepnext.Value == step.Value && x == curstaff)
                                     {
                                         var ddur = e.Descendants("duration").FirstOrDefault();
                                         if (ddur != null)
@@ -1034,9 +1085,13 @@ namespace MusicXml.Domain
                                 {
                                     // Drums
                                     var displaystepnext = e.Descendants("display-step").FirstOrDefault();
-                                    if (bStart && displaystepnext.Value == displaystep.Value)
+                                    var staffnext = e.Descendants("staff").FirstOrDefault();
+                                    if (staffnext != null)
+                                        x = ConvertStringValue(staffnext.Value, -1);
+
+                                    if (bStart && displaystepnext.Value == displaystep.Value && x == curstaff)
                                     {
-                                        var ddur = e.Descendants("duration").FirstOrDefault();
+                                        var ddur = e.Descendants("duration").FirstOrDefault();                                        
                                         if (ddur != null)
                                         {
                                             int ddd = (int)(int.Parse(ddur.Value) * mult);

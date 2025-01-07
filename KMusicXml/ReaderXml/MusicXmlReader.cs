@@ -348,6 +348,11 @@ namespace MusicXml
                 int starttime = 0;
 
                 int versenumber = 0;
+
+                // limits of a measure
+                int measureId = 0;
+                int measureStart;
+                int measureEnd;
                 
 
                 // =========================================                
@@ -393,6 +398,14 @@ namespace MusicXml
                             //if (measure.Number == 5)
                             //    if (part.Id == "P2")
                             //        Console.WriteLine("");
+
+                            
+                            // Measure limits to check notes 
+                            
+                            measureId++;
+                            measureStart = (measureId - 1) * MeasureLength;
+                            measureEnd = measureId * MeasureLength;
+                            
 
                             // BEGIN RECUP
                             decimal W = measure.Width;
@@ -531,22 +544,25 @@ namespace MusicXml
 
                                         // Note duration                                        
                                         note.Duration = (int)(note.Duration * multcoeff);           // Full duration (can be several measures)
-                                        note.TieDuration = (int)(note.TieDuration * multcoeff);     // duration inside the current measure in case of linked notes
+                                        note.TieDuration = (int)(note.TieDuration * multcoeff);     // original duration of the note in case of linked notes
 
                                         /*
-                                        if (measure.Number == 5)
+                                        if (measure.Number == 26)
                                             if (part.Id == "P2")
                                                 Console.WriteLine("");
                                         */
 
                                         // TODO: REVOIR les mult & multcoeff
 
-                                        // Note is a linked note
+                                        // Note is the end of a linked note
                                         // => add duration inside the current measure and exit
                                         if (note.Duration == 0)
                                         {
                                             if (!note.IsChordTone)
+                                            {
+                                                offset = note.TieDuration;
                                                 timeline += note.TieDuration;
+                                            }
                                             
                                             break;
                                         }
@@ -586,10 +602,22 @@ namespace MusicXml
                                                 notenumber += alter;
                                             }
                                         }
-                                        
-
-                                        // Start time of note = tiumeline
+                                                                                
+                                        // Start time of note = timeline
                                         starttime = timeline;
+
+                                        
+                                        if (starttime < measureStart)
+                                        {
+                                            //timeline = measureStart;
+                                            //starttime = timeline;
+                                            Console.WriteLine(measure.Number);
+                                        }
+                                        if (starttime > measureEnd)
+                                        {
+                                            Console.WriteLine(measure.Number);
+                                        }
+                                        
 
                                         // Create note
                                         // in case of harmony (chord), eliminate notes having no stem (except note having whole duration)
@@ -609,6 +637,7 @@ namespace MusicXml
                                         }
 
                                         
+
                                         // offset for the timeline for the next note (if not chord)
                                         // if a chord, the offset will be substract
                                         if (note.TieDuration > 0)
