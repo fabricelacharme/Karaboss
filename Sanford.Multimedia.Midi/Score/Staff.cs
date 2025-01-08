@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Documents;
 using static Sanford.Multimedia.Midi.Track;
 
 namespace Sanford.Multimedia.Midi.Score
@@ -309,9 +310,14 @@ namespace Sanford.Multimedia.Midi.Score
         private void DrawChordNames(Graphics g, Rectangle clip, Pen pen)
         {
             /* Skip the left side Clef symbol and key signature */
-            int xpos = keysigWidth;            
-            int ypos = 20; // same as tempos ... Check this
+            int xpos = keysigWidth + 8;            
+            int ypos = 18; // below tempo
             string t = string.Empty;
+
+            if (clef == Clef.Bass)
+            {
+                ypos -= 20;                
+            }
 
             foreach (ChordNameSymbol chord in lstchordnames)
             {
@@ -632,7 +638,6 @@ namespace Sanford.Multimedia.Midi.Score
                 if (selRect.Width == 0)
                     s.Selected = false;
                 
-
 
                 // Draw only in clip area
                 if ((xpos <= clip.X + clip.Width + 50) && (xpos + s.Width + 50 >= clip.X))

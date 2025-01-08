@@ -74,8 +74,9 @@ namespace Sanford.Multimedia.Midi.Score
         */
         private int minWidth()
         {
-            float widthPerChar = SheetMusic.LetterFont.GetHeight() * 2.0f / 3.0f;
+            float widthPerChar = SheetMusic.ChordNameFont.GetHeight() * 2.0f / 3.0f;
             float width = text.Length * widthPerChar;
+            /*
             if (text.IndexOf("i") >= 0)
             {
                 width -= widthPerChar / 2.0f;
@@ -88,6 +89,7 @@ namespace Sanford.Multimedia.Midi.Score
             {
                 width -= widthPerChar / 2.0f;
             }
+            */
             return (int)width;
         }
 

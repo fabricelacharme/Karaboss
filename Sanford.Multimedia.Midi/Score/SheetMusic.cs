@@ -1310,7 +1310,7 @@ namespace Sanford.Multimedia.Midi.Score
             NoteHeight = LineSpace + LineWidth;
             NoteWidth = 3 * LineSpace / 2;
             LetterFont = new Font("Arial", 8, FontStyle.Regular);
-            ChordNameFont = new Font("Arial", 10, FontStyle.Regular);
+            ChordNameFont = new Font("Comic Sans MS", 11, FontStyle.Regular);
         }
 
         #endregion durations
