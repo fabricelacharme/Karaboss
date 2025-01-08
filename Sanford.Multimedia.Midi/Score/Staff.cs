@@ -38,6 +38,7 @@ namespace Sanford.Multimedia.Midi.Score
         private List<MusicSymbol> symbols;  /** The music symbols in this staff */
         private List<LyricSymbol> lyrics;   /** The lyrics to display (can be null) */
         private List<TempoSymbol> lsttempos;     /** The tempo changes to display (minimum 1) */
+        private List<ChordNameSymbol> lstchordnames; 
         private int ytop;                   /** The y pixel of the top of the staff */
         private ClefSymbol clefsym;         /** The left-side Clef symbol */
         private AccidSymbol[] keys;         /** The key signature symbols */
@@ -304,6 +305,28 @@ namespace Sanford.Multimedia.Midi.Score
             }
         }
 
+
+        private void DrawChordNames(Graphics g, Rectangle clip, Pen pen)
+        {
+            /* Skip the left side Clef symbol and key signature */
+            int xpos = keysigWidth;            
+            int ypos = 20; // same as tempos ... Check this
+            string t = string.Empty;
+
+            foreach (ChordNameSymbol chord in lstchordnames)
+            {
+                if ((xpos + chord.X >= clip.X - chord.MinWidth - 50) && (xpos + chord.X <= clip.X + clip.Width + 50))
+                {
+                    t = chord.Text;
+
+                    g.DrawString(t,
+                             SheetMusic.ChordNameFont,
+                             Brushes.Black,
+                             xpos + chord.X, ypos);
+                }
+            }
+        }
+
         /** Draw the measure numbers for each measure */
         private void DrawMeasureNumbers(Graphics g, Rectangle clip, Pen pen)
         {
@@ -456,10 +479,8 @@ namespace Sanford.Multimedia.Midi.Score
          */
         public void AddLyrics(List<LyricSymbol> tracklyrics)
         {
-            if (tracklyrics == null)
-            {
-                return;
-            }
+            if (tracklyrics == null) return;
+            
             lyrics = new List<LyricSymbol>();
 
             int xpos = 0;
@@ -492,6 +513,43 @@ namespace Sanford.Multimedia.Midi.Score
             {
                 lyrics = null;
             }
+        }
+
+        
+        public void AddChordNames(List<ChordNameSymbol> chordNames)
+        {
+            if (chordNames == null) return;
+            
+            int xpos = 0;
+            int symbolindex = 0;
+            lstchordnames = new List<ChordNameSymbol>();
+            
+            foreach (ChordNameSymbol chord in chordNames)
+            {
+                if (chord.StartTime < starttime)
+                {
+                    continue;
+                }
+                if (chord.StartTime >= endtime)
+                {
+                    break;
+                }
+                /* Get the x-position of this lyric */
+                while (symbolindex < symbols.Count && symbols[symbolindex].StartTime < chord.StartTime)
+                {
+                    xpos += symbols[symbolindex].Width;
+                    symbolindex++;
+                }
+                chord.X = xpos;
+                if (symbolindex < symbols.Count && (symbols[symbolindex] is BarSymbol))
+                {
+                    chord.X += SheetMusic.NoteWidth;
+                }
+                lstchordnames.Add(chord);
+                if (lstchordnames.Count == 0) lstchordnames = null;
+            }
+
+
         }
 
         /// <summary>
@@ -600,6 +658,10 @@ namespace Sanford.Multimedia.Midi.Score
             // Draw tempo symbols
             if (lsttempos != null)
                 DrawTempos(g, clip, pen);
+
+            // Draw ChordNames
+            if (lstchordnames != null)
+                DrawChordNames(g, clip, pen);
         }
 
 

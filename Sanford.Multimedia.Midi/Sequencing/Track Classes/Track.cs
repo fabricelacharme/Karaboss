@@ -42,6 +42,9 @@ using System.Windows.Forms;
 using System.Runtime.Remoting.Channels;
 using System.Threading;
 using System.Reflection;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
+using System.Linq;
+using Sanford.Multimedia.Midi.Score;
 
 namespace Sanford.Multimedia.Midi
 {
@@ -74,6 +77,7 @@ namespace Sanford.Multimedia.Midi
         public MidiEvent endOfTrackMidiEvent;
 
         private List<MidiNote> notes;
+        private List<ChordSymbol> _chordsymbols;
 
         #endregion
 
@@ -83,6 +87,7 @@ namespace Sanford.Multimedia.Midi
         {
             endOfTrackMidiEvent = new MidiEvent(this, Length, MetaMessage.EndOfTrackMessage);
             notes = new List<MidiNote>();
+            _chordsymbols = new List<ChordSymbol>();
         }
 
         #endregion
@@ -279,7 +284,6 @@ namespace Sanford.Multimedia.Midi
                 }
             }
 
-
             // FAB 26/09/2024
             // EndOfTrackOffset is now used to dimension a midi file at creation, instead of creating a dummy note at the end of the file
             // But we must ensure to keep the length of editing zone even if we delete notes.
@@ -352,8 +356,7 @@ namespace Sanford.Multimedia.Midi
         }
 
         public MidiNote findMidiNote(int number, int ticks)
-        {
-            
+        {            
             try
             {
                 MidiNote m = notes.Find(u => u != null && u.Number == number && u.StartTime == ticks);
@@ -413,6 +416,57 @@ namespace Sanford.Multimedia.Midi
         }
 
         #endregion notes management
+
+
+        #region chords
+
+        /// <summary>
+        /// Add a new chord name to the track
+        /// </summary>
+        /// <param name="chord"></param>
+        /// <param name="starttime"></param>
+        public void addChord(string chord, int starttime)
+        {
+            
+            #region guard
+            if (findChord(chord, starttime) != null) return;
+            #endregion guard
+
+            ChordSymbol chordnew = new ChordSymbol()
+            {
+                ChordName = chord,
+                TicksOn = starttime,
+            };
+
+            _chordsymbols.Add(chordnew);            
+            _chordsymbols = _chordsymbols.OrderBy(x => x.TicksOn).ToList();
+            
+        }
+
+        /// <summary>
+        /// Find if chord already exists
+        /// </summary>
+        /// <param name="c"></param>
+        /// <param name="ticks"></param>
+        /// <returns></returns>
+        private ChordSymbol findChord(string c, int ticks)
+        {
+            
+            try
+            {
+                ChordSymbol m = _chordsymbols.Find(u => u != null && u.ChordName == c && u.TicksOn == ticks);
+                return m;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+        
+        
+        #endregion chords
+
 
         #region tempo
         /// <summary>
@@ -3169,6 +3223,10 @@ namespace Sanford.Multimedia.Midi
                 }
             }
 
+            foreach (ChordSymbol cns in this.Chords)
+            {
+                track.Chords.Add(cns);
+            }
 
             track.Visible = this.Visible;
             return track;
@@ -3452,6 +3510,25 @@ namespace Sanford.Multimedia.Midi
             get { return notes; }
         }
 
+
+        #region ChordNames
+
+        public class ChordSymbol
+        {
+            public int TicksOn { get; set; }
+            //public int ChordTicks { get; set; }
+            public string ChordName { get; set; }
+        }
+        
+        public List<ChordSymbol> Chords
+        {
+            get { return _chordsymbols; }
+        }
+
+        
+        #endregion ChordNames
+
+
         // Split track into 2 tracks (left hand, right hand)
         private bool splithands;
         public bool SplitHands
@@ -3602,6 +3679,7 @@ namespace Sanford.Multimedia.Midi
             get { return maximized; }
             set { maximized = value; }
         }
+
 
         #region lyrics
 

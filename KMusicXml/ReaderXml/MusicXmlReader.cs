@@ -349,11 +349,13 @@ namespace MusicXml
 
                 int versenumber = 0;
 
+                // TEST
                 // limits of a measure
+                /*
                 int measureId = 0;
                 int measureStart;
                 int measureEnd;
-                
+                */
 
                 // =========================================                
                 // mapmesure is the list of verses.
@@ -399,13 +401,14 @@ namespace MusicXml
                             //    if (part.Id == "P2")
                             //        Console.WriteLine("");
 
-                            
+
                             // Measure limits to check notes 
-                            
+                            // TESTS
+                            /*
                             measureId++;
                             measureStart = (measureId - 1) * MeasureLength;
                             measureEnd = measureId * MeasureLength;
-                            
+                            */
 
                             // BEGIN RECUP
                             decimal W = measure.Width;
@@ -461,12 +464,12 @@ namespace MusicXml
 
 
                                     case MeasureElementType.Chord:
-                                        
-                                        // Option play chords
-                                        if (!_playXmlChords)
-                                            break;
+
                                         
                                         Chord chord = (Chord)obj;
+                                        
+
+
                                         pitch = chord.Pitch;
                                         letter = chord.Pitch.Step.ToString();                                       
 
@@ -498,7 +501,17 @@ namespace MusicXml
                                         int chordchannel = Channel;
                                         if (track1.ProgramChange != 0)
                                             chordchannel = 15;
-                                        
+
+
+
+                                        // Draw chord
+                                        DrawChord(chord, starttime);
+
+                                        // Option play chords
+                                        if (!_playXmlChords)
+                                        {
+                                            break;
+                                        }
 
                                         List<int> lnotes = chord.GetNotes(notenumber);
 
@@ -522,7 +535,10 @@ namespace MusicXml
                                             notenumber += alter;
                                         }
 
-                                        CreateMidiNote1(note, chordchannel, notenumber, starttime);                                      
+                                        CreateMidiNote1(note, chordchannel, notenumber, starttime);
+
+
+                                        
 
                                         break;
                                     
@@ -606,7 +622,8 @@ namespace MusicXml
                                         // Start time of note = timeline
                                         starttime = timeline;
 
-                                        
+                                        // TESTS
+                                        /* 
                                         if (starttime < measureStart)
                                         {
                                             //timeline = measureStart;
@@ -617,7 +634,7 @@ namespace MusicXml
                                         {
                                             Console.WriteLine(measure.Number);
                                         }
-                                        
+                                        */
 
                                         // Create note
                                         // in case of harmony (chord), eliminate notes having no stem (except note having whole duration)
@@ -1314,6 +1331,24 @@ namespace MusicXml
             }
         }
         #endregion lyrics
+
+        
+        #region chords
+        /// <summary>
+        /// Write chord name at position t
+        /// </summary>
+        /// <param name="chord"></param>
+        /// <param name="t"></param>
+        private void DrawChord(Chord chord, int t)
+        {
+            string c = chord.GetChordName();
+            
+            track1.addChord(c, t);
+
+            
+        }
+
+        #endregion chords
 
 
         #region sequence

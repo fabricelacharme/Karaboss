@@ -213,6 +213,7 @@
     <Compile Include="Score\AccidSymbol.cs" />
     <Compile Include="Score\BarSymbol.cs" />
     <Compile Include="Score\BlankSymbol.cs" />
+    <Compile Include="Score\ChordNameSymbol.cs" />
     <Compile Include="Score\TempoSymbol.cs" />
     <Compile Include="Score\ChordSymbol.cs" />
     <Compile Include="Score\ClefMeasures.cs" />
