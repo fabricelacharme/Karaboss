@@ -118,648 +118,693 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="label2.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
+  <data name="lblMuteMelody.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="lblforceUppercase.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 359</value>
+  <data name="lblMuteMelody.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
   </data>
-  <data name="&gt;&gt;label2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="lblMuteMelody.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 120</value>
   </data>
-  <data name="lblDisplayBalls.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 70</value>
-  </data>
-  <data name="chkMuteMelody.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 120</value>
-  </data>
-  <data name="&gt;&gt;txtSepParagraph.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblDisplayBalls.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 70</value>
-  </data>
-  <data name="chkShowParagraph.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
-  </data>
-  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>74, 13</value>
-  </data>
-  <data name="label1.Text" xml:space="preserve">
-    <value>As the song's lyrics are displayed on the screen, animated balls scroll, landing on each syllable when it is to be sung.</value>
-  </data>
-  <data name="lblDescription.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;label9.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="lblMuteMelody.Size" type="System.Drawing.Size, System.Drawing">
+    <value>136, 15</value>
   </data>
   <data name="lblMuteMelody.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
   </data>
-  <data name="&gt;&gt;lblShowParagraph.Type" xml:space="preserve">
+  <data name="lblMuteMelody.Text" xml:space="preserve">
+    <value>Mute melody by default:</value>
+  </data>
+  <data name="&gt;&gt;lblMuteMelody.Name" xml:space="preserve">
+    <value>lblMuteMelody</value>
+  </data>
+  <data name="&gt;&gt;lblMuteMelody.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="txtSepSyllabe.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="&gt;&gt;label4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label6.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;chkForceUppercase.Parent" xml:space="preserve">
+  <data name="&gt;&gt;lblMuteMelody.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="txtSepParagraph.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 12pt</value>
+  <data name="&gt;&gt;lblMuteMelody.ZOrder" xml:space="preserve">
+    <value>20</value>
   </data>
-  <data name="label10.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="chkMuteMelody.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkMuteMelody.Location" type="System.Drawing.Point, System.Drawing">
+    <value>200, 120</value>
+  </data>
+  <data name="chkMuteMelody.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="chkMuteMelody.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;chkMuteMelody.Name" xml:space="preserve">
+    <value>chkMuteMelody</value>
+  </data>
+  <data name="&gt;&gt;chkMuteMelody.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkMuteMelody.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;chkMuteMelody.ZOrder" xml:space="preserve">
+    <value>21</value>
+  </data>
+  <data name="lblDisplayBalls.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblDisplayBalls.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lblDisplayBalls.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="lblforceUppercase.AutoSize" type="System.Boolean, mscorlib">
+  <data name="lblDisplayBalls.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 70</value>
+  </data>
+  <data name="lblDisplayBalls.Size" type="System.Drawing.Size, System.Drawing">
+    <value>123, 15</value>
+  </data>
+  <data name="lblDisplayBalls.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="lblDisplayBalls.Text" xml:space="preserve">
+    <value>Display balls on lyrics</value>
+  </data>
+  <data name="&gt;&gt;lblDisplayBalls.Name" xml:space="preserve">
+    <value>lblDisplayBalls</value>
+  </data>
+  <data name="&gt;&gt;lblDisplayBalls.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblDisplayBalls.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblDisplayBalls.ZOrder" xml:space="preserve">
+    <value>18</value>
+  </data>
+  <data name="chkDisplayBalls.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="chkDisplayBalls.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="label10.Text" xml:space="preserve">
-    <value>Lyrics: converts every characters to uppercase</value>
-  </data>
-  <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 220</value>
-  </data>
-  <data name="chkDisplayBalls.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="lblforceUppercase.Text" xml:space="preserve">
-    <value>Force uppercase</value>
-  </data>
-  <data name="lblDisplayBalls.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;chkDisplayBalls.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="lblMuteMelody.Size" type="System.Drawing.Size, System.Drawing">
-    <value>119, 13</value>
-  </data>
-  <data name="label8.Text" xml:space="preserve">
-    <value>Paragraph separator</value>
-  </data>
-  <data name="lblDisplayBalls.Size" type="System.Drawing.Size, System.Drawing">
-    <value>106, 13</value>
-  </data>
-  <data name="&gt;&gt;label1.Name" xml:space="preserve">
-    <value>label1</value>
-  </data>
-  <data name="txtSepLine.Size" type="System.Drawing.Size, System.Drawing">
-    <value>39, 26</value>
-  </data>
-  <data name="lblMuteMelody.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label8.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 270</value>
-  </data>
-  <data name="&gt;&gt;label8.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;lblforceUppercase.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="txtSepLine.Text" xml:space="preserve">
-    <value>/</value>
-  </data>
-  <data name="&gt;&gt;lblDescription.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lblDisplayBalls.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;label10.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label7.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="txtSepLine.MaxLength" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;lblMuteMelody.Name" xml:space="preserve">
-    <value>lblMuteMelody</value>
-  </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>600, 408</value>
-  </data>
-  <data name="chkForceUppercase.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 359</value>
-  </data>
-  <data name="lblDescription.Text" xml:space="preserve">
-    <value>Karaoke  parametrization: animated balls and melody</value>
-  </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>KaraokeControl</value>
-  </data>
-  <data name="label9.Text" xml:space="preserve">
-    <value>Lyrics: display a blanck line between paragraphs</value>
-  </data>
-  <data name="&gt;&gt;txtSepLine.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="chkShowParagraph.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblShowParagraph.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="txtSepSyllabe.Size" type="System.Drawing.Size, System.Drawing">
-    <value>39, 26</value>
-  </data>
-  <data name="label9.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
-  </data>
-  <data name="label9.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 320</value>
-  </data>
-  <data name="label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblforceUppercase.Size" type="System.Drawing.Size, System.Drawing">
-    <value>87, 13</value>
-  </data>
-  <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 358</value>
-  </data>
-  <data name="&gt;&gt;label10.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="txtSepParagraph.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 270</value>
-  </data>
-  <data name="&gt;&gt;lblMuteMelody.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lblShowParagraph.Size" type="System.Drawing.Size, System.Drawing">
-    <value>90, 13</value>
-  </data>
-  <data name="&gt;&gt;label9.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>328, 40</value>
-  </data>
-  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 170</value>
-  </data>
-  <data name="label5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label3.Text" xml:space="preserve">
-    <value>Syllabe separator</value>
-  </data>
-  <data name="&gt;&gt;lblDisplayBalls.ZOrder" xml:space="preserve">
-    <value>18</value>
-  </data>
-  <data name="label6.Text" xml:space="preserve">
-    <value>Line separator</value>
-  </data>
-  <data name="label7.Text" xml:space="preserve">
-    <value>Separator character used to separate paragraphs</value>
-  </data>
-  <data name="&gt;&gt;chkForceUppercase.Name" xml:space="preserve">
-    <value>chkForceUppercase</value>
-  </data>
-  <data name="lblShowParagraph.Text" xml:space="preserve">
-    <value>Show paragraphs</value>
-  </data>
-  <data name="label4.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>328, 40</value>
-  </data>
-  <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>13</value>
-  </data>
-  <data name="&gt;&gt;label3.Name" xml:space="preserve">
-    <value>label3</value>
-  </data>
-  <data name="label8.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;label2.Name" xml:space="preserve">
-    <value>label2</value>
-  </data>
-  <data name="lblDisplayBalls.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;lblShowParagraph.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="chkForceUppercase.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="&gt;&gt;chkShowParagraph.Name" xml:space="preserve">
-    <value>chkShowParagraph</value>
-  </data>
-  <data name="&gt;&gt;lblforceUppercase.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtSepSyllabe.Name" xml:space="preserve">
-    <value>txtSepSyllabe</value>
-  </data>
-  <data name="label6.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;label5.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="txtSepSyllabe.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 12pt</value>
-  </data>
-  <data name="lblShowParagraph.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 320</value>
-  </data>
-  <data name="label3.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="txtSepParagraph.MaxLength" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;label8.Name" xml:space="preserve">
-    <value>label8</value>
-  </data>
-  <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;chkDisplayBalls.ZOrder" xml:space="preserve">
-    <value>19</value>
-  </data>
-  <data name="chkForceUppercase.Size" type="System.Drawing.Size, System.Drawing">
-    <value>15, 14</value>
-  </data>
-  <data name="&gt;&gt;chkShowParagraph.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;chkMuteMelody.ZOrder" xml:space="preserve">
-    <value>21</value>
-  </data>
-  <data name="lblforceUppercase.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;lblDisplayBalls.Name" xml:space="preserve">
-    <value>lblDisplayBalls</value>
-  </data>
-  <data name="chkShowParagraph.Size" type="System.Drawing.Size, System.Drawing">
-    <value>15, 14</value>
-  </data>
-  <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
-    <value>12</value>
-  </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
-  </data>
-  <data name="label4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="chkDisplayBalls.Location" type="System.Drawing.Point, System.Drawing">
+    <value>200, 70</value>
   </data>
   <data name="chkDisplayBalls.Size" type="System.Drawing.Size, System.Drawing">
     <value>15, 14</value>
   </data>
-  <data name="txtSepParagraph.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
+  <data name="chkDisplayBalls.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
-  <data name="lblDescription.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 10</value>
+  <data name="&gt;&gt;chkDisplayBalls.Name" xml:space="preserve">
+    <value>chkDisplayBalls</value>
   </data>
-  <data name="lblforceUppercase.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
+  <data name="&gt;&gt;chkDisplayBalls.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="chkDisplayBalls.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 70</value>
-  </data>
-  <data name="&gt;&gt;lblDisplayBalls.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lblDisplayBalls.Text" xml:space="preserve">
-    <value>Display balls on lyrics</value>
-  </data>
-  <data name="label3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="chkForceUppercase.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;chkShowParagraph.Parent" xml:space="preserve">
+  <data name="&gt;&gt;chkDisplayBalls.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;label7.ZOrder" xml:space="preserve">
-    <value>6</value>
+  <data name="&gt;&gt;chkDisplayBalls.ZOrder" xml:space="preserve">
+    <value>19</value>
   </data>
-  <data name="lblShowParagraph.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="label1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
   </data>
-  <data name="&gt;&gt;txtSepLine.ZOrder" xml:space="preserve">
-    <value>11</value>
+  <data name="label1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;chkShowParagraph.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>247, 70</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>328, 40</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
-  <data name="label6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="label1.Text" xml:space="preserve">
+    <value>As the song's lyrics are displayed on the screen, animated balls scroll, landing on each syllable when it is to be sung.</value>
   </data>
-  <data name="&gt;&gt;lblMuteMelody.ZOrder" xml:space="preserve">
-    <value>20</value>
+  <data name="&gt;&gt;label1.Name" xml:space="preserve">
+    <value>label1</value>
   </data>
-  <data name="txtSepLine.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Center</value>
+  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label1.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="txtSepLine.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 12pt</value>
-  </data>
-  <data name="&gt;&gt;label9.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label5.Name" xml:space="preserve">
-    <value>label5</value>
-  </data>
-  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="txtSepSyllabe.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 170</value>
-  </data>
-  <data name="label8.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
     <value>17</value>
   </data>
-  <data name="label6.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="label2.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
   </data>
-  <data name="&gt;&gt;lblShowParagraph.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>328, 40</value>
-  </data>
-  <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 170</value>
+  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>247, 120</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>297, 40</value>
   </data>
-  <data name="txtSepParagraph.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Center</value>
+  <data name="label2.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
   </data>
-  <data name="&gt;&gt;label6.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Keep or mute the melody and keep only the accompaniment.</value>
   </data>
-  <data name="label3.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="&gt;&gt;label2.Name" xml:space="preserve">
+    <value>label2</value>
   </data>
-  <data name="chkShowParagraph.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 320</value>
-  </data>
-  <data name="&gt;&gt;lblMuteMelody.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label4.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label5.Type" xml:space="preserve">
+  <data name="&gt;&gt;label2.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="chkMuteMelody.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
-  <data name="label7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 270</value>
+  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
+    <value>16</value>
   </data>
-  <data name="&gt;&gt;txtSepSyllabe.ZOrder" xml:space="preserve">
-    <value>14</value>
+  <data name="lblDescription.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9.75pt</value>
+  </data>
+  <data name="lblDescription.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblDescription.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 10</value>
+  </data>
+  <data name="lblDescription.Size" type="System.Drawing.Size, System.Drawing">
+    <value>400, 60</value>
+  </data>
+  <data name="lblDescription.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblDescription.Text" xml:space="preserve">
+    <value>Karaoke  parametrization: animated balls and melody</value>
   </data>
   <data name="&gt;&gt;lblDescription.Name" xml:space="preserve">
     <value>lblDescription</value>
   </data>
-  <data name="&gt;&gt;label7.Type" xml:space="preserve">
+  <data name="&gt;&gt;lblDescription.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;lblDescription.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;chkMuteMelody.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;lblDescription.ZOrder" xml:space="preserve">
+    <value>15</value>
   </data>
-  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 120</value>
+  <data name="txtSepSyllabe.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 12pt</value>
   </data>
-  <data name="&gt;&gt;chkMuteMelody.Name" xml:space="preserve">
-    <value>chkMuteMelody</value>
-  </data>
-  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 220</value>
-  </data>
-  <data name="&gt;&gt;label3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="chkShowParagraph.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;chkMuteMelody.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="txtSepParagraph.Size" type="System.Drawing.Size, System.Drawing">
-    <value>39, 26</value>
-  </data>
-  <data name="&gt;&gt;lblforceUppercase.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="txtSepSyllabe.Location" type="System.Drawing.Point, System.Drawing">
+    <value>200, 170</value>
   </data>
   <data name="txtSepSyllabe.MaxLength" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
-  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>297, 40</value>
-  </data>
-  <data name="lblShowParagraph.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;txtSepSyllabe.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label10.Name" xml:space="preserve">
-    <value>label10</value>
-  </data>
-  <data name="&gt;&gt;label7.Name" xml:space="preserve">
-    <value>label7</value>
-  </data>
-  <data name="&gt;&gt;label8.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="chkMuteMelody.Size" type="System.Drawing.Size, System.Drawing">
-    <value>15, 14</value>
-  </data>
-  <data name="txtSepLine.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="&gt;&gt;label6.Name" xml:space="preserve">
-    <value>label6</value>
-  </data>
-  <data name="&gt;&gt;label3.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="label2.Text" xml:space="preserve">
-    <value>Keep or mute the melody and keep only the accompaniment.</value>
-  </data>
-  <data name="txtSepSyllabe.Text" xml:space="preserve">
-    <value>*</value>
-  </data>
-  <data name="txtSepParagraph.Text" xml:space="preserve">
-    <value>\</value>
-  </data>
-  <data name="label7.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
+  <data name="txtSepSyllabe.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 26</value>
   </data>
   <data name="txtSepSyllabe.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
   </data>
-  <data name="&gt;&gt;txtSepParagraph.Name" xml:space="preserve">
-    <value>txtSepParagraph</value>
+  <data name="txtSepSyllabe.Text" xml:space="preserve">
+    <value>*</value>
   </data>
-  <data name="label10.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
+  <data name="txtSepSyllabe.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="&gt;&gt;txtSepSyllabe.Name" xml:space="preserve">
+    <value>txtSepSyllabe</value>
   </data>
   <data name="&gt;&gt;txtSepSyllabe.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="txtSepLine.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 220</value>
+  <data name="&gt;&gt;txtSepSyllabe.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
-  <data name="label9.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="&gt;&gt;txtSepSyllabe.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="label3.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label3.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="label3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="label4.Text" xml:space="preserve">
-    <value>Separator character used to separate syllabes when loading a text of lyrics:  ex: Ka*ra*boss is won*der*ful</value>
+  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 170</value>
+  </data>
+  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 15</value>
+  </data>
+  <data name="label3.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>Syllabe separator</value>
+  </data>
+  <data name="&gt;&gt;label3.Name" xml:space="preserve">
+    <value>label3</value>
+  </data>
+  <data name="&gt;&gt;label3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label3.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="label4.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="label4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>247, 170</value>
   </data>
   <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
     <value>297, 40</value>
   </data>
-  <data name="chkDisplayBalls.AutoSize" type="System.Boolean, mscorlib">
+  <data name="label4.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="label4.Text" xml:space="preserve">
+    <value>Separator character used to separate syllabes when loading a text of lyrics:  ex: Ka*ra*boss is won*der*ful</value>
+  </data>
+  <data name="&gt;&gt;label4.Name" xml:space="preserve">
+    <value>label4</value>
+  </data>
+  <data name="&gt;&gt;label4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label4.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="label5.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="label5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>247, 220</value>
+  </data>
+  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 40</value>
+  </data>
+  <data name="label5.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="label5.Text" xml:space="preserve">
+    <value>Separator character used to separate lines</value>
+  </data>
+  <data name="&gt;&gt;label5.Name" xml:space="preserve">
+    <value>label5</value>
+  </data>
+  <data name="&gt;&gt;label5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label5.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="label6.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="lblMuteMelody.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 120</value>
+  <data name="label6.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="label6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 220</value>
+  </data>
+  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>86, 15</value>
+  </data>
+  <data name="label6.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="label6.Text" xml:space="preserve">
+    <value>Line separator</value>
+  </data>
+  <data name="&gt;&gt;label6.Name" xml:space="preserve">
+    <value>label6</value>
+  </data>
+  <data name="&gt;&gt;label6.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label6.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label6.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="txtSepLine.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 12pt</value>
+  </data>
+  <data name="txtSepLine.Location" type="System.Drawing.Point, System.Drawing">
+    <value>200, 220</value>
+  </data>
+  <data name="txtSepLine.MaxLength" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="txtSepLine.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 26</value>
+  </data>
+  <data name="txtSepLine.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="txtSepLine.Text" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="txtSepLine.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="&gt;&gt;txtSepLine.Name" xml:space="preserve">
+    <value>txtSepLine</value>
+  </data>
+  <data name="&gt;&gt;txtSepLine.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtSepLine.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtSepLine.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="label7.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="label7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>247, 270</value>
+  </data>
+  <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 40</value>
+  </data>
+  <data name="label7.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="label7.Text" xml:space="preserve">
+    <value>Separator character used to separate paragraphs</value>
+  </data>
+  <data name="&gt;&gt;label7.Name" xml:space="preserve">
+    <value>label7</value>
+  </data>
+  <data name="&gt;&gt;label7.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label7.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label7.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="label8.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label8.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="label8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label8.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 270</value>
+  </data>
+  <data name="label8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>120, 15</value>
+  </data>
+  <data name="label8.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="label8.Text" xml:space="preserve">
+    <value>Paragraph separator</value>
+  </data>
+  <data name="&gt;&gt;label8.Name" xml:space="preserve">
+    <value>label8</value>
+  </data>
+  <data name="&gt;&gt;label8.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label8.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label8.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="txtSepParagraph.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 12pt</value>
+  </data>
+  <data name="txtSepParagraph.Location" type="System.Drawing.Point, System.Drawing">
+    <value>200, 270</value>
+  </data>
+  <data name="txtSepParagraph.MaxLength" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="txtSepParagraph.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 26</value>
+  </data>
+  <data name="txtSepParagraph.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="txtSepParagraph.Text" xml:space="preserve">
+    <value>\</value>
+  </data>
+  <data name="txtSepParagraph.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="&gt;&gt;txtSepParagraph.Name" xml:space="preserve">
+    <value>txtSepParagraph</value>
+  </data>
+  <data name="&gt;&gt;txtSepParagraph.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtSepParagraph.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtSepParagraph.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="label9.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="label9.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label9.Location" type="System.Drawing.Point, System.Drawing">
+    <value>247, 320</value>
+  </data>
+  <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
+    <value>328, 40</value>
+  </data>
+  <data name="label9.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="label9.Text" xml:space="preserve">
+    <value>Lyrics: display a blanck line between paragraphs</value>
+  </data>
+  <data name="&gt;&gt;label9.Name" xml:space="preserve">
+    <value>label9</value>
+  </data>
+  <data name="&gt;&gt;label9.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label9.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label9.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="lblShowParagraph.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblShowParagraph.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="lblShowParagraph.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblShowParagraph.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 320</value>
+  </data>
+  <data name="lblShowParagraph.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 15</value>
+  </data>
+  <data name="lblShowParagraph.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="lblShowParagraph.Text" xml:space="preserve">
+    <value>Show paragraphs</value>
+  </data>
+  <data name="&gt;&gt;lblShowParagraph.Name" xml:space="preserve">
+    <value>lblShowParagraph</value>
+  </data>
+  <data name="&gt;&gt;lblShowParagraph.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblShowParagraph.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblShowParagraph.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="chkShowParagraph.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkShowParagraph.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkShowParagraph.Location" type="System.Drawing.Point, System.Drawing">
+    <value>200, 320</value>
+  </data>
+  <data name="chkShowParagraph.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="chkShowParagraph.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="&gt;&gt;chkShowParagraph.Name" xml:space="preserve">
+    <value>chkShowParagraph</value>
+  </data>
+  <data name="&gt;&gt;chkShowParagraph.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkShowParagraph.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;chkShowParagraph.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="lblforceUppercase.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblforceUppercase.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="lblforceUppercase.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblforceUppercase.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 359</value>
+  </data>
+  <data name="lblforceUppercase.Size" type="System.Drawing.Size, System.Drawing">
+    <value>99, 15</value>
+  </data>
+  <data name="lblforceUppercase.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="lblforceUppercase.Text" xml:space="preserve">
+    <value>Force uppercase</value>
+  </data>
+  <data name="&gt;&gt;lblforceUppercase.Name" xml:space="preserve">
+    <value>lblforceUppercase</value>
+  </data>
+  <data name="&gt;&gt;lblforceUppercase.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblforceUppercase.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblforceUppercase.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="chkForceUppercase.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="chkForceUppercase.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 13</value>
+  <data name="chkForceUppercase.Location" type="System.Drawing.Point, System.Drawing">
+    <value>200, 359</value>
   </data>
-  <data name="&gt;&gt;txtSepLine.Parent" xml:space="preserve">
+  <data name="chkForceUppercase.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="chkForceUppercase.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="&gt;&gt;chkForceUppercase.Name" xml:space="preserve">
+    <value>chkForceUppercase</value>
+  </data>
+  <data name="&gt;&gt;chkForceUppercase.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkForceUppercase.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;chkForceUppercase.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="label10.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="label10.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
+    <value>247, 358</value>
+  </data>
+  <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
+    <value>328, 40</value>
+  </data>
+  <data name="label10.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="label10.Text" xml:space="preserve">
+    <value>Lyrics: converts every characters to uppercase</value>
+  </data>
+  <data name="&gt;&gt;label10.Name" xml:space="preserve">
+    <value>label10</value>
+  </data>
+  <data name="&gt;&gt;label10.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label10.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
   <data name="&gt;&gt;label10.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="chkMuteMelody.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;chkForceUppercase.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="label7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label5.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
-  </data>
-  <data name="&gt;&gt;txtSepLine.Name" xml:space="preserve">
-    <value>txtSepLine</value>
-  </data>
-  <data name="&gt;&gt;chkDisplayBalls.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtSepParagraph.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>16</value>
-  </data>
-  <data name="lblDescription.Size" type="System.Drawing.Size, System.Drawing">
-    <value>400, 60</value>
-  </data>
-  <data name="&gt;&gt;chkDisplayBalls.Name" xml:space="preserve">
-    <value>chkDisplayBalls</value>
-  </data>
-  <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>297, 40</value>
-  </data>
-  <data name="lblMuteMelody.Text" xml:space="preserve">
-    <value>Mute melody by default:</value>
-  </data>
-  <data name="label5.Text" xml:space="preserve">
-    <value>Separator character used to separate lines</value>
-  </data>
-  <data name="&gt;&gt;lblDescription.ZOrder" xml:space="preserve">
-    <value>15</value>
-  </data>
-  <data name="lblDescription.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;lblShowParagraph.Name" xml:space="preserve">
-    <value>lblShowParagraph</value>
-  </data>
-  <data name="&gt;&gt;lblforceUppercase.Name" xml:space="preserve">
-    <value>lblforceUppercase</value>
-  </data>
-  <data name="label1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;label8.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;chkForceUppercase.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;txtSepParagraph.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label6.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label9.Name" xml:space="preserve">
-    <value>label9</value>
-  </data>
-  <data name="label8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>103, 13</value>
-  </data>
-  <data name="&gt;&gt;label1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="label8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;label4.Name" xml:space="preserve">
-    <value>label4</value>
-  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>600, 408</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>KaraokeControl</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

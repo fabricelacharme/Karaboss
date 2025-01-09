@@ -4075,7 +4075,6 @@ namespace Karaboss
             FileModified();
         }
 
-
         private void ManageDisplayLyricsForm()
         {
             // If the user does not want to see the lyrics => exit
@@ -4186,6 +4185,29 @@ namespace Karaboss
             }
         }
         
+        /// <summary>
+        /// Load chords embedded in Xml file
+        /// </summary>
+        private void LoadXmlChordsInLyrics()
+        {
+            #region guard
+            if (myLyricsMgmt == null) return;
+            if (MXmlReader == null) return;
+            #endregion guard
+            
+            if (MXmlReader.bHasXmlChords)
+            {
+                // infos
+                // MXmlReader.lstChords
+                // MXmlReader.TrackChordsNumber
+                myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.XmlEmbedded;
+                //myLyricsMgmt.lstXmlChords.Clear();
+                myLyricsMgmt.lstXmlChords = MXmlReader.lstChords;
+                //myLyricsMgmt.PopulateXmlChords(MXmlReader.lstChords);
+
+            }
+                
+        }
 
         #endregion Lyrics
 
@@ -4225,7 +4247,6 @@ namespace Karaboss
             // Color in red the key of the track
             SelectTrackKey(tracknum);
         }
-
      
 
         /// <summary>
@@ -4364,7 +4385,7 @@ namespace Karaboss
             progressBarPlayer.Visible = false;
 
             // ====================================
-            // AJOUT par arraport au standard
+            // Ajout par rapport au standard
             // ====================================
             if (Karaclass.m_MxmlPath != null && Karaclass.m_MxmlPath != "") 
             {
@@ -4372,11 +4393,9 @@ namespace Karaboss
                 MIDIfilePath = Path.GetDirectoryName(Karaclass.m_MxmlPath);                            
                 MIDIfileName = fName + ".mid";
                 MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
-
             }
             else
             {
-
                 MIDIfilePath = Path.GetDirectoryName(MIDIfileFullPath);                
                 string fName = Path.GetFileNameWithoutExtension(MIDIfileFullPath);    // name without extension
                 MIDIfileName = fName + ".mid";
@@ -4386,15 +4405,13 @@ namespace Karaboss
 
 
             // Reset settings made for previous song
-            ResetPlaySettings();
-
-            //if (frmLoading != null)
-            //    frmLoading.Dispose();
+            ResetPlaySettings();            
             loading = false;
 
             sequence1 = MXmlReader.seq;
             sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
             sequence1.LoadProgressChanged += HandleLoadProgressChanged;
+
 
             if (e.Error == null && e.Cancelled == false)
             {
@@ -4404,7 +4421,12 @@ namespace Karaboss
                 sequence1.Format = 1;
                 
                 myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
-                //bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0;                 
+
+                // Load chords in LyricsMgmt in order to be displayed in the lyrics form                
+                LoadXmlChordsInLyrics();
+                //if (MXmlReader.bHasXmlChords)
+                //    myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.XmlEmbedded;
+
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -4412,6 +4434,7 @@ namespace Karaboss
                 * Workaround is to rewrite the lyrics
                 */
 
+                    // case of format 0
                 if ((sequence1.OrigFormat == 0) && (myLyricsMgmt.LyricType == LyricTypes.Lyric))
                 {
                     int tracknum = myLyricsMgmt.LyricsTrackNum;
@@ -4419,8 +4442,7 @@ namespace Karaboss
                     // supprime tous les messages text & lyric
                     track.deleteLyrics();
 
-                    // Insert all lyric events
-                    //InsTrkEvents(tracknum);
+                    // Insert all lyric events                    
                     TrkInsertLyrics(track, myLyricsMgmt.OrgplLyrics, myLyricsMgmt.LyricType);
                 }                               
 
@@ -4452,7 +4474,7 @@ namespace Karaboss
                 // Display track controls             
                 DisplayTrackControls();
 
-                // REset tracks Stuff
+                // Reset tracks Stuff
                 InitTracksStuff();
                 #endregion
 
@@ -4465,6 +4487,7 @@ namespace Karaboss
                 #region display lyrics
                 // Recherche si des lyrics existent et affiche la forme frmLyric
                 mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
+
                 DisplayLyricsInfos();
                 #endregion
 

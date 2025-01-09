@@ -44,6 +44,12 @@ using KMusicXml.MusicXml.Domain;
 
 namespace MusicXml
 {
+    public class ChordItem
+    {
+        public int TicksOn { get; set; }
+        public string ChordName { get; set; }
+    }
+
     public class MusicXmlReader
     {
         private BackgroundWorker loadXmlWorker = new BackgroundWorker();
@@ -173,8 +179,7 @@ namespace MusicXml
             catch (Exception ee)
             {
                 Console.Write(ee.ToString());
-                e.Cancel = true;
-                
+                e.Cancel = true;                
             }
         }
 
@@ -190,15 +195,32 @@ namespace MusicXml
             }
         }
 
+        /// <summary>
+        /// Display or not the chords
+        /// </summary>
         private bool _playXmlChords = false;
         public bool PlayXmlChords
         {
             set { _playXmlChords = value; }
         }
 
+        /// <summary>
+        /// Is there chords in this file?
+        /// </summary>        
+        public bool bHasXmlChords
+        {
+            get { return lstChords.Count > 0; }            
+        }
+
+        public int TrackChordsNumber { get; internal set; }
+        
+       
+        
+        public List<ChordItem> lstChords { get; internal set; }
+
 
         /// <summary>
-        /// Create a score objetc
+        /// Create a score object
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
@@ -236,7 +258,6 @@ namespace MusicXml
             Identification Identification = SC.Identification;
             String MovementTitle = SC.MovementTitle;
             
-
             // List of tracks
             List<Part> Parts = SC.PartList;
 
@@ -244,7 +265,6 @@ namespace MusicXml
             if (Parts.Count == 0)
                 return null;
             #endregion
-
 
             // Create MAP of measures according to repeat backward/forward found
             List<List<int>> mapmeasures = CreateVerses(Parts[0].Measures);
@@ -273,9 +293,14 @@ namespace MusicXml
             }
 
             // Search common Division for all parts
-            int commondivision = ((Parts[0].Division > 0) ? Parts[0].Division  :  24); 
+            int commondivision = ((Parts[0].Division > 0) ? Parts[0].Division  :  24);
 
-            
+            // reset Chords
+            lstChords = new List<ChordItem>();
+            TrackChordsNumber = -1;
+            int indextracks = -1;
+
+            // Search for the biggest division
             foreach (Part part in Parts)
             {
                  if (part.Division > commondivision)
@@ -309,15 +334,13 @@ namespace MusicXml
                  */
                 double multcoeff = 1;       // Mutiply everything in order to have common Division
                 
+                // Division
                 if (part.Division == 0)
                 {
                     Console.WriteLine("ERROR: Division = 0");
                     part.Division = 24;
-                }
-                
-                Division = part.Division;
-                
-                
+                }                
+                Division = part.Division;                                
                 if (Division != commondivision)
                 {
                     Division = commondivision;
@@ -356,6 +379,9 @@ namespace MusicXml
                 int measureStart;
                 int measureEnd;
                 */
+
+                indextracks++;
+
 
                 // =========================================                
                 // mapmesure is the list of verses.
@@ -463,13 +489,8 @@ namespace MusicXml
                                         break;
 
 
-                                    case MeasureElementType.Chord:
-
-                                        
-                                        Chord chord = (Chord)obj;
-                                        
-
-
+                                    case MeasureElementType.Chord:                                        
+                                        Chord chord = (Chord)obj;                                        
                                         pitch = chord.Pitch;
                                         letter = chord.Pitch.Step.ToString();                                       
 
@@ -502,26 +523,27 @@ namespace MusicXml
                                         if (track1.ProgramChange != 0)
                                             chordchannel = 15;
 
-
-
-                                        // Draw chord
-                                        DrawChord(chord, starttime);
+                                        // always ? Draw chord    ????????????? to be checked
+                                        DrawChord(chord, starttime, indextracks);
 
                                         // Option play chords
+                                        // If false, do not display notes and do not play them
                                         if (!_playXmlChords)
                                         {
                                             break;
                                         }
 
+                                        // =============================================
+                                        // Create notes of chord
+                                        // =============================================
                                         List<int> lnotes = chord.GetNotes(notenumber);
 
-                                        // Create chord                                                                                
+                                        // Create Chord                                                                                
                                         for (int idx = 0; idx < lnotes.Count; idx++)
                                         {
                                             CreateMidiNote1(note, chordchannel, lnotes[idx], starttime);
                                         }
                                         
-
                                         // Create Bass
                                         note = new Note();
                                         pitch = chord.BassPitch;
@@ -534,12 +556,8 @@ namespace MusicXml
                                             alter = chord.BassPitch.Alter;
                                             notenumber += alter;
                                         }
-
-                                        CreateMidiNote1(note, chordchannel, notenumber, starttime);
-
-
+                                        CreateMidiNote1(note, chordchannel, notenumber, starttime);                                        
                                         
-
                                         break;
                                     
 
@@ -1339,13 +1357,20 @@ namespace MusicXml
         /// </summary>
         /// <param name="chord"></param>
         /// <param name="t"></param>
-        private void DrawChord(Chord chord, int t)
+        private void DrawChord(Chord chord, int t, int tracknumber)
         {
             string c = chord.GetChordName();
-            
-            track1.addChord(c, t);
 
-            
+            ChordItem ci = new ChordItem()
+            {
+                TicksOn = t,
+                ChordName = c,
+            };       
+            lstChords.Add(ci);
+            TrackChordsNumber= tracknumber;
+
+
+            track1.addChord(c, t);          // Why track1 and not track2 ?????????????  
         }
 
         #endregion chords

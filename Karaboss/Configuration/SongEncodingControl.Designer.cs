@@ -51,11 +51,11 @@
             // 
             // SongEncodingControl
             // 
-            resources.ApplyResources(this, "$this");
             this.Controls.Add(this.lblDescription);
             this.Controls.Add(this.m_langCB);
             this.Controls.Add(this.m_langL);
             this.Name = "SongEncodingControl";
+            resources.ApplyResources(this, "$this");
             this.ResumeLayout(false);
 
         }

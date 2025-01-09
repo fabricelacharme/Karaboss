@@ -118,29 +118,20 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="lblHelp.Text" xml:space="preserve">
-    <value>Coché : les accords sont toujours affichés. Non coché : les accords ne sont pas affichés même s'ils sont inclus dans les paroles.</value>
+    <value>Coché : les accords sont affichés quelle que soit leur origine. Non coché : les accords ne sont pas affichés.</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="lblPauseSongs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 13</value>
-  </data>
-  <data name="lblPauseSongs.Text" xml:space="preserve">
-    <value>Afficher les accords Midi</value>
+  <data name="lblDisplayChords.Text" xml:space="preserve">
+    <value>Afficher les accords dans la fenêtre du karaoké</value>
   </data>
   <data name="lblDescription.Text" xml:space="preserve">
-    <value>Cette option permet de gérer l'affichage des accords dans les deux cas suivants :
-
-* Fichiers Midi : les accords peuvent être associés aux paroles ou découverts par Karaboss.
-
-* Fichiers Xml et Mxl : dans certains cas, les accords peuvent être présents et mélangés aux notes. </value>
+    <value>Cette option gère l'affichage des accords dans la fenêtre karaoké ou dans les partitions, selon les cas suivants :
+- Fichiers Midi : les accords peuvent être associés aux paroles ou découverts par Karaboss.
+- Fichiers Xml et Mxl : dans certains cas, les accords peuvent être présents et mélangés aux notes. </value>
   </data>
   <data name="label1.Text" xml:space="preserve">
     <value>Coché : Les accords sont affichés en plus des notes et sont joués. Non coché : les accords ne sont pas affichés et ne sont pas joués.</value>
   </data>
-  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>120, 13</value>
-  </data>
-  <data name="label2.Text" xml:space="preserve">
-    <value>Afficher les accords Xml</value>
+  <data name="lblDisplayXmlChords.Text" xml:space="preserve">
+    <value>Affichier les accords Xml dans les partitions</value>
   </data>
 </root>

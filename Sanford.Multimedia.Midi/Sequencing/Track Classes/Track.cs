@@ -3515,8 +3515,7 @@ namespace Sanford.Multimedia.Midi
 
         public class ChordSymbol
         {
-            public int TicksOn { get; set; }
-            //public int ChordTicks { get; set; }
+            public int TicksOn { get; set; }            
             public string ChordName { get; set; }
         }
         
