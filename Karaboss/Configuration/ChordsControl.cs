@@ -22,6 +22,7 @@ namespace Karaboss.Configuration
         private void PopulateValues()
         {
             chkDisplayChords.Checked = Karaclass.m_ShowChords;
+            chkDisplayXmlChords.Checked = Karaclass.m_ShowXmlChords;
             
         }
 
@@ -35,8 +36,10 @@ namespace Karaboss.Configuration
         public override void Apply()
         {            
             Karaclass.m_ShowChords = chkDisplayChords.Checked;
+            Karaclass.m_ShowXmlChords = chkDisplayXmlChords.Checked;
 
             Properties.Settings.Default.bShowChords = Karaclass.m_ShowChords;            
+            Properties.Settings.Default.bShowXmlChords = Karaclass.m_ShowXmlChords;
             Properties.Settings.Default.Save();
         }
 

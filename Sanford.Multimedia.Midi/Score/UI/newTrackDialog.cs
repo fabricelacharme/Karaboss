@@ -233,7 +233,6 @@ namespace Sanford.Multimedia.Midi.Score.UI
             cbChannels.SelectedIndex = channel;
             updIndex.Value = indexmax;
             cbClef.SelectedIndex = clef;
-
             
         }
 

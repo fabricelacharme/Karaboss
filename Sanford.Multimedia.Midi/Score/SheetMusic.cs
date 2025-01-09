@@ -323,6 +323,7 @@ namespace Sanford.Multimedia.Midi.Score
         public const int PageHeight = 1050;  /** The height of each page (when printing) */
 
         public static Font LetterFont;       /** The font for drawing the letters */
+        public static Font ChordNameFont;    // The font for drawing chords names
 
         private bool bplaying = false;
         public bool BPlaying
@@ -524,10 +525,20 @@ namespace Sanford.Multimedia.Midi.Score
                 CreateAllBeamedChords(symbols, time);
             }
 
+            // Draw Lyrics
             if (lyrics != null && staffs != null)
             {
                 AddLyricsToStaffs(staffs, lyrics);
             }
+
+            // Draws chords from XML
+            //List<ChordNameSymbol>[] chordnames = null;
+            List<ChordNameSymbol>[] chordnames = GetChordNames(tracks);
+            if (chordnames != null && chordnames.Count() > 0)
+            {
+                AddChordNamesToStaffs(staffs, chordnames);
+            }
+
 
             // Tempos
             // List of all tempo changes (only 2 fields tempo & ticks)
@@ -1299,6 +1310,7 @@ namespace Sanford.Multimedia.Midi.Score
             NoteHeight = LineSpace + LineWidth;
             NoteWidth = 3 * LineSpace / 2;
             LetterFont = new Font("Arial", 8, FontStyle.Regular);
+            ChordNameFont = new Font("Comic Sans MS", 11, FontStyle.Regular);
         }
 
         #endregion durations
@@ -3627,8 +3639,7 @@ namespace Sanford.Multimedia.Midi.Score
             List<LyricSymbol>[] result = new List<LyricSymbol>[tracks.Count];
             
             for (int tracknum = 0; tracknum < tracks.Count; tracknum++)
-            {
-                
+            {                
                 // FAB : à corriger
                 
                 Track track = tracks[tracknum];
@@ -3642,9 +3653,7 @@ namespace Sanford.Multimedia.Midi.Score
                 // Nouveau code
                 foreach (Track.Lyric ev in track.Lyrics)
                 {
-
                     string text = ev.Element;
-
                     if (text != "")
                     {
                         LyricSymbol sym = new LyricSymbol(ev.TicksOn, text);
@@ -3686,7 +3695,48 @@ namespace Sanford.Multimedia.Midi.Score
 
         #endregion lyrics
 
-        
+
+        #region ChordNames
+
+        private static List<ChordNameSymbol>[] GetChordNames(List<Track> tracks)
+        {
+            List<ChordNameSymbol>[] result = new List<ChordNameSymbol>[tracks.Count];
+
+            for (int tracknum = 0; tracknum < tracks.Count; tracknum++)
+            {
+                Track track = tracks[tracknum];
+                
+                if (track.Chords == null || track.Chords.Count == 0)
+                {
+                    continue;
+                }
+                
+                result[tracknum] = new List<ChordNameSymbol>();                                
+                foreach (Track.ChordSymbol cs in track.Chords)
+                {
+                    string text = cs.ChordName;
+                    if (text != "")
+                    {
+                        ChordNameSymbol sym = new ChordNameSymbol(cs.TicksOn, text);
+                        result[tracknum].Add(sym);
+                    }
+                }                
+            }
+            return result;
+        }
+
+        static void AddChordNamesToStaffs(List<Staff> staffs, List<ChordNameSymbol>[] trackchords)
+        {
+            foreach (Staff staff in staffs)
+            {
+                List<ChordNameSymbol> chordnames = trackchords[staff.Track];
+                staff.AddChordNames(chordnames);
+            }
+        }
+
+        #endregion ChordNames
+
+
         #region zoom
 
         /** Set the zoom level to display at (1.0 == 100%).

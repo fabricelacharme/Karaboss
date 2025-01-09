@@ -117,46 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="&gt;&gt;chkUpdFreq.Name" xml:space="preserve">
-    <value>chkUpdFreq</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="lblWebSite.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 114</value>
-  </data>
-  <data name="&gt;&gt;lblDescription.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="chkUpdFreq.Location" type="System.Drawing.Point, System.Drawing">
-    <value>289, 146</value>
-  </data>
-  <data name="&gt;&gt;lblDescription.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;txtWebSite.Name" xml:space="preserve">
-    <value>txtWebSite</value>
+  <data name="&gt;&gt;lblDescription.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="lblUpdFreq.AutoSize" type="System.Boolean, mscorlib">
+  <data name="chkUpdateProgram.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblWebSite.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
-  </data>
-  <data name="&gt;&gt;chkUpdFreq.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="lblUpdFreq.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="txtWebSite.Location" type="System.Drawing.Point, System.Drawing">
-    <value>50, 111</value>
-  </data>
-  <data name="&gt;&gt;lblWebSite.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="chkUpdateProgram.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;chkUpdateProgram.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;lblWebSite.Name" xml:space="preserve">
     <value>lblWebSite</value>
@@ -164,33 +133,121 @@
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>UpdControl</value>
   </data>
-  <data name="lblWebSite.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+  <data name="chkUpdFreq.Text" xml:space="preserve">
+    <value>Monthly</value>
   </data>
-  <data name="&gt;&gt;txtWebSite.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;lblDescription.Name" xml:space="preserve">
+    <value>lblDescription</value>
+  </data>
+  <data name="&gt;&gt;lblUpdFreq.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="lblDescription.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="chkUpdateProgram.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 77</value>
-  </data>
-  <data name="lblUpdFreq.Text" xml:space="preserve">
-    <value>Check for a new version each</value>
-  </data>
-  <data name="chkUpdateProgram.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="chkUpdFreq.Text" xml:space="preserve">
+  <data name="chkUpdFreq.Items2" xml:space="preserve">
     <value>Monthly</value>
   </data>
-  <data name="lblWebSite.Size" type="System.Drawing.Size, System.Drawing">
-    <value>25, 13</value>
+  <data name="txtWebSite.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
-  <data name="lblUpdFreq.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 149</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="chkUpdFreq.Location" type="System.Drawing.Point, System.Drawing">
+    <value>210, 146</value>
+  </data>
+  <data name="chkUpdFreq.Items1" xml:space="preserve">
+    <value>Weekly</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="&gt;&gt;lblDescription.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="lblUpdFreq.Size" type="System.Drawing.Size, System.Drawing">
+    <value>166, 15</value>
+  </data>
+  <data name="&gt;&gt;chkUpdFreq.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>675, 231</value>
+  </data>
+  <data name="&gt;&gt;lblUpdFreq.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblWebSite.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="lblWebSite.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 114</value>
+  </data>
+  <data name="&gt;&gt;txtWebSite.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="lblUpdFreq.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkUpdFreq.Items" xml:space="preserve">
+    <value>Daily</value>
+  </data>
+  <data name="lblUpdFreq.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="txtWebSite.Text" xml:space="preserve">
+    <value>https://karaboss.lacharme.net/AutoupdateService.xml</value>
+  </data>
+  <data name="&gt;&gt;chkUpdateProgram.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="chkUpdateProgram.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;chkUpdateProgram.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblUpdFreq.Name" xml:space="preserve">
+    <value>lblUpdFreq</value>
+  </data>
+  <data name="&gt;&gt;lblUpdFreq.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblDescription.Size" type="System.Drawing.Size, System.Drawing">
+    <value>600, 60</value>
+  </data>
+  <data name="txtWebSite.Location" type="System.Drawing.Point, System.Drawing">
+    <value>210, 111</value>
+  </data>
+  <data name="&gt;&gt;chkUpdFreq.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="chkUpdateProgram.Size" type="System.Drawing.Size, System.Drawing">
+    <value>113, 17</value>
+  </data>
+  <data name="lblDescription.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9.75pt</value>
+  </data>
+  <data name="txtWebSite.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="&gt;&gt;txtWebSite.Name" xml:space="preserve">
+    <value>txtWebSite</value>
+  </data>
+  <data name="lblWebSite.Size" type="System.Drawing.Size, System.Drawing">
+    <value>28, 15</value>
+  </data>
+  <data name="&gt;&gt;txtWebSite.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkUpdateProgram.Name" xml:space="preserve">
+    <value>chkUpdateProgram</value>
+  </data>
+  <data name="&gt;&gt;lblWebSite.ZOrder" xml:space="preserve">
+    <value>4</value>
   </data>
   <data name="lblWebSite.Text" xml:space="preserve">
     <value>Site</value>
@@ -198,104 +255,59 @@
   <data name="&gt;&gt;txtWebSite.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="&gt;&gt;lblUpdFreq.Name" xml:space="preserve">
-    <value>lblUpdFreq</value>
-  </data>
-  <data name="txtWebSite.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;chkUpdateProgram.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="chkUpdateProgram.Size" type="System.Drawing.Size, System.Drawing">
-    <value>113, 17</value>
-  </data>
-  <data name="lblUpdFreq.Size" type="System.Drawing.Size, System.Drawing">
-    <value>149, 13</value>
-  </data>
-  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>436, 231</value>
-  </data>
   <data name="&gt;&gt;lblWebSite.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;lblDescription.Name" xml:space="preserve">
-    <value>lblDescription</value>
+  <data name="lblUpdFreq.Text" xml:space="preserve">
+    <value>Check for a new version each</value>
   </data>
-  <data name="txtWebSite.Text" xml:space="preserve">
-    <value>https://karaboss.lacharme.net/AutoupdateService.xml</value>
+  <data name="chkUpdFreq.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
   </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;lblDescription.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
-  <data name="&gt;&gt;txtWebSite.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;chkUpdateProgram.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;lblUpdFreq.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="lblUpdFreq.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
   </data>
-  <data name="chkUpdFreq.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 21</value>
-  </data>
-  <data name="lblDescription.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 10</value>
+  <data name="&gt;&gt;lblWebSite.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="lblDescription.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;chkUpdateProgram.Name" xml:space="preserve">
-    <value>chkUpdateProgram</value>
-  </data>
-  <data name="&gt;&gt;chkUpdFreq.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;lblUpdFreq.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="chkUpdateProgram.Text" xml:space="preserve">
-    <value>Check for updates</value>
-  </data>
-  <data name="lblDescription.Size" type="System.Drawing.Size, System.Drawing">
-    <value>400, 60</value>
-  </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
-  </data>
-  <data name="txtWebSite.Size" type="System.Drawing.Size, System.Drawing">
-    <value>360, 20</value>
-  </data>
-  <data name="&gt;&gt;chkUpdateProgram.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
   <data name="lblDescription.Text" xml:space="preserve">
     <value>Karaboss can check the availability of new versions. Select "Check for updates" and the frequency . You will be automatically informed of the availability of a new version.</value>
   </data>
-  <data name="&gt;&gt;lblUpdFreq.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="lblWebSite.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
   </data>
-  <data name="chkUpdFreq.Items" xml:space="preserve">
-    <value>Daily</value>
+  <data name="chkUpdFreq.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 21</value>
   </data>
-  <data name="chkUpdFreq.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+  <data name="lblDescription.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 10</value>
+  </data>
+  <data name="txtWebSite.Size" type="System.Drawing.Size, System.Drawing">
+    <value>360, 21</value>
+  </data>
+  <data name="lblUpdFreq.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 149</value>
+  </data>
+  <data name="chkUpdateProgram.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 77</value>
+  </data>
+  <data name="chkUpdateProgram.Text" xml:space="preserve">
+    <value>Check for updates</value>
   </data>
   <data name="&gt;&gt;chkUpdFreq.Type" xml:space="preserve">
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="chkUpdFreq.Items1" xml:space="preserve">
-    <value>Weekly</value>
-  </data>
-  <data name="lblWebSite.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;lblDescription.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="chkUpdFreq.Items2" xml:space="preserve">
-    <value>Monthly</value>
-  </data>
-  <data name="&gt;&gt;lblWebSite.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;chkUpdFreq.Name" xml:space="preserve">
+    <value>chkUpdFreq</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

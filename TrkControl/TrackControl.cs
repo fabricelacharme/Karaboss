@@ -209,8 +209,6 @@ namespace TrkControl
             set
             {
                 patch = value;
-                //lblProgram.Text = value.ToString();
-                //lblTrackLabel.Text = lslIntrumentNames[patch];
             }
         }
 
@@ -268,7 +266,7 @@ namespace TrkControl
             set
             {
                 track = value;
-                this.lblTrack.Text = value.ToString();
+                this.lblTrack.Text = (value + 1).ToString();
             }
         }
 
@@ -754,13 +752,13 @@ namespace TrkControl
                 return;
             #endregion
 
-            string message = "Do you want to delete track number " + track + "?";
+            string message = "Do you want to delete track number " + (track + 1) + "?";
             string caption = "Karaboss";
             MessageBoxButtons buttons = MessageBoxButtons.YesNo;
             DialogResult result;
 
             // Displays the MessageBox.
-            result = MessageBox.Show(message, caption, buttons);
+            result = MessageBox.Show(message, caption, buttons, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)                            
                 OntrkControlbtnDelClicked?.Invoke(this, e, track);

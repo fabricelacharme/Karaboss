@@ -800,6 +800,7 @@ namespace Karaboss
             Karaclass.m_ShowParagraph = Properties.Settings.Default.bShowParagraph;
             Karaclass.m_ForceUppercase = Properties.Settings.Default.bForceUppercase;
             Karaclass.m_ShowChords = Properties.Settings.Default.bShowChords;
+            Karaclass.m_ShowXmlChords = Properties.Settings.Default.bShowXmlChords;
 
             Karaclass.m_SaveDefaultOutputDevice = Properties.Settings.Default.SaveDefaultOutputDevice;
 
@@ -1419,6 +1420,7 @@ namespace Karaboss
         private void Global_xPlayXml(object sender, FileInfo fi, bool bplay)
         {
             Karaclass.m_MxmlPath = "";
+            Karaclass.m_XmlPath = fi.FullName;
             DisplayXmlPlayer(fi.FullName, null, bplay);
         }
 
@@ -1431,6 +1433,7 @@ namespace Karaboss
 
         private void Global_xPlayTxt(object sender, FileInfo fi, bool bplay)
         {
+            Karaclass.m_XmlPath = "";
             Karaclass.m_MxmlPath = "";
             DisplayTxtPlayer(fi.FullName, null, bplay);
         }
@@ -1447,6 +1450,7 @@ namespace Karaboss
 
         private void Global_PlayMidi(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
+            Karaclass.m_XmlPath = "";
             Karaclass.m_MxmlPath = "";
             DisplayMidiPlayer(fi.FullName, pl, bplay);
         }
@@ -1458,6 +1462,7 @@ namespace Karaboss
 
         private void Global_PlayXml(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
+            Karaclass.m_MxmlPath = fi.FullName;
             Karaclass.m_MxmlPath = "";
             DisplayXmlPlayer(fi.FullName, pl, bplay);
         }
@@ -1470,6 +1475,7 @@ namespace Karaboss
 
         private void Global_PlayTxt(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
+            Karaclass.m_XmlPath = "";
             Karaclass.m_MxmlPath = "";
             DisplayTxtPlayer(fi.FullName, pl, bplay);
         }
@@ -1749,6 +1755,7 @@ namespace Karaboss
             string myXMLFileName = UnzipFile(fpath);            
             if (File.Exists(myXMLFileName))
             {
+                Karaclass.m_XmlPath = myXMLFileName;
                 DisplayXmlPlayer(myXMLFileName, pl, bPlayNow);
             }
 
@@ -2390,7 +2397,7 @@ namespace Karaboss
             string trackname = "Track1";
             int programchange = 0;
             int channel = 0;
-            decimal trkindex = 0;
+            decimal trkindex = 1;
             int clef = 0;
 
             //dr = new DialogResult();

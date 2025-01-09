@@ -9,6 +9,7 @@
 	public enum MeasureElementType
 	{
 		Note,
+		Chord,
 		Backup,
 		Forward,
 		Barline,

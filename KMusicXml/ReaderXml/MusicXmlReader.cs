@@ -36,19 +36,20 @@ using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using MusicXml.Domain;
 using Sanford.Multimedia.Midi;
-using System.Runtime.CompilerServices;
-using System.Data.Sql;
+using KMusicXml.MusicXml.Domain;
 
 namespace MusicXml
 {
+    public class ChordItem
+    {
+        public int TicksOn { get; set; }
+        public string ChordName { get; set; }
+    }
+
     public class MusicXmlReader
     {
         private BackgroundWorker loadXmlWorker = new BackgroundWorker();
@@ -178,8 +179,7 @@ namespace MusicXml
             catch (Exception ee)
             {
                 Console.Write(ee.ToString());
-                e.Cancel = true;
-                
+                e.Cancel = true;                
             }
         }
 
@@ -195,9 +195,32 @@ namespace MusicXml
             }
         }
 
+        /// <summary>
+        /// Display or not the chords
+        /// </summary>
+        private bool _playXmlChords = false;
+        public bool PlayXmlChords
+        {
+            set { _playXmlChords = value; }
+        }
 
         /// <summary>
-        /// Create a score objetc
+        /// Is there chords in this file?
+        /// </summary>        
+        public bool bHasXmlChords
+        {
+            get { return lstChords.Count > 0; }            
+        }
+
+        public int TrackChordsNumber { get; internal set; }
+        
+       
+        
+        public List<ChordItem> lstChords { get; internal set; }
+
+
+        /// <summary>
+        /// Create a score object
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
@@ -235,7 +258,6 @@ namespace MusicXml
             Identification Identification = SC.Identification;
             String MovementTitle = SC.MovementTitle;
             
-
             // List of tracks
             List<Part> Parts = SC.PartList;
 
@@ -243,7 +265,6 @@ namespace MusicXml
             if (Parts.Count == 0)
                 return null;
             #endregion
-
 
             // Create MAP of measures according to repeat backward/forward found
             List<List<int>> mapmeasures = CreateVerses(Parts[0].Measures);
@@ -272,26 +293,34 @@ namespace MusicXml
             }
 
             // Search common Division for all parts
-            int commondivision = ((Parts[0].Division > 0) ? Parts[0].Division  :  24); 
+            int commondivision = ((Parts[0].Division > 0) ? Parts[0].Division  :  24);
 
-            
+            // reset Chords
+            lstChords = new List<ChordItem>();
+            TrackChordsNumber = -1;
+            int indextracks = -1;
+
+            // Search for the biggest division
             foreach (Part part in Parts)
             {
                  if (part.Division > commondivision)
                     commondivision = part.Division;
             }
 
+            // ================================
             // For each track
+            // ================================
             foreach (Part part in Parts)
             {
                 TrackName = part.Name.Trim();
                 
                 Id = part.Id.Trim();
                 Channel = part.MidiChannel - 1;
-                if (Channel > 15)
-                    break;
+                if (Channel < 0 || Channel > 15) break;
 
                 ProgramChange = part.MidiProgram - 1;
+                if (ProgramChange < 0 || ProgramChange > 127) 
+                    break;
                 Volume = part.Volume;
                 Pan = part.Pan;
 
@@ -305,15 +334,13 @@ namespace MusicXml
                  */
                 double multcoeff = 1;       // Mutiply everything in order to have common Division
                 
+                // Division
                 if (part.Division == 0)
                 {
                     Console.WriteLine("ERROR: Division = 0");
                     part.Division = 24;
-                }
-                
-                Division = part.Division;
-                
-                
+                }                
+                Division = part.Division;                                
                 if (Division != commondivision)
                 {
                     Division = commondivision;
@@ -340,11 +367,21 @@ namespace MusicXml
 
                 // Manage the start time of notes
                 int timeline = 0;
-                int offset = 0;                
+                int offset = 0;
                 int starttime = 0;
 
                 int versenumber = 0;
-                
+
+                // TEST
+                // limits of a measure
+                /*
+                int measureId = 0;
+                int measureStart;
+                int measureEnd;
+                */
+
+                indextracks++;
+
 
                 // =========================================                
                 // mapmesure is the list of verses.
@@ -385,14 +422,38 @@ namespace MusicXml
                         { 
 
                             Measure measure = Measures[indice];
-                            
+
+                            //if (measure.Number == 5)
+                            //    if (part.Id == "P2")
+                            //        Console.WriteLine("");
+
+
+                            // Measure limits to check notes 
+                            // TESTS
+                            /*
+                            measureId++;
+                            measureStart = (measureId - 1) * MeasureLength;
+                            measureEnd = measureId * MeasureLength;
+                            */
+
                             // BEGIN RECUP
                             decimal W = measure.Width;
                             int notenumber = 0;
 
+                            int fif;
+                            string mod;
                             Key k = measure.Attributes.Key;
-                            int fif = k.Fifths;
-                            string mod = k.Mode;
+                            if (k != null)
+                            {
+                                fif = k.Fifths;
+                                mod = k.Mode;
+                            }
+
+                            Pitch pitch;
+                            string letter;
+                            int octave;
+                            int alter;
+                            Note note;
 
 
                             // *************** TAKE INTO ACCOUNT THOSE THINGS !!!!! ***************
@@ -423,92 +484,145 @@ namespace MusicXml
                                         break;
                                     
                                     case MeasureElementType.Backup:
-                                        Backup bkp = (Backup)obj;
+                                        Backup bkp = (Backup)obj;                                        
                                         timeline -= (int)(bkp.Duration * multcoeff);
                                         break;
 
 
+                                    case MeasureElementType.Chord:                                        
+                                        Chord chord = (Chord)obj;                                        
+                                        pitch = chord.Pitch;
+                                        letter = chord.Pitch.Step.ToString();                                       
+
+                                        // Create chord
+                                        note = new Note();
+                                        octave = 4;
+                                        
+                                        notenumber = 12 + Notes.IndexOf(letter) + 12 * octave;
+                                        if (chord.Pitch.Alter != 0)
+                                        {
+                                            alter = chord.Pitch.Alter;
+                                            notenumber += alter;
+                                        }
+
+                                        //starttime = timeline + offset;
+                                        starttime = timeline;
+                                        if (chord.Offset > 0)
+                                        {
+                                            starttime += (int)(chord.Offset * multcoeff);
+                                        }
+                                        
+                                        // Duration of chord
+                                        // Distance between end of measure or distance between next chord                                        
+                                        int d = chord.RemainDuration;
+                                        note.Duration = (int)(d * multcoeff);
+
+
+                                        // Change patch & channel in order to play piano for the chords
+                                        int chordchannel = Channel;
+                                        if (track1.ProgramChange != 0)
+                                            chordchannel = 15;
+
+                                        // always ? Draw chord    ????????????? to be checked
+                                        DrawChord(chord, starttime, indextracks);
+
+                                        // Option play chords
+                                        // If false, do not display notes and do not play them
+                                        if (!_playXmlChords)
+                                        {
+                                            break;
+                                        }
+
+                                        // =============================================
+                                        // Create notes of chord
+                                        // =============================================
+                                        List<int> lnotes = chord.GetNotes(notenumber);
+
+                                        // Create Chord                                                                                
+                                        for (int idx = 0; idx < lnotes.Count; idx++)
+                                        {
+                                            CreateMidiNote1(note, chordchannel, lnotes[idx], starttime);
+                                        }
+                                        
+                                        // Create Bass
+                                        note = new Note();
+                                        pitch = chord.BassPitch;
+                                        letter = chord.BassPitch.Step.ToString();
+                                        octave = 4;
+                                        note.Duration = d;
+                                        notenumber = 12 + Notes.IndexOf(letter) + 12 * (octave - 2);
+                                        if (chord.BassPitch.Alter != 0)
+                                        {
+                                            alter = chord.BassPitch.Alter;
+                                            notenumber += alter;
+                                        }
+                                        CreateMidiNote1(note, chordchannel, notenumber, starttime);                                        
+                                        
+                                        break;
+                                    
+
                                     case MeasureElementType.Note:
-                                        Note note = (Note)obj;
+                                        note = (Note)obj;
 
                                         string accidental = note.Accidental;
                                         int staff = note.Staff;
                                         bool isrest = note.IsRest;
                                         bool ischordtone = note.IsChordTone;
-                                        Pitch pitch = note.Pitch;
-                                        int voice = note.Voice;
-                                        
+                                        pitch = note.Pitch;
+                                        int voice = note.Voice;                                        
 
                                         // keep only the good number of the verse             
                                         List<Lyric> lyrics = note.Lyrics;
                                         
                                         string ntype = note.Type;
 
+                                        // Note duration                                        
+                                        note.Duration = (int)(note.Duration * multcoeff);           // Full duration (can be several measures)
+                                        note.TieDuration = (int)(note.TieDuration * multcoeff);     // original duration of the note in case of linked notes
 
-                                        // Note duration
-                                        //int t = part.Division;
-                                        note.Duration = (int)(note.Duration * multcoeff);
-                                        
                                         /*
-                                        switch (note.Type)
-                                        {
-                                            case "whole":
-                                                t = t/8;                                                
-                                                break;
-                                            case "half":
-                                                t = t/8;
-                                                break;
-                                            case "quarter":
-                                                t = t/8;                                                
-                                                break;
-                                            case "eighth":
-                                                t = t/8;                                               
-                                                break;
-                                            case "16th":
-                                                t = t/8;                                                
-                                                break;
-                                            case "32nd":
-                                                t = t/8;                                                
-                                                break;
-                                            case "":
-                                                t = t/8; // part.Division;
-                                                break;
-                                            default:
-                                                break;
-                                        }
-
-                                        int test1 = (int)(note.DurationOld * multcoeff); ;
-                                        int test2 = t * note.Duration;
-
-                                        if (test1 != test2)
-                                            Console.WriteLine("");
-
-                                        note.Duration = test2;
+                                        if (measure.Number == 26)
+                                            if (part.Id == "P2")
+                                                Console.WriteLine("");
                                         */
 
+                                        // TODO: REVOIR les mult & multcoeff
+
+                                        // Note is the end of a linked note
+                                        // => add duration inside the current measure and exit
+                                        if (note.Duration == 0)
+                                        {
+                                            if (!note.IsChordTone)
+                                            {
+                                                offset = note.TieDuration;
+                                                timeline += note.TieDuration;
+                                            }
+                                            
+                                            break;
+                                        }
+
+                                        // note is a place holder
+                                        // => add duration and exit
                                         if (note.IsRest)
                                         {
                                             timeline += note.Duration;
                                             break;
                                         }
 
-                                        // Take into account previous note                                
+                                        // If note is a chord, we have to substract the offset added previoulsy with the first note of the chord                                
                                         if (note.IsChordTone)
+                                        {                                                                                        
+                                            timeline -= offset;
                                             offset = 0;
-                                        timeline += offset;
+                                        }
+                                                                               
+                                        // Notenumber calculation                                       
+                                        octave = note.Pitch.Octave;
+                                        letter = note.Pitch.Step.ToString();
 
-                                        // For the next note (if not chord)
-                                        offset = note.Duration;
-
-                                        starttime = timeline;
-
-
-                                        int octave = note.Pitch.Octave;
-                                        string letter = note.Pitch.Step.ToString();
-
-                                        if (note.IsDrums)
+                                        if (note.IsDrums && note.DrumInstrument != 0)
                                         {
-                                            notenumber = note.DrumPitch;
+                                            notenumber = note.DrumInstrument;
                                         }
                                         else
                                         {
@@ -518,23 +632,61 @@ namespace MusicXml
 
                                             if (note.Pitch.Alter != 0)
                                             {
-                                                int alter = note.Pitch.Alter;
+                                                alter = note.Pitch.Alter;
                                                 notenumber += alter;
                                             }
-
                                         }
+                                                                                
+                                        // Start time of note = timeline
+                                        starttime = timeline;
+
+                                        // TESTS
+                                        /* 
+                                        if (starttime < measureStart)
+                                        {
+                                            //timeline = measureStart;
+                                            //starttime = timeline;
+                                            Console.WriteLine(measure.Number);
+                                        }
+                                        if (starttime > measureEnd)
+                                        {
+                                            Console.WriteLine(measure.Number);
+                                        }
+                                        */
 
                                         // Create note
-                                        if (note.Staff <= 1)
-                                            CreateMidiNote1(note, notenumber, starttime);
-                                        else
-                                            CreateMidiNote2(note, notenumber, starttime);
-                                        
-                                        
-                                        if (note.Lyrics.Count > 0 && note.Lyrics[0].Text != null)
+                                        // in case of harmony (chord), eliminate notes having no stem (except note having whole duration)
+                                        // because these notes are only here for the duration of the chord and must not be played
+                                        if (part.ScoreType == Part.ScoreTypes.Notes || part.ScoreType == Part.ScoreTypes.Chords && (note.Duration == MeasureLength || (note.Stem != null && note.Stem != "none")))
                                         {
-                                            CreateLyric(note, starttime, versenumber);
+                                            if (note.Staff <= 1)
+                                                CreateMidiNote1(note, Channel, notenumber, starttime);
+                                            else
+                                                CreateMidiNote2(note, Channel, notenumber, starttime);
+
+
+                                            if (note.Lyrics.Count > 0 && note.Lyrics[0].Text != null)
+                                            {
+                                                CreateLyric(note, starttime, versenumber);
+                                            }
                                         }
+
+                                        
+
+                                        // offset for the timeline for the next note (if not chord)
+                                        // if a chord, the offset will be substract
+                                        if (note.TieDuration > 0)
+                                        {
+                                            // If a linked note, the offset is only the duration inside the current measure
+                                            offset = note.TieDuration;
+                                            timeline += note.TieDuration;                                            
+                                        }
+                                        else
+                                        {
+                                            offset = note.Duration;
+                                            timeline += note.Duration;
+                                        }                                        
+
                                         break;
 
 
@@ -896,10 +1048,10 @@ namespace MusicXml
             
             track1.insertTrackname(TrackName);
 
-            if (Volume >=  0)
+            if (Volume >= 0 && Volume <= 15)
                 track1.insertVolume(Channel, Volume);
             
-            if (Pan >= 0)
+            if (Pan >= 0 && Pan <= 127)
                 track1.insertPan(Channel, Pan);            
 
             newTracks.Add(track1);
@@ -931,9 +1083,9 @@ namespace MusicXml
             
             track2.insertTrackname(TrackName);
             
-            if (Volume >= 0)
+            if (Volume >= 0 && Volume <= 127)
                 track2.insertVolume(Channel, Volume);
-            if (Pan >= 0)
+            if (Pan >= 0 && Pan <= 127)
                 track2.insertPan(Channel, Pan);
 
             newTracks.Add(track2);
@@ -952,13 +1104,14 @@ namespace MusicXml
 
         #region notes
 
+      
         /// <summary>
         /// Create a MIDI note in the current rack
         /// </summary>
         /// <param name="n"></param>
         /// <param name="v"></param>
         /// <param name="st"></param>
-        private void CreateMidiNote1(Note n, int v, int st)
+        private void CreateMidiNote1(Note n, int Channel, int v, int st)
         {
             
             if (v < 21)
@@ -978,7 +1131,7 @@ namespace MusicXml
             }
         }
 
-        private void CreateMidiNote2(Note n, int v, int st)
+        private void CreateMidiNote2(Note n, int Channel, int v, int st)
         {
             if (v < 21)
                 return;
@@ -996,7 +1149,7 @@ namespace MusicXml
                 Console.WriteLine(e.ToString());
             }
         }
-        #endregion notes
+        #endregion notes    
 
 
         #region lyrics
@@ -1197,6 +1350,31 @@ namespace MusicXml
         }
         #endregion lyrics
 
+        
+        #region chords
+        /// <summary>
+        /// Write chord name at position t
+        /// </summary>
+        /// <param name="chord"></param>
+        /// <param name="t"></param>
+        private void DrawChord(Chord chord, int t, int tracknumber)
+        {
+            string c = chord.GetChordName();
+
+            ChordItem ci = new ChordItem()
+            {
+                TicksOn = t,
+                ChordName = c,
+            };       
+            lstChords.Add(ci);
+            TrackChordsNumber= tracknumber;
+
+
+            track1.addChord(c, t);          // Why track1 and not track2 ?????????????  
+        }
+
+        #endregion chords
+
 
         #region sequence
 
@@ -1231,7 +1409,7 @@ namespace MusicXml
                 sequence.tracks[0].insertTempo(Tempo, 0);
 
             // Tags to sequence
-            //sequence.CloneTags();
+            sequence.CloneTags();
         }
 
         #endregion sequence

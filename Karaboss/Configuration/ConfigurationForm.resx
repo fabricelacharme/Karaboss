@@ -117,21 +117,69 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="&gt;&gt;m_applyBtn.Name" xml:space="preserve">
+    <value>m_applyBtn</value>
+  </data>
+  <data name="&gt;&gt;m_applyBtn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_applyBtn.Parent" xml:space="preserve">
+    <value>m_restoreApplyPanel</value>
+  </data>
+  <data name="&gt;&gt;m_applyBtn.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;m_restoreBtn.Name" xml:space="preserve">
+    <value>m_restoreBtn</value>
+  </data>
+  <data name="&gt;&gt;m_restoreBtn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_restoreBtn.Parent" xml:space="preserve">
+    <value>m_restoreApplyPanel</value>
+  </data>
+  <data name="&gt;&gt;m_restoreBtn.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="m_restoreApplyPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="m_restoreApplyPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>200, 462</value>
+  </data>
+  <data name="m_restoreApplyPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>684, 40</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="m_restoreApplyPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;m_restoreApplyPanel.Name" xml:space="preserve">
+    <value>m_restoreApplyPanel</value>
+  </data>
+  <data name="&gt;&gt;m_restoreApplyPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_restoreApplyPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_restoreApplyPanel.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
   <data name="m_applyBtn.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
   </data>
   <data name="m_applyBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>System</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="m_applyBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>620, 8</value>
+    <value>588, 8</value>
   </data>
   <data name="m_applyBtn.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="m_applyBtn.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
@@ -157,7 +205,7 @@
     <value>System</value>
   </data>
   <data name="m_restoreBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>532, 8</value>
+    <value>500, 8</value>
   </data>
   <data name="m_restoreBtn.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
@@ -180,38 +228,17 @@
   <data name="&gt;&gt;m_restoreBtn.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="m_restoreApplyPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="m_restoreApplyPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>168, 462</value>
-  </data>
-  <data name="m_restoreApplyPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>716, 40</value>
-  </data>
-  <data name="m_restoreApplyPanel.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;m_restoreApplyPanel.Name" xml:space="preserve">
-    <value>m_restoreApplyPanel</value>
-  </data>
-  <data name="&gt;&gt;m_restoreApplyPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_restoreApplyPanel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;m_restoreApplyPanel.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
   <data name="m_optionsTV.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
+  </data>
+  <data name="m_optionsTV.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9.75pt</value>
   </data>
   <data name="m_optionsTV.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
   <data name="m_optionsTV.Size" type="System.Drawing.Size, System.Drawing">
-    <value>168, 502</value>
+    <value>200, 502</value>
   </data>
   <data name="m_optionsTV.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -235,7 +262,7 @@
     <value>0, 0</value>
   </data>
   <data name="m_optionsPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>168, 502</value>
+    <value>200, 502</value>
   </data>
   <data name="m_optionsPanel.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -251,6 +278,54 @@
   </data>
   <data name="&gt;&gt;m_optionsPanel.ZOrder" xml:space="preserve">
     <value>4</value>
+  </data>
+  <data name="&gt;&gt;m_cancelBtn.Name" xml:space="preserve">
+    <value>m_cancelBtn</value>
+  </data>
+  <data name="&gt;&gt;m_cancelBtn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_cancelBtn.Parent" xml:space="preserve">
+    <value>m_okCancelPanel</value>
+  </data>
+  <data name="&gt;&gt;m_cancelBtn.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;m_okBtn.Name" xml:space="preserve">
+    <value>m_okBtn</value>
+  </data>
+  <data name="&gt;&gt;m_okBtn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_okBtn.Parent" xml:space="preserve">
+    <value>m_okCancelPanel</value>
+  </data>
+  <data name="&gt;&gt;m_okBtn.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="m_okCancelPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="m_okCancelPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 505</value>
+  </data>
+  <data name="m_okCancelPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>884, 48</value>
+  </data>
+  <data name="m_okCancelPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;m_okCancelPanel.Name" xml:space="preserve">
+    <value>m_okCancelPanel</value>
+  </data>
+  <data name="&gt;&gt;m_okCancelPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_okCancelPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_okCancelPanel.ZOrder" xml:space="preserve">
+    <value>6</value>
   </data>
   <data name="m_cancelBtn.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -312,38 +387,14 @@
   <data name="&gt;&gt;m_okBtn.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="m_okCancelPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="m_okCancelPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 505</value>
-  </data>
-  <data name="m_okCancelPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>884, 48</value>
-  </data>
-  <data name="m_okCancelPanel.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;m_okCancelPanel.Name" xml:space="preserve">
-    <value>m_okCancelPanel</value>
-  </data>
-  <data name="&gt;&gt;m_okCancelPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_okCancelPanel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;m_okCancelPanel.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
   <data name="m_mainPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
   <data name="m_mainPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>168, 32</value>
+    <value>200, 32</value>
   </data>
   <data name="m_mainPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>716, 430</value>
+    <value>684, 430</value>
   </data>
   <data name="m_mainPanel.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -384,6 +435,42 @@
   <data name="&gt;&gt;m_separatorGB.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
+  <data name="&gt;&gt;m_configLabel.Name" xml:space="preserve">
+    <value>m_configLabel</value>
+  </data>
+  <data name="&gt;&gt;m_configLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_configLabel.Parent" xml:space="preserve">
+    <value>m_headPanel</value>
+  </data>
+  <data name="&gt;&gt;m_configLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="m_headPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="m_headPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>200, 0</value>
+  </data>
+  <data name="m_headPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>684, 32</value>
+  </data>
+  <data name="m_headPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;m_headPanel.Name" xml:space="preserve">
+    <value>m_headPanel</value>
+  </data>
+  <data name="&gt;&gt;m_headPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_headPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_headPanel.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
   <data name="m_configLabel.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9.75pt, style=Bold</value>
   </data>
@@ -408,38 +495,14 @@
   <data name="&gt;&gt;m_configLabel.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="m_headPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="m_headPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>168, 0</value>
-  </data>
-  <data name="m_headPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>716, 32</value>
-  </data>
-  <data name="m_headPanel.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;m_headPanel.Name" xml:space="preserve">
-    <value>m_headPanel</value>
-  </data>
-  <data name="&gt;&gt;m_headPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_headPanel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;m_headPanel.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <data name="m_upperSeparatorGB.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
   </data>
   <data name="m_upperSeparatorGB.Location" type="System.Drawing.Point, System.Drawing">
-    <value>168, 32</value>
+    <value>200, 32</value>
   </data>
   <data name="m_upperSeparatorGB.Size" type="System.Drawing.Size, System.Drawing">
-    <value>716, 4</value>
+    <value>684, 4</value>
   </data>
   <data name="m_upperSeparatorGB.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>

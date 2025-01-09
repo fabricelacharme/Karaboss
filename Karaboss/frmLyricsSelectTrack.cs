@@ -90,7 +90,7 @@ namespace Karaboss
                 int patch = track.ProgramChange;
                 if (patch > 127)
                     patch = 0;
-                item = i.ToString("00") + " - " + lsInstruments[patch] + " - " + name;                                
+                item = (i + 1).ToString("00") + " - " + lsInstruments[patch] + " - " + name;                                
                 cbSelectTrack.Items.Add(item);
             }
 

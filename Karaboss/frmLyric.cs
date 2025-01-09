@@ -1017,7 +1017,7 @@ namespace Karaboss
             else
             {
                 // Chords have to be guessed with a vertical search
-                myLyricsMgmt.PopulateEmbeddedChords();                                                
+                myLyricsMgmt.PopulateDetectedChords();                                                
             }
 
             tx = myLyricsMgmt.GetLyricsLinesWithChords();

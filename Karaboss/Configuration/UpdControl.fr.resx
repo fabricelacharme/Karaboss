@@ -125,13 +125,13 @@
     <value>Vérifier les mises à jour</value>
   </data>
   <data name="lblUpdFreq.Size" type="System.Drawing.Size, System.Drawing">
-    <value>133, 13</value>
+    <value>150, 15</value>
   </data>
   <data name="lblUpdFreq.Text" xml:space="preserve">
     <value>Fréquence de vérification :</value>
   </data>
   <data name="lblDescription.Size" type="System.Drawing.Size, System.Drawing">
-    <value>400, 52</value>
+    <value>600, 52</value>
   </data>
   <data name="lblDescription.Text" xml:space="preserve">
     <value>Karaboss peut vérifier automatiquement la disponibilité de nouvelles versions. Pour cela, cocher "Vérifier les mises à jour" et choississez la fréquence des vérifications. Lorsqu'une nouvelle version sera disponible vous serez informé et pourrez choisir de l'installer.</value>
