@@ -153,7 +153,7 @@
     <value>True</value>
   </data>
   <data name="chkMuteMelody.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 120</value>
+    <value>210, 120</value>
   </data>
   <data name="chkMuteMelody.Size" type="System.Drawing.Size, System.Drawing">
     <value>15, 14</value>
@@ -214,7 +214,7 @@
     <value>NoControl</value>
   </data>
   <data name="chkDisplayBalls.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 70</value>
+    <value>210, 70</value>
   </data>
   <data name="chkDisplayBalls.Size" type="System.Drawing.Size, System.Drawing">
     <value>15, 14</value>
@@ -241,7 +241,7 @@
     <value>NoControl</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 70</value>
+    <value>259, 70</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>328, 40</value>
@@ -271,7 +271,7 @@
     <value>NoControl</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 120</value>
+    <value>259, 120</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>297, 40</value>
@@ -304,7 +304,7 @@
     <value>25, 10</value>
   </data>
   <data name="lblDescription.Size" type="System.Drawing.Size, System.Drawing">
-    <value>400, 60</value>
+    <value>600, 60</value>
   </data>
   <data name="lblDescription.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -328,7 +328,7 @@
     <value>Microsoft Sans Serif, 12pt</value>
   </data>
   <data name="txtSepSyllabe.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 170</value>
+    <value>210, 170</value>
   </data>
   <data name="txtSepSyllabe.MaxLength" type="System.Int32, mscorlib">
     <value>1</value>
@@ -397,7 +397,7 @@
     <value>NoControl</value>
   </data>
   <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 170</value>
+    <value>259, 170</value>
   </data>
   <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
     <value>297, 40</value>
@@ -427,7 +427,7 @@
     <value>NoControl</value>
   </data>
   <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 220</value>
+    <value>259, 220</value>
   </data>
   <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
     <value>297, 40</value>
@@ -487,7 +487,7 @@
     <value>Microsoft Sans Serif, 12pt</value>
   </data>
   <data name="txtSepLine.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 220</value>
+    <value>210, 220</value>
   </data>
   <data name="txtSepLine.MaxLength" type="System.Int32, mscorlib">
     <value>1</value>
@@ -523,7 +523,7 @@
     <value>NoControl</value>
   </data>
   <data name="label7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 270</value>
+    <value>259, 270</value>
   </data>
   <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
     <value>297, 40</value>
@@ -583,7 +583,7 @@
     <value>Microsoft Sans Serif, 12pt</value>
   </data>
   <data name="txtSepParagraph.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 270</value>
+    <value>210, 270</value>
   </data>
   <data name="txtSepParagraph.MaxLength" type="System.Int32, mscorlib">
     <value>1</value>
@@ -619,7 +619,7 @@
     <value>NoControl</value>
   </data>
   <data name="label9.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 320</value>
+    <value>259, 320</value>
   </data>
   <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
     <value>328, 40</value>
@@ -682,7 +682,7 @@
     <value>NoControl</value>
   </data>
   <data name="chkShowParagraph.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 320</value>
+    <value>210, 320</value>
   </data>
   <data name="chkShowParagraph.Size" type="System.Drawing.Size, System.Drawing">
     <value>15, 14</value>
@@ -742,7 +742,7 @@
     <value>NoControl</value>
   </data>
   <data name="chkForceUppercase.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 359</value>
+    <value>210, 359</value>
   </data>
   <data name="chkForceUppercase.Size" type="System.Drawing.Size, System.Drawing">
     <value>15, 14</value>
@@ -769,7 +769,7 @@
     <value>NoControl</value>
   </data>
   <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>247, 358</value>
+    <value>259, 358</value>
   </data>
   <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
     <value>328, 40</value>
@@ -799,7 +799,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>600, 408</value>
+    <value>675, 408</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>KaraokeControl</value>

@@ -255,10 +255,10 @@ namespace Karaboss.Lyrics
                         FullExtractLyrics();
                         break;
                     case ChordsOrigins.XmlEmbedded:
+                        // Chords are provided by the Xml score
                         if (plLyrics.Count == 0)
                             FullExtractLyrics();
                         PopulateXmlChords(lstXmlChords);
-
                         CleanLyrics();
                         break;
                     
@@ -281,28 +281,7 @@ namespace Karaboss.Lyrics
                     
                     default:
                         break;
-                }
-                
-                /*
-                // 1. If chords are  already included in lyrics
-                // Add false lyrics in chords alone (instrumental) ???
-                if (bHasChordsInLyrics)
-                {
-                    FullExtractLyrics();
-                }
-                // 2. If chords are not included in lyrics,
-                // we have to detect chords and add them to the lyrics or add them to an extra
-                else if (!bHasChordsInLyrics)
-                {
-                    if (plLyrics.Count == 0)
-                        FullExtractLyrics();
-
-                    PopulateDetectedChords();
-
-                    // Clean lyrics HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    CleanLyrics();
-                }
-                */
+                }                                
             }
             else
             {
@@ -320,22 +299,7 @@ namespace Karaboss.Lyrics
                 // All could be replaced by FullExtractLyrics();
                 FullExtractLyrics();
 
-                /*
-                // 1. If chords are already included in lyrics
-                // Remove false lyrics added to chords alone (instrumental)
-                if (bHasChordsInLyrics)
-                {
-                    FullExtractLyrics();
-                }
-                // 2. If chords are not included in lyrics
-                // Chords have been added by detection to existing lyrics but also on additional false lyrics (chords alone in instrumentals)
-                // So we have to delete all additions made by the chord analysis.                
-                else if (!bHasChordsInLyrics)
-                {
-                    // Remove detected chords by re-extracting all
-                    FullExtractLyrics();
-                }
-                */
+                
             }
         }
 

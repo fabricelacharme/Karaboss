@@ -60,12 +60,12 @@
             // 
             // chkUpdFreq
             // 
+            resources.ApplyResources(this.chkUpdFreq, "chkUpdFreq");
             this.chkUpdFreq.FormattingEnabled = true;
             this.chkUpdFreq.Items.AddRange(new object[] {
             resources.GetString("chkUpdFreq.Items"),
             resources.GetString("chkUpdFreq.Items1"),
             resources.GetString("chkUpdFreq.Items2")});
-            resources.ApplyResources(this.chkUpdFreq, "chkUpdFreq");
             this.chkUpdFreq.Name = "chkUpdFreq";
             // 
             // lblDescription

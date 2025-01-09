@@ -126,10 +126,10 @@
     <value>NoControl</value>
   </data>
   <data name="lblDescription.Location" type="System.Drawing.Point, System.Drawing">
-    <value>41, 10</value>
+    <value>25, 10</value>
   </data>
   <data name="lblDescription.Size" type="System.Drawing.Size, System.Drawing">
-    <value>400, 60</value>
+    <value>600, 60</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="lblDescription.TabIndex" type="System.Int32, mscorlib">
@@ -160,7 +160,7 @@
     <value>301, 139</value>
   </data>
   <data name="lblParamDescr.Size" type="System.Drawing.Size, System.Drawing">
-    <value>328, 56</value>
+    <value>354, 56</value>
   </data>
   <data name="lblParamDescr.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -190,7 +190,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblParam.Location" type="System.Drawing.Point, System.Drawing">
-    <value>41, 139</value>
+    <value>25, 139</value>
   </data>
   <data name="lblParam.Size" type="System.Drawing.Size, System.Drawing">
     <value>165, 15</value>
@@ -214,7 +214,7 @@
     <value>5</value>
   </data>
   <data name="UpDownTransposeAmount.Location" type="System.Drawing.Point, System.Drawing">
-    <value>216, 137</value>
+    <value>210, 137</value>
   </data>
   <data name="UpDownTransposeAmount.Size" type="System.Drawing.Size, System.Drawing">
     <value>54, 20</value>
@@ -244,7 +244,7 @@
     <value>303, 83</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>328, 56</value>
+    <value>352, 56</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -274,7 +274,7 @@
     <value>NoControl</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>43, 83</value>
+    <value>25, 83</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>48, 15</value>
@@ -298,7 +298,7 @@
     <value>1</value>
   </data>
   <data name="UpDownVelocity.Location" type="System.Drawing.Point, System.Drawing">
-    <value>218, 81</value>
+    <value>210, 81</value>
   </data>
   <data name="UpDownVelocity.Size" type="System.Drawing.Size, System.Drawing">
     <value>54, 20</value>

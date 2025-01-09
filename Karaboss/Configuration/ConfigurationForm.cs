@@ -320,6 +320,7 @@ namespace Karaboss.Configuration
             // 
             resources.ApplyResources(this.m_optionsTV, "m_optionsTV");
             this.m_optionsTV.HideSelection = false;
+            this.m_optionsTV.ItemHeight = 22;
             this.m_optionsTV.Name = "m_optionsTV";
             this.m_optionsTV.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.SelectConfig);
             // 

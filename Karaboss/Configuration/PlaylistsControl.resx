@@ -129,7 +129,7 @@
     <value>301, 95</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>328, 44</value>
+    <value>352, 44</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="label1.TabIndex" type="System.Int32, mscorlib">
@@ -160,7 +160,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblPauseSongs.Location" type="System.Drawing.Point, System.Drawing">
-    <value>41, 95</value>
+    <value>25, 95</value>
   </data>
   <data name="lblPauseSongs.Size" type="System.Drawing.Size, System.Drawing">
     <value>42, 15</value>
@@ -190,7 +190,7 @@
     <value>NoControl</value>
   </data>
   <data name="chkPauseSongs.Location" type="System.Drawing.Point, System.Drawing">
-    <value>216, 95</value>
+    <value>210, 95</value>
   </data>
   <data name="chkPauseSongs.Size" type="System.Drawing.Size, System.Drawing">
     <value>15, 14</value>
@@ -211,7 +211,7 @@
     <value>6</value>
   </data>
   <data name="CountDownSong.Location" type="System.Drawing.Point, System.Drawing">
-    <value>216, 137</value>
+    <value>210, 137</value>
   </data>
   <data name="CountDownSong.Size" type="System.Drawing.Size, System.Drawing">
     <value>54, 20</value>
@@ -241,7 +241,7 @@
     <value>NoControl</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>41, 139</value>
+    <value>25, 139</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>99, 15</value>
@@ -274,7 +274,7 @@
     <value>301, 139</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>328, 56</value>
+    <value>352, 56</value>
   </data>
   <data name="label3.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -301,10 +301,10 @@
     <value>NoControl</value>
   </data>
   <data name="lblDescription.Location" type="System.Drawing.Point, System.Drawing">
-    <value>41, 10</value>
+    <value>25, 10</value>
   </data>
   <data name="lblDescription.Size" type="System.Drawing.Size, System.Drawing">
-    <value>400, 60</value>
+    <value>600, 60</value>
   </data>
   <data name="lblDescription.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
