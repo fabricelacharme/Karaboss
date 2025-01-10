@@ -122,80 +122,80 @@
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="mnuFileNew.Size" type="System.Drawing.Size, System.Drawing">
-    <value>207, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="mnuFileNew.Text" xml:space="preserve">
     <value>New</value>
   </data>
   <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>207, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="mnuFileOpen.Text" xml:space="preserve">
     <value>&amp;Open...</value>
   </data>
   <data name="MnuFileSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>204, 6</value>
+    <value>205, 6</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="mnuFileSave.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>Ctrl+S</value>
   </data>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>207, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="mnuFileSave.Text" xml:space="preserve">
     <value>&amp;Save</value>
   </data>
   <data name="mnuFileSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>207, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="mnuFileSaveAs.Text" xml:space="preserve">
     <value>Save &amp;as</value>
   </data>
   <data name="mnuSaveAsPDF.Size" type="System.Drawing.Size, System.Drawing">
-    <value>207, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="mnuSaveAsPDF.Text" xml:space="preserve">
     <value>Print (PDF)</value>
   </data>
   <data name="MnuFileSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>204, 6</value>
+    <value>205, 6</value>
   </data>
   <data name="MnuFileImportMidiFromText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>207, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="MnuFileImportMidiFromText.Text" xml:space="preserve">
     <value>Import Midi file from text</value>
   </data>
   <data name="MnuFileExportMidiToText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>207, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="MnuFileExportMidiToText.Text" xml:space="preserve">
     <value>Export Midi file to Text</value>
   </data>
   <data name="MnuFileSeparator3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>204, 6</value>
+    <value>205, 6</value>
   </data>
   <data name="MnuFileImportMusicXml.Size" type="System.Drawing.Size, System.Drawing">
-    <value>207, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="MnuFileImportMusicXml.Text" xml:space="preserve">
     <value>Import MusicXml file</value>
   </data>
   <data name="MnuFileSeparator4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>204, 6</value>
+    <value>205, 6</value>
   </data>
   <data name="mnufileProperties.Size" type="System.Drawing.Size, System.Drawing">
-    <value>207, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="mnufileProperties.Text" xml:space="preserve">
     <value>Properties (MIDI Tags)</value>
   </data>
   <data name="MnuFileSeparator5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>204, 6</value>
+    <value>205, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>207, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>E&amp;xit</value>
@@ -207,19 +207,25 @@
     <value>&amp;File</value>
   </data>
   <data name="mnuEditAddLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuEditAddLyrics.Text" xml:space="preserve">
     <value>&amp;Edit lyrics</value>
   </data>
+  <data name="mnuEditLyricsChords.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuEditLyricsChords.Text" xml:space="preserve">
+    <value>Edit chords</value>
+  </data>
   <data name="mnuEditSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 6</value>
+    <value>177, 6</value>
   </data>
   <data name="MnuEditScore.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>Ctrl+E</value>
   </data>
   <data name="MnuEditScore.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="MnuEditScore.Text" xml:space="preserve">
     <value>Edit score</value>
@@ -228,7 +234,7 @@
     <value>Ctrl+N</value>
   </data>
   <data name="MnuEditEnterNotes.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="MnuEditEnterNotes.Text" xml:space="preserve">
     <value>Enter notes</value>
@@ -562,7 +568,7 @@
     <value>btnMute1</value>
   </data>
   <data name="&gt;&gt;btnMute1.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.CheckButtonControl, Karaboss, Version=1.0.10.2, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.CheckButtonControl, Karaboss, Version=1.0.10.3, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnMute1.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -583,7 +589,7 @@
     <value>btnTranspoMinus</value>
   </data>
   <data name="&gt;&gt;btnTranspoMinus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.2, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.3, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTranspoMinus.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -604,7 +610,7 @@
     <value>btnTranspoPlus</value>
   </data>
   <data name="&gt;&gt;btnTranspoPlus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.2, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.3, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTranspoPlus.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -625,7 +631,7 @@
     <value>btnTempoMinus</value>
   </data>
   <data name="&gt;&gt;btnTempoMinus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.2, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.3, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTempoMinus.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -646,7 +652,7 @@
     <value>btnTempoPlus</value>
   </data>
   <data name="&gt;&gt;btnTempoPlus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.2, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.3, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTempoPlus.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -793,7 +799,7 @@
     <value>btnPrev</value>
   </data>
   <data name="&gt;&gt;btnPrev.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.2, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.3, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnPrev.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -820,7 +826,7 @@
     <value>btnNext</value>
   </data>
   <data name="&gt;&gt;btnNext.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.2, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.3, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnNext.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -853,7 +859,7 @@
     <value>btnStop</value>
   </data>
   <data name="&gt;&gt;btnStop.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.2, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.3, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnStop.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -883,7 +889,7 @@
     <value>btnPlay</value>
   </data>
   <data name="&gt;&gt;btnPlay.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.2, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.3, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnPlay.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -1262,7 +1268,7 @@
     <value>249, 25</value>
   </data>
   <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 24</value>
+    <value>24, 80</value>
   </data>
   <data name="sldMainVolume.TabIndex" type="System.Int32, mscorlib">
     <value>30</value>
@@ -5359,6 +5365,12 @@
   </data>
   <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuEditLyricsChords.Name" xml:space="preserve">
+    <value>mnuEditLyricsChords</value>
+  </data>
+  <data name="&gt;&gt;mnuEditLyricsChords.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmPlayer</value>

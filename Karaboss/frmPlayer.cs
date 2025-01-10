@@ -2869,7 +2869,7 @@ namespace Karaboss
         }     
 
         /// <summary>
-        /// Menu: open track Word lyric editor
+        /// Menu: open lyrics editor
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -2883,30 +2883,31 @@ namespace Karaboss
         /// </summary>
         public void DisplayEditLyricsForm()
         {
-            int melodytracknum;// = 0;
-            // Display track editor
+            int melodytracknum;
+
+            // Display lyrics editor
             if (Application.OpenForms.OfType<frmLyricsEdit>().Count() == 0)
             {
                 try
                 {                                                            
                     // Cas
-                    if (myLyricsMgmt.plLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum >= 0)
+                    if (myLyricsMgmt.OrgplLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum >= 0)
                     {
                         // Lyrics exist and melody track found
                         // go directly to edition form ?
 
                     }
-                    else if (myLyricsMgmt.plLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum == -1)
+                    else if (myLyricsMgmt.OrgplLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum == -1)
                     {
                         // Some lyrics are found, but no melody
                         // propose to select a track (or not) as a guide
                         // Lyrics does not exist
                         // => select track having melody
-
+                        MessageBox.Show("Lyrics were found, but I am unable to identify the melody track", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    else if (myLyricsMgmt.plLyrics.Count == 0)
+                    else if (myLyricsMgmt.OrgplLyrics.Count == 0)
                     {
-                        // Start a new kar file from a mid file
+                        // Start a new kar file from a midi file
                         // Select a track (or not) as a guide
                         // Lyrics does not exist
                         // => select track having melody
@@ -2922,12 +2923,11 @@ namespace Karaboss
                         melodytracknum = TrackDialog.TrackNumber - 1;                        
                         myLyricsMgmt.MelodyTrackNum = melodytracknum;
 
+                        // Choose format of lyrics
                         if (TrackDialog.TextLyricFormat == 0)
                         {
-                            // TEXT FORMAT
-                            // Create track at position 2 for text lyrics           
-                            // Set myLyrics.melodytracknum & myMyrics.lyricstracknum
-                            //AddTrackWords();
+                            // TEXT FORMAT                                  
+                            // Set myLyrics.melodytracknum & myMyrics.lyricstracknum                            
                             myLyricsMgmt.LyricType = LyricTypes.Text;
                         }
                         else
@@ -2959,7 +2959,7 @@ namespace Karaboss
                 }
                 catch (Exception fl)
                 {
-                    Console.Write("Erreur showing frmLyricsEdit: " + fl.Message);
+                    MessageBox.Show("Erreur showing frmLyricsEdit: " + fl.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -2971,6 +2971,109 @@ namespace Karaboss
             }
 
         }
+
+
+        /// <summary>
+        /// Menu: open lyrics & chords editor
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuEditLyricsChords_Click(object sender, EventArgs e)
+        {
+            DisplayEditLyricsChordsForm();
+        }
+        /// <summary>
+        /// Display the form for lyrics and chords edition
+        /// </summary>
+        public void DisplayEditLyricsChordsForm()
+        {
+            int melodytracknum;
+
+            if (Application.OpenForms.OfType<frmLyricsEdit>().Count() == 0)
+            {
+                try
+                {
+                    // Cas
+                    if (myLyricsMgmt.OrgplLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum >= 0)
+                    {
+                        // Lyrics exist and melody track found
+                        // go directly to edition form ?
+
+                    }
+                    else if (myLyricsMgmt.OrgplLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum == -1)
+                    {
+                        // Some lyrics are found, but no melody
+                        // propose to select a track (or not) as a guide
+                        // Lyrics does not exist
+                        // => select track having melody
+                        MessageBox.Show("Lyrics were found, but I am unable to identify the melody track", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else if (myLyricsMgmt.OrgplLyrics.Count == 0)
+                    {
+                        // Start a new kar file from a midi file
+                        // Select a track (or not) as a guide
+                        // Lyrics does not exist
+                        // => select track having melody
+                        DialogResult dr = new DialogResult();
+                        frmLyricsSelectTrack TrackDialog = new frmLyricsSelectTrack(sequence1);
+                        dr = TrackDialog.ShowDialog();
+
+                        if (dr == System.Windows.Forms.DialogResult.Cancel)
+                            return;
+
+                        // Get track number for melody
+                        // -1 if no track
+                        melodytracknum = TrackDialog.TrackNumber - 1;
+                        myLyricsMgmt.MelodyTrackNum = melodytracknum;
+
+                        // Choose format of lyrics
+                        if (TrackDialog.TextLyricFormat == 0)
+                        {
+                            // TEXT FORMAT                                  
+                            // Set myLyrics.melodytracknum & myMyrics.lyricstracknum                            
+                            myLyricsMgmt.LyricType = LyricTypes.Text;
+                        }
+                        else
+                        {
+                            // LYRIC FORMAT
+                            // Lyrics set to the same track than notes
+                            myLyricsMgmt.MelodyTrackNum = melodytracknum;
+                            if (melodytracknum > -1)
+                                myLyricsMgmt.LyricsTrackNum = melodytracknum;
+                            else
+                                myLyricsMgmt.LyricsTrackNum = 0;
+                            myLyricsMgmt.LyricType = LyricTypes.Lyric;
+                        }
+                        DisplayLyricsInfos();
+                    }
+
+                    // Lyrics exist
+                    if (!myLyricsMgmt.bHasChordsInLyrics)
+                    {
+                        // Remove detected chords: redo the lyrics extraction
+                        myLyricsMgmt.FullExtractLyrics();
+                    }
+
+                    frmLyricsEdit frmLyricsEdit;
+                    // Caution: Load the original lyrics, not the lyrics internally transformed by FullExtractLyrics
+                    frmLyricsEdit = new frmLyricsEdit(sequence1, myLyricsMgmt.OrgplLyrics, myLyricsMgmt, MIDIfileFullPath, true);
+
+                    frmLyricsEdit.Show();
+                }
+                catch (Exception fl)
+                {
+                    MessageBox.Show("Erreur showing frmLyricsEdit: " + fl.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                if (Application.OpenForms["frmLyricsEdit"].WindowState == FormWindowState.Minimized)
+                    Application.OpenForms["frmLyricsEdit"].WindowState = FormWindowState.Normal;
+                Application.OpenForms["frmLyricsEdit"].Show();
+                Application.OpenForms["frmLyricsEdit"].Activate();
+            }
+        }
+
 
         /// <summary>
         /// Validate or invalidate EditMode
@@ -8579,6 +8682,7 @@ namespace Karaboss
         }
 
         #endregion
+
     }
 
 }

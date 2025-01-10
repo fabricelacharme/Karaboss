@@ -45,6 +45,7 @@ using Karaboss.Lrc.SharedFramework;
 using Karaboss.Lyrics;
 using System.Reflection;
 using Sanford.Multimedia.Midi.PianoRoll;
+using Sanford.Multimedia.Midi.Score;
 
 
 namespace Karaboss
@@ -79,6 +80,20 @@ namespace Karaboss
         #endregion
 
 
+        #region dgView Colors
+
+        Color dgViewHeaderBackColor = Color.FromArgb(43, 87, 151);
+        Color dgViewHeaderForeColor = Color.White;
+        Color dgViewSelectionBackColor = Color.FromArgb(45, 137, 239);
+
+        Color SepLinesColor = Color.FromArgb(239, 244, 255);
+        Color SepParagrColor = Color.LightGray;
+
+        Font dgViewHeaderFont = new Font("Arial", 12F, FontStyle.Regular);
+        Font dgViewCellsFont = new Font("Arial", 16F, GraphicsUnit.Pixel);
+        #endregion dgViewColors
+
+
         #region External lyrics separators
 
         private readonly string m_SepLine = "/";
@@ -101,6 +116,7 @@ namespace Karaboss
             Lyric = 1
         }
 
+        public bool bEditChords { get ; set; }
         int COL_TICKS;  // = 0;
         int COL_TIME;   // = 1;
         int COL_TYPE;   // = 2;
@@ -130,9 +146,19 @@ namespace Karaboss
 
         private readonly List<string> lsInstruments = Sanford.Multimedia.Midi.MidiFile.LoadInstruments();
 
-        public frmLyricsEdit(Sequence sequence, List<plLyric> plLyrics, LyricsMgmt myLyricsMgmt, string fileName)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="sequence"></param>
+        /// <param name="plLyrics"></param>
+        /// <param name="myLyricsMgmt"></param>
+        /// <param name="fileName"></param>
+        /// <param name="EditChords"></param>
+        public frmLyricsEdit(Sequence sequence, List<plLyric> plLyrics, LyricsMgmt myLyricsMgmt, string fileName, bool EditChords = false)
         {
             InitializeComponent();
+
+            bEditChords = EditChords;
 
             LoadOptions();
             
@@ -246,13 +272,11 @@ namespace Karaboss
             {
                 _lyricseditfont = Properties.Settings.Default.LyricsEditFont;
                 _fontSize = _lyricseditfont.Size;
-
-                
-                                
+                                               
                 // Regardless the origin of chords (lyrics, from Xml/mxl, discovery)
                 // Karaboss is working internally in Midi and chords will be saved in the lyrics 
                 // Chords update will be possible if the end user decided to show the chords by clicking a specific button in the karaoke window
-                switch (Karaclass.m_ShowChords)
+                switch (bEditChords)
                 {
                     case false:
                         COL_TICKS = 0;
@@ -307,9 +331,12 @@ namespace Karaboss
             if (sequence1.Time != null)
                 _measurelen = sequence1.Time.Measure;
         }
-      
 
-       
+        public bool IsNumeric(string input)
+        {
+            return int.TryParse(input, out int test);
+        }
+
         #region Tracks
 
         /// <summary>
@@ -391,11 +418,7 @@ namespace Karaboss
 
 
         #region gridview
-        public bool IsNumeric(string input)
-        {
-            //int test;
-            return int.TryParse(input, out int test);
-        }
+       
 
         /// <summary>
         /// Cell edition
@@ -597,24 +620,91 @@ namespace Karaboss
             dgView.Refresh();
 
             // Header color
-            dgView.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(43, 87, 151);
-            dgView.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgView.ColumnHeadersDefaultCellStyle.BackColor = dgViewHeaderBackColor;
+            dgView.ColumnHeadersDefaultCellStyle.ForeColor = dgViewHeaderForeColor;
 
-            dgView.ColumnHeadersDefaultCellStyle.Font = new Font("Arial", 12F, FontStyle.Regular);
+            dgView.ColumnHeadersDefaultCellStyle.Font = dgViewHeaderFont;
             dgView.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
             dgView.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;           
 
 
             // Selection
-            dgView.DefaultCellStyle.SelectionBackColor = Color.FromArgb(45, 137, 239);
+            dgView.DefaultCellStyle.SelectionBackColor = dgViewSelectionBackColor;
 
             dgView.EnableHeadersVisualStyles = false;
+
+
+            // Create columns
+            if (!bEditChords) {
+                dgView.ColumnCount = 5;
+
+                dgView.Columns[0].Name = "dTime";
+                dgView.Columns[0].HeaderText = "Ticks";
+                dgView.Columns[0].ToolTipText = "Number of ticks";
+                dgView.Columns[0].Width = 70;
+
+                dgView.Columns[1].Name = "dRealTime";
+                dgView.Columns[1].HeaderText = "Time";
+                dgView.Columns[1].ToolTipText = "Time";
+                dgView.Columns[0].Width = 80;
+
+                dgView.Columns[2].Name = "dType";
+                dgView.Columns[2].HeaderText = "Type";
+                dgView.Columns[2].ToolTipText = "Type of lyric (cr or text)";
+                dgView.Columns[2].Width = 60;
+
+                dgView.Columns[3].Name = "dNote";
+                dgView.Columns[3].HeaderText = "Note";
+                dgView.Columns[3].ToolTipText = "Played note";
+                dgView.Columns[3].Width = 50;
+
+                dgView.Columns[4].Name = "dText";
+                dgView.Columns[4].HeaderText = "Text";
+                dgView.Columns[4].ToolTipText = "Original text";
+                dgView.Columns[4].Width = 80;
+            }
+            else
+            {
+                // Chords edition
+                dgView.ColumnCount = 6;
+
+                dgView.Columns[0].Name = "dTime";
+                dgView.Columns[0].HeaderText = "Ticks";
+                dgView.Columns[0].ToolTipText = "Number of ticks";
+                dgView.Columns[0].Width = 70;
+
+                dgView.Columns[1].Name = "dRealTime";
+                dgView.Columns[1].HeaderText = "Time";
+                dgView.Columns[1].ToolTipText = "Time";
+                dgView.Columns[1].Width = 80;
+
+                dgView.Columns[2].Name = "dType";
+                dgView.Columns[2].HeaderText = "Type";
+                dgView.Columns[2].ToolTipText = "Type of lyric (cr or text)";
+                dgView.Columns[2].Width = 60;
+
+                dgView.Columns[3].Name = "dChord";
+                dgView.Columns[3].HeaderText = "Chord";
+                dgView.Columns[3].ToolTipText = "Chord";
+                dgView.Columns[3].Width = 70;
+
+                dgView.Columns[4].Name = "dNote";
+                dgView.Columns[4].HeaderText = "Note";
+                dgView.Columns[4].ToolTipText = "Played note";
+                dgView.Columns[4].Width = 50;
+
+                dgView.Columns[5].Name = "dText";
+                dgView.Columns[5].HeaderText = "Text";
+                dgView.Columns[5].ToolTipText = "Original text";
+                dgView.Columns[5].Width = 80;
+            }
+
 
             //Change cell font
             foreach (DataGridViewColumn c in dgView.Columns)
             {
                 c.SortMode = DataGridViewColumnSortMode.NotSortable;                     // header not sortable
-                c.DefaultCellStyle.Font = new Font("Arial", 16F, GraphicsUnit.Pixel);
+                c.DefaultCellStyle.Font = dgViewCellsFont;
                 c.ReadOnly = false;               
             }
         }
@@ -631,11 +721,11 @@ namespace Karaboss
             {
                 if (dgView.Rows[i].Cells[COL_TYPE].Value != null && dgView.Rows[i].Cells[COL_TYPE].Value.ToString() == "cr")
                 {
-                    dgView.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(239, 244, 255);
+                    dgView.Rows[i].DefaultCellStyle.BackColor = SepLinesColor;
                 }
                 else if (dgView.Rows[i].Cells[COL_TYPE].Value != null && dgView.Rows[i].Cells[COL_TYPE].Value.ToString() == "par")
                 {
-                    dgView.Rows[i].DefaultCellStyle.BackColor = Color.LightGray;
+                    dgView.Rows[i].DefaultCellStyle.BackColor = SepParagrColor;
                 }
             }
         }
@@ -649,15 +739,15 @@ namespace Karaboss
         {
             //bool bfound = false;
 
-            int plTicksOn; // = 0;
-            string plRealTime; // = "00:00.00";
-            plLyric.CharTypes plType; // = plLyric.CharTypes.Text;             
-
-            //int plNote = 0;
-            string sNote; // = string.Empty;
-            string plElement; // = string.Empty;
-
-            int idx; // = 0;
+            int plTicksOn; 
+            string plRealTime;
+            plLyric.CharTypes plType;
+            
+            string sNote;
+            string chordName = "A7";
+            string plElement;
+            string[] rowlyric;
+            int idx;
 
 
             if (melodyTrack == null)
@@ -685,7 +775,12 @@ namespace Karaboss
                         default:
                             break;
                     }
-                    string[] rowlyric = { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
+                    
+                    if (!bEditChords)
+                        rowlyric = new string[]{ plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
+                    else
+                        rowlyric = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), chordName, sNote, plElement };
+
                     dgView.Rows.Add(rowlyric);
                 }
             }
@@ -707,6 +802,7 @@ namespace Karaboss
             int plNote;
             bool bFound;
             string sNote;
+            string chordName = "A7";
             // Not found notes
             List<MidiNote> lstNotFound = new List<MidiNote>();
 
@@ -735,7 +831,11 @@ namespace Karaboss
                         break;
                 }
 
-                rowline = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
+                if (!bEditChords)
+                    rowline = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
+                else
+                    rowline = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), chordName, sNote, plElement };
+
                 dgView.Rows.Add(rowline);
             }
 
@@ -779,9 +879,7 @@ namespace Karaboss
 
             // 3. insert Lost notes  on new rows
             if (lstNotFound.Count > 0)
-            {                
-                //List<MidiNote> lstNotes = new List<MidiNote>();
-
+            {                                
                 for (int i = 0; i < lstNotFound.Count; i++)
                 {
                     plTicksOn = lstNotFound[i].StartTime;
@@ -798,7 +896,12 @@ namespace Karaboss
                             // Insert note
                             if (t > plTicksOn)
                             {                                
-                                dgView.Rows.Insert(row, plTicksOn, plRealTime, "text", plNote.ToString(), "");
+                                
+                                if (!bEditChords)
+                                    dgView.Rows.Insert(row, plTicksOn, plRealTime, "text", plNote.ToString(), "");
+                                else
+                                    dgView.Rows.Insert(row, plTicksOn, plRealTime, "text", chordName, plNote.ToString(), "");
+
                                 bFound = true;                                
                                 break;
                             }
@@ -808,7 +911,11 @@ namespace Karaboss
                     if (!bFound)
                     {
                         // Missing notes must be added at the end of the gridview, after the last row                        
-                        rowline = new string[] { plTicksOn.ToString(), plRealTime, "text", plNote.ToString(), "" };
+                        if (!bEditChords)
+                            rowline = new string[] { plTicksOn.ToString(), plRealTime, "text", plNote.ToString(), "" };
+                        else
+                            rowline = new string[] { plTicksOn.ToString(), plRealTime, "text", chordName, plNote.ToString(), "" };
+
                         dgView.Rows.Add(rowline);
                     }
 
@@ -829,11 +936,13 @@ namespace Karaboss
             if (tracknumber >= 0 && tracknumber < sequence1.tracks.Count)
             {
                 Track track = sequence1.tracks[tracknumber];
-                int plTicksOn; // = 0;
-                string plRealTime; // = string.Empty;
-                string plType; // = string.Empty;
-                int plNote; // = 0;
-                string plElement; // = string.Empty;
+                int plTicksOn;
+                string plRealTime;
+                string plType; 
+                int plNote;
+                string chordName = "A7";
+                string plElement;
+                string[] row;
 
                 int lastStartTime = -1;
 
@@ -849,7 +958,11 @@ namespace Karaboss
                         plNote = n.Number;
                         plElement = plNote.ToString();
 
-                        string[] row = { plTicksOn.ToString(), plRealTime, plType, plNote.ToString(), plElement };
+                        if (!bEditChords)
+                            row = new string[] { plTicksOn.ToString(), plRealTime, plType, plNote.ToString(), plElement };
+                        else
+                            row = new string[] { plTicksOn.ToString(), plRealTime, plType, chordName, plNote.ToString(), plElement };
+
                         dgView.Rows.Add(row);
                     }
                 }
@@ -1077,7 +1190,10 @@ namespace Karaboss
                 plElement = m_SepParagraph;
 
             // time, type, note, text, text
-            dgView.Rows.Insert(Row, plTicksOn, plRealTime, sep, "", plElement);
+            if (!bEditChords)
+                dgView.Rows.Insert(Row, plTicksOn, plRealTime, sep, "", plElement);
+            else
+                dgView.Rows.Insert(Row, plTicksOn, plRealTime, sep, "", "", plElement);
 
             //Load modification into local list of lyrics
             LoadModifiedLyrics();
@@ -1133,8 +1249,10 @@ namespace Karaboss
             else
                 pReplace = "text";
 
-
-            dgView.Rows.Insert(Row, plTicksOn, plRealTime, "text", pNote, pElement, pReplace);
+            if (!bEditChords)
+                dgView.Rows.Insert(Row, plTicksOn, plRealTime, "text", pNote, pElement, pReplace);
+            else
+                dgView.Rows.Insert(Row, plTicksOn, plRealTime, "text", "", pNote, pElement, pReplace);
 
             HeightsToDurations();
 
@@ -1648,8 +1766,7 @@ namespace Karaboss
             string Tag_By = string.Empty;
             string Tag_DPlus = string.Empty;
 
-            string FileName = saveMidiFileDialog.FileName;
-            //string bLRCType = "Lines";
+            string FileName = saveMidiFileDialog.FileName;            
 
             // Search Title & Artist
             string SingleName = Path.GetFileNameWithoutExtension(FileName);
@@ -2021,7 +2138,7 @@ namespace Karaboss
         {
             bool bUpdateMode = false;
             string s;
-
+            string chordName = "";
 
             // Split into peaces of words
             source = source.Replace("\r\n", " <cr> ");
@@ -2138,7 +2255,10 @@ namespace Karaboss
                         // Insert new row 
                         if (!bUpdateMode)
                         {
-                            dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);
+                            if (!bEditChords)
+                                dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);
+                            else
+                                dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, chordName, plNote.ToString(), plElement, plElement);
                         }
                         else
                         {
@@ -2217,8 +2337,8 @@ namespace Karaboss
             string plRealTime; 
             string plType;
             int plNote = 0; // = string.Empty;
-            string plElement; 
-            //int row = 0;
+            string plElement;
+            string chordName = "";
             string s;
 
 
@@ -2306,7 +2426,10 @@ namespace Karaboss
                         // Insert new row 
                         if (!bUpdateMode)
                         {
-                            dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);
+                            if (!bEditChords)
+                                dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);
+                            else
+                                dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, chordName, plNote.ToString(), plElement, plElement);
                         }
                         else
                         {
@@ -2834,11 +2957,11 @@ namespace Karaboss
         /// </summary>
         private void LoadModifiedLyrics()
         {
-            int plTicksOn; // = 0;
-            string val; // = string.Empty;
-            plLyric.CharTypes plType; // = plLyric.CharTypes.Text;
-            string plElement; // = string.Empty;
-            //string plReplace; // = string.Empty;
+            int plTicksOn;
+            string val; 
+            plLyric.CharTypes plType; 
+            string plElement;
+            string chordName = string.Empty;
 
 
             localplLyrics = new List<plLyric>();
@@ -2892,8 +3015,17 @@ namespace Karaboss
 
                     // replace again spaces
                     plElement = plElement.Replace("_", " ");
-                    
-                    localplLyrics.Add(new plLyric() { CharType = plType, Element =  ("", plElement), TicksOn = plTicksOn });
+
+                    // chord
+                    if (bEditChords)
+                    {
+                        if (dgView.Rows[row].Cells[COL_CHORD].Value != null)
+                        {
+                            chordName = dgView.Rows[row].Cells[COL_CHORD].Value.ToString();
+                        }
+                    }
+
+                    localplLyrics.Add(new plLyric() { CharType = plType, Element =  (chordName, plElement), TicksOn = plTicksOn });
 
                     // TODO add TicksOff
                 }
@@ -2914,18 +3046,12 @@ namespace Karaboss
             else
                 ltype = LyricTypes.Lyric;
 
-            
-            
-            
+                                   
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
                 frmPlayer frmPlayer = GetForm<frmPlayer>();
                 frmPlayer.ReplaceLyrics(localplLyrics, ltype, melodytracknum);
             }
-
-
-
-
         }
 
         /// <summary>
@@ -2990,7 +3116,6 @@ namespace Karaboss
 
             txtResult.SelectAll();
             txtResult.SelectionAlignment = HorizontalAlignment.Center;
-
         }
 
         /// <summary>
@@ -3019,7 +3144,6 @@ namespace Karaboss
                         if (dgView.Rows[row].Cells[COL_TEXT].Value != null)
                             s = dgView.Rows[row].Cells[COL_TEXT].Value.ToString();
                     }
-
                 }
                
                 s = s.Replace("_", " ");                

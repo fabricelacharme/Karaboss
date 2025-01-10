@@ -149,6 +149,7 @@ namespace Karaboss
             this.sequence1 = new Sanford.Multimedia.Midi.Sequence();
             this.sequencer1 = new Sanford.Multimedia.Midi.Sequencer();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.mnuEditLyricsChords = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.pnlDisplay.SuspendLayout();
@@ -277,6 +278,7 @@ namespace Karaboss
             // 
             this.mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuEditAddLyrics,
+            this.mnuEditLyricsChords,
             this.mnuEditSeparator1,
             this.MnuEditScore,
             this.MnuEditEnterNotes});
@@ -1206,6 +1208,12 @@ namespace Karaboss
             this.sequencer1.Chased += new System.EventHandler<Sanford.Multimedia.Midi.ChasedEventArgs>(this.HandleChased);
             this.sequencer1.Stopped += new System.EventHandler<Sanford.Multimedia.Midi.StoppedEventArgs>(this.HandleStopped);
             // 
+            // mnuEditLyricsChords
+            // 
+            this.mnuEditLyricsChords.Name = "mnuEditLyricsChords";
+            resources.ApplyResources(this.mnuEditLyricsChords, "mnuEditLyricsChords");
+            this.mnuEditLyricsChords.Click += new System.EventHandler(this.mnuEditLyricsChords_Click);
+            // 
             // frmPlayer
             // 
             resources.ApplyResources(this, "$this");
@@ -1355,6 +1363,7 @@ namespace Karaboss
         private System.Windows.Forms.ToolStripMenuItem MnuFileImportMusicXml;
         private System.Windows.Forms.Button btnDump;
         private System.Windows.Forms.Button btnChords;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditLyricsChords;
     }
 }
 
