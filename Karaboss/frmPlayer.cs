@@ -8670,6 +8670,9 @@ namespace Karaboss
             switch (myLyricsMgmt.ChordsOriginatedFrom)
             {
                 case LyricsMgmt.ChordsOrigins.Discovery:
+                    if (myLyricsMgmt.LyricsTrackNum == -1)
+                        myLyricsMgmt.LyricsTrackNum = 0;
+
                     track = sequence1.tracks[myLyricsMgmt.LyricsTrackNum];
                     if (myLyricsMgmt.plLyrics.Count == 0)
                         myLyricsMgmt.FullExtractLyrics();
