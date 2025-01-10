@@ -1092,7 +1092,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnChangeWords_Click(object sender, EventArgs e)
+        private void btnEditLyrics_Click(object sender, EventArgs e)
         {
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
@@ -1101,7 +1101,6 @@ namespace Karaboss
             }
 
         }
-
         #endregion pnlWindow        
 
     }

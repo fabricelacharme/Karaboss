@@ -39,7 +39,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnLyricsChords = new System.Windows.Forms.Button();
             this.chkChords = new System.Windows.Forms.CheckBox();
-            this.btnChangeWords = new System.Windows.Forms.Button();
+            this.btnEditLyrics = new System.Windows.Forms.Button();
             this.btnFrmWords = new System.Windows.Forms.Button();
             this.btnFrmOptions = new System.Windows.Forms.Button();
             this.btnFrmMin = new System.Windows.Forms.Button();
@@ -96,7 +96,7 @@
             this.pnlWindow.Controls.Add(this.label1);
             this.pnlWindow.Controls.Add(this.btnLyricsChords);
             this.pnlWindow.Controls.Add(this.chkChords);
-            this.pnlWindow.Controls.Add(this.btnChangeWords);
+            this.pnlWindow.Controls.Add(this.btnEditLyrics);
             this.pnlWindow.Controls.Add(this.btnFrmWords);
             this.pnlWindow.Controls.Add(this.btnFrmOptions);
             this.pnlWindow.Controls.Add(this.btnFrmMin);
@@ -133,16 +133,16 @@
             this.chkChords.UseVisualStyleBackColor = true;
             this.chkChords.CheckedChanged += new System.EventHandler(this.chkChords_CheckedChanged);
             // 
-            // btnChangeWords
+            // btnEditLyrics
             // 
-            this.btnChangeWords.BackColor = System.Drawing.Color.Gray;
-            this.btnChangeWords.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
-            resources.ApplyResources(this.btnChangeWords, "btnChangeWords");
-            this.btnChangeWords.Name = "btnChangeWords";
-            this.btnChangeWords.TabStop = false;
-            this.toolTip1.SetToolTip(this.btnChangeWords, resources.GetString("btnChangeWords.ToolTip"));
-            this.btnChangeWords.UseVisualStyleBackColor = false;
-            this.btnChangeWords.Click += new System.EventHandler(this.btnChangeWords_Click);
+            this.btnEditLyrics.BackColor = System.Drawing.Color.Gray;
+            this.btnEditLyrics.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnEditLyrics, "btnEditLyrics");
+            this.btnEditLyrics.Name = "btnEditLyrics";
+            this.btnEditLyrics.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnEditLyrics, resources.GetString("btnEditLyrics.ToolTip"));
+            this.btnEditLyrics.UseVisualStyleBackColor = false;
+            this.btnEditLyrics.Click += new System.EventHandler(this.btnEditLyrics_Click);
             // 
             // btnFrmWords
             // 
@@ -283,7 +283,7 @@
         private System.Windows.Forms.Button btnFrmWords;
         private System.Windows.Forms.Button btnFrmOptions;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Button btnChangeWords;
+        private System.Windows.Forms.Button btnEditLyrics;
         private System.Windows.Forms.Button btnLyricsChords;
         private System.Windows.Forms.CheckBox chkChords;
         private System.Windows.Forms.Label label1;

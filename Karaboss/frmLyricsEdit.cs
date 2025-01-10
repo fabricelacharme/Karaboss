@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2018 Fabrice Lacharme
+/* Copyright (c) 2025 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -54,11 +54,12 @@ namespace Karaboss
 
         /* Lyrics edition form
          * 
-         * 0 - Ticks    Number of ticks
-         * 1 - Time     Time in sec
-         * 2 - Type     text, paragraph, linefeed
-         * 3 - Note     Note value
-         * 4 - Text     text        
+         * 0    - Ticks    Number of ticks
+         * 1    - Time     Time in sec
+         * 2    - Type     text, paragraph, linefeed
+         * <3   - Chord    Chord name (optional if option bShowChord is true)>     
+         * 3(4) - Note     Note value
+         * 4(5) - Text     text        
          * 
          * Line break is '/' - cr
          * Paragraph is '\'  - par
@@ -98,13 +99,14 @@ namespace Karaboss
         {
             Text = 0,
             Lyric = 1
-        }       
+        }
 
-        const int COL_TICKS = 0;
-        const int COL_TIME = 1;
-        const int COL_TYPE = 2;
-        const int COL_NOTE = 3;
-        const int COL_TEXT = 4;
+        int COL_TICKS;  // = 0;
+        int COL_TIME;   // = 1;
+        int COL_TYPE;   // = 2;
+        int COL_CHORD;  // = 3 if chords
+        int COL_NOTE;   // = 3 or 4 if chords;
+        int COL_TEXT;   // = 4 or 5 if chords;
         
 
         LyricFormats TextLyricFormat;        
@@ -244,6 +246,32 @@ namespace Karaboss
             {
                 _lyricseditfont = Properties.Settings.Default.LyricsEditFont;
                 _fontSize = _lyricseditfont.Size;
+
+                
+                                
+                // Regardless the origin of chords (lyrics, from Xml/mxl, discovery)
+                // Karaboss is working internally in Midi and chords will be saved in the lyrics 
+                // Chords update will be possible if the end user decided to show the chords by clicking a specific button in the karaoke window
+                switch (Karaclass.m_ShowChords)
+                {
+                    case false:
+                        COL_TICKS = 0;
+                        COL_TIME = 1;
+                        COL_TYPE = 2;
+                        COL_NOTE = 3;
+                        COL_TEXT = 4;
+                        break;
+                    case true:
+                        COL_TICKS = 0;
+                        COL_TIME = 1;
+                        COL_TYPE = 2;
+                        COL_CHORD = 3;
+                        COL_NOTE = 4;
+                        COL_TEXT = 5;
+                        break;
+                    default:
+                        break;
+                }
 
             }
             catch (Exception e) 
