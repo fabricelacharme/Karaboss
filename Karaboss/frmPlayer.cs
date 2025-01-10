@@ -37,7 +37,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
-using ChordsAnalyser;
 using System.Diagnostics;
 using Sanford.Multimedia.Midi.Score;
 using Karaboss.Resources.Localization;
@@ -46,13 +45,7 @@ using System.Text.RegularExpressions;
 using MusicXml;
 using MusicTxt;
 using System.Linq;
-using ChordAnalyser.UI;
-using Karaboss.Search;
-using System.Text;
 using Karaboss.Lyrics;
-using MusicXml.Domain;
-using System.Xml;
-using FlShell.Interop;
 
 namespace Karaboss
 {
@@ -3841,8 +3834,8 @@ namespace Karaboss
             if (myLyricsMgmt != null)
                 {
                 tx = "Lyrics type: " + myLyricsMgmt.LyricType + "\r";
-                tx += "Lyrics track: " + myLyricsMgmt.LyricsTrackNum.ToString() + "\r";
-                tx += "Melody track: " + myLyricsMgmt.MelodyTrackNum.ToString();
+                tx += "Lyrics track: " + (myLyricsMgmt.LyricsTrackNum + 1).ToString() + "\r";
+                tx += "Melody track: " + (myLyricsMgmt.MelodyTrackNum + 1).ToString();
 
                 lblLyricsInfos.Text = tx;
 
@@ -4387,6 +4380,7 @@ namespace Karaboss
                 
                 myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
 
+                
                 AddChordsToTrack();
 
                 /*
@@ -8666,14 +8660,25 @@ namespace Karaboss
         
         private void AddChordsToTrack()
         {
+            if (!Karaclass.m_ShowChords)
+                return;
+            if (sequence1.tracks.Count == 0) return;
+
             Track track;
             switch (myLyricsMgmt.ChordsOriginatedFrom)
             {
                 case LyricsMgmt.ChordsOrigins.Discovery:
-                    if (myLyricsMgmt.LyricsTrackNum == -1)
-                        myLyricsMgmt.LyricsTrackNum = 0;
+                    //if (myLyricsMgmt.LyricsTrackNum == -1)
+                    //    myLyricsMgmt.LyricsTrackNum = 0;
+                    
+                    if (myLyricsMgmt.MelodyTrackNum == -1)
+                        myLyricsMgmt.MelodyTrackNum = 0;
 
-                    track = sequence1.tracks[myLyricsMgmt.LyricsTrackNum];
+                    // Put chords on track 0
+                    //track = sequence1.tracks[myLyricsMgmt.LyricsTrackNum];
+                    //track = sequence1.tracks[0];
+                    
+                    track = sequence1.tracks[myLyricsMgmt.MelodyTrackNum];
                     if (myLyricsMgmt.plLyrics.Count == 0)
                         myLyricsMgmt.FullExtractLyrics();
                     myLyricsMgmt.PopulateDetectedChords();

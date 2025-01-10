@@ -233,6 +233,13 @@ namespace Sanford.Multimedia.Midi.Score
         }
 
 
+        private Color _ChordsColor = Color.FromArgb(227, 162, 26); // (255, 196, 13); // UI orange
+        public Color ChordsColor
+        {
+            get { return _ChordsColor; }
+            set { _ChordsColor = value; }
+        }
+
         // List of chords for each track
         private List<ChordSymbol>[] _lstchords;
         public List<ChordSymbol>[] lstChords 
@@ -1670,7 +1677,7 @@ namespace Sanford.Multimedia.Midi.Score
                         g.TranslateTransform(-clip.X, ypos);
                         
                         // Dessine la portée  
-                        staff.Draw(g, clip, selRect, pen);
+                        staff.Draw(g, clip, selRect, pen, ChordsColor);
 
                         g.TranslateTransform(clip.X, -ypos);
                     }
@@ -4655,11 +4662,11 @@ namespace Sanford.Multimedia.Midi.Score
                         break;
 
                     g.TranslateTransform(leftmargin, topmargin + ypos);
-                    staffs[staffnum].Draw(g, clip, selRect,pen);
+                    staffs[staffnum].Draw(g, clip, selRect,pen, ChordsColor);
                     g.TranslateTransform(-leftmargin, -(topmargin + ypos));
                     ypos += staffs[staffnum].Height;
                     g.TranslateTransform(leftmargin, topmargin + ypos);
-                    staffs[staffnum + 1].Draw(g, clip, selRect,pen);
+                    staffs[staffnum + 1].Draw(g, clip, selRect,pen, ChordsColor);
                     g.TranslateTransform(-leftmargin, -(topmargin + ypos));
                     ypos += staffs[staffnum + 1].Height;
                 }
@@ -4698,7 +4705,7 @@ namespace Sanford.Multimedia.Midi.Score
                         break;
 
                     g.TranslateTransform(leftmargin, topmargin + ypos);
-                    staffs[staffnum].Draw(g, clip, selRect,pen);
+                    staffs[staffnum].Draw(g, clip, selRect,pen, ChordsColor);
                     g.TranslateTransform(-leftmargin, -(topmargin + ypos));
                     ypos += staffs[staffnum].Height;
                 }

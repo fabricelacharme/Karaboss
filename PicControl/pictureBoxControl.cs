@@ -52,8 +52,7 @@ namespace PicControl
          * Si songposition <> currenttextpos (syllabe active a changé) => redessine
          */
 
-        
-
+       
         #region Move form without title bar
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
@@ -65,8 +64,6 @@ namespace PicControl
         public static extern bool ReleaseCapture();
         private HashSet<Control> controlsToMove = new HashSet<Control>();
         #endregion
-
-
        
 
         #region classes
