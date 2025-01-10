@@ -258,6 +258,7 @@ namespace Karaboss.Lyrics
                         // Chords are provided by the Xml score
                         if (plLyrics.Count == 0)
                             FullExtractLyrics();
+                        // include xml chords in plLyrics
                         PopulateXmlChords(lstXmlChords);
                         CleanLyrics();
                         break;
@@ -971,7 +972,7 @@ namespace Karaboss.Lyrics
             MatchCollection mc2 = chordCheck2.Matches(s);
 
             // Exlude copyright (C)
-            if (mc.Count > 1 | mc2.Count > 1) 
+            if (mc.Count > 1 || mc2.Count > 1) 
                 return true;
             else
                 return false;                      

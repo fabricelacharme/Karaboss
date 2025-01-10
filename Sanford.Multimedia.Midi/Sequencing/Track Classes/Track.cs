@@ -420,6 +420,11 @@ namespace Sanford.Multimedia.Midi
 
         #region chords
 
+        public void ClearChordSymbols()
+        {
+            _chordsymbols.Clear();
+        }
+
         /// <summary>
         /// Add a new chord name to the track
         /// </summary>

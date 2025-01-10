@@ -65,7 +65,7 @@ namespace Karaboss
 
         #region private
 
-        private LyricsMgmt myLyricsMgmt;
+        public LyricsMgmt myLyricsMgmt {  get; set; }
 
         private Font _karaokeFont;        
         private int currentTextPos = 0;
@@ -372,11 +372,11 @@ namespace Karaboss
 
         public List<pictureBoxControl.plLyric> plLyrics;
                                                   
-        public frmLyric(LyricsMgmt myLyricsMgmt)
+        public frmLyric(LyricsMgmt _myLyricsMgmt)
         {
             InitializeComponent();
 
-            this.myLyricsMgmt = myLyricsMgmt;
+            this.myLyricsMgmt = _myLyricsMgmt;
 
             // Graphic optimization
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
@@ -503,8 +503,14 @@ namespace Karaboss
                 if (myLyricsMgmt.bShowChords)
                 {
                     // if bShowChords, the chords will be displayed above the lyrics, so clean chords included in lyrics
-                    if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)
+                    if (myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == LyricsMgmt.ChordsOrigins.Lyrics)
                     {
+                        
+                        if ( myLyricsMgmt.RemoveChordPattern == null )
+                        {
+                            MessageBox.Show("RemoveChordsPattern is null", "Karaboss",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
                         lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
                     }
                 }

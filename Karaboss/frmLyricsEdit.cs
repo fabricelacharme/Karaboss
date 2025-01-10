@@ -562,7 +562,7 @@ namespace Karaboss
             }
 
             //Load modification into local list of lyrics
-            LoadModifiedLyrics();
+            localplLyrics = LoadModifiedLyrics(false);
             PopulateTextBox(localplLyrics);
 
             // Modify height of cells according to durations
@@ -601,7 +601,7 @@ namespace Karaboss
                                 C.Value = "";                            
                         }
                         //Load modification into local list of lyrics
-                        LoadModifiedLyrics();
+                        localplLyrics = LoadModifiedLyrics();
                         PopulateTextBox(localplLyrics);
 
                         // File was modified
@@ -710,8 +710,6 @@ namespace Karaboss
         }
 
         
-
-
         /// <summary>
         /// Apply colors to comlumns: Line Break & Paragraph
         /// </summary>
@@ -736,20 +734,36 @@ namespace Karaboss
         /// </summary>
         /// <param name="plLyrics"></param>
         private void PopulateDataGridView(List<plLyric> lLyrics)
-        {
-            //bool bfound = false;
-
+        {            
             int plTicksOn; 
             string plRealTime;
             plLyric.CharTypes plType;
             
             string sNote;
-            string chordName = "A7";
+            string plChordName;
             string plElement;
             string[] rowlyric;
             int idx;
 
+            
+            switch ( _myLyricsMgmt.ChordsOriginatedFrom)
+            {
+                case LyricsMgmt.ChordsOrigins.Lyrics:
+                    // Chords are included inthe lyrics
+                    break;
+                    // Chords are not included in the lyrics
+                case LyricsMgmt.ChordsOrigins.XmlEmbedded:
+                case LyricsMgmt.ChordsOrigins.MidiEmbedded:
+                case LyricsMgmt.ChordsOrigins.Discovery:
+                    break;
+            }
+            
+            string lyrics = _myLyricsMgmt.Lyrics;
 
+            // ==================================================
+            // Case: no track supplied for the melody => 0 notes, only lyrics
+            // Write only the lyrics into the grid
+            // ==================================================
             if (melodyTrack == null)
             {
                 // On affiche la liste des lyrics 
@@ -759,6 +773,7 @@ namespace Karaboss
                     plRealTime = TicksToTime(plTicksOn);           
                     //plNote = 0;
                     sNote = "";
+                    plChordName = lLyrics[idx].Element.Item1;
                     plElement = lLyrics[idx].Element.Item2;
                     plElement = plElement.Replace(" ", "_");
                     plType = lLyrics[idx].CharType;
@@ -775,22 +790,37 @@ namespace Karaboss
                         default:
                             break;
                     }
-                    
-                    if (!bEditChords)
-                        rowlyric = new string[]{ plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
-                    else
-                        rowlyric = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), chordName, sNote, plElement };
 
+                    if (!bEditChords)
+                    {
+                        // No chord edition, do not modify lyrics
+                        rowlyric = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
+                    }
+                    else
+                    {
+                        // Chords edition
+                        // Extract chord name from the lyrics
+                        if (plElement != "" &&  _myLyricsMgmt.ChordsOriginatedFrom == LyricsMgmt.ChordsOrigins.Lyrics)
+                        {
+                            // Remove chord
+                            plElement = Regex.Replace(plElement, _myLyricsMgmt.RemoveChordPattern, @"");
+                        }
+                        rowlyric = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), plChordName, sNote, plElement };
+                    }
                     dgView.Rows.Add(rowlyric);
                 }
             }
             else
             {
+                // A track is provided for the melody => write the notes and lyrics according to their startimes
                 PopulateDataGridViewWithMelodyTrack(lLyrics);                                                             
             }                             
         }
 
-
+        /// <summary>
+        /// Case: A track is provided for the melody => write the notes and lyrics according to their startimes
+        /// </summary>
+        /// <param name="lLyrics"></param>
         private void PopulateDataGridViewWithMelodyTrack(List<plLyric> lLyrics)
         {
             int plTicksOn;
@@ -802,7 +832,7 @@ namespace Karaboss
             int plNote;
             bool bFound;
             string sNote;
-            string chordName = "A7";
+            string plChordName = string.Empty;
             // Not found notes
             List<MidiNote> lstNotFound = new List<MidiNote>();
 
@@ -811,6 +841,7 @@ namespace Karaboss
             {
                 plTicksOn = lLyrics[i].TicksOn;
                 plRealTime = TicksToTime(plTicksOn);
+                plChordName = lLyrics[i].Element.Item1;
                 plElement = lLyrics[i].Element.Item2;
                 plType = lLyrics[i].CharType;
                 sNote = "";
@@ -832,9 +863,20 @@ namespace Karaboss
                 }
 
                 if (!bEditChords)
+                {
                     rowline = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
+                }
                 else
-                    rowline = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), chordName, sNote, plElement };
+                {
+                    // Chords edition
+                    // Extract chord name from the lyrics
+                    if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == LyricsMgmt.ChordsOrigins.Lyrics)
+                    {
+                        // Remove chord
+                        plElement = Regex.Replace(plElement, _myLyricsMgmt.RemoveChordPattern, @"");
+                    }
+                    rowline = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), plChordName, sNote, plElement };
+                }
 
                 dgView.Rows.Add(rowline);
             }
@@ -895,12 +937,14 @@ namespace Karaboss
                             t = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
                             // Insert note
                             if (t > plTicksOn)
-                            {                                
-                                
+                            {
+
                                 if (!bEditChords)
                                     dgView.Rows.Insert(row, plTicksOn, plRealTime, "text", plNote.ToString(), "");
                                 else
-                                    dgView.Rows.Insert(row, plTicksOn, plRealTime, "text", chordName, plNote.ToString(), "");
+                                {
+                                    dgView.Rows.Insert(row, plTicksOn, plRealTime, "text", plChordName, plNote.ToString(), "");
+                                }
 
                                 bFound = true;                                
                                 break;
@@ -914,11 +958,10 @@ namespace Karaboss
                         if (!bEditChords)
                             rowline = new string[] { plTicksOn.ToString(), plRealTime, "text", plNote.ToString(), "" };
                         else
-                            rowline = new string[] { plTicksOn.ToString(), plRealTime, "text", chordName, plNote.ToString(), "" };
+                            rowline = new string[] { plTicksOn.ToString(), plRealTime, "text", plChordName, plNote.ToString(), "" };
 
                         dgView.Rows.Add(rowline);
                     }
-
                 }                
             }
         }
@@ -940,7 +983,7 @@ namespace Karaboss
                 string plRealTime;
                 string plType; 
                 int plNote;
-                string chordName = "A7";
+                string plChordName = string.Empty;
                 string plElement;
                 string[] row;
 
@@ -956,12 +999,13 @@ namespace Karaboss
                         plRealTime = TicksToTime(plTicksOn);
                         plType = "text";
                         plNote = n.Number;
+                        
                         plElement = plNote.ToString();
 
                         if (!bEditChords)
                             row = new string[] { plTicksOn.ToString(), plRealTime, plType, plNote.ToString(), plElement };
                         else
-                            row = new string[] { plTicksOn.ToString(), plRealTime, plType, chordName, plNote.ToString(), plElement };
+                            row = new string[] { plTicksOn.ToString(), plRealTime, plType, plChordName, plNote.ToString(), plElement };
 
                         dgView.Rows.Add(row);
                     }
@@ -1026,7 +1070,6 @@ namespace Karaboss
         /// <param name="e"></param>
         private void FrmLyricsEdit_FormClosing(object sender, FormClosingEventArgs e)
         {
-
             if (bfilemodified == true)
             {
                 string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
@@ -1035,10 +1078,10 @@ namespace Karaboss
                     e.Cancel = true;
 
                     //Load modification into local list of lyrics
-                    LoadModifiedLyrics();
+                    localplLyrics = LoadModifiedLyrics();
 
                     // Display new lyrics in frmPlayer
-                    ReplaceLyrics();
+                    ReplaceLyrics(localplLyrics);
 
                     // Save file
                     SaveFileProc();
@@ -1134,12 +1177,12 @@ namespace Karaboss
         /// <param name="e"></param>
         private void BtnView_Click(object sender, EventArgs e)
         {
-
             //Load modification into local list of lyrics
-            LoadModifiedLyrics();
+            localplLyrics = LoadModifiedLyrics(true);
 
             // Display new lyrics in frmPlayer
-            ReplaceLyrics();
+            _myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.Lyrics;
+            ReplaceLyrics(localplLyrics);
         }
 
 
@@ -1196,7 +1239,7 @@ namespace Karaboss
                 dgView.Rows.Insert(Row, plTicksOn, plRealTime, sep, "", "", plElement);
 
             //Load modification into local list of lyrics
-            LoadModifiedLyrics();
+            localplLyrics = LoadModifiedLyrics();
             PopulateTextBox(localplLyrics);
 
             // Modify height of cells according to durations
@@ -1310,7 +1353,7 @@ namespace Karaboss
                 dgView.Rows.RemoveAt(row);
 
                 //Load modification into local list of lyrics
-                LoadModifiedLyrics();
+                localplLyrics = LoadModifiedLyrics();
                 PopulateTextBox(localplLyrics);
 
                 // File was modified
@@ -1333,11 +1376,12 @@ namespace Karaboss
         {
             System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
 
-            //Load modification into local list of lyrics
-            LoadModifiedLyrics();
+            //Load modification into local list of lyrics            
+            localplLyrics = LoadModifiedLyrics(true);
 
             // Display new lyrics in frmPlayer
-            ReplaceLyrics();
+            _myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.Lyrics;
+            ReplaceLyrics(localplLyrics);
 
             // Save file
             SaveFileProc();
@@ -1381,10 +1425,11 @@ namespace Karaboss
         private void BtnPlay_Click(object sender, EventArgs e)
         {
             //Load modification into local list of lyrics
-            LoadModifiedLyrics();
+            localplLyrics = LoadModifiedLyrics();
 
             // Display new lyrics in frmPlayer
-            ReplaceLyrics();
+            _myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.Lyrics;
+            ReplaceLyrics(localplLyrics);
 
             if (dgView.CurrentRow != null)
             {
@@ -1670,10 +1715,12 @@ namespace Karaboss
         private void MnuFileSave_Click(object sender, EventArgs e)
         {
             //Load modification into local list of lyrics
-            LoadModifiedLyrics();
+            // Format lyric by including chord
+            localplLyrics = LoadModifiedLyrics();
 
             // Display new lyrics in frmPlayer
-            ReplaceLyrics();            
+            _myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.Lyrics;
+            ReplaceLyrics(localplLyrics);            
             
             // save file
             SaveFileProc();
@@ -1688,196 +1735,59 @@ namespace Karaboss
         {
             SaveAsFileProc();
         }
+      
 
-       
         /// <summary>
-        /// Save lyrics to text file .lrc format - line by line
+        /// Quit windowx
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void mnuFileSaveAsLrcLines_Click(object sender, EventArgs e)
+        private void MnuFileQuit_Click(object sender, EventArgs e)
         {
-            #region select filename
-            string fName = "New.lrc";
-            string fPath = Path.GetDirectoryName(MIDIfileName);
-
-            string fullName; // = string.Empty;
-            string defName; // = string.Empty;
-
-            #region search name
-            if (fPath == null || fPath == "")
-            {
-                if (Directory.Exists(CreateNewMidiFile.DefaultDirectory))
-                    fPath = CreateNewMidiFile.DefaultDirectory;
-                else
-                    fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-            }
-            else
-            {
-                fName = Path.GetFileName(MIDIfileName);
-            }
-
-            string defExt = ".lrc";         // Extension
-            fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
-            string inifName = fName + defExt;                            // Original name with extension
-            defName = fName;                                    // Proposed name for dialog box
-
-            fullName = fPath + "\\" + inifName;
-
-            if (File.Exists(fullName) == true)
-            {
-                // Remove all (1) (2) etc..
-                string pattern = @"[(\d)]";
-                string replace = @"";
-                inifName = Regex.Replace(fName, pattern, replace);
-
-                int i = 1;
-                string addName = "(" + i.ToString() + ")";
-                defName = inifName + addName + defExt;
-                fullName = fPath + "\\" + defName;
-
-                while (File.Exists(fullName) == true)
-                {
-                    i++;
-                    defName = inifName + "(" + i.ToString() + ")" + defExt;
-                    fullName = fPath + "\\" + defName;
-                }
-            }
-
-            #endregion search name                   
-
-            string defFilter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
-
-            saveMidiFileDialog.Title = "Save to LRC format";
-            saveMidiFileDialog.Filter = defFilter;
-            saveMidiFileDialog.DefaultExt = defExt;
-            saveMidiFileDialog.InitialDirectory = @fPath;
-            saveMidiFileDialog.FileName = defName;
-
-            if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
-                return;
-
-            #endregion
-
-            string Tag_Title = string.Empty;
-            string Tag_Artist = string.Empty;
-            string Tag_Album = string.Empty;
-            string Tag_Lang = string.Empty;
-            string Tag_By = string.Empty;
-            string Tag_DPlus = string.Empty;
-
-            string FileName = saveMidiFileDialog.FileName;            
-
-            // Search Title & Artist
-            string SingleName = Path.GetFileNameWithoutExtension(FileName);
-            string[] split = SingleName.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-            if (split.Length == 1)
-            {
-                Tag_Title = split[0].Trim();
-            }
-            else if (split.Length == 2)
-            {
-                Tag_Artist = split[0].Trim();
-                Tag_Title = split[1].Trim();
-            }
-           
-            SaveLRCLines(FileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);           
+            Close();
         }
 
         /// <summary>
-        /// Save lyrics to text file .lrc format - syllabe by syllabe
+        /// Menu: load times of a melody track to help lyrics entering
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void mnuFileSaveAsLrcSyllabes_Click(object sender, EventArgs e)
+        private void MnuEditLoadTrack_Click(object sender, EventArgs e)
         {
-            #region select filename
-            string fName = "New.lrc";
-            string fPath = Path.GetDirectoryName(MIDIfileName);
+            DialogResult dr; // = new DialogResult();
+            frmLyricsSelectTrack TrackDialog = new frmLyricsSelectTrack(sequence1);
+            dr = TrackDialog.ShowDialog();
 
-            string fullName; // = string.Empty;
-            string defName; // = string.Empty;
-
-            #region search name
-            if (fPath == null || fPath == "")
-            {
-                if (Directory.Exists(CreateNewMidiFile.DefaultDirectory))
-                    fPath = CreateNewMidiFile.DefaultDirectory;
-                else
-                    fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-            }
-            else
-            {
-                fName = Path.GetFileName(MIDIfileName);
-            }
-
-            string defExt = ".lrc";         // Extension
-            fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
-            string inifName = fName + defExt;                            // Original name with extension
-            defName = fName;                                    // Proposed name for dialog box
-
-            fullName = fPath + "\\" + inifName;
-
-            if (File.Exists(fullName) == true)
-            {
-                // Remove all (1) (2) etc..
-                string pattern = @"[(\d)]";
-                string replace = @"";
-                inifName = Regex.Replace(fName, pattern, replace);
-
-                int i = 1;
-                string addName = "(" + i.ToString() + ")";
-                defName = inifName + addName + defExt;
-                fullName = fPath + "\\" + defName;
-
-                while (File.Exists(fullName) == true)
-                {
-                    i++;
-                    defName = inifName + "(" + i.ToString() + ")" + defExt;
-                    fullName = fPath + "\\" + defName;
-                }
-            }
-
-            #endregion search name                   
-
-            string defFilter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
-
-            saveMidiFileDialog.Title = "Save to LRC format";
-            saveMidiFileDialog.Filter = defFilter;
-            saveMidiFileDialog.DefaultExt = defExt;
-            saveMidiFileDialog.InitialDirectory = @fPath;
-            saveMidiFileDialog.FileName = defName;
-
-            if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
+            if (dr == System.Windows.Forms.DialogResult.Cancel)
                 return;
 
-            #endregion
-
-            string Tag_Title = string.Empty;
-            string Tag_Artist = string.Empty;
-            string Tag_Album = string.Empty;
-            string Tag_Lang = string.Empty;
-            string Tag_By = string.Empty;
-            string Tag_DPlus = string.Empty;
-
-            string FileName = saveMidiFileDialog.FileName;
-            //string bLRCType = "Lines";
-
-            // Search Title & Artist
-            string SingleName = Path.GetFileNameWithoutExtension(FileName);
-            string[] split = SingleName.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-            if (split.Length == 1)
-            {
-                Tag_Title = split[0].Trim();
-            }
-            else if (split.Length == 2)
-            {
-                Tag_Artist = split[0].Trim();
-                Tag_Title = split[1].Trim();
-            }
+            // Get track number for melody
+            // -1 if no track
+            melodytracknum = TrackDialog.TrackNumber - 1;
             
-            SaveLRCSyllabes(FileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+            if (melodytracknum == -1)
+            {
+                //MessageBox.Show("No track found for the melody", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                dgView.Rows.Clear();
+                return;
+            }
+
+            LoadTrackGuide();
         }
+
+        /// <summary>
+        /// Select track audio guide & lyrics format
+        /// </summary>
+        private void LoadTrackGuide()
+        {
+            
+            PopulateDataGridViewTrack(melodytracknum);
+            localplLyrics = LoadModifiedLyrics();
+            PopulateTextBox(localplLyrics);
+        }
+
+
+        #region TXT
 
         /// <summary>
         /// Save text with all separators
@@ -1947,9 +1857,9 @@ namespace Karaboss
                 return;
 
             #endregion
-         
-            string FileName = saveMidiFileDialog.FileName;            
-         
+
+            string FileName = saveMidiFileDialog.FileName;
+
             SaveTextWithSep(FileName);
         }
 
@@ -1965,7 +1875,7 @@ namespace Karaboss
             string lrcs = string.Empty;
             string cr = "\r\n";
             //string sep = "!";
-            
+
             bool bStartLine = true;
 
             // Save syllabe by syllabe
@@ -1986,7 +1896,7 @@ namespace Karaboss
                     if (sLyric != "" && sType != "cr" && sType != "par")
                     {
                         if (bStartLine)
-                        {                                                        
+                        {
                             sLine = sLyric + _InternalSepLines;
                             bStartLine = false;
                         }
@@ -1997,7 +1907,7 @@ namespace Karaboss
                         }
                     }
                     else if (sType == "cr" || sType == "par")
-                    {                       
+                    {
                         // Save current line
                         if (sLine != "")
                         {
@@ -2013,16 +1923,16 @@ namespace Karaboss
                     }
                 }
             }
-                        
+
             // Save last line
             if (sLine != "")
-            {                
+            {
                 lrcs += sLine; // + cr;
             }
 
-            
+
             // * "Oh!_la!_la_la!_vie!_en!_rose!\r\nLe!_rose!_qu'on!_nous!_pro!pose!\r\nD'avoir!_les!_quan!ti!tés!_d'choses!\r\nQui!_donnent!_en!vie!_d'autre!_chose!\r\nAie!_on!_nous!_fait!_croire!\r\nQue!_le!_bonheur!_c'est!_d'a!voir!\r\nDe!_l'avoir!_plein!_nos!_ar!moires!\r\nDérisions!_de!_nous!_dé!ri!soires!\r\ncar...!\r\nFoule!_sen!ti!men!tale!\r\nOn_a!_soif!_d'idéal!\r\nAttiré!_par!_les!_é!toiles,!_les!_voiles!\r\nQue!_des!_choses!_pas!_com!mer!ciales!\r\nFoule!_sen!ti!men!tale!\r\nIl!_faut!_voir!_comme!_on!_nous!_parle!\r\nComme!_on!_nous!_parle!\r\nIl!_se!_dé!ga!ge!\r\nDe!_ces!_cartons!_d'em!bal!lage!\r\nDes!_gens!_lavés!_hors!_d'u!sage!\r\nEt!_triste!_et!_sans_au!cun!_a!van!tage!\r\nOn!_nous!_in!flige!\r\nDes!_désirs!_qui!_nous!_af!fligent!\r\nOn!_nous!_prend!_faut!_pas!_dé!con!ner!_dès!_qu'on!_est!_né!\r\nPour!_des!_cons!_alors!_qu'on!_est!\r\nDes!_foule!_sen!ti!men!tale!\r\nOn_a!_soif!_d'idéal!\r\nAttiré!_par!_les!_é!toiles,!_les!_voiles!\r\nQue!_des!_choses!_pas!_com!mer!ciales!\r\nFoule!_sen!ti!men!tale!\r\nIl!_faut
-            
+
             lrcs = lrcs.Replace(_InternalSepLines + "_", " ");
             lrcs = lrcs.Replace("_" + _InternalSepLines, " ");
             lrcs = lrcs.Replace(_InternalSepLines + cr, cr);
@@ -2030,9 +1940,9 @@ namespace Karaboss
             lrcs = lrcs.Replace(_InternalSepLines, "*");
 
             // Delete last sep
-            if (lrcs.Length > 0 && (lrcs.Substring(lrcs.Length - 1, 1) == "*") )
+            if (lrcs.Length > 0 && (lrcs.Substring(lrcs.Length - 1, 1) == "*"))
             {
-                lrcs = lrcs.Substring(0, lrcs.Length - 1);                
+                lrcs = lrcs.Substring(0, lrcs.Length - 1);
             }
 
             try
@@ -2045,55 +1955,6 @@ namespace Karaboss
             {
                 MessageBox.Show(ex.Message);
             }
-        }
-
-        /// <summary>
-        /// Quit windowx
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuFileQuit_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        /// <summary>
-        /// Menu: load times of a melody track to help lyrics entering
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuEditLoadTrack_Click(object sender, EventArgs e)
-        {
-            DialogResult dr; // = new DialogResult();
-            frmLyricsSelectTrack TrackDialog = new frmLyricsSelectTrack(sequence1);
-            dr = TrackDialog.ShowDialog();
-
-            if (dr == System.Windows.Forms.DialogResult.Cancel)
-                return;
-
-            // Get track number for melody
-            // -1 if no track
-            melodytracknum = TrackDialog.TrackNumber - 1;
-            
-            if (melodytracknum == -1)
-            {
-                //MessageBox.Show("No track found for the melody", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                dgView.Rows.Clear();
-                return;
-            }
-
-            LoadTrackGuide();
-        }
-
-        /// <summary>
-        /// Select track audio guide & lyrics format
-        /// </summary>
-        private void LoadTrackGuide()
-        {
-            
-            PopulateDataGridViewTrack(melodytracknum);
-            LoadModifiedLyrics();
-            PopulateTextBox(localplLyrics);
         }
 
         /// <summary>
@@ -2279,7 +2140,7 @@ namespace Karaboss
             }
 
             //Load modification into local list of lyrics
-            LoadModifiedLyrics();
+            localplLyrics = LoadModifiedLyrics();
             PopulateTextBox(localplLyrics);
 
             // Color separators
@@ -2289,7 +2150,199 @@ namespace Karaboss
             FileModified();
         }
 
-      
+        #endregion TXT
+
+
+        #region LRC
+
+        /// <summary>
+        /// Save lyrics to text file .lrc format - line by line
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuFileSaveAsLrcLines_Click(object sender, EventArgs e)
+        {
+            #region select filename
+            string fName = "New.lrc";
+            string fPath = Path.GetDirectoryName(MIDIfileName);
+
+            string fullName; // = string.Empty;
+            string defName; // = string.Empty;
+
+            #region search name
+            if (fPath == null || fPath == "")
+            {
+                if (Directory.Exists(CreateNewMidiFile.DefaultDirectory))
+                    fPath = CreateNewMidiFile.DefaultDirectory;
+                else
+                    fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            }
+            else
+            {
+                fName = Path.GetFileName(MIDIfileName);
+            }
+
+            string defExt = ".lrc";         // Extension
+            fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
+            string inifName = fName + defExt;                            // Original name with extension
+            defName = fName;                                    // Proposed name for dialog box
+
+            fullName = fPath + "\\" + inifName;
+
+            if (File.Exists(fullName) == true)
+            {
+                // Remove all (1) (2) etc..
+                string pattern = @"[(\d)]";
+                string replace = @"";
+                inifName = Regex.Replace(fName, pattern, replace);
+
+                int i = 1;
+                string addName = "(" + i.ToString() + ")";
+                defName = inifName + addName + defExt;
+                fullName = fPath + "\\" + defName;
+
+                while (File.Exists(fullName) == true)
+                {
+                    i++;
+                    defName = inifName + "(" + i.ToString() + ")" + defExt;
+                    fullName = fPath + "\\" + defName;
+                }
+            }
+
+            #endregion search name                   
+
+            string defFilter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
+
+            saveMidiFileDialog.Title = "Save to LRC format";
+            saveMidiFileDialog.Filter = defFilter;
+            saveMidiFileDialog.DefaultExt = defExt;
+            saveMidiFileDialog.InitialDirectory = @fPath;
+            saveMidiFileDialog.FileName = defName;
+
+            if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            #endregion
+
+            string Tag_Title = string.Empty;
+            string Tag_Artist = string.Empty;
+            string Tag_Album = string.Empty;
+            string Tag_Lang = string.Empty;
+            string Tag_By = string.Empty;
+            string Tag_DPlus = string.Empty;
+
+            string FileName = saveMidiFileDialog.FileName;
+
+            // Search Title & Artist
+            string SingleName = Path.GetFileNameWithoutExtension(FileName);
+            string[] split = SingleName.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split.Length == 1)
+            {
+                Tag_Title = split[0].Trim();
+            }
+            else if (split.Length == 2)
+            {
+                Tag_Artist = split[0].Trim();
+                Tag_Title = split[1].Trim();
+            }
+
+            SaveLRCLines(FileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+        }
+
+        /// <summary>
+        /// Save lyrics to text file .lrc format - syllabe by syllabe
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuFileSaveAsLrcSyllabes_Click(object sender, EventArgs e)
+        {
+            #region select filename
+            string fName = "New.lrc";
+            string fPath = Path.GetDirectoryName(MIDIfileName);
+
+            string fullName; // = string.Empty;
+            string defName; // = string.Empty;
+
+            #region search name
+            if (fPath == null || fPath == "")
+            {
+                if (Directory.Exists(CreateNewMidiFile.DefaultDirectory))
+                    fPath = CreateNewMidiFile.DefaultDirectory;
+                else
+                    fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            }
+            else
+            {
+                fName = Path.GetFileName(MIDIfileName);
+            }
+
+            string defExt = ".lrc";         // Extension
+            fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
+            string inifName = fName + defExt;                            // Original name with extension
+            defName = fName;                                    // Proposed name for dialog box
+
+            fullName = fPath + "\\" + inifName;
+
+            if (File.Exists(fullName) == true)
+            {
+                // Remove all (1) (2) etc..
+                string pattern = @"[(\d)]";
+                string replace = @"";
+                inifName = Regex.Replace(fName, pattern, replace);
+
+                int i = 1;
+                string addName = "(" + i.ToString() + ")";
+                defName = inifName + addName + defExt;
+                fullName = fPath + "\\" + defName;
+
+                while (File.Exists(fullName) == true)
+                {
+                    i++;
+                    defName = inifName + "(" + i.ToString() + ")" + defExt;
+                    fullName = fPath + "\\" + defName;
+                }
+            }
+
+            #endregion search name                   
+
+            string defFilter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
+
+            saveMidiFileDialog.Title = "Save to LRC format";
+            saveMidiFileDialog.Filter = defFilter;
+            saveMidiFileDialog.DefaultExt = defExt;
+            saveMidiFileDialog.InitialDirectory = @fPath;
+            saveMidiFileDialog.FileName = defName;
+
+            if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            #endregion
+
+            string Tag_Title = string.Empty;
+            string Tag_Artist = string.Empty;
+            string Tag_Album = string.Empty;
+            string Tag_Lang = string.Empty;
+            string Tag_By = string.Empty;
+            string Tag_DPlus = string.Empty;
+
+            string FileName = saveMidiFileDialog.FileName;
+            //string bLRCType = "Lines";
+
+            // Search Title & Artist
+            string SingleName = Path.GetFileNameWithoutExtension(FileName);
+            string[] split = SingleName.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split.Length == 1)
+            {
+                Tag_Title = split[0].Trim();
+            }
+            else if (split.Length == 2)
+            {
+                Tag_Artist = split[0].Trim();
+                Tag_Title = split[1].Trim();
+            }
+
+            SaveLRCSyllabes(FileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+        }
 
         /// <summary>
         /// Load a text file LRC format (times stamps + lyrics)
@@ -2341,7 +2394,6 @@ namespace Karaboss
             string chordName = "";
             string s;
 
-
             // Check existence of cr or par
             for (int i = 0; i < dgView.Rows.Count - 1; i++)
             {
@@ -2352,7 +2404,6 @@ namespace Karaboss
                     break;
                 }
             }
-
 
             Karaboss.Lrc.SharedFramework.Lyrics lyrics = new Karaboss.Lrc.SharedFramework.Lyrics();
             lyrics.ArrangeLyrics(Source);
@@ -2452,7 +2503,7 @@ namespace Karaboss
 
 
             //Load modification into local list of lyrics
-            LoadModifiedLyrics();
+            localplLyrics = LoadModifiedLyrics();
             PopulateTextBox(localplLyrics);
 
             // Color separators
@@ -2462,6 +2513,12 @@ namespace Karaboss
             FileModified();
 
         }
+
+        #endregion LRC
+
+
+        #region deleteme
+        /*
         private void LoadLRCFile2(string Source)
         {
             Karaboss.Lrc.SharedFramework.Lyrics lyrics = new Karaboss.Lrc.SharedFramework.Lyrics();
@@ -2527,7 +2584,7 @@ namespace Karaboss
             }
 
             //Load modification into local list of lyrics
-            LoadModifiedLyrics();
+            localplLyrics = LoadModifiedLyrics();
             PopulateTextBox(localplLyrics);
 
             // Color separators
@@ -2536,6 +2593,9 @@ namespace Karaboss
             // File was modified
             FileModified();
         }
+        */
+        #endregion deleteme
+
 
         /// <summary>
         /// Menu : about
@@ -2553,7 +2613,6 @@ namespace Karaboss
 
 
         #region context menu
-
 
         private void DgView_MouseDown(object sender, MouseEventArgs e)
         {
@@ -2660,7 +2719,7 @@ namespace Karaboss
             // Paste from Clipboard
             PasteClipboard();
             //Load modification into local list of lyrics
-            LoadModifiedLyrics();
+            localplLyrics = LoadModifiedLyrics();
             PopulateTextBox(localplLyrics);
 
             // Color separators
@@ -2760,7 +2819,6 @@ namespace Karaboss
                     MessageBox.Show("The Clipboard could not be accessed. Please try again.\n" + ex.Message);
                 }
             }
-
         }
 
 
@@ -2779,7 +2837,7 @@ namespace Karaboss
                 dgView.Rows[row].Cells[COL_TEXT].Value = dgView.Rows[row-1].Cells[COL_TEXT].Value;
             }
             dgView.Rows[r].Cells[COL_TEXT].Value = "";
-            LoadModifiedLyrics();
+            localplLyrics = LoadModifiedLyrics();
             PopulateTextBox(localplLyrics);
         }
 
@@ -2797,7 +2855,7 @@ namespace Karaboss
             {
                 dgView.Rows[row].Cells[COL_TEXT].Value = dgView.Rows[row + 1].Cells[COL_TEXT].Value;
             }
-            LoadModifiedLyrics();
+            localplLyrics = LoadModifiedLyrics();
             PopulateTextBox(localplLyrics);
         }
 
@@ -2952,10 +3010,10 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Load modification into list of lyrics
-        /// Recharge la liste localpLyrics avec les données de la gridview
+        /// Reload localpLyrics with data from gridview
+        /// format lyrics to include the chords
         /// </summary>
-        private void LoadModifiedLyrics()
+        private List<plLyric> LoadModifiedLyrics(bool bIncludeChordsInLyrics = false)
         {
             int plTicksOn;
             string val; 
@@ -2964,7 +3022,7 @@ namespace Karaboss
             string chordName = string.Empty;
 
 
-            localplLyrics = new List<plLyric>();
+            List<plLyric> lst = new List<plLyric>();
 
             for (int row = 0; row < dgView.Rows.Count; row++)
             {
@@ -3016,28 +3074,36 @@ namespace Karaboss
                     // replace again spaces
                     plElement = plElement.Replace("_", " ");
 
-                    // chord
+                    // chords edition
                     if (bEditChords)
-                    {
+                    {                        
+                        // Read chord name
                         if (dgView.Rows[row].Cells[COL_CHORD].Value != null)
                         {
                             chordName = dgView.Rows[row].Cells[COL_CHORD].Value.ToString();
                         }
+
+                        // Modifie text to include the chordname into the lyric
+                        // [Am]La petite maison [G]dans la prairie
+                        if (bIncludeChordsInLyrics && chordName != "")
+                        {
+                            plElement = "[" + chordName + "]" + plElement;
+                        }
+
                     }
 
-                    localplLyrics.Add(new plLyric() { CharType = plType, Element =  (chordName, plElement), TicksOn = plTicksOn });
-
-                    // TODO add TicksOff
+                    lst.Add(new plLyric() { CharType = plType, Element =  (chordName, plElement), TicksOn = plTicksOn });                    
                 }
             }
 
+            return lst;
         }
 
         /// <summary>
         /// Replace lyrics in frmPlayer
         /// Appelle la méthode ReplaceLyrics de frmPlayer
         /// </summary>
-        private void ReplaceLyrics()
+        private void ReplaceLyrics(List<plLyric> l)
         {
             LyricTypes ltype;
 
@@ -3050,7 +3116,7 @@ namespace Karaboss
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
                 frmPlayer frmPlayer = GetForm<frmPlayer>();
-                frmPlayer.ReplaceLyrics(localplLyrics, ltype, melodytracknum);
+                frmPlayer.ReplaceLyrics(l, ltype, melodytracknum);
             }
         }
 
@@ -3108,6 +3174,17 @@ namespace Karaboss
                 }
                 else
                 {
+                    if (bEditChords)
+                    {
+                        // Chords edition
+                        // Extract chord name from the lyrics
+                        if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == LyricsMgmt.ChordsOrigins.Lyrics)
+                        {
+                            // Remove chord from lyrics
+                            plElement = Regex.Replace(plElement, _myLyricsMgmt.RemoveChordPattern, @"");
+                        }
+                    }
+
                     tx += plElement;
                 }                             
             }
@@ -3559,7 +3636,7 @@ namespace Karaboss
                     DisplayOtherFormat();
 
                     // Display new lyrics in frmPlayer
-                    ReplaceLyrics();
+                    ReplaceLyrics(localplLyrics);
 
                     Cursor.Current = Cursors.Default;
                 }

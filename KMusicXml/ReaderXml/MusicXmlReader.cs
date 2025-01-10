@@ -1361,16 +1361,19 @@ namespace MusicXml
         {
             string c = chord.GetChordName();
 
+
+            // frmPlayer HandleLoadXmlCompleted > LoadXmlChordsInLyrics()
             ChordItem ci = new ChordItem()
             {
                 TicksOn = t,
                 ChordName = c,
             };       
             lstChords.Add(ci);
-            TrackChordsNumber= tracknumber;
+
+            TrackChordsNumber = tracknumber;
 
 
-            track1.addChord(c, t);          // Why track1 and not track2 ?????????????  
+            //track1.addChord(c, t);          // Why track1 and not track2 ?????????????  
         }
 
         #endregion chords

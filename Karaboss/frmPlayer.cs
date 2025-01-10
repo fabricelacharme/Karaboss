@@ -2945,16 +2945,17 @@ namespace Karaboss
                     }
 
                     // Lyrics exist
+                    /*
                     if (!myLyricsMgmt.bHasChordsInLyrics)
                     {
                         // Remove detected chords: redo the lyrics extraction
                         myLyricsMgmt.FullExtractLyrics();
                     }
+                    */
 
-                    frmLyricsEdit frmLyricsEdit;
                     // Caution: Load the original lyrics, not the lyrics internally transformed by FullExtractLyrics
+                    frmLyricsEdit frmLyricsEdit;                    
                     frmLyricsEdit = new frmLyricsEdit(sequence1, myLyricsMgmt.OrgplLyrics, myLyricsMgmt, MIDIfileFullPath);
-
                     frmLyricsEdit.Show();
                 }
                 catch (Exception fl)
@@ -3048,15 +3049,17 @@ namespace Karaboss
                     }
 
                     // Lyrics exist
+                    /*
                     if (!myLyricsMgmt.bHasChordsInLyrics)
                     {
-                        // Remove detected chords: redo the lyrics extraction
+                        // Remove detected chords: redo the lyrics extraction: NO ??????
                         myLyricsMgmt.FullExtractLyrics();
                     }
+                    */
 
-                    frmLyricsEdit frmLyricsEdit;
-                    // Caution: Load the original lyrics, not the lyrics internally transformed by FullExtractLyrics
-                    frmLyricsEdit = new frmLyricsEdit(sequence1, myLyricsMgmt.OrgplLyrics, myLyricsMgmt, MIDIfileFullPath, true);
+                    // Caution: Load the FULL lyrics in order to have the chords displayed
+                    frmLyricsEdit frmLyricsEdit;                    
+                    frmLyricsEdit = new frmLyricsEdit(sequence1, myLyricsMgmt.plLyrics, myLyricsMgmt, MIDIfileFullPath, true);
 
                     frmLyricsEdit.Show();
                 }
@@ -3881,15 +3884,17 @@ namespace Karaboss
 
             // Reload myLyricMgmt
             myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
+            
 
             // Refresh frmLyric
 
             if (myLyricsMgmt.OrgplLyrics.Count > 0)
             {
-                // Window closed
-                DisplayLyricsForm();
                 // Reset display
                 myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
+
+                // Window closed
+                DisplayLyricsForm();
                 frmLyric.LoadSong(myLyricsMgmt.plLyrics);
             }
 
@@ -3916,11 +3921,10 @@ namespace Karaboss
         /// <param name="LyricType"></param>
         private void TrkInsertLyrics(Track Track, List<plLyric> l, LyricTypes LyricType)
         {
-            int currentTick; // = 0;
+            int currentTick;
             int lastcurrenttick = 0;
 
-            string currentElement; // = string.Empty;
-            //string currentType; // = string.Empty;
+            string currentElement;            
             string currentCR = string.Empty;
                         
             Track.Lyrics.Clear();
@@ -4188,10 +4192,11 @@ namespace Karaboss
             if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgplLyrics.Count == 0)
             { return; }
             
-
-            DisplayLyricsForm();
-            
+                        
             myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
+                                               
+            DisplayLyricsForm();
+
 
             // If no lyrics and a playlist, display something in the center
             if (currentPlaylistItem != null && myLyricsMgmt.OrgplLyrics.Count == 0 && !Karaclass.m_PauseBetweenSongs && Karaclass.m_CountdownSongs == 0 && !Karaclass.m_ShowChords)
@@ -4246,6 +4251,10 @@ namespace Karaboss
             {                
                 frmLyric = new frmLyric(myLyricsMgmt);
                 frmLyric.Show();
+            }
+            else
+            {
+                frmLyric.myLyricsMgmt = myLyricsMgmt;
             }
 
             
@@ -4304,12 +4313,9 @@ namespace Karaboss
                 // MXmlReader.lstChords
                 // MXmlReader.TrackChordsNumber
                 myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.XmlEmbedded;
-                //myLyricsMgmt.lstXmlChords.Clear();
-                myLyricsMgmt.lstXmlChords = MXmlReader.lstChords;
-                //myLyricsMgmt.PopulateXmlChords(MXmlReader.lstChords);
-
-            }
                 
+                myLyricsMgmt.lstXmlChords = MXmlReader.lstChords;                
+            }                
         }
 
         #endregion Lyrics
@@ -4380,7 +4386,8 @@ namespace Karaboss
                 sequence1.Format = 1;
                 
                 myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
-                //bHasLyrics =  myLyricsMgmt.OrgplLyrics.Count > 0;                 
+
+                AddChordsToTrack();
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -4527,9 +4534,7 @@ namespace Karaboss
 
                 // Load chords in LyricsMgmt in order to be displayed in the lyrics form                
                 LoadXmlChordsInLyrics();
-                //if (MXmlReader.bHasXmlChords)
-                //    myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.XmlEmbedded;
-
+                AddChordsToTrack();
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -4537,7 +4542,7 @@ namespace Karaboss
                 * Workaround is to rewrite the lyrics
                 */
 
-                    // case of format 0
+                // case of format 0
                 if ((sequence1.OrigFormat == 0) && (myLyricsMgmt.LyricType == LyricTypes.Lyric))
                 {
                     int tracknum = myLyricsMgmt.LyricsTrackNum;
@@ -4670,8 +4675,7 @@ namespace Karaboss
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
                 
-                myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
-                //bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0;                 
+                myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);                                 
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -8659,6 +8663,55 @@ namespace Karaboss
 
 
         #region chords analysis
+        
+        private void AddChordsToTrack()
+        {
+            Track track;
+            switch (myLyricsMgmt.ChordsOriginatedFrom)
+            {
+                case LyricsMgmt.ChordsOrigins.Discovery:
+                    track = sequence1.tracks[myLyricsMgmt.LyricsTrackNum];
+                    if (myLyricsMgmt.plLyrics.Count == 0)
+                        myLyricsMgmt.FullExtractLyrics();
+                    myLyricsMgmt.PopulateDetectedChords();
+                    myLyricsMgmt.CleanLyrics();
+                    track.ClearChordSymbols();
+                    for (int i = 0; i < myLyricsMgmt.plLyrics.Count; i++)
+                    {
+                        track.addChord(myLyricsMgmt.plLyrics[i].Element.Item1, myLyricsMgmt.plLyrics[i].TicksOn);
+                    }
+                    break;
+                case LyricsMgmt.ChordsOrigins.Lyrics:
+                    // Origin = lyrics, track is same as lyrics
+                    track = sequence1.tracks[myLyricsMgmt.LyricsTrackNum];
+                    
+                    if (myLyricsMgmt.plLyrics.Count == 0)
+                        myLyricsMgmt.FullExtractLyrics();
+                    
+                    track.ClearChordSymbols();
+                    for (int i = 0; i < myLyricsMgmt.plLyrics.Count; i ++)
+                    {
+                        track.addChord(myLyricsMgmt.plLyrics[i].Element.Item1, myLyricsMgmt.plLyrics[i].TicksOn);
+                    }
+                    break;
+                case LyricsMgmt.ChordsOrigins.XmlEmbedded:
+                    // Origin = Xml, track is MXmlReader.TrackChordsNumber
+                    if (MXmlReader == null)
+                        return;
+                    if (MXmlReader.TrackChordsNumber > sequence1.tracks.Count)
+                        return;
+                    track = sequence1.tracks[MXmlReader.TrackChordsNumber];
+                    track.ClearChordSymbols();
+                    for (int i = 0; i < MXmlReader.lstChords.Count; i++)
+                    {
+                        track.addChord(MXmlReader.lstChords[i].ChordName, MXmlReader.lstChords[i].TicksOn);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        
         private void btnChords_Click(object sender, EventArgs e)
         {
 
