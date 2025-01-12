@@ -304,13 +304,7 @@ namespace Karaboss
             m_SepLine = Karaclass.m_SepLine;
             m_SepParagraph = Karaclass.m_SepParagraph;
 
-            // Don't work with unzipped file            
-            /*
-            if (Karaclass.m_MxmlPath != "") 
-            {
-                FileName = Karaclass.m_MxmlPath;
-            }
-            */
+            
             MIDIfileFullPath = FileName;
             MIDIfileName = Path.GetFileName(FileName);
             MIDIfilePath = Path.GetDirectoryName(FileName);
