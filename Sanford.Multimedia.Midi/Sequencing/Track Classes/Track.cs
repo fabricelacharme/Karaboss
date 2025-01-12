@@ -77,7 +77,7 @@ namespace Sanford.Multimedia.Midi
         public MidiEvent endOfTrackMidiEvent;
 
         private List<MidiNote> notes;
-        private List<ChordSymbol> _chordsymbols;
+        private List<ChordNameSymbol> _chordnamesymbols;
 
         #endregion
 
@@ -87,7 +87,7 @@ namespace Sanford.Multimedia.Midi
         {
             endOfTrackMidiEvent = new MidiEvent(this, Length, MetaMessage.EndOfTrackMessage);
             notes = new List<MidiNote>();
-            _chordsymbols = new List<ChordSymbol>();
+            _chordnamesymbols = new List<ChordNameSymbol>();
         }
 
         #endregion
@@ -420,9 +420,9 @@ namespace Sanford.Multimedia.Midi
 
         #region chords
 
-        public void ClearChordSymbols()
+        public void ClearChordNameSymbols()
         {
-            _chordsymbols.Clear();
+            _chordnamesymbols.Clear();
         }
 
         /// <summary>
@@ -430,21 +430,21 @@ namespace Sanford.Multimedia.Midi
         /// </summary>
         /// <param name="chord"></param>
         /// <param name="starttime"></param>
-        public void addChord(string chord, int starttime)
+        public void addChordName(string chord, int starttime)
         {
             
             #region guard
             if (findChord(chord, starttime) != null) return;
             #endregion guard
 
-            ChordSymbol chordnew = new ChordSymbol()
+            ChordNameSymbol chordnew = new ChordNameSymbol()
             {
                 ChordName = chord,
                 TicksOn = starttime,
             };
 
-            _chordsymbols.Add(chordnew);            
-            _chordsymbols = _chordsymbols.OrderBy(x => x.TicksOn).ToList();
+            _chordnamesymbols.Add(chordnew);            
+            _chordnamesymbols = _chordnamesymbols.OrderBy(x => x.TicksOn).ToList();
             
         }
 
@@ -454,12 +454,12 @@ namespace Sanford.Multimedia.Midi
         /// <param name="c"></param>
         /// <param name="ticks"></param>
         /// <returns></returns>
-        private ChordSymbol findChord(string c, int ticks)
+        private ChordNameSymbol findChord(string c, int ticks)
         {
             
             try
             {
-                ChordSymbol m = _chordsymbols.Find(u => u != null && u.ChordName == c && u.TicksOn == ticks);
+                ChordNameSymbol m = _chordnamesymbols.Find(u => u != null && u.ChordName == c && u.TicksOn == ticks);
                 return m;
             }
             catch (Exception e)
@@ -3228,9 +3228,9 @@ namespace Sanford.Multimedia.Midi
                 }
             }
 
-            foreach (ChordSymbol cns in this.Chords)
+            foreach (ChordNameSymbol cns in this.ChordNames)
             {
-                track.Chords.Add(cns);
+                track.ChordNames.Add(cns);
             }
 
             track.Visible = this.Visible;
@@ -3518,15 +3518,15 @@ namespace Sanford.Multimedia.Midi
 
         #region ChordNames
 
-        public class ChordSymbol
+        public class ChordNameSymbol
         {
             public int TicksOn { get; set; }            
             public string ChordName { get; set; }
         }
         
-        public List<ChordSymbol> Chords
+        public List<ChordNameSymbol> ChordNames
         {
-            get { return _chordsymbols; }
+            get { return _chordnamesymbols; }
         }
 
         

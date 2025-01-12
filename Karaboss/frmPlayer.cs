@@ -3828,9 +3828,8 @@ namespace Karaboss
         /// </summary>
         public void DisplayLyricsInfos()
         {
-            string tx; // = string.Empty;
-            
-            // FAB 28/08
+            string tx; 
+                        
             if (myLyricsMgmt != null)
                 {
                 tx = "Lyrics type: " + myLyricsMgmt.LyricType + "\r";
@@ -3855,8 +3854,8 @@ namespace Karaboss
         /// <param name="pLyrics"></param>
         public void ReplaceLyrics(List<plLyric> newpLyrics, LyricTypes newLyricType, int melodytracknum)
         {
+            // LyricType has changed => refresh display
             bool bRefreshDisplay = (newLyricType != myLyricsMgmt.LyricType);
-
             
             // Delete all lyrics of all types
             foreach (Track T in sequence1.tracks)
@@ -3867,7 +3866,6 @@ namespace Karaboss
             }
             // Tags associated to the sequence have been deleted
             restoreSequenceTags();
-
 
             // By default, insert the lyrics (either text or lyric) into the melodytrack
             Track track = sequence1.tracks[melodytracknum];
@@ -3880,7 +3878,6 @@ namespace Karaboss
             
 
             // Refresh frmLyric
-
             if (myLyricsMgmt.OrgplLyrics.Count > 0)
             {
                 // Reset display
@@ -3896,6 +3893,9 @@ namespace Karaboss
             // if Lyric because we need to display the new lyrics on the scores
             if (bRefreshDisplay || myLyricsMgmt.LyricType == LyricTypes.Lyric)
             {
+                if (Karaclass.m_ShowChords)
+                    AddChordsToTrack();
+
                 RefreshDisplay();
             }
 
@@ -4275,6 +4275,7 @@ namespace Karaboss
 
         }
 
+        // Slideshow
         private void SetSlideShow()
         {
             if (frmLyric != null)
@@ -4380,7 +4381,7 @@ namespace Karaboss
                 
                 myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
 
-                
+                // Save chords to track in order to display them in the score
                 AddChordsToTrack();
 
                 /*
@@ -4937,6 +4938,9 @@ namespace Karaboss
                 byte[] data = msg.GetBytes();
                 _tempoplayed = ((data[0] << 16) | (data[1] << 8) | data[2]);                                
             }
+
+            // TODO add change of Time Signature ?
+            // Idem for exporting CSV
         }
 
         private void HandleChannelMessagePlayed(object sender, ChannelMessageEventArgs e)
@@ -5089,9 +5093,7 @@ namespace Karaboss
                     }
                 }
                 bReglageChanged = true;
-
-            }
-            
+            }            
         }
 
         private void HandleChased(object sender, ChasedEventArgs e)
@@ -5104,7 +5106,7 @@ namespace Karaboss
 
         private void HandleSysExMessagePlayed(object sender, SysExMessageEventArgs e)
         {
-       //     outDevice.Send(e.Message); Sometimes causes an exception to be thrown because the output device is overloaded.
+            // outDevice.Send(e.Message); Sometimes causes an exception to be thrown because the output device is overloaded.
         }
 
         private void HandleStopped(object sender, StoppedEventArgs e)
@@ -5418,7 +5420,6 @@ namespace Karaboss
 
         #region form load close keydown
 
-
         /// <summary>
         /// Mousewheel : scroll vertically if playing
         /// </summary>
@@ -5595,8 +5596,6 @@ namespace Karaboss
 
             List<string> lsextensions = new List<string> { "*.musicxml", "*.xml" };
             return Karaclass.UnzipFiles(f, lsextensions, myTempDir);
-
-
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -6024,17 +6023,16 @@ namespace Karaboss
                 #endregion
             } 
         }
+        
 
-
-        /** When the window is resized, adjust the pnlScrollView to fill the window */
+        /// <summary>
+        /// When the window is resized, adjust the pnlScrollView to fill the window */
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);          
-
-            //if (sheetmusic != null)
-            //    sheetmusic.Redraw();
-            sheetmusic?.Redraw();
-            
+            sheetmusic?.Redraw();            
             SetScrollBarValues();            
         }    
 
@@ -8657,17 +8655,41 @@ namespace Karaboss
 
 
         #region chords analysis
-        
+
+
+        public void RefreshChordsSheetMusic()
+        {
+            
+            AddChordsToTrack();
+            sheetmusic.Refresh();
+        }
+
+        /// <summary>
+        /// Save chords to track in order to be displayed on the score
+        /// Refresh needed
+        /// </summary>
         private void AddChordsToTrack()
         {
             if (!Karaclass.m_ShowChords)
+            {
+                // Clear list of chord names
+                foreach (Track trk in sequence1.tracks)
+                {
+                    trk.ClearChordNameSymbols();
+                }
                 return;
+            }
             if (sequence1.tracks.Count == 0) return;
 
             Track track;
             switch (myLyricsMgmt.ChordsOriginatedFrom)
             {
                 case LyricsMgmt.ChordsOrigins.Discovery:
+                    // the question is: which track for displaying the chords?
+                    // LyricsTrackNum?
+                    // MelodyTrackNum?
+                    // Track 0?
+                    
                     //if (myLyricsMgmt.LyricsTrackNum == -1)
                     //    myLyricsMgmt.LyricsTrackNum = 0;
                     
@@ -8683,12 +8705,13 @@ namespace Karaboss
                         myLyricsMgmt.FullExtractLyrics();
                     myLyricsMgmt.PopulateDetectedChords();
                     myLyricsMgmt.CleanLyrics();
-                    track.ClearChordSymbols();
+                    track.ClearChordNameSymbols();
                     for (int i = 0; i < myLyricsMgmt.plLyrics.Count; i++)
                     {
-                        track.addChord(myLyricsMgmt.plLyrics[i].Element.Item1, myLyricsMgmt.plLyrics[i].TicksOn);
+                        track.addChordName(myLyricsMgmt.plLyrics[i].Element.Item1, myLyricsMgmt.plLyrics[i].TicksOn);
                     }
                     break;
+
                 case LyricsMgmt.ChordsOrigins.Lyrics:
                     // Origin = lyrics, track is same as lyrics
                     track = sequence1.tracks[myLyricsMgmt.LyricsTrackNum];
@@ -8696,12 +8719,13 @@ namespace Karaboss
                     if (myLyricsMgmt.plLyrics.Count == 0)
                         myLyricsMgmt.FullExtractLyrics();
                     
-                    track.ClearChordSymbols();
+                    track.ClearChordNameSymbols();
                     for (int i = 0; i < myLyricsMgmt.plLyrics.Count; i ++)
                     {
-                        track.addChord(myLyricsMgmt.plLyrics[i].Element.Item1, myLyricsMgmt.plLyrics[i].TicksOn);
+                        track.addChordName(myLyricsMgmt.plLyrics[i].Element.Item1, myLyricsMgmt.plLyrics[i].TicksOn);
                     }
                     break;
+                
                 case LyricsMgmt.ChordsOrigins.XmlEmbedded:
                     // Origin = Xml, track is MXmlReader.TrackChordsNumber
                     if (MXmlReader == null)
@@ -8709,10 +8733,10 @@ namespace Karaboss
                     if (MXmlReader.TrackChordsNumber > sequence1.tracks.Count)
                         return;
                     track = sequence1.tracks[MXmlReader.TrackChordsNumber];
-                    track.ClearChordSymbols();
+                    track.ClearChordNameSymbols();
                     for (int i = 0; i < MXmlReader.lstChords.Count; i++)
                     {
-                        track.addChord(MXmlReader.lstChords[i].ChordName, MXmlReader.lstChords[i].TicksOn);
+                        track.addChordName(MXmlReader.lstChords[i].ChordName, MXmlReader.lstChords[i].TicksOn);
                     }
                     break;
                 default:
@@ -8720,6 +8744,11 @@ namespace Karaboss
             }
         }
         
+        /// <summary>
+        /// Display form frmChords
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnChords_Click(object sender, EventArgs e)
         {
 

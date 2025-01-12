@@ -920,7 +920,12 @@ namespace Karaboss
                 myLyricsMgmt.ResetDisplayChordsOptions(chkChords.Checked);
                                                
                 // Load modified lyrics into the picturebox
-                LoadSong(myLyricsMgmt.plLyrics);                
+                LoadSong(myLyricsMgmt.plLyrics);
+
+                // Refresh score with or without chords
+                frmPlayer frmPlayer = GetForm<frmPlayer>();
+                frmPlayer.RefreshChordsSheetMusic();
+
             }
 
         }

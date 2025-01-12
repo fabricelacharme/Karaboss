@@ -511,6 +511,8 @@ namespace Sanford.Multimedia.Midi.Score
                 symbols[tracknum] = CreateSymbols(chords, clefs, time, lastStart, track.Clef);                
             }
 
+
+            // Retrieve lyrics
             List<LyricSymbol>[] lyrics = null;
             if (options.showLyrics)
             {
@@ -518,8 +520,7 @@ namespace Sanford.Multimedia.Midi.Score
             }
 
             
-            /* Vertically align the music symbols */
-
+            // Vertically align the music symbols
             SymbolWidths widths = new SymbolWidths(symbols, lyrics, measurelen);
             AlignSymbols(symbols, widths, options, measurelen);           
 
@@ -538,8 +539,7 @@ namespace Sanford.Multimedia.Midi.Score
                 AddLyricsToStaffs(staffs, lyrics);
             }
 
-            // Draws chords from XML
-            //List<ChordNameSymbol>[] chordnames = null;
+            // Draws chordnames            
             List<ChordNameSymbol>[] chordnames = GetChordNames(tracks);
             if (chordnames != null && chordnames.Count() > 0)
             {
@@ -547,10 +547,10 @@ namespace Sanford.Multimedia.Midi.Score
             }
 
 
-            // Tempos
+            // Draw Tempos
+            #region draw tempos
             // List of all tempo changes (only 2 fields tempo & ticks)
             List<TempoSymbol> l = GetAllTempoChanges();
-
             // Case of files without any tempo event ....
             if (l.Count ==  0)
             {
@@ -563,6 +563,7 @@ namespace Sanford.Multimedia.Midi.Score
                 // List of all tempo changes / all fields (tempo, ticks, X etc...)
                 _lsttemposymbols = AddTemposToStaffs(staffs, l);
             }
+            #endregion draw tempos
 
             /* After making chord pairs, the stem directions can change,
              * which affects the staff height.  Re-calculate the staff height.
@@ -698,11 +699,7 @@ namespace Sanford.Multimedia.Midi.Score
                 lyrics = GetLyrics(tracks);
             }
 
-            /* Vertically align the music symbols */
-            //int measurelen = 0;
-            //measurelen = time.Measure;
-            //nbMeasures = 1 + seqlength / measurelen;
-
+            // Vertically align the music symbols
             SymbolWidths widths = new SymbolWidths(symbols, lyrics, measurelen);
             AlignSymbols(symbols, widths, options, measurelen);
 
@@ -713,7 +710,6 @@ namespace Sanford.Multimedia.Midi.Score
 
                 // FAB : à corriger
                 CreateAllBeamedChords(symbols, time);
-
                 
                 // Height of staffs maximized or minimized
                 for (int tracknum = 0; tracknum < AllTracks.Count; tracknum++) 
@@ -728,10 +724,37 @@ namespace Sanford.Multimedia.Midi.Score
                 }
             }
 
+            // Draw lyrics
             if (lyrics != null && staffs != null)
             {
                 AddLyricsToStaffs(staffs, lyrics);
             }
+
+            // Draws chordnames            
+            List<ChordNameSymbol>[] chordnames = GetChordNames(tracks);
+            if (chordnames != null && chordnames.Count() > 0)
+            {
+                AddChordNamesToStaffs(staffs, chordnames);
+            }
+
+            // Draw Tempos
+            #region draw tempos
+            // List of all tempo changes (only 2 fields tempo & ticks)
+            List<TempoSymbol> l = GetAllTempoChanges();
+            // Case of files without any tempo event ....
+            if (l.Count == 0)
+            {
+                TempoSymbol tmps = new TempoSymbol(0, 500000);
+                l.Add(tmps);
+            }
+
+            if (l != null && l.Count > 0 && staffs != null)
+            {
+                // List of all tempo changes / all fields (tempo, ticks, X etc...)
+                _lsttemposymbols = AddTemposToStaffs(staffs, l);
+            }
+            #endregion draw tempos
+
 
             /* After making chord pairs, the stem directions can change,
              * which affects the staff height.  Re-calculate the staff height.
@@ -3713,13 +3736,13 @@ namespace Sanford.Multimedia.Midi.Score
             {
                 Track track = tracks[tracknum];
                 
-                if (track.Chords == null || track.Chords.Count == 0)
+                if (track.ChordNames == null || track.ChordNames.Count == 0)
                 {
                     continue;
                 }
                 
                 result[tracknum] = new List<ChordNameSymbol>();                                
-                foreach (Track.ChordSymbol cs in track.Chords)
+                foreach (Track.ChordNameSymbol cs in track.ChordNames)
                 {
                     string text = cs.ChordName;
                     if (text != "")
