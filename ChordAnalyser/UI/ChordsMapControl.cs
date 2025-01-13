@@ -101,9 +101,14 @@ namespace ChordAnalyser.UI
         private string ChordNotFound = "<Chord not found>";
         private string EmptyChord = "<Empty>";
 
-        public const int PageWidth = 800;    /** The width of each page */
-        public const int PageHeight = 1050;  /** The height of each page (when printing) */
+        public int PageWidth = 800;    /** The width of each page */
+        public int PageHeight = 1050;  /** The height of each page (when printing) */
         public const int TitleHeight = 14; /** The height for the title on the first page */
+
+        private float HeaderHeight = 100;
+        private string _filename;
+        private const int leftmargin = 20;
+        private const int topmargin = 20;
 
         #endregion private
 
@@ -188,6 +193,17 @@ namespace ChordAnalyser.UI
             }
         }
 
+        private int _headerheight = 100;
+        public int MyHeaderHeight
+        {
+            get { return _headerheight; }
+            set 
+            { 
+                _headerheight = value;
+                HeaderHeight = _headerheight * zoom;
+            }
+        }
+
         private int _columnheight = 80;
         public int ColumnHeight
         {
@@ -221,6 +237,7 @@ namespace ChordAnalyser.UI
 
                 _cellwidth = _columnwidth * zoom;
                 _cellheight = _columnheight * zoom;
+                HeaderHeight = _headerheight * zoom;
 
                 RedimControl();
 
@@ -236,8 +253,10 @@ namespace ChordAnalyser.UI
         #endregion properties
 
 
-        public ChordsMapControl()
+        public ChordsMapControl(string FileName)
         {
+            _filename = FileName;
+
             // Draw pnlCanvas
             DrawCanvas();
 
@@ -263,8 +282,7 @@ namespace ChordAnalyser.UI
         /// Add panel to the control
         /// </summary>
         private void DrawCanvas()
-        {          
-            
+        {           
             // Draw pnlCanvas            
             pnlCanvas = new MyPanel();
             pnlCanvas.Location = new Point(0, 0);
@@ -282,13 +300,49 @@ namespace ChordAnalyser.UI
         }
 
         /// <summary>
+        /// print Title, tempo, TimeSignature in Header
+        /// </summary>
+        private void PrintFileInfos(Graphics g)
+        {
+            // All must be in
+            // HeaderHeight
+            // PageWidth, leftmargin, topmargin
+
+            Font fontTitle = new Font("Arial", 20 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font fontText = new Font("Arial", 14 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+
+            float w;
+            String TimeSignature = sequence1.Numerator + "/" + sequence1.Denominator;
+            string Tempo = GetBPM(_tempo).ToString();
+
+            int _beatwidth = ((int)(_cellwidth) + (_LinesWidth - 1));            
+            PageWidth = 2*leftmargin + _nbcolumns * (_beatwidth * sequence1.Numerator);
+
+            string title = Path.GetFileName(_filename);
+            w = MeasureString(fontTitle.FontFamily, title, fontTitle.Size);
+
+            title = title.Replace(".mid", "").Replace("_", " ").Replace(".kar", "");            
+
+            g.TranslateTransform(PageWidth/2 - w/2, topmargin);
+            g.DrawString(title, fontTitle, Brushes.Black, 0, 0);
+            g.TranslateTransform(-(PageWidth/2 - w/2), -topmargin);
+
+            int ypos = 50;
+            Point p1 = new Point(leftmargin, ypos);
+            g.DrawString("TimeSignature: " + TimeSignature, fontText, new SolidBrush(Color.Black), p1.X, p1.Y);
+            g.DrawString("Tempo: " + Tempo, fontText, new SolidBrush(Color.Black), p1.X, p1.Y + 16 * zoom);
+
+            fontTitle.Dispose();
+
+        }
+        
+        /// <summary>
         /// Draw cells on the panel: 4 cells/measure by line
         /// </summary>
         /// <param name="g"></param>
         /// <param name="clip"></param>
         private void DrawGrid(Graphics g, Rectangle clip)
-        {
-            
+        {            
             int _beatwidth = ((int)(_cellwidth) + (_LinesWidth - 1));
             int _beatheight = ((int)(_cellheight) + (_LinesWidth - 1));
             int _measurewidth = _beatwidth * sequence1.Numerator;
@@ -301,43 +355,15 @@ namespace ChordAnalyser.UI
             Rectangle rect;
             Point p1;
             Point p2;
-            int x = 0;
-            int y = 0;
+            int x = leftmargin; //0;
+            int y = (int)HeaderHeight;//0;
 
             int compteurmesure = -1;
 
             FillPen = new Pen(Color.Gray, _LinesWidth);
-
-            /*
-            // ********************************
-            // 1st place = false measuree
-            // ********************************
-            for (int j = 0; j < sequence1.Numerator - 1; j++)
-            {
-                g.DrawRectangle(FillPen, x, y, _cellwidth, _cellheight);
-                rect = new Rectangle(x, 0, (int)(_cellwidth), (int)(_cellheight));
-                g.FillRectangle(new SolidBrush(Color.Gray), rect);
-                x += _beatwidth; 
-            }
-
-            // =====================================================
-            // 1ere case noire en plus de celles du morceau
-            //======================================================            
-            g.DrawRectangle(FillPen, x, 0, _cellwidth, _cellheight);
-            rect = new Rectangle(x, 0, (int)(_cellwidth), (int)(_cellheight));
-            g.FillRectangle(new SolidBrush(Color.Black), rect);
-
-            var src = new Bitmap(Resources.silence_white);
-            var bmp = new Bitmap((int)(src.Width * zoom), (int)(src.Height * zoom), PixelFormat.Format32bppPArgb);
-            g.DrawImage(src, new Rectangle(x + 10, 10, bmp.Width, bmp.Height));
-            */
-
-
+           
             // init variables
-            //compteurmesure = 0;
-            //x = _measurewidth; 
-            compteurmesure = -1;
-            x = 0;
+            compteurmesure = -1;                    
 
             // ********************
             // Begin at 2nd place
@@ -347,12 +373,11 @@ namespace ChordAnalyser.UI
                 compteurmesure++;
                 if (compteurmesure > (_nbcolumns - 1))   // 4 measures per line
                 {
-                    y += _beatheight; 
-                    x = 0;
+                    y += _beatheight;
+                    x = leftmargin;//0;
                     compteurmesure = 0;
                 }
-                
-                
+                                
                 // Dessine autant de cases que le numerateur
                 for (int j = 0; j < sequence1.Numerator; j++)
                 {
@@ -362,7 +387,6 @@ namespace ChordAnalyser.UI
                         g.DrawRectangle(FillPen, x, y, _cellwidth, _cellheight);
                         rect = new Rectangle(x, y, (int)(_cellwidth), (int)(_cellheight));
                         g.FillRectangle(new SolidBrush(Color.Gray), rect);
-
                     }
                     else
                     {
@@ -377,8 +401,8 @@ namespace ChordAnalyser.UI
             // ====================================================
             // Ligne noire sur la dernière case de chaque mesure
             // ====================================================                        
-            x = _measurewidth;             
-            y = 0;
+            x = leftmargin + _measurewidth;
+            y = (int)HeaderHeight; //0;
             int nbMeasuresPerLine = 1;
 
             for (int mes = 1; mes <= NbMeasures; mes++)
@@ -396,7 +420,7 @@ namespace ChordAnalyser.UI
                 if (nbMeasuresPerLine > _nbcolumns)
                 {                    
                     y += _beatheight;
-                    x = _measurewidth;                     
+                    x = leftmargin + _measurewidth;                     
                     nbMeasuresPerLine = 1;                    
                 }
             }                        
@@ -421,11 +445,11 @@ namespace ChordAnalyser.UI
 
             Font fontChord = new Font("Arial", 20 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontMeasure = new Font("Arial", 12 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
-                                  
-            int x = 0;
-            int y_chord = ((int)(_cellheight) / 2) - (fontMeasure.Height / 2);
+
+            int x = leftmargin;//0;
+            int y_chord = (int)HeaderHeight + ((int)(_cellheight) / 2) - (fontMeasure.Height / 2);
             int y_symbol = 10;
-            int y_measurenumber = (int)(_cellheight) - fontMeasure.Height;
+            int y_measurenumber = (int)HeaderHeight + (int)(_cellheight) - fontMeasure.Height;
             int m = -1;
 
             Point p1;
@@ -452,7 +476,7 @@ namespace ChordAnalyser.UI
                         y_chord += (int)_cellheight + 1;
                         y_symbol += (int)_cellheight + 1;
                         y_measurenumber += (int)_cellheight + 1;
-                        x = 0;
+                        x = leftmargin;//0;
                         compteurmesure = 0;
                     }
 
@@ -554,6 +578,8 @@ namespace ChordAnalyser.UI
 
             if (sequence1 != null)
             {
+                PrintFileInfos(g);
+                
                 DrawGrid(g, clip);
 
                 DrawChords(g, clip);
@@ -588,14 +614,27 @@ namespace ChordAnalyser.UI
             }
         }
 
+        /// <summary>
+        /// Calculate BPM
+        /// </summary>
+        /// <param name="tempo"></param>
+        /// <returns></returns>
+        private int GetBPM(int tempo)
+        {
+            // see http://midi.teragonaudio.com/tech/midifile/ppqn.htm
+            const float kOneMinuteInMicroseconds = 60000000;
+            float BPM = kOneMinuteInMicroseconds / (float)tempo;
+
+            return (int)BPM;
+        }
 
         private void RedimControl()
         {
             if (sequence1 != null)
             {
                 NbLines = (int)(Math.Ceiling((double)(NbMeasures + 1) / _nbcolumns));
-                Height = ((int)_cellheight + 1) * NbLines;             
-                Width = (sequence1.Numerator * ((int)(_cellwidth) + (_LinesWidth - 1))) * _nbcolumns;
+                Height = (int)HeaderHeight + ((int)_cellheight + 1) * NbLines;             
+                Width = 2*leftmargin + (sequence1.Numerator * ((int)(_cellwidth) + (_LinesWidth - 1))) * _nbcolumns;
             }
         }
 
@@ -703,9 +742,7 @@ namespace ChordAnalyser.UI
         /** Write the MIDI filename at the top of the page */
         private void DrawTitle(Graphics g, string fileName)
         {
-            int leftmargin = 20;
-            int topmargin = 20;
-
+            
             string title = Path.GetFileName(fileName);
 
             //string title = Path.GetFileName(filename);

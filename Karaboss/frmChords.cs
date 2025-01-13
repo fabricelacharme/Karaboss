@@ -564,7 +564,7 @@ namespace Karaboss
 
 
             #region ChordMapControl
-            ChordMapControl1 = new ChordsMapControl() {
+            ChordMapControl1 = new ChordsMapControl(MIDIfileName) {
                 Parent = pnlDisplayMap,
                 Location = new Point(0, 0),
                 ColumnWidth = 80,
