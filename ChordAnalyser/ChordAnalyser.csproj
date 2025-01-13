@@ -452,5 +452,59 @@
   <ItemGroup>
     <None Include="Resources\pG#m7.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Abm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bbm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Db7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dbm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Eb7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ebm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gb7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gbm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gbm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pAbm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pDb7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pDbm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pEb7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pEbm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pGb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pGb7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pGbm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pGbm7.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

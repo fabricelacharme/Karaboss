@@ -489,10 +489,14 @@ namespace ChordAnalyser.UI
                         bmp.Dispose();
 
                     }
+                    else
+                    {
+                        Console.WriteLine(ChordName + " *************** missing chord ******************");
+                    }
                 }
                 catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
+                {                    
+                    MessageBox.Show(ex.Message);
                 }
             }
         }
