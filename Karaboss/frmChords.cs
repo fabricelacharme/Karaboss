@@ -668,9 +668,27 @@ namespace Karaboss
         {
             ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);            
             // It can be used in DisplayChords if there are chords embedded in lyrics
-            myLyricsMgmt = new LyricsMgmt(sequence1, true);
+            //myLyricsMgmt = new LyricsMgmt(sequence1, true);
+            myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
+            
+            
+            switch (myLyricsMgmt.ChordsOriginatedFrom)
+            {
+                case LyricsMgmt.ChordsOrigins.Lyrics:
+                    GridBeatChords = myLyricsMgmt.FillGridBeatChordsWithLyricsChords();
+                    break;
+                    case LyricsMgmt.ChordsOrigins.XmlEmbedded:
+                    GridBeatChords = myLyricsMgmt.FillGridBeatChordsWithLyricsChords();
+                    break;
+                    case LyricsMgmt.ChordsOrigins.Discovery:
+                    GridBeatChords = Analyser.GridBeatChords;
+                    break;
+                default:
+                    break;
+            }
 
-            // favors chords included in lyrics
+            /*
+            // favors chords included in lyrics            
             if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)
             {
                 // Chords by beat
@@ -684,7 +702,7 @@ namespace Karaboss
                 // Chords by beat
                 GridBeatChords = Analyser.GridBeatChords;            
             }
-
+            */
 
             //Change labels displayed
             for (int i = 1; i <= GridBeatChords.Count; i++)
@@ -738,6 +756,11 @@ namespace Karaboss
 
             //chord = chord.Replace("<Chord not found>", "?");
             chord = chord.Replace("<Chord not found>", "");
+
+            int i = chord.IndexOf("/");
+            if (i > 0) { chord = chord.Substring(0, i); }
+            chord = chord.Replace("maj", "");
+            //chord = chord.Replace("Eb", "D#");
 
             chord = chord.Trim();
             return chord;
@@ -798,6 +821,7 @@ namespace Karaboss
         {
             if (e.Error == null && e.Cancelled == false)
             {
+                myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
                 CommonLoadCompleted(sequence1);                
             }
             else
@@ -842,7 +866,9 @@ namespace Karaboss
                 return;                        
                                  
             if (e.Error == null && e.Cancelled == false)
-            {                
+            {
+                myLyricsMgmt = new LyricsMgmt(MXmlReader.seq, Karaclass.m_ShowChords);
+                LoadXmlChordsInLyrics();
                 CommonLoadCompleted(MXmlReader.seq);
             }
             else
@@ -852,6 +878,26 @@ namespace Karaboss
             }
         }
 
+        /// <summary>
+        /// Load chords embedded in Xml file
+        /// </summary>
+        private void LoadXmlChordsInLyrics()
+        {
+            #region guard
+            if (myLyricsMgmt == null) return;
+            if (MXmlReader == null) return;
+            #endregion guard
+
+            if (MXmlReader.bHasXmlChords)
+            {
+                // infos
+                // MXmlReader.lstChords
+                // MXmlReader.TrackChordsNumber
+                myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.XmlEmbedded;
+
+                myLyricsMgmt.lstXmlChords = MXmlReader.lstChords;
+            }
+        }
 
         /// <summary>
         /// Load async a XML file
@@ -888,7 +934,8 @@ namespace Karaboss
             if (MTxtReader.seq == null) return;
             
             if (e.Error == null && e.Cancelled == false)
-            {                
+            {
+                myLyricsMgmt = new LyricsMgmt(MTxtReader.seq, Karaclass.m_ShowChords);
                 CommonLoadCompleted(MTxtReader.seq);
             }
             else

@@ -464,7 +464,7 @@ namespace ChordAnalyser.UI
             {
                 try
                 {
-                    ResourceManager rm = Resources.ResourceManager;
+                    ResourceManager rm = Resources.ResourceManager;                    
                     Bitmap chordImage = (Bitmap)rm.GetObject(ChordName);
 
                     // chord played is bigger

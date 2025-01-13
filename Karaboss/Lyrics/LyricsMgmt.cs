@@ -1911,6 +1911,12 @@ namespace Karaboss.Lyrics
             int insertIndex;
 
             int beat;
+
+            if (sequence1 == null || sequence1.Numerator == 0) 
+            { 
+                MessageBox.Show("Invalid sequence: null or Numerator = 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             int nbBeatsPerMeasure = sequence1.Numerator;
             int beatDuration = _measurelen / nbBeatsPerMeasure;
 
