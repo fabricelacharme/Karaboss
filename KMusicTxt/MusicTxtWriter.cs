@@ -188,8 +188,8 @@ namespace MusicTxt
                 {
                     switch (e.MidiMessage.MessageType)
                     {
-                        case MessageType.Channel:
-                            Write((ChannelMessage)e.MidiMessage, trackid, e.AbsoluteTicks, track.MidiChannel);
+                        case MessageType.Channel:                            
+                            Write((ChannelMessage)e.MidiMessage, trackid, e.AbsoluteTicks);
                             break;
 
                         case MessageType.SystemExclusive:
@@ -206,9 +206,7 @@ namespace MusicTxt
 
                         case MessageType.SystemRealtime:
                             Write((SysRealtimeMessage)e.MidiMessage);
-                            break;
-
-                            
+                            break;                            
                     }
                 }
                 #endregion events
@@ -251,10 +249,9 @@ namespace MusicTxt
 
             stream.WriteLine("0, 0, Copyright_t, \"No copyright\"");
 
-            // Track, Time, Time_signature, Num, Denom, Click, NotesQ
-            // FAB: TO BE CHECKED
-            stream.WriteLine(string.Format("0, 0, Time_signature, {0}, {1}, {2}, {3}", sequence.Time.Numerator, sequence.Time.Denominator, 24, 8));
-            
+
+            // TimeSignature can change during execution                        
+            //stream.WriteLine(string.Format("0, 0, Time_signature, {0}, {1}, {2}, {3}", sequence.Time.Numerator, sequence.Time.Denominator, 24, 8));            
             
             // Tempo can change during execution
             //stream.WriteLine(string.Format("1, 0, Tempo, {0}", sequence.Tempo));
@@ -271,35 +268,38 @@ namespace MusicTxt
         /// <param name="trackid"></param>
         /// <param name="ticks"></param>
         /// <param name="channel"></param>
-        private void Write(ChannelMessage message, int trackid, int ticks, int channel)
+        private void Write(ChannelMessage message, int trackid, int ticks)
         {
             if (runningStatus != message.Status)
             {
                 runningStatus = message.Status;
             }
 
+            // 14/01/2025 :
+            // Midi message can have another channel than the track's channel: track.channel replaces par message.MidiChannel
+            
+
             if (ChannelMessage.DataBytesPerType(message.Command) == 2)
             {
                 if (message.Command == ChannelCommand.NoteOn)
                 {
                     // Track, Time, Note_on_c, Channel, Note, Velocity                    
-                    stream.WriteLine(string.Format("{0}, {1}, Note_on_c, {2}, {3}, {4}", trackid, ticks, channel, message.Data1, message.Data2));
+                    stream.WriteLine(string.Format("{0}, {1}, Note_on_c, {2}, {3}, {4}", trackid, ticks, message.MidiChannel, message.Data1, message.Data2));
                 }
                 else if (message.Command == ChannelCommand.NoteOff)
                 {
                     // Track, Time, Note_off_c, Channel, Note, Velocity = 0
-                    stream.WriteLine(string.Format("{0}, {1}, Note_off_c, {2}, {3}, 0", trackid, ticks, channel, message.Data1));
+                    stream.WriteLine(string.Format("{0}, {1}, Note_off_c, {2}, {3}, 0", trackid, ticks, message.MidiChannel, message.Data1));
                 }
                 else if (message.Command == ChannelCommand.PitchWheel)
                 {
-                    // Track
-                    //stream.WriteLine(string.Format("{0}, {1}, Pitch_bend_c, {2}, {3}", trackid, ticks, channel, message.Data1));
-                    stream.WriteLine(string.Format("{0}, {1}, Pitch_bend_c, {2}, {3}", trackid, ticks, channel, message.Data2));
+                    // Track                    
+                    stream.WriteLine(string.Format("{0}, {1}, Pitch_bend_c, {2}, {3}", trackid, ticks, message.MidiChannel, message.Data2));
 
                 }
                 else if (message.Command == ChannelCommand.Controller)
                 {
-                    stream.WriteLine(string.Format("{0}, {1}, Control_c, {2}, {3}, {4}", trackid, ticks, channel, message.Data1, message.Data2));
+                    stream.WriteLine(string.Format("{0}, {1}, Control_c, {2}, {3}, {4}", trackid, ticks, message.MidiChannel, message.Data1, message.Data2));
                     // 7 Volume
                     // 10 Pan
                     // 11 Fader
@@ -314,7 +314,7 @@ namespace MusicTxt
                 {
                     // Change instrument
                     // Track, Time, Program_c, Channel, Program_num
-                    stream.WriteLine(string.Format("{0}, {1}, Program_c, {2}, {3}", trackid, ticks, channel, message.Data1));
+                    stream.WriteLine(string.Format("{0}, {1}, Program_c, {2}, {3}", trackid, ticks, message.MidiChannel, message.Data1));
 
 
                 }
@@ -340,7 +340,7 @@ namespace MusicTxt
         private void Write(MetaMessage message, int trackid, int ticks)
         {
             string sy = string.Empty;
-            
+            byte[] data;
 
             switch (message.MetaType)
             {
@@ -384,7 +384,7 @@ namespace MusicTxt
                 case MetaType.SmpteOffset:
                     break;
                 case MetaType.Tempo:
-                    byte[] data = message.GetBytes();
+                    data = message.GetBytes();
                     int _tempo = ((data[0] << 16) | (data[1] << 8) | data[2]);
                     stream.WriteLine(string.Format("{0}, {1}, Tempo, {2}", trackid, ticks, _tempo));
                     break;
@@ -400,6 +400,16 @@ namespace MusicTxt
                     stream.WriteLine(string.Format("{0}, {1}, Text_t, \"{2}\"", trackid, ticks, sy));
                     break;
                 case MetaType.TimeSignature:
+                    // Track, Time, Time_signature, Num, Denom, Click, NotesQ
+                    data = message.GetBytes();
+                    if (data.Length > 3)
+                    {
+                        var Numerator = data[0];
+                        var Denominator = (int)Math.Pow(2, data[1]); // denominator is a negative power of 2
+                        var cc = data[2];
+                        var dd = data[3];
+                        stream.WriteLine(string.Format("{0}, {1}, Time_signature, {2}, {3}, {4}, {5}", trackid, ticks, Numerator, Denominator, cc, dd));
+                    }
                     break;
                 case MetaType.TrackName:
                     break;

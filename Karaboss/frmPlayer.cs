@@ -2487,14 +2487,14 @@ namespace Karaboss
                 ResetSequencer();
                 if (fileName != "\\")
                 {
-                    // FAB 2710
+                    
                     MXmlReader = new MusicXmlReader();
                     
                     // Show Xml chords?
                     MXmlReader.PlayXmlChords = Karaclass.m_ShowXmlChords;
 
                     MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
-                    // ========
+                    
 
                     MXmlReader.LoadXmlAsync(fileName, false);
                 }
@@ -4523,6 +4523,8 @@ namespace Karaboss
 
                 // Load chords in LyricsMgmt in order to be displayed in the lyrics form                
                 LoadXmlChordsInLyrics();
+
+                // Add chords to Track for SheetMusic to display it
                 AddChordsToTrack();
 
                 /*

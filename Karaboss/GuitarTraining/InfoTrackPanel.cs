@@ -51,7 +51,7 @@ namespace Karaboss.GuitarTraining
             set
             {
                 _tracknumber = value;
-                this.lblTrackNumber.Text = string.Format("Track: {0}", value);
+                this.lblTrackNumber.Text = string.Format("Track: {0}", value + 1);
             }
         }
 

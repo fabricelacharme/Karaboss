@@ -279,8 +279,8 @@ namespace Karaboss
         {
             // see http://midi.teragonaudio.com/tech/midifile/ppqn.htm
             const float kOneMinuteInMicroseconds = 60000000;
-            float kTimeSignatureNumerator = (float)sequence1.Numerator;
-            float kTimeSignatureDenominator = (float)sequence1.Denominator;
+            //float kTimeSignatureNumerator = (float)sequence1.Numerator;
+            //float kTimeSignatureDenominator = (float)sequence1.Denominator;
 
             //float BPM = (kOneMinuteInMicroseconds / (float)tempo) * (kTimeSignatureDenominator / 4.0f);            
             float BPM = kOneMinuteInMicroseconds / (float)tempo;

@@ -51,6 +51,7 @@ namespace Karaboss
     {
 
         #region private dcl
+
         MusicXmlReader MXmlReader; 
         MusicTxtReader MTxtReader;
 
@@ -114,9 +115,6 @@ namespace Karaboss
 
         // Tabpage for image of chord (Guitar & Piano)        
         private TabControl tbPChords;
-        //private readonly TabPage TabPageGuitar; // = new TabPage();
-        //private readonly TabPage TabPagePiano; // = new TabPage();
-
 
         private Label lblLyrics;
         private Label lblOtherLyrics;
@@ -666,9 +664,11 @@ namespace Karaboss
         
         private void DisplayChords()
         {
-            ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);            
+            //ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);            
             // It can be used in DisplayChords if there are chords embedded in lyrics
             //myLyricsMgmt = new LyricsMgmt(sequence1, true);
+            
+            // This will only extract lyrics and chords if in lyrics or embedded in xml
             myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
             
             
@@ -677,33 +677,19 @@ namespace Karaboss
                 case LyricsMgmt.ChordsOrigins.Lyrics:
                     GridBeatChords = myLyricsMgmt.FillGridBeatChordsWithLyricsChords();
                     break;
-                    case LyricsMgmt.ChordsOrigins.XmlEmbedded:
+                case LyricsMgmt.ChordsOrigins.XmlEmbedded:
                     GridBeatChords = myLyricsMgmt.FillGridBeatChordsWithLyricsChords();
                     break;
-                    case LyricsMgmt.ChordsOrigins.Discovery:
+                case LyricsMgmt.ChordsOrigins.Discovery:
+                    // For discovery, we need to call ChordAnalyser
+                    ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
                     GridBeatChords = Analyser.GridBeatChords;
                     break;
                 default:
                     break;
             }
 
-            /*
-            // favors chords included in lyrics            
-            if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)
-            {
-                // Chords by beat
-                GridBeatChords = myLyricsMgmt.FillGridBeatChordsWithLyricsChords();
-            }
-            else
-            {
-                // No chords in lyrics => vertical analyse of notes to build a chord map
-                // Display chords in the textbox                
-                               
-                // Chords by beat
-                GridBeatChords = Analyser.GridBeatChords;            
-            }
-            */
-
+           
             //Change labels displayed
             for (int i = 1; i <= GridBeatChords.Count; i++)
             {
@@ -759,7 +745,7 @@ namespace Karaboss
 
             int i = chord.IndexOf("/");
             if (i > 0) { chord = chord.Substring(0, i); }
-            chord = chord.Replace("maj", "");
+            //chord = chord.Replace("maj", "");
             //chord = chord.Replace("Eb", "D#");
 
             chord = chord.Trim();
@@ -911,6 +897,10 @@ namespace Karaboss
                 if (fileName != "\\")
                 {                    
                     MXmlReader = new MusicXmlReader();
+
+                    // Show Xml chords?
+                    MXmlReader.PlayXmlChords = Karaclass.m_ShowXmlChords;
+
                     MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;                    
                     MXmlReader.LoadXmlAsync(fileName, false);
                 }

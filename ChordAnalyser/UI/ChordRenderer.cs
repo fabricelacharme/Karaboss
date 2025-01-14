@@ -222,33 +222,7 @@ namespace ChordAnalyser.UI
             this.SetStyle(ControlStyles.UserPaint, true);
             this.SetStyle(ControlStyles.ResizeRedraw, true);
         }
-
-        /*
-        public void TransferByMeasureToByBeat(int numerator, int measures)
-        {
-            GridBeatChords = new Dictionary<int, string>();
-
-            int beats = numerator * measures;
-            for (int i = 1; i <= beats; i++)
-            {
-                GridBeatChords.Add(i, "");
-            }
-
-            int beat;
-            
-            for (int measure = 1; measure <= Gridchords.Count; measure++ )
-            {
-                beat = 1 + (measure - 1) * numerator; 
-                string item1 = Gridchords[measure].Item1;
-                GridBeatChords[beat] = item1;
-
-                beat = 1 + (measure - 1) * numerator + (numerator/2);
-                string item2 = Gridchords[measure].Item2;
-                GridBeatChords[beat] = item2;
-
-            }
-        }
-        */
+       
 
         /// <summary>
         /// Create a new dictionnary with only real chords (eliminate empty & no chords)
@@ -331,25 +305,33 @@ namespace ChordAnalyser.UI
                     int offset = (index - 2) * LargeurCellule;
                     int remainingwidth = Width - offset;
 
-                    if (offset <= 0)
+                    if (offset <= 0)   // idem index <= 2
                     {
                         // At start, do not offset until we have passed 2 cells
                         pnlCanvas.Invalidate();
                     }
                     else
-                    {
+                    {                        
                         if (remainingwidth >= Parent.Width - LargeurCellule)
-                        {                            
+                        {                                             
                             // if the remaining display width of the control is greater than that of the parent control, then you can shift
                             this.OffsetX = offset;
+                            //pnlCanvas.Invalidate();
                         }
-                        else
-                        {
-                            // if the remaining display width of the control is less than that of the parent control, then we no longer shift
-                            int z = (Width - Parent.Width) / LargeurCellule;                            
-                            this.OffsetX = (z + 1) * LargeurCellule;
+                        else if (remainingwidth < Parent.Width - LargeurCellule)
+                        {                            
+                            offset = Width - Parent.Width - LargeurCellule;                            
                             pnlCanvas.Invalidate();
                         }
+                        /*
+                        else
+                        {                         
+                            // if the remaining display width of the control is less than that of the parent control, then we no longer shift
+                            int z = (Width - Parent.Width) / LargeurCellule;
+                            this.OffsetX = (z + 1) * LargeurCellule;                                                         
+                            pnlCanvas.Invalidate();
+                        }
+                        */
                     }                    
                 }
             }
@@ -531,7 +513,7 @@ namespace ChordAnalyser.UI
 
         private void pnlCanvas_Paint(object sender, PaintEventArgs e)
         {                        
-            if (GridBeatChords !=null && GridBeatChords.Count > 0)
+            if (GridBeatChords != null && GridBeatChords.Count > 0)
             {
                 Rectangle clip =
                     new Rectangle(

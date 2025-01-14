@@ -321,7 +321,7 @@ namespace ChordAnalyser.UI
             string title = Path.GetFileName(_filename);
             w = MeasureString(fontTitle.FontFamily, title, fontTitle.Size);
 
-            title = title.Replace(".mid", "").Replace("_", " ").Replace(".kar", "");            
+            title = title.Replace(".mid", "").Replace("_", " ").Replace(".kar", "").Replace("musicxml", "").Replace("xml", "");            
 
             g.TranslateTransform(PageWidth/2 - w/2, topmargin);
             g.DrawString(title, fontTitle, Brushes.Black, 0, 0);
