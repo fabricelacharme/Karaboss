@@ -122,80 +122,80 @@
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="mnuFileNew.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 22</value>
+    <value>207, 22</value>
   </data>
   <data name="mnuFileNew.Text" xml:space="preserve">
     <value>New</value>
   </data>
   <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 22</value>
+    <value>207, 22</value>
   </data>
   <data name="mnuFileOpen.Text" xml:space="preserve">
     <value>&amp;Open...</value>
   </data>
   <data name="MnuFileSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 6</value>
+    <value>204, 6</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="mnuFileSave.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>Ctrl+S</value>
   </data>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 22</value>
+    <value>207, 22</value>
   </data>
   <data name="mnuFileSave.Text" xml:space="preserve">
     <value>&amp;Save</value>
   </data>
   <data name="mnuFileSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 22</value>
+    <value>207, 22</value>
   </data>
   <data name="mnuFileSaveAs.Text" xml:space="preserve">
     <value>Save &amp;as</value>
   </data>
   <data name="mnuSaveAsPDF.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 22</value>
+    <value>207, 22</value>
   </data>
   <data name="mnuSaveAsPDF.Text" xml:space="preserve">
     <value>Print (PDF)</value>
   </data>
   <data name="MnuFileSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 6</value>
+    <value>204, 6</value>
   </data>
   <data name="MnuFileImportMidiFromText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 22</value>
+    <value>207, 22</value>
   </data>
   <data name="MnuFileImportMidiFromText.Text" xml:space="preserve">
     <value>Import Midi file from text</value>
   </data>
   <data name="MnuFileExportMidiToText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 22</value>
+    <value>207, 22</value>
   </data>
   <data name="MnuFileExportMidiToText.Text" xml:space="preserve">
     <value>Export Midi file to Text</value>
   </data>
   <data name="MnuFileSeparator3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 6</value>
+    <value>204, 6</value>
   </data>
   <data name="MnuFileImportMusicXml.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 22</value>
+    <value>207, 22</value>
   </data>
   <data name="MnuFileImportMusicXml.Text" xml:space="preserve">
     <value>Import MusicXml file</value>
   </data>
   <data name="MnuFileSeparator4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 6</value>
+    <value>204, 6</value>
   </data>
   <data name="mnufileProperties.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 22</value>
+    <value>207, 22</value>
   </data>
   <data name="mnufileProperties.Text" xml:space="preserve">
     <value>Properties (MIDI Tags)</value>
   </data>
   <data name="MnuFileSeparator5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 6</value>
+    <value>204, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 22</value>
+    <value>207, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>E&amp;xit</value>
@@ -207,25 +207,25 @@
     <value>&amp;File</value>
   </data>
   <data name="mnuEditAddLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>176, 22</value>
   </data>
   <data name="mnuEditAddLyrics.Text" xml:space="preserve">
     <value>&amp;Edit lyrics</value>
   </data>
   <data name="mnuEditLyricsChords.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>176, 22</value>
   </data>
   <data name="mnuEditLyricsChords.Text" xml:space="preserve">
     <value>Edit chords</value>
   </data>
   <data name="mnuEditSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>177, 6</value>
+    <value>173, 6</value>
   </data>
   <data name="MnuEditScore.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>Ctrl+E</value>
   </data>
   <data name="MnuEditScore.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>176, 22</value>
   </data>
   <data name="MnuEditScore.Text" xml:space="preserve">
     <value>Edit score</value>
@@ -234,7 +234,7 @@
     <value>Ctrl+N</value>
   </data>
   <data name="MnuEditEnterNotes.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>176, 22</value>
   </data>
   <data name="MnuEditEnterNotes.Text" xml:space="preserve">
     <value>Enter notes</value>
@@ -396,7 +396,7 @@
     <value>0, 0</value>
   </data>
   <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>888, 24</value>
+    <value>1149, 24</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
@@ -1268,7 +1268,7 @@
     <value>249, 25</value>
   </data>
   <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
-    <value>24, 80</value>
+    <value>80, 24</value>
   </data>
   <data name="sldMainVolume.TabIndex" type="System.Int32, mscorlib">
     <value>30</value>
@@ -1379,7 +1379,7 @@
     <value>0, 436</value>
   </data>
   <data name="pnlBottom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>888, 130</value>
+    <value>1149, 130</value>
   </data>
   <data name="pnlBottom.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -1405,6 +1405,33 @@
   <metadata name="timer4.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>104, 56</value>
   </metadata>
+  <data name="button1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="button1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1046, 1</value>
+  </data>
+  <data name="button1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>54, 33</value>
+  </data>
+  <data name="button1.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="button1.Text" xml:space="preserve">
+    <value>Tempos</value>
+  </data>
+  <data name="&gt;&gt;button1.Name" xml:space="preserve">
+    <value>button1</value>
+  </data>
+  <data name="&gt;&gt;button1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;button1.Parent" xml:space="preserve">
+    <value>pnlTop</value>
+  </data>
+  <data name="&gt;&gt;button1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="btnChords.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -1430,7 +1457,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;btnChords.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="btnDump.Location" type="System.Drawing.Point, System.Drawing">
     <value>942, 0</value>
@@ -1454,7 +1481,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;btnDump.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="lblHelp.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1484,7 +1511,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblHelp.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="lblBass.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1511,7 +1538,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblBass.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="lblTreble.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1538,7 +1565,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblTreble.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="lblCurNoteInfo.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1568,7 +1595,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblCurNoteInfo.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="lblDotted.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 20.25pt</value>
@@ -1601,7 +1628,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblDotted.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="lblEdit.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 8.25pt</value>
@@ -1637,7 +1664,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblEdit.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="lblSaisieNotes.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 14.25pt</value>
@@ -1673,7 +1700,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblSaisieNotes.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="lblBecarre.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1700,7 +1727,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblBecarre.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="lblQuadrupleCrocheNote.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1727,7 +1754,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblQuadrupleCrocheNote.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="lblTripleCrocheNote.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1754,7 +1781,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblTripleCrocheNote.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <data name="lblDoubleCrocheNote.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1781,7 +1808,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblDoubleCrocheNote.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>13</value>
   </data>
   <data name="lblBemol.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1808,7 +1835,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblBemol.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>14</value>
   </data>
   <data name="lblDiese.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1835,7 +1862,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblDiese.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>15</value>
   </data>
   <data name="lblRondNote.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1862,7 +1889,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblRondNote.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>16</value>
   </data>
   <data name="lblCrocheNote.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1889,7 +1916,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblCrocheNote.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>17</value>
   </data>
   <data name="lblBlackNote.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1916,7 +1943,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblBlackNote.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>18</value>
   </data>
   <data name="lblWhiteNote.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1943,7 +1970,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblWhiteNote.ZOrder" xml:space="preserve">
-    <value>18</value>
+    <value>19</value>
   </data>
   <data name="lblGomme.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1973,7 +2000,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblGomme.ZOrder" xml:space="preserve">
-    <value>19</value>
+    <value>20</value>
   </data>
   <data name="pnlTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
@@ -1982,7 +2009,7 @@
     <value>0, 24</value>
   </data>
   <data name="pnlTop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>888, 50</value>
+    <value>1149, 50</value>
   </data>
   <data name="pnlTop.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
@@ -2048,7 +2075,7 @@
     <value>0, 74</value>
   </data>
   <data name="pnlMiddle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>888, 362</value>
+    <value>1149, 362</value>
   </data>
   <data name="pnlMiddle.TabIndex" type="System.Int32, mscorlib">
     <value>14</value>
@@ -2087,7 +2114,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>888, 566</value>
+    <value>1149, 566</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -5126,6 +5153,12 @@
   <data name="&gt;&gt;mnuEditAddLyrics.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;mnuEditLyricsChords.Name" xml:space="preserve">
+    <value>mnuEditLyricsChords</value>
+  </data>
+  <data name="&gt;&gt;mnuEditLyricsChords.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;mnuEditSeparator1.Name" xml:space="preserve">
     <value>mnuEditSeparator1</value>
   </data>
@@ -5365,12 +5398,6 @@
   </data>
   <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mnuEditLyricsChords.Name" xml:space="preserve">
-    <value>mnuEditLyricsChords</value>
-  </data>
-  <data name="&gt;&gt;mnuEditLyricsChords.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmPlayer</value>

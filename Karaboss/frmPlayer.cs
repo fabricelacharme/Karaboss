@@ -46,6 +46,7 @@ using MusicXml;
 using MusicTxt;
 using System.Linq;
 using Karaboss.Lyrics;
+using Karaboss.DryWetMidi;
 
 namespace Karaboss
 {
@@ -8769,6 +8770,12 @@ namespace Karaboss
 
         #endregion
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            frmTempoMap frmTempoMap = new frmTempoMap();
+            frmTempoMap.Show();
+            
+        }
     }
 
 }

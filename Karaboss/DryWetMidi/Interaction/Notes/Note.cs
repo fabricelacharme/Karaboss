@@ -1,10 +1,7 @@
 ﻿using Karaboss.DryWetMidi.Common;
 using Karaboss.DryWetMidi.Core;
+using Karaboss.DryWetMidi.MusicTheory;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Karaboss.DryWetMidi.Interaction
 {
