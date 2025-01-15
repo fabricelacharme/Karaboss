@@ -116,6 +116,20 @@
     <Compile Include="Buttons\PlusButtonControl.Designer.cs">
       <DependentUpon>PlusButtonControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Common\CircularBuffer.cs" />
+    <Compile Include="Common\DataTypes\DataTypesUtilities.cs" />
+    <Compile Include="Common\DataTypes\FourBitNumber.cs" />
+    <Compile Include="Common\DataTypes\SevenBitNumber.cs" />
+    <Compile Include="Common\DataTypes\ShortByteParser.cs" />
+    <Compile Include="Common\MathUtilities.cs" />
+    <Compile Include="Common\MidiException.cs" />
+    <Compile Include="Common\Parsing\Parsing.cs" />
+    <Compile Include="Common\Parsing\ParsingResult.cs" />
+    <Compile Include="Common\Parsing\ParsingStatus.cs" />
+    <Compile Include="Common\Parsing\ParsingUtilities.cs" />
+    <Compile Include="Common\SmpteFormat.cs" />
+    <Compile Include="Common\StreamWrapper.cs" />
+    <Compile Include="Common\ThrowIfArgument.cs" />
     <Compile Include="Configuration\ConfigurationBaseControl.cs" />
     <Compile Include="Configuration\ConfigurationForm.cs">
       <SubType>Form</SubType>
@@ -164,6 +178,71 @@
       <DependentUpon>UpdControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Configuration\UpdFrequency.cs" />
+    <Compile Include="Core\Chunks\Info\ChunkType.cs" />
+    <Compile Include="Core\Chunks\Info\ChunkTypesCollection.cs" />
+    <Compile Include="Core\Equality\Event\MidiEventEquality.cs" />
+    <Compile Include="Core\Equality\Event\MidiEventEqualityCheckSettings.cs" />
+    <Compile Include="Core\Events\Base\ChannelEvent.cs" />
+    <Compile Include="Core\Events\Base\MetaEvent.cs" />
+    <Compile Include="Core\Events\Base\MidiEvent.cs" />
+    <Compile Include="Core\Events\Base\MidiEventType.cs" />
+    <Compile Include="Core\Events\Base\SysExEvent.cs" />
+    <Compile Include="Core\Events\Base\SystemCommonEvent.cs" />
+    <Compile Include="Core\Events\Base\SystemRealTimeEvent.cs" />
+    <Compile Include="Core\Events\Info\EventStatusBytes.cs" />
+    <Compile Include="Core\Events\Info\EventType.cs" />
+    <Compile Include="Core\Events\Info\EventTypesCollection.cs" />
+    <Compile Include="Core\Events\Info\StandardMetaEventStatusBytes.cs" />
+    <Compile Include="Core\Events\Meta\BaseTextEvent.cs" />
+    <Compile Include="Core\Events\Meta\ChannelPrefixEvent.cs" />
+    <Compile Include="Core\Events\Meta\KeySignatureEvent.cs" />
+    <Compile Include="Core\Events\Meta\PortPrefixEvent.cs" />
+    <Compile Include="Core\Events\Meta\SequenceNumberEvent.cs" />
+    <Compile Include="Core\Events\Meta\SequencerSpecificEvent.cs" />
+    <Compile Include="Core\Events\Meta\SetTempoEventcs.cs" />
+    <Compile Include="Core\Events\Meta\SmpteOffsetEvent.cs" />
+    <Compile Include="Core\Events\Meta\TimeSignatureEvent.cs" />
+    <Compile Include="Core\Events\Meta\UnknownMetaEvent.cs" />
+    <Compile Include="Core\Events\SystemCommon\MidiTimeCodeComponent.cs" />
+    <Compile Include="Core\Events\SystemCommon\MidiTimeCodeEvent.cs" />
+    <Compile Include="Core\Events\SystemCommon\SongPositionPointerEvent.cs" />
+    <Compile Include="Core\Events\SystemCommon\SongSelectEvent.cs" />
+    <Compile Include="Core\Exceptions\InvalidChannelEventParameterValueException.cs" />
+    <Compile Include="Core\Exceptions\InvalidMetaEventParameterValueException.cs" />
+    <Compile Include="Core\Exceptions\InvalidMidiTimeCodeComponentException.cs" />
+    <Compile Include="Core\Exceptions\InvalidSystemCommonEventParameterValueException.cs" />
+    <Compile Include="Core\Exceptions\NotEnoughBytesException.cs" />
+    <Compile Include="Core\MidiReader.cs" />
+    <Compile Include="Core\MidiWriter.cs" />
+    <Compile Include="Core\ReadingSettings\BufferingPolicy.cs" />
+    <Compile Include="Core\ReadingSettings\DecodeTextCallback.cs" />
+    <Compile Include="Core\ReadingSettings\EndOfTrackStoringPolicy.cs" />
+    <Compile Include="Core\ReadingSettings\ExtraTrackChunkPolicy.cs" />
+    <Compile Include="Core\ReadingSettings\InvalidChannelEventParameterValuePolicy.cs" />
+    <Compile Include="Core\ReadingSettings\InvalidChunkSizePolicy.cs" />
+    <Compile Include="Core\ReadingSettings\InvalidMetaEventParameterValuePolicy.cs" />
+    <Compile Include="Core\ReadingSettings\InvalidSystemCommonEventParameterValuePolicy.cs" />
+    <Compile Include="Core\ReadingSettings\MissedEndOfTrackPolicy.cs" />
+    <Compile Include="Core\ReadingSettings\NoHeaderChunkPolicy.cs" />
+    <Compile Include="Core\ReadingSettings\NotEnoughBytesPolicy.cs" />
+    <Compile Include="Core\ReadingSettings\ReaderSettings.cs" />
+    <Compile Include="Core\ReadingSettings\ReadingSettings.cs" />
+    <Compile Include="Core\ReadingSettings\SilentNoteOnPolicy.cs" />
+    <Compile Include="Core\ReadingSettings\UnexpectedTrackChunksCountPolicy.cs" />
+    <Compile Include="Core\ReadingSettings\UnknownChannelEventAction.cs" />
+    <Compile Include="Core\ReadingSettings\UnknownChannelEventCallback.cs" />
+    <Compile Include="Core\ReadingSettings\UnknownChannelEventInstruction.cs" />
+    <Compile Include="Core\ReadingSettings\UnknownChannelEventPolicy.cs" />
+    <Compile Include="Core\ReadingSettings\UnknownChunkIdPolicy.cs" />
+    <Compile Include="Core\ReadingSettings\UnknownFileFormatPolicy.cs" />
+    <Compile Include="Core\ReadingSettings\ZeroLengthDataPolicy.cs" />
+    <Compile Include="Core\TimeDivision\TicksPerQuarterNoteTimeDivision.cs" />
+    <Compile Include="Core\TimeDivision\TimeDivision.cs" />
+    <Compile Include="Core\Utilities\ArrayUtilities.cs" />
+    <Compile Include="Core\Utilities\SmfConstants.cs" />
+    <Compile Include="Core\Utilities\SmpteData.cs" />
+    <Compile Include="Core\WritingSettings\WriterSettings.cs" />
+    <Compile Include="Core\WritingSettings\WritingSettings.cs" />
     <Compile Include="Display\PanelPlayer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -237,6 +316,45 @@
     <Compile Include="GuitarTraining\TextBlock.Designer.cs">
       <DependentUpon>TextBlock.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interaction\TempoMap\ITempoMapValuesCache.cs" />
+    <Compile Include="Interaction\TempoMap\Tempocs.cs" />
+    <Compile Include="Interaction\TempoMap\TempoMapLine.cs" />
+    <Compile Include="Interaction\TimedObject\ITimedObject.cs" />
+    <Compile Include="Interaction\TimedObject\TimedObjectsComparer.cs" />
+    <Compile Include="Interaction\TimeSpan\Converters\BarBeatFractionTimeSpanConverter.cs" />
+    <Compile Include="Interaction\TimeSpan\Converters\BarBeatTicksTimeSpanConverter.cs" />
+    <Compile Include="Interaction\TimeSpan\Converters\ITimeSpanConverter.cs" />
+    <Compile Include="Interaction\TimeSpan\Converters\LengthConverter.cs" />
+    <Compile Include="Interaction\TimeSpan\Converters\MathTimeSpanConverter.cs" />
+    <Compile Include="Interaction\TimeSpan\Converters\MetricTimeSpanConverter.cs" />
+    <Compile Include="Interaction\TimeSpan\Converters\MidiTimeSpanConverter.cs" />
+    <Compile Include="Interaction\TimeSpan\Converters\MusicalTimeSpanConverter.cs" />
+    <Compile Include="Interaction\TimeSpan\Converters\TimeConverter.cs" />
+    <Compile Include="Interaction\TimeSpan\Converters\TimeSpanConverter.cs" />
+    <Compile Include="Interaction\TimeSpan\ITimeSpan.cs" />
+    <Compile Include="Interaction\TimeSpan\MathOperation.cs" />
+    <Compile Include="Interaction\TimeSpan\Parsers\BarBeatFractionTimeSpanParser.cs" />
+    <Compile Include="Interaction\TimeSpan\Parsers\BarBeatTicksTimeSpanParser.cs" />
+    <Compile Include="Interaction\TimeSpan\Parsers\MetricTimeSpanParser.cs" />
+    <Compile Include="Interaction\TimeSpan\Parsers\MidiTimeSpanParser.cs" />
+    <Compile Include="Interaction\TimeSpan\Parsers\MusicalTimeSpanParser.cs" />
+    <Compile Include="Interaction\TimeSpan\Representations\BarBeatFractionTimeSpan.cs" />
+    <Compile Include="Interaction\TimeSpan\Representations\BarBeatTicksTimeSpan.cs" />
+    <Compile Include="Interaction\TimeSpan\Representations\DoubleToMusicalTimeSpanSettings.cs" />
+    <Compile Include="Interaction\TimeSpan\Representations\MathTimeSpan.cs" />
+    <Compile Include="Interaction\TimeSpan\Representations\MetricTimeSpan.cs" />
+    <Compile Include="Interaction\TimeSpan\Representations\MidiTimeSpan.cs" />
+    <Compile Include="Interaction\TimeSpan\Representations\MusicalTimeSpan.cs" />
+    <Compile Include="Interaction\TimeSpan\TempoMapValuesCaches\MetricTempoMapValuesCache.cs" />
+    <Compile Include="Interaction\TimeSpan\TimeSpanMode.cs" />
+    <Compile Include="Interaction\TimeSpan\TimeSpanRoundingPolicy.cs" />
+    <Compile Include="Interaction\TimeSpan\TimeSpanType.cs" />
+    <Compile Include="Interaction\TimeSpan\TimeSpanUtilities.cs" />
+    <Compile Include="Interaction\TimeSpan\Utilities\BarBeatTimeSpanUtilities.cs" />
+    <Compile Include="Interaction\Utilities\ThrowIf\ThrowIfLengthArgument.cs" />
+    <Compile Include="Interaction\Utilities\ThrowIf\ThrowIfTimeArgument.cs" />
+    <Compile Include="Interaction\ValueLine\ValueChange.cs" />
+    <Compile Include="Interaction\ValueLine\ValueLine.cs" />
     <Compile Include="Lrc\FileWriter.cs" />
     <Compile Include="Lrc\FormatFileName.cs" />
     <Compile Include="Lrc\Lrc.cs" />
@@ -427,6 +545,7 @@
       <DependentUpon>frmVideoRecorder.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="Interaction\TempoMap\TempoMap.cs" />
     <EmbeddedResource Include="Buttons\CheckButtonControl.resx">
       <DependentUpon>CheckButtonControl.cs</DependentUpon>
       <SubType>Designer</SubType>

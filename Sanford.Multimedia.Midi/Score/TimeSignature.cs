@@ -73,6 +73,16 @@ namespace Sanford.Multimedia.Midi
             get { return tempo; }
         }
 
+        #region Constants
+
+        /// <summary>
+        /// Default time signature which is 4/4.
+        /// </summary>
+        public static readonly TimeSignature Default = new TimeSignature(4, 4, 4, 4);
+
+        #endregion
+
+
         /** Create a new time signature, with the given numerator,
          * denominator, pulses per quarter note, and tempo.
          */
