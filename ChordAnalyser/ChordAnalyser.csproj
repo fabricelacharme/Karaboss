@@ -506,5 +506,29 @@
   <ItemGroup>
     <None Include="Resources\pGbm7.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\A5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Abdim.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Asus4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Db9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dsus4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Emaj7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gbdim.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gdim.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
