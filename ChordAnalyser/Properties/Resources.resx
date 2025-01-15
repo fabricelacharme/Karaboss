@@ -142,6 +142,9 @@
   <data name="Ab" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Ab.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Ab5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Ab5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Ab7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Ab7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -187,6 +190,9 @@
   <data name="Bm7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Bm7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Bsus4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bsus4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="BTN_Thumb_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\BTN_Thumb_Blue.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -213,6 +219,9 @@
   </data>
   <data name="Cm7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Cm7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Csus4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Csus4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="D" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\D.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -253,6 +262,9 @@
   <data name="Dm7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Dm7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Dmaj7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Dmaj7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Dsus4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Dsus4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -265,6 +277,9 @@
   <data name="Eb" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Eb.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Eb5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Eb5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Eb7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Eb7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -273,6 +288,9 @@
   </data>
   <data name="Ebm7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Ebm7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Ebmaj7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Ebmaj7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Em" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Em.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -306,6 +324,9 @@
   </data>
   <data name="Fm7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Fm7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Fmaj7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Fmaj7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="G" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\G.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
