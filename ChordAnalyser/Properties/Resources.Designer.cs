@@ -723,6 +723,16 @@ namespace ChordAnalyser.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap F6 {
+            get {
+                object obj = ResourceManager.GetObject("F6", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap F7 {
             get {
                 object obj = ResourceManager.GetObject("F7", resourceCulture);
