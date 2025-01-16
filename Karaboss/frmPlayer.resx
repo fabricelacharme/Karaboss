@@ -1268,7 +1268,7 @@
     <value>249, 25</value>
   </data>
   <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 24</value>
+    <value>24, 80</value>
   </data>
   <data name="sldMainVolume.TabIndex" type="System.Int32, mscorlib">
     <value>30</value>
@@ -1405,33 +1405,6 @@
   <metadata name="timer4.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>104, 56</value>
   </metadata>
-  <data name="button1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="button1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1046, 1</value>
-  </data>
-  <data name="button1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>54, 33</value>
-  </data>
-  <data name="button1.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
-  </data>
-  <data name="button1.Text" xml:space="preserve">
-    <value>Tempos</value>
-  </data>
-  <data name="&gt;&gt;button1.Name" xml:space="preserve">
-    <value>button1</value>
-  </data>
-  <data name="&gt;&gt;button1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button1.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;button1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="btnChords.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -1457,7 +1430,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;btnChords.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>0</value>
   </data>
   <data name="btnDump.Location" type="System.Drawing.Point, System.Drawing">
     <value>942, 0</value>
@@ -1481,7 +1454,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;btnDump.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>1</value>
   </data>
   <data name="lblHelp.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1511,7 +1484,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblHelp.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>2</value>
   </data>
   <data name="lblBass.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1538,7 +1511,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblBass.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>3</value>
   </data>
   <data name="lblTreble.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1565,7 +1538,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblTreble.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>4</value>
   </data>
   <data name="lblCurNoteInfo.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1595,7 +1568,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblCurNoteInfo.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>5</value>
   </data>
   <data name="lblDotted.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 20.25pt</value>
@@ -1628,7 +1601,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblDotted.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>6</value>
   </data>
   <data name="lblEdit.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 8.25pt</value>
@@ -1664,7 +1637,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblEdit.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>7</value>
   </data>
   <data name="lblSaisieNotes.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 14.25pt</value>
@@ -1700,7 +1673,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblSaisieNotes.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>8</value>
   </data>
   <data name="lblBecarre.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1727,7 +1700,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblBecarre.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>9</value>
   </data>
   <data name="lblQuadrupleCrocheNote.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1754,7 +1727,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblQuadrupleCrocheNote.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>10</value>
   </data>
   <data name="lblTripleCrocheNote.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1781,7 +1754,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblTripleCrocheNote.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>11</value>
   </data>
   <data name="lblDoubleCrocheNote.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1808,7 +1781,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblDoubleCrocheNote.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>12</value>
   </data>
   <data name="lblBemol.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1835,7 +1808,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblBemol.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>13</value>
   </data>
   <data name="lblDiese.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1862,7 +1835,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblDiese.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>14</value>
   </data>
   <data name="lblRondNote.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1889,7 +1862,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblRondNote.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>15</value>
   </data>
   <data name="lblCrocheNote.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1916,7 +1889,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblCrocheNote.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>16</value>
   </data>
   <data name="lblBlackNote.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1943,7 +1916,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblBlackNote.ZOrder" xml:space="preserve">
-    <value>18</value>
+    <value>17</value>
   </data>
   <data name="lblWhiteNote.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1970,7 +1943,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblWhiteNote.ZOrder" xml:space="preserve">
-    <value>19</value>
+    <value>18</value>
   </data>
   <data name="lblGomme.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -2000,7 +1973,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblGomme.ZOrder" xml:space="preserve">
-    <value>20</value>
+    <value>19</value>
   </data>
   <data name="pnlTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>

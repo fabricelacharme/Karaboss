@@ -58,8 +58,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KMusicTxt", "KMusicTxt\KMus
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChordAnalyser", "ChordAnalyser\ChordAnalyser.csproj", "{038AF1E8-FE5D-465D-BF42-CC322755BC42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Melanchall.DryWetMidi", "DryWetMidi\Melanchall.DryWetMidi.csproj", "{7857C829-4323-4408-968D-A7C9316981E4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -223,12 +221,6 @@ Global
 		{038AF1E8-FE5D-465D-BF42-CC322755BC42}.Release|Any CPU.Build.0 = Release|Any CPU
 		{038AF1E8-FE5D-465D-BF42-CC322755BC42}.Travis|Any CPU.ActiveCfg = Debug|Any CPU
 		{038AF1E8-FE5D-465D-BF42-CC322755BC42}.Travis|Any CPU.Build.0 = Debug|Any CPU
-		{7857C829-4323-4408-968D-A7C9316981E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7857C829-4323-4408-968D-A7C9316981E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7857C829-4323-4408-968D-A7C9316981E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7857C829-4323-4408-968D-A7C9316981E4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7857C829-4323-4408-968D-A7C9316981E4}.Travis|Any CPU.ActiveCfg = Debug|Any CPU
-		{7857C829-4323-4408-968D-A7C9316981E4}.Travis|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

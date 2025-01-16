@@ -41,6 +41,7 @@ using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Collections.Generic; // DLL import
 using Karaboss.Lyrics;
+using Sanford.Multimedia.Midi;
 
 namespace Karaboss
 {
@@ -69,6 +70,9 @@ namespace Karaboss
 
         public static string m_MxmlPath;        // Path of compressed XML File
         public static string m_XmlPath;         // Path of uncompressed XML File
+
+
+        public static List<(int, int)> lstTempos;
 
         public enum OptionsDisplay
         {

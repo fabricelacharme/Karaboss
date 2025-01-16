@@ -168,6 +168,8 @@ namespace Karaboss
             MIDIfileName = fileName;
             sequence1 = sequence;
             UpdateMidiTimes();
+            // Load tempos map
+            TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);
 
             // Load saved line and paragraph separators
             m_SepLine = Karaclass.m_SepLine;
@@ -1492,11 +1494,13 @@ namespace Karaboss
         /// <returns></returns>
         private string TicksToTime(int ticks)
         {
-            double dur = _tempo * (ticks / _ppqn) / 1000000; //seconds     
+            double dur = TempoUtilities.GetMidiDuration(ticks, sequence1.Division);
+            
+            //double dur = _tempo * (ticks / _ppqn) / 1000000; //seconds     
+
+
             int Min = (int)(dur / 60);
             int Sec = (int)(dur - (Min * 60));
-
-
             int Cent = (int)(100 * (dur - (Min * 60) - Sec));
 
             string tx = string.Format("{0:00}:{1:00}.{2:00}", Min, Sec, Cent);
@@ -2260,11 +2264,7 @@ namespace Karaboss
 
             //19200
             //TempoUtilities.GetMidiDuration(sequence1, sequence1.GetLength());
-            TempoUtilities.GetMidiDuration(sequence1, 19200);
-
-            return;
-
-
+                      
             #region select filename
             string fName = "New.lrc";
             string fPath = Path.GetDirectoryName(MIDIfileName);
@@ -2350,8 +2350,8 @@ namespace Karaboss
                 Tag_Title = split[1].Trim();
             }
 
-            //SaveLRCSyllabes(LrcFileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
-            TempoUtilities.ExportToLRC(MIDIfileName, LrcFileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+            SaveLRCSyllabes(LrcFileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+            //TempoUtilities.ExportToLRC(MIDIfileName, LrcFileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
         }
 
         /// <summary>

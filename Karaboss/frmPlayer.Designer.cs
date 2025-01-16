@@ -150,7 +150,6 @@ namespace Karaboss
             this.sequence1 = new Sanford.Multimedia.Midi.Sequence();
             this.sequencer1 = new Sanford.Multimedia.Midi.Sequencer();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.pnlDisplay.SuspendLayout();
@@ -955,7 +954,6 @@ namespace Karaboss
             // pnlTop
             // 
             this.pnlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.pnlTop.Controls.Add(this.button1);
             this.pnlTop.Controls.Add(this.btnChords);
             this.pnlTop.Controls.Add(this.btnDump);
             this.pnlTop.Controls.Add(this.lblHelp);
@@ -1216,13 +1214,6 @@ namespace Karaboss
             this.sequencer1.Chased += new System.EventHandler<Sanford.Multimedia.Midi.ChasedEventArgs>(this.HandleChased);
             this.sequencer1.Stopped += new System.EventHandler<Sanford.Multimedia.Midi.StoppedEventArgs>(this.HandleStopped);
             // 
-            // button1
-            // 
-            resources.ApplyResources(this.button1, "button1");
-            this.button1.Name = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // frmPlayer
             // 
             resources.ApplyResources(this, "$this");
@@ -1373,7 +1364,6 @@ namespace Karaboss
         private System.Windows.Forms.Button btnDump;
         private System.Windows.Forms.Button btnChords;
         private System.Windows.Forms.ToolStripMenuItem mnuEditLyricsChords;
-        private System.Windows.Forms.Button button1;
     }
 }
 

@@ -170,12 +170,6 @@
     <Compile Include="Display\PanelPlayer.Designer.cs">
       <DependentUpon>PanelPlayer.cs</DependentUpon>
     </Compile>
-    <Compile Include="DryWetMidi\frmTempoMap.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DryWetMidi\frmTempoMap.Designer.cs">
-      <DependentUpon>frmTempoMap.cs</DependentUpon>
-    </Compile>
     <Compile Include="DryWetMidi\TempoUtilities.cs" />
     <Compile Include="frmChords.cs">
       <SubType>Form</SubType>
@@ -519,9 +513,6 @@
     <EmbeddedResource Include="Display\PanelPlayer.resx">
       <DependentUpon>PanelPlayer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DryWetMidi\frmTempoMap.resx">
-      <DependentUpon>frmTempoMap.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmChords.en.resx">
       <DependentUpon>frmChords.cs</DependentUpon>
     </EmbeddedResource>
@@ -771,10 +762,6 @@
     <ProjectReference Include="..\ColorSlider\ColorSlider.csproj">
       <Project>{16e224dc-7ff0-4908-8318-d6a3ac2e797a}</Project>
       <Name>ColorSlider</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DryWetMidi\Melanchall.DryWetMidi.csproj">
-      <Project>{7857c829-4323-4408-968d-a7c9316981e4}</Project>
-      <Name>Melanchall.DryWetMidi</Name>
     </ProjectReference>
     <ProjectReference Include="..\flShell\FlShell.csproj">
       <Project>{3792319c-fe86-404c-ac23-54522f7044cc}</Project>
