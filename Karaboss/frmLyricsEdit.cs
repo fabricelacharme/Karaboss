@@ -46,6 +46,7 @@ using Karaboss.Lyrics;
 using System.Reflection;
 using Sanford.Multimedia.Midi.PianoRoll;
 using Sanford.Multimedia.Midi.Score;
+using Karaboss.DryWetMidi;
 
 
 namespace Karaboss
@@ -1546,8 +1547,8 @@ namespace Karaboss
         /// <param name="FileName"></param>
         private void SaveLRCSyllabes(string File, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
         {
-            string sTime; // = string.Empty;
-            string sLyric; // = string.Empty;
+            string sTime; 
+            string sLyric;
             object vLyric;
             object vTime;
             string lrcs = string.Empty;
@@ -1828,17 +1829,17 @@ namespace Karaboss
                 // Remove all (1) (2) etc..
                 string pattern = @"[(\d)]";
                 string replace = @"";
-                inifName = Regex.Replace(fName, pattern, replace);
+                inifName = Regex.Replace(fName, pattern, replace).Trim();
 
-                int i = 1;
-                string addName = "(" + i.ToString() + ")";
+                int i = 2;
+                string addName = " (" + i.ToString() + ")";
                 defName = inifName + addName + defExt;
                 fullName = fPath + "\\" + defName;
 
                 while (File.Exists(fullName) == true)
                 {
                     i++;
-                    defName = inifName + "(" + i.ToString() + ")" + defExt;
+                    defName = inifName + " (" + i.ToString() + ")" + defExt;
                     fullName = fPath + "\\" + defName;
                 }
             }
@@ -2194,17 +2195,17 @@ namespace Karaboss
                 // Remove all (1) (2) etc..
                 string pattern = @"[(\d)]";
                 string replace = @"";
-                inifName = Regex.Replace(fName, pattern, replace);
+                inifName = Regex.Replace(fName, pattern, replace).Trim();
 
-                int i = 1;
-                string addName = "(" + i.ToString() + ")";
+                int i = 2;
+                string addName = " (" + i.ToString() + ")";
                 defName = inifName + addName + defExt;
                 fullName = fPath + "\\" + defName;
 
                 while (File.Exists(fullName) == true)
                 {
                     i++;
-                    defName = inifName + "(" + i.ToString() + ")" + defExt;
+                    defName = inifName + " (" + i.ToString() + ")" + defExt;
                     fullName = fPath + "\\" + defName;
                 }
             }
@@ -2256,6 +2257,14 @@ namespace Karaboss
         /// <param name="e"></param>
         private void mnuFileSaveAsLrcSyllabes_Click(object sender, EventArgs e)
         {
+
+            //19200
+            //TempoUtilities.GetMidiDuration(sequence1, sequence1.GetLength());
+            TempoUtilities.GetMidiDuration(sequence1, 19200);
+
+            return;
+
+
             #region select filename
             string fName = "New.lrc";
             string fPath = Path.GetDirectoryName(MIDIfileName);
@@ -2288,17 +2297,17 @@ namespace Karaboss
                 // Remove all (1) (2) etc..
                 string pattern = @"[(\d)]";
                 string replace = @"";
-                inifName = Regex.Replace(fName, pattern, replace);
+                inifName = Regex.Replace(fName, pattern, replace).Trim();
 
-                int i = 1;
-                string addName = "(" + i.ToString() + ")";
+                int i = 2;
+                string addName = " (" + i.ToString() + ")";
                 defName = inifName + addName + defExt;
                 fullName = fPath + "\\" + defName;
 
                 while (File.Exists(fullName) == true)
                 {
                     i++;
-                    defName = inifName + "(" + i.ToString() + ")" + defExt;
+                    defName = inifName + " (" + i.ToString() + ")" + defExt;
                     fullName = fPath + "\\" + defName;
                 }
             }
@@ -2325,11 +2334,11 @@ namespace Karaboss
             string Tag_By = string.Empty;
             string Tag_DPlus = string.Empty;
 
-            string FileName = saveMidiFileDialog.FileName;
+            string LrcFileName = saveMidiFileDialog.FileName;
             //string bLRCType = "Lines";
 
             // Search Title & Artist
-            string SingleName = Path.GetFileNameWithoutExtension(FileName);
+            string SingleName = Path.GetFileNameWithoutExtension(LrcFileName);
             string[] split = SingleName.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
             if (split.Length == 1)
             {
@@ -2341,7 +2350,8 @@ namespace Karaboss
                 Tag_Title = split[1].Trim();
             }
 
-            SaveLRCSyllabes(FileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+            //SaveLRCSyllabes(LrcFileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+            TempoUtilities.ExportToLRC(MIDIfileName, LrcFileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
         }
 
         /// <summary>
@@ -2961,19 +2971,17 @@ namespace Karaboss
                 // Remove all (1) (2) etc..
                 string pattern = @"[(\d)]";
                 string replace = @"";
-                inifName = Regex.Replace(fName, pattern, replace);
+                inifName = Regex.Replace(fName, pattern, replace).Trim();
 
-
-
-                int i = 1;
-                string addName = "(" + i.ToString() + ")";
+                int i = 2;
+                string addName = " (" + i.ToString() + ")";
                 defName = inifName + addName + defExt;
                 fullName = fPath + "\\" + defName;
 
                 while (File.Exists(fullName) == true)
                 {
                     i++;
-                    defName = inifName + "(" + i.ToString() + ")" + defExt;
+                    defName = inifName + " (" + i.ToString() + ")" + defExt;
                     fullName = fPath + "\\" + defName;
                 }
             }

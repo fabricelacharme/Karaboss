@@ -1228,17 +1228,17 @@ namespace Karaboss
                 // Remove all (1) (2) etc..
                 string pattern = @"[(\d)]";
                 string replace = @"";
-                inifName = Regex.Replace(fName, pattern, replace);
+                inifName = Regex.Replace(fName, pattern, replace).Trim();
 
-                int i = 1;
-                string addName = "(" + i.ToString() + ")";
+                int i = 2;
+                string addName = " (" + i.ToString() + ")";
                 defName = inifName + addName + defExt;
                 fullName = fPath + "\\" + defName;
 
                 while (File.Exists(fullName) == true)
                 {
                     i++;
-                    defName = inifName + "(" + i.ToString() + ")" + defExt;
+                    defName = inifName + " (" + i.ToString() + ")" + defExt;
                     fullName = fPath + "\\" + defName;
                 }
             }

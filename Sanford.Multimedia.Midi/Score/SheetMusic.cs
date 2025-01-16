@@ -546,8 +546,7 @@ namespace Sanford.Multimedia.Midi.Score
                 AddChordNamesToStaffs(staffs, chordnames);
             }
 
-
-            // Draw Tempos
+            
             #region draw tempos
             // List of all tempo changes (only 2 fields tempo & ticks)
             List<TempoSymbol> l = GetAllTempoChanges();

@@ -1,5 +1,5 @@
-﻿using Karaboss.DryWetMidi.Core;
-using Karaboss.DryWetMidi.Interaction;
+﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

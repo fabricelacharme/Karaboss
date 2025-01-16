@@ -116,20 +116,6 @@
     <Compile Include="Buttons\PlusButtonControl.Designer.cs">
       <DependentUpon>PlusButtonControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DryWetMidi\Common\CircularBuffer.cs" />
-    <Compile Include="DryWetMidi\Common\DataTypes\DataTypesUtilities.cs" />
-    <Compile Include="DryWetMidi\Common\DataTypes\FourBitNumber.cs" />
-    <Compile Include="DryWetMidi\Common\DataTypes\SevenBitNumber.cs" />
-    <Compile Include="DryWetMidi\Common\DataTypes\ShortByteParser.cs" />
-    <Compile Include="DryWetMidi\Common\MathUtilities.cs" />
-    <Compile Include="DryWetMidi\Common\MidiException.cs" />
-    <Compile Include="DryWetMidi\Common\Parsing\Parsing.cs" />
-    <Compile Include="DryWetMidi\Common\Parsing\ParsingResult.cs" />
-    <Compile Include="DryWetMidi\Common\Parsing\ParsingStatus.cs" />
-    <Compile Include="DryWetMidi\Common\Parsing\ParsingUtilities.cs" />
-    <Compile Include="DryWetMidi\Common\SmpteFormat.cs" />
-    <Compile Include="DryWetMidi\Common\StreamWrapper.cs" />
-    <Compile Include="DryWetMidi\Common\ThrowIfArgument.cs" />
     <Compile Include="Configuration\ConfigurationBaseControl.cs" />
     <Compile Include="Configuration\ConfigurationForm.cs">
       <SubType>Form</SubType>
@@ -178,156 +164,6 @@
       <DependentUpon>UpdControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Configuration\UpdFrequency.cs" />
-    <Compile Include="DryWetMidi\Core\ChunksConverters\ChunksConverterFactory.cs" />
-    <Compile Include="DryWetMidi\Core\ChunksConverters\IChunksConverter.cs" />
-    <Compile Include="DryWetMidi\Core\ChunksConverters\MultiSequenceChunksConverter.cs" />
-    <Compile Include="DryWetMidi\Core\ChunksConverters\MultiTrackChunksConverter.cs" />
-    <Compile Include="DryWetMidi\Core\ChunksConverters\SingleTrackChunksConverter.cs" />
-    <Compile Include="DryWetMidi\Core\Chunks\HeaderChunk.cs" />
-    <Compile Include="DryWetMidi\Core\Chunks\Info\ChunkType.cs" />
-    <Compile Include="DryWetMidi\Core\Chunks\Info\ChunkTypesCollection.cs" />
-    <Compile Include="DryWetMidi\Core\Chunks\Info\StandardChunkIds.cs" />
-    <Compile Include="DryWetMidi\Core\Chunks\MidiChunk.cs" />
-    <Compile Include="DryWetMidi\Core\Chunks\TrackChunk.cs" />
-    <Compile Include="DryWetMidi\Core\Chunks\UnknownChunk.cs" />
-    <Compile Include="DryWetMidi\Core\Collections\ChunksCollection.cs" />
-    <Compile Include="DryWetMidi\Core\Collections\EventsCollection.cs" />
-    <Compile Include="DryWetMidi\Core\Equality\Chunk\MidiChunkEquality.cs" />
-    <Compile Include="DryWetMidi\Core\Equality\Chunk\MidiChunkEqualityCheckSettings.cs" />
-    <Compile Include="DryWetMidi\Core\Equality\Event\EventsCollectionEquality.cs" />
-    <Compile Include="DryWetMidi\Core\Equality\Event\MidiEventEquality.cs" />
-    <Compile Include="DryWetMidi\Core\Equality\Event\MidiEventEqualityCheckSettings.cs" />
-    <Compile Include="DryWetMidi\Core\Equality\File\MidiFileEquality.cs" />
-    <Compile Include="DryWetMidi\Core\Equality\File\MidiFileEqualityCheckSettings.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Base\ChannelEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Base\MetaEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Base\MidiEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Base\MidiEventType.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Base\SysExEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Base\SystemCommonEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Base\SystemRealTimeEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Channel\ChannelAftertouchEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Channel\ControlChangeEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Channel\NoteAftertouchEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Channel\NoteEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Channel\NoteOffEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Channel\NoteOnEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Channel\PitchBendEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Channel\ProgramChangeEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Info\EventStatusBytes.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Info\EventType.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Info\EventTypesCollection.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Info\StandardMetaEventStatusBytes.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\BaseTextEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\ChannelPrefixEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\CopyrightNoticeEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\CuePointEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\DeviceNameEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\EndOfTrackEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\InstrumentNameEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\KeySignatureEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\LyricEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\MarkerEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\PortPrefixEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\ProgramNameEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\SequenceNumberEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\SequencerSpecificEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\SequenceTrackNameEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\SetTempoEventcs.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\SmpteOffsetEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\TextEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\TimeSignatureEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Meta\UnknownMetaEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Readers\ChannelEventReadercs.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Readers\EventReaderFactory.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Readers\IEventReader.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Readers\MetaEventReader.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Readers\SysExEventReader.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Readers\SystemCommonEventReader.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Readers\SystemRealTimeEventReader.cs" />
-    <Compile Include="DryWetMidi\Core\Events\SysEx\EscapeSysExEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\SysEx\NormalSysExEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\SystemCommon\MidiTimeCodeComponent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\SystemCommon\MidiTimeCodeEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\SystemCommon\SongPositionPointerEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\SystemCommon\SongSelectEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\SystemCommon\TuneRequestEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\SystemRealTime\ActiveSensingEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\SystemRealTime\ContinueEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\SystemRealTime\ResetEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\SystemRealTime\StartEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\SystemRealTime\StopEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\SystemRealTime\TimingClockEvent.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Writers\ChannelEventWriter.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Writers\EventWriterFactory.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Writers\IEventWriter.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Writers\MetaEventWriter.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Writers\SysExEventWriter.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Writers\SystemCommonEventWriter.cs" />
-    <Compile Include="DryWetMidi\Core\Events\Writers\SystemRealTimeEventWriter.cs" />
-    <Compile Include="DryWetMidi\Core\Exceptions\InvalidChannelEventParameterValueException.cs" />
-    <Compile Include="DryWetMidi\Core\Exceptions\InvalidChunkSizeException.cs" />
-    <Compile Include="DryWetMidi\Core\Exceptions\InvalidMetaEventParameterValueException.cs" />
-    <Compile Include="DryWetMidi\Core\Exceptions\InvalidMidiTimeCodeComponentException.cs" />
-    <Compile Include="DryWetMidi\Core\Exceptions\InvalidSystemCommonEventParameterValueException.cs" />
-    <Compile Include="DryWetMidi\Core\Exceptions\MissedEndOfTrackEventException.cs" />
-    <Compile Include="DryWetMidi\Core\Exceptions\NoHeaderChunkException.cs" />
-    <Compile Include="DryWetMidi\Core\Exceptions\NotEnoughBytesException.cs" />
-    <Compile Include="DryWetMidi\Core\Exceptions\TooManyTrackChunksException.cs" />
-    <Compile Include="DryWetMidi\Core\Exceptions\UnexpectedRunningStatusException.cs" />
-    <Compile Include="DryWetMidi\Core\Exceptions\UnexpectedTrackChunksCountException.cs" />
-    <Compile Include="DryWetMidi\Core\Exceptions\UnknownChunkException.cs" />
-    <Compile Include="DryWetMidi\Core\Exceptions\UnknownFileFormatException.cs" />
-    <Compile Include="DryWetMidi\Core\Lazy\EnumerateEventsResult.cs" />
-    <Compile Include="DryWetMidi\Core\Lazy\MidiToken.cs" />
-    <Compile Include="DryWetMidi\Core\Lazy\MidiTokensReader.cs" />
-    <Compile Include="DryWetMidi\Core\Lazy\MidiTokensReaderUtilities.cs" />
-    <Compile Include="DryWetMidi\Core\Lazy\MidiTokensWriter.cs" />
-    <Compile Include="DryWetMidi\Core\Lazy\MidiTokenType.cs" />
-    <Compile Include="DryWetMidi\Core\Lazy\Tokens\BytesPacketToken.cs" />
-    <Compile Include="DryWetMidi\Core\Lazy\Tokens\ChunkHeaderToken.cs" />
-    <Compile Include="DryWetMidi\Core\Lazy\Tokens\FileHeaderToken.cs" />
-    <Compile Include="DryWetMidi\Core\Lazy\Tokens\MidiEventToken.cs" />
-    <Compile Include="DryWetMidi\Core\MidiFile.cs" />
-    <Compile Include="DryWetMidi\Core\MidiFileFormat.cs" />
-    <Compile Include="DryWetMidi\Core\MidiFileReadingUtilities.cs" />
-    <Compile Include="DryWetMidi\Core\MidiReader.cs" />
-    <Compile Include="DryWetMidi\Core\MidiWriter.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\BufferingPolicy.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\DecodeTextCallback.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\EndOfTrackStoringPolicy.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\ExtraTrackChunkPolicy.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\InvalidChannelEventParameterValuePolicy.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\InvalidChunkSizePolicy.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\InvalidMetaEventParameterValuePolicy.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\InvalidSystemCommonEventParameterValuePolicy.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\MissedEndOfTrackPolicy.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\NoHeaderChunkPolicy.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\NotEnoughBytesPolicy.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\ReaderSettings.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\ReadingSettings.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\SilentNoteOnPolicy.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\UnexpectedTrackChunksCountPolicy.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\UnknownChannelEventAction.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\UnknownChannelEventCallback.cs" />
-    <Compile Include="DryWetMidi\Core\Exceptions\UnknownChannelEventException.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\UnknownChannelEventInstruction.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\UnknownChannelEventPolicy.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\UnknownChunkIdPolicy.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\UnknownFileFormatPolicy.cs" />
-    <Compile Include="DryWetMidi\Core\ReadingSettings\ZeroLengthDataPolicy.cs" />
-    <Compile Include="DryWetMidi\Core\TimeDivision\SmpteTimeDivision.cs" />
-    <Compile Include="DryWetMidi\Core\TimeDivision\TicksPerQuarterNoteTimeDivision.cs" />
-    <Compile Include="DryWetMidi\Core\TimeDivision\TimeDivision.cs" />
-    <Compile Include="DryWetMidi\Core\TimeDivision\TimeDivisionFactory.cs" />
-    <Compile Include="DryWetMidi\Core\Utilities\ArrayUtilities.cs" />
-    <Compile Include="DryWetMidi\Core\Utilities\FileUtilities.cs" />
-    <Compile Include="DryWetMidi\Core\Utilities\NoteEventUtilities.cs" />
-    <Compile Include="DryWetMidi\Core\Utilities\SmfConstants.cs" />
-    <Compile Include="DryWetMidi\Core\Utilities\SmpteData.cs" />
-    <Compile Include="DryWetMidi\Core\Utilities\TrackChunkUtilities.cs" />
-    <Compile Include="DryWetMidi\Core\WritingSettings\WriterSettings.cs" />
-    <Compile Include="DryWetMidi\Core\WritingSettings\WritingSettings.cs" />
     <Compile Include="Display\PanelPlayer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -340,46 +176,7 @@
     <Compile Include="DryWetMidi\frmTempoMap.Designer.cs">
       <DependentUpon>frmTempoMap.cs</DependentUpon>
     </Compile>
-    <Compile Include="DryWetMidi\Interaction\Chords\Chord.cs" />
-    <Compile Include="DryWetMidi\Interaction\Chords\ChordData.cs" />
-    <Compile Include="DryWetMidi\Interaction\Chords\ChordDetectionSettings.cs" />
-    <Compile Include="DryWetMidi\Interaction\Chords\ChordProcessingHint.cs" />
-    <Compile Include="DryWetMidi\Interaction\Chords\ChordsBuilder.cs" />
-    <Compile Include="DryWetMidi\Interaction\Chords\ChordsManagingUtilities.cs" />
-    <Compile Include="DryWetMidi\Interaction\GetObjects\GetObjectsUtilities.cs" />
-    <Compile Include="DryWetMidi\Interaction\Notes\NoteData.cs" />
-    <Compile Include="DryWetMidi\Interaction\Notes\NoteDetectionSettings.cs" />
-    <Compile Include="DryWetMidi\Interaction\Notes\NoteProcessingHint.cs" />
-    <Compile Include="DryWetMidi\Interaction\Notes\NotesBuilder.cs" />
-    <Compile Include="DryWetMidi\Interaction\Notes\NotesManagingUtilities.cs" />
-    <Compile Include="DryWetMidi\Interaction\Notes\NoteStartDetectionPolicy.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedEvents\TimedEventProcessingHint.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedEvents\TimedEventsManagingUtilities.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedObject\ISortedTimedObjectsImmutableCollection.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedObject\SortedTimedObjectsImmutableCollection.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedObject\TimedObjectAt.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedObject\TimedObjectsCollection.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedObject\TimedObjectsCollectionChangedEventArgs.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedObject\TimedObjectsCollectionChangedEventHandler.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedObject\TimedObjectUtilities.Common.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Chord\Chord.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Chord\ChordParser.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Chord\ChordQuality.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Chord\ChordsNamesTable.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Chord\ChordUtilities.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Interval\Interval.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Interval\IntervalDefinition.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Interval\IntervalDirection.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Interval\IntervalParser.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Interval\IntervalQuality.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Interval\IntervalUtilities.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Note\Note.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Note\NoteName.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Note\NoteNameParser.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Note\NoteParser.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Note\NoteUtilities.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Octave\Octave.cs" />
-    <Compile Include="DryWetMidi\MusicTheory\Octave\OctaveParser.cs" />
+    <Compile Include="DryWetMidi\TempoUtilities.cs" />
     <Compile Include="frmChords.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -447,62 +244,6 @@
     <Compile Include="GuitarTraining\TextBlock.Designer.cs">
       <DependentUpon>TextBlock.cs</DependentUpon>
     </Compile>
-    <Compile Include="DryWetMidi\Interaction\GetObjects\ObjectDetectionSettings.cs" />
-    <Compile Include="DryWetMidi\Interaction\GetObjects\ObjectType.cs" />
-    <Compile Include="DryWetMidi\Interaction\IMusicalObject.cs" />
-    <Compile Include="DryWetMidi\Interaction\LengthedObject\ILengthedObject.cs" />
-    <Compile Include="DryWetMidi\Interaction\LengthedObject\INotifyLengthChanged.cs" />
-    <Compile Include="DryWetMidi\Interaction\LengthedObject\LengthChangedEventArgs.cs" />
-    <Compile Include="DryWetMidi\Interaction\LengthedObject\SplitLengthedObject.cs" />
-    <Compile Include="DryWetMidi\Interaction\Notes\Note.cs" />
-    <Compile Include="DryWetMidi\Interaction\TempoMap\ITempoMapValuesCache.cs" />
-    <Compile Include="DryWetMidi\Interaction\TempoMap\Tempocs.cs" />
-    <Compile Include="DryWetMidi\Interaction\TempoMap\TempoMapLine.cs" />
-    <Compile Include="DryWetMidi\Interaction\TempoMap\TempoMapManager.cs" />
-    <Compile Include="DryWetMidi\Interaction\TempoMap\TempoMapManagingUtilities.cs" />
-    <Compile Include="DryWetMidi\Interaction\TempoMap\TimeSignature.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedEvents\TimedEvent.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedEvents\TimedEventData.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedEvents\TimedEventDetectionSettings.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedObject\INotifyTimeChanged.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedObject\ITimedObject.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedObject\TimeChangedEventArgs.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedObject\TimedObjectsComparer.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimedObject\TimedObjectsManager.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Converters\BarBeatFractionTimeSpanConverter.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Converters\BarBeatTicksTimeSpanConverter.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Converters\ITimeSpanConverter.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Converters\LengthConverter.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Converters\MathTimeSpanConverter.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Converters\MetricTimeSpanConverter.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Converters\MidiTimeSpanConverter.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Converters\MusicalTimeSpanConverter.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Converters\TimeConverter.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Converters\TimeSpanConverter.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\ITimeSpan.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\MathOperation.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Parsers\BarBeatFractionTimeSpanParser.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Parsers\BarBeatTicksTimeSpanParser.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Parsers\MetricTimeSpanParser.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Parsers\MidiTimeSpanParser.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Parsers\MusicalTimeSpanParser.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Representations\BarBeatFractionTimeSpan.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Representations\BarBeatTicksTimeSpan.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Representations\DoubleToMusicalTimeSpanSettings.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Representations\MathTimeSpan.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Representations\MetricTimeSpan.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Representations\MidiTimeSpan.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Representations\MusicalTimeSpan.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\TempoMapValuesCaches\MetricTempoMapValuesCache.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\TimeSpanMode.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\TimeSpanRoundingPolicy.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\TimeSpanType.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\TimeSpanUtilities.cs" />
-    <Compile Include="DryWetMidi\Interaction\TimeSpan\Utilities\BarBeatTimeSpanUtilities.cs" />
-    <Compile Include="DryWetMidi\Interaction\Utilities\ThrowIf\ThrowIfLengthArgument.cs" />
-    <Compile Include="DryWetMidi\Interaction\Utilities\ThrowIf\ThrowIfTimeArgument.cs" />
-    <Compile Include="DryWetMidi\Interaction\ValueLine\ValueChange.cs" />
-    <Compile Include="DryWetMidi\Interaction\ValueLine\ValueLine.cs" />
     <Compile Include="Lrc\FileWriter.cs" />
     <Compile Include="Lrc\FormatFileName.cs" />
     <Compile Include="Lrc\Lrc.cs" />
@@ -693,7 +434,6 @@
       <DependentUpon>frmVideoRecorder.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="DryWetMidi\Interaction\TempoMap\TempoMap.cs" />
     <EmbeddedResource Include="Buttons\CheckButtonControl.resx">
       <DependentUpon>CheckButtonControl.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1031,6 +771,10 @@
     <ProjectReference Include="..\ColorSlider\ColorSlider.csproj">
       <Project>{16e224dc-7ff0-4908-8318-d6a3ac2e797a}</Project>
       <Name>ColorSlider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DryWetMidi\Melanchall.DryWetMidi.csproj">
+      <Project>{7857c829-4323-4408-968d-a7c9316981e4}</Project>
+      <Name>Melanchall.DryWetMidi</Name>
     </ProjectReference>
     <ProjectReference Include="..\flShell\FlShell.csproj">
       <Project>{3792319c-fe86-404c-ac23-54522f7044cc}</Project>
