@@ -1209,7 +1209,7 @@ namespace Karaboss
             #region search name
             // search path
             if (fPath == null || fPath == "")
-                fPath = CreateNewMidiFile.DefaultDirectory;
+                fPath = Utilities.CreateNewMidiFile._DefaultDirectory;
 
             // Search name
             if (MIDIfileName == null || MIDIfileName == "")

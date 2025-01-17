@@ -205,6 +205,6 @@ namespace Karaboss.Utilities
 
             return _duration;
         }
-
+     
     }
 }

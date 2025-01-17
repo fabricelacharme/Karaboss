@@ -1808,8 +1808,8 @@ namespace Karaboss
             #region search name
             if (fPath == null || fPath == "")
             {
-                if (Directory.Exists(CreateNewMidiFile.DefaultDirectory))
-                    fPath = CreateNewMidiFile.DefaultDirectory;
+                if (Directory.Exists(CreateNewMidiFile._DefaultDirectory))
+                    fPath = CreateNewMidiFile._DefaultDirectory;
                 else
                     fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
             }
@@ -2174,8 +2174,8 @@ namespace Karaboss
             #region search name
             if (fPath == null || fPath == "")
             {
-                if (Directory.Exists(CreateNewMidiFile.DefaultDirectory))
-                    fPath = CreateNewMidiFile.DefaultDirectory;
+                if (Directory.Exists(CreateNewMidiFile._DefaultDirectory))
+                    fPath = CreateNewMidiFile._DefaultDirectory;
                 else
                     fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
             }
@@ -2272,8 +2272,8 @@ namespace Karaboss
             #region search name
             if (fPath == null || fPath == "")
             {
-                if (Directory.Exists(CreateNewMidiFile.DefaultDirectory))
-                    fPath = CreateNewMidiFile.DefaultDirectory;
+                if (Directory.Exists(CreateNewMidiFile._DefaultDirectory))
+                    fPath = CreateNewMidiFile._DefaultDirectory;
                 else
                     fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
             }
@@ -2946,8 +2946,8 @@ namespace Karaboss
             #region search name
             if (fPath == null || fPath == "")
             {                
-                if (Directory.Exists(CreateNewMidiFile.DefaultDirectory))
-                    fPath = CreateNewMidiFile.DefaultDirectory;
+                if (Directory.Exists(CreateNewMidiFile._DefaultDirectory))
+                    fPath = CreateNewMidiFile._DefaultDirectory;
                 else
                     fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
             }
