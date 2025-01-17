@@ -170,8 +170,9 @@
     <Compile Include="Display\PanelPlayer.Designer.cs">
       <DependentUpon>PanelPlayer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\CreateNewMidiFile.cs" />
-    <Compile Include="Utilities\TempoUtilities.cs" />
+    <Compile Include="Utilities\IO\Files.cs" />
+    <Compile Include="Utilities\MidiFile\CreateNewMidiFile.cs" />
+    <Compile Include="Utilities\Tempo\TempoUtilities.cs" />
     <Compile Include="frmChords.cs">
       <SubType>Form</SubType>
     </Compile>

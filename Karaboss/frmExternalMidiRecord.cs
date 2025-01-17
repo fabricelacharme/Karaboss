@@ -1214,34 +1214,11 @@ namespace Karaboss
             // Search name
             if (MIDIfileName == null || MIDIfileName == "")
                 fName = "New.mid";
-
-
-            string inifName = fName;                            // Original name with extension
-            string defExt = Path.GetExtension(fName);           // Extension
-            fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
-            defName = fName;                                    // Proposed name for dialog box
-
-            fullName = fPath + "\\" + inifName;
-
-            if (File.Exists(fullName) == true)
-            {
-                // Remove all (1) (2) etc..
-                string pattern = @"[(\d)]";
-                string replace = @"";
-                inifName = Regex.Replace(fName, pattern, replace).Trim();
-
-                int i = 2;
-                string addName = " (" + i.ToString() + ")";
-                defName = inifName + addName + defExt;
-                fullName = fPath + "\\" + defName;
-
-                while (File.Exists(fullName) == true)
-                {
-                    i++;
-                    defName = inifName + " (" + i.ToString() + ")" + defExt;
-                    fullName = fPath + "\\" + defName;
-                }
-            }
+           
+            string fullPath = fPath + "\\" + fName;
+            string defExt = Path.GetExtension(fName);                           // Extension
+            fullName = Utilities.Files.FindUniqueFileName(fullPath);            // Add (2), (3) etc.. if necessary    
+            defName = Path.GetFileNameWithoutExtension(fullName);               // Default name to propose to dialog
 
             #endregion search name
 

@@ -21,8 +21,8 @@ namespace Sanford.Multimedia.Midi.Score
   */
     public class RestSymbol : MusicSymbol
     {
-        private int starttime;          /** The starttime of the rest */
-        private NoteDuration duration;  /** The rest duration (eighth, quarter, half, whole) */
+        private readonly int starttime;          /** The starttime of the rest */
+        private readonly NoteDuration duration;  /** The rest duration (eighth, quarter, half, whole) */
         private int width;              /** The width in pixels */
         private bool selected = false;
 
@@ -94,7 +94,7 @@ namespace Sanford.Multimedia.Midi.Score
 
             if (duration == NoteDuration.Whole)
             {
-                DrawWhole(g, pen, ytop);
+                DrawWhole(g, ytop);
             }
             else if (duration == NoteDuration.Half)
             {
@@ -116,7 +116,7 @@ namespace Sanford.Multimedia.Midi.Score
         /** Draw a whole rest symbol, a rectangle below a staff line.
          * @param ytop The ylocation (in pixels) where the top of the staff starts.
          */
-        public void DrawWhole(Graphics g, Pen pen, int ytop)
+        public void DrawWhole(Graphics g, int ytop)
         {
             int y = ytop + SheetMusic.NoteHeight;
 

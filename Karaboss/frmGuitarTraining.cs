@@ -1,4 +1,5 @@
 ﻿using Karaboss.GuitarTraining;
+using Karaboss.Utilities;
 using MusicTxt;
 using MusicXml;
 using Sanford.Multimedia.Midi;
@@ -263,7 +264,13 @@ namespace Karaboss
             _tempo = sequence1.Tempo;
             TempoOrig = _tempo;
             _ppqn = sequence1.Division;
-            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
+
+            // Load tempos map
+            TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);
+
+            //_duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
+            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);
+
             _bpm = GetBPM(_tempo);
 
             if (sequence1.Time != null)

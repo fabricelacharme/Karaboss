@@ -1,5 +1,4 @@
-﻿using Karaboss.GuitarTraining;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace Karaboss.Utilities
 {

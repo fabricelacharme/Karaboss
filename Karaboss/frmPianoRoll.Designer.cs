@@ -377,7 +377,7 @@ namespace Karaboss
             this.pianoRollControl2.Velocity = 100;
             this.pianoRollControl2.xScale = 0.1D;
             this.pianoRollControl2.yScale = 20;
-            this.pianoRollControl2.zoomx = 1F;
+            this.pianoRollControl2.Zoomx = 1F;
             // 
             // pnlRight
             // 

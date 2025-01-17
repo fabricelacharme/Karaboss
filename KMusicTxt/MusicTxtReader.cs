@@ -472,7 +472,7 @@ namespace MusicTxt
 
             ChannelMessageBuilder builder = new ChannelMessageBuilder();
             ChannelMessage pitchBendMessage;
-            int mask = 127;
+            //int mask = 127;
 
             // Build pitch bend message;
             builder.Command = ChannelCommand.PitchWheel;

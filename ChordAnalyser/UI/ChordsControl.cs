@@ -169,11 +169,11 @@ namespace ChordAnalyser.UI
         public Dictionary<int,string> GridLyrics { get; set; }
 
         private string EmptyChord = "<Empty>";
-        private string ChordNotFound = "<Chord not found>";
+        private readonly string ChordNotFound = "<Chord not found>";
 
         private float _cellwidth;
         private float _cellheight;
-        private int _LinesWidth = 2;
+        private readonly int _LinesWidth = 2;
 
 
         private int _columnwidth = 80;
@@ -182,9 +182,8 @@ namespace ChordAnalyser.UI
             get { return _columnwidth; }
             set { 
                 _columnwidth = value;
-                _cellwidth = _columnwidth * zoom;
-                if (WidthChanged != null)
-                    WidthChanged(this, this.Width);
+                _cellwidth = _columnwidth * Zoom;
+                WidthChanged?.Invoke(this, this.Width);
                 pnlCanvas.Invalidate();
 
             }
@@ -196,11 +195,10 @@ namespace ChordAnalyser.UI
             get { return _columnheight; }
             set { 
                 _columnheight = value;
-                _cellheight = _columnheight * zoom;
+                _cellheight = _columnheight * Zoom;
 
                 this.Height = (int)(_cellheight);
-                if (HeightChanged != null)
-                    HeightChanged(this, this.Height);
+                HeightChanged?.Invoke(this, this.Height);
                 pnlCanvas.Invalidate();
             }
         }
@@ -210,10 +208,11 @@ namespace ChordAnalyser.UI
         /// zoom
         /// </summary>
         private float _zoom = 1.0f;    // zoom for horizontal
-        public float zoom
+        public float Zoom
         {
             get
             { return _zoom; }
+            
             set
             {
                 if (value <= 0.0f)
@@ -221,10 +220,10 @@ namespace ChordAnalyser.UI
 
                 _zoom = value;                
 
-                _cellwidth = _columnwidth * zoom;
-                _cellheight = _columnheight * zoom;
+                _cellwidth = _columnwidth * _zoom;
+                _cellheight = _columnheight * _zoom;
 
-                _fontChord = new Font(_fontChord.FontFamily, 40 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+                _fontChord = new Font(_fontChord.FontFamily, 40 * _zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
                 this.Height = (int)_cellheight;
                 if (HeightChanged != null)
@@ -344,7 +343,7 @@ namespace ChordAnalyser.UI
             g.FillRectangle(new SolidBrush(Color.Black), rect);
 
             var src = new Bitmap(Resources.silence_white);
-            var bmp = new Bitmap((int)(src.Width * zoom), (int)(src.Height * zoom), PixelFormat.Format32bppPArgb);
+            var bmp = new Bitmap((int)(src.Width * Zoom), (int)(src.Height * Zoom), PixelFormat.Format32bppPArgb);
             g.DrawImage(src, new Rectangle(10, 10, bmp.Width, bmp.Height));
 
 
@@ -529,8 +528,8 @@ namespace ChordAnalyser.UI
             SolidBrush MeasureBrush = new SolidBrush(Color.FromArgb(238, 17, 17));
             SolidBrush LyricBrush = new SolidBrush(Color.FromArgb(45, 137, 239));
 
-            Font fontMeasure = new Font("Arial", 14 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
-            Font fontLyric = new Font("Arial", 14 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font fontMeasure = new Font("Arial", 14 * Zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font fontLyric = new Font("Arial", 14 * Zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
             int x = (int)(_cellwidth) + (_LinesWidth - 1);
 
@@ -547,7 +546,7 @@ namespace ChordAnalyser.UI
                 int d = (int)(_cellwidth) + (_LinesWidth - 1);
                 int m = -1;
                 var src = new Bitmap(Resources.silence_black);
-                var bmp = new Bitmap((int)(src.Width * zoom), (int)(src.Height * zoom), PixelFormat.Format32bppPArgb);
+                var bmp = new Bitmap((int)(src.Width * Zoom), (int)(src.Height * Zoom), PixelFormat.Format32bppPArgb);
 
                 // Filter chords
                 string _currentChordName = "<>";

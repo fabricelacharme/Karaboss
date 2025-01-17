@@ -1871,7 +1871,7 @@ namespace Karaboss
         /// </summary>
         /// <typeparam name="TForm"></typeparam>
         /// <returns></returns>
-        private TForm getForm<TForm>()
+        private TForm GetForm<TForm>()
             where TForm : Form
         {
             return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
@@ -1892,7 +1892,7 @@ namespace Karaboss
             // Remove splash windows for sound fonts
             if (Application.OpenForms.OfType<frmLoading>().Count() > 0)
             {
-                frmLoading frmLoading = getForm<frmLoading>();
+                frmLoading frmLoading = GetForm<frmLoading>();
                 frmLoading.Close();
             }           
         }
@@ -1901,7 +1901,7 @@ namespace Karaboss
         {
             if (Application.OpenForms.OfType<frmSplashScreen>().Count() > 0)
             {
-                frmSplashScreen frmSplashScreen = getForm<frmSplashScreen>();
+                frmSplashScreen frmSplashScreen = GetForm<frmSplashScreen>();
                 frmSplashScreen.Msg(message);
             }
         }
@@ -2823,22 +2823,7 @@ namespace Karaboss
         #endregion
 
 
-        #region divers
-
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
-
-        #endregion divers
-
-
+      
         #region configuration control
 
         private void LoadConfigurationForm()

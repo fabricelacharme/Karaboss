@@ -46,6 +46,7 @@ using MusicXml;
 using MusicTxt;
 using System.Linq;
 using Karaboss.Lyrics;
+using Karaboss.Utilities;
 
 namespace Karaboss
 {
@@ -2848,7 +2849,6 @@ namespace Karaboss
         #endregion Xml import/export
 
         #endregion Text, Xml Import/export
-
 
 
         #region handle messages
@@ -8543,7 +8543,13 @@ namespace Karaboss
             _tempo = sequence1.Tempo;
             TempoOrig = _tempo;
             _ppqn = sequence1.Division;
-            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
+
+            // Load tempos map
+            TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);
+
+            //_duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
+            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);
+
             _bpm = GetBPM(_tempo);
 
             if (sequence1.Time != null)
@@ -8601,15 +8607,14 @@ namespace Karaboss
         private void DisplayFileInfos(int tempo)
         {
             _tempoplayed = tempo;
-            double dur = _tempoplayed * (_totalTicks / _ppqn) / 1000000; //seconds            
-            DisplaySongDuration(dur);
-
-            // BEAT
-            //beat = 1;
+            //double dur = _tempoplayed * (_totalTicks / _ppqn) / 1000000; //seconds            
+            //DisplaySongDuration(dur);
+                        
             int bpm = GetBPM(tempo);
 
-            int Min = (int)(dur / 60);
-            int Sec = (int)(dur - (Min * 60));
+            
+            int Min = (int)(_duration / 60);
+            int Sec = (int)(_duration - (Min * 60));
 
             string tx;
             tx = string.Format("Division: {0}", _ppqn) + "\n";
@@ -8623,6 +8628,7 @@ namespace Karaboss
             else
                 tx += "Midi Format: " + sequence1.Format.ToString();
 
+            
             lblInfosF.Text = tx;
         }
 
@@ -8664,7 +8670,6 @@ namespace Karaboss
                 {
                     sequence1.SaveAsync(fileName);
                 }
-
             }
             catch (Exception errsave)
             {
@@ -8711,11 +8716,12 @@ namespace Karaboss
         {
             string fName = MIDIfileName;
             string fPath = MIDIfilePath;
+            string fullPath = MIDIfileFullPath;
 
-            string fullName; // = string.Empty;
-            string defName; // = string.Empty;
+            string fullName; 
+            string defName;
 
-            #region search name
+            
             // search path
             if (fPath == null || fPath == "")
                 fPath = Utilities.CreateNewMidiFile._DefaultDirectory;
@@ -8724,33 +8730,11 @@ namespace Karaboss
             if (MIDIfileName == null || MIDIfileName == "")
                 fName = "New.mid";
 
+            #region search name
 
-            string inifName = fName;                            // Original name with extension
-            string defExt = Path.GetExtension(fName);           // Extension
-            fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
-            defName = fName;                                    // Proposed name for dialog box
-
-            fullName = fPath + "\\" + inifName;
-
-            if (File.Exists(fullName) == true)
-            {
-                // Remove all (1) (2) etc..
-                string pattern = @"[(\d)]";
-                string replace = @"";
-                inifName = Regex.Replace(fName, pattern, replace).Trim();
-
-                int i = 2;
-                string addName = " (" + i.ToString() + ")";
-                defName = inifName + addName + defExt;
-                fullName = fPath + "\\" + defName;
-
-                while (File.Exists(fullName) == true)
-                {
-                    i++;
-                    defName = inifName + " (" + i.ToString() + ")" + defExt;
-                    fullName = fPath + "\\" + defName;
-                }
-            }
+            string defExt = Path.GetExtension(fName);                           // Extension
+            fullName = Utilities.Files.FindUniqueFileName(fullPath);    // Add (2), (3) etc.. if necessary    
+            defName = Path.GetFileNameWithoutExtension(fullName);               // Default name to propose to dialog
 
             #endregion search name
 

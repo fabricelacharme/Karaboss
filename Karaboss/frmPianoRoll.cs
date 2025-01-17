@@ -453,7 +453,7 @@ namespace Karaboss
             pianoRollControl2.yScale = yScale;
             pianoControl2.Scale = yScale;
 
-            pianoRollControl2.zoomx = zoomx;
+            pianoRollControl2.Zoomx = zoomx;
             pianoControl2.Zoom = zoomy;
 
             pianoRollControl2.yScale = pianoControl2.Scale;
@@ -1004,7 +1004,7 @@ namespace Karaboss
                         break;
                     case PlayerStates.Stopped:
                         zoomx += (e.Delta > 0 ? 0.1f : -0.1f);
-                        pianoRollControl2.zoomx = zoomx;
+                        pianoRollControl2.Zoomx = zoomx;
                         // Adjust scrollbar values
                         SetScrollBarValues();
                         break;
@@ -1201,7 +1201,7 @@ namespace Karaboss
             {
                 zoomx = Properties.Settings.Default.PianoRollZoomX;
                 zoomy = Properties.Settings.Default.PianoRollZoomY;
-                pianoRollControl2.zoomx = zoomx;                
+                pianoRollControl2.Zoomx = zoomx;                
 
                 pianoControl2.Zoom = zoomy;
                 pianoControl2.Height = pianoControl2.TotalLength;

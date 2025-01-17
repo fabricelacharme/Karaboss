@@ -725,7 +725,7 @@ namespace Karaboss
         
         public void StartTimerBalls()
         {
-            picBalls.pBallsNumber = 22;
+            picBalls.BallsNumber = 22;
             picBalls.Start();
         }
 

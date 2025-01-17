@@ -94,7 +94,7 @@ namespace MusicXml.Domain
         public int Staff { get; set; }   // Staff number
         public int Voice { get; set; }  // voice
         
-        private int _division;
+        //private int _division;
         public int Division { get; set; }
         public Dictionary<int, int> Tempos { get; set; } // key = measure, value = tempo
 
@@ -759,6 +759,7 @@ namespace MusicXml.Domain
             }
             catch (Exception e)
             { 
+                Console.WriteLine(e.ToString());
                 return defvalue;
             }
            
@@ -902,7 +903,7 @@ namespace MusicXml.Domain
             var displayoctave = node.Descendants("display-octave").FirstOrDefault();
             var instrument = node.Descendants("instrument").FirstOrDefault();
 
-            bool bgrace = false;
+            //bool bgrace = false;
 
             Note note = new Note();
 
@@ -1001,12 +1002,13 @@ namespace MusicXml.Domain
             else if (displayoctave != null)
                 note.Pitch.Octave = ConvertStringValue(displayoctave.Value, 4); //int.Parse(displayoctave.Value);
             
-            
+            /*
             if (grace != null)
             {
                 if (grace.FirstAttribute != null && grace.FirstAttribute.Value == "yes")
                     bgrace = true;                
             }
+            */
 
             #region duration
 

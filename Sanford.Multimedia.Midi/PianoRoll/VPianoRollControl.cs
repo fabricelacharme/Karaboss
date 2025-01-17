@@ -782,7 +782,7 @@ namespace Sanford.Multimedia.Midi.VPianoRoll
 
             int w = _TimeLineWidth;  // bande verticale à gauche pour afficher les mesures et intervalles
             int H = 0; // Length of scores
-            int W = 0;
+            //int W = 0;
 
             H = clip.Height;
 

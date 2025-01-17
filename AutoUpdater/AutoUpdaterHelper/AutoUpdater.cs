@@ -49,9 +49,9 @@ namespace PrgAutoUpdater
     {
 
         #region The private fields
-        private Config config = null;
+        private readonly Config config = null;
 
-        private LocalFile localfile = null;
+        private readonly LocalFile localfile = null;
 
         private bool bNeedRestart = false;
         private bool bDownload = false;
@@ -62,11 +62,11 @@ namespace PrgAutoUpdater
         public event ShowHandler OnShow;
         #endregion
 
-        private string AppName = string.Empty;
-        private Version version = null;
+        private readonly string AppName = string.Empty;
+        private readonly Version version = null;
         private string newversion = string.Empty;
 
-        private long size = 0;
+        private readonly long size = 0;
         private long newsize = 0;
 
         #region properties
@@ -93,9 +93,10 @@ namespace PrgAutoUpdater
             FileInfo F = new FileInfo(file);
             if (F.Exists == false)
             {
-                config = new Config();
-                config.ServerUrl = tRemoteUrl;          // File on remote server
-                config.Enabled = true;
+                config = new Config() {
+                    ServerUrl = tRemoteUrl,          // File on remote server
+                    Enabled = true 
+                };
 
                 config.SaveConfig(file);
                 config = null;
@@ -105,9 +106,10 @@ namespace PrgAutoUpdater
             config = Config.LoadConfig(file);
 
             // current program set with old values version & size
-            localfile = new LocalFile();
-            localfile.LastVer = version.ToString();
-            localfile.Size = size;                    
+            localfile = new LocalFile() {
+                LastVer = version.ToString(),
+                Size = size,
+            };
         }
 
         #endregion
@@ -166,8 +168,7 @@ namespace PrgAutoUpdater
             {
                 DownloadConfirm dc = new DownloadConfirm(downloadList, AppName, newversion, newsize);
 
-                if (this.OnShow != null)
-                    this.OnShow();
+                this.OnShow?.Invoke();
 
                 if (DialogResult.OK == dc.ShowDialog())
                 {
@@ -185,7 +186,7 @@ namespace PrgAutoUpdater
 
 
         #region The private method
-        string newfilepath = string.Empty;
+        //readonly string newfilepath = string.Empty;
 
         /// <summary>
         /// Retrieve informations in the remote file AutoupdateService.xml

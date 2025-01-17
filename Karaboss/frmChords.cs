@@ -34,6 +34,7 @@
 using ChordAnalyser.UI;
 using Karaboss.Display;
 using Karaboss.Lyrics;
+using Karaboss.Utilities;
 using MusicTxt;
 using MusicXml;
 using Sanford.Multimedia.Midi;
@@ -168,7 +169,7 @@ namespace Karaboss
             MIDIfileFullPath = FileName;
             MIDIfileName = Path.GetFileName(FileName);
             //MIDIfilePath = Path.GetDirectoryName(FileName);
-                        
+
             outDevice = OtpDev;
 
             // Allow form keydown
@@ -205,9 +206,7 @@ namespace Karaboss
                 this.sequencer1.Chased += new System.EventHandler<Sanford.Multimedia.Midi.ChasedEventArgs>(this.HandleChased);
                 this.sequencer1.Stopped += new System.EventHandler<Sanford.Multimedia.Midi.StoppedEventArgs>(this.HandleStopped);
 
-                sequence1.Clean();
-                UpdateMidiTimes();
-
+                sequence1.Clean();               
 
                 // PlayerState = stopped
                 ResetSequencer();
@@ -1149,10 +1148,10 @@ namespace Karaboss
 
         private void btnZoomMinus_Click(object sender, EventArgs e)
         {
-            float zoom = ChordControl1.zoom;
+            float zoom = ChordControl1.Zoom;
             zoom -= (float)0.1;
 
-            ChordControl1.zoom = zoom; //-= (float)0.1;
+            ChordControl1.Zoom = zoom; //-= (float)0.1;
             ChordRendererGuitar.zoom = zoom;
             ChordRendererPiano.zoom = zoom;
             ChordMapControl1.zoom = zoom; // -= (float)0.1;
@@ -1165,10 +1164,10 @@ namespace Karaboss
 
         private void btnZoomPlus_Click(object sender, EventArgs e)
         {
-            float zoom = ChordControl1.zoom;
+            float zoom = ChordControl1.Zoom;
             zoom += (float)0.1;
 
-            ChordControl1.zoom = zoom; //+= (float)0.1;
+            ChordControl1.Zoom = zoom; //+= (float)0.1;
             ChordRendererGuitar.zoom = zoom;
             ChordRendererPiano.zoom = zoom;
             ChordMapControl1.zoom = zoom; // += (float)0.1;
@@ -1374,7 +1373,7 @@ namespace Karaboss
                 
                 
                 // Calculations for ChordControl1
-                int LargeurCellule = (int)(ChordControl1.ColumnWidth * ChordControl1.zoom) + 1;
+                int LargeurCellule = (int)(ChordControl1.ColumnWidth * ChordControl1.Zoom) + 1;
                 int LargeurMesure = LargeurCellule * sequence1.Numerator; // keep one measure on the left
                 int offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);                    
                 
@@ -1769,7 +1768,13 @@ namespace Karaboss
             _totalTicks = sequence1.GetLength();
             _tempo = sequence1.Tempo;
             _ppqn = sequence1.Division;
-            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds                        
+
+
+            // Load tempos map
+            TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);
+
+            //_duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds                        
+            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);
 
             if (sequence1.Time != null)
             {

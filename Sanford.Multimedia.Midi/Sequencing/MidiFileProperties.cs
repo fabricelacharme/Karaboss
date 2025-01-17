@@ -130,8 +130,8 @@ namespace Sanford.Multimedia.Midi
 
             FindHeader(strm);
 
-            int _format = 0;
-            int _trackcount = 0;
+            int _format;
+            int _trackcount;
 
             // FAB - 03/11/17 : correction fichier midi erroné : format = 0 et nombre tracks > 1 !!!
             //Format = (int)ReadProperty(strm);

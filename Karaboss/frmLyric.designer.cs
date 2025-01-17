@@ -81,8 +81,8 @@
             this.picBalls.Division = 0F;
             resources.ApplyResources(this.picBalls, "picBalls");
             this.picBalls.Name = "picBalls";
-            this.picBalls.pBackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.picBalls.pBallsNumber = 0;
+            this.picBalls.BallsBackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.picBalls.BallsNumber = 0;
             // 
             // panel1
             // 

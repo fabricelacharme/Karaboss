@@ -567,11 +567,7 @@ namespace PicControl
 
         private Font m_font;
         private float emSize; // Size of the font
-        private StringFormat sf;
-
-        private int percent = 0;
-        private float steps = 10;
-        //private float step = 0;      
+        private StringFormat sf;           
 
         private List<RectangleF> rRect;
         private List<RectangleF> rNextRect;
@@ -739,7 +735,7 @@ namespace PicControl
         /// <param name="toto"></param>
         public void LoadSong(List<plLyric> plLyrics, bool bDemoMode = false)
         {
-            string lyrics = string.Empty;
+            string lyrics; // = string.Empty;
             lstLyricsLines = new List<string>();
             syllabes = new List<syllabe>();
 
@@ -798,6 +794,7 @@ namespace PicControl
 
         #region tests
 
+        /*
         private void TestCheckTimes(List<plLyric> plLyrics)
         {
             int lastTime = -1;
@@ -813,6 +810,7 @@ namespace PicControl
                 lastTime = t;
             }
         }
+        */
         #endregion tests
 
 
@@ -1366,7 +1364,7 @@ namespace PicControl
                 {
                     do
                     {
-                        inisize = inisize - 1;
+                        inisize--; //= inisize - 1;
                         if (inisize > 0)
                         {                            
                             femsize = g.DpiX * inisize / 72;                            
@@ -1378,7 +1376,7 @@ namespace PicControl
                 {
                     do
                     {
-                        inisize = inisize + 1;                        
+                        inisize++; //= inisize + 1;                        
                         femsize = g.DpiX * inisize / 72;                        
                         textSize = MeasureString(S, femsize);
                     } while (textSize < comp);
@@ -1405,7 +1403,7 @@ namespace PicControl
                 {
                     do
                     {
-                        inisize = inisize - 1;
+                        inisize--; //= inisize - 1;
                         if (inisize > 0)
                         {                            
                             femsize = g.DpiY * inisize / 72;                            
@@ -1642,7 +1640,7 @@ namespace PicControl
             if (syllabes == null)
                 return;
 
-            int x0 = 0;
+            int x0; // = 0;
             // Si retour arriere ou avance
             if (syllabeposition < 0)
                 syllabeposition = 0;
@@ -1685,7 +1683,7 @@ namespace PicControl
         /// <returns></returns>
         private int getOffset(string tx, float femsize)
         {
-            float ret = 0;
+            float ret; // = 0;
             float L = MeasureString(tx, femsize);
             float W = pboxWnd.ClientSize.Width;
 
@@ -1982,7 +1980,7 @@ namespace PicControl
             }
         }
 
-
+        /*
         /// <summary>
         /// Pas utilisé
         /// </summary>
@@ -2028,7 +2026,7 @@ namespace PicControl
             }
 
         }
-
+        */
 
 
         /// <summary>
@@ -2045,7 +2043,7 @@ namespace PicControl
             int H;
 
             float x1;
-            string tx = string.Empty;
+            //string tx; // = string.Empty;
             int x0 = 0;
             int i;
             syllabe syllab;
@@ -2290,7 +2288,7 @@ namespace PicControl
 
         private string SelectRndFile(List<string> files)
         {
-            string retfile = string.Empty;
+            //string retfile;// = string.Empty;
             if (files.Count > 0)
             {            
                 int rand = random.Next(0, files.Count);
@@ -2467,7 +2465,7 @@ namespace PicControl
         private void SetOffset()
         {                                  
             int ctp = findPosition(_currentPosition);  // index syllabe à chanter
-            int newvOffset = 0;
+            int newvOffset; // = 0;
 
             // If vertical Offset change => redraw
             // Time to next line            
@@ -2603,7 +2601,7 @@ namespace PicControl
         {
             if (lineMax != null && syllabes != null)
             {
-                int pos = 0;
+                int pos;
                 AjustText(lineMax);
 
                 if (_currentTextPos < 0)

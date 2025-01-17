@@ -40,6 +40,7 @@ using Sanford.Multimedia.Midi.UI;
 using System.IO;
 using MusicTxt;
 using MusicXml;
+using Karaboss.Utilities;
 
 namespace Karaboss
 {
@@ -263,7 +264,15 @@ namespace Karaboss
             _tempo = sequence1.Tempo;
             TempoOrig = _tempo;
             _ppqn = sequence1.Division;
-            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
+
+            // Load tempos map
+            TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);
+
+            //_duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
+
+            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);
+
+
             _bpm = GetBPM(_tempo);
 
             if (sequence1.Time != null)
@@ -280,8 +289,8 @@ namespace Karaboss
         {
             // see http://midi.teragonaudio.com/tech/midifile/ppqn.htm
             const float kOneMinuteInMicroseconds = 60000000;
-            float kTimeSignatureNumerator = (float)sequence1.Numerator;
-            float kTimeSignatureDenominator = (float)sequence1.Denominator;
+            //float kTimeSignatureNumerator = (float)sequence1.Numerator;
+            //float kTimeSignatureDenominator = (float)sequence1.Denominator;
 
             //float BPM = (kOneMinuteInMicroseconds / (float)tempo) * (kTimeSignatureDenominator / 4.0f);            
             float BPM = kOneMinuteInMicroseconds / (float)tempo;
@@ -930,8 +939,10 @@ namespace Karaboss
             try
             {
                 LoadSequencer(seq);
-                // Draw controls needs informations from the sequence
-                DrawControls();
+                
+                // Draw controls needs informations from the sequence                
+                DrawControls();           
+
                 InitCbTracks();
             }
             catch (Exception e)

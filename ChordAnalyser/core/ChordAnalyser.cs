@@ -37,18 +37,18 @@ using System.Collections.Generic;
 using System.Linq;
 using Sanford.Multimedia.Midi;
 using ChordAnalyser;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
+
 
 namespace ChordsAnalyser
 {
     public class ChordAnalyser
     {        
 
-        Analyser Analyser = new Analyser();
+        readonly Analyser Analyser = new Analyser();
         
-        static List<MidiNote[]> lnMidiNote = new List<MidiNote[]>();
+        static readonly List<MidiNote[]> lnMidiNote = new List<MidiNote[]>();
         static List<int[]> lnIntNote = new List<int[]>();
-        static List<string[]> lnStringNote = new List<string[]>();
+        static readonly List<string[]> lnStringNote = new List<string[]>();
 
         #region properties
 
@@ -66,12 +66,12 @@ namespace ChordsAnalyser
         // list of chords by ticks
         //public List<(int,string)> lstChords { get; set; }
 
-        private Dictionary<int, List<int>> dictnotes = new Dictionary<int, List<int>>();
+        private readonly static Dictionary<int, List<int>> dictnotes = new Dictionary<int, List<int>>();
 
         #endregion properties
 
         #region private
-        private Sequence sequence1 = new Sequence();        
+        private static Sequence sequence1 = new Sequence();        
         
         // Midifile characteristics
         private double _duration = 0;  // en secondes
@@ -82,10 +82,10 @@ namespace ChordsAnalyser
         private int _nbMeasures;
         private int _nbBeats;
 
-        private string ChordNotFound = "<Chord not found>";
-        private List<string> LstNoChords = new List<string>() { "<Chord not found>" };
-        private string EmptyChord = "<Empty>";
-        private List<string> LstEmptyChords = new List<string>() { "<Empty>" };
+        private readonly string ChordNotFound = "<Chord not found>";
+        private readonly List<string> LstNoChords = new List<string>() { "<Chord not found>" };
+        private readonly string EmptyChord = "<Empty>";
+        private readonly List<string> LstEmptyChords = new List<string>() { "<Empty>" };
 
         #endregion private
 
@@ -192,6 +192,7 @@ namespace ChordsAnalyser
         }
 
         // Search chord for each beat
+        /*
         private void SearchBeat2(int beat)
         {            
             if (dictnotes[beat].Count > 0)
@@ -236,6 +237,7 @@ namespace ChordsAnalyser
             }
         }
 
+        */
 
         private void SearchBeat(int beat)
         {
@@ -829,7 +831,9 @@ namespace ChordsAnalyser
             _totalTicks = sequence1.GetLength();
             _tempo = sequence1.Tempo;            
             _ppqn = sequence1.Division;
-            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds            
+            
+            //_duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
+            
                         
             if (sequence1.Time != null)
             {                
@@ -837,8 +841,7 @@ namespace ChordsAnalyser
                 _nbMeasures = Convert.ToInt32(Math.Ceiling((double)_totalTicks / _measurelen)); // rounds up to the next full integer                 
 
                 int nbBeatsPerMeasure = sequence1.Numerator;
-                int beatDuration = _measurelen / nbBeatsPerMeasure;
-                //_nbBeats = (int)Math.Ceiling(_totalTicks / (float)beatDuration);
+                int beatDuration = _measurelen / nbBeatsPerMeasure;                
                 _nbBeats = _nbMeasures * nbBeatsPerMeasure;
             }
         }
@@ -960,7 +963,7 @@ namespace ChordsAnalyser
                 */
             Dictionary<string, int> res = new Dictionary<string, int>();
             string chord;
-            string s;
+            //string s;
 
             if (dict.Count <= 3)
                 return dict;

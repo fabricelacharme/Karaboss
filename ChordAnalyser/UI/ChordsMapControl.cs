@@ -719,7 +719,7 @@ namespace ChordAnalyser.UI
 
             Rectangle clip = new Rectangle(0, 0, PageWidth, PageHeight);
 
-            int ypos = TitleHeight;
+            //int ypos = TitleHeight;
             int pagenum = 1;
             
 
@@ -728,11 +728,11 @@ namespace ChordAnalyser.UI
             if (pagenum == 1)
             {
                 DrawTitle(g, fileName);
-                ypos = TitleHeight;
+                //ypos = TitleHeight;
             }
             else
             {
-                ypos = 0;
+                //ypos = 0;
             }
 
 

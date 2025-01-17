@@ -150,7 +150,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         /// <summary>
         /// Gets or sets totalHeight
         /// </summary>
-        public int totalHeight
+        public int TotalHeight
         {
             get
             {
@@ -162,7 +162,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         /// <summary>
         /// Gets or sets zoom value
         /// </summary>
-        public float zoomx
+        public float Zoomx
         {
             get
             { return _zoomx; }
@@ -344,8 +344,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
                 if (value != _offsetx)
                 {
                     _offsetx = value;
-                    if (OffsetChanged != null)
-                        OffsetChanged(this, _offsetx);
+                    OffsetChanged?.Invoke(this, _offsetx);
                     pnlCanvas.Invalidate();
                 }
             }
@@ -390,7 +389,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         
         #region private
 
-        private MyPanel pnlCanvas;
+        private readonly MyPanel pnlCanvas;
 
         // Notes : MIDI maxi = 0 to 127 (C0 to G9)
         // Not all 128 notes taken : 23 to 108 = 86 notes
@@ -398,7 +397,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         private const int DefaultHighNoteID = 108;  //108
 
         private int measurelen = 0;
-        private int keysNumber;
+        private readonly int keysNumber;
         private int curTrack = 0;
         private float lastPosition = 0;
         private Track track1;
@@ -450,17 +449,18 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             this.KeyDown += new KeyEventHandler(PianoRollControl_KeyDown);
             this.KeyUp += new KeyEventHandler(PianoRollControl_KeyUp);
 
-            pnlCanvas = new MyPanel();
-            pnlCanvas.Location = new Point(0, 0);
-            pnlCanvas.Size = new Size(40, 40);
-            pnlCanvas.BackColor = Color.White;
-            pnlCanvas.Dock = DockStyle.Fill;
-            
-            pnlCanvas.Paint += new PaintEventHandler(pnlCanvas_Paint);
-            pnlCanvas.MouseDown += new MouseEventHandler(pnlCanvas_MouseDown);
-            pnlCanvas.MouseUp += new MouseEventHandler(pnlCanvas_MouseUp);
-            pnlCanvas.MouseMove += new MouseEventHandler(pnlCanvas_MouseMove);
-            pnlCanvas.MouseLeave += new EventHandler(pnlCanvas_MouseLeave);
+            pnlCanvas = new MyPanel() {
+                Location = new Point(0, 0),
+                Size = new Size(40, 40),
+                BackColor = Color.White,
+                Dock = DockStyle.Fill,
+            };
+
+            pnlCanvas.Paint += new PaintEventHandler(PnlCanvas_Paint);
+            pnlCanvas.MouseDown += new MouseEventHandler(PnlCanvas_MouseDown);
+            pnlCanvas.MouseUp += new MouseEventHandler(PnlCanvas_MouseUp);
+            pnlCanvas.MouseMove += new MouseEventHandler(PnlCanvas_MouseMove);
+            pnlCanvas.MouseLeave += new EventHandler(PnlCanvas_MouseLeave);
                            
             this.Controls.Add(pnlCanvas);
 
@@ -714,8 +714,8 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             Pen GroupNotesPen = new Pen(System.Drawing.ColorTranslator.FromHtml("#FF676767"), 1);
 
             int h = _TimeLineHeight;  // bande horizontale en haut pour afficher les mesures et intervalles
-            int H = 0;
-            int W = 0; // Width of scores
+            int H; // = 0;
+            int W; // = 0; // Width of scores
             
             
             if (clip.Width > _maxstaffwidth)
@@ -861,8 +861,8 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             Point p2;
 
             int h = _TimeLineHeight;  // bande horizontale en haut pour afficher les mesures et intervalles
-            int H = 0;
-            int W = 0; // Width of scores
+            //int H = 0;
+            int W; // = 0; // Width of scores
 
             W = clip.Width;
 
@@ -906,7 +906,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             SolidBrush textBrush = new SolidBrush(Color.White);
             Font fontMeasure = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontInterval = new Font("Arial", 10, FontStyle.Regular, GraphicsUnit.Pixel);
-            int pico = 0;
+            int pico; // = 0;
 
             do
             {
@@ -958,7 +958,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void pnlCanvas_Paint(object sender, PaintEventArgs e)
+        private void PnlCanvas_Paint(object sender, PaintEventArgs e)
         {
             Rectangle clip =
                 new Rectangle((int)(_offsetx),
@@ -1194,7 +1194,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             selRect = new Rectangle(0, 0, 0, 0);           
         }
           
-        private void pnlCanvas_MouseDown(object sender, MouseEventArgs e)
+        private void PnlCanvas_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -1579,7 +1579,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         #endregion context menus
 
 
-        private void pnlCanvas_MouseMove(object sender, MouseEventArgs e)
+        private void PnlCanvas_MouseMove(object sender, MouseEventArgs e)
         {                        
             // We are in the mode "enter notes"
             if (bEnterNotes == true)
@@ -1972,7 +1972,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
         }
 
 
-        private void pnlCanvas_MouseUp(object sender, MouseEventArgs e)
+        private void PnlCanvas_MouseUp(object sender, MouseEventArgs e)
         {
             if (note != null)
                 MouseUpStopNote(note.StartTime, note.Channel, note.Number, note.Duration, e);
@@ -2157,7 +2157,7 @@ namespace Sanford.Multimedia.Midi.PianoRoll
             
         }
 
-        private void pnlCanvas_MouseLeave(object sender, EventArgs e)
+        private void PnlCanvas_MouseLeave(object sender, EventArgs e)
         {
             this.Capture = false;
         }

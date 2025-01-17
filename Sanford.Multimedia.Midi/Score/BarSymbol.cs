@@ -23,7 +23,7 @@ namespace Sanford.Multimedia.Midi.Score
         private int starttime;
         private int width;
         private bool selected = false;
-        private bool drawbarnumber = false;
+        //private bool drawbarnumber = false;
         private int number = 0;
 
         /** Create a BarSymbol. The starttime should be the beginning of a measure. */
