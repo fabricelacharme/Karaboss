@@ -46,7 +46,6 @@ using MusicXml;
 using MusicTxt;
 using System.Linq;
 using Karaboss.Lyrics;
-using Karaboss.DryWetMidi;
 
 namespace Karaboss
 {

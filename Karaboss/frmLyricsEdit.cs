@@ -43,10 +43,7 @@ using System.Text.RegularExpressions;
 using Karaboss.Resources.Localization;
 using Karaboss.Lrc.SharedFramework;
 using Karaboss.Lyrics;
-using System.Reflection;
-using Sanford.Multimedia.Midi.PianoRoll;
-using Sanford.Multimedia.Midi.Score;
-using Karaboss.DryWetMidi;
+using Karaboss.Utilities;
 
 
 namespace Karaboss

@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
 
-namespace Karaboss.DryWetMidi
+namespace Karaboss.Utilities
 {
     internal static class TempoUtilities
     {
