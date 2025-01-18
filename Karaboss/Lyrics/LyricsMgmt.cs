@@ -837,7 +837,10 @@ namespace Karaboss.Lyrics
                 // Move linefeeds to the end of the previous lyric
                 FixLinefeeds();
 
-                if (bHasChordsInLyrics & bShowChords)
+
+                // Extract chords from lyrics ALWAYS ????
+                //if (bHasChordsInLyrics & bShowChords)
+                if (bHasChordsInLyrics)
                 {
                     // Add chords found in lyrics in the list pllyrics
                     ExtractChordsInLyrics();

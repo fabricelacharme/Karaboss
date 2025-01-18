@@ -8685,19 +8685,17 @@ namespace Karaboss
         {
             string fName = MIDIfileName;
             string fPath = MIDIfilePath;
+            
+            if (MIDIfileFullPath == null && fName != "" && fPath != "")
+                MIDIfileFullPath = fPath + "\\" + fName;
 
-            if (fPath == null || fPath == "" || fName == null || fName == "")
+
+            if (fPath == null || fPath == "" || fName == null || fName == "" || !File.Exists(MIDIfileFullPath))
             {
                 SaveAsFileProc();
                 return;
             }
 
-
-            if (File.Exists(MIDIfileFullPath) == false)
-            {
-                SaveAsFileProc();
-                return;
-            }
 
             InitSaveFile(MIDIfileFullPath);
         }

@@ -848,7 +848,10 @@ namespace Karaboss
             this.Cursor = Cursors.Arrow;
 
             if (MXmlReader.seq == null)
-                return;                        
+            {
+                MessageBox.Show("Invalid xml file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
                                  
             if (e.Error == null && e.Cancelled == false)
             {
@@ -919,9 +922,13 @@ namespace Karaboss
         private void HandleLoadTxtCompleted(object sender, AsyncCompletedEventArgs e)
         {
             this.Cursor= Cursors.Arrow;
-            
-            if (MTxtReader.seq == null) return;
-            
+
+            if (MTxtReader.seq == null)
+            {
+                MessageBox.Show("Invalid text file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             if (e.Error == null && e.Cancelled == false)
             {
                 myLyricsMgmt = new LyricsMgmt(MTxtReader.seq, Karaclass.m_ShowChords);
@@ -1296,15 +1303,18 @@ namespace Karaboss
         /// <param name="e"></param>
         private void tabChordsControl_SelectedIndexChanged(object sender, EventArgs e)
         {
+            try
+            {
+                btnPrintPDF.Visible = (tabChordsControl.SelectedIndex != 0);
+                btnPrintTXT.Visible = (tabChordsControl.SelectedIndex == 2);
 
-            btnPrintPDF.Visible = (tabChordsControl.SelectedIndex != 0);
-            btnPrintTXT.Visible = (tabChordsControl.SelectedIndex == 2);
+                btnZoomPlus.Visible = (tabChordsControl.SelectedIndex != 2);
+                btnZoomMinus.Visible = (tabChordsControl.SelectedIndex != 2);
 
-            btnZoomPlus.Visible = (tabChordsControl.SelectedIndex != 2);
-            btnZoomMinus.Visible = (tabChordsControl.SelectedIndex != 2);
-
-            mnuFilePrintLyrics.Visible = (tabChordsControl.SelectedIndex == 2);
-            mnuFilePrintPDF.Visible = (tabChordsControl.SelectedIndex != 0);
+                mnuFilePrintLyrics.Visible = (tabChordsControl.SelectedIndex == 2);
+                mnuFilePrintPDF.Visible = (tabChordsControl.SelectedIndex != 0);
+            }
+            catch (Exception ex) {Console.WriteLine(ex.Message); }
         }
        
        

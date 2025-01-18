@@ -1490,7 +1490,9 @@ namespace Karaboss
             {
                 vPianoRollControl1.TrackNum = -1;
             }
-            CbTracks.Parent.Focus();
+            
+            if (CbTracks.Parent != null)
+                CbTracks.Parent.Focus();
         }
 
         #endregion
