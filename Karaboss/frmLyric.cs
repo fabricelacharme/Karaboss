@@ -500,7 +500,7 @@ namespace Karaboss
                 chord = plL.Element.Item1;
                 lyric = plL.Element.Item2;
 
-                if (myLyricsMgmt.bShowChords)
+                if (Karaclass.m_ShowChords)
                 {
                     // if bShowChords, the chords will be displayed above the lyrics, so clean chords included in lyrics
                     if (myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == LyricsMgmt.ChordsOrigins.Lyrics)

@@ -48,6 +48,8 @@
             this.cbNote.Size = new System.Drawing.Size(61, 23);
             this.cbNote.TabIndex = 0;
             this.cbNote.TextUpdate += new System.EventHandler(this.cbNote_TextUpdate);
+            this.cbNote.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cbNote_KeyDown);
+            this.cbNote.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cbNote_KeyPress);
             this.cbNote.Validating += new System.ComponentModel.CancelEventHandler(this.cbNote_Validating);
             // 
             // label1

@@ -185,9 +185,7 @@ namespace Karaboss.Lyrics
         {
             get { return _gridbeatchords; }
             set { _gridbeatchords = value; } 
-        }
-       
-        public bool bShowChords { get; set; }
+        }               
               
         
         #endregion public
@@ -197,10 +195,8 @@ namespace Karaboss.Lyrics
         /// Constructor
         /// </summary>
         /// <param name="sequence"></param>
-        public LyricsMgmt(Sequence sequence, bool ShowChords) 
-        {                        
-            bShowChords = ShowChords;
-            
+        public LyricsMgmt(Sequence sequence) 
+        {                                                
             _lyricstracknum = -1;
             _melodytracknum = -1;
             
@@ -237,9 +233,9 @@ namespace Karaboss.Lyrics
         /// </summary>
         public void ResetDisplayChordsOptions(bool ShowChords)
         {
-            bShowChords = ShowChords;
+            //bShowChords = ShowChords;
 
-            if (bShowChords)
+            if (ShowChords)
             {
                 // ===================
                 // Show chords                                
@@ -250,12 +246,12 @@ namespace Karaboss.Lyrics
                     case ChordsOrigins.Lyrics:
                         // 1. If chords are  already included in lyrics
                         // Add false lyrics in chords alone (instrumental) ???
-                        FullExtractLyrics();
+                        FullExtractLyrics(ShowChords);
                         break;
                     case ChordsOrigins.XmlEmbedded:
                         // Chords are provided by the Xml score
                         if (plLyrics.Count == 0)
-                            FullExtractLyrics();
+                            FullExtractLyrics(ShowChords);
                         // include xml chords in plLyrics
                         PopulateXmlChords(lstXmlChords);
                         CleanLyrics();
@@ -271,7 +267,7 @@ namespace Karaboss.Lyrics
                         // 2. If chords are not included in lyrics,
                         // we have to detect chords and add them to the lyrics or add them to an extra
                         if (plLyrics.Count == 0)
-                            FullExtractLyrics();
+                            FullExtractLyrics(ShowChords);
 
                         PopulateDetectedChords();
                         // Clean lyrics HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -296,7 +292,7 @@ namespace Karaboss.Lyrics
                 // So we have to delete all additions made by the chord discovery or adddition from files.                
                 
                 // All could be replaced by FullExtractLyrics();
-                FullExtractLyrics();
+                FullExtractLyrics(false);
 
                 
             }
@@ -777,7 +773,7 @@ namespace Karaboss.Lyrics
         /// <summary>
         /// Full extract of lyrics. Launch all functions
         /// </summary>
-        public void FullExtractLyrics()
+        public void FullExtractLyrics(bool ShowChords)
         {
             try
             {
@@ -836,12 +832,11 @@ namespace Karaboss.Lyrics
                 FixLinefeeds();
 
 
-                // Extract chords from lyrics ALWAYS ????
-                //if (bHasChordsInLyrics & bShowChords)
-                if (bHasChordsInLyrics)
+                // Extract chords from lyrics ALWAYS ????                
+                if (bHasChordsInLyrics && ShowChords)
                 {
                     // Add chords found in lyrics in the list pllyrics
-                    ExtractChordsInLyrics();
+                    ExtractChordsInLyrics(ShowChords);
                 }
 
                 //TestCheckTimes();                             
@@ -1349,7 +1344,7 @@ namespace Karaboss.Lyrics
         /// and add them to plLyric
         /// </summary>
         /// <param name="tracknum"></param>
-        private void ExtractChordsInLyrics()
+        private void ExtractChordsInLyrics(bool ShowChords)
         {
             string lyricElement;
             string chordElement = string.Empty;           
@@ -1410,7 +1405,7 @@ namespace Karaboss.Lyrics
                     if (bFound)
                     {
 
-                        if (bShowChords)
+                        if (ShowChords)
                         {
                             lyricElement = formateLyricOfDetectedChord(chordElement, lyricElement);
                         }

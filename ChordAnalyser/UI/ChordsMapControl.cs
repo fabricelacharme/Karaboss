@@ -57,15 +57,8 @@ namespace ChordAnalyser.UI
         #region events
         public event MapOffsetChangedEventHandler OffsetChanged;
         public event MapWidthChangedEventHandler WidthChanged;
-        public event MapHeightChangedEventHandler HeightChanged;
-
-        
-        //public event MouseDownEventHandler OnMouseDown;
-
+        public event MapHeightChangedEventHandler HeightChanged;              
         #endregion events
-
-        //public delegate void MouseDownEventHandler(object sender, MouseEventArgs e);
-
 
         /// <summary>
         /// Double buffer panel
@@ -115,13 +108,19 @@ namespace ChordAnalyser.UI
 
 
         private string _filename;
-        private const int leftmargin = 20;
+        
         private const int topmargin = 20;
 
         #endregion private
 
 
         #region properties
+
+        private const int _leftmargin = 20;
+        public int LeftMargin
+        {
+            get { return _leftmargin; }
+        }
 
         private int _nbcolumns = 4;
         /// <summary>
@@ -324,7 +323,7 @@ namespace ChordAnalyser.UI
             string Tempo = GetBPM(_tempo).ToString();
 
             int _beatwidth = ((int)(_cellwidth) + (_LinesWidth - 1));            
-            PageWidth = 2*leftmargin + _nbcolumns * (_beatwidth * sequence1.Numerator);
+            PageWidth = 2*_leftmargin + _nbcolumns * (_beatwidth * sequence1.Numerator);
 
             string title = Path.GetFileName(_filename);
             w = MeasureString(fontTitle.FontFamily, title, fontTitle.Size);
@@ -336,7 +335,7 @@ namespace ChordAnalyser.UI
             g.TranslateTransform(-(PageWidth/2 - w/2), -topmargin);
 
             int ypos = 50;
-            Point p1 = new Point(leftmargin, ypos);
+            Point p1 = new Point(_leftmargin, ypos);
             g.DrawString("TimeSignature: " + TimeSignature, fontText, new SolidBrush(Color.Black), p1.X, p1.Y);
             g.DrawString("Tempo: " + Tempo, fontText, new SolidBrush(Color.Black), p1.X, p1.Y + 16 * zoom);
 
@@ -363,7 +362,7 @@ namespace ChordAnalyser.UI
             Rectangle rect;
             Point p1;
             Point p2;
-            int x = leftmargin; //0;
+            int x = _leftmargin; //0;
             int y = (int)HeaderHeight;//0;
 
             int compteurmesure = -1;
@@ -382,7 +381,7 @@ namespace ChordAnalyser.UI
                 if (compteurmesure > (_nbcolumns - 1))   // 4 measures per line
                 {
                     y += _beatheight;
-                    x = leftmargin;//0;
+                    x = _leftmargin;//0;
                     compteurmesure = 0;
                 }
                                 
@@ -409,7 +408,7 @@ namespace ChordAnalyser.UI
             // ====================================================
             // Ligne noire sur la dernière case de chaque mesure
             // ====================================================                        
-            x = leftmargin + _measurewidth;
+            x = _leftmargin + _measurewidth;
             y = (int)HeaderHeight; //0;
             int nbMeasuresPerLine = 1;
 
@@ -428,7 +427,7 @@ namespace ChordAnalyser.UI
                 if (nbMeasuresPerLine > _nbcolumns)
                 {                    
                     y += _beatheight;
-                    x = leftmargin + _measurewidth;                     
+                    x = _leftmargin + _measurewidth;                     
                     nbMeasuresPerLine = 1;                    
                 }
             }                        
@@ -454,7 +453,7 @@ namespace ChordAnalyser.UI
             Font fontChord = new Font("Arial", 20 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontMeasure = new Font("Arial", 12 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
-            int x = leftmargin;//0;
+            int x = _leftmargin;//0;
             int y_chord = (int)HeaderHeight + ((int)(_cellheight) / 2) - (fontMeasure.Height / 2);
             int y_symbol = 10;
             int y_measurenumber = (int)HeaderHeight + (int)(_cellheight) - fontMeasure.Height;
@@ -484,7 +483,7 @@ namespace ChordAnalyser.UI
                         y_chord += (int)_cellheight + 1;
                         y_symbol += (int)_cellheight + 1;
                         y_measurenumber += (int)_cellheight + 1;
-                        x = leftmargin;//0;
+                        x = _leftmargin;//0;
                         compteurmesure = 0;
                     }
 
@@ -643,7 +642,7 @@ namespace ChordAnalyser.UI
             {
                 NbLines = (int)(Math.Ceiling((double)(NbMeasures + 1) / _nbcolumns));
                 Height = (int)HeaderHeight + ((int)_cellheight + 1) * NbLines;             
-                Width = 2*leftmargin + (sequence1.Numerator * ((int)(_cellwidth) + (_LinesWidth - 1))) * _nbcolumns;
+                Width = 2*_leftmargin + (sequence1.Numerator * ((int)(_cellwidth) + (_LinesWidth - 1))) * _nbcolumns;
             }
         }
 
@@ -711,12 +710,12 @@ namespace ChordAnalyser.UI
 
         public void DoPrint(Graphics g, string fileName, int pagenumber, int numpages)
         {
-            int leftmargin = 20;
-            int topmargin = 20;
+            //int leftmargin = 20;
+            //int topmargin = 20;
             int rightmargin = 20;
             int bottommargin = 20;
 
-            float scale = (g.VisibleClipBounds.Width - leftmargin - rightmargin) / PageWidth;
+            float scale = (g.VisibleClipBounds.Width - _leftmargin - rightmargin) / PageWidth;
             g.PageScale = scale;
 
             int viewPageHeight = (int)((g.VisibleClipBounds.Height - topmargin - bottommargin) / scale);
@@ -758,9 +757,9 @@ namespace ChordAnalyser.UI
             title = title.Replace(".mid", "").Replace("_", " ").Replace(".kar", "");
             Font font = new Font("Arial", 10, FontStyle.Bold);
 
-            g.TranslateTransform(leftmargin, topmargin);
+            g.TranslateTransform(_leftmargin, topmargin);
             g.DrawString(title, font, Brushes.Black, 0, 0);
-            g.TranslateTransform(-leftmargin, -topmargin);
+            g.TranslateTransform(-_leftmargin, -topmargin);
             font.Dispose();
         }
         #endregion print pdf

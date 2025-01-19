@@ -961,7 +961,7 @@ namespace Karaboss
 
                     track = sequence1.tracks[myLyricsMgmt.MelodyTrackNum];
                     if (myLyricsMgmt.plLyrics.Count == 0)
-                        myLyricsMgmt.FullExtractLyrics();
+                        myLyricsMgmt.FullExtractLyrics(true);
                     myLyricsMgmt.PopulateDetectedChords();
                     myLyricsMgmt.CleanLyrics();
                     track.ClearChordNameSymbols();
@@ -976,7 +976,7 @@ namespace Karaboss
                     track = sequence1.tracks[myLyricsMgmt.LyricsTrackNum];
 
                     if (myLyricsMgmt.plLyrics.Count == 0)
-                        myLyricsMgmt.FullExtractLyrics();
+                        myLyricsMgmt.FullExtractLyrics(true);
 
                     track.ClearChordNameSymbols();
                     for (int i = 0; i < myLyricsMgmt.plLyrics.Count; i++)
@@ -2780,7 +2780,7 @@ namespace Karaboss
 
             // load lyrics and chords if included in lyrics
             //  ********************** Why not load embedded chords here if bShowChords is true ? *****************
-            myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
+            myLyricsMgmt = new LyricsMgmt(sequence1);
 
 
 
@@ -3330,7 +3330,7 @@ namespace Karaboss
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
 
-                myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
+                myLyricsMgmt = new LyricsMgmt(sequence1);
 
                 // Save chords to track in order to display them in the score
                 AddChordsToTrack();
@@ -3476,7 +3476,7 @@ namespace Karaboss
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
 
-                myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
+                myLyricsMgmt = new LyricsMgmt(sequence1);
 
                 // Load chords in LyricsMgmt in order to be displayed in the lyrics form                
                 LoadXmlChordsInLyrics();
@@ -3623,7 +3623,7 @@ namespace Karaboss
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
 
-                myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
+                myLyricsMgmt = new LyricsMgmt(sequence1);
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -3795,7 +3795,7 @@ namespace Karaboss
             TrkInsertLyrics(track, newpLyrics, newLyricType);
 
             // Reload myLyricMgmt
-            myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
+            myLyricsMgmt = new LyricsMgmt(sequence1);
 
 
             // Refresh frmLyric
@@ -4382,7 +4382,7 @@ namespace Karaboss
         {
             if (myLyricsMgmt == null)
             {
-                myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
+                myLyricsMgmt = new LyricsMgmt(sequence1);
             }
             myLyricsMgmt.MelodyTrackNum = melodytracknum;
             myLyricsMgmt.LyricsTrackNum = lyricstracknum;
@@ -5972,7 +5972,7 @@ namespace Karaboss
             // FAB
             SetTitle("New.mid");
 
-            myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
+            myLyricsMgmt = new LyricsMgmt(sequence1);
             //bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0;             
 
             // Display midi file infos

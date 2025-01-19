@@ -134,6 +134,11 @@ namespace Karaboss
         private Panel pnlModifyMap;       // chords in map mode  
         private frmEditChord frmEditChord;
 
+        private int frmxPos;
+        private int frmyPos;
+        private int xPos; 
+        private int yPos;
+
         #endregion controls
 
 
@@ -618,8 +623,9 @@ namespace Karaboss
 
             #endregion 3eme TAB
 
-
+            // =================================
             #region 4eme TAB MODIFY
+            // =================================
 
             #region Modify map chords
             pnlModifyMap = new Panel()
@@ -631,6 +637,10 @@ namespace Karaboss
                 AutoScroll = true,
             };
             tabPageModify.Controls.Add(pnlModifyMap);
+
+            pnlModifyMap.Scroll += new ScrollEventHandler(pnlModifyMap_Scroll);
+            pnlModifyMap.MouseWheel += new MouseEventHandler(pnlModifyMap_MouseWheel);
+
 
             #endregion display map chords
 
@@ -661,8 +671,7 @@ namespace Karaboss
 
         }
 
-      
-
+       
         #endregion Display Controls       
 
 
@@ -720,7 +729,7 @@ namespace Karaboss
             //myLyricsMgmt = new LyricsMgmt(sequence1, true);
             
             // This will only extract lyrics and chords if in lyrics or embedded in xml
-            myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
+            myLyricsMgmt.ResetDisplayChordsOptions(true);
             
             
             switch (myLyricsMgmt.ChordsOriginatedFrom)
@@ -861,7 +870,7 @@ namespace Karaboss
         {
             if (e.Error == null && e.Cancelled == false)
             {
-                myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
+                myLyricsMgmt = new LyricsMgmt(sequence1);
                 CommonLoadCompleted(sequence1);                
             }
             else
@@ -910,7 +919,7 @@ namespace Karaboss
                                  
             if (e.Error == null && e.Cancelled == false)
             {
-                myLyricsMgmt = new LyricsMgmt(MXmlReader.seq, Karaclass.m_ShowChords);
+                myLyricsMgmt = new LyricsMgmt(MXmlReader.seq);
                 LoadXmlChordsInLyrics();
                 CommonLoadCompleted(MXmlReader.seq);
             }
@@ -986,7 +995,7 @@ namespace Karaboss
 
             if (e.Error == null && e.Cancelled == false)
             {
-                myLyricsMgmt = new LyricsMgmt(MTxtReader.seq, Karaclass.m_ShowChords);
+                myLyricsMgmt = new LyricsMgmt(MTxtReader.seq);
                 CommonLoadCompleted(MTxtReader.seq);
             }
             else
@@ -1124,7 +1133,7 @@ namespace Karaboss
         private void DisplayLyrics()
         {            
             // New
-            myLyricsMgmt.FullExtractLyrics();
+            myLyricsMgmt.FullExtractLyrics(true);
             
             myLyricsMgmt.LoadLyricsPerBeat();
             myLyricsMgmt.LoadLyricsLines();
@@ -1363,13 +1372,16 @@ namespace Karaboss
         #region ChordMapControlModify
         
         /// <summary>
-        /// Modify chord
+        /// Open windows to modify a chord name
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
         private void ChordMapControlModify_MouseDown(object sender, MouseEventArgs e)
         {
+            int beat;
+            string ChordName;
+            
             if (e.Button == MouseButtons.Left)
             {
                 
@@ -1378,9 +1390,9 @@ namespace Karaboss
                     frmEditChord frmEditChord = GetForm<frmEditChord>();
                     frmEditChord.Close();
                     return;
-                }
+                }               
 
-                int x = e.Location.X;  //Horizontal
+                int x = e.Location.X - ChordMapControlModify.LeftMargin;  //Horizontal
                 int y = e.Location.Y + ChordMapControlModify.OffsetY - ChordMapControlModify.MyHeaderHeight;  // Vertical
 
                 // Calculate start time                
@@ -1389,21 +1401,46 @@ namespace Karaboss
 
 
                 int line = (int)Math.Ceiling(y / (double)HauteurCellule);
-
                 int prevmeasures = -1 + (line - 1) * ChordMapControlModify.NbColumns;
-
                 int cellincurrentline = (int)Math.Ceiling(x / (double)LargeurCellule);
 
-                int idx = (line - 1) * (ChordMapControlModify.NbColumns * sequence1.Numerator) + cellincurrentline;
-                if (ChordMapControlModify.GridBeatChords.ContainsKey(idx))
-                {
-                    string chord = ChordMapControlModify.GridBeatChords[(line - 1) * (ChordMapControlModify.NbColumns * sequence1.Numerator) + cellincurrentline];
 
-                    //Console.WriteLine("Chord = " + chord + " - idx = " + idx);
+                // Calculate x & y with cells bounds
+                frmxPos = Left;
+                frmyPos = Top;
 
-                    frmEditChord = new frmEditChord(chord, ChordMapControlModify, x, y  + pnlModifyMap.AutoScrollPosition.Y + ChordMapControlModify.OffsetY);
+                xPos = 12 + Left + tabPageModify.Left + ChordMapControlModify.LeftMargin + (cellincurrentline - 1) * LargeurCellule;            // why 12 ?????????????
+                yPos = 35 + Top + tabChordsControl.Top + tabPageModify.Top + ChordMapControlModify.MyHeaderHeight + (line * HauteurCellule);    //why 12 ??????????????                
+
+                beat = (line - 1) * (ChordMapControlModify.NbColumns * sequence1.Numerator) + cellincurrentline;
+                
+                if (ChordMapControlModify.GridBeatChords.ContainsKey(beat))
+                {                    
+                    ChordName = ChordMapControlModify.GridBeatChords[beat];                    
+                    frmEditChord = new frmEditChord(ChordName, ChordMapControlModify, xPos + pnlModifyMap.AutoScrollPosition.X, yPos + pnlModifyMap.AutoScrollPosition.Y);
                     frmEditChord.Show();
                 }
+            }
+        }
+
+        private void pnlModifyMap_Scroll(object sender, ScrollEventArgs e)
+        {                       
+            if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+            {                               
+                frmEditChord.Location = new Point(xPos + pnlModifyMap.AutoScrollPosition.X + (Left - frmxPos), yPos + pnlModifyMap.AutoScrollPosition.Y + (Top - frmyPos));                
+                frmEditChord.Visible = frmEditChord.Top > 222 && frmEditChord.Top < 800;
+            }
+                
+        }
+
+        private void pnlModifyMap_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+            {
+                frmEditChord.Location = new Point(xPos + pnlModifyMap.AutoScrollPosition.X + (Left - frmxPos), yPos + pnlModifyMap.AutoScrollPosition.Y + (Top - frmyPos));               
+
+                frmEditChord.Visible = frmEditChord.Top > 222;
+                
             }
         }
 
@@ -1464,14 +1501,21 @@ namespace Karaboss
         {
             try
             {
-                btnPrintPDF.Visible = (tabChordsControl.SelectedIndex != 0);
+                btnPrintPDF.Visible = (tabChordsControl.SelectedIndex == 1 || tabChordsControl.SelectedIndex == 2);
                 btnPrintTXT.Visible = (tabChordsControl.SelectedIndex == 2);
 
-                btnZoomPlus.Visible = (tabChordsControl.SelectedIndex != 2);
-                btnZoomMinus.Visible = (tabChordsControl.SelectedIndex != 2);
+                btnZoomPlus.Visible = (tabChordsControl.SelectedIndex == 0 || tabChordsControl.SelectedIndex == 1);
+                btnZoomMinus.Visible = (tabChordsControl.SelectedIndex == 0 || tabChordsControl.SelectedIndex == 1);
 
                 mnuFilePrintLyrics.Visible = (tabChordsControl.SelectedIndex == 2);
-                mnuFilePrintPDF.Visible = (tabChordsControl.SelectedIndex != 0);
+                mnuFilePrintPDF.Visible = (tabChordsControl.SelectedIndex == 1 || tabChordsControl.SelectedIndex == 2);
+
+                if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+                {
+                    frmEditChord.Visible = (tabChordsControl.SelectedIndex == 3);
+
+                }
+
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
@@ -1518,9 +1562,7 @@ namespace Karaboss
                         //pnlDisplayMap.VerticalScroll.Value = HauteurCellule * (curline - 2);
                         pnlDisplayMap.VerticalScroll.Value = offset;
                     }
-                }
-                
-
+                }                
             }
         }
 
@@ -1818,12 +1860,8 @@ namespace Karaboss
                         tbPChords.TabPages[i].Width = tbPChords.TabPages[tbPChords.SelectedIndex].Width;
                     }
                 }
-
-
-                //ChordRendererGuitar.Width = tbPChords.TabPages[0].Width;
+                
                 ChordRendererPiano.Width = tbPChords.TabPages[1].Width;
-
-
                 pnlBottom.Height = tabPageChords.Height - tabPageChords.Margin.Top - tabPageChords.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             }
 
@@ -1833,37 +1871,49 @@ namespace Karaboss
                 positionHScrollBar.Top = ChordControl1.Top + ChordControl1.Height;
             }
 
-            
-
+            // ==================================
             // 2nd TAB
+            // ==================================
             if (pnlDisplayMap != null)
             {
                 pnlDisplayMap.Width = tabPageMap.Width - tabPageMap.Margin.Left - tabPageMap.Margin.Right;                
                 pnlDisplayMap.Height = tabPageMap.Height - tabPageMap.Margin.Top - tabPageMap.Margin.Bottom;
             }
 
-
+            // ==================================
             // 3rd TAB
+            // ==================================
             if (pnlDisplayWords != null)
             {
                 pnlDisplayWords.Width = tabPageLyrics.Width - tabPageLyrics.Margin.Left - tabPageLyrics.Margin.Right;
                 pnlDisplayWords.Height = tabPageLyrics.Height - tabPageLyrics.Margin.Top - tabPageLyrics.Margin.Bottom;
             }
 
+            // ==================================
+            // 4th TAB
+            // ==================================
+            if (pnlModifyMap != null)
+            {
+                pnlModifyMap.Width = tabPageModify.Width - tabPageModify.Margin.Left - tabPageModify.Margin.Right;
+                pnlModifyMap.Height = tabPageModify.Height - tabPageModify.Margin.Top - tabPageModify.Margin.Bottom;
+            }
 
             // Set maximum & visibility
             SetScrollBarValues();
         }
 
-        private void frmChords_FormClosing(object sender, FormClosingEventArgs e)
+        private void frmChords_Move(object sender, EventArgs e)
         {
-
             if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
             {
-                frmEditChord frmEditChord = GetForm<frmEditChord>();
-                frmEditChord.Close();                
+                frmEditChord.Location = new Point(xPos + pnlModifyMap.AutoScrollPosition.X + (Left - frmxPos), yPos + pnlModifyMap.AutoScrollPosition.Y + (Top - frmyPos) );
+                
             }
+        }
 
+        private void frmChords_FormClosing(object sender, FormClosingEventArgs e)
+        {
+           
             // enregistre la taille et la position de la forme
             // Copy window location to app settings                
             if (WindowState != FormWindowState.Minimized)
@@ -1883,6 +1933,11 @@ namespace Karaboss
 
                 // Save settings
                 Properties.Settings.Default.Save();
+            }
+
+            if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+            {
+                Application.OpenForms["frmEditChord"].Close();
             }
 
             // Active le formulaire frmExplorer
@@ -2551,6 +2606,7 @@ namespace Karaboss
 
         #endregion print text pdf
 
+
         #region Locate form
         /// <summary>
         /// Locate form
@@ -2565,5 +2621,6 @@ namespace Karaboss
 
         #endregion Locate form
 
+     
     }
 }
