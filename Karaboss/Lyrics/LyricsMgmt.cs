@@ -39,8 +39,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using MusicXml;
-using ChordAnalyser;
-using System.Xml;
 
 namespace Karaboss.Lyrics
 {

@@ -116,6 +116,12 @@
     <Compile Include="Buttons\PlusButtonControl.Designer.cs">
       <DependentUpon>PlusButtonControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Chords\frmEditChord.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Chords\frmEditChord.Designer.cs">
+      <DependentUpon>frmEditChord.cs</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\ConfigurationBaseControl.cs" />
     <Compile Include="Configuration\ConfigurationForm.cs">
       <SubType>Form</SubType>
@@ -173,10 +179,10 @@
     <Compile Include="Utilities\IO\Files.cs" />
     <Compile Include="Utilities\MidiFile\CreateNewMidiFile.cs" />
     <Compile Include="Utilities\Tempo\TempoUtilities.cs" />
-    <Compile Include="frmChords.cs">
+    <Compile Include="Chords\frmChords.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmChords.Designer.cs">
+    <Compile Include="Chords\frmChords.Designer.cs">
       <DependentUpon>frmChords.cs</DependentUpon>
     </Compile>
     <Compile Include="frmGuitarTraining.cs">
@@ -445,6 +451,9 @@
       <DependentUpon>PlusButtonControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Chords\frmEditChord.resx">
+      <DependentUpon>frmEditChord.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ConfigurationBaseControl.resx">
       <DependentUpon>ConfigurationBaseControl.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -515,13 +524,13 @@
     <EmbeddedResource Include="Display\PanelPlayer.resx">
       <DependentUpon>PanelPlayer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmChords.en.resx">
+    <EmbeddedResource Include="Chords\frmChords.en.resx">
       <DependentUpon>frmChords.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmChords.fr.resx">
+    <EmbeddedResource Include="Chords\frmChords.fr.resx">
       <DependentUpon>frmChords.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmChords.resx">
+    <EmbeddedResource Include="Chords\frmChords.resx">
       <DependentUpon>frmChords.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmExternalMidiPlay.resx">
@@ -859,6 +868,8 @@
     <None Include="Resources\export-txt48-2.png" />
     <None Include="Resources\export-pdf32.png" />
     <None Include="Resources\D.png" />
+    <None Include="Resources\checkgreen24.png" />
+    <None Include="Resources\checkgreen16.png" />
     <Content Include="Resources\Ico\mml.ico" />
     <None Include="Resources\Media-Controls-Skip-To-Start-icon.png" />
     <None Include="Resources\Media-Controls-Skip-To-End-icon.png" />

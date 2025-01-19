@@ -59,7 +59,13 @@ namespace ChordAnalyser.UI
         public event MapWidthChangedEventHandler WidthChanged;
         public event MapHeightChangedEventHandler HeightChanged;
 
+        
+        //public event MouseDownEventHandler OnMouseDown;
+
         #endregion events
+
+        //public delegate void MouseDownEventHandler(object sender, MouseEventArgs e);
+
 
         /// <summary>
         /// Double buffer panel
@@ -106,6 +112,8 @@ namespace ChordAnalyser.UI
         public const int TitleHeight = 14; /** The height for the title on the first page */
 
         private float HeaderHeight = 100;
+
+
         private string _filename;
         private const int leftmargin = 20;
         private const int topmargin = 20;
@@ -556,6 +564,7 @@ namespace ChordAnalyser.UI
         private void pnlCanvas_MouseDown(object sender, MouseEventArgs e)
         {
             OnMouseDown(e);
+            
         }
 
         #endregion mouse

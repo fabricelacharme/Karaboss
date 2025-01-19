@@ -40,8 +40,6 @@ using System.Threading;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Collections.Generic; // DLL import
-using Karaboss.Lyrics;
-using Sanford.Multimedia.Midi;
 
 namespace Karaboss
 {

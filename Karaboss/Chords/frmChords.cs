@@ -128,7 +128,11 @@ namespace Karaboss
         // 3 rd TAB
         private Panel pnlDisplayWords;
         private System.Windows.Forms.TextBox txtDisplayWords;
-        
+
+        // 4th TAB
+        private ChordsMapControl ChordMapControlModify;
+        private Panel pnlModifyMap;       // chords in map mode  
+        private frmEditChord frmEditChord;
 
         #endregion controls
 
@@ -342,6 +346,9 @@ namespace Karaboss
             tabChordsControl.Top = pnlToolbar.Top + pnlToolbar.Height;
             tabChordsControl.Height =  this.ClientSize.Height - menuStrip1.Height - pnlToolbar.Height;
             tabChordsControl.Width = this.ClientSize.Width;
+            
+            // Mandatory to color headers
+            tabChordsControl.DrawMode = TabDrawMode.OwnerDrawFixed;
 
             #region 1er TAB                    
             // * tabPageDiagrams
@@ -358,12 +365,12 @@ namespace Karaboss
             // 1 : add a panel on top
             // this panel will host the chrod control and the colorslider
             pnlDisplayHorz = new Panel() {
-                Parent = tabPageDiagrams,
-                Location = new Point(tabPageDiagrams.Margin.Left, tabPageDiagrams.Margin.Top),
-                Size = new Size(tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, 150),
+                Parent = tabPageChords,
+                Location = new Point(tabPageChords.Margin.Left, tabPageChords.Margin.Top),
+                Size = new Size(tabPageChords.Width - tabPageChords.Margin.Left - tabPageChords.Margin.Right, 150),
                 BackColor = Color.FromArgb(239, 244, 255), //Color.Chocolate;
             };
-            tabPageDiagrams.Controls.Add(pnlDisplayHorz);
+            tabPageChords.Controls.Add(pnlDisplayHorz);
 
             #endregion Panel Display horizontal chords
 
@@ -398,7 +405,7 @@ namespace Karaboss
             positionHScrollBar = new ColorSlider.ColorSlider() {
                 Parent = pnlDisplayHorz,
                 ThumbImage = Properties.Resources.BTN_Thumb_Blue,
-                Size = new Size(pnlDisplayHorz.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, 20),
+                Size = new Size(pnlDisplayHorz.Width - tabPageChords.Margin.Left - tabPageChords.Margin.Right, 20),
                 Location = new Point(0, ChordControl1.Height),
                 Value = 0,
                 Minimum = 0,
@@ -428,13 +435,13 @@ namespace Karaboss
             int htotale = 280;
 
             pnlDisplayImagesOfChords = new Panel() {
-                Parent = tabPageDiagrams,
-                Location = new Point(tabPageDiagrams.Margin.Left, pnlDisplayHorz.Top + pnlDisplayHorz.Height),
+                Parent = tabPageChords,
+                Location = new Point(tabPageChords.Margin.Left, pnlDisplayHorz.Top + pnlDisplayHorz.Height),
                 Height = htotale,
                 BackColor = Color.FromArgb(239, 244, 255),
                 Width = pnlDisplayHorz.Width,
             };
-            tabPageDiagrams.Controls.Add(pnlDisplayImagesOfChords);
+            tabPageChords.Controls.Add(pnlDisplayImagesOfChords);
 
 
             #region tabPage to select Guitar or Piano
@@ -499,12 +506,12 @@ namespace Karaboss
             // 5 : add a panel at the bottom
             // This panel will host the lyrics
             pnlBottom = new Panel() {
-                Parent = this.tabPageDiagrams,
-                Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height,
+                Parent = this.tabPageChords,
+                Height = tabPageChords.Height - tabPageChords.Margin.Top - tabPageChords.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height,
                 BackColor = Color.White,
                 Dock = DockStyle.Bottom,
             };
-            tabPageDiagrams.Controls.Add(pnlBottom);
+            tabPageChords.Controls.Add(pnlBottom);
 
             // 6 add a label for text being sung
             Font fontLyrics = new Font("Arial", 32, FontStyle.Regular, GraphicsUnit.Pixel);
@@ -545,17 +552,17 @@ namespace Karaboss
             #endregion 1er TAB
 
 
-            #region 2eme TAB
+            #region 2eme TAB MAP
 
             #region display map chords
             pnlDisplayMap = new Panel() {
-                Parent = tabPageOverview,
-                Location = new Point(tabPageOverview.Margin.Left, tabPageOverview.Margin.Top),
-                Size = new Size(tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right, tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom),
+                Parent = tabPageMap,
+                Location = new Point(tabPageMap.Margin.Left, tabPageMap.Margin.Top),
+                Size = new Size(tabPageMap.Width - tabPageMap.Margin.Left - tabPageMap.Margin.Right, tabPageMap.Height - tabPageMap.Margin.Top - tabPageMap.Margin.Bottom),
                 BackColor = Color.White,
                 AutoScroll = true,
             };
-            tabPageOverview.Controls.Add(pnlDisplayMap);
+            tabPageMap.Controls.Add(pnlDisplayMap);
 
             #endregion display map chords
 
@@ -571,7 +578,7 @@ namespace Karaboss
             };
 
             ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
-            pnlDisplayMap.Size = new Size(tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right, tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom);
+            pnlDisplayMap.Size = new Size(tabPageMap.Width - tabPageMap.Margin.Left - tabPageMap.Margin.Right, tabPageMap.Height - tabPageMap.Margin.Top - tabPageMap.Margin.Bottom);
 
             ChordMapControl1.WidthChanged += new MapWidthChangedEventHandler(ChordMapControl1_WidthChanged);
             ChordMapControl1.HeightChanged += new MapHeightChangedEventHandler(ChordMapControl1_HeightChanged);
@@ -584,15 +591,16 @@ namespace Karaboss
             #endregion 2eme TAB 
 
 
-            #region 3eme TAB
+            #region 3eme TAB LYRICS
+
             pnlDisplayWords = new Panel() {
-                Parent = tabPageEdit,
-                Location = new Point(tabPageEdit.Margin.Left, tabPageEdit.Margin.Top),
-                Size = new Size(tabPageEdit.Width - tabPageEdit.Margin.Left - tabPageEdit.Margin.Right, tabPageEdit.Height - tabPageEdit.Margin.Top - tabPageEdit.Margin.Bottom),
+                Parent = tabPageLyrics,
+                Location = new Point(tabPageLyrics.Margin.Left, tabPageLyrics.Margin.Top),
+                Size = new Size(tabPageLyrics.Width - tabPageLyrics.Margin.Left - tabPageLyrics.Margin.Right, tabPageLyrics.Height - tabPageLyrics.Margin.Top - tabPageLyrics.Margin.Bottom),
                 BackColor = Color.Coral,
                 AutoScroll = true,
             };
-            tabPageEdit.Controls.Add(pnlDisplayWords);
+            tabPageLyrics.Controls.Add(pnlDisplayWords);
 
             Font fontWords = new Font("Courier New", 22, FontStyle.Regular, GraphicsUnit.Pixel);
             txtDisplayWords = new System.Windows.Forms.TextBox() {
@@ -609,7 +617,51 @@ namespace Karaboss
             pnlDisplayWords.Controls.Add(txtDisplayWords);
 
             #endregion 3eme TAB
-        }      
+
+
+            #region 4eme TAB MODIFY
+
+            #region Modify map chords
+            pnlModifyMap = new Panel()
+            {
+                Parent = tabPageMap,
+                Location = new Point(tabPageModify.Margin.Left, tabPageModify.Margin.Top),
+                Size = new Size(tabPageModify.Width - tabPageModify.Margin.Left - tabPageModify.Margin.Right, tabPageModify.Height - tabPageModify.Margin.Top - tabPageModify.Margin.Bottom),
+                BackColor = Color.White,
+                AutoScroll = true,
+            };
+            tabPageModify.Controls.Add(pnlModifyMap);
+
+            #endregion display map chords
+
+
+            #region ChordMapControl
+            ChordMapControlModify = new ChordsMapControl(MIDIfileName)
+            {
+                Parent = pnlDisplayMap,
+                Location = new Point(0, 0),
+                ColumnWidth = 80,
+                ColumnHeight = 80,
+                Cursor = Cursors.Hand,
+                Sequence1 = this.sequence1,
+            };
+
+            ChordMapControlModify.Size = new Size(ChordMapControlModify.Width, ChordMapControlModify.Height);
+            pnlModifyMap.Size = new Size(tabPageModify.Width - tabPageModify.Margin.Left - tabPageModify.Margin.Right, tabPageModify.Height - tabPageModify.Margin.Top - tabPageModify.Margin.Bottom);
+
+            ChordMapControlModify.WidthChanged += new MapWidthChangedEventHandler(ChordMapControlModify_WidthChanged);
+            ChordMapControlModify.HeightChanged += new MapHeightChangedEventHandler(ChordMapControlModify_HeightChanged);
+            ChordMapControlModify.MouseDown += new MouseEventHandler(ChordMapControlModify_MouseDown);
+
+            pnlModifyMap.Controls.Add(ChordMapControlModify);
+
+            #endregion ChordMapControl
+
+            #endregion 4eme TAB
+
+        }
+
+      
 
         #endregion Display Controls       
 
@@ -706,7 +758,10 @@ namespace Karaboss
             ChordRendererGuitar.FilterChords();
             ChordRendererPiano.FilterChords();
             
+            // Display chords map
             ChordMapControl1.GridBeatChords = GridBeatChords;
+            // Modify chords
+            ChordMapControlModify.GridBeatChords = GridBeatChords;
         }
 
         /// <summary>
@@ -1226,7 +1281,7 @@ namespace Karaboss
             if (pnlBottom != null && pnlDisplayImagesOfChords != null && pnlDisplayHorz != null)
             {
                 pnlBottom.Location = new Point(0, pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height);
-                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+                pnlBottom.Height = tabPageChords.Height - tabPageChords.Margin.Top - tabPageChords.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             }
 
         }
@@ -1242,7 +1297,7 @@ namespace Karaboss
             if (pnlBottom != null && pnlDisplayImagesOfChords != null && pnlDisplayHorz != null)
             {
                 pnlBottom.Location = new Point(0, pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height);
-                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+                pnlBottom.Height = tabPageChords.Height - tabPageChords.Margin.Top - tabPageChords.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             }
         }
                        
@@ -1253,7 +1308,7 @@ namespace Karaboss
             if (pnlBottom != null && pnlDisplayImagesOfChords != null && pnlDisplayHorz != null)
             {
                 pnlBottom.Location = new Point(0, pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height);
-                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+                pnlBottom.Height = tabPageChords.Height - tabPageChords.Margin.Top - tabPageChords.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             }
         }
       
@@ -1273,18 +1328,27 @@ namespace Karaboss
 
         }
 
+        /// <summary>
+        /// Launch player on mouse down
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ChordMapControl1_MouseDown(object sender, MouseEventArgs e)
         {            
             if (e.Button == MouseButtons.Left)
             {
                 int x = e.Location.X;  //Horizontal
-                int y = e.Location.Y + ChordMapControl1.OffsetY;  // Vertical
+                int y = e.Location.Y + ChordMapControl1.OffsetY - ChordMapControl1.MyHeaderHeight;  // Vertical
 
                 // Calculate start time                
                 int HauteurCellule = (int)(ChordMapControl1.ColumnHeight) + 1;
                 int LargeurCellule = (int)(ChordMapControl1.ColumnWidth) + 1;
+                
+                
                 int line = (int)Math.Ceiling(y / (double)HauteurCellule);
+                
                 int prevmeasures = -1 + (line - 1) * ChordMapControl1.NbColumns;
+                
                 int cellincurrentline = (int)Math.Ceiling(x / (double)LargeurCellule);
 
                 newstart = _measurelen * prevmeasures + (_measurelen / sequence1.Numerator) * cellincurrentline;
@@ -1294,6 +1358,101 @@ namespace Karaboss
 
 
         #endregion chordmapcontrol
+
+
+        #region ChordMapControlModify
+        
+        /// <summary>
+        /// Modify chord
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void ChordMapControlModify_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                
+                if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+                {
+                    frmEditChord frmEditChord = GetForm<frmEditChord>();
+                    frmEditChord.Close();
+                    return;
+                }
+
+                int x = e.Location.X;  //Horizontal
+                int y = e.Location.Y + ChordMapControlModify.OffsetY - ChordMapControlModify.MyHeaderHeight;  // Vertical
+
+                // Calculate start time                
+                int HauteurCellule = (int)(ChordMapControlModify.ColumnHeight) + 1;
+                int LargeurCellule = (int)(ChordMapControlModify.ColumnWidth) + 1;
+
+
+                int line = (int)Math.Ceiling(y / (double)HauteurCellule);
+
+                int prevmeasures = -1 + (line - 1) * ChordMapControlModify.NbColumns;
+
+                int cellincurrentline = (int)Math.Ceiling(x / (double)LargeurCellule);
+
+                int idx = (line - 1) * (ChordMapControlModify.NbColumns * sequence1.Numerator) + cellincurrentline;
+                if (ChordMapControlModify.GridBeatChords.ContainsKey(idx))
+                {
+                    string chord = ChordMapControlModify.GridBeatChords[(line - 1) * (ChordMapControlModify.NbColumns * sequence1.Numerator) + cellincurrentline];
+
+                    //Console.WriteLine("Chord = " + chord + " - idx = " + idx);
+
+                    frmEditChord = new frmEditChord(chord, ChordMapControlModify, x, y  + pnlModifyMap.AutoScrollPosition.Y + ChordMapControlModify.OffsetY);
+                    frmEditChord.Show();
+                }
+            }
+        }
+
+        private void ChordMapControlModify_HeightChanged(object sender, int value)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void ChordMapControlModify_WidthChanged(object sender, int value)
+        {
+            //throw new NotImplementedException();
+        }
+
+        #endregion ChordMapControlModify
+
+
+        #region TabChordsControl
+
+        /// <summary>
+        /// Color selected header cell of TabControl
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tabChordsControl_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            // This event is called once for each tab button in your tab control
+            // First paint the background with a color based on the current tab
+            // e.Index is the index of the tab in the TabPages collection.
+
+            Color a = Color.FromArgb(255, 196, 13); // Yellow
+            Color b = Color.FromArgb(153, 180, 51); // Light Green
+            Color c = Color.FromArgb(239, 244, 255); // Light blue
+            Color d = Color.FromArgb(45, 137, 239); // Blue
+
+
+            TabPage page = tabChordsControl.TabPages[e.Index];
+            Rectangle paddedBounds = e.Bounds;
+
+            if (e.State == DrawItemState.Selected)
+            {
+                e.Graphics.FillRectangle(new SolidBrush(a), e.Bounds);
+                TextRenderer.DrawText(e.Graphics, page.Text, e.Font, paddedBounds, Color.White);
+            }
+            else
+            {
+                e.Graphics.FillRectangle(new SolidBrush(c), e.Bounds);
+                TextRenderer.DrawText(e.Graphics, page.Text, e.Font, paddedBounds, Color.Black);
+            }
+        }
 
 
         /// <summary>
@@ -1314,10 +1473,14 @@ namespace Karaboss
                 mnuFilePrintLyrics.Visible = (tabChordsControl.SelectedIndex == 2);
                 mnuFilePrintPDF.Visible = (tabChordsControl.SelectedIndex != 0);
             }
-            catch (Exception ex) {Console.WriteLine(ex.Message); }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
-       
-       
+
+        #endregion TabChordsControl
+
+
+
+
         #endregion Events
 
 
@@ -1440,7 +1603,7 @@ namespace Karaboss
                 pnlDisplayHorz.Height = ChordControl1.Height + padding;
                 pnlDisplayImagesOfChords.Top = pnlDisplayHorz.Top + pnlDisplayHorz.Height;
                 pnlBottom.Top = pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height;
-                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+                pnlBottom.Height = tabPageChords.Height - tabPageChords.Margin.Top - tabPageChords.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
 
                 ChordControl1.OffsetX = 0;
                 ChordRendererGuitar.OffsetX = 0;
@@ -1456,7 +1619,7 @@ namespace Karaboss
                 pnlDisplayHorz.Height = ChordControl1.Height + positionHScrollBar.Height + padding;
                 pnlDisplayImagesOfChords.Top = pnlDisplayHorz.Top + pnlDisplayHorz.Height;
                 pnlBottom.Top = pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height;
-                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+                pnlBottom.Height = tabPageChords.Height - tabPageChords.Margin.Top - tabPageChords.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             }
 
         }
@@ -1644,7 +1807,7 @@ namespace Karaboss
             // 1st TAB
             if (pnlDisplayHorz != null && tbPChords != null)
             {
-                pnlDisplayHorz.Width = tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right;
+                pnlDisplayHorz.Width = tabPageChords.Width - tabPageChords.Margin.Left - tabPageChords.Margin.Right;
                 pnlDisplayImagesOfChords.Width = pnlDisplayHorz.Width;
 
                 for (int i = 0; i < tbPChords.TabCount; i++)
@@ -1661,7 +1824,7 @@ namespace Karaboss
                 ChordRendererPiano.Width = tbPChords.TabPages[1].Width;
 
 
-                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+                pnlBottom.Height = tabPageChords.Height - tabPageChords.Margin.Top - tabPageChords.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             }
 
             if (ChordControl1 != null)
@@ -1675,16 +1838,16 @@ namespace Karaboss
             // 2nd TAB
             if (pnlDisplayMap != null)
             {
-                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;                
-                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
+                pnlDisplayMap.Width = tabPageMap.Width - tabPageMap.Margin.Left - tabPageMap.Margin.Right;                
+                pnlDisplayMap.Height = tabPageMap.Height - tabPageMap.Margin.Top - tabPageMap.Margin.Bottom;
             }
 
 
             // 3rd TAB
             if (pnlDisplayWords != null)
             {
-                pnlDisplayWords.Width = tabPageEdit.Width - tabPageEdit.Margin.Left - tabPageEdit.Margin.Right;
-                pnlDisplayWords.Height = tabPageEdit.Height - tabPageEdit.Margin.Top - tabPageEdit.Margin.Bottom;
+                pnlDisplayWords.Width = tabPageLyrics.Width - tabPageLyrics.Margin.Left - tabPageLyrics.Margin.Right;
+                pnlDisplayWords.Height = tabPageLyrics.Height - tabPageLyrics.Margin.Top - tabPageLyrics.Margin.Bottom;
             }
 
 
@@ -1694,6 +1857,13 @@ namespace Karaboss
 
         private void frmChords_FormClosing(object sender, FormClosingEventArgs e)
         {
+
+            if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+            {
+                frmEditChord frmEditChord = GetForm<frmEditChord>();
+                frmEditChord.Close();                
+            }
+
             // enregistre la taille et la position de la forme
             // Copy window location to app settings                
             if (WindowState != FormWindowState.Minimized)
@@ -1898,39 +2068,21 @@ namespace Karaboss
             {
                 case PlayerStates.Playing:
                     btnPlay.Image = Properties.Resources.btn_green_pause;
-                    //btnStop.Image = Properties.Resources.btn_black_stop;
-                    btnPlay.Enabled = true;  // to allow pause
-                    //btnStop.Enabled = true;  // to allow stop 
-                    
-                    //lblStatus.Text = "Playing";
-                    //lblStatus.ForeColor = Color.LightGreen;
+                    btnPlay.Enabled = true;  // to allow pause                    
+                    //tabChordsControl.TabPages.Remove(tabPageModify);
                     panelPlayer.DisplayStatus("Playing");
                     break;
 
                 case PlayerStates.Paused:
                     btnPlay.Image = Properties.Resources.btn_green_play;
                     btnPlay.Enabled = true;  // to allow play
-                    //btnStop.Enabled = true;  // to allow stop
-
-                    //lblStatus.Text = "Paused";
-                    //lblStatus.ForeColor = Color.Yellow;
                     panelPlayer.DisplayStatus("Paused");
                     break;
 
                 case PlayerStates.Stopped:
                     btnPlay.Image = Properties.Resources.btn_black_play;
                     btnPlay.Enabled = true;   // to allow play
-                    if (newstart == 0)
-                    {
-                        //btnStop.Image = Properties.Resources.btn_red_stop;
-                    }
-                    else
-                    {
-                        //btnStop.Enabled = true;   // to enable real stop because stop point not at the beginning of the song 
-                    }
-
-                    //lblStatus.Text = "Stopped";
-                    //lblStatus.ForeColor = Color.Red;
+                    //tabChordsControl.TabPages.Add(tabPageModify);
                     panelPlayer.DisplayStatus("Stopped");
                     break;
 
@@ -2396,8 +2548,22 @@ namespace Karaboss
         }
 
 
+
         #endregion print text pdf
 
-      
+        #region Locate form
+        /// <summary>
+        /// Locate form
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <returns></returns>
+        private TForm GetForm<TForm>()
+            where TForm : Form
+        {
+            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
+        }
+
+        #endregion Locate form
+
     }
 }
