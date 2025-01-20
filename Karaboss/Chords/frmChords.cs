@@ -2153,7 +2153,7 @@ namespace Karaboss
                 case PlayerStates.Playing:
                     btnPlay.Image = Properties.Resources.btn_green_pause;
                     btnPlay.Enabled = true;  // to allow pause                    
-                    //tabChordsControl.TabPages.Remove(tabPageModify);
+                    tabChordsControl.TabPages.Remove(tabPageModify);
                     panelPlayer.DisplayStatus("Playing");
                     break;
 
@@ -2166,7 +2166,7 @@ namespace Karaboss
                 case PlayerStates.Stopped:
                     btnPlay.Image = Properties.Resources.btn_black_play;
                     btnPlay.Enabled = true;   // to allow play
-                    //tabChordsControl.TabPages.Add(tabPageModify);
+                    tabChordsControl.TabPages.Add(tabPageModify);
                     panelPlayer.DisplayStatus("Stopped");
                     break;
 
