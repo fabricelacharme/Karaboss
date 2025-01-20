@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Karaboss.Utilities
 {
@@ -47,6 +43,62 @@ namespace Karaboss.Utilities
 
             return fPath;
         }
+
+
+        #region Unzip
+
+        /// <summary>
+        /// Unzip file in temp directory
+        /// </summary>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        public static string UnzipFile(string f)
+        {
+            string mTempDir = Path.GetTempPath() + "karaboss\\";
+            string myTempDir = mTempDir + Path.GetRandomFileName();
+            Directory.CreateDirectory(myTempDir);
+
+            List<string> lsextensions = new List<string> { "*.musicxml", "*.xml" };
+            return UnzipFiles(f, lsextensions, myTempDir);
+        }
+        
+
+        /// <summary>
+        /// Extract any file with extension 'extension'
+        /// For egg : '*.musicxml', '*.mxl'
+        /// </summary>
+        /// <param name="zipFilename"></param>
+        /// <param name="extension"></param>
+        /// <param name="outputPath"></param>
+        /// <returns></returns>
+        private static string UnzipFiles(string zipFilename, List<string> lsextension, string outputPath)
+        {
+            string UnzipFiles = "";
+            try
+            {
+                ICSharpCode.SharpZipLib.Zip.FastZip myZip = new ICSharpCode.SharpZipLib.Zip.FastZip();
+                myZip.ExtractZip(zipFilename, outputPath, "");
+                DirectoryInfo myDirInfo = new DirectoryInfo(outputPath);
+
+                foreach (string extension in lsextension)
+                {                    
+                    FileInfo[] myFileInfo = myDirInfo.GetFiles(extension, SearchOption.TopDirectoryOnly);
+                    if (myFileInfo.Length > 0)
+                    {
+                        UnzipFiles = myFileInfo[0].FullName;
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+            }
+
+            return UnzipFiles;
+        }
+
+        #endregion Unzip
 
     }
 }

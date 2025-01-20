@@ -106,7 +106,7 @@ namespace ChordAnalyser.UI
         // Chords
         // 2 chords by measure : Chord 1, chord 2
         //public Dictionary<int, (string, string)> Gridchords { get; set; }
-        public Dictionary<int, string> GridBeatChords { get; set; }
+        public Dictionary<int, (string, int)> GridBeatChords { get; set; }
 
         // New search (by beat)        
         private int _chordsCount = 0;
@@ -239,7 +239,7 @@ namespace ChordAnalyser.UI
 
                 for (int i = 1; i <= GridBeatChords.Count; i++)
                 {
-                    string t = GridBeatChords[i];
+                    string t = GridBeatChords[i].Item1;
 
                     if (t != "" && t != EmptyChord && t != NoChord && t != currentchord)
                     {
@@ -285,7 +285,7 @@ namespace ChordAnalyser.UI
             if (!GridBeatChords.ContainsKey(beat))
                 return;
 
-            string ChordName = GridBeatChords[beat];
+            string ChordName = GridBeatChords[beat].Item1;
             // If the chord chord played is different than the previous one, we have to offset the control
             if (ChordName != NoChord && ChordName != "" && ChordName != EmptyChord && ChordName != _currentChordName)
             {
@@ -394,7 +394,7 @@ namespace ChordAnalyser.UI
 
             for (int i = 1; i <= GridBeatChords.Count; i++)
             {
-                ChordName = GridBeatChords[i];
+                ChordName = GridBeatChords[i].Item1;
 
                 // Draw chords if they are different from previous               
                 if (ChordName != "" && ChordName != EmptyChord && ChordName != currentChordName && ChordName != NoChord)

@@ -306,8 +306,32 @@
   <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuFileOpen.Text" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="mnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>177, 6</value>
+  </data>
+  <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuFileSave.Text" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="mnuFileSaveAs.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuFileSaveAs.Text" xml:space="preserve">
+    <value>Save as</value>
+  </data>
+  <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>177, 6</value>
+  </data>
   <data name="mnuFilePrintLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>131, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFilePrintLyrics.Text" xml:space="preserve">
     <value>Print Lyrics</value>
@@ -316,7 +340,7 @@
     <value>False</value>
   </data>
   <data name="mnuFilePrintPDF.Size" type="System.Drawing.Size, System.Drawing">
-    <value>131, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFilePrintPDF.Text" xml:space="preserve">
     <value>Print PDF</value>
@@ -324,14 +348,17 @@
   <data name="mnuFilePrintPDF.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="mnuFileSep.Size" type="System.Drawing.Size, System.Drawing">
-    <value>128, 6</value>
+  <data name="mnuFileSep3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>177, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>131, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quit</value>
+  </data>
+  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>177, 6</value>
   </data>
   <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>37, 20</value>
@@ -392,6 +419,9 @@
   </metadata>
   <metadata name="saveMidiFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>230, 17</value>
+  </metadata>
+  <metadata name="openMidiFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>383, 17</value>
   </metadata>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -3075,6 +3105,36 @@
   <data name="&gt;&gt;mnuFile.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;mnuFileOpen.Name" xml:space="preserve">
+    <value>mnuFileOpen</value>
+  </data>
+  <data name="&gt;&gt;mnuFileOpen.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuFileSep1.Name" xml:space="preserve">
+    <value>mnuFileSep1</value>
+  </data>
+  <data name="&gt;&gt;mnuFileSep1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuFileSave.Name" xml:space="preserve">
+    <value>mnuFileSave</value>
+  </data>
+  <data name="&gt;&gt;mnuFileSave.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuFileSaveAs.Name" xml:space="preserve">
+    <value>mnuFileSaveAs</value>
+  </data>
+  <data name="&gt;&gt;mnuFileSaveAs.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuFileSep2.Name" xml:space="preserve">
+    <value>mnuFileSep2</value>
+  </data>
+  <data name="&gt;&gt;mnuFileSep2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;mnuFilePrintLyrics.Name" xml:space="preserve">
     <value>mnuFilePrintLyrics</value>
   </data>
@@ -3087,10 +3147,10 @@
   <data name="&gt;&gt;mnuFilePrintPDF.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;mnuFileSep.Name" xml:space="preserve">
-    <value>mnuFileSep</value>
+  <data name="&gt;&gt;mnuFileSep3.Name" xml:space="preserve">
+    <value>mnuFileSep3</value>
   </data>
-  <data name="&gt;&gt;mnuFileSep.Type" xml:space="preserve">
+  <data name="&gt;&gt;mnuFileSep3.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;mnuFileQuit.Name" xml:space="preserve">
@@ -3098,6 +3158,12 @@
   </data>
   <data name="&gt;&gt;mnuFileQuit.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator3.Name" xml:space="preserve">
+    <value>toolStripSeparator3</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;mnuHelp.Name" xml:space="preserve">
     <value>mnuHelp</value>
@@ -3134,6 +3200,12 @@
   </data>
   <data name="&gt;&gt;saveMidiFileDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;openMidiFileDialog.Name" xml:space="preserve">
+    <value>openMidiFileDialog</value>
+  </data>
+  <data name="&gt;&gt;openMidiFileDialog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmChords</value>

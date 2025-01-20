@@ -50,7 +50,7 @@ namespace Karaboss.Lyrics
         private Dictionary<int, string> LyricsLines = new Dictionary<int, string>();
         private Dictionary<int, int> LyricsTimes = new Dictionary<int, int>();
         private Array LyricsLinesKeys;
-        //private Array LyricsTimesKeys;
+        
 
         private readonly Sequence sequence1;
 
@@ -140,7 +140,6 @@ namespace Karaboss.Lyrics
             set { _lyrictype = value; }
         }
 
-
         public bool bHasLyrics
         {
             get {
@@ -179,9 +178,9 @@ namespace Karaboss.Lyrics
 
         // Search by beat
         // int beat
-        // string chord
-        private Dictionary<int, string> _gridbeatchords;
-        public Dictionary<int, string> GridBeatChords 
+        // string chord & int ticks
+        private Dictionary<int, (string, int)> _gridbeatchords;
+        public Dictionary<int, (string, int)> GridBeatChords 
         {
             get { return _gridbeatchords; }
             set { _gridbeatchords = value; } 
@@ -1350,6 +1349,9 @@ namespace Karaboss.Lyrics
         /// <param name="tracknum"></param>
         private void ExtractChordsInLyrics(bool ShowChords)
         {
+            // TODO improve performance
+            // avoid to recalculate pattern & Chorddelimiter
+            
             string lyricElement;
             string chordElement = string.Empty;           
             bool bFound;
@@ -1658,7 +1660,7 @@ namespace Karaboss.Lyrics
             //Change labels displayed
             for (int i = 1; i <= GridBeatChords.Count; i++)
             {
-                GridBeatChords[i] = InterpreteChord(GridBeatChords[i]);
+                GridBeatChords[i] = (InterpreteChord(GridBeatChords[i].Item1), GridBeatChords[i].Item2);
             }
         }
 
@@ -1707,7 +1709,7 @@ namespace Karaboss.Lyrics
         /// <summary>
         /// Include chords updated from frmChords
         /// </summary>
-        public void PopulateUpdatedChords(Dictionary<int, string> gbc)
+        public void PopulateUpdatedChords(Dictionary<int, (string, int)> gbc)
         {
             int nbBeatsPerMeasure = sequence1.Numerator;
             int beatDuration = _measurelen / nbBeatsPerMeasure;
@@ -1721,13 +1723,13 @@ namespace Karaboss.Lyrics
             string lastChordName = "<>";
             bool bFound;
             int insertIndex;
-           
+            int removeIndex;
 
             // Beat
-            // chord
+            // (chord, ticks)
             GridBeatChords = gbc;
-
-            // FIRST REMOVE CHORDS FROM plLyrics
+            /*
+            // FIRST REMOVE CHORDS FROM plLyrics !!!!!!!!!!!!!!!!!!!!!!!!!! NOOOOOOON
             List<plLyric> l  = new List<plLyric>();
             for (int i = 0; i < plLyrics.Count; i++)
             {
@@ -1735,36 +1737,109 @@ namespace Karaboss.Lyrics
                     l.Add(plLyrics[i]);
             }
             plLyrics = l;
-            
+            */
+
+            /*
+             *  Gros problème : gridbeatchords résonne en beat et les accords ne sont pas forcément saisies parfaitement sur des chiffres ronds !!!!
+             * 
+             * 
+             * */
+            removeIndex = -1;
+            bool bExit = false;
+
+            // Remove chords from plLyrics that have been deleted
+            do
+            {
+                // Loop on each chord of plLyrics
+                for (int j = 0; j < plLyrics.Count; j++)
+                {
+                    plLyric pll = plLyrics[j];
+
+                    if (pll.CharType == plLyric.CharTypes.Text)
+                    {
+                        chordName = pll.Element.Item1;
+                        lyric = pll.Element.Item2;
+                        TicksOn = pll.TicksOn;
+                        bFound = false;
+
+                        if (chordName != "")
+                        {
+                            // Search if this chord exists in GridBeatChord
+                            for (int beat = 1; beat <= GridBeatChords.Count; beat++)
+                            {
+                                if (GridBeatChords[beat].Item2 > TicksOn)
+                                    break;
+
+                                if (chordName == GridBeatChords[beat].Item1 && TicksOn == GridBeatChords[beat].Item2)
+                                {
+                                    bFound = true;
+                                    break;
+                                }
+                            }
+
+                            // chord does not exists in GridBeatChord
+                            if (!bFound)
+                            {
+                                removeIndex = j;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (j == plLyrics.Count - 1)
+                    {
+                        //removeIndex = -1;
+                        bExit = true;
+                    }
+                }
+
+                if (!bExit)
+                    plLyrics.RemoveAt(removeIndex);
+
+            } while (!bExit);
+
+
+            // 2. Add new chords
             for (int beat = 1; beat <= GridBeatChords.Count; beat++)
             {
                 if (GridBeatChords.ContainsKey(beat))
                 {
-                    chordName = GridBeatChords[beat];
+                    chordName = GridBeatChords[beat].Item1;
 
                     if (chordName != string.Empty && chordName != EmptyChord && chordName != ChordNotFound && chordName != lastChordName)
                     {
                         lastChordName = chordName;
-                        ticks = (beat - 1) * beatDuration;
+                        
+                        //ticks = (beat - 1) * beatDuration;
+                        ticks = GridBeatChords[beat].Item2;
+                        
                         bFound = false;
                         insertIndex = -1;
 
                         for (int j = 0; j < plLyrics.Count; j++)
                         {
-                            TicksOn = plLyrics[j].TicksOn;
-                            TicksOff = plLyrics[j].TicksOff;
+                            // Consider only Text
+                            plLyric pll = plLyrics[j];
+                            
+                            TicksOn = pll.TicksOn;
+                            TicksOff = pll.TicksOff;
 
                             if (ticks == TicksOn)
                             {
-                                // ticks has the same value than a TicksOn, the chord has to be added to the lyric in the field 'chord'
-                                if (plLyrics[j].CharType == plLyric.CharTypes.Text)
+                                // Chord must be replaced [C]La maison => [D]La maison
+                                if (pll.CharType == plLyric.CharTypes.Text)
                                 {
-                                    lyric = plLyrics[j].Element.Item2;
-                                    lyric = formateLyricOfChord(chordName, lyric);
-                                    plLyrics[j].Element = (chordName, lyric);
-                                    plLyrics[j].IsChord = false;
+                                    if (chordName != pll.Element.Item1)
+                                    {
+                                        lyric = pll.Element.Item2;
+                                        // Remove chord in the lyric
+                                        lyric = Regex.Replace(lyric, RemoveChordPattern, @"");
+                                        lyric = formateLyricOfChord(chordName, lyric);
+                                        pll.Element = (chordName, lyric);
+                                    }
                                     bFound = true;
-                                }
+
+                                }                                                                                                               
                                 else
                                 {
                                     // This is a linefeed or paragraph => insert a new lyric
@@ -1818,6 +1893,9 @@ namespace Karaboss.Lyrics
                         if (!bFound)
                         {
                             lyric = formateLyricOfChord(chordName, "");
+                            
+                            // Add chord name to the lyric: Replace lyric '-- ' by '[A]-- '
+                            lyric = ChordDelimiter.Item1 + chordName + ChordDelimiter.Item2 + lyric;
 
                             // Ticks was never smaller or equal to an existing TickOn => is has to be added at the end
                             if (insertIndex == -1)
@@ -1868,12 +1946,15 @@ namespace Karaboss.Lyrics
             {
                 if (GridBeatChords.ContainsKey(beat))
                 {
-                    chordName = GridBeatChords[beat];
+                    chordName = GridBeatChords[beat].Item1;
 
                     if (chordName != string.Empty && chordName != EmptyChord && chordName != ChordNotFound && chordName != lastChordName)
                     {
                         lastChordName = chordName;
+                        
+                        // With Analyser, the ticks precision is a beat
                         ticks = (beat - 1) * beatDuration;
+                        
                         bFound = false;
                         insertIndex = -1;
 
@@ -2471,9 +2552,9 @@ namespace Karaboss.Lyrics
                 for (int timeinmeasure = 1; timeinmeasure <= nbBeatsPerMeasure; timeinmeasure++)
                 {
                     beat = (measure - 1) * nbBeatsPerMeasure + timeinmeasure;
-                    if (beat <= _nbBeats && beat < GridBeatChords.Count)
+                    if (beat <= _nbBeats && beat <= GridBeatChords.Count)
                     {
-                        chordName = GridBeatChords[beat];
+                        chordName = GridBeatChords[beat].Item1;
 
 
                         // ===========================
@@ -2733,7 +2814,7 @@ namespace Karaboss.Lyrics
         /// Used in frmChords TAB1, 2 & 3 and frmLyrics
         /// </summary>
         /// <returns></returns>
-        public Dictionary<int, string> FillGridBeatChordsWithLyricsChords()
+        public Dictionary<int, (string, int)> FillGridBeatChordsWithLyricsChords()
         {
             int nbBeatsPerMeasure = sequence1.Numerator;
             //int measure;
@@ -2746,7 +2827,7 @@ namespace Karaboss.Lyrics
             //int tickson;
             //int numerator = sequence1.Numerator;
 
-            _gridbeatchords = new Dictionary<int, string>();
+            _gridbeatchords = new Dictionary<int, (string, int)>();
 
             #region check
             if (plLyrics == null || plLyrics.Count == 0)
@@ -2759,7 +2840,7 @@ namespace Karaboss.Lyrics
 
             for (int i = 1; i <= beats; i++)
             {
-                _gridbeatchords[i] = ChordNotFound;
+                _gridbeatchords[i] = (ChordNotFound, 0);
             }
 
             for (int i = 0; i < plLyrics.Count; i++)
@@ -2774,7 +2855,7 @@ namespace Karaboss.Lyrics
                     //timeinmeasure = (int)GetTimeInMeasure(tickson);
                     beat = pll.Beat;
 
-                    _gridbeatchords[beat] = chordName;
+                    _gridbeatchords[beat] = (chordName, pll.TicksOn);
                 }
             }
 

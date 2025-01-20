@@ -60,11 +60,9 @@ namespace ChordsAnalyser
 
         // Dictionary chodr by beat      
        // int beat
-       // string chord
-        public Dictionary<int, string> GridBeatChords { get; set; }
+       // string chord, int ticks
+        public Dictionary<int, (string, int)> GridBeatChords { get; set; }
 
-        // list of chords by ticks
-        //public List<(int,string)> lstChords { get; set; }
 
         private readonly static Dictionary<int, List<int>> dictnotes = new Dictionary<int, List<int>>();
 
@@ -108,10 +106,10 @@ namespace ChordsAnalyser
             // Dictionary :
             // int = measure number
             // string : chord
-            GridBeatChords = new Dictionary<int, string>(_nbBeats);
+            GridBeatChords = new Dictionary<int, (string, int)>(_nbBeats);
             for (int i = 1; i <= _nbBeats; i++)
             {
-                GridBeatChords[i] = ChordNotFound;
+                GridBeatChords[i] = (ChordNotFound, 0);
             }
             
             // Search by half measure
@@ -159,12 +157,10 @@ namespace ChordsAnalyser
             int beat;
             int timeinmeasure;
 
-            // init dictionary            
-            //GridBeatChords = new Dictionary<int, string>();
+            // init dictionary                        
             for (int i = 1; i <= _nbBeats; i++)
             {
-                dictnotes[i] = new List<int>();                
-                //GridBeatChords[i] = ChordNotFound;
+                dictnotes[i] = new List<int>();                                
             }
 
             //Search notes
@@ -239,6 +235,8 @@ namespace ChordsAnalyser
 
         */
 
+        
+        
         private void SearchBeat(int beat)
         {
             if (dictnotes[beat].Count > 0)
@@ -246,6 +244,8 @@ namespace ChordsAnalyser
                 List<string> notletters = TransposeToLetterChord(dictnotes[beat]);
                 // Dictionary with notes sorted by apparition
                 Dictionary<string, int> dictbestnotes = GetBestNotes(notletters);
+
+                int ticks = beat;
 
                 // Remove doubles
                 // TODO
@@ -337,15 +337,16 @@ namespace ChordsAnalyser
                 if (lroot != null)
                 {
                     string res = Analyser.determine(lroot);
-                    GridBeatChords[beat] = res;
+                    GridBeatChords[beat] = (res, ticks);
                 }
                 else
                 {
-                    GridBeatChords[beat] = ChordNotFound;
+                    GridBeatChords[beat] = (ChordNotFound, ticks);
                 }
 
             }
         }
+        
         #endregion variante
 
 
@@ -765,14 +766,18 @@ namespace ChordsAnalyser
         {
             int measure;
             int beat;
+            int ticks;
             string chordName;
             string lastChordName = "-1";
             int numerator = sequence1.Numerator;
+            int nbBeatsPerMeasure = sequence1.Numerator;
+            int beatDuration = _measurelen / nbBeatsPerMeasure;
 
-            GridBeatChords = new Dictionary<int, string>(_nbBeats);
+            GridBeatChords = new Dictionary<int, (string, int)>(_nbBeats);
             for (int i = 1; i <= _nbBeats; i++) 
             {
-                GridBeatChords[i] = ChordNotFound;            
+                ticks = (i - 1) * beatDuration;
+                GridBeatChords[i] = (ChordNotFound, ticks);            
             }
 
             for (int i = 1; i <= Gridchords.Count; i++)
@@ -785,7 +790,8 @@ namespace ChordsAnalyser
                 {
                     lastChordName = chordName;
                     beat = 1 + (measure - 1) * numerator;
-                    GridBeatChords[beat] = chordName;
+                    ticks = (beat - 1) * beatDuration;
+                    GridBeatChords[beat] = (chordName, ticks);
 
                 }
 
@@ -795,10 +801,8 @@ namespace ChordsAnalyser
                 {
                     lastChordName = chordName;
                     beat = 1 + (measure - 1) * numerator + (numerator / 2);
-
-
-
-                    GridBeatChords[beat] = chordName;
+                    ticks = (beat - 1) * beatDuration;
+                    GridBeatChords[beat] = (chordName, ticks);
                 }
             }
         }

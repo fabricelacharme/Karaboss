@@ -163,7 +163,7 @@ namespace ChordAnalyser.UI
         // Chords
         // 2 chords by measure : Chord 1, chord 2
         //public Dictionary<int, (string, string)> Gridchords { get; set; }        
-        public Dictionary<int, string> GridBeatChords { get; set; }
+        public Dictionary<int, (string, int)> GridBeatChords { get; set; }
 
         //Lyrics
         public Dictionary<int,string> GridLyrics { get; set; }
@@ -554,7 +554,7 @@ namespace ChordAnalyser.UI
                 for (int i = 1; i <= GridBeatChords.Count; i++)
                 {
                     // Chord name                                                           
-                    chordName = GridBeatChords[i];
+                    chordName = GridBeatChords[i].Item1;
                     
                     w = MeasureString(_fontChord.FontFamily, chordName, _fontChord.Size);
                     h = MeasureStringHeight(_fontChord.FontFamily, chordName, _fontChord.Size);

@@ -2170,7 +2170,7 @@ namespace Karaboss
             else if (ext == ".mxl")
             {
                 // mxl file must be unzipped before
-                string myXMLFileName = UnzipFile(MIDIfileFullPath);
+                string myXMLFileName = Files.UnzipFile(MIDIfileFullPath);
                 if (File.Exists(myXMLFileName))
                 {
                     Cursor.Current = Cursors.WaitCursor;
@@ -3788,6 +3788,11 @@ namespace Karaboss
             restoreSequenceTags();
 
             // By default, insert the lyrics (either text or lyric) into the melodytrack
+            #region guard
+            if (melodytracknum == -1)
+                melodytracknum = 0;
+            #endregion guard
+
             Track track = sequence1.tracks[melodytracknum];
 
             // Insert all lyric events
@@ -4482,8 +4487,7 @@ namespace Karaboss
         {
 
             openMidiFileDialog.Title = "Open MIDI file";
-            openMidiFileDialog.DefaultExt = "kar";
-            //openMidiFileDialog.Filter = "Kar files|*.kar|MIDI files|*.mid|All files|*.*";
+            openMidiFileDialog.DefaultExt = "kar";            
             openMidiFileDialog.Filter = "Kar files|*.kar|MIDI files|*.mid|Xml files|*.xml|MusicXml files|*.musicxml|Text files|*.txt|All files|*.*";
 
 
@@ -8503,19 +8507,7 @@ namespace Karaboss
 
         #region Utilities
 
-        #region Unzip
-        private string UnzipFile(string f)
-        {
-            string mTempDir = Path.GetTempPath() + "karaboss\\";
-            string myTempDir = mTempDir + Path.GetRandomFileName();
-            Directory.CreateDirectory(myTempDir);
-
-            List<string> lsextensions = new List<string> { "*.musicxml", "*.xml" };
-            return Karaclass.UnzipFiles(f, lsextensions, myTempDir);
-        }
-        #endregion Unzip
-
-
+       
         #region MIDI
 
         /// <summary>

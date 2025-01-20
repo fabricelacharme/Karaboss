@@ -177,8 +177,8 @@ namespace ChordAnalyser.UI
 
         //public Dictionary<int, (string, string)> Gridchords { get; set; }
 
-        private Dictionary<int, string> _gridbeatchords;
-        public Dictionary<int, string> GridBeatChords {
+        private Dictionary<int, (string, int)> _gridbeatchords;
+        public Dictionary<int, (string, int)> GridBeatChords {
             get { return _gridbeatchords; }
             set { 
                 _gridbeatchords = value;
@@ -496,7 +496,7 @@ namespace ChordAnalyser.UI
                     }
 
                     // Chord name                                        
-                    chordName = _gridbeatchords[i];
+                    chordName = _gridbeatchords[i].Item1;
 
                     w = MeasureString(fontChord.FontFamily, chordName, fontChord.Size);
 

@@ -160,7 +160,7 @@ namespace Karaboss
         private frmExplorer frmExplorer;
         
         // New search (by beat)        
-        public Dictionary<int, string> GridBeatChords;
+        public Dictionary<int, (string, int)> GridBeatChords;
 
         #endregion private dcl
 
@@ -749,7 +749,7 @@ namespace Karaboss
             //Change labels displayed
             for (int i = 1; i <= GridBeatChords.Count; i++)
             {
-                GridBeatChords[i] = InterpreteChord(GridBeatChords[i]);
+                GridBeatChords[i] = (InterpreteChord(GridBeatChords[i].Item1), GridBeatChords[i].Item2);
             }
 
 
@@ -845,17 +845,7 @@ namespace Karaboss
         #endregion Display Notes
 
 
-        #region Update Chord
-
-        public void UpdateChord(int beat, string ChordName)
-        {
-            GridBeatChords[beat] = ChordName;            
-            ChordMapControlModify.GridBeatChords = GridBeatChords;
-
-            FileModified();
-        }
-
-        #endregion Update Chord
+       
 
 
         #region handle messages
@@ -1274,7 +1264,7 @@ namespace Karaboss
 
         #region Events
 
-        #region chordcontrol
+        #region TAB1 chordcontrol
         private void ChordControl_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -1308,7 +1298,7 @@ namespace Karaboss
         #endregion chordcontrol
 
 
-        #region chordrenderer events
+        #region TAB1 chordrenderer events
         
         private void ChordRendererGuitar_HeightChanged(object sender, int value)
         {                        
@@ -1331,10 +1321,10 @@ namespace Karaboss
             }
         }
       
-        #endregion chordrenderer events
+        #endregion TAB1 chordrenderer events
 
 
-        #region chordmapcontrol
+        #region TAB2 chordmapcontrol
         private void ChordMapControl1_HeightChanged(object sender, int value)
         {            
             
@@ -1378,7 +1368,7 @@ namespace Karaboss
         #endregion chordmapcontrol
 
 
-        #region ChordMapControlModify
+        #region TAB4 ChordMapControlModify
         
         /// <summary>
         /// Open windows to modify a chord name
@@ -1425,7 +1415,7 @@ namespace Karaboss
                 
                 if (ChordMapControlModify.GridBeatChords.ContainsKey(beat))
                 {                    
-                    ChordName = ChordMapControlModify.GridBeatChords[beat];                    
+                    ChordName = ChordMapControlModify.GridBeatChords[beat].Item1;                    
                     frmEditChord = new frmEditChord(ChordName, beat, xPos + pnlModifyMap.AutoScrollPosition.X, yPos + pnlModifyMap.AutoScrollPosition.Y);
                     frmEditChord.Show();
                 }
@@ -1463,10 +1453,10 @@ namespace Karaboss
             //throw new NotImplementedException();
         }
 
-        #endregion ChordMapControlModify
+        #endregion TAB4 ChordMapControlModify
 
 
-        #region TabChordsControl
+        #region All TABS TabChordsControl
 
         /// <summary>
         /// Color selected header cell of TabControl
@@ -1529,7 +1519,7 @@ namespace Karaboss
             catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
 
-        #endregion TabChordsControl
+        #endregion All TABS TabChordsControl
 
 
         #endregion Events
@@ -1546,8 +1536,7 @@ namespace Karaboss
             // pos is in which measure?
             int curmeasure = 1 + pos / _measurelen;
 
-            // which line ?                                
-            //int curline = (int)(Math.Ceiling((double)(curmeasure + 1) / ChordMapControl1.NbColumns));
+            // which line ?                                            
             int curline = (int)(Math.Ceiling((double)(curmeasure) / ChordMapControl1.NbColumns));
 
             // Change line => offset Chord map
@@ -1560,13 +1549,11 @@ namespace Karaboss
                 // if control is higher then the panel => scroll
                 if (ChordMapControl1.Height > pnlDisplayMap.Height)
                 {
-                    // offset vertical: ensure to see 2 lines
-                    //int offset = HauteurCellule * (curline - 2);
+                    // offset vertical: ensure to see 2 lines                    
                     int offset = HauteurCellule * (curline - 1);
 
                     if (pnlDisplayMap.VerticalScroll.Visible && pnlDisplayMap.VerticalScroll.Minimum <= offset && offset <= pnlDisplayMap.VerticalScroll.Maximum)
                     {
-                        //pnlDisplayMap.VerticalScroll.Value = HauteurCellule * (curline - 2);
                         pnlDisplayMap.VerticalScroll.Value = offset;
                     }
                 }                
@@ -1785,6 +1772,17 @@ namespace Karaboss
                 Cursor.Current = Cursors.WaitCursor;
                 Application.DoEvents();
                 LoadAsyncXmlFile(MIDIfileFullPath);
+            }
+            else if (ext == ".mxl")
+            {
+                // mxl file must be unzipped before
+                string myXMLFileName = Files.UnzipFile(MIDIfileFullPath);
+                if (File.Exists(myXMLFileName))
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                    Application.DoEvents();
+                    LoadAsyncXmlFile(myXMLFileName);
+                }
             }
             else if (ext == ".txt")
             {
@@ -2284,6 +2282,42 @@ namespace Karaboss
 
         #region mnu file
 
+        private void mnuFileOpen_Click(object sender, EventArgs e)
+        {
+            openMidiFileDialog.Title = "Open MIDI file";
+            openMidiFileDialog.DefaultExt = "kar";
+            openMidiFileDialog.Filter = "Kar files|*.kar|MIDI files|*.mid|Xml files|*.xml|MusicXml files|*.musicxml|Compressed MusicXml files|*.mxl|Text files|*.txt|All files|*.*";
+
+
+            if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = openMidiFileDialog.FileName;
+
+                MIDIfileName = Path.GetFileName(fileName);
+                MIDIfilePath = Path.GetDirectoryName(fileName);
+                MIDIfileFullPath = fileName;
+
+                // Load file
+                sequence1.LoadProgressChanged += HandleLoadProgressChanged;
+                sequence1.LoadCompleted += HandleLoadCompleted;
+
+                SelectActionOnLoad();
+
+            }
+        }
+
+        private void mnuFileSave_Click(object sender, EventArgs e)
+        {
+            StoreChordsInLyrics();
+            SaveFileProc();
+        }
+
+        private void mnuFileSaveAs_Click(object sender, EventArgs e)
+        {
+            StoreChordsInLyrics();
+            SaveAsFileProc();
+        }
+
         /// <summary>
         /// TAB 3: send lyrics to notepad
         /// </summary>
@@ -2655,21 +2689,7 @@ namespace Karaboss
 
         #region Save file
 
-        /// <summary>
-        /// Put Chords of GridBeatChords in lyrics
-        /// </summary>
-        private void StoreChordsInLyrics()
-        {
-            // Source GridBeatChords
-            Track track = sequence1.tracks[myLyricsMgmt.MelodyTrackNum];
-            if (myLyricsMgmt.plLyrics.Count == 0)
-                myLyricsMgmt.FullExtractLyrics(true);
-            myLyricsMgmt.PopulateUpdatedChords(GridBeatChords);
-            myLyricsMgmt.CleanLyrics();
-
-            ReplaceLyrics(myLyricsMgmt.plLyrics, LyricTypes.Lyric, myLyricsMgmt.MelodyTrackNum);
-            
-        }
+        
         
         
         /// <summary>
@@ -2769,9 +2789,7 @@ namespace Karaboss
         /// <param name="fileName"></param>
         public void InitSaveFile(string fileName)
         {
-
             progressBarPlayer.Visible = true;
-
             sequence1.SaveProgressChanged += HandleSaveProgressChanged;
             sequence1.SaveCompleted += HandleSaveCompleted;
             SaveFile(fileName);
@@ -2865,7 +2883,72 @@ namespace Karaboss
         #endregion Save file
 
 
-        #region lyrics
+        #region Save lyrics
+
+        #region Update Chord
+
+        /// <summary>
+        /// Insert new chord into gribeatchords
+        /// </summary>
+        /// <param name="beat"></param>
+        /// <param name="ChordName"></param>
+        public void UpdateChord(int beat, string ChordName)
+        {
+            int ticks;
+            int nbBeatsPerMeasure = sequence1.Numerator;
+
+            if (nbBeatsPerMeasure == 0)
+                return;
+            
+            int beatDuration = _measurelen / nbBeatsPerMeasure;
+
+            if (GridBeatChords[beat].Item2 == 0)
+                ticks = (beat - 1) * beatDuration;
+            else
+                ticks = GridBeatChords[beat].Item2;
+
+            GridBeatChords[beat] = (ChordName, ticks);
+            ChordMapControlModify.GridBeatChords = GridBeatChords;
+
+            FileModified();
+        }
+
+        #endregion Update Chord
+
+
+        /// <summary>
+        /// Put Chords of GridBeatChords in lyrics
+        /// </summary>
+        private void StoreChordsInLyrics()
+        {
+            // Source GridBeatChords
+            if (myLyricsMgmt.MelodyTrackNum == -1)
+                myLyricsMgmt.MelodyTrackNum = 0;
+
+            Track track = sequence1.tracks[myLyricsMgmt.MelodyTrackNum];
+            
+            if (myLyricsMgmt.plLyrics.Count == 0)
+                myLyricsMgmt.FullExtractLyrics(true);
+
+            #region check
+            if (myLyricsMgmt.ChordDelimiter == (null, null) || myLyricsMgmt.ChordDelimiter == ("", ""))
+            {
+                myLyricsMgmt.ChordDelimiter = ("[", "]");
+                //MessageBox.Show("Format of chords delimiters not found: [] or ()", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //return;
+            }
+            #endregion check
+
+            myLyricsMgmt.PopulateUpdatedChords(GridBeatChords);
+            myLyricsMgmt.CleanLyrics();
+
+           
+
+            // Insert new lyrics in the sequence
+            ReplaceLyrics(myLyricsMgmt.plLyrics, LyricTypes.Lyric, myLyricsMgmt.MelodyTrackNum);
+
+        }
+
 
         /// <summary>
         /// Replace existing lyrics by others
@@ -2903,28 +2986,11 @@ namespace Karaboss
             if (myLyricsMgmt.OrgplLyrics.Count > 0)
             {
                 // Reset display
-                myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
-
-                // Window closed
-                //DisplayLyricsForm();
-                //frmLyric.LoadSong(myLyricsMgmt.plLyrics);
+                myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);               
             }
-
-            // Refresh display of lyrics
-            // if switch between Text & Lyric or
-            // if Lyric because we need to display the new lyrics on the scores
-            if (bRefreshDisplay || myLyricsMgmt.LyricType == LyricTypes.Lyric)
-            {
-                //if (Karaclass.m_ShowChords)
-                //    AddChordsToTrack();
-
-                //RefreshDisplay();
-            }
-
-
+            
             // File was modified
             FileModified();
-
         }
 
 
@@ -3016,16 +3082,23 @@ namespace Karaboss
                     if (currentTick >= lastcurrenttick)
                     {
                         string plElement;
+
+                        /*
                         if (pll.IsChord)
                         {
-                            plElement = "[" + pll.Element.Item1 + "]";
+                            // Select pattern delimiter
+                            //plElement = "[" + pll.Element.Item1 + "]";
+                            plElement = myLyricsMgmt.ChordDelimiter.Item1 + pll.Element.Item1 + myLyricsMgmt.ChordDelimiter.Item2;
                         }
                         else
                         {
                             plElement = pll.Element.Item2;
                         }
-                        
-                        
+                        */
+                        // Fix done in PopulateUpdatedChords
+                        // Add chord name to the lyric: Replace lyric '-- ' by '[A]-- '
+                        plElement = pll.Element.Item2;
+
                         lastcurrenttick = currentTick;
                         currentElement = currentCR + plElement;
 
@@ -3178,6 +3251,9 @@ namespace Karaboss
             // Insert new message
             track.Insert(currentTick, mtMsg);
         }
-        #endregion lyrics
+
+        #endregion Save lyrics
+
+       
     }
 }

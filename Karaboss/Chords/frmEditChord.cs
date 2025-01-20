@@ -301,19 +301,29 @@ namespace Karaboss
             
             if (cbNote.Text.Length == 0)
             {
-                // 1st char: Restric 1st combo to "A", "B", "C", "D", "E", "F", "G", "#", "b"           
-                
+                // 1st char: Restric 1st combo to "A", "B", "C", "D", "E", "F", "G", "#", "b"                
                 if (!lstRootNotes1.Contains(e.KeyChar.ToString()))
                     e.Handled = true;
                 else
                 {
-                    e.KeyChar = Char.ToUpper(e.KeyChar);
-                    
+                    e.KeyChar = Char.ToUpper(e.KeyChar);                    
                 }
             }
             else if (cbNote.Text.Length == 1)
             {
-                
+                // If selection => ecrase
+                if (cbNote.SelectionLength == 1) 
+                {
+                    // 1st char: Restric 1st combo to "A", "B", "C", "D", "E", "F", "G", "#", "b"                
+                    if (!lstRootNotes1.Contains(e.KeyChar.ToString()))
+                        e.Handled = true;
+                    else
+                    {
+                        e.KeyChar = Char.ToUpper(e.KeyChar);
+                    }
+                    return;
+                }
+
                 if (!lstRootNotes2.Contains(e.KeyChar.ToString()))
                 {
                     // 2nd char: restrict to "#", "b"
