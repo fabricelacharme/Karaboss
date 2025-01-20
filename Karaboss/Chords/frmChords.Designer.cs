@@ -47,7 +47,10 @@
             this.mnuHelpAboutSong = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.saveMidiFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.progressBarPlayer = new System.Windows.Forms.ProgressBar();
             this.tabChordsControl.SuspendLayout();
+            this.pnlToolbar.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -92,6 +95,7 @@
             // pnlToolbar
             // 
             this.pnlToolbar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlToolbar.Controls.Add(this.progressBarPlayer);
             resources.ApplyResources(this.pnlToolbar, "pnlToolbar");
             this.pnlToolbar.Name = "pnlToolbar";
             // 
@@ -162,6 +166,11 @@
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             resources.ApplyResources(this.aboutToolStripMenuItem, "aboutToolStripMenuItem");
             // 
+            // progressBarPlayer
+            // 
+            resources.ApplyResources(this.progressBarPlayer, "progressBarPlayer");
+            this.progressBarPlayer.Name = "progressBarPlayer";
+            // 
             // frmChords
             // 
             resources.ApplyResources(this, "$this");
@@ -176,6 +185,7 @@
             this.Move += new System.EventHandler(this.frmChords_Move);
             this.Resize += new System.EventHandler(this.frmChords_Resize);
             this.tabChordsControl.ResumeLayout(false);
+            this.pnlToolbar.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -202,5 +212,7 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ToolStripMenuItem mnuFilePrintLyrics;
         private System.Windows.Forms.TabPage tabPageModify;
+        private System.Windows.Forms.SaveFileDialog saveMidiFileDialog;
+        private System.Windows.Forms.ProgressBar progressBarPlayer;
     }
 }

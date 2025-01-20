@@ -9,8 +9,9 @@ namespace Karaboss
 {
     public partial class frmEditChord : Form
     {
-        //frmChords fmrmChords;
-        ChordsMapControl ChordsMapControl;
+        #region declarations
+        private frmChords frmChords;
+        private readonly int Beat;
         Point P;
         string currentvalue;
 
@@ -19,25 +20,27 @@ namespace Karaboss
         
         List<string> lstNotes = new List<string> { "C", "C#", "D", "D#", "Db", "E", "Eb", "F", "F#", "G", "G#", "Gb", "A", "A#", "Ab", "B", "Bb" };
         List<string> lstTypes = new List<string> { "maj", "m", "7", "maj7", "m7", "sus4", "5", "dim", "sus2", "7sus4", "9", "7#9", "m9", "maj9", "6", "m6", "m7b5", "aug" };
-        List<string> lstBass = new List<string> { "A", "Ab", "B", "Bb", "C", "C#", "D", "E", "Eb", "F", "F#", "G"  };
+        List<string> lstBass = new List<string> { "A", "Ab", "B", "Bb", "C", "C#", "D", "Db", "E", "Eb", "F", "F#", "G"  };
 
-        public frmEditChord(string Note, ChordsMapControl cm, int X, int Y)
+        #endregion declarations
+
+        public frmEditChord(string Note, int beat, int X, int Y)
         {
             InitializeComponent();
 
             this.TopMost = true;
-            
-            ChordsMapControl = cm;
-            P = new Point(X, Y);                        
-            
+                        
+            P = new Point(X, Y);
+            Beat = beat;
+
             //  form will receive key events before the event is passed to the control that has focus.
             this.KeyPreview = true;
 
             InitCombos();
-            SetcbNotesValues(Note);
+            SetCombosValues(Note);
         }
 
-
+        #region Combos
         private void InitCombos()
         {
             for (int i = 0; i < lstTypes.Count; i++)
@@ -49,39 +52,23 @@ namespace Karaboss
                 cbBass.Items.Add(lstBass[i]);
             }
         }
-
-        private void cbNote_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            // Prevent form closing !!!!!!!!!!!!!!!!
-            // manage Closing variable ?
-            
-            //e.Cancel = !lstNotes.Contains(cbNote.Text);
-                
-
-        }
-        private void cbNote_TextUpdate(object sender, EventArgs e)
-        {
-            if (currentvalue != cbNote.Text)
-            {
-                currentvalue = cbNote.Text;
-                SetcbNotesValues(currentvalue);
-            }
-        }
-        private void cbNote_TextChanged(object sender, EventArgs e)
-        {
-            
-           // SetNotesValue(cbNote.Text);
-            
-        }
-
-        private void SetcbNotesValues(string note)
+         
+        private void SetCombosValues(string note)
         {
             string rest = string.Empty;
+            string type;
+            string bass;
             
             if (note.Length == 0)
                 return;
 
-            if (!lstNotes.Contains(note)) {
+            if (lstNotes.Contains(note))
+            {
+
+            }            
+            // Notes is not contained only in the first Combo
+            else
+            {
                 // First letter wrong
                 if (!lstNotes.Contains(note.Substring(0, 1)))
                     return;
@@ -93,10 +80,9 @@ namespace Karaboss
                 {
                     if (!lstNotes.Contains(note.Substring(0, 2)))
                     {
-                        // if 2 firts letters wrong => take first one
+                        // if 2 firsts letters wrong => take first one
                         rest = note.Substring(1, note.Length - 1);
-                        note = note.Substring(0, 1);
-                        
+                        note = note.Substring(0, 1);              // first letter is ok as seen previouly                        
                     }
                     else
                     {
@@ -104,9 +90,30 @@ namespace Karaboss
                         rest = note.Substring(2, note.Length - 2);
                         note = note.Substring(0, 2);                        
                     }
+                   
+
+                    if (lstTypes.Contains(rest))
+                    {
+                        cbType.Text = rest;
+                    }
+                    else if (lstBass.Contains(rest))
+                    {
+                        cbBass.Text = rest;
+                    }
+                    else if (rest.IndexOf("/") != -1)
+                    {
+                        type = rest.Substring(0, rest.IndexOf("/"));
+                        bass = rest.Substring(rest.IndexOf("/") + 1);
+
+                        if (lstTypes.Contains(type))
+                            cbType.Text = type;
+                        if (lstBass.Contains(bass))
+                            cbBass.Text = bass;
+                    }                    
                 }                
             }
 
+            #region note
             // ============================
             // cbNote
             // ============================
@@ -118,7 +125,7 @@ namespace Karaboss
                     cbNote.Items.Clear();
                     cbNote.Items.Add("C");
                     cbNote.Items.Add("C#");
-                    cbNote.Text = note;                     
+                    cbNote.Text = note;
                     cbNote.EndUpdate();
                     break;
                 case "Db":
@@ -138,7 +145,7 @@ namespace Karaboss
                     cbNote.Items.Clear();
                     cbNote.Items.Add("E");
                     cbNote.Items.Add("Eb");
-                    cbNote.Text= note;
+                    cbNote.Text = note;
                     cbNote.EndUpdate();
                     break;
                 case "F#":
@@ -185,16 +192,13 @@ namespace Karaboss
             currentvalue = note;
             cbNote.SelectionStart = note.Length;
 
-            // ============================
-            // cbType
-            // ============================
-            if (rest == "")
-                return;
-            if (!lstTypes.Contains(rest)) return;
-
-            cbType.Text = rest;
-
+            #endregion note
         }
+
+        #endregion Combos
+
+
+        #region form load unload
 
         private void frmEditChord_Load(object sender, EventArgs e)
         {
@@ -212,16 +216,53 @@ namespace Karaboss
             }
         }
 
+        #endregion form load unload
+
+
+        #region Button
+
+        /// <summary>
+        /// Button: valid note change
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnOk_Click(object sender, EventArgs e)
         {
-            this.Close();
+            SaveChord();
         }
 
+        private void SaveChord()
+        {
+            string ChordName = cbNote.Text;
+            ChordName += cbType.Text;
+            ChordName += cbBass.Text != "" ? "/" + cbBass.Text : "";
 
-      
+            #region Check ChordName
+            if (cbNote.Text == "" && (cbType.Text != "" || cbBass.Text != ""))
+            {
+                MessageBox.Show("Invalid chord", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            #endregion Check ChordName
+
+
+
+            if (Application.OpenForms.OfType<frmChords>().Count() > 0)
+            {
+                frmChords = GetForm<frmChords>();
+                frmChords.UpdateChord(Beat, ChordName);
+            }
+
+            this.Close();
+
+        }
+
+        #endregion Button
 
 
         #region Locate form
+
         /// <summary>
         /// Locate form
         /// </summary>
@@ -233,10 +274,27 @@ namespace Karaboss
             return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
         }
 
-
-
-
         #endregion Locate form
+
+
+        #region cbNote
+
+        private void cbNote_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Prevent form closing !!!!!!!!!!!!!!!!
+            // manage Closing variable ?
+
+            //e.Cancel = !lstNotes.Contains(cbNote.Text);
+        }
+
+        private void cbNote_TextUpdate(object sender, EventArgs e)
+        {
+            if (currentvalue != cbNote.Text)
+            {
+                currentvalue = cbNote.Text;
+                SetCombosValues(currentvalue);
+            }
+        }
 
         private void cbNote_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -273,6 +331,13 @@ namespace Karaboss
                     e.Handled = true;
                 }
             }
+            else if (cbNote.Text.Length == 2)
+            {
+                if (cbNote.SelectionLength != 2)
+                    e.Handled = true;
+                else
+                    e.KeyChar = Char.ToUpper(e.KeyChar);
+            }
             else
             {
                 e.Handled = true;
@@ -282,22 +347,11 @@ namespace Karaboss
         private void cbNote_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
-            {
-                case Keys.A:
+            {              
+                case Keys.Enter:
+                    SaveChord();
                     break;
-                case Keys.B:
-                    break;
-                case Keys.C:
-                    break;
-                case Keys.D:
-                    break;
-                case Keys.E:
-                    break;
-
-                case Keys.F:
-                    break;
-                case Keys.G:
-                    break;
+                
                 case Keys.Back:
                     if (cbNote.Text.Length > 1)
                     {
@@ -308,6 +362,34 @@ namespace Karaboss
                         cbNote.Text = "";
                     break;
                 default:                    
+                    break;
+            }
+        }
+
+        #endregion cbNote
+
+        private void cbType_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Enter:
+                    SaveChord();
+                    break;
+               
+                default:
+                    break;
+            }
+        }
+
+        private void cbBass_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Enter:
+                    SaveChord();
+                    break;
+
+                default:
                     break;
             }
         }

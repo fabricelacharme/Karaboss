@@ -60,6 +60,8 @@ namespace Karaboss
 
         public bool bfilemodified = false;
 
+
+
         #region Lyrics declaration
 
         // Lyrics management
@@ -914,7 +916,6 @@ namespace Karaboss
 
 
         #region chords analysis
-
 
         public void RefreshChordsSheetMusic()
         {
@@ -2196,7 +2197,6 @@ namespace Karaboss
         }
 
     
-
         protected override void OnClosing(CancelEventArgs e)
         {
             closing = true;
@@ -2233,7 +2233,6 @@ namespace Karaboss
 
                 if (bfilemodified == true)
                 {
-
                     // string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
                     String tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
                     DialogResult dr = MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);

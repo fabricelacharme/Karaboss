@@ -759,11 +759,15 @@ namespace Karaboss.Lyrics
                     // Start time for a lyric
                     plTicksOn = track.Lyrics[k].TicksOn;
 
-                    // Stop time for the lyric
-                    //if (plType == plLyric.CharTypes.Text)
-                        plTicksOff = plTicksOn + _measurelen;
+                    // Stop time for the lyric                    
+                    plTicksOff = plTicksOn + _measurelen;
 
-                    pll.Add(new plLyric() { CharType = plType, Element = ("", plElement), TicksOn = plTicksOn, TicksOff = plTicksOff });
+                    // Check if this is a chord (IsChord)
+                    Console.WriteLine("");
+                    if (plElement.Contains("--"))
+                        pll.Add(new plLyric() { CharType = plType, Element = ("", plElement), TicksOn = plTicksOn, TicksOff = plTicksOff, IsChord = true });
+                    else
+                        pll.Add(new plLyric() { CharType = plType, Element = ("", plElement), TicksOn = plTicksOn, TicksOff = plTicksOff, IsChord = false });
                 }
             }            
 
@@ -1699,6 +1703,141 @@ namespace Karaboss.Lyrics
       
 
         #region include remove detected chords in plLyrics
+
+        /// <summary>
+        /// Include chords updated from frmChords
+        /// </summary>
+        public void PopulateUpdatedChords(Dictionary<int, string> gbc)
+        {
+            int nbBeatsPerMeasure = sequence1.Numerator;
+            int beatDuration = _measurelen / nbBeatsPerMeasure;
+
+            int ticks;
+            int TicksOn;
+            int TicksOff = 0;
+
+            string chordName;
+            string lyric;
+            string lastChordName = "<>";
+            bool bFound;
+            int insertIndex;
+           
+
+            // Beat
+            // chord
+            GridBeatChords = gbc;
+
+            // FIRST REMOVE CHORDS FROM plLyrics
+            List<plLyric> l  = new List<plLyric>();
+            for (int i = 0; i < plLyrics.Count; i++)
+            {
+                if (!plLyrics[i].IsChord)
+                    l.Add(plLyrics[i]);
+            }
+            plLyrics = l;
+            
+            for (int beat = 1; beat <= GridBeatChords.Count; beat++)
+            {
+                if (GridBeatChords.ContainsKey(beat))
+                {
+                    chordName = GridBeatChords[beat];
+
+                    if (chordName != string.Empty && chordName != EmptyChord && chordName != ChordNotFound && chordName != lastChordName)
+                    {
+                        lastChordName = chordName;
+                        ticks = (beat - 1) * beatDuration;
+                        bFound = false;
+                        insertIndex = -1;
+
+                        for (int j = 0; j < plLyrics.Count; j++)
+                        {
+                            TicksOn = plLyrics[j].TicksOn;
+                            TicksOff = plLyrics[j].TicksOff;
+
+                            if (ticks == TicksOn)
+                            {
+                                // ticks has the same value than a TicksOn, the chord has to be added to the lyric in the field 'chord'
+                                if (plLyrics[j].CharType == plLyric.CharTypes.Text)
+                                {
+                                    lyric = plLyrics[j].Element.Item2;
+                                    lyric = formateLyricOfChord(chordName, lyric);
+                                    plLyrics[j].Element = (chordName, lyric);
+                                    plLyrics[j].IsChord = false;
+                                    bFound = true;
+                                }
+                                else
+                                {
+                                    // This is a linefeed or paragraph => insert a new lyric
+                                    // Case of Alexandrie Alexandra song                                
+
+                                    // Insert the chord after the linefeed of the lyrics line
+                                    // Test if the element after the linefeed hast not the same TicksOn
+                                    if (j + 1 < plLyrics.Count)
+                                    {
+                                        if (ticks == plLyrics[j + 1].TicksOn)
+                                        {
+                                            lyric = plLyrics[j + 1].Element.Item2;
+                                            lyric = formateLyricOfChord(chordName, lyric);
+                                            plLyrics[j + 1].Element = (chordName, lyric);
+                                            plLyrics[j + 1].IsChord = false;
+                                            bFound = true;
+                                        }
+                                        else
+                                        {
+                                            insertIndex = j + 1;
+                                            bFound = false;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        insertIndex = j;
+                                        bFound = false;
+                                    }
+                                }
+                                break;
+                            }
+
+                            else if (ticks > TicksOn && ticks < TicksOff && plLyrics[j].CharType == plLyric.CharTypes.Text && plLyrics[j].IsChord == false)
+                            {
+                                lyric = plLyrics[j].Element.Item2;
+                                lyric = formateLyricOfChord(chordName, lyric);
+                                plLyrics[j].Element = (chordName, lyric);
+                                plLyrics[j].IsChord = false;
+                                bFound = true;
+                                break;
+                            }
+                            else if (ticks < TicksOn)
+                            {
+                                // ticks is smaller than this TicksOn => the chord has to be inserted at its place as a new element
+                                insertIndex = j;
+                                bFound = false;
+                                break;
+                            }
+                        }
+
+                        if (!bFound)
+                        {
+                            lyric = formateLyricOfChord(chordName, "");
+
+                            // Ticks was never smaller or equal to an existing TickOn => is has to be added at the end
+                            if (insertIndex == -1)
+                            {
+                                plLyrics.Add(new plLyric() { Beat = beat, CharType = plLyric.CharTypes.Text, Element = (chordName, lyric), TicksOn = ticks, TicksOff = TicksOff, IsChord = true });
+                            }
+                            else
+                            {
+                                // ticks was found smaller or equal to an existing TicksOn
+                                plLyrics.Insert(insertIndex, new plLyric() { Beat = beat, CharType = plLyric.CharTypes.Text, Element = (chordName, lyric), TicksOn = ticks, TicksOff = TicksOff, IsChord = true });
+                            }
+                        }
+                    }
+                }
+            }
+
+            //TestCheckTimes();
+            // Add tickoff to new elements chord ?
+            //CheckTimes();
+        }
 
         /// <summary>
         /// Include detected chords into the list plLyrics

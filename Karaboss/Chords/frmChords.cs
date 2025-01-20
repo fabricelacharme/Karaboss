@@ -50,24 +50,26 @@ namespace Karaboss
 {
     public partial class frmChords : Form
     {
-
         #region private dcl
 
         MusicXmlReader MXmlReader; 
         MusicTxtReader MTxtReader;
 
+        private bool bfilemodified = false;
 
         private bool closing = false;
+        private bool bClosingRequired = false; // Quit after saving file
         private bool scrolling = false;
 
         // Current file beeing edited
-        private readonly string MIDIfileName; // = string.Empty;
-        //private readonly string MIDIfilePath; // = string.Empty;
-        private readonly string MIDIfileFullPath; // = string.Empty;
+        private string MIDIfileName; // = string.Empty;
+        private string MIDIfilePath; // = string.Empty;
+        private string MIDIfileFullPath; // = string.Empty;
 
-        //private int bouclestart = 0;
+        private readonly string m_SepLine = "/";
+        private readonly string m_SepParagraph = "\\";
+
         private int newstart = 0;
-        //private int laststart = 0;      // Start time to play
         private int nbstop = 0;
 
 
@@ -155,15 +157,9 @@ namespace Karaboss
 
         // Lyrics 
         private LyricsMgmt myLyricsMgmt;
-
-        // Search by half measure
-        // int measure
-        // string Chord 1st half measure
-        // string chord 2nd half measure
-        //Dictionary<int, (string, string)> Gridchords;
+        private frmExplorer frmExplorer;
         
-        // New search (by beat)
-        //public Dictionary<int, List<string>> GridBeatChords;
+        // New search (by beat)        
         public Dictionary<int, string> GridBeatChords;
 
         #endregion private dcl
@@ -177,7 +173,7 @@ namespace Karaboss
             // Sequence
             MIDIfileFullPath = FileName;
             MIDIfileName = Path.GetFileName(FileName);
-            //MIDIfilePath = Path.GetDirectoryName(FileName);
+            MIDIfilePath = Path.GetDirectoryName(FileName);
 
             outDevice = OtpDev;
 
@@ -187,6 +183,7 @@ namespace Karaboss
             // Title
             SetTitle(FileName);                        
         }
+
 
         #region Display Controls
 
@@ -720,7 +717,6 @@ namespace Karaboss
 
 
         #region Display Chords
-
         
         private void DisplayChords()
         {
@@ -806,8 +802,9 @@ namespace Karaboss
             //chord = chord.Replace("<Chord not found>", "?");
             chord = chord.Replace("<Chord not found>", "");
 
-            int i = chord.IndexOf("/");
-            if (i > 0) { chord = chord.Substring(0, i); }
+            //int i = chord.IndexOf("/");
+            //if (i > 0) { chord = chord.Substring(0, i); }
+            
             //chord = chord.Replace("maj", "");
             //chord = chord.Replace("Eb", "D#");
 
@@ -847,7 +844,20 @@ namespace Karaboss
 
         #endregion Display Notes
 
-       
+
+        #region Update Chord
+
+        public void UpdateChord(int beat, string ChordName)
+        {
+            GridBeatChords[beat] = ChordName;            
+            ChordMapControlModify.GridBeatChords = GridBeatChords;
+
+            FileModified();
+        }
+
+        #endregion Update Chord
+
+
         #region handle messages
 
         /// <summary>
@@ -1324,7 +1334,6 @@ namespace Karaboss
         #endregion chordrenderer events
 
 
-
         #region chordmapcontrol
         private void ChordMapControl1_HeightChanged(object sender, int value)
         {            
@@ -1417,7 +1426,7 @@ namespace Karaboss
                 if (ChordMapControlModify.GridBeatChords.ContainsKey(beat))
                 {                    
                     ChordName = ChordMapControlModify.GridBeatChords[beat];                    
-                    frmEditChord = new frmEditChord(ChordName, ChordMapControlModify, xPos + pnlModifyMap.AutoScrollPosition.X, yPos + pnlModifyMap.AutoScrollPosition.Y);
+                    frmEditChord = new frmEditChord(ChordName, beat, xPos + pnlModifyMap.AutoScrollPosition.X, yPos + pnlModifyMap.AutoScrollPosition.Y);
                     frmEditChord.Show();
                 }
             }
@@ -1521,8 +1530,6 @@ namespace Karaboss
         }
 
         #endregion TabChordsControl
-
-
 
 
         #endregion Events
@@ -1913,7 +1920,31 @@ namespace Karaboss
 
         private void frmChords_FormClosing(object sender, FormClosingEventArgs e)
         {
-           
+
+            if (bfilemodified == true)
+            {
+                // string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
+                String tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
+                DialogResult dr = MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (dr == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+                else if (dr == DialogResult.Yes)
+                {
+                    e.Cancel = true;
+                    // turlututu
+                    bClosingRequired = true;
+
+                    StoreChordsInLyrics();
+
+
+                    SaveFileProc();
+                    return;
+                }
+            }
+
             // enregistre la taille et la position de la forme
             // Copy window location to app settings                
             if (WindowState != FormWindowState.Minimized)
@@ -2621,6 +2652,532 @@ namespace Karaboss
 
         #endregion Locate form
 
-     
+
+        #region Save file
+
+        /// <summary>
+        /// Put Chords of GridBeatChords in lyrics
+        /// </summary>
+        private void StoreChordsInLyrics()
+        {
+            // Source GridBeatChords
+            Track track = sequence1.tracks[myLyricsMgmt.MelodyTrackNum];
+            if (myLyricsMgmt.plLyrics.Count == 0)
+                myLyricsMgmt.FullExtractLyrics(true);
+            myLyricsMgmt.PopulateUpdatedChords(GridBeatChords);
+            myLyricsMgmt.CleanLyrics();
+
+            ReplaceLyrics(myLyricsMgmt.plLyrics, LyricTypes.Lyric, myLyricsMgmt.MelodyTrackNum);
+            
+        }
+        
+        
+        /// <summary>
+        /// File was modified
+        /// </summary>
+        public void FileModified()
+        {
+            bfilemodified = true;
+            string fName = MIDIfileName;
+            if (fName != null && fName != "")
+            {
+                string fExt = Path.GetExtension(fName);             // Extension
+                fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
+
+                string fShortName = fName.Replace("*", "");
+                if (fShortName == fName)
+                    fName += "*";
+
+                fName += fExt;
+                SetTitle(fName);
+            }
+        }
+
+        /// <summary>
+        /// Save File
+        /// </summary>
+        private void SaveFileProc()
+        {
+            string fName = MIDIfileName;
+            string fPath = MIDIfilePath;
+
+            if (MIDIfileFullPath == null && fName != "" && fPath != "")
+                MIDIfileFullPath = fPath + "\\" + fName;
+
+
+            if (fPath == null || fPath == "" || fName == null || fName == "" || !File.Exists(MIDIfileFullPath))
+            {
+                SaveAsFileProc();
+                return;
+            }
+            InitSaveFile(MIDIfileFullPath);
+        }
+
+
+        private void SaveAsFileProc()
+        {
+            string fName = MIDIfileName;
+            string fPath = MIDIfilePath;
+            string fullPath = MIDIfileFullPath;
+
+            string fullName;
+            string defName;
+
+
+            // search path
+            if (fPath == null || fPath == "")
+                fPath = Utilities.CreateNewMidiFile._DefaultDirectory;
+
+            // Search name
+            if (MIDIfileName == null || MIDIfileName == "")
+                fName = "New.mid";
+
+            #region search name
+
+            string defExt = Path.GetExtension(fName);                           // Extension
+            fullName = Utilities.Files.FindUniqueFileName(fullPath);    // Add (2), (3) etc.. if necessary    
+            defName = Path.GetFileNameWithoutExtension(fullName);               // Default name to propose to dialog
+
+            #endregion search name
+
+            string defFilter = "MIDI files (*.mid)|*.mid|Kar files (*.kar)|*.kar|All files (*.*)|*.*";
+            if (defExt == ".kar")
+                defFilter = "Kar files (*.kar)|*.kar|MIDI files (*.mid)|*.mid|All files (*.*)|*.*";
+
+            saveMidiFileDialog.Title = "Save MIDI file";
+            saveMidiFileDialog.Filter = defFilter;
+            saveMidiFileDialog.DefaultExt = defExt;
+            saveMidiFileDialog.InitialDirectory = @fPath;
+            saveMidiFileDialog.FileName = defName;
+
+            if (saveMidiFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = saveMidiFileDialog.FileName;
+
+                MIDIfileFullPath = fileName;
+                MIDIfileName = Path.GetFileName(fileName);
+                MIDIfilePath = Path.GetDirectoryName(fileName);
+
+                InitSaveFile(fileName);
+            }
+        }
+
+
+        /// <summary>
+        /// Save file: initialize events
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void InitSaveFile(string fileName)
+        {
+
+            progressBarPlayer.Visible = true;
+
+            sequence1.SaveProgressChanged += HandleSaveProgressChanged;
+            sequence1.SaveCompleted += HandleSaveCompleted;
+            SaveFile(fileName);
+        }
+
+        /// <summary>
+        /// Save the midi file
+        /// </summary>
+        /// <param name="fileName"></param>
+        private void SaveFile(string fileName)
+        {
+            try
+            {
+                if (fileName != "")
+                {
+                    sequence1.SaveAsync(fileName);
+                }
+            }
+            catch (Exception errsave)
+            {
+                Console.Write(errsave.Message);
+            }
+        }
+
+        /// <summary>
+        /// Event: saving midi file in progress
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleSaveProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            try
+            {
+                if (e.ProgressPercentage >= progressBarPlayer.Minimum && e.ProgressPercentage <= progressBarPlayer.Maximum)
+                    progressBarPlayer.Value = e.ProgressPercentage;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        /// <summary>
+        /// Event: save midi file terminated
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleSaveCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+
+            if (progressBarPlayer != null)
+            {
+                try
+                {
+                    progressBarPlayer.Value = 0;
+                    progressBarPlayer.Visible = false;
+
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex.Message);
+                }
+
+            }
+
+            if (e.Error == null)
+            {
+                bfilemodified = false;
+                if (bClosingRequired == true)
+                {
+                    this.Close();
+                    return;
+                }
+
+                SetTitle(MIDIfileName);
+
+                // Active le formulaire frmExplorer
+                if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
+                {
+                    frmExplorer = GetForm<frmExplorer>();
+                    frmExplorer.RefreshExplorer();
+                }
+
+            }
+            else
+            {
+                MessageBox.Show(e.Error.Message);
+            }
+        }
+
+        #endregion Save file
+
+
+        #region lyrics
+
+        /// <summary>
+        /// Replace existing lyrics by others
+        /// MelodyTrackNum: track hosting the melody
+        /// LyricsTrackNum: track hosting the lyrics (text or lyric types)
+        /// The target is to host the lyrics in the melody track
+        /// </summary>
+        /// <param name="pLyrics"></param>
+        private void ReplaceLyrics(List<plLyric> newpLyrics, LyricTypes newLyricType, int melodytracknum)
+        {
+            // LyricType has changed => refresh display
+            bool bRefreshDisplay = (newLyricType != myLyricsMgmt.LyricType);
+
+            // Delete all lyrics of all types
+            foreach (Track T in sequence1.tracks)
+            {
+                T.deleteLyrics();
+                T.LyricsText.Clear();
+                T.Lyrics.Clear();
+            }
+            // Tags associated to the sequence have been deleted
+            restoreSequenceTags();
+
+            // By default, insert the lyrics (either text or lyric) into the melodytrack
+            Track track = sequence1.tracks[melodytracknum];
+
+            // Insert all lyric events
+            TrkInsertLyrics(track, newpLyrics, newLyricType);
+
+            // Reload myLyricMgmt
+            myLyricsMgmt = new LyricsMgmt(sequence1);
+
+
+            // Refresh frmLyric
+            if (myLyricsMgmt.OrgplLyrics.Count > 0)
+            {
+                // Reset display
+                myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
+
+                // Window closed
+                //DisplayLyricsForm();
+                //frmLyric.LoadSong(myLyricsMgmt.plLyrics);
+            }
+
+            // Refresh display of lyrics
+            // if switch between Text & Lyric or
+            // if Lyric because we need to display the new lyrics on the scores
+            if (bRefreshDisplay || myLyricsMgmt.LyricType == LyricTypes.Lyric)
+            {
+                //if (Karaclass.m_ShowChords)
+                //    AddChordsToTrack();
+
+                //RefreshDisplay();
+            }
+
+
+            // File was modified
+            FileModified();
+
+        }
+
+
+        /// <summary>
+        /// Insert new lyrics in the target track
+        /// </summary>
+        /// <param name="Track"></param>
+        /// <param name="l"></param>
+        /// <param name="LyricType"></param>
+        private void TrkInsertLyrics(Track Track, List<plLyric> l, LyricTypes LyricType)
+        {
+            int currentTick;
+            int lastcurrenttick = 0;
+
+            string currentElement;
+            string currentCR = string.Empty;
+
+            Track.Lyrics.Clear();
+            Track.LyricsText.Clear();
+
+            Track.TotalLyricsL = "";
+            Track.TotalLyricsT = "";
+
+
+            // Recréé tout les textes et lyrics
+            for (int idx = 0; idx < l.Count; idx++)
+            {
+                plLyric pll = l[idx];
+
+                // Si c'est un CR, le stocke et le collera au prochain lyric
+                if (pll.CharType == plLyric.CharTypes.LineFeed)
+                {
+                    if (LyricType == LyricTypes.Text)
+                        currentCR = m_SepLine;
+                    else
+                        currentCR = "\r";
+
+                    // Update Track.Lyrics List
+                    Track.Lyric L = new Track.Lyric()
+                    {
+                        Element = pll.Element.Item2,
+                        TicksOn = pll.TicksOn,
+                        Type = (Track.Lyric.Types)pll.CharType,
+                    };
+
+                    if (LyricType == LyricTypes.Text)
+                    {
+                        // si lyrics de type text                     
+                        Track.LyricsText.Add(L);
+                    }
+                    else
+                    {
+                        // si lyrics de type lyrics
+                        Track.Lyrics.Add(L);
+                    }
+
+                }
+                else if (pll.CharType == plLyric.CharTypes.ParagraphSep)
+                {
+                    if (LyricType == LyricTypes.Text)
+                        currentCR = m_SepParagraph;
+                    else
+                        currentCR = "\r\r";
+
+
+                    // Update Track.Lyrics List
+                    Track.Lyric L = new Track.Lyric()
+                    {
+                        Element = pll.Element.Item2,
+                        TicksOn = pll.TicksOn,
+                        Type = (Track.Lyric.Types)pll.CharType,
+                    };
+
+                    if (LyricType == LyricTypes.Text)
+                    {
+                        // si lyrics de type text                     
+                        Track.LyricsText.Add(L);
+                    }
+                    else
+                    {
+                        // si lyrics de type lyrics
+                        Track.Lyrics.Add(L);
+                    }
+                }
+                else if (pll.CharType == plLyric.CharTypes.Text)
+                {
+                    // C'est un lyric
+                    currentTick = pll.TicksOn;
+                    if (currentTick >= lastcurrenttick)
+                    {
+                        string plElement;
+                        if (pll.IsChord)
+                        {
+                            plElement = "[" + pll.Element.Item1 + "]";
+                        }
+                        else
+                        {
+                            plElement = pll.Element.Item2;
+                        }
+                        
+                        
+                        lastcurrenttick = currentTick;
+                        currentElement = currentCR + plElement;
+
+                        // Transforme en byte la nouvelle chaine
+                        // ERROR FAB 16-01-2021 : must tyake into accout encoding selected by end user !!!
+                        byte[] newdata; // = Encoding.Default.GetBytes(currentElement);
+
+                        switch (OpenMidiFileOptions.TextEncoding)
+                        {
+                            case "Ascii":
+                                //sy = System.Text.Encoding.Default.GetString(data);
+                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
+                                break;
+                            case "Chinese":
+                                System.Text.Encoding chinese = System.Text.Encoding.GetEncoding("gb2312");
+                                newdata = chinese.GetBytes(currentElement);
+                                break;
+                            case "Japanese":
+                                System.Text.Encoding japanese = System.Text.Encoding.GetEncoding("shift_jis");
+                                newdata = japanese.GetBytes(currentElement);
+                                break;
+                            case "Korean":
+                                System.Text.Encoding korean = System.Text.Encoding.GetEncoding("ks_c_5601-1987");
+                                newdata = korean.GetBytes(currentElement);
+                                break;
+                            case "Vietnamese":
+                                System.Text.Encoding vietnamese = System.Text.Encoding.GetEncoding("windows-1258");
+                                newdata = vietnamese.GetBytes(currentElement);
+                                break;
+                            default:
+                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
+                                break;
+                        }
+
+
+                        MetaMessage mtMsg;
+
+                        // Update Track.Lyrics List
+                        Track.Lyric L = new Track.Lyric()
+                        {
+                            Element = plElement,
+                            TicksOn = pll.TicksOn,
+                            Type = (Track.Lyric.Types)pll.CharType,
+                        };
+
+
+                        if (LyricType == LyricTypes.Text)
+                        {
+                            // si lyrics de type text
+                            mtMsg = new MetaMessage(MetaType.Text, newdata);
+                            Track.LyricsText.Add(L);
+                        }
+                        else
+                        {
+                            // si lyrics de type lyrics
+                            mtMsg = new MetaMessage(MetaType.Lyric, newdata);
+                            Track.Lyrics.Add(L);
+                        }
+
+                        // Insert new message
+                        Track.Insert(currentTick, mtMsg);
+                    }
+                    currentCR = "";
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Rewrite tags level sequence
+        /// </summary>
+        private void restoreSequenceTags()
+        {
+            string tx;
+            int i;
+
+            if (sequence1.ITag != null)
+            {
+                for (i = sequence1.ITag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@I" + sequence1.ITag[i];
+                    AddTag(tx);
+                }
+            }
+
+            if (sequence1.KTag != null)
+            {
+                for (i = sequence1.KTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@K" + sequence1.KTag[i];
+                    AddTag(tx);
+                }
+            }
+            if (sequence1.LTag != null)
+            {
+                for (i = sequence1.LTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@L" + sequence1.LTag[i];
+                    AddTag(tx);
+                }
+            }
+            if (sequence1.TTag != null)
+            {
+                for (i = sequence1.TTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@T" + sequence1.TTag[i];
+                    AddTag(tx);
+                }
+            }
+            if (sequence1.VTag != null)
+            {
+                for (i = sequence1.VTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@V" + sequence1.VTag[i];
+                    AddTag(tx);
+                }
+            }
+            if (sequence1.WTag != null)
+            {
+                for (i = sequence1.WTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@W" + sequence1.WTag[i];
+                    AddTag(tx);
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Insert Tag at tick 0
+        /// </summary>
+        /// <param name="strTag"></param>
+        private void AddTag(string strTag)
+        {
+            Track track = sequence1.tracks[0];
+            int currentTick = 0;
+            string currentElement = strTag;
+
+            // Transforme en byte la nouvelle chaine
+            byte[] newdata = new byte[currentElement.Length];
+            for (int u = 0; u < newdata.Length; u++)
+            {
+                newdata[u] = (byte)currentElement[u];
+            }
+
+            MetaMessage mtMsg;
+
+            mtMsg = new MetaMessage(MetaType.Text, newdata);
+
+            // Insert new message
+            track.Insert(currentTick, mtMsg);
+        }
+        #endregion lyrics
     }
 }

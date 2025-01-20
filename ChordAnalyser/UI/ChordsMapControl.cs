@@ -176,7 +176,15 @@ namespace ChordAnalyser.UI
         }
 
         //public Dictionary<int, (string, string)> Gridchords { get; set; }
-        public Dictionary<int, string> GridBeatChords { get; set; }
+
+        private Dictionary<int, string> _gridbeatchords;
+        public Dictionary<int, string> GridBeatChords {
+            get { return _gridbeatchords; }
+            set { 
+                _gridbeatchords = value;
+                Refresh();
+            }
+        }
 
         private float _cellwidth;
         private float _cellheight;
@@ -461,7 +469,7 @@ namespace ChordAnalyser.UI
 
             Point p1;
 
-            if (GridBeatChords != null)
+            if (_gridbeatchords != null)
             {                
                 string tx = string.Empty;
                 string chordName = string.Empty;  
@@ -475,7 +483,7 @@ namespace ChordAnalyser.UI
                 // Filter chords
                 string _currentChordName = "<>";
 
-                for (int i = 1; i <= GridBeatChords.Count; i++)
+                for (int i = 1; i <= _gridbeatchords.Count; i++)
                 {
                     compteurmesure++;
                     if (compteurmesure > -1 + _nbcolumns * sequence1.Numerator)   // 4 measures per line
@@ -488,7 +496,7 @@ namespace ChordAnalyser.UI
                     }
 
                     // Chord name                                        
-                    chordName = GridBeatChords[i];
+                    chordName = _gridbeatchords[i];
 
                     w = MeasureString(fontChord.FontFamily, chordName, fontChord.Size);
 

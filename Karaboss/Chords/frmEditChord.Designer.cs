@@ -69,6 +69,7 @@
             this.cbType.Name = "cbType";
             this.cbType.Size = new System.Drawing.Size(61, 23);
             this.cbType.TabIndex = 2;
+            this.cbType.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cbType_KeyDown);
             // 
             // label2
             // 
@@ -87,6 +88,7 @@
             this.cbBass.Name = "cbBass";
             this.cbBass.Size = new System.Drawing.Size(61, 23);
             this.cbBass.TabIndex = 4;
+            this.cbBass.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cbBass_KeyDown);
             // 
             // btnOk
             // 
