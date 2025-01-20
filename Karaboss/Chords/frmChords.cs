@@ -102,6 +102,8 @@ namespace Karaboss
         private NoSelectButton btnPrintTXT;
         private NoSelectButton btnPrintPDF;
 
+        private Label lblMeasures;
+        private NumericUpDown UpDMeasures; 
 
         // 1 rst TAB
         private PanelPlayer panelPlayer;
@@ -343,7 +345,39 @@ namespace Karaboss
 
             #endregion export pdf text
 
+
+            #region Tools for editiong chords
+            lblMeasures = new Label()
+            {
+                Parent = pnlToolbar,
+                Location = new Point(2 + btnPrintTXT.Left + btnPrintTXT.Width, 19),
+                Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
+                Text = "Measures per line",
+                AutoSize = true,
+                ForeColor = Color.White,          
+                Visible=false,
+            };
+            pnlToolbar.Controls.Add(lblMeasures);
+
+            UpDMeasures = new NumericUpDown()
+            {
+                Parent = pnlToolbar,
+                Location = new Point(2 + lblMeasures.Left + lblMeasures.Width, 17),                
+                Minimum = 1,
+                Value = 4,
+                Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
+                Size = new Size(43, 22),
+                Visible =false,
+            };
+            UpDMeasures.ValueChanged += new EventHandler(UpdMeasures_ValueChanged);
+            pnlToolbar.Controls.Add(UpDMeasures);
+
+
+            #endregion Tools for editing chords
+
             #endregion Toolbar
+
+
 
             tabChordsControl.Top = pnlToolbar.Top + pnlToolbar.Height;
             tabChordsControl.Height =  this.ClientSize.Height - menuStrip1.Height - pnlToolbar.Height;
@@ -515,7 +549,7 @@ namespace Karaboss
             };
             tabPageChords.Controls.Add(pnlBottom);
 
-            // 6 add a label for text being sung
+            // 6 - add a label for text being sung
             Font fontLyrics = new Font("Arial", 32, FontStyle.Regular, GraphicsUnit.Pixel);
 
             lblLyrics = new Label() {
@@ -653,6 +687,8 @@ namespace Karaboss
                 Sequence1 = this.sequence1,
             };
 
+            UpDMeasures.Value = ChordMapControlModify.NbColumns;
+
             ChordMapControlModify.Size = new Size(ChordMapControlModify.Width, ChordMapControlModify.Height);
             pnlModifyMap.Size = new Size(tabPageModify.Width - tabPageModify.Margin.Left - tabPageModify.Margin.Right, tabPageModify.Height - tabPageModify.Margin.Top - tabPageModify.Margin.Bottom);
 
@@ -669,6 +705,8 @@ namespace Karaboss
         }
 
        
+
+
         #endregion Display Controls       
 
 
@@ -844,9 +882,7 @@ namespace Karaboss
 
         #endregion Display Notes
 
-
        
-
 
         #region handle messages
 
@@ -1139,9 +1175,12 @@ namespace Karaboss
             myLyricsMgmt.LoadLyricsLines();
 
             // Display lyrics on first tab
-            ChordControl1.GridLyrics = myLyricsMgmt.Gridlyrics;
-
+            ChordControl1.GridLyrics = myLyricsMgmt.Gridlyrics;            
             DisplayLineLyrics(0);
+
+            // Display lyrics on chords map
+            ChordMapControlModify.GridLyrics = myLyricsMgmt.Gridlyrics;
+
         }            
          
         /// <summary>
@@ -1369,7 +1408,13 @@ namespace Karaboss
 
 
         #region TAB4 ChordMapControlModify
-        
+
+        private void UpdMeasures_ValueChanged(object sender, EventArgs e)
+        {
+            ChordMapControlModify.NbColumns = (int)UpDMeasures.Value;
+        }
+
+
         /// <summary>
         /// Open windows to modify a chord name
         /// </summary>
@@ -1504,10 +1549,14 @@ namespace Karaboss
                 btnPrintTXT.Visible = (tabChordsControl.SelectedIndex == 2);
 
                 btnZoomPlus.Visible = (tabChordsControl.SelectedIndex == 0 || tabChordsControl.SelectedIndex == 1);
-                btnZoomMinus.Visible = (tabChordsControl.SelectedIndex == 0 || tabChordsControl.SelectedIndex == 1);
+                btnZoomMinus.Visible = btnZoomPlus.Visible;
 
                 mnuFilePrintLyrics.Visible = (tabChordsControl.SelectedIndex == 2);
                 mnuFilePrintPDF.Visible = (tabChordsControl.SelectedIndex == 1 || tabChordsControl.SelectedIndex == 2);
+
+                lblMeasures.Visible = (tabChordsControl.SelectedIndex == 1 ||  tabChordsControl.SelectedIndex == 3);
+                UpDMeasures.Visible = lblMeasures.Visible;
+
 
                 if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
                 {

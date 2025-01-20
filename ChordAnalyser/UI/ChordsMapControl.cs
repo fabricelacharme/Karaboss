@@ -129,7 +129,11 @@ namespace ChordAnalyser.UI
         public int NbColumns
         {
             get { return _nbcolumns; }
-            set { _nbcolumns = value; }
+            set { 
+                _nbcolumns = value;
+                RedimControl();
+                Refresh();
+            }
         }
 
 
@@ -185,6 +189,10 @@ namespace ChordAnalyser.UI
                 Refresh();
             }
         }
+
+        //Lyrics
+        public Dictionary<int, string> GridLyrics { get; set; }
+        
 
         private float _cellwidth;
         private float _cellheight;
@@ -444,7 +452,7 @@ namespace ChordAnalyser.UI
         #endregion draw canvas
 
 
-        #region drawnotes 
+        #region Draw chords 
 
         /// <summary>
         /// Draw the name of the notes
@@ -457,14 +465,19 @@ namespace ChordAnalyser.UI
             
             SolidBrush ChordBrush = new SolidBrush(Color.Black);
             SolidBrush MeasureBrush = new SolidBrush(Color.Red);
+            SolidBrush LyricBrush = new SolidBrush(Color.FromArgb(45, 137, 239));
 
             Font fontChord = new Font("Arial", 20 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
             Font fontMeasure = new Font("Arial", 12 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font fontLyric = new Font("Arial", 14 * zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
             int x = _leftmargin;//0;
             int y_chord = (int)HeaderHeight + ((int)(_cellheight) / 2) - (fontMeasure.Height / 2);
             int y_symbol = 10;
-            int y_measurenumber = (int)HeaderHeight + (int)(_cellheight) - fontMeasure.Height;
+
+            //int y_measurenumber = (int)HeaderHeight + (int)(_cellheight) - fontMeasure.Height;
+            int y_measurenumber = (int)HeaderHeight + fontMeasure.Height/3;
+
             int m = -1;
 
             Point p1;
@@ -475,6 +488,7 @@ namespace ChordAnalyser.UI
                 string chordName = string.Empty;  
                 int Offset = 4;
                 float w;
+                float h;                
                 int d = (int)(_cellwidth) + (_LinesWidth - 1);
 
                 var src = new Bitmap(Resources.silence_black);
@@ -490,8 +504,8 @@ namespace ChordAnalyser.UI
                     {
                         y_chord += (int)_cellheight + 1;
                         y_symbol += (int)_cellheight + 1;
-                        y_measurenumber += (int)_cellheight + 1;
-                        x = _leftmargin;//0;
+                        y_measurenumber += (int)_cellheight + 1;                        
+                        x = _leftmargin;
                         compteurmesure = 0;
                     }
 
@@ -529,10 +543,45 @@ namespace ChordAnalyser.UI
                     // Increment x (go to next beat / cell)                    
                     x += d;
                 }
+
+                // ==============================
+                // Display Lyrics                
+                // ==============================
+                int currentbeat;
+                string currentlyric = string.Empty;
+                int _measure;
+                int nbBeatsPerMeasure = sequence1.Numerator;
+                int HauteurCellule = _columnheight + 1;
+                int LargeurCellule = _columnwidth + 1;
+                int line;   //_nbcolumns
+                float y;
+
+                if (GridLyrics != null)
+                {
+                    foreach (var z in GridLyrics)
+                    {
+                        currentbeat = z.Key;
+                        currentlyric = z.Value;
+                        _measure = (currentbeat - 1) / nbBeatsPerMeasure;
+                        //_measure = 1 + currentbeat / nbBeatsPerMeasure;
+                        line = 1 + _measure/_nbcolumns;
+                        
+
+                        w = MeasureString(fontLyric.FontFamily, currentlyric, fontLyric.Size);
+                        h = MeasureStringHeight(fontLyric.FontFamily, currentlyric, fontLyric.Size);
+
+                        x =  -1 + currentbeat - (line - 1) * (nbBeatsPerMeasure * _nbcolumns);
+                        x = _leftmargin + x * d;
+
+                        y =  HeaderHeight + line * HauteurCellule - h;
+                        g.DrawString(currentlyric, fontLyric, LyricBrush, x + (_cellwidth - w) / 2, y);
+                    }
+                }
+
             }
         }
 
-        #endregion drawnotes
+        #endregion Draw Chords
 
 
         #region public
