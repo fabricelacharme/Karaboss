@@ -87,11 +87,33 @@ namespace ChordAnalyser.UI
         #region properties
 
         private Font _fontChord;
-        public Font fontChord
+        public Font FontChord
         {
             get { return _fontChord; } 
             set 
             {  _fontChord = value;
+                pnlCanvas.Invalidate();
+            }
+        }
+
+        private Font _fontMeasure;
+        public Font FontMeasure
+        {
+            get { return _fontMeasure; }
+            set
+            {
+                _fontMeasure = value;
+                pnlCanvas.Invalidate();
+            }
+        }
+        
+        private Font _fontLyric;
+        public Font FontLyric
+        {
+            get { return _fontLyric; }
+            set
+            {
+                _fontLyric = value;
                 pnlCanvas.Invalidate();
             }
         }
@@ -224,6 +246,8 @@ namespace ChordAnalyser.UI
                 _cellheight = _columnheight * _zoom;
 
                 _fontChord = new Font(_fontChord.FontFamily, 40 * _zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+                _fontMeasure = new Font(_fontMeasure.FontFamily, 14 * _zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+                _fontLyric = new Font(_fontLyric.FontFamily, 14 * _zoom, FontStyle.Regular, GraphicsUnit.Pixel);
 
                 this.Height = (int)_cellheight;
                 if (HeightChanged != null)
@@ -261,7 +285,9 @@ namespace ChordAnalyser.UI
         public ChordsControl()
         {
             _fontChord = new Font("Arial", 40, FontStyle.Regular, GraphicsUnit.Pixel);
-            
+            _fontMeasure = new Font("Arial", 14, FontStyle.Regular, GraphicsUnit.Pixel);
+            _fontLyric = new Font("Arial", 14, FontStyle.Regular, GraphicsUnit.Pixel);
+
             // Draw pnlCanvas
             DrawCanvas();         
 
@@ -270,7 +296,6 @@ namespace ChordAnalyser.UI
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             this.SetStyle(ControlStyles.UserPaint, true);
             this.SetStyle(ControlStyles.ResizeRedraw, true);
-
         }
         
 
@@ -404,13 +429,9 @@ namespace ChordAnalyser.UI
       
         private void DrawChords(Graphics g, Rectangle clip)
         {
-
             SolidBrush ChordBrush = new SolidBrush(Color.FromArgb(29, 29, 29));
             SolidBrush MeasureBrush = new SolidBrush(Color.FromArgb(238, 17, 17));
-            SolidBrush LyricBrush = new SolidBrush(Color.FromArgb(45, 137, 239));
-
-            Font fontMeasure = new Font("Arial", 14 * Zoom, FontStyle.Regular, GraphicsUnit.Pixel);
-            Font fontLyric = new Font("Arial", 14 * Zoom, FontStyle.Regular, GraphicsUnit.Pixel);
+            SolidBrush LyricBrush = new SolidBrush(Color.FromArgb(45, 137, 239));       
 
             int x = (int)(_cellwidth) + (_LinesWidth - 1);
 
@@ -455,7 +476,7 @@ namespace ChordAnalyser.UI
                     if (m % sequence1.Numerator == 0)
                     {
                         tx = (1 + i / sequence1.Numerator).ToString();
-                        g.DrawString(tx, fontMeasure, MeasureBrush, x + Offset, (int)(_cellheight) - fontMeasure.Height);
+                        g.DrawString(tx, _fontMeasure, MeasureBrush, x + Offset, (int)(_cellheight) - _fontMeasure.Height);
                         m = 0;
                     }
 
@@ -475,11 +496,11 @@ namespace ChordAnalyser.UI
                     {
                         currentbeat = z.Key;
                         currentlyric = z.Value;
-                        w = MeasureString(fontLyric.FontFamily, currentlyric, fontLyric.Size);
-                        h = MeasureStringHeight(fontLyric.FontFamily, currentlyric, fontLyric.Size);
+                        w = MeasureString(_fontLyric.FontFamily, currentlyric, _fontLyric.Size);
+                        h = MeasureStringHeight(_fontLyric.FontFamily, currentlyric, _fontLyric.Size);
 
                         x = currentbeat * d;
-                        g.DrawString(currentlyric, fontLyric, LyricBrush, x + (_cellwidth - w) / 2, _cellheight / 2 + h);
+                        g.DrawString(currentlyric, _fontLyric, LyricBrush, x + (_cellwidth - w) / 2, _cellheight / 2 + h);
                     }
                 }
             }

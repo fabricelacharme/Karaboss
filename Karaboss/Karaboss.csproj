@@ -532,6 +532,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Chords\frmChords.resx">
       <DependentUpon>frmChords.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmExternalMidiPlay.resx">
       <DependentUpon>frmExternalMidiPlay.cs</DependentUpon>

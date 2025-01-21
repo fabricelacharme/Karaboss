@@ -68,9 +68,7 @@ namespace Karaboss.Lyrics
 
         private bool _bHasCarriageReturn = false;
 
-        private readonly string patternBracket = @"\[\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\]";
-        private readonly string patternParenth = @"\(\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\)";
-
+                               
         private readonly string _InternalSepLines = "¼";
         //private string _InternalSepParagraphs = "½";
 
@@ -162,12 +160,17 @@ namespace Karaboss.Lyrics
         }
 
         // Pattern to remove chords from lyrics
+        private readonly string patternBracket = @"\[\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\]";
+        private readonly string patternParenth = @"\(\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\)";
+
         private string _removechordpattern;
         public string RemoveChordPattern
         {
             get { return _removechordpattern; }
             set { _removechordpattern = value; }
         }
+
+
 
         // Lyrics : int = time, string = syllabes in corresponding time
         private Dictionary<int, string> _gridlyrics;
@@ -201,6 +204,10 @@ namespace Karaboss.Lyrics
             
             _lyrictype = LyricTypes.None;
             ChordsOriginatedFrom = ChordsOrigins.Discovery;  // Default value = chords found nowhere. They must be discovered
+
+            // Default values
+            _removechordpattern = patternBracket;
+            _chordDelimiter = ("[", "]");
 
             plLyrics = new List<plLyric>();
             lstpllyrics = new List<List<plLyric>>();
@@ -1728,24 +1735,14 @@ namespace Karaboss.Lyrics
             // Beat
             // (chord, ticks)
             GridBeatChords = gbc;
-            /*
-            // FIRST REMOVE CHORDS FROM plLyrics !!!!!!!!!!!!!!!!!!!!!!!!!! NOOOOOOON
-            List<plLyric> l  = new List<plLyric>();
-            for (int i = 0; i < plLyrics.Count; i++)
-            {
-                if (!plLyrics[i].IsChord)
-                    l.Add(plLyrics[i]);
-            }
-            plLyrics = l;
-            */
-
-            /*
-             *  Gros problème : gridbeatchords résonne en beat et les accords ne sont pas forcément saisies parfaitement sur des chiffres ronds !!!!
-             * 
-             * 
-             * */
             removeIndex = -1;
             bool bExit = false;
+
+            if (ChordDelimiter == (null, null) || ChordDelimiter == ("", "") || RemoveChordPattern == null)
+            {
+                ChordDelimiter = ("[", "]");
+                RemoveChordPattern = patternBracket;
+            }
 
             // Remove chords from plLyrics that have been deleted
             do
@@ -1895,6 +1892,9 @@ namespace Karaboss.Lyrics
                             lyric = formateLyricOfChord(chordName, "");
                             
                             // Add chord name to the lyric: Replace lyric '-- ' by '[A]-- '
+                            if (ChordDelimiter == (null, null) || ChordDelimiter == ("", ""))
+                                ChordDelimiter = ("[", "]");
+
                             lyric = ChordDelimiter.Item1 + chordName + ChordDelimiter.Item2 + lyric;
 
                             // Ticks was never smaller or equal to an existing TickOn => is has to be added at the end

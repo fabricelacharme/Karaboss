@@ -1345,5 +1345,53 @@ namespace Karaboss.Properties {
                 this["bShowXmlChords"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public decimal ChordsMapCellSize {
+            get {
+                return ((decimal)(this["ChordsMapCellSize"]));
+            }
+            set {
+                this["ChordsMapCellSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public decimal ChordsMapColumns {
+            get {
+                return ((decimal)(this["ChordsMapColumns"]));
+            }
+            set {
+                this["ChordsMapColumns"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public float ChordsMapZoom {
+            get {
+                return ((float)(this["ChordsMapZoom"]));
+            }
+            set {
+                this["ChordsMapZoom"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public float ChordsMapModifyZoom {
+            get {
+                return ((float)(this["ChordsMapModifyZoom"]));
+            }
+            set {
+                this["ChordsMapModifyZoom"] = value;
+            }
+        }
     }
 }

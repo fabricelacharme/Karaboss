@@ -34,6 +34,7 @@
 using ChordAnalyser.UI;
 using Karaboss.Display;
 using Karaboss.Lyrics;
+using Karaboss.Properties;
 using Karaboss.Utilities;
 using MusicTxt;
 using MusicXml;
@@ -44,7 +45,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Karaboss
 {
@@ -103,7 +106,14 @@ namespace Karaboss
         private NoSelectButton btnPrintPDF;
 
         private Label lblMeasures;
-        private NumericUpDown UpDMeasures; 
+        private NumericUpDown UpDMeasures;
+
+        private Label lblDisplayLyrics;
+        private CheckBox chkDisplayLyrics;
+
+        private Label lblCellsize;
+        private NumericUpDown UpdCellsize;
+
 
         // 1 rst TAB
         private PanelPlayer panelPlayer;
@@ -183,11 +193,26 @@ namespace Karaboss
             this.KeyPreview = true;
 
             // Title
-            SetTitle(FileName);                        
+            SetTitle(FileName);
+           
         }
 
 
         #region Display Controls
+
+        private void LoadProperties()
+        {
+            try
+            {
+                UpdCellsize.Value = Properties.Settings.Default.ChordsMapCellSize;
+                UpDMeasures.Value = Properties.Settings.Default.ChordsMapColumns;
+
+                ChordMapControl1.Zoom = Properties.Settings.Default.ChordsMapZoom;
+                ChordMapControlModify.Zoom = Properties.Settings.Default.ChordsMapModifyZoom;
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+
+        }
 
         /// <summary>
         /// Sets title of form
@@ -286,13 +311,15 @@ namespace Karaboss
 
             #region zoom
 
-            btnZoomPlus = new NoSelectButton() {
+            btnZoomPlus = new NoSelectButton()
+            {
                 Parent = pnlToolbar,
                 Image = Karaboss.Properties.Resources.magnifyplus24,
                 UseVisualStyleBackColor = true,
                 Location = new Point(34 + panelPlayer.Left + panelPlayer.Width, 2),
                 Size = new Size(50, 50),
                 Text = "",
+                //Visible = false,
             };
             btnZoomPlus.Click += new EventHandler(btnZoomPlus_Click);            
             pnlToolbar.Controls.Add(btnZoomPlus);
@@ -304,7 +331,8 @@ namespace Karaboss
                 UseVisualStyleBackColor = true,
                 Location = new Point(2 + btnZoomPlus.Left + btnZoomPlus.Width, 2),
                 Size = new Size(50, 50),
-                Text = ""
+                Text = "",
+                //Visible = false,
             };                        
             btnZoomMinus.Click += new EventHandler(btnZoomMinus_Click);
             pnlToolbar.Controls.Add(btnZoomMinus);
@@ -346,11 +374,15 @@ namespace Karaboss
             #endregion export pdf text
 
 
-            #region Tools for editiong chords
+            #region Tools for editing chords
+
+            // ==============================
+            // Number of measures per line
+            // ==============================
             lblMeasures = new Label()
             {
                 Parent = pnlToolbar,
-                Location = new Point(2 + btnPrintTXT.Left + btnPrintTXT.Width, 19),
+                Location = new Point(2 + btnPrintTXT.Left + btnPrintTXT.Width, 8),
                 Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
                 Text = "Measures per line",
                 AutoSize = true,
@@ -362,16 +394,71 @@ namespace Karaboss
             UpDMeasures = new NumericUpDown()
             {
                 Parent = pnlToolbar,
-                Location = new Point(2 + lblMeasures.Left + lblMeasures.Width, 17),                
+                Location = new Point(2 + lblMeasures.Left + lblMeasures.Width, 6),                
                 Minimum = 1,
                 Value = 4,
                 Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
                 Size = new Size(43, 22),
-                Visible =false,
+                Visible = false,
             };
             UpDMeasures.ValueChanged += new EventHandler(UpdMeasures_ValueChanged);
             pnlToolbar.Controls.Add(UpDMeasures);
 
+
+            // ==============================
+            // Display lyrics
+            // ==============================
+            lblDisplayLyrics = new Label()
+            {
+                Parent = pnlToolbar,
+                Location = new Point(lblMeasures.Left, 33),
+                Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
+                Text = "Display lyrics",
+                AutoSize = true,
+                ForeColor = Color.White,
+                Visible = false,
+            };
+            pnlToolbar.Controls.Add(lblDisplayLyrics);
+
+            chkDisplayLyrics = new CheckBox()
+            {
+                Parent = pnlToolbar,
+                Location = new Point(UpDMeasures.Left, 29),
+                Checked = true,
+                Visible = false,
+            };
+            pnlToolbar.Controls.Add(chkDisplayLyrics);
+            chkDisplayLyrics.CheckedChanged += new EventHandler(chkDisplayLyrics_CheckedChanged);
+
+
+            // ==============================
+            // Cell size
+            // ==============================
+            lblCellsize = new Label()
+            {
+                Parent = pnlToolbar,
+                Location = new Point(20 + UpDMeasures.Left + UpDMeasures.Width, 8),
+                Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
+                Text = "Cell size",
+                AutoSize = true,
+                ForeColor = Color.White,
+                Visible = false,
+            };
+            pnlToolbar.Controls.Add(lblCellsize);
+
+            this.UpdCellsize = new NumericUpDown()
+            {
+                Parent = pnlToolbar,
+                Location = new Point(2 + lblCellsize.Left + lblCellsize.Width, 6),
+                Minimum = 1,
+                Maximum = 500,
+                Value = 100,
+                Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
+                Size = new Size(43, 22),
+                Visible = false,
+            };
+            UpdCellsize.ValueChanged += new EventHandler(UpdCellsize_ValueChanged);
+            pnlToolbar.Controls.Add(UpdCellsize);
 
             #endregion Tools for editing chords
 
@@ -607,8 +694,9 @@ namespace Karaboss
             ChordMapControl1 = new ChordsMapControl(MIDIfileName) {
                 Parent = pnlDisplayMap,
                 Location = new Point(0, 0),
-                ColumnWidth = 80,
+                ColumnWidth = 100,
                 ColumnHeight = 80,
+                HeaderHeight = 100,
                 Cursor = Cursors.Hand,
                 Sequence1 = this.sequence1,
             };
@@ -681,8 +769,9 @@ namespace Karaboss
             {
                 Parent = pnlDisplayMap,
                 Location = new Point(0, 0),
-                ColumnWidth = 80,
+                ColumnWidth = 100,
                 ColumnHeight = 80,
+                HeaderHeight = 100,
                 Cursor = Cursors.Hand,
                 Sequence1 = this.sequence1,
             };
@@ -703,9 +792,7 @@ namespace Karaboss
             #endregion 4eme TAB
 
         }
-
-       
-
+     
 
         #endregion Display Controls       
 
@@ -881,7 +968,6 @@ namespace Karaboss
         }
 
         #endregion Display Notes
-
        
 
         #region handle messages
@@ -1097,6 +1183,8 @@ namespace Karaboss
 
                 DrawControls();
                
+                LoadProperties();
+
                 UpdateMidiTimes();
 
                 DisplaySongDuration();
@@ -1179,6 +1267,7 @@ namespace Karaboss
             DisplayLineLyrics(0);
 
             // Display lyrics on chords map
+            ChordMapControl1.GridLyrics = myLyricsMgmt.Gridlyrics;
             ChordMapControlModify.GridLyrics = myLyricsMgmt.Gridlyrics;
 
         }            
@@ -1258,34 +1347,77 @@ namespace Karaboss
 
         private void btnZoomMinus_Click(object sender, EventArgs e)
         {
-            float zoom = ChordControl1.Zoom;
-            zoom -= (float)0.1;
+            float zoom;
+            switch (this.tabChordsControl.SelectedIndex) 
+            {
+                case 0:
+                    zoom = ChordControl1.Zoom;
+                    zoom -= (float)0.1;
 
-            ChordControl1.Zoom = zoom; //-= (float)0.1;
-            ChordRendererGuitar.zoom = zoom;
-            ChordRendererPiano.zoom = zoom;
-            ChordMapControl1.zoom = zoom; // -= (float)0.1;
+                    ChordControl1.Zoom = zoom;
+                    ChordRendererGuitar.zoom = zoom;
+                    ChordRendererPiano.zoom = zoom;
+                    SetScrollBarValues();
+                    toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                    toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                    break;
 
-            SetScrollBarValues();
+                case 1:
+                    zoom = ChordMapControl1.Zoom;
+                    zoom -= (float)0.1;
+                    
+                    ChordMapControl1.Zoom = zoom;                    
+                    toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                    toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                    break;
 
-            toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
-            toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                case 3:
+                    zoom = ChordMapControlModify.Zoom;
+                    zoom -= (float)0.1;
+
+                    ChordMapControlModify.Zoom = zoom;                    
+                    toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                    toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                    break;
+            }
         }
 
         private void btnZoomPlus_Click(object sender, EventArgs e)
         {
-            float zoom = ChordControl1.Zoom;
-            zoom += (float)0.1;
+            float zoom;
 
-            ChordControl1.Zoom = zoom; //+= (float)0.1;
-            ChordRendererGuitar.zoom = zoom;
-            ChordRendererPiano.zoom = zoom;
-            ChordMapControl1.zoom = zoom; // += (float)0.1;
+            switch (this.tabChordsControl.SelectedIndex) 
+            {
+                case 0:
+                    zoom = ChordControl1.Zoom;
+                    zoom += (float)0.1;
 
-            SetScrollBarValues();
+                    ChordControl1.Zoom = zoom;
+                    ChordRendererGuitar.zoom = zoom;
+                    ChordRendererPiano.zoom = zoom;                    
+                    SetScrollBarValues();
+                    toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                    toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                    break;
 
-            toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
-            toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                case 1:
+                    zoom = ChordMapControl1.Zoom;
+                    zoom += (float)0.1;
+
+                    ChordMapControl1.Zoom = zoom;
+                    toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                    toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                    break;
+                
+                case 3:
+                    zoom = ChordMapControlModify.Zoom;
+                    zoom += (float)0.1;
+
+                    ChordMapControlModify.Zoom = zoom;
+                    toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                    toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                    break;
+            }
         }
 
         private void btnPrintPDF_Click(object sender, EventArgs e)
@@ -1385,7 +1517,7 @@ namespace Karaboss
             if (e.Button == MouseButtons.Left)
             {
                 int x = e.Location.X;  //Horizontal
-                int y = e.Location.Y + ChordMapControl1.OffsetY - ChordMapControl1.MyHeaderHeight;  // Vertical
+                int y = e.Location.Y + ChordMapControl1.OffsetY - ChordMapControl1.HeaderHeight;  // Vertical
 
                 // Calculate start time                
                 int HauteurCellule = (int)(ChordMapControl1.ColumnHeight) + 1;
@@ -1409,9 +1541,58 @@ namespace Karaboss
 
         #region TAB4 ChordMapControlModify
 
+        /// <summary>
+        /// Change cells size
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UpdCellsize_ValueChanged(object sender, EventArgs e)
+        {
+            int CellSize = (int)UpdCellsize.Value;
+            // Shared values
+            ChordMapControl1.ColumnWidth = CellSize;
+            ChordMapControlModify.ColumnWidth = CellSize;
+
+            // Save option
+            Properties.Settings.Default.ChordsMapCellSize = CellSize;
+            Properties.Settings.Default.Save();
+        }
+
+
+        /// <summary>
+        /// Change option display lyrics
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkDisplayLyrics_CheckedChanged(object sender, EventArgs e)
+        {
+            switch (tabChordsControl.SelectedIndex)
+            {
+                case 1:
+                    ChordMapControl1.Displaylyrics = chkDisplayLyrics.Checked;
+                    break;
+                case 3:
+                    ChordMapControlModify.Displaylyrics = chkDisplayLyrics.Checked;
+                    break;
+            }                        
+        }
+
+        /// <summary>
+        /// Change number of measures per line
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UpdMeasures_ValueChanged(object sender, EventArgs e)
         {
-            ChordMapControlModify.NbColumns = (int)UpDMeasures.Value;
+            int Columns = (int)UpDMeasures.Value;
+
+            // Shared values
+            ChordMapControl1.NbColumns = Columns;
+            ChordMapControlModify.NbColumns = Columns;
+
+            // Save option
+            Properties.Settings.Default.ChordsMapColumns = Columns;
+            Properties.Settings.Default.Save();
         }
 
 
@@ -1437,7 +1618,7 @@ namespace Karaboss
                 }               
 
                 int x = e.Location.X - ChordMapControlModify.LeftMargin;  //Horizontal
-                int y = e.Location.Y + ChordMapControlModify.OffsetY - ChordMapControlModify.MyHeaderHeight;  // Vertical
+                int y = e.Location.Y + ChordMapControlModify.OffsetY - ChordMapControlModify.HeaderHeight;  // Vertical
 
                 // Calculate start time                
                 int HauteurCellule = (int)(ChordMapControlModify.ColumnHeight) + 1;
@@ -1454,7 +1635,7 @@ namespace Karaboss
                 frmyPos = Top;
 
                 xPos = 12 + Left + tabPageModify.Left + ChordMapControlModify.LeftMargin + (cellincurrentline - 1) * LargeurCellule;            // why 12 ?????????????
-                yPos = 35 + Top + tabChordsControl.Top + tabPageModify.Top + ChordMapControlModify.MyHeaderHeight + (line * HauteurCellule);    //why 12 ??????????????                
+                yPos = 35 + Top + tabChordsControl.Top + tabPageModify.Top + ChordMapControlModify.HeaderHeight + (line * HauteurCellule);    //why 12 ??????????????                
 
                 beat = (line - 1) * (ChordMapControlModify.NbColumns * sequence1.Numerator) + cellincurrentline;
                 
@@ -1543,19 +1724,104 @@ namespace Karaboss
         /// <param name="e"></param>
         private void tabChordsControl_SelectedIndexChanged(object sender, EventArgs e)
         {
+            float zoom;            
+
             try
             {
-                btnPrintPDF.Visible = (tabChordsControl.SelectedIndex == 1 || tabChordsControl.SelectedIndex == 2);
-                btnPrintTXT.Visible = (tabChordsControl.SelectedIndex == 2);
+                switch (tabChordsControl.SelectedIndex)
+                {
+                    case 0: // Chords line
+                        btnPrintTXT.Visible = false;
+                        btnPrintPDF.Visible = false;
+                        mnuFilePrintLyrics.Visible = false;
+                        mnuFilePrintPDF.Visible = false;
+                        lblMeasures.Visible = false;
+                        UpDMeasures.Visible = false;
+                        lblDisplayLyrics.Visible = false;
+                        chkDisplayLyrics.Visible = false;
+                        lblCellsize.Visible = false;
+                        UpdCellsize.Visible = false;
 
-                btnZoomPlus.Visible = (tabChordsControl.SelectedIndex == 0 || tabChordsControl.SelectedIndex == 1);
-                btnZoomMinus.Visible = btnZoomPlus.Visible;
+                        btnZoomPlus.Visible = true;
+                        btnZoomMinus.Visible = true;
 
-                mnuFilePrintLyrics.Visible = (tabChordsControl.SelectedIndex == 2);
-                mnuFilePrintPDF.Visible = (tabChordsControl.SelectedIndex == 1 || tabChordsControl.SelectedIndex == 2);
+                        zoom = ChordControl1.Zoom;
+                        toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                        toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
 
-                lblMeasures.Visible = (tabChordsControl.SelectedIndex == 1 ||  tabChordsControl.SelectedIndex == 3);
-                UpDMeasures.Visible = lblMeasures.Visible;
+                        break;
+                    
+                    case 1: // Map                                                
+                        mnuFilePrintLyrics.Visible = false;
+                        btnPrintTXT.Visible = false;
+
+                        mnuFilePrintPDF.Visible= true;
+                        btnPrintPDF.Visible = true;
+                        btnZoomPlus.Visible = true;
+                        btnZoomMinus.Visible = true;
+                        
+                        zoom = ChordMapControl1.Zoom;
+                        toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                        toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+
+                        lblMeasures.Visible = true;
+                        lblDisplayLyrics.Visible = true;
+                        lblCellsize.Visible = true;
+                        
+                        ChordMapControl1.NbColumns = (int)UpDMeasures.Value;
+                        UpDMeasures.Visible = true;
+
+                        ChordMapControl1.ColumnWidth = (int)UpdCellsize.Value;
+                        UpdCellsize.Visible = true;
+
+                        ChordMapControl1.Displaylyrics = chkDisplayLyrics.Checked;
+                        chkDisplayLyrics.Visible = true;
+                        break;
+                    
+                    case 2: //Words
+                        lblMeasures.Visible = false;
+                        UpDMeasures.Visible = false;
+                        lblDisplayLyrics.Visible = false;
+                        chkDisplayLyrics.Visible = false;
+                        lblCellsize.Visible = false;
+                        UpdCellsize.Visible = false;
+
+
+                        mnuFilePrintLyrics.Visible = true;
+                        mnuFilePrintPDF.Visible = true;
+                        btnPrintTXT.Visible = true;
+                        btnPrintPDF.Visible = true;                        
+                        break;
+                    
+                    case 3: // Modify map                        
+                        mnuFilePrintLyrics.Visible = false;
+                        btnPrintTXT.Visible = false;
+
+                        mnuFilePrintPDF.Visible = true;
+                        btnPrintPDF.Visible = true;
+                        btnZoomPlus.Visible = true;
+                        btnZoomMinus.Visible = true;
+
+                        lblMeasures.Visible = true;
+                        lblDisplayLyrics.Visible = true;
+                        lblCellsize.Visible = true;                        
+
+                        ChordMapControlModify.NbColumns = (int)UpDMeasures.Value;
+                        UpDMeasures.Visible = true;
+
+                        ChordMapControlModify.ColumnWidth = (int)UpdCellsize.Value;
+                        UpdCellsize.Visible = true;
+
+                        ChordMapControlModify.Displaylyrics = chkDisplayLyrics.Checked;
+                        chkDisplayLyrics.Visible = true;
+
+                        zoom = ChordMapControlModify.Zoom;
+                        toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                        toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+
+                        break;
+                }
+
 
 
                 if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
@@ -2013,6 +2279,10 @@ namespace Karaboss
                 Properties.Settings.Default.Save();
             }
 
+            Properties.Settings.Default.ChordsMapZoom = ChordMapControl1.Zoom;
+            Properties.Settings.Default.ChordsMapModifyZoom = ChordMapControlModify.Zoom;
+            Properties.Settings.Default.Save();
+
             if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
             {
                 Application.OpenForms["frmEditChord"].Close();
@@ -2024,7 +2294,6 @@ namespace Karaboss
                 // Restore form
                 Application.OpenForms["frmExplorer"].Restore();
                 Application.OpenForms["frmExplorer"].Activate();
-
             }
 
             Dispose();
@@ -2616,6 +2885,18 @@ namespace Karaboss
                 pnlDisplayWords.Height = height;
                 initname += "-Lyrics.pdf";
             }
+            else if (tabChordsControl.SelectedIndex == 3)
+            {
+                //Chords Map Modify
+                width = ChordMapControlModify.Width;
+                height = ChordMapControlModify.Height;
+                initname += "-chords.pdf";
+            }
+            else
+            {
+                MessageBox.Show("Error printing PDF", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
 
             SaveFileDialog dialog = new SaveFileDialog()
@@ -2682,6 +2963,15 @@ namespace Karaboss
                         // Words
                         pnlDisplayWords.DrawToBitmap(MemoryImage, new Rectangle(0, 0, width, height));
                         
+                    }
+                    else if (tabChordsControl.SelectedIndex == 3) 
+                    {
+                        ChordMapControlModify.DrawToBitmap(MemoryImage, new Rectangle(0, 0, width, height));
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error printing PDF", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
                     }
 
                     pdfdocument.AddImage(MemoryImage);
@@ -2980,11 +3270,10 @@ namespace Karaboss
                 myLyricsMgmt.FullExtractLyrics(true);
 
             #region check
-            if (myLyricsMgmt.ChordDelimiter == (null, null) || myLyricsMgmt.ChordDelimiter == ("", ""))
-            {
-                myLyricsMgmt.ChordDelimiter = ("[", "]");
-                //MessageBox.Show("Format of chords delimiters not found: [] or ()", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //return;
+            if (myLyricsMgmt.ChordDelimiter == (null, null) || myLyricsMgmt.ChordDelimiter == ("", "") || myLyricsMgmt.RemoveChordPattern == null)
+            {                                
+                MessageBox.Show("Format of chords delimiters not found: [] or ()", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
             #endregion check
 
@@ -3131,19 +3420,7 @@ namespace Karaboss
                     if (currentTick >= lastcurrenttick)
                     {
                         string plElement;
-
-                        /*
-                        if (pll.IsChord)
-                        {
-                            // Select pattern delimiter
-                            //plElement = "[" + pll.Element.Item1 + "]";
-                            plElement = myLyricsMgmt.ChordDelimiter.Item1 + pll.Element.Item1 + myLyricsMgmt.ChordDelimiter.Item2;
-                        }
-                        else
-                        {
-                            plElement = pll.Element.Item2;
-                        }
-                        */
+                       
                         // Fix done in PopulateUpdatedChords
                         // Add chord name to the lyric: Replace lyric '-- ' by '[A]-- '
                         plElement = pll.Element.Item2;
