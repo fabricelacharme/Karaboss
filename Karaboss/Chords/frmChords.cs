@@ -3075,12 +3075,15 @@ namespace Karaboss
             if (MIDIfileFullPath == null && fName != "" && fPath != "")
                 MIDIfileFullPath = fPath + "\\" + fName;
 
+            // Save all formats to Midi format
             string ext = Path.GetExtension(MIDIfileFullPath).ToLower();
             switch (ext)
             {
+                case ".txt":
                 case ".musicxml":
                 case ".mxl":
                 case ".xml":                   
+                    MessageBox.Show("Your file will be saved in Midi format", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     SaveAsFileProc();
                     return;                    
             }

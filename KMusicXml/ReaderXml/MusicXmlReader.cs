@@ -1048,7 +1048,7 @@ namespace MusicXml
             
             track1.insertTrackname(TrackName);
 
-            if (Volume >= 0 && Volume <= 15)
+            if (Volume >= 0 && Volume <= 127)
                 track1.insertVolume(Channel, Volume);
             
             if (Pan >= 0 && Pan <= 127)
