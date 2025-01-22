@@ -34,7 +34,6 @@
 using ChordAnalyser.UI;
 using Karaboss.Display;
 using Karaboss.Lyrics;
-using Karaboss.Properties;
 using Karaboss.Utilities;
 using MusicTxt;
 using MusicXml;
@@ -45,9 +44,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using System.Xml.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Karaboss
 {
@@ -187,6 +185,20 @@ namespace Karaboss
             MIDIfileFullPath = FileName;
             MIDIfileName = Path.GetFileName(FileName);
             MIDIfilePath = Path.GetDirectoryName(FileName);
+
+            if (FileName != null)
+            {
+                string ext = Path.GetExtension(MIDIfileFullPath).ToLower();
+                switch (ext)
+                {
+                    case ".musicxml":
+                    case ".mxl":
+                    case ".xml":
+                        //mnuFileSave.Enabled = false;
+                        //mnuFileSaveAs.Enabled = false;
+                        break;
+                }
+            }
 
             outDevice = OtpDev;
 
@@ -385,7 +397,7 @@ namespace Karaboss
                 Parent = pnlToolbar,
                 Location = new Point(2 + btnPrintTXT.Left + btnPrintTXT.Width, 8),
                 Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
-                Text = "Measures per line",
+                Text = Karaboss.Resources.Localization.Strings.MeasuresPerLine, // "Measures per line",
                 AutoSize = true,
                 ForeColor = Color.White,          
                 Visible=false,
@@ -395,7 +407,7 @@ namespace Karaboss
             UpDMeasures = new NumericUpDown()
             {
                 Parent = pnlToolbar,
-                Location = new Point(2 + lblMeasures.Left + lblMeasures.Width, 6),                
+                Location = new Point(10 + lblMeasures.Left + lblMeasures.Width, 6),                
                 Minimum = 1,
                 Value = 4,
                 Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
@@ -414,7 +426,7 @@ namespace Karaboss
                 Parent = pnlToolbar,
                 Location = new Point(lblMeasures.Left, 33),
                 Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
-                Text = "Display lyrics",
+                Text = Karaboss.Resources.Localization.Strings.DisplayLyrics, // "Display lyrics",
                 AutoSize = true,
                 ForeColor = Color.White,
                 Visible = false,
@@ -440,7 +452,7 @@ namespace Karaboss
                 Parent = pnlToolbar,
                 Location = new Point(20 + UpDMeasures.Left + UpDMeasures.Width, 8),
                 Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
-                Text = "Cell size",
+                Text = Karaboss.Resources.Localization.Strings.CellSize,  //"Cell size",
                 AutoSize = true,
                 ForeColor = Color.White,
                 Visible = false,
@@ -1612,7 +1624,7 @@ namespace Karaboss
             if (e.Button == MouseButtons.Left)
             {
                 
-                if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+                if (System.Windows.Forms.Application.OpenForms.OfType<frmEditChord>().Count() > 0)
                 {
                     frmEditChord frmEditChord = GetForm<frmEditChord>();
                     frmEditChord.Close();
@@ -1652,7 +1664,7 @@ namespace Karaboss
 
         private void pnlModifyMap_Scroll(object sender, ScrollEventArgs e)
         {                       
-            if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+            if (System.Windows.Forms.Application.OpenForms.OfType<frmEditChord>().Count() > 0)
             {                               
                 frmEditChord.Location = new Point(xPos + pnlModifyMap.AutoScrollPosition.X + (Left - frmxPos), yPos + pnlModifyMap.AutoScrollPosition.Y + (Top - frmyPos));                
                 frmEditChord.Visible = frmEditChord.Top > 222 && frmEditChord.Top < 800;
@@ -1662,7 +1674,7 @@ namespace Karaboss
 
         private void pnlModifyMap_MouseWheel(object sender, MouseEventArgs e)
         {
-            if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+            if (System.Windows.Forms.Application.OpenForms.OfType<frmEditChord>().Count() > 0)
             {
                 frmEditChord.Location = new Point(xPos + pnlModifyMap.AutoScrollPosition.X + (Left - frmxPos), yPos + pnlModifyMap.AutoScrollPosition.Y + (Top - frmyPos));               
 
@@ -1826,7 +1838,7 @@ namespace Karaboss
 
 
 
-                if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+                if (System.Windows.Forms.Application.OpenForms.OfType<frmEditChord>().Count() > 0)
                 {
                     frmEditChord.Visible = (tabChordsControl.SelectedIndex == 3);
 
@@ -2087,7 +2099,7 @@ namespace Karaboss
             else if (ext == ".xml" || ext == ".musicxml")
             {
                 Cursor.Current = Cursors.WaitCursor;
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
                 LoadAsyncXmlFile(MIDIfileFullPath);
             }
             else if (ext == ".mxl")
@@ -2097,14 +2109,14 @@ namespace Karaboss
                 if (File.Exists(myXMLFileName))
                 {
                     Cursor.Current = Cursors.WaitCursor;
-                    Application.DoEvents();
+                    System.Windows.Forms.Application.DoEvents();
                     LoadAsyncXmlFile(myXMLFileName);
                 }
             }
             else if (ext == ".txt")
             {
                 Cursor.Current = Cursors.WaitCursor;
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
                 LoadAsyncTxtFile(MIDIfileFullPath);
             }
             else
@@ -2226,7 +2238,7 @@ namespace Karaboss
 
         private void frmChords_Move(object sender, EventArgs e)
         {
-            if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+            if (System.Windows.Forms.Application.OpenForms.OfType<frmEditChord>().Count() > 0)
             {
                 frmEditChord.Location = new Point(xPos + pnlModifyMap.AutoScrollPosition.X + (Left - frmxPos), yPos + pnlModifyMap.AutoScrollPosition.Y + (Top - frmyPos) );
                 
@@ -2285,17 +2297,17 @@ namespace Karaboss
             Properties.Settings.Default.ChordsMapModifyZoom = ChordMapControlModify.Zoom;
             Properties.Settings.Default.Save();
 
-            if (Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+            if (System.Windows.Forms.Application.OpenForms.OfType<frmEditChord>().Count() > 0)
             {
-                Application.OpenForms["frmEditChord"].Close();
+                System.Windows.Forms.Application.OpenForms["frmEditChord"].Close();
             }
 
             // Active le formulaire frmExplorer
-            if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
+            if (System.Windows.Forms.Application.OpenForms.OfType<frmExplorer>().Count() > 0)
             {
                 // Restore form
-                Application.OpenForms["frmExplorer"].Restore();
-                Application.OpenForms["frmExplorer"].Activate();
+                System.Windows.Forms.Application.OpenForms["frmExplorer"].Restore();
+                System.Windows.Forms.Application.OpenForms["frmExplorer"].Activate();
             }
 
             Dispose();
@@ -2486,7 +2498,8 @@ namespace Karaboss
                 case PlayerStates.Stopped:
                     btnPlay.Image = Properties.Resources.btn_black_play;
                     btnPlay.Enabled = true;   // to allow play
-                    tabChordsControl.TabPages.Add(tabPageModify);
+                    if (!tabChordsControl.TabPages.Contains(tabPageModify))
+                        tabChordsControl.TabPages.Add(tabPageModify);
                     panelPlayer.DisplayStatus("Stopped");
                     break;
 
@@ -2814,7 +2827,7 @@ namespace Karaboss
                 };
 
                 progressDialog.Show();
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
                 System.Threading.Thread.Sleep(500);
 
 
@@ -2826,7 +2839,7 @@ namespace Karaboss
                     System.IO.File.WriteAllText(@filename, tx);
 
                     progressBar.PerformStep();
-                    Application.DoEvents();
+                    System.Windows.Forms.Application.DoEvents();
                                      
                     System.Threading.Thread.Sleep(500);
                 }
@@ -2936,7 +2949,7 @@ namespace Karaboss
                 };
 
                 progressDialog.Show();
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
                 System.Threading.Thread.Sleep(500);
 
 
@@ -2979,7 +2992,7 @@ namespace Karaboss
                     pdfdocument.AddImage(MemoryImage);
                     MemoryImage.Dispose();
                     progressBar.PerformStep();
-                    Application.DoEvents();
+                    System.Windows.Forms.Application.DoEvents();
 
                     pdfdocument.Save();
                     stream.Close();
@@ -3022,17 +3035,14 @@ namespace Karaboss
         private TForm GetForm<TForm>()
             where TForm : Form
         {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
+            return (TForm)System.Windows.Forms.Application.OpenForms.OfType<TForm>().FirstOrDefault();
         }
 
         #endregion Locate form
 
 
         #region Save file
-
-        
-        
-        
+                        
         /// <summary>
         /// File was modified
         /// </summary>
@@ -3065,6 +3075,16 @@ namespace Karaboss
             if (MIDIfileFullPath == null && fName != "" && fPath != "")
                 MIDIfileFullPath = fPath + "\\" + fName;
 
+            string ext = Path.GetExtension(MIDIfileFullPath).ToLower();
+            switch (ext)
+            {
+                case ".musicxml":
+                case ".mxl":
+                case ".xml":                   
+                    SaveAsFileProc();
+                    return;                    
+            }
+
 
             if (fPath == null || fPath == "" || fName == null || fName == "" || !File.Exists(MIDIfileFullPath))
             {
@@ -3092,6 +3112,20 @@ namespace Karaboss
             // Search name
             if (MIDIfileName == null || MIDIfileName == "")
                 fName = "New.mid";
+
+            string ext = Path.GetExtension(MIDIfileFullPath).ToLower();
+            switch (ext)
+            {
+                case ".musicxml":
+                case ".mxl":
+                case ".xml":
+                    fName = Path.GetFileNameWithoutExtension(MIDIfileFullPath) + ".mid";
+                    MIDIfileName = fName;
+                    fPath = MIDIfilePath;
+                    MIDIfileFullPath = fPath + "\\" + fName;
+                    break;
+            }
+
 
             #region search name
 
@@ -3208,7 +3242,7 @@ namespace Karaboss
                 SetTitle(MIDIfileName);
 
                 // Active le formulaire frmExplorer
-                if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
+                if (System.Windows.Forms.Application.OpenForms.OfType<frmExplorer>().Count() > 0)
                 {
                     frmExplorer = GetForm<frmExplorer>();
                     frmExplorer.RefreshExplorer();

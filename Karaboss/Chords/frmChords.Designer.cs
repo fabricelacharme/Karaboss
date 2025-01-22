@@ -71,58 +71,67 @@
             this.tabChordsControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
             this.tabChordsControl.Name = "tabChordsControl";
             this.tabChordsControl.SelectedIndex = 0;
+            this.toolTip1.SetToolTip(this.tabChordsControl, resources.GetString("tabChordsControl.ToolTip"));
             this.tabChordsControl.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabChordsControl_DrawItem);
             this.tabChordsControl.SelectedIndexChanged += new System.EventHandler(this.tabChordsControl_SelectedIndexChanged);
             // 
             // tabPageChords
             // 
-            this.tabPageChords.ForeColor = System.Drawing.SystemColors.ControlText;
             resources.ApplyResources(this.tabPageChords, "tabPageChords");
+            this.tabPageChords.ForeColor = System.Drawing.SystemColors.ControlText;
             this.tabPageChords.Name = "tabPageChords";
+            this.toolTip1.SetToolTip(this.tabPageChords, resources.GetString("tabPageChords.ToolTip"));
             this.tabPageChords.UseVisualStyleBackColor = true;
             // 
             // tabPageMap
             // 
             resources.ApplyResources(this.tabPageMap, "tabPageMap");
             this.tabPageMap.Name = "tabPageMap";
+            this.toolTip1.SetToolTip(this.tabPageMap, resources.GetString("tabPageMap.ToolTip"));
             this.tabPageMap.UseVisualStyleBackColor = true;
             // 
             // tabPageLyrics
             // 
             resources.ApplyResources(this.tabPageLyrics, "tabPageLyrics");
             this.tabPageLyrics.Name = "tabPageLyrics";
+            this.toolTip1.SetToolTip(this.tabPageLyrics, resources.GetString("tabPageLyrics.ToolTip"));
             this.tabPageLyrics.UseVisualStyleBackColor = true;
             // 
             // tabPageModify
             // 
             resources.ApplyResources(this.tabPageModify, "tabPageModify");
             this.tabPageModify.Name = "tabPageModify";
+            this.toolTip1.SetToolTip(this.tabPageModify, resources.GetString("tabPageModify.ToolTip"));
             this.tabPageModify.UseVisualStyleBackColor = true;
             // 
             // pnlToolbar
             // 
+            resources.ApplyResources(this.pnlToolbar, "pnlToolbar");
             this.pnlToolbar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
             this.pnlToolbar.Controls.Add(this.progressBarPlayer);
-            resources.ApplyResources(this.pnlToolbar, "pnlToolbar");
             this.pnlToolbar.Name = "pnlToolbar";
+            this.toolTip1.SetToolTip(this.pnlToolbar, resources.GetString("pnlToolbar.ToolTip"));
             // 
             // progressBarPlayer
             // 
             resources.ApplyResources(this.progressBarPlayer, "progressBarPlayer");
             this.progressBarPlayer.Name = "progressBarPlayer";
+            this.toolTip1.SetToolTip(this.progressBarPlayer, resources.GetString("progressBarPlayer.ToolTip"));
             // 
             // menuStrip1
             // 
+            resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFile,
             this.mnuHelp,
             this.aboutToolStripMenuItem});
-            resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.Name = "menuStrip1";
+            this.toolTip1.SetToolTip(this.menuStrip1, resources.GetString("menuStrip1.ToolTip"));
             // 
             // mnuFile
             // 
+            resources.ApplyResources(this.mnuFile, "mnuFile");
             this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFileOpen,
             this.mnuFileSep1,
@@ -135,92 +144,96 @@
             this.mnuFileQuit,
             this.toolStripSeparator3});
             this.mnuFile.Name = "mnuFile";
-            resources.ApplyResources(this.mnuFile, "mnuFile");
             // 
             // mnuFileOpen
             // 
-            this.mnuFileOpen.Name = "mnuFileOpen";
             resources.ApplyResources(this.mnuFileOpen, "mnuFileOpen");
+            this.mnuFileOpen.Name = "mnuFileOpen";
             this.mnuFileOpen.Click += new System.EventHandler(this.mnuFileOpen_Click);
             // 
             // mnuFileSep1
             // 
-            this.mnuFileSep1.Name = "mnuFileSep1";
             resources.ApplyResources(this.mnuFileSep1, "mnuFileSep1");
+            this.mnuFileSep1.Name = "mnuFileSep1";
             // 
             // mnuFileSave
             // 
-            this.mnuFileSave.Name = "mnuFileSave";
             resources.ApplyResources(this.mnuFileSave, "mnuFileSave");
+            this.mnuFileSave.Name = "mnuFileSave";
             this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
             // 
             // mnuFileSaveAs
             // 
-            this.mnuFileSaveAs.Name = "mnuFileSaveAs";
             resources.ApplyResources(this.mnuFileSaveAs, "mnuFileSaveAs");
+            this.mnuFileSaveAs.Name = "mnuFileSaveAs";
             this.mnuFileSaveAs.Click += new System.EventHandler(this.mnuFileSaveAs_Click);
             // 
             // mnuFileSep2
             // 
-            this.mnuFileSep2.Name = "mnuFileSep2";
             resources.ApplyResources(this.mnuFileSep2, "mnuFileSep2");
+            this.mnuFileSep2.Name = "mnuFileSep2";
             // 
             // mnuFilePrintLyrics
             // 
-            this.mnuFilePrintLyrics.Name = "mnuFilePrintLyrics";
             resources.ApplyResources(this.mnuFilePrintLyrics, "mnuFilePrintLyrics");
+            this.mnuFilePrintLyrics.Name = "mnuFilePrintLyrics";
             this.mnuFilePrintLyrics.Click += new System.EventHandler(this.mnuFilePrintLyrics_Click);
             // 
             // mnuFilePrintPDF
             // 
-            this.mnuFilePrintPDF.Name = "mnuFilePrintPDF";
             resources.ApplyResources(this.mnuFilePrintPDF, "mnuFilePrintPDF");
+            this.mnuFilePrintPDF.Name = "mnuFilePrintPDF";
             this.mnuFilePrintPDF.Click += new System.EventHandler(this.mnuFilePrintPDF_Click);
             // 
             // mnuFileSep3
             // 
-            this.mnuFileSep3.Name = "mnuFileSep3";
             resources.ApplyResources(this.mnuFileSep3, "mnuFileSep3");
+            this.mnuFileSep3.Name = "mnuFileSep3";
             // 
             // mnuFileQuit
             // 
-            this.mnuFileQuit.Name = "mnuFileQuit";
             resources.ApplyResources(this.mnuFileQuit, "mnuFileQuit");
+            this.mnuFileQuit.Name = "mnuFileQuit";
             this.mnuFileQuit.Click += new System.EventHandler(this.mnuFileQuit_Click);
             // 
             // toolStripSeparator3
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
             resources.ApplyResources(this.toolStripSeparator3, "toolStripSeparator3");
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
             // 
             // mnuHelp
             // 
+            resources.ApplyResources(this.mnuHelp, "mnuHelp");
             this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuHelpAbout,
             this.mnuHelpAboutSong});
             this.mnuHelp.Name = "mnuHelp";
-            resources.ApplyResources(this.mnuHelp, "mnuHelp");
             // 
             // mnuHelpAbout
             // 
-            this.mnuHelpAbout.Name = "mnuHelpAbout";
             resources.ApplyResources(this.mnuHelpAbout, "mnuHelpAbout");
+            this.mnuHelpAbout.Name = "mnuHelpAbout";
             this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
             // 
             // mnuHelpAboutSong
             // 
-            this.mnuHelpAboutSong.Name = "mnuHelpAboutSong";
             resources.ApplyResources(this.mnuHelpAboutSong, "mnuHelpAboutSong");
+            this.mnuHelpAboutSong.Name = "mnuHelpAboutSong";
             this.mnuHelpAboutSong.Click += new System.EventHandler(this.mnuHelpAboutSong_Click);
             // 
             // aboutToolStripMenuItem
             // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             resources.ApplyResources(this.aboutToolStripMenuItem, "aboutToolStripMenuItem");
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            // 
+            // saveMidiFileDialog
+            // 
+            resources.ApplyResources(this.saveMidiFileDialog, "saveMidiFileDialog");
             // 
             // openMidiFileDialog
             // 
             this.openMidiFileDialog.FileName = "openFileDialog1";
+            resources.ApplyResources(this.openMidiFileDialog, "openMidiFileDialog");
             // 
             // frmChords
             // 
@@ -230,6 +243,7 @@
             this.Controls.Add(this.pnlToolbar);
             this.Controls.Add(this.tabChordsControl);
             this.Name = "frmChords";
+            this.toolTip1.SetToolTip(this, resources.GetString("$this.ToolTip"));
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmChords_FormClosing);
             this.Load += new System.EventHandler(this.frmChords_Load);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmChords_KeyUp);

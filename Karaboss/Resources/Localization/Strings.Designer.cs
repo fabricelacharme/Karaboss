@@ -1267,5 +1267,26 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("Chords", resourceCulture);
             }
         }
+        internal static string MeasuresPerLine
+        {
+            get
+            {
+                return ResourceManager.GetString("MeasuresPerLine", resourceCulture);
+            }
+        }
+        internal static string DisplayLyrics
+        {
+            get
+            {
+                return ResourceManager.GetString("DisplayLyrics", resourceCulture);
+            }
+        }
+        internal static string CellSize
+        {
+            get
+            {
+                return ResourceManager.GetString("CellSize", resourceCulture);
+            }
+        }
     }
 }

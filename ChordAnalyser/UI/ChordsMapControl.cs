@@ -107,6 +107,8 @@ namespace ChordAnalyser.UI
         private string _filename;        
         private const int topmargin = 20;
 
+        private int _currentselection = 0;
+
         #endregion private
 
 
@@ -404,7 +406,7 @@ namespace ChordAnalyser.UI
             string title = Path.GetFileName(_filename);
             w = MeasureString(fontTitle.FontFamily, title, fontTitle.Size);
 
-            title = title.Replace(".mid", "").Replace("_", " ").Replace(".kar", "").Replace("musicxml", "").Replace("xml", "");            
+            title = title.Replace(".mid", "").Replace("_", " ").Replace(".kar", "").Replace("musicxml", "").Replace(".xml", "").Replace(".mxl", "");            
 
             g.TranslateTransform(PageWidth/2 - w/2, topmargin);
             g.DrawString(title, fontTitle, Brushes.Black, 0, 0);
@@ -444,7 +446,8 @@ namespace ChordAnalyser.UI
             int compteurmesure = -1;
 
             FillPen = new Pen(Color.Gray, _LinesWidth);
-           
+            Pen SelectionPen = new Pen(Color.FromArgb(255, 196, 13), _LinesWidth + 3);
+
             // init variables
             compteurmesure = -1;                    
 
@@ -464,17 +467,25 @@ namespace ChordAnalyser.UI
                 // Dessine autant de cases que le numerateur
                 for (int j = 0; j < sequence1.Numerator; j++)
                 {
-                    // Draw played cell in gray
+                    
                     if (i == _currentmeasure && j == _currentTimeInMeasure - 1 && _currentpos > 0)
                     {
+                        // Draw played cell in gray
                         g.DrawRectangle(FillPen, x, y, _cellwidth, _cellheight);
                         rect = new Rectangle(x, y, (int)(_cellwidth), (int)(_cellheight));
                         g.FillRectangle(new SolidBrush(Color.Gray), rect);
-                    }
+                    }                    
                     else
                     {
                         // Draw other celles in white                        
                         g.DrawRectangle(FillPen, x, y, _cellwidth, _cellheight);
+
+                        if (i == _currentmeasure && j == _currentTimeInMeasure - 1 && _currentselection > 0)
+                        {
+                            // Draw selected cell in yellow
+                            g.DrawRectangle(SelectionPen, x + 3, y + 3, _cellwidth - 6, _cellheight - 6);
+                        }
+
                     }
                     x += _beatwidth; 
                 }
@@ -528,7 +539,8 @@ namespace ChordAnalyser.UI
             SolidBrush LyricBrush = new SolidBrush(Color.FromArgb(43, 87, 151)); // (45, 137, 239))
             
             int x = _leftmargin;//0;
-            int y_chord = (int)_headerheight + ((int)(_cellheight) / 2) - (_fontMeasure.Height / 2);
+            //int y_chord = (int)_headerheight + ((int)(_cellheight) / 2) - (_fontMeasure.Height / 2);
+            int y_chord = (int)_headerheight + ((int)(_cellheight) / 3) - (_fontMeasure.Height / 2);
             int y_symbol = 10;
            
             int y_measurenumber = (int)_headerheight + _fontMeasure.Height / 3;
@@ -661,7 +673,35 @@ namespace ChordAnalyser.UI
 
         private void pnlCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            //throw new NotImplementedException();
+
+            int x = e.Location.X - _leftmargin; //Horizontal
+            int y = e.Location.Y + OffsetY - (int)_headerheight;  // Vertical
+
+            // Calculate start time                
+            int HauteurCellule = (int)_cellheight + 1;
+            int LargeurCellule = (int)_cellwidth + 1;
+
+            if (x > _nbcolumns * LargeurCellule * sequence1.Numerator)
+            {
+                _currentselection = 0;
+                Refresh();
+                return;
+            }
+
+            int line = (int)Math.Ceiling(y / (double)HauteurCellule);            
+            int cellincurrentline = (int)Math.Ceiling(x / (double)LargeurCellule);  // Cell number in current line 
+
+            int prevmeasures =  ((cellincurrentline - 1)/sequence1.Numerator) +  (line - 1) * _nbcolumns;    // measures before current
+            
+            int newstart = _measurelen * prevmeasures + (_measurelen / sequence1.Numerator) * cellincurrentline;
+
+            if (_currentselection != newstart)
+            {                
+                _currentmeasure = 1 + prevmeasures;
+                _currentTimeInMeasure = cellincurrentline - prevmeasures * sequence1.Numerator + (line - 1) * _nbcolumns * sequence1.Numerator;
+                _currentselection = newstart;
+                Refresh();
+            }
         }
 
         private void pnlCanvas_MouseUp(object sender, MouseEventArgs e)
@@ -670,9 +710,8 @@ namespace ChordAnalyser.UI
         }
 
         private void pnlCanvas_MouseDown(object sender, MouseEventArgs e)
-        {
-            OnMouseDown(e);
-            
+        {           
+            OnMouseDown(e);            
         }
 
         #endregion mouse

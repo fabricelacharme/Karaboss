@@ -613,6 +613,7 @@ namespace Karaboss
                 return;
             }
 
+            /*
             // Unzip MXL before
             if (Karaclass.IsMXL(filename))
             {
@@ -622,6 +623,7 @@ namespace Karaboss
                     return;
                 }
             }
+            */
 
             // ferme le formulaire frmPlayer
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)

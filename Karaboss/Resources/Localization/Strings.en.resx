@@ -510,4 +510,13 @@
   <data name="Chords" xml:space="preserve">
     <value>Chords</value>
   </data>
+  <data name="MeasuresPerLine" xml:space="preserve">
+    <value>Measures per line</value>
+  </data>
+  <data name="DisplayLyrics" xml:space="preserve">
+    <value>Display lyrics</value>
+  </data>
+  <data name="CellSize" xml:space="preserve">
+    <value>Cell size</value>
+  </data>
 </root>

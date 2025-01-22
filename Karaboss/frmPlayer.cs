@@ -2759,9 +2759,7 @@ namespace Karaboss
             //string fExt = Path.GetExtension(fileName);             // Extension
             string fName = Path.GetFileNameWithoutExtension(fileName);    // name without extension
             MIDIfileName = fName + ".mid";
-            MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
-
-            //string lyrics;// = string.Empty;
+            MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);            
 
             // Load xml file                
             MusicXmlReader M = new MusicXmlReader();
@@ -3265,10 +3263,7 @@ namespace Karaboss
 
                     // Show Xml chords?
                     MXmlReader.PlayXmlChords = Karaclass.m_ShowXmlChords;
-
                     MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
-
-
                     MXmlReader.LoadXmlAsync(fileName, false);
                 }
             }
@@ -3293,7 +3288,6 @@ namespace Karaboss
                 {
                     MTxtReader = new MusicTxtReader(fileName);
                     MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
-
                     MTxtReader.LoadTxtAsync(fileName);
                 }
             }
@@ -4227,7 +4221,7 @@ namespace Karaboss
                         // propose to select a track (or not) as a guide
                         // Lyrics does not exist
                         // => select track having melody
-                        MessageBox.Show("Lyrics were found, but I am unable to identify the melody track", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        //MessageBox.Show("Lyrics were found, but I am unable to identify the melody track", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else if (myLyricsMgmt.OrgplLyrics.Count == 0)
                     {
@@ -4277,7 +4271,7 @@ namespace Karaboss
                 }
                 catch (Exception fl)
                 {
-                    MessageBox.Show("Erreur showing frmLyricsEdit: " + fl.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error displaying frmLyricsEdit: " + fl.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -4534,9 +4528,7 @@ namespace Karaboss
               * - Call the SheetMusic.DoPrint() method to draw the music onto the bitmap
               * - Add the bitmap image to the PDF document.
               * - Save the PDF document
-              */
-
-            //string message; // = string.Empty;
+              */            
 
             if (sheetmusic == null)
                 return;
@@ -7434,7 +7426,9 @@ namespace Karaboss
 
                 // Display time elapse
                 double dpercent = 100 * sequencer1.Position / (double)_totalTicks;
-                double maintenant = (dpercent * _durationPercent) / 100;  //seconds
+                double maintenant = (dpercent * _durationPercent) / 100;  //seconds                                                
+                //double maintenant2 = TempoUtilities.GetMidiDuration(sequencer1.Position, sequence1.Division);
+                
                 DisplayTimeElapse(dpercent);              
 
                 //Eteint la boule fixe;
@@ -8541,8 +8535,8 @@ namespace Karaboss
             // Load tempos map
             TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);
 
-            _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
-            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);
+            _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. For sheetmusic offset
+            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);  // Real duration according to tempo changes
 
             _bpm = GetBPM(_tempo);
 
