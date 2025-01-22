@@ -241,40 +241,40 @@
     <value />
   </data>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
+    <value>258, 22</value>
   </data>
   <data name="mnuFileSave.Text" xml:space="preserve">
     <value>&amp;Enregistrer</value>
   </data>
   <data name="mnuFileSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
+    <value>258, 22</value>
   </data>
   <data name="mnuFileSaveAs.Text" xml:space="preserve">
     <value>Enregistrer &amp;sous</value>
   </data>
   <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>211, 6</value>
+    <value>255, 6</value>
   </data>
   <data name="mnuFileSaveAsLrcLines.Text" xml:space="preserve">
     <value>Lignes</value>
   </data>
   <data name="mnuFileSaveAsLrc.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
+    <value>258, 22</value>
   </data>
   <data name="mnuFileSaveAsLrc.Text" xml:space="preserve">
-    <value>Enregistrer au format .lrc</value>
+    <value>Exporter les paroles au format .lrc</value>
   </data>
   <data name="MnuSaveAsText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
+    <value>258, 22</value>
   </data>
   <data name="MnuSaveAsText.Text" xml:space="preserve">
-    <value>Enregistrer au format texte</value>
+    <value>Exporter les paroles au format texte</value>
   </data>
   <data name="mnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>211, 6</value>
+    <value>255, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 22</value>
+    <value>258, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
@@ -286,7 +286,7 @@
     <value>&amp;Fichier</value>
   </data>
   <data name="mnuEditLoadTrack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>260, 22</value>
+    <value>263, 22</value>
   </data>
   <data name="mnuEditLoadTrack.Text" xml:space="preserve">
     <value>&amp;Charger une piste</value>
@@ -295,10 +295,10 @@
     <value>Charger une piste contenant des notes pour synchroniser le texte.</value>
   </data>
   <data name="mnuEditSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>257, 6</value>
+    <value>260, 6</value>
   </data>
   <data name="mnuEditLoadMelodyText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>260, 22</value>
+    <value>263, 22</value>
   </data>
   <data name="mnuEditLoadMelodyText.Text" xml:space="preserve">
     <value>Charger un fichier texte (paroles)</value>
@@ -307,10 +307,10 @@
     <value>Charger un fichier texte (uniquement des paroles, pas de temps)</value>
   </data>
   <data name="mnuEditLoadLRCFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>260, 22</value>
+    <value>263, 22</value>
   </data>
   <data name="mnuEditLoadLRCFile.Text" xml:space="preserve">
-    <value>Charge un fichier texte (format .lrc)</value>
+    <value>Charger un fichier texte (format .lrc)</value>
   </data>
   <data name="mnuEditLoadLRCFile.ToolTipText" xml:space="preserve">
     <value>Charger un fichier texte au format LRC (temps + Lyriques)</value>

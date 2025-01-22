@@ -61,8 +61,6 @@
             this.mnuFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSep2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileSaveAsLrc = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFileSaveAsLrcLines = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFileSaveAsLrcSyllabes = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuSaveAsText = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
@@ -369,23 +367,9 @@
             // 
             // mnuFileSaveAsLrc
             // 
-            this.mnuFileSaveAsLrc.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFileSaveAsLrcLines,
-            this.mnuFileSaveAsLrcSyllabes});
             this.mnuFileSaveAsLrc.Name = "mnuFileSaveAsLrc";
             resources.ApplyResources(this.mnuFileSaveAsLrc, "mnuFileSaveAsLrc");
-            // 
-            // mnuFileSaveAsLrcLines
-            // 
-            this.mnuFileSaveAsLrcLines.Name = "mnuFileSaveAsLrcLines";
-            resources.ApplyResources(this.mnuFileSaveAsLrcLines, "mnuFileSaveAsLrcLines");
-            this.mnuFileSaveAsLrcLines.Click += new System.EventHandler(this.mnuFileSaveAsLrcLines_Click);
-            // 
-            // mnuFileSaveAsLrcSyllabes
-            // 
-            this.mnuFileSaveAsLrcSyllabes.Name = "mnuFileSaveAsLrcSyllabes";
-            resources.ApplyResources(this.mnuFileSaveAsLrcSyllabes, "mnuFileSaveAsLrcSyllabes");
-            this.mnuFileSaveAsLrcSyllabes.Click += new System.EventHandler(this.mnuFileSaveAsLrcSyllabes_Click);
+            this.mnuFileSaveAsLrc.Click += new System.EventHandler(this.mnuFileSaveAsLrc_Click);
             // 
             // MnuSaveAsText
             // 
@@ -662,8 +646,6 @@
         private System.Windows.Forms.TextBox txtLTag;
         private System.Windows.Forms.TextBox txtKTag;
         private System.Windows.Forms.Button btnSaveTags;
-        private System.Windows.Forms.ToolStripMenuItem mnuFileSaveAsLrcLines;
-        private System.Windows.Forms.ToolStripMenuItem mnuFileSaveAsLrcSyllabes;
         private System.Windows.Forms.Button btnDeleteAllLyrics;
         private System.Windows.Forms.ToolStripMenuItem MnuSaveAsText;
         private System.Windows.Forms.Panel pnlMenus;

@@ -176,7 +176,14 @@
     <Compile Include="Display\PanelPlayer.Designer.cs">
       <DependentUpon>PanelPlayer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Lyrics\frmLrcOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Lyrics\frmLrcOptions.Designer.cs">
+      <DependentUpon>frmLrcOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\IO\Files.cs" />
+    <Compile Include="Utilities\Lyrics\LyricsUtilities.cs" />
     <Compile Include="Utilities\MidiFile\CreateNewMidiFile.cs" />
     <Compile Include="Utilities\Tempo\TempoUtilities.cs" />
     <Compile Include="Chords\frmChords.cs">
@@ -287,10 +294,10 @@
     <Compile Include="frmLoading.Designer.cs">
       <DependentUpon>frmLoading.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmLyricsEdit.cs">
+    <Compile Include="Lyrics\frmLyricsEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmLyricsEdit.Designer.cs">
+    <Compile Include="Lyrics\frmLyricsEdit.Designer.cs">
       <DependentUpon>frmLyricsEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="frmMessageBox.cs">
@@ -317,10 +324,10 @@
     <Compile Include="frmRecorder.Designer.cs">
       <DependentUpon>frmRecorder.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmLyricsSelectTrack.cs">
+    <Compile Include="Lyrics\frmLyricsSelectTrack.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmLyricsSelectTrack.Designer.cs">
+    <Compile Include="Lyrics\frmLyricsSelectTrack.Designer.cs">
       <DependentUpon>frmLyricsSelectTrack.cs</DependentUpon>
     </Compile>
     <Compile Include="frmSplashScreen.cs">
@@ -335,10 +342,10 @@
     <Compile Include="frmTags.Designer.cs">
       <DependentUpon>frmTags.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmLyric.cs">
+    <Compile Include="Lyrics\frmLyric.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmLyric.designer.cs">
+    <Compile Include="Lyrics\frmLyric.designer.cs">
       <DependentUpon>frmLyric.cs</DependentUpon>
     </Compile>
     <Compile Include="frmLyrOptions.cs">
@@ -543,7 +550,13 @@
     <EmbeddedResource Include="frmGuitarTraining.resx">
       <DependentUpon>frmGuitarTraining.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmLyricsSelectTrack.fr.resx">
+    <EmbeddedResource Include="Lyrics\frmLrcOptions.fr.resx">
+      <DependentUpon>frmLrcOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lyrics\frmLrcOptions.resx">
+      <DependentUpon>frmLrcOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lyrics\frmLyricsSelectTrack.fr.resx">
       <DependentUpon>frmLyricsSelectTrack.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmModifyTempo.fr.resx">
@@ -600,22 +613,22 @@
     <EmbeddedResource Include="frmLoading.resx">
       <DependentUpon>frmLoading.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmLyricsEdit.en.resx">
+    <EmbeddedResource Include="Lyrics\frmLyricsEdit.en.resx">
       <DependentUpon>frmLyricsEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmLyricsEdit.fr.resx">
-      <DependentUpon>frmLyricsEdit.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmLyricsEdit.resx">
+    <EmbeddedResource Include="Lyrics\frmLyricsEdit.fr.resx">
       <DependentUpon>frmLyricsEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmLyric.en.resx">
+    <EmbeddedResource Include="Lyrics\frmLyricsEdit.resx">
+      <DependentUpon>frmLyricsEdit.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lyrics\frmLyric.en.resx">
       <DependentUpon>frmLyric.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmLyric.fr.resx">
+    <EmbeddedResource Include="Lyrics\frmLyric.fr.resx">
       <DependentUpon>frmLyric.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -650,7 +663,7 @@
     <EmbeddedResource Include="frmRecorder.resx">
       <DependentUpon>frmRecorder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmLyricsSelectTrack.resx">
+    <EmbeddedResource Include="Lyrics\frmLyricsSelectTrack.resx">
       <DependentUpon>frmLyricsSelectTrack.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSplashScreen.resx">
@@ -659,7 +672,7 @@
     <EmbeddedResource Include="frmTags.resx">
       <DependentUpon>frmTags.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmLyric.resx">
+    <EmbeddedResource Include="Lyrics\frmLyric.resx">
       <DependentUpon>frmLyric.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

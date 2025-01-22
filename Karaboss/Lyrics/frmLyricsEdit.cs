@@ -45,6 +45,7 @@ using Karaboss.Lrc.SharedFramework;
 using Karaboss.Lyrics;
 using Karaboss.Utilities;
 using radio42.Multimedia.Midi;
+using static Karaboss.Karaclass;
 
 
 namespace Karaboss
@@ -1548,7 +1549,7 @@ namespace Karaboss
         /// Save lyrics to lrc format, syllabe by syllabe
         /// </summary>
         /// <param name="FileName"></param>
-        private void SaveLRCSyllabes(string File, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
+        private void SaveLRCSyllabes(string File, bool bRemoveAccents, bool bUpperCase, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
         {
             string sTime; 
             string sLyric;
@@ -1582,8 +1583,21 @@ namespace Karaboss
                     sLyric = sLyric.Replace("_", " ");
                     sLyric = sLyric.Trim();
 
+
                     if (sLyric != "" && sLyric != cr)
-                    {
+                    { 
+                        // Remove accents
+                        if (bRemoveAccents)
+                        {
+                            sLyric = Utilities.LyricsUtilities.RemoveDiacritics(sLyric);
+                        }
+
+                        //Uppercase letters
+                        if (bUpperCase) 
+                        { 
+                            sLyric = sLyric.ToUpper();
+                        }
+                                       
                         sTime = vTime.ToString();
                         lrcs += "[" + sTime + "]" + sLyric + cr;
                     }
@@ -1612,7 +1626,7 @@ namespace Karaboss
         /// <param name="Tag_Lang"></param>
         /// <param name="Tag_By"></param>
         /// <param name="Tag_DPlus"></param>
-        private void SaveLRCLines(string File, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
+        private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
         {
             string sTime; // = string.Empty;
             string sLyric; // = string.Empty;
@@ -1655,6 +1669,19 @@ namespace Karaboss
 
                     if (sLyric != "" && sType != "cr" && sType != "par")
                     {
+
+                        // Remove accents
+                        if (bRemoveAccents)
+                        {
+                            sLyric = Utilities.LyricsUtilities.RemoveDiacritics(sLyric);
+                        }
+
+                        //Uppercase letters
+                        if (bUpperCase)
+                        {
+                            sLyric = sLyric.ToUpper();
+                        }
+
                         if (bStartLine)
                         {
                             sTime = vTime.ToString();
@@ -2137,18 +2164,46 @@ namespace Karaboss
 
         #region LRC
 
+        private void mnuFileSaveAsLrc_Click(object sender, EventArgs e)
+        {
+           
+            
+            DialogResult dr;
+            frmLrcOptions LrcOptionsDialog = new frmLrcOptions();
+            dr = LrcOptionsDialog.ShowDialog();
+
+            if (dr == System.Windows.Forms.DialogResult.Cancel)            
+                return;
+
+            bool bRemoveAccents = LrcOptionsDialog.bRemoveAccents;
+            bool bUppercase = LrcOptionsDialog.bUpperCase;
+            Karaclass.LrcFormats LrcFormat = LrcOptionsDialog.LrcFormat;
+
+            switch (LrcFormat)
+            {
+                case LrcFormats.Lines:
+                    ExportToLrcLines(bRemoveAccents, bUppercase);
+                    break;
+                case LrcFormats.Syllables:
+                    ExportToLrcSyllabes(bRemoveAccents, bUppercase);
+                    break;
+
+            }
+
+        }
+
         /// <summary>
         /// Save lyrics to text file .lrc format - line by line
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void mnuFileSaveAsLrcLines_Click(object sender, EventArgs e)
+        private void ExportToLrcLines(bool bRemoveAccents, bool bUpperCase)
         {
             #region select filename
             string fName = "New.lrc";
             string fPath = Path.GetDirectoryName(MIDIfileName);
 
-            string fullName; 
+            string fullName;
             string defName;
 
             #region search name
@@ -2206,7 +2261,7 @@ namespace Karaboss
                 Tag_Title = split[1].Trim();
             }
 
-            SaveLRCLines(FileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+            SaveLRCLines(FileName, bRemoveAccents, bUpperCase, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
         }
 
         /// <summary>
@@ -2214,12 +2269,11 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void mnuFileSaveAsLrcSyllabes_Click(object sender, EventArgs e)
+        private void ExportToLrcSyllabes(bool bRemoveAccents, bool bUpperCase)
         {
-
             //19200
             //TempoUtilities.GetMidiDuration(sequence1, sequence1.GetLength());
-                      
+
             #region select filename
             string fName = "New.lrc";
             string fPath = Path.GetDirectoryName(MIDIfileName);
@@ -2283,10 +2337,12 @@ namespace Karaboss
                 Tag_Title = split[1].Trim();
             }
 
-            SaveLRCSyllabes(LrcFileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+            SaveLRCSyllabes(LrcFileName, bRemoveAccents, bUpperCase, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
             //TempoUtilities.ExportToLRC(MIDIfileName, LrcFileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
         }
 
+        
+        
         /// <summary>
         /// Load a text file LRC format (times stamps + lyrics)
         /// </summary>
@@ -2458,86 +2514,7 @@ namespace Karaboss
         }
 
         #endregion LRC
-
-
-        #region deleteme
-        /*
-        private void LoadLRCFile2(string Source)
-        {
-            Karaboss.Lrc.SharedFramework.Lyrics lyrics = new Karaboss.Lrc.SharedFramework.Lyrics();
-            lyrics.ArrangeLyrics(Source);
-
-
-            // Clear dgView
-            dgView.Rows.Clear();
-            
-            // Add missing lines before
-            int addl = lyrics.Count - dgView.Rows.Count;
-            if (addl > 0)
-            {
-                for (int i = 0; i < addl; i++)
-                {
-                    dgView.Rows.Add();
-                }
-            }
-
-            // ADD rows for CR
-            addl = dgView.Rows.Count;
-            for (int i = 0; i < addl; i++)
-            {
-                dgView.Rows.Add();
-            }
-
-            int plTicksOn = 0;
-            string plRealTime; // = string.Empty;
-            string plType; // = string.Empty;
-            string plNote = string.Empty;
-            string plElement; // = string.Empty;            
-            int row = 0;
-
-            for (int i = 0; i < lyrics.Count; i++)
-            {
-                LyricsLine lyline = lyrics[i];
-                plRealTime = lyline.Timeline;
-
-                if (row > 0)
-                {
-                    // Add CR
-                    plElement = "";
-                    plType = "cr";
-                    dgView.Rows[row].Cells[COL_TICKS].Value = plTicksOn;
-                    dgView.Rows[row].Cells[COL_TIME].Value = plRealTime;
-                    dgView.Rows[row].Cells[COL_TYPE].Value = plType;
-                    dgView.Rows[row].Cells[COL_NOTE].Value = plNote;
-                    dgView.Rows[row].Cells[COL_TEXT].Value = plElement;
-                    row++;
-                }
-                
-                plType = "text";
-                plElement = lyline.OriLyrics;
-
-                plTicksOn = TimeToTicks(plRealTime);
-                dgView.Rows[row].Cells[COL_TICKS].Value = plTicksOn;
-                dgView.Rows[row].Cells[COL_TIME].Value = plRealTime;
-                dgView.Rows[row].Cells[COL_TYPE].Value = plType;
-                dgView.Rows[row].Cells[COL_NOTE].Value = plNote;
-                dgView.Rows[row].Cells[COL_TEXT].Value = plElement;
-
-                row++;
-            }
-
-            //Load modification into local list of lyrics
-            localplLyrics = LoadModifiedLyrics();
-            PopulateTextBox(localplLyrics);
-
-            // Color separators
-            ColorSepRows();
-
-            // File was modified
-            FileModified();
-        }
-        */
-        #endregion deleteme
+    
 
 
         /// <summary>
@@ -3583,8 +3560,9 @@ namespace Karaboss
             
         }
 
+
         #endregion switch to other available format
 
-
+      
     }
 }

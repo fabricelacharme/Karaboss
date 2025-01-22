@@ -802,49 +802,37 @@
     <value>17, 17</value>
   </metadata>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="mnuFileSave.Text" xml:space="preserve">
     <value>&amp;Save</value>
   </data>
   <data name="mnuFileSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="mnuFileSaveAs.Text" xml:space="preserve">
     <value>Save &amp;as</value>
   </data>
   <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>170, 6</value>
-  </data>
-  <data name="mnuFileSaveAsLrcLines.Size" type="System.Drawing.Size, System.Drawing">
-    <value>116, 22</value>
-  </data>
-  <data name="mnuFileSaveAsLrcLines.Text" xml:space="preserve">
-    <value>Lines</value>
-  </data>
-  <data name="mnuFileSaveAsLrcSyllabes.Size" type="System.Drawing.Size, System.Drawing">
-    <value>116, 22</value>
-  </data>
-  <data name="mnuFileSaveAsLrcSyllabes.Text" xml:space="preserve">
-    <value>Syllabes</value>
+    <value>209, 6</value>
   </data>
   <data name="mnuFileSaveAsLrc.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="mnuFileSaveAsLrc.Text" xml:space="preserve">
-    <value>Save as .lrc format</value>
+    <value>Export lyrics to .lrc format</value>
   </data>
   <data name="MnuSaveAsText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="MnuSaveAsText.Text" xml:space="preserve">
-    <value>Save as text format</value>
+    <value>Export lyrics to text format</value>
   </data>
   <data name="mnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>170, 6</value>
+    <value>209, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quit</value>
@@ -1546,18 +1534,6 @@
     <value>mnuFileSaveAsLrc</value>
   </data>
   <data name="&gt;&gt;mnuFileSaveAsLrc.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mnuFileSaveAsLrcLines.Name" xml:space="preserve">
-    <value>mnuFileSaveAsLrcLines</value>
-  </data>
-  <data name="&gt;&gt;mnuFileSaveAsLrcLines.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mnuFileSaveAsLrcSyllabes.Name" xml:space="preserve">
-    <value>mnuFileSaveAsLrcSyllabes</value>
-  </data>
-  <data name="&gt;&gt;mnuFileSaveAsLrcSyllabes.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;MnuSaveAsText.Name" xml:space="preserve">

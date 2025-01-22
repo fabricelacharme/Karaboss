@@ -199,9 +199,7 @@ namespace Karaboss
             }
 
         }
-
        
-
 
         #region Content Changed
         /// <summary>
@@ -814,6 +812,10 @@ namespace Karaboss
 
         }
 
+        public void RefreshExplorer()
+        {
+            xplorerControl.RefreshContents();
+        }
 
         #endregion functions
 
@@ -2814,16 +2816,6 @@ namespace Karaboss
         #endregion
 
         #endregion menus
-
-
-        #region functions
-        public void RefreshExplorer()
-        {
-            xplorerControl.RefreshContents();
-        }
-
-        #endregion
-
 
       
         #region configuration control
