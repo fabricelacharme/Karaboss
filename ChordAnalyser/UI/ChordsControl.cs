@@ -267,7 +267,7 @@ namespace ChordAnalyser.UI
         private StringFormat sf = new StringFormat();
 
         // Midifile characteristics
-        private double _duration = 0;  // en secondes
+        //private double _duration = 0;  // en secondes
         private int _totalTicks = 0;        
         private double _ppqn;
         private int _tempo;
@@ -617,7 +617,7 @@ namespace ChordAnalyser.UI
             _totalTicks = sequence1.GetLength();
             _tempo = sequence1.Tempo;
             _ppqn = sequence1.Division;
-            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds            
+            //_duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds            
 
             if (sequence1.Time != null)
             {

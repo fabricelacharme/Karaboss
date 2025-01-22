@@ -607,23 +607,20 @@ namespace ChordAnalyser.UI
                 string currentlyric = string.Empty;
                 int _measure;
                 int nbBeatsPerMeasure = sequence1.Numerator;
-                int line;
-                int prevline = 1;                
+                int line;                
+                int c = (int)_cellheight + 1;
 
                 if (GridLyrics != null && _displaylyrics)
                 {
                     foreach (var z in GridLyrics)
                     {
-                        currentbeat = z.Key;
+                        currentbeat = z.Key;                        
                         currentlyric = z.Value;
+
                         _measure = (currentbeat - 1) / nbBeatsPerMeasure;
                         
-                        line = 1 + _measure/_nbcolumns;                  
-                        if (line > prevline)
-                        {
-                            prevline = line;
-                            y_lyric += ((int)_cellheight + 1);
-                        }
+                        line = 1 + _measure/_nbcolumns;                                          
+                        y_lyric = (line + 1) * c;
 
                         w = MeasureString(_fontLyric.FontFamily, currentlyric, _fontLyric.Size);
                         h = MeasureStringHeight(_fontLyric.FontFamily, currentlyric, _fontLyric.Size);

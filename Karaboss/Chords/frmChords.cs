@@ -158,6 +158,7 @@ namespace Karaboss
 
         // Midifile characteristics
         private double _duration = 0;  // en secondes
+        private double _durationPercent = 0;
         private int _totalTicks = 0;        
         private double _ppqn;
         private int _tempo;
@@ -963,6 +964,7 @@ namespace Karaboss
                 ChordControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
                 ChordRendererGuitar.OffsetControl(sequence1.Numerator , pos, curmeasure, timeinmeasure);
                 ChordRendererPiano.OffsetControl(sequence1.Numerator, pos, curmeasure, timeinmeasure);
+                
                 ChordMapControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
             }
         }
@@ -1516,21 +1518,21 @@ namespace Karaboss
         {            
             if (e.Button == MouseButtons.Left)
             {
-                int x = e.Location.X;  //Horizontal
+                int x = e.Location.X - ChordMapControl1.LeftMargin;  //Horizontal
                 int y = e.Location.Y + ChordMapControl1.OffsetY - ChordMapControl1.HeaderHeight;  // Vertical
 
                 // Calculate start time                
                 int HauteurCellule = (int)(ChordMapControl1.ColumnHeight) + 1;
                 int LargeurCellule = (int)(ChordMapControl1.ColumnWidth) + 1;
+                                
+                int line = (int)Math.Ceiling(y / (double)HauteurCellule);                
                 
-                
-                int line = (int)Math.Ceiling(y / (double)HauteurCellule);
-                
-                int prevmeasures = -1 + (line - 1) * ChordMapControl1.NbColumns;
-                
-                int cellincurrentline = (int)Math.Ceiling(x / (double)LargeurCellule);
+                int prevmeasures = (line - 1) * ChordMapControl1.NbColumns;    // measures in previous lines
 
-                newstart = _measurelen * prevmeasures + (_measurelen / sequence1.Numerator) * cellincurrentline;
+                int cellincurrentline = -1 +  (int)Math.Ceiling(x / (double)LargeurCellule);  // Cell number in current line               
+
+                newstart = _measurelen * prevmeasures + (_measurelen / sequence1.Numerator) * cellincurrentline;                
+
                 FirstPlaySong(newstart);
             }
         }
@@ -1865,7 +1867,7 @@ namespace Karaboss
                 if (ChordMapControl1.Height > pnlDisplayMap.Height)
                 {
                     // offset vertical: ensure to see 2 lines                    
-                    int offset = HauteurCellule * (curline - 1);
+                    int offset = ChordMapControl1.HeaderHeight +  HauteurCellule * (curline - 1);
 
                     if (pnlDisplayMap.VerticalScroll.Visible && pnlDisplayMap.VerticalScroll.Minimum <= offset && offset <= pnlDisplayMap.VerticalScroll.Maximum)
                     {
@@ -2355,7 +2357,7 @@ namespace Karaboss
             // Load tempos map
             TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);
 
-            //_duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds                        
+            _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds                        
             _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);
 
             if (sequence1.Time != null)

@@ -235,6 +235,7 @@ namespace Karaboss
 
         // Midifile characteristics
         private double _duration = 0;  // en secondes
+        private double _durationPercent = 0;   //Duration for positioning in sheemusic
         private int _totalTicks = 0;
         private int _bpm = 0;        
         private double _ppqn;
@@ -6945,7 +6946,7 @@ namespace Karaboss
                     dpercent = starttime / maxvalue;
 
                 // Elapsed time
-                double maintenant = dpercent * _duration;
+                double maintenant = dpercent * _durationPercent;
 
                 currentTime = maintenant * 1000; // Elapsed time en msec
 
@@ -7323,7 +7324,9 @@ namespace Karaboss
             _bpm = GetBPM(_tempo);
 
             // Update display duration
-            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
+            _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. Duration for ScrollTo dislay of sheetmusic
+            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn); // real duration for multiple tempos
+
             int Min = (int)(_duration / 60);
             int Sec = (int)(_duration - (Min * 60));
             lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
@@ -7431,7 +7434,7 @@ namespace Karaboss
 
                 // Display time elapse
                 double dpercent = 100 * sequencer1.Position / (double)_totalTicks;
-                double maintenant = (dpercent * _duration) / 100;  //seconds
+                double maintenant = (dpercent * _durationPercent) / 100;  //seconds
                 DisplayTimeElapse(dpercent);              
 
                 //Eteint la boule fixe;
@@ -8538,7 +8541,7 @@ namespace Karaboss
             // Load tempos map
             TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);
 
-            //_duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
+            _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
             _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);
 
             _bpm = GetBPM(_tempo);
@@ -8602,7 +8605,6 @@ namespace Karaboss
             //DisplaySongDuration(dur);
                         
             int bpm = GetBPM(tempo);
-
             
             int Min = (int)(_duration / 60);
             int Sec = (int)(_duration - (Min * 60));
