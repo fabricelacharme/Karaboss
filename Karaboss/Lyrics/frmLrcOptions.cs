@@ -31,10 +31,12 @@ namespace Karaboss
             get { return chkUpperCase.Checked; }
         }
 
-        public frmLrcOptions(bool bRemoveAccents, bool bForceUpperCase, bool bRemoveNonAlphaNumeric)
+        public frmLrcOptions(Karaclass.LrcFormats LrcFormat, bool bRemoveAccents, bool bForceUpperCase, bool bRemoveNonAlphaNumeric)
         {
             InitializeComponent();
 
+            OptFormatLines.Checked = LrcFormat == Karaclass.LrcFormats.Lines;
+            
             chkUpperCase.Checked = bForceUpperCase;
             chkAlphaNumeric.Checked = bRemoveNonAlphaNumeric;
             chkRemoveAccents.Checked = bRemoveAccents;

@@ -2165,7 +2165,7 @@ namespace Karaboss
             tabChordsControl.Height = this.ClientSize.Height - menuStrip1.Height - pnlToolbar.Height;
 
             // Bug: only the selected TabPage is resized, but not others 
-            for (int i = 0; i < tabChordsControl.TabCount;i++)
+            for (int i = 0; i < tabChordsControl.TabCount; i++)
             {
                 if (i != tabChordsControl.SelectedIndex)
                 {
@@ -2498,8 +2498,15 @@ namespace Karaboss
                 case PlayerStates.Stopped:
                     btnPlay.Image = Properties.Resources.btn_black_play;
                     btnPlay.Enabled = true;   // to allow play
+
                     if (!tabChordsControl.TabPages.Contains(tabPageModify))
+                    {
                         tabChordsControl.TabPages.Add(tabPageModify);
+                        // Redim it 
+                        pnlModifyMap.Width = tabPageModify.Width - tabPageModify.Margin.Left - tabPageModify.Margin.Right;
+                        pnlModifyMap.Height = tabPageModify.Height - tabPageModify.Margin.Top - tabPageModify.Margin.Bottom;
+                    }
+                    
                     panelPlayer.DisplayStatus("Stopped");
                     break;
 
@@ -2546,6 +2553,7 @@ namespace Karaboss
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
+        
         /// <summary>
         /// Things to do at the end of a song
         /// </summary>

@@ -1429,5 +1429,17 @@ namespace Karaboss.Properties {
                 this["bLrcRemoveNonAlphaNumeric"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int lrcFormatLinesSyllabes {
+            get {
+                return ((int)(this["lrcFormatLinesSyllabes"]));
+            }
+            set {
+                this["lrcFormatLinesSyllabes"] = value;
+            }
+        }
     }
 }

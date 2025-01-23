@@ -162,6 +162,7 @@ namespace Karaboss.Lyrics
         // Pattern to remove chords from lyrics
         private readonly string patternBracket = @"\[\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\]";
         private readonly string patternParenth = @"\(\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\)";
+        private readonly string patternPercent = @"\%\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)";
 
         private string _removechordpattern;
         public string RemoveChordPattern
@@ -973,15 +974,20 @@ namespace Karaboss.Lyrics
             
             // With parenthesis
             Regex chordCheck2 = new Regex(patternParenth);
-                        
+
+            // With Percent
+            Regex chordCheck3 = new Regex(patternPercent);
+
+
             MatchCollection mc = chordCheck.Matches(s);
             MatchCollection mc2 = chordCheck2.Matches(s);
+            MatchCollection mc3 = chordCheck3.Matches(s);
 
-            // Exlude copyright (C)
-            if (mc.Count > 1 || mc2.Count > 1) 
+            // Exlude copyright (C) => greater than 1
+            if (mc.Count > 1 || mc2.Count > 1 || mc3.Count > 1) 
                 return true;
             else
-                return false;                      
+                return false;
         }
 
         /// <summary>
@@ -1377,13 +1383,16 @@ namespace Karaboss.Lyrics
                     // With parenthesis                    
                     Regex chordCheck2 = new Regex(patternParenth);
 
+                    // With Percent
+                    Regex chordCheck3 = new Regex(patternPercent);
 
                     MatchCollection mc = chordCheck.Matches(lyricElement);
                     MatchCollection mc2 = chordCheck2.Matches(lyricElement);
+                    MatchCollection mc3 = chordCheck3.Matches(lyricElement);
 
                     bFound = false;
 
-                    if (mc.Count > 0) 
+                    if (mc.Count > 0)
                     {
                         //for (int j = 0; j < mc.Count; j++) 
                         //{ 
@@ -1400,7 +1409,7 @@ namespace Karaboss.Lyrics
 
                         //}
 
-                    } 
+                    }
                     else if (mc2.Count > 0)
                     {
                         _chordDelimiter = ("(", ")");
@@ -1414,10 +1423,22 @@ namespace Karaboss.Lyrics
                             chordElement = chordElement.Substring(1, chordElement.Length - 2);
                         }
                     }
+                    else if (mc3.Count > 0)
+                    {
+                        _chordDelimiter = ("%", "");
+                        chordElement = mc3[0].Value;
+                        _removechordpattern = patternPercent;
+
+                        bFound = true;
+
+                        if (chordElement.Length >= 2)
+                        {
+                            chordElement = chordElement.Substring(1, chordElement.Length - 1);
+                        }
+                    }
 
                     if (bFound)
                     {
-
                         if (ShowChords)
                         {
                             lyricElement = formateLyricOfDetectedChord(chordElement, lyricElement);

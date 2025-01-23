@@ -2195,10 +2195,13 @@ namespace Karaboss
             // Force Upper Case
             bool bUppercase = Properties.Settings.Default.bLrcForceUpperCase;
             // Remove all non-alphanumeric characters
-            bool bRemoveNonAlphaNumeric = Properties.Settings.Default.bLrcRemoveNonAlphaNumeric; 
+            bool bRemoveNonAlphaNumeric = Properties.Settings.Default.bLrcRemoveNonAlphaNumeric;            
+            // Export to lines or syllabes
+            Karaclass.LrcFormats LrcFormat = Properties.Settings.Default.lrcFormatLinesSyllabes == 0 ? LrcFormats.Lines : LrcFormats.Syllables;
+            
 
             DialogResult dr;
-            frmLrcOptions LrcOptionsDialog = new frmLrcOptions(bRemoveAccents, bUppercase, bRemoveNonAlphaNumeric);
+            frmLrcOptions LrcOptionsDialog = new frmLrcOptions(LrcFormat, bRemoveAccents, bUppercase, bRemoveNonAlphaNumeric);
             dr = LrcOptionsDialog.ShowDialog();
 
             if (dr == System.Windows.Forms.DialogResult.Cancel)            
@@ -2211,12 +2214,13 @@ namespace Karaboss
             // Remove all non-alphanumeric characters
             bRemoveNonAlphaNumeric = LrcOptionsDialog.bRemoveNonAlphaNumeric;
             // Save to line or to syllabes
-            Karaclass.LrcFormats LrcFormat = LrcOptionsDialog.LrcFormat;
+            LrcFormat = LrcOptionsDialog.LrcFormat;
 
             // Save options
             Properties.Settings.Default.bLrcRemoveAccents = bRemoveAccents;
             Properties.Settings.Default.bLrcForceUpperCase = bUppercase;
             Properties.Settings.Default.bLrcRemoveNonAlphaNumeric = bRemoveNonAlphaNumeric;
+            Properties.Settings.Default.lrcFormatLinesSyllabes = LrcFormat == LrcFormats.Lines ? 0 : 1;
 
             switch (LrcFormat)
             {
