@@ -75,7 +75,24 @@ namespace ChordAnalyser.UI
             }
         }
 
+        class SelectableCell
+        {
+            public int Measure;
+            public int Beat;
+            public bool Selected;
+            public SelectableCell ()
+            {
+                Measure = 0;
+                Beat = 0;
+                Selected = false;
+            }
+        }
+        SelectableCell SelectedCell = new SelectableCell();
 
+
+        public bool Playing { get; set; }
+       
+               
         #region private
         private MyPanel pnlCanvas;
         private Font m_font;
@@ -350,7 +367,6 @@ namespace ChordAnalyser.UI
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             this.SetStyle(ControlStyles.UserPaint, true);
             this.SetStyle(ControlStyles.ResizeRedraw, true);
-
         }
 
         #region Draw Canvas
@@ -480,10 +496,16 @@ namespace ChordAnalyser.UI
                         // Draw other celles in white                        
                         g.DrawRectangle(FillPen, x, y, _cellwidth, _cellheight);
 
-                        if (i == _currentmeasure && j == _currentTimeInMeasure - 1 && _currentselection > 0)
+                        if (i == _currentmeasure && j == _currentTimeInMeasure - 1 && _currentselection > 0 && !SelectedCell.Selected && !Playing)
                         {
                             // Draw selected cell in yellow
                             g.DrawRectangle(SelectionPen, x + 3, y + 3, _cellwidth - 6, _cellheight - 6);
+                        }
+                        else if (i == SelectedCell.Measure && j == SelectedCell.Beat && SelectedCell.Selected && !Playing) 
+                        {
+                            // Draw selected cell in yellow
+                            g.DrawRectangle(SelectionPen, x + 3, y + 3, _cellwidth - 6, _cellheight - 6);
+
                         }
 
                     }
@@ -657,6 +679,9 @@ namespace ChordAnalyser.UI
         /// <param name="pos"></param>
         public void DisplayNotes(int pos, int measure, int timeinmeasure)
         {
+            Playing = true;
+            SelectedCell.Selected = false;
+
             _currentpos = pos;
             _currentmeasure = measure;
             _currentTimeInMeasure = timeinmeasure;
@@ -673,6 +698,10 @@ namespace ChordAnalyser.UI
 
         private void pnlCanvas_MouseMove(object sender, MouseEventArgs e)
         {
+            if (Playing)
+            {                
+                return;
+            }
 
             int x = e.Location.X - _leftmargin; //Horizontal
             int y = e.Location.Y + OffsetY - (int)_headerheight;  // Vertical
@@ -683,7 +712,7 @@ namespace ChordAnalyser.UI
 
             if (x > _nbcolumns * LargeurCellule * sequence1.Numerator)
             {
-                _currentselection = 0;
+                _currentselection = 0;                
                 Refresh();
                 return;
             }
@@ -699,7 +728,7 @@ namespace ChordAnalyser.UI
             {                
                 _currentmeasure = 1 + prevmeasures;
                 _currentTimeInMeasure = cellincurrentline - prevmeasures * sequence1.Numerator + (line - 1) * _nbcolumns * sequence1.Numerator;
-                _currentselection = newstart;
+                _currentselection = newstart;                
                 Refresh();
             }
         }
@@ -710,14 +739,58 @@ namespace ChordAnalyser.UI
         }
 
         private void pnlCanvas_MouseDown(object sender, MouseEventArgs e)
-        {           
+        {
+
+            if (Playing)
+            {
+                OnMouseDown(e);
+                return;
+            }
+
+            if (SelectedCell.Selected)
+            {
+                SelectedCell.Selected = false;
+                OnMouseDown(e);
+                return;
+            } 
+
+            int x = e.Location.X - _leftmargin; //Horizontal
+            int y = e.Location.Y + OffsetY - (int)_headerheight;  // Vertical
+
+            // Calculate start time                
+            int HauteurCellule = (int)_cellheight + 1;
+            int LargeurCellule = (int)_cellwidth + 1;
+
+            if (x > _nbcolumns * LargeurCellule * sequence1.Numerator)
+            {
+                _currentselection = 0;                
+                Refresh();
+                return;
+            }
+
+            int line = (int)Math.Ceiling(y / (double)HauteurCellule);
+            int cellincurrentline = (int)Math.Ceiling(x / (double)LargeurCellule);  // Cell number in current line 
+            int prevmeasures = ((cellincurrentline - 1) / sequence1.Numerator) + (line - 1) * _nbcolumns;    // measures before current
+            
+            _currentmeasure = 1 + prevmeasures;
+            _currentTimeInMeasure = cellincurrentline - prevmeasures * sequence1.Numerator + (line - 1) * _nbcolumns * sequence1.Numerator;            
+                
+            SelectedCell.Selected = true;
+            SelectedCell.Measure = _currentmeasure;
+            SelectedCell.Beat = _currentTimeInMeasure - 1;
+
+            Refresh();
+            
+
             OnMouseDown(e);            
         }
 
+       
         #endregion mouse
-
-
+        
+        
         #region paint
+
         private void pnlCanvas_Paint(object sender, PaintEventArgs e)
         {
             Rectangle clip =
@@ -890,9 +963,6 @@ namespace ChordAnalyser.UI
             {
                 //ypos = 0;
             }
-
-
-
         }
 
         /** Write the MIDI filename at the top of the page */

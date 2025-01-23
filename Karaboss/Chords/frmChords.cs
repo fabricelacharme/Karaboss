@@ -2353,8 +2353,8 @@ namespace Karaboss
                     return true;
                 }               
             }
-
-        return base.ProcessCmdKey(ref msg, keyData);
+                        
+            return base.ProcessCmdKey(ref msg, keyData);
 
         }
         #endregion Form
@@ -2593,6 +2593,9 @@ namespace Karaboss
 
                 ChordMapControl1.OffsetY = 0;
                 ChordMapControl1.DisplayNotes(0, -1, -1);
+                ChordMapControl1.Playing = false;
+
+                ChordMapControlModify.Playing = false;
 
                 DisplayLineLyrics(0);                
 
