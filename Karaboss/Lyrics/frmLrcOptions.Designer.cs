@@ -37,6 +37,7 @@
             this.chkRemoveAccents = new System.Windows.Forms.CheckBox();
             this.chkUpperCase = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chkAlphaNumeric = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -47,7 +48,6 @@
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOk.Name = "btnOk";
             this.btnOk.UseVisualStyleBackColor = true;
-            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
             // btnCancel
             // 
@@ -63,7 +63,6 @@
             this.OptFormatLines.Name = "OptFormatLines";
             this.OptFormatLines.TabStop = true;
             this.OptFormatLines.UseVisualStyleBackColor = true;
-            this.OptFormatLines.CheckedChanged += new System.EventHandler(this.OptFormatLines_CheckedChanged);
             // 
             // OptFormatSyllabes
             // 
@@ -72,7 +71,6 @@
             this.OptFormatSyllabes.Name = "OptFormatSyllabes";
             this.OptFormatSyllabes.TabStop = true;
             this.OptFormatSyllabes.UseVisualStyleBackColor = true;
-            this.OptFormatSyllabes.CheckedChanged += new System.EventHandler(this.OptFormatSyllabes_CheckedChanged);
             // 
             // groupBox1
             // 
@@ -87,22 +85,27 @@
             resources.ApplyResources(this.chkRemoveAccents, "chkRemoveAccents");
             this.chkRemoveAccents.Name = "chkRemoveAccents";
             this.chkRemoveAccents.UseVisualStyleBackColor = true;
-            this.chkRemoveAccents.CheckedChanged += new System.EventHandler(this.chkRemoveAccents_CheckedChanged);
             // 
             // chkUpperCase
             // 
             resources.ApplyResources(this.chkUpperCase, "chkUpperCase");
             this.chkUpperCase.Name = "chkUpperCase";
             this.chkUpperCase.UseVisualStyleBackColor = true;
-            this.chkUpperCase.CheckedChanged += new System.EventHandler(this.chkUpperCase_CheckedChanged);
             // 
             // groupBox2
             // 
             resources.ApplyResources(this.groupBox2, "groupBox2");
+            this.groupBox2.Controls.Add(this.chkAlphaNumeric);
             this.groupBox2.Controls.Add(this.chkRemoveAccents);
             this.groupBox2.Controls.Add(this.chkUpperCase);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
+            // 
+            // chkAlphaNumeric
+            // 
+            resources.ApplyResources(this.chkAlphaNumeric, "chkAlphaNumeric");
+            this.chkAlphaNumeric.Name = "chkAlphaNumeric";
+            this.chkAlphaNumeric.UseVisualStyleBackColor = true;
             // 
             // frmLrcOptions
             // 
@@ -135,5 +138,6 @@
         private System.Windows.Forms.CheckBox chkRemoveAccents;
         private System.Windows.Forms.CheckBox chkUpperCase;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox chkAlphaNumeric;
     }
 }

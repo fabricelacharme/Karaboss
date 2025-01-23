@@ -1393,5 +1393,41 @@ namespace Karaboss.Properties {
                 this["ChordsMapModifyZoom"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool bLrcForceUpperCase {
+            get {
+                return ((bool)(this["bLrcForceUpperCase"]));
+            }
+            set {
+                this["bLrcForceUpperCase"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool bLrcRemoveAccents {
+            get {
+                return ((bool)(this["bLrcRemoveAccents"]));
+            }
+            set {
+                this["bLrcRemoveAccents"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool bLrcRemoveNonAlphaNumeric {
+            get {
+                return ((bool)(this["bLrcRemoveNonAlphaNumeric"]));
+            }
+            set {
+                this["bLrcRemoveNonAlphaNumeric"] = value;
+            }
+        }
     }
 }

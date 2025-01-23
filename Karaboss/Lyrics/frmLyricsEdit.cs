@@ -44,7 +44,6 @@ using Karaboss.Resources.Localization;
 using Karaboss.Lrc.SharedFramework;
 using Karaboss.Lyrics;
 using Karaboss.Utilities;
-using radio42.Multimedia.Midi;
 using static Karaboss.Karaclass;
 
 
@@ -1075,8 +1074,16 @@ namespace Karaboss
         {
             if (bfilemodified == true)
             {
-                string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
-                if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                //string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
+                String tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
+
+                DialogResult dr = MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (dr == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+                else if (dr == DialogResult.Yes)
                 {
                     e.Cancel = true;
 
@@ -1499,11 +1506,11 @@ namespace Karaboss
             //double dur = _tempo * (ticks / _ppqn) / 1000000; //seconds     
 
 
-            int Min = (int)(dur / 60);
-            int Sec = (int)(dur - (Min * 60));
-            int Cent = (int)(100 * (dur - (Min * 60) - Sec));
+            double Min = (int)(dur / 60);
+            double Sec = (int)(dur - (Min * 60));
+            double Cent = (1000 * (dur - (Min * 60) - Sec));
 
-            string tx = string.Format("{0:00}:{1:00}.{2:00}", Min, Sec, Cent);
+            string tx = string.Format("{0:00}:{1:00}.{2:000}", Min, Sec, Cent);
             return tx;
         }
 
@@ -1537,7 +1544,7 @@ namespace Karaboss
             int Sec = Convert.ToInt32(sec);
             dur += Sec;
             float Cent = Convert.ToInt32(cent);
-            dur += Cent / 100;
+            dur += Cent / 1000;
 
             ti = Convert.ToInt32(_ppqn * dur * 1000000 / _tempo);
 
@@ -1549,7 +1556,7 @@ namespace Karaboss
         /// Save lyrics to lrc format, syllabe by syllabe
         /// </summary>
         /// <param name="FileName"></param>
-        private void SaveLRCSyllabes(string File, bool bRemoveAccents, bool bUpperCase, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
+        private void SaveLRCSyllabes(string File, bool bRemoveAccents, bool bUpperCase, bool bRemoveNonAlphaNumeric, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
         {
             string sTime; 
             string sLyric;
@@ -1557,6 +1564,9 @@ namespace Karaboss
             object vTime;
             string lrcs = string.Empty;
             string cr = "\r\n";
+
+            // Un peu de pub
+            lrcs += "[tool: Karaboss https://karaboss.lacharme.net]" + cr;
 
             if (Tag_Title != "")
                 lrcs += "[Ti:" + Tag_Title + "]" + cr;
@@ -1571,6 +1581,8 @@ namespace Karaboss
             if (Tag_DPlus != "")
                 lrcs += "[D+:" + Tag_DPlus + "]" + cr;
 
+           
+            
             // Save syllabe by syllabe
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
@@ -1587,19 +1599,19 @@ namespace Karaboss
                     if (sLyric != "" && sLyric != cr)
                     { 
                         // Remove accents
-                        if (bRemoveAccents)
-                        {
-                            sLyric = Utilities.LyricsUtilities.RemoveDiacritics(sLyric);
-                        }
+                        sLyric = bRemoveAccents? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
 
                         //Uppercase letters
-                        if (bUpperCase) 
-                        { 
-                            sLyric = sLyric.ToUpper();
+                        sLyric = bUpperCase? sLyric.ToUpper() : sLyric;
+                        
+                        // Remove non-alphanumeric chars
+                        sLyric = bRemoveNonAlphaNumeric? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
+
+                        if (sLyric.Trim().Length > 0)
+                        {
+                            sTime = vTime.ToString();
+                            lrcs += "[" + sTime + "] " + sLyric + cr;
                         }
-                                       
-                        sTime = vTime.ToString();
-                        lrcs += "[" + sTime + "]" + sLyric + cr;
                     }
                 }
             }
@@ -1626,18 +1638,21 @@ namespace Karaboss
         /// <param name="Tag_Lang"></param>
         /// <param name="Tag_By"></param>
         /// <param name="Tag_DPlus"></param>
-        private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
+        private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, bool bRemoveNonAlphaNumeric, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
         {
-            string sTime; // = string.Empty;
-            string sLyric; // = string.Empty;
+            string sTime;
+            string sLyric;
             string sLine = string.Empty;
-            string sType; // = string.Empty;
+            string sType;
             object vLyric;
             object vTime;
             object vType;
             string lrcs = string.Empty;
             string cr = "\r\n";
 
+            
+            // Un peu de pub
+            lrcs += "[tool: Karaboss https://karaboss.lacharme.net]" + cr;
 
             if (Tag_Title != "")
                 lrcs += "[Ti:" + Tag_Title + "]" + cr;
@@ -1651,11 +1666,12 @@ namespace Karaboss
                 lrcs += "[By:" + Tag_Album + "]" + cr;
             if (Tag_DPlus != "")
                 lrcs += "[D+:" + Tag_DPlus + "]" + cr;
-
+                
+               
 
             bool bStartLine = true;
 
-            // Save syllabe by syllabe
+            // Save line by line
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
                 vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
@@ -1664,44 +1680,47 @@ namespace Karaboss
 
                 if (vTime != null && vLyric != null && vType != null)
                 {
-                    sLyric = vLyric.ToString().Trim();                                        
+                    sLyric = vLyric.ToString().Trim();
+                    sLyric = sLyric.Replace("_", " ");          // new 23/01/2025
                     sType = vType.ToString().Trim();
 
                     if (sLyric != "" && sType != "cr" && sType != "par")
                     {
-
                         // Remove accents
-                        if (bRemoveAccents)
-                        {
-                            sLyric = Utilities.LyricsUtilities.RemoveDiacritics(sLyric);
-                        }
+                        sLyric = bRemoveAccents? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
 
                         //Uppercase letters
-                        if (bUpperCase)
+                        sLyric = bUpperCase? sLyric.ToUpper() : sLyric;
+
+                        // Remove non alphanumeric chars
+                        sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
+
+                        if (sLyric.Trim().Length > 0)
                         {
-                            sLyric = sLyric.ToUpper();
+                            if (bStartLine)
+                            {
+                                sTime = vTime.ToString();
+                                sLine = "[" + sTime + "] " + sLyric;
+                                bStartLine = false;
+                            }
+                            else
+                            {
+                                // Line continuation
+                                sLine += sLyric;
+                            }
                         }
 
-                        if (bStartLine)
-                        {
-                            sTime = vTime.ToString();
-                            sLine = "[" + sTime + "]" + sLyric;
-                            bStartLine = false;
-                        }
-                        else
-                        {
-                            // Line continuation
-                            sLine += sLyric;
-                        }
                     }
-                    else if (sType == "cr" || sType == "par")
+                    else if ( (sType == "cr" || sType == "par") )
                     {
                         // Start new line    
                         
                         // Save current line
                         if (sLine != "")
                         {
-                            sLine = sLine.Replace("_", " ");
+                            // Check length of line
+                            
+                            // Add new line
                             lrcs += sLine + cr;
                         }
 
@@ -1715,7 +1734,7 @@ namespace Karaboss
             // Save last line
             if (sLine != "")
             {
-                sLine = sLine.Replace("_", " ");
+                //sLine = sLine.Replace("_", " ");
                 lrcs += sLine + cr;
             }
 
@@ -2164,28 +2183,48 @@ namespace Karaboss
 
         #region LRC
 
+        /// <summary>
+        /// Menu: Export lyrics to format LRC
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuFileSaveAsLrc_Click(object sender, EventArgs e)
         {
-           
-            
+
+            bool bRemoveAccents = Properties.Settings.Default.bLrcRemoveAccents;
+            // Force Upper Case
+            bool bUppercase = Properties.Settings.Default.bLrcForceUpperCase;
+            // Remove all non-alphanumeric characters
+            bool bRemoveNonAlphaNumeric = Properties.Settings.Default.bLrcRemoveNonAlphaNumeric; 
+
             DialogResult dr;
-            frmLrcOptions LrcOptionsDialog = new frmLrcOptions();
+            frmLrcOptions LrcOptionsDialog = new frmLrcOptions(bRemoveAccents, bUppercase, bRemoveNonAlphaNumeric);
             dr = LrcOptionsDialog.ShowDialog();
 
             if (dr == System.Windows.Forms.DialogResult.Cancel)            
                 return;
 
-            bool bRemoveAccents = LrcOptionsDialog.bRemoveAccents;
-            bool bUppercase = LrcOptionsDialog.bUpperCase;
+            // Remove accents
+            bRemoveAccents = LrcOptionsDialog.bRemoveAccents;
+            // Force Upper Case
+            bUppercase = LrcOptionsDialog.bUpperCase;
+            // Remove all non-alphanumeric characters
+            bRemoveNonAlphaNumeric = LrcOptionsDialog.bRemoveNonAlphaNumeric;
+            // Save to line or to syllabes
             Karaclass.LrcFormats LrcFormat = LrcOptionsDialog.LrcFormat;
+
+            // Save options
+            Properties.Settings.Default.bLrcRemoveAccents = bRemoveAccents;
+            Properties.Settings.Default.bLrcForceUpperCase = bUppercase;
+            Properties.Settings.Default.bLrcRemoveNonAlphaNumeric = bRemoveNonAlphaNumeric;
 
             switch (LrcFormat)
             {
                 case LrcFormats.Lines:
-                    ExportToLrcLines(bRemoveAccents, bUppercase);
+                    ExportToLrcLines(bRemoveAccents, bUppercase, bRemoveNonAlphaNumeric);
                     break;
                 case LrcFormats.Syllables:
-                    ExportToLrcSyllabes(bRemoveAccents, bUppercase);
+                    ExportToLrcSyllabes(bRemoveAccents, bUppercase, bRemoveNonAlphaNumeric);
                     break;
 
             }
@@ -2197,7 +2236,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ExportToLrcLines(bool bRemoveAccents, bool bUpperCase)
+        private void ExportToLrcLines(bool bRemoveAccents, bool bUpperCase, bool bRemoveNonAlphaNumeric)
         {
             #region select filename
             string fName = "New.lrc";
@@ -2220,7 +2259,7 @@ namespace Karaboss
             }
 
             string defExt = ".lrc";                                             // Extension forced to lrc            
-            string fullPath = fPath + "\\" + fName;
+            string fullPath = fPath + "\\" + Path.GetFileNameWithoutExtension(fName) + defExt;
             fullName = Utilities.Files.FindUniqueFileName(fullPath);            // Add (2), (3) etc.. if necessary    
             defName = Path.GetFileNameWithoutExtension(fullName);               // Default name to propose to dialog
 
@@ -2261,7 +2300,7 @@ namespace Karaboss
                 Tag_Title = split[1].Trim();
             }
 
-            SaveLRCLines(FileName, bRemoveAccents, bUpperCase, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+            SaveLRCLines(FileName, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
         }
 
         /// <summary>
@@ -2269,17 +2308,15 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ExportToLrcSyllabes(bool bRemoveAccents, bool bUpperCase)
-        {
-            //19200
-            //TempoUtilities.GetMidiDuration(sequence1, sequence1.GetLength());
+        private void ExportToLrcSyllabes(bool bRemoveAccents, bool bUpperCase, bool bRemoveNonAlphaNumeric)
+        {                        
 
             #region select filename
             string fName = "New.lrc";
             string fPath = Path.GetDirectoryName(MIDIfileName);
 
-            string fullName; // = string.Empty;
-            string defName; // = string.Empty;
+            string fullName;
+            string defName;
 
             #region search name
             if (fPath == null || fPath == "")
@@ -2321,8 +2358,7 @@ namespace Karaboss
             string Tag_By = string.Empty;
             string Tag_DPlus = string.Empty;
 
-            string LrcFileName = saveMidiFileDialog.FileName;
-            //string bLRCType = "Lines";
+            string LrcFileName = saveMidiFileDialog.FileName;            
 
             // Search Title & Artist
             string SingleName = Path.GetFileNameWithoutExtension(LrcFileName);
@@ -2337,8 +2373,7 @@ namespace Karaboss
                 Tag_Title = split[1].Trim();
             }
 
-            SaveLRCSyllabes(LrcFileName, bRemoveAccents, bUpperCase, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
-            //TempoUtilities.ExportToLRC(MIDIfileName, LrcFileName, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+            SaveLRCSyllabes(LrcFileName, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);            
         }
 
         

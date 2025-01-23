@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Karaboss.Utilities
@@ -114,11 +115,10 @@ namespace Karaboss.Utilities
             return c;
         }
 
+
         public static string RemoveDiacritics(this string s)
         {
-            //StringBuilder sb = new StringBuilder ();
             string text = "";
-
 
             foreach (char c in s)
             {
@@ -141,5 +141,24 @@ namespace Karaboss.Utilities
             return text;
         }
 
+        /// <summary>
+        /// Remove all non alphanumerc characters of a string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string RemoveNonAlphaNumeric(string str)
+        {
+            // Cann also be used
+            // str = String.Concat(Array.FindAll(str.ToCharArray(), Char.IsLetterOrDigit));
+            // str = String.Concat(str.Where(char.IsLetterOrDigit));
+
+            // With regex
+            str = Regex.Replace(str, "[^a-zA-Z0-9\\s-']", String.Empty);
+            return str;
+        }
+
     }
+
+
 }
+

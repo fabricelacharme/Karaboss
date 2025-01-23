@@ -16,6 +16,11 @@ namespace Karaboss
             }
         }
 
+        public bool bRemoveNonAlphaNumeric
+        {
+            get { return chkAlphaNumeric.Checked; }
+        }
+
         public bool bRemoveAccents
         {
             get { return chkRemoveAccents.Checked; }
@@ -26,38 +31,18 @@ namespace Karaboss
             get { return chkUpperCase.Checked; }
         }
 
-        public frmLrcOptions()
+        public frmLrcOptions(bool bRemoveAccents, bool bForceUpperCase, bool bRemoveNonAlphaNumeric)
         {
             InitializeComponent();
-        }
 
-        private void btnOk_Click(object sender, EventArgs e)
-        {
-
+            chkUpperCase.Checked = bForceUpperCase;
+            chkAlphaNumeric.Checked = bRemoveNonAlphaNumeric;
+            chkRemoveAccents.Checked = bRemoveAccents;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        private void OptFormatLines_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void OptFormatSyllabes_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void chkRemoveAccents_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void chkUpperCase_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

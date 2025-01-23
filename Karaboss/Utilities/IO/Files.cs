@@ -29,13 +29,14 @@ namespace Karaboss.Utilities
                 int i = 2;
                 string addName = " (" + i.ToString() + ")";
                 string newName = inifName + addName + defExt;
-                newPath = fPath + "\\" + newName;
+                string newDir = Path.GetDirectoryName(fPath);
+                newPath = newDir + "\\" + newName;
 
                 while (File.Exists(newPath) == true)
                 {
                     i++;
                     newName = inifName + " (" + i.ToString() + ")" + defExt;
-                    newPath = fPath + "\\" + newName;
+                    newPath = newDir + "\\" + newName;
                 }
 
                 return newPath;
