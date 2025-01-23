@@ -883,7 +883,12 @@ namespace Karaboss
                     break;
             }
 
+            UpdateDisplayOfChords();
            
+        }
+
+        private void UpdateDisplayOfChords()
+        {
             //Change labels displayed
             for (int i = 1; i <= GridBeatChords.Count; i++)
             {
@@ -892,7 +897,7 @@ namespace Karaboss
 
 
             // Display Chords in horizontal cells            
-            ChordControl1.GridBeatChords = GridBeatChords;           
+            ChordControl1.GridBeatChords = GridBeatChords;
 
             // Display chords for guitar & piano                        
             ChordRendererGuitar.GridBeatChords = GridBeatChords;
@@ -900,12 +905,13 @@ namespace Karaboss
 
             ChordRendererGuitar.FilterChords();
             ChordRendererPiano.FilterChords();
-            
+
             // Display chords map
             ChordMapControl1.GridBeatChords = GridBeatChords;
             // Modify chords
             ChordMapControlModify.GridBeatChords = GridBeatChords;
         }
+
 
         /// <summary>
         /// Remove useless strings
@@ -3294,7 +3300,10 @@ namespace Karaboss
                 ticks = GridBeatChords[beat].Item2;
 
             GridBeatChords[beat] = (ChordName, ticks);
-            ChordMapControlModify.GridBeatChords = GridBeatChords;
+
+
+            UpdateDisplayOfChords();
+            DisplayWordsAndChords();
 
             FileModified();
         }
@@ -3468,7 +3477,7 @@ namespace Karaboss
                     {
                         string plElement;
                        
-                        // Fix done in PopulateUpdatedChords
+                        // Fix done in PopulateUpdatedChords                                    NON !!!!!
                         // Add chord name to the lyric: Replace lyric '-- ' by '[A]-- '
                         plElement = pll.Element.Item2;
 

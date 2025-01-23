@@ -1805,14 +1805,29 @@ namespace Karaboss.Lyrics
                     }
 
                     if (j == plLyrics.Count - 1)
-                    {
-                        //removeIndex = -1;
+                    {                        
                         bExit = true;
                     }
                 }
 
                 if (!bExit)
-                    plLyrics.RemoveAt(removeIndex);
+                {
+                    // If pure chord => remove the element
+                    // If chod + lyric => keep the lyric and remove the chord
+                    if (removeIndex >= 0 && removeIndex < plLyrics.Count) 
+                    {
+                        if (plLyrics[removeIndex].IsChord)
+                        {
+                            plLyrics.RemoveAt(removeIndex);
+                        }
+                        else
+                        {
+                            plLyrics[removeIndex].Element = ("", Regex.Replace(plLyrics[removeIndex].Element.Item2, RemoveChordPattern, @""));
+
+                        }
+                    }
+                    
+                }
 
             } while (!bExit);
 
@@ -1844,17 +1859,21 @@ namespace Karaboss.Lyrics
 
                             if (ticks == TicksOn)
                             {
-                                // Chord must be replaced [C]La maison => [D]La maison
+                                // Chord must be replaced [C]La maison => [D]La maison          NON !!!  toujours !
                                 if (pll.CharType == plLyric.CharTypes.Text)
                                 {
-                                    if (chordName != pll.Element.Item1)
-                                    {
-                                        lyric = pll.Element.Item2;
-                                        // Remove chord in the lyric
-                                        lyric = Regex.Replace(lyric, RemoveChordPattern, @"");
-                                        lyric = formateLyricOfChord(chordName, lyric);
-                                        pll.Element = (chordName, lyric);
-                                    }
+                                    
+                                    // Action always needed, not only if the chord is updated
+                                    //if (chordName != pll.Element.Item1)
+                                    //{
+                                    lyric = pll.Element.Item2;
+                                    // Remove chord in the lyric
+                                    lyric = Regex.Replace(lyric, RemoveChordPattern, @"");
+                                    lyric = formateLyricOfChord(chordName, lyric);                                    
+                                    lyric = ChordDelimiter.Item1 + chordName + ChordDelimiter.Item2 + lyric;
+                                    
+                                    pll.Element = (chordName, lyric);
+                                    //}
                                     bFound = true;
 
                                 }                                                                                                               
@@ -1870,7 +1889,10 @@ namespace Karaboss.Lyrics
                                         if (ticks == plLyrics[j + 1].TicksOn)
                                         {
                                             lyric = plLyrics[j + 1].Element.Item2;
+                                            lyric = Regex.Replace(lyric, RemoveChordPattern, @"");
                                             lyric = formateLyricOfChord(chordName, lyric);
+                                            lyric = ChordDelimiter.Item1 + chordName + ChordDelimiter.Item2 + lyric;
+
                                             plLyrics[j + 1].Element = (chordName, lyric);
                                             plLyrics[j + 1].IsChord = false;
                                             bFound = true;
@@ -1893,7 +1915,9 @@ namespace Karaboss.Lyrics
                             else if (ticks > TicksOn && ticks < TicksOff && plLyrics[j].CharType == plLyric.CharTypes.Text && plLyrics[j].IsChord == false)
                             {
                                 lyric = plLyrics[j].Element.Item2;
+                                lyric = Regex.Replace(lyric, RemoveChordPattern, @"");
                                 lyric = formateLyricOfChord(chordName, lyric);
+                                lyric = ChordDelimiter.Item1 + chordName + ChordDelimiter.Item2 + lyric;
                                 plLyrics[j].Element = (chordName, lyric);
                                 plLyrics[j].IsChord = false;
                                 bFound = true;
@@ -1909,7 +1933,7 @@ namespace Karaboss.Lyrics
                         }
 
                         if (!bFound)
-                        {
+                        {                            
                             lyric = formateLyricOfChord(chordName, "");
                             
                             // Add chord name to the lyric: Replace lyric '-- ' by '[A]-- '
