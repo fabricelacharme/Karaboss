@@ -802,37 +802,37 @@
     <value>17, 17</value>
   </metadata>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>212, 22</value>
+    <value>214, 22</value>
   </data>
   <data name="mnuFileSave.Text" xml:space="preserve">
     <value>&amp;Save</value>
   </data>
   <data name="mnuFileSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>212, 22</value>
+    <value>214, 22</value>
   </data>
   <data name="mnuFileSaveAs.Text" xml:space="preserve">
     <value>Save &amp;as</value>
   </data>
   <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 6</value>
+    <value>211, 6</value>
   </data>
   <data name="mnuFileSaveAsLrc.Size" type="System.Drawing.Size, System.Drawing">
-    <value>212, 22</value>
+    <value>214, 22</value>
   </data>
   <data name="mnuFileSaveAsLrc.Text" xml:space="preserve">
     <value>Export lyrics to .lrc format</value>
   </data>
   <data name="MnuSaveAsText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>212, 22</value>
+    <value>214, 22</value>
   </data>
   <data name="MnuSaveAsText.Text" xml:space="preserve">
     <value>Export lyrics to text format</value>
   </data>
   <data name="mnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 6</value>
+    <value>211, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>212, 22</value>
+    <value>214, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quit</value>
@@ -844,7 +844,7 @@
     <value>&amp;File</value>
   </data>
   <data name="mnuEditLoadTrack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>216, 22</value>
+    <value>217, 22</value>
   </data>
   <data name="mnuEditLoadTrack.Text" xml:space="preserve">
     <value>&amp;Load a track</value>
@@ -853,10 +853,10 @@
     <value>Load a track containing notes</value>
   </data>
   <data name="mnuEditSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>213, 6</value>
+    <value>214, 6</value>
   </data>
   <data name="mnuEditLoadMelodyText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>216, 22</value>
+    <value>217, 22</value>
   </data>
   <data name="mnuEditLoadMelodyText.Text" xml:space="preserve">
     <value>Load a text file</value>
@@ -865,7 +865,7 @@
     <value>Load a pure text  file (no times, only text)</value>
   </data>
   <data name="mnuEditLoadLRCFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>216, 22</value>
+    <value>217, 22</value>
   </data>
   <data name="mnuEditLoadLRCFile.Text" xml:space="preserve">
     <value>Load a text file (.lrc format)</value>
@@ -1366,16 +1366,16 @@
     <value>NoControl</value>
   </data>
   <data name="lblSelectTrack.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 6</value>
+    <value>12, 8</value>
   </data>
   <data name="lblSelectTrack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>67, 13</value>
+    <value>188, 13</value>
   </data>
   <data name="lblSelectTrack.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
   </data>
   <data name="lblSelectTrack.Text" xml:space="preserve">
-    <value>Select track:</value>
+    <value>Select the track containing the melody</value>
   </data>
   <data name="&gt;&gt;lblSelectTrack.Name" xml:space="preserve">
     <value>lblSelectTrack</value>
@@ -1390,7 +1390,7 @@
     <value>0</value>
   </data>
   <data name="cbSelectTrack.Location" type="System.Drawing.Point, System.Drawing">
-    <value>120, 3</value>
+    <value>220, 4</value>
   </data>
   <data name="cbSelectTrack.Size" type="System.Drawing.Size, System.Drawing">
     <value>380, 21</value>

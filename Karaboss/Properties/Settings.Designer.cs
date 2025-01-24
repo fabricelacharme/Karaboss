@@ -1360,7 +1360,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public decimal ChordsMapColumns {
             get {
                 return ((decimal)(this["ChordsMapColumns"]));

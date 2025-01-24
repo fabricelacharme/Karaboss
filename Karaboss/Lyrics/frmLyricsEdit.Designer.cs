@@ -537,6 +537,7 @@
             // 
             // pnlMenus
             // 
+            this.pnlMenus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
             this.pnlMenus.Controls.Add(this.lblSelectTrack);
             this.pnlMenus.Controls.Add(this.cbSelectTrack);
             resources.ApplyResources(this.pnlMenus, "pnlMenus");
@@ -545,6 +546,7 @@
             // lblSelectTrack
             // 
             resources.ApplyResources(this.lblSelectTrack, "lblSelectTrack");
+            this.lblSelectTrack.ForeColor = System.Drawing.Color.White;
             this.lblSelectTrack.Name = "lblSelectTrack";
             // 
             // cbSelectTrack
@@ -552,6 +554,7 @@
             this.cbSelectTrack.FormattingEnabled = true;
             resources.ApplyResources(this.cbSelectTrack, "cbSelectTrack");
             this.cbSelectTrack.Name = "cbSelectTrack";
+            this.cbSelectTrack.TabStop = false;
             this.cbSelectTrack.SelectedIndexChanged += new System.EventHandler(this.cbSelectTrack_SelectedIndexChanged);
             // 
             // frmLyricsEdit

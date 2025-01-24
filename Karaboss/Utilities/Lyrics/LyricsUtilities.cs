@@ -143,6 +143,7 @@ namespace Karaboss.Utilities
 
         /// <summary>
         /// Remove all non alphanumerc characters of a string
+        /// Except space, -, '
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -157,6 +158,62 @@ namespace Karaboss.Utilities
             return str;
         }
 
+
+        /// <summary>
+        /// Converts ticks into elapsed time, taking tempo changes into account
+        /// Minutes, seconds, ms of seconds
+        /// Ex: 6224 ticks => 00:09.152 (mm:ss.ms)
+        /// </summary>
+        /// <param name="ticks"></param>
+        /// <returns></returns>
+        public static string TicksToTime(int ticks, double Division)
+        {
+            double dur = TempoUtilities.GetMidiDuration(ticks, Division);            
+            double Min = (int)(dur / 60);
+            double Sec = (int)(dur - (Min * 60));
+            double Ms = (1000 * (dur - (Min * 60) - Sec));
+
+            string tx = string.Format("{0:00}:{1:00}.{2:000}", Min, Sec, Ms);
+            return tx;
+        }
+
+        /// <summary>
+        /// Convert time to ticks
+        /// 01:15.510 (min 2digits, sec 2 digits, ms 3 digits)
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static int TimeToTicks(string time, double Division, int Tempo)
+        {
+            int ti = 0;
+            double dur;
+
+            string[] split1 = time.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split1.Length != 2)
+                return ti;
+
+            string min = split1[0];
+
+            string[] split2 = split1[1].Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split2.Length != 2)
+                return ti;
+
+            string sec = split2[0];
+            string ms = split2[1];
+
+            // Calculate dur in seconds
+            int Min = Convert.ToInt32(min);
+            dur = Min * 60;
+            
+            int Sec = Convert.ToInt32(sec);
+            dur += Sec;
+            
+            float Ms = Convert.ToInt32(ms);
+            dur += Ms / 1000;
+
+            ti = Convert.ToInt32(Division * dur * 1000000 / Tempo);
+            return ti;
+        }
     }
 
 

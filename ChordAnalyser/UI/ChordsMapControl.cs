@@ -502,7 +502,7 @@ namespace ChordAnalyser.UI
                             g.DrawRectangle(SelectionPen, x + 3, y + 3, _cellwidth - 6, _cellheight - 6);
                         }
                         else if (i == SelectedCell.Measure && j == SelectedCell.Beat && SelectedCell.Selected && !Playing) 
-                        {
+                        {                                                       
                             // Draw selected cell in yellow
                             g.DrawRectangle(SelectionPen, x + 3, y + 3, _cellwidth - 6, _cellheight - 6);
 
@@ -687,6 +687,12 @@ namespace ChordAnalyser.UI
             _currentTimeInMeasure = timeinmeasure;
             this.Redraw();
         }
+
+        public void UnselectCell()
+        {
+            SelectedCell.Selected = false;                        
+        }
+
         #endregion public
 
 

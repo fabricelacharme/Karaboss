@@ -117,6 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="pnlBottom.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
   <data name="dTime.ToolTipText" xml:space="preserve">
     <value>Nombre de ticks</value>
   </data>
@@ -129,27 +133,11 @@
   <data name="dText.HeaderText" xml:space="preserve">
     <value>Texte</value>
   </data>
-  <data name="dgView.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="splitContainer1.Panel1.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="txtResult.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
   </data>
   <data name="txtResult.Text" xml:space="preserve">
     <value>Hello World</value>
-  </data>
-  <data name="txtResult.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="pnlBottom.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
-  </data>
-  <data name="pnlBottom.ToolTip" xml:space="preserve">
-    <value />
   </data>
   <data name="btnDisplayOtherLyrics.Text" xml:space="preserve">
     <value>Autres</value>
@@ -231,53 +219,8 @@
   <data name="btnSave.Text" xml:space="preserve">
     <value>&amp;Enregistrer</value>
   </data>
-  <data name="pnlTop.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="splitContainer1.Panel2.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="splitContainer1.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>258, 22</value>
-  </data>
-  <data name="mnuFileSave.Text" xml:space="preserve">
-    <value>&amp;Enregistrer</value>
-  </data>
-  <data name="mnuFileSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>258, 22</value>
-  </data>
-  <data name="mnuFileSaveAs.Text" xml:space="preserve">
-    <value>Enregistrer &amp;sous</value>
-  </data>
-  <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>255, 6</value>
-  </data>
-  <data name="mnuFileSaveAsLrcLines.Text" xml:space="preserve">
-    <value>Lignes</value>
-  </data>
-  <data name="mnuFileSaveAsLrc.Size" type="System.Drawing.Size, System.Drawing">
-    <value>258, 22</value>
-  </data>
-  <data name="mnuFileSaveAsLrc.Text" xml:space="preserve">
-    <value>Exporter les paroles au format .lrc</value>
-  </data>
-  <data name="MnuSaveAsText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>258, 22</value>
-  </data>
-  <data name="MnuSaveAsText.Text" xml:space="preserve">
-    <value>Exporter les paroles au format texte</value>
-  </data>
-  <data name="mnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>255, 6</value>
-  </data>
-  <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>258, 22</value>
-  </data>
-  <data name="mnuFileQuit.Text" xml:space="preserve">
-    <value>&amp;Quitter</value>
+  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
   </data>
   <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>54, 20</value>
@@ -285,8 +228,50 @@
   <data name="mnuFile.Text" xml:space="preserve">
     <value>&amp;Fichier</value>
   </data>
+  <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
+    <value>260, 22</value>
+  </data>
+  <data name="mnuFileSave.Text" xml:space="preserve">
+    <value>&amp;Enregistrer</value>
+  </data>
+  <data name="mnuFileSaveAs.Size" type="System.Drawing.Size, System.Drawing">
+    <value>260, 22</value>
+  </data>
+  <data name="mnuFileSaveAs.Text" xml:space="preserve">
+    <value>Enregistrer &amp;sous</value>
+  </data>
+  <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>257, 6</value>
+  </data>
+  <data name="mnuFileSaveAsLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>260, 22</value>
+  </data>
+  <data name="mnuFileSaveAsLrc.Text" xml:space="preserve">
+    <value>Exporter les paroles au format .lrc</value>
+  </data>
+  <data name="MnuSaveAsText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>260, 22</value>
+  </data>
+  <data name="MnuSaveAsText.Text" xml:space="preserve">
+    <value>Exporter les paroles au format texte</value>
+  </data>
+  <data name="mnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>257, 6</value>
+  </data>
+  <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>260, 22</value>
+  </data>
+  <data name="mnuFileQuit.Text" xml:space="preserve">
+    <value>&amp;Quitter</value>
+  </data>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 20</value>
+  </data>
+  <data name="mnuEdit.Text" xml:space="preserve">
+    <value>&amp;Edition</value>
+  </data>
   <data name="mnuEditLoadTrack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>263, 22</value>
+    <value>264, 22</value>
   </data>
   <data name="mnuEditLoadTrack.Text" xml:space="preserve">
     <value>&amp;Charger une piste</value>
@@ -295,10 +280,10 @@
     <value>Charger une piste contenant des notes pour synchroniser le texte.</value>
   </data>
   <data name="mnuEditSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>260, 6</value>
+    <value>261, 6</value>
   </data>
   <data name="mnuEditLoadMelodyText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>263, 22</value>
+    <value>264, 22</value>
   </data>
   <data name="mnuEditLoadMelodyText.Text" xml:space="preserve">
     <value>Charger un fichier texte (paroles)</value>
@@ -307,7 +292,7 @@
     <value>Charger un fichier texte (uniquement des paroles, pas de temps)</value>
   </data>
   <data name="mnuEditLoadLRCFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>263, 22</value>
+    <value>264, 22</value>
   </data>
   <data name="mnuEditLoadLRCFile.Text" xml:space="preserve">
     <value>Charger un fichier texte (format .lrc)</value>
@@ -315,11 +300,11 @@
   <data name="mnuEditLoadLRCFile.ToolTipText" xml:space="preserve">
     <value>Charger un fichier texte au format LRC (temps + Lyriques)</value>
   </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 20</value>
+  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 20</value>
   </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>&amp;Edition</value>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Aide</value>
   </data>
   <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
     <value>122, 22</value>
@@ -327,80 +312,11 @@
   <data name="mnuHelpAbout.Text" xml:space="preserve">
     <value>A &amp;propos</value>
   </data>
-  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>43, 20</value>
-  </data>
-  <data name="mnuHelp.Text" xml:space="preserve">
-    <value>&amp;Aide</value>
-  </data>
-  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="menuStrip1.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="tabPage1.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="btnSaveTags.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="label15.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="txtWTag.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="label14.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="txtTTag.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="label13.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="label12.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="label11.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="label10.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="txtVTag.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="txtITag.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="txtLTag.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="txtKTag.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="tabPage2.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="tabControl1.ToolTip" xml:space="preserve">
-    <value />
-  </data>
   <data name="lblSelectTrack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 13</value>
+    <value>175, 13</value>
   </data>
   <data name="lblSelectTrack.Text" xml:space="preserve">
-    <value>Choisir la piste :</value>
-  </data>
-  <data name="lblSelectTrack.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="cbSelectTrack.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="pnlMenus.ToolTip" xml:space="preserve">
-    <value />
+    <value>Choisir la piste contenant la mélodie</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -428,8 +344,5 @@
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Karaboss - Modifier les paroles</value>
-  </data>
-  <data name="$this.ToolTip" xml:space="preserve">
-    <value />
   </data>
 </root>

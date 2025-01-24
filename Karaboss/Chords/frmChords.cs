@@ -3304,6 +3304,8 @@ namespace Karaboss
 
             GridBeatChords[beat] = (ChordName, ticks);
 
+            // Update is completed, unlock/unselect cell
+            ChordMapControlModify.UnselectCell();
 
             UpdateDisplayOfChords();
             DisplayWordsAndChords();
