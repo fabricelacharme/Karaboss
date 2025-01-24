@@ -277,11 +277,11 @@ namespace Karaboss
             if (SingleTrack != null)
             {
                 string InstrumentName = MidiFile.PCtoInstrument(SingleTrack.ProgramChange);
-                tx = "Karaboss - (Track " + SingleTrackNumber.ToString() + ") - " + InstrumentName + " - " + Path.GetFileName(fileName);
+                tx = Text + " - (Track " + SingleTrackNumber.ToString() + ") - " + InstrumentName + " - " + Path.GetFileName(fileName);
             }
             else
             {
-                tx = "Karaboss - " + Path.GetFileName(fileName);
+                tx = Text + " - " + Path.GetFileName(fileName);
             }
             this.Text = tx;
         }

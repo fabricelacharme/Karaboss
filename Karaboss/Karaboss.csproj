@@ -192,10 +192,10 @@
     <Compile Include="Chords\frmChords.Designer.cs">
       <DependentUpon>frmChords.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmGuitarTraining.cs">
+    <Compile Include="GuitarTraining\frmGuitarTraining.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmGuitarTraining.Designer.cs">
+    <Compile Include="GuitarTraining\frmGuitarTraining.Designer.cs">
       <DependentUpon>frmGuitarTraining.cs</DependentUpon>
     </Compile>
     <Compile Include="frmExternalMidiPlay.cs">
@@ -547,7 +547,7 @@
     <EmbeddedResource Include="frmExternalMidiRecord.resx">
       <DependentUpon>frmExternalMidiRecord.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmGuitarTraining.resx">
+    <EmbeddedResource Include="GuitarTraining\frmGuitarTraining.resx">
       <DependentUpon>frmGuitarTraining.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Lyrics\frmLrcOptions.fr.resx">

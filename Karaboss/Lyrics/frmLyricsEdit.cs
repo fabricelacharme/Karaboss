@@ -915,7 +915,7 @@ namespace Karaboss
         {
             displayName = displayName.Replace("__", ": ");
             displayName = displayName.Replace("_", " ");
-            Text = "Karaboss - Edit Words - " + displayName;
+            Text = Text + " - " + displayName;
         }
 
 

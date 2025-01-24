@@ -46,9 +46,9 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlMiddle = new System.Windows.Forms.Panel();
             this.pnlBottom = new System.Windows.Forms.Panel();
-            this.CbTracks = new System.Windows.Forms.ComboBox();
             this.BtnStop = new Karaboss.NoSelectButton();
             this.BtnPlay = new Karaboss.NoSelectButton();
+            this.CbTracks = new System.Windows.Forms.ComboBox();
             this.pnlTop.SuspendLayout();
             this.pnlAppName.SuspendLayout();
             this.pnlDisplay.SuspendLayout();
@@ -296,17 +296,6 @@
             this.pnlBottom.Size = new System.Drawing.Size(1188, 54);
             this.pnlBottom.TabIndex = 6;
             // 
-            // CbTracks
-            // 
-            this.CbTracks.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CbTracks.FormattingEnabled = true;
-            this.CbTracks.Location = new System.Drawing.Point(619, 16);
-            this.CbTracks.Name = "CbTracks";
-            this.CbTracks.Size = new System.Drawing.Size(240, 23);
-            this.CbTracks.TabIndex = 37;
-            this.CbTracks.TabStop = false;
-            this.CbTracks.SelectedIndexChanged += new System.EventHandler(this.CbTracks_SelectedIndexChanged);
-            // 
             // BtnStop
             // 
             this.BtnStop.FlatAppearance.BorderSize = 0;
@@ -343,6 +332,17 @@
             this.BtnPlay.MouseLeave += new System.EventHandler(this.BtnPlay_MouseLeave);
             this.BtnPlay.MouseHover += new System.EventHandler(this.BtnPlay_MouseHover);
             // 
+            // CbTracks
+            // 
+            this.CbTracks.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CbTracks.FormattingEnabled = true;
+            this.CbTracks.Location = new System.Drawing.Point(619, 16);
+            this.CbTracks.Name = "CbTracks";
+            this.CbTracks.Size = new System.Drawing.Size(240, 23);
+            this.CbTracks.TabIndex = 37;
+            this.CbTracks.TabStop = false;
+            this.CbTracks.SelectedIndexChanged += new System.EventHandler(this.CbTracks_SelectedIndexChanged);
+            // 
             // frmGuitarTraining
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -355,7 +355,7 @@
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmGuitarTraining";
-            this.Text = "FrmBand";
+            this.Text = "Karaboss - Guitar Training";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmGuitarTraining_FormClosing);
             this.Load += new System.EventHandler(this.frmGuitarTraining_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmGuitarTraining_KeyDown);

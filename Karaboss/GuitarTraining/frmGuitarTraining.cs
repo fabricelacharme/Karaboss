@@ -219,7 +219,7 @@ namespace Karaboss
         /// <param name="fileName"></param>
         private void SetTitle(string fileName)
         {
-            Text = "Karaboss - " + Path.GetFileName(fileName);
+            Text = Text + " - " + Path.GetFileName(fileName);
         }
 
         private void LoadSequencer(Sequence seq)
