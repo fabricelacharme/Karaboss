@@ -43,7 +43,6 @@ using System.IO;
 
 namespace Karaboss
 {
-
     public partial class frmPianoRoll : Form
     {
         #region private decl
@@ -488,7 +487,7 @@ namespace Karaboss
                     if (trk.Name.Trim() != "")
                         N = trk.Name.Trim();
                 }
-                CbTracks.Items.Add(i.ToString("00") + " " + "[" + trk.MidiChannel.ToString("00") + "]" + " - " + N + " - " + "(" + MidiFile.PCtoInstrument(trk.ProgramChange) + ")");
+                CbTracks.Items.Add(i.ToString("00") + " " + "[" + trk.MidiChannel.ToString("00") + "]" + " - " + N + " - (" + MidiFile.PCtoInstrument(trk.ProgramChange) + ")");
                 i++;
             }
         }

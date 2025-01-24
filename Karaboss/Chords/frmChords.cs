@@ -2267,12 +2267,9 @@ namespace Karaboss
                 else if (dr == DialogResult.Yes)
                 {
                     e.Cancel = true;
-                    // turlututu
+                    // Lanch save file and close after
                     bClosingRequired = true;
-
                     StoreChordsInLyrics();
-
-
                     SaveFileProc();
                     return;
                 }
@@ -2299,9 +2296,11 @@ namespace Karaboss
                 Properties.Settings.Default.Save();
             }
 
-            Properties.Settings.Default.ChordsMapZoom = ChordMapControl1.Zoom;
-            Properties.Settings.Default.ChordsMapModifyZoom = ChordMapControlModify.Zoom;
-            Properties.Settings.Default.Save();
+            if (ChordMapControl1 != null && ChordMapControlModify != null) {
+                Properties.Settings.Default.ChordsMapZoom = ChordMapControl1.Zoom;
+                Properties.Settings.Default.ChordsMapModifyZoom = ChordMapControlModify.Zoom;
+                Properties.Settings.Default.Save();
+            }
 
             if (System.Windows.Forms.Application.OpenForms.OfType<frmEditChord>().Count() > 0)
             {
