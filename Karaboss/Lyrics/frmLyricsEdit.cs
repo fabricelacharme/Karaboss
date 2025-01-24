@@ -2189,67 +2189,52 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void mnuFileSaveAsLrc_Click(object sender, EventArgs e)
-        {
-
-            bool bRemoveAccents = Properties.Settings.Default.bLrcRemoveAccents;
-            // Force Upper Case
-            bool bUppercase = Properties.Settings.Default.bLrcForceUpperCase;
-            // Remove all non-alphanumeric characters
-            bool bRemoveNonAlphaNumeric = Properties.Settings.Default.bLrcRemoveNonAlphaNumeric;            
-            // Export to lines or syllabes
-            Karaclass.LrcFormats LrcFormat = Properties.Settings.Default.lrcFormatLinesSyllabes == 0 ? LrcFormats.Lines : LrcFormats.Syllables;
-            
-
-            DialogResult dr;
-            frmLrcOptions LrcOptionsDialog = new frmLrcOptions(LrcFormat, bRemoveAccents, bUppercase, bRemoveNonAlphaNumeric);
+        {          
+            DialogResult dr;           
+            frmLrcOptions LrcOptionsDialog = new frmLrcOptions();
             dr = LrcOptionsDialog.ShowDialog();
 
             if (dr == System.Windows.Forms.DialogResult.Cancel)            
                 return;
 
             // Remove accents
-            bRemoveAccents = LrcOptionsDialog.bRemoveAccents;
+            bool bRemoveAccents = LrcOptionsDialog.bRemoveAccents;
             // Force Upper Case
-            bUppercase = LrcOptionsDialog.bUpperCase;
+            bool bUpperCase = LrcOptionsDialog.bUpperCase;
             // Remove all non-alphanumeric characters
-            bRemoveNonAlphaNumeric = LrcOptionsDialog.bRemoveNonAlphaNumeric;
+            bool bRemoveNonAlphaNumeric = LrcOptionsDialog.bRemoveNonAlphaNumeric;
             // Save to line or to syllabes
-            LrcFormat = LrcOptionsDialog.LrcFormat;
+            Karaclass.LrcFormats LrcFormat = LrcOptionsDialog.LrcFormat;
 
-            // Save options
-            Properties.Settings.Default.bLrcRemoveAccents = bRemoveAccents;
-            Properties.Settings.Default.bLrcForceUpperCase = bUppercase;
-            Properties.Settings.Default.bLrcRemoveNonAlphaNumeric = bRemoveNonAlphaNumeric;
-            Properties.Settings.Default.lrcFormatLinesSyllabes = LrcFormat == LrcFormats.Lines ? 0 : 1;
-
+            /*
             switch (LrcFormat)
             {
                 case LrcFormats.Lines:
-                    ExportToLrcLines(bRemoveAccents, bUppercase, bRemoveNonAlphaNumeric);
+                    ExportToLrcLines(bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric);
                     break;
                 case LrcFormats.Syllables:
-                    ExportToLrcSyllabes(bRemoveAccents, bUppercase, bRemoveNonAlphaNumeric);
+                    ExportToLrcSyllabes(bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric);
                     break;
-
             }
+            */
 
+            SaveLrcFileName(LrcFormat, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric);
         }
 
-        /// <summary>
-        /// Save lyrics to text file .lrc format - line by line
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ExportToLrcLines(bool bRemoveAccents, bool bUpperCase, bool bRemoveNonAlphaNumeric)
+
+        private void SaveLrcFileName(Karaclass.LrcFormats LrcFormat, bool bRemoveAccents, bool bUpperCase, bool bRemoveNonAlphaNumeric)
         {
             #region select filename
-            string fName = "New.lrc";
+
+            string defExt = ".lrc";
+            string fName = "New" + defExt;
             string fPath = Path.GetDirectoryName(MIDIfileName);
 
             string fullName;
             string defName;
 
             #region search name
+
             if (fPath == null || fPath == "")
             {
                 if (Directory.Exists(CreateNewMidiFile._DefaultDirectory))
@@ -2262,10 +2247,10 @@ namespace Karaboss
                 fName = Path.GetFileName(MIDIfileName);
             }
 
-            string defExt = ".lrc";                                             // Extension forced to lrc            
+                                                                        // Extension forced to lrc            
             string fullPath = fPath + "\\" + Path.GetFileNameWithoutExtension(fName) + defExt;
-            fullName = Utilities.Files.FindUniqueFileName(fullPath);            // Add (2), (3) etc.. if necessary    
-            defName = Path.GetFileNameWithoutExtension(fullName);               // Default name to propose to dialog
+            fullName = Utilities.Files.FindUniqueFileName(fullPath);                            // Add (2), (3) etc.. if necessary    
+            defName = Path.GetFileNameWithoutExtension(fullName);                               // Default name to propose to dialog
 
             #endregion search name                   
 
@@ -2304,84 +2289,17 @@ namespace Karaboss
                 Tag_Title = split[1].Trim();
             }
 
-            SaveLRCLines(FileName, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
-        }
-
-        /// <summary>
-        /// Save lyrics to text file .lrc format - syllabe by syllabe
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ExportToLrcSyllabes(bool bRemoveAccents, bool bUpperCase, bool bRemoveNonAlphaNumeric)
-        {                        
-
-            #region select filename
-            string fName = "New.lrc";
-            string fPath = Path.GetDirectoryName(MIDIfileName);
-
-            string fullName;
-            string defName;
-
-            #region search name
-            if (fPath == null || fPath == "")
+            switch (LrcFormat)
             {
-                if (Directory.Exists(CreateNewMidiFile._DefaultDirectory))
-                    fPath = CreateNewMidiFile._DefaultDirectory;
-                else
-                    fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+                case LrcFormats.Lines:                    
+                    SaveLRCLines(FileName, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+                    break;
+                case LrcFormats.Syllables:                    
+                    SaveLRCSyllabes(FileName, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+                    break;
             }
-            else
-            {
-                fName = Path.GetFileName(MIDIfileName);
-            }
+        }     
 
-            string defExt = ".lrc";                                             // Extension forced to lrc
-            string fullPath = fPath + "\\" + fName;
-            fullName = Utilities.Files.FindUniqueFileName(fullPath);            // Add (2), (3) etc.. if necessary    
-            defName = Path.GetFileNameWithoutExtension(fullName);               // Default name to propose to dialog
-
-            #endregion search name                   
-
-            string defFilter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
-
-            saveMidiFileDialog.Title = "Save to LRC format";
-            saveMidiFileDialog.Filter = defFilter;
-            saveMidiFileDialog.DefaultExt = defExt;
-            saveMidiFileDialog.InitialDirectory = @fPath;
-            saveMidiFileDialog.FileName = defName;
-
-            if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
-                return;
-
-            #endregion
-
-            string Tag_Title = string.Empty;
-            string Tag_Artist = string.Empty;
-            string Tag_Album = string.Empty;
-            string Tag_Lang = string.Empty;
-            string Tag_By = string.Empty;
-            string Tag_DPlus = string.Empty;
-
-            string LrcFileName = saveMidiFileDialog.FileName;            
-
-            // Search Title & Artist
-            string SingleName = Path.GetFileNameWithoutExtension(LrcFileName);
-            string[] split = SingleName.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-            if (split.Length == 1)
-            {
-                Tag_Title = split[0].Trim();
-            }
-            else if (split.Length == 2)
-            {
-                Tag_Artist = split[0].Trim();
-                Tag_Title = split[1].Trim();
-            }
-
-            SaveLRCSyllabes(LrcFileName, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);            
-        }
-
-        
-        
         /// <summary>
         /// Load a text file LRC format (times stamps + lyrics)
         /// </summary>
