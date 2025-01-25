@@ -45,7 +45,8 @@ using Karaboss.Lrc.SharedFramework;
 using Karaboss.Lyrics;
 using Karaboss.Utilities;
 using static Karaboss.Karaclass;
-//using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
+using System.Reflection;
+using System.Text;
 
 
 namespace Karaboss
@@ -912,10 +913,10 @@ namespace Karaboss
         /// Set Title of the form
         /// </summary>
         private void SetTitle(string displayName)
-        {
+        {            
             displayName = displayName.Replace("__", ": ");
             displayName = displayName.Replace("_", " ");
-            Text = Text + " - " + displayName;
+            Text = "Karaboss - " + Strings.EditWords  + " - " + displayName;
         }
 
 
@@ -1199,7 +1200,7 @@ namespace Karaboss
 
                     // Time to ticks
                     //dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TICKS].Value = TimeToTicks(dgView.CurrentCell.Value.ToString());
-                    dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TICKS].Value = Utilities.LyricsUtilities.TimeToTicks(dgView.CurrentCell.Value.ToString(), _division, _tempo);
+                    dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TICKS].Value = Utilities.LyricsUtilities.TimeToTicks(dgView.CurrentCell.Value.ToString(), _division, _totalTicks);
                     // Type = text
                     dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TYPE].Value = "text";
 
@@ -2155,11 +2156,10 @@ namespace Karaboss
                 if (vTime != null && vLyric != null)
                 {
                     sLyric = vLyric.ToString();
-                    sLyric = sLyric.Replace("_", " ");
-                    sLyric = sLyric.Trim();
+                    sLyric = sLyric.Replace("_", " ");                    
 
 
-                    if (sLyric != "" && sLyric != cr)
+                    if (sLyric.Trim() != cr)
                     {
                         // Remove chords
                         if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)
@@ -2174,11 +2174,10 @@ namespace Karaboss
                         // Remove non-alphanumeric chars
                         sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
 
-                        if (sLyric.Trim().Length > 0)
-                        {
-                            sTime = vTime.ToString();
-                            lrcs += "[" + sTime + "] " + sLyric + cr;
-                        }
+                        // Save also empty lyrics
+                        sTime = vTime.ToString();
+                        lrcs += "[" + sTime + "] " + sLyric + cr;
+                        
                     }
                 }
             }
@@ -2368,7 +2367,7 @@ namespace Karaboss
             int plTicksOn = 0;
             string plRealTime;
             string plType;
-            int plNote = 0; 
+            string plNote =string.Empty; 
             string plElement;
             string chordName = "";
             string s;
@@ -2388,8 +2387,8 @@ namespace Karaboss
             * Syllabe separator is '*'
             */
                                    
-            List<(int,string, string, string,int, string)> grdRowsChords = new List<(int, string, string, string, int, string)> ();                        
-            List<(int, string, string, int, string)> grdRowsNoChords = new List<(int, string, string, int, string)>();
+            List<(int,string, string, string,string, string)> grdRowsChords = new List<(int, string, string, string, string, string)> ();                        
+            List<(int, string, string, string, string)> grdRowsNoChords = new List<(int, string, string, string, string)>();
             
             
             // Two use cases
@@ -2471,16 +2470,17 @@ namespace Karaboss
             // Loop in lines
             for (int i = 0; i < lyrics.Count; i++)
             {
-                //if (i < dgView.Rows.Count)
-                //{
+                plNote = "";
                 LyricsLine lyline = lyrics[i];
                 plRealTime = lyline.Timeline;
-                plTicksOn = Utilities.LyricsUtilities.TimeToTicks(plRealTime, _division, _tempo);
+                plTicksOn = Utilities.LyricsUtilities.TimeToTicks(plRealTime, _division, _totalTicks);
                 s = lyline.OriLyrics;
                     
                 if (s.Length > 0 && s.StartsWith(" "))                    
                     s = bSpaceBeforeSyllabes ? s.Substring(1) : s;
 
+                //if (s.Trim() == "")
+                //    continue;
                     
                 // ====================================
                 // syllabes or lines
@@ -2494,37 +2494,51 @@ namespace Karaboss
                     // If ticks exist, do not change them with the ticks coming from the file
                     // If not, take the value from the lrc file
                     if (dgView.Rows[row].Cells[COL_TICKS].Value != null)
-                    {                                                        
+                    {
                         if (IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
-                            plTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
+                        {
+                            int localplTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
+                            if (localplTicksOn != plTicksOn)
+                            {
+                                Console.WriteLine("");
+                            }
+                        }
                     }
                         
                     // Note
                     if (dgView.Rows[row].Cells[COL_NOTE].Value == null)
-                        plNote = 0;
+                        plNote = "";
                     else
                     {
                         if (IsNumeric(dgView.Rows[row].Cells[COL_NOTE].Value.ToString()))
-                            plNote = Convert.ToInt32(dgView.Rows[row].Cells[COL_NOTE].Value);
+                            plNote = dgView.Rows[row].Cells[COL_NOTE].Value.ToString();
                     }
-                            
+
                     // Element
                     if (s.EndsWith("#"))
-                        plElement = s.Substring(0, s.Length - 1);
-                    else
-                        plElement = s + "_";
+                        s = s.Substring(0, s.Length - 1);
+
+                    // replace leading or trailing space by '_'
+                    StringBuilder sb = new StringBuilder(s);                    
+                    if (s.StartsWith(@" "))
+                        sb[0] = '_';
+                    if (s.EndsWith(@" "))                    
+                        sb[s.Length - 1] = '_';
+                    s = sb.ToString();
+                    
+                    plElement = s;
 
                     // If not linefeed or paragraph in the lrc file, add a separator before the line or the syllabe
                     if (!bSeparatorsInLrc && !bSeparatorsInGrid)
                     {
                         if (!bEditChords)
                         {
-                            grdRowsNoChords.Add( (plTicksOn, plRealTime, "cr", 0, m_SepLine) );
+                            grdRowsNoChords.Add( (plTicksOn, plRealTime, "cr", "", m_SepLine) );
                             grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));                                
                         }
                         else
                         {
-                            grdRowsChords.Add( (plTicksOn, plRealTime, "cr", "", 0, m_SepLine) );
+                            grdRowsChords.Add( (plTicksOn, plRealTime, "cr", "", "", m_SepLine) );
                             grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
                         }
                     }
@@ -2565,67 +2579,23 @@ namespace Karaboss
                     chordName = "";
 
                     // Note
-                    plNote = 0;
+                    plNote = "";
 
                     // When we start from scratch, ie select a track with notes and add lyrics from text, there is no linefeed
                     // So we have to unsert new rows with linefeeds                        
-                    /*
-                    if (!bSeparatorsInGrid)
-                    {
-                        // Insert new row
-                        if (!bEditChords)
-                            dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);
-                        else
-                            dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, chordName, plNote.ToString(), plElement, plElement);
-                    }
-                    else
-                    {
-                        // other use case: When we want to update the lyrics, the separators already exist
-                        // So we just have to update the lines
-                        // Udpdate
-
-                        dgView.Rows[i].Cells[COL_TICKS].Value = plTicksOn;
-                        dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
-                        dgView.Rows[i].Cells[COL_TYPE].Value = plType;
-                        dgView.Rows[i].Cells[COL_NOTE].Value = plNote;
-                        dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
-                    }
-                    */
-
-
-                    // When we start from scratch, ie select a track with notes and add lyrics from text, there is no linefeed
-                    // So we have to unsert new rows with linefeeds    
-                    
-                    if (!bSeparatorsInGrid)
-                    {
-                        // CORRECT
-                        if (!bEditChords)
-                            grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));
-                        else
-                            grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
-                    }
-                    else
-                    {
-
-                        if (!bEditChords)
-                            grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));
-                        else
-                            grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
-
+                    if (bSeparatorsInGrid)
                         row++;
-                        /*
-                        // BUG
-                        if (!bEditChords)
-                            grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));
-                        else
-                            grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
-                        */
-                    }
 
+                    if (!bEditChords)
+                        grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));
+                    else
+                        grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
 
                 }
+            
+            
             }
-            //}
+            
 
             // Write grdRowsChords in the grid
             if (!bEditChords)

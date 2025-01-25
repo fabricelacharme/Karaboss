@@ -519,4 +519,13 @@
   <data name="CellSize" xml:space="preserve">
     <value>Largeur cellule</value>
   </data>
+  <data name="EditWords" xml:space="preserve">
+    <value>Modifier les paroles</value>
+  </data>
+  <data name="PianoTraining" xml:space="preserve">
+    <value>Piano training</value>
+  </data>
+  <data name="GuitarTraining" xml:space="preserve">
+    <value>Guitar training</value>
+  </data>
 </root>

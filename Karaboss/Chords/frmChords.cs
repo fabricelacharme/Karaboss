@@ -45,7 +45,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
+using Karaboss.Resources.Localization;
 
 namespace Karaboss
 {
@@ -233,7 +233,7 @@ namespace Karaboss
         /// <param name="fileName"></param>
         private void SetTitle(string fileName)
         {
-            Text = Text + " - " + Path.GetFileName(fileName);
+            Text = "Karaboss - " + Strings.Chords + " - " + Path.GetFileName(fileName);
         }
 
         private void LoadSequencer(Sequence seq)
@@ -3300,6 +3300,9 @@ namespace Karaboss
                 ticks = (beat - 1) * beatDuration;
             else
                 ticks = GridBeatChords[beat].Item2;
+
+            if (GridBeatChords[beat].Item1 == ChordName)
+                return;
 
             GridBeatChords[beat] = (ChordName, ticks);
 

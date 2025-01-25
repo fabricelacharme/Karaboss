@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
 
@@ -38,6 +39,10 @@ namespace Karaboss.Utilities
                 }
             }
 
+            // Set tempo to default if no value found
+            if (result.Count == 0)
+                result.Add((0, 50000));
+
             return result;
         }
 
@@ -47,12 +52,12 @@ namespace Karaboss.Utilities
         /// <param name="untilticks"></param>
         /// <param name="division"></param>
         /// <returns></returns>
-        public static double GetMidiDuration(int untilticks, double division)
+        public static double GetMidiDuration(double untilticks, double division)
         {            
             int _tempovalue;
             int _ticks = 0;
-            int _deltaticks;
-            int _previousticks = 0;
+            double _deltaticks;
+            double _previousticks = 0;
             int _previoustempo = 0;
             double _duration = 0;            
 
@@ -103,6 +108,9 @@ namespace Karaboss.Utilities
 
             return _duration;
         }
-     
+
+      
+
+
     }
 }

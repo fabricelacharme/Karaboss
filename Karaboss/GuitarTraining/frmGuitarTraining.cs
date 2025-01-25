@@ -1,4 +1,5 @@
 ﻿using Karaboss.GuitarTraining;
+using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
 using MusicTxt;
 using MusicXml;
@@ -6,14 +7,10 @@ using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
-using System.Xml;
 
 
 namespace Karaboss
@@ -219,7 +216,7 @@ namespace Karaboss
         /// <param name="fileName"></param>
         private void SetTitle(string fileName)
         {
-            Text = Text + " - " + Path.GetFileName(fileName);
+            Text = "Karaboss - " + Strings.GuitarTraining + " - " + Path.GetFileName(fileName);
         }
 
         private void LoadSequencer(Sequence seq)

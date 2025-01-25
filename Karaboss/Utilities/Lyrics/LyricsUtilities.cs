@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -183,7 +184,7 @@ namespace Karaboss.Utilities
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
-        public static int TimeToTicks(string time, double Division, int Tempo)
+        public static int TimeToTicks2(string time, double Division, int Tempo)
         {
             int ti = 0;
             double dur;
@@ -211,9 +212,67 @@ namespace Karaboss.Utilities
             float Ms = Convert.ToInt32(ms);
             dur += Ms / 1000;
 
+            // TODO
+            // Find ticks who are giving this time
+            ti = 1;
+            string tm;
+            do
+            {
+                tm = TicksToTime(ti, Division);
+                if (tm == time)
+                    return ti;
+                ti++;
+            } while (ti < 100000);
+            
             ti = Convert.ToInt32(Division * dur * 1000000 / Tempo);
+            //ti = (int)Utilities.TempoUtilities.GetMidiDuration(dur, Division);
             return ti;
         }
+
+        public static int TimeToTicks(string time, double Division, int max)
+        {
+            int ti = 0;
+            double dur;
+
+            string[] split1 = time.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split1.Length != 2)
+                return ti;
+
+            string min = split1[0];
+
+            string[] split2 = split1[1].Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split2.Length != 2)
+                return ti;
+
+            string sec = split2[0];
+            string ms = split2[1];
+
+            // Calculate dur in seconds
+            int Min = Convert.ToInt32(min);
+            dur = Min * 60;
+
+            int Sec = Convert.ToInt32(sec);
+            dur += Sec;
+
+            float Ms = Convert.ToInt32(ms);
+            dur += Ms / 1000;
+
+            // TODO
+            // Find ticks who are giving this time
+            ti = 1;
+            string tm;
+            do
+            {
+                tm = TicksToTime(ti, Division);
+                if (tm == time)
+                    return ti;
+                ti++;
+            } while (ti <= max);
+
+           
+            return ti;
+        }
+
     }
 
 

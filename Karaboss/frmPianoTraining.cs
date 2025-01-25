@@ -41,6 +41,7 @@ using System.IO;
 using MusicTxt;
 using MusicXml;
 using Karaboss.Utilities;
+using Karaboss.Resources.Localization;
 
 namespace Karaboss
 {
@@ -219,7 +220,7 @@ namespace Karaboss
         /// <param name="fileName"></param>
         private void SetTitle(string fileName)
         {            
-            Text = Text + " - " + Path.GetFileName(fileName);            
+            Text = "Karaboss - " + Strings.PianoTraining + " - " + Path.GetFileName(fileName);            
         }
 
         private void LoadSequencer(Sequence seq)
