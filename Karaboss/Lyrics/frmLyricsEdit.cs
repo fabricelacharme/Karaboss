@@ -2248,6 +2248,11 @@ namespace Karaboss
 
                     if (sLyric != "" && sType != "cr" && sType != "par")
                     {
+
+                        // Remove chords
+                        if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)
+                            sLyric = Regex.Replace(sLyric, _myLyricsMgmt.RemoveChordPattern, @"");
+
                         // Remove accents
                         sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
 
@@ -2357,7 +2362,9 @@ namespace Karaboss
         /// <param name="Source"></param>
         private void LoadLRCFile(string Source)
         {
-            bool bUpdateMode = false;
+            //bool bUpdateMode = false;
+            bool bSeparatorsInGrid = false;
+            bool bSeparatorsInLrc = false;
             int plTicksOn = 0;
             string plRealTime;
             string plType;
@@ -2367,17 +2374,35 @@ namespace Karaboss
             string s;
             bool bSpaceBeforeSyllabes = false;
 
+            /* Lyrics edition form
+            * 
+            * 0    - Ticks    Number of ticks
+            * 1    - Time     Time in sec
+            * 2    - Type     text, paragraph, linefeed
+            * <3   - Chord    Chord name (optional if option bShowChord is true)>     
+            * 3(4) - Note     Note value
+            * 4(5) - Text     text        
+            * 
+            * Line break is '/' - cr
+            * Paragraph is '\'  - par
+            * Syllabe separator is '*'
+            */
+                                   
+            List<(int,string, string, string,int, string)> grdRowsChords = new List<(int, string, string, string, int, string)> ();                        
+            List<(int, string, string, int, string)> grdRowsNoChords = new List<(int, string, string, int, string)>();
+            
+            
             // Two use cases
             // 1. Newly created file through menu "add lyrics" => no linefeed: bUpdateMode = false
             // 2. Existing file with linefeeds: bUpdateMode = true
-            
-            // Check existence of cr or par
+
+            // Check existence of separators in the gridview
             for (int i = 0; i < dgView.Rows.Count - 1; i++)
             {
                 s = dgView.Rows[i].Cells[COL_TYPE].Value.ToString();
                 if (s == "cr" || s == "par")
                 {
-                    bUpdateMode = true;
+                    bSeparatorsInGrid = true;
                     break;
                 }
             }
@@ -2385,119 +2410,245 @@ namespace Karaboss
             Karaboss.Lrc.SharedFramework.Lyrics lyrics = new Karaboss.Lrc.SharedFramework.Lyrics();
             lyrics.ArrangeLyrics(Source);
 
-            // Adjust dgview rows to lyrics count
-            if (dgView.Rows.Count < lyrics.Count)
-                dgView.Rows.Add(lyrics.Count - dgView.Rows.Count);
 
-            // Is there a space beween times and lyrics ?
-            // like [00:02.000] hello instead of [00:02.000]hello
-            // Search for ' /' or ' \'
+            // Check existence of separators in the lrc file
             for (int i = 0; i < lyrics.Count; i++)
             {
-                s = lyrics[i].OriLyrics;                
-                if (s.Trim() == m_SepLine || s.Trim() == m_SepParagraph )
+                s = lyrics[i].OriLyrics;
+                if (s.Trim() == m_SepLine || s.Trim() == m_SepParagraph)
                 {
+                    bSeparatorsInLrc = true; break;
+                }
+            }
+
+            
+            int lines = lyrics.Count;
+            // If separators in the lrc file, the number of lines to import is equal to the number of lyrics
+            if (!bSeparatorsInLrc && !bSeparatorsInGrid)
+            {
+                // If no separators in the lrc file, each lyric will be followed by a separator,
+                // so the number of line is twice
+                lines = 2 * lyrics.Count;
+            }
+
+            // Adjust dgview rows to lyrics count
+            if (dgView.Rows.Count < lines)
+            {
+               dgView.Rows.Add(lines - dgView.Rows.Count);
+            }
+
+            // Is there a space beween times and lyrics ?
+            // like [00:02.000] hello instead of [00:02.000]hello            
+           
+            for (int i = 0; i < lyrics.Count; i++)
+            {
+                s = lyrics[i].OriLyrics;
+                    
+                if (bSeparatorsInLrc && (s.Trim() == m_SepLine || s.Trim() == m_SepParagraph))
+                {
+                    // Lyrics have separators
+                    // Search for ' /' or ' \'
                     if (s.StartsWith(" " + m_SepLine) || s.StartsWith(" " + m_SepParagraph))
                         bSpaceBeforeSyllabes = true;
                     break;
                 }
+                else
+                {
+                    //Lyrics do not have separators
+                    // Search for '] ' on all lyrics ?
+                    if (!s.StartsWith("] "))
+                        bSpaceBeforeSyllabes = true;
+                    else
+                    {
+                        bSpaceBeforeSyllabes = false;
+                        break;
+                    }
+                }
             }
 
+            int row = 0;
 
             // Loop in lines
             for (int i = 0; i < lyrics.Count; i++)
             {
-                if (i < dgView.Rows.Count)
-                {
-                    LyricsLine lyline = lyrics[i];
-                    plRealTime = lyline.Timeline;
-                    s = lyline.OriLyrics;
-                    if (s.Length > 0 && s.StartsWith(" "))                    
-                       s = bSpaceBeforeSyllabes ? s.Substring(1) : s;
+                //if (i < dgView.Rows.Count)
+                //{
+                LyricsLine lyline = lyrics[i];
+                plRealTime = lyline.Timeline;
+                plTicksOn = Utilities.LyricsUtilities.TimeToTicks(plRealTime, _division, _tempo);
+                s = lyline.OriLyrics;
                     
+                if (s.Length > 0 && s.StartsWith(" "))                    
+                    s = bSpaceBeforeSyllabes ? s.Substring(1) : s;
 
-                    if (s != m_SepLine && s != m_SepParagraph)
+                    
+                // ====================================
+                // syllabes or lines
+                // ====================================
+                if (s != m_SepLine && s != m_SepParagraph)
+                {
+                    // insert TEXT
+                    plType = "text";
+
+                    // Ticks & RealTime
+                    // If ticks exist, do not change them with the ticks coming from the file
+                    // If not, take the value from the lrc file
+                    if (dgView.Rows[row].Cells[COL_TICKS].Value != null)
+                    {                                                        
+                        if (IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
+                            plTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
+                    }
+                        
+                    // Note
+                    if (dgView.Rows[row].Cells[COL_NOTE].Value == null)
+                        plNote = 0;
+                    else
                     {
-                        // insert TEXT
-                        plType = "text";
+                        if (IsNumeric(dgView.Rows[row].Cells[COL_NOTE].Value.ToString()))
+                            plNote = Convert.ToInt32(dgView.Rows[row].Cells[COL_NOTE].Value);
+                    }
+                            
+                    // Element
+                    if (s.EndsWith("#"))
+                        plElement = s.Substring(0, s.Length - 1);
+                    else
+                        plElement = s + "_";
 
-                        if (dgView.Rows[i].Cells[COL_TICKS].Value == null)
+                    // If not linefeed or paragraph in the lrc file, add a separator before the line or the syllabe
+                    if (!bSeparatorsInLrc && !bSeparatorsInGrid)
+                    {
+                        if (!bEditChords)
                         {
-                            dgView.Rows[i].Cells[COL_TICKS].Value = plTicksOn;
-                            plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
-                            dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
+                            grdRowsNoChords.Add( (plTicksOn, plRealTime, "cr", 0, m_SepLine) );
+                            grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));                                
                         }
                         else
                         {
-                            // If ticks exist, do not change them with the ticks coming from the file
-                            plTicksOn = 0;
-                            if (IsNumeric(dgView.Rows[i].Cells[COL_TICKS].Value.ToString()))
-                                plTicksOn = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
+                            grdRowsChords.Add( (plTicksOn, plRealTime, "cr", "", 0, m_SepLine) );
+                            grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
                         }
+                    }
+                    else
+                    {
+                        if (!bEditChords)
+                            grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));
+                        else
+                            grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
+                    }
 
+                    row++;
+
+                }
+                // ====================================
+                // Linefeeds & Paragraphs
+                // means that bSeparatorsInLrc is true
+                // ====================================
+                else if (s == m_SepLine || s == m_SepParagraph)
+                {                        
+                    if (s == m_SepLine)
+                    {
+                        plType = "cr";
+                        plElement = m_SepLine;
+                    }
+                    else
+                    {
+                        plType = "par";
+                        plElement = m_SepParagraph;
+                    }
+
+                    if (dgView.Rows[row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
+                    {
+                        plTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
+                        plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
+                    }
+
+                    chordName = "";
+
+                    // Note
+                    plNote = 0;
+
+                    // When we start from scratch, ie select a track with notes and add lyrics from text, there is no linefeed
+                    // So we have to unsert new rows with linefeeds                        
+                    /*
+                    if (!bSeparatorsInGrid)
+                    {
+                        // Insert new row
+                        if (!bEditChords)
+                            dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);
+                        else
+                            dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, chordName, plNote.ToString(), plElement, plElement);
+                    }
+                    else
+                    {
+                        // other use case: When we want to update the lyrics, the separators already exist
+                        // So we just have to update the lines
+                        // Udpdate
+
+                        dgView.Rows[i].Cells[COL_TICKS].Value = plTicksOn;
+                        dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
                         dgView.Rows[i].Cells[COL_TYPE].Value = plType;
-
-                        if (dgView.Rows[i].Cells[COL_NOTE].Value == null)
-                            dgView.Rows[i].Cells[COL_NOTE].Value = 0;
-
-                        if (s.EndsWith("#"))
-                            plElement = s.Substring(0, s.Length - 1);
-                        else
-                            plElement = s + "_";
-
+                        dgView.Rows[i].Cells[COL_NOTE].Value = plNote;
                         dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
-
                     }
-                    else if (s == m_SepLine || s == m_SepParagraph)
-                    {                        
-                        if (s == m_SepLine)
-                        {
-                            plType = "cr";
-                            plElement = m_SepLine;
-                        }
+                    */
+
+
+                    // When we start from scratch, ie select a track with notes and add lyrics from text, there is no linefeed
+                    // So we have to unsert new rows with linefeeds    
+                    
+                    if (!bSeparatorsInGrid)
+                    {
+                        // CORRECT
+                        if (!bEditChords)
+                            grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));
                         else
-                        {
-                            plType = "par";
-                            plElement = m_SepParagraph;
-                        }
+                            grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
+                    }
+                    else
+                    {
 
-                        if (dgView.Rows[i].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_TICKS].Value.ToString()))
-                        {
-                            plTicksOn = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
-                            plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
-                        }
-                        if (dgView.Rows[i].Cells[COL_NOTE].Value == null)
-                            dgView.Rows[i].Cells[COL_NOTE].Value = 0;
-
-                        if (dgView.Rows[i].Cells[COL_NOTE].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_NOTE].Value.ToString()))
-                            plNote = Convert.ToInt32(dgView.Rows[i].Cells[COL_NOTE].Value);
-
-
-                        // When we start from scratch, ie select a track with notes and add lyrics from text, there is no linefeed
-                        // So we have to unsert new rows with linefeeds
-                        // Insert new row 
-                        if (!bUpdateMode)
-                        {
-                            if (!bEditChords)
-                                dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);
-                            else
-                                dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, chordName, plNote.ToString(), plElement, plElement);
-                        }
+                        if (!bEditChords)
+                            grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));
                         else
-                        {
-                            // other use case: When we want to update the lyrics, the linefeeds already exist
-                            // So we just have to update the lines
-                            // Udpdate
+                            grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
 
-                            dgView.Rows[i].Cells[COL_TICKS].Value = plTicksOn;
-                            dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
-                            dgView.Rows[i].Cells[COL_TYPE].Value = plType;
-                            dgView.Rows[i].Cells[COL_NOTE].Value = plNote;
-                            dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
-
-                        }
+                        row++;
+                        /*
+                        // BUG
+                        if (!bEditChords)
+                            grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));
+                        else
+                            grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
+                        */
                     }
 
+
+                }
+            }
+            //}
+
+            // Write grdRowsChords in the grid
+            if (!bEditChords)
+            {
+                for (int i = 0; i < grdRowsNoChords.Count; i++)
+                {
+                    dgView.Rows[i].Cells[COL_TICKS].Value = grdRowsNoChords[i].Item1;
+                    dgView.Rows[i].Cells[COL_TIME].Value = grdRowsNoChords[i].Item2;
+                    dgView.Rows[i].Cells[COL_TYPE].Value = grdRowsNoChords[i].Item3;
+                    dgView.Rows[i].Cells[COL_NOTE].Value = grdRowsNoChords[i].Item4;
+                    dgView.Rows[i].Cells[COL_TEXT].Value = grdRowsNoChords[i].Item5;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < grdRowsChords.Count; i++ )
+                {
+                    dgView.Rows[i].Cells[COL_TICKS].Value = grdRowsChords[i].Item1;
+                    dgView.Rows[i].Cells[COL_TIME].Value = grdRowsChords[i].Item2;
+                    dgView.Rows[i].Cells[COL_TYPE].Value = grdRowsChords[i].Item3;
+                    dgView.Rows[i].Cells[COL_CHORD].Value = grdRowsChords[i].Item4;
+                    dgView.Rows[i].Cells[COL_NOTE].Value = grdRowsChords[i].Item5;
+                    dgView.Rows[i].Cells[COL_TEXT].Value = grdRowsChords[i].Item6;
                 }
             }
 

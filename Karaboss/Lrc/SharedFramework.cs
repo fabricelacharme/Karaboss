@@ -27,14 +27,14 @@ namespace Karaboss.Lrc.SharedFramework
                     Sec = Convert.ToInt32(Math.Floor(_tmptimeline / 100.0));
                 }
                 else
-                    return $"00:00.{_tmptimeline:D2}";
+                    return $"00:00.{_tmptimeline:D3}";
 
                 if (Sec > 59)
                 {
                     Min = Convert.ToInt32(Math.Floor(Sec / 60.0));
                     Sec = Sec % 60;
                 }
-                return $"{Min:D2}:{Sec:D2}.{MSec:D2}";
+                return $"{Min:D2}:{Sec:D2}.{MSec:D3}";
             }
 
             set
