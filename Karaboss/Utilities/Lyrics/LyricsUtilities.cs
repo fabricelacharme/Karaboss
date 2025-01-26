@@ -188,9 +188,8 @@ namespace Karaboss.Utilities
             double Sec = (int)(dur - (Min * 60));
             double Ms = (1000 * (dur - (Min * 60) - Sec));
 
-            if (Ms > 999)
-            {
-                Console.Write("");
+            if (Math.Round(Ms) > 999)
+            {                
                 Ms = 0;
                 Sec++;
                 if (Sec > 59)
@@ -241,8 +240,8 @@ namespace Karaboss.Utilities
             // TODO
             // Find ticks who are giving this time
             // Search convergence
-            tic = 1;
-            string tm;
+            tic = 0;
+            string tm;            
             do
             {
                 // Start with step 100
@@ -263,18 +262,21 @@ namespace Karaboss.Utilities
                         tic +=10;
 
                         if(TempoUtilities.GetMidiDuration(tic, Division) > dur)
-                        {
+                        {                                                                                    
                             tic -= 10;
                             do
                             {
                                 // Continue with step 1
                                 tm = TicksToTime(tic, Division);
                                 
-                                if (tm == time)                               
+                                // Option: take the highest tic giving the good result.
+                                // If next value of tic give also the same time, continue
+                                if (tm == time && TicksToTime(tic + 1, Division) != time)                               
                                     return tic;
                                 
                                 tic++;
                             } while (tic <= max);
+                            
                         }
 
 

@@ -2501,7 +2501,7 @@ namespace Karaboss
                             {
                                 // If time value of existing row is different than the time value of lrc line
                                 // What to do ?
-                                MessageBox.Show("Time value is different", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);                                
+                                MessageBox.Show("Ticks value is different", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);                                
                             }
                         }
                     }
