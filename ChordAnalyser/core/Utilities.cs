@@ -7,9 +7,10 @@ namespace ChordAnalyser.core
     public static class Utilities
     {
         /// <summary>
-        /// Tempo map : list (ticks, tempo value)
+        /// Tempo list : list (ticks, tempo)
         /// </summary>
         public static List<(int, int)> lstTempos;
+     
 
         /// <summary>
         /// Return the list of all Tempo changes - Format: (ticks, tempo value)
@@ -39,6 +40,8 @@ namespace ChordAnalyser.core
             return result;
         }
 
+      
+
         /// <summary>
         /// Returns a duration that takes tempo changes into account
         /// </summary>
@@ -57,8 +60,7 @@ namespace ChordAnalyser.core
             if (division == 0)
                 return 0;
 
-            // (ticks, tempo value)
-            //List<(int, int)> lstTempos = GetAllTempoChanges(seq);
+            // (ticks, tempo value)            
             if (lstTempos == null || lstTempos.Count == 0)
             {
                 MessageBox.Show("Tempo map is empty", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);

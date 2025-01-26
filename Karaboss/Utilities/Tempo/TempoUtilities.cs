@@ -9,17 +9,17 @@ namespace Karaboss.Utilities
     {
 
         /// <summary>
-        /// Tempo map : list (ticks, tempo value)
+        /// Tempo list : list (ticks, tempo)
         /// </summary>
-        public static List<(int, int)> lstTempos;
-       
+        public static List<(int, int)> lstTempos;     
+
 
         /// <summary>
-        /// Return the list of all Tempo changes - Format: (ticks, tempo value)
+        /// Return the list of all Tempo changes - Format: (ticks, tempo, duration)
         /// </summary>
         /// <returns></returns>
         public static List<(int, int)> GetAllTempoChanges(Sequence seq)
-        {
+        {            
             List<(int, int)> result = new List<(int, int)>();
 
             List<(int, int)> l = new List<(int, int)>();    // list of tempo events for a track
@@ -41,10 +41,13 @@ namespace Karaboss.Utilities
 
             // Set tempo to default if no value found
             if (result.Count == 0)
+            {
                 result.Add((0, 50000));
-
+            }
+            
             return result;
         }
+       
 
         /// <summary>
         /// Returns a duration that takes tempo changes into account
@@ -64,8 +67,7 @@ namespace Karaboss.Utilities
             if (division == 0)
                 return 0;
 
-            // (ticks, tempo value)
-            //List<(int, int)> lstTempos = GetAllTempoChanges(seq);
+            // (ticks, tempo value)            
             if (lstTempos == null || lstTempos.Count == 0)
             {
                 MessageBox.Show("Tempo map is empty", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);

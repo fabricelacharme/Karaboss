@@ -170,7 +170,7 @@ namespace Karaboss
             UpdateMidiTimes();
             
             // Load tempos map
-            TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);
+            TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);            
 
             // Load saved line and paragraph separators
             m_SepLine = Karaclass.m_SepLine;
@@ -2499,7 +2499,9 @@ namespace Karaboss
                             int localplTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
                             if (localplTicksOn != plTicksOn)
                             {
-                                Console.WriteLine("");
+                                // If time value of existing row is different than the time value of lrc line
+                                // What to do ?
+                                MessageBox.Show("Time value is different", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);                                
                             }
                         }
                     }

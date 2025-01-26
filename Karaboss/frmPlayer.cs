@@ -8533,7 +8533,7 @@ namespace Karaboss
             _ppqn = sequence1.Division;
 
             // Load tempos map
-            TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);
+            TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);            
 
             _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. For sheetmusic offset
             _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);  // Real duration according to tempo changes

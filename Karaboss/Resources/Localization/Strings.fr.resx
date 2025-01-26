@@ -496,7 +496,7 @@
     <value>Le format  {0} a été choisi par  Karaboss car il possède plus de paroles ({1} syllabes)</value>
   </data>
   <data name="ChangeFormatLyrics" xml:space="preserve">
-    <value>Vous pourvez choisir le format {0}  ({1} syllabes) en cliquant sur le bouton 'Autres'</value>
+    <value>Vous pouvez choisir le format {0}  ({1} syllabes) en cliquant sur le bouton 'Autres'</value>
   </data>
   <data name="CurrentLyricFormatIs" xml:space="preserve">
     <value>The format actuel est  {0} ({1} syllabes)</value>

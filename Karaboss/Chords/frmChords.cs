@@ -2372,7 +2372,7 @@ namespace Karaboss
 
 
             // Load tempos map
-            TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);
+            TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);            
 
             _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds                        
             _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);
