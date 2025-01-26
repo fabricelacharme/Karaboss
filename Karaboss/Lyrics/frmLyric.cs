@@ -909,6 +909,9 @@ namespace Karaboss
             // User has manually changed the display of chords
             if (chkChords.Checked != Karaclass.m_ShowChords)
             {
+                // Set cursor as hourglass
+                Cursor.Current = Cursors.WaitCursor;
+
                 Karaclass.m_ShowChords = chkChords.Checked;
                 pBox.bShowChords = Karaclass.m_ShowChords;
 
@@ -925,6 +928,9 @@ namespace Karaboss
                 // Refresh score with or without chords
                 frmPlayer frmPlayer = GetForm<frmPlayer>();
                 frmPlayer.RefreshChordsSheetMusic();
+
+                // Set cursor as default
+                Cursor.Current = Cursors.Default;
 
             }
 

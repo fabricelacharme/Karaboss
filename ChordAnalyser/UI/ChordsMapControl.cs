@@ -422,7 +422,7 @@ namespace ChordAnalyser.UI
             string title = Path.GetFileName(_filename);
             w = MeasureString(fontTitle.FontFamily, title, fontTitle.Size);
 
-            title = title.Replace(".mid", "").Replace("_", " ").Replace(".kar", "").Replace("musicxml", "").Replace(".xml", "").Replace(".mxl", "");            
+            title = title.Replace(".mid", "").Replace("_", " ").Replace(".kar", "").Replace(".musicxml", "").Replace(".xml", "").Replace(".mxl", "");            
 
             g.TranslateTransform(PageWidth/2 - w/2, topmargin);
             g.DrawString(title, fontTitle, Brushes.Black, 0, 0);
@@ -558,10 +558,9 @@ namespace ChordAnalyser.UI
             
             SolidBrush ChordBrush = new SolidBrush(Color.Black);
             SolidBrush MeasureBrush = new SolidBrush(Color.Red);
-            SolidBrush LyricBrush = new SolidBrush(Color.FromArgb(43, 87, 151)); // (45, 137, 239))
+            SolidBrush LyricBrush = new SolidBrush(Color.FromArgb(43, 87, 151));
             
-            int x = _leftmargin;//0;
-            //int y_chord = (int)_headerheight + ((int)(_cellheight) / 2) - (_fontMeasure.Height / 2);
+            int x = _leftmargin;//0;            
             int y_chord = (int)_headerheight + ((int)(_cellheight) / 3) - (_fontMeasure.Height / 2);
             int y_symbol = 10;
            

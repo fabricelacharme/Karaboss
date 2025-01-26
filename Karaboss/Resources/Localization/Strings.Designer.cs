@@ -1309,5 +1309,33 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("GuitarTraining", resourceCulture);
             }
         }
+        internal static string ChordsOriginFromLyrics
+        {
+            get
+            {
+                return ResourceManager.GetString("ChordsOriginFromLyrics", resourceCulture);
+            }
+        }
+        internal static string ChordsOriginFromXml
+        {
+            get
+            {
+                return ResourceManager.GetString("ChordsOriginFromXml", resourceCulture);
+            }
+        }
+        internal static string ChordsOriginFromDiscovery
+        {
+            get
+            {
+                return ResourceManager.GetString("ChordsOriginFromDiscovery", resourceCulture);
+            }
+        }       
+        internal static string ChordsOriginFromUserInput
+        {
+            get
+            {
+                return ResourceManager.GetString("ChordsOriginFromUserInput", resourceCulture);
+            }
+        }
     }
 }
