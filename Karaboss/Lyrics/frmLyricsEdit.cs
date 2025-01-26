@@ -2499,9 +2499,15 @@ namespace Karaboss
                             int localplTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
                             if (localplTicksOn != plTicksOn)
                             {
-                                // If time value of existing row is different than the time value of lrc line
-                                // What to do ?
-                                MessageBox.Show("Ticks value is different", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);                                
+                                if (Math.Abs(localplTicksOn - plTicksOn) == 1)
+                                    plTicksOn = localplTicksOn;
+                                else 
+                                { 
+                                    // If time value of existing row is different than the time value of lrc line
+                                    // What to do ?
+                                    MessageBox.Show( string.Format("Load Lrc failed. Ticks value are different, tick {0}, line {1}, lyric {2}",localplTicksOn, i, s), "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    return;
+                                }
                             }
                         }
                     }

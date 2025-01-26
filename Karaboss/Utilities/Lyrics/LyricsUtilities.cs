@@ -233,7 +233,7 @@ namespace Karaboss.Utilities
             int Sec = Convert.ToInt32(sec);
             dur += Sec;
 
-            float Ms = Convert.ToInt32(ms);
+            double Ms = Convert.ToDouble(ms);
             dur += Ms / 1000;
                       
             
