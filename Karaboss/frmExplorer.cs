@@ -496,18 +496,12 @@ namespace Karaboss
             }
 
             // Ferme le formulaire frmPianoTraining            
-            //if (Application.OpenForms["frmPianoTraining"] != null)
-            //    Application.OpenForms["frmPianoTraining"].Close();
             Application.OpenForms["frmPianoTraining"]?.Close();
 
             // Ferme le formulaire frmChords
-            //if (Application.OpenForms["frmChords"] != null)
-            //    Application.OpenForms["frmChords"].Close();
             Application.OpenForms["frmChords"]?.Close();
 
             // Ferme le formulaire frmGuitarTraining            
-            //if (Application.OpenForms["frmGuitarTraining"] != null)
-            //    Application.OpenForms["frmGuitarTraining"].Close();
             Application.OpenForms["frmGuitarTraining"]?.Close();
 
             ResetOutPutDevice();
@@ -565,18 +559,12 @@ namespace Karaboss
             }
 
             // Ferme le formulaire frmPianoTraining            
-            //if (Application.OpenForms["frmPianoTraining"] != null)
-            //    Application.OpenForms["frmPianoTraining"].Close();
             Application.OpenForms["frmPianoTraining"]?.Close();
 
             // Ferme le formulaire frmChords
-            //if (Application.OpenForms["frmChords"] != null)
-            //    Application.OpenForms["frmChords"].Close();
             Application.OpenForms["frmChords"]?.Close();
 
             // Ferme le formulaire frmGuitarTraining            
-            //if (Application.OpenForms["frmGuitarTraining"] != null)
-            //    Application.OpenForms["frmGuitarTraining"].Close();
             Application.OpenForms["frmGuitarTraining"]?.Close();
 
             ResetOutPutDevice();
@@ -611,37 +599,20 @@ namespace Karaboss
                 return;
             }
 
-            /*
-            // Unzip MXL before
-            if (Karaclass.IsMXL(filename))
-            {
-                filename = UnzipFile(filename);
-                if (!File.Exists(filename))
-                {
-                    return;
-                }
-            }
-            */
-
+            
             // ferme le formulaire frmPlayer
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
                 Application.OpenForms["frmPlayer"].Close();
             }
 
-            // Ferme le formulaire frmPianoTraining            
-            //if (Application.OpenForms["frmPianoTraining"] != null)
-            //    Application.OpenForms["frmPianoTraining"].Close();
+            // Ferme le formulaire frmPianoTraining                        
             Application.OpenForms["frmPianoTraining"]?.Close();
 
             // Ferme le formulaire frmGuitarTraining            
-            //if (Application.OpenForms["frmGuitarTraining"] != null)
-            //    Application.OpenForms["frmGuitarTraining"].Close();
             Application.OpenForms["frmGuitarTraining"]?.Close();
 
             // Ferme le formulaire frmChords
-            //if (Application.OpenForms["frmChords"] != null)
-            //    Application.OpenForms["frmChords"].Close();
             Application.OpenForms["frmChords"]?.Close();
 
             ResetOutPutDevice();
@@ -650,8 +621,9 @@ namespace Karaboss
             frmChords.Show();
             frmChords.Activate();
 
-
         }
+
+       
 
         /// <summary>
         /// Open a file selected from the MRU list.
@@ -812,9 +784,9 @@ namespace Karaboss
 
         }
 
-        public void RefreshExplorer()
+        public void RefreshExplorer(string fullPath = "")
         {
-            xplorerControl.RefreshContents();
+            xplorerControl.RefreshContents(fullPath);
         }
 
         #endregion functions

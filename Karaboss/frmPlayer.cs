@@ -2929,7 +2929,7 @@ namespace Karaboss
                 if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
                 {
                     frmExplorer = GetForm<frmExplorer>();
-                    frmExplorer.RefreshExplorer();
+                    frmExplorer.RefreshExplorer( Path.GetFileName(MIDIfileName));
                 }
 
             }
@@ -8751,6 +8751,8 @@ namespace Karaboss
         /// <param name="fileName"></param>
         public void InitSaveFile(string fileName)
         {
+
+            MIDIfileName = fileName;
 
             progressBarPlayer.Visible = true;
 
