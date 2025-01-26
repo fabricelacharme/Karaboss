@@ -5,11 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace Karaboss.Utilities
 {
     public static class LyricsUtilities
     {
+        /// <summary>
+        /// Conversion table accented chars to non accentued chars
+        /// </summary>
         static Dictionary<string, string> foreign_characters = new Dictionary<string, string>
         {
             { "äæǽ", "ae" },
@@ -104,6 +108,11 @@ namespace Karaboss.Utilities
             { "я", "ya" },
          };
 
+        /// <summary>
+        /// Remove accents for chars
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         public static char RemoveDiacritics(this char c)
         {
             foreach (KeyValuePair<string, string> entry in foreign_characters)
@@ -116,7 +125,11 @@ namespace Karaboss.Utilities
             return c;
         }
 
-
+        /// <summary>
+        /// Remove accents for strings
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public static string RemoveDiacritics(this string s)
         {
             string text = "";
@@ -174,8 +187,19 @@ namespace Karaboss.Utilities
             double Sec = (int)(dur - (Min * 60));
             double Ms = (1000 * (dur - (Min * 60) - Sec));
 
-            string tx = string.Format("{0:00}:{1:00}.{2:000}", Min, Sec, Ms);
-            return tx;
+            if (Ms > 999)
+            {
+                Console.Write("");
+                Ms = 0;
+                Sec++;
+                if (Sec > 59)
+                {
+                    Sec = 0;
+                    Min++;
+                }
+            }
+            
+            return string.Format("{0:00}:{1:00}.{2:000}", Min, Sec, Ms);
         }
 
         /// <summary>
@@ -231,18 +255,18 @@ namespace Karaboss.Utilities
 
         public static int TimeToTicks(string time, double Division, int max)
         {
-            int ti = 0;
+            int tic = 0;
             double dur;
 
             string[] split1 = time.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
             if (split1.Length != 2)
-                return ti;
+                return tic;
 
             string min = split1[0];
 
             string[] split2 = split1[1].Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
             if (split2.Length != 2)
-                return ti;
+                return tic;
 
             string sec = split2[0];
             string ms = split2[1];
@@ -257,21 +281,55 @@ namespace Karaboss.Utilities
             float Ms = Convert.ToInt32(ms);
             dur += Ms / 1000;
 
+
             // TODO
             // Find ticks who are giving this time
-            ti = 1;
+            // Search convergence
+            tic = 1;
             string tm;
             do
             {
-                tm = TicksToTime(ti, Division);
+                // Start with step 100
+                tm = TicksToTime(tic, Division);                
                 if (tm == time)
-                    return ti;
-                ti++;
-            } while (ti <= max);
+                    return tic;                
+                tic += 100;
 
+                if (TempoUtilities.GetMidiDuration(tic, Division) > dur)
+                {
+                    tic -= 100;
+                    do
+                    {
+                        // Continue with step 10
+                        tm = TicksToTime(tic, Division);
+                        if (tm == time)
+                            return tic;
+                        tic +=10;
+
+                        if(TempoUtilities.GetMidiDuration(tic, Division) > dur)
+                        {
+                            tic -= 10;
+                            do
+                            {
+                                // Continue with step 1
+                                tm = TicksToTime(tic, Division);
+                                if (tm == time) 
+                                    return tic;
+                                tic++;
+                            } while (tic <= max);
+                        }
+
+
+                    } while (tic <= max);
+                }
+
+            } while (tic <= max);
            
-            return ti;
+            return tic;
         }
+
+     
+
 
     }
 

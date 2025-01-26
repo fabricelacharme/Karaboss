@@ -105,7 +105,6 @@ namespace Karaboss.Utilities
                 _duration += (_previoustempo) * (_deltaticks / division) / 1000000;
             }
 
-
             return _duration;
         }
 

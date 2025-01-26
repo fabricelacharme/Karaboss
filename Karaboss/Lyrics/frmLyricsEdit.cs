@@ -2386,7 +2386,8 @@ namespace Karaboss
             * Paragraph is '\'  - par
             * Syllabe separator is '*'
             */
-                                   
+            Cursor.Current = Cursors.WaitCursor;
+
             List<(int,string, string, string,string, string)> grdRowsChords = new List<(int, string, string, string, string, string)> ();                        
             List<(int, string, string, string, string)> grdRowsNoChords = new List<(int, string, string, string, string)>();
             
@@ -2478,9 +2479,7 @@ namespace Karaboss
                     
                 if (s.Length > 0 && s.StartsWith(" "))                    
                     s = bSpaceBeforeSyllabes ? s.Substring(1) : s;
-
-                //if (s.Trim() == "")
-                //    continue;
+                
                     
                 // ====================================
                 // syllabes or lines
@@ -2633,6 +2632,7 @@ namespace Karaboss
             // File was modified
             FileModified();
 
+            Cursor.Current = Cursors.Default;
         }
 
         #endregion Load lrc
