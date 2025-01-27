@@ -9,6 +9,7 @@ namespace Karaboss
 {
     public partial class frmModifyTempo : Form
     {
+        #region declarations
         private enum TempoChangesModes
         {
             CreateTempo,
@@ -53,8 +54,14 @@ namespace Karaboss
                 return Convert.ToInt32(_starttime);
             }
         }
-        
 
+        #endregion declarations
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="sheetMusic"></param>
+        /// <param name="seq"></param>
         public frmModifyTempo(SheetMusic sheetMusic, Sequence seq)
         {
             InitializeComponent();
@@ -74,35 +81,7 @@ namespace Karaboss
                 // No tempo was selected by double click
                 _tempoSymbol = sheetmusic.lstTempoSymbols[0];
                 sheetmusic.SelectTempoSymbol(_tempoSymbol);
-
-                #region deleme
-                /*
-                _tempo = deftempo;
-                _tempoSymbol = null;
-
-                if (sheetmusic.CurrentNote != null)
-                {
-                    // if a note is selected
-                    MidiNote n = sheetmusic.CurrentNote.midinote;
-                    _starttime = n.StartTime;
-                }
-                else
-                {
-                    _starttime = 0;
-                }
-
-                for (int i = 0; i < l.Count; i++)
-                {
-                    if (l[i].StartTime == _starttime)
-                    {
-                        _tempoSymbol = l[i];
-                        _tempo = _tempoSymbol.Tempo;
-                        sheetMusic.SelectTempoSymbol(_tempoSymbol);
-                        break;
-                    }
-                }
-                */
-                #endregion deleteme
+                
             }            
 
             Division = sequence1.Division;
@@ -459,10 +438,12 @@ namespace Karaboss
                 {
                     _tempoSymbol = l[i];
                     sheetmusic.SelectTempoSymbol(_tempoSymbol);
-                    //DisplayPreviousTempoChange();
-                    //DisplayNextTempoChange();
                     
                     UpdatefrmPlayer();
+                    UpdateFields();
+
+                    txtTempo.Text = _tempoSymbol.Tempo.ToString();
+
                     return;
                 }
             } 
@@ -504,11 +485,24 @@ namespace Karaboss
                 {
                     index = 1;
                     lblTempoNumber.Text = string.Format("Tempo {0} of {1}", index, l.Count);
-                    btnDelete.Enabled = false;
+
+                    int nbStartTimes = 0;
+                    for (int i =0; i < l.Count; i++)
+                    {
+                        if (l[i].StartTime == 0)
+                            nbStartTimes++;
+                    }
+
+                    if (nbStartTimes == 1)
+                        btnDelete.Enabled = false;
                     
                     ChangeMode = TempoChangesModes.UpdateTempo;
                     tx = Karaboss.Resources.Localization.Strings.Update;
                     btnUpdate.Text = tx;
+                    
+                    index = l.IndexOf(_tempoSymbol);
+                    lblTempoNumber.Text = string.Format("Tempo {0} of {1}", index + 1, l.Count);
+
                     return;
                 }
 

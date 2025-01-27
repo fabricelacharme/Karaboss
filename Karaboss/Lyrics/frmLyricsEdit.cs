@@ -2132,6 +2132,15 @@ namespace Karaboss
             object vTime;
             string lrcs = string.Empty;
             string cr = "\r\n";
+            string strSpaceBetween;
+            bool bSpaceBetwwen = false;
+
+
+            // Space between time and lyrics [00:02.872]lyric
+            if (bSpaceBetwwen)
+                strSpaceBetween = " ";
+            else
+                strSpaceBetween = string.Empty;
 
             List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
             List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
@@ -2144,7 +2153,7 @@ namespace Karaboss
                 Tag = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(Tag) : Tag;
                 Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
                 if (Tag != "")
-                    lrcs += "[" + TagName + " " + Tag + "]" + cr;
+                    lrcs += "[" + TagName + strSpaceBetween + Tag + "]" + cr;
             }
 
             // Save syllabe by syllabe
@@ -2176,7 +2185,7 @@ namespace Karaboss
 
                         // Save also empty lyrics
                         sTime = vTime.ToString();
-                        lrcs += "[" + sTime + "] " + sLyric + cr;
+                        lrcs += "[" + sTime + "]" + strSpaceBetween + sLyric + cr;
                         
                     }
                 }
@@ -2215,7 +2224,18 @@ namespace Karaboss
             object vType;
             string lrcs = string.Empty;
             string cr = "\r\n";
+            string strSpaceBetween;
+            bool bSpaceBetwwen = false;
+            bool bMaxLength = true;
+            int MaxLength = 30;
 
+            // Space between time and lyrics [00:02.872]lyric
+            if (bSpaceBetwwen)
+                strSpaceBetween = " ";
+            else
+                strSpaceBetween = string.Empty;
+
+            
             List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
             List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
             string Tag;
@@ -2227,10 +2247,10 @@ namespace Karaboss
                 Tag = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(Tag) : Tag;
                 Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
                 if (Tag != "")
-                    lrcs += "[" + TagName + " " + Tag + "]" + cr;
+                    lrcs += "[" + TagName + strSpaceBetween + Tag + "]" + cr;
             }
 
-            bool bStartLine = true;
+            bool bStartLine = true;            
 
             // Save line by line
             for (int i = 0; i < dgView.Rows.Count; i++)
@@ -2263,44 +2283,47 @@ namespace Karaboss
 
                         if (sLyric.Trim().Length > 0)
                         {
+                            
                             if (bStartLine)
                             {
                                 sTime = vTime.ToString();
-                                sLine = "[" + sTime + "] " + sLyric;
+                                sLine = "[" + sTime + "]" + strSpaceBetween + sLyric;
                                 bStartLine = false;
                             }
                             else
-                            {
+                            {                                                                
                                 // Line continuation
-                                sLine += sLyric;
+                                sLine += sLyric;                                
                             }
                         }
 
                     }
                     else if ((sType == "cr" || sType == "par"))
                     {
+                        // =======================
                         // Start new line    
+                        // =======================
+                        // Remove last space
+                        if (sLine.Length > 0 && sLine.EndsWith(" "))
+                            sLine = sLine.Remove(sLine.Length - 1, 1);
 
                         // Save current line
                         if (sLine != "")
-                        {
-                            // Check length of line
-
+                        {                           
                             // Add new line
                             lrcs += sLine + cr;
                         }
 
                         // Reset all
                         bStartLine = true;
-                        sLine = string.Empty;
+                        sLine = string.Empty;                        
                     }
                 }
             }
 
             // Save last line
             if (sLine != "")
-            {
-                //sLine = sLine.Replace("_", " ");
+            {                
                 lrcs += sLine + cr;
             }
 

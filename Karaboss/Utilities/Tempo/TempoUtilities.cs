@@ -23,7 +23,8 @@ namespace Karaboss.Utilities
             List<(int, int)> result = new List<(int, int)>();
 
             List<(int, int)> l = new List<(int, int)>();    // list of tempo events for a track
-            List<(int, int)> lt = new List<(int, int)>();   // list of all tempo events for all tracks         
+            List<(int, int)> lt = new List<(int, int)>();   // list of all tempo events for all tracks                     
+
 
             foreach (Sanford.Multimedia.Midi.Track track in seq.tracks)
             {
@@ -32,7 +33,7 @@ namespace Karaboss.Utilities
                 for (int i = 0; i < l.Count; i++)
                 {
                     if (!lt.Contains(l[i]))
-                    {
+                    {                        
                         lt.Add(l[i]);
                         result.Add(l[i]);
                     }

@@ -6,17 +6,18 @@ namespace ChordAnalyser.core
 {
     public static class Utilities
     {
+        /*
         /// <summary>
         /// Tempo list : list (ticks, tempo)
         /// </summary>
-        public static List<(int, int)> lstTempos;
+        public static List<(int, int)> lstTempos2;
      
 
         /// <summary>
         /// Return the list of all Tempo changes - Format: (ticks, tempo value)
         /// </summary>
         /// <returns></returns>
-        public static List<(int, int)> GetAllTempoChanges(Sequence seq)
+        public static List<(int, int)> GetAllTempoChanges2(Sequence seq)
         {
             List<(int, int)> result = new List<(int, int)>();
 
@@ -48,7 +49,7 @@ namespace ChordAnalyser.core
         /// <param name="untilticks"></param>
         /// <param name="division"></param>
         /// <returns></returns>
-        public static double GetMidiDuration(int untilticks, double division)
+        public static double GetMidiDuration2(int untilticks, double division)
         {
             int _tempovalue;
             int _ticks = 0;
@@ -61,16 +62,16 @@ namespace ChordAnalyser.core
                 return 0;
 
             // (ticks, tempo value)            
-            if (lstTempos == null || lstTempos.Count == 0)
+            if (lstTempos2 == null || lstTempos2.Count == 0)
             {
                 MessageBox.Show("Tempo map is empty", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return 0;
             }
 
             // for each set (ticks, tempo value) compare 'untiltick' with the ticks of each tempo
-            for (int i = 0; i < lstTempos.Count; i++)
+            for (int i = 0; i < lstTempos2.Count; i++)
             {
-                _ticks = lstTempos[i].Item1; // ticks of the tempo
+                _ticks = lstTempos2[i].Item1; // ticks of the tempo
 
                 // If searched tick is less than the tick of the current tempo
                 // add partial duration and exit
@@ -86,7 +87,7 @@ namespace ChordAnalyser.core
                 _deltaticks = _ticks - _previousticks;
                 _previousticks = _ticks;
 
-                _tempovalue = lstTempos[i].Item2;
+                _tempovalue = lstTempos2[i].Item2;
                 _duration += (_previoustempo) * (_deltaticks / division) / 1000000;
                 _previoustempo = _tempovalue;
 
@@ -103,6 +104,7 @@ namespace ChordAnalyser.core
 
             return _duration;
         }
-
+        */
     }
+        
 }
