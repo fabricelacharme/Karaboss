@@ -726,8 +726,6 @@ namespace Karaboss
         }
 
 
-
-
         /// <summary>
         /// PlaySong for first time
         /// </summary>
@@ -1436,6 +1434,8 @@ namespace Karaboss
                 lblEdit.ForeColor = Color.White;
                 MnuEditScore.Checked = true;
 
+                SetStartVLinePos(0);
+
                 // Allow sheetmusic editing
                 sheetmusic.bEditMode = true;
                 EnableTrackControls(true);
@@ -1467,7 +1467,7 @@ namespace Karaboss
 
                 // Disallow sheetmusic edit mode
                 sheetmusic.bEditMode = false;
-                sheetmusic.bEnterNotes = false;
+                sheetmusic.bEnterNotes = false;                
 
                 // Disable edit Track Controls
                 EnableTrackControls(false);
@@ -7143,6 +7143,11 @@ namespace Karaboss
         /// <param name="Width"></param>
         private void ScoreWidth_Changed(int Width)
         {
+            // Recalculate duration of song
+            UpdateMidiTimes();
+            DisplaySongDuration(_duration);
+            
+            // recalculate scrollbars
             SetScrollBarValues();
         }
 

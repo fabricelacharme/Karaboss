@@ -45,7 +45,6 @@
   <ItemGroup>
     <Compile Include="core\Analyser.cs" />
     <Compile Include="core\ChordAnalyser.cs" />
-    <Compile Include="core\Utilities.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2024 Fabrice Lacharme
+/* Copyright (c) 2025 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -43,6 +43,14 @@ namespace ChordAnalyser.UI
 {
     public partial class ChordRenderer : Control
     {
+        /*
+         *  Control displaying bitmaps of guitar chords or piano chords
+         * 
+         * 
+         * 
+         * 
+         * */
+
 
         #region events
         public event OffsetChangedEventHandler OffsetChanged;
@@ -315,23 +323,13 @@ namespace ChordAnalyser.UI
                         if (remainingwidth >= Parent.Width - LargeurCellule)
                         {                                             
                             // if the remaining display width of the control is greater than that of the parent control, then you can shift
-                            this.OffsetX = offset;
-                            //pnlCanvas.Invalidate();
+                            this.OffsetX = offset;                            
                         }
                         else if (remainingwidth < Parent.Width - LargeurCellule)
                         {                            
                             offset = Width - Parent.Width - LargeurCellule;                            
                             pnlCanvas.Invalidate();
-                        }
-                        /*
-                        else
-                        {                         
-                            // if the remaining display width of the control is less than that of the parent control, then we no longer shift
-                            int z = (Width - Parent.Width) / LargeurCellule;
-                            this.OffsetX = (z + 1) * LargeurCellule;                                                         
-                            pnlCanvas.Invalidate();
-                        }
-                        */
+                        }                        
                     }                    
                 }
             }
@@ -387,14 +385,18 @@ namespace ChordAnalyser.UI
                 return;
             
             string ChordName;
-            string currentChordName = string.Empty;
-           
+            string currentChordName = string.Empty;            
+
             int x = _LinesWidth - 1;
             bool bChordPlayed = false;
 
             for (int i = 1; i <= GridBeatChords.Count; i++)
             {
                 ChordName = GridBeatChords[i].Item1;
+                if (ChordName.Length > 0 && ChordName.IndexOf("/") != -1)
+                {
+                    ChordName = ChordName.Substring(0, ChordName.IndexOf("/"));
+                }
 
                 // Draw chords if they are different from previous               
                 if (ChordName != "" && ChordName != EmptyChord && ChordName != currentChordName && ChordName != NoChord)
