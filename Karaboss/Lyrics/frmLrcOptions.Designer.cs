@@ -34,11 +34,15 @@
             this.OptFormatLines = new System.Windows.Forms.RadioButton();
             this.OptFormatSyllabes = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblCutLines = new System.Windows.Forms.Label();
+            this.UpdCutLines = new System.Windows.Forms.NumericUpDown();
+            this.chkCutLines = new System.Windows.Forms.CheckBox();
             this.chkRemoveAccents = new System.Windows.Forms.CheckBox();
             this.chkUpperCase = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.chkAlphaNumeric = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.UpdCutLines)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,6 +67,7 @@
             this.OptFormatLines.Name = "OptFormatLines";
             this.OptFormatLines.TabStop = true;
             this.OptFormatLines.UseVisualStyleBackColor = true;
+            this.OptFormatLines.CheckedChanged += new System.EventHandler(this.OptFormatLines_CheckedChanged);
             // 
             // OptFormatSyllabes
             // 
@@ -71,14 +76,50 @@
             this.OptFormatSyllabes.Name = "OptFormatSyllabes";
             this.OptFormatSyllabes.TabStop = true;
             this.OptFormatSyllabes.UseVisualStyleBackColor = true;
+            this.OptFormatSyllabes.CheckedChanged += new System.EventHandler(this.OptFormatSyllabes_CheckedChanged);
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lblCutLines);
+            this.groupBox1.Controls.Add(this.UpdCutLines);
+            this.groupBox1.Controls.Add(this.chkCutLines);
             this.groupBox1.Controls.Add(this.OptFormatLines);
             this.groupBox1.Controls.Add(this.OptFormatSyllabes);
             resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
+            // 
+            // lblCutLines
+            // 
+            resources.ApplyResources(this.lblCutLines, "lblCutLines");
+            this.lblCutLines.Name = "lblCutLines";
+            // 
+            // UpdCutLines
+            // 
+            resources.ApplyResources(this.UpdCutLines, "UpdCutLines");
+            this.UpdCutLines.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            this.UpdCutLines.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.UpdCutLines.Name = "UpdCutLines";
+            this.UpdCutLines.Value = new decimal(new int[] {
+            40,
+            0,
+            0,
+            0});
+            // 
+            // chkCutLines
+            // 
+            resources.ApplyResources(this.chkCutLines, "chkCutLines");
+            this.chkCutLines.Name = "chkCutLines";
+            this.chkCutLines.UseVisualStyleBackColor = true;
+            this.chkCutLines.CheckedChanged += new System.EventHandler(this.chkCutLines_CheckedChanged);
             // 
             // chkRemoveAccents
             // 
@@ -123,6 +164,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmLrcOptions_FormClosing);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.UpdCutLines)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
@@ -140,5 +182,8 @@
         private System.Windows.Forms.CheckBox chkUpperCase;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox chkAlphaNumeric;
+        private System.Windows.Forms.Label lblCutLines;
+        private System.Windows.Forms.NumericUpDown UpdCutLines;
+        private System.Windows.Forms.CheckBox chkCutLines;
     }
 }

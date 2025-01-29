@@ -2029,7 +2029,11 @@ namespace Karaboss
             // Save to line or to syllabes
             Karaclass.LrcFormats LrcFormat = LrcOptionsDialog.LrcFormat;
 
-            SaveLrcFileName(LrcFormat, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric);
+            // Cut lines over x characters
+            bool bCutLines = LrcOptionsDialog.bCutLines;
+            int LrcCutLinesChars = LrcOptionsDialog.LrcCutLinesChars;
+
+            SaveLrcFileName(LrcFormat, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, bCutLines, LrcCutLinesChars);
         }
 
         /// <summary>
@@ -2040,7 +2044,7 @@ namespace Karaboss
         /// <param name="bRemoveAccents"></param>
         /// <param name="bUpperCase"></param>
         /// <param name="bRemoveNonAlphaNumeric"></param>
-        private void SaveLrcFileName(Karaclass.LrcFormats LrcFormat, bool bRemoveAccents, bool bUpperCase, bool bRemoveNonAlphaNumeric)
+        private void SaveLrcFileName(Karaclass.LrcFormats LrcFormat, bool bRemoveAccents, bool bUpperCase, bool bRemoveNonAlphaNumeric, bool bCutLines, int LrcCutLinesChars)
         {
             #region select filename
 
@@ -2112,7 +2116,7 @@ namespace Karaboss
             switch (LrcFormat)
             {
                 case LrcFormats.Lines:
-                    SaveLRCLines(FileName, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+                    SaveLRCLines(FileName, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, bCutLines, LrcCutLinesChars);
                     break;
                 case LrcFormats.Syllables:
                     SaveLRCSyllabes(FileName, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
@@ -2213,11 +2217,12 @@ namespace Karaboss
         /// <param name="Tag_Lang"></param>
         /// <param name="Tag_By"></param>
         /// <param name="Tag_DPlus"></param>
-        private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
+        private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus, bool bControlLength, int MaxLength)
         {
             string sTime;
             string sLyric;
             string sLine = string.Empty;
+            string sTimeLine = string.Empty;
             string sType;
             object vLyric;
             object vTime;
@@ -2227,8 +2232,10 @@ namespace Karaboss
             string strSpaceBetween;
             bool bSpaceBetwwen = false;
             bool bStartLine;
-            bool bControlLength = true;
-            int MaxLength = 38;
+            
+            //bool bControlLength = true;
+            //int MaxLength = 38;
+            
             string strPartialLine = string.Empty;
 
             // Space between time and lyrics [00:02.872]lyric
@@ -2315,10 +2322,11 @@ namespace Karaboss
 
             #region List of Lines
 
-            // Store lyrics in lines without cut
+            // Store lyrics in lines
 
             // List to store lines
             List<string> lstLines = new List<string>();
+            List<string> lstTimeLines = new List<string>();
 
             bStartLine = true;
             // sTime, sType, sLyric
@@ -2336,12 +2344,14 @@ namespace Karaboss
                         if (sLyric.Length > 0 && sLyric.StartsWith(" "))
                             sLyric = sLyric.Remove(0, 1);
                         sLine = sTime + strSpaceBetween + sLyric;    // time + lyric for the beginning of a line
+                        sTimeLine = sTime + strSpaceBetween + sLyric;
                         bStartLine = false;
                     }
                     else
                     {
                         // Line continuation
                         sLine += sLyric; // only lyric for the continuation of a line
+                        sTimeLine += sTime + strSpaceBetween + sLyric;
                     }                    
                 }
                 else
@@ -2351,25 +2361,44 @@ namespace Karaboss
                     if (sLine.Length > 0 && sLine.EndsWith(" "))
                         sLine = sLine.Remove(sLine.Length - 1, 1);
 
+                    if (sTimeLine.Length > 0 && sTimeLine.EndsWith(" "))
+                        sTimeLine = sTimeLine.Remove(sTimeLine.Length - 1, 1);
+
+
                     // Save current line
                     if (sLine != "")
                     {
                         // Add new line
-                        lstLines.Add(sLine);
-                        //lrcs += sLine + cr;
+                        lstLines.Add(sLine);                        
+                    }
+
+                    if (sTimeLine != "")
+                    {
+                        // Add new line
+                        lstTimeLines.Add(sTimeLine);
                     }
 
                     // Reset all
                     bStartLine = true;
-                    sLine = string.Empty;                    
+                    sLine = string.Empty;
+                    sTimeLine = string.Empty;
                 }
             }
             // Save last line
             if (sLine != "")
-            {
-                //lrcs += sLine + cr;
+            {                
                 lstLines.Add(sLine);
             }
+
+            // Save last line
+            if (sTimeLine != "")
+            {
+                // Remove last space
+                if (sTimeLine.Length > 0 && sTimeLine.EndsWith(" "))
+                    sTimeLine = sTimeLine.Remove(sTimeLine.Length - 1, 1);                
+                lstTimeLines.Add(sTimeLine);
+            }
+
 
             #region deleteme
             /*
@@ -2451,15 +2480,92 @@ namespace Karaboss
             #endregion List of lines
 
 
-
-            List<string[]> lstWords = new List<string[]>(); 
+            #region List of lines cut
+            
+            List<string[]> lstWords = new List<string[]>();
+            List<string[]> lstTimes = new List<string[]>();
+            
             string[] words;
-            for (int i = 0; i < lstLines.Count; i++)
+            string[] Times;
+            string removepattern = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
+            string replace = @"";
+            for (int i = 0; i < lstTimeLines.Count; i++)
             {
-                sLine = lstLines[i];
-                words = sLine.Split(' ');
+                sTimeLine = lstTimeLines[i];
+                words = sTimeLine.Split(' ');
+                Times = new string[words.Length];
+                for (int j = 0; j < words.Length; j++)
+                {
+                    Times[j] = words[j].Substring(0, 11);
+                    words[j] = Regex.Replace(words[j], removepattern, replace); 
+                }
                 lstWords.Add(words);
+                lstTimes.Add(Times);
             }
+            
+
+            // Manage length
+            List<string> lstLinesCut = new List<string>();
+            strPartialLine = string.Empty;
+            sLine = string.Empty;            
+            string[] ItemsW;
+            string[] ItemsT;
+            for (int i = 0; i < lstWords.Count; i++)
+            {
+                ItemsT = lstTimes[i];
+                ItemsW = lstWords[i];
+                sLine = string.Empty;
+
+                for (int j = 0; j < ItemsW.Count(); j++)
+                {
+                    bStartLine = (j == 0);
+                    sLyric = ItemsW[j];
+                    sTime = ItemsT[j];
+                    
+                    if ( !bStartLine && (strPartialLine + " " + sLyric).Length > MaxLength)
+                    {
+                        // Too long
+                        // Remove last space
+                        if (sLine.Length > 0 && sLine.EndsWith(" "))
+                            sLine = sLine.Remove(sLine.Length - 1, 1);
+                        lstLinesCut.Add(sLine);
+
+                        // Restart a new line
+                        sLine = sTime + sLyric + " ";
+                        strPartialLine = sLyric + " ";
+
+                    }
+                    else
+                    {
+                        if (bStartLine)
+                        {
+                            sLine = sTime + sLyric + " ";
+                            strPartialLine = sLyric + " ";
+                        }
+                        else
+                        {
+                            sLine += sLyric + " ";
+                            strPartialLine += sLyric + " ";
+                        }
+                    }
+                }
+
+                // Remove last space
+                if (sLine.Length > 0 && sLine.EndsWith(" "))
+                    sLine = sLine.Remove(sLine.Length - 1, 1);
+                lstLinesCut.Add(sLine);
+                sLine = string.Empty;
+            }
+
+            if (sLine != string.Empty)
+            {
+                // Remove last space
+                if (sLine.Length > 0 && sLine.EndsWith(" "))
+                    sLine = sLine.Remove(sLine.Length - 1, 1);
+                lstLinesCut.Add(sLine);
+            }
+
+            #endregion List of lines cut
 
 
             #region send all to string 
@@ -2468,9 +2574,20 @@ namespace Karaboss
             {
                 lrcs += lstHeaderLines[i] + cr;
             }
-            for (int i = 0; i < lstLines.Count; i++)
+
+            if (bControlLength)
             {
-                lrcs += lstLines[i] + cr;
+                for (int i = 0; i < lstLinesCut.Count; i++)
+                {
+                    lrcs += lstLinesCut[i] + cr;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < lstLines.Count; i++)
+                {
+                    lrcs += lstLines[i] + cr;
+                }
             }
             #endregion send all to string
 

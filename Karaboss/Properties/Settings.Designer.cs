@@ -1441,5 +1441,29 @@ namespace Karaboss.Properties {
                 this["lrcFormatLinesSyllabes"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool bLrcCutLines {
+            get {
+                return ((bool)(this["bLrcCutLines"]));
+            }
+            set {
+                this["bLrcCutLines"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("38")]
+        public int LrcCutLinesChars {
+            get {
+                return ((int)(this["LrcCutLinesChars"]));
+            }
+            set {
+                this["LrcCutLinesChars"] = value;
+            }
+        }
     }
 }
