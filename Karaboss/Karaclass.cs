@@ -40,7 +40,6 @@ using System.Threading;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Collections.Generic; // DLL import
-using Karaboss.Lyrics;
 
 namespace Karaboss
 {
@@ -70,11 +69,20 @@ namespace Karaboss
         public static string m_MxmlPath;        // Path of compressed XML File
         public static string m_XmlPath;         // Path of uncompressed XML File
 
+
+        public static List<(int, int)> lstTempos;
+
         public enum OptionsDisplay
         {
             Top = 0,
             Center = 1,
             Bottom = 2,
+        }
+
+        public enum LrcFormats
+        {
+            Lines = 0,
+            Syllables = 1,
         }
 
         private static string _m_fileplaylistGroups;

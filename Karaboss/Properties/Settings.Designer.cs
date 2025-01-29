@@ -1345,5 +1345,101 @@ namespace Karaboss.Properties {
                 this["bShowXmlChords"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public decimal ChordsMapCellSize {
+            get {
+                return ((decimal)(this["ChordsMapCellSize"]));
+            }
+            set {
+                this["ChordsMapCellSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public decimal ChordsMapColumns {
+            get {
+                return ((decimal)(this["ChordsMapColumns"]));
+            }
+            set {
+                this["ChordsMapColumns"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public float ChordsMapZoom {
+            get {
+                return ((float)(this["ChordsMapZoom"]));
+            }
+            set {
+                this["ChordsMapZoom"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public float ChordsMapModifyZoom {
+            get {
+                return ((float)(this["ChordsMapModifyZoom"]));
+            }
+            set {
+                this["ChordsMapModifyZoom"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool bLrcForceUpperCase {
+            get {
+                return ((bool)(this["bLrcForceUpperCase"]));
+            }
+            set {
+                this["bLrcForceUpperCase"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool bLrcRemoveAccents {
+            get {
+                return ((bool)(this["bLrcRemoveAccents"]));
+            }
+            set {
+                this["bLrcRemoveAccents"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool bLrcRemoveNonAlphaNumeric {
+            get {
+                return ((bool)(this["bLrcRemoveNonAlphaNumeric"]));
+            }
+            set {
+                this["bLrcRemoveNonAlphaNumeric"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int lrcFormatLinesSyllabes {
+            get {
+                return ((int)(this["lrcFormatLinesSyllabes"]));
+            }
+            set {
+                this["lrcFormatLinesSyllabes"] = value;
+            }
+        }
     }
 }

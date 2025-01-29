@@ -36,11 +36,12 @@
             this.picBalls = new BallsControl.Balls();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlWindow = new System.Windows.Forms.Panel();
+            this.btnEditLyricsChords = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.btnLyricsChords = new System.Windows.Forms.Button();
+            this.btnExportLyricsChords = new System.Windows.Forms.Button();
             this.chkChords = new System.Windows.Forms.CheckBox();
-            this.btnChangeWords = new System.Windows.Forms.Button();
-            this.btnFrmWords = new System.Windows.Forms.Button();
+            this.btnEditLyrics = new System.Windows.Forms.Button();
+            this.btnExportLyricsToText = new System.Windows.Forms.Button();
             this.btnFrmOptions = new System.Windows.Forms.Button();
             this.btnFrmMin = new System.Windows.Forms.Button();
             this.btnFrmMax = new System.Windows.Forms.Button();
@@ -80,8 +81,8 @@
             this.picBalls.Division = 0F;
             resources.ApplyResources(this.picBalls, "picBalls");
             this.picBalls.Name = "picBalls";
-            this.picBalls.pBackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.picBalls.pBallsNumber = 0;
+            this.picBalls.BallsBackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.picBalls.BallsNumber = 0;
             // 
             // panel1
             // 
@@ -93,11 +94,12 @@
             // pnlWindow
             // 
             this.pnlWindow.BackColor = System.Drawing.Color.Gray;
+            this.pnlWindow.Controls.Add(this.btnEditLyricsChords);
             this.pnlWindow.Controls.Add(this.label1);
-            this.pnlWindow.Controls.Add(this.btnLyricsChords);
+            this.pnlWindow.Controls.Add(this.btnExportLyricsChords);
             this.pnlWindow.Controls.Add(this.chkChords);
-            this.pnlWindow.Controls.Add(this.btnChangeWords);
-            this.pnlWindow.Controls.Add(this.btnFrmWords);
+            this.pnlWindow.Controls.Add(this.btnEditLyrics);
+            this.pnlWindow.Controls.Add(this.btnExportLyricsToText);
             this.pnlWindow.Controls.Add(this.btnFrmOptions);
             this.pnlWindow.Controls.Add(this.btnFrmMin);
             this.pnlWindow.Controls.Add(this.btnFrmMax);
@@ -109,21 +111,32 @@
             this.pnlWindow.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PnlWindow_MouseUp);
             this.pnlWindow.Resize += new System.EventHandler(this.PnlWindow_Resize);
             // 
+            // btnEditLyricsChords
+            // 
+            this.btnEditLyricsChords.BackColor = System.Drawing.Color.Gray;
+            this.btnEditLyricsChords.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnEditLyricsChords, "btnEditLyricsChords");
+            this.btnEditLyricsChords.Name = "btnEditLyricsChords";
+            this.btnEditLyricsChords.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnEditLyricsChords, resources.GetString("btnEditLyricsChords.ToolTip"));
+            this.btnEditLyricsChords.UseVisualStyleBackColor = false;
+            this.btnEditLyricsChords.Click += new System.EventHandler(this.btnEditLyricsChords_Click);
+            // 
             // label1
             // 
             resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
             // 
-            // btnLyricsChords
+            // btnExportLyricsChords
             // 
-            this.btnLyricsChords.BackColor = System.Drawing.Color.Gray;
-            this.btnLyricsChords.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
-            resources.ApplyResources(this.btnLyricsChords, "btnLyricsChords");
-            this.btnLyricsChords.Name = "btnLyricsChords";
-            this.btnLyricsChords.TabStop = false;
-            this.toolTip1.SetToolTip(this.btnLyricsChords, resources.GetString("btnLyricsChords.ToolTip"));
-            this.btnLyricsChords.UseVisualStyleBackColor = false;
-            this.btnLyricsChords.Click += new System.EventHandler(this.btnLyricsChords_Click);
+            this.btnExportLyricsChords.BackColor = System.Drawing.Color.Gray;
+            this.btnExportLyricsChords.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnExportLyricsChords, "btnExportLyricsChords");
+            this.btnExportLyricsChords.Name = "btnExportLyricsChords";
+            this.btnExportLyricsChords.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnExportLyricsChords, resources.GetString("btnExportLyricsChords.ToolTip"));
+            this.btnExportLyricsChords.UseVisualStyleBackColor = false;
+            this.btnExportLyricsChords.Click += new System.EventHandler(this.btnExportLyricsChordsToText_Click);
             // 
             // chkChords
             // 
@@ -133,27 +146,27 @@
             this.chkChords.UseVisualStyleBackColor = true;
             this.chkChords.CheckedChanged += new System.EventHandler(this.chkChords_CheckedChanged);
             // 
-            // btnChangeWords
+            // btnEditLyrics
             // 
-            this.btnChangeWords.BackColor = System.Drawing.Color.Gray;
-            this.btnChangeWords.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
-            resources.ApplyResources(this.btnChangeWords, "btnChangeWords");
-            this.btnChangeWords.Name = "btnChangeWords";
-            this.btnChangeWords.TabStop = false;
-            this.toolTip1.SetToolTip(this.btnChangeWords, resources.GetString("btnChangeWords.ToolTip"));
-            this.btnChangeWords.UseVisualStyleBackColor = false;
-            this.btnChangeWords.Click += new System.EventHandler(this.btnChangeWords_Click);
+            this.btnEditLyrics.BackColor = System.Drawing.Color.Gray;
+            this.btnEditLyrics.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnEditLyrics, "btnEditLyrics");
+            this.btnEditLyrics.Name = "btnEditLyrics";
+            this.btnEditLyrics.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnEditLyrics, resources.GetString("btnEditLyrics.ToolTip"));
+            this.btnEditLyrics.UseVisualStyleBackColor = false;
+            this.btnEditLyrics.Click += new System.EventHandler(this.btnEditLyrics_Click);
             // 
-            // btnFrmWords
+            // btnExportLyricsToText
             // 
-            this.btnFrmWords.BackColor = System.Drawing.Color.Gray;
-            this.btnFrmWords.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
-            resources.ApplyResources(this.btnFrmWords, "btnFrmWords");
-            this.btnFrmWords.Name = "btnFrmWords";
-            this.btnFrmWords.TabStop = false;
-            this.toolTip1.SetToolTip(this.btnFrmWords, resources.GetString("btnFrmWords.ToolTip"));
-            this.btnFrmWords.UseVisualStyleBackColor = false;
-            this.btnFrmWords.Click += new System.EventHandler(this.BtnFrmWords_Click);
+            this.btnExportLyricsToText.BackColor = System.Drawing.Color.Gray;
+            this.btnExportLyricsToText.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnExportLyricsToText, "btnExportLyricsToText");
+            this.btnExportLyricsToText.Name = "btnExportLyricsToText";
+            this.btnExportLyricsToText.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnExportLyricsToText, resources.GetString("btnExportLyricsToText.ToolTip"));
+            this.btnExportLyricsToText.UseVisualStyleBackColor = false;
+            this.btnExportLyricsToText.Click += new System.EventHandler(this.btnExportLyricsToText_Click);
             // 
             // btnFrmOptions
             // 
@@ -280,12 +293,13 @@
         private System.Windows.Forms.Button btnFrmMin;
         private System.Windows.Forms.Button btnFrmMax;
         private System.Windows.Forms.Button btnFrmClose;
-        private System.Windows.Forms.Button btnFrmWords;
+        private System.Windows.Forms.Button btnExportLyricsToText;
         private System.Windows.Forms.Button btnFrmOptions;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Button btnChangeWords;
-        private System.Windows.Forms.Button btnLyricsChords;
+        private System.Windows.Forms.Button btnEditLyrics;
+        private System.Windows.Forms.Button btnExportLyricsChords;
         private System.Windows.Forms.CheckBox chkChords;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnEditLyricsChords;
     }
 }

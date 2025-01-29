@@ -43,7 +43,6 @@ using System.IO;
 
 namespace Karaboss
 {
-
     public partial class frmPianoRoll : Form
     {
         #region private decl
@@ -278,11 +277,11 @@ namespace Karaboss
             if (SingleTrack != null)
             {
                 string InstrumentName = MidiFile.PCtoInstrument(SingleTrack.ProgramChange);
-                tx = "Karaboss - (Track " + SingleTrackNumber.ToString() + ") - " + InstrumentName + " - " + Path.GetFileName(fileName);
+                tx = Text + " - (Track " + SingleTrackNumber.ToString() + ") - " + InstrumentName + " - " + Path.GetFileName(fileName);
             }
             else
             {
-                tx = "Karaboss - " + Path.GetFileName(fileName);
+                tx = Text + " - " + Path.GetFileName(fileName);
             }
             this.Text = tx;
         }
@@ -453,7 +452,7 @@ namespace Karaboss
             pianoRollControl2.yScale = yScale;
             pianoControl2.Scale = yScale;
 
-            pianoRollControl2.zoomx = zoomx;
+            pianoRollControl2.Zoomx = zoomx;
             pianoControl2.Zoom = zoomy;
 
             pianoRollControl2.yScale = pianoControl2.Scale;
@@ -488,7 +487,7 @@ namespace Karaboss
                     if (trk.Name.Trim() != "")
                         N = trk.Name.Trim();
                 }
-                CbTracks.Items.Add(i.ToString("00") + " " + "[" + trk.MidiChannel.ToString("00") + "]" + " - " + N + " - " + "(" + MidiFile.PCtoInstrument(trk.ProgramChange) + ")");
+                CbTracks.Items.Add(i.ToString("00") + " " + "[" + trk.MidiChannel.ToString("00") + "]" + " - " + N + " - (" + MidiFile.PCtoInstrument(trk.ProgramChange) + ")");
                 i++;
             }
         }
@@ -1004,7 +1003,7 @@ namespace Karaboss
                         break;
                     case PlayerStates.Stopped:
                         zoomx += (e.Delta > 0 ? 0.1f : -0.1f);
-                        pianoRollControl2.zoomx = zoomx;
+                        pianoRollControl2.Zoomx = zoomx;
                         // Adjust scrollbar values
                         SetScrollBarValues();
                         break;
@@ -1201,7 +1200,7 @@ namespace Karaboss
             {
                 zoomx = Properties.Settings.Default.PianoRollZoomX;
                 zoomy = Properties.Settings.Default.PianoRollZoomY;
-                pianoRollControl2.zoomx = zoomx;                
+                pianoRollControl2.Zoomx = zoomx;                
 
                 pianoControl2.Zoom = zoomy;
                 pianoControl2.Height = pianoControl2.TotalLength;

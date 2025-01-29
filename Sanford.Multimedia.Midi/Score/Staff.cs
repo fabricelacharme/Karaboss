@@ -307,7 +307,7 @@ namespace Sanford.Multimedia.Midi.Score
         }
 
 
-        private void DrawChordNames(Graphics g, Rectangle clip, Pen pen)
+        private void DrawChordNames(Graphics g, Rectangle clip, Pen pen, Color C)
         {
             /* Skip the left side Clef symbol and key signature */
             int xpos = keysigWidth + 8;            
@@ -316,9 +316,9 @@ namespace Sanford.Multimedia.Midi.Score
 
             if (clef == Clef.Bass)
             {
-                ypos -= 20;                
+                //ypos -= 20;                
             }
-
+            Brush br = new SolidBrush(C);
             foreach (ChordNameSymbol chord in lstchordnames)
             {
                 if ((xpos + chord.X >= clip.X - chord.MinWidth - 50) && (xpos + chord.X <= clip.X + clip.Width + 50))
@@ -326,8 +326,8 @@ namespace Sanford.Multimedia.Midi.Score
                     t = chord.Text;
 
                     g.DrawString(t,
-                             SheetMusic.ChordNameFont,
-                             Brushes.Black,
+                             SheetMusic.ChordNameFont,                             
+                             br, //Brushes.Black,
                              xpos + chord.X, ypos);
                 }
             }
@@ -604,7 +604,7 @@ namespace Sanford.Multimedia.Midi.Score
         }
 
         /** Draw this staff. Only draw the symbols inside the clip area */
-        public void Draw(Graphics g, Rectangle clip, Rectangle selRect, Pen pen)
+        public void Draw(Graphics g, Rectangle clip, Rectangle selRect, Pen pen, Color ChordColor)
         {
             int xpos = SheetMusic.LeftMargin + 5;
             int yy = ytop + SheetMusic.LineWidth;
@@ -666,7 +666,7 @@ namespace Sanford.Multimedia.Midi.Score
 
             // Draw ChordNames
             if (lstchordnames != null)
-                DrawChordNames(g, clip, pen);
+                DrawChordNames(g, clip, pen, ChordColor);
         }
 
 

@@ -55,7 +55,7 @@ namespace BallsControl
     {
 
         #region Create Delegate Reference
-        public event PaintedEventHandler Painted;
+        //public event PaintedEventHandler Painted;
 
         #endregion Create Delegate Reference
 
@@ -68,17 +68,17 @@ namespace BallsControl
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
-        private HashSet<Control> controlsToMove = new HashSet<Control>();
+        private readonly HashSet<Control> controlsToMove = new HashSet<Control>();
         #endregion
 
-        private int X0;
-        private int FIXED_POSITION;
-        private int STOP_POSITION;
+        private readonly int X0;
+        private readonly int FIXED_POSITION;
+        private readonly int STOP_POSITION;
         private int START_POSITION;
         private int _ballsnumber;
         private bool started = false;
 
-        private int DIAMETRE = 26;
+        private readonly int DIAMETRE = 26;
         private float SPEED = 10;
      
 
@@ -87,7 +87,7 @@ namespace BallsControl
         /// <summary>
         /// Control backcolor
         /// </summary>
-        public Color pBackColor
+        public Color BallsBackColor
         {
             set
             {
@@ -115,7 +115,7 @@ namespace BallsControl
         /// <summary>
         /// Balls number for animation
         /// </summary>
-        public int pBallsNumber
+        public int BallsNumber
         {
             set
             {
@@ -129,8 +129,9 @@ namespace BallsControl
 
         private AnimBall[] manyBall; // Liste de balles       
         private AnimBall fixedBall; // Balle fixe
-        private List<int> LyricsTimes; // Liste des timings
+        private readonly List<int> LyricsTimes; // Liste des timings
         
+        /*
         private void OnPainted(PaintEventArgs e)
         {
             if (Painted != null)
@@ -139,6 +140,7 @@ namespace BallsControl
                 picWnd_Painted(e);
             }
         }
+        */
 
         public Balls()
         {
@@ -166,7 +168,7 @@ namespace BallsControl
             LyricsTimes = new List<int>();
 
             // Invoke the delegate
-            picWnd.Painted += new BallsControl.PaintedEventHandler(picWnd_Painted);            
+            picWnd.Painted += new BallsControl.PaintedEventHandler(PicWnd_Painted);            
         }
 
         /// <summary>
@@ -186,7 +188,7 @@ namespace BallsControl
             return false;
         }
 
-        private void picWnd_Load(object sender, System.EventArgs e)
+        private void PicWnd_Load(object sender, System.EventArgs e)
         {
             // nothing
            
@@ -198,12 +200,12 @@ namespace BallsControl
         public void Start()
         {
             if (LyricsTimes.Count >= 10 )
-                pBallsNumber = 20;
+                BallsNumber = 20;
             else
-                pBallsNumber = LyricsTimes.Count;
+                BallsNumber = LyricsTimes.Count;
 
-            InitBalls(pBallsNumber);
-            fixedBall.gDrawFixedBall(picWnd);
+            InitBalls(BallsNumber);
+            fixedBall.DrawFixedBall();
         }
 
         /// <summary>
@@ -211,7 +213,7 @@ namespace BallsControl
         /// </summary>
         public void Stop()
         {
-            for (int i = 0; i < pBallsNumber; i++)
+            for (int i = 0; i < BallsNumber; i++)
             {                
                 manyBall[i].MoveBall(STOP_POSITION);
             }
@@ -260,11 +262,11 @@ namespace BallsControl
             // 21 balls: 1 fix, 20 moving to the fixed one            
             int LyricPosition;
             int delta;
-            int idLyric = 0;
+            int idLyric; // = 0;
 
             CurrentLyricsPos = textpos;
 
-            for (int j = 0; j < pBallsNumber; j++)
+            for (int j = 0; j < BallsNumber; j++)
             {
                 // index of next lyric to sing
                 idLyric = CurrentLyricsPos + j;
@@ -292,8 +294,7 @@ namespace BallsControl
                 else
                 {
                     // Ball must stop ... song is finished
-                    if (manyBall != null)
-                        manyBall[j].MoveBall(STOP_POSITION);
+                    manyBall?[j].MoveBall(STOP_POSITION);
                 }
             }
 
@@ -315,30 +316,32 @@ namespace BallsControl
 
             manyBall = new AnimBall[n];
 
-            fixedBall = new AnimBall(picWnd);
+            fixedBall = new AnimBall(picWnd) {
 
-            // Coordonnées départ (X est le point gauche haut du rectangle ellipse)
-            fixedBall.X = FIXED_POSITION;
+                // Coordonnées départ (X est le point gauche haut du rectangle ellipse)
+               X = FIXED_POSITION,
 
-            //Coordonnées départ (Y est le point gauche haut du rectangle ellipse)
-            fixedBall.Y = (picWnd.Height - DIAMETRE) / 2;            
+                //Coordonnées départ (Y est le point gauche haut du rectangle ellipse)
+               Y = (picWnd.Height - DIAMETRE) / 2,
 
-            //Ball speed
-            fixedBall.Speed = 0;
+                //Ball speed
+               Speed = 0,
+            };
 
             
             for (int i = 0; i < n; i++)
             {
-                manyBall[i] = new AnimBall(picWnd);
+                manyBall[i] = new AnimBall(picWnd) {
 
-                // Coordonnées départ (X est le point gauche haut du rectangle ellipse)
-                manyBall[i].X = START_POSITION;
+                    // Coordonnées départ (X est le point gauche haut du rectangle ellipse)
+                    X = START_POSITION,
 
-                //Coordonnées départ (Y est le point gauche haut du rectangle ellipse)
-                manyBall[i].Y = (picWnd.Height - DIAMETRE) / 2;               
+                    //Coordonnées départ (Y est le point gauche haut du rectangle ellipse)
+                    Y = (picWnd.Height - DIAMETRE) / 2,
 
-                //Ball speed
-                manyBall[i].Speed = SPEED;
+                    //Ball speed
+                    Speed = SPEED,
+                };
 
                 // Graphic optimization
                 this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
@@ -351,12 +354,11 @@ namespace BallsControl
 
         private void Clear()
         {
-            if (fixedBall != null)
-                fixedBall.Delete(picWnd);
+            fixedBall?.Delete(picWnd);
 
             if (manyBall != null)
             {
-                for (int i = 0; i < pBallsNumber; i++)
+                for (int i = 0; i < BallsNumber; i++)
                 {
                     if (i < manyBall.Length && manyBall[i] != null)
                         manyBall[i].Delete(picWnd);
@@ -365,7 +367,7 @@ namespace BallsControl
         }
      
 
-        private void picWnd_Painted(PaintEventArgs e)
+        private void PicWnd_Painted(PaintEventArgs e)
         {
             if (started)
             {
@@ -373,19 +375,18 @@ namespace BallsControl
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
                 //fixedBall.gDrawBall(e.Graphics);
-                fixedBall.gDrawFixedBall(picWnd);
+                fixedBall.DrawFixedBall();
 
                 // Balles mobile
-                for (int i = 0; i < pBallsNumber; i++)
-                {
-                    //manyBall[i].gDrawBall(e.Graphics);
-                    manyBall[i].gDrawBalls(picWnd);
+                for (int i = 0; i < BallsNumber; i++)
+                {                    
+                    manyBall[i].DrawBalls();
                 }
             }
         }
 
         
-        private void picWnd_Resize(object sender, EventArgs e)
+        private void PicWnd_Resize(object sender, EventArgs e)
         {
             if (picWnd.Width > 0)
                 START_POSITION = picWnd.Width;
@@ -395,17 +396,14 @@ namespace BallsControl
         {
             if (disposing)
             {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
+                components?.Dispose();
 
-                for (int i = 0; i < pBallsNumber; i++)
+                for (int i = 0; i < BallsNumber; i++)
                 {
                     manyBall[i].Dispose();
                 }
-                fixedBall? .Dispose();
-                picWnd? .Dispose();
+                fixedBall?.Dispose();
+                picWnd?.Dispose();
 
                
             }

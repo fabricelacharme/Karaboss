@@ -25,9 +25,9 @@ namespace Sanford.Multimedia.Midi.Score
      */
     public class AccidSymbol : MusicSymbol
     {
-        private Accid accid;          /** The accidental (sharp, flat, natural) */
-        private WhiteNote whitenote;  /** The white note where the symbol occurs */
-        private Clef clef;            /** Which clef the symbols is in */
+        private readonly Accid accid;          /** The accidental (sharp, flat, natural) */
+        private readonly WhiteNote whitenote;  /** The white note where the symbol occurs */
+        private readonly Clef clef;            /** Which clef the symbols is in */
         private int width;            /** Width of symbol */
         private bool selected = false;
 

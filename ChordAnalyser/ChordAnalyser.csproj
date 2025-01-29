@@ -452,5 +452,107 @@
   <ItemGroup>
     <None Include="Resources\pG#m7.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Abm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bbm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Db7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dbm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Eb7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ebm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gb7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gbm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gbm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pAbm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pDb7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pDbm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pEb7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pEbm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pGb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pGb7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pGbm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pGbm7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\A5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Abdim.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Asus4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Db9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dsus4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Emaj7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gbdim.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gdim.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ebmaj7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dmaj7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bsus4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Csus4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Fmaj7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ab5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Eb5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\F6.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

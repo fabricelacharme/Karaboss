@@ -70,7 +70,7 @@ namespace MusicXml
         private List<Track> newTracks;
         private List<MidiNote> newNotes = new List<MidiNote>();
 
-        private StreamReader stream;
+        //private StreamReader stream;
 
         private Sequence sequence;
         private int Format = 1;
@@ -80,14 +80,14 @@ namespace MusicXml
         private int Tempo = 500000;
 
 
-        private int currenttrack = -1;
+        //private int currenttrack = -1;
         private int Channel = 0;
         private string TrackName = "Track1";
         private string InstrumentName = "AcousticGrandPiano";
         private int ProgramChange = 1;
 
-        private int ControlChangeData1 = 0;
-        private int ControlChangeData2 = 0;
+        //private int ControlChangeData1 = 0;
+        //private int ControlChangeData2 = 0;
 
         private int Volume = 0;
         private int Pan = 64;
@@ -1048,7 +1048,7 @@ namespace MusicXml
             
             track1.insertTrackname(TrackName);
 
-            if (Volume >= 0 && Volume <= 15)
+            if (Volume >= 0 && Volume <= 127)
                 track1.insertVolume(Channel, Volume);
             
             if (Pan >= 0 && Pan <= 127)
@@ -1361,16 +1361,19 @@ namespace MusicXml
         {
             string c = chord.GetChordName();
 
+
+            // frmPlayer HandleLoadXmlCompleted > LoadXmlChordsInLyrics()
             ChordItem ci = new ChordItem()
             {
                 TicksOn = t,
                 ChordName = c,
             };       
             lstChords.Add(ci);
-            TrackChordsNumber= tracknumber;
+
+            TrackChordsNumber = tracknumber;
 
 
-            track1.addChord(c, t);          // Why track1 and not track2 ?????????????  
+            //track1.addChord(c, t);          // Why track1 and not track2 ?????????????  
         }
 
         #endregion chords

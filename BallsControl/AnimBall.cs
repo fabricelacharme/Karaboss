@@ -40,7 +40,7 @@ namespace BallsControl
     /// </summary>
     class AnimBall: PictureBox
     {
-        PictureBox P;
+        readonly PictureBox P;
 
         #region Private Variables 
         private int _totalballs;
@@ -109,15 +109,17 @@ namespace BallsControl
             //
             // Default Constructor
             //
-            P = new PictureBox();
-            P.Width = 26;
-            P.Height = 26;
+            P = new PictureBox()
+            {
+                Width = 26,
+                Height = 26
+            };
             
             pbox.Controls.Add(P);
         }
 
 
-        public void gDrawBalls(BallsWnd pbox)
+        public void DrawBalls()
         {            
             P.Image = global::BallsControl.Properties.Resources.ball;
             P.Left = _x;
@@ -126,7 +128,7 @@ namespace BallsControl
 
         }
 
-        public void gDrawFixedBall(BallsWnd pbox)
+        public void DrawFixedBall()
         {         
             P.Image = global::BallsControl.Properties.Resources.ballfixed;
             P.Left = _x;

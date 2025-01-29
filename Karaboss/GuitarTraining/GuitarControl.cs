@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
-using System.Windows.Forms.VisualStyles;
 using System;
 
 namespace Karaboss.GuitarTraining

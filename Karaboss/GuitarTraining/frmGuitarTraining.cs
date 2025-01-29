@@ -1,18 +1,16 @@
 ﻿using Karaboss.GuitarTraining;
+using Karaboss.Resources.Localization;
+using Karaboss.Utilities;
 using MusicTxt;
 using MusicXml;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
-using System.Xml;
 
 
 namespace Karaboss
@@ -218,7 +216,7 @@ namespace Karaboss
         /// <param name="fileName"></param>
         private void SetTitle(string fileName)
         {
-            Text = "Karaboss - " + Path.GetFileName(fileName);
+            Text = "Karaboss - " + Strings.GuitarTraining + " - " + Path.GetFileName(fileName);
         }
 
         private void LoadSequencer(Sequence seq)
@@ -263,7 +261,13 @@ namespace Karaboss
             _tempo = sequence1.Tempo;
             TempoOrig = _tempo;
             _ppqn = sequence1.Division;
-            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
+
+            // Load tempos map
+            TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);            
+
+            //_duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
+            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);
+
             _bpm = GetBPM(_tempo);
 
             if (sequence1.Time != null)
@@ -279,8 +283,8 @@ namespace Karaboss
         {
             // see http://midi.teragonaudio.com/tech/midifile/ppqn.htm
             const float kOneMinuteInMicroseconds = 60000000;
-            float kTimeSignatureNumerator = (float)sequence1.Numerator;
-            float kTimeSignatureDenominator = (float)sequence1.Denominator;
+            //float kTimeSignatureNumerator = (float)sequence1.Numerator;
+            //float kTimeSignatureDenominator = (float)sequence1.Denominator;
 
             //float BPM = (kOneMinuteInMicroseconds / (float)tempo) * (kTimeSignatureDenominator / 4.0f);            
             float BPM = kOneMinuteInMicroseconds / (float)tempo;
@@ -1750,7 +1754,9 @@ namespace Karaboss
             {
                 //vPianoRollControl1.TrackNum = -1;
             }
-            CbTracks.Parent.Focus();
+            
+            if (CbTracks.Parent != null) 
+                CbTracks.Parent.Focus();
         }
 
         #endregion

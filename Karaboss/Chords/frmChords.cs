@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2024 Fabrice Lacharme
+/* Copyright (c) 2025 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -34,6 +34,7 @@
 using ChordAnalyser.UI;
 using Karaboss.Display;
 using Karaboss.Lyrics;
+using Karaboss.Utilities;
 using MusicTxt;
 using MusicXml;
 using Sanford.Multimedia.Midi;
@@ -44,28 +45,33 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Karaboss.Resources.Localization;
+using Karaboss.xplorer;
 
 namespace Karaboss
 {
     public partial class frmChords : Form
     {
-
         #region private dcl
+
         MusicXmlReader MXmlReader; 
         MusicTxtReader MTxtReader;
 
+        private bool bfilemodified = false;
 
         private bool closing = false;
+        private bool bClosingRequired = false; // Quit after saving file
         private bool scrolling = false;
 
         // Current file beeing edited
-        private readonly string MIDIfileName; // = string.Empty;
-        //private readonly string MIDIfilePath; // = string.Empty;
-        private readonly string MIDIfileFullPath; // = string.Empty;
+        private string MIDIfileName; // = string.Empty;
+        private string MIDIfilePath; // = string.Empty;
+        private string MIDIfileFullPath; // = string.Empty;
 
-        //private int bouclestart = 0;
+        private readonly string m_SepLine = "/";
+        private readonly string m_SepParagraph = "\\";
+
         private int newstart = 0;
-        //private int laststart = 0;      // Start time to play
         private int nbstop = 0;
 
 
@@ -98,6 +104,17 @@ namespace Karaboss
         private NoSelectButton btnPrintTXT;
         private NoSelectButton btnPrintPDF;
 
+        private Label lblDisplayOriginOfChords;
+
+        private Label lblMeasures;
+        private NumericUpDown UpDMeasures;
+
+        private Label lblDisplayLyrics;
+        private CheckBox chkDisplayLyrics;
+
+        private Label lblCellsize;
+        private NumericUpDown UpdCellsize;
+
 
         // 1 rst TAB
         private PanelPlayer panelPlayer;
@@ -114,9 +131,6 @@ namespace Karaboss
 
         // Tabpage for image of chord (Guitar & Piano)        
         private TabControl tbPChords;
-        //private readonly TabPage TabPageGuitar; // = new TabPage();
-        //private readonly TabPage TabPagePiano; // = new TabPage();
-
 
         private Label lblLyrics;
         private Label lblOtherLyrics;
@@ -129,13 +143,23 @@ namespace Karaboss
         // 3 rd TAB
         private Panel pnlDisplayWords;
         private System.Windows.Forms.TextBox txtDisplayWords;
-        
+
+        // 4th TAB
+        private ChordsMapControl ChordMapControlModify;
+        private Panel pnlModifyMap;       // chords in map mode  
+        private frmEditChord frmEditChord;
+
+        private int frmxPos;
+        private int frmyPos;
+        private int xPos; 
+        private int yPos;
 
         #endregion controls
 
 
         // Midifile characteristics
         private double _duration = 0;  // en secondes
+        private double _durationPercent = 0;
         private int _totalTicks = 0;        
         private double _ppqn;
         private int _tempo;
@@ -147,16 +171,10 @@ namespace Karaboss
 
         // Lyrics 
         private LyricsMgmt myLyricsMgmt;
-
-        // Search by half measure
-        // int measure
-        // string Chord 1st half measure
-        // string chord 2nd half measure
-        //Dictionary<int, (string, string)> Gridchords;
+        private frmExplorer frmExplorer;
         
-        // New search (by beat)
-        //public Dictionary<int, List<string>> GridBeatChords;
-        public Dictionary<int, string> GridBeatChords;
+        // New search (by beat)        
+        public Dictionary<int, (string, int)> GridBeatChords;
 
         #endregion private dcl
 
@@ -169,18 +187,48 @@ namespace Karaboss
             // Sequence
             MIDIfileFullPath = FileName;
             MIDIfileName = Path.GetFileName(FileName);
-            //MIDIfilePath = Path.GetDirectoryName(FileName);
-                        
+            MIDIfilePath = Path.GetDirectoryName(FileName);
+
+            if (FileName != null)
+            {
+                string ext = Path.GetExtension(MIDIfileFullPath).ToLower();
+                switch (ext)
+                {
+                    case ".musicxml":
+                    case ".mxl":
+                    case ".xml":
+                        //mnuFileSave.Enabled = false;
+                        //mnuFileSaveAs.Enabled = false;
+                        break;
+                }
+            }
+
             outDevice = OtpDev;
 
             // Allow form keydown
             this.KeyPreview = true;
 
             // Title
-            SetTitle(FileName);                        
+            SetTitle(FileName);
+           
         }
 
+
         #region Display Controls
+
+        private void LoadProperties()
+        {
+            try
+            {
+                UpdCellsize.Value = Properties.Settings.Default.ChordsMapCellSize;
+                UpDMeasures.Value = Properties.Settings.Default.ChordsMapColumns;
+
+                ChordMapControl1.Zoom = Properties.Settings.Default.ChordsMapZoom;
+                ChordMapControlModify.Zoom = Properties.Settings.Default.ChordsMapModifyZoom;
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+
+        }
 
         /// <summary>
         /// Sets title of form
@@ -188,7 +236,7 @@ namespace Karaboss
         /// <param name="fileName"></param>
         private void SetTitle(string fileName)
         {
-            Text = "Karaboss - " + Path.GetFileName(fileName);
+            Text = "Karaboss - " + Strings.Chords + " - " + Path.GetFileName(fileName);
         }
 
         private void LoadSequencer(Sequence seq)
@@ -207,9 +255,7 @@ namespace Karaboss
                 this.sequencer1.Chased += new System.EventHandler<Sanford.Multimedia.Midi.ChasedEventArgs>(this.HandleChased);
                 this.sequencer1.Stopped += new System.EventHandler<Sanford.Multimedia.Midi.StoppedEventArgs>(this.HandleStopped);
 
-                sequence1.Clean();
-                UpdateMidiTimes();
-
+                sequence1.Clean();               
 
                 // PlayerState = stopped
                 ResetSequencer();
@@ -281,13 +327,15 @@ namespace Karaboss
 
             #region zoom
 
-            btnZoomPlus = new NoSelectButton() {
+            btnZoomPlus = new NoSelectButton()
+            {
                 Parent = pnlToolbar,
                 Image = Karaboss.Properties.Resources.magnifyplus24,
                 UseVisualStyleBackColor = true,
                 Location = new Point(34 + panelPlayer.Left + panelPlayer.Width, 2),
                 Size = new Size(50, 50),
                 Text = "",
+                //Visible = false,
             };
             btnZoomPlus.Click += new EventHandler(btnZoomPlus_Click);            
             pnlToolbar.Controls.Add(btnZoomPlus);
@@ -299,7 +347,8 @@ namespace Karaboss
                 UseVisualStyleBackColor = true,
                 Location = new Point(2 + btnZoomPlus.Left + btnZoomPlus.Width, 2),
                 Size = new Size(50, 50),
-                Text = ""
+                Text = "",
+                //Visible = false,
             };                        
             btnZoomMinus.Click += new EventHandler(btnZoomMinus_Click);
             pnlToolbar.Controls.Add(btnZoomMinus);
@@ -340,11 +389,123 @@ namespace Karaboss
 
             #endregion export pdf text
 
+
+            #region display origin of chords
+
+            lblDisplayOriginOfChords = new Label()
+            {
+                Parent = pnlToolbar,
+                Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
+                Text = "Display origin of chords",
+                Location = new Point(4 + btnZoomMinus.Left + btnZoomMinus.Width, 6),
+                Size = new Size(280, 48),
+                AutoSize = false,
+                ForeColor = Color.White,
+                Visible = true
+            };
+            pnlToolbar.Controls.Add(lblDisplayOriginOfChords);
+
+            #endregion display origin of chords
+
+
+            #region Tools for editing chords
+
+            // ==============================
+            // Number of measures per line
+            // ==============================
+            lblMeasures = new Label()
+            {
+                Parent = pnlToolbar,
+                Location = new Point(2 + btnPrintTXT.Left + btnPrintTXT.Width, 8),
+                Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
+                Text = Karaboss.Resources.Localization.Strings.MeasuresPerLine, // "Measures per line",
+                AutoSize = true,
+                ForeColor = Color.White,          
+                Visible=false,
+            };
+            pnlToolbar.Controls.Add(lblMeasures);
+
+            UpDMeasures = new NumericUpDown()
+            {
+                Parent = pnlToolbar,
+                Location = new Point(10 + lblMeasures.Left + lblMeasures.Width, 6),                
+                Minimum = 1,
+                Value = 4,
+                Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
+                Size = new Size(43, 22),
+                Visible = false,
+            };
+            UpDMeasures.ValueChanged += new EventHandler(UpdMeasures_ValueChanged);
+            pnlToolbar.Controls.Add(UpDMeasures);
+
+
+            // ==============================
+            // Display lyrics
+            // ==============================
+            lblDisplayLyrics = new Label()
+            {
+                Parent = pnlToolbar,
+                Location = new Point(lblMeasures.Left, 33),
+                Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
+                Text = Karaboss.Resources.Localization.Strings.DisplayLyrics, // "Display lyrics",
+                AutoSize = true,
+                ForeColor = Color.White,
+                Visible = false,
+            };
+            pnlToolbar.Controls.Add(lblDisplayLyrics);
+
+            chkDisplayLyrics = new CheckBox()
+            {
+                Parent = pnlToolbar,
+                Location = new Point(UpDMeasures.Left, 29),
+                Checked = true,
+                Visible = false,
+            };
+            pnlToolbar.Controls.Add(chkDisplayLyrics);
+            chkDisplayLyrics.CheckedChanged += new EventHandler(chkDisplayLyrics_CheckedChanged);
+
+
+            // ==============================
+            // Cell size
+            // ==============================
+            lblCellsize = new Label()
+            {
+                Parent = pnlToolbar,
+                Location = new Point(20 + UpDMeasures.Left + UpDMeasures.Width, 8),
+                Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
+                Text = Karaboss.Resources.Localization.Strings.CellSize,  //"Cell size",
+                AutoSize = true,
+                ForeColor = Color.White,
+                Visible = false,
+            };
+            pnlToolbar.Controls.Add(lblCellsize);
+
+            this.UpdCellsize = new NumericUpDown()
+            {
+                Parent = pnlToolbar,
+                Location = new Point(2 + lblCellsize.Left + lblCellsize.Width, 6),
+                Minimum = 1,
+                Maximum = 500,
+                Value = 100,
+                Font = new Font("Arial", 12, FontStyle.Regular, GraphicsUnit.Pixel),
+                Size = new Size(43, 22),
+                Visible = false,
+            };
+            UpdCellsize.ValueChanged += new EventHandler(UpdCellsize_ValueChanged);
+            pnlToolbar.Controls.Add(UpdCellsize);
+
+            #endregion Tools for editing chords
+
             #endregion Toolbar
+
+
 
             tabChordsControl.Top = pnlToolbar.Top + pnlToolbar.Height;
             tabChordsControl.Height =  this.ClientSize.Height - menuStrip1.Height - pnlToolbar.Height;
             tabChordsControl.Width = this.ClientSize.Width;
+            
+            // Mandatory to color headers
+            tabChordsControl.DrawMode = TabDrawMode.OwnerDrawFixed;
 
             #region 1er TAB                    
             // * tabPageDiagrams
@@ -361,12 +522,12 @@ namespace Karaboss
             // 1 : add a panel on top
             // this panel will host the chrod control and the colorslider
             pnlDisplayHorz = new Panel() {
-                Parent = tabPageDiagrams,
-                Location = new Point(tabPageDiagrams.Margin.Left, tabPageDiagrams.Margin.Top),
-                Size = new Size(tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, 150),
+                Parent = tabPageChords,
+                Location = new Point(tabPageChords.Margin.Left, tabPageChords.Margin.Top),
+                Size = new Size(tabPageChords.Width - tabPageChords.Margin.Left - tabPageChords.Margin.Right, 150),
                 BackColor = Color.FromArgb(239, 244, 255), //Color.Chocolate;
             };
-            tabPageDiagrams.Controls.Add(pnlDisplayHorz);
+            tabPageChords.Controls.Add(pnlDisplayHorz);
 
             #endregion Panel Display horizontal chords
 
@@ -401,7 +562,7 @@ namespace Karaboss
             positionHScrollBar = new ColorSlider.ColorSlider() {
                 Parent = pnlDisplayHorz,
                 ThumbImage = Properties.Resources.BTN_Thumb_Blue,
-                Size = new Size(pnlDisplayHorz.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right, 20),
+                Size = new Size(pnlDisplayHorz.Width - tabPageChords.Margin.Left - tabPageChords.Margin.Right, 20),
                 Location = new Point(0, ChordControl1.Height),
                 Value = 0,
                 Minimum = 0,
@@ -431,13 +592,13 @@ namespace Karaboss
             int htotale = 280;
 
             pnlDisplayImagesOfChords = new Panel() {
-                Parent = tabPageDiagrams,
-                Location = new Point(tabPageDiagrams.Margin.Left, pnlDisplayHorz.Top + pnlDisplayHorz.Height),
+                Parent = tabPageChords,
+                Location = new Point(tabPageChords.Margin.Left, pnlDisplayHorz.Top + pnlDisplayHorz.Height),
                 Height = htotale,
                 BackColor = Color.FromArgb(239, 244, 255),
                 Width = pnlDisplayHorz.Width,
             };
-            tabPageDiagrams.Controls.Add(pnlDisplayImagesOfChords);
+            tabPageChords.Controls.Add(pnlDisplayImagesOfChords);
 
 
             #region tabPage to select Guitar or Piano
@@ -502,14 +663,14 @@ namespace Karaboss
             // 5 : add a panel at the bottom
             // This panel will host the lyrics
             pnlBottom = new Panel() {
-                Parent = this.tabPageDiagrams,
-                Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height,
+                Parent = this.tabPageChords,
+                Height = tabPageChords.Height - tabPageChords.Margin.Top - tabPageChords.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height,
                 BackColor = Color.White,
                 Dock = DockStyle.Bottom,
             };
-            tabPageDiagrams.Controls.Add(pnlBottom);
+            tabPageChords.Controls.Add(pnlBottom);
 
-            // 6 add a label for text being sung
+            // 6 - add a label for text being sung
             Font fontLyrics = new Font("Arial", 32, FontStyle.Regular, GraphicsUnit.Pixel);
 
             lblLyrics = new Label() {
@@ -548,33 +709,34 @@ namespace Karaboss
             #endregion 1er TAB
 
 
-            #region 2eme TAB
+            #region 2eme TAB MAP
 
             #region display map chords
             pnlDisplayMap = new Panel() {
-                Parent = tabPageOverview,
-                Location = new Point(tabPageOverview.Margin.Left, tabPageOverview.Margin.Top),
-                Size = new Size(tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right, tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom),
+                Parent = tabPageMap,
+                Location = new Point(tabPageMap.Margin.Left, tabPageMap.Margin.Top),
+                Size = new Size(tabPageMap.Width - tabPageMap.Margin.Left - tabPageMap.Margin.Right, tabPageMap.Height - tabPageMap.Margin.Top - tabPageMap.Margin.Bottom),
                 BackColor = Color.White,
                 AutoScroll = true,
             };
-            tabPageOverview.Controls.Add(pnlDisplayMap);
+            tabPageMap.Controls.Add(pnlDisplayMap);
 
             #endregion display map chords
 
 
             #region ChordMapControl
-            ChordMapControl1 = new ChordsMapControl() {
+            ChordMapControl1 = new ChordsMapControl(MIDIfileName) {
                 Parent = pnlDisplayMap,
                 Location = new Point(0, 0),
-                ColumnWidth = 80,
+                ColumnWidth = 100,
                 ColumnHeight = 80,
+                HeaderHeight = 100,
                 Cursor = Cursors.Hand,
                 Sequence1 = this.sequence1,
             };
 
             ChordMapControl1.Size = new Size(ChordMapControl1.Width, ChordMapControl1.Height);
-            pnlDisplayMap.Size = new Size(tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right, tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom);
+            pnlDisplayMap.Size = new Size(tabPageMap.Width - tabPageMap.Margin.Left - tabPageMap.Margin.Right, tabPageMap.Height - tabPageMap.Margin.Top - tabPageMap.Margin.Bottom);
 
             ChordMapControl1.WidthChanged += new MapWidthChangedEventHandler(ChordMapControl1_WidthChanged);
             ChordMapControl1.HeightChanged += new MapHeightChangedEventHandler(ChordMapControl1_HeightChanged);
@@ -587,15 +749,16 @@ namespace Karaboss
             #endregion 2eme TAB 
 
 
-            #region 3eme TAB
+            #region 3eme TAB LYRICS
+
             pnlDisplayWords = new Panel() {
-                Parent = tabPageEdit,
-                Location = new Point(tabPageEdit.Margin.Left, tabPageEdit.Margin.Top),
-                Size = new Size(tabPageEdit.Width - tabPageEdit.Margin.Left - tabPageEdit.Margin.Right, tabPageEdit.Height - tabPageEdit.Margin.Top - tabPageEdit.Margin.Bottom),
+                Parent = tabPageLyrics,
+                Location = new Point(tabPageLyrics.Margin.Left, tabPageLyrics.Margin.Top),
+                Size = new Size(tabPageLyrics.Width - tabPageLyrics.Margin.Left - tabPageLyrics.Margin.Right, tabPageLyrics.Height - tabPageLyrics.Margin.Top - tabPageLyrics.Margin.Bottom),
                 BackColor = Color.Coral,
                 AutoScroll = true,
             };
-            tabPageEdit.Controls.Add(pnlDisplayWords);
+            tabPageLyrics.Controls.Add(pnlDisplayWords);
 
             Font fontWords = new Font("Courier New", 22, FontStyle.Regular, GraphicsUnit.Pixel);
             txtDisplayWords = new System.Windows.Forms.TextBox() {
@@ -612,7 +775,58 @@ namespace Karaboss
             pnlDisplayWords.Controls.Add(txtDisplayWords);
 
             #endregion 3eme TAB
-        }      
+
+            // =================================
+            #region 4eme TAB MODIFY
+            // =================================
+
+            #region Modify map chords
+            pnlModifyMap = new Panel()
+            {
+                Parent = tabPageMap,
+                Location = new Point(tabPageModify.Margin.Left, tabPageModify.Margin.Top),
+                Size = new Size(tabPageModify.Width - tabPageModify.Margin.Left - tabPageModify.Margin.Right, tabPageModify.Height - tabPageModify.Margin.Top - tabPageModify.Margin.Bottom),
+                BackColor = Color.White,
+                AutoScroll = true,
+            };
+            tabPageModify.Controls.Add(pnlModifyMap);
+
+            pnlModifyMap.Scroll += new ScrollEventHandler(pnlModifyMap_Scroll);
+            pnlModifyMap.MouseWheel += new MouseEventHandler(pnlModifyMap_MouseWheel);
+
+
+            #endregion display map chords
+
+
+            #region ChordMapControl
+            ChordMapControlModify = new ChordsMapControl(MIDIfileName)
+            {
+                Parent = pnlDisplayMap,
+                Location = new Point(0, 0),
+                ColumnWidth = 100,
+                ColumnHeight = 80,
+                HeaderHeight = 100,
+                Cursor = Cursors.Hand,
+                Sequence1 = this.sequence1,
+            };
+
+            UpDMeasures.Value = ChordMapControlModify.NbColumns;
+
+            ChordMapControlModify.Size = new Size(ChordMapControlModify.Width, ChordMapControlModify.Height);
+            pnlModifyMap.Size = new Size(tabPageModify.Width - tabPageModify.Margin.Left - tabPageModify.Margin.Right, tabPageModify.Height - tabPageModify.Margin.Top - tabPageModify.Margin.Bottom);
+
+            ChordMapControlModify.WidthChanged += new MapWidthChangedEventHandler(ChordMapControlModify_WidthChanged);
+            ChordMapControlModify.HeightChanged += new MapHeightChangedEventHandler(ChordMapControlModify_HeightChanged);
+            ChordMapControlModify.MouseDown += new MouseEventHandler(ChordMapControlModify_MouseDown);
+
+            pnlModifyMap.Controls.Add(ChordMapControlModify);
+
+            #endregion ChordMapControl
+
+            #endregion 4eme TAB
+
+        }
+     
 
         #endregion Display Controls       
 
@@ -662,39 +876,47 @@ namespace Karaboss
 
 
         #region Display Chords
-
         
         private void DisplayChords()
+        {                               
+            // This will only extract lyrics and chords if in lyrics or embedded in xml
+            myLyricsMgmt.ResetDisplayChordsOptions(true);
+            
+            
+            switch (myLyricsMgmt.ChordsOriginatedFrom)
+            {
+                case LyricsMgmt.ChordsOrigins.Lyrics:
+                    lblDisplayOriginOfChords.Text = Strings.ChordsOriginFromLyrics; // "The musical chords are taken from the lyrics";
+                    GridBeatChords = myLyricsMgmt.FillGridBeatChordsWithLyricsChords();
+                    break;
+                case LyricsMgmt.ChordsOrigins.XmlEmbedded:
+                    lblDisplayOriginOfChords.Text = Strings.ChordsOriginFromXml; // "The music chords come from the xml file";
+                    GridBeatChords = myLyricsMgmt.FillGridBeatChordsWithLyricsChords();
+                    break;
+                case LyricsMgmt.ChordsOrigins.Discovery:
+                    // For discovery, we need to call ChordAnalyser
+                    lblDisplayOriginOfChords.Text = Strings.ChordsOriginFromDiscovery; // "The music chords were automatically generated by Karaboss";
+                    ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
+                    GridBeatChords = Analyser.GridBeatChords;
+                    break;
+                default:
+                    break;
+            }
+
+            UpdateDisplayOfChords();
+           
+        }
+
+        private void UpdateDisplayOfChords()
         {
-            ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);            
-            // It can be used in DisplayChords if there are chords embedded in lyrics
-            myLyricsMgmt = new LyricsMgmt(sequence1, true);
-
-            // favors chords included in lyrics
-            if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)
-            {
-                // Chords by beat
-                GridBeatChords = myLyricsMgmt.FillGridBeatChordsWithLyricsChords();
-            }
-            else
-            {
-                // No chords in lyrics => vertical analyse of notes to build a chord map
-                // Display chords in the textbox                
-                               
-                // Chords by beat
-                GridBeatChords = Analyser.GridBeatChords;            
-            }
-
-
             //Change labels displayed
             for (int i = 1; i <= GridBeatChords.Count; i++)
             {
-                GridBeatChords[i] = InterpreteChord(GridBeatChords[i]);
+                GridBeatChords[i] = (InterpreteChord(GridBeatChords[i].Item1), GridBeatChords[i].Item2);
             }
 
-
             // Display Chords in horizontal cells            
-            ChordControl1.GridBeatChords = GridBeatChords;           
+            ChordControl1.GridBeatChords = GridBeatChords;
 
             // Display chords for guitar & piano                        
             ChordRendererGuitar.GridBeatChords = GridBeatChords;
@@ -702,9 +924,13 @@ namespace Karaboss
 
             ChordRendererGuitar.FilterChords();
             ChordRendererPiano.FilterChords();
-            
+
+            // Display chords map
             ChordMapControl1.GridBeatChords = GridBeatChords;
+            // Modify chords
+            ChordMapControlModify.GridBeatChords = GridBeatChords;
         }
+
 
         /// <summary>
         /// Remove useless strings
@@ -739,6 +965,12 @@ namespace Karaboss
             //chord = chord.Replace("<Chord not found>", "?");
             chord = chord.Replace("<Chord not found>", "");
 
+            //int i = chord.IndexOf("/");
+            //if (i > 0) { chord = chord.Substring(0, i); }
+            
+            //chord = chord.Replace("maj", "");
+            //chord = chord.Replace("Eb", "D#");
+
             chord = chord.Trim();
             return chord;
         }
@@ -769,13 +1001,14 @@ namespace Karaboss
                 ChordControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
                 ChordRendererGuitar.OffsetControl(sequence1.Numerator , pos, curmeasure, timeinmeasure);
                 ChordRendererPiano.OffsetControl(sequence1.Numerator, pos, curmeasure, timeinmeasure);
+                
                 ChordMapControl1.DisplayNotes(pos, curmeasure, timeinmeasure);
             }
         }
 
         #endregion Display Notes
-
        
+
         #region handle messages
 
         /// <summary>
@@ -798,6 +1031,7 @@ namespace Karaboss
         {
             if (e.Error == null && e.Cancelled == false)
             {
+                myLyricsMgmt = new LyricsMgmt(sequence1);
                 CommonLoadCompleted(sequence1);                
             }
             else
@@ -839,10 +1073,15 @@ namespace Karaboss
             this.Cursor = Cursors.Arrow;
 
             if (MXmlReader.seq == null)
-                return;                        
+            {
+                MessageBox.Show("Invalid xml file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
                                  
             if (e.Error == null && e.Cancelled == false)
-            {                
+            {
+                myLyricsMgmt = new LyricsMgmt(MXmlReader.seq);
+                LoadXmlChordsInLyrics();
                 CommonLoadCompleted(MXmlReader.seq);
             }
             else
@@ -852,6 +1091,26 @@ namespace Karaboss
             }
         }
 
+        /// <summary>
+        /// Load chords embedded in Xml file
+        /// </summary>
+        private void LoadXmlChordsInLyrics()
+        {
+            #region guard
+            if (myLyricsMgmt == null) return;
+            if (MXmlReader == null) return;
+            #endregion guard
+
+            if (MXmlReader.bHasXmlChords)
+            {
+                // infos
+                // MXmlReader.lstChords
+                // MXmlReader.TrackChordsNumber
+                myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.XmlEmbedded;
+
+                myLyricsMgmt.lstXmlChords = MXmlReader.lstChords;
+            }
+        }
 
         /// <summary>
         /// Load async a XML file
@@ -865,6 +1124,10 @@ namespace Karaboss
                 if (fileName != "\\")
                 {                    
                     MXmlReader = new MusicXmlReader();
+
+                    // Show Xml chords?
+                    MXmlReader.PlayXmlChords = Karaclass.m_ShowXmlChords;
+
                     MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;                    
                     MXmlReader.LoadXmlAsync(fileName, false);
                 }
@@ -884,11 +1147,16 @@ namespace Karaboss
         private void HandleLoadTxtCompleted(object sender, AsyncCompletedEventArgs e)
         {
             this.Cursor= Cursors.Arrow;
-            
-            if (MTxtReader.seq == null) return;
-            
+
+            if (MTxtReader.seq == null)
+            {
+                MessageBox.Show("Invalid text file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             if (e.Error == null && e.Cancelled == false)
-            {                
+            {
+                myLyricsMgmt = new LyricsMgmt(MTxtReader.seq);
                 CommonLoadCompleted(MTxtReader.seq);
             }
             else
@@ -954,6 +1222,8 @@ namespace Karaboss
 
                 DrawControls();
                
+                LoadProperties();
+
                 UpdateMidiTimes();
 
                 DisplaySongDuration();
@@ -1026,15 +1296,19 @@ namespace Karaboss
         private void DisplayLyrics()
         {            
             // New
-            myLyricsMgmt.FullExtractLyrics();
+            myLyricsMgmt.FullExtractLyrics(true);
             
             myLyricsMgmt.LoadLyricsPerBeat();
             myLyricsMgmt.LoadLyricsLines();
 
             // Display lyrics on first tab
-            ChordControl1.GridLyrics = myLyricsMgmt.Gridlyrics;
-
+            ChordControl1.GridLyrics = myLyricsMgmt.Gridlyrics;            
             DisplayLineLyrics(0);
+
+            // Display lyrics on chords map
+            ChordMapControl1.GridLyrics = myLyricsMgmt.Gridlyrics;
+            ChordMapControlModify.GridLyrics = myLyricsMgmt.Gridlyrics;
+
         }            
          
         /// <summary>
@@ -1054,16 +1328,17 @@ namespace Karaboss
         private void DisplayWordsAndChords()
         {
             string cr = Environment.NewLine;
-            string tx = ExtractTMidiInfos();
+            string tx;
+            string txMidi = ExtractTMidiInfos();
             string title = MIDIfileName;
 
-            title = Path.GetFileNameWithoutExtension(title);            
+            title = Path.GetFileNameWithoutExtension(title).Replace("_", " ");            
 
             myLyricsMgmt.GridBeatChords = GridBeatChords;
 
-            if (tx != "")
+            if (txMidi != "")
             {
-                tx += cr + myLyricsMgmt.DisplayWordsAndChords();
+                tx = title + cr + txMidi + cr + cr + myLyricsMgmt.DisplayWordsAndChords();
             }
             else
             {                
@@ -1112,34 +1387,77 @@ namespace Karaboss
 
         private void btnZoomMinus_Click(object sender, EventArgs e)
         {
-            float zoom = ChordControl1.zoom;
-            zoom -= (float)0.1;
+            float zoom;
+            switch (this.tabChordsControl.SelectedIndex) 
+            {
+                case 0:
+                    zoom = ChordControl1.Zoom;
+                    zoom -= (float)0.1;
 
-            ChordControl1.zoom = zoom; //-= (float)0.1;
-            ChordRendererGuitar.zoom = zoom;
-            ChordRendererPiano.zoom = zoom;
-            ChordMapControl1.zoom = zoom; // -= (float)0.1;
+                    ChordControl1.Zoom = zoom;
+                    ChordRendererGuitar.zoom = zoom;
+                    ChordRendererPiano.zoom = zoom;
+                    SetScrollBarValues();
+                    toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                    toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                    break;
 
-            SetScrollBarValues();
+                case 1:
+                    zoom = ChordMapControl1.Zoom;
+                    zoom -= (float)0.1;
+                    
+                    ChordMapControl1.Zoom = zoom;                    
+                    toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                    toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                    break;
 
-            toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
-            toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                case 3:
+                    zoom = ChordMapControlModify.Zoom;
+                    zoom -= (float)0.1;
+
+                    ChordMapControlModify.Zoom = zoom;                    
+                    toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                    toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                    break;
+            }
         }
 
         private void btnZoomPlus_Click(object sender, EventArgs e)
         {
-            float zoom = ChordControl1.zoom;
-            zoom += (float)0.1;
+            float zoom;
 
-            ChordControl1.zoom = zoom; //+= (float)0.1;
-            ChordRendererGuitar.zoom = zoom;
-            ChordRendererPiano.zoom = zoom;
-            ChordMapControl1.zoom = zoom; // += (float)0.1;
+            switch (this.tabChordsControl.SelectedIndex) 
+            {
+                case 0:
+                    zoom = ChordControl1.Zoom;
+                    zoom += (float)0.1;
 
-            SetScrollBarValues();
+                    ChordControl1.Zoom = zoom;
+                    ChordRendererGuitar.zoom = zoom;
+                    ChordRendererPiano.zoom = zoom;                    
+                    SetScrollBarValues();
+                    toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                    toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                    break;
 
-            toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
-            toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                case 1:
+                    zoom = ChordMapControl1.Zoom;
+                    zoom += (float)0.1;
+
+                    ChordMapControl1.Zoom = zoom;
+                    toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                    toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                    break;
+                
+                case 3:
+                    zoom = ChordMapControlModify.Zoom;
+                    zoom += (float)0.1;
+
+                    ChordMapControlModify.Zoom = zoom;
+                    toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                    toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+                    break;
+            }
         }
 
         private void btnPrintPDF_Click(object sender, EventArgs e)
@@ -1157,7 +1475,7 @@ namespace Karaboss
 
         #region Events
 
-        #region chordcontrol
+        #region TAB1 chordcontrol
         private void ChordControl_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -1183,7 +1501,7 @@ namespace Karaboss
             if (pnlBottom != null && pnlDisplayImagesOfChords != null && pnlDisplayHorz != null)
             {
                 pnlBottom.Location = new Point(0, pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height);
-                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+                pnlBottom.Height = tabPageChords.Height - tabPageChords.Margin.Top - tabPageChords.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             }
 
         }
@@ -1191,7 +1509,7 @@ namespace Karaboss
         #endregion chordcontrol
 
 
-        #region chordrenderer events
+        #region TAB1 chordrenderer events
         
         private void ChordRendererGuitar_HeightChanged(object sender, int value)
         {                        
@@ -1199,7 +1517,7 @@ namespace Karaboss
             if (pnlBottom != null && pnlDisplayImagesOfChords != null && pnlDisplayHorz != null)
             {
                 pnlBottom.Location = new Point(0, pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height);
-                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+                pnlBottom.Height = tabPageChords.Height - tabPageChords.Margin.Top - tabPageChords.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             }
         }
                        
@@ -1210,15 +1528,14 @@ namespace Karaboss
             if (pnlBottom != null && pnlDisplayImagesOfChords != null && pnlDisplayHorz != null)
             {
                 pnlBottom.Location = new Point(0, pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height);
-                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+                pnlBottom.Height = tabPageChords.Height - tabPageChords.Margin.Top - tabPageChords.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             }
         }
       
-        #endregion chordrenderer events
+        #endregion TAB1 chordrenderer events
 
 
-
-        #region chordmapcontrol
+        #region TAB2 chordmapcontrol
         private void ChordMapControl1_HeightChanged(object sender, int value)
         {            
             
@@ -1230,27 +1547,214 @@ namespace Karaboss
 
         }
 
+        /// <summary>
+        /// Launch player on mouse down
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ChordMapControl1_MouseDown(object sender, MouseEventArgs e)
         {            
             if (e.Button == MouseButtons.Left)
             {
-                int x = e.Location.X;  //Horizontal
-                int y = e.Location.Y + ChordMapControl1.OffsetY;  // Vertical
+                int x = e.Location.X - ChordMapControl1.LeftMargin;  //Horizontal
+                int y = e.Location.Y + ChordMapControl1.OffsetY - ChordMapControl1.HeaderHeight;  // Vertical
 
                 // Calculate start time                
                 int HauteurCellule = (int)(ChordMapControl1.ColumnHeight) + 1;
                 int LargeurCellule = (int)(ChordMapControl1.ColumnWidth) + 1;
-                int line = (int)Math.Ceiling(y / (double)HauteurCellule);
-                int prevmeasures = -1 + (line - 1) * ChordMapControl1.NbColumns;
-                int cellincurrentline = (int)Math.Ceiling(x / (double)LargeurCellule);
+                                
+                int line = (int)Math.Ceiling(y / (double)HauteurCellule);                
+                
+                int prevmeasures = (line - 1) * ChordMapControl1.NbColumns;    // measures in previous lines
 
-                newstart = _measurelen * prevmeasures + (_measurelen / sequence1.Numerator) * cellincurrentline;
+                int cellincurrentline = -1 +  (int)Math.Ceiling(x / (double)LargeurCellule);  // Cell number in current line               
+
+                newstart = _measurelen * prevmeasures + (_measurelen / sequence1.Numerator) * cellincurrentline;                
+
                 FirstPlaySong(newstart);
             }
         }
 
 
         #endregion chordmapcontrol
+
+
+        #region TAB4 ChordMapControlModify
+
+        /// <summary>
+        /// Change cells size
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UpdCellsize_ValueChanged(object sender, EventArgs e)
+        {
+            int CellSize = (int)UpdCellsize.Value;
+            // Shared values
+            ChordMapControl1.ColumnWidth = CellSize;
+            ChordMapControlModify.ColumnWidth = CellSize;
+
+            // Save option
+            Properties.Settings.Default.ChordsMapCellSize = CellSize;
+            Properties.Settings.Default.Save();
+        }
+
+
+        /// <summary>
+        /// Change option display lyrics
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkDisplayLyrics_CheckedChanged(object sender, EventArgs e)
+        {
+            switch (tabChordsControl.SelectedIndex)
+            {
+                case 1:
+                    ChordMapControl1.Displaylyrics = chkDisplayLyrics.Checked;
+                    break;
+                case 3:
+                    ChordMapControlModify.Displaylyrics = chkDisplayLyrics.Checked;
+                    break;
+            }                        
+        }
+
+        /// <summary>
+        /// Change number of measures per line
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UpdMeasures_ValueChanged(object sender, EventArgs e)
+        {
+            int Columns = (int)UpDMeasures.Value;
+
+            // Shared values
+            ChordMapControl1.NbColumns = Columns;
+            ChordMapControlModify.NbColumns = Columns;
+
+            // Save option
+            Properties.Settings.Default.ChordsMapColumns = Columns;
+            Properties.Settings.Default.Save();
+        }
+
+
+        /// <summary>
+        /// Open windows to modify a chord name
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void ChordMapControlModify_MouseDown(object sender, MouseEventArgs e)
+        {
+            int beat;
+            string ChordName;
+            
+            if (e.Button == MouseButtons.Left)
+            {
+                
+                if (System.Windows.Forms.Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+                {
+                    frmEditChord frmEditChord = GetForm<frmEditChord>();
+                    frmEditChord.Close();
+                    return;
+                }               
+
+                int x = e.Location.X - ChordMapControlModify.LeftMargin;  //Horizontal
+                int y = e.Location.Y + ChordMapControlModify.OffsetY - ChordMapControlModify.HeaderHeight;  // Vertical
+
+                // Calculate start time                
+                int HauteurCellule = (int)(ChordMapControlModify.ColumnHeight) + 1;
+                int LargeurCellule = (int)(ChordMapControlModify.ColumnWidth) + 1;
+
+
+                int line = (int)Math.Ceiling(y / (double)HauteurCellule);
+                int prevmeasures = -1 + (line - 1) * ChordMapControlModify.NbColumns;
+                int cellincurrentline = (int)Math.Ceiling(x / (double)LargeurCellule);
+
+
+                // Calculate x & y with cells bounds
+                frmxPos = Left;
+                frmyPos = Top;
+
+                xPos = 12 + Left + tabPageModify.Left + ChordMapControlModify.LeftMargin + (cellincurrentline - 1) * LargeurCellule;            // why 12 ?????????????
+                yPos = 35 + Top + tabChordsControl.Top + tabPageModify.Top + ChordMapControlModify.HeaderHeight + (line * HauteurCellule);    //why 12 ??????????????                
+
+                beat = (line - 1) * (ChordMapControlModify.NbColumns * sequence1.Numerator) + cellincurrentline;
+                
+                if (ChordMapControlModify.GridBeatChords.ContainsKey(beat))
+                {                    
+                    ChordName = ChordMapControlModify.GridBeatChords[beat].Item1;                    
+                    frmEditChord = new frmEditChord(ChordName, beat, xPos + pnlModifyMap.AutoScrollPosition.X, yPos + pnlModifyMap.AutoScrollPosition.Y);
+                    frmEditChord.Show();
+                }
+            }
+        }
+
+        private void pnlModifyMap_Scroll(object sender, ScrollEventArgs e)
+        {                       
+            if (System.Windows.Forms.Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+            {                               
+                frmEditChord.Location = new Point(xPos + pnlModifyMap.AutoScrollPosition.X + (Left - frmxPos), yPos + pnlModifyMap.AutoScrollPosition.Y + (Top - frmyPos));                
+                frmEditChord.Visible = frmEditChord.Top > 222 && frmEditChord.Top < 800;
+            }
+                
+        }
+
+        private void pnlModifyMap_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (System.Windows.Forms.Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+            {
+                frmEditChord.Location = new Point(xPos + pnlModifyMap.AutoScrollPosition.X + (Left - frmxPos), yPos + pnlModifyMap.AutoScrollPosition.Y + (Top - frmyPos));               
+
+                frmEditChord.Visible = frmEditChord.Top > 222;
+                
+            }
+        }
+
+        private void ChordMapControlModify_HeightChanged(object sender, int value)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void ChordMapControlModify_WidthChanged(object sender, int value)
+        {
+            //throw new NotImplementedException();
+        }
+
+        #endregion TAB4 ChordMapControlModify
+
+
+        #region All TABS TabChordsControl
+
+        /// <summary>
+        /// Color selected header cell of TabControl
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tabChordsControl_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            // This event is called once for each tab button in your tab control
+            // First paint the background with a color based on the current tab
+            // e.Index is the index of the tab in the TabPages collection.
+
+            Color a = Color.FromArgb(255, 196, 13); // Yellow
+            Color b = Color.FromArgb(153, 180, 51); // Light Green
+            Color c = Color.FromArgb(239, 244, 255); // Light blue
+            Color d = Color.FromArgb(45, 137, 239); // Blue
+
+
+            TabPage page = tabChordsControl.TabPages[e.Index];
+            Rectangle paddedBounds = e.Bounds;
+
+            if (e.State == DrawItemState.Selected)
+            {
+                e.Graphics.FillRectangle(new SolidBrush(a), e.Bounds);
+                TextRenderer.DrawText(e.Graphics, page.Text, e.Font, paddedBounds, Color.White);
+            }
+            else
+            {
+                e.Graphics.FillRectangle(new SolidBrush(c), e.Bounds);
+                TextRenderer.DrawText(e.Graphics, page.Text, e.Font, paddedBounds, Color.Black);
+            }
+        }
 
 
         /// <summary>
@@ -1260,18 +1764,124 @@ namespace Karaboss
         /// <param name="e"></param>
         private void tabChordsControl_SelectedIndexChanged(object sender, EventArgs e)
         {
+            float zoom;            
 
-            btnPrintPDF.Visible = (tabChordsControl.SelectedIndex != 0);
-            btnPrintTXT.Visible = (tabChordsControl.SelectedIndex == 2);
+            try
+            {
+                switch (tabChordsControl.SelectedIndex)
+                {
+                    case 0: // Chords line
+                        btnPrintTXT.Visible = false;
+                        btnPrintPDF.Visible = false;
+                        mnuFilePrintLyrics.Visible = false;
+                        mnuFilePrintPDF.Visible = false;
+                        
+                        lblMeasures.Visible = false;
+                        UpDMeasures.Visible = false;
+                        lblDisplayLyrics.Visible = false;
+                        chkDisplayLyrics.Visible = false;
+                        lblCellsize.Visible = false;
+                        UpdCellsize.Visible = false;
 
-            btnZoomPlus.Visible = (tabChordsControl.SelectedIndex != 2);
-            btnZoomMinus.Visible = (tabChordsControl.SelectedIndex != 2);
+                        lblDisplayOriginOfChords.Visible = true;
 
-            mnuFilePrintLyrics.Visible = (tabChordsControl.SelectedIndex == 2);
-            mnuFilePrintPDF.Visible = (tabChordsControl.SelectedIndex != 0);
+                        btnZoomPlus.Visible = true;
+                        btnZoomMinus.Visible = true;
+
+                        zoom = ChordControl1.Zoom;
+                        toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                        toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+
+                        break;
+                    
+                    case 1: // Map                                                
+                        lblDisplayOriginOfChords.Visible = false;
+                        mnuFilePrintLyrics.Visible = false;
+                        btnPrintTXT.Visible = false;
+
+                        mnuFilePrintPDF.Visible= true;
+                        btnPrintPDF.Visible = true;
+                        btnZoomPlus.Visible = true;
+                        btnZoomMinus.Visible = true;
+                        
+                        zoom = ChordMapControl1.Zoom;
+                        toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                        toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+
+                        lblMeasures.Visible = true;
+                        lblDisplayLyrics.Visible = true;
+                        lblCellsize.Visible = true;
+                        
+                        ChordMapControl1.NbColumns = (int)UpDMeasures.Value;
+                        UpDMeasures.Visible = true;
+
+                        ChordMapControl1.ColumnWidth = (int)UpdCellsize.Value;
+                        UpdCellsize.Visible = true;
+
+                        ChordMapControl1.Displaylyrics = chkDisplayLyrics.Checked;
+                        chkDisplayLyrics.Visible = true;
+                        break;
+                    
+                    case 2: //Words
+                        lblMeasures.Visible = false;
+                        UpDMeasures.Visible = false;
+                        lblDisplayLyrics.Visible = false;
+                        chkDisplayLyrics.Visible = false;
+                        lblCellsize.Visible = false;
+                        UpdCellsize.Visible = false;
+                        lblDisplayOriginOfChords.Visible = false;
+
+                        mnuFilePrintLyrics.Visible = true;
+                        mnuFilePrintPDF.Visible = true;
+                        btnPrintTXT.Visible = true;
+                        btnPrintPDF.Visible = true;                        
+                        break;
+                    
+                    case 3: // Modify map                        
+                        mnuFilePrintLyrics.Visible = false;
+                        btnPrintTXT.Visible = false;
+                        lblDisplayOriginOfChords.Visible = false;
+
+                        mnuFilePrintPDF.Visible = true;
+                        btnPrintPDF.Visible = true;
+                        btnZoomPlus.Visible = true;
+                        btnZoomMinus.Visible = true;
+
+                        lblMeasures.Visible = true;
+                        lblDisplayLyrics.Visible = true;
+                        lblCellsize.Visible = true;                        
+
+                        ChordMapControlModify.NbColumns = (int)UpDMeasures.Value;
+                        UpDMeasures.Visible = true;
+
+                        ChordMapControlModify.ColumnWidth = (int)UpdCellsize.Value;
+                        UpdCellsize.Visible = true;
+
+                        ChordMapControlModify.Displaylyrics = chkDisplayLyrics.Checked;
+                        chkDisplayLyrics.Visible = true;
+
+                        zoom = ChordMapControlModify.Zoom;
+                        toolTip1.SetToolTip(btnZoomPlus, string.Format("{0:P2}", zoom));
+                        toolTip1.SetToolTip(btnZoomMinus, string.Format("{0:P2}", zoom));
+
+                        break;
+                }
+
+
+
+                if (System.Windows.Forms.Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+                {
+                    frmEditChord.Visible = (tabChordsControl.SelectedIndex == 3);
+
+                }
+
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
-       
-       
+
+        #endregion All TABS TabChordsControl
+
+
         #endregion Events
 
 
@@ -1286,8 +1896,7 @@ namespace Karaboss
             // pos is in which measure?
             int curmeasure = 1 + pos / _measurelen;
 
-            // which line ?                                
-            //int curline = (int)(Math.Ceiling((double)(curmeasure + 1) / ChordMapControl1.NbColumns));
+            // which line ?                                            
             int curline = (int)(Math.Ceiling((double)(curmeasure) / ChordMapControl1.NbColumns));
 
             // Change line => offset Chord map
@@ -1300,18 +1909,14 @@ namespace Karaboss
                 // if control is higher then the panel => scroll
                 if (ChordMapControl1.Height > pnlDisplayMap.Height)
                 {
-                    // offset vertical: ensure to see 2 lines
-                    //int offset = HauteurCellule * (curline - 2);
-                    int offset = HauteurCellule * (curline - 1);
+                    // offset vertical: ensure to see 2 lines                    
+                    int offset = ChordMapControl1.HeaderHeight +  HauteurCellule * (curline - 1);
 
                     if (pnlDisplayMap.VerticalScroll.Visible && pnlDisplayMap.VerticalScroll.Minimum <= offset && offset <= pnlDisplayMap.VerticalScroll.Maximum)
                     {
-                        //pnlDisplayMap.VerticalScroll.Value = HauteurCellule * (curline - 2);
                         pnlDisplayMap.VerticalScroll.Value = offset;
                     }
-                }
-                
-
+                }                
             }
         }
 
@@ -1337,7 +1942,7 @@ namespace Karaboss
                 
                 
                 // Calculations for ChordControl1
-                int LargeurCellule = (int)(ChordControl1.ColumnWidth * ChordControl1.zoom) + 1;
+                int LargeurCellule = (int)(ChordControl1.ColumnWidth * ChordControl1.Zoom) + 1;
                 int LargeurMesure = LargeurCellule * sequence1.Numerator; // keep one measure on the left
                 int offsetx = LargeurCellule + (_currentMeasure - 1) * (LargeurMesure);                    
                 
@@ -1394,7 +1999,7 @@ namespace Karaboss
                 pnlDisplayHorz.Height = ChordControl1.Height + padding;
                 pnlDisplayImagesOfChords.Top = pnlDisplayHorz.Top + pnlDisplayHorz.Height;
                 pnlBottom.Top = pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height;
-                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+                pnlBottom.Height = tabPageChords.Height - tabPageChords.Margin.Top - tabPageChords.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
 
                 ChordControl1.OffsetX = 0;
                 ChordRendererGuitar.OffsetX = 0;
@@ -1410,7 +2015,7 @@ namespace Karaboss
                 pnlDisplayHorz.Height = ChordControl1.Height + positionHScrollBar.Height + padding;
                 pnlDisplayImagesOfChords.Top = pnlDisplayHorz.Top + pnlDisplayHorz.Height;
                 pnlBottom.Top = pnlDisplayImagesOfChords.Top + pnlDisplayImagesOfChords.Height;
-                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+                pnlBottom.Height = tabPageChords.Height - tabPageChords.Margin.Top - tabPageChords.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             }
 
         }
@@ -1525,13 +2130,24 @@ namespace Karaboss
             else if (ext == ".xml" || ext == ".musicxml")
             {
                 Cursor.Current = Cursors.WaitCursor;
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
                 LoadAsyncXmlFile(MIDIfileFullPath);
+            }
+            else if (ext == ".mxl")
+            {
+                // mxl file must be unzipped before
+                string myXMLFileName = Files.UnzipFile(MIDIfileFullPath);
+                if (File.Exists(myXMLFileName))
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                    System.Windows.Forms.Application.DoEvents();
+                    LoadAsyncXmlFile(myXMLFileName);
+                }
             }
             else if (ext == ".txt")
             {
                 Cursor.Current = Cursors.WaitCursor;
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
                 LoadAsyncTxtFile(MIDIfileFullPath);
             }
             else
@@ -1580,7 +2196,7 @@ namespace Karaboss
             tabChordsControl.Height = this.ClientSize.Height - menuStrip1.Height - pnlToolbar.Height;
 
             // Bug: only the selected TabPage is resized, but not others 
-            for (int i = 0; i < tabChordsControl.TabCount;i++)
+            for (int i = 0; i < tabChordsControl.TabCount; i++)
             {
                 if (i != tabChordsControl.SelectedIndex)
                 {
@@ -1598,7 +2214,7 @@ namespace Karaboss
             // 1st TAB
             if (pnlDisplayHorz != null && tbPChords != null)
             {
-                pnlDisplayHorz.Width = tabPageDiagrams.Width - tabPageDiagrams.Margin.Left - tabPageDiagrams.Margin.Right;
+                pnlDisplayHorz.Width = tabPageChords.Width - tabPageChords.Margin.Left - tabPageChords.Margin.Right;
                 pnlDisplayImagesOfChords.Width = pnlDisplayHorz.Width;
 
                 for (int i = 0; i < tbPChords.TabCount; i++)
@@ -1609,13 +2225,9 @@ namespace Karaboss
                         tbPChords.TabPages[i].Width = tbPChords.TabPages[tbPChords.SelectedIndex].Width;
                     }
                 }
-
-
-                //ChordRendererGuitar.Width = tbPChords.TabPages[0].Width;
+                
                 ChordRendererPiano.Width = tbPChords.TabPages[1].Width;
-
-
-                pnlBottom.Height = tabPageDiagrams.Height - tabPageDiagrams.Margin.Top - tabPageDiagrams.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
+                pnlBottom.Height = tabPageChords.Height - tabPageChords.Margin.Top - tabPageChords.Margin.Bottom - pnlDisplayHorz.Height - pnlDisplayImagesOfChords.Height;
             }
 
             if (ChordControl1 != null)
@@ -1624,30 +2236,70 @@ namespace Karaboss
                 positionHScrollBar.Top = ChordControl1.Top + ChordControl1.Height;
             }
 
-            
-
+            // ==================================
             // 2nd TAB
+            // ==================================
             if (pnlDisplayMap != null)
             {
-                pnlDisplayMap.Width = tabPageOverview.Width - tabPageOverview.Margin.Left - tabPageOverview.Margin.Right;                
-                pnlDisplayMap.Height = tabPageOverview.Height - tabPageOverview.Margin.Top - tabPageOverview.Margin.Bottom;
+                pnlDisplayMap.Width = tabPageMap.Width - tabPageMap.Margin.Left - tabPageMap.Margin.Right;                
+                pnlDisplayMap.Height = tabPageMap.Height - tabPageMap.Margin.Top - tabPageMap.Margin.Bottom;
             }
 
-
+            // ==================================
             // 3rd TAB
+            // ==================================
             if (pnlDisplayWords != null)
             {
-                pnlDisplayWords.Width = tabPageEdit.Width - tabPageEdit.Margin.Left - tabPageEdit.Margin.Right;
-                pnlDisplayWords.Height = tabPageEdit.Height - tabPageEdit.Margin.Top - tabPageEdit.Margin.Bottom;
+                pnlDisplayWords.Width = tabPageLyrics.Width - tabPageLyrics.Margin.Left - tabPageLyrics.Margin.Right;
+                pnlDisplayWords.Height = tabPageLyrics.Height - tabPageLyrics.Margin.Top - tabPageLyrics.Margin.Bottom;
             }
 
+            // ==================================
+            // 4th TAB
+            // ==================================
+            if (pnlModifyMap != null)
+            {
+                pnlModifyMap.Width = tabPageModify.Width - tabPageModify.Margin.Left - tabPageModify.Margin.Right;
+                pnlModifyMap.Height = tabPageModify.Height - tabPageModify.Margin.Top - tabPageModify.Margin.Bottom;
+            }
 
             // Set maximum & visibility
             SetScrollBarValues();
         }
 
+        private void frmChords_Move(object sender, EventArgs e)
+        {
+            if (System.Windows.Forms.Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+            {
+                frmEditChord.Location = new Point(xPos + pnlModifyMap.AutoScrollPosition.X + (Left - frmxPos), yPos + pnlModifyMap.AutoScrollPosition.Y + (Top - frmyPos) );
+                
+            }
+        }
+
         private void frmChords_FormClosing(object sender, FormClosingEventArgs e)
         {
+
+            if (bfilemodified == true)
+            {
+                // string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
+                String tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
+                DialogResult dr = MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (dr == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+                else if (dr == DialogResult.Yes)
+                {
+                    e.Cancel = true;
+                    // Lanch save file and close after
+                    bClosingRequired = true;
+                    StoreChordsInLyrics();
+                    SaveFileProc();
+                    return;
+                }
+            }
+
             // enregistre la taille et la position de la forme
             // Copy window location to app settings                
             if (WindowState != FormWindowState.Minimized)
@@ -1669,13 +2321,23 @@ namespace Karaboss
                 Properties.Settings.Default.Save();
             }
 
+            if (ChordMapControl1 != null && ChordMapControlModify != null) {
+                Properties.Settings.Default.ChordsMapZoom = ChordMapControl1.Zoom;
+                Properties.Settings.Default.ChordsMapModifyZoom = ChordMapControlModify.Zoom;
+                Properties.Settings.Default.Save();
+            }
+
+            if (System.Windows.Forms.Application.OpenForms.OfType<frmEditChord>().Count() > 0)
+            {
+                System.Windows.Forms.Application.OpenForms["frmEditChord"].Close();
+            }
+
             // Active le formulaire frmExplorer
-            if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
+            if (System.Windows.Forms.Application.OpenForms.OfType<frmExplorer>().Count() > 0)
             {
                 // Restore form
-                Application.OpenForms["frmExplorer"].Restore();
-                Application.OpenForms["frmExplorer"].Activate();
-
+                System.Windows.Forms.Application.OpenForms["frmExplorer"].Restore();
+                System.Windows.Forms.Application.OpenForms["frmExplorer"].Activate();
             }
 
             Dispose();
@@ -1715,8 +2377,8 @@ namespace Karaboss
                     return true;
                 }               
             }
-
-        return base.ProcessCmdKey(ref msg, keyData);
+                        
+            return base.ProcessCmdKey(ref msg, keyData);
 
         }
         #endregion Form
@@ -1732,7 +2394,13 @@ namespace Karaboss
             _totalTicks = sequence1.GetLength();
             _tempo = sequence1.Tempo;
             _ppqn = sequence1.Division;
-            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds                        
+
+
+            // Load tempos map
+            TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);            
+
+            _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds                        
+            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);
 
             if (sequence1.Time != null)
             {
@@ -1846,39 +2514,29 @@ namespace Karaboss
             {
                 case PlayerStates.Playing:
                     btnPlay.Image = Properties.Resources.btn_green_pause;
-                    //btnStop.Image = Properties.Resources.btn_black_stop;
-                    btnPlay.Enabled = true;  // to allow pause
-                    //btnStop.Enabled = true;  // to allow stop 
-                    
-                    //lblStatus.Text = "Playing";
-                    //lblStatus.ForeColor = Color.LightGreen;
+                    btnPlay.Enabled = true;  // to allow pause                    
+                    tabChordsControl.TabPages.Remove(tabPageModify);
                     panelPlayer.DisplayStatus("Playing");
                     break;
 
                 case PlayerStates.Paused:
                     btnPlay.Image = Properties.Resources.btn_green_play;
                     btnPlay.Enabled = true;  // to allow play
-                    //btnStop.Enabled = true;  // to allow stop
-
-                    //lblStatus.Text = "Paused";
-                    //lblStatus.ForeColor = Color.Yellow;
                     panelPlayer.DisplayStatus("Paused");
                     break;
 
                 case PlayerStates.Stopped:
                     btnPlay.Image = Properties.Resources.btn_black_play;
                     btnPlay.Enabled = true;   // to allow play
-                    if (newstart == 0)
-                    {
-                        //btnStop.Image = Properties.Resources.btn_red_stop;
-                    }
-                    else
-                    {
-                        //btnStop.Enabled = true;   // to enable real stop because stop point not at the beginning of the song 
-                    }
 
-                    //lblStatus.Text = "Stopped";
-                    //lblStatus.ForeColor = Color.Red;
+                    if (!tabChordsControl.TabPages.Contains(tabPageModify))
+                    {
+                        tabChordsControl.TabPages.Add(tabPageModify);
+                        // Redim it 
+                        pnlModifyMap.Width = tabPageModify.Width - tabPageModify.Margin.Left - tabPageModify.Margin.Right;
+                        pnlModifyMap.Height = tabPageModify.Height - tabPageModify.Margin.Top - tabPageModify.Margin.Bottom;
+                    }
+                    
                     panelPlayer.DisplayStatus("Stopped");
                     break;
 
@@ -1925,6 +2583,7 @@ namespace Karaboss
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
+        
         /// <summary>
         /// Things to do at the end of a song
         /// </summary>
@@ -1958,6 +2617,9 @@ namespace Karaboss
 
                 ChordMapControl1.OffsetY = 0;
                 ChordMapControl1.DisplayNotes(0, -1, -1);
+                ChordMapControl1.Playing = false;
+
+                ChordMapControlModify.Playing = false;
 
                 DisplayLineLyrics(0);                
 
@@ -1993,6 +2655,42 @@ namespace Karaboss
         #region menus
 
         #region mnu file
+
+        private void mnuFileOpen_Click(object sender, EventArgs e)
+        {
+            openMidiFileDialog.Title = "Open MIDI file";
+            openMidiFileDialog.DefaultExt = "kar";
+            openMidiFileDialog.Filter = "Kar files|*.kar|MIDI files|*.mid|Xml files|*.xml|MusicXml files|*.musicxml|Compressed MusicXml files|*.mxl|Text files|*.txt|All files|*.*";
+
+
+            if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = openMidiFileDialog.FileName;
+
+                MIDIfileName = Path.GetFileName(fileName);
+                MIDIfilePath = Path.GetDirectoryName(fileName);
+                MIDIfileFullPath = fileName;
+
+                // Load file
+                sequence1.LoadProgressChanged += HandleLoadProgressChanged;
+                sequence1.LoadCompleted += HandleLoadCompleted;
+
+                SelectActionOnLoad();
+
+            }
+        }
+
+        private void mnuFileSave_Click(object sender, EventArgs e)
+        {
+            StoreChordsInLyrics();
+            SaveFileProc();
+        }
+
+        private void mnuFileSaveAs_Click(object sender, EventArgs e)
+        {
+            StoreChordsInLyrics();
+            SaveAsFileProc();
+        }
 
         /// <summary>
         /// TAB 3: send lyrics to notepad
@@ -2170,7 +2868,7 @@ namespace Karaboss
                 };
 
                 progressDialog.Show();
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
                 System.Threading.Thread.Sleep(500);
 
 
@@ -2182,7 +2880,7 @@ namespace Karaboss
                     System.IO.File.WriteAllText(@filename, tx);
 
                     progressBar.PerformStep();
-                    Application.DoEvents();
+                    System.Windows.Forms.Application.DoEvents();
                                      
                     System.Threading.Thread.Sleep(500);
                 }
@@ -2243,6 +2941,18 @@ namespace Karaboss
                 pnlDisplayWords.Height = height;
                 initname += "-Lyrics.pdf";
             }
+            else if (tabChordsControl.SelectedIndex == 3)
+            {
+                //Chords Map Modify
+                width = ChordMapControlModify.Width;
+                height = ChordMapControlModify.Height;
+                initname += "-chords.pdf";
+            }
+            else
+            {
+                MessageBox.Show("Error printing PDF", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
 
             SaveFileDialog dialog = new SaveFileDialog()
@@ -2280,7 +2990,7 @@ namespace Karaboss
                 };
 
                 progressDialog.Show();
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
                 System.Threading.Thread.Sleep(500);
 
 
@@ -2310,11 +3020,20 @@ namespace Karaboss
                         pnlDisplayWords.DrawToBitmap(MemoryImage, new Rectangle(0, 0, width, height));
                         
                     }
+                    else if (tabChordsControl.SelectedIndex == 3) 
+                    {
+                        ChordMapControlModify.DrawToBitmap(MemoryImage, new Rectangle(0, 0, width, height));
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error printing PDF", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
 
                     pdfdocument.AddImage(MemoryImage);
                     MemoryImage.Dispose();
                     progressBar.PerformStep();
-                    Application.DoEvents();
+                    System.Windows.Forms.Application.DoEvents();
 
                     pdfdocument.Save();
                     stream.Close();
@@ -2344,8 +3063,612 @@ namespace Karaboss
         }
 
 
+
         #endregion print text pdf
 
-      
+
+        #region Locate form
+        /// <summary>
+        /// Locate form
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <returns></returns>
+        private TForm GetForm<TForm>()
+            where TForm : Form
+        {
+            return (TForm)System.Windows.Forms.Application.OpenForms.OfType<TForm>().FirstOrDefault();
+        }
+
+        #endregion Locate form
+
+
+        #region Save file
+                        
+        /// <summary>
+        /// File was modified
+        /// </summary>
+        public void FileModified()
+        {
+            bfilemodified = true;
+            string fName = MIDIfileName;
+            if (fName != null && fName != "")
+            {
+                string fExt = Path.GetExtension(fName);             // Extension
+                fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
+
+                string fShortName = fName.Replace("*", "");
+                if (fShortName == fName)
+                    fName += "*";
+
+                fName += fExt;
+                SetTitle(fName);
+            }
+        }
+
+        /// <summary>
+        /// Save File
+        /// </summary>
+        private void SaveFileProc()
+        {
+            string fName = MIDIfileName;
+            string fPath = MIDIfilePath;
+
+            if (MIDIfileFullPath == null && fName != "" && fPath != "")
+                MIDIfileFullPath = fPath + "\\" + fName;
+
+            // Save all formats to Midi format
+            string ext = Path.GetExtension(MIDIfileFullPath).ToLower();
+            switch (ext)
+            {
+                case ".txt":
+                case ".musicxml":
+                case ".mxl":
+                case ".xml":                   
+                    MessageBox.Show("Your file will be saved in Midi format", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    SaveAsFileProc();
+                    return;                    
+            }
+
+
+            if (fPath == null || fPath == "" || fName == null || fName == "" || !File.Exists(MIDIfileFullPath))
+            {
+                SaveAsFileProc();
+                return;
+            }
+            InitSaveFile(MIDIfileFullPath);
+        }
+
+
+        private void SaveAsFileProc()
+        {
+            string fName = MIDIfileName;
+            string fPath = MIDIfilePath;
+            string fullPath = MIDIfileFullPath;
+
+            string fullName;
+            string defName;
+
+
+            // search path
+            if (fPath == null || fPath == "")
+                fPath = Utilities.CreateNewMidiFile._DefaultDirectory;
+
+            // Search name
+            if (MIDIfileName == null || MIDIfileName == "")
+                fName = "New.mid";
+
+            string ext = Path.GetExtension(MIDIfileFullPath).ToLower();
+            switch (ext)
+            {
+                case ".musicxml":
+                case ".mxl":
+                case ".xml":
+                    fName = Path.GetFileNameWithoutExtension(MIDIfileFullPath) + ".mid";
+                    MIDIfileName = fName;
+                    fPath = MIDIfilePath;
+                    MIDIfileFullPath = fPath + "\\" + fName;
+                    break;
+            }
+
+
+            #region search name
+
+            string defExt = Path.GetExtension(fName);                           // Extension
+            fullName = Utilities.Files.FindUniqueFileName(fullPath);    // Add (2), (3) etc.. if necessary    
+            defName = Path.GetFileNameWithoutExtension(fullName);               // Default name to propose to dialog
+
+            #endregion search name
+
+            string defFilter = "MIDI files (*.mid)|*.mid|Kar files (*.kar)|*.kar|All files (*.*)|*.*";
+            if (defExt == ".kar")
+                defFilter = "Kar files (*.kar)|*.kar|MIDI files (*.mid)|*.mid|All files (*.*)|*.*";
+
+            saveMidiFileDialog.Title = "Save MIDI file";
+            saveMidiFileDialog.Filter = defFilter;
+            saveMidiFileDialog.DefaultExt = defExt;
+            saveMidiFileDialog.InitialDirectory = @fPath;
+            saveMidiFileDialog.FileName = defName;
+
+            if (saveMidiFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = saveMidiFileDialog.FileName;
+
+                MIDIfileFullPath = fileName;
+                MIDIfileName = Path.GetFileName(fileName);
+                MIDIfilePath = Path.GetDirectoryName(fileName);
+
+                InitSaveFile(fileName);
+            }
+        }
+
+
+        /// <summary>
+        /// Save file: initialize events
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void InitSaveFile(string fileName)
+        {
+            progressBarPlayer.Visible = true;
+            sequence1.SaveProgressChanged += HandleSaveProgressChanged;
+            sequence1.SaveCompleted += HandleSaveCompleted;
+            SaveFile(fileName);
+        }
+
+        /// <summary>
+        /// Save the midi file
+        /// </summary>
+        /// <param name="fileName"></param>
+        private void SaveFile(string fileName)
+        {
+            try
+            {
+                if (fileName != "")
+                {
+                    sequence1.SaveAsync(fileName);
+                }
+            }
+            catch (Exception errsave)
+            {
+                Console.Write(errsave.Message);
+            }
+        }
+
+        /// <summary>
+        /// Event: saving midi file in progress
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleSaveProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            try
+            {
+                if (e.ProgressPercentage >= progressBarPlayer.Minimum && e.ProgressPercentage <= progressBarPlayer.Maximum)
+                    progressBarPlayer.Value = e.ProgressPercentage;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        /// <summary>
+        /// Event: save midi file terminated
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleSaveCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+
+            if (progressBarPlayer != null)
+            {
+                try
+                {
+                    progressBarPlayer.Value = 0;
+                    progressBarPlayer.Visible = false;
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex.Message);
+                }
+
+            }
+
+            if (e.Error == null)
+            {
+                bfilemodified = false;
+                if (bClosingRequired == true)
+                {
+                    this.Close();
+                    return;
+                }
+
+                SetTitle(MIDIfileName);
+
+                // Active le formulaire frmExplorer
+                if (System.Windows.Forms.Application.OpenForms.OfType<frmExplorer>().Count() > 0)
+                {
+                    frmExplorer = GetForm<frmExplorer>();
+                    frmExplorer.RefreshExplorer(MIDIfileName);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show(e.Error.Message);
+            }
+        }
+
+        #endregion Save file
+
+
+        #region Save lyrics
+
+        #region Update Chord
+
+        /// <summary>
+        /// Insert new chord into gribeatchords
+        /// </summary>
+        /// <param name="beat"></param>
+        /// <param name="ChordName"></param>
+        public void UpdateChord(int beat, string ChordName)
+        {
+            int ticks;
+            int nbBeatsPerMeasure = sequence1.Numerator;
+
+            if (nbBeatsPerMeasure == 0)
+                return;
+            
+            int beatDuration = _measurelen / nbBeatsPerMeasure;
+
+            if (GridBeatChords[beat].Item2 == 0)
+                ticks = (beat - 1) * beatDuration;
+            else
+                ticks = GridBeatChords[beat].Item2;
+
+            if (GridBeatChords[beat].Item1 == ChordName)
+                return;
+
+            GridBeatChords[beat] = (ChordName, ticks);
+
+            // Update is completed, unlock/unselect cell
+            ChordMapControlModify.UnselectCell();
+
+            UpdateDisplayOfChords();
+            DisplayWordsAndChords();
+
+            lblDisplayOriginOfChords.Text = Strings.ChordsOriginFromUserInput; // "Music chords come from user input and will be saved in the lyrics";
+
+            FileModified();
+        }
+
+        #endregion Update Chord
+
+
+        /// <summary>
+        /// Put Chords of GridBeatChords in lyrics
+        /// </summary>
+        private void StoreChordsInLyrics()
+        {
+            // Source GridBeatChords
+            if (myLyricsMgmt.MelodyTrackNum == -1)
+                myLyricsMgmt.MelodyTrackNum = 0;
+
+            Track track = sequence1.tracks[myLyricsMgmt.MelodyTrackNum];
+            
+            if (myLyricsMgmt.plLyrics.Count == 0)
+                myLyricsMgmt.FullExtractLyrics(true);
+
+            #region check
+            if (myLyricsMgmt.ChordDelimiter == (null, null) || myLyricsMgmt.ChordDelimiter == ("", "") || myLyricsMgmt.RemoveChordPattern == null)
+            {                                
+                MessageBox.Show("Format of chords delimiters not found: [] or ()", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            #endregion check
+
+            myLyricsMgmt.PopulateUpdatedChords(GridBeatChords);
+            myLyricsMgmt.CleanLyrics();
+
+           
+
+            // Insert new lyrics in the sequence
+            ReplaceLyrics(myLyricsMgmt.plLyrics, LyricTypes.Lyric, myLyricsMgmt.MelodyTrackNum);
+
+        }
+
+
+        /// <summary>
+        /// Replace existing lyrics by others
+        /// MelodyTrackNum: track hosting the melody
+        /// LyricsTrackNum: track hosting the lyrics (text or lyric types)
+        /// The target is to host the lyrics in the melody track
+        /// </summary>
+        /// <param name="pLyrics"></param>
+        private void ReplaceLyrics(List<plLyric> newpLyrics, LyricTypes newLyricType, int melodytracknum)
+        {
+            // LyricType has changed => refresh display
+            bool bRefreshDisplay = (newLyricType != myLyricsMgmt.LyricType);
+
+            // Delete all lyrics of all types
+            foreach (Track T in sequence1.tracks)
+            {
+                T.deleteLyrics();
+                T.LyricsText.Clear();
+                T.Lyrics.Clear();
+            }
+            // Tags associated to the sequence have been deleted
+            restoreSequenceTags();
+
+            // By default, insert the lyrics (either text or lyric) into the melodytrack
+            Track track = sequence1.tracks[melodytracknum];
+
+            // Insert all lyric events
+            TrkInsertLyrics(track, newpLyrics, newLyricType);
+
+            // Reload myLyricMgmt
+            myLyricsMgmt = new LyricsMgmt(sequence1);
+
+
+            // Refresh frmLyric
+            if (myLyricsMgmt.OrgplLyrics.Count > 0)
+            {
+                // Reset display
+                myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);               
+            }
+            
+            // File was modified
+            FileModified();
+        }
+
+
+        /// <summary>
+        /// Insert new lyrics in the target track
+        /// </summary>
+        /// <param name="Track"></param>
+        /// <param name="l"></param>
+        /// <param name="LyricType"></param>
+        private void TrkInsertLyrics(Track Track, List<plLyric> l, LyricTypes LyricType)
+        {
+            int currentTick;
+            int lastcurrenttick = 0;
+
+            string currentElement;
+            string currentCR = string.Empty;
+
+            Track.Lyrics.Clear();
+            Track.LyricsText.Clear();
+
+            Track.TotalLyricsL = "";
+            Track.TotalLyricsT = "";
+
+
+            // Recréé tout les textes et lyrics
+            for (int idx = 0; idx < l.Count; idx++)
+            {
+                plLyric pll = l[idx];
+
+                // Si c'est un CR, le stocke et le collera au prochain lyric
+                if (pll.CharType == plLyric.CharTypes.LineFeed)
+                {
+                    if (LyricType == LyricTypes.Text)
+                        currentCR = m_SepLine;
+                    else
+                        currentCR = "\r";
+
+                    // Update Track.Lyrics List
+                    Track.Lyric L = new Track.Lyric()
+                    {
+                        Element = pll.Element.Item2,
+                        TicksOn = pll.TicksOn,
+                        Type = (Track.Lyric.Types)pll.CharType,
+                    };
+
+                    if (LyricType == LyricTypes.Text)
+                    {
+                        // si lyrics de type text                     
+                        Track.LyricsText.Add(L);
+                    }
+                    else
+                    {
+                        // si lyrics de type lyrics
+                        Track.Lyrics.Add(L);
+                    }
+
+                }
+                else if (pll.CharType == plLyric.CharTypes.ParagraphSep)
+                {
+                    if (LyricType == LyricTypes.Text)
+                        currentCR = m_SepParagraph;
+                    else
+                        currentCR = "\r\r";
+
+
+                    // Update Track.Lyrics List
+                    Track.Lyric L = new Track.Lyric()
+                    {
+                        Element = pll.Element.Item2,
+                        TicksOn = pll.TicksOn,
+                        Type = (Track.Lyric.Types)pll.CharType,
+                    };
+
+                    if (LyricType == LyricTypes.Text)
+                    {
+                        // si lyrics de type text                     
+                        Track.LyricsText.Add(L);
+                    }
+                    else
+                    {
+                        // si lyrics de type lyrics
+                        Track.Lyrics.Add(L);
+                    }
+                }
+                else if (pll.CharType == plLyric.CharTypes.Text)
+                {
+                    // C'est un lyric
+                    currentTick = pll.TicksOn;
+                    if (currentTick >= lastcurrenttick)
+                    {
+                        string plElement;
+                       
+                        // Fix done in PopulateUpdatedChords                                    NON !!!!!
+                        // Add chord name to the lyric: Replace lyric '-- ' by '[A]-- '
+                        plElement = pll.Element.Item2;
+
+                        lastcurrenttick = currentTick;
+                        currentElement = currentCR + plElement;
+
+                        // Transforme en byte la nouvelle chaine
+                        // ERROR FAB 16-01-2021 : must tyake into accout encoding selected by end user !!!
+                        byte[] newdata; // = Encoding.Default.GetBytes(currentElement);
+
+                        switch (OpenMidiFileOptions.TextEncoding)
+                        {
+                            case "Ascii":
+                                //sy = System.Text.Encoding.Default.GetString(data);
+                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
+                                break;
+                            case "Chinese":
+                                System.Text.Encoding chinese = System.Text.Encoding.GetEncoding("gb2312");
+                                newdata = chinese.GetBytes(currentElement);
+                                break;
+                            case "Japanese":
+                                System.Text.Encoding japanese = System.Text.Encoding.GetEncoding("shift_jis");
+                                newdata = japanese.GetBytes(currentElement);
+                                break;
+                            case "Korean":
+                                System.Text.Encoding korean = System.Text.Encoding.GetEncoding("ks_c_5601-1987");
+                                newdata = korean.GetBytes(currentElement);
+                                break;
+                            case "Vietnamese":
+                                System.Text.Encoding vietnamese = System.Text.Encoding.GetEncoding("windows-1258");
+                                newdata = vietnamese.GetBytes(currentElement);
+                                break;
+                            default:
+                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
+                                break;
+                        }
+
+
+                        MetaMessage mtMsg;
+
+                        // Update Track.Lyrics List
+                        Track.Lyric L = new Track.Lyric()
+                        {
+                            Element = plElement,
+                            TicksOn = pll.TicksOn,
+                            Type = (Track.Lyric.Types)pll.CharType,
+                        };
+
+
+                        if (LyricType == LyricTypes.Text)
+                        {
+                            // si lyrics de type text
+                            mtMsg = new MetaMessage(MetaType.Text, newdata);
+                            Track.LyricsText.Add(L);
+                        }
+                        else
+                        {
+                            // si lyrics de type lyrics
+                            mtMsg = new MetaMessage(MetaType.Lyric, newdata);
+                            Track.Lyrics.Add(L);
+                        }
+
+                        // Insert new message
+                        Track.Insert(currentTick, mtMsg);
+                    }
+                    currentCR = "";
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Rewrite tags level sequence
+        /// </summary>
+        private void restoreSequenceTags()
+        {
+            string tx;
+            int i;
+
+            if (sequence1.ITag != null)
+            {
+                for (i = sequence1.ITag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@I" + sequence1.ITag[i];
+                    AddTag(tx);
+                }
+            }
+
+            if (sequence1.KTag != null)
+            {
+                for (i = sequence1.KTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@K" + sequence1.KTag[i];
+                    AddTag(tx);
+                }
+            }
+            if (sequence1.LTag != null)
+            {
+                for (i = sequence1.LTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@L" + sequence1.LTag[i];
+                    AddTag(tx);
+                }
+            }
+            if (sequence1.TTag != null)
+            {
+                for (i = sequence1.TTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@T" + sequence1.TTag[i];
+                    AddTag(tx);
+                }
+            }
+            if (sequence1.VTag != null)
+            {
+                for (i = sequence1.VTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@V" + sequence1.VTag[i];
+                    AddTag(tx);
+                }
+            }
+            if (sequence1.WTag != null)
+            {
+                for (i = sequence1.WTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@W" + sequence1.WTag[i];
+                    AddTag(tx);
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Insert Tag at tick 0
+        /// </summary>
+        /// <param name="strTag"></param>
+        private void AddTag(string strTag)
+        {
+            Track track = sequence1.tracks[0];
+            int currentTick = 0;
+            string currentElement = strTag;
+
+            // Transforme en byte la nouvelle chaine
+            byte[] newdata = new byte[currentElement.Length];
+            for (int u = 0; u < newdata.Length; u++)
+            {
+                newdata[u] = (byte)currentElement[u];
+            }
+
+            MetaMessage mtMsg;
+
+            mtMsg = new MetaMessage(MetaType.Text, newdata);
+
+            // Insert new message
+            track.Insert(currentTick, mtMsg);
+        }
+
+        #endregion Save lyrics
+
+       
     }
 }

@@ -37,7 +37,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
-using ChordsAnalyser;
 using System.Diagnostics;
 using Sanford.Multimedia.Midi.Score;
 using Karaboss.Resources.Localization;
@@ -46,25 +45,22 @@ using System.Text.RegularExpressions;
 using MusicXml;
 using MusicTxt;
 using System.Linq;
-using ChordAnalyser.UI;
-using Karaboss.Search;
-using System.Text;
 using Karaboss.Lyrics;
-using MusicXml.Domain;
-using System.Xml;
-using FlShell.Interop;
+using Karaboss.Utilities;
 
 namespace Karaboss
 {
 
     public partial class frmPlayer : Form
     {
-        // FAB 2710
+        
         MusicXmlReader MXmlReader; 
         MusicTxtReader MTxtReader; 
         MusicTxtWriter MTxtWriter;
 
         public bool bfilemodified = false;
+
+
 
         #region Lyrics declaration
 
@@ -239,6 +235,7 @@ namespace Karaboss
 
         // Midifile characteristics
         private double _duration = 0;  // en secondes
+        private double _durationPercent = 0;   //Duration for positioning in sheemusic
         private int _totalTicks = 0;
         private int _bpm = 0;        
         private double _ppqn;
@@ -311,13 +308,7 @@ namespace Karaboss
             m_SepLine = Karaclass.m_SepLine;
             m_SepParagraph = Karaclass.m_SepParagraph;
 
-            // Don't work with unzipped file            
-            /*
-            if (Karaclass.m_MxmlPath != "") 
-            {
-                FileName = Karaclass.m_MxmlPath;
-            }
-            */
+            
             MIDIfileFullPath = FileName;
             MIDIfileName = Path.GetFileName(FileName);
             MIDIfilePath = Path.GetDirectoryName(FileName);
@@ -387,1294 +378,36 @@ namespace Karaboss
             // Lyrics
             timer2.Interval = 50;            
 
-        }      
-
-        #region SheetMusic
-
-        /// <summary>
-        /// Display scores
-        /// </summary>
-        private void DisplayScores()
-        {
-            DrawingControl.SuspendDrawing(this);
-
-            DrawControls();           
-            
-            SetTitle(MIDIfileName);
-
-            // Display scores
-            RedrawSheetMusic();
-            
-            // ScrollBar properties
-            SetScrollBarValues();
-
-            DrawingControl.ResumeDrawing(this);
-
-            MidiOptions options2 = new MidiOptions(sequence1);
-            
-
-            if (sequence1.Time != null)
-            {
-                double inverse_tempo = 1.0 / sequence1.Time.Tempo;
-                double inverse_tempo_scaled = inverse_tempo;
-
-                options2.tempo = (int)(1.0 / inverse_tempo_scaled);
-                pulsesPerMsec = sequence1.Time.Quarter * (1000.0 / options2.tempo);
-            }
         }
 
 
-        /// <summary>
-        /// Set Title of the form
-        /// </summary>
-        private void SetTitle(string displayName)
-        {
-            if (displayName != null)
-            {
-                displayName = displayName.Replace("__", ": ");
-                displayName = displayName.Replace("_", " ");
-            }
-            if (NumInstance > 1)
-                Text = "Karaboss PLAYER (" + NumInstance + ") - " + displayName;
-            else
-                Text = "Karaboss PLAYER - " + displayName;
-        }
-        
-        /** The Sheet Music needs to be redrawn.  Gather the sheet music
-          * options from the menu items.  Then create the sheetmusic
-          * control, and add it to this form. Update the MidiPlayer with
-          * the new midi file.
-          */
-        public void RedrawSheetMusic()
-        {
-
-            /* Create a new SheetMusic Control from the midifile */
-            Cursor = Cursors.AppStarting;
-
-            bool bEditMode = false;
-            if (sheetmusic != null)
-                bEditMode = sheetmusic.bEditMode;
-
-            //if (sheetmusic != null)
-            //    sheetmusic.Dispose();
-            sheetmusic?.Dispose();
-                        
-            options = GetMidiOptions(ScrollVert);
-
-            #region create new sheet music
-            sheetmusic = new SheetMusic(sequence1, options, iStaffHeightMaximized)
-            {
-                bEditMode = bEditMode,
-                Velocity = Karaclass.m_Velocity,
-            };
-           
-            sheetmusic.FileModified += new SheetMusic.FileModifiedEventHandler(Score_Modified);
-            sheetmusic.WidthChanged += new SheetMusic.WidthChangedEventHandler(ScoreWidth_Changed);
-
-            // Event handler double click on track            
-            sheetmusic.OnSMMouseDoubleClick += new SheetMusic.smMouseDoubleClickEventHandler(Track_DoubleClick);
-            sheetmusic.OnSMMouseDoubleClickTempo += new SheetMusic.smMouseDoubleClickTempoEventHandler(Tempo_DoubleClick);
-
-            // Contextual menu on sheetmusic
-            sheetmusic.MnuPianoRollClick += new SheetMusic.mnuPianoRollClickEventHandler(PianoRoll_Required);
-           
-            sheetmusic.OnSMMouseDown += new SheetMusic.smMouseDownEventHandler(Track_MouseDown);
-            sheetmusic.OnSMMouseUp += new SheetMusic.smMouseUpEventHandler(Track_MouseUp);
-            sheetmusic.OnSMMouseMove += new SheetMusic.smMouseMoveEventHandler(Track_MouseMove);            
-
-            sheetmusic.CurrentNoteChanged += new SheetMusic.CurrentNoteChangedEventHandler(SheetMusic_CurrentNoteChanged);
-            sheetmusic.CurrentTrackChanged += new SheetMusic.CurrentTrackChangedEventHandler(SheetMusic_CurrentTrackChanged);
-
-            sheetmusic.CurrentDefaultVelocityChanged += new SheetMusic.CurrentDefaultVelocityChangedEventHandler(SheetMusic_CurrentDefaultVelocityChanged);
-
-            sheetmusic.SetZoom(zoom);
-            sheetmusic.Parent = pnlScrollView;
-            #endregion
-
-            BackColor = Color.White;
-            pnlScrollView.BackColor = Color.White;
-            
-            if ( ScrollVert == false)
-            {
-                pnlTracks.Height = sequence1.tracks.Count * iStaffHeightMaximized * Convert.ToInt32(zoom);
-                pnlScrollView.Height = pnlTracks.Height;
-            }
-            else
-            {
-                pnlTracks.Height = sheetmusic.Height;
-                pnlScrollView.Height = sheetmusic.Height;
-            }
-            SetStartVLinePos(0);
-            SetTimeVLinePos(0);
-
-            Cursor = Cursors.Default; 
-        }
-
-        
-        /// <summary>
-        /// Default velocity value was changed in sheetmusic
-        /// </summary>
-        /// <param name="velocity"></param>
-        private void SheetMusic_CurrentDefaultVelocityChanged(int velocity)
-        {
-            Karaclass.m_Velocity = velocity;
-            Properties.Settings.Default.Velocity = velocity;
-            Properties.Settings.Default.Save();            
-        }
-
+        #region ani balls
 
         /// <summary>
-        /// Event: score was modified, recalculate scrollbars
+        /// Start balls animation
         /// </summary>
-        /// <param name="Width"></param>
-        private void ScoreWidth_Changed(int Width)
+        private void StartTimerBalls()
         {
-            SetScrollBarValues();
+            timer3.Interval = 1;
+            timer3.Start();
+
+            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+                frmLyric.StartTimerBalls();
         }
 
         /// <summary>
-        /// Contextual menu on sheetmusic: display PianoRoll window
+        /// Terminate balls animation
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <param name="staffnum"></param>
-        private void PianoRoll_Required(object sender, EventArgs e, int staffnum, int ticks)
+        private void StopTimerBalls()
         {
-            //float pos = sequence1.GetLength() * (float)hScrollBar.Value / (float)hScrollBar.Maximum;
-            DisplayPianoRoll(staffnum, MIDIfileFullPath, ticks);
-        }
+            timer3.Stop();
 
-        /// <summary>
-        /// Event: score was modified, set flag
-        /// </summary>
-        /// <param name="sender"></param>
-        private void Score_Modified(object sender)
-        {
-            FileModified();
-        }
-
-
-        /// <summary>
-        /// Refresh display
-        /// </summary>
-        public void RefreshDisplay()
-        {
-            int numstaff = sheetmusic.CurrentNote.numstaff;
-            int note = sheetmusic.CurrentNote.midinote.Number;
-            int lastnote = sheetmusic.CurrentNote.lastnote;
-            float ticks = sheetmusic.CurrentNote.midinote.StartTime; 
-                
-            sheetmusic.Refresh();
-            
-            this.Focus();
-
-            // Display song duration
-            DisplaySongDuration(_duration);
-            DisplayFileInfos();
-            DisplayLyricsInfos();
-
-            // Set Current Note
-            sheetmusic.UpdateCurrentNote(numstaff, note, ticks, false);
-            sheetmusic.CurrentNote.lastnote = lastnote;
-
-
-            // Dimensions            
-            pnlTracks.Height = sequence1.tracks.Count * iStaffHeightMaximized * Convert.ToInt32(zoom);
-            pnlScrollView.Height = pnlTracks.Height;
-
-            SetStartVLinePos(0);
-            SetTimeVLinePos(0);
-
-            SetScrollBarValues();
-        }
-
-        /// <summary>
-        /// Set midi options choosen in menus
-        /// </summary>
-        /// <param name="scrollvert"></param>
-        /// <returns></returns>
-        private MidiOptions GetMidiOptions(bool scrollvert)
-        {
-            options = new MidiOptions(sequence1) {
-                transpose = 0,
-                key = -1,
-                time = sequence1.Time,
-                scrollVert = scrollvert,
-                // Display score if bSequencerAlwaysOn or bForceShowSequencer
-                bVisible = bSequencerAlwaysOn | bForceShowSequencer,
-               
-            };
-
-            return options;
-        }
-
-        #endregion MidiSheetMusic
-
-
-        # region track stuff
-        /// <summary>
-        /// Reset all things related to tracks when the number of tracks evolve
-        /// </summary>
-        private void InitTracksStuff()
-        {
-            lstTrkReglages = new List<_reglages>();
-            int nbTrk = sequence1.tracks.Count;
-                     
-            for (int i = 0; i < nbTrk; i++)
-            {
-                Track track = sequence1.tracks[i];
-                TrkReglages = new _reglages() {
-                    maximized = track.Maximized,
-                    volume = track.Volume,
-                    pan = track.Pan,
-                    reverb = track.Reverb,
-                    muted = false,
-                    channel = track.MidiChannel,
-                    patch = track.ProgramChange,
-                };
-                lstTrkReglages.Add(TrkReglages);
-            }
-
-            bReglageChanged = false;
-
-            // Mute Channel
-            for (int i = 0; i < 16; i++)
-            {
-                ChannelReglages = new _channels() {
-                    muted = false,
-                };
-                lstChannels.Add(ChannelReglages);
-            }
-        }
-
-        /// <summary>
-        /// Mouse move event => draw help grid to seize notes
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Track_MouseMove(object sender, EventArgs e)
-        {
-            sheetmusic.bShowHelpGrid = (NoteValue != NoteValues.None);           
-        }
-
-        /// <summary>
-        /// Mouse down : add a new note
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <param name="staffnum"></param>
-        /// <param name="note"></param>
-        /// <param name="ticks"></param>
-        private void Track_MouseDown(object sender, MouseEventArgs e, int staffnum, int note, float ticks)
-        {                     
-            #region draw blue vertical line
-            if (PlayerState != PlayerStates.Stopped || bEnterNotes == false)
-            {
-                if (bEditScore == false && PlayerState != PlayerStates.Playing)
-                {
-                    newstart = Convert.ToInt32(ticks);
-                    if (newstart > 0)
-                        BtnStatus();
-
-                    // ticks for new start
-                    laststart = newstart;
-
-                    bouclestart = laststart;
-                    //lastscroll = hScrollBar.Value;
-
-
-                    // Draw blue vertical line on new start
-                    lastbluestart = e.X;
-                    SetStartVLinePos(lastbluestart);
-
-                }
-
-                return;
-            }
-            #endregion guard
-
-            float time = ticks / sequence1.Division;
-            Track track = sequence1.tracks[staffnum];
-
-            float duration;// = 0;
-
-            if (Alteration == Alterations.Diese)
-                note++;
-            else if (Alteration == Alterations.Bemol)
-                note--;
-
-
-            #region edit
-
-            SelectOctave(note);
-
-            // delete note
-            if (NoteValue == NoteValues.Gomme)
-            {
-                // Delete a note on a track         
-                sheetmusic.DeleteNote(staffnum, note, ticks);
-
-            }
-            else
-            {
-
-                // Retrieve new note duration according to button selected
-                duration = GetNewNoteDuration();            
-               
-                // Add new note
-                int starttime = Convert.ToInt32(time * sequence1.Division);
-                int dur = Convert.ToInt32(duration * sequence1.Division);
-                int channel = track.MidiChannel;
-                int notenumber = note;
-
-                int velocity = Karaclass.m_Velocity;
-
-                MidiNote mdnote = new MidiNote(starttime, channel, notenumber, dur, velocity, false);
-
-                if (sheetmusic.AddNote(track, mdnote) > 0)
-                {
-                    PlayNote(note, staffnum);
-                    sheetmusic.UpdateCurrentNote(sheetmusic.CurrentNote.numstaff, mdnote.Number, mdnote.StartTime, true);
-                }                
-            }
-            
-            // Redraw scores
-            RefreshDisplay();            
-
-            #endregion edit
+            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+                frmLyric.StopTimerBalls();
 
         }
 
-        private void PlayNote(int note, int staffnum)
-        {
-            StopNote();
-
-            if (on == false)
-            {
-                on = true;
-                playedNote = note;
-                playedStaff = staffnum;
-
-                if (staffnum < sequence1.tracks.Count && note >= 0 && note <= 127)
-                {
-                    Track track = sequence1.tracks[staffnum];
-                    //Console.Write("\nPlay note: " + note);
-                    outDevice.Send(new ChannelMessage(ChannelCommand.NoteOn, track.MidiChannel, note, 127));
-                }
-            }
-        }
-
-        private void StopNote()
-        {
-            if (on && playedNote >= 0 && playedNote <= 127)
-            {                
-                Track track = sequence1.tracks[playedStaff];
-                outDevice.Send(new ChannelMessage(ChannelCommand.NoteOff, track.MidiChannel, playedNote, 0));
-                on = false;
-            }
-        }
-
-        /// <summary>
-        /// Mouse up : stop note
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <param name="staffnum"></param>
-        /// <param name="note"></param>
-        /// <param name="ticks"></param>
-        private void Track_MouseUp(object sender, EventArgs e, int staffnum, int note, float ticks)
-        {
-            #region Guard
-
-            if (PlayerState != PlayerStates.Stopped)
-            {
-                return;
-            }
-
-            #endregion
-            
-            StopNote();          
-        }    
-
-        /// <summary>
-        /// Double Click: display piano roll
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <param name="staffnum"></param>
-        private void Track_DoubleClick(object sender, EventArgs e, int staffnum, float pos)
-        {
-            #region guard
-            if (PlayerState != PlayerStates.Stopped)
-            {
-                return;
-            }
-            #endregion guard            
-
-            // Launch PianoRoll Window in order to display this track
-            DisplayPianoRoll(staffnum, MIDIfileFullPath, (int)pos);
-        }
-
-        /// <summary>
-        /// Up/Down on same note
-        /// </summary>
-        /// <param name="KeyCode"></param>
-        private void Key_UpDownNote(string KeyCode)
-        {
-            #region guard
-            if (PlayerState != PlayerStates.Stopped || sheetmusic == null)
-            {
-                return;
-            }
-            #endregion guard            
-
-            // First bEnterNotes, because bEditScore is also true...
-            if (bEnterNotes && sheetmusic.CurrentNote != null && sheetmusic.CurrentNote.midinote.Duration != 0)
-            {
-                #region updown current note
-                sheetmusic.SheetMusic_UpDownCurrentNote(KeyCode);
-                
-                // alter note
-                int numstaff = sheetmusic.CurrentNote.numstaff;                
-                int note = sheetmusic.CurrentNote.midinote.Number;                
-                               
-                // Play note                
-                PlayNote(note, numstaff);
-                FileModified();
-                RefreshDisplay();                
-                SelectOctave(note);
-                #endregion updown current note
-            }
-            else if (bEditScore)
-            {
-                #region updown selected notes
-
-                sheetmusic.SheetMusic_UpDownSelectedNote(KeyCode);
-                FileModified();
-                RefreshDisplay();
-                
-                #endregion updown selected notes
-            }
-        }
-
-        /// <summary>
-        /// Left key: select previous note
-        /// </summary>
-        private void Key_Left()
-        {
-            //Console.Write("\nfrmPlayer Key Left"); 
-
-            // alter note
-            int numstaff = sheetmusic.CurrentNote.numstaff;
-            Track track = sequence1.tracks[numstaff];
-            int note = sheetmusic.CurrentNote.midinote.Number;
-            int ticks = Convert.ToInt32(sheetmusic.CurrentNote.midinote.StartTime);
-
-            // Set new current note = note before            
-            MidiNote n = track.getPrevNote(note, ticks);
-            // si il n'y a pas de note précédante on reste sur la même
-            if (n != null)
-            {                
-                sheetmusic.UpdateCurrentNote(numstaff, n.Number, n.StartTime, true);
-
-                RefreshDisplay();                
-                ScrollTo(n.StartTime);
-            }            
-        }
-
-
-        /// <summary>
-        /// Event: key right on keyboard
-        /// </summary>
-        private void Key_Right()
-        {
-            // alter note
-            int numstaff = sheetmusic.CurrentNote.numstaff;
-            Track track = sequence1.tracks[numstaff];
-            int note = sheetmusic.CurrentNote.midinote.Number;
-            float ticks = sheetmusic.CurrentNote.midinote.StartTime;
-
-            // Set new current note = note before            
-            MidiNote n = track.getNextNote(note, Convert.ToInt32(ticks));
-            // si il n'y a pas de note suivante : on reste sur la même
-            if (n != null)
-            {                
-                sheetmusic.UpdateCurrentNote(numstaff, n.Number, n.StartTime, true);
-
-                RefreshDisplay();
-                ScrollTo(n.StartTime);
-            }            
-        }
-
-        /// <summary>
-        /// Create new notes with keyboard
-        /// </summary>
-        /// <param name="nnote"></param>
-        private void Key_AddNote(int nnote)
-        {
-            #region guard
-            if (PlayerState != PlayerStates.Stopped || bEnterNotes == false)
-            {
-                return;
-            }
-            #endregion guard            
-
-            // note number according to current octave
-            int lastnote = sheetmusic.CurrentNote.midinote.Number;
-            int min = 100;
-            int newoctave = 0;            
-
-            // 3 choices
-            // Take min of lastnote - a, lastnote - b, lastnote - c ?
-            int a = (nnote + (octave - 1) * 12);
-            if (Math.Abs(lastnote - a) < min)
-            {
-                min = Math.Abs(lastnote - a);
-                newoctave = octave - 1;
-            }
-            
-            int b = (nnote + octave * 12);
-            if (Math.Abs(lastnote - b) < min) 
-            {
-                min = Math.Abs(lastnote - b);
-                newoctave = octave;
-            }
-            
-            int c = (nnote + (octave + 1) * 12);
-            if (Math.Abs(lastnote - c) < min)
-            {
-                //min = Math.Abs(lastnote - c);
-                newoctave = octave + 1;
-            }
-
-            int newnote = nnote + newoctave * 12;                                    
-
-            // Retrieve new note duration according to button selected
-            float newduration = GetNewNoteDuration();
-
-            // build new midi note to create
-            MidiNote mdnote = sheetmusic.BuildNewNote(newnote, newduration);
-
-
-            int numstaff = sheetmusic.CurrentNote.numstaff;            
-            Track track = sequence1.tracks[numstaff];
-
-            // Add new note
-            if (sheetmusic.AddNote(track, mdnote) > 0)
-            {
-                PlayNote(mdnote.Number, numstaff);
-                sheetmusic.UpdateCurrentNote(sheetmusic.CurrentNote.numstaff, mdnote.Number, mdnote.StartTime, true);
-                
-                UpdateMidiTimes();
-                DisplaySongDuration(_duration);
-
-                // Redraw scores
-                FileModified();
-                RefreshDisplay();
-                ScrollTo(mdnote.StartTime);
-            }
-        }
-        
-        /// <summary>
-        /// Delete current note with keyboard
-        /// </summary>
-        private void Key_DelNote()
-        {
-            #region guard
-            if (PlayerState != PlayerStates.Stopped || bEnterNotes == false)
-            {
-                return;
-            }
-            #endregion guard
-
-            sheetmusic.DeleteNote(sheetmusic.CurrentNote.numstaff, sheetmusic.CurrentNote.midinote.Number, sheetmusic.CurrentNote.midinote.StartTime);
-            UpdateMidiTimes();
-            DisplaySongDuration(_duration);
-
-            ScrollTo(sheetmusic.CurrentNote.midinote.StartTime);
-
-            FileModified();
-
-            // Redraw scores
-            RefreshDisplay();                     
-        }
-
-
-        /// <summary>
-        /// Retrieve new note duration according to button selected
-        /// </summary>
-        /// <returns></returns>
-        private float GetNewNoteDuration()
-        {           
-            switch (NoteValue)
-            {
-                case NoteValues.Ronde:
-                    if (Alteration == Alterations.Dot)
-                        return 6;
-                    else
-                        return 4;
-
-                case NoteValues.Blanche:
-                    if (Alteration == Alterations.Dot)
-                        return 3;
-                    else
-                        return 2;
-
-                case NoteValues.Noire:
-                    if (Alteration == Alterations.Dot)
-                        return 1.5f;
-                    else
-                        return 1;
-
-                case NoteValues.Croche:
-                    if (Alteration == Alterations.Dot)
-                        return 0.75f;
-                    else
-                        return 0.5f;
-
-                case NoteValues.DoubleCroche:
-                    if (Alteration == Alterations.Dot)
-                        return 0.375f;
-                    else
-                        return 0.25f;
-
-                case NoteValues.TripleCroche:
-                    if (Alteration == Alterations.Dot)
-                        return 0.1825f;
-                    else
-                        return 0.125f;
-
-                case NoteValues.QuadrupleCroche:
-                    if (Alteration == Alterations.Dot)
-                        return 0.09375f;
-                    else
-                        return 0.0625f;
-
-                default:
-                    return 1;
-
-            }
-        }
-               
-        /// <summary>
-        /// File was modified
-        /// </summary>
-        public void FileModified()
-        {
-            bfilemodified = true;
-            string fName = MIDIfileName;
-            if (fName != null && fName != "")
-            {
-                string fExt = Path.GetExtension(fName);             // Extension
-                fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
-
-                string fShortName = fName.Replace("*", "");
-                if (fShortName == fName)
-                    fName += "*";
-
-                fName += fExt;
-                SetTitle(fName);
-            }
-        }
-     
-        /// <summary>
-        /// Adapt current octave to notes entered
-        /// </summary>
-        /// <param name="note"></param>
-        private void SelectOctave(int note)
-        {
-            if (note >= octave*12 && note <= 11 + octave*12 )
-                return;
-            
-            if (note > 11 + octave * 12)
-            {
-                do
-                {
-                    if (octave < 12)
-                        octave++;
-                    else
-                        break;
-                } while (note > 11 + octave * 12);
-            }
-            else
-            {
-                do
-                {
-                    if (octave > 0)
-                        octave--;
-                    else
-                        break;
-                } while (note > 11 + octave * 12);
-            }
-        }
-
-        #endregion track stuff
-
-
-        #region Displays objects
-
-        /// <summary>
-        /// Draw panels pnlScrollView & pnlTracks
-        /// </summary>
-        private void DrawControls()
-        {
-            //important:   use "leftWidth" to position controls                       
-
-            #region volume
-
-            sldMainVolume.Maximum = 130;    // Closer to 127
-            sldMainVolume.Minimum = 0;
-            sldMainVolume.ScaleDivisions = 13;
-            sldMainVolume.Value = 104;
-            sldMainVolume.SmallChange = 13;
-            sldMainVolume.LargeChange = 13;
-            sldMainVolume.MouseWheelBarPartitions = 10;
-
-            sldMainVolume.Left = 249;
-            sldMainVolume.Top = 25;
-            sldMainVolume.Width = 24;
-            sldMainVolume.Height = 80;
-
-
-            lblMainVolume.Text = String.Format("{0}%", 100 * sldMainVolume.Value / sldMainVolume.Maximum);
-
-            #endregion
-
-
-            #region left
-            // ------------------------------------------------------------
-            // then the tracks...
-            // Draw a panel on the left to display the track controllers
-            // ------------------------------------------------------------
-            //if (pnlTracks != null)
-            //    pnlTracks.Dispose();
-            pnlTracks?.Dispose();
-
-            pnlTracks = new Panel() {
-                Parent = pnlMiddle,
-                BorderStyle = BorderStyle.FixedSingle,
-                AutoScroll = false,
-                AutoSize = false,
-                BackColor = Color.Black,
-            };
-            pnlTracks.SetBounds(0, 0, leftWidth, 400);
-
-            #endregion left
-
-
-            #region right
-
-            // ------------------------------------------------------------
-            // first the scores
-            // Draw a panel on the right to display the scores
-            // ------------------------------------------------------------
-            //if (pnlScrollView != null)
-            //    pnlScrollView.Dispose();
-            pnlScrollView?.Dispose();
-
-            pnlScrollView = new Panel()
-            {
-                Parent = pnlMiddle,
-                BorderStyle = BorderStyle.FixedSingle,
-                BackColor = Color.Gray,
-                AutoScroll = false,
-                AutoSize = false,
-            };
-            pnlScrollView.Size = new Size(pnlScrollView.Parent.ClientSize.Width - leftWidth, pnlScrollView.Parent.ClientSize.Height);
-            pnlScrollView.SetBounds(leftWidth, 0, 200, 400);
-            pnlMiddle.Controls.Add(pnlScrollView);
-
-
-            // Horizontal scrollbar
-            //if (pnlHScroll != null)
-            //    pnlHScroll.Dispose();
-            pnlHScroll?.Dispose();
-
-            pnlHScroll = new Panel() {
-                Parent = pnlMiddle,
-                AutoScroll = false,
-                AutoSize = false,
-                BackColor = Color.Black,
-                Size = new Size(pnlMiddle.Width - pnlTracks.Width, 17),
-                Dock = DockStyle.Bottom,
-            };
-            pnlMiddle.Controls.Add(pnlHScroll);
-
-
-            hScrollBar = new HScrollBar() {
-                Parent = pnlHScroll,
-                Left = leftWidth,
-                Top = 0,
-                Minimum = 0,
-            };
-            pnlHScroll.Controls.Add(hScrollBar);
-
-            hScrollBar.Scroll += new ScrollEventHandler(HScrollBar_Scroll);
-            hScrollBar.ValueChanged += new EventHandler(HScrollBar_ValueChanged);
-
-
-            // ========================
-            // Bring to front
-            // ========================
-            pnlTracks.BringToFront();
-            pnlHScroll.BringToFront();
-
-
-            // Vertical Scrollbar
-            //if (vScrollBar != null)
-            //    vScrollBar.Dispose();
-            vScrollBar?.Dispose();  
-
-            vScrollBar = new NoSelectVScrollBar() {
-                Parent = pnlMiddle,
-                Top = 0,
-                Minimum = 0,
-                TabStop = false,
-            };
-
-            pnlMiddle.Controls.Add(vScrollBar);
-            vScrollBar.Dock = DockStyle.Right;
-            vScrollBar.BringToFront();
-
-            vScrollBar.Scroll += new ScrollEventHandler(VScrollBar_Scroll);
-            vScrollBar.ValueChanged += new EventHandler(VScrollBar_ValueChanged);
-
-            #endregion right
-
-            // Red bar
-            TimeVLine.Height = pnlScrollView.Height;
-            TimeVLine.Left = pnlScrollView.Left;
-            TimeVLine.Top = pnlScrollView.Top;
-
-            // Blue bar
-            TimeStartVLine.Height = pnlScrollView.Height;
-            TimeStartVLine.Left = pnlScrollView.Left;
-            TimeStartVLine.Top = pnlScrollView.Top;
-
-            SetScrollBarValues();            
-        }
-       
-
-        /// <summary>
-        /// Display track controls
-        /// </summary>
-        private void DisplayTrackControls()
-        {
-            int nbTrk = sequence1.tracks.Count;
-            int nbTrkNotes = 0;
-            //int yOffset = 1;
-
-            this.Cursor = Cursors.WaitCursor;
-            DrawingControl.SuspendDrawing(this);
-
-            // Remove all existing track controls
-            bool oneMoreTime = true;
-            while (oneMoreTime)
-            {
-                Control toDelete = null;
-                oneMoreTime = false;
-                foreach (Control item in pnlTracks.Controls)
-                {
-                    if (item.GetType() == typeof(TrkControl.TrackControl))
-                    {
-                        toDelete = item;
-                        break;
-                    }
-                }
-                if (toDelete != null)
-                {
-                    pnlTracks.Controls.Remove(toDelete);
-                    oneMoreTime = true;
-                }
-            }
-
-            for (int i = 0; i < nbTrk; i++)
-            {                
-                Track track = sequence1.tracks[i];
-                nbTrkNotes++;
-                // Add track control
-                AddTrackControl(track, i);
-            }
-
-            // Ajust height of panel according to number of controls
-            pnlTracks.Height = sequence1.tracks.Count * iStaffHeightMaximized * Convert.ToInt32(zoom);
-
-            pnlScrollView.Height = pnlTracks.Height;
-
-            SetScrollBarValues();
-
-            DrawingControl.ResumeDrawing(this);
-            this.Cursor = Cursors.Default;
-        }
-
-        /// <summary>
-        /// Things to do when song is loaded
-        /// </summary>
-        private void DisplaySongDuration(double dur)
-        {
-            // Affichage du BEAT
-            //lblBeat.Text = "1|" + sequence1.Numerator;
-          
-            int Min = (int)(dur / 60);
-            int Sec = (int)(dur - (Min * 60));
-
-            lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
-            
-        }
-
-        /// <summary>
-        /// Upadate MIDI times
-        /// </summary>
-        private void UpdateMidiTimes()
-        {
-            _totalTicks = sequence1.GetLength();
-            _tempo = sequence1.Tempo;
-            TempoOrig = _tempo;
-            _ppqn = sequence1.Division;
-            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
-            _bpm = GetBPM(_tempo);
-
-            if (sequence1.Time != null)
-            {
-                _measurelen = sequence1.Time.Measure;
-
-                foreach (Track track in sequence1.tracks)
-                { 
-                    track.MeasureLength = _measurelen;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Calculate BPM
-        /// </summary>
-        /// <param name="tempo"></param>
-        /// <returns></returns>
-        private int GetBPM(int tempo)
-        {
-            // see http://midi.teragonaudio.com/tech/midifile/ppqn.htm
-            const float kOneMinuteInMicroseconds = 60000000;
-            float BPM = kOneMinuteInMicroseconds / (float)tempo;
-
-            return (int)BPM;
-        }
-
-        /// <summary>
-        /// Display informations on midi file
-        /// </summary>
-        private void DisplayFileInfos()
-        {                        
-            // BEAT
-            beat = 1;
-            lblBeat.Text = "1|" + sequence1.Numerator;
-
-            int Min = (int)(_duration / 60);
-            int Sec = (int)(_duration - (Min * 60));
-
-            string tx;
-            tx = string.Format("Division: {0}", _ppqn) + "\n";
-            tx += string.Format("Tempo: {0}", _tempo) + "\n";
-            tx += string.Format("BPM: {0}", _bpm) + "\n";
-            tx += string.Format("TotalTicks: {0}", _totalTicks) + "\n";
-            tx += "Duree: " + string.Format("{0:00}:{1:00}", Min, Sec) + "\n";
-
-            if (sequence1.Format != sequence1.OrigFormat)
-                tx += "Midi Format: " + sequence1.Format.ToString() + " (Orig. Format: " + sequence1.OrigFormat.ToString() + ")";
-            else
-                tx += "Midi Format: " + sequence1.Format.ToString();
-
-            lblInfosF.Text = tx;
-        }
-
-        private void DisplayFileInfos(int tempo)
-        {
-            _tempoplayed = tempo;
-            double dur = _tempoplayed * (_totalTicks / _ppqn) / 1000000; //seconds            
-            DisplaySongDuration(dur);
-
-            // BEAT
-            //beat = 1;
-            int bpm = GetBPM(tempo);
-
-            int Min = (int)(dur / 60);
-            int Sec = (int)(dur - (Min * 60));
-
-            string tx;
-            tx = string.Format("Division: {0}", _ppqn) + "\n";
-            tx += string.Format("Tempo: {0}", tempo) + "\n";
-            tx += string.Format("BPM: {0}", bpm) + "\n";
-            tx += string.Format("TotalTicks: {0}", _totalTicks) + "\n";
-            tx += "Duree: " + string.Format("{0:00}:{1:00}", Min, Sec) + "\n";
-
-            if (sequence1.Format != sequence1.OrigFormat)
-                tx += "Midi Format: " + sequence1.Format.ToString() + " (Orig. Format: " + sequence1.OrigFormat.ToString() + ")";
-            else
-                tx += "Midi Format: " + sequence1.Format.ToString();
-
-            lblInfosF.Text = tx;
-        }
-
-        #endregion Displays objects
-
-
-        #region scroll events
-
-        private void VScrollBar_ValueChanged(object sender, EventArgs e)
-        {
-            // Verticall scroll of panel kept
-            pnlTracks.Top = -vScrollBar.Value;
-            pnlScrollView.Top = -vScrollBar.Value;            
-        }
-
-        private void VScrollBar_Scroll(object sender, ScrollEventArgs e)
-        {
-            pnlTracks.Top = -vScrollBar.Value;
-            pnlScrollView.Top = -vScrollBar.Value;            
-        }
-
-        private void HScrollBar_ValueChanged(object sender, EventArgs e)
-        {
-            sheetmusic.OffsetX = hScrollBar.Value;
-        }
-
-        private void HScrollBar_Scroll(object sender, ScrollEventArgs e)
-        {            
-            sheetmusic.OffsetX = hScrollBar.Value;
-        }
-    
-
-        /// <summary>
-        /// Set scrollBar maxi values
-        /// </summary>
-        private void SetScrollBarValues()
-        {
-            if (pnlScrollView == null || sheetmusic == null)
-                return;
-
-            int hH = 0;
-            int vW = 0;
-
-            // Width of sheetmusic
-            int W = sheetmusic.MaxStaffWidth;
-            // display width
-            int wMiddle = pnlMiddle.Width - pnlTracks.Width;
-
-            bool bShowHScrollBarIndetermined = false;
-
-            // If display width > sheetmusic width => remove horizontal scrollbar
-            if (wMiddle > W + vScrollBar.Width)
-                bShowHScrollBar = false;
-            else if (wMiddle < W)
-                bShowHScrollBar = true;
-            else
-                bShowHScrollBarIndetermined = true;
-
-
-            bool bShowVScrollBarIndetermined = false;
-
-            // If display height > sheetmusic height => remove vertical scrollbar
-            if (pnlMiddle.Height > pnlScrollView.Height + hScrollBar.Height)
-                bShowVScrollBar = false;
-            else if (pnlMiddle.Height < pnlScrollView.Height)
-                bShowVScrollBar = true;
-            else
-                bShowVScrollBarIndetermined = true;
-
-
-            if (bShowVScrollBarIndetermined && bShowHScrollBarIndetermined)
-            {
-                bShowHScrollBar = false;
-                bShowVScrollBar = false;
-            }
-            else if (bShowVScrollBarIndetermined && pnlMiddle.Height > pnlScrollView.Height)
-                bShowVScrollBar = false;
-            else if (bShowHScrollBarIndetermined && wMiddle > W)
-                bShowHScrollBar = false;
-
-
-            if (bShowVScrollBar && wMiddle - vScrollBar.Width < W)
-                bShowHScrollBar = true;
-
-            if (bShowHScrollBar && pnlMiddle.Height - hScrollBar.Height < pnlScrollView.Height)
-                bShowVScrollBar = true;
-
-
-
-            if (bShowVScrollBar == false)
-            {
-                vScrollBar.Visible = false;
-                pnlTracks.Top = 0;
-                pnlScrollView.Top = 0;
-            }
-            else
-            {
-                vScrollBar.Visible = true;
-                vScrollBar.Left = pnlMiddle.Width - vScrollBar.Width;
-                if (bShowHScrollBar)
-                    vScrollBar.Height = pnlMiddle.Height - hScrollBar.Height;
-                else
-                    vScrollBar.Height = pnlMiddle.Height;
-
-                // Aggrandissement vertical de la fenetre = > la scrollbar verticale doit se positionner en bas
-                if (sheetmusic.Height - vScrollBar.Value < pnlMiddle.Height)
-                    vScrollBar.Value = vScrollBar.Maximum - vScrollBar.LargeChange;
-            }
-
-
-            if (bShowHScrollBar == false)
-            {
-                pnlHScroll.Visible = false;
-                pnlTracks.Left = 0;
-                pnlScrollView.Left = pnlTracks.Width;
-            }
-            else
-            {
-                pnlHScroll.Visible = true;
-                if (bShowVScrollBar)
-                    hScrollBar.Width = wMiddle - vScrollBar.Width;
-                else
-                    hScrollBar.Width = wMiddle;
-
-                // Aggrandissement horizontal de la fenetre => la scrollbar horizontale doit se positionner à droite 
-                if (W - hScrollBar.Value < wMiddle)
-                    hScrollBar.Value = hScrollBar.Maximum - hScrollBar.LargeChange;
-            }
-
-
-            if (bShowVScrollBar)
-                vW = vScrollBar.Width;
-            if (bShowHScrollBar)
-                hH = hScrollBar.Height;
-
-            // Width of pnlScrollView
-            pnlScrollView.Width = pnlMiddle.Width - leftWidth - vW;
-
-            // vScrollBar properties
-            if (bShowVScrollBar)
-            {
-                vScrollBar.Maximum = pnlScrollView.Height - (pnlMiddle.Height - hH) + pnlScrollView.Height / 10;
-
-                vScrollBar.SmallChange = pnlScrollView.Height / 20;
-                vScrollBar.LargeChange = pnlScrollView.Height / 10;
-                
-            }
-
-            // hScrollBar properties
-            if (bShowHScrollBar)
-            {
-                // Properties of hScrollBar: define first Maximum than Large and small change                
-                int SC = W / 20;
-                int LC = W / 10;
-
-                // Width is limited to 65535                
-                hScrollBar.Maximum = W - (wMiddle - vW) + LC;
-
-                hScrollBar.SmallChange = SC;
-                hScrollBar.LargeChange = LC;
-            }
-        }
-
-
-        /// <summary>
-        /// Scroll vertical time bar and sheet music when playing
-        /// </summary>
-        /// <param name="curtime"></param>
-        private void ScrollTimeBar(double curtime)
-        {
-            if (sheetmusic != null)
-            {
-                currentTime = curtime * 1000; // Elapsed time en msec
-
-                prevPulseTime = currentPulseTime;
-                currentPulseTime = currentTime * pulsesPerMsec;
-                if (prevPulseTime != currentPulseTime)
-                {
-
-                    // Calcule x_shade
-                    sheetmusic.ScrollTo((int)currentPulseTime, (int)prevPulseTime);
-                    
-                    int x_midle = (pnlMiddle.Width - pnlTracks.Width) / 2;
-                    int x_shade = sheetmusic.X_shade;
-
-                    int W = sheetmusic.MaxStaffWidth;   // Longueur totale de la partition
-                    int x_last = W - x_midle;            // Derniere moitié de la partition 
-                    int delta = x_shade - x_midle;       
-
-                    
-                    // scroll horizontal scrollbar
-                    if (delta <= 0)
-                        hScrollBar.Value = 0;
-                    else if (delta > 0 && delta <= hScrollBar.Maximum)
-                        hScrollBar.Value = delta;
-
-
-                    // Scroll vertical red bars
-                    if (delta < 0)
-                    {
-                        // 1ere moitié affichage
-                        SetTimeVLinePos(x_shade + 6);
-                        
-                    }
-                    else
-                    {
-                        // milieu du morceau
-                        if (x_shade < x_last)
-                        {                            
-                            SetTimeVLinePos(x_midle);
-                        }
-                        else
-                        {
-                            // Fin du morceau                            
-                            SetTimeVLinePos(x_midle + (x_midle - (W - x_shade)));
-                        }
-                    }
-
-                }
-            }
-        }
-
-        /// <summary>
-        /// Scroll score to a position
-        /// </summary>
-        /// <param name="curtime"></param>
-        public void ScrollTo(double starttime)
-        {
-            if (sheetmusic != null)
-            {
-                double dpercent = 0;
-                int maxvalue = sequence1.GetLength();
-                if (maxvalue > 0)
-                    dpercent = starttime / maxvalue;
-                
-                // Elapsed time
-                double maintenant = dpercent * _duration;
-
-                currentTime = maintenant * 1000; // Elapsed time en msec
-                
-                prevPulseTime = currentPulseTime;   // Save old pulsetime
-                currentPulseTime = currentTime * pulsesPerMsec; // Set new pulsetime
-
-                if (prevPulseTime != currentPulseTime)
-                {
-                    // Calcule x_shade
-                    sheetmusic.ScrollTo((int)currentPulseTime, (int)prevPulseTime);                                                           
-
-                    int x_midle = (pnlMiddle.Width - pnlTracks.Width) / 2;
-                    int x_shade = sheetmusic.X_shade;                   
-                   
-                    int delta = x_shade - x_midle;
-
-                    // scroll horizontal scrollbar
-                    if (delta <= 0)
-                        hScrollBar.Value = 0;
-                    else if (delta > 0 && delta <= hScrollBar.Maximum)
-                        hScrollBar.Value = delta;                                                
-                    
-                }
-            }
-        }
-
-        #endregion scroll events
+        #endregion ani balls
 
 
         #region buttons play pause stop
@@ -1704,7 +437,7 @@ namespace Karaboss
             else if (PlayerState == PlayerStates.Playing)
                 btnPlay.Image = Properties.Resources.btn_green_play;
         }
-       
+
         #endregion
 
 
@@ -1713,7 +446,7 @@ namespace Karaboss
         private void BtnStop_Click(object sender, EventArgs e)
         {
             //if (PlayerState != PlayerStates.Stopped)
-                StopMusic();
+            StopMusic();
         }
 
 
@@ -1775,7 +508,7 @@ namespace Karaboss
 
 
         #region Mute               
-        
+
         /// <summary>
         /// Button: Mute Melody
         /// </summary>
@@ -1788,20 +521,20 @@ namespace Karaboss
                 if (!btnMute1.Checked)
                 {
                     // Play melody
-                    btnMute1.Checked = true;                    
+                    btnMute1.Checked = true;
                     UnMuteSomeTracks(sequence1.tracks[myLyricsMgmt.MelodyTrackNum].MidiChannel);
                 }
                 else
                 {
                     // Mute melody
-                    btnMute1.Checked = false;                    
-                                       
+                    btnMute1.Checked = false;
+
                     // Stop Channel : All notes off                                        
                     sequencer1.AllSoundOff();
 
                     // Mute other TrackControls having same channel
                     MuteSomeTracks(sequence1.tracks[myLyricsMgmt.MelodyTrackNum].MidiChannel);
-                }              
+                }
 
                 this.Focus();
             }
@@ -1839,8 +572,8 @@ namespace Karaboss
                 case PlayerStates.Stopped:
                     btnPlay.Image = Properties.Resources.btn_black_play;
                     btnPlay.Enabled = true;   // to allow play
-                    if (newstart == 0)                                            
-                        btnStop.Image = Properties.Resources.btn_red_stop;                    
+                    if (newstart == 0)
+                        btnStop.Image = Properties.Resources.btn_red_stop;
                     else
                         btnStop.Enabled = true;   // to enable real stop because stop point not at the beginning of the song 
                     lblStatus.Text = "Stopped";
@@ -1856,10 +589,10 @@ namespace Karaboss
                     lblStatus.Text = "Paused next singer";
                     lblStatus.ForeColor = Color.Yellow;
                     break;
-                 
-                case PlayerStates.Waiting:                    
+
+                case PlayerStates.Waiting:
                     // Count down running
-                    btnPlay.Image = Properties.Resources.btn_green_play;                    
+                    btnPlay.Image = Properties.Resources.btn_green_play;
                     btnPlay.Enabled = true;  // to allow pause
                     btnStop.Enabled = true;   // to allow stop
                     lblStatus.Text = "Next";
@@ -1882,7 +615,7 @@ namespace Karaboss
                 default:
                     break;
             }
-        }                           
+        }
 
         private void StopMusic()
         {
@@ -1893,7 +626,7 @@ namespace Karaboss
                 sequencer1.Stop();
 
                 // Si point de départ n'est pas le début du morceau
-                if (newstart > 0 )
+                if (newstart > 0)
                 {
                     if (nbstop > 0)
                     {
@@ -1902,7 +635,7 @@ namespace Karaboss
                         AfterStopped();
                     }
                     else
-                    {                        
+                    {
                         nbstop = 1;
                         AfterStopped();
                     }
@@ -1911,7 +644,7 @@ namespace Karaboss
                 {
                     // Point de départ = début du moreceau
                     AfterStopped();
-                }                    
+                }
             }
             catch (Exception ex)
             {
@@ -1941,7 +674,7 @@ namespace Karaboss
                     timer2.Start(); // Lyrics 
                     timer3.Start(); // Balls
                     timer4.Start(); // Beat
-                    sequencer1.Continue();                    
+                    sequencer1.Continue();
                     break;
 
                 case PlayerStates.Waiting:
@@ -1949,7 +682,7 @@ namespace Karaboss
                     // stop timer : status = WaitingPaused
                     PlayerState = PlayerStates.WaitingPaused;
                     BtnStatus();
-                    timer5.Enabled = false;                    
+                    timer5.Enabled = false;
                     break;
 
                 case PlayerStates.WaitingPaused:
@@ -1970,7 +703,7 @@ namespace Karaboss
                     else
                     {
                         // Start  count down timer
-                        StartCountDownTimer();                       
+                        StartCountDownTimer();
                     }
                     break;
 
@@ -1978,7 +711,7 @@ namespace Karaboss
                     // First play                
                     FirstPlaySong(newstart);
                     break;
-            }        
+            }
         }
 
         /// <summary>
@@ -1989,11 +722,9 @@ namespace Karaboss
             newstart = 0;
             laststart = 0;
             sequencer1.Stop();
-            PlayerState = PlayerStates.Stopped;            
+            PlayerState = PlayerStates.Stopped;
         }
 
-
-      
 
         /// <summary>
         /// PlaySong for first time
@@ -2003,10 +734,10 @@ namespace Karaboss
             if (sheetmusic == null) return;
 
             try
-            {                               
-                nbstop = 0;                             
+            {
+                nbstop = 0;
                 // stop Edit mode
-                DspEdit(false);            
+                DspEdit(false);
                 DisplayFileInfos();
                 DisplayLyricsInfos();
                 ValideMenus(false);
@@ -2014,7 +745,7 @@ namespace Karaboss
 
                 // 1. DISPLAY LYRICS
                 ManageDisplayLyricsForm();
-          
+
 
                 // 2. START PLAYING
                 // 
@@ -2073,9 +804,9 @@ namespace Karaboss
             // melody track exists 
             // AND
             // Mute Melody for all OR this playlistItem mutted
-            if ( (myLyricsMgmt != null && myLyricsMgmt.MelodyTrackNum != -1) && (Karaclass.m_MuteMelody == true || (currentPlaylist != null && currentPlaylistItem.MelodyMute == true)))
+            if ((myLyricsMgmt != null && myLyricsMgmt.MelodyTrackNum != -1) && (Karaclass.m_MuteMelody == true || (currentPlaylist != null && currentPlaylistItem.MelodyMute == true)))
             {
-                btnMute1.Checked = false;                
+                btnMute1.Checked = false;
 
                 // Stop Channel : All notes off                                        
                 sequencer1.AllSoundOff();
@@ -2085,7 +816,7 @@ namespace Karaboss
 
             }
         }
-        
+
         #endregion
 
         /// <summary>
@@ -2097,8 +828,8 @@ namespace Karaboss
                 return;
 
             // Buttons play & stop 
-            BtnStatus();            
-            StopTimerBalls();                      
+            BtnStatus();
+            StopTimerBalls();
             sheetmusic.BPlaying = false;
 
             // Light off all channels
@@ -2117,7 +848,7 @@ namespace Karaboss
             // Stopped to start of score
             if (newstart <= 0)
             {
-                ScrollTimeBar(0);                
+                ScrollTimeBar(0);
                 DisplayTimeElapse(0);
                 DisplayFileInfos();
 
@@ -2128,7 +859,7 @@ namespace Karaboss
                     frmLyric.ResetTop();
                     frmLyric.StopDiaporama();
                 }
-                
+
                 positionHScrollBarNew.Value = 0;
 
                 SetTimeVLinePos(0);
@@ -2164,7 +895,7 @@ namespace Karaboss
                                 catch (Exception ex) { Console.WriteLine(ex.Message.ToString()); }
                             }
                         }
-                    }                   
+                    }
                 }
 
             }
@@ -2176,396 +907,1740 @@ namespace Karaboss
                 // blue bar
                 SetStartVLinePos(x_midle);
                 // red bar
-                SetTimeVLinePos(0);              
+                SetTimeVLinePos(0);
             }
         }
 
         #endregion button play pause stop
 
 
-        #region menus
+        #region chords analysis
 
-        /// <summary>
-        /// Valid or not some menus if playing or not
-        /// </summary>
-        /// <param name="enabled"></param>
-        private void ValideMenus(bool enabled)
-        {
-            menuStrip1.Visible = enabled;
-            return;          
-        }
-
-        #region Menu File
-
-        /// <summary>
-        /// Menu create a new midi file
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuFileNew_Click(object sender, EventArgs e)
-        {
-            int numerator = 4;
-            int denominator = 4;
-            int division = 960;
-            int tempo = 750000;
-            int measures = 35;
-
-            // Display dialog windows new midi file
-            DialogResult dr; // = new DialogResult();
-            Sanford.Multimedia.Midi.Score.UI.frmNewMidiFile MidiFileDialog = new Sanford.Multimedia.Midi.Score.UI.frmNewMidiFile(numerator, denominator, division, tempo, measures);
-            dr = MidiFileDialog.ShowDialog();
-
-            if (dr == System.Windows.Forms.DialogResult.Cancel)
-            {
-                return;
-            }
-
-            CreateNewMidiFile.Numerator = MidiFileDialog.Numerator;
-            CreateNewMidiFile.Denominator = MidiFileDialog.Denominator;
-            CreateNewMidiFile.Division = MidiFileDialog.Division;
-            CreateNewMidiFile.Tempo = MidiFileDialog.Tempo;
-            CreateNewMidiFile.Measures = MidiFileDialog.Measures;
-
-            // Fab 27/10/2023
-            // Display Dialog for new track
-            string trackname = "Track1";
-            int programchange = 0;
-            int channel = 0;
-            decimal trkindex = 0;
-            int clef = 0;
-
-            //dr = new DialogResult();
-            Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog TrackDialog = new Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog(trackname, programchange, channel, trkindex, clef);
-            dr = TrackDialog.ShowDialog();
-
-            // TODO : if we are creating a new file, 
-            if (dr == DialogResult.Cancel)
-                return;
-
-            CreateNewMidiFile.trackname = TrackDialog.TrackName;
-            CreateNewMidiFile.programchange = TrackDialog.ProgramChange;
-            CreateNewMidiFile.channel = TrackDialog.MidiChannel;
-            CreateNewMidiFile.trkindex = trkindex;
-            CreateNewMidiFile.clef = TrackDialog.cle;
-
-
-            // Ferme le formulaire frmLyric
-            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
-            {
-                frmLyric.Close();
-            }
-            // ferme le formulaire frmLyricsEdit
-            if (Application.OpenForms.OfType<frmLyricsEdit>().Count() > 0)
-            {     
-                Application.OpenForms["frmLyricsEdit"].Close();
-            }
-            // Ferme le formulaire PianoRoll
-            if (Application.OpenForms.OfType<frmPianoRoll>().Count() > 0)
-            {
-                Application.OpenForms["frmPianoRoll"].Close();
-            }            
-
-            // Create a new Midi File with above parameters
-            NewMidiFile();            
-        }        
-        
-        /// <summary>
-        /// Menu OpenFile
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuFileOpen_Click(object sender, EventArgs e)
+        public void RefreshChordsSheetMusic()
         {
 
-            openMidiFileDialog.Title = "Open MIDI file";
-            openMidiFileDialog.DefaultExt = "kar";
-            //openMidiFileDialog.Filter = "Kar files|*.kar|MIDI files|*.mid|All files|*.*";
-            openMidiFileDialog.Filter = "Kar files|*.kar|MIDI files|*.mid|Xml files|*.xml|MusicXml files|*.musicxml|Text files|*.txt|All files|*.*";
-
-
-            if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string fileName = openMidiFileDialog.FileName;                                
-
-                MIDIfileName = Path.GetFileName(fileName);
-                MIDIfilePath = Path.GetDirectoryName(fileName);
-                MIDIfileFullPath = fileName;
-
-                // Load file
-                sequence1.LoadProgressChanged += HandleLoadProgressChanged;
-                sequence1.LoadCompleted += HandleLoadCompleted;
-                             
-                SelectFileToLoadAsync();
-
-            }
+            AddChordsToTrack();
+            sheetmusic.Refresh();
         }
 
         /// <summary>
-        /// Menu File Save
+        /// Save chords to track in order to be displayed on the score
+        /// Refresh needed
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuFileSave_Click(object sender, EventArgs e)
+        private void AddChordsToTrack()
         {
-            SaveFileProc();
-        }
-
-        /// <summary>
-        /// Save File
-        /// </summary>
-        private void SaveFileProc()
-        {
-            string fName = MIDIfileName;
-            string fPath = MIDIfilePath;
-
-            if (fPath == null || fPath == "" || fName == null || fName == "")
+            if (!Karaclass.m_ShowChords)
             {
-                SaveAsFileProc();
-                return;
-            }
-
-            
-            if (File.Exists(MIDIfileFullPath) == false)
-            {
-                SaveAsFileProc();
-                return;
-            }
-
-            InitSaveFile(MIDIfileFullPath);
-        }
-
-        /// <summary>
-        /// Menu File Save As
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuFileSaveAs_Click(object sender, EventArgs e)
-        {
-            SaveAsFileProc();
-        }
-
-        private void SaveAsFileProc()
-        {
-            string fName = MIDIfileName;
-            string fPath = MIDIfilePath;
-
-            string fullName; // = string.Empty;
-            string defName; // = string.Empty;
-
-            #region search name
-            // search path
-            if (fPath == null || fPath == "")            
-                fPath = CreateNewMidiFile.DefaultDirectory;
-            
-            // Search name
-            if (MIDIfileName == null || MIDIfileName == "")            
-                fName = "New.mid";
-            
-
-            string inifName = fName;                            // Original name with extension
-            string defExt = Path.GetExtension(fName);           // Extension
-            fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
-            defName = fName;                                    // Proposed name for dialog box
-
-            fullName = fPath + "\\" + inifName;
-
-            if (File.Exists(fullName) == true)
-            {
-                // Remove all (1) (2) etc..
-                string pattern = @"[(\d)]";
-                string replace = @"";
-                inifName = Regex.Replace(fName, pattern, replace);
-
-                int i = 1;
-                string addName = "(" + i.ToString() + ")";
-                defName = inifName + addName + defExt;
-                fullName = fPath + "\\" + defName;
-
-                while (File.Exists(fullName) == true)
+                // Clear list of chord names
+                foreach (Track trk in sequence1.tracks)
                 {
-                    i++;
-                    defName = inifName + "(" + i.ToString() + ")" + defExt;
-                    fullName = fPath + "\\" + defName;
+                    trk.ClearChordNameSymbols();
+                }
+                return;
+            }
+            if (sequence1.tracks.Count == 0) return;
+
+            Track track;
+            switch (myLyricsMgmt.ChordsOriginatedFrom)
+            {
+                case LyricsMgmt.ChordsOrigins.Discovery:
+                    // the question is: which track for displaying the chords?
+                    // LyricsTrackNum?
+                    // MelodyTrackNum?
+                    // Track 0?
+
+                    //if (myLyricsMgmt.LyricsTrackNum == -1)
+                    //    myLyricsMgmt.LyricsTrackNum = 0;
+
+                    if (myLyricsMgmt.MelodyTrackNum == -1)
+                        myLyricsMgmt.MelodyTrackNum = 0;
+
+                    // Put chords on track 0
+                    //track = sequence1.tracks[myLyricsMgmt.LyricsTrackNum];
+                    //track = sequence1.tracks[0];
+
+                    track = sequence1.tracks[myLyricsMgmt.MelodyTrackNum];
+                    if (myLyricsMgmt.plLyrics.Count == 0)
+                        myLyricsMgmt.FullExtractLyrics(true);
+                    myLyricsMgmt.PopulateDetectedChords();
+                    myLyricsMgmt.CleanLyrics();
+                    track.ClearChordNameSymbols();
+                    for (int i = 0; i < myLyricsMgmt.plLyrics.Count; i++)
+                    {
+                        track.addChordName(myLyricsMgmt.plLyrics[i].Element.Item1, myLyricsMgmt.plLyrics[i].TicksOn);
+                    }
+                    break;
+
+                case LyricsMgmt.ChordsOrigins.Lyrics:
+                    // Origin = lyrics, track is same as lyrics
+                    track = sequence1.tracks[myLyricsMgmt.LyricsTrackNum];
+
+                    if (myLyricsMgmt.plLyrics.Count == 0)
+                        myLyricsMgmt.FullExtractLyrics(true);
+
+                    track.ClearChordNameSymbols();
+                    for (int i = 0; i < myLyricsMgmt.plLyrics.Count; i++)
+                    {
+                        track.addChordName(myLyricsMgmt.plLyrics[i].Element.Item1, myLyricsMgmt.plLyrics[i].TicksOn);
+                    }
+                    break;
+
+                case LyricsMgmt.ChordsOrigins.XmlEmbedded:
+                    // Origin = Xml, track is MXmlReader.TrackChordsNumber
+                    if (MXmlReader == null)
+                        return;
+                    if (MXmlReader.TrackChordsNumber > sequence1.tracks.Count)
+                        return;
+                    track = sequence1.tracks[MXmlReader.TrackChordsNumber];
+                    track.ClearChordNameSymbols();
+                    for (int i = 0; i < MXmlReader.lstChords.Count; i++)
+                    {
+                        track.addChordName(MXmlReader.lstChords[i].ChordName, MXmlReader.lstChords[i].TicksOn);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Display form frmChords
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnChords_Click(object sender, EventArgs e)
+        {
+
+            // Ferme le formulaire frmChords
+            //if (Application.OpenForms["frmChords"] != null)
+            //    Application.OpenForms["frmChords"].Close();
+            Application.OpenForms["frmChords"]?.Close();
+
+            if (Application.OpenForms.OfType<frmChords>().Count() == 0)
+            {
+                try
+                {
+                    frmChords frmChords = new frmChords(outDevice, MIDIfileFullPath);
+                    frmChords.Show();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region Displays objects
+
+        /// <summary>
+        /// Draw panels pnlScrollView & pnlTracks
+        /// </summary>
+        private void DrawControls()
+        {
+            //important:   use "leftWidth" to position controls                       
+
+            #region volume
+
+            sldMainVolume.Maximum = 130;    // Closer to 127
+            sldMainVolume.Minimum = 0;
+            sldMainVolume.ScaleDivisions = 13;
+            sldMainVolume.Value = 104;
+            sldMainVolume.SmallChange = 13;
+            sldMainVolume.LargeChange = 13;
+            sldMainVolume.MouseWheelBarPartitions = 10;
+
+            sldMainVolume.Left = 249;
+            sldMainVolume.Top = 25;
+            sldMainVolume.Width = 24;
+            sldMainVolume.Height = 80;
+
+
+            lblMainVolume.Text = String.Format("{0}%", 100 * sldMainVolume.Value / sldMainVolume.Maximum);
+
+            #endregion
+
+
+            #region left
+            // ------------------------------------------------------------
+            // then the tracks...
+            // Draw a panel on the left to display the track controllers
+            // ------------------------------------------------------------
+            //if (pnlTracks != null)
+            //    pnlTracks.Dispose();
+            pnlTracks?.Dispose();
+
+            pnlTracks = new Panel()
+            {
+                Parent = pnlMiddle,
+                BorderStyle = BorderStyle.FixedSingle,
+                AutoScroll = false,
+                AutoSize = false,
+                BackColor = Color.Black,
+            };
+            pnlTracks.SetBounds(0, 0, leftWidth, 400);
+
+            #endregion left
+
+
+            #region right
+
+            // ------------------------------------------------------------
+            // first the scores
+            // Draw a panel on the right to display the scores
+            // ------------------------------------------------------------
+            //if (pnlScrollView != null)
+            //    pnlScrollView.Dispose();
+            pnlScrollView?.Dispose();
+
+            pnlScrollView = new Panel()
+            {
+                Parent = pnlMiddle,
+                BorderStyle = BorderStyle.FixedSingle,
+                BackColor = Color.Gray,
+                AutoScroll = false,
+                AutoSize = false,
+            };
+            pnlScrollView.Size = new Size(pnlScrollView.Parent.ClientSize.Width - leftWidth, pnlScrollView.Parent.ClientSize.Height);
+            pnlScrollView.SetBounds(leftWidth, 0, 200, 400);
+            pnlMiddle.Controls.Add(pnlScrollView);
+
+
+            // Horizontal scrollbar
+            //if (pnlHScroll != null)
+            //    pnlHScroll.Dispose();
+            pnlHScroll?.Dispose();
+
+            pnlHScroll = new Panel()
+            {
+                Parent = pnlMiddle,
+                AutoScroll = false,
+                AutoSize = false,
+                BackColor = Color.Black,
+                Size = new Size(pnlMiddle.Width - pnlTracks.Width, 17),
+                Dock = DockStyle.Bottom,
+            };
+            pnlMiddle.Controls.Add(pnlHScroll);
+
+
+            hScrollBar = new HScrollBar()
+            {
+                Parent = pnlHScroll,
+                Left = leftWidth,
+                Top = 0,
+                Minimum = 0,
+            };
+            pnlHScroll.Controls.Add(hScrollBar);
+
+            hScrollBar.Scroll += new ScrollEventHandler(HScrollBar_Scroll);
+            hScrollBar.ValueChanged += new EventHandler(HScrollBar_ValueChanged);
+
+
+            // ========================
+            // Bring to front
+            // ========================
+            pnlTracks.BringToFront();
+            pnlHScroll.BringToFront();
+
+
+            // Vertical Scrollbar
+            //if (vScrollBar != null)
+            //    vScrollBar.Dispose();
+            vScrollBar?.Dispose();
+
+            vScrollBar = new NoSelectVScrollBar()
+            {
+                Parent = pnlMiddle,
+                Top = 0,
+                Minimum = 0,
+                TabStop = false,
+            };
+
+            pnlMiddle.Controls.Add(vScrollBar);
+            vScrollBar.Dock = DockStyle.Right;
+            vScrollBar.BringToFront();
+
+            vScrollBar.Scroll += new ScrollEventHandler(VScrollBar_Scroll);
+            vScrollBar.ValueChanged += new EventHandler(VScrollBar_ValueChanged);
+
+            #endregion right
+
+            // Red bar
+            TimeVLine.Height = pnlScrollView.Height;
+            TimeVLine.Left = pnlScrollView.Left;
+            TimeVLine.Top = pnlScrollView.Top;
+
+            // Blue bar
+            TimeStartVLine.Height = pnlScrollView.Height;
+            TimeStartVLine.Left = pnlScrollView.Left;
+            TimeStartVLine.Top = pnlScrollView.Top;
+
+            SetScrollBarValues();
+        }
+
+
+        /// <summary>
+        /// Display track controls
+        /// </summary>
+        private void DisplayTrackControls()
+        {
+            int nbTrk = sequence1.tracks.Count;
+            int nbTrkNotes = 0;
+            //int yOffset = 1;
+
+            this.Cursor = Cursors.WaitCursor;
+            DrawingControl.SuspendDrawing(this);
+
+            // Remove all existing track controls
+            bool oneMoreTime = true;
+            while (oneMoreTime)
+            {
+                Control toDelete = null;
+                oneMoreTime = false;
+                foreach (Control item in pnlTracks.Controls)
+                {
+                    if (item.GetType() == typeof(TrkControl.TrackControl))
+                    {
+                        toDelete = item;
+                        break;
+                    }
+                }
+                if (toDelete != null)
+                {
+                    pnlTracks.Controls.Remove(toDelete);
+                    oneMoreTime = true;
                 }
             }
 
-            #endregion search name
-
-            string defFilter = "MIDI files (*.mid)|*.mid|Kar files (*.kar)|*.kar|All files (*.*)|*.*";
-            if (defExt == ".kar")
-                defFilter = "Kar files (*.kar)|*.kar|MIDI files (*.mid)|*.mid|All files (*.*)|*.*";
-
-            saveMidiFileDialog.Title = "Save MIDI file";
-            saveMidiFileDialog.Filter = defFilter;
-            saveMidiFileDialog.DefaultExt = defExt;
-            saveMidiFileDialog.InitialDirectory = @fPath;
-            saveMidiFileDialog.FileName = defName;
-
-            if (saveMidiFileDialog.ShowDialog() == DialogResult.OK)
+            for (int i = 0; i < nbTrk; i++)
             {
-                string fileName = saveMidiFileDialog.FileName;
+                Track track = sequence1.tracks[i];
+                nbTrkNotes++;
+                // Add track control
+                AddTrackControl(track, i);
+            }
 
-                MIDIfileFullPath = fileName;
-                MIDIfileName = Path.GetFileName(fileName);
-                MIDIfilePath = Path.GetDirectoryName(fileName);
+            // Ajust height of panel according to number of controls
+            pnlTracks.Height = sequence1.tracks.Count * iStaffHeightMaximized * Convert.ToInt32(zoom);
 
-                InitSaveFile(fileName);
+            pnlScrollView.Height = pnlTracks.Height;
+
+            SetScrollBarValues();
+
+            DrawingControl.ResumeDrawing(this);
+            this.Cursor = Cursors.Default;
+        }
+
+
+
+        #endregion Displays objects
+
+
+        #region Edit partition
+
+        /// <summary>
+        /// Add measures to the score
+        /// </summary>
+        private void AddMeasures()
+        {
+            DialogResult dr;// = new DialogResult();
+            Sanford.Multimedia.Midi.Score.UI.frmAddMeasuresDialog AddMeasuresDialog = new Sanford.Multimedia.Midi.Score.UI.frmAddMeasuresDialog();
+            dr = AddMeasuresDialog.ShowDialog();
+
+            if (dr == System.Windows.Forms.DialogResult.Cancel)
+                return;
+
+            decimal measures = AddMeasuresDialog.Measures;
+
+            if (measures == 0)
+                return;
+
+            _totalTicks = sequence1.GetLength();
+            _measurelen = sequence1.Time.Measure;
+            int ticks = _totalTicks + (int)measures * _measurelen;
+            Track track = sequence1.tracks[0];
+
+            // Ofset end of track            
+            track.EndOfTrackOffset = ticks;
+
+            // Update GUI
+            UpdateMidiTimes();
+            DisplaySongDuration(_duration);
+
+            RedrawSheetMusic();
+            SetScrollBarValues();
+
+            FileModified();
+        }
+
+
+        /// <summary>
+        /// Time signature: remove all time signatures in all tracks, write new values in track 0
+        /// </summary>
+        /// <param name="numerator"></param>
+        /// <param name="denominator"></param>
+        private bool ModTimeSignature(int numerator, int denominator)
+        {
+            if (numerator == sequence1.Numerator && denominator == sequence1.Denominator)
+                return false;
+
+            sequence1.Numerator = numerator;
+            sequence1.Denominator = denominator;
+            sequence1.Time = new TimeSignature(sequence1.Numerator, sequence1.Denominator, sequence1.Division, sequence1.Tempo);
+
+            // Remove all time signature messages in all tracks
+            foreach (Track track in sequence1.tracks)
+            {
+                track.RemoveTimesignature();
+            }
+
+            // Write new value in track 0            
+            sequence1.tracks[0].insertTimesignature(numerator, denominator);
+
+            return true;
+
+        }
+
+        private void KeyboardSelectDurations(KeyEventArgs e)
+        {
+            if (PlayerState != PlayerStates.Stopped)
+                return;
+
+            switch (e.KeyCode)
+            {
+                case Keys.Oemplus:
+                case Keys.Add:
+                    switch (NoteValue)
+                    {
+                        case NoteValues.QuadrupleCroche:
+                            SetTripleCroche();
+                            break;
+                        case NoteValues.TripleCroche:
+                            SetDoubleCroche();
+                            break;
+                        case NoteValues.DoubleCroche:
+                            SetCroche();
+                            break;
+                        case NoteValues.Croche:
+                            SetBlack();
+                            break;
+                        case NoteValues.Noire:
+                            SetWhite();
+                            break;
+                        case NoteValues.Blanche:
+                            SetRond();
+                            break;
+                        case NoteValues.Ronde:
+                            SetQuadrupleCroche();
+                            break;
+                    }
+                    break;
+
+                case Keys.D6:
+                case Keys.OemMinus:
+                case Keys.Subtract:
+                    switch (NoteValue)
+                    {
+                        case NoteValues.Ronde:
+                            SetWhite();
+                            break;
+                        case NoteValues.Blanche:
+                            SetBlack();
+                            break;
+                        case NoteValues.Noire:
+                            SetCroche();
+                            break;
+                        case NoteValues.Croche:
+                            SetDoubleCroche();
+                            break;
+                        case NoteValues.DoubleCroche:
+                            SetTripleCroche();
+                            break;
+                        case NoteValues.TripleCroche:
+                            SetQuadrupleCroche();
+                            break;
+                        case NoteValues.QuadrupleCroche:
+                            SetRond();
+                            break;
+                    }
+                    break;
+
+                case Keys.OemPeriod:
+                case Keys.Decimal:
+                    SetDotted();
+                    break;
             }
         }
 
         /// <summary>
-        /// Save file: initialize events
+        /// Disable editing functions
         /// </summary>
-        /// <param name="fileName"></param>
-        public void InitSaveFile(string fileName)
+        private void DisableEditButtons()
         {
-           
-            progressBarPlayer.Visible = true;
+            NoteValue = NoteValues.None;
+            this.Cursor = Cursors.Default;
 
-            sequence1.SaveProgressChanged += HandleSaveProgressChanged;
-            sequence1.SaveCompleted += HandleSaveCompleted;            
-            SaveFile(fileName);
+            lblSaisieNotes.BackColor = Color.White;
+            bEnterNotes = false;
+            Alteration = Alterations.None;
+
+            lblGomme.BackColor = Color.White;
+            lblRondNote.BackColor = Color.White;
+            lblWhiteNote.BackColor = Color.White;
+            lblBlackNote.BackColor = Color.White;
+            lblCrocheNote.BackColor = Color.White;
+            lblDoubleCrocheNote.BackColor = Color.White;
+            lblTripleCrocheNote.BackColor = Color.White;
+            lblQuadrupleCrocheNote.BackColor = Color.White;
+
+            lblDotted.BackColor = Color.White;
+            lblBemol.BackColor = Color.White;
+            lblDiese.BackColor = Color.White;
+            lblBecarre.BackColor = Color.White;
+
         }
 
         /// <summary>
-        /// Savs as PDF
+        /// Click on button "Edit" => Score edition activation
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MnuSaveAsPDF_Click(object sender, EventArgs e)
+        private void LblEdit_Click(object sender, EventArgs e)
         {
-            /** The callback function for the "Save As PDF" menu.
-              * When invoked this will save the sheet music as a PDF document,
-              * with one image per page.  For each page in the sheet music:
-              * - Create a new bitmap, PageWidth by PageHeight
-              * - Create a Graphics object for the bitmap
-              * - Call the SheetMusic.DoPrint() method to draw the music onto the bitmap
-              * - Add the bitmap image to the PDF document.
-              * - Save the PDF document
-              */
+            if (PlayerState != PlayerStates.Stopped)
+                return;
 
-            //string message; // = string.Empty;
+            DspEdit(!bEditScore);
 
+        }
+
+        /// <summary>
+        /// Validate or invalidate EditMode
+        /// </summary>
+        /// <param name="status"></param>
+        private void DspEdit(bool status)
+        {
             if (sheetmusic == null)
                 return;
 
-            if (MIDIfileName == null || MIDIfileName == "")
+            if (status == true)
             {
-                MIDIfileName = "new.mid";
-            }
-          
+                // Enter edit mode
+                bEditScore = true;
 
-            // Affiche le formulaire frmPrint 
-            //if (Application.OpenForms["frmPrint"] != null)
-            //    Application.OpenForms["frmPrint"].Close();
-            Application.OpenForms["frmPrint"]?.Close();
+                lblEdit.BackColor = Color.Red;
+                lblEdit.ForeColor = Color.White;
+                MnuEditScore.Checked = true;
 
-            Form frmPrint = new frmPrint(sequence1, MIDIfileFullPath);
-            frmPrint.Show();
+                SetStartVLinePos(0);
 
-        }
+                // Allow sheetmusic editing
+                sheetmusic.bEditMode = true;
+                EnableTrackControls(true);
 
-        /// <summary>
-        /// Load the midi file in the sequencer
-        /// </summary>
-        /// <param name="fileName"></param>
-        public void LoadAsyncMidiFile(string fileName)
-        {
-            try
-            {                
-                progressBarPlayer.Visible = true;
-
-                ResetSequencer();
-                if (fileName != "\\")
-                {                                        
-                    sequence1.LoadAsync(fileName);                                        
-                }
-            } catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            }            
-        }
-        
-
-        /// <summary>
-        /// Load async a XML file
-        /// </summary>
-        /// <param name="fileName"></param>
-        public void LoadAsyncXmlFile(string fileName)
-        {
-            try
-            {
-                progressBarPlayer.Visible = true;
-
-                ResetSequencer();
-                if (fileName != "\\")
+                if (sheetmusic.SelectedStaff != -1)
                 {
-                    // FAB 2710
-                    MXmlReader = new MusicXmlReader();
-                    
-                    // Show Xml chords?
-                    MXmlReader.PlayXmlChords = Karaclass.m_ShowXmlChords;
-
-                    MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
-                    // ========
-
-                    MXmlReader.LoadXmlAsync(fileName, false);
+                    SelectTrackControl(sheetmusic.SelectedStaff);
+                }
+                else
+                {
+                    SelectTrackControl(0);
+                    sheetmusic.SelectedStaff = 0;
                 }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                // Quit edit mode
+                bEditScore = false;
+
+                lblEdit.BackColor = Color.White;
+                lblEdit.ForeColor = Color.Black;
+
+                MnuEditScore.Checked = false;
+                MnuEditEnterNotes.Checked = false;
+
+                // Quit enter notes
+                DisableEditButtons();
+                bEnterNotes = false;
+
+                // Disallow sheetmusic edit mode
+                sheetmusic.bEditMode = false;
+                sheetmusic.bEnterNotes = false;                
+
+                // Disable edit Track Controls
+                EnableTrackControls(false);
+
+                // Unselect all track controls
+                UnselectTrackControls();
+
+                // Close frmModifyTempo
+                if (Application.OpenForms.OfType<frmModifyTempo>().Count() > 0)
+                {
+                    Application.OpenForms["frmModifyTempo"].Close();
+                }
+
             }
         }
 
         /// <summary>
-        /// Load async a TXT file
+        /// Click on button "N" => Notes entering activation
         /// </summary>
-        /// <param name="fileName"></param>
-        public void LoadAsyncTxtFile(string fileName)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LblSaisieNotes_Click(object sender, EventArgs e)
         {
-            try
+            DspEnterNotes();
+        }
+
+        /// <summary>
+        /// Validate or invalidate Entering notes
+        /// </summary>
+        private void DspEnterNotes()
+        {
+            if (PlayerState != PlayerStates.Stopped)
+                return;
+
+            // stop notes entering 
+            if (bEnterNotes == true)
             {
-                progressBarPlayer.Visible = true;
+                DisableEditButtons();
+                bEnterNotes = false;
 
-                ResetSequencer();
-                if (fileName != "\\")
-                {
-                    MTxtReader = new MusicTxtReader(fileName);
-                    MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
+                MnuEditEnterNotes.Checked = false;
 
-                    MTxtReader.LoadTxtAsync(fileName);
-                }
+                sheetmusic.bEnterNotes = false;
+                sheetmusic.bShowHelpGrid = false;
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                // start notes entering 
+                DisableEditButtons();
+                bEnterNotes = true;
+
+
+                MnuEditEnterNotes.Checked = true;
+                MnuEditScore.Checked = true;
+
+                sheetmusic.bEnterNotes = true;
+                sheetmusic.bShowHelpGrid = true;
+
+                // Enter edit mode
+                DspEdit(true);
+
+                lblSaisieNotes.BackColor = Color.Red;
+
+                NoteValue = NoteValues.Noire;
+                this.Cursor = Cursors.Hand;
+                lblBlackNote.BackColor = Color.Red;
+            }
+
+
+            // Show form edit note only if label "Edit" is red
+            //if (bEditScore && !bEnterNotes)
+            //    ShowFrmNoteEdit();
+
+
+        }
+
+        private void RestoreSaisie()
+        {
+            if (bEnterNotes == false)
+            {
+                // start notes entering
+                DisableEditButtons();
+                bEnterNotes = true;
+                sheetmusic.bEnterNotes = true;
+                lblSaisieNotes.BackColor = Color.Red;
+
+                // Enter edit mode
+                DspEdit(true);
             }
         }
 
         /// <summary>
-        /// Save the midi file
+        /// Edit: Erase a note
         /// </summary>
-        /// <param name="fileName"></param>
-        private void SaveFile(string fileName)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LblGomme_Click(object sender, EventArgs e)
         {
-            try
+            if (PlayerState != PlayerStates.Stopped)
+                return;
+            else
+                RestoreSaisie();
+
+            if (NoteValue == NoteValues.Gomme)
             {
-                if (fileName != "")
-                {
-                    sequence1.SaveAsync(fileName);
-                }
+                NoteValue = NoteValues.None;
+                lblGomme.BackColor = Color.White;
+                this.Cursor = Cursors.Arrow;
+            }
+            else
+            {
+                NoteValue = NoteValues.Gomme;
+                this.Cursor = Cursors.Hand;
+
+                lblGomme.BackColor = Color.Red;
+                lblRondNote.BackColor = Color.White;
+                lblWhiteNote.BackColor = Color.White;
+                lblBlackNote.BackColor = Color.White;
+                lblCrocheNote.BackColor = Color.White;
+                lblDoubleCrocheNote.BackColor = Color.White;
+                lblTripleCrocheNote.BackColor = Color.White;
+                lblQuadrupleCrocheNote.BackColor = Color.White;
 
             }
-            catch (Exception errsave)
+        }
+
+        #region Notes Ronde to quadruplecroche
+
+        /// <summary>
+        /// Edi: Add a Rond note
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LblRondNote_Click(object sender, EventArgs e)
+        {
+            SetRond();
+        }
+
+        private void SetRond()
+        {
+            if (PlayerState != PlayerStates.Stopped)
+                return;
+            else
+                RestoreSaisie();
+
+            if (NoteValue == NoteValues.Ronde)
             {
-                Console.Write(errsave.Message);
+                NoteValue = NoteValues.None;
+                lblRondNote.BackColor = Color.White;
+                this.Cursor = Cursors.Arrow;
+            }
+            else
+            {
+                NoteValue = NoteValues.Ronde;
+                this.Cursor = Cursors.Hand;
+
+                lblGomme.BackColor = Color.White;
+                lblRondNote.BackColor = Color.Red;
+                lblWhiteNote.BackColor = Color.White;
+                lblBlackNote.BackColor = Color.White;
+                lblCrocheNote.BackColor = Color.White;
+                lblDoubleCrocheNote.BackColor = Color.White;
+                lblTripleCrocheNote.BackColor = Color.White;
+                lblQuadrupleCrocheNote.BackColor = Color.White;
+            }
+        }
+
+        /// <summary>
+        /// Edit: Add a white note
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LblWhiteNote_Click(object sender, EventArgs e)
+        {
+            SetWhite();
+        }
+
+        private void SetWhite()
+        {
+            if (PlayerState != PlayerStates.Stopped)
+                return;
+            else
+                RestoreSaisie();
+
+            if (NoteValue == NoteValues.Blanche)
+            {
+                NoteValue = NoteValues.None;
+                lblWhiteNote.BackColor = Color.White;
+                this.Cursor = Cursors.Arrow;
+            }
+            else
+            {
+                NoteValue = NoteValues.Blanche;
+                this.Cursor = Cursors.Hand;
+
+                lblGomme.BackColor = Color.White;
+                lblRondNote.BackColor = Color.White;
+                lblWhiteNote.BackColor = Color.Red;
+                lblBlackNote.BackColor = Color.White;
+                lblCrocheNote.BackColor = Color.White;
+                lblDoubleCrocheNote.BackColor = Color.White;
+                lblTripleCrocheNote.BackColor = Color.White;
+                lblQuadrupleCrocheNote.BackColor = Color.White;
+            }
+        }
+
+        private void LblBlackNote_Click(object sender, EventArgs e)
+        {
+            SetBlack();
+        }
+
+        private void SetBlack()
+        {
+            if (PlayerState != PlayerStates.Stopped)
+                return;
+            else
+                RestoreSaisie();
+
+            if (NoteValue == NoteValues.Noire)
+            {
+                NoteValue = NoteValues.None;
+                lblBlackNote.BackColor = Color.White;
+                this.Cursor = Cursors.Arrow;
+            }
+            else
+            {
+                NoteValue = NoteValues.Noire;
+                this.Cursor = Cursors.Hand;
+
+                lblGomme.BackColor = Color.White;
+                lblRondNote.BackColor = Color.White;
+                lblWhiteNote.BackColor = Color.White;
+                lblBlackNote.BackColor = Color.Red;
+                lblCrocheNote.BackColor = Color.White;
+                lblDoubleCrocheNote.BackColor = Color.White;
+                lblTripleCrocheNote.BackColor = Color.White;
+                lblQuadrupleCrocheNote.BackColor = Color.White;
+            }
+
+        }
+
+        private void LblCrocheNote_Click(object sender, EventArgs e)
+        {
+            SetCroche();
+        }
+
+        private void SetCroche()
+        {
+            if (PlayerState != PlayerStates.Stopped)
+                return;
+            else
+                RestoreSaisie();
+
+            if (NoteValue == NoteValues.Croche)
+            {
+                NoteValue = NoteValues.None;
+                lblCrocheNote.BackColor = Color.White;
+                this.Cursor = Cursors.Arrow;
+            }
+            else
+            {
+                NoteValue = NoteValues.Croche;
+                this.Cursor = Cursors.Hand;
+
+                lblGomme.BackColor = Color.White;
+                lblRondNote.BackColor = Color.White;
+                lblWhiteNote.BackColor = Color.White;
+                lblBlackNote.BackColor = Color.White;
+                lblCrocheNote.BackColor = Color.Red;
+                lblDoubleCrocheNote.BackColor = Color.White;
+                lblTripleCrocheNote.BackColor = Color.White;
+                lblQuadrupleCrocheNote.BackColor = Color.White;
+            }
+        }
+
+        private void LblDoubleCrocheNote_Click(object sender, EventArgs e)
+        {
+            SetDoubleCroche();
+        }
+
+        private void SetDoubleCroche()
+        {
+            if (PlayerState != PlayerStates.Stopped)
+                return;
+            else
+                RestoreSaisie();
+
+            if (NoteValue == NoteValues.DoubleCroche)
+            {
+                NoteValue = NoteValues.None;
+                lblDoubleCrocheNote.BackColor = Color.White;
+                this.Cursor = Cursors.Arrow;
+            }
+            else
+            {
+                NoteValue = NoteValues.DoubleCroche;
+                this.Cursor = Cursors.Hand;
+
+                lblGomme.BackColor = Color.White;
+                lblRondNote.BackColor = Color.White;
+                lblWhiteNote.BackColor = Color.White;
+                lblBlackNote.BackColor = Color.White;
+                lblCrocheNote.BackColor = Color.White;
+                lblDoubleCrocheNote.BackColor = Color.Red;
+                lblTripleCrocheNote.BackColor = Color.White;
+                lblQuadrupleCrocheNote.BackColor = Color.White;
+            }
+        }
+
+        private void LblTripleCrocheNote_Click(object sender, EventArgs e)
+        {
+            SetTripleCroche();
+        }
+
+        private void SetTripleCroche()
+        {
+            if (PlayerState != PlayerStates.Stopped)
+                return;
+            else
+                RestoreSaisie();
+
+            if (NoteValue == NoteValues.TripleCroche)
+            {
+                NoteValue = NoteValues.None;
+                lblTripleCrocheNote.BackColor = Color.White;
+                this.Cursor = Cursors.Arrow;
+            }
+            else
+            {
+                NoteValue = NoteValues.TripleCroche;
+                this.Cursor = Cursors.Hand;
+
+                lblGomme.BackColor = Color.White;
+                lblRondNote.BackColor = Color.White;
+                lblWhiteNote.BackColor = Color.White;
+                lblBlackNote.BackColor = Color.White;
+                lblCrocheNote.BackColor = Color.White;
+                lblDoubleCrocheNote.BackColor = Color.White;
+                lblTripleCrocheNote.BackColor = Color.Red;
+                lblQuadrupleCrocheNote.BackColor = Color.White;
+            }
+        }
+
+        private void LblQuadrupleCrocheNote_Click(object sender, EventArgs e)
+        {
+            SetQuadrupleCroche();
+        }
+
+        private void SetQuadrupleCroche()
+        {
+            if (PlayerState != PlayerStates.Stopped)
+                return;
+            else
+                RestoreSaisie();
+
+            if (NoteValue == NoteValues.QuadrupleCroche)
+            {
+                NoteValue = NoteValues.None;
+                lblQuadrupleCrocheNote.BackColor = Color.White;
+                this.Cursor = Cursors.Arrow;
+            }
+            else
+            {
+                NoteValue = NoteValues.QuadrupleCroche;
+                this.Cursor = Cursors.Hand;
+
+                lblGomme.BackColor = Color.White;
+                lblRondNote.BackColor = Color.White;
+                lblWhiteNote.BackColor = Color.White;
+                lblBlackNote.BackColor = Color.White;
+                lblCrocheNote.BackColor = Color.White;
+                lblDoubleCrocheNote.BackColor = Color.White;
+                lblTripleCrocheNote.BackColor = Color.White;
+                lblQuadrupleCrocheNote.BackColor = Color.Red;
+            }
+        }
+
+        #endregion
+
+        #region alterations
+        private void LblDotted_Click(object sender, EventArgs e)
+        {
+            SetDotted();
+        }
+
+        private void SetDotted()
+        {
+            if (bEnterNotes == false)
+                return;
+
+            if (Alteration == Alterations.Dot)
+            {
+                Alteration = Alterations.None;
+                lblDotted.BackColor = Color.White;
+            }
+            else
+            {
+                Alteration = Alterations.Dot;
+                lblDotted.BackColor = Color.Red;
+            }
+        }
+
+        private void LblDiese_Click(object sender, EventArgs e)
+        {
+            if (bEnterNotes == false)
+                return;
+
+            if (Alteration == Alterations.Diese)
+            {
+                Alteration = Alterations.None;
+                lblDiese.BackColor = Color.White;
+            }
+            else
+            {
+                Alteration = Alterations.Diese;
+                lblDiese.BackColor = Color.Red;
+                lblBemol.BackColor = Color.White;
+                lblBecarre.BackColor = Color.White;
+            }
+        }
+
+        private void LblBemol_Click(object sender, EventArgs e)
+        {
+            if (bEnterNotes == false)
+                return;
+
+            if (Alteration == Alterations.Bemol)
+            {
+                Alteration = Alterations.None;
+                lblBemol.BackColor = Color.White;
+            }
+            else
+            {
+                Alteration = Alterations.Bemol;
+                lblDiese.BackColor = Color.White;
+                lblBemol.BackColor = Color.Red;
+                lblBecarre.BackColor = Color.White;
+            }
+
+        }
+
+        private void LblBecarre_Click(object sender, EventArgs e)
+        {
+            if (bEnterNotes == false)
+                return;
+
+            if (Alteration == Alterations.Becarre)
+            {
+                Alteration = Alterations.None;
+                lblBecarre.BackColor = Color.White;
+            }
+            else
+            {
+                Alteration = Alterations.Becarre;
+                lblDiese.BackColor = Color.White;
+                lblBemol.BackColor = Color.White;
+                lblBecarre.BackColor = Color.Red;
+            }
+
+        }
+        #endregion
+
+        #region triolet
+        /// <summary>
+        /// Transform selection of notes to a triolet
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LblTriolet_Click(object sender, EventArgs e)
+        {
+            #region guard
+            if (bEditScore == false || sheetmusic == null)
+                return;
+
+            #endregion
+            //  
+
+        }
+
+        #endregion
+
+        #region clef
+
+        // Set Clef for Measure
+        private void LblTreble_Click(object sender, EventArgs e)
+        {
+            if (bEditScore == false)
+                return;
+
+            int numTrack = sheetmusic.CurrentNote.numstaff;
+            Track track = sequence1.tracks[numTrack];
+
+            if (lblTreble.BackColor == Color.Red)
+            {
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.None;
+                lblTreble.BackColor = Color.White;
+            }
+            else
+            {
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Treble;
+                lblBass.BackColor = Color.White;
+                lblTreble.BackColor = Color.Red;
+            }
+            sheetmusic.Refresh();
+        }
+
+        private void LblBass_Click(object sender, EventArgs e)
+        {
+            if (bEditScore == false)
+                return;
+
+            int numTrack = sheetmusic.CurrentNote.numstaff;
+            Track track = sequence1.tracks[numTrack];
+
+            if (lblBass.BackColor == Color.Red)
+            {
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.None;
+                lblBass.BackColor = Color.White;
+            }
+            else
+            {
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Bass;
+                lblTreble.BackColor = Color.White;
+                lblBass.BackColor = Color.Red;
+            }
+            sheetmusic.Refresh();
+        }
+
+        /// <summary>
+        /// Color in red button corresponding to the key of the track
+        /// </summary>
+        /// <param name="tracknum"></param>
+        private void SelectTrackKey(int tracknum)
+        {
+            Track track = sequence1.tracks[tracknum];
+
+            // Select key
+            if (track.Clef == Sanford.Multimedia.Midi.Score.Clef.Bass)
+            {
+                lblBass.BackColor = Color.Red;
+                lblTreble.BackColor = Color.White;
+            }
+            else if (track.Clef == Sanford.Multimedia.Midi.Score.Clef.Treble)
+            {
+                lblTreble.BackColor = Color.Red;
+                lblBass.BackColor = Color.White;
+            }
+            else
+            {
+                lblTreble.BackColor = Color.White;
+                lblBass.BackColor = Color.White;
+            }
+        }
+
+        #endregion
+
+        #endregion edit partition
+
+
+        #region form load close keydown
+
+        /// <summary>
+        /// Mousewheel : scroll vertically if playing
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FrmPlayer_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (sheetmusic == null) return;
+
+            int newvalue; // = 0;
+            int W = sheetmusic.MaxStaffWidth;
+
+
+            // If playing, scroll vertically both leftPanel & score
+            if (PlayerState == PlayerStates.Playing)
+            {
+                if (bShowVScrollBar)
+                {
+                    // Scroll vertically Left panel
+                    newvalue = vScrollBar.Value - e.Delta;
+                    if (newvalue < 0)
+                        newvalue = 0;
+                    if (newvalue > vScrollBar.Maximum - vScrollBar.LargeChange)
+                        newvalue = vScrollBar.Maximum - vScrollBar.LargeChange;
+
+                    vScrollBar.Value = newvalue;
+                }
+            }
+            else
+            {
+                // If not playing,
+
+                //scroll vertically the left panel if mouse is over it
+                if (e.Location.X > 0 & e.Location.X < pnlTracks.Location.X + pnlTracks.Width)
+                {
+                    if (bShowVScrollBar)
+                    {
+                        // Scroll vertically Left panel
+                        newvalue = vScrollBar.Value - e.Delta;
+                        if (newvalue < 0)
+                            newvalue = 0;
+                        if (newvalue > vScrollBar.Maximum - vScrollBar.LargeChange)
+                            newvalue = vScrollBar.Maximum - vScrollBar.LargeChange;
+
+                        vScrollBar.Value = newvalue;
+                    }
+                }
+                else if (e.Location.X > pnlScrollView.Location.X && e.Location.X < pnlScrollView.Location.X + W)
+                {
+                    if (bShowHScrollBar)
+                    {
+                        // Scroll horizontaly right panel
+                        newvalue = hScrollBar.Value - e.Delta;
+                        if (newvalue < 0)
+                            newvalue = 0;
+                        if (newvalue > hScrollBar.Maximum - hScrollBar.LargeChange)
+                            newvalue = hScrollBar.Maximum - hScrollBar.LargeChange;
+
+                        hScrollBar.Value = newvalue;
+                    }
+                }
             }
         }
 
 
-        #region import/export
+        /// <summary>
+        /// Override form load event
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnLoad(EventArgs e)
+        {
+            if (outDevice == null)
+            {
+                MessageBox.Show("No MIDI output devices available.", "Error!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                Close();
+            }
+            else
+            {
+                try
+                {
+                    outDeviceProcessId = outDevice.Pid;
 
+                    string outDeviceName = OutputDeviceBase.GetDeviceCapabilities(outDevice.DeviceID).name;
+                    lblOutputDevice.Text = outDeviceName;
+
+                    AlertOutputDevice(outDeviceName);
+
+                    sequence1.LoadProgressChanged += HandleLoadProgressChanged;
+                    sequence1.LoadCompleted += HandleLoadCompleted;
+
+                    // ==========================================================================
+                    // Chargement du fichier midi selectionné depuis frmExplorer
+                    // ==========================================================================
+
+                    ResetMidiFile();
+
+                    // ACTIONS TO PERFORM
+                    SelectActionOnLoad();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error!",
+                        MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    Close();
+                }
+            }
+            base.OnLoad(e);
+        }
+
+
+        /// <summary>
+        /// Select what to do on load: new score, play single file, or playlist 
+        /// </summary>
+        private void SelectActionOnLoad()
+        {
+            // Same for start a playlist or a single file (mid, xml, txt)
+            if (MIDIfileFullPath != null && MIDIfileFullPath != "")
+            {
+                SelectFileToLoadAsync();
+            }
+            else
+            {
+                // A new file must be created                                                              
+                NewMidiFile();
+            }
+        }
+
+        /// <summary>
+        /// Select loader according to extension (mid, xml, txt)
+        /// </summary>
+        private void SelectFileToLoadAsync()
+        {
+            string ext = Path.GetExtension(MIDIfileFullPath).ToLower();
+            if (ext == ".mid" || ext == ".kar")
+            {
+                // Play a single MIDI file
+                LoadAsyncMidiFile(MIDIfileFullPath);
+            }
+            else if (ext == ".mxl")
+            {
+                // mxl file must be unzipped before
+                string myXMLFileName = Files.UnzipFile(MIDIfileFullPath);
+                if (File.Exists(myXMLFileName))
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                    Application.DoEvents();
+                    LoadAsyncXmlFile(myXMLFileName);
+                }
+            }
+            else if (ext == ".xml" || ext == ".musicxml")
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                Application.DoEvents();
+                LoadAsyncXmlFile(MIDIfileFullPath);
+            }
+            else if (ext == ".txt")
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                Application.DoEvents();
+                LoadAsyncTxtFile(MIDIfileFullPath);
+            }
+            else
+            {
+                MessageBox.Show("Unknown extension");
+            }
+        }
+
+    
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            closing = true;
+            base.OnClosing(e);
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            ResetSequencer();
+            sequencer1.Dispose();
+            if (outDevice != null && !outDevice.IsDisposed)
+                outDevice.Reset();
+
+            base.OnClosed(e);
+        }
+
+        /// <summary>
+        /// Event: form closing
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FrmPlayer_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (loading)
+            {
+                e.Cancel = true;
+            }
+            else
+            {
+
+                // Remove edit forms like frmNoteEdit, frmModifyTempo etcc (always on top)
+                // They can hide the messagebox asking for saving the file
+                DspEdit(false);
+
+                if (bfilemodified == true)
+                {
+                    // string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
+                    String tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
+                    DialogResult dr = MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                    if (dr == DialogResult.Cancel)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+                    else if (dr == DialogResult.Yes)
+                    {
+                        e.Cancel = true;
+                        // turlututu
+                        bClosingRequired = true;
+                        SaveFileProc();
+                        return;
+                    }
+                }
+
+                // enregistre la taille et la position de la forme
+                // Copy window location to app settings                
+                if (WindowState != FormWindowState.Minimized)
+                {
+                    if (WindowState == FormWindowState.Maximized)
+                    {
+                        Properties.Settings.Default.frmPlayerLocation = RestoreBounds.Location;
+                        Properties.Settings.Default.frmPlayerMaximized = true;
+
+                    }
+                    else if (WindowState == FormWindowState.Normal)
+                    {
+                        Properties.Settings.Default.frmPlayerLocation = Location;
+
+                        // SDave only if not default size
+                        if (Height != SimplePlayerHeight)
+                            Properties.Settings.Default.frmPlayerSize = Size;
+
+                        Properties.Settings.Default.frmPlayerMaximized = false;
+                    }
+
+                    // Show sequencer
+                    Properties.Settings.Default.ShowSequencer = bSequencerAlwaysOn;
+                    Properties.Settings.Default.ShowKaraoke = bKaraokeAlwaysOn;
+
+                    // Save settings
+                    Properties.Settings.Default.Save();
+                }
+
+
+                // Ferme le formulaire frmLyric
+                if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+                {
+                    frmLyric.Close();
+                    //frmLyric.Dispose();
+                }
+                // ferme le formulaire frmLyricsEdit
+                if (Application.OpenForms.OfType<frmLyricsEdit>().Count() > 0)
+                {
+                    Application.OpenForms["frmLyricsEdit"].Close();
+                }
+                // ferme le formulaire frmPianoRoll
+                if (Application.OpenForms.OfType<frmPianoRoll>().Count() > 0)
+                {
+                    Application.OpenForms["frmPianoRoll"].Close();
+                }
+                // ferme le formulaire frmModifyTempo
+                if (Application.OpenForms.OfType<frmModifyTempo>().Count() > 0)
+                {
+                    Application.OpenForms["frmModifyTempo"].Close();
+                }
+                // ferme le formulaire frmPrint
+                if (Application.OpenForms.OfType<frmPrint>().Count() > 0)
+                {
+                    Application.OpenForms["frmPrint"].Close();
+                }
+                // Active le formulaire frmExplorer
+                if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
+                {
+                    // Restore form
+                    Application.OpenForms["frmExplorer"].Restore();
+                    Application.OpenForms["frmExplorer"].Activate();
+
+                }
+
+
+                Dispose();
+
+            }
+        }
+
+        /// <summary>
+        /// Form load
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FrmPlayer_Load(object sender, EventArgs e)
+        {
+            // Set window location and size
+            #region window size & location
+            // If window is maximized
+            if (Properties.Settings.Default.frmPlayerMaximized)
+            {
+                Location = Properties.Settings.Default.frmPlayerLocation;
+                //Size = Properties.Settings.Default.frmPlayerSize;
+                WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                Location = Properties.Settings.Default.frmPlayerLocation;
+                // Verify if this windows is visible in extended screens
+                Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
+                foreach (Screen screen in Screen.AllScreens)
+                    rect = Rectangle.Union(rect, screen.Bounds);
+
+                if (Location.X > rect.Width)
+                    Location = new Point(0, Location.Y);
+                if (Location.Y > rect.Height)
+                    Location = new Point(Location.X, 0);
+
+                Size = Properties.Settings.Default.frmPlayerSize;
+            }
+            #endregion
+
+            // Ne pas tenir compte si new file ou edit file
+            bSequencerAlwaysOn = Properties.Settings.Default.ShowSequencer;
+            bKaraokeAlwaysOn = Properties.Settings.Default.ShowKaraoke;
+
+            // Redim form according to the visibility of the sequencer
+            RedimIfSequencerVisible();
+
+        }
+
+
+        /// <summary>
+        /// Form Keydown event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FrmPlayer_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (bEditScore == true)
+            {
+                #region edit score
+                /*
+                // Move up or down a single note
+                if (e.KeyCode.ToString() == "Down" || e.KeyCode.ToString() == "Up")
+                {
+                    // move Up or Down a single note 
+                    Key_UpDownNote(e.KeyCode.ToString());
+                }
+                */
+
+                // Edit notes
+                if (bEnterNotes == false)
+                {
+                    // EditScore = true and EnterNotes = false
+                    // Ctrl + N > valide EnterNotes
+                    // Left, Right > Move the current note
+                    // Delete > delete selection
+                    switch (e.KeyCode)
+                    {
+                        case Keys.E:
+                            if (e.Control)
+                                DspEdit(!bEditScore);
+                            break;
+
+                        case Keys.N:
+                            if (e.Control)
+                                DspEnterNotes();
+                            break;
+
+                        case Keys.Delete:
+                            sheetmusic.SheetMusic_KeyDown(sender, e);
+                            break;
+                    }
+                }
+                else if (bEnterNotes == true)
+                {
+                    // EditScore = true and EnterNotes = true
+                    // enter notes C, D, E F, G, A, B
+                    // Delete notes tec...
+                    switch (e.KeyCode)
+                    {
+                        case Keys.C:
+                            Key_AddNote(0);
+                            break;
+                        case Keys.D:
+                            Key_AddNote(2);
+                            break;
+                        case Keys.E:
+                            if (e.Control)
+                                DspEdit(!bEditScore);
+                            else
+                                Key_AddNote(4);
+                            break;
+                        case Keys.F:
+                            Key_AddNote(5);
+                            break;
+                        case Keys.G:
+                            Key_AddNote(7);
+                            break;
+                        case Keys.A:
+                            Key_AddNote(9);
+                            break;
+                        case Keys.B:
+                            Key_AddNote(11);
+                            break;
+
+                        case Keys.N:
+                            // Set EnterNotes = false
+                            if (e.Control)
+                                DspEnterNotes();
+                            break;
+
+                        case Keys.Add:
+                        case Keys.Subtract:
+                        case Keys.D6:
+                        case Keys.Decimal:
+                            // plus, minus > select more or less duration for entering notes
+                            KeyboardSelectDurations(e);
+                            break;
+
+                        case Keys.Back:
+                            Key_DelNote();
+                            break;
+
+                        case Keys.Delete:
+                            Key_DelNote();
+                            break;
+
+                        case Keys.Space:
+                            // Set enterNotes = false and start playing
+                            DspEnterNotes();
+                            PlayPauseMusic();
+                            break;
+
+                    }
+                }
+                #endregion edit score
+            }
+            else
+            {
+                // not in editing mode
+                // Manage launch player with spacebar
+                #region Player
+                switch (e.KeyCode)
+                {
+                    case Keys.E:
+                        if (e.Control)
+                            DspEdit(!bEditScore);
+                        break;
+
+                    case Keys.N:
+                        // Set enterNotes = true
+                        if (e.Control)
+                            DspEnterNotes();
+                        break;
+
+                    case Keys.Add:
+                    case Keys.Subtract:
+                    case Keys.D6:
+                    case Keys.Decimal:
+                        // Tempo +-
+                        KeyboardSelectTempo(e);
+                        break;
+
+                }
+                #endregion Player
+            }
+        }
+
+        /// <summary>
+        /// I am able to detect alpha-numeric keys. However i am not able to detect arrow keys
+        /// ProcessCmdKey save my life
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="keyData"></param>
+        /// <returns></returns>
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (bEditScore == false)
+            {
+                if ((PlayerState == PlayerStates.Paused) || (PlayerState == PlayerStates.Stopped && newstart > 0))
+                {
+                    if (keyData == Keys.Left)
+                    {
+                        StopMusic();
+                        return true;
+                    }
+                }
+            }
+            else if (bEditScore == true)
+            {
+                switch (keyData)
+                {
+                    case Keys.Left:
+                        Key_Left();
+                        return true;
+                    case Keys.Right:
+                        Key_Right();
+                        return true;
+                }
+
+                if (keyData.ToString() == "Down" || keyData.ToString() == "Up")
+                {
+                    // move Up or Down a single note 
+                    Key_UpDownNote(keyData.ToString());
+                }
+
+
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        /// <summary>
+        /// Key Up event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FrmPlayer_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Shift)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.Oemplus:
+                        // Tempo +-
+                        KeyboardSelectTempo(e);
+                        break;
+                }
+            }
+            else if (bEditScore == false)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.Space:
+                        PlayPauseMusic();
+                        break;
+
+                    case Keys.F12:
+                        bSequencerAlwaysOn = !bSequencerAlwaysOn;
+                        // bForceShowSequencer was true, but user decided to hide the sequencer by clicking on the menu
+                        if (bSequencerAlwaysOn == false && bForceShowSequencer == true)
+                            bForceShowSequencer = false;
+                        RedimIfSequencerVisible();
+                        break;
+                }
+            }
+            else if (bEnterNotes == true)
+            {
+                #region edit score
+                if (e.Modifiers == Keys.Shift)
+                {
+                    switch (e.KeyCode)
+                    {
+                        case Keys.Oemplus:
+                        case Keys.OemPeriod:
+                        case Keys.Decimal:
+                            KeyboardSelectDurations(e);
+                            break;
+                    }
+                    return;
+                }
+
+
+                if (e.KeyCode.ToString() == "Down" || e.KeyCode.ToString() == "Up" || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
+                {
+                    StopNote();
+                }
+                else
+                {
+                    switch (e.KeyCode)
+                    {
+                        case Keys.C:
+                        case Keys.D:
+                        case Keys.E:
+                        case Keys.F:
+                        case Keys.G:
+                        case Keys.A:
+                        case Keys.B:
+                        case Keys.Back:
+                            StopNote();
+                            break;
+                    }
+                }
+                #endregion
+            }
+        }
+
+
+        /// <summary>
+        /// When the window is resized, adjust the pnlScrollView to fill the window */
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            sheetmusic?.Redraw();
+            SetScrollBarValues();
+        }
+
+        #endregion form load close keydown
+
+
+        #region Text, Xml Import/export
+
+        #region Text import/export
         /// <summary>
         /// Export Midi file to normalized text dump
         /// </summary>
@@ -2616,9 +2691,9 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MTxtWriter_WriteTxtCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            string file = ((MusicTxtWriter)sender).fileName;            
+            string file = ((MusicTxtWriter)sender).fileName;
             try
-            {                
+            {
                 System.Diagnostics.Process.Start(@file);
             }
             catch (Exception ex)
@@ -2626,7 +2701,7 @@ namespace Karaboss
                 MessageBox.Show(ex.Message);
             }
         }
-      
+
 
         /// <summary>
         /// Import a normalized text file
@@ -2652,8 +2727,10 @@ namespace Karaboss
             }
         }
 
-      
+        #endregion Text import/export
 
+
+        #region Xml import/export
         /// <summary>
         /// Import a MusicXml file to Midi
         /// </summary>
@@ -2663,7 +2740,7 @@ namespace Karaboss
         {
             openMidiFileDialog.Title = "Open MusicXml file";
             openMidiFileDialog.DefaultExt = "xml";
-            openMidiFileDialog.Filter = "Xml files|*.xml|MusicXml files|*.musicxml|All files|*.*";            
+            openMidiFileDialog.Filter = "Xml files|*.xml|MusicXml files|*.musicxml|All files|*.*";
             openMidiFileDialog.InitialDirectory = MIDIfilePath;
 
             if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
@@ -2671,10 +2748,10 @@ namespace Karaboss
                 string fileName = openMidiFileDialog.FileName;
 
                 // Load xml file and display messages
-                LoadXmlFile(fileName, false);             
+                LoadXmlFile(fileName, false);
             }
         }
-        
+
         private bool LoadXmlFile(string fileName, bool bsilentmode)
         {
             MIDIfilePath = Path.GetDirectoryName(fileName);
@@ -2682,13 +2759,11 @@ namespace Karaboss
             //string fExt = Path.GetExtension(fileName);             // Extension
             string fName = Path.GetFileNameWithoutExtension(fileName);    // name without extension
             MIDIfileName = fName + ".mid";
-            MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
+            MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);            
 
-            //string lyrics;// = string.Empty;
-          
             // Load xml file                
             MusicXmlReader M = new MusicXmlReader();
-            
+
             // Show Xml chords?
             M.PlayXmlChords = Karaclass.m_ShowXmlChords;
 
@@ -2700,12 +2775,12 @@ namespace Karaboss
                     MessageBox.Show("Invalid MusicXml file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-            
+
             // load lyrics and chords if included in lyrics
             //  ********************** Why not load embedded chords here if bShowChords is true ? *****************
-            myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
-            
-                       
+            myLyricsMgmt = new LyricsMgmt(sequence1);
+
+
 
             laststart = 0;
             // Remove all MIDI events after last note
@@ -2742,7 +2817,7 @@ namespace Karaboss
 
             // Display log file
             if (sequence1.Log != "")
-            {                
+            {
                 lblChangesInfos.Text = sequence1.Log;
             }
 
@@ -2751,7 +2826,7 @@ namespace Karaboss
 
             // Display title
             SetTitle(MIDIfileName);
-            
+
             // File is new
             if (bsilentmode)
                 FileModified();
@@ -2769,9 +2844,1711 @@ namespace Karaboss
 
         }
 
+        #endregion Xml import/export
 
-        #endregion
+        #endregion Text, Xml Import/export
 
+
+        #region handle messages
+
+        #region sheetmusic
+        private void SheetMusic_CurrentNoteChanged(MidiNote n)
+        {
+            // Convert note number to letter
+            string[] scale = { "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#" };
+            string notename = scale[(n.Number + 3) % 12];
+            string s = CurrentNoteToString(n.Number, notename, n.StartTime, n.Duration, n.Velocity);
+            lblCurNoteInfo.Text = s;
+
+        }
+        
+        private string CurrentNoteToString(int note, string noteLetter, float ticks, int duration, int velocity)
+        {
+            float timeinmeasure = sheetmusic.GetTimeInMeasure(ticks);
+            return string.Format("note {0} ({1}) - time {2} - ticks {3} - duration {4} - velocity {5}", note, noteLetter, timeinmeasure, ticks, duration, velocity);
+        }
+
+        /// <summary>
+        /// Click on sheetmusic => track changed event
+        /// </summary>
+        /// <param name="tracknum"></param>
+        private void SheetMusic_CurrentTrackChanged(int tracknum)
+        {
+            if (!bEditScore)
+                return;
+
+            // Unselect all track controls
+            UnselectTrackControls();
+
+            // Select track control
+            SelectTrackControl(tracknum);
+
+            // Color in red the key of the track
+            SelectTrackKey(tracknum);
+        }
+
+        #endregion sheemusic
+   
+
+        #region Save file
+        /// <summary>
+        /// Event: save midi file terminated
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleSaveCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+
+            if (progressBarPlayer != null)
+            {
+                try
+                {
+                    progressBarPlayer.Value = 0;
+                    progressBarPlayer.Visible = false;
+
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex.Message);
+                }
+
+            }
+
+            if (e.Error == null)
+            {
+                bfilemodified = false;
+                if (bClosingRequired == true)
+                {
+                    this.Close();
+                    return;
+                }
+
+                SetTitle(MIDIfileName);
+
+                // Active le formulaire frmExplorer
+                if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
+                {
+                    frmExplorer = GetForm<frmExplorer>();
+                    frmExplorer.RefreshExplorer( Path.GetFileName(MIDIfileName));
+                }
+
+            }
+            else
+            {
+                MessageBox.Show(e.Error.Message);
+            }
+        }
+
+        /// <summary>
+        /// Ecent: Save Dump to text file terminated
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleSaveTxtCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+
+            if (progressBarPlayer != null)
+            {
+                try
+                {
+                    progressBarPlayer.Value = 0;
+                    progressBarPlayer.Visible = false;
+
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex.Message);
+                }
+
+            }
+
+            if (e.Error == null)
+            {
+                bfilemodified = false;
+                if (bClosingRequired == true)
+                {
+                    this.Close();
+                    return;
+                }
+
+                SetTitle(MIDIfileName);
+
+                // Active le formulaire frmExplorer
+                if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
+                {
+                    frmExplorer = GetForm<frmExplorer>();
+                    frmExplorer.RefreshExplorer();
+                }
+            }
+            else
+            {
+                MessageBox.Show(e.Error.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// Event: saving midi file in progress
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleSaveProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            try
+            {
+                if (e.ProgressPercentage >= progressBarPlayer.Minimum && e.ProgressPercentage <= progressBarPlayer.Maximum)
+                    progressBarPlayer.Value = e.ProgressPercentage;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        #endregion save file
+           
+
+        #region Play messages
+        private void HandleMetaMessagePlayed(object sender, MetaMessageEventArgs e)
+        {
+            if (closing)
+            {
+                return;
+            }
+
+            // Tempo change            
+            if (e.Message.MetaType == MetaType.Tempo)
+            {
+                MetaMessage msg = e.Message;
+                byte[] data = msg.GetBytes();
+                _tempoplayed = ((data[0] << 16) | (data[1] << 8) | data[2]);
+            }
+
+            // TODO add change of Time Signature ?
+            // Idem for exporting CSV
+        }
+
+        private void HandleChannelMessagePlayed(object sender, ChannelMessageEventArgs e)
+        {
+            if (closing)
+            {
+                return;
+            }
+
+            int nChannel = e.Message.MidiChannel;
+            string sChannel = nChannel.ToString();
+
+            if (!lstChannels[nChannel].muted)
+                outDevice.Send(e.Message);
+
+
+            // Modify display according to changes during play 
+            if (e.Message.Command == ChannelCommand.NoteOn)
+            {
+                // Allume la diode du channel correspondant                
+                for (int i = 0; i < pnlTracks.Controls.Count; i++)
+                {
+                    if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                    {
+                        if (pnlTracks.Controls[i].Tag != null)
+                        {
+                            string stag = pnlTracks.Controls[i].Tag.ToString();
+                            if (stag == sChannel)
+                            {
+                                ((TrkControl.TrackControl)pnlTracks.Controls[i]).LightOn();
+                            }
+                        }
+                    }
+                }
+            }
+            else if (e.Message.Command == ChannelCommand.NoteOff)
+            {
+                // Eteint la diode du channel correspondant
+                for (int i = 0; i < pnlTracks.Controls.Count; i++)
+                {
+                    if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                    {
+                        if (pnlTracks.Controls[i].Tag != null)
+                        {
+                            string stag = pnlTracks.Controls[i].Tag.ToString();
+                            if (stag == sChannel)
+                            {
+                                ((TrkControl.TrackControl)pnlTracks.Controls[i]).LightOff();
+                            }
+                        }
+                    }
+                }
+
+            }
+            else if (e.Message.Command == ChannelCommand.Controller)
+            {
+                ChannelMessage Msg = e.Message;
+                ControllerType ct = (ControllerType)Msg.Data1;
+
+
+                if (ct == ControllerType.Volume)
+                {
+                    int vol = Msg.Data2;
+                    int j = -1;
+
+                    for (int i = 0; i < pnlTracks.Controls.Count; i++)
+                    {
+                        if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                        {
+                            j++;
+                            if (pnlTracks.Controls[i].Tag != null)
+                            {
+                                string stag = pnlTracks.Controls[i].Tag.ToString();
+                                if (stag == sChannel)
+                                {
+                                    // Adjust volume for all tracks having this channel
+                                    lstTrkReglages[j].volume = vol;
+                                }
+                            }
+                        }
+                    }
+                    bReglageChanged = true;
+                }
+                else if (ct == ControllerType.Pan)
+                {
+                    int pan = Msg.Data2;
+                    int j = -1;
+                    for (int i = 0; i < pnlTracks.Controls.Count; i++)
+                    {
+                        if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                        {
+                            j++;
+                            if (pnlTracks.Controls[i].Tag != null)
+                            {
+                                string stag = pnlTracks.Controls[i].Tag.ToString();
+                                if (stag == sChannel)
+                                {
+                                    // Ajust pan for all tracks having this channel
+                                    lstTrkReglages[j].pan = pan;
+                                }
+                            }
+                        }
+                    }
+                    bReglageChanged = true;
+                }
+                else if (ct == ControllerType.EffectsLevel)
+                {
+                    int reverb = Msg.Data2;
+                    int j = -1;
+                    for (int i = 0; i < pnlTracks.Controls.Count; i++)
+                    {
+                        if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                        {
+                            j++;
+                            if (pnlTracks.Controls[i].Tag != null)
+                            {
+                                string stag = pnlTracks.Controls[i].Tag.ToString();
+                                if (stag == sChannel)
+                                {
+                                    // Ajust reverb for all tracks having this channel
+                                    lstTrkReglages[j].reverb = reverb;
+                                }
+                            }
+                        }
+                    }
+                    bReglageChanged = true;
+                }
+            }
+            else if (e.Message.Command == ChannelCommand.ProgramChange)
+            {
+                // Instrument is changed during play !!!!!
+                ChannelMessage Msg = e.Message;
+                int patch = Msg.Data1;
+                int j = -1;
+
+                for (int i = 0; i < pnlTracks.Controls.Count; i++)
+                {
+                    if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                    {
+                        j++;
+                        if (pnlTracks.Controls[i].Tag != null)
+                        {
+                            string stag = pnlTracks.Controls[i].Tag.ToString();
+                            if (stag == sChannel)
+                            {
+                                // Ajust patch for all tracks having this programchange
+                                lstTrkReglages[j].patch = patch;
+                            }
+                        }
+                    }
+                }
+                bReglageChanged = true;
+            }
+        }
+
+        private void HandleChased(object sender, ChasedEventArgs e)
+        {
+            foreach (ChannelMessage message in e.Messages)
+            {
+                outDevice.Send(message);
+            }
+        }
+
+        private void HandleSysExMessagePlayed(object sender, SysExMessageEventArgs e)
+        {
+            // outDevice.Send(e.Message); Sometimes causes an exception to be thrown because the output device is overloaded.
+        }
+
+        private void HandleStopped(object sender, StoppedEventArgs e)
+        {
+            foreach (ChannelMessage message in e.Messages)
+            {
+                outDevice.Send(message);
+            }
+        }
+
+        /// <summary>
+        /// Event: playing midi file completed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandlePlayingCompleted(object sender, EventArgs e)
+        {
+            newstart = 0;
+            // Select next song of a playlist
+            PlayerState = PlayerStates.NextSong;
+        }
+
+        #endregion Play messages
+
+
+        #endregion handle messages
+
+
+        #region load file
+
+        /// <summary>
+        /// Load the midi file in the sequencer
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void LoadAsyncMidiFile(string fileName)
+        {
+            try
+            {
+                progressBarPlayer.Visible = true;
+
+                ResetSequencer();
+                if (fileName != "\\")
+                {
+                    sequence1.LoadAsync(fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+
+        /// <summary>
+        /// Load async a XML file
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void LoadAsyncXmlFile(string fileName)
+        {
+            try
+            {
+                progressBarPlayer.Visible = true;
+
+                ResetSequencer();
+                if (fileName != "\\")
+                {
+
+                    MXmlReader = new MusicXmlReader();
+
+                    // Show Xml chords?
+                    MXmlReader.PlayXmlChords = Karaclass.m_ShowXmlChords;
+                    MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;
+                    MXmlReader.LoadXmlAsync(fileName, false);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        /// <summary>
+        /// Load async a TXT file
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void LoadAsyncTxtFile(string fileName)
+        {
+            try
+            {
+                progressBarPlayer.Visible = true;
+
+                ResetSequencer();
+                if (fileName != "\\")
+                {
+                    MTxtReader = new MusicTxtReader(fileName);
+                    MTxtReader.LoadTxtCompleted += HandleLoadTxtCompleted;
+                    MTxtReader.LoadTxtAsync(fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        /// <summary>
+        /// Event: loading of midi file terminated: launch song
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleLoadCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            //string lyrics; // = string.Empty;
+            this.Cursor = Cursors.Arrow;
+            mnuFileOpen.Enabled = true;
+            progressBarPlayer.Value = 0;
+            progressBarPlayer.Visible = false;
+
+            // Reset settings made for previous song
+            ResetPlaySettings();
+
+            //if (frmLoading != null)
+            //    frmLoading.Dispose();
+            loading = false;
+
+            if (e.Error == null && e.Cancelled == false)
+            {
+                laststart = 0;
+
+                // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
+                sequence1.Format = 1;
+
+                myLyricsMgmt = new LyricsMgmt(sequence1);
+
+                // Save chords to track in order to display them in the score
+                AddChordsToTrack();
+
+                /*
+                * Bug when format is 0, Karaboss change the format to 1.
+                * If the file contains lyrics (not text), they are lost when the file is saved
+                * Workaround is to rewrite the lyrics
+                */
+
+                if ((sequence1.OrigFormat == 0) && (myLyricsMgmt.LyricType == LyricTypes.Lyric))
+                {
+                    int tracknum = myLyricsMgmt.LyricsTrackNum;
+                    Track track = sequence1.tracks[tracknum];
+                    // supprime tous les messages text & lyric
+                    track.deleteLyrics();
+
+                    // Insert all lyric events
+                    //InsTrkEvents(tracknum);
+                    TrkInsertLyrics(track, myLyricsMgmt.OrgplLyrics, myLyricsMgmt.LyricType);
+                }
+
+
+                // Remove all MIDI events after last note
+                sequence1.Clean();
+                UpdateMidiTimes();
+
+
+                #region displays controls
+
+                positionHScrollBarNew.Value = 0;
+                positionHScrollBarNew.Maximum = _totalTicks;
+
+                // ----------------------------------------------------------------
+                // Display Scores on panel pnlScrollView
+                // ----------------------------------------------------------------
+                DisplayScores();
+
+                // Display song duration
+                DisplaySongDuration(_duration);
+
+                // Display track controls             
+                DisplayTrackControls();
+
+                // Reset tracks Stuff
+                InitTracksStuff();
+                #endregion
+
+                // Display log file
+                if (sequence1.Log != "")
+                    lblChangesInfos.Text = sequence1.Log;
+
+                DisplayFileInfos();
+
+
+                #region display lyrics
+                // Recherche si des lyrics existent et affiche la forme frmLyric
+                mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
+
+                DisplayLyricsInfos();
+                #endregion
+
+
+                // PLAYLIST
+                if (currentPlaylist != null)
+                {
+                    // Highlight current song in the playlist
+                    UpdatePlayListsForm(currentPlaylistItem.Song);
+
+                    // play asap, pause, countdown
+                    performPlaylistChainingChoice();
+                }
+                else
+                {
+                    // SINGLE FILE
+
+                    // the user asked to play the song immediately                
+                    if (bPlayNow)
+                        PlayPauseMusic();
+                    else
+                    {
+                        // the user wants to edit the file 
+                        ManageDisplayLyricsForm();
+                    }
+                }
+            }
+            else
+            {
+                if (e.Error != null)
+                    MessageBox.Show(e.Error.Message);
+            }
+        }
+
+        /// <summary>
+        /// Event: end loading XML music file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleLoadXmlCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (MXmlReader.seq == null)
+                return;
+
+            string lyrics = string.Empty;
+            this.Cursor = Cursors.Arrow;
+            mnuFileOpen.Enabled = true;
+            progressBarPlayer.Value = 0;
+            progressBarPlayer.Visible = false;
+
+            // ====================================
+            // Ajout par rapport au standard
+            // ====================================
+            if (Karaclass.m_MxmlPath != null && Karaclass.m_MxmlPath != "")
+            {
+                string fName = Path.GetFileNameWithoutExtension(Karaclass.m_MxmlPath);    // name without extension
+                MIDIfilePath = Path.GetDirectoryName(Karaclass.m_MxmlPath);
+                MIDIfileName = fName + ".mid";
+                MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
+            }
+            else
+            {
+                MIDIfilePath = Path.GetDirectoryName(MIDIfileFullPath);
+                string fName = Path.GetFileNameWithoutExtension(MIDIfileFullPath);    // name without extension
+                MIDIfileName = fName + ".mid";
+                MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
+            }
+            // fin ajout
+
+
+            // Reset settings made for previous song
+            ResetPlaySettings();
+            loading = false;
+
+            sequence1 = MXmlReader.seq;
+            sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+            sequence1.LoadProgressChanged += HandleLoadProgressChanged;
+
+
+            if (e.Error == null && e.Cancelled == false)
+            {
+                laststart = 0;
+
+                // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
+                sequence1.Format = 1;
+
+                myLyricsMgmt = new LyricsMgmt(sequence1);
+
+                // Load chords in LyricsMgmt in order to be displayed in the lyrics form                
+                LoadXmlChordsInLyrics();
+
+                // Add chords to Track for SheetMusic to display it
+                AddChordsToTrack();
+
+                /*
+                * Bug when format is 0, Karaboss change the format to 1.
+                * If the file contains lyrics (not text), they are lost when the file is saved
+                * Workaround is to rewrite the lyrics
+                */
+
+                // case of format 0
+                if ((sequence1.OrigFormat == 0) && (myLyricsMgmt.LyricType == LyricTypes.Lyric))
+                {
+                    int tracknum = myLyricsMgmt.LyricsTrackNum;
+                    Track track = sequence1.tracks[tracknum];
+                    // supprime tous les messages text & lyric
+                    track.deleteLyrics();
+
+                    // Insert all lyric events                    
+                    TrkInsertLyrics(track, myLyricsMgmt.OrgplLyrics, myLyricsMgmt.LyricType);
+                }
+
+                // Remove all MIDI events after last note
+                sequence1.Clean();
+
+                // ====================================
+                // AJOUT par rapport au standard
+                // ====================================
+                ResetSequencer();
+                sequencer1.Sequence = sequence1;
+                // fin ajout
+
+                UpdateMidiTimes();
+
+                #region displays controls
+
+                positionHScrollBarNew.Value = 0;
+                positionHScrollBarNew.Maximum = _totalTicks;
+
+                // ----------------------------------------------------------------
+                // Display Scores on panel pnlScrollView
+                // ----------------------------------------------------------------
+                DisplayScores();
+
+                // Display song duration
+                DisplaySongDuration(_duration);
+
+                // Display track controls             
+                DisplayTrackControls();
+
+                // Reset tracks Stuff
+                InitTracksStuff();
+                #endregion
+
+
+                // Display log file
+                if (sequence1.Log != "")
+                    lblChangesInfos.Text = sequence1.Log;
+                DisplayFileInfos();
+
+                #region display lyrics
+                // Recherche si des lyrics existent et affiche la forme frmLyric
+                mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
+
+                DisplayLyricsInfos();
+                #endregion
+
+                // PLAYLIST
+                if (currentPlaylist != null)
+                {
+                    // Highlight current song in the playlist
+                    UpdatePlayListsForm(currentPlaylistItem.Song);
+
+                    // play asap, pause, countdown
+                    performPlaylistChainingChoice();
+                }
+                else
+                {
+                    // SINGLE FILE
+
+                    // Lance immédiatement la lecture du morceau                
+                    if (bPlayNow)
+                        PlayPauseMusic();
+                    else
+                    {
+                        ManageDisplayLyricsForm();
+                    }
+                }
+            }
+            else
+            {
+                if (e.Error != null)
+                    MessageBox.Show(e.Error.Message);
+            }
+        }
+
+        /// <summary>
+        /// End loading dump text file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleLoadTxtCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (MTxtReader.seq == null)
+                return;
+
+            string lyrics = string.Empty;
+            this.Cursor = Cursors.Arrow;
+            mnuFileOpen.Enabled = true;
+            progressBarPlayer.Value = 0;
+            progressBarPlayer.Visible = false;
+
+            // ====================================
+            // AJOUT par rapport au standard
+            // ====================================
+            MIDIfileFullPath = ((MusicTxtReader)sender).fileName;
+
+            MIDIfilePath = Path.GetDirectoryName(MIDIfileFullPath);
+            string fExt = Path.GetExtension(MIDIfileFullPath);             // Extension
+            string fName = Path.GetFileNameWithoutExtension(MIDIfileFullPath);    // name without extension
+            MIDIfileName = fName + ".mid";
+            MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
+            // fin ajout
+
+
+            // Reset settings made for previous song
+            ResetPlaySettings();
+
+            //if (frmLoading != null)
+            //    frmLoading.Dispose();
+            loading = false;
+
+            sequence1 = MTxtReader.seq;
+            sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
+            sequence1.LoadProgressChanged += HandleLoadProgressChanged;
+
+            if (e.Error == null && e.Cancelled == false)
+            {
+                laststart = 0;
+
+                // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
+                sequence1.Format = 1;
+
+                myLyricsMgmt = new LyricsMgmt(sequence1);
+
+                /*
+                * Bug when format is 0, Karaboss change the format to 1.
+                * If the file contains lyrics (not text), they are lost when the file is saved
+                * Workaround is to rewrite the lyrics
+                */
+
+                if ((sequence1.OrigFormat == 0) && (myLyricsMgmt.LyricType == LyricTypes.Lyric))
+                {
+                    int tracknum = myLyricsMgmt.LyricsTrackNum;
+                    Track track = sequence1.tracks[tracknum];
+                    // supprime tous les messages text & lyric
+                    track.deleteLyrics();
+
+                    // Insert all lyric events
+                    //InsTrkEvents(tracknum);
+                    TrkInsertLyrics(track, myLyricsMgmt.OrgplLyrics, myLyricsMgmt.LyricType);
+                }
+
+
+                // Remove all MIDI events after last note
+                sequence1.Clean();
+
+                // ====================================
+                // AJOUT par rapport au standard
+                // ====================================
+                ResetSequencer();
+                sequencer1.Sequence = sequence1;
+                // fin ajout
+
+                UpdateMidiTimes();
+
+                #region displays controls
+
+                positionHScrollBarNew.Value = 0;
+                positionHScrollBarNew.Maximum = _totalTicks;
+
+                // ----------------------------------------------------------------
+                // Display Scores on panel pnlScrollView
+                // ----------------------------------------------------------------
+                DisplayScores();
+
+                // Display song duration
+                DisplaySongDuration(_duration);
+
+                // Display track controls             
+                DisplayTrackControls();
+
+                // REset tracks Stuff
+                InitTracksStuff();
+                #endregion
+
+
+                #region display lyrics
+
+                // Recherche si des lyrics existent et affiche la forme frmLyric
+                mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
+
+                // Display log file
+                if (sequence1.Log != "")
+                    lblChangesInfos.Text = sequence1.Log;
+
+                DisplayFileInfos();
+                DisplayLyricsInfos();
+                #endregion
+
+                // PLAYLIST
+                if (currentPlaylist != null)
+                {
+                    // Highlight current song in the playlist
+                    UpdatePlayListsForm(currentPlaylistItem.Song);
+
+                    // play asap, pause, countdown
+                    performPlaylistChainingChoice();
+                }
+                else
+                {
+                    // SINGLE FILE
+
+                    // Lance immédiatement la lecture du morceau                
+                    if (bPlayNow)
+                        PlayPauseMusic();
+                    else
+                    {
+                        ManageDisplayLyricsForm();
+                    }
+                }
+            }
+            else
+            {
+                if (e.Error != null)
+                    MessageBox.Show(e.Error.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// Event: loading of midi file in progress
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleLoadProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            loading = true;
+            try
+            {
+                progressBarPlayer.Value = e.ProgressPercentage;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+
+        #endregion load file
+
+
+        #region Lyrics
+
+        /// <summary>
+        /// Display informations on Lyrics
+        /// </summary>
+        public void DisplayLyricsInfos()
+        {
+            string tx;
+
+            if (myLyricsMgmt != null)
+            {
+                tx = "Lyrics type: " + myLyricsMgmt.LyricType + "\r";
+                tx += "Lyrics track: " + (myLyricsMgmt.LyricsTrackNum + 1).ToString() + "\r";
+                tx += "Melody track: " + (myLyricsMgmt.MelodyTrackNum + 1).ToString();
+
+                lblLyricsInfos.Text = tx;
+
+                // Mute melody track
+                MuteMelodyTrack();
+            }
+
+        }
+
+
+        /// <summary>
+        /// Replace existing lyrics by others
+        /// MelodyTrackNum: track hosting the melody
+        /// LyricsTrackNum: track hosting the lyrics (text or lyric types)
+        /// The target is to host the lyrics in the melody track
+        /// </summary>
+        /// <param name="pLyrics"></param>
+        public void ReplaceLyrics(List<plLyric> newpLyrics, LyricTypes newLyricType, int melodytracknum)
+        {
+            // LyricType has changed => refresh display
+            bool bRefreshDisplay = (newLyricType != myLyricsMgmt.LyricType);
+
+            // Delete all lyrics of all types
+            foreach (Track T in sequence1.tracks)
+            {
+                T.deleteLyrics();
+                T.LyricsText.Clear();
+                T.Lyrics.Clear();
+            }
+            // Tags associated to the sequence have been deleted
+            restoreSequenceTags();
+
+            // By default, insert the lyrics (either text or lyric) into the melodytrack
+            #region guard
+            if (melodytracknum == -1)
+                melodytracknum = 0;
+            #endregion guard
+
+            Track track = sequence1.tracks[melodytracknum];
+
+            // Insert all lyric events
+            TrkInsertLyrics(track, newpLyrics, newLyricType);
+
+            // Reload myLyricMgmt
+            myLyricsMgmt = new LyricsMgmt(sequence1);
+
+
+            // Refresh frmLyric
+            if (myLyricsMgmt.OrgplLyrics.Count > 0)
+            {
+                // Reset display
+                myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
+
+                // Window closed
+                DisplayLyricsForm();
+                frmLyric.LoadSong(myLyricsMgmt.plLyrics);
+            }
+
+            // Refresh display of lyrics
+            // if switch between Text & Lyric or
+            // if Lyric because we need to display the new lyrics on the scores
+            if (bRefreshDisplay || myLyricsMgmt.LyricType == LyricTypes.Lyric)
+            {
+                if (Karaclass.m_ShowChords)
+                    AddChordsToTrack();
+
+                RefreshDisplay();
+            }
+
+
+            // File was modified
+            FileModified();
+
+        }
+
+
+        /// <summary>
+        /// Insert new lyrics in the target track
+        /// </summary>
+        /// <param name="Track"></param>
+        /// <param name="l"></param>
+        /// <param name="LyricType"></param>
+        private void TrkInsertLyrics(Track Track, List<plLyric> l, LyricTypes LyricType)
+        {
+            int currentTick;
+            int lastcurrenttick = 0;
+
+            string currentElement;
+            string currentCR = string.Empty;
+
+            Track.Lyrics.Clear();
+            Track.LyricsText.Clear();
+
+            Track.TotalLyricsL = "";
+            Track.TotalLyricsT = "";
+
+
+            // Recréé tout les textes et lyrics
+            for (int idx = 0; idx < l.Count; idx++)
+            {
+                plLyric pll = l[idx];
+
+                // Si c'est un CR, le stocke et le collera au prochain lyric
+                if (pll.CharType == plLyric.CharTypes.LineFeed)
+                {
+                    if (LyricType == LyricTypes.Text)
+                        currentCR = m_SepLine;
+                    else
+                        currentCR = "\r";
+
+                    // Update Track.Lyrics List
+                    Track.Lyric L = new Track.Lyric()
+                    {
+                        Element = pll.Element.Item2,
+                        TicksOn = pll.TicksOn,
+                        Type = (Track.Lyric.Types)pll.CharType,
+                    };
+
+                    if (LyricType == LyricTypes.Text)
+                    {
+                        // si lyrics de type text                     
+                        Track.LyricsText.Add(L);
+                    }
+                    else
+                    {
+                        // si lyrics de type lyrics
+                        Track.Lyrics.Add(L);
+                    }
+
+                }
+                else if (pll.CharType == plLyric.CharTypes.ParagraphSep)
+                {
+                    if (LyricType == LyricTypes.Text)
+                        currentCR = m_SepParagraph;
+                    else
+                        currentCR = "\r\r";
+
+
+                    // Update Track.Lyrics List
+                    Track.Lyric L = new Track.Lyric()
+                    {
+                        Element = pll.Element.Item2,
+                        TicksOn = pll.TicksOn,
+                        Type = (Track.Lyric.Types)pll.CharType,
+                    };
+
+                    if (LyricType == LyricTypes.Text)
+                    {
+                        // si lyrics de type text                     
+                        Track.LyricsText.Add(L);
+                    }
+                    else
+                    {
+                        // si lyrics de type lyrics
+                        Track.Lyrics.Add(L);
+                    }
+                }
+                else if (pll.CharType == plLyric.CharTypes.Text)
+                {
+                    // C'est un lyric
+                    currentTick = pll.TicksOn;
+                    if (currentTick >= lastcurrenttick)
+                    {
+                        lastcurrenttick = currentTick;
+                        currentElement = currentCR + pll.Element.Item2;
+
+                        // Transforme en byte la nouvelle chaine
+                        // ERROR FAB 16-01-2021 : must tyake into accout encoding selected by end user !!!
+                        byte[] newdata; // = Encoding.Default.GetBytes(currentElement);
+
+                        switch (OpenMidiFileOptions.TextEncoding)
+                        {
+                            case "Ascii":
+                                //sy = System.Text.Encoding.Default.GetString(data);
+                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
+                                break;
+                            case "Chinese":
+                                System.Text.Encoding chinese = System.Text.Encoding.GetEncoding("gb2312");
+                                newdata = chinese.GetBytes(currentElement);
+                                break;
+                            case "Japanese":
+                                System.Text.Encoding japanese = System.Text.Encoding.GetEncoding("shift_jis");
+                                newdata = japanese.GetBytes(currentElement);
+                                break;
+                            case "Korean":
+                                System.Text.Encoding korean = System.Text.Encoding.GetEncoding("ks_c_5601-1987");
+                                newdata = korean.GetBytes(currentElement);
+                                break;
+                            case "Vietnamese":
+                                System.Text.Encoding vietnamese = System.Text.Encoding.GetEncoding("windows-1258");
+                                newdata = vietnamese.GetBytes(currentElement);
+                                break;
+                            default:
+                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
+                                break;
+                        }
+
+
+                        MetaMessage mtMsg;
+
+                        // Update Track.Lyrics List
+                        Track.Lyric L = new Track.Lyric()
+                        {
+                            Element = pll.Element.Item2,
+                            TicksOn = pll.TicksOn,
+                            Type = (Track.Lyric.Types)pll.CharType,
+                        };
+
+
+                        if (LyricType == LyricTypes.Text)
+                        {
+                            // si lyrics de type text
+                            mtMsg = new MetaMessage(MetaType.Text, newdata);
+                            Track.LyricsText.Add(L);
+                        }
+                        else
+                        {
+                            // si lyrics de type lyrics
+                            mtMsg = new MetaMessage(MetaType.Lyric, newdata);
+                            Track.Lyrics.Add(L);
+                        }
+
+                        // Insert new message
+                        Track.Insert(currentTick, mtMsg);
+                    }
+                    currentCR = "";
+                }
+            }
+        }
+
+
+        #region restore sequence tags
+
+        /// <summary>
+        /// Rewrite tags level sequence
+        /// </summary>
+        private void restoreSequenceTags()
+        {
+            string tx;
+            int i;
+
+            if (sequence1.ITag != null)
+            {
+                for (i = sequence1.ITag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@I" + sequence1.ITag[i];
+                    AddTag(tx);
+                }
+            }
+
+            if (sequence1.KTag != null)
+            {
+                for (i = sequence1.KTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@K" + sequence1.KTag[i];
+                    AddTag(tx);
+                }
+            }
+            if (sequence1.LTag != null)
+            {
+                for (i = sequence1.LTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@L" + sequence1.LTag[i];
+                    AddTag(tx);
+                }
+            }
+            if (sequence1.TTag != null)
+            {
+                for (i = sequence1.TTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@T" + sequence1.TTag[i];
+                    AddTag(tx);
+                }
+            }
+            if (sequence1.VTag != null)
+            {
+                for (i = sequence1.VTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@V" + sequence1.VTag[i];
+                    AddTag(tx);
+                }
+            }
+            if (sequence1.WTag != null)
+            {
+                for (i = sequence1.WTag.Count - 1; i >= 0; i--)
+                {
+                    tx = "@W" + sequence1.WTag[i];
+                    AddTag(tx);
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Insert Tag at tick 0
+        /// </summary>
+        /// <param name="strTag"></param>
+        private void AddTag(string strTag)
+        {
+            Track track = sequence1.tracks[0];
+            int currentTick = 0;
+            string currentElement = strTag;
+
+            // Transforme en byte la nouvelle chaine
+            byte[] newdata = new byte[currentElement.Length];
+            for (int u = 0; u < newdata.Length; u++)
+            {
+                newdata[u] = (byte)currentElement[u];
+            }
+
+            MetaMessage mtMsg;
+
+            mtMsg = new MetaMessage(MetaType.Text, newdata);
+
+            // Insert new message
+            track.Insert(currentTick, mtMsg);
+        }
+
+        #endregion restore sequence tags
+
+        /// <summary>
+        /// Delete all lyrics
+        /// </summary>
+        public void DeleteAllLyrics()
+        {
+            foreach (Track trk in sequence1.tracks)
+            {
+                trk.deleteLyrics();
+                trk.Lyrics.Clear();
+                trk.LyricsText.Clear();
+            }
+
+            myLyricsMgmt.plLyrics.Clear();
+            //bHasLyrics = false;
+
+            // Ferme le formulaire frmLyric
+            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+            {
+                frmLyric.Close();
+            }
+
+            // File was modified
+            FileModified();
+        }
+
+        private void ManageDisplayLyricsForm()
+        {
+            // If the user does not want to see the lyrics => exit
+            if (!bKaraokeAlwaysOn)
+            { return; }
+
+            // If normal plying and no lyrics => exit
+            if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgplLyrics.Count == 0)
+            { return; }
+
+
+            myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
+
+            DisplayLyricsForm();
+
+
+            // If no lyrics and a playlist, display something in the center
+            if (currentPlaylistItem != null && myLyricsMgmt.OrgplLyrics.Count == 0 && !Karaclass.m_PauseBetweenSongs && Karaclass.m_CountdownSongs == 0 && !Karaclass.m_ShowChords)
+            {
+                string sSinger = currentPlaylistItem.KaraokeSinger;
+                string centertxt;
+                if (sSinger == "" || sSinger == "<Song reserved by>")
+                {
+                    centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
+                }
+                else
+                {
+                    centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song)
+                + _InternalSepLines + Strings.SungBy
+                + _InternalSepLines + currentPlaylistItem.KaraokeSinger;
+                }
+
+                frmLyric.DisplayText(centertxt, (int)_duration);
+            }
+            else
+            {
+                frmLyric.LoadSong(myLyricsMgmt.plLyrics);
+            }
+        }
+
+        /// <summary>
+        /// Load form frmLyrics       
+        /// </summary>
+        private void DisplayLyricsForm()
+        {
+            // If normal playing (no playlist) AND do not show chords AND no lyrics => do not show this form 
+            if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgplLyrics.Count == 0)
+            { return; }
+
+            string sSong;
+            string sSinger = string.Empty;
+
+
+            if (currentPlaylistItem != null)
+            {
+                sSong = currentPlaylistItem.Song;
+                sSinger = currentPlaylistItem.KaraokeSinger;
+            }
+            else
+            {
+                sSong = MIDIfileName;
+            }
+
+
+            // if Window closed, reload it
+            if (frmLyric == null || Application.OpenForms.OfType<frmLyric>().Count() == 0)
+            {
+                frmLyric = new frmLyric(myLyricsMgmt);
+                frmLyric.Show();
+            }
+            else
+            {
+                frmLyric.myLyricsMgmt = myLyricsMgmt;
+            }
+
+
+            // Display song & current singer on top label
+            string tx;
+            sSong = Path.GetFileNameWithoutExtension(sSong);
+            if (sSinger == "" || sSinger == "<Song reserved by>")
+                tx = sSong;
+            else
+                tx = sSong + " - " + Strings.Singer + ": " + sSinger;
+
+            frmLyric.DisplaySinger(tx);
+
+
+
+            // Show window
+            if (frmLyric.WindowState == FormWindowState.Minimized)
+                frmLyric.WindowState = FormWindowState.Normal;
+
+            frmLyric.Show();
+            frmLyric.Activate();
+
+            // cas d'une playlist ou non : met à jour le diaporama
+            SetSlideShow();
+
+        }
+
+
+        /// <summary>
+        /// Display the form for lyrics edition
+        /// </summary>
+        public void DisplayEditLyricsForm()
+        {
+            int melodytracknum;
+
+            // Display lyrics editor
+            if (Application.OpenForms.OfType<frmLyricsEdit>().Count() == 0)
+            {
+                try
+                {
+                    // Cas
+                    if (myLyricsMgmt.OrgplLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum >= 0)
+                    {
+                        // Lyrics exist and melody track found
+                        // go directly to edition form ?
+
+                    }
+                    else if (myLyricsMgmt.OrgplLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum == -1)
+                    {
+                        // Some lyrics are found, but no melody
+                        // propose to select a track (or not) as a guide
+                        // Lyrics does not exist
+                        // => select track having melody
+                        //MessageBox.Show("Lyrics were found, but I am unable to identify the melody track", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else if (myLyricsMgmt.OrgplLyrics.Count == 0)
+                    {
+                        // Start a new kar file from a midi file
+                        // Select a track (or not) as a guide
+                        // Lyrics does not exist
+                        // => select track having melody
+                        DialogResult dr = new DialogResult();
+                        frmLyricsSelectTrack TrackDialog = new frmLyricsSelectTrack(sequence1);
+                        dr = TrackDialog.ShowDialog();
+
+                        if (dr == System.Windows.Forms.DialogResult.Cancel)
+                            return;
+
+                        // Get track number for melody
+                        // -1 if no track
+                        melodytracknum = TrackDialog.TrackNumber - 1;
+                        myLyricsMgmt.MelodyTrackNum = melodytracknum;
+
+                        // Choose format of lyrics
+                        if (TrackDialog.TextLyricFormat == 0)
+                        {
+                            // TEXT FORMAT                                  
+                            // Set myLyrics.melodytracknum & myMyrics.lyricstracknum                            
+                            myLyricsMgmt.LyricType = LyricTypes.Text;
+                        }
+                        else
+                        {
+                            // LYRIC FORMAT
+                            // Lyrics set to the same track than notes
+                            myLyricsMgmt.MelodyTrackNum = melodytracknum;
+                            if (melodytracknum > -1)
+                                myLyricsMgmt.LyricsTrackNum = melodytracknum;
+                            else
+                                myLyricsMgmt.LyricsTrackNum = 0;
+                            myLyricsMgmt.LyricType = LyricTypes.Lyric;
+                        }
+                        DisplayLyricsInfos();
+                    }
+
+
+
+                    // Caution: Load the original lyrics, not the lyrics internally transformed by FullExtractLyrics
+                    frmLyricsEdit frmLyricsEdit;
+                    frmLyricsEdit = new frmLyricsEdit(sequence1, myLyricsMgmt.OrgplLyrics, myLyricsMgmt, MIDIfileFullPath);
+                    frmLyricsEdit.Show();
+                }
+                catch (Exception fl)
+                {
+                    MessageBox.Show("Error displaying frmLyricsEdit: " + fl.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                if (Application.OpenForms["frmLyricsEdit"].WindowState == FormWindowState.Minimized)
+                    Application.OpenForms["frmLyricsEdit"].WindowState = FormWindowState.Normal;
+                Application.OpenForms["frmLyricsEdit"].Show();
+                Application.OpenForms["frmLyricsEdit"].Activate();
+            }
+
+        }
+
+        /// <summary>
+        /// Display the form for lyrics and chords edition
+        /// </summary>
+        public void DisplayEditLyricsChordsForm()
+        {
+            int melodytracknum;
+
+            if (Application.OpenForms.OfType<frmLyricsEdit>().Count() == 0)
+            {
+                try
+                {
+                    // Cas
+                    if (myLyricsMgmt.OrgplLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum >= 0)
+                    {
+                        // Lyrics exist and melody track found
+                        // go directly to edition form ?
+
+                    }
+                    else if (myLyricsMgmt.OrgplLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum == -1)
+                    {
+                        // Some lyrics are found, but no melody
+                        // propose to select a track (or not) as a guide
+                        // Lyrics does not exist
+                        // => select track having melody
+                        MessageBox.Show("Lyrics were found, but I am unable to identify the melody track", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else if (myLyricsMgmt.OrgplLyrics.Count == 0)
+                    {
+                        // Start a new kar file from a midi file
+                        // Select a track (or not) as a guide
+                        // Lyrics does not exist
+                        // => select track having melody
+                        DialogResult dr = new DialogResult();
+                        frmLyricsSelectTrack TrackDialog = new frmLyricsSelectTrack(sequence1);
+                        dr = TrackDialog.ShowDialog();
+
+                        if (dr == System.Windows.Forms.DialogResult.Cancel)
+                            return;
+
+                        // Get track number for melody
+                        // -1 if no track
+                        melodytracknum = TrackDialog.TrackNumber - 1;
+                        myLyricsMgmt.MelodyTrackNum = melodytracknum;
+
+                        // Choose format of lyrics
+                        if (TrackDialog.TextLyricFormat == 0)
+                        {
+                            // TEXT FORMAT                                  
+                            // Set myLyrics.melodytracknum & myMyrics.lyricstracknum                            
+                            myLyricsMgmt.LyricType = LyricTypes.Text;
+                        }
+                        else
+                        {
+                            // LYRIC FORMAT
+                            // Lyrics set to the same track than notes
+                            myLyricsMgmt.MelodyTrackNum = melodytracknum;
+                            if (melodytracknum > -1)
+                                myLyricsMgmt.LyricsTrackNum = melodytracknum;
+                            else
+                                myLyricsMgmt.LyricsTrackNum = 0;
+                            myLyricsMgmt.LyricType = LyricTypes.Lyric;
+                        }
+                        DisplayLyricsInfos();
+                    }
+
+
+
+                    // Caution: Load the FULL lyrics in order to have the chords displayed
+                    frmLyricsEdit frmLyricsEdit;
+                    frmLyricsEdit = new frmLyricsEdit(sequence1, myLyricsMgmt.plLyrics, myLyricsMgmt, MIDIfileFullPath, true);
+
+                    frmLyricsEdit.Show();
+                }
+                catch (Exception fl)
+                {
+                    MessageBox.Show("Erreur showing frmLyricsEdit: " + fl.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                if (Application.OpenForms["frmLyricsEdit"].WindowState == FormWindowState.Minimized)
+                    Application.OpenForms["frmLyricsEdit"].WindowState = FormWindowState.Normal;
+                Application.OpenForms["frmLyricsEdit"].Show();
+                Application.OpenForms["frmLyricsEdit"].Activate();
+            }
+        }
+
+
+        /// <summary>
+        /// Reset myLyric
+        /// </summary>
+        /// <param name="lyricstracknum">notes guide</param>
+        /// <param name="melodytracknum">num track to store lyrics</param>
+        public void NewMyLyric(int lyricstracknum, int melodytracknum)
+        {
+            if (myLyricsMgmt == null)
+            {
+                myLyricsMgmt = new LyricsMgmt(sequence1);
+            }
+            myLyricsMgmt.MelodyTrackNum = melodytracknum;
+            myLyricsMgmt.LyricsTrackNum = lyricstracknum;
+        }
+
+        // Slideshow
+        private void SetSlideShow()
+        {
+            if (frmLyric != null)
+            {
+                // cas d'une playlist ou non : met à jour le diaporama
+                if (currentPlaylistItem != null)
+                    dirSlideShow = currentPlaylistItem.DirSlideShow;
+                else
+                    dirSlideShow = Properties.Settings.Default.dirSlideShow;
+
+                frmLyric.SetSlideShow(dirSlideShow);
+
+            }
+        }
+
+        /// <summary>
+        /// Load chords embedded in Xml file
+        /// </summary>
+        private void LoadXmlChordsInLyrics()
+        {
+            #region guard
+            if (myLyricsMgmt == null) return;
+            if (MXmlReader == null) return;
+            #endregion guard
+
+            if (MXmlReader.bHasXmlChords)
+            {
+                // infos
+                // MXmlReader.lstChords
+                // MXmlReader.TrackChordsNumber
+                myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.XmlEmbedded;
+
+                myLyricsMgmt.lstXmlChords = MXmlReader.lstChords;
+            }
+        }
+
+
+
+        #endregion Lyrics
+
+
+        #region menus
+
+        /// <summary>
+        /// Valid or not some menus if playing or not
+        /// </summary>
+        /// <param name="enabled"></param>
+        private void ValideMenus(bool enabled)
+        {
+            menuStrip1.Visible = enabled;
+            return;
+        }
+
+        #region Menu File
+
+        /// <summary>
+        /// Menu create a new midi file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuFileNew_Click(object sender, EventArgs e)
+        {
+            if (!Utilities.CreateNewMidiFile.New(""))
+                return;
+
+            // Ferme le formulaire frmLyric
+            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+            {
+                frmLyric.Close();
+            }
+            // ferme le formulaire frmLyricsEdit
+            if (Application.OpenForms.OfType<frmLyricsEdit>().Count() > 0)
+            {
+                Application.OpenForms["frmLyricsEdit"].Close();
+            }
+            // Ferme le formulaire PianoRoll
+            if (Application.OpenForms.OfType<frmPianoRoll>().Count() > 0)
+            {
+                Application.OpenForms["frmPianoRoll"].Close();
+            }
+
+            // Create a new Midi File with above parameters
+            NewMidiFile();
+        }
+
+        /// <summary>
+        /// Menu OpenFile
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuFileOpen_Click(object sender, EventArgs e)
+        {
+
+            openMidiFileDialog.Title = "Open MIDI file";
+            openMidiFileDialog.DefaultExt = "kar";            
+            openMidiFileDialog.Filter = "Kar files|*.kar|MIDI files|*.mid|Xml files|*.xml|MusicXml files|*.musicxml|Text files|*.txt|All files|*.*";
+
+
+            if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = openMidiFileDialog.FileName;
+
+                MIDIfileName = Path.GetFileName(fileName);
+                MIDIfilePath = Path.GetDirectoryName(fileName);
+                MIDIfileFullPath = fileName;
+
+                // Load file
+                sequence1.LoadProgressChanged += HandleLoadProgressChanged;
+                sequence1.LoadCompleted += HandleLoadCompleted;
+
+                SelectFileToLoadAsync();
+
+            }
+        }
+
+        /// <summary>
+        /// Menu File Save
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuFileSave_Click(object sender, EventArgs e)
+        {
+            SaveFileProc();
+        }
+  
+        /// <summary>
+        /// Savs as PDF
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuSaveAsPDF_Click(object sender, EventArgs e)
+        {
+            /** The callback function for the "Save As PDF" menu.
+              * When invoked this will save the sheet music as a PDF document,
+              * with one image per page.  For each page in the sheet music:
+              * - Create a new bitmap, PageWidth by PageHeight
+              * - Create a Graphics object for the bitmap
+              * - Call the SheetMusic.DoPrint() method to draw the music onto the bitmap
+              * - Add the bitmap image to the PDF document.
+              * - Save the PDF document
+              */            
+
+            if (sheetmusic == null)
+                return;
+
+            if (MIDIfileName == null || MIDIfileName == "")
+            {
+                MIDIfileName = "new.mid";
+            }
+
+
+            // Affiche le formulaire frmPrint 
+            //if (Application.OpenForms["frmPrint"] != null)
+            //    Application.OpenForms["frmPrint"].Close();
+            Application.OpenForms["frmPrint"]?.Close();
+
+            Form frmPrint = new frmPrint(sequence1, MIDIfileFullPath);
+            frmPrint.Show();
+
+        }
+    
 
         /// <summary>
         /// Edit or display MIDI file tags
@@ -2801,27 +4578,16 @@ namespace Karaboss
 
 
         #region Menu Edit
-      
-        /// <summary>
-        /// Reset myLyric
-        /// </summary>
-        /// <param name="lyricstracknum">notes guide</param>
-        /// <param name="melodytracknum">num track to store lyrics</param>
-        public void NewMyLyric(int lyricstracknum, int melodytracknum)
-        {
-            if (myLyricsMgmt == null)
-            {
-                myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
-            }
-            myLyricsMgmt.MelodyTrackNum = melodytracknum;
-            myLyricsMgmt.LyricsTrackNum = lyricstracknum;            
-        }
 
+   
+
+        #region deleteme
+        /*
         /// <summary>
         /// Create new track containing lyrics type text
         /// </summary>
         public void AddTrackWords()
-        {            
+        {
             //int f = sequence1.Format;
             int C = sequence1.tracks.Count;
             int trackindex = 2; // track 2 by default, named "Words"
@@ -2831,7 +4597,7 @@ namespace Karaboss
             if (C == 0)
                 trackindex = 0;
             else if (C == 1)
-                trackindex = 1;            
+                trackindex = 1;
             else if (C > 2)
             {
                 // Check if and empty track exists at position trackindex
@@ -2840,7 +4606,7 @@ namespace Karaboss
                 if (wtrack.Notes.Count == 0)
                 {
                     // If empty track exists at position 2 => take this track
-                    bCreate = false;                    
+                    bCreate = false;
                 }
             }
 
@@ -2866,112 +4632,33 @@ namespace Karaboss
             // Return track number where text lyrics are set (normaly 2)
             //return trackindex;
             myLyricsMgmt.LyricsTrackNum = trackindex;
-        }     
+        }
+        */
+
+        #endregion deleteme
 
         /// <summary>
-        /// Menu: open track Word lyric editor
+        /// Menu: open lyrics editor
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void MnuEditAddLyrics_Click(object sender, EventArgs e)
-        {          
+        {
             DisplayEditLyricsForm();
         }
 
+ 
         /// <summary>
-        /// Display the form for lyrics edition
+        /// Menu: open lyrics & chords editor
         /// </summary>
-        public void DisplayEditLyricsForm()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuEditLyricsChords_Click(object sender, EventArgs e)
         {
-            int melodytracknum;// = 0;
-            // Display track editor
-            if (Application.OpenForms.OfType<frmLyricsEdit>().Count() == 0)
-            {
-                try
-                {                                                            
-                    // Cas
-                    if (myLyricsMgmt.plLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum >= 0)
-                    {
-                        // Lyrics exist and melody track found
-                        // go directly to edition form ?
-
-                    }
-                    else if (myLyricsMgmt.plLyrics.Count > 0 && myLyricsMgmt.MelodyTrackNum == -1)
-                    {
-                        // Some lyrics are found, but no melody
-                        // propose to select a track (or not) as a guide
-                        // Lyrics does not exist
-                        // => select track having melody
-
-                    }
-                    else if (myLyricsMgmt.plLyrics.Count == 0)
-                    {
-                        // Start a new kar file from a mid file
-                        // Select a track (or not) as a guide
-                        // Lyrics does not exist
-                        // => select track having melody
-                        DialogResult dr = new DialogResult();
-                        frmLyricsSelectTrack TrackDialog = new frmLyricsSelectTrack(sequence1);
-                        dr = TrackDialog.ShowDialog();
-
-                        if (dr == System.Windows.Forms.DialogResult.Cancel)
-                            return;
-
-                        // Get track number for melody
-                        // -1 if no track
-                        melodytracknum = TrackDialog.TrackNumber - 1;                        
-                        myLyricsMgmt.MelodyTrackNum = melodytracknum;
-
-                        if (TrackDialog.TextLyricFormat == 0)
-                        {
-                            // TEXT FORMAT
-                            // Create track at position 2 for text lyrics           
-                            // Set myLyrics.melodytracknum & myMyrics.lyricstracknum
-                            //AddTrackWords();
-                            myLyricsMgmt.LyricType = LyricTypes.Text;
-                        }
-                        else
-                        {
-                            // LYRIC FORMAT
-                            // Lyrics set to the same track than notes
-                            myLyricsMgmt.MelodyTrackNum = melodytracknum;
-                            if (melodytracknum > -1)
-                                myLyricsMgmt.LyricsTrackNum = melodytracknum;
-                            else
-                                myLyricsMgmt.LyricsTrackNum = 0;
-                            myLyricsMgmt.LyricType = LyricTypes.Lyric;
-                        }
-                        DisplayLyricsInfos();
-                    }
-
-                    // Lyrics exist
-                    if (!myLyricsMgmt.bHasChordsInLyrics)
-                    {
-                        // Remove detected chords: redo the lyrics extraction
-                        myLyricsMgmt.FullExtractLyrics();
-                    }
-
-                    frmLyricsEdit frmLyricsEdit;
-                    // Caution: Load the original lyrics, not the lyrics internally transformed by FullExtractLyrics
-                    frmLyricsEdit = new frmLyricsEdit(sequence1, myLyricsMgmt.OrgplLyrics, myLyricsMgmt, MIDIfileFullPath);
-
-                    frmLyricsEdit.Show();
-                }
-                catch (Exception fl)
-                {
-                    Console.Write("Erreur showing frmLyricsEdit: " + fl.Message);
-                }
-            }
-            else
-            {
-                if (Application.OpenForms["frmLyricsEdit"].WindowState == FormWindowState.Minimized)
-                    Application.OpenForms["frmLyricsEdit"].WindowState = FormWindowState.Normal;
-                Application.OpenForms["frmLyricsEdit"].Show();
-                Application.OpenForms["frmLyricsEdit"].Activate();
-            }
-
+            DisplayEditLyricsChordsForm();
         }
 
+       
         /// <summary>
         /// Validate or invalidate EditMode
         /// </summary>
@@ -2983,15 +4670,11 @@ namespace Karaboss
                 return;
 
             // display score if not visible
-            //if (!bSequencerAlwaysOn)
-            //    DisplaySequencer();
             if (!pnlTop.Visible)
             {
                 bForceShowSequencer = true;
                 RedimIfSequencerVisible();
             }
-
-
             DspEdit(!bEditScore);
         }
 
@@ -3001,13 +4684,11 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void MnuEditEnterNotes_Click(object sender, EventArgs e)
-        {           
+        {
             if (PlayerState != PlayerStates.Stopped)
                 return;
 
             // Display score if not visible
-            //if (!bSequencerAlwaysOn)                            
-            //    DisplaySequencer();
             if (!pnlTop.Visible)
             {
                 bForceShowSequencer = true;
@@ -3015,7 +4696,7 @@ namespace Karaboss
             }
             DspEnterNotes();
         }
-              
+
         #endregion
 
 
@@ -3028,7 +4709,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuDisplaySequencer_Click(object sender, EventArgs e)
         {
-            DisplaySequencer();           
+            DisplaySequencer();
         }
 
         private void DisplaySequencer()
@@ -3047,7 +4728,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="bSequencerAlwaysOn"></param>
         private void RedimIfSequencerVisible()
-        {                       
+        {
             /*
              * Bug quand on veut cacher le sequencer en faisant F12 lorsque
              * bSequencerAlwaysOn = false && bForceShowSequencer = true                           
@@ -3058,22 +4739,22 @@ namespace Karaboss
             {
                 this.MaximizeBox = true;
                 this.FormBorderStyle = FormBorderStyle.Sizable;
-                
+
                 // Show sequencer
                 pnlTop.Visible = true;
                 pnlMiddle.Visible = true;
 
-               
-                
+
+
                 #region window size & location
                 // If window is maximized
                 if (Properties.Settings.Default.frmPlayerMaximized)
                 {
-                    Location = Properties.Settings.Default.frmPlayerLocation;                    
+                    Location = Properties.Settings.Default.frmPlayerLocation;
                     WindowState = FormWindowState.Maximized;
                 }
                 else
-                {                   
+                {
                     try
                     {
                         if (Properties.Settings.Default.frmPlayerSize.Height == SimplePlayerHeight)
@@ -3129,8 +4810,8 @@ namespace Karaboss
 
                 this.MaximizeBox = false;
                 this.FormBorderStyle = FormBorderStyle.FixedSingle;
-                
-                
+
+
                 pnlTop.Visible = false;
                 pnlMiddle.Visible = false;
 
@@ -3181,7 +4862,7 @@ namespace Karaboss
                 if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
                 {
                     Application.OpenForms["frmLyric"].Close();
-                }                
+                }
                 mnuDisplayLyricsWindows.Checked = false;
             }
         }
@@ -3200,11 +4881,11 @@ namespace Karaboss
         /// </summary>
         /// <param name="tracknum"></param>
         private void DisplayPianoRoll(int tracknum, string fileName, int ticks)
-        {                        
+        {
             if (Application.OpenForms["frmPianoRoll"] == null)
             {
-                int note = sheetmusic.CurrentNote.midinote.Number;          
-                
+                int note = sheetmusic.CurrentNote.midinote.Number;
+
                 frmPianoRoll = new frmPianoRoll(sequence1, tracknum, outDevice, fileName);
                 frmPianoRoll.Show();
                 frmPianoRoll.Refresh();
@@ -3223,14 +4904,14 @@ namespace Karaboss
                 frmPianoTraining = new frmPianoTraining(outDevice, MIDIfileFullPath);
                 frmPianoTraining.Show();
                 frmPianoTraining.Refresh();
-               
+
             }
         }
 
         private void MnuDisplayZoom_Click(object sender, EventArgs e)
         {
             DialogResult dr;// = new DialogResult();
-            Sanford.Multimedia.Midi.Score.UI.frmZoomDialog frmZoomDialog = new Sanford.Multimedia.Midi.Score.UI.frmZoomDialog(sheetmusic ,zoom);
+            Sanford.Multimedia.Midi.Score.UI.frmZoomDialog frmZoomDialog = new Sanford.Multimedia.Midi.Score.UI.frmZoomDialog(sheetmusic, zoom);
             dr = frmZoomDialog.ShowDialog();
 
             if (dr == System.Windows.Forms.DialogResult.Cancel)
@@ -3312,7 +4993,7 @@ namespace Karaboss
         {
             // Add track to existing tracks            
             sequence1.Add(track);
-            
+
             AddTrackControl(track, sequence1.tracks.Count - 1);
 
             UpdateMidiTimes();
@@ -3466,37 +5147,7 @@ namespace Karaboss
             AddMeasures();
         }
 
-        private void AddMeasures()
-        {
-            DialogResult dr;// = new DialogResult();
-            Sanford.Multimedia.Midi.Score.UI.frmAddMeasuresDialog AddMeasuresDialog = new Sanford.Multimedia.Midi.Score.UI.frmAddMeasuresDialog();
-            dr = AddMeasuresDialog.ShowDialog();
-
-            if (dr == System.Windows.Forms.DialogResult.Cancel)
-                return;
-
-            decimal measures = AddMeasuresDialog.Measures;
-
-            if (measures == 0)
-                return;
-         
-            _totalTicks = sequence1.GetLength();
-            _measurelen = sequence1.Time.Measure;
-            int ticks = _totalTicks + (int)measures * _measurelen;
-            Track track = sequence1.tracks[0];            
-
-            // Ofset end of track            
-            track.EndOfTrackOffset = ticks;
-            
-            // Update GUI
-            UpdateMidiTimes();
-            DisplaySongDuration(_duration);
-
-            RedrawSheetMusic();
-            SetScrollBarValues();
-
-            FileModified();
-        }
+        
 
         /// <summary>
         /// Modify Tempo, not Division (read only)
@@ -3514,23 +5165,22 @@ namespace Karaboss
 
             if (Application.OpenForms["frmModifyTempo"] == null)
             {
-                frmModifyTempo = new frmModifyTempo(sheetmusic, sequence1);                
+                frmModifyTempo = new frmModifyTempo(sheetmusic, sequence1);
                 frmModifyTempo.Show();
                 frmModifyTempo.Refresh();
             }
-            
+
         }
-        
+
         public void UpdateTimes()
         {
-            UpdateMidiTimes();            
+            UpdateMidiTimes();
 
             FileModified();
             DisplayFileInfos();
-
         }
 
-       
+
         /// <summary>
         /// Modify Time Signature (4/4, 4/2 etc...)
         /// </summary>
@@ -3548,40 +5198,16 @@ namespace Karaboss
             int numerator = TimeSignatureDialog.Numerator;
             int denominator = TimeSignatureDialog.Denominator;
 
-            if (ModTimeSignature(numerator, denominator)) {
+            if (ModTimeSignature(numerator, denominator))
+            {
                 RedrawSheetMusic();
                 DisplayFileInfos();
                 FileModified();
             }
         }
 
-        /// <summary>
-        /// Time signature: remove all time signatures in all tracks, write new values in track 0
-        /// </summary>
-        /// <param name="numerator"></param>
-        /// <param name="denominator"></param>
-        private bool ModTimeSignature(int numerator, int denominator)
-        {
-            if (numerator == sequence1.Numerator && denominator == sequence1.Denominator)
-                return false;
+    
 
-            sequence1.Numerator = numerator;
-            sequence1.Denominator = denominator;
-            sequence1.Time = new TimeSignature(sequence1.Numerator, sequence1.Denominator, sequence1.Division, sequence1.Tempo);
-
-            // Remove all time signature messages in all tracks
-            foreach (Track track in sequence1.tracks)
-            {
-                track.RemoveTimesignature();
-            }
-
-            // Write new value in track 0            
-            sequence1.tracks[0].insertTimesignature(numerator, denominator);
-            
-            return true;
-
-        }
-       
         /// <summary>
         /// Remove Fader in & out (enfin j'espère !)
         /// </summary>
@@ -3611,7 +5237,7 @@ namespace Karaboss
                     MessageBox.Show("Error, please save your file before.", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                
+
                 // Split hands on
                 // If we have 1 track, we can split it int 2 tacks
                 // to have left hand and rignt hand for piano
@@ -3624,7 +5250,7 @@ namespace Karaboss
                 }
                 mnuMidiSplitHands.Checked = true;
             }
-                       
+
             OpenMidiFileOptions.SplitHands = mnuMidiSplitHands.Checked;
 
             // reload the file according to split hands choice stored in MidiFile properties
@@ -3635,7 +5261,7 @@ namespace Karaboss
 
 
         #region Menu Help
-    
+
         /// <summary>
         /// Menu About
         /// </summary>
@@ -3646,9 +5272,9 @@ namespace Karaboss
             frmAboutDialog dlg = new frmAboutDialog();
             dlg.ShowDialog();
         }
-       
+
         private void MnuHelpAboutSong_Click(object sender, EventArgs e)
-        {            
+        {
             string tx = string.Empty;
             int i;
             string cr = Environment.NewLine;
@@ -3661,7 +5287,7 @@ namespace Karaboss
                     tx += sequence1.KTag[i] + cr;
                 }
             }
-            
+
             if (tx != "") tx += cr;
             // Version
             if (sequence1.VTag != null)
@@ -3680,7 +5306,7 @@ namespace Karaboss
                     tx += sequence1.LTag[i] + cr;
                 }
             }
-            
+
             if (tx != "") tx += cr;
 
             // Copyright of karaoke
@@ -3691,7 +5317,7 @@ namespace Karaboss
                     tx += sequence1.WTag[i] + cr;
                 }
             }
-            
+
             if (tx != "") tx += cr;
             // Song infos
             if (sequence1.TTag != null)
@@ -3701,7 +5327,7 @@ namespace Karaboss
                     tx += sequence1.TTag[i] + cr;
                 }
             }
-            
+
             if (tx != "") tx += cr;
             // Infos
             if (sequence1.ITag != null)
@@ -3722,348 +5348,1201 @@ namespace Karaboss
         #endregion menus
 
 
-        #region Lyrics
+        #region new song
 
         /// <summary>
-        /// Display informations on Lyrics
+        /// Add notes to compose a time line
         /// </summary>
-        public void DisplayLyricsInfos()
+        /// <param name="track"></param>
+        /// <param name="channel"></param>
+        /// <param name="dur">type of note's duration:  0.5f, 0.25f</param>
+        private void CreateTimeLineMelody(Track track, int channel, float dur)
         {
-            string tx; // = string.Empty;
-            
-            // FAB 28/08
-            if (myLyricsMgmt != null)
-                {
-                tx = "Lyrics type: " + myLyricsMgmt.LyricType + "\r";
-                tx += "Lyrics track: " + myLyricsMgmt.LyricsTrackNum.ToString() + "\r";
-                tx += "Melody track: " + myLyricsMgmt.MelodyTrackNum.ToString();
+            int noteC = 60;
 
-                lblLyricsInfos.Text = tx;
+            int ticks; // = 0;
+            int duration; // = 0;
+            int number = noteC;
 
-                // Mute melody track
-                MuteMelodyTrack();
-            }
-
-        }
+            float time; // = 0;
 
 
-        /// <summary>
-        /// Replace existing lyrics by others
-        /// MelodyTrackNum: track hosting the melody
-        /// LyricsTrackNum: track hosting the lyrics (text or lyric types)
-        /// The target is to host the lyrics in the melody track
-        /// </summary>
-        /// <param name="pLyrics"></param>
-        public void ReplaceLyrics(List<plLyric> newpLyrics, LyricTypes newLyricType, int melodytracknum)
-        {
-            bool bRefreshDisplay = (newLyricType != myLyricsMgmt.LyricType);
+            int totalduration = sequence1.GetLength();
+            int division = sequence1.Division;
 
-            
-            // Delete all lyrics of all types
-            foreach (Track T in sequence1.tracks)
+            if (totalduration == 1)
             {
-                T.deleteLyrics();
-                T.LyricsText.Clear();
-                T.Lyrics.Clear();
+                totalduration = division * 5;
             }
-            // Tags associated to the sequence have been deleted
-            restoreSequenceTags();
 
+            // Number of notes to create
+            int nbnotes = Convert.ToInt32((1 / dur) * (1 + (totalduration / division)));
+            int velocity = Karaclass.m_Velocity;
 
-            // By default, insert the lyrics (either text or lyric) into the melodytrack
-            Track track = sequence1.tracks[melodytracknum];
-            
-            // Insert all lyric events
-            TrkInsertLyrics(track, newpLyrics, newLyricType);
-
-            // Reload myLyricMgmt
-            myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
-
-            // Refresh frmLyric
-
-            if (myLyricsMgmt.OrgplLyrics.Count > 0)
+            for (int i = 0; i < nbnotes; i++)
             {
-                // Window closed
-                DisplayLyricsForm();
-                // Reset display
-                myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
-                frmLyric.LoadSong(myLyricsMgmt.plLyrics);
-            }
+                time = i * dur;
 
-            // Refresh display of lyrics
-            // if switch between Text & Lyric or
-            // if Lyric because we need to display the new lyrics on the scores
-            if (bRefreshDisplay || myLyricsMgmt.LyricType == LyricTypes.Lyric)
-            {
-                RefreshDisplay();
-            }
+                ticks = Convert.ToInt32(time * division);
+                duration = Convert.ToInt32(dur * division);
 
+                MidiNote note = new MidiNote(ticks, channel, number, duration, velocity, false);
+                track.addNote(note);
+            }
 
             // File was modified
             FileModified();
 
         }
 
-
         /// <summary>
-        /// Insert new lyrics in the target track
+        /// Create a demo melody
         /// </summary>
-        /// <param name="Track"></param>
-        /// <param name="l"></param>
-        /// <param name="LyricType"></param>
-        private void TrkInsertLyrics(Track Track, List<plLyric> l, LyricTypes LyricType)
+        /// <param name="track"></param>
+        /// <param name="channel"></param>
+        private void CreateNewMelody(Track track, int measures)
         {
-            int currentTick; // = 0;
-            int lastcurrenttick = 0;
+            #region old code
+            /*
+            int noteC = 60;
+            int ticks = 0;
+            int number = noteC;
+            int division = sequence1.Division;
+            int duration = 1 * division;
 
-            string currentElement; // = string.Empty;
-            //string currentType; // = string.Empty;
-            string currentCR = string.Empty;
-                        
-            Track.Lyrics.Clear();
-            Track.LyricsText.Clear();
+            int nbblacks = measures * sequence1.Numerator * 4 / sequence1.Denominator;
 
-            Track.TotalLyricsL = "";
-            Track.TotalLyricsT = "";
+            // Ajoute une note au ticks = 0           
+            ticks = 0;
+            int velocity = Karaclass.m_Velocity;
 
+            MidiNote note = new MidiNote(ticks, channel, number, duration, velocity, false);
+            
 
-            // Recréé tout les textes et lyrics
-            for (int idx = 0; idx < l.Count; idx++)
-            {
-                plLyric pll = l[idx];
+            // Ajoute une note au ticks -1
+            ticks = (nbblacks - 1) * division;
+            note = new MidiNote(ticks, channel, number, duration, velocity, false);
+            track.addNote(note);
 
-                // Si c'est un CR, le stocke et le collera au prochain lyric
-                if (pll.CharType == plLyric.CharTypes.LineFeed)
-                {
-                    if (LyricType == LyricTypes.Text)
-                        currentCR = m_SepLine;
-                    else
-                        currentCR = "\r";
+            track.Volume = 80;
+            */
+            #endregion old code
 
-                    // Update Track.Lyrics List
-                    Track.Lyric L = new Track.Lyric()
-                    {
-                        Element = pll.Element.Item2,
-                        TicksOn = pll.TicksOn,
-                        Type = (Track.Lyric.Types)pll.CharType,
-                    };
-                    
-                    if (LyricType == LyricTypes.Text)
-                    {
-                        // si lyrics de type text                     
-                        Track.LyricsText.Add(L);
-                    }
-                    else
-                    {
-                        // si lyrics de type lyrics
-                        Track.Lyrics.Add(L);
-                    }
-
-                }
-                else if (pll.CharType == plLyric.CharTypes.ParagraphSep)
-                {
-                    if (LyricType == LyricTypes.Text)
-                        currentCR = m_SepParagraph;
-                    else
-                        currentCR = "\r\r";
-
-
-                    // Update Track.Lyrics List
-                    Track.Lyric L = new Track.Lyric()
-                    {
-                        Element = pll.Element.Item2,
-                        TicksOn = pll.TicksOn,
-                        Type = (Track.Lyric.Types)pll.CharType,
-                    };
-
-                    if (LyricType == LyricTypes.Text)
-                    {
-                        // si lyrics de type text                     
-                        Track.LyricsText.Add(L);
-                    }
-                    else
-                    {
-                        // si lyrics de type lyrics
-                        Track.Lyrics.Add(L);
-                    }
-                }
-                else if (pll.CharType == plLyric.CharTypes.Text)
-                {
-                    // C'est un lyric
-                    currentTick = pll.TicksOn;
-                    if (currentTick >= lastcurrenttick)
-                    {
-                        lastcurrenttick = currentTick;
-                        currentElement = currentCR + pll.Element.Item2;
-
-                        // Transforme en byte la nouvelle chaine
-                        // ERROR FAB 16-01-2021 : must tyake into accout encoding selected by end user !!!
-                        byte[] newdata; // = Encoding.Default.GetBytes(currentElement);
-
-                        switch (OpenMidiFileOptions.TextEncoding)
-                        {
-                            case "Ascii":
-                                //sy = System.Text.Encoding.Default.GetString(data);
-                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
-                                break;
-                            case "Chinese":
-                                System.Text.Encoding chinese = System.Text.Encoding.GetEncoding("gb2312");
-                                newdata = chinese.GetBytes(currentElement);
-                                break;
-                            case "Japanese":
-                                System.Text.Encoding japanese = System.Text.Encoding.GetEncoding("shift_jis");
-                                newdata = japanese.GetBytes(currentElement);
-                                break;
-                            case "Korean":
-                                System.Text.Encoding korean = System.Text.Encoding.GetEncoding("ks_c_5601-1987");
-                                newdata = korean.GetBytes(currentElement);
-                                break;
-                            case "Vietnamese":
-                                System.Text.Encoding vietnamese = System.Text.Encoding.GetEncoding("windows-1258");
-                                newdata = vietnamese.GetBytes(currentElement);
-                                break;
-                            default:
-                                newdata = System.Text.Encoding.Default.GetBytes(currentElement);
-                                break;
-                        }
-                                               
-
-                        MetaMessage mtMsg;
-
-                        // Update Track.Lyrics List
-                        Track.Lyric L = new Track.Lyric()
-                        {
-                            Element = pll.Element.Item2,
-                            TicksOn = pll.TicksOn,
-                            Type = (Track.Lyric.Types)pll.CharType,
-                        };
-
-
-                        if (LyricType == LyricTypes.Text)
-                        {
-                            // si lyrics de type text
-                            mtMsg = new MetaMessage(MetaType.Text, newdata);
-                            Track.LyricsText.Add(L);
-                        }
-                        else
-                        {
-                            // si lyrics de type lyrics
-                            mtMsg = new MetaMessage(MetaType.Lyric, newdata);
-                            Track.Lyrics.Add(L);
-                        }
-
-                        // Insert new message
-                        Track.Insert(currentTick, mtMsg);
-                    }
-                    currentCR = "";
-                }
-            }
-        }
-      
-
-        #region restore sequence tags
-
-        /// <summary>
-        /// Rewrite tags level sequence
-        /// </summary>
-        private void restoreSequenceTags()
-        {
-            string tx;
-            int i;
-
-            if (sequence1.ITag != null)
-            {
-                for (i = sequence1.ITag.Count - 1; i >= 0; i--)
-                {
-                    tx = "@I" + sequence1.ITag[i];
-                    AddTag(tx);
-                }
-            }
-
-            if (sequence1.KTag != null)
-            {
-                for (i = sequence1.KTag.Count - 1; i >= 0; i--)
-                {
-                    tx = "@K" + sequence1.KTag[i];
-                    AddTag(tx);
-                }
-            }
-            if (sequence1.LTag != null)
-            {
-                for (i = sequence1.LTag.Count - 1; i >= 0; i--)
-                {
-                    tx = "@L" + sequence1.LTag[i];
-                    AddTag(tx);
-                }
-            }
-            if (sequence1.TTag != null)
-            {
-                for (i = sequence1.TTag.Count - 1; i >= 0; i--)
-                {
-                    tx = "@T" + sequence1.TTag[i];
-                    AddTag(tx);
-                }
-            }
-            if (sequence1.VTag != null)
-            {
-                for (i = sequence1.VTag.Count - 1; i >= 0; i--)
-                {
-                    tx = "@V" + sequence1.VTag[i];
-                    AddTag(tx);
-                }
-            }
-            if (sequence1.WTag != null)
-            {
-                for (i = sequence1.WTag.Count - 1; i >= 0; i--)
-                {
-                    tx = "@W" + sequence1.WTag[i];
-                    AddTag(tx);
-                }
-            }
+            SetTrackLength(track, measures);
 
         }
 
         /// <summary>
-        /// Insert Tag at tick 0
+        /// Insert a "EndOfTrack" meta message one tick after the duration
         /// </summary>
-        /// <param name="strTag"></param>
-        private void AddTag(string strTag)
+        /// <param name="track"></param>
+        /// <param name="channel"></param>
+        /// <param name="measures"></param>
+        private void SetTrackLength(Track track, int measures)
         {
-            Track track = sequence1.tracks[0];
-            int currentTick = 0;
-            string currentElement = strTag;
+            if (measures < 1)
+                return;
 
-            // Transforme en byte la nouvelle chaine
-            byte[] newdata = new byte[currentElement.Length];
-            for (int u = 0; u < newdata.Length; u++)
-            {
-                newdata[u] = (byte)currentElement[u];
-            }
+            //int division = sequence1.Division;
+            _measurelen = sequence1.Time.Measure;
 
-            MetaMessage mtMsg;
+            // ticks + 1            
+            int ticks = _measurelen * measures;
 
-            mtMsg = new MetaMessage(MetaType.Text, newdata);
+            /*
+            var split = BitConverter.GetBytes(0);
+            byte[] bytes = new byte[3];
+            bytes[0] = split[2]; //11;
+            bytes[1] = split[1]; //113;
+            bytes[2] = split[0]; //176;
 
-            // Insert new message
-            track.Insert(currentTick, mtMsg);
+            MetaMessage mtMsg = new MetaMessage(MetaType.EndOfTrack, bytes);
+            track.Insert(ticks, mtMsg);            
+            //track.OffsetEndOfTrack(ticks);
+            */
+
+            track.EndOfTrackOffset = ticks - 1;
+
+
+
         }
 
-        #endregion restore sequence tags
+        /// <summary>
+        /// Insert a new track
+        /// </summary>
+        /// <param name="trackindex"></param>
+        /// <param name="trackname"></param>
+        /// <param name="instrumentname"></param>
+        /// <param name="channel"></param>
+        /// <param name="programchange"></param>
+        /// <param name="volume"></param>
+        /// <param name="tempo"></param>
+        /// <param name="timesig"></param>
+        /// <returns></returns>
+        private Track InsertTrack(int trackindex, string trackname, string instrumentname, int channel, int programchange, int volume, int tempo, TimeSignature timesig, int clef)
+        {
+            Track track = CreateTrack(trackname, instrumentname, channel, programchange, volume, tempo, timesig, clef);
+            SequenceInsertTrack(trackindex, track);
+
+            return track;
+        }
 
         /// <summary>
-        /// Delete all lyrics
+        /// Create a new track
         /// </summary>
-        public void DeleteAllLyrics()
+        /// <param name="trackname"></param>
+        /// <param name="instrumentname"></param>
+        /// <param name="channel"></param>
+        /// <param name="programchange"></param>
+        /// <param name="volume"></param>
+        /// <param name="tempo"></param>
+        /// <param name="timesig"></param>
+        /// <returns></returns>
+        private Track CreateTrack(string trackname, string instrumentname, int channel, int programchange, int volume, int tempo, TimeSignature timesig, int clef)
         {
-            foreach (Track trk in sequence1.tracks)
+            // Add tack to sequence
+            Track track = new Track()
             {
-                trk.deleteLyrics();
-                trk.Lyrics.Clear();
-                trk.LyricsText.Clear();
+                MidiChannel = channel,
+                Name = trackname,
+                InstrumentName = instrumentname,
+                ProgramChange = programchange,
+                Volume = volume,
+                Pan = 64,
+                Reverb = 0,
+            };
+
+            if (clef == 0)
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Treble;
+            else if (clef == 1)
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Bass;
+            else
+                track.Clef = Sanford.Multimedia.Midi.Score.Clef.None;
+
+            // Tempo : 
+            //ex tempo = 750000;
+            track.insertTempo(tempo, 0);
+
+            // Keysignature
+            track.insertKeysignature(timesig.Numerator, timesig.Denominator);
+
+            // Timesignature
+            track.Numerator = timesig.Numerator;
+            track.Denominator = timesig.Denominator;
+            track.insertTimesignature(timesig.Numerator, timesig.Denominator);
+
+            // Patch
+            track.insertPatch(channel, programchange);
+
+            // trackname      
+            track.insertTrackname(trackname);
+
+            // Volume
+            track.insertVolume(channel, volume);
+
+            // Lengh of measure
+            track.MeasureLength = _measurelen;
+
+            return track;
+        }
+
+        /// <summary>
+        /// Insert a new track to a sequence
+        /// </summary>
+        /// <param name="trackindex"></param>
+        /// <param name="track"></param>
+        private void SequenceInsertTrack(int trackindex, Track track)
+        {
+            //insert track
+            if (trackindex < sequence1.tracks.Count)
+                sequence1.Insert(trackindex, track);
+            else
+                sequence1.Add(track);
+
+            // File was modified
+            FileModified();
+        }
+
+        /// <summary>
+        /// Add a new track
+        /// </summary>
+        /// <param name="trackname"></param>
+        /// <param name="instrumentname"></param>
+        /// <param name="nChannel"></param>
+        /// <param name="programchange"></param>
+        /// <param name="volume"></param>
+        private Track AddTrack(string trackname, string instrumentname, int channel, int programchange, int volume, int tempo, TimeSignature timesig, int clef)
+        {
+            Track track = CreateTrack(trackname, instrumentname, channel, programchange, volume, tempo, timesig, clef);
+            sequence1.Add(track);
+            // File was modified
+            FileModified();
+            return track;
+        }
+
+        /// <summary>
+        /// Insert a track control
+        /// </summary>
+        /// <param name="track"></param>
+        /// <param name="trackindex"></param>
+        private void InsertTrackControl(Track track, int trackindex)
+        {
+            CreateTrackControl(track, trackindex);
+                      
+        }
+
+        /// <summary>
+        /// Create a track control
+        /// </summary>
+        /// <param name="track"></param>
+        /// <param name="trackindex"></param>
+        /// <returns></returns>
+        private TrkControl.TrackControl CreateTrackControl(Track track, int trackindex)
+        {
+            // Add track control
+            pTrack = new TrkControl.TrackControl
+            {
+                //TrackName = track.Name == null ? "<NoName>" : track.Name,
+                TrackName = track.Name ?? "<NoName>",
+                Patch = track.ProgramChange
+            };
+
+            // InstrumentName;
+            if (track.ProgramChange >= 0 && track.ProgramChange < 128)
+                pTrack.TrackLabel = lsInstruments[track.ProgramChange].Trim();
+
+            pTrack.MidiChannel = track.MidiChannel;
+
+            pTrack.Volume = track.Volume;
+            pTrack.Pan = track.Pan;
+            pTrack.Reverb = track.Reverb;
+
+            pTrack.Muted = false;
+            pTrack.Enabled = bEditScore;
+
+            pTrack.Track = trackindex;
+
+            pTrack.OntrkControlClick += new TrkControl.TrackControl.TrackControlClickEventHandler(TrackControl_Click);
+            pTrack.OntrkControlbtnMaximizeClicked += new TrkControl.TrackControl.btnMaximizeClickedEventHandler(BtnMaximizedClickOneEvent);
+            pTrack.OntrkControlbtnMutClicked += new TrkControl.TrackControl.btnMutClickedEventHandler(BtnMutClickOneEvent);
+            pTrack.OntrkControlbtnSoloClicked += new TrkControl.TrackControl.btnSoloClickedEventHandler(BtnSoloClickOneEvent);
+            pTrack.OntrkControlbtnDelClicked += new TrkControl.TrackControl.btnDelClickedEventHandler(BtnDelClickOneEvent);
+            pTrack.OntrkControllblPatchChanged += new TrkControl.TrackControl.lblPatchChangedEventHandler(LstInstrumentClickOneEvent);
+            pTrack.OntrkControllblChannelChanged += new TrkControl.TrackControl.lblChannelChangedEventHandler(LstChannelClickOneEvent);
+            pTrack.OntrkControlbtnPianoRollClicked += new TrkControl.TrackControl.btnPianoRollClickedEventHandler(BtnPianoRollClickOneEvent);
+
+            // Knob buttons (volume, pan, reverb)
+            pTrack.OnknobControlknobVolumeValueChanged += new TrkControl.TrackControl.knobVolumeValueChangedEventHandler(TrackBarVolumeChanged);
+            pTrack.OnknobControlknobPanValueChanged += new TrkControl.TrackControl.knobPanValueChangedEventHandler(TrackBarPanChanged);
+            pTrack.OnknobControlknobReverbValueChanged += new TrkControl.TrackControl.knobReverbValueChangedEventHandler(TrackBarReverbChanged);
+
+            pTrack.OntrkControllblTrackNameChanged += new TrkControl.TrackControl.lblTrackNameChangedEventHandler(Trk_TrackName);
+
+
+            // Drag Drop
+            pTrack.MouseDown += new MouseEventHandler(TrkControl_MouseDown);
+            pTrack.DragDrop += new DragEventHandler(TrkControl_DragDrop);
+            pTrack.DragEnter += new DragEventHandler(TrkControl_DragEnter);
+            pTrack.DragLeave += new EventHandler(TrkControl_DragLeave);
+            pTrack.DragOver += new DragEventHandler(TrkControl_DragOver);
+            pTrack.AllowDrop = true;
+
+
+            pTrack.Tag = track.MidiChannel.ToString();
+
+            try
+            {
+                pTrack.Parent = pnlTracks;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            myLyricsMgmt.plLyrics.Clear();            
-            //bHasLyrics = false;
+            return pTrack;
+        }
+
+
+        /// <summary>
+        /// Add a new track control 
+        /// </summary>
+        /// <param name="track"></param>
+        private void AddTrackControl(Track track, int trackindex)
+        {
+
+            int j = 0;
+            int yOffset = 1;
+
+            // Count existing tracks track controls
+            for (int i = 0; i < pnlTracks.Controls.Count; i++)
+            {
+                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                {
+                    j++;
+                }
+            }
+
+            try
+            {
+                TrkControl.TrackControl pTrack = CreateTrackControl(track, trackindex);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            int yloc = yOffset + j * iStaffHeightMaximized;
+
+            yloc = Convert.ToInt32(yloc * zoom);
+
+            pTrack.Location = new Point(0, yloc);
+
+            // Ordonnée originelle
+            pTrack.yOrg = yloc;
+
+        }
+
+        /// <summary>
+        /// Redraw track controls
+        /// </summary>
+        public void RedrawTrackControls()
+        {
+            for (int i = 0; i < pnlTracks.Controls.Count; i++)
+            {
+                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                {
+                    if (pnlTracks.Controls[i].Tag != null)
+                    {
+                        TrkControl.TrackControl trkC = ((TrkControl.TrackControl)pnlTracks.Controls[i]);
+
+                        int yloc = trkC.yOrg;
+                        yloc = Convert.ToInt32(yloc * zoom);
+                        trkC.Location = new Point(trkC.Location.X, yloc);
+                    }
+                }
+            }
+        }
+
+        private void RedrawTrackControls2()
+        {
+            int yloc; // = 0;
+            int h = 0;
+
+            for (int i = 0; i < pnlTracks.Controls.Count; i++)
+            {
+                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                {
+                    if (pnlTracks.Controls[i].Tag != null)
+                    {
+                        TrkControl.TrackControl trkC = ((TrkControl.TrackControl)pnlTracks.Controls[i]);
+
+
+                        yloc = h;
+                        yloc = Convert.ToInt32(yloc * zoom);
+                        trkC.Location = new Point(trkC.Location.X, yloc);
+
+                        h += trkC.Height;
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Common for new track
+        /// </summary>
+        private void NewTrack(int measures)
+        {
+            #region trackname
+            // Find unused name for track name
+            int id = 1;
+            string trackname = "Track1";
+            bool bfound; // = false;
+            bool bfinished = false;
+            while (bfinished == false)
+            {
+                bfound = false;
+                for (int i = 0; i < sequence1.tracks.Count; i++)
+                {
+                    Track track = sequence1.tracks[i];
+                    if (track.Name == trackname)
+                    {
+                        bfound = true;
+                        id++;
+                        trackname = "Track" + id.ToString();
+                        break;
+                    }
+                }
+                if (bfound == false)
+                    bfinished = true;
+            }
+
+            #endregion trackname
+
+            // propose first patch
+            int programchange = 0;
+
+            #region channel
+            // Find unused channel for track            
+            int channel = 0;
+            //bfound = false;
+            bfinished = false;
+            while (bfinished == false)
+            {
+                bfound = false;
+                for (int i = 0; i < sequence1.tracks.Count; i++)
+                {
+                    Track track = sequence1.tracks[i];
+                    if (track.MidiChannel == channel)
+                    {
+                        bfound = true;
+                        channel++;
+                        break;
+                    }
+                }
+                if (bfound == false)
+                    bfinished = true;
+            }
+            #endregion channel
+
+            #region trackindex
+            decimal trkindex = sequence1.tracks.Count + 1;
+
+            #endregion trackindex
+
+            int clef = 0;
+
+            DialogResult dr; // = new DialogResult();
+            Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog TrackDialog = new Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog(trackname, programchange, channel, trkindex, clef);
+            dr = TrackDialog.ShowDialog();
+
+            // TODO : if we are creating a new file, 
+            if (dr == DialogResult.Cancel)
+                return;
+
+            // Get infos from dialog
+            clef = TrackDialog.cle;
+            trackname = TrackDialog.TrackName;
+            programchange = TrackDialog.ProgramChange;
+            string instrumentname = TrackDialog.InstrumentName;
+            channel = TrackDialog.MidiChannel;
+            int tindex = Convert.ToInt32(TrackDialog.trackindex) - 1;  // index of new track (-1 to convert to 0 base)
+
+
+            int volume = 79;
+            sequence1.Format = 1;
+
+            // Pas possible pour midi format 0 : une seule piste
+            if (sequence1.Format == 0)
+            {
+                string msg = "Sorry, i can't add a new track to a midi file format 0";
+                string title = "Karaboss";
+                MessageBox.Show(msg, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            }
+            else
+            {
+                if (tindex == sequence1.tracks.Count)
+                {
+                    // Add track to sequence
+                    Track track = AddTrack(trackname, instrumentname, channel, programchange, volume, sequence1.Tempo, sequence1.Time, clef);
+
+                    // Add track control
+                    int trackindex = sequence1.tracks.Count - 1;
+                    AddTrackControl(track, trackindex);
+
+                    // Add a little melody
+                    if (sequence1.tracks.Count == 1)
+                        CreateNewMelody(track, measures);
+                }
+                else
+                {
+                    // Insert track at position trkindex
+                    Track track = InsertTrack(tindex, trackname, instrumentname, channel, programchange, volume, sequence1.Tempo, sequence1.Time, clef);
+
+                    // Insert track control
+                    InsertTrackControl(track, tindex);
+
+                    // Add a little melody
+                    if (sequence1.tracks.Count == 1)
+                        CreateNewMelody(track, measures);
+                }
+
+
+
+                DisplayTrackControls();
+
+                // Reset tracks stuff
+                InitTracksStuff();
+
+                // Create a new ShetMusic
+                RedrawSheetMusic();
+
+                SetScrollBarValues();
+
+                FileModified();
+
+                // Set Current Note on new track
+                int numstrack = sequence1.tracks.Count - 1;
+                sheetmusic.UpdateCurrentNote(numstrack, 60, 0, true);
+            }
+        }
+
+        /// <summary>
+        /// Create a new midi file from the explorer or from the player
+        /// </summary>
+        private void NewMidiFile()
+        {
+            // Show sequencer even if bSequencerAlwaysOn is set to False
+            bForceShowSequencer = true;
+
+            // Initialize tags
+            MidiTags.ResetTags();
+
+            // Create new sequence
+            sequence1 = new Sequence(Utilities.CreateNewMidiFile._Division)
+            {
+                Format = 1,
+                OrigFormat = 1,
+                Numerator = Utilities.CreateNewMidiFile._Numerator,
+                Denominator = Utilities.CreateNewMidiFile._Denominator,
+                Tempo = Utilities.CreateNewMidiFile._Tempo,
+                Time = new TimeSignature(Utilities.CreateNewMidiFile._Numerator, Utilities.CreateNewMidiFile._Denominator, Utilities.CreateNewMidiFile._Division, Utilities.CreateNewMidiFile._Tempo),
+            };
+
+
+            sequence1.CloneTags();
+
+            pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
+
+            DrawControls();
+
+            #region add track
+
+            // Add track to sequence
+            int volume = 79;
+            sequence1.Format = 1;
+            Track track = AddTrack(Utilities.CreateNewMidiFile._TrackName, Utilities.CreateNewMidiFile._InstrumentName, Utilities.CreateNewMidiFile._Channel, Utilities.CreateNewMidiFile._ProgramChange, volume, sequence1.Tempo, sequence1.Time, Utilities.CreateNewMidiFile._Clef);
+
+            // Add track control
+            int trackindex = sequence1.tracks.Count - 1;
+            AddTrackControl(track, trackindex);
+
+            // Add a little melody
+            if (sequence1.tracks.Count == 1)
+                CreateNewMelody(track, Utilities.CreateNewMidiFile._Measures);
+
+            DisplayTrackControls();
+
+            // Reset tracks stuff
+            InitTracksStuff();
+
+            // Create a new ShetMusic
+            RedrawSheetMusic();
+
+            SetScrollBarValues();
+
+            FileModified();
+
+            // Set Current Note on new track
+            int numstrack = sequence1.tracks.Count - 1;
+            sheetmusic.UpdateCurrentNote(numstrack, 60, 0, true);
+
+
+            #endregion addtrack
+
+
+            UpdateMidiTimes();
+            DisplaySongDuration(_duration);
+
+            positionHScrollBarNew.Value = 0;
+            positionHScrollBarNew.Maximum = _totalTicks;
+
+            sequencer1.Sequence = sequence1;
+
+            MIDIfileName = "New";
+            MIDIfilePath = Utilities.CreateNewMidiFile._DefaultDirectory; ;
+            MIDIfileFullPath = null;
+
+            // FAB
+            SetTitle("New.mid");
+
+            myLyricsMgmt = new LyricsMgmt(sequence1);
+            //bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0;             
+
+            // Display midi file infos
+            DisplayFileInfos();
+            DisplayLyricsInfos();
+
+            // Display log file
+            if (sequence1.Log != "")
+            {
+                lblChangesInfos.Text = sequence1.Log;
+            }
+
+            PlayerState = PlayerStates.Stopped;
+
+        }
+
+
+
+        #endregion new song
+
+
+        #region Notes
+
+        private void PlayNote(int note, int staffnum)
+        {
+            StopNote();
+
+            if (on == false)
+            {
+                on = true;
+                playedNote = note;
+                playedStaff = staffnum;
+
+                if (staffnum < sequence1.tracks.Count && note >= 0 && note <= 127)
+                {
+                    Track track = sequence1.tracks[staffnum];
+                    //Console.Write("\nPlay note: " + note);
+                    outDevice.Send(new ChannelMessage(ChannelCommand.NoteOn, track.MidiChannel, note, 127));
+                }
+            }
+        }
+
+        private void StopNote()
+        {
+            if (on && playedNote >= 0 && playedNote <= 127)
+            {
+                Track track = sequence1.tracks[playedStaff];
+                outDevice.Send(new ChannelMessage(ChannelCommand.NoteOff, track.MidiChannel, playedNote, 0));
+                on = false;
+            }
+        }
+
+
+        /// <summary>
+        /// Up/Down on same note
+        /// </summary>
+        /// <param name="KeyCode"></param>
+        private void Key_UpDownNote(string KeyCode)
+        {
+            #region guard
+            if (PlayerState != PlayerStates.Stopped || sheetmusic == null)
+            {
+                return;
+            }
+            #endregion guard            
+
+            // First bEnterNotes, because bEditScore is also true...
+            if (bEnterNotes && sheetmusic.CurrentNote != null && sheetmusic.CurrentNote.midinote.Duration != 0)
+            {
+                #region updown current note
+                sheetmusic.SheetMusic_UpDownCurrentNote(KeyCode);
+
+                // alter note
+                int numstaff = sheetmusic.CurrentNote.numstaff;
+                int note = sheetmusic.CurrentNote.midinote.Number;
+
+                // Play note                
+                PlayNote(note, numstaff);
+                FileModified();
+                RefreshDisplay();
+                SelectOctave(note);
+                #endregion updown current note
+            }
+            else if (bEditScore)
+            {
+                #region updown selected notes
+
+                sheetmusic.SheetMusic_UpDownSelectedNote(KeyCode);
+                FileModified();
+                RefreshDisplay();
+
+                #endregion updown selected notes
+            }
+        }
+
+        /// <summary>
+        /// Left key: select previous note
+        /// </summary>
+        private void Key_Left()
+        {
+            //Console.Write("\nfrmPlayer Key Left"); 
+
+            // alter note
+            int numstaff = sheetmusic.CurrentNote.numstaff;
+            Track track = sequence1.tracks[numstaff];
+            int note = sheetmusic.CurrentNote.midinote.Number;
+            int ticks = Convert.ToInt32(sheetmusic.CurrentNote.midinote.StartTime);
+
+            // Set new current note = note before            
+            MidiNote n = track.getPrevNote(note, ticks);
+            // si il n'y a pas de note précédante on reste sur la même
+            if (n != null)
+            {
+                sheetmusic.UpdateCurrentNote(numstaff, n.Number, n.StartTime, true);
+
+                RefreshDisplay();
+                ScrollTo(n.StartTime);
+            }
+        }
+
+
+        /// <summary>
+        /// Event: key right on keyboard
+        /// </summary>
+        private void Key_Right()
+        {
+            // alter note
+            int numstaff = sheetmusic.CurrentNote.numstaff;
+            Track track = sequence1.tracks[numstaff];
+            int note = sheetmusic.CurrentNote.midinote.Number;
+            float ticks = sheetmusic.CurrentNote.midinote.StartTime;
+
+            // Set new current note = note before            
+            MidiNote n = track.getNextNote(note, Convert.ToInt32(ticks));
+            // si il n'y a pas de note suivante : on reste sur la même
+            if (n != null)
+            {
+                sheetmusic.UpdateCurrentNote(numstaff, n.Number, n.StartTime, true);
+
+                RefreshDisplay();
+                ScrollTo(n.StartTime);
+            }
+        }
+
+        /// <summary>
+        /// Create new notes with keyboard
+        /// </summary>
+        /// <param name="nnote"></param>
+        private void Key_AddNote(int nnote)
+        {
+            #region guard
+            if (PlayerState != PlayerStates.Stopped || bEnterNotes == false)
+            {
+                return;
+            }
+            #endregion guard            
+
+            // note number according to current octave
+            int lastnote = sheetmusic.CurrentNote.midinote.Number;
+            int min = 100;
+            int newoctave = 0;
+
+            // 3 choices
+            // Take min of lastnote - a, lastnote - b, lastnote - c ?
+            int a = (nnote + (octave - 1) * 12);
+            if (Math.Abs(lastnote - a) < min)
+            {
+                min = Math.Abs(lastnote - a);
+                newoctave = octave - 1;
+            }
+
+            int b = (nnote + octave * 12);
+            if (Math.Abs(lastnote - b) < min)
+            {
+                min = Math.Abs(lastnote - b);
+                newoctave = octave;
+            }
+
+            int c = (nnote + (octave + 1) * 12);
+            if (Math.Abs(lastnote - c) < min)
+            {
+                //min = Math.Abs(lastnote - c);
+                newoctave = octave + 1;
+            }
+
+            int newnote = nnote + newoctave * 12;
+
+            // Retrieve new note duration according to button selected
+            float newduration = GetNewNoteDuration();
+
+            // build new midi note to create
+            MidiNote mdnote = sheetmusic.BuildNewNote(newnote, newduration);
+
+
+            int numstaff = sheetmusic.CurrentNote.numstaff;
+            Track track = sequence1.tracks[numstaff];
+
+            // Add new note
+            if (sheetmusic.AddNote(track, mdnote) > 0)
+            {
+                PlayNote(mdnote.Number, numstaff);
+                sheetmusic.UpdateCurrentNote(sheetmusic.CurrentNote.numstaff, mdnote.Number, mdnote.StartTime, true);
+
+                UpdateMidiTimes();
+                DisplaySongDuration(_duration);
+
+                // Redraw scores
+                FileModified();
+                RefreshDisplay();
+                ScrollTo(mdnote.StartTime);
+            }
+        }
+
+        /// <summary>
+        /// Delete current note with keyboard
+        /// </summary>
+        private void Key_DelNote()
+        {
+            #region guard
+            if (PlayerState != PlayerStates.Stopped || bEnterNotes == false)
+            {
+                return;
+            }
+            #endregion guard
+
+            sheetmusic.DeleteNote(sheetmusic.CurrentNote.numstaff, sheetmusic.CurrentNote.midinote.Number, sheetmusic.CurrentNote.midinote.StartTime);
+            UpdateMidiTimes();
+            DisplaySongDuration(_duration);
+
+            ScrollTo(sheetmusic.CurrentNote.midinote.StartTime);
+
+            FileModified();
+
+            // Redraw scores
+            RefreshDisplay();
+        }
+
+        /// <summary>
+        /// Retrieve new note duration according to button selected
+        /// </summary>
+        /// <returns></returns>
+        private float GetNewNoteDuration()
+        {
+            switch (NoteValue)
+            {
+                case NoteValues.Ronde:
+                    if (Alteration == Alterations.Dot)
+                        return 6;
+                    else
+                        return 4;
+
+                case NoteValues.Blanche:
+                    if (Alteration == Alterations.Dot)
+                        return 3;
+                    else
+                        return 2;
+
+                case NoteValues.Noire:
+                    if (Alteration == Alterations.Dot)
+                        return 1.5f;
+                    else
+                        return 1;
+
+                case NoteValues.Croche:
+                    if (Alteration == Alterations.Dot)
+                        return 0.75f;
+                    else
+                        return 0.5f;
+
+                case NoteValues.DoubleCroche:
+                    if (Alteration == Alterations.Dot)
+                        return 0.375f;
+                    else
+                        return 0.25f;
+
+                case NoteValues.TripleCroche:
+                    if (Alteration == Alterations.Dot)
+                        return 0.1825f;
+                    else
+                        return 0.125f;
+
+                case NoteValues.QuadrupleCroche:
+                    if (Alteration == Alterations.Dot)
+                        return 0.09375f;
+                    else
+                        return 0.0625f;
+
+                default:
+                    return 1;
+
+            }
+        }
+
+       
+
+        /// <summary>
+        /// Adapt current octave to notes entered
+        /// </summary>
+        /// <param name="note"></param>
+        private void SelectOctave(int note)
+        {
+            if (note >= octave * 12 && note <= 11 + octave * 12)
+                return;
+
+            if (note > 11 + octave * 12)
+            {
+                do
+                {
+                    if (octave < 12)
+                        octave++;
+                    else
+                        break;
+                } while (note > 11 + octave * 12);
+            }
+            else
+            {
+                do
+                {
+                    if (octave > 0)
+                        octave--;
+                    else
+                        break;
+                } while (note > 11 + octave * 12);
+            }
+        }
+
+
+        #endregion Notes
+
+
+        #region peak level master volume
+
+        /// <summary>
+        /// Get master peak volume from provider of sound (Karaboss itself or an external one such as VirtualMidiSynth)
+        /// </summary>
+        private void GetPeakVolume()
+        {
+            float? peak = AudioControl.AudioManager.GetApplicationMasterPeakVolume(outDeviceProcessId);
+            VuMasterPeakVolume.Level = Convert.ToInt32(peak);
+        }
+
+        /// <summary>
+        /// Initialize control peak volume level
+        /// </summary>
+        private void Init_peakLevel()
+        {
+            this.VuMasterPeakVolume.AnalogMeter = false;
+            this.VuMasterPeakVolume.BackColor = System.Drawing.Color.DimGray;
+            this.VuMasterPeakVolume.DialBackground = System.Drawing.Color.White;
+            this.VuMasterPeakVolume.DialTextNegative = System.Drawing.Color.Red;
+            this.VuMasterPeakVolume.DialTextPositive = System.Drawing.Color.Black;
+            this.VuMasterPeakVolume.DialTextZero = System.Drawing.Color.DarkGreen;
+
+            // LED 1
+            this.VuMasterPeakVolume.Led1ColorOff = System.Drawing.Color.DarkGreen;
+            this.VuMasterPeakVolume.Led1ColorOn = System.Drawing.Color.LimeGreen;
+            //this.VuMasterPeakVolume.Led1Count = 12;
+            this.VuMasterPeakVolume.Led1Count = 14;
+
+            // LED 2
+            this.VuMasterPeakVolume.Led2ColorOff = System.Drawing.Color.Olive;
+            this.VuMasterPeakVolume.Led2ColorOn = System.Drawing.Color.Yellow;
+            //this.VuMasterPeakVolume.Led2Count = 12;
+            this.VuMasterPeakVolume.Led2Count = 14;
+
+            // LED 3
+            this.VuMasterPeakVolume.Led3ColorOff = System.Drawing.Color.Maroon;
+            this.VuMasterPeakVolume.Led3ColorOn = System.Drawing.Color.Red;
+            //this.VuMasterPeakVolume.Led3Count = 8;
+            this.VuMasterPeakVolume.Led3Count = 10;
+
+            // LED size
+            this.VuMasterPeakVolume.LedSize = new System.Drawing.Size(12, 2);
+
+            this.VuMasterPeakVolume.LedSpace = 1;
+            this.VuMasterPeakVolume.Level = 0;
+            this.VuMasterPeakVolume.LevelMax = 127;
+
+            //this.VuMasterPeakVolume.Location = new System.Drawing.Point(220, 33);
+            this.VuMasterPeakVolume.MeterScale = VU_MeterLibrary.MeterScale.Log10;
+            this.VuMasterPeakVolume.Name = "VuMasterPeakVolume";
+            this.VuMasterPeakVolume.NeedleColor = System.Drawing.Color.Black;
+            this.VuMasterPeakVolume.PeakHold = false;
+            this.VuMasterPeakVolume.Peakms = 1000;
+            this.VuMasterPeakVolume.PeakNeedleColor = System.Drawing.Color.Red;
+            this.VuMasterPeakVolume.ShowDialOnly = false;
+            this.VuMasterPeakVolume.ShowLedPeak = false;
+            this.VuMasterPeakVolume.ShowTextInDial = false;
+            this.VuMasterPeakVolume.Size = new System.Drawing.Size(14, 120);
+            this.VuMasterPeakVolume.TabIndex = 5;
+            this.VuMasterPeakVolume.TextInDial = new string[] {
+            "-40",
+            "-20",
+            "-10",
+            "-5",
+            "0",
+            "+6"};
+            this.VuMasterPeakVolume.UseLedLight = false;
+            this.VuMasterPeakVolume.VerticalBar = true;
+            this.VuMasterPeakVolume.VuText = "VU";
+            this.VuMasterPeakVolume.Location = new Point(226, 7);
+
+        }
+
+
+        #endregion
+
+
+        #region Playlists
+
+        // Select and load next playlist item
+        private void SelectNextPlaylistSong()
+        {
+            if (currentPlaylist == null)
+            {
+                // FAB 30/09/2018 !!!!
+                // Ne s'arrête jamais
+                PlayerState = PlayerStates.Stopped;
+                return;
+            }
+
+            PlaylistItem pli = currentPlaylistItem;
+
+            // Select next item            
+            currentPlaylistItem = currentPlaylist.Next(pli);
+
+            // Stop if no other song to play
+            if (pli == currentPlaylistItem)
+            {
+                PlayerState = PlayerStates.Stopped;
+                BtnStatus();
+                return;
+            }
+
+            // Load file
+            MIDIfileName = currentPlaylistItem.Song;
+            MIDIfileFullPath = currentPlaylistItem.File;
+
+            // Select which type a file it is
+            SelectFileToLoadAsync();
+        }
+
+        /// <summary>
+        /// Select action to perform betwwen 2 songs according to user's choices
+        /// Pause, Count Down, play asap
+        /// </summary>
+        private void performPlaylistChainingChoice()
+        {
+            // If mode pause between songs of a playlist 
+            // Display a waiting information (not the words)
+            if (Karaclass.m_PauseBetweenSongs)
+            {
+                PlayerState = PlayerStates.LaunchNextSong;
+                BtnStatus();
+
+                #region display singer in the Lyrics form
+                // Display the Lyric form even if no lyrics in order to display the singer
+                if (Application.OpenForms.OfType<frmLyric>().Count() == 0)
+                {
+                    frmLyric = new frmLyric(myLyricsMgmt);
+                    frmLyric.Show();
+                }
+
+                if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+                {
+                    // During the waiting time, display informations about the next singer
+                    int nbLines;
+                    string toptxt;
+                    string centertxt;
+
+                    if (currentPlaylistItem.KaraokeSinger == "" || currentPlaylistItem.KaraokeSinger == "<Song reserved by>")
+                    {
+                        toptxt = "Next song: " + Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
+                        centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
+                        nbLines = 1;
+                    }
+                    else
+                    {
+
+                        toptxt = "Next song: " + Path.GetFileNameWithoutExtension(currentPlaylistItem.Song) + " - Next singer: " + currentPlaylistItem.KaraokeSinger;
+                        centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song)
+                            + _InternalSepLines + Strings.SungBy
+                            + _InternalSepLines + currentPlaylistItem.KaraokeSinger;
+                        nbLines = 4;
+                    }
+
+                    // arriere plan provisoire
+                    frmLyric.AlloModifyDirSlideShow = true;
+                    frmLyric.DirSlideShow = Properties.Settings.Default.dirSlideShow;
+                    frmLyric.AlloModifyDirSlideShow = false;
+
+                    frmLyric.TxtNbLines = nbLines;
+                    frmLyric.bTextBackGround = false;
+
+                    // Display singer in top panel
+                    frmLyric.DisplaySinger(toptxt);
+
+                    // Display next singer in lyrics form
+                    frmLyric.DisplayText(centertxt);
+                }
+                #endregion
+
+                // Focus on paused windows
+                this.Restore();
+                this.Activate();
+            }
+            else
+            {
+                // NO PAUSE MODE
+                if (Karaclass.m_CountdownSongs == 0)
+                {
+                    // NO Timer => play                    
+                    PlayerState = PlayerStates.Stopped;
+                    PlayPauseMusic();
+                }
+                else
+                {
+                    // No pause mode between songs of a playlist, but a timer 
+                    // Lauch Countdown timer
+                    StartCountDownTimer();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Start count down before playing
+        /// </summary>
+        private void StartCountDownTimer()
+        {
+            PlayerState = PlayerStates.Waiting;
+            BtnStatus();
+
+            w_tick = 0;
+            int sec = Karaclass.m_CountdownSongs;  // wait for x seconds
+            w_wait = sec + 4;
+
+            if (Application.OpenForms.OfType<frmLyric>().Count() == 0)
+            {
+                frmLyric = new frmLyric(myLyricsMgmt);
+                frmLyric.Show();
+            }
+
+            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+            {
+                // Display song & singer
+                string nextsong = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
+                string txt = "Next song: " + nextsong + " - Next singer: " + currentPlaylistItem.KaraokeSinger;
+                frmLyric.DisplaySinger(txt);
+
+                frmLyric.LoadWaitSong(sec);
+            }
+
+            timer5.Interval = 1000;  // interval = 1 sec      
+            timer5.Enabled = true;
+        }
+
+
+        /// <summary>
+        /// Called by Button NEXT, play immediately the next song
+        /// </summary>
+        private void PlayNextSong()
+        {
+            PlaylistItem pli = currentPlaylistItem;
+            if (pli == null)
+                return;
+
+            currentPlaylistItem = currentPlaylist.Next(pli);
+
+            if (currentPlaylist == null || pli == currentPlaylistItem)
+                return;
+
+            //Next song of the playlist
+            MIDIfileName = currentPlaylistItem.Song;
+            UpdatePlayListsForm(currentPlaylistItem.Song);
 
             // Ferme le formulaire frmLyric
             if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
@@ -4071,705 +6550,136 @@ namespace Karaboss
                 frmLyric.Close();
             }
 
-            // File was modified
-            FileModified();
+            PlayerState = PlayerStates.Playing;
+            MIDIfileFullPath = currentPlaylistItem.File;
+            ResetMidiFile();
+
+            SelectFileToLoadAsync();
         }
 
-        private void ManageDisplayLyricsForm()
-        {
-            // If the user does not want to see the lyrics => exit
-            if (!bKaraokeAlwaysOn)
-            { return; }
-
-            // If normal plying and no lyrics => exit
-            if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgplLyrics.Count == 0)
-            { return; }
-            
-
-            DisplayLyricsForm();
-            
-            myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
-
-            // If no lyrics and a playlist, display something in the center
-            if (currentPlaylistItem != null && myLyricsMgmt.OrgplLyrics.Count == 0 && !Karaclass.m_PauseBetweenSongs && Karaclass.m_CountdownSongs == 0 && !Karaclass.m_ShowChords)
-            {                
-                string sSinger = currentPlaylistItem.KaraokeSinger;
-                string centertxt;
-                if (sSinger == "" || sSinger == "<Song reserved by>")
-                {
-                    centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
-                }
-                else
-                {
-                    centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song)
-                + _InternalSepLines + Strings.SungBy
-                + _InternalSepLines + currentPlaylistItem.KaraokeSinger;
-                }
-
-                frmLyric.DisplayText(centertxt, (int)_duration);
-            }
-            else
-            {
-                frmLyric.LoadSong(myLyricsMgmt.plLyrics);
-            }
-        }
 
         /// <summary>
-        /// Load form frmLyrics       
+        /// Called by button PREVIOUS, play immediately the previous song
         /// </summary>
-        private void DisplayLyricsForm()
+        private void PlayPrevSong()
         {
-            // If normal playing (no playlist) AND do not show chords AND no lyrics => do not show this form 
-            if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgplLyrics.Count == 0)
-                { return; }
-            
-            string sSong;
-            string sSinger = string.Empty;
-            
-            
-            if (currentPlaylistItem != null)
-            {                
-                sSong = currentPlaylistItem.Song;
-                sSinger = currentPlaylistItem.KaraokeSinger;
-            }
-            else
+            if (PlayerState == PlayerStates.Paused)
             {
-                sSong = MIDIfileName;
-            }
-           
-
-            // if Window closed, reload it
-            if (frmLyric == null || Application.OpenForms.OfType<frmLyric>().Count() == 0)
-            {                
-                frmLyric = new frmLyric(myLyricsMgmt);
-                frmLyric.Show();
-            }
-
-            
-            // Display song & current singer on top label
-            string tx;
-            sSong = Path.GetFileNameWithoutExtension(sSong);
-            if (sSinger == "" || sSinger == "<Song reserved by>")
-                tx = sSong;
-            else
-                tx = sSong + " - " + Strings.Singer + ": " + sSinger;
-
-            frmLyric.DisplaySinger(tx);
-
-          
-
-            // Show window
-            if (frmLyric.WindowState == FormWindowState.Minimized)
-                frmLyric.WindowState = FormWindowState.Normal;
-
-            frmLyric.Show();
-            frmLyric.Activate();
-
-            // cas d'une playlist ou non : met à jour le diaporama
-            SetSlideShow();
-
-        }
-
-        private void SetSlideShow()
-        {
-            if (frmLyric != null)
-            {
-                // cas d'une playlist ou non : met à jour le diaporama
-                if (currentPlaylistItem != null)
-                    dirSlideShow = currentPlaylistItem.DirSlideShow;
-                else
-                    dirSlideShow = Properties.Settings.Default.dirSlideShow;
-
-                frmLyric.SetSlideShow(dirSlideShow);
-
-            }
-        }
-        
-        /// <summary>
-        /// Load chords embedded in Xml file
-        /// </summary>
-        private void LoadXmlChordsInLyrics()
-        {
-            #region guard
-            if (myLyricsMgmt == null) return;
-            if (MXmlReader == null) return;
-            #endregion guard
-            
-            if (MXmlReader.bHasXmlChords)
-            {
-                // infos
-                // MXmlReader.lstChords
-                // MXmlReader.TrackChordsNumber
-                myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.XmlEmbedded;
-                //myLyricsMgmt.lstXmlChords.Clear();
-                myLyricsMgmt.lstXmlChords = MXmlReader.lstChords;
-                //myLyricsMgmt.PopulateXmlChords(MXmlReader.lstChords);
-
-            }
-                
-        }
-
-        #endregion Lyrics
-
-
-        #region handle messages
-
-        private void SheetMusic_CurrentNoteChanged(MidiNote n)
-        {            
-            // Convert note number to letter
-            string[] scale = { "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#" };
-            string notename = scale[(n.Number + 3) % 12];
-            string s = CurrentNoteToString(n.Number, notename, n.StartTime, n.Duration, n.Velocity);
-            lblCurNoteInfo.Text = s;
-
-        }
-        private string CurrentNoteToString(int note, string noteLetter, float ticks, int duration, int velocity)
-        {
-            float timeinmeasure = sheetmusic.GetTimeInMeasure(ticks);
-            return string.Format("note {0} ({1}) - time {2} - ticks {3} - duration {4} - velocity {5}", note, noteLetter, timeinmeasure, ticks, duration, velocity);
-        }
-
-        /// <summary>
-        /// Click on sheetmusic => track changed event
-        /// </summary>
-        /// <param name="tracknum"></param>
-        private void SheetMusic_CurrentTrackChanged(int tracknum)
-        {
-            if (!bEditScore)
+                laststart = bouclestart;
+                sequencer1.Position = laststart;
                 return;
-            
-            // Unselect all track controls
-            UnselectTrackControls();
-            
-            // Select track control
-            SelectTrackControl(tracknum);
-            
-            // Color in red the key of the track
-            SelectTrackKey(tracknum);
-        }
-     
-
-        /// <summary>
-        /// Event: loading of midi file terminated: launch song
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void HandleLoadCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            //string lyrics; // = string.Empty;
-            this.Cursor = Cursors.Arrow;
-            mnuFileOpen.Enabled = true;            
-            progressBarPlayer.Value = 0;            
-            progressBarPlayer.Visible = false;
-
-            // Reset settings made for previous song
-            ResetPlaySettings();
-
-            //if (frmLoading != null)
-            //    frmLoading.Dispose();
-            loading = false;
-
-            if (e.Error == null && e.Cancelled == false)
-            {                
-                laststart = 0;
-
-                // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
-                sequence1.Format = 1;
-                
-                myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
-                //bHasLyrics =  myLyricsMgmt.OrgplLyrics.Count > 0;                 
-
-                /*
-                * Bug when format is 0, Karaboss change the format to 1.
-                * If the file contains lyrics (not text), they are lost when the file is saved
-                * Workaround is to rewrite the lyrics
-                */
-
-                if ((sequence1.OrigFormat == 0) && (myLyricsMgmt.LyricType == LyricTypes.Lyric))
-                {
-                    int tracknum = myLyricsMgmt.LyricsTrackNum;
-                    Track track = sequence1.tracks[tracknum];
-                    // supprime tous les messages text & lyric
-                    track.deleteLyrics();
-
-                    // Insert all lyric events
-                    //InsTrkEvents(tracknum);
-                    TrkInsertLyrics(track, myLyricsMgmt.OrgplLyrics, myLyricsMgmt.LyricType);
-                }                
-
-                              
-                // Remove all MIDI events after last note
-                sequence1.Clean();
-                UpdateMidiTimes();
-
-
-                #region displays controls
-
-                positionHScrollBarNew.Value = 0;
-                positionHScrollBarNew.Maximum = _totalTicks;
-
-                // ----------------------------------------------------------------
-                // Display Scores on panel pnlScrollView
-                // ----------------------------------------------------------------
-                DisplayScores();
-               
-                // Display song duration
-                DisplaySongDuration(_duration);
-                
-                // Display track controls             
-                DisplayTrackControls();
-
-                // Reset tracks Stuff
-                InitTracksStuff();
-                #endregion
-
-                // Display log file
-                if (sequence1.Log != "")
-                    lblChangesInfos.Text = sequence1.Log;
-
-                DisplayFileInfos();
-
-
-                #region display lyrics
-                // Recherche si des lyrics existent et affiche la forme frmLyric
-                mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;                           
-                
-                DisplayLyricsInfos();
-                #endregion
-
-
-                // PLAYLIST
-                if (currentPlaylist != null)
-                {
-                    // Highlight current song in the playlist
-                    UpdatePlayListsForm(currentPlaylistItem.Song);
-
-                    // play asap, pause, countdown
-                    performPlaylistChainingChoice();
-                }
-                else
-                {
-                    // SINGLE FILE
-
-                    // the user asked to play the song immediately                
-                    if (bPlayNow)
-                        PlayPauseMusic();
-                    else
-                    {
-                        // the user wants to edit the file 
-                        ManageDisplayLyricsForm();                        
-                    }
-                }
             }
-            else
-            {
-                if (e.Error != null)
-                    MessageBox.Show(e.Error.Message);
-            }
-        }      
 
-        /// <summary>
-        /// Event: end loading XML music file
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void HandleLoadXmlCompleted(object sender, AsyncCompletedEventArgs e)
-        {                               
-            if (MXmlReader.seq == null)
+            PlaylistItem pli = currentPlaylistItem;
+            if (pli == null)
                 return;
 
-            string lyrics = string.Empty;
-            this.Cursor = Cursors.Arrow;
-            mnuFileOpen.Enabled = true;
-            progressBarPlayer.Value = 0;
-            progressBarPlayer.Visible = false;
+            currentPlaylistItem = currentPlaylist.Previous(pli);
 
-            // ====================================
-            // Ajout par rapport au standard
-            // ====================================
-            if (Karaclass.m_MxmlPath != null && Karaclass.m_MxmlPath != "") 
-            {
-                string fName = Path.GetFileNameWithoutExtension(Karaclass.m_MxmlPath);    // name without extension
-                MIDIfilePath = Path.GetDirectoryName(Karaclass.m_MxmlPath);                            
-                MIDIfileName = fName + ".mid";
-                MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
-            }
-            else
-            {
-                MIDIfilePath = Path.GetDirectoryName(MIDIfileFullPath);                
-                string fName = Path.GetFileNameWithoutExtension(MIDIfileFullPath);    // name without extension
-                MIDIfileName = fName + ".mid";
-                MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
-            }
-            // fin ajout
-
-
-            // Reset settings made for previous song
-            ResetPlaySettings();            
-            loading = false;
-
-            sequence1 = MXmlReader.seq;
-            sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
-            sequence1.LoadProgressChanged += HandleLoadProgressChanged;
-
-
-            if (e.Error == null && e.Cancelled == false)
-            {
-                laststart = 0;
-
-                // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
-                sequence1.Format = 1;
-                
-                myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
-
-                // Load chords in LyricsMgmt in order to be displayed in the lyrics form                
-                LoadXmlChordsInLyrics();
-                //if (MXmlReader.bHasXmlChords)
-                //    myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.XmlEmbedded;
-
-
-                /*
-                * Bug when format is 0, Karaboss change the format to 1.
-                * If the file contains lyrics (not text), they are lost when the file is saved
-                * Workaround is to rewrite the lyrics
-                */
-
-                    // case of format 0
-                if ((sequence1.OrigFormat == 0) && (myLyricsMgmt.LyricType == LyricTypes.Lyric))
-                {
-                    int tracknum = myLyricsMgmt.LyricsTrackNum;
-                    Track track = sequence1.tracks[tracknum];
-                    // supprime tous les messages text & lyric
-                    track.deleteLyrics();
-
-                    // Insert all lyric events                    
-                    TrkInsertLyrics(track, myLyricsMgmt.OrgplLyrics, myLyricsMgmt.LyricType);
-                }                               
-
-                // Remove all MIDI events after last note
-                sequence1.Clean();
-
-                // ====================================
-                // AJOUT par rapport au standard
-                // ====================================
-                ResetSequencer();
-                sequencer1.Sequence = sequence1;
-                // fin ajout
-
-                UpdateMidiTimes();
-
-                #region displays controls
-
-                positionHScrollBarNew.Value = 0;
-                positionHScrollBarNew.Maximum = _totalTicks;
-
-                // ----------------------------------------------------------------
-                // Display Scores on panel pnlScrollView
-                // ----------------------------------------------------------------
-                DisplayScores();
-
-                // Display song duration
-                DisplaySongDuration(_duration);
-
-                // Display track controls             
-                DisplayTrackControls();
-
-                // Reset tracks Stuff
-                InitTracksStuff();
-                #endregion
-
-
-                // Display log file
-                if (sequence1.Log != "")
-                    lblChangesInfos.Text = sequence1.Log;
-                DisplayFileInfos();
-
-                #region display lyrics
-                // Recherche si des lyrics existent et affiche la forme frmLyric
-                mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
-
-                DisplayLyricsInfos();
-                #endregion
-
-                // PLAYLIST
-                if (currentPlaylist != null)
-                {
-                    // Highlight current song in the playlist
-                    UpdatePlayListsForm(currentPlaylistItem.Song);
-
-                    // play asap, pause, countdown
-                    performPlaylistChainingChoice();
-                }
-                else
-                {
-                    // SINGLE FILE
-
-                    // Lance immédiatement la lecture du morceau                
-                    if (bPlayNow)
-                        PlayPauseMusic();
-                    else
-                    {
-                        ManageDisplayLyricsForm();
-                    }
-                }
-            }
-            else
-            {
-                if (e.Error != null)
-                    MessageBox.Show(e.Error.Message);
-            }                
-        }
-
-        /// <summary>
-        /// End loading dump text file
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void HandleLoadTxtCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            if (MTxtReader.seq == null)
+            if (currentPlaylist == null || pli == currentPlaylistItem)
                 return;
 
-            string lyrics = string.Empty;
-            this.Cursor = Cursors.Arrow;
-            mnuFileOpen.Enabled = true;
-            progressBarPlayer.Value = 0;
-            progressBarPlayer.Visible = false;
+            MIDIfileName = currentPlaylistItem.Song;
+            MIDIfileFullPath = currentPlaylistItem.File;
 
-            // ====================================
-            // AJOUT par rapport au standard
-            // ====================================
-            MIDIfileFullPath = ((MusicTxtReader)sender).fileName;
+            UpdatePlayListsForm(currentPlaylistItem.Song);
+            PlayerState = PlayerStates.Playing;
 
-            MIDIfilePath = Path.GetDirectoryName(MIDIfileFullPath);
-            string fExt = Path.GetExtension(MIDIfileFullPath);             // Extension
-            string fName = Path.GetFileNameWithoutExtension(MIDIfileFullPath);    // name without extension
-            MIDIfileName = fName + ".mid";
-            MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
-            // fin ajout
+            ResetMidiFile();
 
+            SelectFileToLoadAsync();
 
-            // Reset settings made for previous song
-            ResetPlaySettings();
-
-            //if (frmLoading != null)
-            //    frmLoading.Dispose();
-            loading = false;
-
-            sequence1 = MTxtReader.seq;
-            sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
-            sequence1.LoadProgressChanged += HandleLoadProgressChanged;
-
-            if (e.Error == null && e.Cancelled == false)
-            {
-                laststart = 0;
-
-                // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
-                sequence1.Format = 1;
-                
-                myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
-                //bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0;                 
-
-                /*
-                * Bug when format is 0, Karaboss change the format to 1.
-                * If the file contains lyrics (not text), they are lost when the file is saved
-                * Workaround is to rewrite the lyrics
-                */
-
-                if ((sequence1.OrigFormat == 0) && (myLyricsMgmt.LyricType == LyricTypes.Lyric))
-                {
-                    int tracknum = myLyricsMgmt.LyricsTrackNum;
-                    Track track = sequence1.tracks[tracknum];
-                    // supprime tous les messages text & lyric
-                    track.deleteLyrics();
-
-                    // Insert all lyric events
-                    //InsTrkEvents(tracknum);
-                    TrkInsertLyrics(track, myLyricsMgmt.OrgplLyrics, myLyricsMgmt.LyricType);
-                }
-                               
-
-                // Remove all MIDI events after last note
-                sequence1.Clean();
-
-                // ====================================
-                // AJOUT par rapport au standard
-                // ====================================
-                ResetSequencer();
-                sequencer1.Sequence = sequence1;
-                // fin ajout
-
-                UpdateMidiTimes();
-
-                #region displays controls
-
-                positionHScrollBarNew.Value = 0;
-                positionHScrollBarNew.Maximum = _totalTicks;
-
-                // ----------------------------------------------------------------
-                // Display Scores on panel pnlScrollView
-                // ----------------------------------------------------------------
-                DisplayScores();
-
-                // Display song duration
-                DisplaySongDuration(_duration);
-
-                // Display track controls             
-                DisplayTrackControls();
-
-                // REset tracks Stuff
-                InitTracksStuff();
-                #endregion
-
-
-                #region display lyrics
-
-                // Recherche si des lyrics existent et affiche la forme frmLyric
-                mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
-
-                // Display log file
-                if (sequence1.Log != "")
-                    lblChangesInfos.Text = sequence1.Log;
-
-                DisplayFileInfos();
-                DisplayLyricsInfos();
-                #endregion
-
-                // PLAYLIST
-                if (currentPlaylist != null)
-                {
-                    // Highlight current song in the playlist
-                    UpdatePlayListsForm(currentPlaylistItem.Song);
-
-                    // play asap, pause, countdown
-                    performPlaylistChainingChoice();
-                }
-                else
-                {
-                    // SINGLE FILE
-
-                    // Lance immédiatement la lecture du morceau                
-                    if (bPlayNow)
-                        PlayPauseMusic();
-                    else
-                    {
-                        ManageDisplayLyricsForm();
-                    }
-                }
-            }
-            else
-            {
-                if (e.Error != null)
-                    MessageBox.Show(e.Error.Message);
-            }        
         }
 
         /// <summary>
-        /// Event: save midi file terminated
+        /// Update display of frmPlaylist
+        /// </summary>
+        /// <param name="song"></param>
+        private void UpdatePlayListsForm(string song)
+        {
+            int idx = currentPlaylist.SelectedIndex(currentPlaylistItem) + 1;
+            lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;
+
+            if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
+            {
+                frmExplorer = GetForm<frmExplorer>();
+                frmExplorer.DisplaySong(song);
+            }
+        }
+
+
+        private void ResetMidiFile()
+        {
+            OpenMidiFileOptions.TextEncoding = Karaclass.m_textEncoding;
+            OpenMidiFileOptions.SplitHands = false;
+        }
+
+
+        #endregion Playlists
+
+
+        #region recording
+
+        private void BtnStartRec_Click(object sender, EventArgs e)
+        {
+            LaunchRecorder();
+        }
+
+        /// <summary>
+        /// Launch the MP3 recorder
+        /// </summary>
+        private void LaunchRecorder()
+        {
+            string arguments = string.Empty;
+            //IntPtr Hwnd = IntPtr.Zero;
+
+            string exeName = "KarabossRecorder.exe";
+            string exeNameConfig = "KarabossRecorder.exe.config";
+
+            string path = Path.GetDirectoryName(Application.ExecutablePath);
+
+            string fullPath = Path.Combine(path, exeName);
+            if (!File.Exists(fullPath))
+            {
+                string errorText = string.Format("File not found: {0}", exeName);
+                MessageBox.Show(errorText, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            fullPath = Path.Combine(path, exeNameConfig);
+            if (!File.Exists(fullPath))
+            {
+                string errorText = string.Format("File not found: {0}", exeNameConfig);
+                MessageBox.Show(errorText, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+
+                ProcessStartInfo startRecorder = new ProcessStartInfo()
+                {
+                    Arguments = arguments,
+                    FileName = exeName,
+                };
+
+                Process.Start(startRecorder);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        #endregion recording
+
+
+        #region scroll events
+
+        /// <summary>
+        /// Player position scrollbar scroll
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void HandleSaveCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            
-            if (progressBarPlayer != null)
-            {
-                try
-                {                  
-                    progressBarPlayer.Value = 0;
-                    progressBarPlayer.Visible = false;
-                    
-                }
-                catch (Exception ex)
-                {
-                    Console.Write(ex.Message);
-                }
-
-            }
-
-            if (e.Error == null)
-            {
-                bfilemodified = false;
-                if (bClosingRequired == true)
-                {
-                    this.Close();
-                    return;
-                }
-
-                SetTitle(MIDIfileName);
-
-                // Active le formulaire frmExplorer
-                if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
-                {
-                    frmExplorer = GetForm<frmExplorer>();
-                    frmExplorer.RefreshExplorer();                    
-                }
-
-            }
-            else
-            {
-                MessageBox.Show(e.Error.Message);
-            }
-        }
-
-        /// <summary>
-        /// Ecent: Save Dump to text file terminated
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void HandleSaveTxtCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-
-            if (progressBarPlayer != null)
-            {
-                try
-                {
-                    progressBarPlayer.Value = 0;
-                    progressBarPlayer.Visible = false;
-
-                }
-                catch (Exception ex)
-                {
-                    Console.Write(ex.Message);
-                }
-
-            }
-
-            if (e.Error == null)
-            {
-                bfilemodified = false;
-                if (bClosingRequired == true)
-                {
-                    this.Close();
-                    return;
-                }
-
-                SetTitle(MIDIfileName);
-
-                // Active le formulaire frmExplorer
-                if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
-                {
-                    frmExplorer = GetForm<frmExplorer>();
-                    frmExplorer.RefreshExplorer();
-                }
-            }
-            else
-            {
-                MessageBox.Show(e.Error.Message);
-            }
-        }
-
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }       
-
         private void PositionHScrollBarNew_Scroll(object sender, ScrollEventArgs e)
         {
             if (e.Type == ScrollEventType.EndScroll)
@@ -4785,252 +6695,716 @@ namespace Karaboss
             }
         }
 
+        private void VScrollBar_ValueChanged(object sender, EventArgs e)
+        {
+            // Verticall scroll of panel kept
+            pnlTracks.Top = -vScrollBar.Value;
+            pnlScrollView.Top = -vScrollBar.Value;
+        }
+
         /// <summary>
-        /// Event: loading of midi file in progress
+        /// Vertical scrollbar scroll
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void HandleLoadProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void VScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
-            loading = true;
-            try
-            {                
-                progressBarPlayer.Value = e.ProgressPercentage;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            }
+            pnlTracks.Top = -vScrollBar.Value;
+            pnlScrollView.Top = -vScrollBar.Value;
         }
 
-       
         /// <summary>
-        /// Event: saving midi file in progress
+        /// Horizontal scrollbar value changed
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void HandleSaveProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void HScrollBar_ValueChanged(object sender, EventArgs e)
         {
-            try
-            {               
-                if (e.ProgressPercentage >= progressBarPlayer.Minimum && e.ProgressPercentage <= progressBarPlayer.Maximum)
-                    progressBarPlayer.Value = e.ProgressPercentage;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            }
+            sheetmusic.OffsetX = hScrollBar.Value;
         }
 
-        private void HandleMetaMessagePlayed(object sender, MetaMessageEventArgs e)
+        /// <summary>
+        /// Horizontal scrollbar scroll
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
-            if (closing)
-            {
+            sheetmusic.OffsetX = hScrollBar.Value;
+        }
+
+
+        /// <summary>
+        /// Set scrollBar maxi values
+        /// </summary>
+        private void SetScrollBarValues()
+        {
+            if (pnlScrollView == null || sheetmusic == null)
                 return;
-            }
-            
-            // Tempo change            
-            if (e.Message.MetaType == MetaType.Tempo)
+
+            int hH = 0;
+            int vW = 0;
+
+            // Width of sheetmusic
+            int W = sheetmusic.MaxStaffWidth;
+            // display width
+            int wMiddle = pnlMiddle.Width - pnlTracks.Width;
+
+            bool bShowHScrollBarIndetermined = false;
+
+            // If display width > sheetmusic width => remove horizontal scrollbar
+            if (wMiddle > W + vScrollBar.Width)
+                bShowHScrollBar = false;
+            else if (wMiddle < W)
+                bShowHScrollBar = true;
+            else
+                bShowHScrollBarIndetermined = true;
+
+
+            bool bShowVScrollBarIndetermined = false;
+
+            // If display height > sheetmusic height => remove vertical scrollbar
+            if (pnlMiddle.Height > pnlScrollView.Height + hScrollBar.Height)
+                bShowVScrollBar = false;
+            else if (pnlMiddle.Height < pnlScrollView.Height)
+                bShowVScrollBar = true;
+            else
+                bShowVScrollBarIndetermined = true;
+
+
+            if (bShowVScrollBarIndetermined && bShowHScrollBarIndetermined)
             {
-                MetaMessage msg = e.Message;
-                byte[] data = msg.GetBytes();
-                _tempoplayed = ((data[0] << 16) | (data[1] << 8) | data[2]);                                
+                bShowHScrollBar = false;
+                bShowVScrollBar = false;
             }
-        }
+            else if (bShowVScrollBarIndetermined && pnlMiddle.Height > pnlScrollView.Height)
+                bShowVScrollBar = false;
+            else if (bShowHScrollBarIndetermined && wMiddle > W)
+                bShowHScrollBar = false;
 
-        private void HandleChannelMessagePlayed(object sender, ChannelMessageEventArgs e)
-        {
-            if(closing)
+
+            if (bShowVScrollBar && wMiddle - vScrollBar.Width < W)
+                bShowHScrollBar = true;
+
+            if (bShowHScrollBar && pnlMiddle.Height - hScrollBar.Height < pnlScrollView.Height)
+                bShowVScrollBar = true;
+
+
+
+            if (bShowVScrollBar == false)
             {
-                return;
-            }            
-
-            int nChannel = e.Message.MidiChannel;
-            string sChannel = nChannel.ToString();
-
-            if (!lstChannels[nChannel].muted)
-                outDevice.Send(e.Message);
-
-
-            // Modify display according to changes during play 
-            if (e.Message.Command == ChannelCommand.NoteOn)
-            {
-                // Allume la diode du channel correspondant                
-                for (int i = 0; i < pnlTracks.Controls.Count; i++)
-                {
-                    if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                    {
-                        if (pnlTracks.Controls[i].Tag != null)
-                        {
-                            string stag = pnlTracks.Controls[i].Tag.ToString();
-                            if (stag == sChannel)
-                            {
-                                ((TrkControl.TrackControl)pnlTracks.Controls[i]).LightOn();
-                            }
-                        }
-                    }
-                }
+                vScrollBar.Visible = false;
+                pnlTracks.Top = 0;
+                pnlScrollView.Top = 0;
             }
-            else if (e.Message.Command == ChannelCommand.NoteOff)
+            else
             {
-                // Eteint la diode du channel correspondant
-                for (int i = 0; i < pnlTracks.Controls.Count; i++)
-                {
-                    if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                    {
-                        if (pnlTracks.Controls[i].Tag != null)
-                        {
-                            string stag = pnlTracks.Controls[i].Tag.ToString();
-                            if (stag == sChannel)
-                            {
-                                ((TrkControl.TrackControl)pnlTracks.Controls[i]).LightOff();
-                            }
-                        }
-                    }
-                }
-                
-            }
-            else if (e.Message.Command == ChannelCommand.Controller)
-            {                                                                     
-                ChannelMessage Msg = e.Message;                   
-                ControllerType ct = (ControllerType)Msg.Data1;
-                
-                   
-                if (ct == ControllerType.Volume)
-                {                    
-                    int vol = Msg.Data2;
-                    int j = -1;
+                vScrollBar.Visible = true;
+                vScrollBar.Left = pnlMiddle.Width - vScrollBar.Width;
+                if (bShowHScrollBar)
+                    vScrollBar.Height = pnlMiddle.Height - hScrollBar.Height;
+                else
+                    vScrollBar.Height = pnlMiddle.Height;
 
-                    for (int i = 0; i < pnlTracks.Controls.Count; i++)
-                    {
-                        if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                        {
-                            j++;
-                            if (pnlTracks.Controls[i].Tag != null)
-                            {
-                                string stag = pnlTracks.Controls[i].Tag.ToString();
-                                if (stag == sChannel)
-                                {
-                                    // Adjust volume for all tracks having this channel
-                                    lstTrkReglages[j].volume = vol;                                    
-                                }
-                            }
-                        }                                
-                    }
-                    bReglageChanged = true;
-                }
-                else if (ct == ControllerType.Pan)
-                {
-                    int pan = Msg.Data2;
-                    int j = -1;
-                    for (int i = 0; i < pnlTracks.Controls.Count; i++)
-                    {
-                        if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                        {
-                            j++;
-                            if (pnlTracks.Controls[i].Tag != null)
-                            {
-                                string stag = pnlTracks.Controls[i].Tag.ToString();
-                                if (stag == sChannel)
-                                {
-                                    // Ajust pan for all tracks having this channel
-                                    lstTrkReglages[j].pan = pan;                                    
-                                }
-                            }
-                        }
-                    }
-                    bReglageChanged = true;
-                }
-                else if (ct == ControllerType.EffectsLevel)
-                {
-                    int reverb = Msg.Data2;
-                    int j = -1;
-                    for (int i = 0; i < pnlTracks.Controls.Count; i++)
-                    {
-                        if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                        {
-                            j++;
-                            if (pnlTracks.Controls[i].Tag != null)
-                            {
-                                string stag = pnlTracks.Controls[i].Tag.ToString();
-                                if (stag == sChannel)
-                                {
-                                    // Ajust reverb for all tracks having this channel
-                                    lstTrkReglages[j].reverb = reverb;                                    
-                                }
-                            }
-                        }
-                    }
-                    bReglageChanged = true;
-                }                
+                // Aggrandissement vertical de la fenetre = > la scrollbar verticale doit se positionner en bas
+                if (sheetmusic.Height - vScrollBar.Value < pnlMiddle.Height)
+                    vScrollBar.Value = vScrollBar.Maximum - vScrollBar.LargeChange;
             }
-            else if (e.Message.Command == ChannelCommand.ProgramChange)
+
+
+            if (bShowHScrollBar == false)
             {
-                // Instrument is changed during play !!!!!
-                ChannelMessage Msg = e.Message;
-                int patch = Msg.Data1;
-                int j = -1;                
+                pnlHScroll.Visible = false;
+                pnlTracks.Left = 0;
+                pnlScrollView.Left = pnlTracks.Width;
+            }
+            else
+            {
+                pnlHScroll.Visible = true;
+                if (bShowVScrollBar)
+                    hScrollBar.Width = wMiddle - vScrollBar.Width;
+                else
+                    hScrollBar.Width = wMiddle;
 
-                for (int i = 0; i < pnlTracks.Controls.Count; i++)
-                {
-                    if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                    {
-                        j++;
-                        if (pnlTracks.Controls[i].Tag != null)
-                        {
-                            string stag = pnlTracks.Controls[i].Tag.ToString();
-                            if (stag == sChannel)
-                            {
-                                // Ajust patch for all tracks having this programchange
-                                lstTrkReglages[j].patch = patch;
-                            }
-                        }
-                    }
-                }
-                bReglageChanged = true;
+                // Aggrandissement horizontal de la fenetre => la scrollbar horizontale doit se positionner à droite 
+                if (W - hScrollBar.Value < wMiddle)
+                    hScrollBar.Value = hScrollBar.Maximum - hScrollBar.LargeChange;
+            }
+
+
+            if (bShowVScrollBar)
+                vW = vScrollBar.Width;
+            if (bShowHScrollBar)
+                hH = hScrollBar.Height;
+
+            // Width of pnlScrollView
+            pnlScrollView.Width = pnlMiddle.Width - leftWidth - vW;
+
+            // vScrollBar properties
+            if (bShowVScrollBar)
+            {
+                vScrollBar.Maximum = pnlScrollView.Height - (pnlMiddle.Height - hH) + pnlScrollView.Height / 10;
+
+                vScrollBar.SmallChange = pnlScrollView.Height / 20;
+                vScrollBar.LargeChange = pnlScrollView.Height / 10;
 
             }
-            
-        }
 
-        private void HandleChased(object sender, ChasedEventArgs e)
-        {
-            foreach(ChannelMessage message in e.Messages)
+            // hScrollBar properties
+            if (bShowHScrollBar)
             {
-                outDevice.Send(message);
+                // Properties of hScrollBar: define first Maximum than Large and small change                
+                int SC = W / 20;
+                int LC = W / 10;
+
+                // Width is limited to 65535                
+                hScrollBar.Maximum = W - (wMiddle - vW) + LC;
+
+                hScrollBar.SmallChange = SC;
+                hScrollBar.LargeChange = LC;
             }
         }
 
-        private void HandleSysExMessagePlayed(object sender, SysExMessageEventArgs e)
-        {
-       //     outDevice.Send(e.Message); Sometimes causes an exception to be thrown because the output device is overloaded.
-        }
 
-        private void HandleStopped(object sender, StoppedEventArgs e)
+        /// <summary>
+        /// Scroll vertical time bar and sheet music when playing
+        /// </summary>
+        /// <param name="curtime"></param>
+        private void ScrollTimeBar(double curtime)
         {
-            foreach(ChannelMessage message in e.Messages)
+            if (sheetmusic != null)
             {
-                outDevice.Send(message);                
+                currentTime = curtime * 1000; // Elapsed time en msec
+
+                prevPulseTime = currentPulseTime;
+                currentPulseTime = currentTime * pulsesPerMsec;
+                if (prevPulseTime != currentPulseTime)
+                {
+
+                    // Calcule x_shade
+                    sheetmusic.ScrollTo((int)currentPulseTime, (int)prevPulseTime);
+
+                    int x_midle = (pnlMiddle.Width - pnlTracks.Width) / 2;
+                    int x_shade = sheetmusic.X_shade;
+
+                    int W = sheetmusic.MaxStaffWidth;   // Longueur totale de la partition
+                    int x_last = W - x_midle;            // Derniere moitié de la partition 
+                    int delta = x_shade - x_midle;
+
+
+                    // scroll horizontal scrollbar
+                    if (delta <= 0)
+                        hScrollBar.Value = 0;
+                    else if (delta > 0 && delta <= hScrollBar.Maximum)
+                        hScrollBar.Value = delta;
+
+
+                    // Scroll vertical red bars
+                    if (delta < 0)
+                    {
+                        // 1ere moitié affichage
+                        SetTimeVLinePos(x_shade + 6);
+
+                    }
+                    else
+                    {
+                        // milieu du morceau
+                        if (x_shade < x_last)
+                        {
+                            SetTimeVLinePos(x_midle);
+                        }
+                        else
+                        {
+                            // Fin du morceau                            
+                            SetTimeVLinePos(x_midle + (x_midle - (W - x_shade)));
+                        }
+                    }
+
+                }
             }
         }
 
         /// <summary>
-        /// Event: playing midi file completed
+        /// Scroll score to a position
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void HandlePlayingCompleted(object sender, EventArgs e)
+        /// <param name="curtime"></param>
+        public void ScrollTo(double starttime)
         {
-            newstart = 0;
-            // Select next song of a playlist
-            PlayerState = PlayerStates.NextSong;
+            if (sheetmusic != null)
+            {
+                double dpercent = 0;
+                int maxvalue = sequence1.GetLength();
+                if (maxvalue > 0)
+                    dpercent = starttime / maxvalue;
+
+                // Elapsed time
+                double maintenant = dpercent * _durationPercent;
+
+                currentTime = maintenant * 1000; // Elapsed time en msec
+
+                prevPulseTime = currentPulseTime;   // Save old pulsetime
+                currentPulseTime = currentTime * pulsesPerMsec; // Set new pulsetime
+
+                if (prevPulseTime != currentPulseTime)
+                {
+                    // Calcule x_shade
+                    sheetmusic.ScrollTo((int)currentPulseTime, (int)prevPulseTime);
+
+                    int x_midle = (pnlMiddle.Width - pnlTracks.Width) / 2;
+                    int x_shade = sheetmusic.X_shade;
+
+                    int delta = x_shade - x_midle;
+
+                    // scroll horizontal scrollbar
+                    if (delta <= 0)
+                        hScrollBar.Value = 0;
+                    else if (delta > 0 && delta <= hScrollBar.Maximum)
+                        hScrollBar.Value = delta;
+
+                }
+            }
+        }
+
+        #endregion scroll events
+
+
+        #region Settings
+
+        private void AlertOutputDevice(string Name)
+        {
+            if (Name == "Microsoft GS Wavetable Synth")
+                lblOutputDevice.ForeColor = Color.Red;
+            else
+                lblOutputDevice.ForeColor = Color.PaleGreen;
+        }
+
+        private void ResetPlaySettings()
+        {
+            // Reset settings made for previous song
+            sldMainVolume.Value = 104;
+            TempoDelta = 100;
+            lblTempoValue.Text = string.Format("{0}%", TempoDelta);
+            TransposeDelta = 0;
+            lblTranspoValue.Text = string.Format("{0}", TransposeDelta);
+
+
+            // Mute melody track
+            if (Karaclass.m_MuteMelody == true || (currentPlaylist != null && currentPlaylistItem.MelodyMute == true))
+            {
+                btnMute1.Checked = false;
+            }
+            else
+            {
+                btnMute1.Checked = true;
+            }
+
+        }
+
+        #endregion
+
+
+        #region SheetMusic
+
+        /// <summary>
+        /// Display scores
+        /// </summary>
+        private void DisplayScores()
+        {
+            DrawingControl.SuspendDrawing(this);
+
+            DrawControls();           
+            
+            SetTitle(MIDIfileName);
+
+            // Display scores
+            RedrawSheetMusic();
+            
+            // ScrollBar properties
+            SetScrollBarValues();
+
+            DrawingControl.ResumeDrawing(this);
+
+            MidiOptions options2 = new MidiOptions(sequence1);
+            
+
+            if (sequence1.Time != null)
+            {
+                double inverse_tempo = 1.0 / sequence1.Time.Tempo;
+                double inverse_tempo_scaled = inverse_tempo;
+
+                options2.tempo = (int)(1.0 / inverse_tempo_scaled);
+                pulsesPerMsec = sequence1.Time.Quarter * (1000.0 / options2.tempo);
+            }
         }
 
 
-        #endregion handle messages
+        /// <summary>
+        /// Set Title of the form
+        /// </summary>
+        private void SetTitle(string displayName)
+        {
+            if (displayName != null)
+            {
+                displayName = displayName.Replace("__", ": ");
+                displayName = displayName.Replace("_", " ");
+            }
+            if (NumInstance > 1)
+                Text = "Karaboss PLAYER (" + NumInstance + ") - " + displayName;
+            else
+                Text = "Karaboss PLAYER - " + displayName;
+        }
+        
+        /** The Sheet Music needs to be redrawn.  Gather the sheet music
+          * options from the menu items.  Then create the sheetmusic
+          * control, and add it to this form. Update the MidiPlayer with
+          * the new midi file.
+          */
+        public void RedrawSheetMusic()
+        {
+
+            /* Create a new SheetMusic Control from the midifile */
+            Cursor = Cursors.AppStarting;
+
+            bool bEditMode = false;
+            if (sheetmusic != null)
+                bEditMode = sheetmusic.bEditMode;
+
+            //if (sheetmusic != null)
+            //    sheetmusic.Dispose();
+            sheetmusic?.Dispose();
+                        
+            options = GetMidiOptions(ScrollVert);
+
+            #region create new sheet music
+            sheetmusic = new SheetMusic(sequence1, options, iStaffHeightMaximized)
+            {
+                bEditMode = bEditMode,
+                Velocity = Karaclass.m_Velocity,
+            };
+           
+            sheetmusic.FileModified += new SheetMusic.FileModifiedEventHandler(Score_Modified);
+            sheetmusic.WidthChanged += new SheetMusic.WidthChangedEventHandler(ScoreWidth_Changed);
+
+            // Event handler double click on track            
+            sheetmusic.OnSMMouseDoubleClick += new SheetMusic.smMouseDoubleClickEventHandler(Track_DoubleClick);
+            sheetmusic.OnSMMouseDoubleClickTempo += new SheetMusic.smMouseDoubleClickTempoEventHandler(Tempo_DoubleClick);
+
+            // Contextual menu on sheetmusic
+            sheetmusic.MnuPianoRollClick += new SheetMusic.mnuPianoRollClickEventHandler(PianoRoll_Required);
+           
+            sheetmusic.OnSMMouseDown += new SheetMusic.smMouseDownEventHandler(Track_MouseDown);
+            sheetmusic.OnSMMouseUp += new SheetMusic.smMouseUpEventHandler(Track_MouseUp);
+            sheetmusic.OnSMMouseMove += new SheetMusic.smMouseMoveEventHandler(Track_MouseMove);            
+
+            sheetmusic.CurrentNoteChanged += new SheetMusic.CurrentNoteChangedEventHandler(SheetMusic_CurrentNoteChanged);
+            sheetmusic.CurrentTrackChanged += new SheetMusic.CurrentTrackChangedEventHandler(SheetMusic_CurrentTrackChanged);
+
+            sheetmusic.CurrentDefaultVelocityChanged += new SheetMusic.CurrentDefaultVelocityChangedEventHandler(SheetMusic_CurrentDefaultVelocityChanged);
+
+            sheetmusic.SetZoom(zoom);
+            sheetmusic.Parent = pnlScrollView;
+            #endregion
+
+            BackColor = Color.White;
+            pnlScrollView.BackColor = Color.White;
+            
+            if ( ScrollVert == false)
+            {
+                pnlTracks.Height = sequence1.tracks.Count * iStaffHeightMaximized * Convert.ToInt32(zoom);
+                pnlScrollView.Height = pnlTracks.Height;
+            }
+            else
+            {
+                pnlTracks.Height = sheetmusic.Height;
+                pnlScrollView.Height = sheetmusic.Height;
+            }
+            SetStartVLinePos(0);
+            SetTimeVLinePos(0);
+
+            Cursor = Cursors.Default; 
+        }
+
+        
+        /// <summary>
+        /// Default velocity value was changed in sheetmusic
+        /// </summary>
+        /// <param name="velocity"></param>
+        private void SheetMusic_CurrentDefaultVelocityChanged(int velocity)
+        {
+            Karaclass.m_Velocity = velocity;
+            Properties.Settings.Default.Velocity = velocity;
+            Properties.Settings.Default.Save();            
+        }
 
 
-        #region timers
+        /// <summary>
+        /// Event: score was modified, recalculate scrollbars
+        /// </summary>
+        /// <param name="Width"></param>
+        private void ScoreWidth_Changed(int Width)
+        {
+            // Recalculate duration of song
+            UpdateMidiTimes();
+            DisplaySongDuration(_duration);
+            
+            // recalculate scrollbars
+            SetScrollBarValues();
+        }
+
+        /// <summary>
+        /// Contextual menu on sheetmusic: display PianoRoll window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="staffnum"></param>
+        private void PianoRoll_Required(object sender, EventArgs e, int staffnum, int ticks)
+        {
+            //float pos = sequence1.GetLength() * (float)hScrollBar.Value / (float)hScrollBar.Maximum;
+            DisplayPianoRoll(staffnum, MIDIfileFullPath, ticks);
+        }
+
+        /// <summary>
+        /// Event: score was modified, set flag
+        /// </summary>
+        /// <param name="sender"></param>
+        private void Score_Modified(object sender)
+        {
+            FileModified();
+        }
+
+
+        /// <summary>
+        /// Refresh display
+        /// </summary>
+        public void RefreshDisplay()
+        {
+            int numstaff = sheetmusic.CurrentNote.numstaff;
+            int note = sheetmusic.CurrentNote.midinote.Number;
+            int lastnote = sheetmusic.CurrentNote.lastnote;
+            float ticks = sheetmusic.CurrentNote.midinote.StartTime; 
+                
+            sheetmusic.Refresh();
+            
+            this.Focus();
+
+            // Display song duration
+            DisplaySongDuration(_duration);
+            DisplayFileInfos();
+            DisplayLyricsInfos();
+
+            // Set Current Note
+            sheetmusic.UpdateCurrentNote(numstaff, note, ticks, false);
+            sheetmusic.CurrentNote.lastnote = lastnote;
+
+
+            // Dimensions            
+            pnlTracks.Height = sequence1.tracks.Count * iStaffHeightMaximized * Convert.ToInt32(zoom);
+            pnlScrollView.Height = pnlTracks.Height;
+
+            SetStartVLinePos(0);
+            SetTimeVLinePos(0);
+
+            SetScrollBarValues();
+        }
+
+        /// <summary>
+        /// Set midi options choosen in menus
+        /// </summary>
+        /// <param name="scrollvert"></param>
+        /// <returns></returns>
+        private MidiOptions GetMidiOptions(bool scrollvert)
+        {
+            options = new MidiOptions(sequence1) {
+                transpose = 0,
+                key = -1,
+                time = sequence1.Time,
+                scrollVert = scrollvert,
+                // Display score if bSequencerAlwaysOn or bForceShowSequencer
+                bVisible = bSequencerAlwaysOn | bForceShowSequencer,
+               
+            };
+
+            return options;
+        }
+
+        #endregion MidiSheetMusic
+      
+
+        #region Tempo, Transpo
+
+
+        /// <summary>
+        /// Open window of tempo management
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="tmps"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void Tempo_DoubleClick(object sender, EventArgs e, TempoSymbol tmps)
+        {
+            //if (Application.OpenForms["frmModifyTempo"] != null)
+            //    Application.OpenForms["frmModifyTempo"].Close();
+
+            Application.OpenForms["frmModifyTempo"]?.Close();
+
+            if (Application.OpenForms["frmModifyTempo"] == null)
+            {
+                frmModifyTempo = new frmModifyTempo(sheetmusic, sequence1);
+                frmModifyTempo.Show();
+                frmModifyTempo.Refresh();
+
+            }
+        }
+
+        /// <summary>
+        /// Speed up tempo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnTempoPlus_Click(object sender, EventArgs e)
+        {
+            if (TempoDelta > 10)
+                TempoDelta -= 10;
+            ModTempo();
+        }
+
+        /// <summary>
+        ///  Slow down tempo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnTempoMinus_Click(object sender, EventArgs e)
+        {
+            if (TempoDelta < 200)
+                TempoDelta += 10;
+            ModTempo();
+        }
+
+
+        /// <summary>
+        /// Transpose higher
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnTranspoPlus_Click(object sender, EventArgs e)
+        {
+            int amount = Properties.Settings.Default.TransposeAmount;
+
+            TransposeDelta += amount;
+            ModTranspose(amount);
+        }
+
+        /// <summary>
+        /// Transpose down
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnTranspoMinus_Click(object sender, EventArgs e)
+        {
+            int amount = Properties.Settings.Default.TransposeAmount;
+            TransposeDelta -= amount;
+            ModTranspose(-amount);
+        }
+
+        private void ModTempo()
+        {
+            _tempo = TempoDelta * TempoOrig / 100;
+            _tempoplayed = _tempo;
+
+            // Change clock tempo
+            sequencer1.Tempo = _tempo;
+
+
+            lblTempoValue.Text = string.Format("{0}%", TempoDelta);
+
+            // Update Midi Times            
+            _bpm = GetBPM(_tempo);
+
+            // Update display duration
+            _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. Duration for ScrollTo dislay of sheetmusic
+            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn); // real duration for multiple tempos
+
+            int Min = (int)(_duration / 60);
+            int Sec = (int)(_duration - (Min * 60));
+            lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
+
+            DisplayFileInfos();
+
+        }
+
+        private void ModTranspose(int amount)
+        {
+            btnTempoMinus.Enabled = false;
+            btnTranspoPlus.Enabled = false;
+
+            //int tp = TransposeOrig + TransposeDelta;
+
+            lblTranspoValue.Text = string.Format("{0}", TransposeDelta);
+
+            if (PlayerState == PlayerStates.Playing)
+                sequencer1.Stop();
+
+            sequence1.Transpose(amount);
+
+            if (PlayerState == PlayerStates.Playing)
+                sequencer1.Continue();
+
+            // FAB : 16/09/2018 fixed redraw of scores
+            if (bSequencerAlwaysOn | bForceShowSequencer)
+            {
+                RedrawSheetMusic();
+            }
+
+            btnTempoMinus.Enabled = true;
+            btnTranspoPlus.Enabled = true;
+
+        }
+
+        private void KeyboardSelectTempo(KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Oemplus:
+                case Keys.Add:
+                    if (TempoDelta > 10)
+                        TempoDelta -= 10;
+                    ModTempo();
+                    break;
+
+                case Keys.D6:
+                case Keys.OemMinus:
+                case Keys.Subtract:
+                    if (TempoDelta < 200)
+                        TempoDelta += 10;
+                    ModTempo();
+                    break;
+            }
+        }
+
+        #endregion
+
+
+        #region TimeLine
+
+        // red bar
+        private void SetTimeVLinePos(int pos)
+        {
+            TimeVLine.Height = pnlScrollView.Height;
+            TimeVLine.Location = new Point(leftWidth + pos, pnlScrollView.Top);
+
+        }
+
+        // blue bar
+        private void SetStartVLinePos(int pos)
+        {
+            TimeStartVLine.Height = pnlScrollView.Height;
+            TimeStartVLine.Location = new Point(leftWidth + pos, pnlScrollView.Top);
+        }
+
+        #endregion TimeLine
+
+
+        #region Timers
 
         /// <summary>
         /// Display Time Elapse
@@ -5057,7 +7431,9 @@ namespace Karaboss
 
                 // Display time elapse
                 double dpercent = 100 * sequencer1.Position / (double)_totalTicks;
-                double maintenant = (dpercent * _duration) / 100;  //seconds
+                double maintenant = (dpercent * _durationPercent) / 100;  //seconds                                                
+                //double maintenant2 = TempoUtilities.GetMidiDuration(sequencer1.Position, sequence1.Division);
+                
                 DisplayTimeElapse(dpercent);              
 
                 //Eteint la boule fixe;
@@ -5286,661 +7662,7 @@ namespace Karaboss
         #endregion timers
 
 
-        #region ani balls
-
-        /// <summary>
-        /// Start balls animation
-        /// </summary>
-        private void StartTimerBalls()
-        {           
-            timer3.Interval = 1;
-            timer3.Start();            
-
-            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
-                frmLyric.StartTimerBalls();            
-        }
-        
-        /// <summary>
-        /// Terminate balls animation
-        /// </summary>
-        private void StopTimerBalls()
-        {
-            timer3.Stop();            
-
-            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
-                frmLyric.StopTimerBalls();
-
-        }
-
-        #endregion ani balls
-
-
-        #region form load close keydown
-
-
-        /// <summary>
-        /// Mousewheel : scroll vertically if playing
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FrmPlayer_MouseWheel(object sender, MouseEventArgs e)
-        {
-            if (sheetmusic == null) return;
-
-            int newvalue; // = 0;
-            int W = sheetmusic.MaxStaffWidth;
-
-
-            // If playing, scroll vertically both leftPanel & score
-            if (PlayerState == PlayerStates.Playing)
-            {
-                if (bShowVScrollBar)
-                {
-                    // Scroll vertically Left panel
-                    newvalue = vScrollBar.Value - e.Delta;
-                    if (newvalue < 0)
-                        newvalue = 0;
-                    if (newvalue > vScrollBar.Maximum - vScrollBar.LargeChange)
-                        newvalue = vScrollBar.Maximum - vScrollBar.LargeChange;
-
-                    vScrollBar.Value = newvalue;
-                }
-            }
-            else
-            {
-                // If not playing,
-                
-                //scroll vertically the left panel if mouse is over it
-                if (e.Location.X > 0 & e.Location.X < pnlTracks.Location.X + pnlTracks.Width)
-                {
-                    if (bShowVScrollBar)
-                    {
-                        // Scroll vertically Left panel
-                        newvalue = vScrollBar.Value - e.Delta;
-                        if (newvalue < 0)
-                            newvalue = 0;
-                        if (newvalue > vScrollBar.Maximum - vScrollBar.LargeChange)
-                            newvalue = vScrollBar.Maximum - vScrollBar.LargeChange;
-
-                        vScrollBar.Value = newvalue;
-                    }
-                }
-                else if (e.Location.X > pnlScrollView.Location.X && e.Location.X < pnlScrollView.Location.X + W)
-                {
-                    if (bShowHScrollBar)
-                    {
-                        // Scroll horizontaly right panel
-                        newvalue = hScrollBar.Value - e.Delta;
-                        if (newvalue < 0)
-                            newvalue = 0;
-                        if (newvalue > hScrollBar.Maximum - hScrollBar.LargeChange)
-                            newvalue = hScrollBar.Maximum - hScrollBar.LargeChange;
-
-                        hScrollBar.Value = newvalue;
-                    }
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Override form load event
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnLoad(EventArgs e)
-        {
-            if (outDevice == null)
-            {
-                MessageBox.Show("No MIDI output devices available.", "Error!",
-                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                Close();
-            }
-            else
-            {               
-                try
-                {
-                    outDeviceProcessId = outDevice.Pid;
-
-                    string outDeviceName = OutputDeviceBase.GetDeviceCapabilities(outDevice.DeviceID).name;
-                    lblOutputDevice.Text = outDeviceName;
-
-                    AlertOutputDevice(outDeviceName);
-
-                    sequence1.LoadProgressChanged += HandleLoadProgressChanged;
-                    sequence1.LoadCompleted += HandleLoadCompleted;                    
-
-                    // ==========================================================================
-                    // Chargement du fichier midi selectionné depuis frmExplorer
-                    // ==========================================================================
-
-                    ResetMidiFile();
-
-                    // ACTIONS TO PERFORM
-                    SelectActionOnLoad();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error!",
-                        MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    Close();
-                }
-            }       
-            base.OnLoad(e);
-        }
-
-     
-        /// <summary>
-        /// Select what to do on load: new score, play single file, or playlist 
-        /// </summary>
-        private void SelectActionOnLoad()
-        {           
-            // Same for start a playlist or a single file (mid, xml, txt)
-            if (MIDIfileFullPath != null && MIDIfileFullPath != "")
-            {
-                SelectFileToLoadAsync();
-            }
-            else
-            {
-                // A new file must be created                                                              
-                NewMidiFile();
-            }
-        }
-
-        /// <summary>
-        /// Select loader according to extension (mid, xml, txt)
-        /// </summary>
-        private void SelectFileToLoadAsync()
-        {
-            string ext = Path.GetExtension(MIDIfileFullPath).ToLower();
-            if (ext == ".mid" || ext == ".kar")
-            {
-                // Play a single MIDI file
-                LoadAsyncMidiFile(MIDIfileFullPath);
-            }
-            else if (ext == ".mxl")
-            {
-                // mxl file must be unzipped before
-                string myXMLFileName = UnzipFile(MIDIfileFullPath);
-                if (File.Exists(myXMLFileName))
-                {
-                    Cursor.Current = Cursors.WaitCursor;
-                    Application.DoEvents();
-                    LoadAsyncXmlFile(myXMLFileName);
-                }
-            }
-            else if (ext == ".xml" || ext == ".musicxml")
-            {
-                Cursor.Current = Cursors.WaitCursor;
-                Application.DoEvents();
-                LoadAsyncXmlFile(MIDIfileFullPath);
-            }
-            else if (ext == ".txt")
-            {
-                Cursor.Current = Cursors.WaitCursor;
-                Application.DoEvents();
-                LoadAsyncTxtFile(MIDIfileFullPath);
-            }
-            else
-            {
-                MessageBox.Show("Unknown extension");
-            }
-        }
-
-        private string UnzipFile(string f)
-        {
-            string mTempDir = Path.GetTempPath() + "karaboss\\";
-            string myTempDir = mTempDir + Path.GetRandomFileName();
-            Directory.CreateDirectory(myTempDir);
-
-            List<string> lsextensions = new List<string> { "*.musicxml", "*.xml" };
-            return Karaclass.UnzipFiles(f, lsextensions, myTempDir);
-
-
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            closing = true;
-            base.OnClosing(e);
-        }        
-                
-        protected override void OnClosed(EventArgs e)
-        {            
-            ResetSequencer();
-            sequencer1.Dispose();
-            if (outDevice!= null && !outDevice.IsDisposed)
-                outDevice.Reset();
-         
-            base.OnClosed(e);
-        }
-
-        /// <summary>
-        /// Event: form closing
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FrmPlayer_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (loading)
-            {
-                e.Cancel = true;
-            }
-            else
-            {
-                
-                // Remove edit forms like frmNoteEdit, frmModifyTempo etcc (always on top)
-                // They can hide the messagebox asking for saving the file
-                DspEdit(false);
-                
-                if (bfilemodified == true)
-                {
-                    
-                    // string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
-                    String tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
-                    DialogResult dr = MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-                    if (dr == DialogResult.Cancel)
-                    {
-                        e.Cancel = true;
-                        return;
-                    }
-                    else if (dr == DialogResult.Yes) 
-                    {
-                        e.Cancel = true;
-                        // turlututu
-                        bClosingRequired = true;
-                        SaveFileProc();
-                        return;
-                    }                   
-                }
-                
-                // enregistre la taille et la position de la forme
-                // Copy window location to app settings                
-                if (WindowState != FormWindowState.Minimized)
-                {
-                    if (WindowState == FormWindowState.Maximized)
-                    {
-                        Properties.Settings.Default.frmPlayerLocation = RestoreBounds.Location;
-                        Properties.Settings.Default.frmPlayerMaximized = true;
-
-                    }
-                    else if (WindowState == FormWindowState.Normal)
-                    {
-                        Properties.Settings.Default.frmPlayerLocation = Location;
-
-                        // SDave only if not default size
-                        if (Height != SimplePlayerHeight)
-                            Properties.Settings.Default.frmPlayerSize = Size;
-
-                        Properties.Settings.Default.frmPlayerMaximized = false;
-                    }
-
-                    // Show sequencer
-                    Properties.Settings.Default.ShowSequencer = bSequencerAlwaysOn;
-                    Properties.Settings.Default.ShowKaraoke = bKaraokeAlwaysOn;
-
-                    // Save settings
-                    Properties.Settings.Default.Save();
-                }
-                
-                                            
-                // Ferme le formulaire frmLyric
-                if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
-                {
-                    frmLyric.Close();
-                    //frmLyric.Dispose();
-                }                
-                // ferme le formulaire frmLyricsEdit
-                if (Application.OpenForms.OfType<frmLyricsEdit>().Count() > 0)
-                {                    
-                    Application.OpenForms["frmLyricsEdit"].Close();
-                }
-                // ferme le formulaire frmPianoRoll
-                if (Application.OpenForms.OfType<frmPianoRoll>().Count() > 0)
-                {
-                    Application.OpenForms["frmPianoRoll"].Close();
-                }
-                // ferme le formulaire frmModifyTempo
-                if (Application.OpenForms.OfType<frmModifyTempo>().Count() > 0)
-                {
-                    Application.OpenForms["frmModifyTempo"].Close();
-                }
-                // ferme le formulaire frmPrint
-                if (Application.OpenForms.OfType<frmPrint>().Count() > 0)
-                {
-                    Application.OpenForms["frmPrint"].Close();
-                }
-                // Active le formulaire frmExplorer
-                if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
-                {                    
-                    // Restore form
-                    Application.OpenForms["frmExplorer"].Restore();
-                    Application.OpenForms["frmExplorer"].Activate();
-
-                }
-
-
-                Dispose();
-
-            }
-        }
-
-        /// <summary>
-        /// Form load
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FrmPlayer_Load(object sender, EventArgs e)
-        {
-            // Set window location and size
-            #region window size & location
-            // If window is maximized
-            if (Properties.Settings.Default.frmPlayerMaximized)
-            {                
-                Location = Properties.Settings.Default.frmPlayerLocation;
-                //Size = Properties.Settings.Default.frmPlayerSize;
-                WindowState = FormWindowState.Maximized;
-            }
-            else
-            {
-                Location = Properties.Settings.Default.frmPlayerLocation;
-                // Verify if this windows is visible in extended screens
-                Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
-                foreach (Screen screen in Screen.AllScreens)                
-                    rect = Rectangle.Union(rect, screen.Bounds);
-
-                if (Location.X > rect.Width)
-                    Location = new Point(0, Location.Y);
-                if (Location.Y > rect.Height)
-                    Location = new Point(Location.X, 0);                
-
-                Size = Properties.Settings.Default.frmPlayerSize;
-            }
-            #endregion
-
-            // Ne pas tenir compte si new file ou edit file
-            bSequencerAlwaysOn = Properties.Settings.Default.ShowSequencer;
-            bKaraokeAlwaysOn = Properties.Settings.Default.ShowKaraoke;
-            
-            // Redim form according to the visibility of the sequencer
-            RedimIfSequencerVisible();
-            
-        }
-
-        
-        /// <summary>
-        /// Form Keydown event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FrmPlayer_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (bEditScore == true)
-            {
-                #region edit score
-                /*
-                // Move up or down a single note
-                if (e.KeyCode.ToString() == "Down" || e.KeyCode.ToString() == "Up")
-                {
-                    // move Up or Down a single note 
-                    Key_UpDownNote(e.KeyCode.ToString());
-                }
-                */
-
-                // Edit notes
-                if (bEnterNotes == false)
-                {
-                    // EditScore = true and EnterNotes = false
-                    // Ctrl + N > valide EnterNotes
-                    // Left, Right > Move the current note
-                    // Delete > delete selection
-                    switch (e.KeyCode)
-                    {                           
-                        case Keys.E:
-                            if (e.Control)
-                                DspEdit(!bEditScore);
-                            break;
-
-                        case Keys.N:
-                            if (e.Control)
-                                DspEnterNotes();
-                            break;
-
-                        case Keys.Delete:
-                            sheetmusic.SheetMusic_KeyDown(sender, e);
-                            break;
-                    }                    
-                }
-                else if (bEnterNotes == true)
-                {                    
-                    // EditScore = true and EnterNotes = true
-                    // enter notes C, D, E F, G, A, B
-                    // Delete notes tec...
-                    switch (e.KeyCode)
-                    {
-                        case Keys.C:
-                            Key_AddNote(0);
-                            break;
-                        case Keys.D:
-                            Key_AddNote(2);
-                            break;
-                        case Keys.E:
-                            if (e.Control)
-                                DspEdit(!bEditScore);
-                            else
-                                Key_AddNote(4);
-                            break;
-                        case Keys.F:
-                            Key_AddNote(5);
-                            break;
-                        case Keys.G:
-                            Key_AddNote(7);
-                            break;
-                        case Keys.A:
-                            Key_AddNote(9);
-                            break;
-                        case Keys.B:
-                            Key_AddNote(11);
-                            break;
-
-                        case Keys.N:
-                            // Set EnterNotes = false
-                            if (e.Control)
-                                DspEnterNotes();
-                            break;
-
-                        case Keys.Add:
-                        case Keys.Subtract:
-                        case Keys.D6:
-                        case Keys.Decimal:
-                            // plus, minus > select more or less duration for entering notes
-                            KeyboardSelectDurations(e);
-                            break;
-
-                        case Keys.Back:
-                            Key_DelNote();
-                            break;
-
-                        case Keys.Delete:
-                            Key_DelNote();
-                            break;
-
-                        case Keys.Space:
-                            // Set enterNotes = false and start playing
-                            DspEnterNotes();
-                            PlayPauseMusic();
-                            break;
-
-                    }                    
-                }                
-                #endregion edit score
-            }
-            else 
-            {
-                // not in editing mode
-                // Manage launch player with spacebar
-                #region Player
-                switch (e.KeyCode)
-                {                    
-                    case Keys.E:
-                        if (e.Control)
-                            DspEdit(!bEditScore);
-                        break;
-
-                    case Keys.N:
-                        // Set enterNotes = true
-                        if (e.Control)
-                            DspEnterNotes();
-                        break;
-
-                    case Keys.Add:
-                    case Keys.Subtract:
-                    case Keys.D6:
-                    case Keys.Decimal:
-                        // Tempo +-
-                        KeyboardSelectTempo(e);
-                        break;
-
-                }
-                #endregion Player
-            }
-        }
-
-        /// <summary>
-        /// I am able to detect alpha-numeric keys. However i am not able to detect arrow keys
-        /// ProcessCmdKey save my life
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="keyData"></param>
-        /// <returns></returns>
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (bEditScore == false)
-            {
-                if ((PlayerState == PlayerStates.Paused) || (PlayerState == PlayerStates.Stopped && newstart > 0))
-                {
-                    if (keyData == Keys.Left)
-                    {
-                        StopMusic();
-                        return true;
-                    }
-                }
-            } 
-            else if (bEditScore == true)
-            {
-                switch (keyData)
-                {
-                    case Keys.Left:
-                        Key_Left();
-                        return true;
-                    case Keys.Right:
-                        Key_Right();
-                        return true;                       
-                }
-
-                if (keyData.ToString() == "Down" || keyData.ToString() == "Up")
-                {
-                    // move Up or Down a single note 
-                    Key_UpDownNote(keyData.ToString());
-                }
-
-
-            }
-                
-            return base.ProcessCmdKey(ref msg, keyData);
-        }
-
-        /// <summary>
-        /// Key Up event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FrmPlayer_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Modifiers == Keys.Shift)
-            {
-                switch (e.KeyCode)
-                {
-                    case Keys.Oemplus:
-                        // Tempo +-
-                        KeyboardSelectTempo(e);
-                        break;
-                }
-            }
-            else if (bEditScore == false)
-            {
-                switch (e.KeyCode)
-                {
-                    case Keys.Space:                        
-                        PlayPauseMusic();
-                        break;                        
-
-                    case Keys.F12:
-                        bSequencerAlwaysOn = !bSequencerAlwaysOn;
-                        // bForceShowSequencer was true, but user decided to hide the sequencer by clicking on the menu
-                        if (bSequencerAlwaysOn == false && bForceShowSequencer == true)
-                            bForceShowSequencer = false;
-                        RedimIfSequencerVisible();
-                        break;
-                }
-            }
-            else if (bEnterNotes == true)
-            {
-                #region edit score
-                if (e.Modifiers == Keys.Shift)
-                {
-                    switch (e.KeyCode)
-                    {
-                        case Keys.Oemplus:
-                        case Keys.OemPeriod:
-                        case Keys.Decimal:
-                            KeyboardSelectDurations(e);
-                            break;
-                    }                        
-                    return;                    
-                }
-                
-
-                if (e.KeyCode.ToString() == "Down" || e.KeyCode.ToString() == "Up" || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
-                {                    
-                    StopNote();
-                }
-                else
-                {
-                    switch (e.KeyCode)
-                    {
-                        case Keys.C:                        
-                        case Keys.D:
-                        case Keys.E:
-                        case Keys.F:
-                        case Keys.G:
-                        case Keys.A:
-                        case Keys.B:
-                        case Keys.Back:
-                            StopNote();
-                            break;
-                    }
-                }
-                #endregion
-            } 
-        }
-
-
-        /** When the window is resized, adjust the pnlScrollView to fill the window */
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);          
-
-            //if (sheetmusic != null)
-            //    sheetmusic.Redraw();
-            sheetmusic?.Redraw();
-            
-            SetScrollBarValues();            
-        }    
-
-        #endregion form load close keydown
-
-
-        #region track control
+        #region Track control
 
         /// <summary>
         /// Track Control : change track name
@@ -6597,1988 +8319,472 @@ namespace Karaboss
         #endregion
 
         #endregion track control
+                  
 
-
-        #region song next prev load
-
-        // Select and load next playlist item
-        private void SelectNextPlaylistSong()
-        {
-            if (currentPlaylist == null)
-            {
-                // FAB 30/09/2018 !!!!
-                // Ne s'arrête jamais
-                PlayerState = PlayerStates.Stopped;
-                return;
-            }
-
-            PlaylistItem pli = currentPlaylistItem;
-
-            // Select next item            
-            currentPlaylistItem = currentPlaylist.Next(pli);
-
-            // Stop if no other song to play
-            if (pli == currentPlaylistItem)
-            {                
-                PlayerState = PlayerStates.Stopped;
-                BtnStatus();
-                return;
-            }
-            
-            // Load file
-            MIDIfileName = currentPlaylistItem.Song;
-            MIDIfileFullPath = currentPlaylistItem.File;
-
-            // Select which type a file it is
-            SelectFileToLoadAsync();            
-        }
-
+        #region Track stuff
         /// <summary>
-        /// Select action to perform betwwen 2 songs according to user's choices
-        /// Pause, Count Down, play asap
+        /// Reset all things related to tracks when the number of tracks evolve
         /// </summary>
-        private void performPlaylistChainingChoice()
+        private void InitTracksStuff()
         {
-            
-            
-            // If mode pause between songs of a playlist 
-            // Display a waiting information (not the words)
-            if (Karaclass.m_PauseBetweenSongs)
-            {
-                PlayerState = PlayerStates.LaunchNextSong;
-                BtnStatus();
+            lstTrkReglages = new List<_reglages>();
+            int nbTrk = sequence1.tracks.Count;
 
-                #region display singer in the Lyrics form
-                // Display the Lyric form even if no lyrics in order to display the singer
-                if (Application.OpenForms.OfType<frmLyric>().Count() == 0)
+            for (int i = 0; i < nbTrk; i++)
+            {
+                Track track = sequence1.tracks[i];
+                TrkReglages = new _reglages()
                 {
-                    frmLyric = new frmLyric(myLyricsMgmt);
-                    frmLyric.Show();
-                }
+                    maximized = track.Maximized,
+                    volume = track.Volume,
+                    pan = track.Pan,
+                    reverb = track.Reverb,
+                    muted = false,
+                    channel = track.MidiChannel,
+                    patch = track.ProgramChange,
+                };
+                lstTrkReglages.Add(TrkReglages);
+            }
 
-                if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+            bReglageChanged = false;
+
+            // Mute Channel
+            for (int i = 0; i < 16; i++)
+            {
+                ChannelReglages = new _channels()
                 {
-                    // During the waiting time, display informations about the next singer
-                    int nbLines; 
-                    string toptxt; 
-                    string centertxt; 
-                    
-                    if (currentPlaylistItem.KaraokeSinger == "" || currentPlaylistItem.KaraokeSinger == "<Song reserved by>")
-                    {
-                        toptxt = "Next song: " + Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
-                        centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
-                        nbLines = 1;
-                    }
-                    else
-                    {
-                        
-                        toptxt = "Next song: " + Path.GetFileNameWithoutExtension(currentPlaylistItem.Song) + " - Next singer: " + currentPlaylistItem.KaraokeSinger;                        
-                        centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song) 
-                            + _InternalSepLines + Strings.SungBy 
-                            + _InternalSepLines + currentPlaylistItem.KaraokeSinger;
-                        nbLines = 4;
-                    }
-
-                    // arriere plan provisoire
-                    frmLyric.AlloModifyDirSlideShow = true;
-                    frmLyric.DirSlideShow = Properties.Settings.Default.dirSlideShow;
-                    frmLyric.AlloModifyDirSlideShow = false;
-
-                    frmLyric.TxtNbLines = nbLines;
-                    frmLyric.bTextBackGround = false;
-
-                    // Display singer in top panel
-                    frmLyric.DisplaySinger(toptxt);
-
-                    // Display next singer in lyrics form
-                    frmLyric.DisplayText(centertxt);
-                }
-                #endregion
-
-                // Focus on paused windows
-                this.Restore();
-                this.Activate();
-            }
-            else
-            {
-                // NO PAUSE MODE
-                if (Karaclass.m_CountdownSongs == 0)
-                {
-                    // NO Timer => play                    
-                    PlayerState = PlayerStates.Stopped;                    
-                    PlayPauseMusic();
-                }
-                else
-                {
-                    // No pause mode between songs of a playlist, but a timer 
-                    // Lauch Countdown timer
-                    StartCountDownTimer();
-                }
+                    muted = false,
+                };
+                lstChannels.Add(ChannelReglages);
             }
         }
 
         /// <summary>
-        /// Start count down before playing
-        /// </summary>
-        private void StartCountDownTimer()
-        {
-            PlayerState = PlayerStates.Waiting;
-            BtnStatus();
-
-            w_tick = 0;
-            int sec = Karaclass.m_CountdownSongs;  // wait for x seconds
-            w_wait = sec + 4;
-
-            if (Application.OpenForms.OfType<frmLyric>().Count() == 0)
-            {
-                frmLyric = new frmLyric(myLyricsMgmt);
-                frmLyric.Show();
-            }
-
-            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
-            {
-                // Display song & singer
-                string nextsong = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
-                string txt = "Next song: " + nextsong + " - Next singer: " + currentPlaylistItem.KaraokeSinger;
-                frmLyric.DisplaySinger(txt);
-
-                frmLyric.LoadWaitSong(sec);
-            }
-
-            timer5.Interval = 1000;  // interval = 1 sec      
-            timer5.Enabled = true;
-        }
-      
-
-        /// <summary>
-        /// Called by Button NEXT, play immediately the next song
-        /// </summary>
-        private void PlayNextSong()
-        {
-            PlaylistItem pli = currentPlaylistItem;
-            if (pli == null)
-                return;
-
-            currentPlaylistItem = currentPlaylist.Next(pli);
-
-            if (currentPlaylist == null || pli == currentPlaylistItem)
-                return;
-                                              
-            //Next song of the playlist
-            MIDIfileName = currentPlaylistItem.Song;
-            UpdatePlayListsForm(currentPlaylistItem.Song);
-
-            // Ferme le formulaire frmLyric
-            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
-            {
-                frmLyric.Close();
-            }
-
-            PlayerState = PlayerStates.Playing;
-            MIDIfileFullPath = currentPlaylistItem.File;
-            ResetMidiFile();
-
-            SelectFileToLoadAsync();                   
-        }
-
-
-        /// <summary>
-        /// Called by button PREVIOUS, play immediately the previous song
-        /// </summary>
-        private void PlayPrevSong()
-        {
-            if (PlayerState == PlayerStates.Paused)
-            {
-                laststart = bouclestart;
-                sequencer1.Position = laststart;
-                return;
-            }
-            
-            PlaylistItem pli = currentPlaylistItem;
-            if (pli == null)
-                return;
-
-            currentPlaylistItem = currentPlaylist.Previous(pli);
-
-            if (currentPlaylist == null || pli == currentPlaylistItem)
-                return;
-                      
-            MIDIfileName = currentPlaylistItem.Song;
-            MIDIfileFullPath = currentPlaylistItem.File;
-
-            UpdatePlayListsForm(currentPlaylistItem.Song);
-            PlayerState = PlayerStates.Playing;
-            
-            ResetMidiFile();
-            
-            SelectFileToLoadAsync();
-                    
-        }
-
-        /// <summary>
-        /// Update display of frmPlaylist
-        /// </summary>
-        /// <param name="song"></param>
-        private void UpdatePlayListsForm(string song)
-        {
-            int idx = currentPlaylist.SelectedIndex(currentPlaylistItem) + 1;
-            lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;
-
-            if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
-            {
-                frmExplorer = GetForm<frmExplorer>();
-                frmExplorer.DisplaySong(song);
-            }
-        }
-
-
-        private void ResetMidiFile()
-        {            
-            OpenMidiFileOptions.TextEncoding = Karaclass.m_textEncoding;            
-            OpenMidiFileOptions.SplitHands = false;
-        }
-
-
-        #endregion next prev load
-
-
-        #region new song
-
-        /// <summary>
-        /// Add notes to compose a time line
-        /// </summary>
-        /// <param name="track"></param>
-        /// <param name="channel"></param>
-        /// <param name="dur">type of note's duration:  0.5f, 0.25f</param>
-        private void CreateTimeLineMelody(Track track, int channel, float dur)
-        {
-            int noteC = 60;
-
-            int ticks; // = 0;
-            int duration; // = 0;
-            int number = noteC;
-
-            float time; // = 0;
- 
-
-            int totalduration = sequence1.GetLength();
-            int division = sequence1.Division;
-
-            if (totalduration == 1)
-            {
-                totalduration = division * 5;
-            }
-
-            // Number of notes to create
-            int nbnotes = Convert.ToInt32((1/dur) * (1 + (totalduration / division)));
-            int velocity = Karaclass.m_Velocity;
-            
-            for (int i = 0 ; i < nbnotes; i++)
-            {
-                time = i * dur;
-
-                ticks = Convert.ToInt32(time * division);
-                duration = Convert.ToInt32(dur * division);
-                
-                MidiNote note = new MidiNote(ticks, channel, number, duration, velocity, false);
-                track.addNote(note);
-            }
-
-            // File was modified
-            FileModified();
-
-        }
-
-        /// <summary>
-        /// Create a demo melody
-        /// </summary>
-        /// <param name="track"></param>
-        /// <param name="channel"></param>
-        private void CreateNewMelody(Track track, int measures)
-        {
-            #region old code
-            /*
-            int noteC = 60;
-            int ticks = 0;
-            int number = noteC;
-            int division = sequence1.Division;
-            int duration = 1 * division;
-
-            int nbblacks = measures * sequence1.Numerator * 4 / sequence1.Denominator;
-
-            // Ajoute une note au ticks = 0           
-            ticks = 0;
-            int velocity = Karaclass.m_Velocity;
-
-            MidiNote note = new MidiNote(ticks, channel, number, duration, velocity, false);
-            
-
-            // Ajoute une note au ticks -1
-            ticks = (nbblacks - 1) * division;
-            note = new MidiNote(ticks, channel, number, duration, velocity, false);
-            track.addNote(note);
-
-            track.Volume = 80;
-            */
-            #endregion old code
-
-            SetTrackLength(track, measures);
-
-        }
-
-        /// <summary>
-        /// Insert a "EndOfTrack" meta message one tick after the duration
-        /// </summary>
-        /// <param name="track"></param>
-        /// <param name="channel"></param>
-        /// <param name="measures"></param>
-        private void SetTrackLength(Track track, int measures)
-        {            
-            if(measures < 1)
-                return;
-            
-            //int division = sequence1.Division;
-            _measurelen = sequence1.Time.Measure;            
-
-            // ticks + 1            
-            int ticks = _measurelen * measures;
-
-            /*
-            var split = BitConverter.GetBytes(0);
-            byte[] bytes = new byte[3];
-            bytes[0] = split[2]; //11;
-            bytes[1] = split[1]; //113;
-            bytes[2] = split[0]; //176;
-
-            MetaMessage mtMsg = new MetaMessage(MetaType.EndOfTrack, bytes);
-            track.Insert(ticks, mtMsg);            
-            //track.OffsetEndOfTrack(ticks);
-            */
-
-            track.EndOfTrackOffset = ticks - 1;
-            
-
-
-        }
-
-        /// <summary>
-        /// Insert a new track
-        /// </summary>
-        /// <param name="trackindex"></param>
-        /// <param name="trackname"></param>
-        /// <param name="instrumentname"></param>
-        /// <param name="channel"></param>
-        /// <param name="programchange"></param>
-        /// <param name="volume"></param>
-        /// <param name="tempo"></param>
-        /// <param name="timesig"></param>
-        /// <returns></returns>
-        private Track InsertTrack(int trackindex, string trackname, string instrumentname, int channel, int programchange, int volume, int tempo, TimeSignature timesig, int clef)
-        {
-            Track track = CreateTrack(trackname, instrumentname, channel, programchange, volume, tempo, timesig, clef);
-            SequenceInsertTrack(trackindex, track);
- 
-            return track;
-        }
-
-        /// <summary>
-        /// Create a new track
-        /// </summary>
-        /// <param name="trackname"></param>
-        /// <param name="instrumentname"></param>
-        /// <param name="channel"></param>
-        /// <param name="programchange"></param>
-        /// <param name="volume"></param>
-        /// <param name="tempo"></param>
-        /// <param name="timesig"></param>
-        /// <returns></returns>
-        private Track CreateTrack(string trackname, string instrumentname, int channel, int programchange, int volume, int tempo, TimeSignature timesig, int clef)
-        {
-            // Add tack to sequence
-            Track track = new Track() {
-                MidiChannel = channel,
-                Name = trackname,
-                InstrumentName = instrumentname,
-                ProgramChange = programchange,
-                Volume = volume,
-                Pan = 64,
-                Reverb = 0,
-            };
-
-            if (clef == 0)
-                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Treble;
-            else if (clef == 1)
-                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Bass;
-            else
-                track.Clef = Sanford.Multimedia.Midi.Score.Clef.None;
-
-            // Tempo : 
-            //ex tempo = 750000;
-            track.insertTempo(tempo, 0);
-          
-            // Keysignature
-            track.insertKeysignature(timesig.Numerator, timesig.Denominator);
-          
-            // Timesignature
-            track.Numerator = timesig.Numerator;
-            track.Denominator = timesig.Denominator;
-            track.insertTimesignature(timesig.Numerator, timesig.Denominator);            
-
-            // Patch
-            track.insertPatch(channel, programchange);
-
-            // trackname      
-            track.insertTrackname(trackname);
-
-            // Volume
-            track.insertVolume(channel, volume);
-
-            // Lengh of measure
-            track.MeasureLength = _measurelen;
-
-            return track;
-        }
-     
-        /// <summary>
-        /// Insert a new track to a sequence
-        /// </summary>
-        /// <param name="trackindex"></param>
-        /// <param name="track"></param>
-        private void SequenceInsertTrack(int trackindex ,Track track)
-        {
-            //insert track
-            if (trackindex < sequence1.tracks.Count)                        
-                sequence1.Insert(trackindex, track);            
-            else            
-                sequence1.Add(track);            
-
-            // File was modified
-            FileModified();
-        }
-
-        /// <summary>
-        /// Add a new track
-        /// </summary>
-        /// <param name="trackname"></param>
-        /// <param name="instrumentname"></param>
-        /// <param name="nChannel"></param>
-        /// <param name="programchange"></param>
-        /// <param name="volume"></param>
-        private Track AddTrack(string trackname, string instrumentname, int channel, int programchange, int volume, int tempo, TimeSignature timesig, int clef)
-        {            
-            Track track = CreateTrack(trackname, instrumentname, channel, programchange, volume, tempo, timesig, clef);
-            sequence1.Add(track);
-            // File was modified
-            FileModified();            
-            return track;
-        }
-
-        /// <summary>
-        /// Insert a track control
-        /// </summary>
-        /// <param name="track"></param>
-        /// <param name="trackindex"></param>
-        private void InsertTrackControl(Track track, int trackindex)
-        {
-            CreateTrackControl(track, trackindex);
-            //TrkControl.TrackControl pTrack = CreateTrackControl(track, trackindex);            
-        }
-
-        /// <summary>
-        /// Create a track control
-        /// </summary>
-        /// <param name="track"></param>
-        /// <param name="trackindex"></param>
-        /// <returns></returns>
-        private TrkControl.TrackControl CreateTrackControl(Track track, int trackindex)
-        {
-            // Add track control
-            pTrack = new TrkControl.TrackControl
-            {
-                //TrackName = track.Name == null ? "<NoName>" : track.Name,
-                TrackName = track.Name ?? "<NoName>",
-                Patch = track.ProgramChange
-            };
-
-            // InstrumentName;
-            if (track.ProgramChange >= 0 && track.ProgramChange < 128)
-                pTrack.TrackLabel = lsInstruments[track.ProgramChange].Trim();
-             
-            pTrack.MidiChannel = track.MidiChannel;
-
-            pTrack.Volume = track.Volume;
-            pTrack.Pan = track.Pan;
-            pTrack.Reverb = track.Reverb;
-
-            pTrack.Muted = false;
-            pTrack.Enabled = bEditScore;
-
-            pTrack.Track = trackindex;
-
-            pTrack.OntrkControlClick += new TrkControl.TrackControl.TrackControlClickEventHandler(TrackControl_Click);
-            pTrack.OntrkControlbtnMaximizeClicked += new TrkControl.TrackControl.btnMaximizeClickedEventHandler(BtnMaximizedClickOneEvent);
-            pTrack.OntrkControlbtnMutClicked += new TrkControl.TrackControl.btnMutClickedEventHandler(BtnMutClickOneEvent);
-            pTrack.OntrkControlbtnSoloClicked += new TrkControl.TrackControl.btnSoloClickedEventHandler(BtnSoloClickOneEvent);
-            pTrack.OntrkControlbtnDelClicked += new TrkControl.TrackControl.btnDelClickedEventHandler(BtnDelClickOneEvent);
-            pTrack.OntrkControllblPatchChanged += new TrkControl.TrackControl.lblPatchChangedEventHandler(LstInstrumentClickOneEvent);
-            pTrack.OntrkControllblChannelChanged += new TrkControl.TrackControl.lblChannelChangedEventHandler(LstChannelClickOneEvent);
-            pTrack.OntrkControlbtnPianoRollClicked += new TrkControl.TrackControl.btnPianoRollClickedEventHandler(BtnPianoRollClickOneEvent);
-
-            // Knob buttons (volume, pan, reverb)
-            pTrack.OnknobControlknobVolumeValueChanged += new TrkControl.TrackControl.knobVolumeValueChangedEventHandler(TrackBarVolumeChanged);
-            pTrack.OnknobControlknobPanValueChanged += new TrkControl.TrackControl.knobPanValueChangedEventHandler(TrackBarPanChanged);
-            pTrack.OnknobControlknobReverbValueChanged += new TrkControl.TrackControl.knobReverbValueChangedEventHandler(TrackBarReverbChanged);
-
-            pTrack.OntrkControllblTrackNameChanged += new TrkControl.TrackControl.lblTrackNameChangedEventHandler(Trk_TrackName);
-
-
-            // Drag Drop
-            pTrack.MouseDown += new MouseEventHandler(TrkControl_MouseDown);
-            pTrack.DragDrop += new DragEventHandler(TrkControl_DragDrop);
-            pTrack.DragEnter += new DragEventHandler(TrkControl_DragEnter);
-            pTrack.DragLeave += new EventHandler(TrkControl_DragLeave);
-            pTrack.DragOver += new DragEventHandler(TrkControl_DragOver);
-            pTrack.AllowDrop = true;
-
-            
-            pTrack.Tag = track.MidiChannel.ToString();
-
-            try
-            {
-                pTrack.Parent = pnlTracks;
-            }
-            catch (Exception ex) 
-            {
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            return pTrack;
-        }
-    
-
-        /// <summary>
-        /// Add a new track control 
-        /// </summary>
-        /// <param name="track"></param>
-        private void AddTrackControl(Track track, int trackindex)
-        {
-            
-            int j = 0;
-            int yOffset = 1;
-
-            // Count existing tracks track controls
-            for (int i = 0; i < pnlTracks.Controls.Count; i++)
-            {
-                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                {
-                    j++;
-                }
-            }
-
-            try
-            {
-                TrkControl.TrackControl pTrack = CreateTrackControl(track, trackindex);
-            }
-            catch (Exception ex) 
-            {
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            int yloc = yOffset + j * iStaffHeightMaximized;
-
-            yloc = Convert.ToInt32(yloc*zoom);
-
-            pTrack.Location = new Point(0, yloc);
-
-            // Ordonnée originelle
-            pTrack.yOrg = yloc;
-            
-        }
-
-        /// <summary>
-        /// Redraw track controls
-        /// </summary>
-        public void RedrawTrackControls()
-        {            
-            for (int i = 0; i < pnlTracks.Controls.Count; i++)
-            {
-                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                {
-                    if (pnlTracks.Controls[i].Tag != null)
-                    {
-                        TrkControl.TrackControl trkC = ((TrkControl.TrackControl)pnlTracks.Controls[i]);
-                        
-                        int yloc = trkC.yOrg;
-                        yloc = Convert.ToInt32(yloc*zoom);
-                        trkC.Location = new Point(trkC.Location.X, yloc);
-                    }
-                }
-            }                                   
-        }
-     
-        private void RedrawTrackControls2()
-        {
-            int yloc; // = 0;
-            int h = 0;
-
-            for (int i = 0; i < pnlTracks.Controls.Count; i++)
-            {
-                if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
-                {
-                    if (pnlTracks.Controls[i].Tag != null)
-                    {
-                        TrkControl.TrackControl trkC = ((TrkControl.TrackControl)pnlTracks.Controls[i]);
-                        
-
-                        yloc = h;
-                        yloc = Convert.ToInt32(yloc * zoom);
-                        trkC.Location = new Point(trkC.Location.X, yloc);
-
-                        h += trkC.Height;
-                    }
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Common for new track
-        /// </summary>
-        private void NewTrack(int measures)
-        {
-            #region trackname
-            // Find unused name for track name
-            int id = 1;
-            string trackname = "Track1";
-            bool bfound; // = false;
-            bool bfinished = false;
-            while (bfinished == false)
-            {
-                bfound = false;
-                for (int i = 0; i < sequence1.tracks.Count; i++)
-                {
-                    Track track = sequence1.tracks[i];
-                    if (track.Name == trackname)
-                    {
-                        bfound = true;
-                        id++;
-                        trackname = "Track" + id.ToString();
-                        break;
-                    }
-                }
-                if (bfound == false)
-                    bfinished = true;
-            }
-
-            #endregion trackname
-
-            // propose first patch
-            int programchange = 0;
-
-            #region channel
-            // Find unused channel for track            
-            int channel = 0;
-            //bfound = false;
-            bfinished = false;
-            while (bfinished == false)
-            {
-                bfound = false;
-                for (int i = 0; i < sequence1.tracks.Count; i++)
-                {
-                    Track track = sequence1.tracks[i];
-                    if (track.MidiChannel == channel)
-                    {
-                        bfound = true;
-                        channel++;
-                        break;
-                    }
-                }
-                if (bfound == false)
-                    bfinished = true;
-            }
-            #endregion channel
-
-            #region trackindex
-            decimal trkindex = sequence1.tracks.Count + 1;
-
-            #endregion trackindex
-
-            int clef = 0;
-
-            DialogResult dr; // = new DialogResult();
-            Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog TrackDialog = new Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog(trackname, programchange, channel, trkindex, clef);
-            dr = TrackDialog.ShowDialog();
-
-            // TODO : if we are creating a new file, 
-            if (dr == DialogResult.Cancel)            
-                return;
-            
-            // Get infos from dialog
-            clef = TrackDialog.cle;
-            trackname = TrackDialog.TrackName;
-            programchange = TrackDialog.ProgramChange;
-            string instrumentname = TrackDialog.InstrumentName;
-            channel = TrackDialog.MidiChannel;
-            int tindex = Convert.ToInt32(TrackDialog.trackindex) - 1;  // index of new track (-1 to convert to 0 base)
-
-
-            int volume = 79;
-            sequence1.Format = 1;
-
-            // Pas possible pour midi format 0 : une seule piste
-            if (sequence1.Format == 0)
-            {
-                string msg = "Sorry, i can't add a new track to a midi file format 0";
-                string title = "Karaboss";
-                MessageBox.Show(msg, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            }
-            else
-            {
-                if (tindex == sequence1.tracks.Count)
-                {
-                    // Add track to sequence
-                    Track track = AddTrack(trackname, instrumentname, channel, programchange, volume, sequence1.Tempo, sequence1.Time, clef);
-
-                    // Add track control
-                    int trackindex = sequence1.tracks.Count - 1;
-                    AddTrackControl(track, trackindex);
-
-                    // Add a little melody
-                    if (sequence1.tracks.Count == 1)
-                        CreateNewMelody(track, measures);
-                }
-                else
-                {
-                    // Insert track at position trkindex
-                    Track track = InsertTrack(tindex, trackname, instrumentname, channel, programchange, volume, sequence1.Tempo, sequence1.Time, clef);
-
-                    // Insert track control
-                    InsertTrackControl(track, tindex);
-
-                    // Add a little melody
-                    if (sequence1.tracks.Count == 1)
-                        CreateNewMelody(track, measures);
-                }
-                
-
-
-                DisplayTrackControls();
-
-                // Reset tracks stuff
-                InitTracksStuff();
-
-                // Create a new ShetMusic
-                RedrawSheetMusic();
-                
-                SetScrollBarValues();
-
-                FileModified();
-
-                // Set Current Note on new track
-                int numstrack = sequence1.tracks.Count - 1;
-                sheetmusic.UpdateCurrentNote(numstrack, 60, 0, true);
-            }            
-        }
-
-        /// <summary>
-        /// Create a new midi file from the explorer or from the player
-        /// </summary>
-        private void NewMidiFile()
-        {
-            // Show sequencer even if bSequencerAlwaysOn is set to False
-            bForceShowSequencer = true;
-
-            // Initialize tags
-            MidiTags.ResetTags();
-
-            // Create new sequence
-            sequence1 = new Sequence(CreateNewMidiFile.Division)
-            {
-                Format = 1,
-                OrigFormat= 1,
-                Numerator = CreateNewMidiFile.Numerator,
-                Denominator = CreateNewMidiFile.Denominator,
-                Tempo = CreateNewMidiFile.Tempo,
-                Time = new TimeSignature(CreateNewMidiFile.Numerator, CreateNewMidiFile.Denominator, CreateNewMidiFile.Division, CreateNewMidiFile.Tempo),
-            };
-
-            
-            sequence1.CloneTags();
-
-            pulsesPerMsec = sequence1.Division * (1000.0 / sequence1.Tempo);
-
-            DrawControls();
-
-            #region add track
-           
-            // Add track to sequence
-            int volume = 79;
-            sequence1.Format = 1;
-            Track track = AddTrack(CreateNewMidiFile.trackname, CreateNewMidiFile.instrumentname, CreateNewMidiFile.channel, CreateNewMidiFile.programchange, volume, sequence1.Tempo, sequence1.Time, CreateNewMidiFile.clef);
-
-            // Add track control
-            int trackindex = sequence1.tracks.Count - 1;
-            AddTrackControl(track, trackindex);
-
-            // Add a little melody
-            if (sequence1.tracks.Count == 1)
-                CreateNewMelody(track, CreateNewMidiFile.Measures);
-
-            DisplayTrackControls();
-
-            // Reset tracks stuff
-            InitTracksStuff();
-
-            // Create a new ShetMusic
-            RedrawSheetMusic();
-
-            SetScrollBarValues();
-
-            FileModified();
-
-            // Set Current Note on new track
-            int numstrack = sequence1.tracks.Count - 1;
-            sheetmusic.UpdateCurrentNote(numstrack, 60, 0, true);
-
-
-            #endregion addtrack
-
-
-            UpdateMidiTimes();
-            DisplaySongDuration(_duration);
-
-            positionHScrollBarNew.Value = 0;
-            positionHScrollBarNew.Maximum = _totalTicks;
-
-            sequencer1.Sequence = sequence1;
-
-            MIDIfileName = "New";
-            MIDIfilePath = CreateNewMidiFile.DefaultDirectory; ;
-            MIDIfileFullPath = null;
-
-            // FAB
-            SetTitle("New.mid");
-
-            myLyricsMgmt = new LyricsMgmt(sequence1, Karaclass.m_ShowChords);
-            //bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0;             
-
-            // Display midi file infos
-            DisplayFileInfos();
-            DisplayLyricsInfos();
-
-            // Display log file
-            if (sequence1.Log != "")
-            {
-                lblChangesInfos.Text = sequence1.Log;
-            }
-
-            PlayerState = PlayerStates.Stopped;
-
-        }
-
-
-
-        #endregion new song
-
-
-        #region Tempo
-        /// <summary>
-        /// Open window of tempo management
+        /// Mouse move event => draw help grid to seize notes
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        /// <param name="tmps"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        private void Tempo_DoubleClick(object sender, EventArgs e, TempoSymbol tmps)
+        private void Track_MouseMove(object sender, EventArgs e)
         {
-            //if (Application.OpenForms["frmModifyTempo"] != null)
-            //    Application.OpenForms["frmModifyTempo"].Close();
-
-            Application.OpenForms["frmModifyTempo"]?.Close();
-
-            if (Application.OpenForms["frmModifyTempo"] == null)
-            {
-                frmModifyTempo = new frmModifyTempo(sheetmusic, sequence1);                
-                frmModifyTempo.Show();
-                frmModifyTempo.Refresh();
-
-            }            
-        }
-
-        #endregion Tempo
-
-
-        #region edit partition
-
-        private void KeyboardSelectDurations(KeyEventArgs e)
-        {
-            if (PlayerState != PlayerStates.Stopped)
-                return;
-
-            switch (e.KeyCode)
-            {
-                case Keys.Oemplus:
-                case Keys.Add:
-                    switch (NoteValue)
-                    {
-                        case NoteValues.QuadrupleCroche:
-                            SetTripleCroche();
-                            break;
-                        case NoteValues.TripleCroche:
-                            SetDoubleCroche();
-                            break;
-                        case NoteValues.DoubleCroche:
-                            SetCroche();
-                            break;
-                        case NoteValues.Croche:
-                            SetBlack();
-                            break;
-                        case NoteValues.Noire:
-                            SetWhite();
-                            break;
-                        case NoteValues.Blanche:
-                            SetRond();
-                            break;
-                        case NoteValues.Ronde:
-                            SetQuadrupleCroche();
-                            break;
-                    }
-                    break;
-
-                case Keys.D6:
-                case Keys.OemMinus:
-                case Keys.Subtract:
-                    switch (NoteValue)
-                    {
-                        case NoteValues.Ronde:
-                            SetWhite();
-                            break;
-                        case NoteValues.Blanche:
-                            SetBlack();
-                            break;
-                        case NoteValues.Noire:
-                            SetCroche();
-                            break;
-                        case NoteValues.Croche:
-                            SetDoubleCroche();
-                            break;
-                        case NoteValues.DoubleCroche:
-                            SetTripleCroche();
-                            break;
-                        case NoteValues.TripleCroche:
-                            SetQuadrupleCroche();
-                            break;
-                        case NoteValues.QuadrupleCroche:
-                            SetRond();
-                            break;
-                    }
-                    break;
-
-                case Keys.OemPeriod:
-                case Keys.Decimal:
-                    SetDotted();
-                    break;
-            }        
+            sheetmusic.bShowHelpGrid = (NoteValue != NoteValues.None);
         }
 
         /// <summary>
-        /// Disable editing functions
-        /// </summary>
-        private void DisableEditButtons()
-        {
-            NoteValue = NoteValues.None;
-            this.Cursor = Cursors.Default;
-
-            lblSaisieNotes.BackColor = Color.White;
-            bEnterNotes = false;
-            Alteration = Alterations.None;
-
-            lblGomme.BackColor = Color.White;
-            lblRondNote.BackColor = Color.White;
-            lblWhiteNote.BackColor = Color.White;
-            lblBlackNote.BackColor = Color.White;
-            lblCrocheNote.BackColor = Color.White;
-            lblDoubleCrocheNote.BackColor = Color.White;
-            lblTripleCrocheNote.BackColor = Color.White;
-            lblQuadrupleCrocheNote.BackColor = Color.White;
-
-            lblDotted.BackColor = Color.White;
-            lblBemol.BackColor = Color.White;
-            lblDiese.BackColor = Color.White;
-            lblBecarre.BackColor = Color.White;           
-
-        }
-       
-        /// <summary>
-        /// Click on button "Edit" => Score edition activation
+        /// Mouse down : add a new note
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void LblEdit_Click(object sender, EventArgs e)
+        /// <param name="staffnum"></param>
+        /// <param name="note"></param>
+        /// <param name="ticks"></param>
+        private void Track_MouseDown(object sender, MouseEventArgs e, int staffnum, int note, float ticks)
         {
-            if (PlayerState != PlayerStates.Stopped)
-                return;
-
-            DspEdit(!bEditScore);           
-
-        }
- 
-        /// <summary>
-        /// Validate or invalidate EditMode
-        /// </summary>
-        /// <param name="status"></param>
-        private void DspEdit(bool status)
-        {
-            if (sheetmusic == null)
-                return;
-
-            if (status == true)
+            #region draw blue vertical line
+            if (PlayerState != PlayerStates.Stopped || bEnterNotes == false)
             {
-                // Enter edit mode
-                bEditScore = true;
-
-                lblEdit.BackColor = Color.Red;
-                lblEdit.ForeColor = Color.White;
-                MnuEditScore.Checked = true;
-
-                // Allow sheetmusic editing
-                sheetmusic.bEditMode = true;
-                EnableTrackControls(true);
-
-                if (sheetmusic.SelectedStaff != -1)
+                if (bEditScore == false && PlayerState != PlayerStates.Playing)
                 {
-                    SelectTrackControl(sheetmusic.SelectedStaff);                   
-                }
-                else
-                {
-                    SelectTrackControl(0);
-                    sheetmusic.SelectedStaff = 0;
-                }                
-            }
-            else
-            {
-                // Quit edit mode
-                bEditScore = false;
+                    newstart = Convert.ToInt32(ticks);
+                    if (newstart > 0)
+                        BtnStatus();
 
-                lblEdit.BackColor = Color.White;
-                lblEdit.ForeColor = Color.Black;
+                    // ticks for new start
+                    laststart = newstart;
 
-                MnuEditScore.Checked = false;
-                MnuEditEnterNotes.Checked = false;
-                
-                // Quit enter notes
-                DisableEditButtons();
-                bEnterNotes = false;
+                    bouclestart = laststart;
+                    //lastscroll = hScrollBar.Value;
 
-                // Disallow sheetmusic edit mode
-                sheetmusic.bEditMode = false;
-                sheetmusic.bEnterNotes = false;
 
-                // Disable edit Track Controls
-                EnableTrackControls(false);
+                    // Draw blue vertical line on new start
+                    lastbluestart = e.X;
+                    SetStartVLinePos(lastbluestart);
 
-                // Unselect all track controls
-                UnselectTrackControls();
-
-                // Close frmModifyTempo
-                if (Application.OpenForms.OfType<frmModifyTempo>().Count() > 0)
-                {
-                    Application.OpenForms["frmModifyTempo"].Close();
                 }
 
-            }
-        }
-
-        /// <summary>
-        /// Click on button "N" => Notes entering activation
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LblSaisieNotes_Click(object sender, EventArgs e)
-        {
-            DspEnterNotes();          
-        }
-
-        /// <summary>
-        /// Validate or invalidate Entering notes
-        /// </summary>
-        private void DspEnterNotes()
-        {
-            if (PlayerState != PlayerStates.Stopped)
                 return;
-
-            // stop notes entering 
-            if (bEnterNotes == true)
-            {
-                DisableEditButtons();
-                bEnterNotes = false;
-
-                MnuEditEnterNotes.Checked = false;
-                
-                sheetmusic.bEnterNotes = false;
-                sheetmusic.bShowHelpGrid = false;
             }
-            else
-            {
-                // start notes entering 
-                DisableEditButtons();
-                bEnterNotes = true;
-                
+            #endregion guard
 
-                MnuEditEnterNotes.Checked = true;
-                MnuEditScore.Checked = true;
+            float time = ticks / sequence1.Division;
+            Track track = sequence1.tracks[staffnum];
 
-                sheetmusic.bEnterNotes = true;
-                sheetmusic.bShowHelpGrid = true;
+            float duration;// = 0;
 
-                // Enter edit mode
-                DspEdit(true);
-                
-                lblSaisieNotes.BackColor = Color.Red;
-                
-                NoteValue = NoteValues.Noire;
-                this.Cursor = Cursors.Hand;
-                lblBlackNote.BackColor = Color.Red;               
-            }
+            if (Alteration == Alterations.Diese)
+                note++;
+            else if (Alteration == Alterations.Bemol)
+                note--;
 
 
-            // Show form edit note only if label "Edit" is red
-            //if (bEditScore && !bEnterNotes)
-            //    ShowFrmNoteEdit();
+            #region edit
 
+            SelectOctave(note);
 
-        }
-    
-        private void RestoreSaisie()
-       {
-           if (bEnterNotes == false)
-            {
-                // start notes entering
-                DisableEditButtons();
-                bEnterNotes = true;
-                sheetmusic.bEnterNotes = true;
-                lblSaisieNotes.BackColor = Color.Red;
-
-                // Enter edit mode
-                DspEdit(true);
-            }
-       }
-
-        /// <summary>
-        /// Edit: Erase a note
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LblGomme_Click(object sender, EventArgs e)
-        {
-            if (PlayerState != PlayerStates.Stopped)
-                return;
-            else
-                RestoreSaisie();
-
+            // delete note
             if (NoteValue == NoteValues.Gomme)
             {
-                NoteValue = NoteValues.None;
-                lblGomme.BackColor = Color.White;
-                this.Cursor = Cursors.Arrow;
+                // Delete a note on a track         
+                sheetmusic.DeleteNote(staffnum, note, ticks);
+
             }
             else
-            { 
-                NoteValue = NoteValues.Gomme;
-                this.Cursor = Cursors.Hand;
+            {
 
-                lblGomme.BackColor = Color.Red;
-                lblRondNote.BackColor = Color.White;
-                lblWhiteNote.BackColor = Color.White;
-                lblBlackNote.BackColor = Color.White;
-                lblCrocheNote.BackColor = Color.White;
-                lblDoubleCrocheNote.BackColor = Color.White;
-                lblTripleCrocheNote.BackColor = Color.White;
-                lblQuadrupleCrocheNote.BackColor = Color.White;
+                // Retrieve new note duration according to button selected
+                duration = GetNewNoteDuration();
 
+                // Add new note
+                int starttime = Convert.ToInt32(time * sequence1.Division);
+                int dur = Convert.ToInt32(duration * sequence1.Division);
+                int channel = track.MidiChannel;
+                int notenumber = note;
+
+                int velocity = Karaclass.m_Velocity;
+
+                MidiNote mdnote = new MidiNote(starttime, channel, notenumber, dur, velocity, false);
+
+                if (sheetmusic.AddNote(track, mdnote) > 0)
+                {
+                    PlayNote(note, staffnum);
+                    sheetmusic.UpdateCurrentNote(sheetmusic.CurrentNote.numstaff, mdnote.Number, mdnote.StartTime, true);
+                }
             }
+
+            // Redraw scores
+            RefreshDisplay();
+
+            #endregion edit
+
         }
 
-        #region Notes Ronde to quadruplecroche
+
+ 
+
+
 
         /// <summary>
-        /// Edi: Add a Rond note
+        /// Mouse up on a track : stop note
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void LblRondNote_Click(object sender, EventArgs e)
+        /// <param name="staffnum"></param>
+        /// <param name="note"></param>
+        /// <param name="ticks"></param>
+        private void Track_MouseUp(object sender, EventArgs e, int staffnum, int note, float ticks)
         {
-            SetRond();
-        }
+            #region Guard
 
-        private void SetRond()
-        {
             if (PlayerState != PlayerStates.Stopped)
+            {
                 return;
-            else
-                RestoreSaisie();
-
-            if (NoteValue == NoteValues.Ronde)
-            {
-                NoteValue = NoteValues.None;
-                lblRondNote.BackColor = Color.White;
-                this.Cursor = Cursors.Arrow;
             }
-            else
-            {
-                NoteValue = NoteValues.Ronde;
-                this.Cursor = Cursors.Hand;
 
-                lblGomme.BackColor = Color.White;
-                lblRondNote.BackColor = Color.Red;
-                lblWhiteNote.BackColor = Color.White;
-                lblBlackNote.BackColor = Color.White;
-                lblCrocheNote.BackColor = Color.White;
-                lblDoubleCrocheNote.BackColor = Color.White;
-                lblTripleCrocheNote.BackColor = Color.White;
-                lblQuadrupleCrocheNote.BackColor = Color.White;
-            }
+            #endregion
+
+            StopNote();
         }
+
 
         /// <summary>
-        /// Edit: Add a white note
+        /// Double Click: display piano roll
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void LblWhiteNote_Click(object sender, EventArgs e)
-            {
-                SetWhite();
-            }
-
-        private void SetWhite()
-        {
-            if (PlayerState != PlayerStates.Stopped)
-                return;
-            else
-                RestoreSaisie();
-
-            if (NoteValue == NoteValues.Blanche)
-            {
-                NoteValue = NoteValues.None;
-                lblWhiteNote.BackColor = Color.White;
-                this.Cursor = Cursors.Arrow;
-            }
-            else
-            {
-                NoteValue = NoteValues.Blanche;
-                this.Cursor = Cursors.Hand;
-
-                lblGomme.BackColor = Color.White;
-                lblRondNote.BackColor = Color.White;
-                lblWhiteNote.BackColor = Color.Red;
-                lblBlackNote.BackColor = Color.White;
-                lblCrocheNote.BackColor = Color.White;
-                lblDoubleCrocheNote.BackColor = Color.White;
-                lblTripleCrocheNote.BackColor = Color.White;
-                lblQuadrupleCrocheNote.BackColor = Color.White;
-            }
-        }
-
-        private void LblBlackNote_Click(object sender, EventArgs e)
-        {
-            SetBlack();
-        }
-
-        private void SetBlack()
-        {
-            if (PlayerState != PlayerStates.Stopped)
-                return;
-            else
-                RestoreSaisie();
-
-            if (NoteValue == NoteValues.Noire)
-            {
-                NoteValue = NoteValues.None;
-                lblBlackNote.BackColor = Color.White;
-                this.Cursor = Cursors.Arrow;
-            }
-            else
-            {
-                NoteValue = NoteValues.Noire;
-                this.Cursor = Cursors.Hand;
-
-                lblGomme.BackColor = Color.White;
-                lblRondNote.BackColor = Color.White;
-                lblWhiteNote.BackColor = Color.White;
-                lblBlackNote.BackColor = Color.Red;
-                lblCrocheNote.BackColor = Color.White;
-                lblDoubleCrocheNote.BackColor = Color.White;
-                lblTripleCrocheNote.BackColor = Color.White;
-                lblQuadrupleCrocheNote.BackColor = Color.White;
-            }
-
-        }
-
-        private void LblCrocheNote_Click(object sender, EventArgs e)
-        {
-            SetCroche();
-        }
-
-        private void SetCroche()
-        {
-            if (PlayerState != PlayerStates.Stopped)
-                return;
-            else
-                RestoreSaisie();
-
-            if (NoteValue == NoteValues.Croche)
-            {
-                NoteValue = NoteValues.None;
-                lblCrocheNote.BackColor = Color.White;
-                this.Cursor = Cursors.Arrow;
-            }
-            else
-            {
-                NoteValue = NoteValues.Croche;
-                this.Cursor = Cursors.Hand;
-
-                lblGomme.BackColor = Color.White;
-                lblRondNote.BackColor = Color.White;
-                lblWhiteNote.BackColor = Color.White;
-                lblBlackNote.BackColor = Color.White;
-                lblCrocheNote.BackColor = Color.Red;
-                lblDoubleCrocheNote.BackColor = Color.White;
-                lblTripleCrocheNote.BackColor = Color.White;
-                lblQuadrupleCrocheNote.BackColor = Color.White;
-            }
-        }
-
-        private void LblDoubleCrocheNote_Click(object sender, EventArgs e)
-        {
-            SetDoubleCroche();
-        }
-
-        private void SetDoubleCroche()
-        {
-            if (PlayerState != PlayerStates.Stopped)
-                return;
-            else
-                RestoreSaisie();
-
-            if (NoteValue == NoteValues.DoubleCroche)
-            {
-                NoteValue = NoteValues.None;
-                lblDoubleCrocheNote.BackColor = Color.White;
-                this.Cursor = Cursors.Arrow;
-            }
-            else
-            {
-                NoteValue = NoteValues.DoubleCroche;
-                this.Cursor = Cursors.Hand;
-
-                lblGomme.BackColor = Color.White;
-                lblRondNote.BackColor = Color.White;
-                lblWhiteNote.BackColor = Color.White;
-                lblBlackNote.BackColor = Color.White;
-                lblCrocheNote.BackColor = Color.White;
-                lblDoubleCrocheNote.BackColor = Color.Red;
-                lblTripleCrocheNote.BackColor = Color.White;
-                lblQuadrupleCrocheNote.BackColor = Color.White;
-            }
-        }
-
-        private void LblTripleCrocheNote_Click(object sender, EventArgs e)
-        {
-            SetTripleCroche();
-        }
-
-        private void SetTripleCroche()
-        {
-            if (PlayerState != PlayerStates.Stopped)
-                return;
-            else
-                RestoreSaisie();
-
-            if (NoteValue == NoteValues.TripleCroche)
-            {
-                NoteValue = NoteValues.None;
-                lblTripleCrocheNote.BackColor = Color.White;
-                this.Cursor = Cursors.Arrow;
-            }
-            else
-            {
-                NoteValue = NoteValues.TripleCroche;
-                this.Cursor = Cursors.Hand;
-
-                lblGomme.BackColor = Color.White;
-                lblRondNote.BackColor = Color.White;
-                lblWhiteNote.BackColor = Color.White;
-                lblBlackNote.BackColor = Color.White;
-                lblCrocheNote.BackColor = Color.White;
-                lblDoubleCrocheNote.BackColor = Color.White;
-                lblTripleCrocheNote.BackColor = Color.Red;
-                lblQuadrupleCrocheNote.BackColor = Color.White;
-            }
-        }
-
-        private void LblQuadrupleCrocheNote_Click(object sender, EventArgs e)
-        {
-            SetQuadrupleCroche();
-        }
-
-        private void SetQuadrupleCroche()
-        {
-            if (PlayerState != PlayerStates.Stopped)
-                return;
-            else
-                RestoreSaisie();
-
-            if (NoteValue == NoteValues.QuadrupleCroche)
-            {
-                NoteValue = NoteValues.None;
-                lblQuadrupleCrocheNote.BackColor = Color.White;
-                this.Cursor = Cursors.Arrow;
-            }
-            else
-            {
-                NoteValue = NoteValues.QuadrupleCroche;
-                this.Cursor = Cursors.Hand;
-
-                lblGomme.BackColor = Color.White;
-                lblRondNote.BackColor = Color.White;
-                lblWhiteNote.BackColor = Color.White;
-                lblBlackNote.BackColor = Color.White;
-                lblCrocheNote.BackColor = Color.White;
-                lblDoubleCrocheNote.BackColor = Color.White;
-                lblTripleCrocheNote.BackColor = Color.White;
-                lblQuadrupleCrocheNote.BackColor = Color.Red;
-            }
-        }
-
-        #endregion
-
-        #region alterations
-        private void LblDotted_Click(object sender, EventArgs e)
-        {
-            SetDotted();
-        }
-
-        private void SetDotted()
-        {
-            if (bEnterNotes == false)
-                return;
-
-            if (Alteration == Alterations.Dot)
-            {
-                Alteration = Alterations.None;
-                lblDotted.BackColor = Color.White;
-            }
-            else
-            {
-                Alteration = Alterations.Dot;
-                lblDotted.BackColor = Color.Red;
-            }
-        }
-
-        private void LblDiese_Click(object sender, EventArgs e)
-        {
-            if (bEnterNotes == false)
-                return;
-            
-            if (Alteration == Alterations.Diese)
-            {
-                Alteration = Alterations.None;
-                lblDiese.BackColor = Color.White;
-            }
-            else
-            {
-                Alteration = Alterations.Diese;
-                lblDiese.BackColor = Color.Red;
-                lblBemol.BackColor = Color.White;
-                lblBecarre.BackColor = Color.White;
-            }
-        }
-
-        private void LblBemol_Click(object sender, EventArgs e)
-        {
-            if (bEnterNotes == false)
-                return;
-            
-            if (Alteration == Alterations.Bemol)
-            {
-                Alteration = Alterations.None;
-                lblBemol.BackColor = Color.White;
-            }
-            else
-            {
-                Alteration = Alterations.Bemol;
-                lblDiese.BackColor = Color.White;
-                lblBemol.BackColor = Color.Red;
-                lblBecarre.BackColor = Color.White;
-            }
-
-        }
-      
-        private void LblBecarre_Click(object sender, EventArgs e)
-        {
-            if (bEnterNotes == false)
-                return;
-            
-            if (Alteration == Alterations.Becarre)
-            {
-                Alteration = Alterations.None;
-                lblBecarre.BackColor = Color.White;
-            }
-            else
-            {
-                Alteration = Alterations.Becarre;
-                lblDiese.BackColor = Color.White;
-                lblBemol.BackColor = Color.White;
-                lblBecarre.BackColor = Color.Red;
-            }
-
-        }
-        #endregion
-
-        #region triolet
-        /// <summary>
-        /// Transform selection of notes to a triolet
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LblTriolet_Click(object sender, EventArgs e)
+        /// <param name="staffnum"></param>
+        private void Track_DoubleClick(object sender, EventArgs e, int staffnum, float pos)
         {
             #region guard
-            if (bEditScore == false || sheetmusic == null)
-                return;
-            
-            #endregion
-            //  
-            
-        }
-
-        #endregion
-
-        #region clef
-
-        // Set Clef for Measure
-        private void LblTreble_Click(object sender, EventArgs e)
-        {
-            if (bEditScore == false)
-                return;
-
-            int numTrack = sheetmusic.CurrentNote.numstaff;
-            Track track = sequence1.tracks[numTrack];
-
-            if (lblTreble.BackColor == Color.Red)
+            if (PlayerState != PlayerStates.Stopped)
             {
-                track.Clef = Sanford.Multimedia.Midi.Score.Clef.None;
-                lblTreble.BackColor = Color.White;
-            }
-            else
-            {
-                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Treble;
-                lblBass.BackColor = Color.White;
-                lblTreble.BackColor = Color.Red;
-            }
-            sheetmusic.Refresh();
-        }
-
-        private void LblBass_Click(object sender, EventArgs e)
-        {
-            if (bEditScore == false)
-                return;
-
-            int numTrack = sheetmusic.CurrentNote.numstaff;
-            Track track = sequence1.tracks[numTrack];
-
-            if (lblBass.BackColor == Color.Red)
-            {
-                track.Clef = Sanford.Multimedia.Midi.Score.Clef.None;
-                lblBass.BackColor = Color.White;
-            }
-            else
-            {
-                track.Clef = Sanford.Multimedia.Midi.Score.Clef.Bass;
-                lblTreble.BackColor = Color.White;
-                lblBass.BackColor = Color.Red;
-            }
-            sheetmusic.Refresh();
-        }
-        
-        /// <summary>
-        /// Color in red button corresponding to the key of the track
-        /// </summary>
-        /// <param name="tracknum"></param>
-        private void SelectTrackKey(int tracknum)
-        {
-            Track track = sequence1.tracks[tracknum];
-
-            // Select key
-            if (track.Clef == Sanford.Multimedia.Midi.Score.Clef.Bass)
-            {
-                lblBass.BackColor = Color.Red;
-                lblTreble.BackColor = Color.White;
-            }
-            else if (track.Clef == Sanford.Multimedia.Midi.Score.Clef.Treble)
-            {
-                lblTreble.BackColor = Color.Red;
-                lblBass.BackColor = Color.White;
-            }
-            else
-            {
-                lblTreble.BackColor = Color.White;
-                lblBass.BackColor = Color.White;
-            }
-        }
-
-        #endregion
-
-        #endregion edit partition
-
-
-        #region recording
-
-        private void BtnStartRec_Click(object sender, EventArgs e)
-        {          
-            LaunchRecorder();
-        }
-
-        /// <summary>
-        /// Launch the MP3 recorder
-        /// </summary>
-        private void LaunchRecorder()
-        {
-            string arguments = string.Empty;
-            //IntPtr Hwnd = IntPtr.Zero;
-
-            string exeName = "KarabossRecorder.exe";
-            string exeNameConfig = "KarabossRecorder.exe.config";
-
-            string path = Path.GetDirectoryName(Application.ExecutablePath);
-
-            string fullPath = Path.Combine(path, exeName);       
-            if (!File.Exists(fullPath))
-            {                
-                string errorText = string.Format("File not found: {0}", exeName);
-                MessageBox.Show(errorText, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            fullPath = Path.Combine(path, exeNameConfig);
-            if (!File.Exists(fullPath))
-            {
-                string errorText = string.Format("File not found: {0}", exeNameConfig);
-                MessageBox.Show(errorText, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            #endregion guard            
 
-            try
-            {
-
-                ProcessStartInfo startRecorder = new ProcessStartInfo()
-                {
-                    Arguments = arguments,
-                    FileName = exeName,
-                };
-
-                Process.Start(startRecorder);
-            }
-            catch (Exception ex)
-            {                
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            // Launch PianoRoll Window in order to display this track
+            DisplayPianoRoll(staffnum, MIDIfileFullPath, (int)pos);
         }
 
-        #endregion recording
+        #endregion track stuff
 
 
-        #region TimeLine
+        #region Utilities
 
-        // red bar
-        private void SetTimeVLinePos(int pos)
-        {
-            TimeVLine.Height = pnlScrollView.Height;
-            TimeVLine.Location = new Point(leftWidth + pos, pnlScrollView.Top);
-            
-        }
-
-        // blue bar
-        private void SetStartVLinePos(int pos)
-        {
-            TimeStartVLine.Height = pnlScrollView.Height;
-            TimeStartVLine.Location = new Point(leftWidth + pos, pnlScrollView.Top);
-        }
-
-        #endregion TimeLine
-
-
-        #region peak level master volume
-                        
-        /// <summary>
-        /// Get master peak volume from provider of sound (Karaboss itself or an external one such as VirtualMidiSynth)
-        /// </summary>
-        private void GetPeakVolume()
-        {            
-            float? peak = AudioControl.AudioManager.GetApplicationMasterPeakVolume(outDeviceProcessId);
-            VuMasterPeakVolume.Level = Convert.ToInt32(peak);
-        }
+       
+        #region MIDI
 
         /// <summary>
-        /// Initialize control peak volume level
+        /// Things to do when song is loaded
         /// </summary>
-        private void Init_peakLevel()
+        private void DisplaySongDuration(double dur)
         {
-            this.VuMasterPeakVolume.AnalogMeter = false;
-            this.VuMasterPeakVolume.BackColor = System.Drawing.Color.DimGray;
-            this.VuMasterPeakVolume.DialBackground = System.Drawing.Color.White;
-            this.VuMasterPeakVolume.DialTextNegative = System.Drawing.Color.Red;
-            this.VuMasterPeakVolume.DialTextPositive = System.Drawing.Color.Black;
-            this.VuMasterPeakVolume.DialTextZero = System.Drawing.Color.DarkGreen;
+            // Affichage du BEAT
+            //lblBeat.Text = "1|" + sequence1.Numerator;
 
-            // LED 1
-            this.VuMasterPeakVolume.Led1ColorOff = System.Drawing.Color.DarkGreen;
-            this.VuMasterPeakVolume.Led1ColorOn = System.Drawing.Color.LimeGreen;
-            //this.VuMasterPeakVolume.Led1Count = 12;
-            this.VuMasterPeakVolume.Led1Count = 14;
+            int Min = (int)(dur / 60);
+            int Sec = (int)(dur - (Min * 60));
 
-            // LED 2
-            this.VuMasterPeakVolume.Led2ColorOff = System.Drawing.Color.Olive;
-            this.VuMasterPeakVolume.Led2ColorOn = System.Drawing.Color.Yellow;
-            //this.VuMasterPeakVolume.Led2Count = 12;
-            this.VuMasterPeakVolume.Led2Count = 14;
-
-            // LED 3
-            this.VuMasterPeakVolume.Led3ColorOff = System.Drawing.Color.Maroon;
-            this.VuMasterPeakVolume.Led3ColorOn = System.Drawing.Color.Red;
-            //this.VuMasterPeakVolume.Led3Count = 8;
-            this.VuMasterPeakVolume.Led3Count = 10;
-
-            // LED size
-            this.VuMasterPeakVolume.LedSize = new System.Drawing.Size(12, 2);            
-
-            this.VuMasterPeakVolume.LedSpace = 1;
-            this.VuMasterPeakVolume.Level = 0;
-            this.VuMasterPeakVolume.LevelMax = 127;
-
-            //this.VuMasterPeakVolume.Location = new System.Drawing.Point(220, 33);
-            this.VuMasterPeakVolume.MeterScale = VU_MeterLibrary.MeterScale.Log10;
-            this.VuMasterPeakVolume.Name = "VuMasterPeakVolume";
-            this.VuMasterPeakVolume.NeedleColor = System.Drawing.Color.Black;
-            this.VuMasterPeakVolume.PeakHold = false;
-            this.VuMasterPeakVolume.Peakms = 1000;
-            this.VuMasterPeakVolume.PeakNeedleColor = System.Drawing.Color.Red;
-            this.VuMasterPeakVolume.ShowDialOnly = false;
-            this.VuMasterPeakVolume.ShowLedPeak = false;
-            this.VuMasterPeakVolume.ShowTextInDial = false;
-            this.VuMasterPeakVolume.Size = new System.Drawing.Size(14, 120);
-            this.VuMasterPeakVolume.TabIndex = 5;
-            this.VuMasterPeakVolume.TextInDial = new string[] {
-            "-40",
-            "-20",
-            "-10",
-            "-5",
-            "0",
-            "+6"};
-            this.VuMasterPeakVolume.UseLedLight = false;
-            this.VuMasterPeakVolume.VerticalBar = true;
-            this.VuMasterPeakVolume.VuText = "VU";            
-            this.VuMasterPeakVolume.Location = new Point(226, 7);
-
-        }       
-
-
-        #endregion
-
-
-        #region Tempo, Transpo
-
-        /// <summary>
-        /// Speed up tempo
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnTempoPlus_Click(object sender, EventArgs e)
-        {
-            if (TempoDelta > 10)
-                TempoDelta -= 10;
-            ModTempo();
-        }
-
-        /// <summary>
-        ///  Slow down tempo
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnTempoMinus_Click(object sender, EventArgs e)
-        {
-            if (TempoDelta < 200)
-                TempoDelta += 10;
-            ModTempo();
-        }
-
-
-      
-
-        /// <summary>
-        /// Transpose higher
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnTranspoPlus_Click(object sender, EventArgs e)
-        {
-            int amount = Properties.Settings.Default.TransposeAmount;
-
-            TransposeDelta += amount;
-            ModTranspose(amount);
-        }
-
-        /// <summary>
-        /// Transpose down
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnTranspoMinus_Click(object sender, EventArgs e)
-        {
-            int amount = Properties.Settings.Default.TransposeAmount;
-            TransposeDelta -= amount;
-            ModTranspose(-amount);
-        }      
-
-        private void ModTempo()
-        {
-            _tempo = TempoDelta * TempoOrig / 100;
-            _tempoplayed = _tempo;
-
-            // Change clock tempo
-            sequencer1.Tempo = _tempo;
-            
-
-            lblTempoValue.Text = string.Format("{0}%", TempoDelta);
-
-            // Update Midi Times            
-            _bpm = GetBPM(_tempo);            
-
-            // Update display duration
-            _duration = _tempo * (_totalTicks / _ppqn) / 1000000; //seconds
-            int Min = (int)(_duration / 60);
-            int Sec = (int)(_duration - (Min * 60));
             lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
 
-            DisplayFileInfos();            
-
         }
 
-        private void ModTranspose(int amount)
+        /// <summary>
+        /// Upadate MIDI times
+        /// </summary>
+        private void UpdateMidiTimes()
         {
-            btnTempoMinus.Enabled = false;
-            btnTranspoPlus.Enabled = false;
+            _totalTicks = sequence1.GetLength();
+            _tempo = sequence1.Tempo;
+            TempoOrig = _tempo;
+            _ppqn = sequence1.Division;
 
-            //int tp = TransposeOrig + TransposeDelta;
+            // Load tempos map
+            TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);            
 
-            lblTranspoValue.Text = string.Format("{0}", TransposeDelta);
+            _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. For sheetmusic offset
+            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);  // Real duration according to tempo changes
 
-            if (PlayerState == PlayerStates.Playing)
-                sequencer1.Stop();
+            _bpm = GetBPM(_tempo);
 
-            sequence1.Transpose(amount);
-
-            if (PlayerState == PlayerStates.Playing)
-                sequencer1.Continue();
-
-            // FAB : 16/09/2018 fixed redraw of scores
-            if (bSequencerAlwaysOn | bForceShowSequencer)
+            if (sequence1.Time != null)
             {
-                RedrawSheetMusic();                
-            }
+                _measurelen = sequence1.Time.Measure;
 
-            btnTempoMinus.Enabled = true;
-            btnTranspoPlus.Enabled = true;
-
-        }
-
-        private void KeyboardSelectTempo(KeyEventArgs e)
-        {
-            switch (e.KeyCode)
-            {
-                case Keys.Oemplus:
-                case Keys.Add:
-                    if (TempoDelta > 10)
-                        TempoDelta -= 10;
-                    ModTempo();
-                    break;
-
-                case Keys.D6:
-                case Keys.OemMinus:
-                case Keys.Subtract:
-                    if (TempoDelta < 200)
-                        TempoDelta += 10;
-                    ModTempo();
-                    break;
+                foreach (Track track in sequence1.tracks)
+                {
+                    track.MeasureLength = _measurelen;
+                }
             }
         }
 
-        #endregion
-
-
-        #region settings
-
-        private void AlertOutputDevice(string Name)
+        /// <summary>
+        /// Calculate BPM
+        /// </summary>
+        /// <param name="tempo"></param>
+        /// <returns></returns>
+        private int GetBPM(int tempo)
         {
-            if (Name == "Microsoft GS Wavetable Synth")
-                lblOutputDevice.ForeColor = Color.Red;
+            // see http://midi.teragonaudio.com/tech/midifile/ppqn.htm
+            const float kOneMinuteInMicroseconds = 60000000;
+            float BPM = kOneMinuteInMicroseconds / (float)tempo;
+
+            return (int)BPM;
+        }
+
+        /// <summary>
+        /// Display informations on midi file
+        /// </summary>
+        private void DisplayFileInfos()
+        {
+            // BEAT
+            beat = 1;
+            lblBeat.Text = "1|" + sequence1.Numerator;
+
+            int Min = (int)(_duration / 60);
+            int Sec = (int)(_duration - (Min * 60));
+
+            string tx;
+            tx = string.Format("Division: {0}", _ppqn) + "\n";
+            tx += string.Format("Tempo: {0}", _tempo) + "\n";
+            tx += string.Format("BPM: {0}", _bpm) + "\n";
+            tx += string.Format("TotalTicks: {0}", _totalTicks) + "\n";
+            tx += "Duree: " + string.Format("{0:00}:{1:00}", Min, Sec) + "\n";
+
+            if (sequence1.Format != sequence1.OrigFormat)
+                tx += "Midi Format: " + sequence1.Format.ToString() + " (Orig. Format: " + sequence1.OrigFormat.ToString() + ")";
             else
-                lblOutputDevice.ForeColor = Color.PaleGreen;
+                tx += "Midi Format: " + sequence1.Format.ToString();
+
+            lblInfosF.Text = tx;
         }
 
-        private void ResetPlaySettings()
+        private void DisplayFileInfos(int tempo)
         {
-            // Reset settings made for previous song
-            sldMainVolume.Value = 104;
-            TempoDelta = 100;
-            lblTempoValue.Text = string.Format("{0}%", TempoDelta);
-            TransposeDelta = 0;
-            lblTranspoValue.Text = string.Format("{0}", TransposeDelta);
-
-
-            // Mute melody track
-            if (Karaclass.m_MuteMelody == true || (currentPlaylist != null && currentPlaylistItem.MelodyMute == true))
-            {                
-                btnMute1.Checked = false;
-            }
-            else
-            {                
-                btnMute1.Checked = true;
-            }
+            _tempoplayed = tempo;
+            //double dur = _tempoplayed * (_totalTicks / _ppqn) / 1000000; //seconds            
+            //DisplaySongDuration(dur);
+                        
+            int bpm = GetBPM(tempo);
             
+            int Min = (int)(_duration / 60);
+            int Sec = (int)(_duration - (Min * 60));
+
+            string tx;
+            tx = string.Format("Division: {0}", _ppqn) + "\n";
+            tx += string.Format("Tempo: {0}", tempo) + "\n";
+            tx += string.Format("BPM: {0}", bpm) + "\n";
+            tx += string.Format("TotalTicks: {0}", _totalTicks) + "\n";
+            tx += "Duree: " + string.Format("{0:00}:{1:00}", Min, Sec) + "\n";
+
+            if (sequence1.Format != sequence1.OrigFormat)
+                tx += "Midi Format: " + sequence1.Format.ToString() + " (Orig. Format: " + sequence1.OrigFormat.ToString() + ")";
+            else
+                tx += "Midi Format: " + sequence1.Format.ToString();
+
+            
+            lblInfosF.Text = tx;
+        }
+
+        #endregion MIDI
+
+
+        #region SaveFile
+
+        /// <summary>
+        /// File was modified
+        /// </summary>
+        public void FileModified()
+        {
+            bfilemodified = true;
+            string fName = MIDIfileName;
+            if (fName != null && fName != "")
+            {
+                string fExt = Path.GetExtension(fName);             // Extension
+                fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
+
+                string fShortName = fName.Replace("*", "");
+                if (fShortName == fName)
+                    fName += "*";
+
+                fName += fExt;
+                SetTitle(fName);
+            }
+        }
+
+        /// <summary>
+        /// Save the midi file
+        /// </summary>
+        /// <param name="fileName"></param>
+        private void SaveFile(string fileName)
+        {
+            try
+            {
+                if (fileName != "")
+                {
+                    sequence1.SaveAsync(fileName);
+                }
+            }
+            catch (Exception errsave)
+            {
+                Console.Write(errsave.Message);
+            }
         }
 
 
+        /// <summary>
+        /// Save File
+        /// </summary>
+        private void SaveFileProc()
+        {
+            string fName = MIDIfileName;
+            string fPath = MIDIfilePath;
+            
+            if (MIDIfileFullPath == null && fName != "" && fPath != "")
+                MIDIfileFullPath = fPath + "\\" + fName;
 
 
-        #endregion
+            if (fPath == null || fPath == "" || fName == null || fName == "" || !File.Exists(MIDIfileFullPath))
+            {
+                SaveAsFileProc();
+                return;
+            }
 
 
-        #region chords analysis
-        private void btnChords_Click(object sender, EventArgs e)
+            InitSaveFile(MIDIfileFullPath);
+        }
+
+        /// <summary>
+        /// Menu File Save As
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuFileSaveAs_Click(object sender, EventArgs e)
+        {
+            SaveAsFileProc();
+        }
+
+        private void SaveAsFileProc()
+        {
+            string fName = MIDIfileName;
+            string fPath = MIDIfilePath;
+            string fullPath = MIDIfileFullPath;
+
+            string fullName; 
+            string defName;
+
+            
+            // search path
+            if (fPath == null || fPath == "")
+                fPath = Utilities.CreateNewMidiFile._DefaultDirectory;
+
+            // Search name
+            if (MIDIfileName == null || MIDIfileName == "")
+                fName = "New.mid";
+
+            #region search name
+
+            string defExt = Path.GetExtension(fName);                           // Extension
+            fullName = Utilities.Files.FindUniqueFileName(fullPath);    // Add (2), (3) etc.. if necessary    
+            defName = Path.GetFileNameWithoutExtension(fullName);               // Default name to propose to dialog
+
+            #endregion search name
+
+            string defFilter = "MIDI files (*.mid)|*.mid|Kar files (*.kar)|*.kar|All files (*.*)|*.*";
+            if (defExt == ".kar")
+                defFilter = "Kar files (*.kar)|*.kar|MIDI files (*.mid)|*.mid|All files (*.*)|*.*";
+
+            saveMidiFileDialog.Title = "Save MIDI file";
+            saveMidiFileDialog.Filter = defFilter;
+            saveMidiFileDialog.DefaultExt = defExt;
+            saveMidiFileDialog.InitialDirectory = @fPath;
+            saveMidiFileDialog.FileName = defName;
+
+            if (saveMidiFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = saveMidiFileDialog.FileName;
+
+                MIDIfileFullPath = fileName;
+                MIDIfileName = Path.GetFileName(fileName);
+                MIDIfilePath = Path.GetDirectoryName(fileName);
+
+                InitSaveFile(fileName);
+            }
+        }
+
+        /// <summary>
+        /// Save file: initialize events
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void InitSaveFile(string fileName)
         {
 
-            // Ferme le formulaire frmChords
-            //if (Application.OpenForms["frmChords"] != null)
-            //    Application.OpenForms["frmChords"].Close();
-            Application.OpenForms["frmChords"]?.Close();
+            MIDIfileName = fileName;
 
-            if (Application.OpenForms.OfType<frmChords>().Count() == 0)
-            {
-                try
-                {
-                    frmChords frmChords = new frmChords(outDevice, MIDIfileFullPath);
-                    frmChords.Show();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }            
+            progressBarPlayer.Visible = true;
+
+            sequence1.SaveProgressChanged += HandleSaveProgressChanged;
+            sequence1.SaveCompleted += HandleSaveCompleted;
+            SaveFile(fileName);
         }
 
-        #endregion
+
+        #endregion Save File
+
+
+        #region Locate form
+        /// <summary>
+        /// Locate form
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <returns></returns>
+        private TForm GetForm<TForm>()
+            where TForm : Form
+        {
+            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
+        }
+
+        #endregion Locate form
+
+        #endregion Utilities
     }
 
 }

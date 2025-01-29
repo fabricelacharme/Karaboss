@@ -1267,5 +1267,75 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("Chords", resourceCulture);
             }
         }
+        internal static string MeasuresPerLine
+        {
+            get
+            {
+                return ResourceManager.GetString("MeasuresPerLine", resourceCulture);
+            }
+        }
+        internal static string DisplayLyrics
+        {
+            get
+            {
+                return ResourceManager.GetString("DisplayLyrics", resourceCulture);
+            }
+        }
+        internal static string CellSize
+        {
+            get
+            {
+                return ResourceManager.GetString("CellSize", resourceCulture);
+            }
+        }
+        internal static string EditWords
+        {
+            get
+            {
+                return ResourceManager.GetString("EditWords", resourceCulture);
+            }
+        }
+        internal static string PianoTraining
+        {
+            get
+            {
+                return ResourceManager.GetString("PianoTraining", resourceCulture);
+            }
+        }
+        internal static string GuitarTraining
+        {
+            get
+            {
+                return ResourceManager.GetString("GuitarTraining", resourceCulture);
+            }
+        }
+        internal static string ChordsOriginFromLyrics
+        {
+            get
+            {
+                return ResourceManager.GetString("ChordsOriginFromLyrics", resourceCulture);
+            }
+        }
+        internal static string ChordsOriginFromXml
+        {
+            get
+            {
+                return ResourceManager.GetString("ChordsOriginFromXml", resourceCulture);
+            }
+        }
+        internal static string ChordsOriginFromDiscovery
+        {
+            get
+            {
+                return ResourceManager.GetString("ChordsOriginFromDiscovery", resourceCulture);
+            }
+        }       
+        internal static string ChordsOriginFromUserInput
+        {
+            get
+            {
+                return ResourceManager.GetString("ChordsOriginFromUserInput", resourceCulture);
+            }
+        }
     }
 }

@@ -44,7 +44,7 @@
             this.picWnd.Size = new System.Drawing.Size(405, 43);
             this.picWnd.TabIndex = 0;
             this.picWnd.TabStop = false;
-            this.picWnd.Resize += new System.EventHandler(this.picWnd_Resize);
+            this.picWnd.Resize += new System.EventHandler(this.PicWnd_Resize);
             // 
             // balls
             // 
@@ -53,7 +53,7 @@
             this.Controls.Add(this.picWnd);
             this.Name = "balls";
             this.Size = new System.Drawing.Size(405, 43);
-            this.Load += new System.EventHandler(this.picWnd_Load);
+            this.Load += new System.EventHandler(this.PicWnd_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picWnd)).EndInit();
             this.ResumeLayout(false);
 

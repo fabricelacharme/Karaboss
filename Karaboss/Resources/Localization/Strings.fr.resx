@@ -496,7 +496,7 @@
     <value>Le format  {0} a été choisi par  Karaboss car il possède plus de paroles ({1} syllabes)</value>
   </data>
   <data name="ChangeFormatLyrics" xml:space="preserve">
-    <value>Vous pourvez choisir le format {0}  ({1} syllabes) en cliquant sur le bouton 'Autres'</value>
+    <value>Vous pouvez choisir le format {0}  ({1} syllabes) en cliquant sur le bouton 'Autres'</value>
   </data>
   <data name="CurrentLyricFormatIs" xml:space="preserve">
     <value>The format actuel est  {0} ({1} syllabes)</value>
@@ -509,5 +509,35 @@
   </data>
   <data name="Chords" xml:space="preserve">
     <value>Accords</value>
+  </data>
+  <data name="MeasuresPerLine" xml:space="preserve">
+    <value>Mesures par ligne</value>
+  </data>
+  <data name="DisplayLyrics" xml:space="preserve">
+    <value>Afficher les paroles</value>
+  </data>
+  <data name="CellSize" xml:space="preserve">
+    <value>Largeur cellule</value>
+  </data>
+  <data name="EditWords" xml:space="preserve">
+    <value>Modifier les paroles</value>
+  </data>
+  <data name="PianoTraining" xml:space="preserve">
+    <value>Piano training</value>
+  </data>
+  <data name="GuitarTraining" xml:space="preserve">
+    <value>Guitar training</value>
+  </data>
+  <data name="ChordsOriginFromLyrics" xml:space="preserve">
+    <value>Les accords sont extraits des paroles</value>
+  </data>
+  <data name="ChordsOriginFromXml" xml:space="preserve">
+    <value>Les accords sont extraits du fichier Xml</value>
+  </data>
+  <data name="ChordsOriginFromDiscovery" xml:space="preserve">
+    <value>Les accords ont été automatiquement générés par Karaboss</value>
+  </data>
+  <data name="ChordsOriginFromUserInput" xml:space="preserve">
+    <value>Les accords sont saisis manuellement et seront enregistrés dans les paroles</value>
   </data>
 </root>

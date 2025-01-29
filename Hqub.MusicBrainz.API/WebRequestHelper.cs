@@ -34,6 +34,10 @@ namespace Hqub.MusicBrainz.API
                 {
                     throw e;
                 }
+                else
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
 
             return default(T);

@@ -48,9 +48,8 @@ using Karaboss.Pages.ABCnotation;
 using Karaboss.Mru;
 using MusicXml;
 using MusicTxt;
-using Sanford.Multimedia.Midi.Score;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
+
 
 namespace Karaboss
 {
@@ -200,9 +199,7 @@ namespace Karaboss
             }
 
         }
-
        
-
 
         #region Content Changed
         /// <summary>
@@ -499,18 +496,12 @@ namespace Karaboss
             }
 
             // Ferme le formulaire frmPianoTraining            
-            //if (Application.OpenForms["frmPianoTraining"] != null)
-            //    Application.OpenForms["frmPianoTraining"].Close();
             Application.OpenForms["frmPianoTraining"]?.Close();
 
             // Ferme le formulaire frmChords
-            //if (Application.OpenForms["frmChords"] != null)
-            //    Application.OpenForms["frmChords"].Close();
             Application.OpenForms["frmChords"]?.Close();
 
             // Ferme le formulaire frmGuitarTraining            
-            //if (Application.OpenForms["frmGuitarTraining"] != null)
-            //    Application.OpenForms["frmGuitarTraining"].Close();
             Application.OpenForms["frmGuitarTraining"]?.Close();
 
             ResetOutPutDevice();
@@ -568,18 +559,12 @@ namespace Karaboss
             }
 
             // Ferme le formulaire frmPianoTraining            
-            //if (Application.OpenForms["frmPianoTraining"] != null)
-            //    Application.OpenForms["frmPianoTraining"].Close();
             Application.OpenForms["frmPianoTraining"]?.Close();
 
             // Ferme le formulaire frmChords
-            //if (Application.OpenForms["frmChords"] != null)
-            //    Application.OpenForms["frmChords"].Close();
             Application.OpenForms["frmChords"]?.Close();
 
             // Ferme le formulaire frmGuitarTraining            
-            //if (Application.OpenForms["frmGuitarTraining"] != null)
-            //    Application.OpenForms["frmGuitarTraining"].Close();
             Application.OpenForms["frmGuitarTraining"]?.Close();
 
             ResetOutPutDevice();
@@ -614,35 +599,20 @@ namespace Karaboss
                 return;
             }
 
-            // Unzip MXL before
-            if (Karaclass.IsMXL(filename))
-            {
-                filename = UnzipFile(filename);
-                if (!File.Exists(filename))
-                {
-                    return;
-                }
-            }
-
+            
             // ferme le formulaire frmPlayer
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
                 Application.OpenForms["frmPlayer"].Close();
             }
 
-            // Ferme le formulaire frmPianoTraining            
-            //if (Application.OpenForms["frmPianoTraining"] != null)
-            //    Application.OpenForms["frmPianoTraining"].Close();
+            // Ferme le formulaire frmPianoTraining                        
             Application.OpenForms["frmPianoTraining"]?.Close();
 
             // Ferme le formulaire frmGuitarTraining            
-            //if (Application.OpenForms["frmGuitarTraining"] != null)
-            //    Application.OpenForms["frmGuitarTraining"].Close();
             Application.OpenForms["frmGuitarTraining"]?.Close();
 
             // Ferme le formulaire frmChords
-            //if (Application.OpenForms["frmChords"] != null)
-            //    Application.OpenForms["frmChords"].Close();
             Application.OpenForms["frmChords"]?.Close();
 
             ResetOutPutDevice();
@@ -651,8 +621,9 @@ namespace Karaboss
             frmChords.Show();
             frmChords.Activate();
 
-
         }
+
+       
 
         /// <summary>
         /// Open a file selected from the MRU list.
@@ -813,6 +784,10 @@ namespace Karaboss
 
         }
 
+        public void RefreshExplorer(string fullPath = "")
+        {
+            xplorerControl.RefreshContents(fullPath);
+        }
 
         #endregion functions
 
@@ -1872,7 +1847,7 @@ namespace Karaboss
         /// </summary>
         /// <typeparam name="TForm"></typeparam>
         /// <returns></returns>
-        private TForm getForm<TForm>()
+        private TForm GetForm<TForm>()
             where TForm : Form
         {
             return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
@@ -1893,7 +1868,7 @@ namespace Karaboss
             // Remove splash windows for sound fonts
             if (Application.OpenForms.OfType<frmLoading>().Count() > 0)
             {
-                frmLoading frmLoading = getForm<frmLoading>();
+                frmLoading frmLoading = GetForm<frmLoading>();
                 frmLoading.Close();
             }           
         }
@@ -1902,7 +1877,7 @@ namespace Karaboss
         {
             if (Application.OpenForms.OfType<frmSplashScreen>().Count() > 0)
             {
-                frmSplashScreen frmSplashScreen = getForm<frmSplashScreen>();
+                frmSplashScreen frmSplashScreen = GetForm<frmSplashScreen>();
                 frmSplashScreen.Msg(message);
             }
         }
@@ -2368,51 +2343,9 @@ namespace Karaboss
         /// Create a new score midi file
         /// </summary>
         private void NewMidiFile()
-        {
-            int numerator = 4;
-            int denominator = 4;
-            int division = 480;
-            int tempo = 500000;
-            int measures = 35;
-
-            // Display dialog windows new midi file
-            DialogResult dr; // = new DialogResult();
-            Sanford.Multimedia.Midi.Score.UI.frmNewMidiFile MidiFileDialog = new Sanford.Multimedia.Midi.Score.UI.frmNewMidiFile(numerator, denominator, division, tempo, measures);
-            dr = MidiFileDialog.ShowDialog();
-
-            if (dr == System.Windows.Forms.DialogResult.Cancel)
-            {
-                return;
-            }
-            
-            CreateNewMidiFile.Numerator = MidiFileDialog.Numerator;
-            CreateNewMidiFile.Denominator = MidiFileDialog.Denominator;
-            CreateNewMidiFile.Division = MidiFileDialog.Division;
-            CreateNewMidiFile.Tempo = MidiFileDialog.Tempo;
-            CreateNewMidiFile.Measures = MidiFileDialog.Measures;
-            CreateNewMidiFile.DefaultDirectory = this.xplorerControl.CurrentFolder;
-
-
-            // Test fab
-            string trackname = "Track1";
-            int programchange = 0;
-            int channel = 0;
-            decimal trkindex = 1;
-            int clef = 0;
-
-            //dr = new DialogResult();
-            Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog TrackDialog = new Sanford.Multimedia.Midi.Score.UI.frmNewTrackDialog(trackname, programchange, channel, trkindex, clef);
-            dr = TrackDialog.ShowDialog();
-
-            // TODO : if we are creating a new file, 
-            if (dr == DialogResult.Cancel)
-                return;
-
-            CreateNewMidiFile.trackname = TrackDialog.TrackName;
-            CreateNewMidiFile.programchange = TrackDialog.ProgramChange;
-            CreateNewMidiFile.channel = TrackDialog.MidiChannel;
-            CreateNewMidiFile.trkindex = trkindex;
-            CreateNewMidiFile.clef = TrackDialog.cle;
+        {            
+            if (!Utilities.CreateNewMidiFile.New(this.xplorerControl.CurrentFolder))
+                return;      
 
             DisplayMidiPlayer("new file", null, false);
         }              
@@ -2430,6 +2363,7 @@ namespace Karaboss
         }
 
         #endregion
+
 
         #region menu Edit
 
@@ -2855,32 +2789,7 @@ namespace Karaboss
 
         #endregion menus
 
-
-        #region functions
-        public void RefreshExplorer()
-        {
-            xplorerControl.RefreshContents();
-        }
-
-        #endregion
-
-
-        #region divers
-
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
-
-        #endregion divers
-
-
+      
         #region configuration control
 
         private void LoadConfigurationForm()

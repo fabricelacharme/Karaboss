@@ -296,6 +296,12 @@ namespace MusicTxt
             Division = Convert.ToInt32(ar[5]);
         }
 
+        
+        private void ReadKeySignature(string[] ar)
+        {
+            // TODO
+        }
+        
         private void ReadTimeSignature(string[] ar)
         {
             if (ar.Length != 7)
@@ -466,7 +472,7 @@ namespace MusicTxt
 
             ChannelMessageBuilder builder = new ChannelMessageBuilder();
             ChannelMessage pitchBendMessage;
-            int mask = 127;
+            //int mask = 127;
 
             // Build pitch bend message;
             builder.Command = ChannelCommand.PitchWheel;
@@ -559,7 +565,7 @@ namespace MusicTxt
         /// </summary>
         private void CreateTrack()
         {
-            ResetValues();
+            //ResetValues();
 
             track = new Track()
             {
@@ -576,7 +582,18 @@ namespace MusicTxt
 
             ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, track.MidiChannel, track.ProgramChange, 0);
             track.Insert(0, message);
-            track.insertTimesignature(Numerator, Denominator);
+
+            if (Numerator > 0 && Denominator > 0)
+                track.insertTimesignature(Numerator, Denominator);
+
+            track.insertTrackname(TrackName);
+
+            if (Volume >= 0 && Volume <= 15)
+                track.insertVolume(Channel, Volume);
+
+            if (Pan >= 0 && Pan <= 127)
+                track.insertPan(Channel, Pan);
+
             newTracks.Add(track);
 
             
@@ -584,6 +601,7 @@ namespace MusicTxt
         
         private void ResetValues()
         {
+            Volume = 0;
             Pan = 64;
             Reverb = 0;
             TrackName = "Track1";
@@ -648,16 +666,22 @@ namespace MusicTxt
                 throw new ArgumentException("Note Off Length");
             // format of line: Track, Time, Note_off_c, Channel, Note, Velocity
             MidiNote no;
+            int tracknumber = Convert.ToInt32(ar[0]);
             int ticks = Convert.ToInt32(ar[1]);
+            int channel = Convert.ToInt32(ar[3]);
             int notenumber = Convert.ToInt32(ar[4]);
+
+            if (channel == 15) 
+                Console.WriteLine("");
+
             if (newNotes.Count > 0)
             {
                 for (int i = 0; i < newNotes.Count; i++)
                 {
                     no = newNotes[i];
-                    if (no.Duration == 0 && no.Number == notenumber)
+                    if (no.Duration == 0 && no.Number == notenumber && no.Channel == channel)
                     {
-                        no.Duration = Convert.ToInt32(ar[1]) - n.StartTime;
+                        no.Duration = Convert.ToInt32(ar[1]) - no.StartTime;
                         track.addNote(no, false);
                         newNotes.RemoveAt(i);
                         break;
@@ -1413,6 +1437,9 @@ namespace MusicTxt
         /// </summary>
         private void CreateSequence()
         {
+            
+            Tempo = firstTempo;
+
             // Create new sequence
             sequence = new Sequence(Division)
             {
@@ -1428,7 +1455,11 @@ namespace MusicTxt
             for (int i = 0; i < newTracks.Count; i++)
             {
                 sequence.Add(newTracks[i]);
-            }            
+            }
+
+            // Insert Tempo in track 0
+            if (sequence.tracks.Count > 0)
+                sequence.tracks[0].insertTempo(Tempo, 0);
 
             // Tags to sequence
             sequence.CloneTags();

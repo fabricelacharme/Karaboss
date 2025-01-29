@@ -21,20 +21,20 @@ namespace Karaboss.Lrc.SharedFramework
                 if (_offset != 0)
                     _tmptimeline = _tmptimeline - _offset;  
                 int MSec = 0, Sec = 0, Min = 0; // Msec 10
-                if (_tmptimeline > 99)
+                if (_tmptimeline > 999)
                 {
-                    MSec = _tmptimeline % 100;
-                    Sec = Convert.ToInt32(Math.Floor(_tmptimeline / 100.0));
+                    MSec = _tmptimeline % 1000;
+                    Sec = Convert.ToInt32(Math.Floor(_tmptimeline / 1000.0));
                 }
                 else
-                    return $"00:00.{_tmptimeline:D2}";
+                    return $"00:00.{_tmptimeline:D3}";
 
                 if (Sec > 59)
                 {
                     Min = Convert.ToInt32(Math.Floor(Sec / 60.0));
                     Sec = Sec % 60;
                 }
-                return $"{Min:D2}:{Sec:D2}.{MSec:D2}";
+                return $"{Min:D2}:{Sec:D2}.{MSec:D3}";
             }
 
             set
@@ -51,9 +51,9 @@ namespace Karaboss.Lrc.SharedFramework
                     Min = Convert.ToInt32(Regex.Match(value, @"^\d+(?=:)").Value);
                     Sec = Convert.ToInt32(Regex.Match(value, @"(?<=:)\d+(?=\.)").Value != "" ? Regex.Match(value, @"(?<=:)\d+(?=\.)").Value : Regex.Match(value, @"(?<=:)\d+$").Value);
                     MSec = Convert.ToInt32(Regex.Match(value, @"(?<=\.)\d+$").Value != "" ? Regex.Match(value, @"(?<=\.)\d+$").Value : "0"); // 00:37
-                    if (MSec > 99)
+                    if (MSec > 999)
                         MSec = Convert.ToInt32(Math.Round(MSec / 10.0));
-                    int tl = MSec + Sec * 100 + Min * 100 * 60;
+                    int tl = MSec + Sec * 1000 + Min * 1000 * 60;
                     if (tl > 0)
                         _timeline = tl;
                     else

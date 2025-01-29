@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2024 Fabrice Lacharme
+/* Copyright (c) 2025 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -43,6 +43,14 @@ namespace ChordAnalyser.UI
 {
     public partial class ChordRenderer : Control
     {
+        /*
+         *  Control displaying bitmaps of guitar chords or piano chords
+         * 
+         * 
+         * 
+         * 
+         * */
+
 
         #region events
         public event OffsetChangedEventHandler OffsetChanged;
@@ -106,7 +114,7 @@ namespace ChordAnalyser.UI
         // Chords
         // 2 chords by measure : Chord 1, chord 2
         //public Dictionary<int, (string, string)> Gridchords { get; set; }
-        public Dictionary<int, string> GridBeatChords { get; set; }
+        public Dictionary<int, (string, int)> GridBeatChords { get; set; }
 
         // New search (by beat)        
         private int _chordsCount = 0;
@@ -222,33 +230,7 @@ namespace ChordAnalyser.UI
             this.SetStyle(ControlStyles.UserPaint, true);
             this.SetStyle(ControlStyles.ResizeRedraw, true);
         }
-
-        /*
-        public void TransferByMeasureToByBeat(int numerator, int measures)
-        {
-            GridBeatChords = new Dictionary<int, string>();
-
-            int beats = numerator * measures;
-            for (int i = 1; i <= beats; i++)
-            {
-                GridBeatChords.Add(i, "");
-            }
-
-            int beat;
-            
-            for (int measure = 1; measure <= Gridchords.Count; measure++ )
-            {
-                beat = 1 + (measure - 1) * numerator; 
-                string item1 = Gridchords[measure].Item1;
-                GridBeatChords[beat] = item1;
-
-                beat = 1 + (measure - 1) * numerator + (numerator/2);
-                string item2 = Gridchords[measure].Item2;
-                GridBeatChords[beat] = item2;
-
-            }
-        }
-        */
+       
 
         /// <summary>
         /// Create a new dictionnary with only real chords (eliminate empty & no chords)
@@ -265,7 +247,7 @@ namespace ChordAnalyser.UI
 
                 for (int i = 1; i <= GridBeatChords.Count; i++)
                 {
-                    string t = GridBeatChords[i];
+                    string t = GridBeatChords[i].Item1;
 
                     if (t != "" && t != EmptyChord && t != NoChord && t != currentchord)
                     {
@@ -311,7 +293,7 @@ namespace ChordAnalyser.UI
             if (!GridBeatChords.ContainsKey(beat))
                 return;
 
-            string ChordName = GridBeatChords[beat];
+            string ChordName = GridBeatChords[beat].Item1;
             // If the chord chord played is different than the previous one, we have to offset the control
             if (ChordName != NoChord && ChordName != "" && ChordName != EmptyChord && ChordName != _currentChordName)
             {
@@ -331,25 +313,23 @@ namespace ChordAnalyser.UI
                     int offset = (index - 2) * LargeurCellule;
                     int remainingwidth = Width - offset;
 
-                    if (offset <= 0)
+                    if (offset <= 0)   // idem index <= 2
                     {
                         // At start, do not offset until we have passed 2 cells
                         pnlCanvas.Invalidate();
                     }
                     else
-                    {
+                    {                        
                         if (remainingwidth >= Parent.Width - LargeurCellule)
-                        {                            
+                        {                                             
                             // if the remaining display width of the control is greater than that of the parent control, then you can shift
-                            this.OffsetX = offset;
+                            this.OffsetX = offset;                            
                         }
-                        else
-                        {
-                            // if the remaining display width of the control is less than that of the parent control, then we no longer shift
-                            int z = (Width - Parent.Width) / LargeurCellule;                            
-                            this.OffsetX = (z + 1) * LargeurCellule;
+                        else if (remainingwidth < Parent.Width - LargeurCellule)
+                        {                            
+                            offset = Width - Parent.Width - LargeurCellule;                            
                             pnlCanvas.Invalidate();
-                        }
+                        }                        
                     }                    
                 }
             }
@@ -405,14 +385,18 @@ namespace ChordAnalyser.UI
                 return;
             
             string ChordName;
-            string currentChordName = string.Empty;
-           
+            string currentChordName = string.Empty;            
+
             int x = _LinesWidth - 1;
             bool bChordPlayed = false;
 
             for (int i = 1; i <= GridBeatChords.Count; i++)
             {
-                ChordName = GridBeatChords[i];
+                ChordName = GridBeatChords[i].Item1;
+                if (ChordName.Length > 0 && ChordName.IndexOf("/") != -1)
+                {
+                    ChordName = ChordName.Substring(0, ChordName.IndexOf("/"));
+                }
 
                 // Draw chords if they are different from previous               
                 if (ChordName != "" && ChordName != EmptyChord && ChordName != currentChordName && ChordName != NoChord)
@@ -464,7 +448,7 @@ namespace ChordAnalyser.UI
             {
                 try
                 {
-                    ResourceManager rm = Resources.ResourceManager;
+                    ResourceManager rm = Resources.ResourceManager;                    
                     Bitmap chordImage = (Bitmap)rm.GetObject(ChordName);
 
                     // chord played is bigger
@@ -489,10 +473,14 @@ namespace ChordAnalyser.UI
                         bmp.Dispose();
 
                     }
+                    else
+                    {
+                        Console.WriteLine(ChordName + " *************** missing chord ******************");
+                    }
                 }
                 catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
+                {                    
+                    MessageBox.Show(ex.Message);
                 }
             }
         }
@@ -527,7 +515,7 @@ namespace ChordAnalyser.UI
 
         private void pnlCanvas_Paint(object sender, PaintEventArgs e)
         {                        
-            if (GridBeatChords !=null && GridBeatChords.Count > 0)
+            if (GridBeatChords != null && GridBeatChords.Count > 0)
             {
                 Rectangle clip =
                     new Rectangle(

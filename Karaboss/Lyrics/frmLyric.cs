@@ -65,7 +65,7 @@ namespace Karaboss
 
         #region private
 
-        private LyricsMgmt myLyricsMgmt;
+        public LyricsMgmt myLyricsMgmt {  get; set; }
 
         private Font _karaokeFont;        
         private int currentTextPos = 0;
@@ -371,14 +371,12 @@ namespace Karaboss
 
 
         public List<pictureBoxControl.plLyric> plLyrics;
-        
-                                    
-       
-        public frmLyric(LyricsMgmt myLyricsMgmt)
+                                                  
+        public frmLyric(LyricsMgmt _myLyricsMgmt)
         {
             InitializeComponent();
 
-            this.myLyricsMgmt = myLyricsMgmt;
+            this.myLyricsMgmt = _myLyricsMgmt;
 
             // Graphic optimization
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
@@ -502,11 +500,17 @@ namespace Karaboss
                 chord = plL.Element.Item1;
                 lyric = plL.Element.Item2;
 
-                if (myLyricsMgmt.bShowChords)
+                if (Karaclass.m_ShowChords)
                 {
                     // if bShowChords, the chords will be displayed above the lyrics, so clean chords included in lyrics
-                    if (myLyricsMgmt != null && myLyricsMgmt.bHasChordsInLyrics)
+                    if (myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == LyricsMgmt.ChordsOrigins.Lyrics)
                     {
+                        
+                        if ( myLyricsMgmt.RemoveChordPattern == null )
+                        {
+                            MessageBox.Show("RemoveChordsPattern is null", "Karaboss",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
                         lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
                     }
                 }
@@ -721,7 +725,7 @@ namespace Karaboss
         
         public void StartTimerBalls()
         {
-            picBalls.pBallsNumber = 22;
+            picBalls.BallsNumber = 22;
             picBalls.Start();
         }
 
@@ -837,52 +841,155 @@ namespace Karaboss
 
         #endregion form load close resize
 
-       
 
         #region pnlWindow
 
-        bool bPnlVisible = false;
-        DateTime startTime;        
-
-
-        private void MouseMoveHandler(object sender, MouseEventArgs e)
-        {
-            
-            if (bPnlVisible == false && e.Location != Mouselocation)
-            {
-                Mouselocation = e.Location;
-                Cursor.Show();
-                
-
-                bPnlVisible = true;
-                pnlWindow.Visible = true;
-                startTime = DateTime.Now;
-
-                timer1.Enabled = true;
-                timer1.Start();
-
-            }
-        }
-    
         /// <summary>
-        /// Timer used to hide panel
+        /// Edit lyrics
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Timer1_Tick(object sender, EventArgs e)
+        private void btnEditLyrics_Click(object sender, EventArgs e)
         {
-            TimeSpan dur = DateTime.Now - startTime;
-            if (dur > TimeSpan.FromSeconds(3))
+            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
-                timer1.Stop();
-                
-                pnlWindow.Visible = false;
-                bPnlVisible = false;
-                
-                Cursor.Hide();
+                frmPlayer frmPlayer = GetForm<frmPlayer>();
+                frmPlayer.DisplayEditLyricsForm();
             }
         }
-        
+
+
+        /// <summary>
+        /// Export lyrics to text editor (notepad, notepad++ etc...)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>        
+        private void btnExportLyricsToText_Click(object sender, EventArgs e)
+        {
+            #region check
+            if (myLyricsMgmt.Lyrics == null || myLyricsMgmt.Lyrics == "")
+                return;
+            #endregion            
+
+            string tx;
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            string file = path + "\\lyrics.txt";
+
+            //tx = lyrics;
+            // Lyrics not modified
+            tx = myLyricsMgmt.Lyrics;
+            tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
+            tx = tx.Replace(_InternalSepLines, "\r\n");
+            System.IO.File.WriteAllText(@file, tx);
+
+            try
+            {
+                System.Diagnostics.Process.Start(@file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+        #region lyrics & chords
+
+        /// <summary>
+        /// CheckBox: Display chords when checked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkChords_CheckedChanged(object sender, EventArgs e)
+        {                                    
+            // Hide or Show the button for displaying lyrics + chords
+            btnExportLyricsChords.Visible = chkChords.Checked;
+            btnEditLyricsChords.Visible= chkChords.Checked;
+
+            // User has manually changed the display of chords
+            if (chkChords.Checked != Karaclass.m_ShowChords)
+            {
+                // Set cursor as hourglass
+                Cursor.Current = Cursors.WaitCursor;
+
+                Karaclass.m_ShowChords = chkChords.Checked;
+                pBox.bShowChords = Karaclass.m_ShowChords;
+
+                // Save option
+                Properties.Settings.Default.bShowChords = Karaclass.m_ShowChords;
+                Properties.Settings.Default.Save();
+
+                // Reload lyrics with choosen options
+                myLyricsMgmt.ResetDisplayChordsOptions(chkChords.Checked);
+                                               
+                // Load modified lyrics into the picturebox
+                LoadSong(myLyricsMgmt.plLyrics);
+
+                // Refresh score with or without chords
+                frmPlayer frmPlayer = GetForm<frmPlayer>();
+                frmPlayer.RefreshChordsSheetMusic();
+
+                // Set cursor as default
+                Cursor.Current = Cursors.Default;
+
+            }
+
+        }
+
+        /// <summary>
+        /// Export lyrics and chords to text editor (notepad, notepad++, etc...)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>       
+        private void btnExportLyricsChordsToText_Click(object sender, EventArgs e)
+        {
+            string tx;
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            string file = path + "\\lyrics.txt";
+
+            // Chords are in the lyrics
+            if (myLyricsMgmt.bHasChordsInLyrics)
+            {
+                if (myLyricsMgmt.GridBeatChords == null)
+                {
+                    myLyricsMgmt.FillGridBeatChordsWithLyricsChords();
+                }
+            }
+            else
+            {
+                // Chords have to be guessed with a vertical search
+                myLyricsMgmt.PopulateDetectedChords();
+            }
+
+            tx = myLyricsMgmt.GetLyricsLinesWithChords();
+            System.IO.File.WriteAllText(@file, tx);
+
+            try
+            {
+                System.Diagnostics.Process.Start(@file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Edit lyrics & chords
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnEditLyricsChords_Click(object sender, EventArgs e)
+        {
+            frmPlayer frmPlayer = GetForm<frmPlayer>();
+            frmPlayer.DisplayEditLyricsChordsForm();
+        }
+
+        #endregion lyrivs & chords
+
+
+        #region panel events
+
         /// <summary>
         /// Close form
         /// </summary>
@@ -928,126 +1035,57 @@ namespace Karaboss
             frmLyrOptions.ShowDialog();
         }
 
+
+        bool bPnlVisible = false;
+        DateTime startTime;
+
         /// <summary>
-        /// Export words in notepad
+        /// Show panel on mouse move with a timer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnFrmWords_Click(object sender, EventArgs e)
+        private void MouseMoveHandler(object sender, MouseEventArgs e)
         {
-            #region check
-            if (myLyricsMgmt.Lyrics == null || myLyricsMgmt.Lyrics == "")
-                return;
-            #endregion
 
-            //mnuWords.Show(btnFrmWords, 1, btnFrmWords.Height);
-
-            string tx;
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-            string file = path + "\\lyrics.txt";
-
-            //tx = lyrics;
-            // Lyrics not modified
-            tx = myLyricsMgmt.Lyrics;
-            tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
-            tx = tx.Replace(_InternalSepLines, "\r\n");
-            System.IO.File.WriteAllText(@file, tx);
-
-            try
+            if (bPnlVisible == false && e.Location != Mouselocation)
             {
-                System.Diagnostics.Process.Start(@file);
+                Mouselocation = e.Location;
+                Cursor.Show();
+
+                bPnlVisible = true;
+                pnlWindow.Visible = true;
+                startTime = DateTime.Now;
+
+                timer1.Enabled = true;
+                timer1.Start();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-        }
-    
-
-        /// <summary>
-        /// CheckBox: Display chords when checked
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void chkChords_CheckedChanged(object sender, EventArgs e)
-        {                                    
-            // Hide or Show the button for displaying lyrics + chords
-            btnLyricsChords.Visible = chkChords.Checked;
-
-            // User has manually changed the display of chords
-            if (chkChords.Checked != Karaclass.m_ShowChords)
-            {
-                Karaclass.m_ShowChords = chkChords.Checked;
-                pBox.bShowChords = Karaclass.m_ShowChords;
-
-                // Save option
-                Properties.Settings.Default.bShowChords = Karaclass.m_ShowChords;
-                Properties.Settings.Default.Save();
-
-                // Reload lyrics with choosen options
-                myLyricsMgmt.ResetDisplayChordsOptions(chkChords.Checked);
-                                               
-                // Load modified lyrics into the picturebox
-                LoadSong(myLyricsMgmt.plLyrics);                
-
-            }
-
         }
 
         /// <summary>
-        /// Display Words with lyrics in a text file
+        /// Timer used to hide panel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnLyricsChords_Click(object sender, EventArgs e)
+        private void Timer1_Tick(object sender, EventArgs e)
         {
-            string tx;
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-            string file = path + "\\lyrics.txt";
-
-            // Chords are in the lyrics
-            if (myLyricsMgmt.bHasChordsInLyrics)
-            {                
-                if (myLyricsMgmt.GridBeatChords == null)
-                {
-                    myLyricsMgmt.FillGridBeatChordsWithLyricsChords();            
-                }                                
-            }
-            else
+            TimeSpan dur = DateTime.Now - startTime;
+            if (dur > TimeSpan.FromSeconds(3))
             {
-                // Chords have to be guessed with a vertical search
-                myLyricsMgmt.PopulateDetectedChords();                                                
+                timer1.Stop();
+
+                pnlWindow.Visible = false;
+                bPnlVisible = false;
+
+                Cursor.Hide();
             }
-
-            tx = myLyricsMgmt.GetLyricsLinesWithChords();
-
-            //myLyricsMgmt.CleanGridBeatChords();
-            //tx = myLyricsMgmt.DisplayWordsAndChords();
-            //tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
-            //tx = tx.Replace(_InternalSepLines, "\r\n");
-
-            System.IO.File.WriteAllText(@file, tx);
-
-            try
-            {
-                System.Diagnostics.Process.Start(@file);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
         }
-
-
         private void PnlWindow_Resize(object sender, EventArgs e)
         {
             btnFrmClose.Top = 1;
             btnFrmMax.Top = btnFrmClose.Top + btnFrmClose.Height + 1;
             btnFrmMin.Top = btnFrmMax.Top + btnFrmMax.Height + 1;
             btnFrmOptions.Top = btnFrmMin.Top + btnFrmMin.Height + 1;
-            btnFrmWords.Top = btnFrmOptions.Top + btnFrmOptions.Height + 1;
+            btnExportLyricsToText.Top = btnFrmOptions.Top + btnFrmOptions.Height + 1;
         }
 
         private bool dragging = false;
@@ -1086,21 +1124,9 @@ namespace Karaboss
         {
             btnFrmClose.Image = Properties.Resources.Close;
         }
-      
-        /// <summary>
-        /// Change lyrics
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnChangeWords_Click(object sender, EventArgs e)
-        {
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
-            {
-                frmPlayer frmPlayer = GetForm<frmPlayer>();
-                frmPlayer.DisplayEditLyricsForm();
-            }
 
-        }
+
+        #endregion panel events
 
         #endregion pnlWindow        
 

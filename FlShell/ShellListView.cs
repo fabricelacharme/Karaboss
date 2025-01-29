@@ -2140,7 +2140,7 @@ namespace FlShell
 
 
                 #region menu playlist items
-                string plName = string.Empty;
+                string plName; // = string.Empty;
                 MFT ichecked = MFT.MFT_BYCOMMAND;
                 
                 if ( m_allPlaylists.GetLength(0) > 0)
@@ -2258,7 +2258,7 @@ namespace FlShell
         protected override void WndProc(ref System.Windows.Forms.Message m)
         {
             //For send to menu in the ListView context menu
-            HResult hr = 0;
+            HResult hr; // = 0;
             if ((m.Msg == (int)WM.INITMENUPOPUP) || (m.Msg == (int)WM.MEASUREITEM) || (m.Msg == (int)WM.DRAWITEM))
             {
                 if (m_WindowsContextMenu.winMenu2 != null)
@@ -2283,7 +2283,7 @@ namespace FlShell
             {
                 if (m_WindowsContextMenu.winMenu3 != null)
                 {
-                    IntPtr lpresult = IntPtr.Zero;
+                    IntPtr lpresult; // = IntPtr.Zero;
                     hr = m_WindowsContextMenu.winMenu3.HandleMenuMsg2(m.Msg, m.WParam, m.LParam, out lpresult);
                     if (hr == 0)
                         return;
@@ -2392,7 +2392,7 @@ namespace FlShell
             DragDropEffects effect;
 
             // Drag multiple items located in the same folder
-            IntPtr dataObjectPtr = IntPtr.Zero;
+            IntPtr dataObjectPtr;// = IntPtr.Zero;
             dataObjectPtr = ShellHelper.GetIDataObject(SelectedItems);            
             Ole32.DoDragDrop(dataObjectPtr, this, DragDropEffects.All, out effect);                    
         }

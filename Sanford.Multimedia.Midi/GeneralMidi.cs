@@ -502,6 +502,8 @@ namespace Sanford.Multimedia.Midi
             MidiTags.TagTitle = "";
         }
     }
+
+    /*
     /// <summary>
     /// Class to store informations when creating a new midi file
     /// </summary>
@@ -532,5 +534,5 @@ namespace Sanford.Multimedia.Midi
         public static string DefaultDirectory { get; set; }
 
     }
-
+    */
 }

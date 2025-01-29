@@ -377,7 +377,7 @@ namespace Karaboss
             this.pianoRollControl2.Velocity = 100;
             this.pianoRollControl2.xScale = 0.1D;
             this.pianoRollControl2.yScale = 20;
-            this.pianoRollControl2.zoomx = 1F;
+            this.pianoRollControl2.Zoomx = 1F;
             // 
             // pnlRight
             // 
@@ -634,7 +634,7 @@ namespace Karaboss
             this.Controls.Add(this.pnlTop);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmPianoRoll";
-            this.Text = "frmPianoRollcs";
+            this.Text = "Karaboss - Piano Roll";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmPianoRoll_FormClosing);
             this.Load += new System.EventHandler(this.FrmPianoRoll_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmPianoRoll_KeyDown);
