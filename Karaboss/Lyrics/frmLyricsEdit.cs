@@ -2226,8 +2226,10 @@ namespace Karaboss
             string cr = "\r\n";
             string strSpaceBetween;
             bool bSpaceBetwwen = false;
-            bool bMaxLength = true;
-            int MaxLength = 30;
+            bool bStartLine;
+            bool bControlLength = true;
+            int MaxLength = 38;
+            string strPartialLine = string.Empty;
 
             // Space between time and lyrics [00:02.872]lyric
             if (bSpaceBetwwen)
@@ -2235,7 +2237,12 @@ namespace Karaboss
             else
                 strSpaceBetween = string.Empty;
 
-            
+            #region meta data
+
+            // List to store lines
+            List<string> lstHeaderLines = new List<string>();
+
+            // Store meta datas
             List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
             List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
             string Tag;
@@ -2247,12 +2254,21 @@ namespace Karaboss
                 Tag = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(Tag) : Tag;
                 Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
                 if (Tag != "")
-                    lrcs += "[" + TagName + strSpaceBetween + Tag + "]" + cr;
+                {
+                    sLine = "[" + TagName + strSpaceBetween + Tag + "]";
+                    // lrcs += sLine + cr;
+                    lstHeaderLines.Add(sLine);
+                }
             }
+            #endregion meta data
 
-            bool bStartLine = true;            
 
-            // Save line by line
+            #region List of lyrics
+
+            // Store lyrics in a list
+            // sTime, sType, sLyric
+            List<(string, string, string)> lstLyricsItems = new List<(string, string, string)>();
+            
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
                 vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
@@ -2261,71 +2277,202 @@ namespace Karaboss
 
                 if (vTime != null && vLyric != null && vType != null)
                 {
+                    // lyrics: Trim all and replace underscore by a space
                     sLyric = vLyric.ToString().Trim();
-                    sLyric = sLyric.Replace("_", " ");          // new 23/01/2025
+                    sLyric = sLyric.Replace("_", " ");
+
                     sType = vType.ToString().Trim();
+                    sTime = "[" + vTime.ToString() + "]";
 
-                    if (sLyric != "" && sType != "cr" && sType != "par")
+                    if (sType != "cr" && sType != "par")
                     {
-
-                        // Remove chords
-                        if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)
-                            sLyric = Regex.Replace(sLyric, _myLyricsMgmt.RemoveChordPattern, @"");
-
-                        // Remove accents
-                        sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
-
-                        //Uppercase letters
-                        sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
-
-                        // Remove non alphanumeric chars
-                        sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
-
-                        if (sLyric.Trim().Length > 0)
+                        if (sLyric != "")   // Universal code for syllabes & lines: lyrics like " " can be added
                         {
-                            
-                            if (bStartLine)
-                            {
-                                sTime = vTime.ToString();
-                                sLine = "[" + sTime + "]" + strSpaceBetween + sLyric;
-                                bStartLine = false;
-                            }
-                            else
-                            {                                                                
-                                // Line continuation
-                                sLine += sLyric;                                
-                            }
-                        }
+                            // Remove chords
+                            if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)
+                                sLyric = Regex.Replace(sLyric, _myLyricsMgmt.RemoveChordPattern, @"");
 
+                            // Remove accents
+                            sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
+
+                            //Uppercase letters
+                            sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
+
+                            // Remove non alphanumeric chars
+                            sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
+
+                            lstLyricsItems.Add((sTime, sType, sLyric));
+                        }
                     }
-                    else if ((sType == "cr" || sType == "par"))
+                    else
                     {
-                        // =======================
-                        // Start new line    
-                        // =======================
-                        // Remove last space
-                        if (sLine.Length > 0 && sLine.EndsWith(" "))
-                            sLine = sLine.Remove(sLine.Length - 1, 1);
-
-                        // Save current line
-                        if (sLine != "")
-                        {                           
-                            // Add new line
-                            lrcs += sLine + cr;
-                        }
-
-                        // Reset all
-                        bStartLine = true;
-                        sLine = string.Empty;                        
+                        lstLyricsItems.Add((sTime, sType, sLyric));
                     }
                 }
             }
+            #endregion List of Lyrics
 
+
+            #region List of Lines
+
+            // Store lyrics in lines without cut
+
+            // List to store lines
+            List<string> lstLines = new List<string>();
+
+            bStartLine = true;
+            // sTime, sType, sLyric
+            for (int i = 0; i < lstLyricsItems.Count; i++)
+            {
+                sTime = lstLyricsItems[i].Item1;
+                sType = lstLyricsItems[i].Item2;
+                sLyric = lstLyricsItems[i].Item3;
+
+                if (sType == "text")      // Do not add empty lyrics to a line ?
+                {
+                                        
+                    if (bStartLine)
+                    {
+                        if (sLyric.Length > 0 && sLyric.StartsWith(" "))
+                            sLyric = sLyric.Remove(0, 1);
+                        sLine = sTime + strSpaceBetween + sLyric;    // time + lyric for the beginning of a line
+                        bStartLine = false;
+                    }
+                    else
+                    {
+                        // Line continuation
+                        sLine += sLyric; // only lyric for the continuation of a line
+                    }                    
+                }
+                else
+                {
+
+                    // Remove last space
+                    if (sLine.Length > 0 && sLine.EndsWith(" "))
+                        sLine = sLine.Remove(sLine.Length - 1, 1);
+
+                    // Save current line
+                    if (sLine != "")
+                    {
+                        // Add new line
+                        lstLines.Add(sLine);
+                        //lrcs += sLine + cr;
+                    }
+
+                    // Reset all
+                    bStartLine = true;
+                    sLine = string.Empty;                    
+                }
+            }
             // Save last line
             if (sLine != "")
-            {                
+            {
+                //lrcs += sLine + cr;
+                lstLines.Add(sLine);
+            }
+
+            #region deleteme
+            /*
+            // Store lyrics in lines with cuts
+            bStartLine = true;
+            // sTime, sType, sLyric
+            for (int i = 0; i < lstLyricsItems.Count; i++)
+            {
+                sTime = lstLyricsItems[i].Item1;
+                sType = lstLyricsItems[i].Item2;
+                sLyric = lstLyricsItems[i].Item3;
+
+                if (sType == "text")      // Do not add empty lyrics to a line ?
+                {
+                    // Length control: Can we add the next lyric to the current line ?
+                    // Is it a cut inside a word ???????????????????????????????????????????????
+                    if (bControlLength && (strPartialLine + sLyric).Length > MaxLength)
+                    {
+                        // if not: save current line and start a new one with this lyric
+                        // Remove last space
+                        if (sLine.Length > 0 && sLine.EndsWith(" "))
+                            sLine = sLine.Remove(sLine.Length - 1, 1);
+                        // Save current line
+                        lrcs += sLine + cr;
+
+                        // Start a new line
+                        if (sLyric.Length > 0 && sLyric.StartsWith(" "))
+                            sLyric = sLyric.Remove(0, 1);
+                        sLine = sTime + strSpaceBetween + sLyric;
+                        bStartLine = false;
+                        strPartialLine = sLyric;
+                    }
+                    else
+                    {
+                        // No length control
+                        strPartialLine += sLyric;
+                        if (bStartLine)
+                        {
+                            if (sLyric.Length > 0 && sLyric.StartsWith(" "))
+                                sLyric = sLyric.Remove(0, 1);
+                            sLine = sTime + strSpaceBetween + sLyric;    // time + lyric for the beginning of a line
+                            bStartLine = false;
+                        }
+                        else
+                        {
+                            // Line continuation
+                            sLine += sLyric; // only lyric for the continuation of a line
+                        }
+                    }
+                }
+                else
+                {
+
+                    // Remove last space
+                    if (sLine.Length > 0 && sLine.EndsWith(" "))
+                        sLine = sLine.Remove(sLine.Length - 1, 1);
+
+                    // Save current line
+                    if (sLine != "")
+                    {
+                        // Add new line
+                        lrcs += sLine + cr;
+                    }
+
+                    // Reset all
+                    bStartLine = true;
+                    sLine = string.Empty;
+                    strPartialLine = string.Empty;
+                }
+            }
+            // Save last line
+            if (sLine != "")
+            {
                 lrcs += sLine + cr;
             }
+            */
+            #endregion deleteme
+
+            #endregion List of lines
+
+
+
+            List<string[]> lstWords = new List<string[]>(); 
+            string[] words;
+            for (int i = 0; i < lstLines.Count; i++)
+            {
+                sLine = lstLines[i];
+                words = sLine.Split(' ');
+                lstWords.Add(words);
+            }
+
+
+            #region send all to string 
+            lrcs = string.Empty;
+            for (int i = 0; i < lstHeaderLines.Count; i++)
+            {
+                lrcs += lstHeaderLines[i] + cr;
+            }
+            for (int i = 0; i < lstLines.Count; i++)
+            {
+                lrcs += lstLines[i] + cr;
+            }
+            #endregion send all to string
 
             try
             {
