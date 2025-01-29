@@ -1,12 +1,42 @@
-﻿using System;
+﻿#region License
+
+/* Copyright (c) 2025 Fabrice Lacharme
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), to 
+ * deal in the Software without restriction, including without limitation the 
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+ * sell copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software. 
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+ * THE SOFTWARE.
+ */
+
+#endregion
+
+#region Contact
+
+/*
+ * Fabrice Lacharme
+ * Email: fabrice.lacharme@gmail.com
+ */
+
+#endregion
+
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace Karaboss.Utilities
 {
@@ -290,7 +320,279 @@ namespace Karaboss.Utilities
             return tic;
         }
 
-     
+
+        #region LRC
+
+        /// <summary>
+        /// Returns lyrics by lines 
+        /// format [00:08.834]QUAND J'AI RENCONTRE JOSEPHINE"
+        /// </summary>
+        /// <param name="lstLyricsItems"></param>
+        /// <param name="strSpaceBetween"></param>
+        /// <returns></returns>
+        public static List<string> GetLrcLines(List<(string, string, string)> lstLyricsItems, string strSpaceBetween)
+        {
+            List<string> lstLines = new List<string>();
+
+            bool bStartLine;
+            string sTime;
+            string sType;
+            string sLyric;
+            string sLine = string.Empty;
+
+            bStartLine = true;
+
+            try
+            {
+                // sTime, sType, sLyric
+                for (int i = 0; i < lstLyricsItems.Count; i++)
+                {
+                    sTime = lstLyricsItems[i].Item1;
+                    sType = lstLyricsItems[i].Item2;
+                    sLyric = lstLyricsItems[i].Item3;
+
+                    if (sType == "text")      // Do not add empty lyrics to a line ?
+                    {
+
+                        if (bStartLine)
+                        {
+                            if (sLyric.Length > 0 && sLyric.StartsWith(" "))
+                                sLyric = sLyric.Remove(0, 1);
+                            sLine = sTime + strSpaceBetween + sLyric;    // time + lyric for the beginning of a line                        
+                            bStartLine = false;
+                        }
+                        else
+                        {
+                            // Line continuation
+                            sLine += sLyric; // only lyric for the continuation of a line                        
+                        }
+                    }
+                    else
+                    {
+                        // Remove last space
+                        if (sLine.Length > 0 && sLine.EndsWith(" "))
+                            sLine = sLine.Remove(sLine.Length - 1, 1);
+
+                        // Save current line
+                        if (sLine != "")
+                        {
+                            // Add new line
+                            lstLines.Add(sLine);
+                        }
+
+                        // Reset all
+                        bStartLine = true;
+                        sLine = string.Empty;
+                    }
+                }
+                // Save last line
+                if (sLine != "")
+                {
+                    lstLines.Add(sLine);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //return null;
+            }
+
+            return lstLines;
+        }
+
+
+        /// <summary>
+        /// Return lyrics by line with their timestamps
+        /// Format [00:08.834]QUAND [00:09.107]J'AI [00:09.196]REN[00:09.469]CON[00:09.558]TRE [00:09.926]JO[00:10.107]SE[00:10.307]PHI[00:10.656]NE
+        /// </summary>
+        /// <param name="lstLyricsItems"></param>
+        /// <param name="strSpaceBetween"></param>
+        /// <returns></returns>
+        public static List<string> GetLrcTimeLines(List<(string, string, string)> lstLyricsItems, string strSpaceBetween)
+        {
+            List<string> lstTimeLines = new List<string>();
+
+            bool bStartLine;
+            string sTime;
+            string sType;
+            string sLyric;
+            string sTimeLine = string.Empty;
+            bStartLine = true;
+
+            try
+            {
+                // sTime, sType, sLyric
+                for (int i = 0; i < lstLyricsItems.Count; i++)
+                {
+                    sTime = lstLyricsItems[i].Item1;
+                    sType = lstLyricsItems[i].Item2;
+                    sLyric = lstLyricsItems[i].Item3;
+
+                    if (sType == "text")      // Do not add empty lyrics to a line ?
+                    {
+                        if (bStartLine)
+                        {
+                            if (sLyric.Length > 0 && sLyric.StartsWith(" "))
+                                sLyric = sLyric.Remove(0, 1);
+                            sTimeLine = sTime + strSpaceBetween + sLyric;
+                            bStartLine = false;
+                        }
+                        else
+                        {
+                            // Line continuation
+
+                            // Case of spaces at the left of the lyrics
+                            // Add a space to the left to allow split by space
+                            if (sLyric.Length > 0 && sLyric.StartsWith(" "))
+                                sTimeLine += " " + sTime + strSpaceBetween + sLyric.Remove(0, 1);
+                            else
+                                sTimeLine += sTime + strSpaceBetween + sLyric;
+                        }
+                    }
+                    else
+                    {
+                        if (sTimeLine.Length > 0 && sTimeLine.EndsWith(" "))
+                            sTimeLine = sTimeLine.Remove(sTimeLine.Length - 1, 1);
+
+                        if (sTimeLine != "")
+                        {
+                            // Add new line
+                            lstTimeLines.Add(sTimeLine);
+                        }
+
+                        // Reset all
+                        bStartLine = true;
+                        sTimeLine = string.Empty;
+                    }
+                }
+
+                // Save last line
+                if (sTimeLine != "")
+                {
+                    // Remove last space
+                    if (sTimeLine.Length > 0 && sTimeLine.EndsWith(" "))
+                        sTimeLine = sTimeLine.Remove(sTimeLine.Length - 1, 1);
+                    lstTimeLines.Add(sTimeLine);
+                }
+            }
+            catch (Exception e) { MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+
+            return lstTimeLines;
+        }
+
+
+        /// <summary>
+        /// Return lyrics by line and cut lines to MaxLength characters
+        /// </summary>
+        /// <param name="lstTimeLines"></param>
+        /// <param name="MaxLength"></param>
+        /// <returns></returns>
+        public static List<string> GetLrcLinesCut(List<string> lstTimeLines, int MaxLength)
+        {
+            List<string[]> lstWords = new List<string[]>();
+            List<string[]> lstTimes = new List<string[]>();
+
+            string sTimeLine;
+            string strPartialLine;
+            string sLine;
+            bool bStartLine;
+            string sLyric;
+            string sTime;
+
+            string[] words;
+            string[] Times;
+            string removepattern = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
+            string replace = @"";
+
+            List<string> lstLinesCut = new List<string>();
+
+            try
+            {
+
+                for (int i = 0; i < lstTimeLines.Count; i++)
+                {
+                    sTimeLine = lstTimeLines[i];
+                    words = sTimeLine.Split(' ');
+                    Times = new string[words.Length];
+                    for (int j = 0; j < words.Length; j++)
+                    {
+                        Times[j] = words[j].Substring(0, 11);
+                        words[j] = Regex.Replace(words[j], removepattern, replace);
+                    }
+                    lstWords.Add(words);
+                    lstTimes.Add(Times);
+                }
+
+                // Manage length                
+                strPartialLine = string.Empty;
+                sLine = string.Empty;
+                string[] ItemsW;
+                string[] ItemsT;
+                for (int i = 0; i < lstWords.Count; i++)
+                {
+                    ItemsT = lstTimes[i];
+                    ItemsW = lstWords[i];
+                    sLine = string.Empty;
+
+                    for (int j = 0; j < ItemsW.Count(); j++)
+                    {
+                        bStartLine = (j == 0);
+                        sLyric = ItemsW[j];
+                        sTime = ItemsT[j];
+
+                        if (!bStartLine && (strPartialLine + " " + sLyric).Length > MaxLength)
+                        {
+                            // Too long
+                            // Remove last space
+                            if (sLine.Length > 0 && sLine.EndsWith(" "))
+                                sLine = sLine.Remove(sLine.Length - 1, 1);
+                            lstLinesCut.Add(sLine);
+
+                            // Restart a new line
+                            sLine = sTime + sLyric + " ";
+                            strPartialLine = sLyric + " ";
+
+                        }
+                        else
+                        {
+                            if (bStartLine)
+                            {
+                                sLine = sTime + sLyric + " ";
+                                strPartialLine = sLyric + " ";
+                            }
+                            else
+                            {
+                                sLine += sLyric + " ";
+                                strPartialLine += sLyric + " ";
+                            }
+                        }
+                    }
+
+                    // Remove last space
+                    if (sLine.Length > 0 && sLine.EndsWith(" "))
+                        sLine = sLine.Remove(sLine.Length - 1, 1);
+                    lstLinesCut.Add(sLine);
+                    sLine = string.Empty;
+                }
+
+                if (sLine != string.Empty)
+                {
+                    // Remove last space
+                    if (sLine.Length > 0 && sLine.EndsWith(" "))
+                        sLine = sLine.Remove(sLine.Length - 1, 1);
+                    lstLinesCut.Add(sLine);
+                }
+            }
+            catch (Exception e) 
+            { 
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //return null;
+            }
+            return lstLinesCut;
+        }
+
+
+        #endregion LRC
 
 
     }
