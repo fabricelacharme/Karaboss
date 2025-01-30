@@ -167,19 +167,21 @@ namespace Karaboss
         private void chkCutLines_CheckedChanged(object sender, EventArgs e)
         {
             UpdCutLines.Visible = chkCutLines.Checked;
-            lblCutLines.Visible = chkCutLines.Checked;
+            lblCutLines.Visible = UpdCutLines.Visible;
         }
 
         private void OptFormatSyllabes_CheckedChanged(object sender, EventArgs e)
         {
             chkCutLines.Visible = !OptFormatSyllabes.Checked;
             UpdCutLines.Visible = !OptFormatSyllabes.Checked;
-            lblCutLines.Visible = !OptFormatSyllabes.Checked;
+            lblCutLines.Visible = UpdCutLines.Visible;
         }
 
         private void OptFormatLines_CheckedChanged(object sender, EventArgs e)
         {
-            chkCutLines.Visible = OptFormatLines.Checked;           
+            chkCutLines.Visible = OptFormatLines.Checked;    
+            UpdCutLines.Visible = chkCutLines.Checked;
+            lblCutLines.Visible= UpdCutLines.Visible;
         }
 
     }

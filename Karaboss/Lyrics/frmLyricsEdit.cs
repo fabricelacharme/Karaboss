@@ -2219,24 +2219,17 @@ namespace Karaboss
         /// <param name="Tag_DPlus"></param>
         private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus, bool bControlLength, int MaxLength)
         {
+            string sLine;
             string sTime;
-            string sLyric;
-            string sLine = string.Empty;
-            string sTimeLine = string.Empty;
+            string sLyric;                    
             string sType;
             object vLyric;
             object vTime;
             object vType;
-            string lrcs = string.Empty;
+            string lrcs;
             string cr = "\r\n";
             string strSpaceBetween;
-            bool bSpaceBetwwen = false;
-            //bool bStartLine;
-            
-            //bool bControlLength = true;
-            //int MaxLength = 38;
-            
-            string strPartialLine = string.Empty;
+            bool bSpaceBetwwen = false;            
 
             // Space between time and lyrics [00:02.872]lyric
             if (bSpaceBetwwen)
@@ -2275,7 +2268,7 @@ namespace Karaboss
             // Store lyrics in a list
             // sTime, sType, sLyric
             List<(string, string, string)> lstLyricsItems = new List<(string, string, string)>();
-            
+
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
                 vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
@@ -2286,7 +2279,29 @@ namespace Karaboss
                 {
                     // lyrics: Trim all and replace underscore by a space
                     sLyric = vLyric.ToString().Trim();
-                    sLyric = sLyric.Replace("_", " ");
+
+                    /* Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
+                    * We must keep the undercores located inside the string for next split with spaces
+                    * ex: _the_air,_(get_to_poppin')
+                    * So big bug if we use sLyric = sLyric.Replace("_", " ");
+                    */
+                    if (sLyric.Length > 0 )
+                    {
+                        // replace leading or trailing underscore by a space ' '
+                        StringBuilder sb = new StringBuilder(sLyric);
+                        if (sLyric.StartsWith(@"_"))
+                            sb[0] = ' ';
+                        if (sLyric.EndsWith(@"_"))
+                            sb[sLyric.Length - 1] = ' ';
+                        sLyric = sb.ToString();
+
+                        /*
+                        if (sLyric.StartsWith("_"))
+                            sLyric = sLyric.Remove(0, 1).Insert(0, " ");
+                        if (sLyric.EndsWith("_"))
+                            sLyric = sLyric.Substring(0, sLyric.Length - 1) + " ";
+                        */
+                    }
 
                     sType = vType.ToString().Trim();
                     sTime = "[" + vTime.ToString() + "]";
@@ -2344,14 +2359,18 @@ namespace Karaboss
             {
                 for (int i = 0; i < lstLinesCut.Count; i++)
                 {
-                    lrcs += lstLinesCut[i] + cr;
+                    // Replace underscores located in the middle of the lyrics
+                    // ex: " the_air,_(get_to_poppin')"
+                    lrcs += lstLinesCut[i].Replace("_", " ") + cr;
                 }
             }
             else
             {
                 for (int i = 0; i < lstLines.Count; i++)
                 {
-                    lrcs += lstLines[i] + cr;
+                    // Replace underscores located in the middle of the lyrics
+                    // ex: " the_air,_(get_to_poppin')"
+                    lrcs += lstLines[i].Replace("_", " ") + cr;
                 }
             }
             #endregion send all to string
@@ -2578,13 +2597,17 @@ namespace Karaboss
                         s = s.Substring(0, s.Length - 1);
 
                     // replace leading or trailing space by '_'
+                    /*
                     StringBuilder sb = new StringBuilder(s);                    
                     if (s.StartsWith(@" "))
                         sb[0] = '_';
                     if (s.EndsWith(@" "))                    
                         sb[s.Length - 1] = '_';
                     s = sb.ToString();
-                    
+                    */
+                    // Replace all spaces including spaces inside the lyric
+                    s = s.Replace(" ", "_");
+
                     plElement = s;
 
                     // If not linefeed or paragraph in the lrc file, add a separator before the line or the syllabe
