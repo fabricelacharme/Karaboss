@@ -2098,28 +2098,37 @@ namespace Karaboss
             string Tag_By = string.Empty;
             string Tag_DPlus = string.Empty;
 
-            string FileName = saveMidiFileDialog.FileName;
+            fullPath = saveMidiFileDialog.FileName;
 
             // Search Title & Artist
-            string SingleName = Path.GetFileNameWithoutExtension(FileName);
-            string[] split = SingleName.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-            if (split.Length == 1)
+            // Classic Karaoke Midi tags
+            /*
+            @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
+            @L	(single) Language	FRAN, ENGL        
+            @W	(multiple) Copyright (of Karaoke file, not song)        
+            @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
+            @I	Information  ex Date(of Karaoke file, not song)
+            @V	(single) Version ex 0100 ?             
+            */                                                
+            Tag_Title = (sequence1.TTag != null && sequence1.TTag.Count > 1) ? sequence1.TTag[0] : "";
+            Tag_Artist = (sequence1.TTag != null && sequence1.TTag.Count > 1) ? sequence1.TTag[1] : "";
+            
+            
+            if (Tag_Artist == "" && Tag_Title == "")
             {
-                Tag_Title = split[0].Trim();
+                List<string> lstTags = Utilities.LyricsUtilities.GetTagsFromFileName(fullPath);
+                Tag_Artist = lstTags[0];
+                Tag_Title = lstTags[1];
             }
-            else if (split.Length == 2)
-            {
-                Tag_Artist = split[0].Trim();
-                Tag_Title = split[1].Trim();
-            }
+            
 
             switch (LrcFormat)
             {
                 case LrcFormats.Lines:
-                    SaveLRCLines(FileName, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, bCutLines, LrcCutLinesChars);
+                    SaveLRCLines(fullPath, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, bCutLines, LrcCutLinesChars);
                     break;
                 case LrcFormats.Syllables:
-                    SaveLRCSyllabes(FileName, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+                    SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
                     break;
             }
         }

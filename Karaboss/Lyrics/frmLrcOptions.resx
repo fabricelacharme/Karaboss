@@ -378,6 +378,21 @@
   <data name="&gt;&gt;chkUpperCase.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
+  <data name="chkAlphaNumeric.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkAlphaNumeric.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 60</value>
+  </data>
+  <data name="chkAlphaNumeric.Size" type="System.Drawing.Size, System.Drawing">
+    <value>153, 30</value>
+  </data>
+  <data name="chkAlphaNumeric.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="chkAlphaNumeric.Text" xml:space="preserve">
+    <value>Remove non-alphanumeric</value>
+  </data>
   <data name="&gt;&gt;chkAlphaNumeric.Name" xml:space="preserve">
     <value>chkAlphaNumeric</value>
   </data>
@@ -412,33 +427,6 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;groupBox2.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="chkAlphaNumeric.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="chkAlphaNumeric.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 60</value>
-  </data>
-  <data name="chkAlphaNumeric.Size" type="System.Drawing.Size, System.Drawing">
-    <value>153, 30</value>
-  </data>
-  <data name="chkAlphaNumeric.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="chkAlphaNumeric.Text" xml:space="preserve">
-    <value>Remove non-alphanumeric</value>
-  </data>
-  <data name="&gt;&gt;chkAlphaNumeric.Name" xml:space="preserve">
-    <value>chkAlphaNumeric</value>
-  </data>
-  <data name="&gt;&gt;chkAlphaNumeric.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;chkAlphaNumeric.Parent" xml:space="preserve">
-    <value>groupBox2</value>
-  </data>
-  <data name="&gt;&gt;chkAlphaNumeric.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

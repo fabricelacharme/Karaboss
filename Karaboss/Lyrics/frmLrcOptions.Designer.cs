@@ -109,7 +109,7 @@
             0});
             this.UpdCutLines.Name = "UpdCutLines";
             this.UpdCutLines.Value = new decimal(new int[] {
-            40,
+            32,
             0,
             0,
             0});

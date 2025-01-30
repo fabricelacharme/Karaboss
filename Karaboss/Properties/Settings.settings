@@ -360,7 +360,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="LrcCutLinesChars" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">38</Value>
+      <Value Profile="(Default)">32</Value>
     </Setting>
   </Settings>
 </SettingsFile>

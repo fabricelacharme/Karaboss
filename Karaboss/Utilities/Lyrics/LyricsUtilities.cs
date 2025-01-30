@@ -34,6 +34,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -589,6 +590,52 @@ namespace Karaboss.Utilities
                 //return null;
             }
             return lstLinesCut;
+        }
+
+        /// <summary>
+        /// Extraxt artist and song frem file name
+        /// </summary>
+        /// <param name="fPath"></param>
+        /// <returns></returns>
+        public static List<string> GetTagsFromFileName(string fPath)
+        {
+            // Classic Karaoke Midi tags
+            /*
+            @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
+            @L	(single) Language	FRAN, ENGL        
+            @W	(multiple) Copyright (of Karaoke file, not song)        
+            @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
+            @I	Information  ex Date(of Karaoke file, not song)
+            @V	(single) Version ex 0100 ?             
+            */
+            List<string> lstTags = new List<string>();
+            string Tag_Artist = string.Empty;
+            string Tag_Title = string.Empty;
+            int pos;
+            
+            string fName = Path.GetFileNameWithoutExtension(fPath);
+            string sep = " - ";
+
+            try
+            {
+                if (fName.IndexOf(sep) == -1)
+                {
+                    Tag_Title = fName;
+                    Tag_Artist = "";
+                }
+                else
+                {
+                    pos = fName.IndexOf(sep);           // First index
+                    Tag_Artist = fName.Substring(0, pos);
+                    Tag_Title = fName.Substring(pos + sep.Length, fName.Length - pos - sep.Length);
+                }
+            }
+            catch (Exception e) 
+            {
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); 
+            }
+
+            return new List<string> { Tag_Artist, Tag_Title };
         }
 
 

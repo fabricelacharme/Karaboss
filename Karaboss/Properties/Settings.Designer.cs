@@ -1456,7 +1456,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("38")]
+        [global::System.Configuration.DefaultSettingValueAttribute("32")]
         public int LrcCutLinesChars {
             get {
                 return ((int)(this["LrcCutLinesChars"]));
