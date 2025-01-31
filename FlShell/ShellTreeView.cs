@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 // GongSolutions.Shell - A Windows Shell library for .Net.

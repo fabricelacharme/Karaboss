@@ -50,10 +50,6 @@ using FlShell.Interop;
 using ComTypes = System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using FlShell.Resources.Localization;
-using System.Threading;
-using System.Runtime.InteropServices.ComTypes;
-using System.Windows.Forms.VisualStyles;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace FlShell
 {
