@@ -40,7 +40,7 @@ using static Karaboss.Karaclass;
 namespace Karaboss
 {
     public partial class frmLrcOptions : Form
-    {
+    {        
 
         #region properties
         public Karaclass.LrcFormats LrcFormat
@@ -92,7 +92,7 @@ namespace Karaboss
         public frmLrcOptions()
         {
             InitializeComponent();
-
+            
             // Load and apply options
             LoadOptions();            
         }
@@ -118,18 +118,11 @@ namespace Karaboss
                 chkCutLines.Checked = Properties.Settings.Default.bLrcCutLines;
                 UpdCutLines.Value = Properties.Settings.Default.LrcCutLinesChars;
 
-                if (OptFormatSyllabes.Checked)
-                {
-                    chkCutLines.Visible = false;
-                    UpdCutLines.Visible = false;
-                    lblCutLines.Visible = false;
-                }
-                if (!chkCutLines.Checked) 
-                { 
-                    UpdCutLines.Visible = false;
-                    lblCutLines.Visible = false;
-                }
-
+                // Default value for OptFormatSyllabes is Checked => no event at loading form
+                // So manage this use case
+                // The event OptFormatLines.Checked is managed by OptFormatLines_CheckedChanged
+                ManageDisplayOptions();
+               
             }
             catch (Exception ex)
             {
@@ -142,6 +135,9 @@ namespace Karaboss
             Close();
         }
 
+
+        #region Form Load Close
+      
         private void frmLrcOptions_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
@@ -164,25 +160,76 @@ namespace Karaboss
             }
         }
 
+
+        #endregion Form Load close
+
+
+        #region manage number of chars to cut
+
+        /// <summary>
+        /// Checkbox chkCutlines has changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void chkCutLines_CheckedChanged(object sender, EventArgs e)
         {
-            UpdCutLines.Visible = chkCutLines.Checked;
-            lblCutLines.Visible = UpdCutLines.Visible;
+            ManageDisplayOptions();            
         }
 
+        #endregion manage number of chars to cut
+
+
+        #region manage Options syllabes/lines
+        
+        /// <summary>
+        /// OptFormatSyllabes has changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OptFormatSyllabes_CheckedChanged(object sender, EventArgs e)
         {
-            chkCutLines.Visible = !OptFormatSyllabes.Checked;
-            UpdCutLines.Visible = !OptFormatSyllabes.Checked;
-            lblCutLines.Visible = UpdCutLines.Visible;
+            ManageDisplayOptions();            
         }
 
+        /// <summary>
+        /// OptFormatLines has changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OptFormatLines_CheckedChanged(object sender, EventArgs e)
         {
-            chkCutLines.Visible = OptFormatLines.Checked;    
-            UpdCutLines.Visible = chkCutLines.Checked;
-            lblCutLines.Visible= UpdCutLines.Visible;
+            ManageDisplayOptions();            
         }
+
+
+        private void ManageDisplayOptions()
+        {
+            if (OptFormatSyllabes.Checked)
+            {
+                // Cut lines options not visible if syllabes
+                chkCutLines.Visible = false;
+                UpdCutLines.Visible = false;
+                lblCutLines.Visible = false;
+            }
+            else if (OptFormatLines.Checked)
+            {
+                // Cut lines options visibility depends on checkbox chkCutLines
+                chkCutLines.Visible = true;
+
+                if (chkCutLines.Checked)
+                {
+                    UpdCutLines.Visible = true;
+                    lblCutLines.Visible = true;
+                }
+                else
+                {
+                    UpdCutLines.Visible = false;
+                    lblCutLines.Visible = false;
+                }
+            }
+        }
+
+        #endregion manage options syllabes/lines
 
     }
 }
