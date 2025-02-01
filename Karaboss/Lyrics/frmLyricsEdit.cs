@@ -528,12 +528,18 @@ namespace Karaboss
         /// <param name="e"></param>
         private void BtnPlay_Click(object sender, EventArgs e)
         {
+            // Set cursor as hourglass
+            Cursor.Current = Cursors.WaitCursor;
+
             //Load modification into local list of lyrics
             localplLyrics = LoadModifiedLyrics();
 
             // Display new lyrics in frmPlayer
             _myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.Lyrics;
             ReplaceLyrics(localplLyrics);
+
+            // Set cursor as default
+            Cursor.Current = Cursors.Default;
 
             if (dgView.CurrentRow != null)
             {

@@ -878,8 +878,13 @@ namespace Karaboss
             //tx = lyrics;
             // Lyrics not modified
             tx = myLyricsMgmt.Lyrics;
+            
+            
+            
+
             tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
             tx = tx.Replace(_InternalSepLines, "\r\n");
+            tx = tx.Replace("[]", "");                                  // Why are these characters exists ?
             System.IO.File.WriteAllText(@file, tx);
 
             try
