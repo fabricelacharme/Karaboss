@@ -4328,7 +4328,7 @@ namespace Sanford.Multimedia.Midi.Score
                         j = 0;
                         k = 0;
 
-                        bool bCondition = true;
+                        //bool bCondition = true;
                         do
                         {
                             if (j < lstBlanks.Count)
@@ -4365,12 +4365,12 @@ namespace Sanford.Multimedia.Midi.Score
                                 }
                             }
 
-                            if (k >= result.Count && j >= lstBlanks.Count)
-                                bCondition = false;
+                            //if (k >= result.Count && j >= lstBlanks.Count)
+                            //    bCondition = false;
 
-                        } while (bCondition);
-                        
-                      
+                        } while (k < result.Count || j < lstBlanks.Count); // (bCondition);
+
+
 
                         result = lstMerge;
                     }
