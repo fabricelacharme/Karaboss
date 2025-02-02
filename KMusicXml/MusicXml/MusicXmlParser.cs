@@ -170,8 +170,8 @@ namespace MusicXml
                             var tempoNode = measureNode.SelectSingleNode("sound");
 							if (tempoNode != null) 
 							{
-								measure.Attributes.Time.Tempo = Convert.ToInt32(tempoNode.InnerText);
-
+								//measure.Attributes.Time.Tempo = Convert.ToInt32(tempoNode.InnerText);
+								measure.Attributes.TempoChange.Tempo = Convert.ToInt32(tempoNode.InnerText);
 							}
 
 
@@ -220,7 +220,8 @@ namespace MusicXml
 													int i = s.IndexOf(b);
 													s = s.Substring(i + b.Length).Trim();
 
-													measure.Attributes.Time.Tempo = Convert.ToInt32(s);
+													//measure.Attributes.Time.Tempo = Convert.ToInt32(s);
+													measure.Attributes.TempoChange.Tempo = Convert.ToInt32(s);
 												}
 											}
 											catch (Exception err)
@@ -478,7 +479,7 @@ namespace MusicXml
 				if (beatTypeNode != null)
 					time.Mode = beatTypeNode.InnerText;
 
-				var symbol = TimeSymbol.Normal;
+				var symbol = TimeSymbols.Normal;
 
 				if (timeNode.Attributes != null)
 				{
@@ -489,13 +490,13 @@ namespace MusicXml
 						switch (symbolAttribute.InnerText)
 						{
 							case "common":
-								symbol = TimeSymbol.Common;
+								symbol = TimeSymbols.Common;
 								break;
 							case "cut":
-								symbol = TimeSymbol.Cut;
+								symbol = TimeSymbols.Cut;
 								break;
 							case "single-number":
-								symbol = TimeSymbol.SingleNumber;
+								symbol = TimeSymbols.SingleNumber;
 								break;
 						}
 					}

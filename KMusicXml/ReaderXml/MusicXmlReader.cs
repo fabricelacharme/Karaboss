@@ -477,12 +477,27 @@ namespace MusicXml
                                 switch (metype)
                                 {
 
-                                    case MeasureElementType.Time:
-                                        Time tm = (Time)obj;
-                                        float ttempo = tm.Tempo;
+                                    // Change tempo
+                                    case MeasureElementType.TempoChange:
+                                        TempoChange tpc = (TempoChange)obj;
+                                        float ttempo = tpc.Tempo;
                                         CreateTempoEvent(ttempo, timeline);
                                         break;
+
+                                    // Change time signature
+                                    case MeasureElementType.Time:
+                                        Time tm = (Time)obj;
+                                        mult = 4.0f / tm.BeatType; // Denominator;
+                                        
+                                        //multcoeff = multcoeff * tm.BeatType/tm.Beats;
+
+                                        MeasureLength = Division * tm.Beats; //  Numerator;
+                                        MeasureLength = Convert.ToInt32(MeasureLength * mult);
+
+                                        break;
                                     
+
+
                                     case MeasureElementType.Backup:
                                         Backup bkp = (Backup)obj;                                        
                                         timeline -= (int)(bkp.Duration * multcoeff);

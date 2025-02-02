@@ -61,6 +61,7 @@
     <Compile Include="MusicXml\Domain\Pitch.cs" />
     <Compile Include="MusicXml\Domain\Barline.cs" />
     <Compile Include="MusicXml\Domain\Score.cs" />
+    <Compile Include="MusicXml\Domain\TempoChange.cs" />
     <Compile Include="MusicXml\Domain\Time.cs" />
     <Compile Include="MusicXml\MusicXmlParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

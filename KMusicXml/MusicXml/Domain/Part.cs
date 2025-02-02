@@ -41,6 +41,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Security.Policy;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -441,9 +442,16 @@ namespace MusicXml.Domain
                                     const float kOneMinuteInMicroseconds = 60000000;
                                     float ttempo = kOneMinuteInMicroseconds / (float)PerMinute;
 
+                                    /*
                                     var newTime = new Time();
                                     newTime.Tempo = ttempo;
                                     MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Time, Element = newTime };
+                                    curMeasure.MeasureElements.Add(trucmeasureElement);
+                                    */
+
+                                    var newTempo = new TempoChange();
+                                    newTempo.Tempo = ttempo;
+                                    MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.TempoChange, Element = newTempo };
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
 
                                     if (_part.Tempo == 0)
@@ -474,8 +482,7 @@ namespace MusicXml.Domain
                                 //if (int.Parse(t) == 11 && _part.Id == "P2")
                                 //    Console.Write("");
 
-                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics, vNotes, _part._measurelength);
-                                //note.MeasureNumber = curMeasure.Number;
+                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics, vNotes, _part._measurelength);                                
 
                                 #region note lyrics
                                 if (note.Lyrics != null && note.Lyrics.Count > 0)
@@ -624,8 +631,7 @@ namespace MusicXml.Domain
                                 var dur = childnode.Descendants("duration").FirstOrDefault();
                                 if (dur != null)
                                 {
-                                    var forward = new Forward();
-                                    //int duration = 480 * int.Parse(dur.Value);
+                                    var forward = new Forward();                                    
                                     int duration = (int)(_part.coeffmult * int.Parse(dur.Value));
                                     forward.Duration = duration;
                                     MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Forward, Element = forward };
@@ -715,6 +721,29 @@ namespace MusicXml.Domain
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
                                 }
                             }
+                            else if (childnode.Name == "time")
+                            {                                
+                                var beats = childnode.Descendants("beats").FirstOrDefault();
+                                if (beats != null) 
+                                { 
+                                    var beatType = childnode.Descendants("beat-type").FirstOrDefault();
+                                    if (beatType != null)
+                                    {
+                                        var timesignature = new Time();
+                                        timesignature.Beats = int.Parse(beats.Value);
+                                        timesignature.BeatType = int.Parse(beatType.Value);
+                                        MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Time, Element = timesignature };
+                                        curMeasure.MeasureElements.Add(trucmeasureElement);
+
+
+                                        int m = (int)(_part.Division * timesignature.Beats * (4f / timesignature.BeatType));
+                                        _part._measurelength = m;
+                                        
+                                    }
+                                }
+                               
+                            }
+                        
                         }
                         _part.Measures.Add(curMeasure);
                     }
