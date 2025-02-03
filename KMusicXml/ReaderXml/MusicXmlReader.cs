@@ -593,6 +593,7 @@ namespace MusicXml
                                         note = new Note
                                         {
                                             Accidental = lnote.Accidental,
+                                            Articulation = lnote.Articulation,
 
                                             ChromaticTranspose = lnote.ChromaticTranspose,
                                             
@@ -629,6 +630,8 @@ namespace MusicXml
                                         bool ischordtone = note.IsChordTone;
                                         pitch = note.Pitch;
                                         int voice = note.Voice;                                        
+                                        Note.Articulations articulation = note.Articulation;
+                                        int _duration = 0;
 
                                         // keep only the good number of the verse             
                                         List<Lyric> lyrics = note.Lyrics;
@@ -636,8 +639,15 @@ namespace MusicXml
                                         string ntype = note.Type;
                                         
                                         
+                                        // If Staccato, the duration of the note is half of its duration
+                                        // but the timeline must be extended by its duration
+                                        bool IsStaccato = note.Articulation == Note.Articulations.staccato;
+
+
                                         // Note duration                                        
                                         note.Duration = (int)(note.Duration * multcoeff);           // Full duration (can be several measures)
+                                        _duration = note.Duration;
+                                        
                                         note.TieDuration = (int)(note.TieDuration * multcoeff);     // original duration of the note in case of linked notes
                                                                                 
 
@@ -658,7 +668,7 @@ namespace MusicXml
                                         // => add duration and exit
                                         if (note.IsRest)
                                         {
-                                            timeline += note.Duration;
+                                            timeline += _duration; // mainly note.Duration;
                                             break;
                                         }
 
@@ -707,6 +717,13 @@ namespace MusicXml
                                         }
                                         */                                       
 
+                                        switch (note.Articulation)
+                                        {
+                                            case Note.Articulations.staccato:
+                                                note.Duration = note.Duration / 2;
+                                                break;
+                                        }
+
 
                                         // Create note
                                         // in case of harmony (chord), eliminate notes having no stem (except note having whole duration)
@@ -737,8 +754,8 @@ namespace MusicXml
                                         }
                                         else
                                         {
-                                            offset = note.Duration;
-                                            timeline += note.Duration;
+                                            offset = _duration; // mainly note.Duration;
+                                            timeline += _duration; // mainly note.Duration;
                                         }                                        
                                         break;
 

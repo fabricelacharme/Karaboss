@@ -4,6 +4,8 @@ using Sanford.Multimedia.Midi.Score;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+
 #region License
 
 /* Copyright (c) 2024 Fabrice Lacharme
@@ -45,6 +47,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using static MusicXml.Domain.Note;
 using static Sanford.Multimedia.Midi.Track;
 
 namespace MusicXml.Domain
@@ -935,6 +938,7 @@ namespace MusicXml.Domain
             var tied = node.Descendants("tied").FirstOrDefault();             // Linked notes
 
             var ties = node.Descendants("tie");
+            var articulations = node.Descendants("articulations").FirstOrDefault(); // Staccato
 
             // Drums ?
             var displaystep = node.Descendants("display-step").FirstOrDefault();
@@ -1047,6 +1051,67 @@ namespace MusicXml.Domain
                     bgrace = true;                
             }
             */
+
+            if (articulations != null)
+            {                
+                string a = articulations.Descendants().FirstOrDefault().Name.ToString();
+                switch (a)
+                {
+
+                    case "accent":
+                        note.Articulation = Note.Articulations.accent;
+                        break;
+                    case "strong-accent":
+                        note.Articulation = Note.Articulations.strongaccent;
+                        break;
+                    case "staccato":
+                        note.Articulation = Note.Articulations.staccato;
+                        break;
+                    case "tenuto":
+                        note.Articulation = Note.Articulations.tenuto;
+                        break;
+                    case "detached-legato":
+                        note.Articulation = Note.Articulations.detachedlegato;
+                        break;
+                    case "staccatissimo":
+                        note.Articulation = Note.Articulations.staccatissimo;
+                        break;
+                    case "spiccato":
+                        note.Articulation = Note.Articulations.spiccato;
+                        break;
+                    case "scoop":
+                        note.Articulation = Note.Articulations.scoop;
+                        break;
+                    case "plop":
+                        note.Articulation = Note.Articulations.plop;
+                        break;
+                    case "doit":
+                        note.Articulation = Note.Articulations.doit;
+                        break;
+                    case "falloff":
+                        note.Articulation = Note.Articulations.falloff;
+                        break;
+                    case "breath-mark":
+                        note.Articulation = Note.Articulations.breathmark;
+                        break;
+                    case "caesura":
+                        note.Articulation = Note.Articulations.caesura;
+                        break;
+                    case "stress":
+                        note.Articulation = Note.Articulations.stress;
+                        break;
+                    case "unstress":
+                        note.Articulation = Note.Articulations.unstress;
+                        break;
+                    case "soft-accent":
+                        note.Articulation = Note.Articulations.softaccent;
+                        break;
+                    case "other-articulation":                                                
+                    default:
+                        note.Articulation = Note.Articulations.otherarticulation;
+                        break;
+                }                
+            }
 
             #region duration
 
@@ -1171,7 +1236,6 @@ namespace MusicXml.Domain
             // Note has a stem to draw (help to determine if it is a real note to be played and not a placeholder) 
             if (stem != null)
                 note.Stem = stem.Value;
-
             
 
             // Manage several lyrics per note (a note can be used by several verses)

@@ -13,10 +13,32 @@ namespace MusicXml.Domain
 			Both,
 		}
 
+        public enum Articulations
+        {
+            accent,
+            strongaccent,
+            staccato,
+            tenuto,
+            detachedlegato,
+            staccatissimo,
+            spiccato,
+            scoop,
+            plop,
+            doit,
+            falloff,
+            breathmark,
+            caesura,
+            stress,
+            unstress,
+            softaccent,
+            otherarticulation,
+        }
+
         #region declarations
 
         public string Accidental { get; internal set; }        
-                                      
+        public Articulations Articulation {  get; internal set; }                       
+        
         public int ChromaticTranspose { get; internal set; }
         
         public int DrumInstrument { get; internal set; }
@@ -82,6 +104,7 @@ namespace MusicXml.Domain
             Note res = new Note()
             {                                                
                 Accidental = Accidental,                                                                               
+                Articulation = Articulation,
 
                 ChromaticTranspose = ChromaticTranspose,
                 
