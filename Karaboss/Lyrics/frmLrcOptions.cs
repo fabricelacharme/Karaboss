@@ -67,6 +67,11 @@ namespace Karaboss
             get { return chkUpperCase.Checked; }
         }
         
+        public bool bLowerCase
+        {
+            get { return chkLowerCase.Checked; }
+        }
+
         /// <summary>
         /// Number of characters max per lines
         /// </summary>
@@ -108,6 +113,9 @@ namespace Karaboss
                 chkRemoveAccents.Checked = Properties.Settings.Default.bLrcRemoveAccents;
                 // Force Upper Case
                 chkUpperCase.Checked = Properties.Settings.Default.bLrcForceUpperCase;
+                // Force Lower Case 
+                chkLowerCase.Checked = Properties.Settings.Default.bLrcForceLowerCase;
+
                 // Remove all non-alphanumeric characters
                 chkAlphaNumeric.Checked = Properties.Settings.Default.bLrcRemoveNonAlphaNumeric;
 
@@ -144,7 +152,10 @@ namespace Karaboss
             {
                 // Save options
                 Properties.Settings.Default.bLrcRemoveAccents = bRemoveAccents;
+                
                 Properties.Settings.Default.bLrcForceUpperCase = bUpperCase;
+                Properties.Settings.Default.bLrcForceLowerCase = bLowerCase;
+
                 Properties.Settings.Default.bLrcRemoveNonAlphaNumeric = bRemoveNonAlphaNumeric;
                 Properties.Settings.Default.lrcFormatLinesSyllabes = (OptFormatLines.Checked ? 0 : 1);
 
@@ -231,5 +242,16 @@ namespace Karaboss
 
         #endregion manage options syllabes/lines
 
+        private void chkLowerCase_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkLowerCase.Checked)
+                chkUpperCase.Checked = false;
+        }
+
+        private void chkUpperCase_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkUpperCase.Checked)
+                chkLowerCase.Checked = false;
+        }
     }
 }

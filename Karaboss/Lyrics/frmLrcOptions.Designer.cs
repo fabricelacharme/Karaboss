@@ -40,6 +40,7 @@
             this.chkRemoveAccents = new System.Windows.Forms.CheckBox();
             this.chkUpperCase = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chkLowerCase = new System.Windows.Forms.CheckBox();
             this.chkAlphaNumeric = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.UpdCutLines)).BeginInit();
@@ -48,15 +49,15 @@
             // 
             // btnOk
             // 
-            this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnOk, "btnOk");
+            this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOk.Name = "btnOk";
             this.btnOk.UseVisualStyleBackColor = true;
             // 
             // btnCancel
             // 
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             resources.ApplyResources(this.btnCancel, "btnCancel");
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -80,12 +81,12 @@
             // 
             // groupBox1
             // 
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Controls.Add(this.lblCutLines);
             this.groupBox1.Controls.Add(this.UpdCutLines);
             this.groupBox1.Controls.Add(this.chkCutLines);
             this.groupBox1.Controls.Add(this.OptFormatLines);
             this.groupBox1.Controls.Add(this.OptFormatSyllabes);
-            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
@@ -132,15 +133,24 @@
             resources.ApplyResources(this.chkUpperCase, "chkUpperCase");
             this.chkUpperCase.Name = "chkUpperCase";
             this.chkUpperCase.UseVisualStyleBackColor = true;
+            this.chkUpperCase.CheckedChanged += new System.EventHandler(this.chkUpperCase_CheckedChanged);
             // 
             // groupBox2
             // 
+            resources.ApplyResources(this.groupBox2, "groupBox2");
+            this.groupBox2.Controls.Add(this.chkLowerCase);
             this.groupBox2.Controls.Add(this.chkAlphaNumeric);
             this.groupBox2.Controls.Add(this.chkRemoveAccents);
             this.groupBox2.Controls.Add(this.chkUpperCase);
-            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
+            // 
+            // chkLowerCase
+            // 
+            resources.ApplyResources(this.chkLowerCase, "chkLowerCase");
+            this.chkLowerCase.Name = "chkLowerCase";
+            this.chkLowerCase.UseVisualStyleBackColor = true;
+            this.chkLowerCase.CheckedChanged += new System.EventHandler(this.chkLowerCase_CheckedChanged);
             // 
             // chkAlphaNumeric
             // 
@@ -185,5 +195,6 @@
         private System.Windows.Forms.Label lblCutLines;
         private System.Windows.Forms.NumericUpDown UpdCutLines;
         private System.Windows.Forms.CheckBox chkCutLines;
+        private System.Windows.Forms.CheckBox chkLowerCase;
     }
 }

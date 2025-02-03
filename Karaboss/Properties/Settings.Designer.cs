@@ -1465,5 +1465,17 @@ namespace Karaboss.Properties {
                 this["LrcCutLinesChars"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool bLrcForceLowerCase {
+            get {
+                return ((bool)(this["bLrcForceLowerCase"]));
+            }
+            set {
+                this["bLrcForceLowerCase"] = value;
+            }
+        }
     }
 }

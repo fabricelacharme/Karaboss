@@ -2030,6 +2030,8 @@ namespace Karaboss
             bool bRemoveAccents = LrcOptionsDialog.bRemoveAccents;
             // Force Upper Case
             bool bUpperCase = LrcOptionsDialog.bUpperCase;
+            // Force Lower Case
+            bool bLowerCase = LrcOptionsDialog.bLowerCase;
             // Remove all non-alphanumeric characters
             bool bRemoveNonAlphaNumeric = LrcOptionsDialog.bRemoveNonAlphaNumeric;
             // Save to line or to syllabes
@@ -2039,7 +2041,7 @@ namespace Karaboss
             bool bCutLines = LrcOptionsDialog.bCutLines;
             int LrcCutLinesChars = LrcOptionsDialog.LrcCutLinesChars;
 
-            SaveLrcFileName(LrcFormat, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, bCutLines, LrcCutLinesChars);
+            SaveLrcFileName(LrcFormat, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bCutLines, LrcCutLinesChars);
         }
 
         /// <summary>
@@ -2050,7 +2052,7 @@ namespace Karaboss
         /// <param name="bRemoveAccents"></param>
         /// <param name="bUpperCase"></param>
         /// <param name="bRemoveNonAlphaNumeric"></param>
-        private void SaveLrcFileName(Karaclass.LrcFormats LrcFormat, bool bRemoveAccents, bool bUpperCase, bool bRemoveNonAlphaNumeric, bool bCutLines, int LrcCutLinesChars)
+        private void SaveLrcFileName(Karaclass.LrcFormats LrcFormat, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bCutLines, int LrcCutLinesChars)
         {
             #region select filename
 
@@ -2131,10 +2133,10 @@ namespace Karaboss
             switch (LrcFormat)
             {
                 case LrcFormats.Lines:
-                    SaveLRCLines(fullPath, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, bCutLines, LrcCutLinesChars);
+                    SaveLRCLines(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, bCutLines, LrcCutLinesChars);
                     break;
                 case LrcFormats.Syllables:
-                    SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+                    SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
                     break;
             }
         }
@@ -2143,7 +2145,7 @@ namespace Karaboss
         /// Save lyrics to lrc format, syllabe by syllabe
         /// </summary>
         /// <param name="FileName"></param>
-        private void SaveLRCSyllabes(string File, bool bRemoveAccents, bool bUpperCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
+        private void SaveLRCSyllabes(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
         {
             string sTime;
             string sLyric;
@@ -2199,6 +2201,9 @@ namespace Karaboss
                         //Uppercase letters
                         sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
 
+                        // Lowercase letters
+                        sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
+
                         // Remove non-alphanumeric chars
                         sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
 
@@ -2232,7 +2237,7 @@ namespace Karaboss
         /// <param name="Tag_Lang"></param>
         /// <param name="Tag_By"></param>
         /// <param name="Tag_DPlus"></param>
-        private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus, bool bControlLength, int MaxLength)
+        private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus, bool bControlLength, int MaxLength)
         {
             string sLine;
             string sTime;
@@ -2334,6 +2339,9 @@ namespace Karaboss
 
                             //Uppercase letters
                             sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
+
+                            // Lowercase letters
+                            sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
 
                             // Remove non alphanumeric chars
                             sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
