@@ -287,13 +287,18 @@ namespace MusicXml.Domain
                             // Real division
                             _part.Division = ConvertStringValue(attributes.Descendants("divisions").FirstOrDefault().Value, 1);                            
 
-                            // FAB pour avoir la longueur d'une mesure
+                            // pour avoir la longueur d'une mesure
                             int m = (int)(_part.Division * _part.Numerator * (4f / _part.Denominator));
                             _part._measurelength = m;
-                            
+
+
+                            // 03/02/2025 
+                            _part.coeffmult = 1;
+
+                            // A gérer plus tard
                             // Force division to 480 with a coeff
-                            _part.coeffmult = 480f / _part.Division;
-                            _part.Division = 480; 
+                            //_part.coeffmult = 480f / _part.Division;
+                            //_part.Division = 480; 
                         }
                     }
 
@@ -482,7 +487,8 @@ namespace MusicXml.Domain
                                 //if (int.Parse(t) == 11 && _part.Id == "P2")
                                 //    Console.Write("");
 
-                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics, vNotes, _part._measurelength);                                
+                                Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics, vNotes, _part._measurelength);
+                                
 
                                 #region note lyrics
                                 if (note.Lyrics != null && note.Lyrics.Count > 0)
@@ -588,6 +594,9 @@ namespace MusicXml.Domain
 
                                 }
                                 #endregion note lyrics
+
+                                //_part.Notes.Add(note.Pitch.Step.ToString() + ", " + note.Duration.ToString());
+                                curMeasure.Notes.Add(note.Pitch.Step.ToString() + ", " + note.Duration.ToString());
 
                                 // Create new element
                                 MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
@@ -1061,7 +1070,8 @@ namespace MusicXml.Domain
 
             // Real duration
             note.Duration = (int)(nDuration * mult);
-         
+
+                    
             
             // Ajust calculation with notes having tie
             if (note.TieType == Note.TieTypes.Start)
@@ -1148,6 +1158,10 @@ namespace MusicXml.Domain
             {
                 note.Duration = 0;
             }
+
+
+           
+
             #endregion duration
 
             // Note is part of a chord

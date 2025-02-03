@@ -12,8 +12,46 @@ namespace MusicXml.Domain
 			Stop,
 			Both,
 		}
-		
-		internal Note()
+
+        #region declarations
+
+        public string Accidental { get; internal set; }        
+                                      
+        public int ChromaticTranspose { get; internal set; }
+        
+        public int DrumInstrument { get; internal set; }
+        public int Duration { get; internal set; }
+
+        public bool IsChordTone { get; internal set; }
+        public bool IsDrums { get; internal set; }       
+        public bool IsRest { get; internal set; }
+
+        // FAB : for verses (several lyrics on the same note with different "number")
+        public List<Lyric> Lyrics { get; internal set; }
+
+        public int OctaveChange { get; internal set; }
+
+        public Pitch Pitch { get; internal set; }
+        public Pitch PitchDrums { get; internal set; }
+
+        public int Staff { get; internal set; }
+        // Just to determinate if the note has to be played or not (pulsation with harmony)
+        public string Stem { get; internal set; }
+
+
+        public int TieDuration { get; internal set; }
+        public TieTypes TieType { get; internal set; }
+        public string Type { get; internal set; }
+
+        public int Velocity { get; internal set; }
+        public int Voice { get; internal set; }
+
+        #endregion declarations
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        internal Note()
 		{
 			Type = string.Empty;
 			Duration = 0;
@@ -35,47 +73,43 @@ namespace MusicXml.Domain
 			PitchDrums = new Pitch();
 
 			TieType = TieTypes.None;
-
-			//MeasureNumber = 0;
+			
 		}
 
-		
-		public TieTypes TieType {  get; internal set; }
-		
-		// Just to determinate if the note has to be played or not (pulsation with harmony)
-		public string Stem {  get; internal set; }
 
-		public string Type { get; internal set; }
-		
-		public int Voice { get; internal set; }
+        public Note Clone()
+        {
+            Note res = new Note()
+            {                                                
+                Accidental = Accidental,                                                                               
 
-		public int Duration { get; internal set; }
-		public int TieDuration { get; internal set; }
-        		
-		public int Velocity { get; internal set; }
+                ChromaticTranspose = ChromaticTranspose,
+                
+                DrumInstrument = DrumInstrument,
+                Duration = Duration,
 
-        // FAB : for verses (several lyrics on the same note with different "number")
-        public List<Lyric> Lyrics { get; internal set; }
+                IsChordTone = IsChordTone,
+                IsDrums = IsDrums,
+                IsRest = IsRest,
+                                
+                Lyrics = Lyrics,
+                
+                OctaveChange = OctaveChange,
 
-		public int ChromaticTranspose { get; internal set; }
-		public int OctaveChange { get; internal set; }
+                Pitch = Pitch,
+                PitchDrums = PitchDrums,
 
-		public Pitch Pitch { get; internal set; }
+                Staff = Staff,
+                Stem = Stem,
 
-		public Pitch PitchDrums { get; internal set; }
+                TieDuration = TieDuration,
+                TieType = TieType,
+                Type = Type,
 
-		public int Staff { get; internal set; }
-
-		public bool IsChordTone { get; internal set; }
-
-		public bool IsDrums { get; internal set; }
-
-		public int DrumInstrument { get; internal set; }
-
-		public bool IsRest { get; internal set; }
-		
-        public string Accidental { get; internal set; }
-
-		//public int MeasureNumber { get; internal set; }
+                Velocity = Velocity,
+                Voice = Voice,
+            };
+            return res;
+        }
     }
 }
