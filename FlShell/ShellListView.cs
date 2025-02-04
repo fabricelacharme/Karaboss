@@ -50,6 +50,7 @@ using FlShell.Interop;
 using ComTypes = System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using FlShell.Resources.Localization;
+using System.Text.RegularExpressions;
 
 namespace FlShell
 {
@@ -1507,7 +1508,7 @@ namespace FlShell
    
         private void ListView_HandleCreated(object sender, EventArgs e)
         {
-            SetWindowTheme(m_ListView.Handle, "explorer", null);            
+            SetWindowTheme(m_ListView.Handle, "Explorer", null);            
         }
 
         private void ListView_DoubleClick(object sender, EventArgs e)
@@ -1515,8 +1516,9 @@ namespace FlShell
             //if (SelectedItems.Length > 0)
             if (m_ListView.SelectedItems.Count > 0)
             {
-                ShellItem item = (ShellItem)m_ListView.SelectedItems[0].Tag;
-                if (item != null && item.IsFolder)
+                ShellItem item = (ShellItem)m_ListView.SelectedItems[0].Tag;               
+
+                if (item != null && item.IsFolder && !Regex.IsMatch(item.DisplayName, "\\.zip$"))
                     Navigate(item);
                 else
                 {

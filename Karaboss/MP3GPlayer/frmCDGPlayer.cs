@@ -110,12 +110,11 @@ namespace Karaboss
         private void InitBass()
         {
             //'Add registration key here if you have a license
-            //'BassNet.Registration("email@domain.com", "0000000000000000")
-            BassNet.Registration("fabrice.lacharme@free.fr", "2X1632324163737");
+            BassNet.Registration("fabrice.lacharme@gmail.com", "2X1632326152222");
+            
             try
             {
-                Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, Handle);
-                //'Bass.BASS_Init(0, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero)
+                Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
 
                 mBassInitalized = true;
             }
@@ -360,7 +359,8 @@ namespace Karaboss
             }
             catch (Exception ex)
             {
-                Console.Write("\n" + ex.Message);
+                MessageBox.Show(ex.Message);
+                
             }
         }
 
