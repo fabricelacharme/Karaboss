@@ -4,6 +4,8 @@ using Sanford.Multimedia.Midi.Score;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+
 #region License
 
 /* Copyright (c) 2024 Fabrice Lacharme
@@ -41,9 +43,11 @@ using System.Globalization;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Security.Policy;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using static MusicXml.Domain.Note;
 using static Sanford.Multimedia.Midi.Track;
 
 namespace MusicXml.Domain
@@ -286,13 +290,18 @@ namespace MusicXml.Domain
                             // Real division
                             _part.Division = ConvertStringValue(attributes.Descendants("divisions").FirstOrDefault().Value, 1);                            
 
-                            // FAB pour avoir la longueur d'une mesure
+                            // pour avoir la longueur d'une mesure
                             int m = (int)(_part.Division * _part.Numerator * (4f / _part.Denominator));
                             _part._measurelength = m;
-                            
+
+
+                            // 03/02/2025 
+                            _part.coeffmult = 1;
+
+                            // A gérer plus tard
                             // Force division to 480 with a coeff
-                            _part.coeffmult = 480f / _part.Division;
-                            _part.Division = 480; 
+                            //_part.coeffmult = 480f / _part.Division;
+                            //_part.Division = 480; 
                         }
                     }
 
@@ -441,9 +450,16 @@ namespace MusicXml.Domain
                                     const float kOneMinuteInMicroseconds = 60000000;
                                     float ttempo = kOneMinuteInMicroseconds / (float)PerMinute;
 
+                                    /*
                                     var newTime = new Time();
                                     newTime.Tempo = ttempo;
                                     MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Time, Element = newTime };
+                                    curMeasure.MeasureElements.Add(trucmeasureElement);
+                                    */
+
+                                    var newTempo = new TempoChange();
+                                    newTempo.Tempo = ttempo;
+                                    MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.TempoChange, Element = newTempo };
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
 
                                     if (_part.Tempo == 0)
@@ -475,7 +491,7 @@ namespace MusicXml.Domain
                                 //    Console.Write("");
 
                                 Note note = GetNote(childnode, _part.coeffmult, _part._chromatictranspose, _part._octavechange, _part.SoundDynamics, vNotes, _part._measurelength);
-                                //note.MeasureNumber = curMeasure.Number;
+                                
 
                                 #region note lyrics
                                 if (note.Lyrics != null && note.Lyrics.Count > 0)
@@ -582,6 +598,9 @@ namespace MusicXml.Domain
                                 }
                                 #endregion note lyrics
 
+                                //_part.Notes.Add(note.Pitch.Step.ToString() + ", " + note.Duration.ToString());
+                                curMeasure.Notes.Add(note.Pitch.Step.ToString() + ", " + note.Duration.ToString());
+
                                 // Create new element
                                 MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
                                 curMeasure.MeasureElements.Add(trucmeasureElement);                                
@@ -624,8 +643,7 @@ namespace MusicXml.Domain
                                 var dur = childnode.Descendants("duration").FirstOrDefault();
                                 if (dur != null)
                                 {
-                                    var forward = new Forward();
-                                    //int duration = 480 * int.Parse(dur.Value);
+                                    var forward = new Forward();                                    
                                     int duration = (int)(_part.coeffmult * int.Parse(dur.Value));
                                     forward.Duration = duration;
                                     MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Forward, Element = forward };
@@ -715,6 +733,29 @@ namespace MusicXml.Domain
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
                                 }
                             }
+                            else if (childnode.Name == "time")
+                            {                                
+                                var beats = childnode.Descendants("beats").FirstOrDefault();
+                                if (beats != null) 
+                                { 
+                                    var beatType = childnode.Descendants("beat-type").FirstOrDefault();
+                                    if (beatType != null)
+                                    {
+                                        var timesignature = new Time();
+                                        timesignature.Beats = int.Parse(beats.Value);
+                                        timesignature.BeatType = int.Parse(beatType.Value);
+                                        MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Time, Element = timesignature };
+                                        curMeasure.MeasureElements.Add(trucmeasureElement);
+
+
+                                        int m = (int)(_part.Division * timesignature.Beats * (4f / timesignature.BeatType));
+                                        _part._measurelength = m;
+                                        
+                                    }
+                                }
+                               
+                            }
+                        
                         }
                         _part.Measures.Add(curMeasure);
                     }
@@ -897,6 +938,7 @@ namespace MusicXml.Domain
             var tied = node.Descendants("tied").FirstOrDefault();             // Linked notes
 
             var ties = node.Descendants("tie");
+            var articulations = node.Descendants("articulations").FirstOrDefault(); // Staccato
 
             // Drums ?
             var displaystep = node.Descendants("display-step").FirstOrDefault();
@@ -1010,6 +1052,67 @@ namespace MusicXml.Domain
             }
             */
 
+            if (articulations != null)
+            {                
+                string a = articulations.Descendants().FirstOrDefault().Name.ToString();
+                switch (a)
+                {
+
+                    case "accent":
+                        note.Articulation = Note.Articulations.accent;
+                        break;
+                    case "strong-accent":
+                        note.Articulation = Note.Articulations.strongaccent;
+                        break;
+                    case "staccato":
+                        note.Articulation = Note.Articulations.staccato;
+                        break;
+                    case "tenuto":
+                        note.Articulation = Note.Articulations.tenuto;
+                        break;
+                    case "detached-legato":
+                        note.Articulation = Note.Articulations.detachedlegato;
+                        break;
+                    case "staccatissimo":
+                        note.Articulation = Note.Articulations.staccatissimo;
+                        break;
+                    case "spiccato":
+                        note.Articulation = Note.Articulations.spiccato;
+                        break;
+                    case "scoop":
+                        note.Articulation = Note.Articulations.scoop;
+                        break;
+                    case "plop":
+                        note.Articulation = Note.Articulations.plop;
+                        break;
+                    case "doit":
+                        note.Articulation = Note.Articulations.doit;
+                        break;
+                    case "falloff":
+                        note.Articulation = Note.Articulations.falloff;
+                        break;
+                    case "breath-mark":
+                        note.Articulation = Note.Articulations.breathmark;
+                        break;
+                    case "caesura":
+                        note.Articulation = Note.Articulations.caesura;
+                        break;
+                    case "stress":
+                        note.Articulation = Note.Articulations.stress;
+                        break;
+                    case "unstress":
+                        note.Articulation = Note.Articulations.unstress;
+                        break;
+                    case "soft-accent":
+                        note.Articulation = Note.Articulations.softaccent;
+                        break;
+                    case "other-articulation":                                                
+                    default:
+                        note.Articulation = Note.Articulations.otherarticulation;
+                        break;
+                }                
+            }
+
             #region duration
 
             // Linked notes
@@ -1032,7 +1135,8 @@ namespace MusicXml.Domain
 
             // Real duration
             note.Duration = (int)(nDuration * mult);
-         
+
+                    
             
             // Ajust calculation with notes having tie
             if (note.TieType == Note.TieTypes.Start)
@@ -1119,6 +1223,10 @@ namespace MusicXml.Domain
             {
                 note.Duration = 0;
             }
+
+
+           
+
             #endregion duration
 
             // Note is part of a chord
@@ -1128,7 +1236,6 @@ namespace MusicXml.Domain
             // Note has a stem to draw (help to determine if it is a real note to be played and not a placeholder) 
             if (stem != null)
                 note.Stem = stem.Value;
-
             
 
             // Manage several lyrics per note (a note can be used by several verses)

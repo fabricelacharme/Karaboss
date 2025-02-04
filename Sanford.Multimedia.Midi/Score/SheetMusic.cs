@@ -4196,7 +4196,6 @@ namespace Sanford.Multimedia.Midi.Score
             return result;
         }
 
-
         /** Notes with the same start times in different staffs should be
          * vertically aligned.  The SymbolWidths class is used to help 
          * vertically align symbols.
@@ -4233,10 +4232,12 @@ namespace Sanford.Multimedia.Midi.Score
                 }
             }
 
+
+            // For each track
             for (int track = 0; track < allsymbols.Length; track++)
             {
                 List<MusicSymbol> symbols = allsymbols[track];
-                List<MusicSymbol> result = new List<MusicSymbol>();
+                List<MusicSymbol> result = new List<MusicSymbol>();               
 
                 int i = 0;                                
                 
@@ -4256,11 +4257,9 @@ namespace Sanford.Multimedia.Midi.Score
 
                     if (i < symbols.Count && symbols[i].StartTime == start)
                     {
-
                         while (i < symbols.Count &&
                                symbols[i].StartTime == start)
                         {
-
                             result.Add(symbols[i]);
                             i++;
                         }
@@ -4271,61 +4270,113 @@ namespace Sanford.Multimedia.Midi.Score
                     }
                 }
 
+
                 // FAB : Modification proposée :
                 // Ajouter un blank symbol à tous les temps de chaque mesure si pas de note
                 // Il faudrait avoir un tableau des StartTimes de la mesure contenant le plus de notes                                                
 
                 #region addblank
-                
+                //bool bAddBlank = false;
                 // Add additional blanks only if the sheet is visible
                 // Often not visible if used only as a karaoke ...
+                //if (_bvisible && bAddBlank)
                 if (_bvisible)
                 {
-                    int intervall = 32;
-                    //int intervall = 4;
-                    //int intervall = 0;
+                    int intervall = 32;     // triplecroche
+                    //int intervall = 16;   // doublecroche
+                    // int intervall = 8;    // croche
+                    // int intervall = 4;    // noire    
+                    // int intervall = 0;    // 
 
                     if (scrollVert == false && intervall > 0)
                     {
-
                         int realstart = 0;
                         int ins = -1;
                         int t = 0;
+                        int j;
+                        int k;
 
                         // choix du remplissage à blanc
                         // noire 4, croche 8, doublecroche 16, triplecroche 32
-
-
+                        j = 0;
                         int duration = measurelen / intervall;
                         List<int> tpcList = new List<int>();
-                        for (i = 0; i < intervall; i++)
+                        for (j = 0; j < intervall; j++)
                         {
-                            t = i * duration;
+                            t = j * duration;
                             tpcList.Add(t);
                         }
 
+                        // Fab new 02/02/2025
+                        // List de blanckSymbols à tous les starts nécessaires
+                        List<MusicSymbol> lstBlanks = new List<MusicSymbol>();
+                        j = 0;
                         for (int nummeasure = 0; nummeasure < nbMeasures; nummeasure++)
                         {
-                            for (i = 0; i < tpcList.Count; i++)
+                            for (j = 0; j < tpcList.Count; j++)
                             {
-                                t = tpcList[i];
+                                t = tpcList[j];
                                 ins = -1;
                                 realstart = t + nummeasure * measurelen;
-
-                                // Add a blank symbol in each measure if there is nothing to match the maxi measure 
-                                ins = result.FindIndex(s => s.StartTime >= realstart);
-                                if (ins == -1)
-                                    result.Add(new BlankSymbol(realstart, 0));
-                                else if (result[ins].StartTime > realstart)
-                                    result.Insert(ins, new BlankSymbol(realstart, 0));
-
+                                lstBlanks.Add(new BlankSymbol(realstart, 0));
                             }
                         }
+                        
+                        int blankStart;
+                        int resStart;
+                        List<MusicSymbol> lstMerge = new List<MusicSymbol>();
+                        j = 0;
+                        k = 0;
 
+                        //bool bCondition = true;
+                        do
+                        {
+                            if (j < lstBlanks.Count)
+                            {
+                                blankStart = lstBlanks[j].StartTime;
+
+                                if (k < result.Count)
+                                {
+                                    resStart = result[k].StartTime;
+
+                                    if (resStart <= blankStart)
+                                    {
+                                        lstMerge.Add(result[k]);
+                                        k++;
+                                    }
+                                    else if (resStart > blankStart)
+                                    {
+                                        lstMerge.Add(lstBlanks[j]);
+                                        j++;
+                                    }
+                                }
+                                else
+                                {
+                                    lstMerge.Add(lstBlanks[j]);
+                                    j++;
+                                }
+                            }
+                            else
+                            {
+                                if (k < result.Count)
+                                {
+                                    lstMerge.Add(result[k]);
+                                    k++;
+                                }
+                            }
+
+                            //if (k >= result.Count && j >= lstBlanks.Count)
+                            //    bCondition = false;
+
+                        } while (k < result.Count || j < lstBlanks.Count); // (bCondition);
+
+
+
+                        result = lstMerge;
                     }
-
                 }
                 #endregion addblank
+
 
                 /* For each starttime, increase the symbol width by
                  * SymbolWidths.GetExtraWidth().

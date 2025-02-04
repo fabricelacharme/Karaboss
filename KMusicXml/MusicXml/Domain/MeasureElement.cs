@@ -14,6 +14,7 @@
 		Forward,
 		Barline,
 		Ending,
+		TempoChange,
 		Time
 	}
 }

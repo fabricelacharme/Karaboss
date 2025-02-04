@@ -127,6 +127,18 @@
   <data name="OptFormatLines.Text" xml:space="preserve">
     <value>Lignes</value>
   </data>
+  <data name="lblCutLines.Size" type="System.Drawing.Size, System.Drawing">
+    <value>57, 13</value>
+  </data>
+  <data name="lblCutLines.Text" xml:space="preserve">
+    <value>caractères</value>
+  </data>
+  <data name="chkCutLines.Size" type="System.Drawing.Size, System.Drawing">
+    <value>111, 17</value>
+  </data>
+  <data name="chkCutLines.Text" xml:space="preserve">
+    <value>Limiter les lignes à</value>
+  </data>
   <data name="groupBox1.Text" xml:space="preserve">
     <value>Exporter vers</value>
   </data>
@@ -141,6 +153,12 @@
   </data>
   <data name="chkUpperCase.Text" xml:space="preserve">
     <value>Mettre en majuscules</value>
+  </data>
+  <data name="chkLowerCase.Size" type="System.Drawing.Size, System.Drawing">
+    <value>126, 17</value>
+  </data>
+  <data name="chkLowerCase.Text" xml:space="preserve">
+    <value>Mettre en minuscules</value>
   </data>
   <data name="chkAlphaNumeric.Text" xml:space="preserve">
     <value>Supprimer les caractères non alphanumériques</value>

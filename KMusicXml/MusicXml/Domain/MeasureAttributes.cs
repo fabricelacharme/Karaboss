@@ -12,6 +12,8 @@ namespace MusicXml.Domain
 		public Key Key { get; internal set; }
 		
 		public Time Time { get; internal set; }
+
+		public TempoChange TempoChange { get; internal set; }
 		 
 		public Clef Clef { get; internal set; }
 	}
