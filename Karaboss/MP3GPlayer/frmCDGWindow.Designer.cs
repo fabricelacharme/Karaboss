@@ -37,7 +37,7 @@
             this.PictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PictureBox1.Location = new System.Drawing.Point(0, 0);
             this.PictureBox1.Name = "PictureBox1";
-            this.PictureBox1.Size = new System.Drawing.Size(300, 216);
+            this.PictureBox1.Size = new System.Drawing.Size(687, 488);
             this.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.PictureBox1.TabIndex = 1;
             this.PictureBox1.TabStop = false;
@@ -47,7 +47,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(300, 216);
+            this.ClientSize = new System.Drawing.Size(687, 488);
             this.Controls.Add(this.PictureBox1);
             this.KeyPreview = true;
             this.Name = "frmCDGWindow";

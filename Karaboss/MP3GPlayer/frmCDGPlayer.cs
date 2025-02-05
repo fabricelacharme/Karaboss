@@ -49,6 +49,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using AudioControl;
 using static Un4seen.Bass.Misc.WaveForm.WaveBuffer;
+using Karaboss.Display;
 
 namespace Karaboss
 {
@@ -76,6 +77,8 @@ namespace Karaboss
 
         private bool scrolling = false;
         int newstart = 0;
+        string CDGFullPath;
+        long _duration;             // Duration of song
 
         /// <summary>
         /// Player status
@@ -103,17 +106,22 @@ namespace Karaboss
             //mCDGWindow = new frmCDGWindow();
             mCDGWindow.FormClosing += new FormClosingEventHandler(mCDGWindow_FormClosing);
 
-            tbFileName.Text = filename;
+            
+            CDGFullPath = filename;
+            SetTitle(filename);
 
-            Init_peakLevel();
+            Init_Controls();
             PlayerState = PlayerStates.Stopped;
+            pnlDisplay.DisplayBeat("");
         }
 
 
 
         #region "Control Events"
 
-
+        /// <summary>
+        /// Initialize Bass
+        /// </summary>
         private void InitBass()
         {
             //'Add registration key here if you have a license
@@ -131,11 +139,10 @@ namespace Karaboss
             }
         }
 
-        private void btBrowse_Click(object sender, EventArgs e)
-        {
-            BrowseCDGZip();
-        }
+        #endregion
 
+
+        #region Export to AVI (not used)
         /// <summary>
         /// Export CDG to AVI
         /// </summary>
@@ -158,43 +165,44 @@ namespace Karaboss
             }
         }
 
-        private void tsbPlay_Click(object sender, EventArgs e)
-        {
-            //Play();
-        }
+        #endregion Export to AVI
 
-        private void tsbStop_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                StopPlayback();
-            }
-            catch (Exception ex)
-            {
-                Console.Write(ex.Message);
-            }
-        }
 
-        private void tsbPause_Click(object sender, EventArgs e)
-        {
-            //Pause();
-        }
-
-        private void trbVolume_Scroll(object sender, EventArgs e)
-        {
-            //AdjustVolume();
-        }
-
+        /// <summary>
+        /// Ajust pitch
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void nudKey_ValueChanged(object sender, EventArgs e)
         {
             AdjustPitch();
         }
 
-        #endregion
-
-
+       
         #region Form Load Close
 
+        private void SetTitle(string displayName)
+        {
+            int NumInstance = 1;
+
+            try
+            {
+                displayName = Path.GetFileName(displayName);
+                if (displayName != null)
+                {
+                    displayName = displayName.Replace("__", ": ");
+                    displayName = displayName.Replace("_", " ");
+                }
+                if (NumInstance > 1)
+                    Text = "Karaboss CDG Player (" + NumInstance + ") - " + displayName;
+                else
+                    Text = "Karaboss CDG Player - " + displayName;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         private void frmCDGPlayer_Load(object sender, EventArgs e)
         {
@@ -237,11 +245,7 @@ namespace Karaboss
         #endregion
 
 
-        #region "CDG + MP3 Playback Operations"
-
-      
-
-
+        #region "CDG + MP3 Playback Operations"     
         private void PlayMP3Bass(string mp3FileName)
         {
             if (mBassInitalized || Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, Handle))
@@ -254,7 +258,6 @@ namespace Karaboss
                     AdjustPitch();
                     AdjustVolume();
 
-
                     ShowCDGWindow();
 
                     Bass.BASS_ChannelPlay(mMP3Stream, false);
@@ -265,6 +268,10 @@ namespace Karaboss
             }
         }
 
+        
+        /// <summary>
+        /// Free resources
+        /// </summary>
         private void StopPlaybackBass()
         {
             try
@@ -315,6 +322,20 @@ namespace Karaboss
             }
         }
 
+        private void SetPosition(double pos)
+        {
+            if (mMP3Stream != 0)
+            {
+                cdgpos = (int)pos;
+
+                //Bass.BASS_ChannelSetPosition(mMP3Stream, pos);
+                //Bass.BASS_ChannelSetPosition(mMP3Stream, Bass.BASS_ChannelSeconds2Bytes(mMP3Stream, 20.20), BASSMode.BASS_POS_BYTE);
+                //Bass.BASS_ChannelSetPosition(mMP3Stream, Bass.BASS_ChannelSeconds2Bytes(mMP3Stream, pos), BASSMode.BASS_POS_BYTE);
+            }
+        }
+        
+
+
         #endregion
 
 
@@ -322,21 +343,27 @@ namespace Karaboss
 
         private void BrowseCDGZip()
         {
+            OpenFileDialog1.Title = "Open CDG file";
             OpenFileDialog1.Filter = "CDG or Zip Files (*.zip, *.cdg)|*.zip;*.cdg";
-            OpenFileDialog1.ShowDialog();
-            tbFileName.Text = OpenFileDialog1.FileName;
+            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                CDGFullPath = OpenFileDialog1.FileName;
+
+                SetTitle(CDGFullPath);
+            }
+            
         }
 
         private void PreProcessFiles()
         {
             string myCDGFileName = string.Empty;
 
-            if (Regex.IsMatch(tbFileName.Text, "\\.zip$"))
+            if (Regex.IsMatch(CDGFullPath, "\\.zip$"))
             {
                 string myTempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
                 Directory.CreateDirectory(myTempDir);
                 mTempDir = myTempDir;
-                myCDGFileName = Unzip.UnzipMP3GFiles(tbFileName.Text, myTempDir);
+                myCDGFileName = Unzip.UnzipMP3GFiles(CDGFullPath, myTempDir);
 
                 // GO TO
                 string myMP3FileName = Regex.Replace(myCDGFileName, "\\.cdg$", ".mp3");
@@ -346,12 +373,10 @@ namespace Karaboss
                     mCDGFileName = myCDGFileName;
                     mTempDir = "";
                 }
-
-
             }
-            else if (Regex.IsMatch(tbFileName.Text, "\\.cdg$"))
+            else if (Regex.IsMatch(CDGFullPath, "\\.cdg$"))
             {
-                myCDGFileName = tbFileName.Text;
+                myCDGFileName = CDGFullPath;
 
                 // GOTO
                 string myMP3FileName = Regex.Replace(myCDGFileName, "\\.cdg$", ".mp3");
@@ -401,10 +426,7 @@ namespace Karaboss
         #endregion
 
 
-        #region ProgressBar
-        
-       
-
+        #region Timer              
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
@@ -417,70 +439,44 @@ namespace Karaboss
                     if (cdgpos <= positionHScrollBar.Maximum)
                     {
                         positionHScrollBar.Value = Convert.ToInt32(cdgpos);
-
-                        TimeSpan t = TimeSpan.FromMilliseconds(cdgpos);
-                        string pos = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
-
-                        //lblPos.Text = pos;
-                        pnlDisplay.displayElapsed(pos);
+                        // Display time elapse               
+                        DisplayTimeElapse(cdgpos);                        
                     }
                     break;
                 
                 case PlayerStates.Paused:
+                    PauseMusic();
+                    //PauseResumeMusic();
+                    Timer1.Stop();
                     break;
                 
                 case PlayerStates.Stopped:
                     if (mStop)
                         stopProgress();
+                    Timer1.Stop();
                     break;
                 
                 default:
                     break;
             }
-
-            /*
-            if (mStop)
-                stopProgress();
-            else if (cdgpos <= positionHScrollBar.Maximum)
-            {                
-                positionHScrollBar.Value = Convert.ToInt32(cdgpos);
-
-                TimeSpan t = TimeSpan.FromMilliseconds(cdgpos);
-                string pos = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
-                
-                //lblPos.Text = pos;
-                pnlDisplay.displayElapsed(pos);
-            }
-            */
+           
         }
 
 
-        #endregion ProgressBar
+        private void DisplayTimeElapse(long cpos)
+        {
+            TimeSpan t = TimeSpan.FromMilliseconds(cpos);
+            string pos = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
+            pnlDisplay.displayElapsed(pos);
+
+            double dpercent = 100 * cpos / (double)_duration;
+            pnlDisplay.DisplayPercent(string.Format("{0}%", (int)dpercent));
+        }
+
+        #endregion Timer
 
 
         #region buttons play stop pause
-
-        private void startProgress(long max)
-        {
-            // Display progress                
-            positionHScrollBar.Maximum = Convert.ToInt32(max);
-            positionHScrollBar.Value = 0;
-
-            // Duration of song
-            TimeSpan t = TimeSpan.FromMilliseconds(max);
-            string duration = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);            
-            pnlDisplay.DisplayDuration(duration);
-
-            PlayerState = PlayerStates.Playing;
-            Timer1.Start();
-        }
-
-        private void stopProgress()
-        {
-            Timer1.Stop();
-            positionHScrollBar.Value = 0;
-
-        }
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
@@ -508,11 +504,8 @@ namespace Karaboss
         }
 
         private void btnStop_Click(object sender, EventArgs e)
-        {
-            //PauseMusic();
+        {            
             StopMusic();
-
-
         }
 
         private void BtnStop_MouseHover(object sender, EventArgs e)
@@ -537,102 +530,58 @@ namespace Karaboss
                     BtnStatus();
                     break;
                 case PlayerStates.Paused:
+                    // if paused => play
                     PlayerState = PlayerStates.Playing;
                     BtnStatus();
                     Timer1.Start();
-                    break;
-                case PlayerStates.Stopped:
+                    ResumeMusic();
+                    break;               
+                default:
                     // First play                
                     FirstPlaySong(newstart);
                     break;
-            }
-            
-            /*
-            try
-            {
-                if ((mMP3Stream != 0) && Bass.BASS_ChannelIsActive(mMP3Stream) == BASSActive.BASS_ACTIVE_PLAYING)
-                {
-                    StopPlayback();
-                }
-
-                PreProcessFiles();
-                if (mCDGFileName == null || mMP3FileName == null)
-                {
-                    MessageBox.Show("Cannot find a CDG and MP3 file to play together.");
-                    StopPlayback();
-                    return;
-                }
-
-                mPaused = false;
-                mStop = false;
-                mFrameCount = 0;
-                mCDGFile = new CDGFile(mCDGFileName);
-
-                cdgpos = 0;
-                long cdgLength = mCDGFile.getTotalDuration();
-
-                // Display progress                
-                startProgress(cdgLength);
-
-                // Show frmCDGWindow ici
-                PlayMP3Bass(mMP3FileName);
-
-                DateTime startTime = DateTime.Now;
-                DateTime endTime = startTime.AddMilliseconds(cdgLength);
-                long millisecondsRemaining = cdgLength;
-
-                while (millisecondsRemaining > 0)
-                {
-                    if (mStop)
-                    {
-                        break;
-                    }
-                    millisecondsRemaining = (long)endTime.Subtract(DateTime.Now).TotalMilliseconds;
-                    cdgpos = cdgLength - millisecondsRemaining;
-
-                    while (mPaused)
-                    {
-                        endTime = DateTime.Now.AddMilliseconds(millisecondsRemaining);
-                        Application.DoEvents();
-                    }
-                    mCDGFile.renderAtPosition(cdgpos);
-                    mFrameCount += 1;
-                    mCDGWindow.PictureBox1.Image = mCDGFile.RGBImage;
-
-                    Bitmap mbmp = new Bitmap(mCDGFile.RGBImage);
-                    mCDGWindow.PictureBox1.BackColor = mbmp.GetPixel(1, 1);
-
-                    mCDGWindow.PictureBox1.Refresh();
-
-                    // TODO
-                    //float myFrameRate = (float)Math.Round(mFrameCount / (pos / 1000), 1);
-                    Application.DoEvents();
-                }
-                StopPlayback();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-
-            }
-            */
+            }          
         }
 
-        private void PauseMusic()
+        private void PauseResumeMusic()
         {
             mPaused = !mPaused;
             if (mMP3Stream != 0)
             {
                 if (Bass.BASS_ChannelIsActive(mMP3Stream) != BASSActive.BASS_ACTIVE_PLAYING)
                 {
+                    // Resume
                     Bass.BASS_ChannelPlay(mMP3Stream, false);
-                    tsbPause.Text = "Pause";
+                    //tsbPause.Text = "Pause";
                 }
                 else
                 {
+                    // Pause
                     Bass.BASS_ChannelPause(mMP3Stream);
-                    tsbPause.Text = "Resume";
+                    //tsbPause.Text = "Resume";
                 }
+            }
+        }
+
+       private void PauseMusic()
+        {
+            if (mMP3Stream != 0)
+            {
+                mPaused = true;
+                // Pause
+                Bass.BASS_ChannelPause(mMP3Stream);
+                //tsbPause.Text = "Resume";
+            }
+        }
+
+        private void ResumeMusic()
+        {
+            if (mMP3Stream != 0)
+            {
+                mPaused = false;
+                // Resume
+                Bass.BASS_ChannelPlay(mMP3Stream, false);
+                //tsbPause.Text = "Pause";
             }
         }
 
@@ -651,9 +600,8 @@ namespace Karaboss
                     MessageBox.Show("Cannot find a CDG and MP3 file to play together.");
                     StopPlayback();
                     return;
-                }
+                }                
 
-                PlayerState = PlayerStates.Playing;
                 mPaused = false;
                 mStop = false;
                 mFrameCount = 0;
@@ -662,7 +610,8 @@ namespace Karaboss
 
                 cdgpos = 0;
                 long cdgLength = mCDGFile.getTotalDuration();
-
+                _duration = cdgLength;          // Duration of song
+                
                 // Display progress                
                 startProgress(cdgLength);
 
@@ -742,6 +691,31 @@ namespace Karaboss
 
         }
 
+        private void startProgress(long max)
+        {
+            // Display progress                
+            positionHScrollBar.Maximum = Convert.ToInt32(max);
+            positionHScrollBar.Value = 0;
+
+            // Duration of song
+            TimeSpan t = TimeSpan.FromMilliseconds(max);
+            string duration = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
+            pnlDisplay.DisplayDuration(duration);
+            pnlDisplay.DisplayPercent(string.Format("{0}%", 0));
+
+            PlayerState = PlayerStates.Playing;
+            BtnStatus();
+            Timer1.Start();
+        }
+
+        private void stopProgress()
+        {
+            PlayerState = PlayerStates.Stopped;
+            BtnStatus();            
+            positionHScrollBar.Value = 0;
+
+        }
+
         private void BtnStatus()
         {
             switch (PlayerState)
@@ -751,13 +725,13 @@ namespace Karaboss
                     btnStop.Image = Properties.Resources.btn_black_stop;
                     btnPlay.Enabled = true;  // to allow pause
                     btnStop.Enabled = true;  // to allow stop 
-                    pnlDisplay.DisplayStatus("playing");                    
+                    pnlDisplay.DisplayStatus("Playing");                    
                     break;
                 case PlayerStates.Paused:
                     btnPlay.Image = Properties.Resources.btn_red_pause;
                     btnPlay.Enabled = true;  // to allow play
                     btnStop.Enabled = true;  // to allow stop
-                    pnlDisplay.DisplayStatus("paused");
+                    pnlDisplay.DisplayStatus("Paused");
                     break;
                 case PlayerStates.Stopped:
                     btnPlay.Image = Properties.Resources.btn_black_play;
@@ -765,7 +739,7 @@ namespace Karaboss
                     btnStop.Image = Properties.Resources.btn_red_stop;
                     VuPeakVolumeLeft.Level = 0;
                     VuPeakVolumeRight.Level = 0;
-                    pnlDisplay.DisplayStatus("stopped");
+                    pnlDisplay.DisplayStatus("Stopped");
                     break;
                 default:
                     break;
@@ -776,6 +750,13 @@ namespace Karaboss
 
 
         #region peak level
+
+        private void sldMainVolume_ValueChanged(object sender, EventArgs e)
+        {
+            //SetMidiMasterVolume((int)sldMainVolume.Value);
+            AdjustVolume();
+            lblMainVolume.Text = String.Format("{0}%", 100 * sldMainVolume.Value / sldMainVolume.Maximum);
+        }
 
         private void sldMainVolume_Scroll(object sender, ScrollEventArgs e)
         {
@@ -798,7 +779,6 @@ namespace Karaboss
                 
             }
         }
-
         
 
         private static int HIWORD(int n)
@@ -814,8 +794,35 @@ namespace Karaboss
         /// <summary>
         /// Initialize control peak volume level
         /// </summary>
-        private void Init_peakLevel()
+        private void Init_Controls()
         {
+
+            pnlControls.Top = menuStrip1.Height;
+            pnlControls.Left = 0;
+
+            
+            #region volume
+
+            sldMainVolume.Maximum = 130;    // Closer to 127
+            sldMainVolume.Minimum = 0;
+            sldMainVolume.ScaleDivisions = 13;
+            sldMainVolume.Value = 104;
+            sldMainVolume.SmallChange = 13;
+            sldMainVolume.LargeChange = 13;
+            sldMainVolume.MouseWheelBarPartitions = 10;
+
+            /*
+            sldMainVolume.Left = 249;
+            sldMainVolume.Top = 25;
+            sldMainVolume.Width = 24;
+            sldMainVolume.Height = 80;
+            */
+
+            lblMainVolume.Text = String.Format("{0}%", 100 * sldMainVolume.Value / sldMainVolume.Maximum);
+
+            #endregion
+
+
             this.VuPeakVolumeLeft.AnalogMeter = false;
             this.VuPeakVolumeLeft.BackColor = System.Drawing.Color.DimGray;
             this.VuPeakVolumeLeft.DialBackground = System.Drawing.Color.White;
@@ -935,5 +942,46 @@ namespace Karaboss
 
         #endregion peak level
 
+
+        #region Menus
+        private void mnuFileOpen_Click(object sender, EventArgs e)
+        {
+            BrowseCDGZip();
+        }
+
+        private void mnuFileQuit_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void mnuHelpAbout_Click(object sender, EventArgs e)
+        {
+            frmAboutDialog dlg = new frmAboutDialog();
+            dlg.ShowDialog();
+        }
+
+
+
+        #endregion Menus
+
+        private void positionHScrollBar_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (e.Type == ScrollEventType.EndScroll)
+            {
+                // scrollbar position = fraction  of sequence Length
+                double n = (e.NewValue / (float)(positionHScrollBar.Maximum - positionHScrollBar.Minimum)) * _duration;
+                //newstart = (int)n;
+
+                SetPosition(n);
+                
+                scrolling = false;
+            }
+            else if (e.Type != ScrollEventType.First)
+            {
+                // Explain: remove ScrollEventType.First when using the keyboard to pause, start, rewind
+                // Without this, scrolling is set to true
+                scrolling = true;
+            }
+        }
     }
 }

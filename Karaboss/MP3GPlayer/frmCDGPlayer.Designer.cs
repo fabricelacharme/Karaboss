@@ -29,35 +29,34 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCDGPlayer));
             this.btRecord = new System.Windows.Forms.Button();
-            this.tbFileName = new System.Windows.Forms.TextBox();
-            this.btBrowse = new System.Windows.Forms.Button();
-            this.ToolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.tsbPlay = new System.Windows.Forms.ToolStripButton();
-            this.tsbPause = new System.Windows.Forms.ToolStripButton();
-            this.tsbStop = new System.Windows.Forms.ToolStripButton();
             this.nudKey = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
-            this.pnlTop = new System.Windows.Forms.Panel();
             this.OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
             this.positionHScrollBar = new ColorSlider.ColorSlider();
             this.VuPeakVolumeLeft = new VU_MeterLibrary.VuMeter();
             this.sldMainVolume = new ColorSlider.ColorSlider();
-            this.pnlBottom = new System.Windows.Forms.Panel();
+            this.pnlControls = new System.Windows.Forms.Panel();
+            this.VuPeakVolumeRight = new VU_MeterLibrary.VuMeter();
             this.lblMainVolume = new System.Windows.Forms.Label();
             this.lnlVol = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuFileSep = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlDisplay = new Karaboss.Display.PanelPlayer();
             this.btnPrev = new Karaboss.NoSelectButton();
             this.btnNext = new Karaboss.NoSelectButton();
             this.btnStop = new Karaboss.NoSelectButton();
             this.btnPlay = new Karaboss.NoSelectButton();
-            this.VuPeakVolumeRight = new VU_MeterLibrary.VuMeter();
-            this.ToolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudKey)).BeginInit();
-            this.pnlTop.SuspendLayout();
-            this.pnlBottom.SuspendLayout();
+            this.pnlControls.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btRecord
@@ -68,67 +67,8 @@
             this.btRecord.TabIndex = 6;
             this.btRecord.Text = "Record";
             this.btRecord.UseVisualStyleBackColor = true;
+            this.btRecord.Visible = false;
             this.btRecord.Click += new System.EventHandler(this.btRecord_Click);
-            // 
-            // tbFileName
-            // 
-            this.tbFileName.Location = new System.Drawing.Point(3, 10);
-            this.tbFileName.Name = "tbFileName";
-            this.tbFileName.Size = new System.Drawing.Size(453, 20);
-            this.tbFileName.TabIndex = 0;
-            // 
-            // btBrowse
-            // 
-            this.btBrowse.Location = new System.Drawing.Point(461, 9);
-            this.btBrowse.Name = "btBrowse";
-            this.btBrowse.Size = new System.Drawing.Size(63, 23);
-            this.btBrowse.TabIndex = 3;
-            this.btBrowse.Text = "Browse";
-            this.btBrowse.UseVisualStyleBackColor = true;
-            this.btBrowse.Click += new System.EventHandler(this.btBrowse_Click);
-            // 
-            // ToolStrip1
-            // 
-            this.ToolStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.ToolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbPlay,
-            this.tsbPause,
-            this.tsbStop});
-            this.ToolStrip1.Location = new System.Drawing.Point(9, 52);
-            this.ToolStrip1.Name = "ToolStrip1";
-            this.ToolStrip1.Size = new System.Drawing.Size(81, 25);
-            this.ToolStrip1.TabIndex = 5;
-            this.ToolStrip1.Text = "ToolStrip1";
-            // 
-            // tsbPlay
-            // 
-            this.tsbPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbPlay.Image = ((System.Drawing.Image)(resources.GetObject("tsbPlay.Image")));
-            this.tsbPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbPlay.Name = "tsbPlay";
-            this.tsbPlay.Size = new System.Drawing.Size(23, 22);
-            this.tsbPlay.Text = "Play";
-            this.tsbPlay.Click += new System.EventHandler(this.tsbPlay_Click);
-            // 
-            // tsbPause
-            // 
-            this.tsbPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbPause.Image = ((System.Drawing.Image)(resources.GetObject("tsbPause.Image")));
-            this.tsbPause.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbPause.Name = "tsbPause";
-            this.tsbPause.Size = new System.Drawing.Size(23, 22);
-            this.tsbPause.Text = "Pause";
-            this.tsbPause.Click += new System.EventHandler(this.tsbPause_Click);
-            // 
-            // tsbStop
-            // 
-            this.tsbStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbStop.Image = ((System.Drawing.Image)(resources.GetObject("tsbStop.Image")));
-            this.tsbStop.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbStop.Name = "tsbStop";
-            this.tsbStop.Size = new System.Drawing.Size(23, 22);
-            this.tsbStop.Text = "Stop";
-            this.tsbStop.Click += new System.EventHandler(this.tsbStop_Click);
             // 
             // nudKey
             // 
@@ -136,6 +76,7 @@
             this.nudKey.Name = "nudKey";
             this.nudKey.Size = new System.Drawing.Size(51, 20);
             this.nudKey.TabIndex = 4;
+            this.nudKey.TabStop = false;
             this.nudKey.ValueChanged += new System.EventHandler(this.nudKey_ValueChanged);
             // 
             // label2
@@ -146,16 +87,6 @@
             this.label2.Size = new System.Drawing.Size(25, 13);
             this.label2.TabIndex = 3;
             this.label2.Text = "Key";
-            // 
-            // pnlTop
-            // 
-            this.pnlTop.Controls.Add(this.ToolStrip1);
-            this.pnlTop.Controls.Add(this.tbFileName);
-            this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlTop.Location = new System.Drawing.Point(0, 0);
-            this.pnlTop.Name = "pnlTop";
-            this.pnlTop.Size = new System.Drawing.Size(843, 87);
-            this.pnlTop.TabIndex = 4;
             // 
             // OpenFileDialog1
             // 
@@ -229,6 +160,7 @@
             0,
             0,
             0});
+            this.positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.positionHScrollBar_Scroll);
             // 
             // VuPeakVolumeLeft
             // 
@@ -338,28 +270,73 @@
             0,
             0,
             0});
+            this.sldMainVolume.ValueChanged += new System.EventHandler(this.sldMainVolume_ValueChanged);
             this.sldMainVolume.Scroll += new System.Windows.Forms.ScrollEventHandler(this.sldMainVolume_Scroll);
             // 
-            // pnlBottom
+            // pnlControls
             // 
-            this.pnlBottom.Controls.Add(this.VuPeakVolumeRight);
-            this.pnlBottom.Controls.Add(this.VuPeakVolumeLeft);
-            this.pnlBottom.Controls.Add(this.lblMainVolume);
-            this.pnlBottom.Controls.Add(this.btRecord);
-            this.pnlBottom.Controls.Add(this.nudKey);
-            this.pnlBottom.Controls.Add(this.label2);
-            this.pnlBottom.Controls.Add(this.pnlDisplay);
-            this.pnlBottom.Controls.Add(this.btnPrev);
-            this.pnlBottom.Controls.Add(this.btnNext);
-            this.pnlBottom.Controls.Add(this.positionHScrollBar);
-            this.pnlBottom.Controls.Add(this.btnStop);
-            this.pnlBottom.Controls.Add(this.btnPlay);
-            this.pnlBottom.Controls.Add(this.sldMainVolume);
-            this.pnlBottom.Controls.Add(this.lnlVol);
-            this.pnlBottom.Location = new System.Drawing.Point(9, 147);
-            this.pnlBottom.Name = "pnlBottom";
-            this.pnlBottom.Size = new System.Drawing.Size(454, 130);
-            this.pnlBottom.TabIndex = 45;
+            this.pnlControls.Controls.Add(this.VuPeakVolumeRight);
+            this.pnlControls.Controls.Add(this.VuPeakVolumeLeft);
+            this.pnlControls.Controls.Add(this.lblMainVolume);
+            this.pnlControls.Controls.Add(this.btRecord);
+            this.pnlControls.Controls.Add(this.nudKey);
+            this.pnlControls.Controls.Add(this.label2);
+            this.pnlControls.Controls.Add(this.pnlDisplay);
+            this.pnlControls.Controls.Add(this.btnPrev);
+            this.pnlControls.Controls.Add(this.btnNext);
+            this.pnlControls.Controls.Add(this.positionHScrollBar);
+            this.pnlControls.Controls.Add(this.btnStop);
+            this.pnlControls.Controls.Add(this.btnPlay);
+            this.pnlControls.Controls.Add(this.sldMainVolume);
+            this.pnlControls.Controls.Add(this.lnlVol);
+            this.pnlControls.Location = new System.Drawing.Point(0, 27);
+            this.pnlControls.Name = "pnlControls";
+            this.pnlControls.Size = new System.Drawing.Size(454, 130);
+            this.pnlControls.TabIndex = 0;
+            // 
+            // VuPeakVolumeRight
+            // 
+            this.VuPeakVolumeRight.AnalogMeter = false;
+            this.VuPeakVolumeRight.BackColor = System.Drawing.Color.DimGray;
+            this.VuPeakVolumeRight.DialBackground = System.Drawing.Color.White;
+            this.VuPeakVolumeRight.DialTextNegative = System.Drawing.Color.Red;
+            this.VuPeakVolumeRight.DialTextPositive = System.Drawing.Color.Black;
+            this.VuPeakVolumeRight.DialTextZero = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeRight.Led1ColorOff = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeRight.Led1ColorOn = System.Drawing.Color.LimeGreen;
+            this.VuPeakVolumeRight.Led1Count = 14;
+            this.VuPeakVolumeRight.Led2ColorOff = System.Drawing.Color.Olive;
+            this.VuPeakVolumeRight.Led2ColorOn = System.Drawing.Color.Yellow;
+            this.VuPeakVolumeRight.Led2Count = 14;
+            this.VuPeakVolumeRight.Led3ColorOff = System.Drawing.Color.Maroon;
+            this.VuPeakVolumeRight.Led3ColorOn = System.Drawing.Color.Red;
+            this.VuPeakVolumeRight.Led3Count = 6;
+            this.VuPeakVolumeRight.LedSize = new System.Drawing.Size(12, 2);
+            this.VuPeakVolumeRight.LedSpace = 1;
+            this.VuPeakVolumeRight.Level = 0;
+            this.VuPeakVolumeRight.LevelMax = 127;
+            this.VuPeakVolumeRight.Location = new System.Drawing.Point(240, 7);
+            this.VuPeakVolumeRight.MeterScale = VU_MeterLibrary.MeterScale.Log10;
+            this.VuPeakVolumeRight.Name = "VuPeakVolumeRight";
+            this.VuPeakVolumeRight.NeedleColor = System.Drawing.Color.Black;
+            this.VuPeakVolumeRight.PeakHold = true;
+            this.VuPeakVolumeRight.Peakms = 1000;
+            this.VuPeakVolumeRight.PeakNeedleColor = System.Drawing.Color.Red;
+            this.VuPeakVolumeRight.ShowDialOnly = false;
+            this.VuPeakVolumeRight.ShowLedPeak = false;
+            this.VuPeakVolumeRight.ShowTextInDial = false;
+            this.VuPeakVolumeRight.Size = new System.Drawing.Size(14, 103);
+            this.VuPeakVolumeRight.TabIndex = 47;
+            this.VuPeakVolumeRight.TextInDial = new string[] {
+        "-40",
+        "-20",
+        "-10",
+        "-5",
+        "0",
+        "+6"};
+            this.VuPeakVolumeRight.UseLedLight = false;
+            this.VuPeakVolumeRight.VerticalBar = true;
+            this.VuPeakVolumeRight.VuText = "VU";
             // 
             // lblMainVolume
             // 
@@ -384,6 +361,61 @@
             this.lnlVol.TabIndex = 45;
             this.lnlVol.Text = "Volume";
             this.lnlVol.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFile,
+            this.mnuHelp});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(464, 24);
+            this.menuStrip1.TabIndex = 1;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // mnuFile
+            // 
+            this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFileOpen,
+            this.MnuFileSep,
+            this.mnuFileQuit});
+            this.mnuFile.Name = "mnuFile";
+            this.mnuFile.Size = new System.Drawing.Size(37, 20);
+            this.mnuFile.Text = "&File";
+            // 
+            // MnuFileSep
+            // 
+            this.MnuFileSep.Name = "MnuFileSep";
+            this.MnuFileSep.Size = new System.Drawing.Size(109, 6);
+            // 
+            // mnuFileQuit
+            // 
+            this.mnuFileQuit.Name = "mnuFileQuit";
+            this.mnuFileQuit.Size = new System.Drawing.Size(112, 22);
+            this.mnuFileQuit.Text = "E&xit";
+            this.mnuFileQuit.Click += new System.EventHandler(this.mnuFileQuit_Click);
+            // 
+            // mnuHelp
+            // 
+            this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuHelpAbout});
+            this.mnuHelp.Name = "mnuHelp";
+            this.mnuHelp.Size = new System.Drawing.Size(44, 20);
+            this.mnuHelp.Text = "&Help";
+            // 
+            // mnuHelpAbout
+            // 
+            this.mnuHelpAbout.Name = "mnuHelpAbout";
+            this.mnuHelpAbout.Size = new System.Drawing.Size(116, 22);
+            this.mnuHelpAbout.Text = "&About...";
+            this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
+            // 
+            // mnuFileOpen
+            // 
+            this.mnuFileOpen.Name = "mnuFileOpen";
+            this.mnuFileOpen.Size = new System.Drawing.Size(112, 22);
+            this.mnuFileOpen.Text = "&Open...";
+            this.mnuFileOpen.Click += new System.EventHandler(this.mnuFileOpen_Click);
             // 
             // pnlDisplay
             // 
@@ -438,8 +470,11 @@
             this.btnStop.Size = new System.Drawing.Size(50, 50);
             this.btnStop.TabIndex = 42;
             this.btnStop.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnStop, "Stop");
             this.btnStop.UseVisualStyleBackColor = false;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            this.btnStop.MouseLeave += new System.EventHandler(this.BtnStop_MouseLeave);
+            this.btnStop.MouseHover += new System.EventHandler(this.BtnStop_MouseHover);
             // 
             // btnPlay
             // 
@@ -455,93 +490,43 @@
             this.btnPlay.Size = new System.Drawing.Size(50, 50);
             this.btnPlay.TabIndex = 41;
             this.btnPlay.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnPlay, "Play/pause");
             this.btnPlay.UseVisualStyleBackColor = false;
             this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
-            // 
-            // VuPeakVolumeRight
-            // 
-            this.VuPeakVolumeRight.AnalogMeter = false;
-            this.VuPeakVolumeRight.BackColor = System.Drawing.Color.DimGray;
-            this.VuPeakVolumeRight.DialBackground = System.Drawing.Color.White;
-            this.VuPeakVolumeRight.DialTextNegative = System.Drawing.Color.Red;
-            this.VuPeakVolumeRight.DialTextPositive = System.Drawing.Color.Black;
-            this.VuPeakVolumeRight.DialTextZero = System.Drawing.Color.DarkGreen;
-            this.VuPeakVolumeRight.Led1ColorOff = System.Drawing.Color.DarkGreen;
-            this.VuPeakVolumeRight.Led1ColorOn = System.Drawing.Color.LimeGreen;
-            this.VuPeakVolumeRight.Led1Count = 14;
-            this.VuPeakVolumeRight.Led2ColorOff = System.Drawing.Color.Olive;
-            this.VuPeakVolumeRight.Led2ColorOn = System.Drawing.Color.Yellow;
-            this.VuPeakVolumeRight.Led2Count = 14;
-            this.VuPeakVolumeRight.Led3ColorOff = System.Drawing.Color.Maroon;
-            this.VuPeakVolumeRight.Led3ColorOn = System.Drawing.Color.Red;
-            this.VuPeakVolumeRight.Led3Count = 6;
-            this.VuPeakVolumeRight.LedSize = new System.Drawing.Size(12, 2);
-            this.VuPeakVolumeRight.LedSpace = 1;
-            this.VuPeakVolumeRight.Level = 0;
-            this.VuPeakVolumeRight.LevelMax = 127;
-            this.VuPeakVolumeRight.Location = new System.Drawing.Point(246, 7);
-            this.VuPeakVolumeRight.MeterScale = VU_MeterLibrary.MeterScale.Log10;
-            this.VuPeakVolumeRight.Name = "VuPeakVolumeRight";
-            this.VuPeakVolumeRight.NeedleColor = System.Drawing.Color.Black;
-            this.VuPeakVolumeRight.PeakHold = true;
-            this.VuPeakVolumeRight.Peakms = 1000;
-            this.VuPeakVolumeRight.PeakNeedleColor = System.Drawing.Color.Red;
-            this.VuPeakVolumeRight.ShowDialOnly = false;
-            this.VuPeakVolumeRight.ShowLedPeak = false;
-            this.VuPeakVolumeRight.ShowTextInDial = false;
-            this.VuPeakVolumeRight.Size = new System.Drawing.Size(14, 103);
-            this.VuPeakVolumeRight.TabIndex = 47;
-            this.VuPeakVolumeRight.TextInDial = new string[] {
-        "-40",
-        "-20",
-        "-10",
-        "-5",
-        "0",
-        "+6"};
-            this.VuPeakVolumeRight.UseLedLight = false;
-            this.VuPeakVolumeRight.VerticalBar = true;
-            this.VuPeakVolumeRight.VuText = "VU";
+            this.btnPlay.MouseLeave += new System.EventHandler(this.BtnPlay_MouseLeave);
+            this.btnPlay.MouseHover += new System.EventHandler(this.BtnPlay_MouseHover);
             // 
             // frmCDGPlayer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.ClientSize = new System.Drawing.Size(843, 286);
-            this.Controls.Add(this.pnlBottom);
-            this.Controls.Add(this.btBrowse);
-            this.Controls.Add(this.pnlTop);
+            this.ClientSize = new System.Drawing.Size(464, 161);
+            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.pnlControls);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "frmCDGPlayer";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmCDGPlayer";
+            this.Text = "Karaboss - CDG Player";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmCDGPlayer_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmCDGPlayer_FormClosed);
             this.Load += new System.EventHandler(this.frmCDGPlayer_Load);
-            this.ToolStrip1.ResumeLayout(false);
-            this.ToolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudKey)).EndInit();
-            this.pnlTop.ResumeLayout(false);
-            this.pnlTop.PerformLayout();
-            this.pnlBottom.ResumeLayout(false);
-            this.pnlBottom.PerformLayout();
+            this.pnlControls.ResumeLayout(false);
+            this.pnlControls.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Button btRecord;
-        private System.Windows.Forms.TextBox tbFileName;
-        private System.Windows.Forms.Button btBrowse;
-        internal System.Windows.Forms.ToolStrip ToolStrip1;
-        internal System.Windows.Forms.ToolStripButton tsbPlay;
-        internal System.Windows.Forms.ToolStripButton tsbStop;
-        internal System.Windows.Forms.ToolStripButton tsbPause;
         private System.Windows.Forms.NumericUpDown nudKey;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Panel pnlTop;
         internal System.Windows.Forms.OpenFileDialog OpenFileDialog1;
         internal System.Windows.Forms.Timer Timer1;
         private Display.PanelPlayer pnlDisplay;
@@ -552,9 +537,17 @@
         private NoSelectButton btnNext;
         private NoSelectButton btnStop;
         private NoSelectButton btnPlay;
-        private System.Windows.Forms.Panel pnlBottom;
+        private System.Windows.Forms.Panel pnlControls;
         private System.Windows.Forms.Label lnlVol;
         private System.Windows.Forms.Label lblMainVolume;
         private VU_MeterLibrary.VuMeter VuPeakVolumeRight;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem mnuFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileOpen;
+        private System.Windows.Forms.ToolStripSeparator MnuFileSep;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileQuit;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelp;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
     }
 }

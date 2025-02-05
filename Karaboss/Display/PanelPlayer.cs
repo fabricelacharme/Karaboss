@@ -12,8 +12,7 @@ namespace Karaboss.Display
 {
     public partial class PanelPlayer : UserControl
     {
-        
-        
+                
         public PanelPlayer()
         {
             InitializeComponent();

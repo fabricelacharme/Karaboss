@@ -2637,14 +2637,12 @@ namespace Karaboss
         /// </summary>
         private void DisplayTimeElapse(int pos)
         {
-            double dpercent = 100 * pos / (double)_totalTicks;
-            //lblPercent.Text = string.Format("{0}%", (int)dpercent);
+            double dpercent = 100 * pos / (double)_totalTicks;            
             panelPlayer.DisplayPercent(string.Format("{0}%", (int)dpercent));
 
             double maintenant = (dpercent * _duration) / 100;  //seconds
             int Min = (int)(maintenant / 60);
-            int Sec = (int)(maintenant - (Min * 60));
-            //lblElapsed.Text = string.Format("{0:00}:{1:00}", Min, Sec);
+            int Sec = (int)(maintenant - (Min * 60));            
             panelPlayer.displayElapsed(string.Format("{0:00}:{1:00}", Min, Sec));
         }
 
