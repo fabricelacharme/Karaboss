@@ -39,25 +39,23 @@
             this.tsbStop = new System.Windows.Forms.ToolStripButton();
             this.nudKey = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
-            this.trbVolume = new System.Windows.Forms.TrackBar();
-            this.label1 = new System.Windows.Forms.Label();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
             this.positionHScrollBar = new ColorSlider.ColorSlider();
-            this.VuMasterPeakVolume = new VU_MeterLibrary.VuMeter();
+            this.VuPeakVolumeLeft = new VU_MeterLibrary.VuMeter();
             this.sldMainVolume = new ColorSlider.ColorSlider();
             this.pnlBottom = new System.Windows.Forms.Panel();
-            this.lnlVol = new System.Windows.Forms.Label();
             this.lblMainVolume = new System.Windows.Forms.Label();
+            this.lnlVol = new System.Windows.Forms.Label();
             this.pnlDisplay = new Karaboss.Display.PanelPlayer();
             this.btnPrev = new Karaboss.NoSelectButton();
             this.btnNext = new Karaboss.NoSelectButton();
             this.btnStop = new Karaboss.NoSelectButton();
             this.btnPlay = new Karaboss.NoSelectButton();
+            this.VuPeakVolumeRight = new VU_MeterLibrary.VuMeter();
             this.ToolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudKey)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trbVolume)).BeginInit();
             this.pnlTop.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.SuspendLayout();
@@ -149,30 +147,9 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "Key";
             // 
-            // trbVolume
-            // 
-            this.trbVolume.Location = new System.Drawing.Point(194, 36);
-            this.trbVolume.Maximum = 100;
-            this.trbVolume.Name = "trbVolume";
-            this.trbVolume.Size = new System.Drawing.Size(128, 45);
-            this.trbVolume.TabIndex = 2;
-            this.trbVolume.Value = 100;
-            this.trbVolume.Scroll += new System.EventHandler(this.trbVolume_Scroll);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(146, 50);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(42, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Volume";
-            // 
             // pnlTop
             // 
             this.pnlTop.Controls.Add(this.ToolStrip1);
-            this.pnlTop.Controls.Add(this.trbVolume);
-            this.pnlTop.Controls.Add(this.label1);
             this.pnlTop.Controls.Add(this.tbFileName);
             this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTop.Location = new System.Drawing.Point(0, 0);
@@ -253,48 +230,49 @@
             0,
             0});
             // 
-            // VuMasterPeakVolume
+            // VuPeakVolumeLeft
             // 
-            this.VuMasterPeakVolume.AnalogMeter = false;
-            this.VuMasterPeakVolume.DialBackground = System.Drawing.Color.White;
-            this.VuMasterPeakVolume.DialTextNegative = System.Drawing.Color.Red;
-            this.VuMasterPeakVolume.DialTextPositive = System.Drawing.Color.Black;
-            this.VuMasterPeakVolume.DialTextZero = System.Drawing.Color.DarkGreen;
-            this.VuMasterPeakVolume.Led1ColorOff = System.Drawing.Color.DarkGreen;
-            this.VuMasterPeakVolume.Led1ColorOn = System.Drawing.Color.LimeGreen;
-            this.VuMasterPeakVolume.Led1Count = 6;
-            this.VuMasterPeakVolume.Led2ColorOff = System.Drawing.Color.Olive;
-            this.VuMasterPeakVolume.Led2ColorOn = System.Drawing.Color.Yellow;
-            this.VuMasterPeakVolume.Led2Count = 6;
-            this.VuMasterPeakVolume.Led3ColorOff = System.Drawing.Color.Maroon;
-            this.VuMasterPeakVolume.Led3ColorOn = System.Drawing.Color.Red;
-            this.VuMasterPeakVolume.Led3Count = 4;
-            this.VuMasterPeakVolume.LedSize = new System.Drawing.Size(6, 14);
-            this.VuMasterPeakVolume.LedSpace = 3;
-            this.VuMasterPeakVolume.Level = 0;
-            this.VuMasterPeakVolume.LevelMax = 65535;
-            this.VuMasterPeakVolume.Location = new System.Drawing.Point(229, 7);
-            this.VuMasterPeakVolume.MeterScale = VU_MeterLibrary.MeterScale.Log10;
-            this.VuMasterPeakVolume.Name = "VuMasterPeakVolume";
-            this.VuMasterPeakVolume.NeedleColor = System.Drawing.Color.Black;
-            this.VuMasterPeakVolume.PeakHold = true;
-            this.VuMasterPeakVolume.Peakms = 1000;
-            this.VuMasterPeakVolume.PeakNeedleColor = System.Drawing.Color.Red;
-            this.VuMasterPeakVolume.ShowDialOnly = false;
-            this.VuMasterPeakVolume.ShowLedPeak = false;
-            this.VuMasterPeakVolume.ShowTextInDial = false;
-            this.VuMasterPeakVolume.Size = new System.Drawing.Size(12, 275);
-            this.VuMasterPeakVolume.TabIndex = 11;
-            this.VuMasterPeakVolume.TextInDial = new string[] {
+            this.VuPeakVolumeLeft.AnalogMeter = false;
+            this.VuPeakVolumeLeft.BackColor = System.Drawing.Color.DimGray;
+            this.VuPeakVolumeLeft.DialBackground = System.Drawing.Color.White;
+            this.VuPeakVolumeLeft.DialTextNegative = System.Drawing.Color.Red;
+            this.VuPeakVolumeLeft.DialTextPositive = System.Drawing.Color.Black;
+            this.VuPeakVolumeLeft.DialTextZero = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeLeft.Led1ColorOff = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeLeft.Led1ColorOn = System.Drawing.Color.LimeGreen;
+            this.VuPeakVolumeLeft.Led1Count = 14;
+            this.VuPeakVolumeLeft.Led2ColorOff = System.Drawing.Color.Olive;
+            this.VuPeakVolumeLeft.Led2ColorOn = System.Drawing.Color.Yellow;
+            this.VuPeakVolumeLeft.Led2Count = 14;
+            this.VuPeakVolumeLeft.Led3ColorOff = System.Drawing.Color.Maroon;
+            this.VuPeakVolumeLeft.Led3ColorOn = System.Drawing.Color.Red;
+            this.VuPeakVolumeLeft.Led3Count = 6;
+            this.VuPeakVolumeLeft.LedSize = new System.Drawing.Size(12, 2);
+            this.VuPeakVolumeLeft.LedSpace = 1;
+            this.VuPeakVolumeLeft.Level = 0;
+            this.VuPeakVolumeLeft.LevelMax = 127;
+            this.VuPeakVolumeLeft.Location = new System.Drawing.Point(220, 7);
+            this.VuPeakVolumeLeft.MeterScale = VU_MeterLibrary.MeterScale.Log10;
+            this.VuPeakVolumeLeft.Name = "VuPeakVolumeLeft";
+            this.VuPeakVolumeLeft.NeedleColor = System.Drawing.Color.Black;
+            this.VuPeakVolumeLeft.PeakHold = true;
+            this.VuPeakVolumeLeft.Peakms = 1000;
+            this.VuPeakVolumeLeft.PeakNeedleColor = System.Drawing.Color.Red;
+            this.VuPeakVolumeLeft.ShowDialOnly = false;
+            this.VuPeakVolumeLeft.ShowLedPeak = false;
+            this.VuPeakVolumeLeft.ShowTextInDial = false;
+            this.VuPeakVolumeLeft.Size = new System.Drawing.Size(14, 103);
+            this.VuPeakVolumeLeft.TabIndex = 11;
+            this.VuPeakVolumeLeft.TextInDial = new string[] {
         "-40",
         "-20",
         "-10",
         "-5",
         "0",
         "+6"};
-            this.VuMasterPeakVolume.UseLedLight = false;
-            this.VuMasterPeakVolume.VerticalBar = true;
-            this.VuMasterPeakVolume.VuText = "VU";
+            this.VuPeakVolumeLeft.UseLedLight = false;
+            this.VuPeakVolumeLeft.VerticalBar = true;
+            this.VuPeakVolumeLeft.VuText = "VU";
             // 
             // sldMainVolume
             // 
@@ -312,7 +290,7 @@
             0,
             0,
             0});
-            this.sldMainVolume.Location = new System.Drawing.Point(249, 25);
+            this.sldMainVolume.Location = new System.Drawing.Point(286, 25);
             this.sldMainVolume.Maximum = new decimal(new int[] {
             100,
             0,
@@ -364,47 +342,48 @@
             // 
             // pnlBottom
             // 
+            this.pnlBottom.Controls.Add(this.VuPeakVolumeRight);
+            this.pnlBottom.Controls.Add(this.VuPeakVolumeLeft);
             this.pnlBottom.Controls.Add(this.lblMainVolume);
             this.pnlBottom.Controls.Add(this.btRecord);
             this.pnlBottom.Controls.Add(this.nudKey);
             this.pnlBottom.Controls.Add(this.label2);
-            this.pnlBottom.Controls.Add(this.lnlVol);
             this.pnlBottom.Controls.Add(this.pnlDisplay);
             this.pnlBottom.Controls.Add(this.btnPrev);
             this.pnlBottom.Controls.Add(this.btnNext);
             this.pnlBottom.Controls.Add(this.positionHScrollBar);
             this.pnlBottom.Controls.Add(this.btnStop);
-            this.pnlBottom.Controls.Add(this.VuMasterPeakVolume);
             this.pnlBottom.Controls.Add(this.btnPlay);
             this.pnlBottom.Controls.Add(this.sldMainVolume);
+            this.pnlBottom.Controls.Add(this.lnlVol);
             this.pnlBottom.Location = new System.Drawing.Point(9, 147);
             this.pnlBottom.Name = "pnlBottom";
             this.pnlBottom.Size = new System.Drawing.Size(454, 130);
             this.pnlBottom.TabIndex = 45;
-            // 
-            // lnlVol
-            // 
-            this.lnlVol.Font = new System.Drawing.Font("Consolas", 8F);
-            this.lnlVol.ForeColor = System.Drawing.Color.White;
-            this.lnlVol.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lnlVol.Location = new System.Drawing.Point(237, 8);
-            this.lnlVol.Name = "lnlVol";
-            this.lnlVol.Size = new System.Drawing.Size(50, 13);
-            this.lnlVol.TabIndex = 45;
-            this.lnlVol.Text = "Volume";
-            this.lnlVol.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblMainVolume
             // 
             this.lblMainVolume.Font = new System.Drawing.Font("Consolas", 8F);
             this.lblMainVolume.ForeColor = System.Drawing.Color.White;
             this.lblMainVolume.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblMainVolume.Location = new System.Drawing.Point(237, 110);
+            this.lblMainVolume.Location = new System.Drawing.Point(274, 110);
             this.lblMainVolume.Name = "lblMainVolume";
             this.lblMainVolume.Size = new System.Drawing.Size(50, 13);
             this.lblMainVolume.TabIndex = 46;
             this.lblMainVolume.Text = "60%";
             this.lblMainVolume.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lnlVol
+            // 
+            this.lnlVol.Font = new System.Drawing.Font("Consolas", 8F);
+            this.lnlVol.ForeColor = System.Drawing.Color.White;
+            this.lnlVol.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lnlVol.Location = new System.Drawing.Point(274, 8);
+            this.lnlVol.Name = "lnlVol";
+            this.lnlVol.Size = new System.Drawing.Size(50, 13);
+            this.lnlVol.TabIndex = 45;
+            this.lnlVol.Text = "Volume";
+            this.lnlVol.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pnlDisplay
             // 
@@ -479,6 +458,50 @@
             this.btnPlay.UseVisualStyleBackColor = false;
             this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             // 
+            // VuPeakVolumeRight
+            // 
+            this.VuPeakVolumeRight.AnalogMeter = false;
+            this.VuPeakVolumeRight.BackColor = System.Drawing.Color.DimGray;
+            this.VuPeakVolumeRight.DialBackground = System.Drawing.Color.White;
+            this.VuPeakVolumeRight.DialTextNegative = System.Drawing.Color.Red;
+            this.VuPeakVolumeRight.DialTextPositive = System.Drawing.Color.Black;
+            this.VuPeakVolumeRight.DialTextZero = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeRight.Led1ColorOff = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeRight.Led1ColorOn = System.Drawing.Color.LimeGreen;
+            this.VuPeakVolumeRight.Led1Count = 14;
+            this.VuPeakVolumeRight.Led2ColorOff = System.Drawing.Color.Olive;
+            this.VuPeakVolumeRight.Led2ColorOn = System.Drawing.Color.Yellow;
+            this.VuPeakVolumeRight.Led2Count = 14;
+            this.VuPeakVolumeRight.Led3ColorOff = System.Drawing.Color.Maroon;
+            this.VuPeakVolumeRight.Led3ColorOn = System.Drawing.Color.Red;
+            this.VuPeakVolumeRight.Led3Count = 6;
+            this.VuPeakVolumeRight.LedSize = new System.Drawing.Size(12, 2);
+            this.VuPeakVolumeRight.LedSpace = 1;
+            this.VuPeakVolumeRight.Level = 0;
+            this.VuPeakVolumeRight.LevelMax = 127;
+            this.VuPeakVolumeRight.Location = new System.Drawing.Point(246, 7);
+            this.VuPeakVolumeRight.MeterScale = VU_MeterLibrary.MeterScale.Log10;
+            this.VuPeakVolumeRight.Name = "VuPeakVolumeRight";
+            this.VuPeakVolumeRight.NeedleColor = System.Drawing.Color.Black;
+            this.VuPeakVolumeRight.PeakHold = true;
+            this.VuPeakVolumeRight.Peakms = 1000;
+            this.VuPeakVolumeRight.PeakNeedleColor = System.Drawing.Color.Red;
+            this.VuPeakVolumeRight.ShowDialOnly = false;
+            this.VuPeakVolumeRight.ShowLedPeak = false;
+            this.VuPeakVolumeRight.ShowTextInDial = false;
+            this.VuPeakVolumeRight.Size = new System.Drawing.Size(14, 103);
+            this.VuPeakVolumeRight.TabIndex = 47;
+            this.VuPeakVolumeRight.TextInDial = new string[] {
+        "-40",
+        "-20",
+        "-10",
+        "-5",
+        "0",
+        "+6"};
+            this.VuPeakVolumeRight.UseLedLight = false;
+            this.VuPeakVolumeRight.VerticalBar = true;
+            this.VuPeakVolumeRight.VuText = "VU";
+            // 
             // frmCDGPlayer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -499,7 +522,6 @@
             this.ToolStrip1.ResumeLayout(false);
             this.ToolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudKey)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trbVolume)).EndInit();
             this.pnlTop.ResumeLayout(false);
             this.pnlTop.PerformLayout();
             this.pnlBottom.ResumeLayout(false);
@@ -519,14 +541,12 @@
         internal System.Windows.Forms.ToolStripButton tsbPause;
         private System.Windows.Forms.NumericUpDown nudKey;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TrackBar trbVolume;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel pnlTop;
         internal System.Windows.Forms.OpenFileDialog OpenFileDialog1;
         internal System.Windows.Forms.Timer Timer1;
         private Display.PanelPlayer pnlDisplay;
         private ColorSlider.ColorSlider positionHScrollBar;
-        private VU_MeterLibrary.VuMeter VuMasterPeakVolume;
+        private VU_MeterLibrary.VuMeter VuPeakVolumeLeft;
         private ColorSlider.ColorSlider sldMainVolume;
         private NoSelectButton btnPrev;
         private NoSelectButton btnNext;
@@ -535,5 +555,6 @@
         private System.Windows.Forms.Panel pnlBottom;
         private System.Windows.Forms.Label lnlVol;
         private System.Windows.Forms.Label lblMainVolume;
+        private VU_MeterLibrary.VuMeter VuPeakVolumeRight;
     }
 }
