@@ -90,22 +90,6 @@ namespace Karaboss
 
         #region "Control Events"
 
-        private void frmCDGPlayer_Load(object sender, EventArgs e)
-        {
-            Location = Properties.Settings.Default.frmCDGPlayerLocation;
-            // Verify if this windows is visible in extended screens
-            Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
-            foreach (Screen screen in Screen.AllScreens)
-                rect = Rectangle.Union(rect, screen.Bounds);
-
-            if (Location.X > rect.Width)
-                Location = new Point(0, Location.Y);
-            if (Location.Y > rect.Height)
-                Location = new Point(Location.X, 0);
-
-            InitBass();
-        }
-
 
         private void InitBass()
         {
@@ -185,11 +169,28 @@ namespace Karaboss
 
         #endregion
 
-        #region form
+
+        #region Form Load Close
+
+
+        private void frmCDGPlayer_Load(object sender, EventArgs e)
+        {
+            Location = Properties.Settings.Default.frmCDGPlayerLocation;
+            // Verify if this windows is visible in extended screens
+            Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
+            foreach (Screen screen in Screen.AllScreens)
+                rect = Rectangle.Union(rect, screen.Bounds);
+
+            if (Location.X > rect.Width)
+                Location = new Point(0, Location.Y);
+            if (Location.Y > rect.Height)
+                Location = new Point(Location.X, 0);
+
+            InitBass();
+        }
 
         private void mCDGWindow_FormClosing(Object sender, FormClosingEventArgs e)
         {
-
             StopPlayback();
             mCDGWindow.Hide();
             e.Cancel = true;
@@ -206,10 +207,12 @@ namespace Karaboss
        
             // Save settings
             Properties.Settings.Default.Save();
+
         }
 
 
         #endregion
+
 
         #region "CDG + MP3 Playback Operations"
 
@@ -474,14 +477,19 @@ namespace Karaboss
         private void startProgress(long max)
         {
             // Display progress                
-            progressBar1.Maximum = Convert.ToInt32(max);
-            progressBar1.Value = 0;
+            //progressBar1.Maximum = Convert.ToInt32(max);
+            //progressBar1.Value = 0;
+
+            positionHScrollBar.Maximum = Convert.ToInt32(max);
+            positionHScrollBar.Value = 0;
+
 
             TimeSpan t = TimeSpan.FromMilliseconds(max);
             string duration = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
 
 
-            lblDuration.Text = duration;
+            //lblDuration.Text = duration;
+            pnlDisplay.DisplayDuration(duration);
 
             Timer1.Start();
         }
@@ -489,7 +497,8 @@ namespace Karaboss
         private void stopProgress()
         {
             Timer1.Stop();
-            progressBar1.Value = 0;
+            //progressBar1.Value = 0;
+            positionHScrollBar.Value = 0;
         }
 
 
@@ -497,17 +506,41 @@ namespace Karaboss
         {
             if (mStop)
                 stopProgress();
-            else if (cdgpos <= progressBar1.Maximum)
+            else if (cdgpos <= positionHScrollBar.Maximum)    //cdgpos <= progressBar1.Maximum &&
             {
-                progressBar1.Value = Convert.ToInt32(cdgpos);
+                //progressBar1.Value = Convert.ToInt32(cdgpos);
+                positionHScrollBar.Value = Convert.ToInt32(cdgpos);
+
                 TimeSpan t = TimeSpan.FromMilliseconds(cdgpos);
                 string pos = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
-                lblPos.Text = pos; 
+                
+                //lblPos.Text = pos;
+                pnlDisplay.displayElapsed(pos);
             }
         }
 
+
         #endregion ProgressBar
 
- 
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+            Play();
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            Pause();
+        }
+
+        private void sldMainVolume_Scroll(object sender, ScrollEventArgs e)
+        {
+
+            //AdjustVolume();
+            if (mMP3Stream != 0)
+            {
+                float volume = (float)sldMainVolume.Value;
+                Bass.BASS_ChannelSetAttribute(mMP3Stream, BASSAttribute.BASS_ATTRIB_VOL, volume == 0 ? 0 : (volume / 100));
+            }
+        }
     }
 }
