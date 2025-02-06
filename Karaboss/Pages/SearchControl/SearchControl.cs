@@ -59,6 +59,7 @@ namespace Karaboss.Search
     public delegate void SelectedIndexChangedEventHandler(object sender, string fileName);
     public delegate void PlayMidiEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayMp3EventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void MidiInfoEventHandler();
     public delegate void ContentChangedEventHandler(object sender, string strContent);
     public delegate void NavigateToEventHandler(Object sender, string path, string file);            // Says to parent to navigate to this folder
@@ -73,8 +74,11 @@ namespace Karaboss.Search
         #region events
         // Play a song, a playlist or edit a song
         public event SelectedIndexChangedEventHandler SelectedIndexChanged;
+        
         public event PlayMidiEventHandler PlayMidi;
         public event PlayCDGEventHandler PlayCDG;
+        public event PlayMp3EventHandler PlayMp3;
+        
         public event MidiInfoEventHandler OnMidiInfo;
         public event ContentChangedEventHandler SearchContentChanged;
         public event NavigateToEventHandler NavigateTo;

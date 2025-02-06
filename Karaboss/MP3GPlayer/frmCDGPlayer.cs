@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2018 Fabrice Lacharme
+/* Copyright (c) 2025 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -116,7 +116,7 @@ namespace Karaboss
             CDGFullPath = filename;
             SetTitle(filename);
 
-            Init_Controls();
+            InitControls();
             PlayerState = PlayerStates.Stopped;
             pnlDisplay.DisplayBeat("");
         }
@@ -241,10 +241,23 @@ namespace Karaboss
 
         private void frmCDGPlayer_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Properties.Settings.Default.frmCDGPlayerLocation = Location;
-       
-            // Save settings
-            Properties.Settings.Default.Save();
+            if (WindowState != FormWindowState.Minimized)
+            {
+                Properties.Settings.Default.frmCDGPlayerLocation = Location;
+
+                // Save settings
+                Properties.Settings.Default.Save();
+            }
+
+            // Active le formulaire frmExplorer
+            if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
+            {
+                // Restore form
+                Application.OpenForms["frmExplorer"].Restore();
+                Application.OpenForms["frmExplorer"].Activate();
+            }
+
+            Dispose();
 
         }
 
@@ -815,7 +828,7 @@ namespace Karaboss
         /// <summary>
         /// Initialize control peak volume level
         /// </summary>
-        private void Init_Controls()
+        private void InitControls()
         {
 
             pnlControls.Top = menuStrip1.Height;
@@ -831,18 +844,14 @@ namespace Karaboss
             sldMainVolume.SmallChange = 13;
             sldMainVolume.LargeChange = 13;
             sldMainVolume.MouseWheelBarPartitions = 10;
-
-            /*
-            sldMainVolume.Left = 249;
-            sldMainVolume.Top = 25;
-            sldMainVolume.Width = 24;
-            sldMainVolume.Height = 80;
-            */
+            sldMainVolume.Size = new Size(24, 80);
 
             lblMainVolume.Text = String.Format("{0}%", 100 * sldMainVolume.Value / sldMainVolume.Maximum);
 
             #endregion
 
+
+            #region Peak volume
 
             this.VuPeakVolumeLeft.AnalogMeter = false;
             this.VuPeakVolumeLeft.BackColor = System.Drawing.Color.DimGray;
@@ -958,7 +967,8 @@ namespace Karaboss
             this.VuPeakVolumeRight.VerticalBar = true;
             this.VuPeakVolumeRight.VuText = "VU";
             //this.VuPeakVolumeRight.Location = new Point(220, 7);
-
+            
+            #endregion Peak volume
         }
 
         #endregion peak level

@@ -1477,5 +1477,17 @@ namespace Karaboss.Properties {
                 this["bLrcForceLowerCase"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point frmMp3PlayerLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["frmMp3PlayerLocation"]));
+            }
+            set {
+                this["frmMp3PlayerLocation"] = value;
+            }
+        }
     }
 }
