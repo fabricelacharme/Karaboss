@@ -50,6 +50,8 @@ using System.Text.RegularExpressions;
 using AudioControl;
 using static Un4seen.Bass.Misc.WaveForm.WaveBuffer;
 using Karaboss.Display;
+using Hqub.MusicBrainz.API.Entities;
+using Karaboss.Configuration;
 
 namespace Karaboss
 {
@@ -79,6 +81,10 @@ namespace Karaboss
         int newstart = 0;
         string CDGFullPath;
         long _duration;             // Duration of song
+        float _frequency = 0;        // Frequency of song
+        
+        private int TransposeValue = 0;
+        private long FrequencyRatio = 100;
 
         /// <summary>
         /// Player status
@@ -175,7 +181,8 @@ namespace Karaboss
         /// <param name="e"></param>
         private void nudKey_ValueChanged(object sender, EventArgs e)
         {
-            AdjustPitch();
+            //AdjustPitch();
+            //AjustFreq((long)nudKey.Value);
         }
 
        
@@ -255,7 +262,13 @@ namespace Karaboss
                 mMP3Stream = Un4seen.Bass.AddOn.Fx.BassFx.BASS_FX_TempoCreate(mMP3Stream, BASSFlag.BASS_FX_FREESOURCE | BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_SAMPLE_LOOP);
                 if (mMP3Stream != 0)
                 {
-                    AdjustPitch();
+
+                    // Get frequency usually 44100
+                    Bass.BASS_ChannelGetAttribute(mMP3Stream, BASSAttribute.BASS_ATTRIB_FREQ, ref _frequency);
+                    //FrequencyRatio = 100;                    
+                    
+                    // Transpose
+                    AdjustMp3Pitch(0);
                     AdjustVolume();
 
                     ShowCDGWindow();
@@ -299,17 +312,9 @@ namespace Karaboss
         {
             Bass.BASS_Pause();
         }
-
        
 
-        private void AdjustPitch()
-        {
-            if (mMP3Stream != 0)
-            {
-                Bass.BASS_ChannelSetAttribute(mMP3Stream, BASSAttribute.BASS_ATTRIB_TEMPO_PITCH, (float)nudKey.Value);
-            }
-        }
-
+       
         private void AdjustVolume()
         {           
             if (mMP3Stream != 0)
@@ -326,7 +331,9 @@ namespace Karaboss
         {
             if (mMP3Stream != 0)
             {
-                cdgpos = (int)pos;
+                //cdgpos = (int)pos;
+
+                //mCDGFile.renderAtPosition(cdgpos);
 
                 //Bass.BASS_ChannelSetPosition(mMP3Stream, pos);
                 //Bass.BASS_ChannelSetPosition(mMP3Stream, Bass.BASS_ChannelSeconds2Bytes(mMP3Stream, 20.20), BASSMode.BASS_POS_BYTE);
@@ -436,7 +443,7 @@ namespace Karaboss
             {
                 case PlayerStates.Playing:
                     GetPeakVolume();
-                    if (cdgpos <= positionHScrollBar.Maximum)
+                    if (cdgpos <= positionHScrollBar.Maximum && cdgpos >= positionHScrollBar.Minimum)
                     {
                         positionHScrollBar.Value = Convert.ToInt32(cdgpos);
                         // Display time elapse               
@@ -445,8 +452,7 @@ namespace Karaboss
                     break;
                 
                 case PlayerStates.Paused:
-                    PauseMusic();
-                    //PauseResumeMusic();
+                    PauseMusic();                    
                     Timer1.Stop();
                     break;
                 
@@ -606,6 +612,7 @@ namespace Karaboss
                 mStop = false;
                 mFrameCount = 0;
                 mCDGFile = new CDGFile(mCDGFileName);
+
                 
 
                 cdgpos = 0;
@@ -618,6 +625,17 @@ namespace Karaboss
                 // Show frmCDGWindow ici
                 PlayMP3Bass(mMP3FileName);
 
+
+                #region adjust transpose & freq
+                // Reset freq/tempo/pitch
+                //TransposeValue = 0;
+                AdjustMp3Pitch(TransposeValue);
+
+                //FrequencyRatio = 100;
+                AdjustMp3Freq(FrequencyRatio);
+                #endregion adjust transpose & freq
+
+
                 DateTime startTime = DateTime.Now;
                 DateTime endTime = startTime.AddMilliseconds(cdgLength);
                 long millisecondsRemaining = cdgLength;
@@ -628,8 +646,11 @@ namespace Karaboss
                     {
                         break;
                     }
-                    millisecondsRemaining = (long)endTime.Subtract(DateTime.Now).TotalMilliseconds;
-                    cdgpos = cdgLength - millisecondsRemaining;
+                    millisecondsRemaining = ((long)endTime.Subtract(DateTime.Now).TotalMilliseconds);
+                                        
+                    
+                    //cdgpos = cdgLength - millisecondsRemaining;
+                    cdgpos = (cdgLength - millisecondsRemaining) * FrequencyRatio/100;        // Fonctionne si freq mise au départ, pas pendant le jeu
 
                     while (mPaused)
                     {
@@ -972,7 +993,7 @@ namespace Karaboss
                 double n = (e.NewValue / (float)(positionHScrollBar.Maximum - positionHScrollBar.Minimum)) * _duration;
                 //newstart = (int)n;
 
-                SetPosition(n);
+                //SetPosition(n);
                 
                 scrolling = false;
             }
@@ -983,5 +1004,118 @@ namespace Karaboss
                 scrolling = true;
             }
         }
+
+
+        #region Transpose song
+
+        /// <summary>
+        /// Transpose +
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnTranspoPlus_Click(object sender, EventArgs e)
+        {
+            //if (mMP3Stream == 0) return;
+                            
+            TransposeValue++;
+            if (TransposeValue > 100) return;
+                
+            AdjustMp3Pitch(TransposeValue);
+            
+        }
+
+        /// <summary>
+        /// Transpose -
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnTranspoMinus_Click(object sender, EventArgs e)
+        {
+            //if (mMP3Stream == 0) return;
+                            
+            TransposeValue--;                                
+            AdjustMp3Pitch(TransposeValue);            
+        }
+
+        /// <summary>
+        /// Transpose song
+        /// </summary>
+        /// <param name="amount"></param>
+        private void AdjustMp3Pitch(float amount)
+        {                                                
+            lblTranspoValue.Text = string.Format("{0}", amount);
+
+            if (mMP3Stream == 0) return;
+            try
+            {
+                Bass.BASS_ChannelSetAttribute(mMP3Stream, BASSAttribute.BASS_ATTRIB_TEMPO_PITCH, amount);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        }
+
+        #endregion Transpose song
+
+
+        #region Tempo/freq
+
+        /// <summary>
+        /// Tempo/freq +
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnTempoPlus_Click(object sender, EventArgs e)
+        {
+            //freq Samplerate in Hz(must be within 5 % to 5000 % of the original sample rate - Usually 44100)
+            //if (mMP3Stream == 0) return;
+            
+            FrequencyRatio += 10;
+            if (FrequencyRatio > 5000) return;
+
+            AdjustMp3Freq(FrequencyRatio);
+        }
+
+        /// <summary>
+        /// Tempo/freq -
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnTempoMinus_Click(object sender, EventArgs e)
+        {
+            //freq Samplerate in Hz(must be within 5 % to 5000 % of the original sample rate - Usually 44100)
+            //if (mMP3Stream == 0) return;
+
+            FrequencyRatio -= 10;
+            if (FrequencyRatio < 5) return;
+
+            AdjustMp3Freq(FrequencyRatio);            
+        }
+
+        /// <summary>
+        /// Ajust Tempo/freq
+        /// </summary>
+        /// <param name="amount"></param>
+        private void AdjustMp3Freq(long amount)
+        {
+            //freq Samplerate in Hz(must be within 5 % to 5000 % of the original sample rate - Usually 44100)
+                                            
+            if (amount < 5 || amount > 5000) return;
+
+            lblTempoValue.Text = string.Format("{0}%", amount);
+
+
+            if (mMP3Stream == 0) return;
+            double d = _duration / (amount / 100.0);            
+            TimeSpan t = TimeSpan.FromMilliseconds(d);
+            string duration = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
+            pnlDisplay.DisplayDuration(duration);
+
+            try
+            {
+                Bass.BASS_ChannelSetAttribute(mMP3Stream, BASSAttribute.BASS_ATTRIB_FREQ, _frequency * amount / 100);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        }
+
+        #endregion Tempo freq
     }
 }

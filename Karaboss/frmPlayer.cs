@@ -7288,6 +7288,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void btnTranspoPlus_Click(object sender, EventArgs e)
         {
+            // Transpose by 1 or 2 
             int amount = Properties.Settings.Default.TransposeAmount;
 
             TransposeDelta += amount;
@@ -7301,6 +7302,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void btnTranspoMinus_Click(object sender, EventArgs e)
         {
+            // Transpose by 1 or 2 
             int amount = Properties.Settings.Default.TransposeAmount;
             TransposeDelta -= amount;
             ModTranspose(-amount);
