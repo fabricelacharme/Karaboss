@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Un4seen.Bass;
+using static Karaboss.Pages.ABCnotation.MyMidi;
 
 namespace Karaboss
 {
@@ -20,9 +21,9 @@ namespace Karaboss
         /// </summary>
         private enum PlayerStates
         {
+            Stopped,            // Default
             Playing,
-            Paused,
-            Stopped,
+            Paused,            
             NextSong,           // select next song of a playlist
             Waiting,            // count down running between 2 songs of a playlist
             WaitingPaused,      // count down paused between 2 songs of a playlist
@@ -30,14 +31,18 @@ namespace Karaboss
         }
         private PlayerStates PlayerState;
 
+        private readonly bool bPlayNow = false;
+
         private bool scrolling = false;
         private bool closing = false;
         private bool loading = false;
 
         private string Mp3FullPath;
-        
-
-
+        private int newstart;
+        private int nbstop;
+        private int _duration;
+        private double _totalSeconds;
+        private float _frequency;
 
         #region Bass
         private bool mBassInitalized = false;
@@ -45,14 +50,21 @@ namespace Karaboss
         #endregion Bass
 
 
-        public frmMp3Player(string filename)
+        public frmMp3Player(string FileName, bool bplay)
         {
             InitializeComponent();
 
-            Mp3FullPath = filename;
-            SetTitle(filename);
+            Mp3FullPath = FileName;
+            SetTitle(FileName);
 
             InitControls();
+
+            // If true, launch player
+            bPlayNow = bplay;
+
+            // the user asked to play the song immediately                
+            if (bPlayNow)
+                PlayPauseMusic();
 
         }
 
@@ -158,14 +170,173 @@ namespace Karaboss
 
 
         #region buttons play stop pause
+
+        /// <summary>
+        /// Display according to play, pause, stop status
+        /// </summary>
+        private void BtnStatus()
+        {
+            // Play and pause are same button
+            switch (PlayerState)
+            {
+                case PlayerStates.Playing:
+                    btnPlay.Image = Properties.Resources.btn_green_play;
+                    btnStop.Image = Properties.Resources.btn_black_stop;
+                    btnPlay.Enabled = true;  // to allow pause
+                    btnStop.Enabled = true;  // to allow stop 
+                    pnlDisplay.DisplayStatus("Playing");
+                    break;
+
+                case PlayerStates.Paused:
+                    btnPlay.Image = Properties.Resources.btn_red_pause;
+                    btnPlay.Enabled = true;  // to allow play
+                    btnStop.Enabled = true;  // to allow stop
+                    pnlDisplay.DisplayStatus("Paused");
+                    break;
+
+                case PlayerStates.Stopped:
+                    btnPlay.Image = Properties.Resources.btn_black_play;
+                    btnPlay.Enabled = true;   // to allow play
+                    if (newstart == 0)                    
+                        btnStop.Image = Properties.Resources.btn_red_stop;                    
+                    else
+                        btnStop.Enabled = true;   // to enable real stop because stop point not at the beginning of the song 
+
+                    pnlDisplay.DisplayStatus("Stopped");
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        public void FirstPlaySong(int ticks)
+        {
+            try
+            {
+                PlayerState = PlayerStates.Playing;
+                nbstop = 0;
+                BtnStatus();
+
+                if (!InitPlayerMp3(Mp3FullPath)) return;
+                StartMp3Player();
+                //sequencer1.Start();
+
+                if (ticks > 0)
+                {
+                    //sequencer1.Position = ticks;
+                }
+
+                Timer1.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        /// <summary>
+        /// Stop Music player
+        /// </summary>
+        private void StopMusic()
+        {
+            PlayerState = PlayerStates.Stopped;
+            try
+            {
+                StopMp3Player();
+                //sequencer1.Stop();
+
+                // Si point de départ n'est pas le début du morceau
+                if (newstart > 0)
+                {
+                    if (nbstop > 0)
+                    {
+                        newstart = 0;
+                        nbstop = 0;
+                        AfterStopped();
+                    }
+                    else
+                    {
+                        positionHScrollBar.Value = newstart + positionHScrollBar.Minimum;
+                        nbstop = 1;
+                    }
+                }
+                else
+                {
+                    // Point de départ = début du morceau
+                    AfterStopped();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        /// <summary>
+        /// Button play clicked: manage actions according to player status 
+        /// </summary>
+        private void PlayPauseMusic()
+        {
+            switch (PlayerState)
+            {
+                case PlayerStates.Playing:
+                    // If playing => pause
+                    PlayerState = PlayerStates.Paused;
+                    BtnStatus();
+                    break;
+
+                case PlayerStates.Paused:
+                    // if paused => play                
+                    nbstop = 0;
+                    PlayerState = PlayerStates.Playing;
+                    BtnStatus();
+                    Timer1.Start();
+                    //sequencer1.Continue();
+                    break;
+
+                default:
+                    // First play                
+                    FirstPlaySong(newstart);
+                    break;
+            }
+        }
+
+
+        /// <summary>
+        /// Things to do at the end of a song
+        /// </summary>
+        private void AfterStopped()
+        {
+            // Buttons play & stop 
+            BtnStatus();
+            //sheetmusic.BPlaying = false;
+
+            // Clear all
+            //ClearInstruments();
+
+            // Stopped to begining of score
+            if (newstart <= 0)
+            {
+                DisplayTimeElapse(0);
+
+                positionHScrollBar.Value = positionHScrollBar.Minimum;
+                //laststart = 0;
+            }
+            else
+            {
+                // Stop to start point newstart (ticks)                            
+            }
+        }
+
         private void btnPlay_Click(object sender, EventArgs e)
         {
-
+            PlayPauseMusic();
         }
 
         private void btnStop_Click(object sender, EventArgs e)
         {
-
+            StopMusic();
         }
 
         private void btnNext_Click(object sender, EventArgs e)
@@ -352,6 +523,9 @@ namespace Karaboss
         #region Draw controls
         private void InitControls()
         {
+            PlayerState = PlayerStates.Stopped;
+            pnlDisplay.DisplayBeat("");
+
             #region volume
 
             sldMainVolume.Maximum = 130;    // Closer to 127
@@ -490,8 +664,149 @@ namespace Karaboss
 
 
 
+
         #endregion Draw controls
 
-   
+
+        #region mp3 infos
+
+        private bool InitPlayerMp3(string mp3FileName)
+        {
+            if (mBassInitalized || Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, Handle))
+            {
+                mMP3Stream = 0;
+                mMP3Stream = Bass.BASS_StreamCreateFile(mp3FileName, 0, 0, BASSFlag.BASS_STREAM_DECODE | BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_STREAM_PRESCAN);
+                mMP3Stream = Un4seen.Bass.AddOn.Fx.BassFx.BASS_FX_TempoCreate(mMP3Stream, BASSFlag.BASS_FX_FREESOURCE | BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_SAMPLE_LOOP);
+                if (mMP3Stream != 0)
+                {
+                    // Get frequency usually 44100
+                    Bass.BASS_ChannelGetAttribute(mMP3Stream, BASSAttribute.BASS_ATTRIB_FREQ, ref _frequency);
+
+                    // Get Length
+                    // length in bytes
+                    long byteslen = Bass.BASS_ChannelGetLength(mMP3Stream, BASSMode.BASS_POS_BYTE);
+                    // the time length
+                    _totalSeconds = Bass.BASS_ChannelBytes2Seconds(mMP3Stream, byteslen);
+
+                    positionHScrollBar.Maximum = (int)_totalSeconds;
+
+                    TimeSpan t = TimeSpan.FromSeconds(_totalSeconds);
+                    string duration = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
+                    pnlDisplay.DisplayDuration(duration);
+
+                    return true;
+                }
+                else
+                {
+                    throw new Exception(String.Format("Stream error: {0}", Bass.BASS_ErrorGetCode()));
+                }
+
+            }
+            return false;
+        }
+
+        private void StartMp3Player()
+        {
+            if (mMP3Stream == 0) return;
+            Bass.BASS_ChannelPlay(mMP3Stream, false);
+        }
+
+        /// <summary>
+        /// Free resources
+        /// </summary>
+        private void StopMp3Player()
+        {
+            try
+            {
+                Bass.BASS_Stop();
+                Bass.BASS_StreamFree(mMP3Stream);
+                Bass.BASS_Free();
+                mMP3Stream = 0;
+                mBassInitalized = false;
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get player position
+        /// </summary>
+        /// <returns></returns>
+        private double Mp3PlayerGetPosition()
+        {
+            if (mMP3Stream == 0) return 0;
+
+            // length in bytes
+            long byteslen = Bass.BASS_ChannelGetPosition(mMP3Stream, BASSMode.BASS_POS_BYTE); 
+            // the time length
+            return Bass.BASS_ChannelBytes2Seconds(mMP3Stream, byteslen);
+
+            
+        }
+
+        #endregion mp3 infos
+
+
+        #region Timer
+
+        /// <summary>
+        /// Display Time Elapse
+        /// </summary>
+        private void DisplayTimeElapse(double dpercent)
+        {
+            pnlDisplay.DisplayPercent(string.Format("{0}%", (int)(dpercent * 100)));
+
+            double maintenant = (dpercent * _totalSeconds);  //seconds
+            int Min = (int)(maintenant / 60);
+            int Sec = (int)(maintenant - (Min * 60));
+            pnlDisplay.DisplayElapsed(string.Format("{0:00}:{1:00}", Min, Sec));
+        }
+
+        private void Timer1_Tick(object sender, EventArgs e)
+        {
+            if (!scrolling)
+            {
+                // Display time elapse
+                double pos = Mp3PlayerGetPosition();
+                double dpercent = pos / _totalSeconds;                
+
+                DisplayTimeElapse(dpercent);
+
+                switch (PlayerState)
+                {
+                    case PlayerStates.Playing:
+                        //ScrollView();
+                        break;
+
+                    case PlayerStates.Stopped:
+                        Timer1.Stop();
+                        AfterStopped();
+                        break;
+
+                    case PlayerStates.Paused:
+                        //sequencer1.Stop();
+                        Timer1.Stop();
+                        break;
+                }
+
+                #region position hscrollbar
+                try
+                {
+                    if (PlayerState == PlayerStates.Playing && (int)pos < positionHScrollBar.Maximum - positionHScrollBar.Minimum)
+                    {
+                        positionHScrollBar.Value = (int)pos + positionHScrollBar.Minimum;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.Write("Error positionHScrollBarNew.Value - " + ex.Message);
+                }
+                #endregion position hscrollbar
+            }
+        }
+
+        #endregion Timer
     }
 }

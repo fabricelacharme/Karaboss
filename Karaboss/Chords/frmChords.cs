@@ -2643,7 +2643,7 @@ namespace Karaboss
             double maintenant = (dpercent * _duration) / 100;  //seconds
             int Min = (int)(maintenant / 60);
             int Sec = (int)(maintenant - (Min * 60));            
-            panelPlayer.displayElapsed(string.Format("{0:00}:{1:00}", Min, Sec));
+            panelPlayer.DisplayElapsed(string.Format("{0:00}:{1:00}", Min, Sec));
         }
 
 

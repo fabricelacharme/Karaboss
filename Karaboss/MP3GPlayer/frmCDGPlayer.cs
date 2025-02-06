@@ -486,7 +486,7 @@ namespace Karaboss
         {
             TimeSpan t = TimeSpan.FromMilliseconds(cpos);
             string pos = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
-            pnlDisplay.displayElapsed(pos);
+            pnlDisplay.DisplayElapsed(pos);
 
             double dpercent = 100 * cpos / (double)_duration;
             pnlDisplay.DisplayPercent(string.Format("{0}%", (int)dpercent));

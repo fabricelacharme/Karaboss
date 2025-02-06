@@ -1582,13 +1582,13 @@ namespace Karaboss
             // Affiche le formulaire frmCDGPlayer 
             if (Application.OpenForms["frmMp3Player"] == null)
             {
-                Form frmMp3Player = new frmMp3Player(fpath);
+                Form frmMp3Player = new frmMp3Player(fpath, bplay);
                 frmMp3Player.Show();
             }
             else
             {
                 Application.OpenForms["frmMp3Player"].Close();
-                Form frmMp3Player = new frmMp3Player(fpath);
+                Form frmMp3Player = new frmMp3Player(fpath, bplay);
                 frmMp3Player.Show();
             }
         }
