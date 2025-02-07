@@ -1489,5 +1489,23 @@ namespace Karaboss.Properties {
                 this["frmMp3PlayerLocation"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("fabrice.lacharme@gmail.com")]
+        public string BassRegistrationEmail {
+            get {
+                return ((string)(this["BassRegistrationEmail"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2X1632326152222")]
+        public string BassRegistrationKey {
+            get {
+                return ((string)(this["BassRegistrationKey"]));
+            }
+        }
     }
 }

@@ -1,10 +1,14 @@
-﻿using System;
+﻿using Karaboss.Properties;
+using MusicXml.Domain;
+using Sanford.Multimedia.Midi.Score;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,7 +19,9 @@ namespace Karaboss
 {
     public partial class frmMp3Player : Form
     {
-
+        
+        private SYNCPROC _OnEndingSync;
+        
         /// <summary>
         /// Player status
         /// </summary>
@@ -44,6 +50,9 @@ namespace Karaboss
         private double _totalSeconds;
         private float _frequency;
 
+        private int TransposeValue = 0;
+        private long FrequencyRatio = 100;
+
         #region Bass
         private bool mBassInitalized = false;
         private int mMP3Stream;
@@ -64,8 +73,7 @@ namespace Karaboss
 
             // the user asked to play the song immediately                
             if (bPlayNow)
-                PlayPauseMusic();
-
+                PlayPauseMusic();            
         }
 
         #region Bass
@@ -75,8 +83,11 @@ namespace Karaboss
         /// </summary>
         private void InitBass()
         {
-            //'Add registration key here if you have a license
-            BassNet.Registration("fabrice.lacharme@gmail.com", "2X1632326152222");
+            string BassRegistrationEmail = Settings.Default.BassRegistrationEmail;
+            string BassRegistrationKey = Settings.Default.BassRegistrationKey;
+
+            // Add registration key here if you have a license
+            BassNet.Registration(BassRegistrationEmail, BassRegistrationKey);            
 
             try
             {
@@ -90,7 +101,6 @@ namespace Karaboss
                 MessageBox.Show("Unable to initialize the audio playback system. " + ex.Message);
             }
         }
-
        
         /// <summary>
         /// Free resources
@@ -101,7 +111,7 @@ namespace Karaboss
             {
                 Bass.BASS_Stop();
                 Bass.BASS_StreamFree(mMP3Stream);
-                Bass.BASS_Free();
+                bool v = Bass.BASS_Free();
                 mMP3Stream = 0;
                 mBassInitalized = false;
                 PlayerState = PlayerStates.Stopped;
@@ -157,6 +167,9 @@ namespace Karaboss
                 Application.OpenForms["frmExplorer"].Restore();
                 Application.OpenForms["frmExplorer"].Activate();
             }
+
+            _OnEndingSync = null;
+
 
             Dispose();
         }
@@ -220,7 +233,7 @@ namespace Karaboss
 
                 if (!InitPlayerMp3(Mp3FullPath)) return;
                 StartMp3Player();
-                //sequencer1.Start();
+                
 
                 if (ticks > 0)
                 {
@@ -243,8 +256,7 @@ namespace Karaboss
             PlayerState = PlayerStates.Stopped;
             try
             {
-                StopMp3Player();
-                //sequencer1.Stop();
+                StopMp3Player();                
 
                 // Si point de départ n'est pas le début du morceau
                 if (newstart > 0)
@@ -292,7 +304,7 @@ namespace Karaboss
                     PlayerState = PlayerStates.Playing;
                     BtnStatus();
                     Timer1.Start();
-                    //sequencer1.Continue();
+                    ResumeMp3Player();
                     break;
 
                 default:
@@ -310,11 +322,7 @@ namespace Karaboss
         {
             // Buttons play & stop 
             BtnStatus();
-            //sheetmusic.BPlaying = false;
-
-            // Clear all
-            //ClearInstruments();
-
+                      
             // Stopped to begining of score
             if (newstart <= 0)
             {
@@ -349,25 +357,118 @@ namespace Karaboss
 
         }
 
+
+        #region Tempo/freq
+        /// <summary>
+        /// Tempo/freq +
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnTempoPlus_Click(object sender, EventArgs e)
         {
+            //freq Samplerate in Hz(must be within 5 % to 5000 % of the original sample rate - Usually 44100)
+            //if (mMP3Stream == 0) return;
 
+            FrequencyRatio += 10;
+            if (FrequencyRatio > 5000) return;
+
+            AdjustMp3Freq(FrequencyRatio);
         }
 
+        /// <summary>
+        /// Tempo/freq -
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnTempoMinus_Click(object sender, EventArgs e)
         {
 
+            //freq Samplerate in Hz(must be within 5 % to 5000 % of the original sample rate - Usually 44100)
+            //if (mMP3Stream == 0) return;
+
+            FrequencyRatio -= 10;
+            if (FrequencyRatio < 5) return;
+
+            AdjustMp3Freq(FrequencyRatio);
         }
 
+        /// <summary>
+        /// Ajust Tempo/freq
+        /// </summary>
+        /// <param name="amount"></param>
+        private void AdjustMp3Freq(long amount)
+        {
+            //freq Samplerate in Hz(must be within 5 % to 5000 % of the original sample rate - Usually 44100)
+
+            if (amount < 5 || amount > 5000) return;
+
+            lblTempoValue.Text = string.Format("{0}%", amount);
+
+            
+            if (mMP3Stream == 0) return;
+
+            // Display new duration
+            double d = _totalSeconds / (amount / 100.0);
+            TimeSpan t = TimeSpan.FromSeconds(d);
+            string duration = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
+            pnlDisplay.DisplayDuration(duration);
+
+            try
+            {
+                Bass.BASS_ChannelSetAttribute(mMP3Stream, BASSAttribute.BASS_ATTRIB_FREQ, _frequency * amount / 100);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        }
+
+        #endregion Tempo/freq
+
+        #region Transpose
+
+        /// <summary>
+        /// Transpose +
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnTranspoPlus_Click(object sender, EventArgs e)
         {
+            //if (mMP3Stream == 0) return;
 
+            TransposeValue++;
+            if (TransposeValue > 100) return;
+
+            AdjustMp3Pitch(TransposeValue);
         }
 
+        /// <summary>
+        /// Transpose -
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnTranspoMinus_Click(object sender, EventArgs e)
         {
+            //if (mMP3Stream == 0) return;
 
+            TransposeValue--;
+            AdjustMp3Pitch(TransposeValue);
         }
+
+        /// <summary>
+        /// Transpose song
+        /// </summary>
+        /// <param name="amount"></param>
+        private void AdjustMp3Pitch(float amount)
+        {
+            lblTranspoValue.Text = string.Format("{0}", amount);
+
+            if (mMP3Stream == 0) return;
+            try
+            {
+                Bass.BASS_ChannelSetAttribute(mMP3Stream, BASSAttribute.BASS_ATTRIB_TEMPO_PITCH, amount);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        }
+
+        #endregion Transpose
 
         private void btnPrev_MouseHover(object sender, EventArgs e)
         {
@@ -426,14 +527,23 @@ namespace Karaboss
 
 
         #region positionHScrollBar
+        
+        /// <summary>
+        /// Change player position when scrolling
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void positionHScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
-
-        }
-
-        private void positionHScrollBar_ValueChanged(object sender, EventArgs e)
-        {
-
+            if (e.Type == ScrollEventType.EndScroll)
+            {
+                Mp3PlayerSetPosition((double)e.NewValue); 
+                scrolling = false;
+            }
+            else
+            {
+                scrolling = true;
+            }            
         }
         #endregion positionHScrollBar
 
@@ -441,13 +551,55 @@ namespace Karaboss
         #region volume
         private void sldMainVolume_Scroll(object sender, ScrollEventArgs e)
         {
-
+            AdjustVolume();
         }
 
         private void sldMainVolume_ValueChanged(object sender, EventArgs e)
         {
-
+            AdjustVolume();
+            lblMainVolume.Text = String.Format("{0}%", 100 * sldMainVolume.Value / sldMainVolume.Maximum);
         }
+
+        private void AdjustVolume()
+        {
+            if (mMP3Stream != 0)
+            {
+                float volume = (float)sldMainVolume.Value;
+                Bass.BASS_ChannelSetAttribute(mMP3Stream, BASSAttribute.BASS_ATTRIB_VOL, volume == 0 ? 0 : (volume / 100));
+
+                int level = Bass.BASS_ChannelGetLevel(mMP3Stream);
+
+            }
+        }
+
+        /// <summary>
+        /// Get master peak volume from provider of sound (Karaboss itself or an external one such as VirtualMidiSynth)
+        /// </summary>
+        private void GetPeakVolume()
+        {
+            if (mMP3Stream != 0)
+            {
+                int level = Bass.BASS_ChannelGetLevel(mMP3Stream);
+                int LeftLevel = LOWORD(level);
+                int RightLevel = HIWORD(level);
+
+                VuPeakVolumeLeft.Level = LeftLevel;
+                VuPeakVolumeRight.Level = RightLevel;
+
+            }
+        }
+
+        private static int HIWORD(int n)
+        {
+            return (n >> 16) & 0xffff;
+        }
+
+        private static int LOWORD(int n)
+        {
+            return n & 0xffff;
+        }
+
+
 
         #endregion volume
 
@@ -468,9 +620,7 @@ namespace Karaboss
             frmAboutDialog dlg = new frmAboutDialog();
             dlg.ShowDialog();
         }
-
        
-
         private void SetTitle(string displayName)
         {
             int NumInstance = 1;
@@ -493,9 +643,6 @@ namespace Karaboss
                 MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
-
 
         #endregion menus
 
@@ -670,6 +817,12 @@ namespace Karaboss
 
         #region mp3 infos
 
+        /// <summary>
+        /// Initialize player
+        /// </summary>
+        /// <param name="mp3FileName"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         private bool InitPlayerMp3(string mp3FileName)
         {
             if (mBassInitalized || Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, Handle))
@@ -679,6 +832,11 @@ namespace Karaboss
                 mMP3Stream = Un4seen.Bass.AddOn.Fx.BassFx.BASS_FX_TempoCreate(mMP3Stream, BASSFlag.BASS_FX_FREESOURCE | BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_SAMPLE_LOOP);
                 if (mMP3Stream != 0)
                 {
+
+                    // Create event for song playing completed
+                    _OnEndingSync = new SYNCPROC(HandlePlayingCompleted);
+                    Bass.BASS_ChannelSetSync(mMP3Stream, BASSSync.BASS_SYNC_END | BASSSync.BASS_SYNC_MIXTIME, 0, _OnEndingSync, IntPtr.Zero);
+
                     // Get frequency usually 44100
                     Bass.BASS_ChannelGetAttribute(mMP3Stream, BASSAttribute.BASS_ATTRIB_FREQ, ref _frequency);
 
@@ -705,6 +863,29 @@ namespace Karaboss
             return false;
         }
 
+        /// <summary>
+        /// Play mp3 completed
+        /// </summary>
+        /// <param name="handle"></param>
+        /// <param name="channel"></param>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
+        private void HandlePlayingCompleted(int handle, int channel, int data, IntPtr user)
+        {
+            // the 'channel' has ended - jump to the beginning
+            //Bass.BASS_ChannelSetPosition(channel, 0L);
+            
+            //StopMusic();            
+            PlayerState = PlayerStates.NextSong;
+            //Bass.BASS_Stop();
+            //Timer1.Stop();
+
+        }
+
+
+        /// <summary>
+        /// Start player
+        /// </summary>
         private void StartMp3Player()
         {
             if (mMP3Stream == 0) return;
@@ -712,7 +893,7 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Free resources
+        /// Stop player - Free resources
         /// </summary>
         private void StopMp3Player()
         {
@@ -731,6 +912,25 @@ namespace Karaboss
         }
 
         /// <summary>
+        /// Pause player
+        /// </summary>
+        private void PauseMp3Player()
+        {
+            if (mMP3Stream == 0) return;
+            
+            // Pause
+            Bass.BASS_ChannelPause(mMP3Stream);                            
+        }
+
+        private void ResumeMp3Player()
+        {
+            if (mMP3Stream == 0) return;
+                        
+            // Resume
+            Bass.BASS_ChannelPlay(mMP3Stream, false);            
+        }
+
+        /// <summary>
         /// Get player position
         /// </summary>
         /// <returns></returns>
@@ -741,9 +941,19 @@ namespace Karaboss
             // length in bytes
             long byteslen = Bass.BASS_ChannelGetPosition(mMP3Stream, BASSMode.BASS_POS_BYTE); 
             // the time length
-            return Bass.BASS_ChannelBytes2Seconds(mMP3Stream, byteslen);
+            return Bass.BASS_ChannelBytes2Seconds(mMP3Stream, byteslen);            
+        }
 
+
+        /// <summary>
+        /// Set player position
+        /// </summary>
+        /// <param name="pos"></param>
+        private void Mp3PlayerSetPosition(double pos)
+        {
+            if (mMP3Stream == 0) return;            
             
+            Bass.BASS_ChannelSetPosition(mMP3Stream, Bass.BASS_ChannelSeconds2Bytes(mMP3Stream, pos));
         }
 
         #endregion mp3 infos
@@ -766,45 +976,50 @@ namespace Karaboss
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
-            if (!scrolling)
+            if (scrolling) return;            
+
+            double pos = Mp3PlayerGetPosition();
+
+            switch (PlayerState)
             {
-                // Display time elapse
-                double pos = Mp3PlayerGetPosition();
-                double dpercent = pos / _totalSeconds;                
+                case PlayerStates.Playing:
+                    // Display time elapse                        
+                    double dpercent = pos / _totalSeconds;
+                    DisplayTimeElapse(dpercent);
 
-                DisplayTimeElapse(dpercent);
+                    // Display volume
+                    GetPeakVolume();
+                    break;
 
-                switch (PlayerState)
-                {
-                    case PlayerStates.Playing:
-                        //ScrollView();
-                        break;
+                case PlayerStates.Stopped:
+                    Timer1.Stop();
+                    AfterStopped();
+                    break;
 
-                    case PlayerStates.Stopped:
-                        Timer1.Stop();
-                        AfterStopped();
-                        break;
+                case PlayerStates.Paused:
+                    PauseMp3Player();
+                    Timer1.Stop();
+                    break;
 
-                    case PlayerStates.Paused:
-                        //sequencer1.Stop();
-                        Timer1.Stop();
-                        break;
-                }
-
-                #region position hscrollbar
-                try
-                {
-                    if (PlayerState == PlayerStates.Playing && (int)pos < positionHScrollBar.Maximum - positionHScrollBar.Minimum)
-                    {
-                        positionHScrollBar.Value = (int)pos + positionHScrollBar.Minimum;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.Write("Error positionHScrollBarNew.Value - " + ex.Message);
-                }
-                #endregion position hscrollbar
+                case PlayerStates.NextSong:
+                    StopMusic();
+                    break;
             }
+
+            #region position hscrollbar
+            try
+            {
+                if (PlayerState == PlayerStates.Playing && (int)pos < positionHScrollBar.Maximum - positionHScrollBar.Minimum)
+                {
+                    positionHScrollBar.Value = (int)pos + positionHScrollBar.Minimum;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Write("Error positionHScrollBarNew.Value - " + ex.Message);
+            }
+            #endregion position hscrollbar
+            
         }
 
         #endregion Timer

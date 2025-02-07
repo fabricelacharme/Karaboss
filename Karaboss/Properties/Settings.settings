@@ -368,5 +368,11 @@
     <Setting Name="frmMp3PlayerLocation" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">0, 0</Value>
     </Setting>
+    <Setting Name="BassRegistrationEmail" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">fabrice.lacharme@gmail.com</Value>
+    </Setting>
+    <Setting Name="BassRegistrationKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">2X1632326152222</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
