@@ -47,11 +47,6 @@ using CDGNet;
 using MP3GConverter;
 using System.IO;
 using System.Text.RegularExpressions;
-using AudioControl;
-using static Un4seen.Bass.Misc.WaveForm.WaveBuffer;
-using Karaboss.Display;
-using Hqub.MusicBrainz.API.Entities;
-using Karaboss.Configuration;
 
 namespace Karaboss
 {
@@ -110,7 +105,7 @@ namespace Karaboss
         {
             InitializeComponent();
             //mCDGWindow = new frmCDGWindow();
-            mCDGWindow.FormClosing += new FormClosingEventHandler(mCDGWindow_FormClosing);
+            //mCDGWindow.FormClosing += new FormClosingEventHandler(mCDGWindow_FormClosing);
 
             
             CDGFullPath = filename;
@@ -174,17 +169,6 @@ namespace Karaboss
         #endregion Export to AVI
 
 
-        /// <summary>
-        /// Ajust pitch
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void nudKey_ValueChanged(object sender, EventArgs e)
-        {
-            //AdjustPitch();
-            //AjustFreq((long)nudKey.Value);
-        }
-
        
         #region Form Load Close
 
@@ -229,9 +213,32 @@ namespace Karaboss
 
         private void mCDGWindow_FormClosing(Object sender, FormClosingEventArgs e)
         {
+            /*
+            // enregistre la taille et la position de la forme
+            // Copy window location to app settings                
+            if (WindowState != FormWindowState.Minimized)
+            {
+                if (WindowState == FormWindowState.Maximized)
+                {
+                    Properties.Settings.Default.frmCDGWindowLocation = RestoreBounds.Location;
+                    Properties.Settings.Default.frmCDGWindowMaximized = true;
+
+                }
+                else if (WindowState == FormWindowState.Normal)
+                {
+                    Properties.Settings.Default.frmCDGWindowLocation = Location;
+                    Properties.Settings.Default.frmCDGWindowSize = Size;
+                    Properties.Settings.Default.frmCDGWindowMaximized = false;
+                }
+
+                // Save settings
+                Properties.Settings.Default.Save();
+            }
+
             StopPlayback();
             mCDGWindow.Hide();
             e.Cancel = true;
+            */
         }
 
         private void frmCDGPlayer_FormClosed(object sender, FormClosedEventArgs e)
@@ -247,6 +254,13 @@ namespace Karaboss
 
                 // Save settings
                 Properties.Settings.Default.Save();
+            }
+
+            StopPlayback();
+
+            if (Application.OpenForms.OfType<frmCDGWindow>().Count() > 0)
+            {
+                Application.OpenForms["frmCDGWindow"].Close();
             }
 
             // Active le formulaire frmExplorer
@@ -284,6 +298,7 @@ namespace Karaboss
                     AdjustMp3Pitch(0);
                     AdjustVolume();
 
+                    // Display video form
                     ShowCDGWindow();
 
                     Bass.BASS_ChannelPlay(mMP3Stream, false);

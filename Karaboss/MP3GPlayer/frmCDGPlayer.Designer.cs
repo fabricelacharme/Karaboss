@@ -30,8 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.btRecord = new System.Windows.Forms.Button();
-            this.nudKey = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
             this.OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
             this.positionHScrollBar = new ColorSlider.ColorSlider();
@@ -62,7 +60,6 @@
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.nudKey)).BeginInit();
             this.pnlControls.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -77,24 +74,6 @@
             this.btRecord.UseVisualStyleBackColor = true;
             this.btRecord.Visible = false;
             this.btRecord.Click += new System.EventHandler(this.btRecord_Click);
-            // 
-            // nudKey
-            // 
-            this.nudKey.Location = new System.Drawing.Point(491, 8);
-            this.nudKey.Name = "nudKey";
-            this.nudKey.Size = new System.Drawing.Size(51, 20);
-            this.nudKey.TabIndex = 4;
-            this.nudKey.TabStop = false;
-            this.nudKey.ValueChanged += new System.EventHandler(this.nudKey_ValueChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(450, 10);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(25, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Key";
             // 
             // OpenFileDialog1
             // 
@@ -295,8 +274,6 @@
             this.pnlControls.Controls.Add(this.VuPeakVolumeLeft);
             this.pnlControls.Controls.Add(this.lblMainVolume);
             this.pnlControls.Controls.Add(this.btRecord);
-            this.pnlControls.Controls.Add(this.nudKey);
-            this.pnlControls.Controls.Add(this.label2);
             this.pnlControls.Controls.Add(this.pnlDisplay);
             this.pnlControls.Controls.Add(this.btnPrev);
             this.pnlControls.Controls.Add(this.btnNext);
@@ -610,9 +587,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmCDGPlayer_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmCDGPlayer_FormClosed);
             this.Load += new System.EventHandler(this.frmCDGPlayer_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.nudKey)).EndInit();
             this.pnlControls.ResumeLayout(false);
-            this.pnlControls.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -623,8 +598,6 @@
         #endregion
 
         private System.Windows.Forms.Button btRecord;
-        private System.Windows.Forms.NumericUpDown nudKey;
-        private System.Windows.Forms.Label label2;
         internal System.Windows.Forms.OpenFileDialog OpenFileDialog1;
         internal System.Windows.Forms.Timer Timer1;
         private Display.PanelPlayer pnlDisplay;

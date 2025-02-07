@@ -73,7 +73,10 @@ namespace Karaboss
 
             // the user asked to play the song immediately                
             if (bPlayNow)
-                PlayPauseMusic();            
+            {
+                if (!InitBass()) return;
+                PlayPauseMusic();
+            }
         }
 
         #region Bass
@@ -81,7 +84,7 @@ namespace Karaboss
         /// <summary>
         /// Initialize Bass
         /// </summary>
-        private void InitBass()
+        private bool InitBass()
         {
             string BassRegistrationEmail = Settings.Default.BassRegistrationEmail;
             string BassRegistrationKey = Settings.Default.BassRegistrationKey;
@@ -95,11 +98,13 @@ namespace Karaboss
                 Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
 
                 mBassInitalized = true;
+                return true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Unable to initialize the audio playback system. " + ex.Message);
             }
+            return false;
         }
        
         /// <summary>
