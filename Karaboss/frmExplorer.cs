@@ -144,7 +144,7 @@ namespace Karaboss
             xplorerControl.SelectedIndexChanged += new xplorer.SelectedIndexChangedEventHandler(Global_SelectedIndexChanged);            
             
             xplorerControl.PlayMidi += new xplorer.PlayMidiEventHandler(Global_xPlayMidi);
-            xplorerControl.PlayCDG += new xplorer.PlayCDGEventHandler(Global_PlayCDG);
+            xplorerControl.PlayCDG += new xplorer.PlayCDGEventHandler(Global_xPlayCDG);
             xplorerControl.PlayAbc += new xplorer.PlayAbcEventHandler(Global_xPlayAbc);            
             xplorerControl.PlayXml += new xplorer.PlayXmlEventHandler(Global_xPlayXml);
             xplorerControl.PlayMxl += new xplorer.PlayMxlEventHandler(Global_xPlayMxl);
@@ -1401,6 +1401,19 @@ namespace Karaboss
         }
 
         /// <summary>
+        /// Lauch CDG file from explorer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="bplay"></param>
+        private void Global_xPlayCDG(object sender, FileInfo fi, bool bplay)
+        {
+            Karaclass.m_MxmlPath = "";
+            DisplayCDGPlayer(fi.FullName, null, bplay);
+        }
+
+
+        /// <summary>
         /// Launch ABC file from explorer
         /// </summary>
         /// <param name="sender"></param>
@@ -1475,10 +1488,10 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="fi"></param>
         /// <param name="bplay"></param>
-        private void Global_PlayCDG(object sender, FileInfo fi, bool bplay)
+        private void Global_PlayCDG(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
             string fpath = fi.FullName;
-            LaunchCDGPlayer(fpath, bplay);
+            DisplayCDGPlayer(fpath, pl, bplay);
         }
 
         /// <summary>
@@ -1582,13 +1595,13 @@ namespace Karaboss
             // Affiche le formulaire frmCDGPlayer 
             if (Application.OpenForms["frmMp3Player"] == null)
             {
-                Form frmMp3Player = new frmMp3Player(fpath, bplay);
+                Form frmMp3Player = new frmMp3Player(fpath, pl, bplay);
                 frmMp3Player.Show();
             }
             else
             {
                 Application.OpenForms["frmMp3Player"].Close();
-                Form frmMp3Player = new frmMp3Player(fpath, bplay);
+                Form frmMp3Player = new frmMp3Player(fpath, pl, bplay);
                 frmMp3Player.Show();
             }
         }
@@ -1599,7 +1612,7 @@ namespace Karaboss
         /// <param name="fpath"></param>
         /// <param name="fname"></param>
         /// <param name="bPlayNow"></param>
-        private void LaunchCDGPlayer(string fpath, bool bPlayNow)
+        private void DisplayCDGPlayer(string fpath, Playlist pl, bool bPlayNow)
         {            
             if (fpath != null)
             {
@@ -1615,13 +1628,13 @@ namespace Karaboss
             // Affiche le formulaire frmCDGPlayer 
             if (Application.OpenForms["frmCDGPlayer"] == null)
             {
-                Form frmCDGPlayer = new frmCDGPlayer(fpath, bPlayNow);
+                Form frmCDGPlayer = new frmCDGPlayer(fpath, pl, bPlayNow);
                 frmCDGPlayer.Show();
             }
             else
             {
                 Application.OpenForms["frmCDGPlayer"].Close();
-                Form frmCDGPlayer = new frmCDGPlayer(fpath, bPlayNow);
+                Form frmCDGPlayer = new frmCDGPlayer(fpath, pl, bPlayNow);
                 frmCDGPlayer.Show();
             }
         }
@@ -2110,7 +2123,7 @@ namespace Karaboss
                 case ".zip":
                 case ".cdg":
                     {
-                        LaunchCDGPlayer(cmdpath, bPlayNow);
+                        DisplayCDGPlayer(cmdpath, null, bPlayNow);
                         break;
                     }
 

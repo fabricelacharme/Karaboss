@@ -38,6 +38,7 @@
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlControls = new System.Windows.Forms.Panel();
+            this.lblPlaylist = new System.Windows.Forms.Label();
             this.btnTempoMinus = new Karaboss.Buttons.MinusButtonControl();
             this.btnTempoPlus = new Karaboss.Buttons.PlusButtonControl();
             this.lblTempoValue = new System.Windows.Forms.Label();
@@ -113,6 +114,7 @@
             // 
             // pnlControls
             // 
+            this.pnlControls.Controls.Add(this.lblPlaylist);
             this.pnlControls.Controls.Add(this.btnTempoMinus);
             this.pnlControls.Controls.Add(this.btnTempoPlus);
             this.pnlControls.Controls.Add(this.lblTempoValue);
@@ -134,6 +136,12 @@
             this.pnlControls.Controls.Add(this.lnlVol);
             resources.ApplyResources(this.pnlControls, "pnlControls");
             this.pnlControls.Name = "pnlControls";
+            // 
+            // lblPlaylist
+            // 
+            resources.ApplyResources(this.lblPlaylist, "lblPlaylist");
+            this.lblPlaylist.ForeColor = System.Drawing.Color.PaleGreen;
+            this.lblPlaylist.Name = "lblPlaylist";
             // 
             // btnTempoMinus
             // 
@@ -494,6 +502,7 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.pnlControls.ResumeLayout(false);
+            this.pnlControls.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -531,5 +540,6 @@
         internal System.Windows.Forms.OpenFileDialog OpenFileDialog1;
         internal System.Windows.Forms.Timer Timer1;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label lblPlaylist;
     }
 }

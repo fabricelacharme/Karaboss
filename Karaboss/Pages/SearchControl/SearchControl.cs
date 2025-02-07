@@ -58,7 +58,7 @@ namespace Karaboss.Search
     // Events
     public delegate void SelectedIndexChangedEventHandler(object sender, string fileName);
     public delegate void PlayMidiEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
-    public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayCDGEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayMp3EventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void MidiInfoEventHandler();
     public delegate void ContentChangedEventHandler(object sender, string strContent);
@@ -1329,7 +1329,7 @@ namespace Karaboss.Search
                     case ".zip":
                     case ".cdg":
                         {
-                            PlayCDG?.Invoke(this, new FileInfo(file), bplay);
+                            PlayCDG?.Invoke(this, new FileInfo(file), null, bplay);
                             break;
                         }
 

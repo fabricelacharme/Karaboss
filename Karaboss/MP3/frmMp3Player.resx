@@ -162,7 +162,7 @@
     <value>0, 0</value>
   </data>
   <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>484, 24</value>
+    <value>514, 24</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
@@ -183,8 +183,38 @@
   <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="lblPlaylist.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblPlaylist.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblPlaylist.Location" type="System.Drawing.Point, System.Drawing">
+    <value>415, 9</value>
+  </data>
+  <data name="lblPlaylist.Size" type="System.Drawing.Size, System.Drawing">
+    <value>86, 13</value>
+  </data>
+  <data name="lblPlaylist.TabIndex" type="System.Int32, mscorlib">
+    <value>29</value>
+  </data>
+  <data name="lblPlaylist.Text" xml:space="preserve">
+    <value>PLAYLIST: 1/10</value>
+  </data>
+  <data name="&gt;&gt;lblPlaylist.Name" xml:space="preserve">
+    <value>lblPlaylist</value>
+  </data>
+  <data name="&gt;&gt;lblPlaylist.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblPlaylist.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;lblPlaylist.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="btnTempoMinus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>350, 70</value>
+    <value>319, 70</value>
   </data>
   <data name="btnTempoMinus.Size" type="System.Drawing.Size, System.Drawing">
     <value>32, 32</value>
@@ -202,10 +232,10 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;btnTempoMinus.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="btnTempoPlus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>350, 30</value>
+    <value>319, 30</value>
   </data>
   <data name="btnTempoPlus.Size" type="System.Drawing.Size, System.Drawing">
     <value>32, 32</value>
@@ -223,7 +253,7 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;btnTempoPlus.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="lblTempoValue.Font" type="System.Drawing.Font, System.Drawing">
     <value>Consolas, 8.25pt</value>
@@ -232,7 +262,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblTempoValue.Location" type="System.Drawing.Point, System.Drawing">
-    <value>341, 110</value>
+    <value>310, 110</value>
   </data>
   <data name="lblTempoValue.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 13</value>
@@ -256,7 +286,7 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;lblTempoValue.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="lblTemp.Font" type="System.Drawing.Font, System.Drawing">
     <value>Consolas, 8pt</value>
@@ -265,7 +295,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblTemp.Location" type="System.Drawing.Point, System.Drawing">
-    <value>341, 8</value>
+    <value>310, 8</value>
   </data>
   <data name="lblTemp.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 13</value>
@@ -289,10 +319,10 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;lblTemp.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="btnTranspoMinus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>395, 70</value>
+    <value>364, 70</value>
   </data>
   <data name="btnTranspoMinus.Size" type="System.Drawing.Size, System.Drawing">
     <value>32, 32</value>
@@ -310,10 +340,10 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;btnTranspoMinus.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="btnTranspoPlus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>395, 30</value>
+    <value>364, 30</value>
   </data>
   <data name="btnTranspoPlus.Size" type="System.Drawing.Size, System.Drawing">
     <value>32, 32</value>
@@ -331,7 +361,7 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;btnTranspoPlus.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="lblTranspoValue.Font" type="System.Drawing.Font, System.Drawing">
     <value>Consolas, 8.25pt</value>
@@ -340,7 +370,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblTranspoValue.Location" type="System.Drawing.Point, System.Drawing">
-    <value>386, 110</value>
+    <value>355, 110</value>
   </data>
   <data name="lblTranspoValue.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 13</value>
@@ -364,7 +394,7 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;lblTranspoValue.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="lblTransp.Font" type="System.Drawing.Font, System.Drawing">
     <value>Consolas, 8pt</value>
@@ -373,7 +403,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblTransp.Location" type="System.Drawing.Point, System.Drawing">
-    <value>386, 8</value>
+    <value>355, 8</value>
   </data>
   <data name="lblTransp.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 13</value>
@@ -398,7 +428,7 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;lblTransp.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="VuPeakVolumeRight.Location" type="System.Drawing.Point, System.Drawing">
     <value>240, 7</value>
@@ -419,7 +449,7 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;VuPeakVolumeRight.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="VuPeakVolumeLeft.Location" type="System.Drawing.Point, System.Drawing">
     <value>220, 7</value>
@@ -440,7 +470,7 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;VuPeakVolumeLeft.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="lblMainVolume.Font" type="System.Drawing.Font, System.Drawing">
     <value>Consolas, 8pt</value>
@@ -449,7 +479,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblMainVolume.Location" type="System.Drawing.Point, System.Drawing">
-    <value>274, 110</value>
+    <value>260, 110</value>
   </data>
   <data name="lblMainVolume.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 13</value>
@@ -473,7 +503,7 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;lblMainVolume.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="pnlDisplay.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 7</value>
@@ -494,7 +524,7 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;pnlDisplay.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <data name="btnPrev.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -521,7 +551,7 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;btnPrev.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>13</value>
   </data>
   <data name="btnNext.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -548,7 +578,7 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;btnNext.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>14</value>
   </data>
   <data name="positionHScrollBar.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 6pt</value>
@@ -575,7 +605,7 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;positionHScrollBar.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>15</value>
   </data>
   <data name="btnStop.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -602,7 +632,7 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;btnStop.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>16</value>
   </data>
   <data name="btnPlay.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -629,16 +659,16 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;btnPlay.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>17</value>
   </data>
   <data name="sldMainVolume.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 6pt</value>
   </data>
   <data name="sldMainVolume.Location" type="System.Drawing.Point, System.Drawing">
-    <value>286, 25</value>
+    <value>272, 25</value>
   </data>
   <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
-    <value>24, 80</value>
+    <value>80, 24</value>
   </data>
   <data name="sldMainVolume.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -656,7 +686,7 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;sldMainVolume.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>18</value>
   </data>
   <data name="lnlVol.Font" type="System.Drawing.Font, System.Drawing">
     <value>Consolas, 8pt</value>
@@ -665,7 +695,7 @@
     <value>NoControl</value>
   </data>
   <data name="lnlVol.Location" type="System.Drawing.Point, System.Drawing">
-    <value>274, 8</value>
+    <value>260, 8</value>
   </data>
   <data name="lnlVol.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 13</value>
@@ -689,7 +719,7 @@
     <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;lnlVol.ZOrder" xml:space="preserve">
-    <value>18</value>
+    <value>19</value>
   </data>
   <data name="pnlControls.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -698,7 +728,7 @@
     <value>0, 24</value>
   </data>
   <data name="pnlControls.Size" type="System.Drawing.Size, System.Drawing">
-    <value>484, 137</value>
+    <value>514, 127</value>
   </data>
   <data name="pnlControls.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -731,7 +761,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>484, 161</value>
+    <value>514, 151</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>

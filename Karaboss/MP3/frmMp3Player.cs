@@ -1,4 +1,5 @@
-﻿using Karaboss.Properties;
+﻿using Karaboss.Lrc.NeteaseMusic;
+using Karaboss.Properties;
 using MusicXml.Domain;
 using Sanford.Multimedia.Midi.Score;
 using System;
@@ -60,8 +61,12 @@ namespace Karaboss
         private int mMP3Stream;
         #endregion Bass
 
+        // Playlists
+        private readonly Playlist currentPlaylist;
+        private PlaylistItem currentPlaylistItem;
 
-        public frmMp3Player(string FileName, bool bplay)
+
+        public frmMp3Player(string FileName, Playlist myPlayList, bool bplay)
         {
             InitializeComponent();
 
@@ -70,9 +75,25 @@ namespace Karaboss
 
             InitControls();
 
+            #region playlists
+            if (myPlayList != null)
+            {                
+                currentPlaylist = myPlayList;
+                // Search file to play with its filename                
+                currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == Mp3FullPath).FirstOrDefault();
+                
+                lblPlaylist.Visible = true;
+                int idx = currentPlaylist.SelectedIndex(currentPlaylistItem) + 1;
+                lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;
+            }
+            else
+            {
+                lblPlaylist.Visible = false;
+            }
+            #endregion playlists
+
             // If true, launch player
             bPlayNow = bplay;
-
             // the user asked to play the song immediately                
             if (bPlayNow)
             {
@@ -237,6 +258,7 @@ namespace Karaboss
                 PlayerState = PlayerStates.Playing;
                 nbstop = 0;
                 BtnStatus();
+                ValideMenus(false);
 
                 if (!InitPlayerMp3(Mp3FullPath)) return;
                 StartMp3Player();
@@ -334,6 +356,7 @@ namespace Karaboss
             if (newstart <= 0)
             {
                 DisplayTimeElapse(0);
+                ValideMenus(true);
 
                 positionHScrollBar.Value = positionHScrollBar.Minimum;
                 //laststart = 0;
@@ -612,6 +635,21 @@ namespace Karaboss
 
 
         #region menus
+
+        /// <summary>
+        /// Valid or not some menus if playing or not
+        /// </summary>
+        /// <param name="enabled"></param>
+        private void ValideMenus(bool enabled)
+        {
+            menuStrip1.Visible = enabled;    
+            
+            if (!enabled)
+                Height = 166;
+            else
+                Height = 166 + menuStrip1.Height;
+        }
+
         private void mnuFileOpen_Click(object sender, EventArgs e)
         {
             OpenBrowseMp3();
@@ -676,8 +714,9 @@ namespace Karaboss
 
         #region Draw controls
         private void InitControls()
-        {
-            PlayerState = PlayerStates.Stopped;
+        {            
+
+                PlayerState = PlayerStates.Stopped;
             pnlDisplay.DisplayBeat("");
 
             #region volume

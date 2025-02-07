@@ -51,7 +51,7 @@ namespace Karaboss.playlists
     public delegate void PlayTxtEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayXmlEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayMxlEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
-    public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayCDGEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayMp3EventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void NavigateToEventHandler(Object sender, string path, string file);
 
@@ -1486,7 +1486,7 @@ namespace Karaboss.playlists
                             case ".zip":
                             case ".cdg":
                                 {
-                                    PlayCDG?.Invoke(this, fi, bplay);
+                                    PlayCDG?.Invoke(this, fi, currentPlaylist, bplay);
                                     break;
                                 }
 
@@ -2411,7 +2411,7 @@ namespace Karaboss.playlists
                     case ".zip":
                     case ".cdg":
                         {
-                            PlayCDG?.Invoke(this, new FileInfo(file), bplay);
+                            PlayCDG?.Invoke(this, new FileInfo(file), null, bplay);
                             break;
                         }
                     case ".mp3":

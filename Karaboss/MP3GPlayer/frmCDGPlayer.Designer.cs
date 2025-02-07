@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.btRecord = new System.Windows.Forms.Button();
             this.OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
@@ -53,20 +54,115 @@
             this.btnPlay = new Karaboss.NoSelectButton();
             this.lnlVol = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuFileSep = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.pnlControls.SuspendLayout();
+            this.lblPlaylist = new System.Windows.Forms.Label();            
             this.menuStrip1.SuspendLayout();
+            this.pnlControls.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFile,
+            this.mnuHelp});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(514, 24);
+            this.menuStrip1.TabIndex = 2;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // mnuFile
+            // 
+            this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFileOpen,
+            this.MnuFileSep,
+            this.mnuFileQuit});
+            this.mnuFile.Name = "mnuFile";
+            this.mnuFile.Size = new System.Drawing.Size(37, 20);
+            this.mnuFile.Text = "&File";
+            // 
+            // mnuFileOpen
+            // 
+            this.mnuFileOpen.Name = "mnuFileOpen";
+            this.mnuFileOpen.Size = new System.Drawing.Size(112, 22);
+            this.mnuFileOpen.Text = "&Open...";
+            this.mnuFileOpen.Click += new System.EventHandler(this.mnuFileOpen_Click);
+            // 
+            // MnuFileSep
+            // 
+            this.MnuFileSep.Name = "MnuFileSep";
+            this.MnuFileSep.Size = new System.Drawing.Size(109, 6);
+            // 
+            // mnuFileQuit
+            // 
+            this.mnuFileQuit.Name = "mnuFileQuit";
+            this.mnuFileQuit.Size = new System.Drawing.Size(112, 22);
+            this.mnuFileQuit.Text = "E&xit";
+            this.mnuFileQuit.Click += new System.EventHandler(this.mnuFileQuit_Click);
+            // 
+            // mnuHelp
+            // 
+            this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuHelpAbout});
+            this.mnuHelp.Name = "mnuHelp";
+            this.mnuHelp.Size = new System.Drawing.Size(44, 20);
+            this.mnuHelp.Text = "&Help";
+            // 
+            // mnuHelpAbout
+            // 
+            this.mnuHelpAbout.Name = "mnuHelpAbout";
+            this.mnuHelpAbout.Size = new System.Drawing.Size(116, 22);
+            this.mnuHelpAbout.Text = "&About...";
+            this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
+            // 
+            // pnlControls
+            // 
+            this.pnlControls.Controls.Add(this.lblPlaylist);
+            this.pnlControls.Controls.Add(this.btnTempoMinus);
+            this.pnlControls.Controls.Add(this.btnTempoPlus);
+            this.pnlControls.Controls.Add(this.lblTempoValue);
+            this.pnlControls.Controls.Add(this.lblTemp);
+            this.pnlControls.Controls.Add(this.btnTranspoMinus);
+            this.pnlControls.Controls.Add(this.btnTranspoPlus);
+            this.pnlControls.Controls.Add(this.lblTranspoValue);
+            this.pnlControls.Controls.Add(this.lblTransp);
+            this.pnlControls.Controls.Add(this.VuPeakVolumeRight);
+            this.pnlControls.Controls.Add(this.VuPeakVolumeLeft);
+            this.pnlControls.Controls.Add(this.lblMainVolume);
+            this.pnlControls.Controls.Add(this.btRecord);
+            this.pnlControls.Controls.Add(this.pnlDisplay);
+            this.pnlControls.Controls.Add(this.btnPrev);
+            this.pnlControls.Controls.Add(this.btnNext);
+            this.pnlControls.Controls.Add(this.positionHScrollBar);
+            this.pnlControls.Controls.Add(this.btnStop);
+            this.pnlControls.Controls.Add(this.btnPlay);
+            this.pnlControls.Controls.Add(this.sldMainVolume);
+            this.pnlControls.Controls.Add(this.lnlVol);
+            this.pnlControls.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlControls.Location = new System.Drawing.Point(0, 0);
+            this.pnlControls.Name = "pnlControls";
+            this.pnlControls.Size = new System.Drawing.Size(514, 161);
+            this.pnlControls.TabIndex = 1;
+            // 
+            // lblPlaylist
+            // 
+            this.lblPlaylist.AutoSize = true;
+            this.lblPlaylist.ForeColor = System.Drawing.Color.PaleGreen;
+            this.lblPlaylist.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lblPlaylist.Location = new System.Drawing.Point(415, 9);
+            this.lblPlaylist.Name = "lblPlaylist";
+            this.lblPlaylist.Size = new System.Drawing.Size(86, 13);
+            this.lblPlaylist.TabIndex = 61;
+            this.lblPlaylist.Text = "PLAYLIST: 1/10";
             // 
             // btRecord
             // 
-            this.btRecord.Location = new System.Drawing.Point(499, 97);
+            this.btRecord.Location = new System.Drawing.Point(424, 97);
             this.btRecord.Name = "btRecord";
             this.btRecord.Size = new System.Drawing.Size(63, 24);
             this.btRecord.TabIndex = 6;
@@ -209,7 +305,7 @@
             0,
             0,
             0});
-            this.sldMainVolume.Location = new System.Drawing.Point(286, 25);
+            this.sldMainVolume.Location = new System.Drawing.Point(272, 25);
             this.sldMainVolume.Maximum = new decimal(new int[] {
             100,
             0,
@@ -258,38 +354,11 @@
             0,
             0});
             this.sldMainVolume.ValueChanged += new System.EventHandler(this.sldMainVolume_ValueChanged);
-            this.sldMainVolume.Scroll += new System.Windows.Forms.ScrollEventHandler(this.sldMainVolume_Scroll);
-            // 
-            // pnlControls
-            // 
-            this.pnlControls.Controls.Add(this.btnTempoMinus);
-            this.pnlControls.Controls.Add(this.btnTempoPlus);
-            this.pnlControls.Controls.Add(this.lblTempoValue);
-            this.pnlControls.Controls.Add(this.lblTemp);
-            this.pnlControls.Controls.Add(this.btnTranspoMinus);
-            this.pnlControls.Controls.Add(this.btnTranspoPlus);
-            this.pnlControls.Controls.Add(this.lblTranspoValue);
-            this.pnlControls.Controls.Add(this.lblTransp);
-            this.pnlControls.Controls.Add(this.VuPeakVolumeRight);
-            this.pnlControls.Controls.Add(this.VuPeakVolumeLeft);
-            this.pnlControls.Controls.Add(this.lblMainVolume);
-            this.pnlControls.Controls.Add(this.btRecord);
-            this.pnlControls.Controls.Add(this.pnlDisplay);
-            this.pnlControls.Controls.Add(this.btnPrev);
-            this.pnlControls.Controls.Add(this.btnNext);
-            this.pnlControls.Controls.Add(this.positionHScrollBar);
-            this.pnlControls.Controls.Add(this.btnStop);
-            this.pnlControls.Controls.Add(this.btnPlay);
-            this.pnlControls.Controls.Add(this.sldMainVolume);
-            this.pnlControls.Controls.Add(this.lnlVol);
-            this.pnlControls.Location = new System.Drawing.Point(0, 27);
-            this.pnlControls.Name = "pnlControls";
-            this.pnlControls.Size = new System.Drawing.Size(570, 130);
-            this.pnlControls.TabIndex = 1;
+            this.sldMainVolume.Scroll += new System.Windows.Forms.ScrollEventHandler(this.sldMainVolume_Scroll);            
             // 
             // btnTempoMinus
             // 
-            this.btnTempoMinus.Location = new System.Drawing.Point(350, 70);
+            this.btnTempoMinus.Location = new System.Drawing.Point(319, 70);
             this.btnTempoMinus.Name = "btnTempoMinus";
             this.btnTempoMinus.Size = new System.Drawing.Size(32, 32);
             this.btnTempoMinus.TabIndex = 60;
@@ -297,7 +366,7 @@
             // 
             // btnTempoPlus
             // 
-            this.btnTempoPlus.Location = new System.Drawing.Point(350, 30);
+            this.btnTempoPlus.Location = new System.Drawing.Point(319, 30);
             this.btnTempoPlus.Name = "btnTempoPlus";
             this.btnTempoPlus.Size = new System.Drawing.Size(32, 32);
             this.btnTempoPlus.TabIndex = 59;
@@ -309,7 +378,7 @@
             this.lblTempoValue.Font = new System.Drawing.Font("Consolas", 8.25F);
             this.lblTempoValue.ForeColor = System.Drawing.Color.PaleGreen;
             this.lblTempoValue.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblTempoValue.Location = new System.Drawing.Point(341, 110);
+            this.lblTempoValue.Location = new System.Drawing.Point(310, 110);
             this.lblTempoValue.Name = "lblTempoValue";
             this.lblTempoValue.Size = new System.Drawing.Size(50, 13);
             this.lblTempoValue.TabIndex = 58;
@@ -321,7 +390,7 @@
             this.lblTemp.Font = new System.Drawing.Font("Consolas", 8F);
             this.lblTemp.ForeColor = System.Drawing.Color.White;
             this.lblTemp.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblTemp.Location = new System.Drawing.Point(341, 8);
+            this.lblTemp.Location = new System.Drawing.Point(310, 8);
             this.lblTemp.Name = "lblTemp";
             this.lblTemp.Size = new System.Drawing.Size(50, 13);
             this.lblTemp.TabIndex = 57;
@@ -330,7 +399,7 @@
             // 
             // btnTranspoMinus
             // 
-            this.btnTranspoMinus.Location = new System.Drawing.Point(395, 70);
+            this.btnTranspoMinus.Location = new System.Drawing.Point(364, 70);
             this.btnTranspoMinus.Name = "btnTranspoMinus";
             this.btnTranspoMinus.Size = new System.Drawing.Size(32, 32);
             this.btnTranspoMinus.TabIndex = 56;
@@ -338,7 +407,7 @@
             // 
             // btnTranspoPlus
             // 
-            this.btnTranspoPlus.Location = new System.Drawing.Point(395, 30);
+            this.btnTranspoPlus.Location = new System.Drawing.Point(364, 30);
             this.btnTranspoPlus.Name = "btnTranspoPlus";
             this.btnTranspoPlus.Size = new System.Drawing.Size(32, 32);
             this.btnTranspoPlus.TabIndex = 55;
@@ -350,7 +419,7 @@
             this.lblTranspoValue.Font = new System.Drawing.Font("Consolas", 8.25F);
             this.lblTranspoValue.ForeColor = System.Drawing.Color.PaleGreen;
             this.lblTranspoValue.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblTranspoValue.Location = new System.Drawing.Point(386, 110);
+            this.lblTranspoValue.Location = new System.Drawing.Point(355, 110);
             this.lblTranspoValue.Name = "lblTranspoValue";
             this.lblTranspoValue.Size = new System.Drawing.Size(50, 13);
             this.lblTranspoValue.TabIndex = 54;
@@ -362,7 +431,7 @@
             this.lblTransp.Font = new System.Drawing.Font("Consolas", 8F);
             this.lblTransp.ForeColor = System.Drawing.Color.White;
             this.lblTransp.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblTransp.Location = new System.Drawing.Point(386, 8);
+            this.lblTransp.Location = new System.Drawing.Point(355, 8);
             this.lblTransp.Name = "lblTransp";
             this.lblTransp.Size = new System.Drawing.Size(50, 13);
             this.lblTransp.TabIndex = 53;
@@ -418,7 +487,7 @@
             this.lblMainVolume.Font = new System.Drawing.Font("Consolas", 8F);
             this.lblMainVolume.ForeColor = System.Drawing.Color.White;
             this.lblMainVolume.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblMainVolume.Location = new System.Drawing.Point(274, 110);
+            this.lblMainVolume.Location = new System.Drawing.Point(260, 110);
             this.lblMainVolume.Name = "lblMainVolume";
             this.lblMainVolume.Size = new System.Drawing.Size(50, 13);
             this.lblMainVolume.TabIndex = 46;
@@ -509,76 +578,21 @@
             this.lnlVol.Font = new System.Drawing.Font("Consolas", 8F);
             this.lnlVol.ForeColor = System.Drawing.Color.White;
             this.lnlVol.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lnlVol.Location = new System.Drawing.Point(274, 8);
+            this.lnlVol.Location = new System.Drawing.Point(260, 8);
             this.lnlVol.Name = "lnlVol";
             this.lnlVol.Size = new System.Drawing.Size(50, 13);
             this.lnlVol.TabIndex = 45;
             this.lnlVol.Text = "Volume";
-            this.lnlVol.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFile,
-            this.mnuHelp});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(572, 24);
-            this.menuStrip1.TabIndex = 2;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // mnuFile
-            // 
-            this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFileOpen,
-            this.MnuFileSep,
-            this.mnuFileQuit});
-            this.mnuFile.Name = "mnuFile";
-            this.mnuFile.Size = new System.Drawing.Size(37, 20);
-            this.mnuFile.Text = "&File";
-            // 
-            // mnuFileOpen
-            // 
-            this.mnuFileOpen.Name = "mnuFileOpen";
-            this.mnuFileOpen.Size = new System.Drawing.Size(112, 22);
-            this.mnuFileOpen.Text = "&Open...";
-            this.mnuFileOpen.Click += new System.EventHandler(this.mnuFileOpen_Click);
-            // 
-            // MnuFileSep
-            // 
-            this.MnuFileSep.Name = "MnuFileSep";
-            this.MnuFileSep.Size = new System.Drawing.Size(109, 6);
-            // 
-            // mnuFileQuit
-            // 
-            this.mnuFileQuit.Name = "mnuFileQuit";
-            this.mnuFileQuit.Size = new System.Drawing.Size(112, 22);
-            this.mnuFileQuit.Text = "E&xit";
-            this.mnuFileQuit.Click += new System.EventHandler(this.mnuFileQuit_Click);
-            // 
-            // mnuHelp
-            // 
-            this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuHelpAbout});
-            this.mnuHelp.Name = "mnuHelp";
-            this.mnuHelp.Size = new System.Drawing.Size(44, 20);
-            this.mnuHelp.Text = "&Help";
-            // 
-            // mnuHelpAbout
-            // 
-            this.mnuHelpAbout.Name = "mnuHelpAbout";
-            this.mnuHelpAbout.Size = new System.Drawing.Size(116, 22);
-            this.mnuHelpAbout.Text = "&About...";
-            this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
+            this.lnlVol.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;                   
             // 
             // frmCDGPlayer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.ClientSize = new System.Drawing.Size(572, 161);
-            this.Controls.Add(this.menuStrip1);
+            this.ClientSize = new System.Drawing.Size(514, 161);
             this.Controls.Add(this.pnlControls);
+            this.Controls.Add(this.menuStrip1);            
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "frmCDGPlayer";
@@ -588,6 +602,7 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmCDGPlayer_FormClosed);
             this.Load += new System.EventHandler(this.frmCDGPlayer_Load);
             this.pnlControls.ResumeLayout(false);
+            this.pnlControls.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -597,6 +612,14 @@
 
         #endregion
 
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem mnuFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileOpen;
+        private System.Windows.Forms.ToolStripSeparator MnuFileSep;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileQuit;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelp;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
+        private System.Windows.Forms.Panel pnlControls;
         private System.Windows.Forms.Button btRecord;
         internal System.Windows.Forms.OpenFileDialog OpenFileDialog1;
         internal System.Windows.Forms.Timer Timer1;
@@ -607,19 +630,11 @@
         private NoSelectButton btnPrev;
         private NoSelectButton btnNext;
         private NoSelectButton btnStop;
-        private NoSelectButton btnPlay;
-        private System.Windows.Forms.Panel pnlControls;
+        private NoSelectButton btnPlay;        
         private System.Windows.Forms.Label lnlVol;
         private System.Windows.Forms.Label lblMainVolume;
         private VU_MeterLibrary.VuMeter VuPeakVolumeRight;
-        private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem mnuFile;
-        private System.Windows.Forms.ToolStripMenuItem mnuFileOpen;
-        private System.Windows.Forms.ToolStripSeparator MnuFileSep;
-        private System.Windows.Forms.ToolStripMenuItem mnuFileQuit;
-        private System.Windows.Forms.ToolStripMenuItem mnuHelp;
-        private System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
+        private System.Windows.Forms.ToolTip toolTip1;                
         private Buttons.MinusButtonControl btnTranspoMinus;
         private Buttons.PlusButtonControl btnTranspoPlus;
         private System.Windows.Forms.Label lblTranspoValue;
@@ -628,5 +643,6 @@
         private Buttons.PlusButtonControl btnTempoPlus;
         private System.Windows.Forms.Label lblTempoValue;
         private System.Windows.Forms.Label lblTemp;
+        private System.Windows.Forms.Label lblPlaylist;
     }
 }

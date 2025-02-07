@@ -103,7 +103,7 @@ namespace Karaboss
 
         #endregion
 
-        public frmCDGPlayer(string filename, bool bplay)
+        public frmCDGPlayer(string filename, Playlist myPlayList, bool bplay)
         {
             InitializeComponent();            
 
@@ -467,6 +467,7 @@ namespace Karaboss
                     if (mStop)
                         stopProgress();
                     Timer1.Stop();
+                    AfterStopped();
                     break;
                 
                 default:
@@ -618,8 +619,9 @@ namespace Karaboss
                 mPaused = false;
                 mStop = false;
                 mFrameCount = 0;
-                
-                
+
+                ValideMenus(false);
+
                 this.Show();
                 this.Activate();
                 
@@ -716,12 +718,13 @@ namespace Karaboss
             CleanUp();
 
             PlayerState = PlayerStates.Stopped;
+            AfterStopped();
         }
 
 
         private void AfterStopped()
         {
-
+            ValideMenus(true);
         }
 
         private void startProgress(long max)
@@ -977,6 +980,21 @@ namespace Karaboss
 
 
         #region Menus
+
+        /// <summary>
+        /// Valid or not some menus if playing or not
+        /// </summary>
+        /// <param name="enabled"></param>
+        private void ValideMenus(bool enabled)
+        {
+            menuStrip1.Visible = enabled;
+            if (!enabled)
+                Height = 166;
+            else
+                Height = 166 + menuStrip1.Height;
+
+        }
+
         private void mnuFileOpen_Click(object sender, EventArgs e)
         {
             BrowseCDGZip();
