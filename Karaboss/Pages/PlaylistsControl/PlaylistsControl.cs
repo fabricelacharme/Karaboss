@@ -1512,6 +1512,11 @@ namespace Karaboss.playlists
                                     PlayMxl?.Invoke(this, fi, currentPlaylist, bplay);
                                     break;
                                 }
+                            case ".mp3":
+                                {
+                                    PlayMp3?.Invoke(this, fi, currentPlaylist, bplay);
+                                    break;
+                                }
                             default:
                                 try
                                 {
@@ -2407,6 +2412,11 @@ namespace Karaboss.playlists
                     case ".cdg":
                         {
                             PlayCDG?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
+                    case ".mp3":
+                        {
+                            PlayMp3?.Invoke(this, new FileInfo(file), null, bplay);
                             break;
                         }
                     default:

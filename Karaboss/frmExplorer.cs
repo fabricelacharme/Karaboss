@@ -1478,7 +1478,7 @@ namespace Karaboss
         private void Global_PlayCDG(object sender, FileInfo fi, bool bplay)
         {
             string fpath = fi.FullName;
-            LaunchCDGPlayer(fpath, true);
+            LaunchCDGPlayer(fpath, bplay);
         }
 
         /// <summary>
@@ -1615,13 +1615,13 @@ namespace Karaboss
             // Affiche le formulaire frmCDGPlayer 
             if (Application.OpenForms["frmCDGPlayer"] == null)
             {
-                Form frmCDGPlayer = new frmCDGPlayer(fpath);
+                Form frmCDGPlayer = new frmCDGPlayer(fpath, bPlayNow);
                 frmCDGPlayer.Show();
             }
             else
             {
                 Application.OpenForms["frmCDGPlayer"].Close();
-                Form frmCDGPlayer = new frmCDGPlayer(fpath);
+                Form frmCDGPlayer = new frmCDGPlayer(fpath, bPlayNow);
                 frmCDGPlayer.Show();
             }
         }

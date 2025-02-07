@@ -81,6 +81,8 @@ namespace Karaboss
         private int TransposeValue = 0;
         private long FrequencyRatio = 100;
 
+        private readonly bool bPlayNow = false;
+
         /// <summary>
         /// Player status
         /// </summary>
@@ -101,21 +103,20 @@ namespace Karaboss
 
         #endregion
 
-        public frmCDGPlayer(string filename)
+        public frmCDGPlayer(string filename, bool bplay)
         {
-            InitializeComponent();
-            //mCDGWindow = new frmCDGWindow();
-            //mCDGWindow.FormClosing += new FormClosingEventHandler(mCDGWindow_FormClosing);
+            InitializeComponent();            
 
             
             CDGFullPath = filename;
             SetTitle(filename);
 
-            InitControls();
-            PlayerState = PlayerStates.Stopped;
-            pnlDisplay.DisplayBeat("");
-        }
+            InitControls();           
 
+            // If true, launch player
+            bPlayNow = bplay;            
+
+        }
 
 
         #region "Control Events"
@@ -209,37 +210,15 @@ namespace Karaboss
                 Location = new Point(Location.X, 0);
 
             InitBass();
-        }
 
-        private void mCDGWindow_FormClosing(Object sender, FormClosingEventArgs e)
-        {
-            /*
-            // enregistre la taille et la position de la forme
-            // Copy window location to app settings                
-            if (WindowState != FormWindowState.Minimized)
+            // the user asked to play the song immediately 
+            if (bPlayNow)
             {
-                if (WindowState == FormWindowState.Maximized)
-                {
-                    Properties.Settings.Default.frmCDGWindowLocation = RestoreBounds.Location;
-                    Properties.Settings.Default.frmCDGWindowMaximized = true;
-
-                }
-                else if (WindowState == FormWindowState.Normal)
-                {
-                    Properties.Settings.Default.frmCDGWindowLocation = Location;
-                    Properties.Settings.Default.frmCDGWindowSize = Size;
-                    Properties.Settings.Default.frmCDGWindowMaximized = false;
-                }
-
-                // Save settings
-                Properties.Settings.Default.Save();
+                PlayPauseMusic();
             }
-
-            StopPlayback();
-            mCDGWindow.Hide();
-            e.Cancel = true;
-            */
         }
+
+       
 
         private void frmCDGPlayer_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -639,6 +618,11 @@ namespace Karaboss
                 mPaused = false;
                 mStop = false;
                 mFrameCount = 0;
+                
+                
+                this.Show();
+                this.Activate();
+                
                 mCDGFile = new CDGFile(mCDGFileName);
 
                 
@@ -845,6 +829,9 @@ namespace Karaboss
         /// </summary>
         private void InitControls()
         {
+
+            PlayerState = PlayerStates.Stopped;
+            pnlDisplay.DisplayBeat("");
 
             pnlControls.Top = menuStrip1.Height;
             pnlControls.Left = 0;

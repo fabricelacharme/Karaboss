@@ -1330,6 +1330,11 @@ namespace Karaboss.xplorer
                             PlayTxt?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
+                    case ".mp3":
+                        {
+                            PlayMp3?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
                     default:
                         try
                         {

@@ -8,11 +8,13 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Un4seen.Bass;
+using Un4seen.Bass.AddOn.Tags;
 using static Karaboss.Pages.ABCnotation.MyMidi;
 
 namespace Karaboss
@@ -857,6 +859,10 @@ namespace Karaboss
                     string duration = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
                     pnlDisplay.DisplayDuration(duration);
 
+                    // Tags
+                    Mp3PlayerGetTagsFromFile(mp3FileName);
+
+
                     return true;
                 }
                 else
@@ -880,8 +886,11 @@ namespace Karaboss
             // the 'channel' has ended - jump to the beginning
             //Bass.BASS_ChannelSetPosition(channel, 0L);
             
-            //StopMusic();            
+            //StopMusic();
+            
+            // Wait for the timer to complete the stop because we are in another thread
             PlayerState = PlayerStates.NextSong;
+
             //Bass.BASS_Stop();
             //Timer1.Stop();
 
@@ -959,6 +968,16 @@ namespace Karaboss
             if (mMP3Stream == 0) return;            
             
             Bass.BASS_ChannelSetPosition(mMP3Stream, Bass.BASS_ChannelSeconds2Bytes(mMP3Stream, pos));
+        }
+
+
+        private void Mp3PlayerGetTagsFromFile(string FileName)
+        {
+            TAG_INFO tagInfo = BassTags.BASS_TAG_GetFromFile(FileName);
+            if (tagInfo != null)
+            {
+                // display the tags...
+            }
         }
 
         #endregion mp3 infos
