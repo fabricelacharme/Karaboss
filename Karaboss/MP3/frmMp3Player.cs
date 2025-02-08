@@ -866,11 +866,18 @@ namespace Karaboss
 
             if (Tag != null)
             {
-                string s = Tag.Lyrics;
+                string l = Tag.Lyrics;
+                if (l != null && l.Trim() != "")
+                {
+                    Console.WriteLine("*** Lyrics : " + l);
+                }
+
+                string s = Tag.Subtitle;
                 if (s != null && s.Trim() != "")
                 {
-                    Console.WriteLine("*** Lyrics : " + s);
+                    Console.WriteLine("*** SubTitle : " + s);
                 }
+
             }
 
         }
