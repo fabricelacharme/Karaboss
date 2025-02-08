@@ -61,8 +61,10 @@
             this.OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.pBox = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.pnlControls.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pBox)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -114,6 +116,7 @@
             // 
             // pnlControls
             // 
+            this.pnlControls.Controls.Add(this.pBox);
             this.pnlControls.Controls.Add(this.lblPlaylist);
             this.pnlControls.Controls.Add(this.btnTempoMinus);
             this.pnlControls.Controls.Add(this.btnTempoPlus);
@@ -487,6 +490,12 @@
             this.Timer1.Interval = 50;
             this.Timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
+            // pBox
+            // 
+            resources.ApplyResources(this.pBox, "pBox");
+            this.pBox.Name = "pBox";
+            this.pBox.TabStop = false;
+            // 
             // frmMp3Player
             // 
             resources.ApplyResources(this, "$this");
@@ -503,6 +512,7 @@
             this.menuStrip1.PerformLayout();
             this.pnlControls.ResumeLayout(false);
             this.pnlControls.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -541,5 +551,6 @@
         internal System.Windows.Forms.Timer Timer1;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label lblPlaylist;
+        private System.Windows.Forms.PictureBox pBox;
     }
 }

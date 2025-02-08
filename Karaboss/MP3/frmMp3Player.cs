@@ -1,31 +1,20 @@
-﻿using Karaboss.Lrc.NeteaseMusic;
-using Karaboss.mp3;
-using Karaboss.Properties;
-using MusicXml.Domain;
-using Sanford.Multimedia.Midi.Score;
+﻿using Karaboss.mp3;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using TagLib;
+using TagLib.Matroska;
 using Un4seen.Bass;
 using Un4seen.Bass.AddOn.Tags;
-using static Karaboss.Pages.ABCnotation.MyMidi;
 
 namespace Karaboss
 {
     public partial class frmMp3Player : Form
     {
-        
-       
-
+              
         /// <summary>
         /// Player status
         /// </summary>
@@ -88,6 +77,15 @@ namespace Karaboss
             // Create mp3 Player instance
             Player = new Mp3Player(FileName);
 
+            // Create event for playing completed
+            Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);
+            
+
+
+            DisplayMp3Characteristics();
+
+            DisplayOtherInfos(Mp3FullPath);
+            
 
             #region playlists
             if (myPlayList != null)
@@ -117,7 +115,19 @@ namespace Karaboss
         }
 
      
+        /// <summary>
+        /// Display duration and set HScrollbar maximum
+        /// </summary>
+        private void DisplayMp3Characteristics()
+        {
+            if (Player == null) return;
+            _totalSeconds = Player.Seconds;
+            positionHScrollBar.Maximum = (int)_totalSeconds;
 
+            TimeSpan t = TimeSpan.FromSeconds(_totalSeconds);
+            string duration = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
+            pnlDisplay.DisplayDuration(duration);
+        }
 
         #region Form load close resize
 
@@ -418,6 +428,7 @@ namespace Karaboss
             pnlDisplay.DisplayDuration(duration);
 
             Player.ChangeFrequency(amount);
+
             /*
             try
             {
@@ -582,6 +593,7 @@ namespace Karaboss
             if (Player == null) return;
 
             Player.AdjustVolume((float)sldMainVolume.Value);
+            
             /*
             if (mMP3Stream != 0)
             {
@@ -599,8 +611,8 @@ namespace Karaboss
         /// </summary>
         private void GetPeakVolume()
         {
-            if (mMP3Stream != 0)
-            {
+            //if (mMP3Stream != 0)
+            //{
                 //int level = Bass.BASS_ChannelGetLevel(mMP3Stream);
                 int level = Player.Volume;
                 int LeftLevel = LOWORD(level);
@@ -609,7 +621,7 @@ namespace Karaboss
                 VuPeakVolumeLeft.Level = LeftLevel;
                 VuPeakVolumeRight.Level = RightLevel;
 
-            }
+            //}
         }
 
         private static int HIWORD(int n)
@@ -843,13 +855,61 @@ namespace Karaboss
             #endregion Peak volume
         }
 
+        private void DisplayOtherInfos(string FileName)
+        {
+            Player.GetMp3Infos(Mp3FullPath);
+            pBox.Image = Player.AlbumArtImage;
 
+            //TAG_INFO tags = Player.Tags;
+            //Console.WriteLine(tags.ToString());
+            TagLib.Tag Tag = Player.Tag;
 
+            if (Tag != null)
+            {
+                string s = Tag.Lyrics;
+                if (s != null && s.Trim() != "")
+                {
+                    Console.WriteLine("*** Lyrics : " + s);
+                }
+            }
 
+        }
         #endregion Draw controls
 
 
         #region Playlists
+
+        // Select and load next playlist item
+        private void SelectNextPlaylistSong()
+        {
+            if (currentPlaylist == null)
+            {
+                // FAB 30/09/2018 !!!!
+                // Ne s'arrête jamais
+                PlayerState = PlayerStates.Stopped;
+                return;
+            }
+
+            PlaylistItem pli = currentPlaylistItem;
+
+            // Select next item            
+            currentPlaylistItem = currentPlaylist.Next(pli);
+
+            // Stop if no other song to play
+            if (pli == currentPlaylistItem)
+            {
+                PlayerState = PlayerStates.Stopped;
+                BtnStatus();
+                return;
+            }
+
+            // Load file
+            Mp3FileName = currentPlaylistItem.Song;
+            Mp3FullPath = currentPlaylistItem.File;
+
+            // Select which type a file it is
+            SelectFileToLoadAsync(Mp3FullPath);
+        }
 
         /// <summary>
         /// Called by Button NEXT, play immediately the next song
@@ -937,11 +997,12 @@ namespace Karaboss
 
         }
 
-
         #endregion Playlists
 
 
-        #region BASS Mp3Player        
+
+
+        #region Handle events        
 
         /// <summary>
         /// Play mp3 completed
@@ -965,191 +1026,7 @@ namespace Karaboss
 
         }
 
-
-        /*
-        /// <summary>
-        /// Initialize Bass
-        /// </summary>
-        private bool InitBass()
-        {
-            string BassRegistrationEmail = Settings.Default.BassRegistrationEmail;
-            string BassRegistrationKey = Settings.Default.BassRegistrationKey;
-
-            // Add registration key here if you have a license
-            BassNet.Registration(BassRegistrationEmail, BassRegistrationKey);
-
-            try
-            {
-                // Initalize with frequency = 44100
-                Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
-
-                mBassInitalized = true;
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to initialize the audio playback system. " + ex.Message);
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Free resources
-        /// </summary>
-        private void StopPlaybackBass()
-        {
-            try
-            {
-                Bass.BASS_Stop();
-                Bass.BASS_StreamFree(mMP3Stream);
-                bool v = Bass.BASS_Free();
-                mMP3Stream = 0;
-                mBassInitalized = false;
-                PlayerState = PlayerStates.Stopped;
-            }
-            catch (Exception ex)
-            {
-                Console.Write(ex.Message);
-            }
-        }
-        
-
-        /// <summary>
-        /// Initialize player
-        /// </summary>
-        /// <param name="mp3FileName"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        private bool InitPlayerMp3(string mp3FileName)
-        {
-            if (mBassInitalized || Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, Handle))
-            {
-                mMP3Stream = 0;
-                mMP3Stream = Bass.BASS_StreamCreateFile(mp3FileName, 0, 0, BASSFlag.BASS_STREAM_DECODE | BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_STREAM_PRESCAN);
-                mMP3Stream = Un4seen.Bass.AddOn.Fx.BassFx.BASS_FX_TempoCreate(mMP3Stream, BASSFlag.BASS_FX_FREESOURCE | BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_SAMPLE_LOOP);
-                if (mMP3Stream != 0)
-                {
-
-                    // Create event for song playing completed
-                    _OnEndingSync = new SYNCPROC(HandlePlayingCompleted);
-                    Bass.BASS_ChannelSetSync(mMP3Stream, BASSSync.BASS_SYNC_END | BASSSync.BASS_SYNC_MIXTIME, 0, _OnEndingSync, IntPtr.Zero);
-
-                    // Get frequency usually 44100
-                    Bass.BASS_ChannelGetAttribute(mMP3Stream, BASSAttribute.BASS_ATTRIB_FREQ, ref _frequency);
-
-                    // Get Length
-                    // length in bytes
-                    long byteslen = Bass.BASS_ChannelGetLength(mMP3Stream, BASSMode.BASS_POS_BYTE);
-                    // the time length
-                    _totalSeconds = Bass.BASS_ChannelBytes2Seconds(mMP3Stream, byteslen);
-
-                    positionHScrollBar.Maximum = (int)_totalSeconds;
-
-                    TimeSpan t = TimeSpan.FromSeconds(_totalSeconds);
-                    string duration = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
-                    pnlDisplay.DisplayDuration(duration);
-
-                    // Tags
-                    Mp3PlayerGetTagsFromFile(mp3FileName);
-
-
-                    return true;
-                }
-                else
-                {
-                    throw new Exception(String.Format("Stream error: {0}", Bass.BASS_ErrorGetCode()));
-                }
-
-            }
-            return false;
-        }
-
-        
-        /// <summary>
-        /// Start player
-        /// </summary>
-        private void StartMp3Player()
-        {
-            if (mMP3Stream == 0) return;
-            Bass.BASS_ChannelPlay(mMP3Stream, false);
-        }
-
-        /// <summary>
-        /// Stop player - Free resources
-        /// </summary>
-        private void StopMp3Player()
-        {
-            try
-            {
-                Bass.BASS_Stop();
-                Bass.BASS_StreamFree(mMP3Stream);
-                Bass.BASS_Free();
-                mMP3Stream = 0;
-                mBassInitalized = false;
-            }
-            catch (Exception ex)
-            {
-                Console.Write(ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Pause player
-        /// </summary>
-        private void PauseMp3Player()
-        {
-            if (mMP3Stream == 0) return;
-            
-            // Pause
-            Bass.BASS_ChannelPause(mMP3Stream);                            
-        }
-
-        private void ResumeMp3Player()
-        {
-            if (mMP3Stream == 0) return;
-                        
-            // Resume
-            Bass.BASS_ChannelPlay(mMP3Stream, false);            
-        }
-
-        /// <summary>
-        /// Get player position
-        /// </summary>
-        /// <returns></returns>
-        private double Mp3PlayerGetPosition()
-        {
-            if (mMP3Stream == 0) return 0;
-
-            // length in bytes
-            long byteslen = Bass.BASS_ChannelGetPosition(mMP3Stream, BASSMode.BASS_POS_BYTE); 
-            // the time length
-            return Bass.BASS_ChannelBytes2Seconds(mMP3Stream, byteslen);            
-        }
-
-
-        /// <summary>
-        /// Set player position
-        /// </summary>
-        /// <param name="pos"></param>
-        private void Mp3PlayerSetPosition(double pos)
-        {
-            if (mMP3Stream == 0) return;            
-            
-            Bass.BASS_ChannelSetPosition(mMP3Stream, Bass.BASS_ChannelSeconds2Bytes(mMP3Stream, pos));
-        }
-
-
-        private void Mp3PlayerGetTagsFromFile(string FileName)
-        {
-            TAG_INFO tagInfo = BassTags.BASS_TAG_GetFromFile(FileName);
-            if (tagInfo != null)
-            {
-                // display the tags...
-            }
-        }
-
-        */
-        #endregion BASS Mp3Player 
+        #endregion Handle events 
 
 
         #region Timer
@@ -1196,15 +1073,16 @@ namespace Karaboss
                     Timer1.Stop();
                     break;
 
-                case PlayerStates.NextSong:
+                case PlayerStates.NextSong:                                       
                     StopMusic();
+                    SelectNextPlaylistSong();
                     break;
             }
 
             #region position hscrollbar
             try
             {
-                if (PlayerState == PlayerStates.Playing && (int)pos < positionHScrollBar.Maximum - positionHScrollBar.Minimum)
+                if (PlayerState == PlayerStates.Playing && (int)pos < positionHScrollBar.Maximum - positionHScrollBar.Minimum && (int)pos > positionHScrollBar.Minimum)
                 {
                     positionHScrollBar.Value = (int)pos + positionHScrollBar.Minimum;
                 }
