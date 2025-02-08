@@ -30,6 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuFileSep = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.btRecord = new System.Windows.Forms.Button();
             this.OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
@@ -37,6 +43,7 @@
             this.VuPeakVolumeLeft = new VU_MeterLibrary.VuMeter();
             this.sldMainVolume = new ColorSlider.ColorSlider();
             this.pnlControls = new System.Windows.Forms.Panel();
+            this.lblPlaylist = new System.Windows.Forms.Label();
             this.btnTempoMinus = new Karaboss.Buttons.MinusButtonControl();
             this.btnTempoPlus = new Karaboss.Buttons.PlusButtonControl();
             this.lblTempoValue = new System.Windows.Forms.Label();
@@ -54,13 +61,6 @@
             this.btnPlay = new Karaboss.NoSelectButton();
             this.lnlVol = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuFileSep = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.lblPlaylist = new System.Windows.Forms.Label();            
             this.menuStrip1.SuspendLayout();
             this.pnlControls.SuspendLayout();
             this.SuspendLayout();
@@ -119,46 +119,6 @@
             this.mnuHelpAbout.Size = new System.Drawing.Size(116, 22);
             this.mnuHelpAbout.Text = "&About...";
             this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
-            // 
-            // pnlControls
-            // 
-            this.pnlControls.Controls.Add(this.lblPlaylist);
-            this.pnlControls.Controls.Add(this.btnTempoMinus);
-            this.pnlControls.Controls.Add(this.btnTempoPlus);
-            this.pnlControls.Controls.Add(this.lblTempoValue);
-            this.pnlControls.Controls.Add(this.lblTemp);
-            this.pnlControls.Controls.Add(this.btnTranspoMinus);
-            this.pnlControls.Controls.Add(this.btnTranspoPlus);
-            this.pnlControls.Controls.Add(this.lblTranspoValue);
-            this.pnlControls.Controls.Add(this.lblTransp);
-            this.pnlControls.Controls.Add(this.VuPeakVolumeRight);
-            this.pnlControls.Controls.Add(this.VuPeakVolumeLeft);
-            this.pnlControls.Controls.Add(this.lblMainVolume);
-            this.pnlControls.Controls.Add(this.btRecord);
-            this.pnlControls.Controls.Add(this.pnlDisplay);
-            this.pnlControls.Controls.Add(this.btnPrev);
-            this.pnlControls.Controls.Add(this.btnNext);
-            this.pnlControls.Controls.Add(this.positionHScrollBar);
-            this.pnlControls.Controls.Add(this.btnStop);
-            this.pnlControls.Controls.Add(this.btnPlay);
-            this.pnlControls.Controls.Add(this.sldMainVolume);
-            this.pnlControls.Controls.Add(this.lnlVol);
-            this.pnlControls.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlControls.Location = new System.Drawing.Point(0, 0);
-            this.pnlControls.Name = "pnlControls";
-            this.pnlControls.Size = new System.Drawing.Size(514, 161);
-            this.pnlControls.TabIndex = 1;
-            // 
-            // lblPlaylist
-            // 
-            this.lblPlaylist.AutoSize = true;
-            this.lblPlaylist.ForeColor = System.Drawing.Color.PaleGreen;
-            this.lblPlaylist.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblPlaylist.Location = new System.Drawing.Point(415, 9);
-            this.lblPlaylist.Name = "lblPlaylist";
-            this.lblPlaylist.Size = new System.Drawing.Size(86, 13);
-            this.lblPlaylist.TabIndex = 61;
-            this.lblPlaylist.Text = "PLAYLIST: 1/10";
             // 
             // btRecord
             // 
@@ -354,7 +314,47 @@
             0,
             0});
             this.sldMainVolume.ValueChanged += new System.EventHandler(this.sldMainVolume_ValueChanged);
-            this.sldMainVolume.Scroll += new System.Windows.Forms.ScrollEventHandler(this.sldMainVolume_Scroll);            
+            this.sldMainVolume.Scroll += new System.Windows.Forms.ScrollEventHandler(this.sldMainVolume_Scroll);
+            // 
+            // pnlControls
+            // 
+            this.pnlControls.Controls.Add(this.lblPlaylist);
+            this.pnlControls.Controls.Add(this.btnTempoMinus);
+            this.pnlControls.Controls.Add(this.btnTempoPlus);
+            this.pnlControls.Controls.Add(this.lblTempoValue);
+            this.pnlControls.Controls.Add(this.lblTemp);
+            this.pnlControls.Controls.Add(this.btnTranspoMinus);
+            this.pnlControls.Controls.Add(this.btnTranspoPlus);
+            this.pnlControls.Controls.Add(this.lblTranspoValue);
+            this.pnlControls.Controls.Add(this.lblTransp);
+            this.pnlControls.Controls.Add(this.VuPeakVolumeRight);
+            this.pnlControls.Controls.Add(this.VuPeakVolumeLeft);
+            this.pnlControls.Controls.Add(this.lblMainVolume);
+            this.pnlControls.Controls.Add(this.btRecord);
+            this.pnlControls.Controls.Add(this.pnlDisplay);
+            this.pnlControls.Controls.Add(this.btnPrev);
+            this.pnlControls.Controls.Add(this.btnNext);
+            this.pnlControls.Controls.Add(this.positionHScrollBar);
+            this.pnlControls.Controls.Add(this.btnStop);
+            this.pnlControls.Controls.Add(this.btnPlay);
+            this.pnlControls.Controls.Add(this.sldMainVolume);
+            this.pnlControls.Controls.Add(this.lnlVol);
+            this.pnlControls.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlControls.Location = new System.Drawing.Point(0, 24);
+            this.pnlControls.Name = "pnlControls";
+            this.pnlControls.Size = new System.Drawing.Size(514, 127);
+            this.pnlControls.TabIndex = 1;
+            // 
+            // lblPlaylist
+            // 
+            this.lblPlaylist.AutoSize = true;
+            this.lblPlaylist.ForeColor = System.Drawing.Color.PaleGreen;
+            this.lblPlaylist.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lblPlaylist.Location = new System.Drawing.Point(415, 9);
+            this.lblPlaylist.Name = "lblPlaylist";
+            this.lblPlaylist.Size = new System.Drawing.Size(86, 13);
+            this.lblPlaylist.TabIndex = 61;
+            this.lblPlaylist.Text = "PLAYLIST: 1/10";
             // 
             // btnTempoMinus
             // 
@@ -583,16 +583,16 @@
             this.lnlVol.Size = new System.Drawing.Size(50, 13);
             this.lnlVol.TabIndex = 45;
             this.lnlVol.Text = "Volume";
-            this.lnlVol.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;                   
+            this.lnlVol.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // frmCDGPlayer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.ClientSize = new System.Drawing.Size(514, 161);
+            this.ClientSize = new System.Drawing.Size(514, 151);
             this.Controls.Add(this.pnlControls);
-            this.Controls.Add(this.menuStrip1);            
+            this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "frmCDGPlayer";
@@ -601,10 +601,10 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmCDGPlayer_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmCDGPlayer_FormClosed);
             this.Load += new System.EventHandler(this.frmCDGPlayer_Load);
-            this.pnlControls.ResumeLayout(false);
-            this.pnlControls.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.pnlControls.ResumeLayout(false);
+            this.pnlControls.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

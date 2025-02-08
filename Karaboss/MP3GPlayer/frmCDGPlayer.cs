@@ -987,12 +987,7 @@ namespace Karaboss
         /// <param name="enabled"></param>
         private void ValideMenus(bool enabled)
         {
-            menuStrip1.Visible = enabled;
-            if (!enabled)
-                Height = 166;
-            else
-                Height = 166 + menuStrip1.Height;
-
+            menuStrip1.Visible = enabled;            
         }
 
         private void mnuFileOpen_Click(object sender, EventArgs e)
