@@ -37,6 +37,8 @@ BASS :
 bass.dll
 bass.Net.dll
 bass_fx.dll
+
+Documentation CDG : https://jbum.com//cdg_revealed.html
 */
 using System;
 using System.Drawing;

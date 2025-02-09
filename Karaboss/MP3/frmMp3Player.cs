@@ -67,6 +67,7 @@ namespace Karaboss
 
         //forms
         private frmMp3Lyrics frmMp3Lyrics;
+        private frmMp3Karaoke frmMp3Karaoke;
 
         public frmMp3Player(string FileName, Playlist myPlayList, bool bplay)
         {
@@ -170,6 +171,11 @@ namespace Karaboss
                 Application.OpenForms["frmMp3Lyrics"].Close();
             }
 
+            if (Application.OpenForms.OfType<frmMp3Karaoke>().Count() > 0)
+            {
+                Application.OpenForms["frmMp3Karaoke"].Close();
+            }
+
             // Active le formulaire frmExplorer
             if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
             {
@@ -244,6 +250,7 @@ namespace Karaboss
 
                 Player.Play();                                
                 Timer1.Start();
+                StartKaraoke();
             }
             catch (Exception ex)
             {
@@ -330,6 +337,7 @@ namespace Karaboss
             if (newstart <= 0)
             {
                 DisplayTimeElapse(0);
+                StopKaraoke();                
                 ValideMenus(true);
 
                 positionHScrollBar.Value = positionHScrollBar.Minimum;
@@ -812,27 +820,52 @@ namespace Karaboss
                 
             // Lyrivs with time stamps
             TagLib.Id3v2.SynchronisedLyricsFrame SyncLyricsFrame = Player.SyncLyricsFrame;
+            
+            
             if (SyncLyricsFrame != null && SyncLyricsFrame.Text.Count() > 0)
             {
                 string tx = string.Empty;
+                string words = string.Empty;
                 string lyric;
                 long time;
                 string cr = "\r\n";
+                
+                string[] Lyrics = new string[SyncLyricsFrame.Text.Count()];
+                long[] Times = new long[SyncLyricsFrame.Text.Count()];
 
                 for (int i = 0; i < SyncLyricsFrame.Text.Count(); i++)
                 {
                     lyric = SyncLyricsFrame.Text[i].Text;
-                    time = SyncLyricsFrame.Text[i].Time;
 
                     if (lyric.Trim() != "")
                     {
-                        tx += "[" + time + "]" + lyric + cr;
+                        if (lyric.StartsWith("\r"))
+                            lyric = lyric.Replace("\r", "\r\n");
+                        else if (lyric.StartsWith("\n"))
+                            lyric = lyric.Replace("\n", "\r\n");
+                    }
+                    
+                    time = SyncLyricsFrame.Text[i].Time;
+
+                    words += lyric;
+                    
+                    Lyrics[i] = lyric;
+                    Times[i] = time;
+
+                    if (lyric.Trim() != "")
+                    {
+                        tx += "[" + time + "]" + lyric;
                     }
                 }
-
+                /*
                 frmMp3Lyrics = new frmMp3Lyrics();
                 frmMp3Lyrics.Show();
                 frmMp3Lyrics.DisplayText(tx);
+                */
+
+                frmMp3Karaoke = new frmMp3Karaoke(Lyrics, Times);
+                frmMp3Karaoke.Show();
+                StartKaraoke();
             }
 
             else
@@ -1023,6 +1056,7 @@ namespace Karaboss
         #endregion Handle events 
 
 
+
         #region Timer
 
         /// <summary>
@@ -1077,6 +1111,9 @@ namespace Karaboss
                 if (PlayerState == PlayerStates.Playing && (int)pos < positionHScrollBar.Maximum - positionHScrollBar.Minimum && (int)pos > positionHScrollBar.Minimum)
                 {
                     positionHScrollBar.Value = (int)pos + positionHScrollBar.Minimum;
+
+                    // Send position to karaoke
+                    SendPositionToKaraoke(pos);
                 }
             }
             catch (Exception ex)
@@ -1085,6 +1122,27 @@ namespace Karaboss
             }
             #endregion position hscrollbar
             
+        }
+
+        private void SendPositionToKaraoke(double pos)
+        {
+            if (Player == null) return;
+
+            if (Application.OpenForms.OfType<frmMp3Karaoke>().Count() > 0)
+                frmMp3Karaoke.GetPositionFromPlayer(pos);
+
+        }
+
+        private void StopKaraoke()
+        {
+            if (Application.OpenForms.OfType<frmMp3Karaoke>().Count() > 0)
+                frmMp3Karaoke.Stop();
+        }
+
+        private void StartKaraoke()
+        {
+            if (Application.OpenForms.OfType<frmMp3Karaoke>().Count() > 0)
+                frmMp3Karaoke.Start();
         }
 
         #endregion Timer

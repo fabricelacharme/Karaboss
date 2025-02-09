@@ -186,6 +186,12 @@
     <Compile Include="Lyrics\frmLrcOptions.Designer.cs">
       <DependentUpon>frmLrcOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="MP3\frmMp3Karaoke.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MP3\frmMp3Karaoke.Designer.cs">
+      <DependentUpon>frmMp3Karaoke.cs</DependentUpon>
+    </Compile>
     <Compile Include="MP3\frmMp3Lyrics.cs">
       <SubType>Form</SubType>
     </Compile>
