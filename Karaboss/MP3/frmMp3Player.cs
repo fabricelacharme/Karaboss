@@ -145,8 +145,7 @@ namespace Karaboss
                 Location = new Point(0, Location.Y);
             if (Location.Y > rect.Height)
                 Location = new Point(Location.X, 0);
-
-            //InitBass();
+           
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -1027,8 +1026,6 @@ namespace Karaboss
         #endregion Playlists
 
 
-
-
         #region Handle events        
 
         /// <summary>
@@ -1054,7 +1051,6 @@ namespace Karaboss
         }
 
         #endregion Handle events 
-
 
 
         #region Timer

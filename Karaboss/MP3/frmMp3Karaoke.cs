@@ -19,16 +19,14 @@ namespace Karaboss.MP3
         private long[] times;
 
         private int currentIndex;
-        private int LastIndex;
-        private string text;
+        private int LastIndex;        
         private Font font;
         private float lineHeight;
                         
         bool bLineFeedRequired = false;
         int Offsetline = 0;
         int keeplines = 1;
-        int PlayedLines = 0;
-        //DateTime startTime;
+              
         double millisecondsElapsed;
 
         public frmMp3Karaoke(string[] Lyrics, long[] Times)
@@ -48,14 +46,12 @@ namespace Karaboss.MP3
 
             // Set up the Timer
             timer = new Timer();
-            timer.Interval = 100; // 1sec    // 500 milliseconds (0.5 seconds)
+            timer.Interval = 100; // 1000 milliseconds = 1sec    // 500 milliseconds = (0.5 seconds)
             timer.Tick += Timer_Tick;
 
             // Starttime
             LastIndex = -1;
-            currentIndex = -1;
-            //startTime = DateTime.Now;
-            //timer.Start();
+            currentIndex = -1;                        
 
             // Redraw the PictureBox
             pictureBox1.Paint += PictureBox1_Paint;
@@ -69,8 +65,7 @@ namespace Karaboss.MP3
         public void Stop()
         {
             currentIndex = 0;
-            Offsetline = 0;
-            PlayedLines = 0;
+            Offsetline = 0;            
             bLineFeedRequired = false;
             pictureBox1.Invalidate(); // Trigger a repaint
             timer.Stop();
@@ -83,16 +78,19 @@ namespace Karaboss.MP3
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            // Seconds elapsed since start
-            //double millisecondsElapsed = ((DateTime.Now).Subtract(startTime).TotalMilliseconds);
+            int linenumber = -1;            
 
             // Compare with Times            
             if (millisecondsElapsed >= 0)
             {
                 for (int i = 0; i < times.Count(); i++)
                 {
+                    // Count line number of the time
+                    if (words[i].StartsWith("\r\n"))
+                        linenumber ++;
+
                     if (millisecondsElapsed < times[i])
-                    {
+                    {                                                                        
                         if (i > 0)
                             currentIndex = i - 1;
 
@@ -100,43 +98,32 @@ namespace Karaboss.MP3
                         {
                             return;
                         }
-
-                        LastIndex = currentIndex;
-                        //Console.WriteLine("currentIndex: " + currentIndex);
-                        //Console.WriteLine("millisecondsElapsed: " + millisecondsElapsed);
-                        //Console.WriteLine("Lyric: " + words[currentIndex]);
+                        LastIndex = currentIndex;                        
                         break;
                     }
                 }
             }
             
-
             if (currentIndex >=0 && currentIndex < words.Length)
             {
                 // If new line, decrease offsetline
-                /*
+                
                 if (bLineFeedRequired)
-                {
-                    PlayedLines++;
-                    if (PlayedLines > keeplines)
-                    {
-                        Offsetline -= (int)lineHeight;
-                        
+                {                                        
+                    if (linenumber >= keeplines)
+                    {                        
+                        Offsetline = -(int)lineHeight * (linenumber - keeplines + 1);                        
                     }
                     bLineFeedRequired = false;
                 }
-                */
-
-                //currentIndex++;
+                                
                 pictureBox1.Invalidate(); // Trigger a repaint
-
             }
             else
             {
                 // Stop the timer when all words are highlighted
                 currentIndex = 0;
-                Offsetline = 0;
-                PlayedLines = 0;
+                Offsetline = 0;                
                 bLineFeedRequired = false;
                 pictureBox1.Invalidate(); // Trigger a repaint
                 timer.Stop();
@@ -163,16 +150,25 @@ namespace Karaboss.MP3
 
                 IsNewLine = false;
 
+
+                // If next word is crlf, go to next line
+                if (i < words.Length - 1) 
+                { 
+                    string l = words[i + 1];
+                    if (l.StartsWith("\r\n"))
+                    {
+                        IsNewLine = true;
+                    }
+                }
+                
                 // If crlf, go to next line
                 if (Lyric.StartsWith("\r\n"))
                 {
                     x = 0;
                     y += lineHeight;
-                    Lyric = Lyric.Replace("\r\n", "");
-                    IsNewLine = true;
+                    Lyric = Lyric.Replace("\r\n", "");                    
                 }
-
-                //size = e.Graphics.MeasureString(Lyric + " ", font);
+                
                 size = e.Graphics.MeasureString(Lyric, font);
 
                 if (i < currentIndex)
@@ -194,9 +190,9 @@ namespace Karaboss.MP3
 
                 // Create a StringFormat object with the each line of text, and the block
                 // of text centered on the page.
-                StringFormat stringFormat = new StringFormat();
-                stringFormat.Alignment = StringAlignment.Center;
-                stringFormat.LineAlignment = StringAlignment.Center;
+                //StringFormat stringFormat = new StringFormat();
+                //stringFormat.Alignment = StringAlignment.Center;
+                //stringFormat.LineAlignment = StringAlignment.Center;
 
 
                 // Draw the word
@@ -204,9 +200,7 @@ namespace Karaboss.MP3
                 //e.Graphics.DrawString(Lyric + " ", font, Brushes.Black, x, y + Offsetline);
                 e.Graphics.DrawString(Lyric, font, Brushes.Black, x, y + Offsetline);
 
-                x += size.Width;
-
-               
+                x += size.Width;               
             }
         }
 
