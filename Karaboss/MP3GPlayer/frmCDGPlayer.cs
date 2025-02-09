@@ -53,7 +53,6 @@ namespace Karaboss
     public partial class frmCDGPlayer : Form
     {
 
-
         #region "Private Declarations"
 
         private CDGFile mCDGFile;
@@ -69,6 +68,8 @@ namespace Karaboss
         private string mMP3FileName;
         private string mTempDir;
         private int mMP3Stream;
+        
+        // Forms
         private frmCDGWindow mCDGWindow = new frmCDGWindow();
         //private frmExportCDG2AVI mExportForm;
 

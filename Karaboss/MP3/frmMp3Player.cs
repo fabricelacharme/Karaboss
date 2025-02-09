@@ -1,4 +1,5 @@
 ﻿using Karaboss.mp3;
+using Karaboss.MP3;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -6,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using TagLib;
+using TagLib.Id3v2;
 using TagLib.Matroska;
 using Un4seen.Bass;
 using Un4seen.Bass.AddOn.Tags;
@@ -53,17 +55,18 @@ namespace Karaboss
 
         #region Bass
 
-        private SYNCPROC _OnEndingSync;
+        //private SYNCPROC _OnEndingSync;
         private Mp3Player Player;
 
-        private bool mBassInitalized = false;
-        private int mMP3Stream;
+        
         #endregion Bass
 
         // Playlists
         private readonly Playlist currentPlaylist;
         private PlaylistItem currentPlaylistItem;
 
+        //forms
+        private frmMp3Lyrics frmMp3Lyrics;
 
         public frmMp3Player(string FileName, Playlist myPlayList, bool bplay)
         {
@@ -78,9 +81,7 @@ namespace Karaboss
             Player = new Mp3Player(FileName);
 
             // Create event for playing completed
-            Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);
-            
-
+            Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);            
 
             DisplayMp3Characteristics();
 
@@ -164,6 +165,11 @@ namespace Karaboss
                 Properties.Settings.Default.Save();
             }
 
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            {
+                Application.OpenForms["frmMp3Lyrics"].Close();
+            }
+
             // Active le formulaire frmExplorer
             if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
             {
@@ -172,7 +178,7 @@ namespace Karaboss
                 Application.OpenForms["frmExplorer"].Activate();
             }
 
-            _OnEndingSync = null;
+            //_OnEndingSync = null;
 
 
             Dispose();
@@ -180,8 +186,7 @@ namespace Karaboss
 
         private void frmMp3Player_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Player.Reset();
-            //StopPlaybackBass();
+            Player.Reset();            
         }
 
         #endregion Form load close resize
@@ -237,16 +242,7 @@ namespace Karaboss
                 BtnStatus();
                 ValideMenus(false);
 
-                Player.Play();
-                //if (!InitPlayerMp3(Mp3FullPath)) return;
-                //StartMp3Player();
-                
-
-                if (ticks > 0)
-                {
-                    //sequencer1.Position = ticks;
-                }
-
+                Player.Play();                                
                 Timer1.Start();
             }
             catch (Exception ex)
@@ -262,8 +258,7 @@ namespace Karaboss
         {
             PlayerState = PlayerStates.Stopped;
             try
-            {
-                //StopMp3Player();                
+            {                     
                 Player.Stop();
 
                 // Si point de départ n'est pas le début du morceau
@@ -311,8 +306,7 @@ namespace Karaboss
                     nbstop = 0;
                     PlayerState = PlayerStates.Playing;
                     BtnStatus();
-                    Timer1.Start();
-                    //ResumeMp3Player();
+                    Timer1.Start();                    
                     Player.Resume();
                     break;
 
@@ -380,9 +374,6 @@ namespace Karaboss
         /// <param name="e"></param>
         private void btnTempoPlus_Click(object sender, EventArgs e)
         {
-            //freq Samplerate in Hz(must be within 5 % to 5000 % of the original sample rate - Usually 44100)
-            //if (mMP3Stream == 0) return;
-
             FrequencyRatio += 10;
             if (FrequencyRatio > 5000) return;
 
@@ -395,11 +386,7 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnTempoMinus_Click(object sender, EventArgs e)
-        {
-
-            //freq Samplerate in Hz(must be within 5 % to 5000 % of the original sample rate - Usually 44100)
-            //if (mMP3Stream == 0) return;
-
+        {       
             FrequencyRatio -= 10;
             if (FrequencyRatio < 5) return;
 
@@ -416,10 +403,7 @@ namespace Karaboss
 
             if (amount < 5 || amount > 5000) return;
 
-            lblTempoValue.Text = string.Format("{0}%", amount);
-
-            
-            //if (mMP3Stream == 0) return;
+            lblTempoValue.Text = string.Format("{0}%", amount);                        
 
             // Display new duration
             double d = _totalSeconds / (amount / 100.0);
@@ -427,15 +411,7 @@ namespace Karaboss
             string duration = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
             pnlDisplay.DisplayDuration(duration);
 
-            Player.ChangeFrequency(amount);
-
-            /*
-            try
-            {
-                Bass.BASS_ChannelSetAttribute(mMP3Stream, BASSAttribute.BASS_ATTRIB_FREQ, _frequency * amount / 100);
-            }
-            catch (Exception ex) { MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-            */
+            Player.ChangeFrequency(amount);           
         }
 
         #endregion Tempo/freq
@@ -449,9 +425,7 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnTranspoPlus_Click(object sender, EventArgs e)
-        {
-            //if (mMP3Stream == 0) return;
-
+        {            
             TransposeValue++;
             if (TransposeValue > 100) return;
 
@@ -464,9 +438,7 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnTranspoMinus_Click(object sender, EventArgs e)
-        {
-            //if (mMP3Stream == 0) return;
-
+        {            
             TransposeValue--;
             AdjustMp3Pitch(TransposeValue);
         }
@@ -479,16 +451,7 @@ namespace Karaboss
         {
             lblTranspoValue.Text = string.Format("{0}", amount);
 
-            Player.AdjustPitch(amount);
-
-            /*
-            if (mMP3Stream == 0) return;
-            try
-            {
-                Bass.BASS_ChannelSetAttribute(mMP3Stream, BASSAttribute.BASS_ATTRIB_TEMPO_PITCH, amount);
-            }
-            catch (Exception ex) { MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-            */
+            Player.AdjustPitch(amount);          
         }
 
         #endregion Transpose
@@ -564,8 +527,7 @@ namespace Karaboss
         {
             if (e.Type == ScrollEventType.EndScroll)
             {
-                Player.SetPosition((double)e.NewValue);
-                //Mp3PlayerSetPosition((double)e.NewValue); 
+                Player.SetPosition((double)e.NewValue);                
                 scrolling = false;
             }
             else
@@ -592,36 +554,20 @@ namespace Karaboss
         {
             if (Player == null) return;
 
-            Player.AdjustVolume((float)sldMainVolume.Value);
-            
-            /*
-            if (mMP3Stream != 0)
-            {
-                float volume = (float)sldMainVolume.Value;
-                Bass.BASS_ChannelSetAttribute(mMP3Stream, BASSAttribute.BASS_ATTRIB_VOL, volume == 0 ? 0 : (volume / 100));
-
-                int level = Bass.BASS_ChannelGetLevel(mMP3Stream);
-
-            }
-            */
+            Player.AdjustVolume((float)sldMainVolume.Value);                        
         }
 
         /// <summary>
         /// Get master peak volume from provider of sound (Karaboss itself or an external one such as VirtualMidiSynth)
         /// </summary>
         private void GetPeakVolume()
-        {
-            //if (mMP3Stream != 0)
-            //{
-                //int level = Bass.BASS_ChannelGetLevel(mMP3Stream);
-                int level = Player.Volume;
-                int LeftLevel = LOWORD(level);
-                int RightLevel = HIWORD(level);
+        {           
+            int level = Player.Volume;
+            int LeftLevel = LOWORD(level);
+            int RightLevel = HIWORD(level);
 
-                VuPeakVolumeLeft.Level = LeftLevel;
-                VuPeakVolumeRight.Level = RightLevel;
-
-            //}
+            VuPeakVolumeLeft.Level = LeftLevel;
+            VuPeakVolumeRight.Level = RightLevel;
         }
 
         private static int HIWORD(int n)
@@ -858,27 +804,68 @@ namespace Karaboss
         private void DisplayOtherInfos(string FileName)
         {
             Player.GetMp3Infos(Mp3FullPath);
-            pBox.Image = Player.AlbumArtImage;
-
-            //TAG_INFO tags = Player.Tags;
-            //Console.WriteLine(tags.ToString());
-            TagLib.Tag Tag = Player.Tag;
-
-            if (Tag != null)
+            pBox.Image = Player.AlbumArtImage;                        
+            TagLib.Tag Tag = Player.Tag;            
+            
+            if (Tag == null) return;
+            
+                
+            // Lyrivs with time stamps
+            TagLib.Id3v2.SynchronisedLyricsFrame SyncLyricsFrame = Player.SyncLyricsFrame;
+            if (SyncLyricsFrame != null && SyncLyricsFrame.Text.Count() > 0)
             {
-                string l = Tag.Lyrics;
-                if (l != null && l.Trim() != "")
+                string tx = string.Empty;
+                string lyric;
+                long time;
+                string cr = "\r\n";
+
+                for (int i = 0; i < SyncLyricsFrame.Text.Count(); i++)
                 {
-                    Console.WriteLine("*** Lyrics : " + l);
+                    lyric = SyncLyricsFrame.Text[i].Text;
+                    time = SyncLyricsFrame.Text[i].Time;
+
+                    if (lyric.Trim() != "")
+                    {
+                        tx += "[" + time + "]" + lyric + cr;
+                    }
                 }
 
-                string s = Tag.Subtitle;
-                if (s != null && s.Trim() != "")
-                {
-                    Console.WriteLine("*** SubTitle : " + s);
-                }
-
+                frmMp3Lyrics = new frmMp3Lyrics();
+                frmMp3Lyrics.Show();
+                frmMp3Lyrics.DisplayText(tx);
             }
+
+            else
+            {
+
+                string l = Tag.Lyrics;
+                string s = Tag.Subtitle;
+                if (l != null && l.Trim() != "" || s != null && s.Trim() != "")
+                {
+
+
+                    frmMp3Lyrics = new frmMp3Lyrics();
+                    frmMp3Lyrics.Show();
+
+                    string tx = string.Empty;
+                    if (l != null)
+                        tx += l;
+                    if (s != null)
+                        tx += s;
+
+                    frmMp3Lyrics.DisplayText(tx);
+                }
+                else
+                {
+                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                    {
+                        Application.OpenForms["frmMp3Lyrics"].Close();
+                    }
+                }
+            }
+            
+            
+            
 
         }
         #endregion Draw controls
@@ -1054,8 +1041,7 @@ namespace Karaboss
         private void Timer1_Tick(object sender, EventArgs e)
         {
             if (scrolling) return;            
-
-            //double pos = Mp3PlayerGetPosition();
+            
             double pos = Player.Position;
 
             switch (PlayerState)
@@ -1074,8 +1060,7 @@ namespace Karaboss
                     AfterStopped();
                     break;
 
-                case PlayerStates.Paused:
-                    //PauseMp3Player();
+                case PlayerStates.Paused:                    
                     Player.Pause();
                     Timer1.Stop();
                     break;

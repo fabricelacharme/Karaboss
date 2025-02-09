@@ -186,6 +186,12 @@
     <Compile Include="Lyrics\frmLrcOptions.Designer.cs">
       <DependentUpon>frmLrcOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="MP3\frmMp3Lyrics.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MP3\frmMp3Lyrics.Designer.cs">
+      <DependentUpon>frmMp3Lyrics.cs</DependentUpon>
+    </Compile>
     <Compile Include="MP3\frmMp3Player.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -595,6 +601,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GuitarTraining\TextBlock.resx">
       <DependentUpon>TextBlock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MP3\frmMp3Lyrics.resx">
+      <DependentUpon>frmMp3Lyrics.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MP3\frmMp3Player.resx">
       <DependentUpon>frmMp3Player.cs</DependentUpon>
