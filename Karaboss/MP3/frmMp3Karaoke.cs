@@ -215,16 +215,18 @@ namespace Karaboss.MP3
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(800, 450);
+            this.pictureBox1.Size = new System.Drawing.Size(584, 561);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // Form1
+            // frmMp3Karaoke
             // 
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(584, 561);
             this.Controls.Add(this.pictureBox1);
-            this.Name = "frmMP3Karaoke";
+            this.Name = "frmMp3Karaoke";
             this.Text = "Karaoke Text Highlighter";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMp3Karaoke_FormClosing);
+            this.Load += new System.EventHandler(this.frmMp3Karaoke_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -232,5 +234,54 @@ namespace Karaboss.MP3
 
         private System.Windows.Forms.PictureBox pictureBox1;
 
+        private void frmMp3Karaoke_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // enregistre la taille et la position de la forme
+            // Copy window location to app settings                
+            if (WindowState != FormWindowState.Minimized)
+            {
+                if (WindowState == FormWindowState.Maximized)
+                {
+                    Properties.Settings.Default.frmMp3KaraokeLocation = RestoreBounds.Location;
+                    Properties.Settings.Default.frmMp3KaraokeMaximized = true;
+
+                }
+                else if (WindowState == FormWindowState.Normal)
+                {
+                    Properties.Settings.Default.frmMp3KaraokeLocation = Location;
+                    Properties.Settings.Default.frmMp3KaraokeSize = Size;
+                    Properties.Settings.Default.frmMp3KaraokeMaximized = false;
+                }
+
+                // Save settings
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        private void frmMp3Karaoke_Load(object sender, EventArgs e)
+        {
+            // Récupère la taille et position de la forme
+            // Set window location
+            if (Properties.Settings.Default.frmMp3KaraokeMaximized)
+            {
+                Location = Properties.Settings.Default.frmMp3KaraokeLocation;
+                WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                Location = Properties.Settings.Default.frmMp3KaraokeLocation;
+                // Verify if this windows is visible in extended screens
+                Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
+                foreach (Screen screen in Screen.AllScreens)
+                    rect = Rectangle.Union(rect, screen.Bounds);
+
+                if (Location.X > rect.Width)
+                    Location = new Point(0, Location.Y);
+                if (Location.Y > rect.Height)
+                    Location = new Point(Location.X, 0);
+
+                Size = Properties.Settings.Default.frmMp3KaraokeSize;
+            }
+        }
     }
 }

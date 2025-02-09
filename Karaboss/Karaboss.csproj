@@ -608,6 +608,9 @@
     <EmbeddedResource Include="GuitarTraining\TextBlock.resx">
       <DependentUpon>TextBlock.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MP3\frmMp3Karaoke.resx">
+      <DependentUpon>frmMp3Karaoke.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MP3\frmMp3Lyrics.resx">
       <DependentUpon>frmMp3Lyrics.cs</DependentUpon>
     </EmbeddedResource>

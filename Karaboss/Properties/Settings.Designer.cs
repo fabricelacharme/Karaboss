@@ -1507,5 +1507,41 @@ namespace Karaboss.Properties {
                 return ((string)(this["BassRegistrationKey"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point frmMp3KaraokeLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["frmMp3KaraokeLocation"]));
+            }
+            set {
+                this["frmMp3KaraokeLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmMp3KaraokeMaximized {
+            get {
+                return ((bool)(this["frmMp3KaraokeMaximized"]));
+            }
+            set {
+                this["frmMp3KaraokeMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600, 600")]
+        public global::System.Drawing.Size frmMp3KaraokeSize {
+            get {
+                return ((global::System.Drawing.Size)(this["frmMp3KaraokeSize"]));
+            }
+            set {
+                this["frmMp3KaraokeSize"] = value;
+            }
+        }
     }
 }

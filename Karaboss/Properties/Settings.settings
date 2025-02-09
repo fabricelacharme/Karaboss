@@ -374,5 +374,14 @@
     <Setting Name="BassRegistrationKey" Type="System.String" Scope="Application">
       <Value Profile="(Default)">2X1632326152222</Value>
     </Setting>
+    <Setting Name="frmMp3KaraokeLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="frmMp3KaraokeMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="frmMp3KaraokeSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">600, 600</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
