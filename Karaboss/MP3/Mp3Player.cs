@@ -172,9 +172,7 @@ namespace Karaboss.mp3
             {
                 Console.WriteLine("*** Stream is null");
                 return;
-            }
-            
-            
+            }                        
             try
             {
                 bool success = Bass.BASS_ChannelPlay(_stream, false);
@@ -187,8 +185,7 @@ namespace Karaboss.mp3
                     {
                         Console.WriteLine("*** Unsucessful play : " + Bass.BASS_ErrorGetCode());
                         return;
-                    }                   
-                    
+                    }                                       
                     
                     Load(_FileName);
 
@@ -198,7 +195,7 @@ namespace Karaboss.mp3
                         Console.WriteLine("*** Unsucessful play after retry: " + Bass.BASS_ErrorGetCode());
                     else
                         Console.WriteLine("*** Successful play after retry");
-                    //MessageBox.Show("Error: " + Bass.BASS_ErrorGetCode());
+                    
                 }
                 else
                 {
@@ -294,8 +291,8 @@ namespace Karaboss.mp3
             try
             {
                 // length in bytes
-                long byteslen = Bass.BASS_ChannelGetPosition(_stream, BASSMode.BASS_POS_BYTE);
-                if (byteslen == -1)
+                _byteslen = Bass.BASS_ChannelGetPosition(_stream, BASSMode.BASS_POS_BYTE);
+                if (_byteslen == -1)
                 {
                     Console.WriteLine( string.Format( "*** Unsuccessful GetPosition : {0} - at position {1}", Bass.BASS_ErrorGetCode()), _byteslen);
 
@@ -306,19 +303,18 @@ namespace Karaboss.mp3
                         Console.WriteLine("*** Unsucessful play : " + Bass.BASS_ErrorGetCode());
                         return 0;
                     }
-                    Load(_FileName);
-                    SetPosition(_byteslen);
+                    Load(_FileName);                    
                     Play();
                 }
                 
-                _byteslen = BytesLen;
+               
                 // the time length
                 return Bass.BASS_ChannelBytes2Seconds(_stream, _byteslen);
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); return _byteslen;
-                Console.Write(ex.Message);
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); return _byteslen;
+                //Console.Write(ex.Message);
                 return _byteslen;
                 
             }

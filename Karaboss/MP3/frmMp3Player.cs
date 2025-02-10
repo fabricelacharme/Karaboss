@@ -44,9 +44,8 @@ namespace Karaboss
         private string Mp3FileName;
 
         private int bouclestart = 0;
-        private int laststart = 0;      // Start time to play
-        private int newstart;
-        private int nbstop;
+        private int laststart = 0;      // Start time to play        
+        
         
         private int _duration;
         private double _totalSeconds;
@@ -94,6 +93,7 @@ namespace Karaboss
             
 
             #region playlists
+
             if (myPlayList != null)
             {                
                 currentPlaylist = myPlayList;
@@ -230,11 +230,7 @@ namespace Karaboss
                 case PlayerStates.Stopped:
                     btnPlay.Image = Properties.Resources.btn_black_play;
                     btnPlay.Enabled = true;   // to allow play
-                    if (newstart == 0)                    
-                        btnStop.Image = Properties.Resources.btn_red_stop;                    
-                    else
-                        btnStop.Enabled = true;   // to enable real stop because stop point not at the beginning of the song 
-
+                    btnStop.Image = Properties.Resources.btn_red_stop;                                       
                     pnlDisplay.DisplayStatus("Stopped");
                     break;
 
@@ -243,12 +239,11 @@ namespace Karaboss
             }
         }
 
-        public void FirstPlaySong(int ticks)
+        public void FirstPlaySong()
         {
             try
             {
-                PlayerState = PlayerStates.Playing;
-                nbstop = 0;
+                PlayerState = PlayerStates.Playing;                
                 BtnStatus();
                 ValideMenus(false);
 
@@ -272,27 +267,7 @@ namespace Karaboss
             try
             {                     
                 Player.Stop();
-
-                // Si point de départ n'est pas le début du morceau
-                if (newstart > 0)
-                {
-                    if (nbstop > 0)
-                    {
-                        newstart = 0;
-                        nbstop = 0;
-                        AfterStopped();
-                    }
-                    else
-                    {
-                        positionHScrollBar.Value = newstart + positionHScrollBar.Minimum;
-                        nbstop = 1;
-                    }
-                }
-                else
-                {
-                    // Point de départ = début du morceau
-                    AfterStopped();
-                }
+                AfterStopped();
             }
             catch (Exception ex)
             {
@@ -314,8 +289,7 @@ namespace Karaboss
                     break;
 
                 case PlayerStates.Paused:
-                    // if paused => play                
-                    nbstop = 0;
+                    // if paused => play                                    
                     PlayerState = PlayerStates.Playing;
                     BtnStatus();
                     Timer1.Start();                    
@@ -324,7 +298,7 @@ namespace Karaboss
 
                 default:
                     // First play                
-                    FirstPlaySong(newstart);
+                    FirstPlaySong();
                     break;
             }
         }
@@ -336,22 +310,14 @@ namespace Karaboss
         private void AfterStopped()
         {
             // Buttons play & stop 
-            BtnStatus();
-                      
-            // Stopped to begining of score
-            if (newstart <= 0)
-            {
-                DisplayTimeElapse(0);
-                StopKaraoke();                
-                ValideMenus(true);
+            BtnStatus();                      
+           
+            DisplayTimeElapse(0);
+            StopKaraoke();                
+            ValideMenus(true);
 
-                positionHScrollBar.Value = positionHScrollBar.Minimum;
-                //laststart = 0;
-            }
-            else
-            {
-                // Stop to start point newstart (ticks)                            
-            }
+            positionHScrollBar.Value = positionHScrollBar.Minimum;
+           
         }
 
 
@@ -915,6 +881,7 @@ namespace Karaboss
 
         #region Playlists
 
+        /*
         // Select and load next playlist item
         private void SelectNextPlaylistSong()
         {
@@ -983,12 +950,21 @@ namespace Karaboss
             
         }
 
+        */
+
         /// <summary>
         /// Common to button next and end of playing a song
         /// </summary>
         private void PlayNextPlaylistSong()
         {
-                        
+            // If single song (no playlist) => STOP
+            if (currentPlaylist == null)
+            {
+                StopMusic();
+                return;
+            }
+
+            // Select next song of the playlist
             PlaylistItem pli = currentPlaylistItem;
             if (pli == null)
                 return;
@@ -1016,15 +992,14 @@ namespace Karaboss
             // Update form
             UpdatePlayListsForm(currentPlaylistItem.Song);
 
-            // Ferme le formulaire frmLyric
-            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+            // close frmKaraoke
+            if (Application.OpenForms.OfType<frmMp3Karaoke>().Count() > 0)
             {
-                //frmLyric.Close();
+                frmMp3Karaoke.Close();
             }
 
             PlayerState = PlayerStates.Playing;
-            Mp3FullPath = currentPlaylistItem.File;
-            //ResetMidiFile();
+            Mp3FullPath = currentPlaylistItem.File;            
 
             SelectFileToLoadAsync(Mp3FullPath);
         }
@@ -1044,9 +1019,7 @@ namespace Karaboss
 
             PlaylistItem pli = currentPlaylistItem;
             if (pli == null)
-                return;
-
-            
+                return;            
 
             currentPlaylistItem = currentPlaylist.Previous(pli);
 
@@ -1257,12 +1230,7 @@ namespace Karaboss
         /// Display Time Elapse
         /// </summary>
         private void DisplayTimeElapse(double dpercent)
-        {
-            if (dpercent < 0)
-            {
-                Console.WriteLine("DisplayTimeElapse: " + dpercent);
-            }
-
+        {            
             pnlDisplay.DisplayPercent(string.Format("{0}%", (int)(dpercent * 100)));
 
             double maintenant = (dpercent * _totalSeconds);  //seconds

@@ -707,6 +707,11 @@ namespace Karaboss.playlists
                 listView.Items.Remove(_itemPhantom);
                 _itemPhantom = null;
             }
+
+            // Save changes
+            PlReorder();
+            
+
         }
 
         /// <summary>
@@ -1804,12 +1809,16 @@ namespace Karaboss.playlists
 
             for (int i = 0; i < listView.Items.Count; i++)
             {
-                string sng = listView.Items[i].Name;
+                string sng = listView.Items[i].Text;
                 PlaylistItem pi = GetPlaylistItem(sng);
                 newpl.Songs.Add(pi);
             }
             currentPlaylist = newpl;
-            
+
+
+            PlGroupHelper.ReplacePlaylist(PlGroup, currentPlaylistGroupItem, currentPlaylist);
+           
+
             SaveAllPlaylist();
             ShowPlContent(currentPlaylist, 0);
         }
