@@ -1,5 +1,7 @@
-﻿using Karaboss.mp3;
+﻿using Karaboss.Lyrics;
+using Karaboss.mp3;
 using Karaboss.MP3;
+using Karaboss.Resources.Localization;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -52,6 +54,8 @@ namespace Karaboss
 
         private int TransposeValue = 0;
         private long FrequencyRatio = 100;
+
+        private readonly string _InternalSepLines = "¼";
 
         #region Bass
 
@@ -130,6 +134,7 @@ namespace Karaboss
             string duration = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
             pnlDisplay.DisplayDuration(duration);
         }
+
 
         #region Form load close resize
 
@@ -247,9 +252,10 @@ namespace Karaboss
                 BtnStatus();
                 ValideMenus(false);
 
-                Player.Play();                                
-                Timer1.Start();
+                Player.Play();
                 StartKaraoke();
+                Timer1.Start();
+                
             }
             catch (Exception ex)
             {
@@ -362,7 +368,8 @@ namespace Karaboss
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            PlayNextSong();
+            //PlayNextSong();
+            PlayNextPlaylistSong();
         }
 
         private void btnPrev_Click(object sender, EventArgs e)
@@ -947,6 +954,43 @@ namespace Karaboss
         {
             PlaylistItem pli = currentPlaylistItem;
             if (pli == null)
+                return;            
+            
+            currentPlaylistItem = currentPlaylist.Next(pli);
+
+            if (currentPlaylist == null || pli == currentPlaylistItem)
+                return;
+
+            StopMusic();
+
+            //Next song of the playlist
+            Mp3FileName = currentPlaylistItem.Song;
+            
+            // Update form
+            UpdatePlayListsForm(currentPlaylistItem.Song);
+
+            // Ferme le formulaire frmLyric
+            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+            {
+                //frmLyric.Close();
+            }
+
+            PlayerState = PlayerStates.Playing;
+            Mp3FullPath = currentPlaylistItem.File;
+            //ResetMidiFile();
+
+            SelectFileToLoadAsync(Mp3FullPath);
+            
+        }
+
+        /// <summary>
+        /// Common to button next and end of playing a song
+        /// </summary>
+        private void PlayNextPlaylistSong()
+        {
+                        
+            PlaylistItem pli = currentPlaylistItem;
+            if (pli == null)
                 return;
 
             currentPlaylistItem = currentPlaylist.Next(pli);
@@ -954,8 +998,22 @@ namespace Karaboss
             if (currentPlaylist == null || pli == currentPlaylistItem)
                 return;
 
+            // Stop if no other song to play
+            if (pli == currentPlaylistItem)
+            {
+                PlayerState = PlayerStates.Stopped;
+                BtnStatus();
+                return;
+            }
+            
+            
+            StopMusic();
+            Player.Reset();
+
             //Next song of the playlist
             Mp3FileName = currentPlaylistItem.Song;
+
+            // Update form
             UpdatePlayListsForm(currentPlaylistItem.Song);
 
             // Ferme le formulaire frmLyric
@@ -988,10 +1046,15 @@ namespace Karaboss
             if (pli == null)
                 return;
 
+            
+
             currentPlaylistItem = currentPlaylist.Previous(pli);
 
             if (currentPlaylist == null || pli == currentPlaylistItem)
                 return;
+
+            StopMusic();
+            Player.Reset();
 
             Mp3FileName = currentPlaylistItem.Song;
             Mp3FullPath = currentPlaylistItem.File;
@@ -1023,7 +1086,139 @@ namespace Karaboss
 
         private void SelectFileToLoadAsync(string FileName)
         {
+            // Load file and after launch player taking account things to do betwween 2 songs
+            // Create mp3 Player instance
+            Player = new Mp3Player(FileName);
 
+            // Create event for playing completed
+            Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);
+
+            DisplayMp3Characteristics();
+
+            DisplayOtherInfos(Mp3FullPath);
+
+
+            // things to do betwween 2 songs
+            performPlaylistChainingChoice();
+        }
+
+        /// <summary>
+        /// Select action to perform between 2 songs according to user's choices
+        /// Pause, Count Down, play asap
+        /// </summary>
+        private void performPlaylistChainingChoice()
+        {
+            // If mode pause between songs of a playlist 
+            // Display a waiting information (not the words)
+            if (Karaclass.m_PauseBetweenSongs)
+            {
+                PlayerState = PlayerStates.LaunchNextSong;
+                BtnStatus();
+
+                #region display singer in the Lyrics form
+                // Display the Lyric form even if no lyrics in order to display the singer
+                /*
+                if (Application.OpenForms.OfType<frmLyric>().Count() == 0)
+                {
+                    frmLyric = new frmLyric(myLyricsMgmt);
+                    frmLyric.Show();
+                }
+                */
+
+                if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+                {
+                    // During the waiting time, display informations about the next singer
+                    int nbLines;
+                    string toptxt;
+                    string centertxt;
+
+                    if (currentPlaylistItem.KaraokeSinger == "" || currentPlaylistItem.KaraokeSinger == "<Song reserved by>")
+                    {
+                        toptxt = "Next song: " + Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
+                        centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
+                        nbLines = 1;
+                    }
+                    else
+                    {
+
+                        toptxt = "Next song: " + Path.GetFileNameWithoutExtension(currentPlaylistItem.Song) + " - Next singer: " + currentPlaylistItem.KaraokeSinger;
+                        centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song)
+                            + _InternalSepLines + Strings.SungBy
+                            + _InternalSepLines + currentPlaylistItem.KaraokeSinger;
+                        nbLines = 4;
+                    }
+
+                    // arriere plan provisoire
+                    //frmLyric.AlloModifyDirSlideShow = true;
+                    //frmLyric.DirSlideShow = Properties.Settings.Default.dirSlideShow;
+                    //frmLyric.AlloModifyDirSlideShow = false;
+
+                    //frmLyric.TxtNbLines = nbLines;
+                    //frmLyric.bTextBackGround = false;
+
+                    // Display singer in top panel
+                    //frmLyric.DisplaySinger(toptxt);
+
+                    // Display next singer in lyrics form
+                    //frmLyric.DisplayText(centertxt);
+
+                }
+                #endregion
+
+                // Focus on paused windows
+                this.Restore();
+                this.Activate();
+            }
+            else
+            {
+                // NO PAUSE MODE
+                if (Karaclass.m_CountdownSongs == 0)
+                {
+                    // NO Timer => play                    
+                    PlayerState = PlayerStates.Stopped;
+                    PlayPauseMusic();
+                }
+                else
+                {
+                    // No pause mode between songs of a playlist, but a timer 
+                    // Lauch Countdown timer
+                    StartCountDownTimer();
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Start count down before playing
+        /// </summary>
+        private void StartCountDownTimer()
+        {
+            PlayerState = PlayerStates.Waiting;
+            BtnStatus();
+            /*
+            w_tick = 0;
+            int sec = Karaclass.m_CountdownSongs;  // wait for x seconds
+            w_wait = sec + 4;
+
+            if (Application.OpenForms.OfType<frmLyric>().Count() == 0)
+            {
+                frmLyric = new frmLyric(myLyricsMgmt);
+                frmLyric.Show();
+            }
+
+            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+            {
+                // Display song & singer
+                string nextsong = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
+                string txt = "Next song: " + nextsong + " - Next singer: " + currentPlaylistItem.KaraokeSinger;
+                frmLyric.DisplaySinger(txt);
+
+                frmLyric.LoadWaitSong(sec);
+            }
+
+            timer5.Interval = 1000;  // interval = 1 sec      
+            timer5.Enabled = true;
+            */
         }
 
         #endregion Playlists
@@ -1063,6 +1258,11 @@ namespace Karaboss
         /// </summary>
         private void DisplayTimeElapse(double dpercent)
         {
+            if (dpercent < 0)
+            {
+                Console.WriteLine("DisplayTimeElapse: " + dpercent);
+            }
+
             pnlDisplay.DisplayPercent(string.Format("{0}%", (int)(dpercent * 100)));
 
             double maintenant = (dpercent * _totalSeconds);  //seconds
@@ -1099,8 +1299,9 @@ namespace Karaboss
                     break;
 
                 case PlayerStates.NextSong:                                       
-                    StopMusic();
-                    SelectNextPlaylistSong();
+                    //StopMusic();
+                    //SelectNextPlaylistSong();
+                    PlayNextPlaylistSong();
                     break;
             }
 
