@@ -665,6 +665,100 @@ namespace Karaboss
         #endregion Files Save open
 
 
+        #region Display lyrics
+        private void DisplayOtherInfos(string FileName)
+        {
+            Player.GetMp3Infos(Mp3FullPath);
+            pBox.Image = Player.AlbumArtImage;
+            TagLib.Tag Tag = Player.Tag;
+
+            if (Tag == null) return;
+
+
+            // Lyrivs with time stamps
+            TagLib.Id3v2.SynchronisedLyricsFrame SyncLyricsFrame = Player.SyncLyricsFrame;
+
+
+            if (SyncLyricsFrame != null && SyncLyricsFrame.Text.Count() > 0)
+            {
+                string tx = string.Empty;
+                string words = string.Empty;
+                string lyric;
+                long time;
+                string cr = "\r\n";
+
+                string[] Lyrics = new string[SyncLyricsFrame.Text.Count()];
+                long[] Times = new long[SyncLyricsFrame.Text.Count()];
+
+                for (int i = 0; i < SyncLyricsFrame.Text.Count(); i++)
+                {
+                    lyric = SyncLyricsFrame.Text[i].Text;
+
+                    if (lyric.Trim() != "")
+                    {
+                        if (lyric.StartsWith("\r") || lyric.StartsWith("\n"))
+                            lyric = "\r\n" + lyric.Substring(1);
+
+                        if (lyric.EndsWith("\r") || lyric.EndsWith("\n"))
+                        
+                            lyric = "\r\n" + lyric.Substring(0, lyric.Length - 1);
+
+
+                    }
+
+                    time = SyncLyricsFrame.Text[i].Time;
+
+                    //words += lyric;
+
+                    Lyrics[i] = lyric;
+                    Times[i] = time;
+                    /*
+                    if (lyric.Trim() != "")
+                    {
+                        tx += "[" + time + "]" + lyric;
+                    }
+                    */
+                }
+                
+
+                frmMp3Karaoke = new frmMp3Karaoke(Lyrics, Times);
+                frmMp3Karaoke.Show();
+                StartKaraoke();
+            }
+
+            else
+            {
+                string l = Tag.Lyrics;
+                string s = Tag.Subtitle;
+                if (l != null && l.Trim() != "" || s != null && s.Trim() != "")
+                {
+
+
+                    frmMp3Lyrics = new frmMp3Lyrics();
+                    frmMp3Lyrics.Show();
+
+                    string tx = string.Empty;
+                    if (l != null)
+                        tx += l;
+                    if (s != null)
+                        tx += s;
+
+                    frmMp3Lyrics.DisplayText(tx);
+                }
+                else
+                {
+                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                    {
+                        Application.OpenForms["frmMp3Lyrics"].Close();
+                    }
+                }
+            }
+
+        }
+
+        #endregion Display lyrics
+
+
         #region Draw controls
         private void InitControls()
         {            
@@ -808,98 +902,7 @@ namespace Karaboss
             #endregion Peak volume
         }
 
-        private void DisplayOtherInfos(string FileName)
-        {
-            Player.GetMp3Infos(Mp3FullPath);
-            pBox.Image = Player.AlbumArtImage;                        
-            TagLib.Tag Tag = Player.Tag;            
-            
-            if (Tag == null) return;
-            
-                
-            // Lyrivs with time stamps
-            TagLib.Id3v2.SynchronisedLyricsFrame SyncLyricsFrame = Player.SyncLyricsFrame;
-            
-            
-            if (SyncLyricsFrame != null && SyncLyricsFrame.Text.Count() > 0)
-            {
-                string tx = string.Empty;
-                string words = string.Empty;
-                string lyric;
-                long time;
-                string cr = "\r\n";
-                
-                string[] Lyrics = new string[SyncLyricsFrame.Text.Count()];
-                long[] Times = new long[SyncLyricsFrame.Text.Count()];
-
-                for (int i = 0; i < SyncLyricsFrame.Text.Count(); i++)
-                {
-                    lyric = SyncLyricsFrame.Text[i].Text;
-
-                    if (lyric.Trim() != "")
-                    {
-                        if (lyric.StartsWith("\r"))
-                            lyric = lyric.Replace("\r", "\r\n");
-                        else if (lyric.StartsWith("\n"))
-                            lyric = lyric.Replace("\n", "\r\n");
-                    }
-                    
-                    time = SyncLyricsFrame.Text[i].Time;
-
-                    words += lyric;
-                    
-                    Lyrics[i] = lyric;
-                    Times[i] = time;
-
-                    if (lyric.Trim() != "")
-                    {
-                        tx += "[" + time + "]" + lyric;
-                    }
-                }
-                /*
-                frmMp3Lyrics = new frmMp3Lyrics();
-                frmMp3Lyrics.Show();
-                frmMp3Lyrics.DisplayText(tx);
-                */
-
-                frmMp3Karaoke = new frmMp3Karaoke(Lyrics, Times);
-                frmMp3Karaoke.Show();
-                StartKaraoke();
-            }
-
-            else
-            {
-
-                string l = Tag.Lyrics;
-                string s = Tag.Subtitle;
-                if (l != null && l.Trim() != "" || s != null && s.Trim() != "")
-                {
-
-
-                    frmMp3Lyrics = new frmMp3Lyrics();
-                    frmMp3Lyrics.Show();
-
-                    string tx = string.Empty;
-                    if (l != null)
-                        tx += l;
-                    if (s != null)
-                        tx += s;
-
-                    frmMp3Lyrics.DisplayText(tx);
-                }
-                else
-                {
-                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                    {
-                        Application.OpenForms["frmMp3Lyrics"].Close();
-                    }
-                }
-            }
-            
-            
-            
-
-        }
+        
         #endregion Draw controls
 
 
