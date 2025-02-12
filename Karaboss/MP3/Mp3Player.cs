@@ -15,23 +15,25 @@ namespace Karaboss.mp3
     public delegate void EndingSyncHandler(int handle, int channel, int data, System.IntPtr user);
     
     public class Mp3Player
-    {
-
+    {    
         #region events
         // Playing completed
         public SYNCPROC OnEndingSync;
-
         public event EndingSyncHandler PlayingCompleted;
-        
+
         #endregion events
 
-
+  
+        private string _FileName;
         private int _stream;
         private bool mBassInitalized;
 
-        #region properties
 
-        private string _FileName;
+        #region properties
+        
+        // Image of song
+        private Image _albumartimage;
+        public Image AlbumArtImage { get { return _albumartimage; } }
 
         public double Position { get { return GetPosition(); } }
 
@@ -61,12 +63,7 @@ namespace Karaboss.mp3
 
         private SynchronisedLyricsFrame _synclyricsframe;
         public SynchronisedLyricsFrame SyncLyricsFrame { get { return _synclyricsframe; } }
-
-
-        // Image of song
-        private Image _albumartimage;
-        public Image AlbumArtImage { get { return _albumartimage; } }
-
+       
         #endregion properties
 
 
@@ -74,62 +71,63 @@ namespace Karaboss.mp3
         /// Constructor
         /// </summary>
         public Mp3Player()
-        {
+        {            
             if (!InitBass()) return;            
         }
 
         public Mp3Player(string FileName)
         {
-            if (!InitBass()) return;
             _FileName = FileName;
-            Load(_FileName);
+            if (InitBass())
+            {                
+                Load(_FileName);
+            }
         }
+
 
         /// <summary>
         /// Initialize Bass
         /// </summary>
         private bool InitBass()
-        {
-            string BassRegistrationEmail = Settings.Default.BassRegistrationEmail;
-            string BassRegistrationKey = Settings.Default.BassRegistrationKey;
-
-            // Add registration key here if you have a license
-            BassNet.Registration(BassRegistrationEmail, BassRegistrationKey);
-
+        {            
             try
             {
+                string BassRegistrationEmail = Settings.Default.BassRegistrationEmail;
+                string BassRegistrationKey = Settings.Default.BassRegistrationKey;
+
+                // Add registration key here if you have a license
+                BassNet.Registration(BassRegistrationEmail, BassRegistrationKey);
+
                 // Initalize with frequency = 44100
                 Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
 
-                mBassInitalized = true;
-                Application.DoEvents();
+                mBassInitalized = true;                
                 return true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Unable to initialize the audio playback system. " + ex.Message);
-            }
-            return false;
+                return false;
+            }            
         }
-
+                 
+           
         /// <summary>
         /// Load mp3 song
         /// </summary>
         /// <param name="FileName"></param>
         /// <exception cref="Exception"></exception>
         public void Load(string FileName)
-        {
-            //stream = Bass.BASS_StreamCreateFile(location, 0, 0, BASSFlag.BASS_SAMPLE_FLOAT);
+        {            
             if (!mBassInitalized) return;
             
             _stream = 0;
-            _stream = Bass.BASS_StreamCreateFile(FileName, 0, 0, BASSFlag.BASS_STREAM_DECODE | BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_STREAM_PRESCAN);
-            //_stream = Bass.BASS_StreamCreateFile(FileName, 0, 0, BASSFlag.BASS_SAMPLE_FLOAT);
+            _stream = Bass.BASS_StreamCreateFile(FileName, 0, 0, BASSFlag.BASS_STREAM_DECODE | BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_STREAM_PRESCAN);            
             _stream = Un4seen.Bass.AddOn.Fx.BassFx.BASS_FX_TempoCreate(_stream, BASSFlag.BASS_FX_FREESOURCE | BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_SAMPLE_LOOP);
-            
+            //_stream = Bass.BASS_StreamCreateFile(FileName, 0, 0, BASSFlag.BASS_DEFAULT);
+
             if (_stream != 0)
             {
-
                 // Create event for song playing completed                    
                 OnEndingSync = new SYNCPROC(HandlePlayingCompleted);
                 Bass.BASS_ChannelSetSync(_stream, BASSSync.BASS_SYNC_END | BASSSync.BASS_SYNC_MIXTIME, 0, OnEndingSync, IntPtr.Zero);
@@ -144,9 +142,8 @@ namespace Karaboss.mp3
                 _seconds = Bass.BASS_ChannelBytes2Seconds(_stream, _byteslen);
 
                 _tags = GetTagsFromFile(FileName);
-
-                Application.DoEvents();
-                Console.WriteLine("*** Player initialized");
+                
+                //Console.WriteLine("*** Player initialized");
 
             }
             else
@@ -159,52 +156,33 @@ namespace Karaboss.mp3
 
         private void HandlePlayingCompleted(int handle, int channel, int data, IntPtr user)
         {
-            Stop();
+            //Stop();
             PlayingCompleted?.Invoke(handle, channel, data, user);
         }
-
+    
         /// <summary>
         /// Play mp3
         /// </summary>
         public void Play()
         {
-            if (_stream == 0)
-            {
-                Console.WriteLine("*** Stream is null");
-                return;
-            }                        
-            try
-            {
-                bool success = Bass.BASS_ChannelPlay(_stream, false);
+            Stop();
 
-                if (!success)
+            if (InitBass())
+            {
+                Load(_FileName);
+
+                if (_stream != 0)
                 {
-                    
-                    Reset();
-                    if (!InitBass())
+                    try
                     {
-                        Console.WriteLine("*** Unsucessful play : " + Bass.BASS_ErrorGetCode());
-                        return;
-                    }                                       
-                    
-                    Load(_FileName);
+                        bool success = Bass.BASS_ChannelPlay(_stream, false);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("*** Unsucessful play: " + ex.Message, "Karaboss" ,MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    success = Bass.BASS_ChannelPlay(_stream, false);
-                    
-                    if (!success)
-                        Console.WriteLine("*** Unsucessful play after retry: " + Bass.BASS_ErrorGetCode());
-                    else
-                        Console.WriteLine("*** Successful play after retry");
-                    
+                    }
                 }
-                else
-                {
-                    Console.WriteLine("*** Successful play");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
             }
         }
 
@@ -234,11 +212,14 @@ namespace Karaboss.mp3
             try
             {
                 Bass.BASS_ChannelStop(_stream);
+                Bass.BASS_StreamFree(_stream);
                 Bass.BASS_ChannelSetPosition(_stream, 0L);
+                _stream = 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                MessageBox.Show("*** Unsucessful stop: " + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
             }
         }
 
@@ -254,7 +235,7 @@ namespace Karaboss.mp3
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                MessageBox.Show("*** Unsucessful pause: " + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -264,19 +245,17 @@ namespace Karaboss.mp3
         public void Reset()
         {
             try
-            {
+            {                
                 Bass.BASS_Stop();
                 Bass.BASS_StreamFree(_stream);
                 Bass.BASS_Free();
                 _stream = 0;
-                mBassInitalized = false;
-                Application.DoEvents();
-                Console.WriteLine("*** Player reset");
+                mBassInitalized = false;                
+                
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Console.Write(ex.Message);
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);                
             }
         }
 
@@ -292,31 +271,19 @@ namespace Karaboss.mp3
             {
                 // length in bytes
                 _byteslen = Bass.BASS_ChannelGetPosition(_stream, BASSMode.BASS_POS_BYTE);
+                
                 if (_byteslen == -1)
                 {
-                    Console.WriteLine( string.Format( "*** Unsuccessful GetPosition : {0} - at position {1}", Bass.BASS_ErrorGetCode()), _byteslen);
-
-                    //return 0;
-                    Reset();
-                    if (!InitBass())
-                    {
-                        Console.WriteLine("*** Unsucessful play : " + Bass.BASS_ErrorGetCode());
-                        return 0;
-                    }
-                    Load(_FileName);                    
-                    Play();
+                    //Console.WriteLine( string.Format( "*** Unsuccessful GetPosition : {0} - at position {1}", Bass.BASS_ErrorGetCode()), _byteslen);
+                    return 0;                    
                 }
-                
-               
+                               
                 // the time length
                 return Bass.BASS_ChannelBytes2Seconds(_stream, _byteslen);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); return _byteslen;
-                //Console.Write(ex.Message);
-                return _byteslen;
-                
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); return _byteslen;                                                
             }
         }
 

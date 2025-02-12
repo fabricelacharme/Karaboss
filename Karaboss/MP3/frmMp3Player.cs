@@ -60,8 +60,8 @@ namespace Karaboss
 
         //private SYNCPROC _OnEndingSync;
         private Mp3Player Player;
+        //private BassAudioEngine AudioEngine;
 
-        
         #endregion Bass
 
         // Playlists
@@ -81,16 +81,15 @@ namespace Karaboss
 
             InitControls();
 
-            // Create mp3 Player instance
+            // Create mp3 Player instance            
+            //AudioEngine = new BassAudioEngine();
+            
             Player = new Mp3Player(FileName);
-
             // Create event for playing completed
             Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);            
 
             DisplayMp3Characteristics();
-
-            DisplayOtherInfos(Mp3FullPath);
-            
+            DisplayOtherInfos(Mp3FullPath);            
 
             #region playlists
 
@@ -247,6 +246,7 @@ namespace Karaboss
                 BtnStatus();
                 ValideMenus(false);
 
+                //AudioEngine.Play(Mp3FullPath);
                 Player.Play();
                 StartKaraoke();
                 Timer1.Start();
@@ -541,13 +541,15 @@ namespace Karaboss
         /// Get master peak volume from provider of sound (Karaboss itself or an external one such as VirtualMidiSynth)
         /// </summary>
         private void GetPeakVolume()
-        {           
+        {   
+            /*
             int level = Player.Volume;
             int LeftLevel = LOWORD(level);
             int RightLevel = HIWORD(level);
 
             VuPeakVolumeLeft.Level = LeftLevel;
             VuPeakVolumeRight.Level = RightLevel;
+            */
         }
 
         private static int HIWORD(int n)
@@ -971,25 +973,21 @@ namespace Karaboss
 
             currentPlaylistItem = currentPlaylist.Next(pli);
 
-            if (currentPlaylist == null || pli == currentPlaylistItem)
-                return;
-
             // Stop if no other song to play
             if (pli == currentPlaylistItem)
             {
-                PlayerState = PlayerStates.Stopped;
-                BtnStatus();
+                StopMusic();
                 return;
             }
-            
-            
+                        
             StopMusic();
-            Player.Reset();
+            //Player.Reset();
 
             //Next song of the playlist
             Mp3FileName = currentPlaylistItem.Song;
 
             // Update form
+            SetTitle(Mp3FileName);
             UpdatePlayListsForm(currentPlaylistItem.Song);
 
             // close frmKaraoke
@@ -1027,16 +1025,22 @@ namespace Karaboss
                 return;
 
             StopMusic();
-            Player.Reset();
+            //Player.Reset();
 
             Mp3FileName = currentPlaylistItem.Song;
             Mp3FullPath = currentPlaylistItem.File;
 
+            // Update form
+            SetTitle(Mp3FileName);
             UpdatePlayListsForm(currentPlaylistItem.Song);
+
+            // close frmKaraoke
+            if (Application.OpenForms.OfType<frmMp3Karaoke>().Count() > 0)
+            {
+                frmMp3Karaoke.Close();
+            }
+
             PlayerState = PlayerStates.Playing;
-
-            //ResetMidiFile();
-
             SelectFileToLoadAsync(Mp3FullPath);
 
         }
@@ -1116,7 +1120,7 @@ namespace Karaboss
 
                         toptxt = "Next song: " + Path.GetFileNameWithoutExtension(currentPlaylistItem.Song) + " - Next singer: " + currentPlaylistItem.KaraokeSinger;
                         centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song)
-                            + _InternalSepLines + Strings.SungBy
+                            + _InternalSepLines + Karaboss.Resources.Localization.Strings.SungBy
                             + _InternalSepLines + currentPlaylistItem.KaraokeSinger;
                         nbLines = 4;
                     }
@@ -1276,6 +1280,7 @@ namespace Karaboss
             #region position hscrollbar
             try
             {
+                
                 if (PlayerState == PlayerStates.Playing && (int)pos < positionHScrollBar.Maximum - positionHScrollBar.Minimum && (int)pos > positionHScrollBar.Minimum)
                 {
                     positionHScrollBar.Value = (int)pos + positionHScrollBar.Minimum;
@@ -1283,6 +1288,7 @@ namespace Karaboss
                     // Send position to karaoke
                     SendPositionToKaraoke(pos);
                 }
+                
             }
             catch (Exception ex)
             {

@@ -186,6 +186,9 @@
     <Compile Include="Lyrics\frmLrcOptions.Designer.cs">
       <DependentUpon>frmLrcOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="MP3\BassAudioEngine.cs" />
+    <Compile Include="MP3\Config.cs" />
+    <Compile Include="MP3\CueUtil.cs" />
     <Compile Include="MP3\frmMp3Karaoke.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -204,7 +207,13 @@
     <Compile Include="MP3\frmMp3Player.Designer.cs">
       <DependentUpon>frmMp3Player.cs</DependentUpon>
     </Compile>
+    <Compile Include="MP3\g_Player.cs" />
+    <Compile Include="MP3\IPlayercs.cs" />
     <Compile Include="MP3\Mp3Player.cs" />
+    <Compile Include="MP3\MusicStream.cs" />
+    <Compile Include="MP3\MusicTag.cs" />
+    <Compile Include="MP3\StreamCopy.cs" />
+    <Compile Include="MP3\TagReader.cs" />
     <Compile Include="Utilities\IO\Files.cs" />
     <Compile Include="Utilities\Lyrics\LyricsUtilities.cs" />
     <Compile Include="Utilities\MidiFile\CreateNewMidiFile.cs" />
