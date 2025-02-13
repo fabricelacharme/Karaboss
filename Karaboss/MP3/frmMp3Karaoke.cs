@@ -6,14 +6,31 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Karaboss.MP3
 {
-    public partial class frmMp3Karaoke : Form
+    public partial class frmMp3Karaoke : Form, IMessageFilter
     {
+
+        #region Move form without title bar
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+        public const int WM_LBUTTONDOWN = 0x0201;
+
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+
+        private readonly HashSet<Control> controlsToMove = new HashSet<Control>();
+
+        private Point Mouselocation;
+
+        #endregion
 
         private string DefaultDirSlideShow;
         private List<string> m_ImageFilePaths;
@@ -49,9 +66,26 @@ namespace Karaboss.MP3
         {
             InitializeComponent();
 
+            // Graphic optimization
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            this.SetStyle(ControlStyles.UserPaint, true);
+
+            #region Move form without title bar
+            Application.AddMessageFilter(this);
+            controlsToMove.Add(this);
+            // UserControls picball & pBox manage themselves this move.            
+            controlsToMove.Add(this.pnlTitle);
+            controlsToMove.Add(this.lblTitle);
+            #endregion
+
+
             LoadDefaultImage();
 
             InitializeKaraokeTextHighlighter(Lyrics, Times);
+
+            AddMouseMoveHandler(this);
         }
 
         private void InitializeKaraokeTextHighlighter(string[] Lyrics, long[] Times)
@@ -248,34 +282,171 @@ namespace Karaboss.MP3
 
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMp3Karaoke));
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.pnlTop = new System.Windows.Forms.Panel();
+            this.picBalls = new BallsControl.Balls();
+            this.pnlTitle = new System.Windows.Forms.Panel();
+            this.lblTitle = new System.Windows.Forms.Label();
             this.pBox = new System.Windows.Forms.PictureBox();
+            this.pnlTimer = new System.Windows.Forms.Timer(this.components);
+            this.pnlWindow = new System.Windows.Forms.Panel();
+            this.btnEditLyrics = new System.Windows.Forms.Button();
+            this.btnExportLyricsToText = new System.Windows.Forms.Button();
+            this.btnFrmOptions = new System.Windows.Forms.Button();
+            this.btnFrmMin = new System.Windows.Forms.Button();
+            this.btnFrmMax = new System.Windows.Forms.Button();
+            this.btnFrmClose = new System.Windows.Forms.Button();
+            this.pnlTop.SuspendLayout();
+            this.pnlTitle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBox)).BeginInit();
+            this.pnlWindow.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // pnlTop
+            // 
+            this.pnlTop.Controls.Add(this.pnlTitle);
+            this.pnlTop.Controls.Add(this.picBalls);
+            resources.ApplyResources(this.pnlTop, "pnlTop");
+            this.pnlTop.Name = "pnlTop";
+            // 
+            // picBalls
+            // 
+            this.picBalls.BallsBackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.picBalls.BallsNumber = 0;
+            this.picBalls.Division = 0F;
+            resources.ApplyResources(this.picBalls, "picBalls");
+            this.picBalls.Name = "picBalls";
+            // 
+            // pnlTitle
+            // 
+            this.pnlTitle.BackColor = System.Drawing.Color.Black;
+            this.pnlTitle.Controls.Add(this.lblTitle);
+            resources.ApplyResources(this.pnlTitle, "pnlTitle");
+            this.pnlTitle.Name = "pnlTitle";
+            // 
+            // lblTitle
+            // 
+            resources.ApplyResources(this.lblTitle, "lblTitle");
+            this.lblTitle.BackColor = System.Drawing.Color.Black;
+            this.lblTitle.ForeColor = System.Drawing.Color.Teal;
+            this.lblTitle.Name = "lblTitle";
             // 
             // pBox
             // 
-            this.pBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pBox.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(this.pBox, "pBox");
             this.pBox.Name = "pBox";
-            this.pBox.Size = new System.Drawing.Size(584, 561);
-            this.pBox.TabIndex = 0;
             this.pBox.TabStop = false;
+            // 
+            // pnlTimer
+            // 
+            this.pnlTimer.Tick += new System.EventHandler(this.pnlTimer_Tick);
+            // 
+            // pnlWindow
+            // 
+            this.pnlWindow.BackColor = System.Drawing.Color.Gray;
+            this.pnlWindow.Controls.Add(this.btnEditLyrics);
+            this.pnlWindow.Controls.Add(this.btnExportLyricsToText);
+            this.pnlWindow.Controls.Add(this.btnFrmOptions);
+            this.pnlWindow.Controls.Add(this.btnFrmMin);
+            this.pnlWindow.Controls.Add(this.btnFrmMax);
+            this.pnlWindow.Controls.Add(this.btnFrmClose);
+            resources.ApplyResources(this.pnlWindow, "pnlWindow");
+            this.pnlWindow.Name = "pnlWindow";
+            this.pnlWindow.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlWindow_MouseDown);
+            this.pnlWindow.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlWindow_MouseMove);
+            this.pnlWindow.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlWindow_MouseUp);
+            this.pnlWindow.Resize += new System.EventHandler(this.pnlWindow_Resize);
+            // 
+            // btnEditLyrics
+            // 
+            this.btnEditLyrics.BackColor = System.Drawing.Color.Gray;
+            this.btnEditLyrics.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnEditLyrics, "btnEditLyrics");
+            this.btnEditLyrics.Name = "btnEditLyrics";
+            this.btnEditLyrics.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnEditLyrics, resources.GetString("btnEditLyrics.ToolTip"));
+            this.btnEditLyrics.UseVisualStyleBackColor = false;
+            // 
+            // btnExportLyricsToText
+            // 
+            this.btnExportLyricsToText.BackColor = System.Drawing.Color.Gray;
+            this.btnExportLyricsToText.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnExportLyricsToText, "btnExportLyricsToText");
+            this.btnExportLyricsToText.Name = "btnExportLyricsToText";
+            this.btnExportLyricsToText.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnExportLyricsToText, resources.GetString("btnExportLyricsToText.ToolTip"));
+            this.btnExportLyricsToText.UseVisualStyleBackColor = false;
+            // 
+            // btnFrmOptions
+            // 
+            this.btnFrmOptions.BackColor = System.Drawing.Color.Gray;
+            this.btnFrmOptions.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnFrmOptions, "btnFrmOptions");
+            this.btnFrmOptions.Name = "btnFrmOptions";
+            this.btnFrmOptions.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnFrmOptions, resources.GetString("btnFrmOptions.ToolTip"));
+            this.btnFrmOptions.UseVisualStyleBackColor = false;
+            // 
+            // btnFrmMin
+            // 
+            this.btnFrmMin.BackColor = System.Drawing.Color.Gray;
+            this.btnFrmMin.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnFrmMin, "btnFrmMin");
+            this.btnFrmMin.Name = "btnFrmMin";
+            this.btnFrmMin.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnFrmMin, resources.GetString("btnFrmMin.ToolTip"));
+            this.btnFrmMin.UseVisualStyleBackColor = false;
+            this.btnFrmMin.Click += new System.EventHandler(this.btnFrmMin_Click);
+            // 
+            // btnFrmMax
+            // 
+            this.btnFrmMax.BackColor = System.Drawing.Color.Gray;
+            this.btnFrmMax.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnFrmMax, "btnFrmMax");
+            this.btnFrmMax.Name = "btnFrmMax";
+            this.btnFrmMax.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnFrmMax, resources.GetString("btnFrmMax.ToolTip"));
+            this.btnFrmMax.UseVisualStyleBackColor = false;
+            this.btnFrmMax.Click += new System.EventHandler(this.btnFrmMax_Click);
+            // 
+            // btnFrmClose
+            // 
+            this.btnFrmClose.BackColor = System.Drawing.Color.Gray;
+            this.btnFrmClose.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnFrmClose, "btnFrmClose");
+            this.btnFrmClose.Name = "btnFrmClose";
+            this.btnFrmClose.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnFrmClose, resources.GetString("btnFrmClose.ToolTip"));
+            this.btnFrmClose.UseVisualStyleBackColor = false;
+            this.btnFrmClose.Click += new System.EventHandler(this.btnFrmClose_Click);
+            this.btnFrmClose.MouseLeave += new System.EventHandler(this.btnFrmClose_MouseLeave);
+            this.btnFrmClose.MouseHover += new System.EventHandler(this.btnFrmClose_MouseHover);
             // 
             // frmMp3Karaoke
             // 
-            this.ClientSize = new System.Drawing.Size(584, 561);
+            resources.ApplyResources(this, "$this");
+            this.ControlBox = false;
+            this.Controls.Add(this.pnlWindow);
             this.Controls.Add(this.pBox);
+            this.Controls.Add(this.pnlTop);
+            this.DoubleBuffered = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmMp3Karaoke";
-            this.Text = "Karaoke Text Highlighter";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMp3Karaoke_FormClosing);
             this.Load += new System.EventHandler(this.frmMp3Karaoke_Load);
             this.Resize += new System.EventHandler(this.frmMp3Karaoke_Resize);
+            this.pnlTop.ResumeLayout(false);
+            this.pnlTitle.ResumeLayout(false);
+            this.pnlTitle.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBox)).EndInit();
+            this.pnlWindow.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
-
-        private System.Windows.Forms.PictureBox pBox;
 
 
         #region Form Events
@@ -493,5 +664,163 @@ namespace Karaboss.MP3
 
         #endregion
 
+
+        #region Move Window
+
+        bool bPnlVisible = false;
+        DateTime startTime;
+
+        /// <summary>
+        /// Show panel on mouse move with a timer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MouseMoveHandler(object sender, MouseEventArgs e)
+        {
+
+            if (bPnlVisible == false && e.Location != Mouselocation)
+            {
+                Mouselocation = e.Location;
+                Cursor.Show();
+
+                bPnlVisible = true;
+                pnlWindow.Visible = true;
+                startTime = DateTime.Now;
+
+                pnlTimer.Enabled = true;
+                pnlTimer.Start();
+            }
+        }
+
+        private void pnlTimer_Tick(object sender, EventArgs e)
+        {
+            TimeSpan dur = DateTime.Now - startTime;
+            if (dur > TimeSpan.FromSeconds(3))
+            {
+                pnlTimer.Stop();
+
+                pnlWindow.Visible = false;
+                bPnlVisible = false;
+
+                Cursor.Hide();
+            }
+        }
+
+
+        private bool dragging = false;
+        private Point dragCursorPoint;
+        private Point dragFormPoint;
+        private void pnlWindow_MouseDown(object sender, MouseEventArgs e)
+        {
+            dragging = true;
+            dragCursorPoint = Cursor.Position;
+            dragFormPoint = this.Location;
+        }
+
+        private void pnlWindow_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (dragging)
+            {
+                Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
+                this.Location = Point.Add(dragFormPoint, new Size(dif));
+            }
+        }
+
+        private void pnlWindow_MouseUp(object sender, MouseEventArgs e)
+        {
+            dragging = false;
+        }
+
+        private void pnlWindow_Resize(object sender, EventArgs e)
+        {
+            btnFrmClose.Top = 1;
+            btnFrmMax.Top = btnFrmClose.Top + btnFrmClose.Height + 1;
+            btnFrmMin.Top = btnFrmMax.Top + btnFrmMax.Height + 1;
+            btnFrmOptions.Top = btnFrmMin.Top + btnFrmMin.Height + 1;
+            btnExportLyricsToText.Top = btnFrmOptions.Top + btnFrmOptions.Height + 1;
+        }
+
+        private void btnFrmClose_MouseHover(object sender, EventArgs e)
+        {
+            btnFrmClose.Image = Properties.Resources.CloseOver;
+        }
+
+        private void btnFrmClose_MouseLeave(object sender, EventArgs e)
+        {
+            btnFrmClose.Image = Properties.Resources.Close;
+        }
+
+        /// <summary>
+        /// Move form without title bar
+        /// UserControls of the form manage themselves this move
+        /// by sending the message to their parent form (this.ParentForm.Handle)
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        public bool PreFilterMessage(ref Message m)
+        {
+            if (m.Msg == WM_LBUTTONDOWN &&
+                 controlsToMove.Contains(Control.FromHandle(m.HWnd)))
+            {
+                ReleaseCapture();
+                SendMessage(this.Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+                return true;
+            }
+            return false;
+        }
+
+        private void AddMouseMoveHandler(Control c)
+        {
+            c.MouseMove += MouseMoveHandler;
+            if (c.Controls.Count > 0)
+            {
+                foreach (Control ct in c.Controls)
+                    AddMouseMoveHandler(ct);
+            }
+        }
+
+
+        #endregion Move Window
+
+
+        #region pnlWindow Events
+        /// <summary>
+        /// Close form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnFrmClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        /// <summary>
+        /// Maximize form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnFrmMax_Click(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Maximized)
+                WindowState = FormWindowState.Normal;
+            else
+                WindowState = FormWindowState.Maximized;
+        }
+
+        /// <summary>
+        /// Minimize form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnFrmMin_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+
+
+        #endregion
+
+       
     }
 }
