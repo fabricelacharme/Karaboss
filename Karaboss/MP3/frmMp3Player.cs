@@ -542,14 +542,14 @@ namespace Karaboss
         /// </summary>
         private void GetPeakVolume()
         {   
-            /*
+            
             int level = Player.Volume;
             int LeftLevel = LOWORD(level);
             int RightLevel = HIWORD(level);
 
             VuPeakVolumeLeft.Level = LeftLevel;
             VuPeakVolumeRight.Level = RightLevel;
-            */
+            
         }
 
         private static int HIWORD(int n)
@@ -881,78 +881,7 @@ namespace Karaboss
         #endregion Draw controls
 
 
-        #region Playlists
-
-        /*
-        // Select and load next playlist item
-        private void SelectNextPlaylistSong()
-        {
-            if (currentPlaylist == null)
-            {
-                // FAB 30/09/2018 !!!!
-                // Ne s'arrête jamais
-                PlayerState = PlayerStates.Stopped;
-                return;
-            }
-
-            PlaylistItem pli = currentPlaylistItem;
-
-            // Select next item            
-            currentPlaylistItem = currentPlaylist.Next(pli);
-
-            // Stop if no other song to play
-            if (pli == currentPlaylistItem)
-            {
-                PlayerState = PlayerStates.Stopped;
-                BtnStatus();
-                return;
-            }
-
-            // Load file
-            Mp3FileName = currentPlaylistItem.Song;
-            Mp3FullPath = currentPlaylistItem.File;
-
-            // Select which type a file it is
-            SelectFileToLoadAsync(Mp3FullPath);
-        }
-
-        /// <summary>
-        /// Called by Button NEXT, play immediately the next song
-        /// </summary>
-        private void PlayNextSong()
-        {
-            PlaylistItem pli = currentPlaylistItem;
-            if (pli == null)
-                return;            
-            
-            currentPlaylistItem = currentPlaylist.Next(pli);
-
-            if (currentPlaylist == null || pli == currentPlaylistItem)
-                return;
-
-            StopMusic();
-
-            //Next song of the playlist
-            Mp3FileName = currentPlaylistItem.Song;
-            
-            // Update form
-            UpdatePlayListsForm(currentPlaylistItem.Song);
-
-            // Ferme le formulaire frmLyric
-            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
-            {
-                //frmLyric.Close();
-            }
-
-            PlayerState = PlayerStates.Playing;
-            Mp3FullPath = currentPlaylistItem.File;
-            //ResetMidiFile();
-
-            SelectFileToLoadAsync(Mp3FullPath);
-            
-        }
-
-        */
+        #region Playlists     
 
         /// <summary>
         /// Common to button next and end of playing a song
@@ -1212,17 +1141,7 @@ namespace Karaboss
         /// <param name="user"></param>
         private void HandlePlayingCompleted(int handle, int channel, int data, IntPtr user)
         {
-            // the 'channel' has ended - jump to the beginning
-            //Bass.BASS_ChannelSetPosition(channel, 0L);
-
-            //StopMusic();
-
-            // Wait for the timer to complete the stop because we are in another thread
             PlayerState = PlayerStates.NextSong;
-
-            //Bass.BASS_Stop();
-            //Timer1.Stop();
-
         }
 
         #endregion Handle events 
@@ -1271,8 +1190,6 @@ namespace Karaboss
                     break;
 
                 case PlayerStates.NextSong:                                       
-                    //StopMusic();
-                    //SelectNextPlaylistSong();
                     PlayNextPlaylistSong();
                     break;
             }

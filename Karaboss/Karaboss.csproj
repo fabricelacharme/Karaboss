@@ -186,9 +186,6 @@
     <Compile Include="Lyrics\frmLrcOptions.Designer.cs">
       <DependentUpon>frmLrcOptions.cs</DependentUpon>
     </Compile>
-    <Compile Include="MP3\BassAudioEngine.cs" />
-    <Compile Include="MP3\Config.cs" />
-    <Compile Include="MP3\CueUtil.cs" />
     <Compile Include="MP3\frmMp3Karaoke.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -207,13 +204,7 @@
     <Compile Include="MP3\frmMp3Player.Designer.cs">
       <DependentUpon>frmMp3Player.cs</DependentUpon>
     </Compile>
-    <Compile Include="MP3\g_Player.cs" />
-    <Compile Include="MP3\IPlayercs.cs" />
     <Compile Include="MP3\Mp3Player.cs" />
-    <Compile Include="MP3\MusicStream.cs" />
-    <Compile Include="MP3\MusicTag.cs" />
-    <Compile Include="MP3\StreamCopy.cs" />
-    <Compile Include="MP3\TagReader.cs" />
     <Compile Include="Utilities\IO\Files.cs" />
     <Compile Include="Utilities\Lyrics\LyricsUtilities.cs" />
     <Compile Include="Utilities\MidiFile\CreateNewMidiFile.cs" />
@@ -380,10 +371,10 @@
     <Compile Include="Lyrics\frmLyric.designer.cs">
       <DependentUpon>frmLyric.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmLyrOptions.cs">
+    <Compile Include="Lyrics\frmLyrOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmLyrOptions.Designer.cs">
+    <Compile Include="Lyrics\frmLyrOptions.Designer.cs">
       <DependentUpon>frmLyrOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="frmExplorer.cs">
@@ -673,10 +664,10 @@
       <DependentUpon>frmLyric.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmLyrOptions.en.resx">
+    <EmbeddedResource Include="Lyrics\frmLyrOptions.en.resx">
       <DependentUpon>frmLyrOptions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmLyrOptions.fr.resx">
+    <EmbeddedResource Include="Lyrics\frmLyrOptions.fr.resx">
       <DependentUpon>frmLyrOptions.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -717,7 +708,7 @@
       <DependentUpon>frmLyric.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmLyrOptions.resx">
+    <EmbeddedResource Include="Lyrics\frmLyrOptions.resx">
       <DependentUpon>frmLyrOptions.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
