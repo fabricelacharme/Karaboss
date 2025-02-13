@@ -40,9 +40,9 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using MusicXml;
 
-namespace Karaboss.Lyrics
+namespace Karaboss.MidiLyrics
 {
-    public partial class LyricsMgmt
+    public partial class MidiLyricsMgmt
     {
 
         #region private
@@ -198,7 +198,7 @@ namespace Karaboss.Lyrics
         /// Constructor
         /// </summary>
         /// <param name="sequence"></param>
-        public LyricsMgmt(Sequence sequence) 
+        public MidiLyricsMgmt(Sequence sequence) 
         {                                                
             _lyricstracknum = -1;
             _melodytracknum = -1;

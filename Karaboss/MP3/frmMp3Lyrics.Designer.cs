@@ -1,4 +1,4 @@
-﻿namespace Karaboss.MP3
+﻿namespace Karaboss.Mp3
 {
     partial class frmMp3Lyrics
     {

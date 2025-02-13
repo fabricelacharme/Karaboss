@@ -40,6 +40,7 @@ using Sanford.Multimedia.Midi;
 using System.IO; // debug
 using Karaboss.Resources.Localization;
 using Karaboss.Configuration;
+using Karaboss.Mp3;
 using Sanford.Multimedia.Midi.UI;
 using PrgAutoUpdater;
 using System.Net;

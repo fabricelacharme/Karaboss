@@ -9,7 +9,7 @@ using TagLib;
 using TagLib.Id3v2;
 using System.Collections.Generic;
 
-namespace Karaboss.mp3
+namespace Karaboss.Mp3
 {
 
     public delegate void EndingSyncHandler(int handle, int channel, int data, System.IntPtr user);
@@ -86,10 +86,10 @@ namespace Karaboss.mp3
 
 
         /// <summary>
-        /// Initialize Bass
+        /// Initialize Bass: this must be done only once, otherwise you will get random BASS_HANDLE_ERROR errors 
         /// </summary>
         private bool InitBass()
-        {            
+        {
             try
             {
                 string BassRegistrationEmail = Settings.Default.BassRegistrationEmail;
@@ -99,14 +99,22 @@ namespace Karaboss.mp3
                 BassNet.Registration(BassRegistrationEmail, BassRegistrationKey);
 
                 // Initalize with frequency = 44100
-                Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
-
-                mBassInitalized = true;                
-                return true;
+                if (Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero))
+                {
+                    mBassInitalized = true;
+                    return true;
+                }
+                else
+                {
+                    MessageBox.Show("Unable to initialize the audio playback system. " + Bass.BASS_ErrorGetCode());
+                    mBassInitalized = false;
+                    return false;
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Unable to initialize the audio playback system. " + ex.Message);
+                mBassInitalized = false;
                 return false;
             }            
         }
@@ -147,8 +155,7 @@ namespace Karaboss.mp3
 
             }
             else
-            {
-                //throw new Exception(String.Format("Stream error: {0}", Bass.BASS_ErrorGetCode()));
+            {                
                 MessageBox.Show(String.Format("Stream error: {0}", Bass.BASS_ErrorGetCode()), "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
             
@@ -163,13 +170,13 @@ namespace Karaboss.mp3
         /// <summary>
         /// Play mp3
         /// </summary>
-        public void Play()
+        public void Play(string FileName)
         {
             Stop();
 
-            if (InitBass())
-            {
-                Load(_FileName);
+            //if (InitBass())
+            //{
+                Load(FileName);
 
                 if (_stream != 0)
                 {
@@ -183,7 +190,7 @@ namespace Karaboss.mp3
 
                     }
                 }
-            }
+            //}
         }
 
         /// <summary>
@@ -208,7 +215,7 @@ namespace Karaboss.mp3
         /// </summary>
         public void Stop()
         {
-            if (_stream == 0) return;
+            //if (_stream == 0) return;
             try
             {
                 Bass.BASS_ChannelStop(_stream);

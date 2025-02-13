@@ -1,17 +1,12 @@
-﻿using Karaboss.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Karaboss.MP3
+namespace Karaboss.Mp3
 {
     public partial class frmMp3Karaoke : Form, IMessageFilter
     {
@@ -61,6 +56,9 @@ namespace Karaboss.MP3
         int keeplines = 1;
               
         double millisecondsElapsed;
+
+        //string[] _lyrics;
+        //long[] _times;
 
         public frmMp3Karaoke(string[] Lyrics, long[] Times)
         {
@@ -203,8 +201,7 @@ namespace Karaboss.MP3
             float y = 0;
             SizeF size;
             string Lyric;
-            string s;
-            //long pltime;
+            string s;            
             int LineNumber = 0;
 
             bool IsNewLine = false;
@@ -212,11 +209,8 @@ namespace Karaboss.MP3
 
             for (int i = 0; i < words.Length; i++)
             {                                
-                Lyric = words[i];
-                //pltime = times[i];
-
+                Lyric = words[i];                
                 IsNewLine = false;
-
 
                 // If next word is crlf, go to next line
                 if (i < words.Length - 1) 
@@ -285,80 +279,25 @@ namespace Karaboss.MP3
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMp3Karaoke));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.pnlTop = new System.Windows.Forms.Panel();
-            this.picBalls = new BallsControl.Balls();
-            this.pnlTitle = new System.Windows.Forms.Panel();
-            this.lblTitle = new System.Windows.Forms.Label();
-            this.pBox = new System.Windows.Forms.PictureBox();
-            this.pnlTimer = new System.Windows.Forms.Timer(this.components);
-            this.pnlWindow = new System.Windows.Forms.Panel();
             this.btnEditLyrics = new System.Windows.Forms.Button();
             this.btnExportLyricsToText = new System.Windows.Forms.Button();
             this.btnFrmOptions = new System.Windows.Forms.Button();
             this.btnFrmMin = new System.Windows.Forms.Button();
             this.btnFrmMax = new System.Windows.Forms.Button();
             this.btnFrmClose = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.pnlTop = new System.Windows.Forms.Panel();
+            this.pnlTitle = new System.Windows.Forms.Panel();
+            this.lblTitle = new System.Windows.Forms.Label();
+            this.picBalls = new BallsControl.Balls();
+            this.pBox = new System.Windows.Forms.PictureBox();
+            this.pnlTimer = new System.Windows.Forms.Timer(this.components);
+            this.pnlWindow = new System.Windows.Forms.Panel();
             this.pnlTop.SuspendLayout();
             this.pnlTitle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBox)).BeginInit();
             this.pnlWindow.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // pnlTop
-            // 
-            this.pnlTop.Controls.Add(this.pnlTitle);
-            this.pnlTop.Controls.Add(this.picBalls);
-            resources.ApplyResources(this.pnlTop, "pnlTop");
-            this.pnlTop.Name = "pnlTop";
-            // 
-            // picBalls
-            // 
-            this.picBalls.BallsBackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.picBalls.BallsNumber = 0;
-            this.picBalls.Division = 0F;
-            resources.ApplyResources(this.picBalls, "picBalls");
-            this.picBalls.Name = "picBalls";
-            // 
-            // pnlTitle
-            // 
-            this.pnlTitle.BackColor = System.Drawing.Color.Black;
-            this.pnlTitle.Controls.Add(this.lblTitle);
-            resources.ApplyResources(this.pnlTitle, "pnlTitle");
-            this.pnlTitle.Name = "pnlTitle";
-            // 
-            // lblTitle
-            // 
-            resources.ApplyResources(this.lblTitle, "lblTitle");
-            this.lblTitle.BackColor = System.Drawing.Color.Black;
-            this.lblTitle.ForeColor = System.Drawing.Color.Teal;
-            this.lblTitle.Name = "lblTitle";
-            // 
-            // pBox
-            // 
-            resources.ApplyResources(this.pBox, "pBox");
-            this.pBox.Name = "pBox";
-            this.pBox.TabStop = false;
-            // 
-            // pnlTimer
-            // 
-            this.pnlTimer.Tick += new System.EventHandler(this.pnlTimer_Tick);
-            // 
-            // pnlWindow
-            // 
-            this.pnlWindow.BackColor = System.Drawing.Color.Gray;
-            this.pnlWindow.Controls.Add(this.btnEditLyrics);
-            this.pnlWindow.Controls.Add(this.btnExportLyricsToText);
-            this.pnlWindow.Controls.Add(this.btnFrmOptions);
-            this.pnlWindow.Controls.Add(this.btnFrmMin);
-            this.pnlWindow.Controls.Add(this.btnFrmMax);
-            this.pnlWindow.Controls.Add(this.btnFrmClose);
-            resources.ApplyResources(this.pnlWindow, "pnlWindow");
-            this.pnlWindow.Name = "pnlWindow";
-            this.pnlWindow.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlWindow_MouseDown);
-            this.pnlWindow.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlWindow_MouseMove);
-            this.pnlWindow.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlWindow_MouseUp);
-            this.pnlWindow.Resize += new System.EventHandler(this.pnlWindow_Resize);
             // 
             // btnEditLyrics
             // 
@@ -379,6 +318,7 @@ namespace Karaboss.MP3
             this.btnExportLyricsToText.TabStop = false;
             this.toolTip1.SetToolTip(this.btnExportLyricsToText, resources.GetString("btnExportLyricsToText.ToolTip"));
             this.btnExportLyricsToText.UseVisualStyleBackColor = false;
+            this.btnExportLyricsToText.Click += new System.EventHandler(this.btnExportLyricsToText_Click);
             // 
             // btnFrmOptions
             // 
@@ -424,6 +364,61 @@ namespace Karaboss.MP3
             this.btnFrmClose.Click += new System.EventHandler(this.btnFrmClose_Click);
             this.btnFrmClose.MouseLeave += new System.EventHandler(this.btnFrmClose_MouseLeave);
             this.btnFrmClose.MouseHover += new System.EventHandler(this.btnFrmClose_MouseHover);
+            // 
+            // pnlTop
+            // 
+            this.pnlTop.Controls.Add(this.pnlTitle);
+            this.pnlTop.Controls.Add(this.picBalls);
+            resources.ApplyResources(this.pnlTop, "pnlTop");
+            this.pnlTop.Name = "pnlTop";
+            // 
+            // pnlTitle
+            // 
+            this.pnlTitle.BackColor = System.Drawing.Color.Black;
+            this.pnlTitle.Controls.Add(this.lblTitle);
+            resources.ApplyResources(this.pnlTitle, "pnlTitle");
+            this.pnlTitle.Name = "pnlTitle";
+            // 
+            // lblTitle
+            // 
+            resources.ApplyResources(this.lblTitle, "lblTitle");
+            this.lblTitle.BackColor = System.Drawing.Color.Black;
+            this.lblTitle.ForeColor = System.Drawing.Color.Teal;
+            this.lblTitle.Name = "lblTitle";
+            // 
+            // picBalls
+            // 
+            this.picBalls.BallsBackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.picBalls.BallsNumber = 0;
+            this.picBalls.Division = 0F;
+            resources.ApplyResources(this.picBalls, "picBalls");
+            this.picBalls.Name = "picBalls";
+            // 
+            // pBox
+            // 
+            resources.ApplyResources(this.pBox, "pBox");
+            this.pBox.Name = "pBox";
+            this.pBox.TabStop = false;
+            // 
+            // pnlTimer
+            // 
+            this.pnlTimer.Tick += new System.EventHandler(this.pnlTimer_Tick);
+            // 
+            // pnlWindow
+            // 
+            this.pnlWindow.BackColor = System.Drawing.Color.Gray;
+            this.pnlWindow.Controls.Add(this.btnEditLyrics);
+            this.pnlWindow.Controls.Add(this.btnExportLyricsToText);
+            this.pnlWindow.Controls.Add(this.btnFrmOptions);
+            this.pnlWindow.Controls.Add(this.btnFrmMin);
+            this.pnlWindow.Controls.Add(this.btnFrmMax);
+            this.pnlWindow.Controls.Add(this.btnFrmClose);
+            resources.ApplyResources(this.pnlWindow, "pnlWindow");
+            this.pnlWindow.Name = "pnlWindow";
+            this.pnlWindow.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlWindow_MouseDown);
+            this.pnlWindow.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlWindow_MouseMove);
+            this.pnlWindow.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlWindow_MouseUp);
+            this.pnlWindow.Resize += new System.EventHandler(this.pnlWindow_Resize);
             // 
             // frmMp3Karaoke
             // 
@@ -637,7 +632,10 @@ namespace Karaboss.MP3
                 lyric = words[i];
 
                 // Start a new line
-                if (words[i].StartsWith("\r\n"))
+                if (lyric == null || lyric.Length == 0)
+                    continue;
+
+                if (lyric.StartsWith("\r\n"))
                 {
                     lyric = lyric.Replace("\r\n", "");
                     // Previous line is longer
@@ -819,8 +817,33 @@ namespace Karaboss.MP3
 
 
 
+
         #endregion
 
-       
+
+        
+        private void btnExportLyricsToText_Click(object sender, EventArgs e)
+        {            
+            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+            {
+                frmMp3Player frmMp3Player = GetForm<frmMp3Player>();
+                frmMp3Player.ExportLyricsTags();
+            }
+        }
+
+
+        #region Locate form
+        /// <summary>
+        /// Locate form
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <returns></returns>
+        private TForm GetForm<TForm>()
+            where TForm : Form
+        {
+            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
+        }
+
+        #endregion Locate form
     }
 }

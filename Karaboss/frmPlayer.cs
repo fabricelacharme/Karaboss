@@ -45,7 +45,7 @@ using System.Text.RegularExpressions;
 using MusicXml;
 using MusicTxt;
 using System.Linq;
-using Karaboss.Lyrics;
+using Karaboss.MidiLyrics;
 using Karaboss.Utilities;
 
 namespace Karaboss
@@ -65,7 +65,7 @@ namespace Karaboss
         #region Lyrics declaration
 
         // Lyrics management
-        public LyricsMgmt myLyricsMgmt;
+        public MidiLyricsMgmt myLyricsMgmt;
         
 
         // SlideShow directory
@@ -943,7 +943,7 @@ namespace Karaboss
             Track track;
             switch (myLyricsMgmt.ChordsOriginatedFrom)
             {
-                case LyricsMgmt.ChordsOrigins.Discovery:
+                case MidiLyricsMgmt.ChordsOrigins.Discovery:
                     // the question is: which track for displaying the chords?
                     // LyricsTrackNum?
                     // MelodyTrackNum?
@@ -971,7 +971,7 @@ namespace Karaboss
                     }
                     break;
 
-                case LyricsMgmt.ChordsOrigins.Lyrics:
+                case MidiLyricsMgmt.ChordsOrigins.Lyrics:
                     // Origin = lyrics, track is same as lyrics
                     track = sequence1.tracks[myLyricsMgmt.LyricsTrackNum];
 
@@ -985,7 +985,7 @@ namespace Karaboss
                     }
                     break;
 
-                case LyricsMgmt.ChordsOrigins.XmlEmbedded:
+                case MidiLyricsMgmt.ChordsOrigins.XmlEmbedded:
                     // Origin = Xml, track is MXmlReader.TrackChordsNumber
                     if (MXmlReader == null)
                         return;
@@ -2778,7 +2778,7 @@ namespace Karaboss
 
             // load lyrics and chords if included in lyrics
             //  ********************** Why not load embedded chords here if bShowChords is true ? *****************
-            myLyricsMgmt = new LyricsMgmt(sequence1);
+            myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
 
 
@@ -3324,7 +3324,7 @@ namespace Karaboss
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
 
-                myLyricsMgmt = new LyricsMgmt(sequence1);
+                myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
                 // Save chords to track in order to display them in the score
                 AddChordsToTrack();
@@ -3470,7 +3470,7 @@ namespace Karaboss
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
 
-                myLyricsMgmt = new LyricsMgmt(sequence1);
+                myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
                 // Load chords in LyricsMgmt in order to be displayed in the lyrics form                
                 LoadXmlChordsInLyrics();
@@ -3617,7 +3617,7 @@ namespace Karaboss
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
 
-                myLyricsMgmt = new LyricsMgmt(sequence1);
+                myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -3794,7 +3794,7 @@ namespace Karaboss
             TrkInsertLyrics(track, newpLyrics, newLyricType);
 
             // Reload myLyricMgmt
-            myLyricsMgmt = new LyricsMgmt(sequence1);
+            myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
 
             // Refresh frmLyric
@@ -4381,7 +4381,7 @@ namespace Karaboss
         {
             if (myLyricsMgmt == null)
             {
-                myLyricsMgmt = new LyricsMgmt(sequence1);
+                myLyricsMgmt = new MidiLyricsMgmt(sequence1);
             }
             myLyricsMgmt.MelodyTrackNum = melodytracknum;
             myLyricsMgmt.LyricsTrackNum = lyricstracknum;
@@ -4418,7 +4418,7 @@ namespace Karaboss
                 // infos
                 // MXmlReader.lstChords
                 // MXmlReader.TrackChordsNumber
-                myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.XmlEmbedded;
+                myLyricsMgmt.ChordsOriginatedFrom = MidiLyricsMgmt.ChordsOrigins.XmlEmbedded;
 
                 myLyricsMgmt.lstXmlChords = MXmlReader.lstChords;
             }
@@ -5968,7 +5968,7 @@ namespace Karaboss
             // FAB
             SetTitle("New.mid");
 
-            myLyricsMgmt = new LyricsMgmt(sequence1);
+            myLyricsMgmt = new MidiLyricsMgmt(sequence1);
             //bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0;             
 
             // Display midi file infos

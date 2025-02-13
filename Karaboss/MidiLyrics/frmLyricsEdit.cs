@@ -42,7 +42,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Karaboss.Resources.Localization;
 using Karaboss.Lrc.SharedFramework;
-using Karaboss.Lyrics;
+using Karaboss.MidiLyrics;
 using Karaboss.Utilities;
 using static Karaboss.Karaclass;
 using System.Reflection;
@@ -70,7 +70,7 @@ namespace Karaboss
 
         #region declarations
 
-        private LyricsMgmt _myLyricsMgmt;        
+        private MidiLyricsMgmt _myLyricsMgmt;        
         private List<plLyric> localplLyrics;
 
         #region Internal lyrics separators
@@ -155,7 +155,7 @@ namespace Karaboss
         /// <param name="myLyricsMgmt"></param>
         /// <param name="fileName"></param>
         /// <param name="EditChords"></param>
-        public frmLyricsEdit(Sequence sequence, List<plLyric> plLyrics, LyricsMgmt myLyricsMgmt, string fileName, bool EditChords = false)
+        public frmLyricsEdit(Sequence sequence, List<plLyric> plLyrics, MidiLyricsMgmt myLyricsMgmt, string fileName, bool EditChords = false)
         {
             InitializeComponent();
 
@@ -283,7 +283,7 @@ namespace Karaboss
             localplLyrics = LoadModifiedLyrics(true);
 
             // Display new lyrics in frmPlayer
-            _myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.Lyrics;
+            _myLyricsMgmt.ChordsOriginatedFrom = MidiLyricsMgmt.ChordsOrigins.Lyrics;
             ReplaceLyrics(localplLyrics);
         }
 
@@ -482,7 +482,7 @@ namespace Karaboss
             localplLyrics = LoadModifiedLyrics(true);
 
             // Display new lyrics in frmPlayer
-            _myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.Lyrics;
+            _myLyricsMgmt.ChordsOriginatedFrom = MidiLyricsMgmt.ChordsOrigins.Lyrics;
             ReplaceLyrics(localplLyrics);
 
             // Save file
@@ -535,7 +535,7 @@ namespace Karaboss
             localplLyrics = LoadModifiedLyrics();
 
             // Display new lyrics in frmPlayer
-            _myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.Lyrics;
+            _myLyricsMgmt.ChordsOriginatedFrom = MidiLyricsMgmt.ChordsOrigins.Lyrics;
             ReplaceLyrics(localplLyrics);
 
             // Set cursor as default
@@ -987,7 +987,7 @@ namespace Karaboss
                     {
                         // Chords edition
                         // Extract chord name from the lyrics
-                        if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == LyricsMgmt.ChordsOrigins.Lyrics)
+                        if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
                         {
                             // Remove chord from lyrics
                             plElement = Regex.Replace(plElement, _myLyricsMgmt.RemoveChordPattern, @"");
@@ -1460,13 +1460,13 @@ namespace Karaboss
 
             switch (_myLyricsMgmt.ChordsOriginatedFrom)
             {
-                case LyricsMgmt.ChordsOrigins.Lyrics:
+                case MidiLyricsMgmt.ChordsOrigins.Lyrics:
                     // Chords are included inthe lyrics
                     break;
                 // Chords are not included in the lyrics
-                case LyricsMgmt.ChordsOrigins.XmlEmbedded:
-                case LyricsMgmt.ChordsOrigins.MidiEmbedded:
-                case LyricsMgmt.ChordsOrigins.Discovery:
+                case MidiLyricsMgmt.ChordsOrigins.XmlEmbedded:
+                case MidiLyricsMgmt.ChordsOrigins.MidiEmbedded:
+                case MidiLyricsMgmt.ChordsOrigins.Discovery:
                     break;
             }
 
@@ -1512,7 +1512,7 @@ namespace Karaboss
                     {
                         // Chords edition
                         // Extract chord name from the lyrics
-                        if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == LyricsMgmt.ChordsOrigins.Lyrics)
+                        if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
                         {
                             // Remove chord
                             plElement = Regex.Replace(plElement, _myLyricsMgmt.RemoveChordPattern, @"");
@@ -1585,7 +1585,7 @@ namespace Karaboss
                 {
                     // Chords edition
                     // Extract chord name from the lyrics
-                    if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == LyricsMgmt.ChordsOrigins.Lyrics)
+                    if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
                     {
                         // Remove chord
                         plElement = Regex.Replace(plElement, _myLyricsMgmt.RemoveChordPattern, @"");
@@ -2828,7 +2828,7 @@ namespace Karaboss
             localplLyrics = LoadModifiedLyrics();
 
             // Display new lyrics in frmPlayer
-            _myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.Lyrics;
+            _myLyricsMgmt.ChordsOriginatedFrom = MidiLyricsMgmt.ChordsOrigins.Lyrics;
             ReplaceLyrics(localplLyrics);
 
             // save file

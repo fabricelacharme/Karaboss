@@ -40,7 +40,7 @@ using System.IO;
 using PicControl;
 using System.Runtime.InteropServices;
 using System.Linq;
-using Karaboss.Lyrics;
+using Karaboss.MidiLyrics;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
@@ -65,7 +65,7 @@ namespace Karaboss
 
         #region private
 
-        public LyricsMgmt myLyricsMgmt {  get; set; }
+        public MidiLyricsMgmt myLyricsMgmt {  get; set; }
 
         private Font _karaokeFont;        
         private int currentTextPos = 0;
@@ -372,7 +372,7 @@ namespace Karaboss
 
         public List<pictureBoxControl.plLyric> plLyrics;
                                                   
-        public frmLyric(LyricsMgmt _myLyricsMgmt)
+        public frmLyric(MidiLyricsMgmt _myLyricsMgmt)
         {
             InitializeComponent();
 
@@ -503,7 +503,7 @@ namespace Karaboss
                 if (Karaclass.m_ShowChords)
                 {
                     // if bShowChords, the chords will be displayed above the lyrics, so clean chords included in lyrics
-                    if (myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == LyricsMgmt.ChordsOrigins.Lyrics)
+                    if (myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
                     {
                         
                         if ( myLyricsMgmt.RemoveChordPattern == null )
@@ -874,14 +874,10 @@ namespace Karaboss
             string tx;
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             string file = path + "\\lyrics.txt";
-
-            //tx = lyrics;
+            
             // Lyrics not modified
             tx = myLyricsMgmt.Lyrics;
-            
-            
-            
-
+                                   
             tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
             tx = tx.Replace(_InternalSepLines, "\r\n");
             tx = tx.Replace("[]", "");                                  // Why are these characters exists ?
@@ -893,7 +889,7 @@ namespace Karaboss
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

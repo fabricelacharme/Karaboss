@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Karaboss.MP3
+namespace Karaboss.Mp3
 {
     public partial class frmMp3Lyrics : Form
     {

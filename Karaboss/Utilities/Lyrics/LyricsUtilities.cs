@@ -242,6 +242,8 @@ namespace Karaboss.Utilities
         public static int TimeToTicks(string time, double Division, int max)
         {
             int tic = 0;
+            
+            // Caculate duration in seconds
             double dur;
 
             string[] split1 = time.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);

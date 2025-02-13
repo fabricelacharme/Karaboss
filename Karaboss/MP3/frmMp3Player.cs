@@ -1,11 +1,8 @@
-﻿using Karaboss.Lyrics;
-using Karaboss.mp3;
-using Karaboss.MP3;
-using Karaboss.Resources.Localization;
-using MP3GConverter;
+﻿using Karaboss.Mp3;
+using Karaboss.Mp3.Mp3Lyrics;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.Tracing;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -14,21 +11,13 @@ using System.Windows.Forms;
 using TagLib;
 using TagLib.Id3v2;
 using TagLib.Matroska;
-using Un4seen.Bass;
-using Un4seen.Bass.AddOn.Tags;
 
-namespace Karaboss
+namespace Karaboss.Mp3
 {
     public partial class frmMp3Player : Form
     {
 
-        private enum Mp3LyricsTypes
-        {
-            None,
-            LyricsWithTimeStamps,
-            LRCFile,
-            LyricsWithoutTimeStamps,            
-        }
+       
         private Mp3LyricsTypes Mp3LyricsType;
 
         /// <summary>
@@ -259,7 +248,7 @@ namespace Karaboss
                 ValideMenus(false);
 
                 //AudioEngine.Play(Mp3FullPath);
-                Player.Play();
+                Player.Play(Mp3FullPath);
                 StartKaraoke();
                 Timer1.Start();
                 
@@ -654,8 +643,49 @@ namespace Karaboss
 
         #region Display lyrics
 
+        /// <summary>
+        /// Export Lyrics tags to a text file
+        /// </summary>
+        public void ExportLyricsTags()
+        {
+            TagLib.Id3v2.SynchronisedLyricsFrame SyncLyricsFrame = Player.SyncLyricsFrame;
+            if (SyncLyricsFrame == null || SyncLyricsFrame.Text.Count() == 0) 
+            { 
+                MessageBox.Show("No lyrics to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return; 
+            }
 
-       
+            string lyric;
+            long time;
+            string tx = string.Empty;
+            string line = string.Empty;
+
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            string file = path + "\\mp3lyrics.txt";
+
+            for (int i = 0; i < SyncLyricsFrame.Text.Count(); i++)
+            {
+                lyric = SyncLyricsFrame.Text[i].Text;
+                lyric = lyric.Replace("\r\n", "\\");
+                lyric = lyric.Replace("\r", "\\");
+                lyric = lyric.Replace("\n", "\\");
+                
+
+                time = SyncLyricsFrame.Text[i].Time;
+                line = time.ToString() + " " + lyric;
+                tx += line + "\r\n";
+            }
+            System.IO.File.WriteAllText(@file, tx);
+            try
+            {
+                System.Diagnostics.Process.Start(@file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
 
         private void DisplayOtherInfos(string FileName)
         {
@@ -700,8 +730,10 @@ namespace Karaboss
                     Mp3LyricsType = Mp3LyricsTypes.LyricsWithoutTimeStamps;
             }
 
-           
+
+            // =======================================
             // Display sync lyrics
+            // =======================================
             if (Mp3LyricsType == Mp3LyricsTypes.LyricsWithTimeStamps)
             {                
                 string lyric;
@@ -759,42 +791,79 @@ namespace Karaboss
                 frmMp3Karaoke = new frmMp3Karaoke(Lyrics, Times);
                 frmMp3Karaoke.Show();
                 StartKaraoke();
-            }            
+            }
+            // =======================================
+            // LRC file
+            // =======================================
+
             else if (Mp3LyricsType == Mp3LyricsTypes.LRCFile)
             {
                 string line;
-                string lyric;
-                string stime;
+                string lyric = string.Empty;
+                string stime = string.Empty;
                 long time;
 
                 // Load Lrc file into list of lines                
                 string[] lines = System.IO.File.ReadAllLines(lrcfile);
+                
+                List<string> lstLyrics = new List<string>();
+                List<long> lstTimes = new List<long>();                
+
+                MatchCollection mc3;
+                Regex r3 = new Regex(@"\[\d{2}:\d{2}.\d{3}\]");
+                MatchCollection mc2;
+                Regex r2 = new Regex(@"\[\d{2}:\d{2}.\d{2}\]");
+
                 for (int i = 0; i < lines.Length; i++)
                 {
                     // Extract lyrics and time stamps
                     line = lines[i];
-                    Regex r = new Regex(@"\[\d{2}:\d{2}.\d{3}\]");
-                    MatchCollection mc = r.Matches(line);
-                    if (mc.Count > 0)
+                                                            
+                    mc3 = r3.Matches(line);
+                    mc2 = r2.Matches(line);
+
+                    if (mc2.Count == 0 && mc3.Count == 0)
+                        continue;
+
+                    if (mc3.Count > 0)
                     {
                         // Extract time
-                        stime = mc[0].Value;                        
+                        stime = mc3[0].Value;                        
                         // Extract lyrics
-                        lyric = line.Substring(mc[0].Index + stime.Length);
+                        lyric = line.Substring(mc3[0].Index + stime.Length);
 
-                        // Convert stime to long
-                        stime = stime.Substring(1, stime.Length - 2);
-                        time = (long)TimeToMs(stime);
-
-                        //Lyrics.Add
-                        //Lyrics[i] = lyric;
-                        //Times[i] = TimeToMs(time);
+                    } 
+                    else if (mc2.Count > 0)
+                    {
+                        // Extract time
+                        stime = mc2[0].Value;
+                        // Extract lyrics
+                        lyric = line.Substring(mc2[0].Index + stime.Length);
                     }
 
+                    // Convert stime to long
+                    stime = stime.Substring(1, stime.Length - 2);
+                    time = (long)TimeToMs(stime);
+
+                    lstLyrics.Add(lyric);
+                    lstTimes.Add(time);
+                                 
                 }
 
+                Lyrics = new string[lstLyrics.Count];
+                Times = new long[lstTimes.Count];
+                for (int i = 0; i <  lstLyrics.Count; i++)
+                {
+                    Lyrics[i] = "\r\n" + lstLyrics[i];
+                    Times[i] = lstTimes[i];
+                }
+
+                frmMp3Karaoke = new frmMp3Karaoke(Lyrics, Times);
+                frmMp3Karaoke.Show();
+                StartKaraoke();
+
             }
-            else if (Mp3LyricsType == Mp3LyricsTypes.LyricsWithTimeStamps)
+            else if (Mp3LyricsType == Mp3LyricsTypes.LyricsWithoutTimeStamps)
             {
                     frmMp3Lyrics = new frmMp3Lyrics();
                     frmMp3Lyrics.Show();
@@ -1033,8 +1102,7 @@ namespace Karaboss
                 return;
             }
                         
-            StopMusic();
-            //Player.Reset();
+            StopMusic();            
 
             //Next song of the playlist
             Mp3FileName = currentPlaylistItem.Song;
@@ -1118,10 +1186,10 @@ namespace Karaboss
         {
             // Load file and after launch player taking account things to do betwween 2 songs
             // Create mp3 Player instance
-            Player = new Mp3Player(FileName);
+            //Player = new Mp3Player(FileName);
 
             // Create event for playing completed
-            Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);
+            //Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);
 
             DisplayMp3Characteristics();
 
