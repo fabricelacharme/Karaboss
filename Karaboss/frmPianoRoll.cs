@@ -1143,25 +1143,14 @@ namespace Karaboss
         {
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {                
-                frmPlayer = GetForm<frmPlayer>();
+                frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                 frmPlayer.RefreshDisplay();
                 frmPlayer.FileModified();
                 this.Focus();
             }
         }
 
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
-
-        
+              
         /// <summary>
         /// Form load
         /// </summary>

@@ -250,7 +250,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmChords>().Count() > 0)
             {
-                frmChords = GetForm<frmChords>();
+                frmChords = Utilities.FormUtilities.GetForm<frmChords>();
                 frmChords.UpdateChord(Beat, ChordName);
             }
 
@@ -259,22 +259,6 @@ namespace Karaboss
         }
 
         #endregion Button
-
-
-        #region Locate form
-
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
-
-        #endregion Locate form
 
 
         #region cbNote

@@ -690,24 +690,7 @@ namespace Karaboss
 
         #endregion public methods
 
-
-        #region private methods   
-
-
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
-
-        #endregion private methods
-
-
+       
         #region balls
         public void MoveBalls(int songposition)
         {
@@ -853,7 +836,7 @@ namespace Karaboss
         {
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
-                frmPlayer frmPlayer = GetForm<frmPlayer>();
+                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                 frmPlayer.DisplayEditLyricsForm();
             }
         }
@@ -927,7 +910,7 @@ namespace Karaboss
                 LoadSong(myLyricsMgmt.plLyrics);
 
                 // Refresh score with or without chords
-                frmPlayer frmPlayer = GetForm<frmPlayer>();
+                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                 frmPlayer.RefreshChordsSheetMusic();
 
                 // Set cursor as default
@@ -982,7 +965,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void btnEditLyricsChords_Click(object sender, EventArgs e)
         {
-            frmPlayer frmPlayer = GetForm<frmPlayer>();
+            frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
             frmPlayer.DisplayEditLyricsChordsForm();
         }
 

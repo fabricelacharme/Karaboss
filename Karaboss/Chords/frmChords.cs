@@ -1652,7 +1652,7 @@ namespace Karaboss
                 
                 if (System.Windows.Forms.Application.OpenForms.OfType<frmEditChord>().Count() > 0)
                 {
-                    frmEditChord frmEditChord = GetForm<frmEditChord>();
+                    frmEditChord frmEditChord = Utilities.FormUtilities.GetForm<frmEditChord>();
                     frmEditChord.Close();
                     return;
                 }               
@@ -3064,22 +3064,7 @@ namespace Karaboss
 
         #endregion print text pdf
 
-
-        #region Locate form
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)System.Windows.Forms.Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
-
-        #endregion Locate form
-
-
+      
         #region Save file
                         
         /// <summary>
@@ -3285,7 +3270,7 @@ namespace Karaboss
                 // Active le formulaire frmExplorer
                 if (System.Windows.Forms.Application.OpenForms.OfType<frmExplorer>().Count() > 0)
                 {
-                    frmExplorer = GetForm<frmExplorer>();
+                    frmExplorer = Utilities.FormUtilities.GetForm<frmExplorer>();
                     frmExplorer.RefreshExplorer(MIDIfileName);
                 }
 

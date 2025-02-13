@@ -1993,17 +1993,7 @@ namespace Karaboss
             base.OnLoad(e);
         }
 
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
-
+       
         private void ShowSplashSoundFonts()
         {                        
             // Splash window because the the loading of sound fonts takes a very long time if a big file is used
@@ -2019,7 +2009,7 @@ namespace Karaboss
             // Remove splash windows for sound fonts
             if (Application.OpenForms.OfType<frmLoading>().Count() > 0)
             {
-                frmLoading frmLoading = GetForm<frmLoading>();
+                frmLoading frmLoading = Utilities.FormUtilities.GetForm<frmLoading>();
                 frmLoading.Close();
             }           
         }
@@ -2028,7 +2018,7 @@ namespace Karaboss
         {
             if (Application.OpenForms.OfType<frmSplashScreen>().Count() > 0)
             {
-                frmSplashScreen frmSplashScreen = GetForm<frmSplashScreen>();
+                frmSplashScreen frmSplashScreen = Utilities.FormUtilities.GetForm<frmSplashScreen>();
                 frmSplashScreen.Msg(message);
             }
         }
@@ -2290,50 +2280,50 @@ namespace Karaboss
                 // Close existing windows
                 if (Application.OpenForms.OfType<frmLoading>().Count() > 0)
                 {
-                    frmLoading frmLoading = GetForm<frmLoading>();
+                    frmLoading frmLoading = Utilities.FormUtilities.GetForm<frmLoading>();
                     frmLoading.Close();
                 }
 
                 if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                 {
-                    frmPlayer frmPlayer = GetForm<frmPlayer>();
+                    frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                     frmPlayer.Close();
                 }
 
                 if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
                 {
-                    frmPianoTraining frmPianoTraining = GetForm<frmPianoTraining>();
+                    frmPianoTraining frmPianoTraining = Utilities.FormUtilities.GetForm<frmPianoTraining>();
                     frmPianoTraining.Close();
                 }
 
                 if (Application.OpenForms.OfType<frmGuitarTraining>().Count() > 0)
                 {
-                    frmGuitarTraining frmGuitarTraining = GetForm<frmGuitarTraining>();
+                    frmGuitarTraining frmGuitarTraining = Utilities.FormUtilities.GetForm<frmGuitarTraining>();
                     frmGuitarTraining.Close();
                 }
 
 
                 if (Application.OpenForms.OfType<frmExternalMidiPlay>().Count() > 0)
                 {
-                    frmExternalMidiPlay frmExternalMidiPlay = GetForm<frmExternalMidiPlay>();
+                    frmExternalMidiPlay frmExternalMidiPlay = Utilities.FormUtilities.GetForm<frmExternalMidiPlay>();
                     frmExternalMidiPlay.Close();
                 }
 
                 if (Application.OpenForms.OfType<frmExternalMidiRecord>().Count() > 0)
                 {
-                    frmExternalMidiRecord frmExternalMidiRecord = GetForm<frmExternalMidiRecord>();
+                    frmExternalMidiRecord frmExternalMidiRecord = Utilities.FormUtilities.GetForm<frmExternalMidiRecord>();
                     frmExternalMidiRecord.Close();
                 }
 
                 if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
                 {
-                    FrmTextPlayer frm = GetForm<FrmTextPlayer>();
+                    FrmTextPlayer frm = Utilities.FormUtilities.GetForm<FrmTextPlayer>();
                     frm.Close();
                 }
 
                 if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
                 {
-                    frmMp3Player frm = GetForm<frmMp3Player>();
+                    frmMp3Player frm = Utilities.FormUtilities.GetForm<frmMp3Player>();
                     frm.Close();
                 }
 

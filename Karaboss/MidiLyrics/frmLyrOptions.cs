@@ -590,7 +590,7 @@ namespace Karaboss
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                frmLyric = GetForm<frmLyric>();
+                frmLyric = Utilities.FormUtilities.GetForm<frmLyric>();
 
                 frmLyric.bShowBalls = Karaclass.m_DisplayBalls;
 
@@ -654,18 +654,7 @@ namespace Karaboss
 
         #region form load close
 
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
-
-
+       
         /// <summary>
         /// Form load event
         /// </summary>

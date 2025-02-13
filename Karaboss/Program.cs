@@ -296,7 +296,7 @@ namespace Karaboss
         static void SingleInstance_ArgumentsReceived(object sender, ArgumentsReceivedEventArgs e)
         {
             
-            form  = GetForm<frmExplorer>();
+            form  = Utilities.FormUtilities.GetForm<frmExplorer>();
             if (form == null)
                 return;
 
@@ -333,15 +333,6 @@ namespace Karaboss
         }
 
 
-        /// <summary>
-        /// Return if a form exists
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        static TForm GetForm<TForm>()
-        where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
+      
     }
 }

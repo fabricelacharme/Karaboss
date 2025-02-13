@@ -206,6 +206,7 @@
     </Compile>
     <Compile Include="Mp3\Mp3Lyrics\Mp3LyricsMgmt.cs" />
     <Compile Include="Mp3\Mp3Player\Mp3Player.cs" />
+    <Compile Include="Utilities\Forms\FormUtilities.cs" />
     <Compile Include="Utilities\IO\Files.cs" />
     <Compile Include="Utilities\Lyrics\LyricsUtilities.cs" />
     <Compile Include="Utilities\MidiFile\CreateNewMidiFile.cs" />

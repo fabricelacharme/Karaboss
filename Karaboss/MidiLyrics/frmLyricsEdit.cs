@@ -505,7 +505,7 @@ namespace Karaboss
             string tx = Karaboss.Resources.Localization.Strings.DeleteAllLyrics;            
             if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
             {
-                frmPlayer frmPlayer = GetForm<frmPlayer>();
+                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                 frmPlayer.DeleteAllLyrics();
 
                 localplLyrics = new List<plLyric>();
@@ -549,7 +549,7 @@ namespace Karaboss
                     int pTime = Convert.ToInt32(dgView.Rows[Row].Cells[COL_TICKS].Value);
                     if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                     {
-                        frmPlayer frmPlayer = GetForm<frmPlayer>();
+                        frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                         frmPlayer.FirstPlaySong(pTime);
                     }
                 }
@@ -925,18 +925,7 @@ namespace Karaboss
             Text = "Karaboss - " + Strings.EditWords  + " - " + displayName;
         }
 
-
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
-
+        
         /// <summary>
         /// Display modifications into a textbox
         /// </summary>
@@ -1802,7 +1791,7 @@ namespace Karaboss
                 {
                     if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                     {
-                        frmPlayer frmPlayer = GetForm<frmPlayer>();
+                        frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                         frmPlayer.bfilemodified = false;
                     }
                 }
@@ -2000,7 +1989,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
-                frmPlayer frmPlayer = GetForm<frmPlayer>();
+                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                 frmPlayer.ReplaceLyrics(l, ltype, melodytracknum);
             }
         }
@@ -2887,7 +2876,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
-                frmPlayer frmPlayer = GetForm<frmPlayer>();
+                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                 frmPlayer.InitSaveFile(fullName);
 
                 // Reset title
@@ -2948,7 +2937,7 @@ namespace Karaboss
 
                 if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                 {
-                    frmPlayer frmPlayer = GetForm<frmPlayer>();
+                    frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                     frmPlayer.InitSaveFile(fileName);
 
                     bfilemodified = false;
@@ -3166,7 +3155,7 @@ namespace Karaboss
 
                 if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                 {
-                    frmPlayer frmPlayer = GetForm<frmPlayer>();                    
+                    frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();                    
                     frmPlayer.FileModified();
                 }
                 MessageBox.Show("Tags saved successfully", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);               

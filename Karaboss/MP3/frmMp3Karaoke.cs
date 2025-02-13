@@ -826,24 +826,9 @@ namespace Karaboss.Mp3
         {            
             if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
             {
-                frmMp3Player frmMp3Player = GetForm<frmMp3Player>();
+                frmMp3Player frmMp3Player = Utilities.FormUtilities.GetForm<frmMp3Player>();
                 frmMp3Player.ExportLyricsTags();
             }
-        }
-
-
-        #region Locate form
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
-
-        #endregion Locate form
+        }        
     }
 }

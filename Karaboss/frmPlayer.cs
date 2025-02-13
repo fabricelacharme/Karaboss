@@ -2928,7 +2928,7 @@ namespace Karaboss
                 // Active le formulaire frmExplorer
                 if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
                 {
-                    frmExplorer = GetForm<frmExplorer>();
+                    frmExplorer = Utilities.FormUtilities.GetForm<frmExplorer>();
                     frmExplorer.RefreshExplorer( Path.GetFileName(MIDIfileName));
                 }
 
@@ -2976,7 +2976,7 @@ namespace Karaboss
                 // Active le formulaire frmExplorer
                 if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
                 {
-                    frmExplorer = GetForm<frmExplorer>();
+                    frmExplorer = Utilities.FormUtilities.GetForm<frmExplorer>();
                     frmExplorer.RefreshExplorer();
                 }
             }
@@ -6602,7 +6602,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
             {
-                frmExplorer = GetForm<frmExplorer>();
+                frmExplorer = Utilities.FormUtilities.GetForm<frmExplorer>();
                 frmExplorer.DisplaySong(song);
             }
         }
@@ -8771,21 +8771,7 @@ namespace Karaboss
 
         #endregion Save File
 
-
-        #region Locate form
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
-
-        #endregion Locate form
-
+      
         #endregion Utilities
     }
 

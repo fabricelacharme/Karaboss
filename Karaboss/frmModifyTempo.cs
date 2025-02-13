@@ -309,7 +309,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
-                frmPlayer frmPlayer = getForm<frmPlayer>();
+                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                 frmPlayer.ScrollTo(_tempoSymbol.StartTime);
             }
         }
@@ -460,7 +460,7 @@ namespace Karaboss
         {
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
-                frmPlayer frmPlayer = getForm<frmPlayer>();
+                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                 frmPlayer.UpdateTimes();
             }
         }
@@ -545,19 +545,7 @@ namespace Karaboss
         {
             //int test;
             return int.TryParse(input, out int test);
-        }
-
-
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private T getForm<T>()
-        where T : Form
-        {
-            return (T)Application.OpenForms.OfType<T>().FirstOrDefault();
-        }
+        }        
 
         #endregion functions
 
