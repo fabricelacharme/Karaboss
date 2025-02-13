@@ -5402,32 +5402,6 @@ namespace Karaboss
         /// <param name="channel"></param>
         private void CreateNewMelody(Track track, int measures)
         {
-            #region old code
-            /*
-            int noteC = 60;
-            int ticks = 0;
-            int number = noteC;
-            int division = sequence1.Division;
-            int duration = 1 * division;
-
-            int nbblacks = measures * sequence1.Numerator * 4 / sequence1.Denominator;
-
-            // Ajoute une note au ticks = 0           
-            ticks = 0;
-            int velocity = Karaclass.m_Velocity;
-
-            MidiNote note = new MidiNote(ticks, channel, number, duration, velocity, false);
-            
-
-            // Ajoute une note au ticks -1
-            ticks = (nbblacks - 1) * division;
-            note = new MidiNote(ticks, channel, number, duration, velocity, false);
-            track.addNote(note);
-
-            track.Volume = 80;
-            */
-            #endregion old code
-
             SetTrackLength(track, measures);
 
         }
@@ -5449,21 +5423,7 @@ namespace Karaboss
             // ticks + 1            
             int ticks = _measurelen * measures;
 
-            /*
-            var split = BitConverter.GetBytes(0);
-            byte[] bytes = new byte[3];
-            bytes[0] = split[2]; //11;
-            bytes[1] = split[1]; //113;
-            bytes[2] = split[0]; //176;
-
-            MetaMessage mtMsg = new MetaMessage(MetaType.EndOfTrack, bytes);
-            track.Insert(ticks, mtMsg);            
-            //track.OffsetEndOfTrack(ticks);
-            */
-
             track.EndOfTrackOffset = ticks - 1;
-
-
 
         }
 
@@ -6306,6 +6266,7 @@ namespace Karaboss
         /// </summary>
         private void GetPeakVolume()
         {
+            
             float? peak = AudioControl.AudioManager.GetApplicationMasterPeakVolume(outDeviceProcessId);
             VuMasterPeakVolume.Level = Convert.ToInt32(peak);
         }

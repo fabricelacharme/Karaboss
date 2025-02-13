@@ -1593,6 +1593,12 @@ namespace Karaboss
 
             Cursor.Current = Cursors.WaitCursor;
 
+            // Close form frmMp3Player
+            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            {
+                Application.OpenForms["frmPlayer"].Close();
+            }
+
             // Affiche le formulaire frmCDGPlayer 
             if (Application.OpenForms["frmMp3Player"] == null)
             {
@@ -1622,6 +1628,13 @@ namespace Karaboss
                     MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);                    
                     return;
                 }
+            }
+
+
+            // Close form frmMp3Player
+            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+            {
+                Application.OpenForms["frmMp3Player"].Close();
             }
 
             Cursor.Current = Cursors.WaitCursor;
@@ -1686,6 +1699,12 @@ namespace Karaboss
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
                 Application.OpenForms["frmPlayer"].Close();
+            }
+
+            // Close form frmMp3Player
+            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+            {
+                Application.OpenForms["frmMp3Player"].Close();
             }
 
             #endregion
@@ -1773,6 +1792,13 @@ namespace Karaboss
                 Application.OpenForms["frmChords"].Close();
             }
 
+            // Close form frmMp3Player
+            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+            {
+                Application.OpenForms["frmMp3Player"].Close();
+            }
+
+
             #endregion
 
             // Affiche le formulaire frmPlay             
@@ -1846,6 +1872,12 @@ namespace Karaboss
             if (Application.OpenForms.OfType<frmChords>().Count() > 0)
             {
                 Application.OpenForms["frmChords"].Close();
+            }
+
+            // Close form frmMp3Player
+            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+            {
+                Application.OpenForms["frmMp3Player"].Close();
             }
             #endregion
 
@@ -1947,6 +1979,12 @@ namespace Karaboss
             if (Application.OpenForms.OfType<frmChords>().Count() > 0)
             {
                 Application.OpenForms["frmChords"].Close();
+            }
+
+            // Close form frmMp3Player
+            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+            {
+                Application.OpenForms["frmMp3Player"].Close();
             }
             #endregion
 
