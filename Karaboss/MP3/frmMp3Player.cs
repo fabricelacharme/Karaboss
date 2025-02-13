@@ -2,11 +2,14 @@
 using Karaboss.mp3;
 using Karaboss.MP3;
 using Karaboss.Resources.Localization;
+using MP3GConverter;
 using System;
 using System.ComponentModel;
+using System.Diagnostics.Tracing;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using TagLib;
 using TagLib.Id3v2;
@@ -18,7 +21,16 @@ namespace Karaboss
 {
     public partial class frmMp3Player : Form
     {
-              
+
+        private enum Mp3LyricsTypes
+        {
+            None,
+            LyricsWithTimeStamps,
+            LRCFile,
+            LyricsWithoutTimeStamps,            
+        }
+        private Mp3LyricsTypes Mp3LyricsType;
+
         /// <summary>
         /// Player status
         /// </summary>
@@ -641,6 +653,10 @@ namespace Karaboss
 
 
         #region Display lyrics
+
+
+       
+
         private void DisplayOtherInfos(string FileName)
         {
             Player.GetMp3Infos(Mp3FullPath);
@@ -649,86 +665,194 @@ namespace Karaboss
 
             if (Tag == null) return;
 
+            Mp3LyricsType = Mp3LyricsTypes.None;
 
-            // Lyrivs with time stamps
+
+            string lrcfile = string.Empty;
+            string TagLyrics = string.Empty;
+            string TagSubTitles = string.Empty;
+            string[] Lyrics;
+            long[] Times;
+
+            // 1. Lyrics with time stamps
             TagLib.Id3v2.SynchronisedLyricsFrame SyncLyricsFrame = Player.SyncLyricsFrame;
 
 
-            if (SyncLyricsFrame != null && SyncLyricsFrame.Text.Count() > 0)
+            // 1. Lyrics with time stamps
+            if (SyncLyricsFrame != null && SyncLyricsFrame.Text.Count() > 0)            
+                Mp3LyricsType = Mp3LyricsTypes.LyricsWithTimeStamps;
+
+
+            // 2. LRC file with the same name
+            if (Mp3LyricsType == Mp3LyricsTypes.None)
             {
-                string tx = string.Empty;
-                string words = string.Empty;
+                lrcfile = Path.ChangeExtension(FileName, ".lrc");
+                if (System.IO.File.Exists(lrcfile))
+                    Mp3LyricsType = Mp3LyricsTypes.LRCFile;
+            }
+
+            // 3. Simple lyrics without time stamps
+            if (Mp3LyricsType == Mp3LyricsTypes.None)
+            {                
+                TagLyrics = Tag.Lyrics;
+                TagSubTitles = Tag.Subtitle;
+                if (TagLyrics != null && TagLyrics.Trim() != "" || TagSubTitles != null && TagSubTitles.Trim() != "")
+                    Mp3LyricsType = Mp3LyricsTypes.LyricsWithoutTimeStamps;
+            }
+
+           
+            // Display sync lyrics
+            if (Mp3LyricsType == Mp3LyricsTypes.LyricsWithTimeStamps)
+            {                
                 string lyric;
-                long time;
-                string cr = "\r\n";
+                long time;                
 
-                string[] Lyrics = new string[SyncLyricsFrame.Text.Count()];
-                long[] Times = new long[SyncLyricsFrame.Text.Count()];
+                Lyrics = new string[SyncLyricsFrame.Text.Count()];
+                Times = new long[SyncLyricsFrame.Text.Count()];
 
+                bool bHasLineFeeds = false;
+                // 1. Search for linefeed
                 for (int i = 0; i < SyncLyricsFrame.Text.Count(); i++)
                 {
                     lyric = SyncLyricsFrame.Text[i].Text;
-
-                    if (lyric.Trim() != "")
+                    if (lyric.IndexOf("\r") >= 0 || lyric.IndexOf("\n") >= 0 )
                     {
-                        if (lyric.StartsWith("\r") || lyric.StartsWith("\n"))
-                            lyric = "\r\n" + lyric.Substring(1);
-
-                        if (lyric.EndsWith("\r") || lyric.EndsWith("\n"))
-                        
-                            lyric = "\r\n" + lyric.Substring(0, lyric.Length - 1);
-
-
+                        bHasLineFeeds = true;
+                        break;
                     }
+                }
 
-                    time = SyncLyricsFrame.Text[i].Time;
-
-                    //words += lyric;
-
-                    Lyrics[i] = lyric;
-                    Times[i] = time;
-                    /*
-                    if (lyric.Trim() != "")
+                // 2. Display lyrics
+                // If linefeeds, display lyrics with linefeeds
+                if (bHasLineFeeds)
+                {
+                    for (int i = 0; i < SyncLyricsFrame.Text.Count(); i++)
                     {
-                        tx += "[" + time + "]" + lyric;
+                        lyric = SyncLyricsFrame.Text[i].Text;
+                        time = SyncLyricsFrame.Text[i].Time;
+
+                        if (lyric.Trim() != "")
+                        {
+                            if (lyric.StartsWith("\r") || lyric.StartsWith("\n"))
+                                lyric = "\r\n" + lyric.Substring(1);
+
+                            if (lyric.EndsWith("\r") || lyric.EndsWith("\n"))
+
+                                lyric = "\r\n" + lyric.Substring(0, lyric.Length - 1);
+                        }
+                        Lyrics[i] = lyric;
+                        Times[i] = time;
                     }
-                    */
+                }
+                else
+                {
+                    // If no linefeeds, display lyrics with \r\n
+                    for (int i = 0; i < SyncLyricsFrame.Text.Count(); i++)
+                    {
+                        lyric = "\r\n" + SyncLyricsFrame.Text[i].Text.Trim();
+                        time = SyncLyricsFrame.Text[i].Time;
+                        Lyrics[i] = lyric;
+                        Times[i] = time;
+                    }
                 }
                 
-
                 frmMp3Karaoke = new frmMp3Karaoke(Lyrics, Times);
                 frmMp3Karaoke.Show();
                 StartKaraoke();
-            }
-
-            else
+            }            
+            else if (Mp3LyricsType == Mp3LyricsTypes.LRCFile)
             {
-                string l = Tag.Lyrics;
-                string s = Tag.Subtitle;
-                if (l != null && l.Trim() != "" || s != null && s.Trim() != "")
+                string line;
+                string lyric;
+                string stime;
+                long time;
+
+                // Load Lrc file into list of lines                
+                string[] lines = System.IO.File.ReadAllLines(lrcfile);
+                for (int i = 0; i < lines.Length; i++)
                 {
+                    // Extract lyrics and time stamps
+                    line = lines[i];
+                    Regex r = new Regex(@"\[\d{2}:\d{2}.\d{3}\]");
+                    MatchCollection mc = r.Matches(line);
+                    if (mc.Count > 0)
+                    {
+                        // Extract time
+                        stime = mc[0].Value;                        
+                        // Extract lyrics
+                        lyric = line.Substring(mc[0].Index + stime.Length);
 
+                        // Convert stime to long
+                        stime = stime.Substring(1, stime.Length - 2);
+                        time = (long)TimeToMs(stime);
 
+                        //Lyrics.Add
+                        //Lyrics[i] = lyric;
+                        //Times[i] = TimeToMs(time);
+                    }
+
+                }
+
+            }
+            else if (Mp3LyricsType == Mp3LyricsTypes.LyricsWithTimeStamps)
+            {
                     frmMp3Lyrics = new frmMp3Lyrics();
                     frmMp3Lyrics.Show();
 
                     string tx = string.Empty;
-                    if (l != null)
-                        tx += l;
-                    if (s != null)
-                        tx += s;
+                    if (TagLyrics != null)
+                        tx += TagLyrics;
+                    if (TagSubTitles != null)
+                        tx += TagSubTitles;
 
                     frmMp3Lyrics.DisplayText(tx);
-                }
-                else
+            }
+            else
+            {
+                // Close form if exists
+                if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 {
-                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                    {
-                        Application.OpenForms["frmMp3Lyrics"].Close();
-                    }
+                    Application.OpenForms["frmMp3Lyrics"].Close();
                 }
             }
+            
 
+        }
+
+        /// <summary>
+        /// Convert a time stamp 01:15.510 (min 2digits, sec 2 digits, ms 3 digits) to milliseconds
+        /// </summary>
+        /// <param name="stime"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private double TimeToMs(string time)
+        {
+            double dur =0;
+
+            string[] split1 = time.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split1.Length != 2)
+                return 0;
+
+            string min = split1[0];
+
+            string[] split2 = split1[1].Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split2.Length != 2)
+                return 0;
+
+            string sec = split2[0];
+            string ms = split2[1];
+
+            // Calculate dur in seconds
+            int Min = Convert.ToInt32(min);
+            dur = Min * 60;
+
+            int Sec = Convert.ToInt32(sec);
+            dur += Sec * 1000;
+
+            double Ms = Convert.ToDouble(ms);
+            dur += Ms;
+
+            return dur;
         }
 
         #endregion Display lyrics
