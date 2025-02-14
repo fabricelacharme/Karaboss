@@ -21,11 +21,23 @@ namespace Karaboss.Mp3.Mp3Lyrics
         LyricsWithoutTimeStamps,
     }
 
-     
+    public struct SyncText
+    {
+        public long Time { get; set; }
+        public string Text { get; set; }
+        public SyncText(long time, string text)
+        {
+            Time = time;
+            Text = text;
+        }
+    }
+
     public static class Mp3LyricsMgmtHelper
     {
 
-        public static (string[], long[]) SyncLyrics;
+        //public static (long[], string[]) SyncLyrics;        
+        public static SyncText[] SyncTexts;
+        public static SynchronisedLyricsFrame MySyncLyricsFrame;
 
 
         /// <summary>
@@ -109,15 +121,13 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// </summary>
         /// <param name="SyncLyricsFrame"></param>
         /// <returns></returns>
-        public static (string[], long[]) GetSyncLyrics(SynchronisedLyricsFrame SyncLyricsFrame)
+        public static SyncText[] GetSyncLyrics(SynchronisedLyricsFrame SyncLyricsFrame)
         {
-            string[] Lyrics;
-            long[] Times;
+            SyncText[] synchedTexts;
             string lyric;
             long time;
 
-            Lyrics = new string[SyncLyricsFrame.Text.Count()];
-            Times = new long[SyncLyricsFrame.Text.Count()];
+            synchedTexts = new SyncText[SyncLyricsFrame.Text.Count()];
 
             bool bHasLineFeeds = false;
             // 1. Search for linefeed
@@ -149,8 +159,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
                             lyric = "\r\n" + lyric.Substring(0, lyric.Length - 1);
                     }
-                    Lyrics[i] = lyric;
-                    Times[i] = time;
+                    synchedTexts[i] = new SyncText(time, lyric);
+
                 }
             }
             else
@@ -160,12 +170,11 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 {
                     lyric = "\r\n" + SyncLyricsFrame.Text[i].Text.Trim();
                     time = SyncLyricsFrame.Text[i].Time;
-                    Lyrics[i] = lyric;
-                    Times[i] = time;
+                    synchedTexts[i] = new SyncText(time, lyric);
                 }
             }
-
-            return (Lyrics, Times);
+            
+            return synchedTexts;
 
         }
 
@@ -173,12 +182,13 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// Get lyrics from LRC file
         /// </summary>
         /// <param name="FileName"></param>
-        /// <returns></returns>
-        public static (string[], long[]) GetLrcLyrics(string FileName)
-        {
+        /// <returns></returns>        
+        public static SyncText[] GetLrcLyrics(string FileName)
+        {            
             string lrcFile = Path.ChangeExtension(FileName, ".lrc");
-            if (!System.IO.File.Exists(lrcFile)) return (null, null);
+            if (!System.IO.File.Exists(lrcFile)) return null;
 
+            SyncText[] synchedTexts;
             string[] Lyrics;
             long[] Times;            
             long time;
@@ -229,20 +239,21 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 time = (long)TimeToMs(stime);
 
                 lstLyrics.Add(lyric);
-                lstTimes.Add(time);
-
+                lstTimes.Add(time);                
             }
 
             Lyrics = new string[lstLyrics.Count];
             Times = new long[lstTimes.Count];
+            synchedTexts = new SyncText[lstLyrics.Count];
+
             for (int i = 0; i < lstLyrics.Count; i++)
             {
                 Lyrics[i] = "\r\n" + lstLyrics[i];
                 Times[i] = lstTimes[i];
+                synchedTexts[i] = new SyncText(Times[i], Lyrics[i]);
             }
-
-
-            return (Lyrics, Times);
+            
+            return synchedTexts;
         }
 
 

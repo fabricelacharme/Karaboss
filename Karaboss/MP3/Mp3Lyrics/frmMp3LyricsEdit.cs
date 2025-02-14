@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using TagLib.Id3v2;
 
 namespace Karaboss.Mp3.Mp3Lyrics
 {
@@ -48,6 +49,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
             // Inits
             InitTxtResult();
             InitGridView();
+
+            PopulateDataGridView();
         }
 
         #region Form Load and Close
@@ -149,9 +152,29 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
         private void ResizeMe()
         {
-            
-        }
+            // Adapt width of last column
+            int W = dgView.RowHeadersWidth + 19;
+            int WP = dgView.Parent.Width;
+            for (int i = 0; i < dgView.Columns.Count - 1; i++)
+            {
+                W += dgView.Columns[i].Width;
+            }
+            if (WP - W > 0)
+                dgView.Columns[dgView.Columns.Count - 1].Width = WP - W;
 
+        }
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            // Adapt width of last column
+            int W = dgView.RowHeadersWidth + 19;
+            int WP = dgView.Parent.Width;
+            for (int i = 0; i < dgView.Columns.Count - 1; i++)
+            {
+                W += dgView.Columns[i].Width;
+            }
+            if (WP - W > 0)
+                dgView.Columns[dgView.Columns.Count - 1].Width = WP - W;
+        }
 
         #endregion Form Load and Close
 
@@ -161,6 +184,42 @@ namespace Karaboss.Mp3.Mp3Lyrics
         private void PopulateDataGridView()
         {
 
+            SyncText[] SyncLyrics = Mp3LyricsMgmtHelper.SyncTexts;
+
+            SynchronisedLyricsFrame SynchedLyrics = Mp3LyricsMgmtHelper.MySyncLyricsFrame;
+            /*
+            for (int i = 0; i < SyncLyrics.Length; i++)
+            {
+                long time = SyncLyrics[i].Time;
+                string text = SyncLyrics[i].Text;
+                dgView.Rows.Add(time, text);
+            }
+            */
+
+            if (SynchedLyrics != null)
+            {
+                for (int i = 0; i < SynchedLyrics.Text.Count(); i++)
+                {
+                    string text = SynchedLyrics.Text[i].Text;
+                    text = text.Replace("\r\n", m_SepLine);
+                    text = text.Replace("\r", m_SepLine);
+                    text = text.Replace("\n", m_SepLine);
+
+                    text = text.Replace(" ", "_");
+
+                    long time = SynchedLyrics.Text[i].Time;
+                    dgView.Rows.Add(time, text);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < SyncLyrics.Length; i++)
+                {
+                    long time = SyncLyrics[i].Time;
+                    string text = SyncLyrics[i].Text;
+                    dgView.Rows.Add(time, text);
+                }
+            }
         }
 
 
@@ -277,5 +336,6 @@ namespace Karaboss.Mp3.Mp3Lyrics
         }
         #endregion init
 
+       
     }
 }

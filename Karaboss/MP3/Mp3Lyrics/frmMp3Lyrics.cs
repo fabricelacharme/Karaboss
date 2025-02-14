@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Karaboss.Mp3.Mp3Lyrics;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -60,7 +61,7 @@ namespace Karaboss.Mp3
         //string[] _lyrics;
         //long[] _times;
 
-        public frmMp3Lyrics(string[] Lyrics, long[] Times)
+        public frmMp3Lyrics()
         {
             InitializeComponent();
 
@@ -81,16 +82,29 @@ namespace Karaboss.Mp3
 
             LoadDefaultImage();
 
-            InitializeKaraokeTextHighlighter(Lyrics, Times);
+            LoadLyrics();
+         
+            InitializeKaraokeTextHighlighter();
 
             AddMouseMoveHandler(this);
         }
 
-        private void InitializeKaraokeTextHighlighter(string[] Lyrics, long[] Times)
-        {
-            words = Lyrics; 
-            times = Times;
 
+        private void LoadLyrics()
+        {
+            SyncText[] SyncLyrics = Mp3LyricsMgmtHelper.SyncTexts;
+            words = new string[SyncLyrics.Length];
+            times = new long[SyncLyrics.Length];
+            for (int i = 0; i < SyncLyrics.Length; i++)
+            {
+                words[i] = SyncLyrics[i].Text;
+                times[i] = SyncLyrics[i].Time;
+            }
+        }
+
+
+        private void InitializeKaraokeTextHighlighter()
+        {
             _maxline = GetMaxLineLength();
 
             // Set default font for drawing
