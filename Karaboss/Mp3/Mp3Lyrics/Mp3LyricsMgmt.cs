@@ -20,9 +20,14 @@ namespace Karaboss.Mp3.Mp3Lyrics
         LRCFile,
         LyricsWithoutTimeStamps,
     }
-    
+
+     
     public static class Mp3LyricsMgmtHelper
     {
+
+        public static (string[], long[]) SyncLyrics;
+
+
         /// <summary>
         /// Get lyrics type
         /// </summary>

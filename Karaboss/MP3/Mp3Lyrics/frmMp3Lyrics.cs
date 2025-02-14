@@ -817,12 +817,11 @@ namespace Karaboss.Mp3
         }
 
 
-
-
-        #endregion
-
-
-        
+        /// <summary>
+        /// Export lyrics to text
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnExportLyricsToText_Click(object sender, EventArgs e)
         {            
             if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
@@ -832,6 +831,11 @@ namespace Karaboss.Mp3
             }
         }
 
+        /// <summary>
+        /// Open form frmMp3LyricsEdit
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnEditLyrics_Click(object sender, EventArgs e)
         {
             if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
@@ -840,5 +844,8 @@ namespace Karaboss.Mp3
                 frmMp3Player.DisplayMp3EditLyricsForm();
             }
         }
+
+        #endregion
+
     }
 }

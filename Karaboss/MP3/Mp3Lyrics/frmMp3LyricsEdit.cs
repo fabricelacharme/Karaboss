@@ -13,12 +13,41 @@ namespace Karaboss.Mp3.Mp3Lyrics
 {
     public partial class frmMp3LyricsEdit: Form
     {
-        bool bfilemodified = false; 
+        bool bfilemodified = false;
+
+
+        #region dgView Colors
+
+        Color dgViewHeaderBackColor = Color.FromArgb(43, 87, 151);
+        Color dgViewHeaderForeColor = Color.White;
+        Color dgViewSelectionBackColor = Color.FromArgb(45, 137, 239);
+
+        Color SepLinesColor = Color.FromArgb(239, 244, 255);
+        Color SepParagrColor = Color.LightGray;
+
+        Font dgViewHeaderFont = new Font("Arial", 12F, FontStyle.Regular);
+        Font dgViewCellsFont = new Font("Arial", 16F, GraphicsUnit.Pixel);
+        #endregion dgViewColors
+
+        #region External lyrics separators
+
+        private readonly string m_SepLine = "/";
+        private readonly string m_SepParagraph = "\\";
+
+        #endregion
+
+        // txtResult, BtnFontPlus
+        private Font _lyricseditfont;
+        private float _fontSize = 8.25f;
 
 
         public frmMp3LyricsEdit()
         {
             InitializeComponent();
+
+            // Inits
+            InitTxtResult();
+            InitGridView();
         }
 
         #region Form Load and Close
@@ -127,6 +156,16 @@ namespace Karaboss.Mp3.Mp3Lyrics
         #endregion Form Load and Close
 
 
+        #region Populate gridview
+
+        private void PopulateDataGridView()
+        {
+
+        }
+
+
+        #endregion Populate gridview
+
 
         #region Menu File
         /// <summary>
@@ -141,6 +180,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
         #endregion Menu File
 
+
+        #region buttons
         private void btnInsertText_Click(object sender, EventArgs e)
         {
             InsertTextLine();
@@ -180,5 +221,61 @@ namespace Karaboss.Mp3.Mp3Lyrics
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        #endregion buttons
+
+
+        #region init
+
+        private void InitTxtResult()
+        {
+            txtResult.Font = _lyricseditfont;
+        }
+
+        /// <summary>
+        /// Initialize gridview
+        /// </summary>
+        private void InitGridView()
+        {
+            dgView.Rows.Clear();
+            dgView.Refresh();
+
+            // Header color
+            dgView.ColumnHeadersDefaultCellStyle.BackColor = dgViewHeaderBackColor;
+            dgView.ColumnHeadersDefaultCellStyle.ForeColor = dgViewHeaderForeColor;
+
+            dgView.ColumnHeadersDefaultCellStyle.Font = dgViewHeaderFont;
+            dgView.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dgView.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+
+            // Selection
+            dgView.DefaultCellStyle.SelectionBackColor = dgViewSelectionBackColor;
+
+            dgView.EnableHeadersVisualStyles = false;
+         
+            // Chords edition
+            dgView.ColumnCount = 2;
+
+            dgView.Columns[0].Name = "dTime";
+            dgView.Columns[0].HeaderText = "Time";
+            dgView.Columns[0].ToolTipText = "Time";
+            dgView.Columns[0].Width = 80;
+
+            dgView.Columns[1].Name = "dText";
+            dgView.Columns[1].HeaderText = "Text";
+            dgView.Columns[1].ToolTipText = "Text";
+            dgView.Columns[1].Width = 200;                     
+
+            //Change cell font
+            foreach (DataGridViewColumn c in dgView.Columns)
+            {
+                c.SortMode = DataGridViewColumnSortMode.NotSortable;                     // header not sortable
+                c.DefaultCellStyle.Font = dgViewCellsFont;
+                c.ReadOnly = false;
+            }
+        }
+        #endregion init
+
     }
 }

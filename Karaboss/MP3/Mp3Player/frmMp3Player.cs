@@ -652,6 +652,9 @@ namespace Karaboss.Mp3
 
         #region Display lyrics
 
+        /// <summary>
+        /// Display form frmMp3LyricsEdit
+        /// </summary>
         public void DisplayMp3EditLyricsForm()
         {
             // Display lyrics editor
@@ -686,6 +689,10 @@ namespace Karaboss.Mp3
             Mp3LyricsMgmtHelper.ExportSyncLyricsToText(SyncLyricsFrame);  
         }
 
+        /// <summary>
+        /// Display lyrics
+        /// </summary>
+        /// <param name="FileName"></param>
         private void DisplayOtherInfos(string FileName)
         {
             Player.GetMp3Infos(Mp3FullPath);
@@ -714,15 +721,18 @@ namespace Karaboss.Mp3
             {
                 case Mp3LyricsTypes.LyricsWithTimeStamps:
                     (Lyrics, Times) = Mp3LyricsMgmtHelper.GetSyncLyrics(SyncLyricsFrame);
+                    Mp3LyricsMgmtHelper.SyncLyrics = (Lyrics, Times);
                     DisplayFrmKaraoke(Lyrics, Times);
                     break;
 
                 case Mp3LyricsTypes.LRCFile:
                     (Lyrics, Times) = Mp3LyricsMgmtHelper.GetLrcLyrics(FileName);
+                    Mp3LyricsMgmtHelper.SyncLyrics = (Lyrics, Times);
                     DisplayFrmKaraoke(Lyrics, Times);
                     break;
                 
                 case Mp3LyricsTypes.LyricsWithoutTimeStamps:
+                    Mp3LyricsMgmtHelper.SyncLyrics = (null, null);
                     string tx = string.Empty;
                     if (TagLyrics != null)
                         tx += TagLyrics;
@@ -731,6 +741,7 @@ namespace Karaboss.Mp3
                     DisplayFrmSimpleLyrics(tx);
                     break;
                 default:
+                    Mp3LyricsMgmtHelper.SyncLyrics = (null, null);
                     // Close form if exists
                     if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                         Application.OpenForms["frmMp3Lyrics"].Close();
