@@ -1,6 +1,6 @@
 ﻿namespace Karaboss.Mp3
 {
-    partial class frmMp3Lyrics
+    partial class frmMp3LyricsSimple
     {
         /// <summary>
         /// Required designer variable.

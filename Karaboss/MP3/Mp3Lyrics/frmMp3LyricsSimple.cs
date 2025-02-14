@@ -2,9 +2,9 @@
 
 namespace Karaboss.Mp3
 {
-    public partial class frmMp3Lyrics : Form
+    public partial class frmMp3LyricsSimple : Form
     {
-        public frmMp3Lyrics()
+        public frmMp3LyricsSimple()
         {
             InitializeComponent();
         }

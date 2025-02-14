@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Karaboss.Mp3
 {
-    public partial class frmMp3Karaoke : Form, IMessageFilter
+    public partial class frmMp3Lyrics : Form, IMessageFilter
     {
 
         #region Move form without title bar
@@ -60,7 +60,7 @@ namespace Karaboss.Mp3
         //string[] _lyrics;
         //long[] _times;
 
-        public frmMp3Karaoke(string[] Lyrics, long[] Times)
+        public frmMp3Lyrics(string[] Lyrics, long[] Times)
         {
             InitializeComponent();
 
@@ -277,7 +277,7 @@ namespace Karaboss.Mp3
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMp3Karaoke));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMp3Lyrics));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.btnEditLyrics = new System.Windows.Forms.Button();
             this.btnExportLyricsToText = new System.Windows.Forms.Button();
@@ -308,6 +308,7 @@ namespace Karaboss.Mp3
             this.btnEditLyrics.TabStop = false;
             this.toolTip1.SetToolTip(this.btnEditLyrics, resources.GetString("btnEditLyrics.ToolTip"));
             this.btnEditLyrics.UseVisualStyleBackColor = false;
+            this.btnEditLyrics.Click += new System.EventHandler(this.btnEditLyrics_Click);
             // 
             // btnExportLyricsToText
             // 
@@ -420,7 +421,7 @@ namespace Karaboss.Mp3
             this.pnlWindow.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlWindow_MouseUp);
             this.pnlWindow.Resize += new System.EventHandler(this.pnlWindow_Resize);
             // 
-            // frmMp3Karaoke
+            // frmMp3Lyrics
             // 
             resources.ApplyResources(this, "$this");
             this.ControlBox = false;
@@ -430,10 +431,10 @@ namespace Karaboss.Mp3
             this.DoubleBuffered = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmMp3Karaoke";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMp3Karaoke_FormClosing);
-            this.Load += new System.EventHandler(this.frmMp3Karaoke_Load);
-            this.Resize += new System.EventHandler(this.frmMp3Karaoke_Resize);
+            this.Name = "frmMp3Lyrics";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMp3Lyrics_FormClosing);
+            this.Load += new System.EventHandler(this.frmMp3Lyrics_Load);
+            this.Resize += new System.EventHandler(this.frmMp3Lyrics_Resize);
             this.pnlTop.ResumeLayout(false);
             this.pnlTitle.ResumeLayout(false);
             this.pnlTitle.PerformLayout();
@@ -445,7 +446,7 @@ namespace Karaboss.Mp3
 
 
         #region Form Events
-        private void frmMp3Karaoke_FormClosing(object sender, FormClosingEventArgs e)
+        private void frmMp3Lyrics_FormClosing(object sender, FormClosingEventArgs e)
         {
             // enregistre la taille et la position de la forme
             // Copy window location to app settings                
@@ -453,15 +454,15 @@ namespace Karaboss.Mp3
             {
                 if (WindowState == FormWindowState.Maximized)
                 {
-                    Properties.Settings.Default.frmMp3KaraokeLocation = RestoreBounds.Location;
-                    Properties.Settings.Default.frmMp3KaraokeMaximized = true;
+                    Properties.Settings.Default.frmMp3LyricsLocation = RestoreBounds.Location;
+                    Properties.Settings.Default.frmMp3LyricsMaximized = true;
 
                 }
                 else if (WindowState == FormWindowState.Normal)
                 {
-                    Properties.Settings.Default.frmMp3KaraokeLocation = Location;
-                    Properties.Settings.Default.frmMp3KaraokeSize = Size;
-                    Properties.Settings.Default.frmMp3KaraokeMaximized = false;
+                    Properties.Settings.Default.frmMp3LyricsLocation = Location;
+                    Properties.Settings.Default.frmMp3LyricsSize = Size;
+                    Properties.Settings.Default.frmMp3LyricsMaximized = false;
                 }
 
                 // Save settings
@@ -469,18 +470,18 @@ namespace Karaboss.Mp3
             }
         }
 
-        private void frmMp3Karaoke_Load(object sender, EventArgs e)
+        private void frmMp3Lyrics_Load(object sender, EventArgs e)
         {
             // Récupère la taille et position de la forme
             // Set window location
-            if (Properties.Settings.Default.frmMp3KaraokeMaximized)
+            if (Properties.Settings.Default.frmMp3LyricsMaximized)
             {
-                Location = Properties.Settings.Default.frmMp3KaraokeLocation;
+                Location = Properties.Settings.Default.frmMp3LyricsLocation;
                 WindowState = FormWindowState.Maximized;
             }
             else
             {
-                Location = Properties.Settings.Default.frmMp3KaraokeLocation;
+                Location = Properties.Settings.Default.frmMp3LyricsLocation;
                 // Verify if this windows is visible in extended screens
                 Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
                 foreach (Screen screen in Screen.AllScreens)
@@ -491,11 +492,11 @@ namespace Karaboss.Mp3
                 if (Location.Y > rect.Height)
                     Location = new Point(Location.X, 0);
 
-                Size = Properties.Settings.Default.frmMp3KaraokeSize;
+                Size = Properties.Settings.Default.frmMp3LyricsSize;
             }
         }
 
-        private void frmMp3Karaoke_Resize(object sender, EventArgs e)
+        private void frmMp3Lyrics_Resize(object sender, EventArgs e)
         {
             AjustText(_maxline);
             lineHeight = _karaokeFont.GetHeight();
@@ -829,6 +830,15 @@ namespace Karaboss.Mp3
                 frmMp3Player frmMp3Player = Utilities.FormUtilities.GetForm<frmMp3Player>();
                 frmMp3Player.ExportLyricsTags();
             }
-        }        
+        }
+
+        private void btnEditLyrics_Click(object sender, EventArgs e)
+        {
+            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+            {
+                frmMp3Player frmMp3Player = Utilities.FormUtilities.GetForm<frmMp3Player>();
+                frmMp3Player.DisplayMp3EditLyricsForm();
+            }
+        }
     }
 }

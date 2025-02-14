@@ -377,8 +377,8 @@ namespace Karaboss
             int plTicksOn = 0;
             string plRealTime = "00:00.00";
             int pNote = 0;
-            string pElement; // = string.Empty;
-            string pReplace; // = string.Empty;
+            string pElement; 
+            string pReplace; 
 
             if (dgView.Rows[Row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[Row].Cells[COL_TICKS].Value.ToString()))
             {

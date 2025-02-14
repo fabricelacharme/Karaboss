@@ -21,6 +21,7 @@ namespace Karaboss.Mp3
 
        
         private Mp3LyricsTypes Mp3LyricsType;
+        public bool bfilemodified = false;
 
         /// <summary>
         /// Player status
@@ -72,8 +73,8 @@ namespace Karaboss.Mp3
         private PlaylistItem currentPlaylistItem;
 
         //forms
+        private frmMp3LyricsSimple frmMp3LyricsSimple;
         private frmMp3Lyrics frmMp3Lyrics;
-        private frmMp3Karaoke frmMp3Karaoke;
 
         public frmMp3Player(string FileName, Playlist myPlayList, bool bplay)
         {
@@ -172,15 +173,21 @@ namespace Karaboss.Mp3
                 Properties.Settings.Default.Save();
             }
 
+            if (Application.OpenForms.OfType<frmMp3LyricsSimple>().Count() > 0)
+            {
+                Application.OpenForms["frmMp3LyricsSimple"].Close();
+            }
+
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
             {
                 Application.OpenForms["frmMp3Lyrics"].Close();
             }
 
-            if (Application.OpenForms.OfType<frmMp3Karaoke>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMp3LyricsEdit>().Count() > 0)
             {
-                Application.OpenForms["frmMp3Karaoke"].Close();
+                Application.OpenForms["frmMp3LyricsEdit"].Close();
             }
+
 
             // Active le formulaire frmExplorer
             if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
@@ -645,6 +652,31 @@ namespace Karaboss.Mp3
 
         #region Display lyrics
 
+        public void DisplayMp3EditLyricsForm()
+        {
+            // Display lyrics editor
+            if (Application.OpenForms.OfType<frmMp3LyricsEdit>().Count() == 0)
+            {
+                try
+                {
+                    frmMp3LyricsEdit frmMp3LyricsEdit;
+                    frmMp3LyricsEdit = new frmMp3LyricsEdit();
+                    frmMp3LyricsEdit.Show();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                }
+            }
+            else
+            {
+                if (Application.OpenForms["frmMp3LyricsEdit"].WindowState == FormWindowState.Minimized)
+                    Application.OpenForms["frmMp3LyricsEdit"].WindowState = FormWindowState.Normal;
+                Application.OpenForms["frmMp3LyricsEdit"].Show();
+                Application.OpenForms["frmMp3LyricsEdit"].Activate();
+            }
+        }
+
         /// <summary>
         /// Export mp3 Lyrics tags to a text file
         /// </summary>
@@ -700,11 +732,11 @@ namespace Karaboss.Mp3
                     break;
                 default:
                     // Close form if exists
-                    if (Application.OpenForms.OfType<frmMp3Karaoke>().Count() > 0)
-                        Application.OpenForms["frmMp3Karaoke"].Close();
-
-                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)                    
+                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                         Application.OpenForms["frmMp3Lyrics"].Close();
+
+                    if (Application.OpenForms.OfType<frmMp3LyricsSimple>().Count() > 0)                    
+                        Application.OpenForms["frmMp3LyricsSimple"].Close();
                     
                     break;
             }
@@ -723,8 +755,8 @@ namespace Karaboss.Mp3
             {
                 Application.OpenForms["frmMp3Lyrics"].Close();
             }
-            frmMp3Karaoke = new frmMp3Karaoke(Lyrics, Times);
-            frmMp3Karaoke.Show();
+            frmMp3Lyrics = new frmMp3Lyrics(Lyrics, Times);
+            frmMp3Lyrics.Show();
             StartKaraoke();
         }
 
@@ -734,13 +766,13 @@ namespace Karaboss.Mp3
         /// <param name="Lyrics"></param>
         private void DisplayFrmSimpleLyrics(string Lyrics)
         {
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMp3LyricsSimple>().Count() > 0)
             {
-                Application.OpenForms["frmMp3Lyrics"].Close();
+                Application.OpenForms["frmMp3LyricsSimple"].Close();
             }
-            frmMp3Lyrics = new frmMp3Lyrics();
-            frmMp3Lyrics.Show();
-            frmMp3Lyrics.DisplayText(Lyrics);
+            frmMp3LyricsSimple = new frmMp3LyricsSimple();
+            frmMp3LyricsSimple.Show();
+            frmMp3LyricsSimple.DisplayText(Lyrics);
         }
 
        
@@ -932,9 +964,9 @@ namespace Karaboss.Mp3
             UpdatePlayListsForm(currentPlaylistItem.Song);
 
             // close frmKaraoke
-            if (Application.OpenForms.OfType<frmMp3Karaoke>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
             {
-                frmMp3Karaoke.Close();
+                frmMp3Lyrics.Close();
             }
 
             PlayerState = PlayerStates.Playing;
@@ -976,9 +1008,9 @@ namespace Karaboss.Mp3
             UpdatePlayListsForm(currentPlaylistItem.Song);
 
             // close frmKaraoke
-            if (Application.OpenForms.OfType<frmMp3Karaoke>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
             {
-                frmMp3Karaoke.Close();
+                frmMp3Lyrics.Close();
             }
 
             PlayerState = PlayerStates.Playing;
@@ -1231,21 +1263,21 @@ namespace Karaboss.Mp3
         {
             if (Player == null) return;
 
-            if (Application.OpenForms.OfType<frmMp3Karaoke>().Count() > 0)
-                frmMp3Karaoke.GetPositionFromPlayer(pos);
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                frmMp3Lyrics.GetPositionFromPlayer(pos);
 
         }
 
         private void StopKaraoke()
         {
-            if (Application.OpenForms.OfType<frmMp3Karaoke>().Count() > 0)
-                frmMp3Karaoke.Stop();
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                frmMp3Lyrics.Stop();
         }
 
         private void StartKaraoke()
         {
-            if (Application.OpenForms.OfType<frmMp3Karaoke>().Count() > 0)
-                frmMp3Karaoke.Start();
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                frmMp3Lyrics.Start();
         }
 
         #endregion Timer

@@ -186,22 +186,28 @@
     <Compile Include="MidiLyrics\frmLrcOptions.Designer.cs">
       <DependentUpon>frmLrcOptions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Mp3\frmMp3Karaoke.cs">
+    <Compile Include="Mp3\Mp3Lyrics\frmMp3Lyrics.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Mp3\frmMp3Karaoke.Designer.cs">
-      <DependentUpon>frmMp3Karaoke.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Mp3\frmMp3Lyrics.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Mp3\frmMp3Lyrics.Designer.cs">
+    <Compile Include="Mp3\Mp3Lyrics\frmMp3Lyrics.Designer.cs">
       <DependentUpon>frmMp3Lyrics.cs</DependentUpon>
     </Compile>
-    <Compile Include="Mp3\frmMp3Player.cs">
+    <Compile Include="Mp3\Mp3Lyrics\frmMp3LyricsSimple.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Mp3\frmMp3Player.Designer.cs">
+    <Compile Include="Mp3\Mp3Lyrics\frmMp3LyricsSimple.Designer.cs">
+      <DependentUpon>frmMp3LyricsSimple.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mp3\Mp3Lyrics\frmMp3LyricsEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Mp3\Mp3Lyrics\frmMp3LyricsEdit.Designer.cs">
+      <DependentUpon>frmMp3LyricsEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mp3\Mp3Player\frmMp3Player.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Mp3\Mp3Player\frmMp3Player.Designer.cs">
       <DependentUpon>frmMp3Player.cs</DependentUpon>
     </Compile>
     <Compile Include="Mp3\Mp3Lyrics\Mp3LyricsMgmt.cs" />
@@ -610,16 +616,19 @@
     <EmbeddedResource Include="GuitarTraining\TextBlock.resx">
       <DependentUpon>TextBlock.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Mp3\frmMp3Karaoke.resx">
-      <DependentUpon>frmMp3Karaoke.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Mp3\frmMp3Lyrics.resx">
+    <EmbeddedResource Include="Mp3\Mp3Lyrics\frmMp3Lyrics.resx">
       <DependentUpon>frmMp3Lyrics.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Mp3\frmMp3Player.fr.resx">
+    <EmbeddedResource Include="Mp3\Mp3Lyrics\frmMp3LyricsSimple.resx">
+      <DependentUpon>frmMp3LyricsSimple.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mp3\Mp3Lyrics\frmMp3LyricsEdit.resx">
+      <DependentUpon>frmMp3LyricsEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mp3\Mp3Player\frmMp3Player.fr.resx">
       <DependentUpon>frmMp3Player.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Mp3\frmMp3Player.resx">
+    <EmbeddedResource Include="Mp3\Mp3Player\frmMp3Player.resx">
       <DependentUpon>frmMp3Player.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\ABCnotation\TextPlayer\FrmTextPlayer.resx">
