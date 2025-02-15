@@ -3281,10 +3281,7 @@ namespace Karaboss
         private void ResetOutPutDevice()
         {            
             try
-            {
-                //if (outDevice != null)
-                //    outDevice.Dispose();
-
+            {                
                 outDevice?.Dispose();
                 outDevice = new OutputDevice(outDeviceID);
 

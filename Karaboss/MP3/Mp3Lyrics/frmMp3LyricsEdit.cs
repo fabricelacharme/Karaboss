@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using TagLib;
 using TagLib.Id3v2;
 
 namespace Karaboss.Mp3.Mp3Lyrics
@@ -41,10 +43,13 @@ namespace Karaboss.Mp3.Mp3Lyrics
         private Font _lyricseditfont;
         private float _fontSize = 8.25f;
 
+        private string _filename;
 
-        public frmMp3LyricsEdit()
+        public frmMp3LyricsEdit(string FileName)
         {
             InitializeComponent();
+
+            _filename = FileName;
 
             // Inits
             InitTxtResult();
@@ -181,21 +186,16 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
         #region Populate gridview
 
+        /// <summary>
+        /// Populate gridview with lyrics
+        /// </summary>
         private void PopulateDataGridView()
         {
 
             SyncText[] SyncLyrics = Mp3LyricsMgmtHelper.SyncTexts;
 
             SynchronisedLyricsFrame SynchedLyrics = Mp3LyricsMgmtHelper.MySyncLyricsFrame;
-            /*
-            for (int i = 0; i < SyncLyrics.Length; i++)
-            {
-                long time = SyncLyrics[i].Time;
-                string text = SyncLyrics[i].Text;
-                dgView.Rows.Add(time, text);
-            }
-            */
-
+            
             if (SynchedLyrics != null)
             {
                 for (int i = 0; i < SynchedLyrics.Text.Count(); i++)
@@ -334,8 +334,97 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 c.ReadOnly = false;
             }
         }
+
         #endregion init
 
-       
+
+        #region Save Lyrics
+
+        /// <summary>
+        /// Button: save lyrics
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            string text;
+            string time;
+
+            SyncText[] SyncTexts = new SyncText[dgView.RowCount];
+
+            for (int i = 0; i < dgView.RowCount - 1; i++)
+            {
+                time = dgView.Rows[i].Cells[0].Value.ToString();
+                text = dgView.Rows[i].Cells[1].Value.ToString();
+                SyncTexts[i] = new SyncText(long.Parse(time), text);
+            }
+
+            SaveFrame();
+            return;
+
+            saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Lyrics files (*.lrc)|*.lrc|All files (*.*)|*.*";
+            saveFileDialog.FilterIndex = 1;
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.InitialDirectory = Path.GetDirectoryName(_filename);
+            saveFileDialog.FileName = Path.GetFileNameWithoutExtension(_filename) + ".lrc";
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filename = saveFileDialog.FileName;
+                SaveLyricsToText(SyncTexts, filename);
+            }
+
+        }
+
+        /// <summary>
+        /// Save to text file
+        /// </summary>
+        /// <param name="SyncTexts"></param>
+        /// <param name="filename"></param>
+        private void SaveLyricsToText(SyncText[] SyncTexts, string filename)
+        {
+            try
+            {
+                // Save to text file
+                for (int i = 0; i < SyncTexts.Length; i++)
+                {
+                    if (SyncTexts[i].Text != null && SyncTexts[i].Text != "")
+                    {
+                        string line = SyncTexts[i].Time + " " + SyncTexts[i].Text + "\r\n";
+                        System.IO.File.AppendAllText(filename, line);
+                    }
+                }
+
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error saving lyrics: " + ex.Message);
+            }
+        }
+
+        private void SaveFrame()
+        {
+            TagLib.File file = TagLib.File.Create(_filename);
+            TagLib.Tag _tag = file.GetTag(TagTypes.Id3v2);
+
+            //Mp3LyricsMgmtHelper.MySyncLyricsFrame = new SynchronisedLyricsFrame(_tag.Description, "language", SynchedTextType.Lyrics,  StringType.UTF8);
+            
+
+            Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text = new SynchedText[dgView.RowCount - 1];
+            for (int i = 0; i < dgView.RowCount - 1; i++)
+            {
+                Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i] = new SynchedText();
+                Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i].Time = long.Parse(dgView.Rows[i].Cells[0].Value.ToString());
+                Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i].Text = dgView.Rows[i].Cells[1].Value.ToString();
+            }            
+
+            Mp3LyricsMgmtHelper.SetTags(_filename, Mp3LyricsMgmtHelper.MySyncLyricsFrame);
+        }
+
+
+        #endregion Save Lyrics
+
     }
 }

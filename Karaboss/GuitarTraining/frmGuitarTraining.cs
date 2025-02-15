@@ -1180,8 +1180,7 @@ namespace Karaboss
                 return;
             }
             #endregion
-
-            //outDevice.Send(e.Message);
+           
 
             if (bAlltracks)
             {

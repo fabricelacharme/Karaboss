@@ -2110,7 +2110,7 @@ namespace Karaboss
             {
                 try
                 {
-                    outDeviceProcessId = outDevice.Pid;
+                    outDeviceProcessId = outDevice.Pid;                    
 
                     string outDeviceName = OutputDeviceBase.GetDeviceCapabilities(outDevice.DeviceID).name;
                     lblOutputDevice.Text = outDeviceName;

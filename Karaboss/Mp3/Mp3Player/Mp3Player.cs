@@ -392,7 +392,7 @@ namespace Karaboss.Mp3
 
 
         #region TagLib
-        // Tablib
+        // Taglib
 
         public void GetMp3Infos(string Path)
         {

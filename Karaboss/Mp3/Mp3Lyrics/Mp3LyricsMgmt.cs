@@ -1,14 +1,12 @@
-﻿using Karaboss.Lrc.SharedFramework;
-using MP3GConverter;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using TagLib;
 using TagLib.Id3v2;
+using static Karaboss.Configuration.LangControl;
 
 namespace Karaboss.Mp3.Mp3Lyrics
 {
@@ -292,6 +290,83 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
             return dur;
         }
+
+
+        #region id3v2
+        public static void SetTags(string FullPath, SynchronisedLyricsFrame SyncLyrics)
+        {
+            TagLib.Tag _tag;
+
+            try
+            {
+                if (FullPath == null) return;
+                
+                // Copy file to another name
+                string newPath = Path.GetDirectoryName(FullPath) + "\\new" + Path.GetFileName(FullPath);
+                System.IO.File.Copy(FullPath, newPath, true);
+
+                TagLib.File file = TagLib.File.Create(newPath);
+                _tag = file.GetTag(TagTypes.Id3v2);
+
+                
+
+                // Inspiré de https://vimsky.com/examples/detail/csharp-ex---TagLib-AddFrame-method.html
+                TagLib.Id3v2.Tag id3v2tag = (TagLib.Id3v2.Tag)file.GetTag(TagLib.TagTypes.Id3v2, true);
+                
+                SynchronisedLyricsFrame frame = GetSyncLyrics(id3v2tag, SynchedTextType.Lyrics, SyncLyrics);
+                //id3v2tag.RemoveFrame(frame);
+
+                SynchronisedLyricsFrame newframe = frame;
+
+                frame.Text = new SynchedText[SyncLyrics.Text.Length];
+                for (int i = 0; i < SyncLyrics.Text.Length - 1; i++)
+                {
+                    frame.Text[i] = new SynchedText();
+                    frame.Text[i] = SyncLyrics.Text[i];
+                }
+                //id3v2tag.AddFrame(frame);
+
+                id3v2tag.ReplaceFrame(frame, newframe);
+
+                //file.Mode = TagLib.File.AccessMode.Write;
+                file.Save();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                _tag = null;
+            }
+        }
+
+
+        private static SynchronisedLyricsFrame GetSyncLyrics(TagLib.Id3v2.Tag tag, SynchedTextType type, SynchronisedLyricsFrame SyncLyrics)
+        {
+            IEnumerator<Frame> enumerator = tag.GetEnumerator();
+            try
+            {
+                while (enumerator.MoveNext())
+                {
+                    Frame current = enumerator.Current;
+                    SynchronisedLyricsFrame frame = current as SynchronisedLyricsFrame;
+                    if (frame != null && type == frame.Type)
+                    {                                               
+                        return frame;                        
+                    }
+                }
+            }
+            finally
+            {
+                if (enumerator == null)
+                {
+                }
+                enumerator.Dispose();
+            }
+            return null;
+        }
+
+
+        #endregion id3v2
 
     }
 

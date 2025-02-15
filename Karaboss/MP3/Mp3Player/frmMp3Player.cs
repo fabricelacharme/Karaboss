@@ -663,7 +663,7 @@ namespace Karaboss.Mp3
                 try
                 {
                     frmMp3LyricsEdit frmMp3LyricsEdit;
-                    frmMp3LyricsEdit = new frmMp3LyricsEdit();
+                    frmMp3LyricsEdit = new frmMp3LyricsEdit(Mp3FullPath);
                     frmMp3LyricsEdit.Show();
                 }
                 catch (Exception ex)
@@ -706,9 +706,6 @@ namespace Karaboss.Mp3
             string lrcfile = string.Empty;
             string TagLyrics = string.Empty;
             string TagSubTitles = string.Empty;
-            //string[] Lyrics;
-            //long[] Times;
-
 
             // Mp3 sync lyrics with time stamps
             TagLib.Id3v2.SynchronisedLyricsFrame SyncLyricsFrame = Player.SyncLyricsFrame;
@@ -722,20 +719,16 @@ namespace Karaboss.Mp3
             {
                 case Mp3LyricsTypes.LyricsWithTimeStamps:
                     Mp3LyricsMgmtHelper.SyncTexts = Mp3LyricsMgmtHelper.GetSyncLyrics(SyncLyricsFrame);
-                    //Mp3LyricsMgmtHelper.SyncLyrics = (Times, Lyrics);
-                    //Mp3LyricsMgmtHelper.SynchedTexts = SyncLyricsFrame;
                     DisplayFrmMp3Lyrics();
                     break;
 
                 case Mp3LyricsTypes.LRCFile:
                     Mp3LyricsMgmtHelper.SyncTexts = Mp3LyricsMgmtHelper.GetLrcLyrics(FileName);
-                    //Mp3LyricsMgmtHelper.SyncLyrics = (Times, Lyrics);
                     DisplayFrmMp3Lyrics();
                     break;
                 
                 case Mp3LyricsTypes.LyricsWithoutTimeStamps:
                     Mp3LyricsMgmtHelper.SyncTexts = null;
-                    //Mp3LyricsMgmtHelper.SyncLyrics = (null, null);
                     string tx = string.Empty;
                     if (TagLyrics != null)
                         tx += TagLyrics;
@@ -743,8 +736,11 @@ namespace Karaboss.Mp3
                         tx += TagSubTitles;
                     DisplayFrmSimpleLyrics(tx);
                     break;
+                
+
                 default:
                     Mp3LyricsMgmtHelper.SyncTexts = null;
+                    
                     // Close form if exists
                     if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                         Application.OpenForms["frmMp3Lyrics"].Close();
@@ -1048,12 +1044,7 @@ namespace Karaboss.Mp3
 
         private void SelectFileToLoadAsync(string FileName)
         {
-            // Load file and after launch player taking account things to do betwween 2 songs
-            // Create mp3 Player instance
-            //Player = new Mp3Player(FileName);
-
-            // Create event for playing completed
-            //Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);
+            // Load file and after launch player taking account things to do betwween 2 songs                      
 
             DisplayMp3Characteristics();
 

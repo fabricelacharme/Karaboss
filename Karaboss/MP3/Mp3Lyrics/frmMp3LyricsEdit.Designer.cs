@@ -120,6 +120,7 @@
             this.btnSave.Name = "btnSave";
             this.toolTip1.SetToolTip(this.btnSave, resources.GetString("btnSave.ToolTip"));
             this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // menuStrip1
             // 

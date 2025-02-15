@@ -733,28 +733,7 @@ N: <And any more lines of note.>
             {
                 try
                 {
-                    /*
-                    outDeviceProcessId = outDevice.Pid;
-                    string outDeviceName = OutputDeviceBase.GetDeviceCapabilities(outDevice.DeviceID).name;
-                    lblOutputDevice.Text = outDeviceName;
-                    AlertOutputDevice(outDeviceName);
-                    */
-
-                    /*
-                    if (songtext1 == null)
-                    {
-                        songtext1 = new TextPlayer.SongText();
-                        songtext1.LoadProgressChanged += HandleLoadProgressChanged;
-                        songtext1.LoadCompleted += HandleLoadCompleted;                        
-                    }
-                    */
-
-                    // ==========================================================================
-                    // Chargement du fichier midi selectionné depuis frmExplorer
-                    // ==========================================================================
-
-                    //ResetMidiFile();
-
+                    
                     // ACTIONS TO PERFORM
                     SelectActionOnLoad();
                 }
