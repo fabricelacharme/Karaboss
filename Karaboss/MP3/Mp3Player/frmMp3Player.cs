@@ -1,20 +1,12 @@
-﻿using Karaboss.Lrc.SharedFramework;
-using Karaboss.Mp3;
-using Karaboss.Mp3.Mp3Lyrics;
+﻿using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using TagLib;
-using TagLib.Id3v2;
-using TagLib.Matroska;
 
 namespace Karaboss.Mp3
 {

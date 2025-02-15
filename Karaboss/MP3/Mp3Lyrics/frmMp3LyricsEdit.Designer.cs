@@ -40,17 +40,10 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSave = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSep2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileSaveAsLrc = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuSaveAsText = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuEditLoadTrack = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuEditSep1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuEditLoadMelodyText = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuEditLoadLRCFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -63,6 +56,8 @@
             this.pnlRightBottom = new System.Windows.Forms.Panel();
             this.txtResult = new System.Windows.Forms.RichTextBox();
             this.pnlRightTop = new System.Windows.Forms.Panel();
+            this.mnuEditLoadLRCFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.pnlMiddle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -135,10 +130,8 @@
             // 
             this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFileSave,
-            this.mnuFileSaveAs,
             this.mnuFileSep2,
             this.mnuFileSaveAsLrc,
-            this.MnuSaveAsText,
             this.mnuFileSep1,
             this.mnuFileQuit});
             this.mnuFile.Name = "mnuFile";
@@ -148,11 +141,7 @@
             // 
             this.mnuFileSave.Name = "mnuFileSave";
             resources.ApplyResources(this.mnuFileSave, "mnuFileSave");
-            // 
-            // mnuFileSaveAs
-            // 
-            this.mnuFileSaveAs.Name = "mnuFileSaveAs";
-            resources.ApplyResources(this.mnuFileSaveAs, "mnuFileSaveAs");
+            this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
             // 
             // mnuFileSep2
             // 
@@ -163,11 +152,7 @@
             // 
             this.mnuFileSaveAsLrc.Name = "mnuFileSaveAsLrc";
             resources.ApplyResources(this.mnuFileSaveAsLrc, "mnuFileSaveAsLrc");
-            // 
-            // MnuSaveAsText
-            // 
-            this.MnuSaveAsText.Name = "MnuSaveAsText";
-            resources.ApplyResources(this.MnuSaveAsText, "MnuSaveAsText");
+            this.mnuFileSaveAsLrc.Click += new System.EventHandler(this.mnuFileSaveAsLrc_Click);
             // 
             // mnuFileSep1
             // 
@@ -179,36 +164,6 @@
             this.mnuFileQuit.Name = "mnuFileQuit";
             resources.ApplyResources(this.mnuFileQuit, "mnuFileQuit");
             this.mnuFileQuit.Click += new System.EventHandler(this.mnuFileQuit_Click);
-            // 
-            // mnuEdit
-            // 
-            this.mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuEditLoadTrack,
-            this.mnuEditSep1,
-            this.mnuEditLoadMelodyText,
-            this.mnuEditLoadLRCFile});
-            this.mnuEdit.Name = "mnuEdit";
-            resources.ApplyResources(this.mnuEdit, "mnuEdit");
-            // 
-            // mnuEditLoadTrack
-            // 
-            this.mnuEditLoadTrack.Name = "mnuEditLoadTrack";
-            resources.ApplyResources(this.mnuEditLoadTrack, "mnuEditLoadTrack");
-            // 
-            // mnuEditSep1
-            // 
-            this.mnuEditSep1.Name = "mnuEditSep1";
-            resources.ApplyResources(this.mnuEditSep1, "mnuEditSep1");
-            // 
-            // mnuEditLoadMelodyText
-            // 
-            this.mnuEditLoadMelodyText.Name = "mnuEditLoadMelodyText";
-            resources.ApplyResources(this.mnuEditLoadMelodyText, "mnuEditLoadMelodyText");
-            // 
-            // mnuEditLoadLRCFile
-            // 
-            this.mnuEditLoadLRCFile.Name = "mnuEditLoadLRCFile";
-            resources.ApplyResources(this.mnuEditLoadLRCFile, "mnuEditLoadLRCFile");
             // 
             // mnuHelp
             // 
@@ -290,6 +245,19 @@
             resources.ApplyResources(this.pnlRightTop, "pnlRightTop");
             this.pnlRightTop.Name = "pnlRightTop";
             // 
+            // mnuEditLoadLRCFile
+            // 
+            this.mnuEditLoadLRCFile.Name = "mnuEditLoadLRCFile";
+            resources.ApplyResources(this.mnuEditLoadLRCFile, "mnuEditLoadLRCFile");
+            this.mnuEditLoadLRCFile.Click += new System.EventHandler(this.mnuEditLoadLRCFile_Click);
+            // 
+            // mnuEdit
+            // 
+            this.mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuEditLoadLRCFile});
+            this.mnuEdit.Name = "mnuEdit";
+            resources.ApplyResources(this.mnuEdit, "mnuEdit");
+            // 
             // frmMp3LyricsEdit
             // 
             resources.ApplyResources(this, "$this");
@@ -321,17 +289,10 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem mnuFile;
         private System.Windows.Forms.ToolStripMenuItem mnuFileSave;
-        private System.Windows.Forms.ToolStripMenuItem mnuFileSaveAs;
         private System.Windows.Forms.ToolStripSeparator mnuFileSep2;
         private System.Windows.Forms.ToolStripMenuItem mnuFileSaveAsLrc;
-        private System.Windows.Forms.ToolStripMenuItem MnuSaveAsText;
         private System.Windows.Forms.ToolStripSeparator mnuFileSep1;
         private System.Windows.Forms.ToolStripMenuItem mnuFileQuit;
-        private System.Windows.Forms.ToolStripMenuItem mnuEdit;
-        private System.Windows.Forms.ToolStripMenuItem mnuEditLoadTrack;
-        private System.Windows.Forms.ToolStripSeparator mnuEditSep1;
-        private System.Windows.Forms.ToolStripMenuItem mnuEditLoadMelodyText;
-        private System.Windows.Forms.ToolStripMenuItem mnuEditLoadLRCFile;
         private System.Windows.Forms.ToolStripMenuItem mnuHelp;
         private System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
@@ -350,5 +311,7 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.DataGridViewTextBoxColumn clTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn clText;
+        private System.Windows.Forms.ToolStripMenuItem mnuEdit;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditLoadLRCFile;
     }
 }

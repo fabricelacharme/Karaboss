@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using Un4seen.Bass.AddOn.Tags;
 using TagLib;
 using TagLib.Id3v2;
-using System.Collections.Generic;
 using Karaboss.Mp3.Mp3Lyrics;
 
 namespace Karaboss.Mp3

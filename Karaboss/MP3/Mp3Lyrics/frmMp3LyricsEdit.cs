@@ -1,15 +1,10 @@
-﻿using Karaboss.Utilities;
+﻿using Karaboss.Lrc.SharedFramework;
+using Karaboss.Utilities;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
 using TagLib;
 using TagLib.Id3v2;
 
@@ -339,14 +334,32 @@ namespace Karaboss.Mp3.Mp3Lyrics
         #endregion init
 
 
-        #region Save Lyrics
+        #region Save mp3 Lyrics
 
         /// <summary>
-        /// Button: save lyrics
+        /// Button: save mp3 lyrics
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveMp3Lyrics();             
+        }
+
+        /// <summary>
+        /// Menu: save mp3 lyrics
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuFileSave_Click(object sender, EventArgs e)
+        {
+            SaveMp3Lyrics();
+        }
+
+        /// <summary>
+        /// Save mp3 lyrics
+        /// </summary>
+        private void SaveMp3Lyrics()
         {
             string text;
             string time;
@@ -360,6 +373,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 SyncTexts[i] = new SyncText(long.Parse(time), text);
             }
 
+
+            // it isnot possible to save the file on the same file (file locked)
             string mp3file = Files.FindUniqueFileName(_filename);
 
             saveFileDialog = new SaveFileDialog();
@@ -371,7 +386,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                
+
                 string filename = saveFileDialog.FileName;
 
                 // Copy file to another name                
@@ -380,52 +395,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 // Save sync lyrics into the copy of initial file
                 SaveFrame(filename);
             }
-
-
-            
-            return;
-
-            saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Lyrics files (*.lrc)|*.lrc|All files (*.*)|*.*";
-            saveFileDialog.FilterIndex = 1;
-            saveFileDialog.RestoreDirectory = true;
-            saveFileDialog.InitialDirectory = Path.GetDirectoryName(_filename);
-            saveFileDialog.FileName = Path.GetFileNameWithoutExtension(_filename) + ".lrc";
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string filename = saveFileDialog.FileName;
-                SaveLyricsToText(SyncTexts, filename);
-            }
-
         }
-
-        /// <summary>
-        /// Save to text file
-        /// </summary>
-        /// <param name="SyncTexts"></param>
-        /// <param name="filename"></param>
-        private void SaveLyricsToText(SyncText[] SyncTexts, string filename)
-        {
-            try
-            {
-                // Save to text file
-                for (int i = 0; i < SyncTexts.Length; i++)
-                {
-                    if (SyncTexts[i].Text != null && SyncTexts[i].Text != "")
-                    {
-                        string line = SyncTexts[i].Time + " " + SyncTexts[i].Text + "\r\n";
-                        System.IO.File.AppendAllText(filename, line);
-                    }
-                }
-
-                
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error saving lyrics: " + ex.Message);
-            }
-        }
+      
 
         /// <summary>
         /// Save changes to the synchronized lyrics frame
@@ -460,7 +431,167 @@ namespace Karaboss.Mp3.Mp3Lyrics
         }
 
 
-        #endregion Save Lyrics
+        #endregion Save mp3 Lyrics
+
+
+        #region lrc
+
+        #region save lrc
+        private void mnuFileSaveAsLrc_Click(object sender, EventArgs e)
+        {
+            string text;
+            string time;
+
+            SyncText[] SyncTexts = new SyncText[dgView.RowCount];
+
+            for (int i = 0; i < dgView.RowCount - 1; i++)
+            {
+                time = dgView.Rows[i].Cells[0].Value.ToString();
+                text = dgView.Rows[i].Cells[1].Value.ToString();
+                SyncTexts[i] = new SyncText(long.Parse(time), text);
+            }
+            saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Lyrics files (*.lrc)|*.lrc|All files (*.*)|*.*";
+            saveFileDialog.FilterIndex = 1;
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.InitialDirectory = Path.GetDirectoryName(_filename);
+            saveFileDialog.FileName = Path.GetFileNameWithoutExtension(_filename) + ".lrc";
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filename = saveFileDialog.FileName;
+                SaveLyricsToLrcFormat(SyncTexts, filename);
+            }
+
+        }
+
+        /// <summary>
+        /// Save to text file
+        /// </summary>
+        /// <param name="SyncTexts"></param>
+        /// <param name="filename"></param>
+        private void SaveLyricsToLrcFormat(SyncText[] SyncTexts, string filename)
+        {
+            long time;
+            TimeSpan ts;
+            string tsp;
+            string lyric;
+
+            try
+            {
+                // Save to text file
+                for (int i = 0; i < SyncTexts.Length; i++)
+                {
+                    if (SyncTexts[i].Text != null && SyncTexts[i].Text != "")
+                    {
+                        // the time is in millisecond format. It must be converted to timestamp format
+                        
+                        time = SyncTexts[i].Time;
+                        ts = TimeSpan.FromMilliseconds(time);                        
+                        tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+
+                        lyric = SyncTexts[i].Text;
+                        lyric = lyric.Replace("_", " ");
+
+                        string line = "[" + tsp + "]" + lyric + "\r\n";
+                        System.IO.File.AppendAllText(filename, line);
+                    }
+                }
+
+                // Open lrc file
+                if (System.IO.File.Exists(filename)) 
+                {
+                    System.Diagnostics.Process.Start(@filename);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error saving lyrics to lrc: " + ex.Message);
+            }
+        }
+
+        #endregion save lrc
+
+
+        #region load lrc
+        /// <summary>
+        /// Menu: load lrc file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuEditLoadLRCFile_Click(object sender, EventArgs e)
+        {
+            openFileDialog.Title = "Open a .lrc file";
+            openFileDialog.DefaultExt = "lrc";
+            openFileDialog.Filter = "lrc files|*.lrc|All files|*.*";
+            
+            // Get initial directory from mp3 file
+            if (_filename != null || _filename != "")
+                openFileDialog.InitialDirectory = Path.GetDirectoryName(_filename);
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = openFileDialog.FileName;
+
+                try
+                {
+                    using (StreamReader sr = new StreamReader(fileName))
+                    {
+                        String lines = sr.ReadToEnd();
+                        LoadLRCFile(lines);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("The file could not be read:" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Load a LRC file (timestamps + lyrics)
+        /// </summary>
+        /// <param name="Source"></param>
+        private void LoadLRCFile(string Source)
+        {
+            string stime;
+            string lyric;
+            long time;
+
+            Cursor.Current = Cursors.WaitCursor;
+         
+            Karaboss.Lrc.SharedFramework.Lyrics lyrics = new Karaboss.Lrc.SharedFramework.Lyrics();
+            lyrics.ArrangeLyrics(Source);
+            int lines = lyrics.Count;
+
+            InitGridView();
+
+            if (dgView.Rows.Count < lines)
+            {
+                dgView.Rows.Add(lines - dgView.Rows.Count);
+            }
+            
+
+            for (int i = 0; i < lines; i++)
+            {
+                LyricsLine l = lyrics[i];
+                stime = l.Timeline;
+                lyric = l.OriLyrics;
+
+                // Convert time from timestamp to milliseconds
+                time = (long)Mp3LyricsMgmtHelper.TimeToMs(stime);
+
+                dgView.Rows[i].Cells[0].Value = time;
+                dgView.Rows[i].Cells[1].Value = lyric;
+            }
+          
+            Cursor.Current = Cursors.Default;
+        }
+
+        #endregion load lrc
+
+
+        #endregion lrc
 
     }
 }

@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using TagLib;
 using TagLib.Id3v2;
-using static Karaboss.Configuration.LangControl;
 
 namespace Karaboss.Mp3.Mp3Lyrics
 {
@@ -32,8 +31,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
     public static class Mp3LyricsMgmtHelper
     {
-
-        //public static (long[], string[]) SyncLyrics;        
+               
         public static SyncText[] SyncTexts;
         public static SynchronisedLyricsFrame MySyncLyricsFrame;
         public static string m_SepLine = "/";
@@ -261,7 +259,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// <param name="stime"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        private static double TimeToMs(string time)
+        public static double TimeToMs(string time)
         {
             double dur = 0;
 

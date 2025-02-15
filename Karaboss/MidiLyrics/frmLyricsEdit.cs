@@ -45,7 +45,6 @@ using Karaboss.Lrc.SharedFramework;
 using Karaboss.MidiLyrics;
 using Karaboss.Utilities;
 using static Karaboss.Karaclass;
-using System.Reflection;
 using System.Text;
 
 
@@ -2414,6 +2413,8 @@ namespace Karaboss
             openFileDialog.Title = "Open a .lrc file";
             openFileDialog.DefaultExt = "lrc";
             openFileDialog.Filter = "lrc files|*.lrc|All files|*.*";
+
+            // Get initial directory from midi file
             if (MIDIfileName != null || MIDIfileName != "")
                 openFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
 
@@ -2430,10 +2431,9 @@ namespace Karaboss
                         LoadLRCFile(lines);
                     }
                 }
-                catch (Exception errl)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("The file could not be read:");
-                    Console.WriteLine(errl.Message);
+                    MessageBox.Show("The file could not be read:" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
