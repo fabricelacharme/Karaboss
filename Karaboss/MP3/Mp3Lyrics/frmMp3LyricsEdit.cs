@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Karaboss.Utilities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -359,7 +360,29 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 SyncTexts[i] = new SyncText(long.Parse(time), text);
             }
 
-            SaveFrame();
+            string mp3file = Files.FindUniqueFileName(_filename);
+
+            saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
+            saveFileDialog.FilterIndex = 1;
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.InitialDirectory = Path.GetDirectoryName(mp3file);
+            saveFileDialog.FileName = mp3file;
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                
+                string filename = saveFileDialog.FileName;
+
+                // Copy file to another name                
+                System.IO.File.Copy(_filename, filename, true);
+
+                // Save sync lyrics into the copy of initial file
+                SaveFrame(filename);
+            }
+
+
+            
             return;
 
             saveFileDialog = new SaveFileDialog();
@@ -404,23 +427,36 @@ namespace Karaboss.Mp3.Mp3Lyrics
             }
         }
 
-        private void SaveFrame()
+        /// <summary>
+        /// Save changes to the synchronized lyrics frame
+        /// </summary>
+        /// <param name="FileName"></param>
+        private void SaveFrame(string FileName)
         {
-            TagLib.File file = TagLib.File.Create(_filename);
+            string lyric;
+
+            TagLib.File file = TagLib.File.Create(FileName);
             TagLib.Tag _tag = file.GetTag(TagTypes.Id3v2);
-
-            //Mp3LyricsMgmtHelper.MySyncLyricsFrame = new SynchronisedLyricsFrame(_tag.Description, "language", SynchedTextType.Lyrics,  StringType.UTF8);
             
-
+            // Reset frame text
             Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text = new SynchedText[dgView.RowCount - 1];
+            
+            // Read all rows and store into the frame
             for (int i = 0; i < dgView.RowCount - 1; i++)
             {
                 Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i] = new SynchedText();
                 Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i].Time = long.Parse(dgView.Rows[i].Cells[0].Value.ToString());
-                Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i].Text = dgView.Rows[i].Cells[1].Value.ToString();
+
+                // Modify lyrics
+                // \ => '\n'
+                // _ => " "
+                lyric = dgView.Rows[i].Cells[1].Value.ToString();
+                lyric = lyric.Replace(m_SepLine, "\n");
+                lyric = lyric.Replace("_", " ");
+                Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i].Text = lyric;
             }            
 
-            Mp3LyricsMgmtHelper.SetTags(_filename, Mp3LyricsMgmtHelper.MySyncLyricsFrame);
+            Mp3LyricsMgmtHelper.SetTags(FileName, Mp3LyricsMgmtHelper.MySyncLyricsFrame);
         }
 
 

@@ -8,6 +8,7 @@ using Un4seen.Bass.AddOn.Tags;
 using TagLib;
 using TagLib.Id3v2;
 using System.Collections.Generic;
+using Karaboss.Mp3.Mp3Lyrics;
 
 namespace Karaboss.Mp3
 {
@@ -411,6 +412,10 @@ namespace Karaboss.Mp3
             }
         }
 
+        /// <summary>
+        /// Extract tags from file
+        /// </summary>
+        /// <param name="Path"></param>
         private void GetTags(string Path)
         {
             try
@@ -420,44 +425,19 @@ namespace Karaboss.Mp3
                 _tag = file.GetTag(TagTypes.Id3v2);
 
 
-                // Inspiré de https://vimsky.com/examples/detail/csharp-ex---TagLib-AddFrame-method.html
-                TagLib.Id3v2.Tag id3v2tag = (TagLib.Id3v2.Tag)file.GetTag(TagLib.TagTypes.Id3v2, true);                                
-                 _synclyricsframe = GetSyncLyrics(id3v2tag, SynchedTextType.Lyrics);
-                              
+                // Retrieve tags from file 
+                TagLib.Id3v2.Tag id3v2tag = (TagLib.Id3v2.Tag)file.GetTag(TagLib.TagTypes.Id3v2, true);
+
+                // Retrieve the frame SyncLyrics inside the mp3 file (type of lyrics), (last param = do not create if not found)
+                _synclyricsframe = Mp3LyricsMgmtHelper.GetSyncLyricsFrame(id3v2tag, SynchedTextType.Lyrics, false);
 
             }
             catch (Exception e) 
             { 
-                Console.WriteLine(e.Message);
+                MessageBox.Show(e.Message,"Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);                
                 _tag = null;
             }
-        }
-
-        private static SynchronisedLyricsFrame GetSyncLyrics(TagLib.Id3v2.Tag tag, SynchedTextType type)
-        {
-            IEnumerator<Frame> enumerator = tag.GetEnumerator();
-            try
-            {
-                while (enumerator.MoveNext())
-                {
-                    Frame current = enumerator.Current;
-                    SynchronisedLyricsFrame frame2 = current as SynchronisedLyricsFrame;
-                    if (frame2 != null && type == frame2.Type)
-                    {
-                        return frame2;
-                    }
-                }
-            }
-            finally
-            {
-                if (enumerator == null)
-                {
-                }
-                enumerator.Dispose();
-            }
-            return null;
-        }
-     
+        }       
 
         private void GetAlbumArtImage(string Path)
         {

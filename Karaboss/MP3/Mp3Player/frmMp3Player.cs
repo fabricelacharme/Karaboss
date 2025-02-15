@@ -1,6 +1,7 @@
 ﻿using Karaboss.Lrc.SharedFramework;
 using Karaboss.Mp3;
 using Karaboss.Mp3.Mp3Lyrics;
+using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using TagLib;
@@ -85,9 +87,7 @@ namespace Karaboss.Mp3
 
             InitControls();
 
-            // Create mp3 Player instance            
-            //AudioEngine = new BassAudioEngine();
-            
+            // Create mp3 Player instance                                    
             Player = new Mp3Player(FileName);
             // Create event for playing completed
             Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);            
@@ -117,8 +117,7 @@ namespace Karaboss.Mp3
             bPlayNow = bplay;
             // the user asked to play the song immediately                
             if (bPlayNow)
-            {
-                //if (!InitBass()) return;
+            {                
                 PlayPauseMusic();
             }
         }
@@ -759,12 +758,37 @@ namespace Karaboss.Mp3
         /// <param name="Times"></param>
         private void DisplayFrmMp3Lyrics()
         {
+            string sSong = string.Empty;
+            string sSinger = string.Empty;
+
+            if (currentPlaylistItem != null)
+            {
+                sSong = currentPlaylistItem.Song;
+                sSinger = currentPlaylistItem.KaraokeSinger;
+            }
+            else
+            {
+                sSong = Mp3FullPath;
+            }
+
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
             {
                 Application.OpenForms["frmMp3Lyrics"].Close();
             }
             frmMp3Lyrics = new frmMp3Lyrics();
             frmMp3Lyrics.Show();
+
+            // Display song & current singer on top label
+            string tx;
+            sSong = Path.GetFileNameWithoutExtension(sSong);
+            if (sSinger == "" || sSinger == "<Song reserved by>")
+                tx = sSong;
+            else
+                tx = sSong + " - " + Strings.Singer + ": " + sSinger;
+
+            frmMp3Lyrics.DisplaySinger(tx);
+
+
             StartKaraoke();
         }
 

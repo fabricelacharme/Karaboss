@@ -102,7 +102,14 @@ namespace Karaboss.Mp3
             }
         }
 
-
+        /// <summary>
+        /// Display singer and song names
+        /// </summary>
+        /// <param name="text"></param>
+        public void DisplaySinger(string text)
+        {
+            lblTitle.Text = text;
+        }
         private void InitializeKaraokeTextHighlighter()
         {
             _maxline = GetMaxLineLength();
@@ -213,7 +220,9 @@ namespace Karaboss.Mp3
 
             float x = 0;
             float y = 0;
+            SizeF sizetrim;
             SizeF size;
+            float delta;
             string Lyric;
             string s;            
             int LineNumber = 0;
@@ -260,12 +269,14 @@ namespace Karaboss.Mp3
                 }
 
                 // Size of current Lyric
-                size = e.Graphics.MeasureString(Lyric, _karaokeFont);
+                sizetrim = e.Graphics.MeasureString(Lyric, _karaokeFont);
+                size = e.Graphics.MeasureString(Lyric.Trim(), _karaokeFont);
+                delta = sizetrim.Width - size.Width;
 
                 if (i < currentIndex)
                 {
                     // Draw rectangle around the word
-                    e.Graphics.FillRectangle(KaraokeDoneBrush, x, y + Offsetline, size.Width, size.Height);
+                    e.Graphics.FillRectangle(KaraokeDoneBrush, x + delta, y + Offsetline, size.Width, size.Height);
                 }
                 else if (i == currentIndex)
                 {
@@ -276,7 +287,7 @@ namespace Karaboss.Mp3
                     }
 
                     // Draw rectangle around the word
-                    e.Graphics.FillRectangle(KaraokeHighlightBrush, x, y + Offsetline, size.Width, size.Height);
+                    e.Graphics.FillRectangle(KaraokeHighlightBrush, x + delta, y + Offsetline, size.Width, size.Height);
                 }
 
                 // Draw the word

@@ -36,7 +36,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         //public static (long[], string[]) SyncLyrics;        
         public static SyncText[] SyncTexts;
         public static SynchronisedLyricsFrame MySyncLyricsFrame;
-
+        public static string m_SepLine = "/";
 
         /// <summary>
         /// Get lyrics type
@@ -93,9 +93,9 @@ namespace Karaboss.Mp3.Mp3Lyrics
             for (int i = 0; i < SyncLyricsFrame.Text.Count(); i++)
             {
                 lyric = SyncLyricsFrame.Text[i].Text;
-                lyric = lyric.Replace("\r\n", "\\");
-                lyric = lyric.Replace("\r", "\\");
-                lyric = lyric.Replace("\n", "\\");
+                lyric = lyric.Replace("\r\n", m_SepLine);
+                lyric = lyric.Replace("\r", m_SepLine);
+                lyric = lyric.Replace("\n", m_SepLine);
 
 
                 time = SyncLyricsFrame.Text[i].Time;
@@ -293,6 +293,12 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
 
         #region id3v2
+
+        /// <summary>
+        /// Save frame of synchronized lyrics in mp3 file
+        /// </summary>
+        /// <param name="FullPath"></param>
+        /// <param name="SyncLyrics"></param>
         public static void SetTags(string FullPath, SynchronisedLyricsFrame SyncLyrics)
         {
             TagLib.Tag _tag;
@@ -301,46 +307,46 @@ namespace Karaboss.Mp3.Mp3Lyrics
             {
                 if (FullPath == null) return;
                 
-                // Copy file to another name
-                string newPath = Path.GetDirectoryName(FullPath) + "\\new" + Path.GetFileName(FullPath);
-                System.IO.File.Copy(FullPath, newPath, true);
-
-                TagLib.File file = TagLib.File.Create(newPath);
+                TagLib.File file = TagLib.File.Create(FullPath);
                 _tag = file.GetTag(TagTypes.Id3v2);
 
                 
-
-                // Inspiré de https://vimsky.com/examples/detail/csharp-ex---TagLib-AddFrame-method.html
+                // Retrieve tags from file 
                 TagLib.Id3v2.Tag id3v2tag = (TagLib.Id3v2.Tag)file.GetTag(TagLib.TagTypes.Id3v2, true);
+
+                // Retrieve the frame SyncLyrics inside the mp3 file (type of lyrics), create a new one if not found
+                SynchronisedLyricsFrame frame = GetSyncLyricsFrame(id3v2tag, SynchedTextType.Lyrics, true);
                 
-                SynchronisedLyricsFrame frame = GetSyncLyrics(id3v2tag, SynchedTextType.Lyrics, SyncLyrics);
-                //id3v2tag.RemoveFrame(frame);
-
-                SynchronisedLyricsFrame newframe = frame;
-
                 frame.Text = new SynchedText[SyncLyrics.Text.Length];
                 for (int i = 0; i < SyncLyrics.Text.Length - 1; i++)
                 {
                     frame.Text[i] = new SynchedText();
                     frame.Text[i] = SyncLyrics.Text[i];
                 }
-                //id3v2tag.AddFrame(frame);
-
-                id3v2tag.ReplaceFrame(frame, newframe);
-
-                //file.Mode = TagLib.File.AccessMode.Write;
+                
+                // Save file
                 file.Save();
 
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                //Console.WriteLine(e.Message);
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _tag = null;
             }
         }
 
-
-        private static SynchronisedLyricsFrame GetSyncLyrics(TagLib.Id3v2.Tag tag, SynchedTextType type, SynchronisedLyricsFrame SyncLyrics)
+        /// <summary>
+        /// Get a synchronised frame of type lyrics from an mp3 file
+        /// Create it if not found
+        /// see https://vimsky.com/examples/detail/csharp-ex---TagLib-AddFrame-method.html
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <param name="type"></param>
+        /// <param name="SyncLyrics"></param>
+        /// <returns></returns>
+        //public static SynchronisedLyricsFrame GetSyncLyricsFrame(TagLib.Id3v2.Tag tag, SynchedTextType type, SynchronisedLyricsFrame SyncLyrics)
+        public static SynchronisedLyricsFrame GetSyncLyricsFrame(TagLib.Id3v2.Tag tag, SynchedTextType type, bool create)
         {
             IEnumerator<Frame> enumerator = tag.GetEnumerator();
             try
@@ -362,7 +368,16 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 }
                 enumerator.Dispose();
             }
-            return null;
+
+            if (!create)
+            {
+                return null;
+            }
+
+            SynchronisedLyricsFrame newframe = new SynchronisedLyricsFrame(tag.Description, "en", type);
+            tag.AddFrame(newframe);
+            return newframe;
+
         }
 
 
