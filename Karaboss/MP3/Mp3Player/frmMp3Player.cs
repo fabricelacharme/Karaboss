@@ -1299,8 +1299,13 @@ namespace Karaboss.Mp3
                 frmMp3Lyrics.Start();
         }
 
+
         #endregion Timer
-        
+
+        private void mnuLyricsEdit_Click(object sender, EventArgs e)
+        {
+            DisplayFrmMp3Lyrics();
+        }
 
     }
 }

@@ -92,6 +92,9 @@ namespace Karaboss.Mp3
 
         private void LoadLyrics()
         {
+            if (Mp3LyricsMgmtHelper.SyncTexts == null) return;
+
+
             SyncText[] SyncLyrics = Mp3LyricsMgmtHelper.SyncTexts;
             words = new string[SyncLyrics.Length];
             times = new long[SyncLyrics.Length];
@@ -159,7 +162,9 @@ namespace Karaboss.Mp3
         #region Timer
         private void Timer_Tick(object sender, EventArgs e)
         {
-            int linenumber = -1;            
+            int linenumber = -1;
+
+            if (times == null) return;
 
             // Compare with Times            
             if (millisecondsElapsed >= 0)
@@ -228,7 +233,9 @@ namespace Karaboss.Mp3
             int LineNumber = 0;
 
             bool IsNewLine = false;
-            int LineLen = 0;                         
+            int LineLen = 0;
+
+            if (words == null) return;
 
             for (int i = 0; i < words.Length; i++)
             {                                
@@ -653,6 +660,8 @@ namespace Karaboss.Mp3
             string line = "";
             string maxline = "";
 
+            if (times == null) return "";
+            
             for (int i = 0; i < times.Count(); i++)
             {
                 lyric = words[i];

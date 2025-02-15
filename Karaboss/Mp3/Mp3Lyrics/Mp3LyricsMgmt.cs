@@ -278,7 +278,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
             // Calculate dur in seconds
             int Min = Convert.ToInt32(min);
-            dur = Min * 60;
+            dur = Min * 60 * 1000;
 
             int Sec = Convert.ToInt32(sec);
             dur += Sec * 1000;
@@ -316,7 +316,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 SynchronisedLyricsFrame frame = GetSyncLyricsFrame(id3v2tag, SynchedTextType.Lyrics, true);
                 
                 frame.Text = new SynchedText[SyncLyrics.Text.Length];
-                for (int i = 0; i < SyncLyrics.Text.Length - 1; i++)
+                for (int i = 0; i < SyncLyrics.Text.Length; i++)
                 {
                     frame.Text[i] = new SynchedText();
                     frame.Text[i] = SyncLyrics.Text[i];

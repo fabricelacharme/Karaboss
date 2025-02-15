@@ -207,7 +207,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     dgView.Rows.Add(time, text);
                 }
             }
-            else
+            else if (SyncLyrics != null)
             {
                 for (int i = 0; i < SyncLyrics.Length; i++)
                 {
@@ -361,18 +361,19 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// </summary>
         private void SaveMp3Lyrics()
         {
-            string text;
-            string time;
+            //string text;
+            //string time;
 
+            /*
             SyncText[] SyncTexts = new SyncText[dgView.RowCount];
 
-            for (int i = 0; i < dgView.RowCount - 1; i++)
+            for (int i = 0; i < dgView.RowCount; i++)
             {
                 time = dgView.Rows[i].Cells[0].Value.ToString();
                 text = dgView.Rows[i].Cells[1].Value.ToString();
                 SyncTexts[i] = new SyncText(long.Parse(time), text);
             }
-
+            */
 
             // it isnot possible to save the file on the same file (file locked)
             string mp3file = Files.FindUniqueFileName(_filename);
@@ -410,10 +411,17 @@ namespace Karaboss.Mp3.Mp3Lyrics
             TagLib.Tag _tag = file.GetTag(TagTypes.Id3v2);
             
             // Reset frame text
-            Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text = new SynchedText[dgView.RowCount - 1];
+            if (Mp3LyricsMgmtHelper.MySyncLyricsFrame == null)
+            {                
+                Mp3LyricsMgmtHelper.MySyncLyricsFrame = new SynchronisedLyricsFrame("Description", "en", SynchedTextType.Lyrics);
+            }
+
+            int lines = dgView.Rows.Count;
+            
+            Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text = new SynchedText[lines];
             
             // Read all rows and store into the frame
-            for (int i = 0; i < dgView.RowCount - 1; i++)
+            for (int i = 0; i < lines; i++)
             {
                 Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i] = new SynchedText();
                 Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i].Time = long.Parse(dgView.Rows[i].Cells[0].Value.ToString());
