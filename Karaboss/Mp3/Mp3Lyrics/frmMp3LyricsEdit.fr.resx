@@ -117,18 +117,66 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="dgView.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer1.Panel1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="txtResult.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlRightBottom.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnDeleteAllLyrics.Text" xml:space="preserve">
+    <value>Supprimer les &amp;paroles</value>
+  </data>
+  <data name="btnInsertParagraph.Text" xml:space="preserve">
+    <value>Nouveau paragraphe (\)</value>
+  </data>
+  <data name="btnInsertCr.Text" xml:space="preserve">
+    <value>Retour à la ligne (/)</value>
+  </data>
+  <data name="btnInsertText.Text" xml:space="preserve">
+    <value>&amp;Insérer une ligne</value>
+  </data>
+  <data name="btnDelete.Text" xml:space="preserve">
+    <value>&amp;Supprimer la ligne</value>
+  </data>
+  <data name="btnSave.Text" xml:space="preserve">
+    <value>&amp;Enregistrer les paroles</value>
+  </data>
+  <data name="pnlRightTop.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer1.Panel2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>116, 22</value>
+  <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
+    <value>249, 22</value>
   </data>
-  <data name="mnuFileOpen.Text" xml:space="preserve">
-    <value>&amp;Ouvrir...</value>
+  <data name="mnuFileSave.Text" xml:space="preserve">
+    <value>&amp;Enregistrer</value>
   </data>
-  <data name="MnuFileSep.Size" type="System.Drawing.Size, System.Drawing">
-    <value>113, 6</value>
+  <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>246, 6</value>
+  </data>
+  <data name="mnuFileSaveAsLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>249, 22</value>
+  </data>
+  <data name="mnuFileSaveAsLrc.Text" xml:space="preserve">
+    <value>Exporter les paroles au format .lrc</value>
+  </data>
+  <data name="mnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>246, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>116, 22</value>
+    <value>249, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
@@ -139,20 +187,17 @@
   <data name="mnuFile.Text" xml:space="preserve">
     <value>&amp;Fichier</value>
   </data>
-  <data name="mnuEditLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+  <data name="mnuEditLoadLRCFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>263, 22</value>
   </data>
-  <data name="mnuEditLyrics.Text" xml:space="preserve">
-    <value>E&amp;diter les paroles</value>
+  <data name="mnuEditLoadLRCFile.Text" xml:space="preserve">
+    <value>Charger un fichier texte (format .lrc)</value>
   </data>
   <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 20</value>
   </data>
   <data name="mnuEdit.Text" xml:space="preserve">
     <value>&amp;Edition</value>
-  </data>
-  <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
-    <value>131, 22</value>
   </data>
   <data name="mnuHelpAbout.Text" xml:space="preserve">
     <value>&amp;A propos...</value>
@@ -166,78 +211,14 @@
   <data name="menuStrip1.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="pBox.ToolTip" xml:space="preserve">
+  <data name="pnlMiddle.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="lblPlaylist.ToolTip" xml:space="preserve">
+  <data name="lblLyricsOrigin.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="btnTempoMinus.ToolTip" xml:space="preserve">
+  <data name="pnlTop.ToolTip" xml:space="preserve">
     <value />
-  </data>
-  <data name="btnTempoPlus.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lblTempoValue.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lblTemp.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="btnTranspoMinus.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="btnTranspoPlus.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lblTranspoValue.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lblTransp.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="VuPeakVolumeRight.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="VuPeakVolumeLeft.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lblMainVolume.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="pnlDisplay.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="btnPrev.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="btnNext.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="positionHScrollBar.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="btnStop.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="btnPlay.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 24</value>
-  </data>
-  <data name="sldMainVolume.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lnlVol.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="pnlControls.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>Inherit</value>
   </data>
   <data name="$this.ToolTip" xml:space="preserve">
     <value />

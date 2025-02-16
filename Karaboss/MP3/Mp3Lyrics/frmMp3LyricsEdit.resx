@@ -117,646 +117,709 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
+  <data name="&gt;&gt;dgView.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="btnDeleteAllLyrics.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleRight</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="btnDeleteAllLyrics.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnDeleteAllLyrics.Location" type="System.Drawing.Point, System.Drawing">
-    <value>254, 85</value>
-  </data>
-  <data name="btnDeleteAllLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>158, 23</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="btnDeleteAllLyrics.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
-  </data>
-  <data name="btnDeleteAllLyrics.Text" xml:space="preserve">
-    <value>&amp;Delete All Lyrics</value>
-  </data>
-  <data name="btnDeleteAllLyrics.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="btnDeleteAllLyrics.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
-    <value>TextBeforeImage</value>
-  </data>
-  <data name="btnDeleteAllLyrics.ToolTip" xml:space="preserve">
-    <value>Delete all the lyrics</value>
-  </data>
-  <data name="&gt;&gt;btnDeleteAllLyrics.Name" xml:space="preserve">
-    <value>btnDeleteAllLyrics</value>
-  </data>
-  <data name="&gt;&gt;btnDeleteAllLyrics.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnDeleteAllLyrics.Parent" xml:space="preserve">
-    <value>pnlRightTop</value>
-  </data>
-  <data name="&gt;&gt;btnDeleteAllLyrics.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="btnInsertParagraph.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnInsertParagraph.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 34</value>
-  </data>
-  <data name="btnInsertParagraph.Size" type="System.Drawing.Size, System.Drawing">
-    <value>130, 23</value>
-  </data>
-  <data name="btnInsertParagraph.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
-  </data>
-  <data name="btnInsertParagraph.Text" xml:space="preserve">
-    <value>New paragraph (\)</value>
-  </data>
-  <data name="btnInsertParagraph.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="btnInsertParagraph.ToolTip" xml:space="preserve">
-    <value>Insert a new paragraph</value>
-  </data>
-  <data name="&gt;&gt;btnInsertParagraph.Name" xml:space="preserve">
-    <value>btnInsertParagraph</value>
-  </data>
-  <data name="&gt;&gt;btnInsertParagraph.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 20</value>
   </data>
   <data name="&gt;&gt;btnInsertParagraph.Parent" xml:space="preserve">
     <value>pnlRightTop</value>
   </data>
-  <data name="&gt;&gt;btnInsertParagraph.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="btnSave.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
   </data>
-  <data name="btnInsertCr.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="&gt;&gt;mnuFileSave.Name" xml:space="preserve">
+    <value>mnuFileSave</value>
   </data>
-  <data name="btnInsertCr.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 10</value>
+  <data name="dgView.ToolTip" xml:space="preserve">
+    <value />
   </data>
-  <data name="btnInsertCr.Size" type="System.Drawing.Size, System.Drawing">
-    <value>130, 23</value>
+  <data name="&gt;&gt;mnuFileSaveAsLrc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="btnInsertCr.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="btnInsertCr.Text" xml:space="preserve">
-    <value>Insert a Line Break (/)</value>
-  </data>
-  <data name="btnInsertCr.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="btnInsertCr.ToolTip" xml:space="preserve">
-    <value>Insert a Line break</value>
-  </data>
-  <data name="&gt;&gt;btnInsertCr.Name" xml:space="preserve">
-    <value>btnInsertCr</value>
-  </data>
-  <data name="&gt;&gt;btnInsertCr.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnInsertParagraph.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnInsertCr.Parent" xml:space="preserve">
-    <value>pnlRightTop</value>
   </data>
   <data name="&gt;&gt;btnInsertCr.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="btnInsertText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="splitContainer1.Panel1.ToolTip" xml:space="preserve">
+    <value />
   </data>
-  <data name="btnInsertText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 94</value>
+  <data name="&gt;&gt;btnDeleteAllLyrics.Name" xml:space="preserve">
+    <value>btnDeleteAllLyrics</value>
   </data>
-  <data name="btnInsertText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>130, 23</value>
+  <data name="splitContainer1.SplitterDistance" type="System.Int32, mscorlib">
+    <value>477</value>
   </data>
-  <data name="btnInsertText.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
+  <data name="&gt;&gt;splitContainer1.Panel2.Name" xml:space="preserve">
+    <value>splitContainer1.Panel2</value>
   </data>
-  <data name="btnInsertText.Text" xml:space="preserve">
-    <value>&amp;Insert text line</value>
-  </data>
-  <data name="btnInsertText.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="btnInsertText.ToolTip" xml:space="preserve">
-    <value>Insert a new line (text)</value>
-  </data>
-  <data name="&gt;&gt;btnInsertText.Name" xml:space="preserve">
-    <value>btnInsertText</value>
-  </data>
-  <data name="&gt;&gt;btnInsertText.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnInsertText.Parent" xml:space="preserve">
-    <value>pnlRightTop</value>
-  </data>
-  <data name="&gt;&gt;btnInsertText.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="btnDelete.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnDelete.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 119</value>
-  </data>
-  <data name="btnDelete.Size" type="System.Drawing.Size, System.Drawing">
-    <value>130, 23</value>
-  </data>
-  <data name="btnDelete.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
-  </data>
-  <data name="btnDelete.Text" xml:space="preserve">
-    <value>&amp;Delete line</value>
-  </data>
-  <data name="btnDelete.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="btnDelete.ToolTip" xml:space="preserve">
-    <value>Delete current line</value>
-  </data>
-  <data name="&gt;&gt;btnDelete.Name" xml:space="preserve">
-    <value>btnDelete</value>
-  </data>
-  <data name="&gt;&gt;btnDelete.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnDelete.Parent" xml:space="preserve">
-    <value>pnlRightTop</value>
+  <data name="&gt;&gt;splitContainer1.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="&gt;&gt;btnDelete.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
-  <data name="btnSave.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleRight</value>
+  <data name="btnInsertCr.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
   </data>
-  <data name="btnSave.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnSave.Location" type="System.Drawing.Point, System.Drawing">
-    <value>254, 10</value>
-  </data>
-  <data name="btnSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>158, 23</value>
-  </data>
-  <data name="btnSave.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="btnSave.Text" xml:space="preserve">
-    <value>&amp;Save lyrics</value>
-  </data>
-  <data name="btnSave.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="btnSave.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
-    <value>TextBeforeImage</value>
-  </data>
-  <data name="btnSave.ToolTip" xml:space="preserve">
-    <value>Save lyrics</value>
-  </data>
-  <data name="&gt;&gt;btnSave.Name" xml:space="preserve">
-    <value>btnSave</value>
-  </data>
-  <data name="&gt;&gt;btnSave.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnSave.Parent" xml:space="preserve">
-    <value>pnlRightTop</value>
-  </data>
-  <data name="&gt;&gt;btnSave.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>132, 17</value>
-  </metadata>
-  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>37, 20</value>
-  </data>
-  <data name="mnuFile.Text" xml:space="preserve">
-    <value>&amp;File</value>
-  </data>
-  <data name="mnuEditLoadLRCFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>216, 22</value>
-  </data>
-  <data name="mnuEditLoadLRCFile.Text" xml:space="preserve">
-    <value>Load a text file (.lrc format)</value>
-  </data>
-  <data name="mnuEditLoadLRCFile.ToolTipText" xml:space="preserve">
-    <value>Load a LRC file (times stamps + Lyrics)</value>
-  </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>39, 20</value>
-  </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>&amp;Edit</value>
-  </data>
-  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 20</value>
-  </data>
-  <data name="mnuHelp.Text" xml:space="preserve">
-    <value>&amp;Help</value>
-  </data>
-  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="dgView.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>822, 24</value>
+  <data name="btnDelete.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
-  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="menuStrip1.Text" xml:space="preserve">
-    <value>menuStrip1</value>
-  </data>
-  <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
-    <value>menuStrip1</value>
+  <data name="&gt;&gt;splitContainer1.Parent" xml:space="preserve">
+    <value>pnlMiddle</value>
   </data>
   <data name="&gt;&gt;menuStrip1.Type" xml:space="preserve">
     <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;mnuHelp.Name" xml:space="preserve">
+    <value>mnuHelp</value>
   </data>
-  <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="btnInsertParagraph.Size" type="System.Drawing.Size, System.Drawing">
+    <value>130, 23</value>
   </data>
-  <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lblLyricsOrigin.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="&gt;&gt;btnInsertParagraph.Name" xml:space="preserve">
+    <value>btnInsertParagraph</value>
+  </data>
+  <data name="lblLyricsOrigin.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;mnuHelp.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnDeleteAllLyrics.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnDelete.Size" type="System.Drawing.Size, System.Drawing">
+    <value>130, 23</value>
+  </data>
+  <data name="&gt;&gt;mnuFileSep2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="pnlTop.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 24</value>
+  </data>
+  <data name="&gt;&gt;btnSave.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="btnInsertCr.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;mnuHelpAbout.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 20</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="&gt;&gt;lblLyricsOrigin.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="btnDeleteAllLyrics.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="&gt;&gt;pnlRightTop.Name" xml:space="preserve">
+    <value>pnlRightTop</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel2.Parent" xml:space="preserve">
+    <value>splitContainer1</value>
+  </data>
+  <data name="btnDeleteAllLyrics.Location" type="System.Drawing.Point, System.Drawing">
+    <value>254, 85</value>
+  </data>
+  <data name="lblLyricsOrigin.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="pnlMiddle.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;btnInsertText.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="pnlTop.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="mnuFileQuit.Text" xml:space="preserve">
+    <value>&amp;Quit</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="btnInsertParagraph.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;mnuFileQuit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 6</value>
+  </data>
+  <data name="btnDelete.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 119</value>
+  </data>
+  <data name="&gt;&gt;pnlMiddle.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;btnInsertCr.Name" xml:space="preserve">
+    <value>btnInsertCr</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblLyricsOrigin.Name" xml:space="preserve">
+    <value>lblLyricsOrigin</value>
+  </data>
+  <data name="btnDeleteAllLyrics.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnInsertText.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="&gt;&gt;txtResult.Name" xml:space="preserve">
+    <value>txtResult</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>frmMp3LyricsEdit</value>
+  </data>
+  <data name="&gt;&gt;saveFileDialog.Name" xml:space="preserve">
+    <value>saveFileDialog</value>
+  </data>
+  <data name="txtResult.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 8.25pt</value>
+  </data>
+  <data name="&gt;&gt;mnuFileSep1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnDeleteAllLyrics.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;btnDelete.Parent" xml:space="preserve">
+    <value>pnlRightTop</value>
+  </data>
+  <data name="clText.HeaderText" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="btnDeleteAllLyrics.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
+    <value>TextBeforeImage</value>
+  </data>
+  <data name="&gt;&gt;mnuFileQuit.Name" xml:space="preserve">
+    <value>mnuFileQuit</value>
+  </data>
+  <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
     <value>209, 22</value>
   </data>
   <data name="mnuFileSave.Text" xml:space="preserve">
     <value>&amp;Save</value>
   </data>
-  <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 6</value>
-  </data>
-  <data name="mnuFileSaveAsLrc.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
-  </data>
-  <data name="mnuFileSaveAsLrc.Text" xml:space="preserve">
-    <value>Export lyrics to .lrc format</value>
-  </data>
-  <data name="mnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 6</value>
-  </data>
-  <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
-  </data>
-  <data name="mnuFileQuit.Text" xml:space="preserve">
-    <value>&amp;Quit</value>
-  </data>
-  <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
-  </data>
-  <data name="mnuHelpAbout.Text" xml:space="preserve">
-    <value>&amp;About</value>
-  </data>
-  <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>244, 17</value>
-  </metadata>
-  <metadata name="saveFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>386, 17</value>
-  </metadata>
-  <data name="&gt;&gt;splitContainer1.Name" xml:space="preserve">
-    <value>splitContainer1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Parent" xml:space="preserve">
-    <value>pnlMiddle</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="pnlMiddle.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="pnlMiddle.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 24</value>
-  </data>
-  <data name="pnlMiddle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>822, 426</value>
-  </data>
-  <data name="pnlMiddle.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;pnlMiddle.Name" xml:space="preserve">
-    <value>pnlMiddle</value>
-  </data>
-  <data name="&gt;&gt;pnlMiddle.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlMiddle.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pnlMiddle.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="splitContainer1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="splitContainer1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <metadata name="clTime.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="clText.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="dgView.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="dgView.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="dgView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>324, 426</value>
-  </data>
-  <data name="dgView.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;dgView.Name" xml:space="preserve">
-    <value>dgView</value>
-  </data>
-  <data name="&gt;&gt;dgView.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;dgView.Parent" xml:space="preserve">
-    <value>splitContainer1.Panel1</value>
-  </data>
-  <data name="&gt;&gt;dgView.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel1.Name" xml:space="preserve">
-    <value>splitContainer1.Panel1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel1.Parent" xml:space="preserve">
-    <value>splitContainer1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;txtResult.Name" xml:space="preserve">
-    <value>txtResult</value>
-  </data>
-  <data name="&gt;&gt;txtResult.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtResult.Parent" xml:space="preserve">
-    <value>pnlRightBottom</value>
-  </data>
-  <data name="&gt;&gt;txtResult.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="pnlRightBottom.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="pnlRightBottom.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 151</value>
-  </data>
-  <data name="pnlRightBottom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>494, 275</value>
-  </data>
-  <data name="pnlRightBottom.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;pnlRightBottom.Name" xml:space="preserve">
-    <value>pnlRightBottom</value>
-  </data>
-  <data name="&gt;&gt;pnlRightBottom.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlRightBottom.Parent" xml:space="preserve">
-    <value>splitContainer1.Panel2</value>
-  </data>
-  <data name="&gt;&gt;pnlRightBottom.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="pnlRightTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="pnlRightTop.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="pnlRightTop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>494, 151</value>
+  <data name="&gt;&gt;btnInsertCr.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="pnlRightTop.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;pnlRightTop.Name" xml:space="preserve">
-    <value>pnlRightTop</value>
+  <data name="&gt;&gt;btnInsertText.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnSave.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;dgView.Name" xml:space="preserve">
+    <value>dgView</value>
+  </data>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterScreen</value>
+  </data>
+  <data name="btnInsertParagraph.ToolTip" xml:space="preserve">
+    <value>Insert a new paragraph</value>
+  </data>
+  <data name="btnInsertCr.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 10</value>
   </data>
   <data name="&gt;&gt;pnlRightTop.Type" xml:space="preserve">
     <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;pnlRightTop.Parent" xml:space="preserve">
-    <value>splitContainer1.Panel2</value>
-  </data>
-  <data name="&gt;&gt;pnlRightTop.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel2.Name" xml:space="preserve">
-    <value>splitContainer1.Panel2</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel2.Parent" xml:space="preserve">
-    <value>splitContainer1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel2.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="splitContainer1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>822, 426</value>
-  </data>
-  <data name="splitContainer1.SplitterDistance" type="System.Int32, mscorlib">
-    <value>324</value>
-  </data>
-  <data name="splitContainer1.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Name" xml:space="preserve">
-    <value>splitContainer1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Parent" xml:space="preserve">
-    <value>pnlMiddle</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <metadata name="clTime.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <data name="clTime.HeaderText" xml:space="preserve">
     <value>Time</value>
   </data>
-  <data name="clTime.Width" type="System.Int32, mscorlib">
-    <value>80</value>
-  </data>
-  <metadata name="clText.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="clText.HeaderText" xml:space="preserve">
-    <value>Text</value>
-  </data>
-  <data name="clText.Width" type="System.Int32, mscorlib">
-    <value>200</value>
-  </data>
-  <data name="txtResult.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="txtResult.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 8.25pt</value>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>975, 467</value>
   </data>
   <data name="txtResult.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="txtResult.Size" type="System.Drawing.Size, System.Drawing">
-    <value>494, 275</value>
+  <data name="&gt;&gt;pnlTop.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
-  <data name="txtResult.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
+  <data name="btnInsertText.Text" xml:space="preserve">
+    <value>&amp;Insert text line</value>
   </data>
-  <data name="txtResult.Text" xml:space="preserve">
-    <value />
+  <data name="splitContainer1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
   </data>
-  <data name="&gt;&gt;txtResult.Name" xml:space="preserve">
-    <value>txtResult</value>
+  <data name="&gt;&gt;splitContainer1.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
-  <data name="&gt;&gt;txtResult.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
   </data>
-  <data name="&gt;&gt;txtResult.Parent" xml:space="preserve">
+  <data name="lblLyricsOrigin.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 8</value>
+  </data>
+  <data name="&gt;&gt;pnlRightBottom.Name" xml:space="preserve">
     <value>pnlRightBottom</value>
   </data>
   <data name="&gt;&gt;txtResult.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
+  <data name="&gt;&gt;btnDeleteAllLyrics.Parent" xml:space="preserve">
+    <value>pnlRightTop</value>
   </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>822, 450</value>
+  <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
-  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
-    <value>CenterScreen</value>
+  <data name="pnlRightBottom.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;txtResult.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="txtResult.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="txtResult.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Karaboss - Edit mp3 lyrics</value>
   </data>
-  <data name="&gt;&gt;toolTip1.Name" xml:space="preserve">
-    <value>toolTip1</value>
+  <data name="pnlTop.Size" type="System.Drawing.Size, System.Drawing">
+    <value>975, 30</value>
   </data>
-  <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnSave.Text" xml:space="preserve">
+    <value>&amp;Save lyrics</value>
   </data>
-  <data name="&gt;&gt;mnuFile.Name" xml:space="preserve">
-    <value>mnuFile</value>
+  <data name="&gt;&gt;lblLyricsOrigin.Parent" xml:space="preserve">
+    <value>pnlTop</value>
   </data>
-  <data name="&gt;&gt;mnuFile.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnDelete.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;mnuFileSave.Name" xml:space="preserve">
-    <value>mnuFileSave</value>
+  <data name="&gt;&gt;pnlTop.Name" xml:space="preserve">
+    <value>pnlTop</value>
   </data>
-  <data name="&gt;&gt;mnuFileSave.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="mnuHelpAbout.Text" xml:space="preserve">
+    <value>&amp;About...</value>
+  </data>
+  <data name="btnInsertText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>130, 23</value>
   </data>
   <data name="&gt;&gt;mnuFileSep2.Name" xml:space="preserve">
     <value>mnuFileSep2</value>
   </data>
-  <data name="&gt;&gt;mnuFileSep2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;mnuHelpAbout.Name" xml:space="preserve">
+    <value>mnuHelpAbout</value>
   </data>
-  <data name="&gt;&gt;mnuFileSaveAsLrc.Name" xml:space="preserve">
-    <value>mnuFileSaveAsLrc</value>
+  <data name="pnlMiddle.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
   </data>
-  <data name="&gt;&gt;mnuFileSaveAsLrc.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="pnlTop.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>37, 20</value>
+  </data>
+  <data name="lblLyricsOrigin.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;pnlTop.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="splitContainer1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>975, 413</value>
   </data>
   <data name="&gt;&gt;mnuFileSep1.Name" xml:space="preserve">
     <value>mnuFileSep1</value>
   </data>
-  <data name="&gt;&gt;mnuFileSep1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="pnlRightTop.Size" type="System.Drawing.Size, System.Drawing">
+    <value>494, 151</value>
   </data>
-  <data name="&gt;&gt;mnuFileQuit.Name" xml:space="preserve">
-    <value>mnuFileQuit</value>
+  <data name="&gt;&gt;dgView.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
-  <data name="&gt;&gt;mnuFileQuit.Type" xml:space="preserve">
+  <data name="splitContainer1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;mnuFileSave.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;mnuHelp.Name" xml:space="preserve">
-    <value>mnuHelp</value>
+  <data name="btnSave.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;mnuHelp.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;splitContainer1.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
-  <data name="&gt;&gt;mnuHelpAbout.Name" xml:space="preserve">
-    <value>mnuHelpAbout</value>
+  <data name="lblLyricsOrigin.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
   </data>
-  <data name="&gt;&gt;mnuHelpAbout.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;openFileDialog.Name" xml:space="preserve">
-    <value>openFileDialog</value>
+  <data name="&gt;&gt;txtResult.Parent" xml:space="preserve">
+    <value>pnlRightBottom</value>
   </data>
   <data name="&gt;&gt;openFileDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;saveFileDialog.Name" xml:space="preserve">
-    <value>saveFileDialog</value>
+  <data name="btnInsertCr.Size" type="System.Drawing.Size, System.Drawing">
+    <value>130, 23</value>
   </data>
-  <data name="&gt;&gt;saveFileDialog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;btnSave.Name" xml:space="preserve">
+    <value>btnSave</value>
   </data>
-  <data name="&gt;&gt;clTime.Name" xml:space="preserve">
-    <value>clTime</value>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Help</value>
   </data>
-  <data name="&gt;&gt;clTime.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;pnlMiddle.Name" xml:space="preserve">
+    <value>pnlMiddle</value>
   </data>
-  <data name="&gt;&gt;clText.Name" xml:space="preserve">
-    <value>clText</value>
+  <data name="&gt;&gt;pnlRightBottom.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
-  <data name="&gt;&gt;clText.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;btnInsertText.Parent" xml:space="preserve">
+    <value>pnlRightTop</value>
   </data>
-  <data name="&gt;&gt;mnuEditLoadLRCFile.Name" xml:space="preserve">
-    <value>mnuEditLoadLRCFile</value>
+  <data name="splitContainer1.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
   </data>
-  <data name="&gt;&gt;mnuEditLoadLRCFile.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="mnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 6</value>
   </data>
-  <data name="&gt;&gt;mnuEdit.Name" xml:space="preserve">
-    <value>mnuEdit</value>
+  <data name="&gt;&gt;splitContainer1.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
+    <value>209, 22</value>
+  </data>
+  <data name="&gt;&gt;pnlTop.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pnlMiddle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnSave.ToolTip" xml:space="preserve">
+    <value>Save lyrics</value>
+  </data>
+  <data name="txtResult.Size" type="System.Drawing.Size, System.Drawing">
+    <value>494, 262</value>
+  </data>
+  <data name="btnInsertParagraph.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 34</value>
+  </data>
+  <data name="btnSave.Size" type="System.Drawing.Size, System.Drawing">
+    <value>158, 23</value>
+  </data>
+  <data name="dgView.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;btnDelete.Name" xml:space="preserve">
+    <value>btnDelete</value>
+  </data>
+  <data name="&gt;&gt;toolTip1.Name" xml:space="preserve">
+    <value>toolTip1</value>
+  </data>
+  <data name="btnInsertParagraph.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="btnInsertParagraph.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;openFileDialog.Name" xml:space="preserve">
+    <value>openFileDialog</value>
+  </data>
+  <data name="pnlMiddle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 54</value>
+  </data>
+  <data name="btnInsertCr.ToolTip" xml:space="preserve">
+    <value>Insert a Line break</value>
+  </data>
+  <data name="btnInsertCr.Text" xml:space="preserve">
+    <value>Insert a Line Break (/)</value>
+  </data>
+  <data name="pnlMiddle.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlRightTop.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnSave.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="menuStrip1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblLyricsOrigin.Text" xml:space="preserve">
+    <value>Origin of lyrics</value>
+  </data>
+  <data name="clTime.Width" type="System.Int32, mscorlib">
+    <value>80</value>
   </data>
   <data name="&gt;&gt;mnuEdit.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>frmMp3LyricsEdit</value>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;File</value>
   </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;pnlRightTop.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
+  <data name="pnlRightTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="&gt;&gt;mnuFile.Name" xml:space="preserve">
+    <value>mnuFile</value>
+  </data>
+  <data name="btnDelete.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="pnlTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="&gt;&gt;dgView.Parent" xml:space="preserve">
+    <value>splitContainer1.Panel1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel1.Name" xml:space="preserve">
+    <value>splitContainer1.Panel1</value>
+  </data>
+  <data name="mnuEditLoadLRCFile.Text" xml:space="preserve">
+    <value>Load a text file (.lrc format)</value>
+  </data>
+  <data name="btnDelete.ToolTip" xml:space="preserve">
+    <value>Delete current line</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="txtResult.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;clTime.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnDelete.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;clText.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="pnlRightBottom.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="mnuEdit.Text" xml:space="preserve">
+    <value>&amp;Edit</value>
+  </data>
+  <data name="pnlMiddle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>975, 413</value>
+  </data>
+  <data name="btnInsertText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 94</value>
+  </data>
+  <data name="mnuFileSaveAsLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>209, 22</value>
+  </data>
+  <data name="pnlRightTop.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="btnDeleteAllLyrics.Text" xml:space="preserve">
+    <value>&amp;Delete All Lyrics</value>
+  </data>
+  <data name="btnSave.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
+    <value>TextBeforeImage</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;clTime.Name" xml:space="preserve">
+    <value>clTime</value>
+  </data>
+  <data name="splitContainer1.Panel2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;mnuEditLoadLRCFile.Name" xml:space="preserve">
+    <value>mnuEditLoadLRCFile</value>
+  </data>
+  <data name="clText.Width" type="System.Int32, mscorlib">
+    <value>200</value>
+  </data>
+  <data name="btnInsertText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>975, 24</value>
+  </data>
+  <data name="pnlRightBottom.Size" type="System.Drawing.Size, System.Drawing">
+    <value>494, 262</value>
+  </data>
+  <data name="splitContainer1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="btnInsertParagraph.Text" xml:space="preserve">
+    <value>New paragraph (\)</value>
+  </data>
+  <data name="&gt;&gt;mnuFileSaveAsLrc.Name" xml:space="preserve">
+    <value>mnuFileSaveAsLrc</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Name" xml:space="preserve">
+    <value>splitContainer1</value>
+  </data>
+  <data name="&gt;&gt;btnInsertText.Name" xml:space="preserve">
+    <value>btnInsertText</value>
+  </data>
+  <data name="dgView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>477, 413</value>
+  </data>
+  <data name="lblLyricsOrigin.Size" type="System.Drawing.Size, System.Drawing">
+    <value>83, 15</value>
+  </data>
+  <data name="txtResult.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;btnSave.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnInsertText.ToolTip" xml:space="preserve">
+    <value>Insert a new line (text)</value>
+  </data>
+  <data name="btnDeleteAllLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>158, 23</value>
+  </data>
+  <data name="btnSave.Location" type="System.Drawing.Point, System.Drawing">
+    <value>254, 10</value>
+  </data>
+  <data name="pnlRightBottom.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;mnuEditLoadLRCFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="mnuEditLoadLRCFile.ToolTipText" xml:space="preserve">
+    <value>Load a LRC file (times stamps + Lyrics)</value>
+  </data>
+  <data name="pnlRightBottom.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 151</value>
+  </data>
+  <data name="mnuFileSaveAsLrc.Text" xml:space="preserve">
+    <value>Export lyrics to .lrc format</value>
+  </data>
+  <data name="btnDeleteAllLyrics.ToolTip" xml:space="preserve">
+    <value>Delete all the lyrics</value>
+  </data>
+  <data name="&gt;&gt;saveFileDialog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnInsertParagraph.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;lblLyricsOrigin.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnSave.Parent" xml:space="preserve">
+    <value>pnlRightTop</value>
+  </data>
+  <data name="btnDelete.Text" xml:space="preserve">
+    <value>&amp;Delete line</value>
+  </data>
+  <data name="btnInsertText.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="menuStrip1.Text" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;clText.Name" xml:space="preserve">
+    <value>clText</value>
+  </data>
+  <data name="btnInsertCr.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;pnlRightBottom.Parent" xml:space="preserve">
+    <value>splitContainer1.Panel2</value>
+  </data>
+  <data name="&gt;&gt;mnuEdit.Name" xml:space="preserve">
+    <value>mnuEdit</value>
+  </data>
+  <data name="&gt;&gt;btnInsertCr.Parent" xml:space="preserve">
+    <value>pnlRightTop</value>
+  </data>
+  <data name="&gt;&gt;btnDeleteAllLyrics.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel1.Parent" xml:space="preserve">
+    <value>splitContainer1</value>
+  </data>
+  <data name="&gt;&gt;pnlRightTop.Parent" xml:space="preserve">
+    <value>splitContainer1.Panel2</value>
+  </data>
+  <data name="&gt;&gt;pnlRightBottom.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="dgView.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="btnDeleteAllLyrics.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="mnuEditLoadLRCFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>216, 22</value>
+  </data>
+  <data name="&gt;&gt;pnlMiddle.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="$this.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <metadata name="clText.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="saveFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>386, 17</value>
+  </metadata>
+  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>132, 17</value>
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>244, 17</value>
+  </metadata>
+  <metadata name="clTime.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

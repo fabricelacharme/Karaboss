@@ -702,9 +702,11 @@ namespace Karaboss.Mp3
             TagLib.Id3v2.SynchronisedLyricsFrame SyncLyricsFrame = Player.SyncLyricsFrame;
             Mp3LyricsMgmtHelper.MySyncLyricsFrame = SyncLyricsFrame;
 
-            // Get lyrics type
+            // Get lyrics type origin
             Mp3LyricsType = Mp3LyricsMgmtHelper.GetLyricsType(SyncLyricsFrame, TagLyrics, TagSubTitles, FileName);
-
+            
+            // Save info
+            Mp3LyricsMgmtHelper.m_mp3lyricstype = Mp3LyricsType;
             
             switch (Mp3LyricsType)
             {
@@ -742,6 +744,31 @@ namespace Karaboss.Mp3
                     break;
             }         
         }
+
+
+        private void mnuEditLyrics_Click(object sender, EventArgs e)
+        {
+            DisplayFrmMp3Lyrics();
+            DisplayMp3EditLyricsForm();
+
+            /*
+            switch (Mp3LyricsMgmtHelper.m_mp3lyricstype)
+            {
+                case Mp3LyricsTypes.LyricsWithTimeStamps:             // Lyrics exist => display frmMp3Lyrics                                           
+                case Mp3LyricsTypes.LRCFile:
+                    DisplayFrmMp3Lyrics();
+                    DisplayMp3EditLyricsForm();
+                    break;
+
+                case Mp3LyricsTypes.LyricsWithoutTimeStamps:        // Lyrics does not exist => display frmMp3LyricsEdit
+                case Mp3LyricsTypes.None:
+                    DisplayFrmMp3Lyrics();
+                    DisplayMp3EditLyricsForm();
+                    break;
+            }
+            */
+        }
+
 
         /// <summary>
         /// Display Karaoke form
@@ -783,6 +810,8 @@ namespace Karaboss.Mp3
 
             StartKaraoke();
         }
+
+        
 
         /// <summary>
         /// Display with simple lyrics
@@ -1302,10 +1331,7 @@ namespace Karaboss.Mp3
 
         #endregion Timer
 
-        private void mnuLyricsEdit_Click(object sender, EventArgs e)
-        {
-            DisplayFrmMp3Lyrics();
-        }
+
 
     }
 }

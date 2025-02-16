@@ -35,6 +35,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
         public static SyncText[] SyncTexts;
         public static SynchronisedLyricsFrame MySyncLyricsFrame;
         public static string m_SepLine = "/";
+        public static Mp3LyricsTypes m_mp3lyricstype = Mp3LyricsTypes.None;
+
 
         /// <summary>
         /// Get lyrics type
@@ -244,9 +246,15 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
             for (int i = 0; i < lstLyrics.Count; i++)
             {
-                Lyrics[i] = "\r\n" + lstLyrics[i];
-                Times[i] = lstTimes[i];
-                synchedTexts[i] = new SyncText(Times[i], Lyrics[i]);
+                lyric = lstLyrics[i];
+                lyric = lyric.Replace("\r\n", "").Replace("\r", "").Replace("\n", "");
+                lyric = "\r\n" + lyric;
+                //Lyrics[i] = lyric;                      // POURQUOI ajouter \r\n? => needed by PictureBox1_Paint event of frmLyrics
+                
+                time = lstTimes[i];
+                //Times[i] = lstTimes[i];
+                //synchedTexts[i] = new SyncText(Times[i], lyric);
+                synchedTexts[i] = new SyncText(time, lyric);
             }
             
             return synchedTexts;

@@ -90,10 +90,13 @@ namespace Karaboss.Mp3
         }
 
 
+        /// <summary>
+        /// Load lyrics from Mp3LyricsMgmtHelper.SyncTexts
+        /// They must begin with \r\n because of PictureBox1_Paint
+        /// </summary>
         private void LoadLyrics()
         {
             if (Mp3LyricsMgmtHelper.SyncTexts == null) return;
-
 
             SyncText[] SyncLyrics = Mp3LyricsMgmtHelper.SyncTexts;
             words = new string[SyncLyrics.Length];

@@ -126,16 +126,16 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>112, 22</value>
   </data>
   <data name="mnuFileOpen.Text" xml:space="preserve">
     <value>&amp;Open...</value>
   </data>
   <data name="MnuFileSep.Size" type="System.Drawing.Size, System.Drawing">
-    <value>177, 6</value>
+    <value>109, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>112, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>E&amp;xit</value>
@@ -146,20 +146,20 @@
   <data name="mnuFile.Text" xml:space="preserve">
     <value>&amp;File</value>
   </data>
-  <data name="mnuLyricsEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+  <data name="mnuEditLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>124, 22</value>
   </data>
-  <data name="mnuLyricsEdit.Text" xml:space="preserve">
+  <data name="mnuEditLyrics.Text" xml:space="preserve">
+    <value>Edit &amp;lyrics</value>
+  </data>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 20</value>
+  </data>
+  <data name="mnuEdit.Text" xml:space="preserve">
     <value>&amp;Edit</value>
   </data>
-  <data name="mnuLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>48, 20</value>
-  </data>
-  <data name="mnuLyrics.Text" xml:space="preserve">
-    <value>&amp;Lyrics</value>
-  </data>
   <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>116, 22</value>
   </data>
   <data name="mnuHelpAbout.Text" xml:space="preserve">
     <value>&amp;About...</value>
@@ -829,6 +829,18 @@
   <data name="&gt;&gt;mnuFileQuit.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;mnuEdit.Name" xml:space="preserve">
+    <value>mnuEdit</value>
+  </data>
+  <data name="&gt;&gt;mnuEdit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuEditLyrics.Name" xml:space="preserve">
+    <value>mnuEditLyrics</value>
+  </data>
+  <data name="&gt;&gt;mnuEditLyrics.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;mnuHelp.Name" xml:space="preserve">
     <value>mnuHelp</value>
   </data>
@@ -858,18 +870,6 @@
   </data>
   <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mnuLyrics.Name" xml:space="preserve">
-    <value>mnuLyrics</value>
-  </data>
-  <data name="&gt;&gt;mnuLyrics.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mnuLyricsEdit.Name" xml:space="preserve">
-    <value>mnuLyricsEdit</value>
-  </data>
-  <data name="&gt;&gt;mnuLyricsEdit.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmMp3Player</value>

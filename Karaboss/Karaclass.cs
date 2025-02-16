@@ -79,11 +79,7 @@ namespace Karaboss
             Bottom = 2,
         }
 
-        public enum LrcFormats
-        {
-            Lines = 0,
-            Syllables = 1,
-        }
+        
 
         private static string _m_fileplaylistGroups;
         public static string M_filePlaylistGroups

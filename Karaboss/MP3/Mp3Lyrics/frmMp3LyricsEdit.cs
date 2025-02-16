@@ -1,4 +1,5 @@
 ﻿using Karaboss.Lrc.SharedFramework;
+using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
 using System;
 using System.Drawing;
@@ -48,6 +49,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
             _filename = FileName;
 
             // Inits
+            SetTitle(Path.GetFileName(_filename));
+            SetOriginOfLyrics();
             InitTxtResult();
             InitGridView();
 
@@ -55,6 +58,17 @@ namespace Karaboss.Mp3.Mp3Lyrics
         }
 
         #region Form Load and Close
+
+        /// <summary>
+        /// Set Title of the form
+        /// </summary>
+        private void SetTitle(string displayName)
+        {
+            displayName = displayName.Replace("__", ": ");
+            displayName = displayName.Replace("_", " ");
+            Text = "Karaboss - " + Strings.EditWords + " - " + displayName;
+        }
+
         private void frmMp3LyricsEdit_Load(object sender, EventArgs e)
         {
             // Récupère la taille et position de la forme
@@ -200,7 +214,6 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     text = text.Replace("\r\n", m_SepLine);
                     text = text.Replace("\r", m_SepLine);
                     text = text.Replace("\n", m_SepLine);
-
                     text = text.Replace(" ", "_");
 
                     long time = SynchedLyrics.Text[i].Time;
@@ -213,6 +226,12 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 {
                     long time = SyncLyrics[i].Time;
                     string text = SyncLyrics[i].Text;
+                    text = text.Replace("\r\n", m_SepLine);
+                    text = text.Replace("\r", m_SepLine);
+                    text = text.Replace("\n", m_SepLine);
+                    text = text.Replace(" ", "_");
+
+
                     dgView.Rows.Add(time, text);
                 }
             }
@@ -222,7 +241,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         #endregion Populate gridview
 
 
-        #region Menu File
+        #region Menus
         /// <summary>
         /// Menu File Quit
         /// </summary>
@@ -233,7 +252,13 @@ namespace Karaboss.Mp3.Mp3Lyrics
             Close();
         }
 
-        #endregion Menu File
+        private void mnuHelpAbout_Click(object sender, EventArgs e)
+        {
+            frmAboutDialog dlg = new frmAboutDialog();
+            dlg.ShowDialog();
+        }
+
+        #endregion Menus
 
 
         #region buttons
@@ -281,6 +306,28 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
 
         #region init
+
+        private void SetOriginOfLyrics()
+        {
+            
+            switch (Mp3LyricsMgmtHelper.m_mp3lyricstype)
+            {
+                case Mp3LyricsTypes.LyricsWithTimeStamps:
+                    lblLyricsOrigin.Text = "Origin of lyrics = mp3: " + Path.GetFileName(_filename);
+                    break;
+                case Mp3LyricsTypes.LRCFile:
+                    string lrcFile = Path.ChangeExtension(_filename, ".lrc");
+                    if (System.IO.File.Exists(lrcFile))
+                        lblLyricsOrigin.Text = "Origin of lyrics = lrc: " + Path.GetFileName(lrcFile);
+                    break;
+                case Mp3LyricsTypes.LyricsWithoutTimeStamps:        // Lyrics does not exist => display frmMp3LyricsEdit
+                    lblLyricsOrigin.Text = "Origin of lyrics = None";
+                    break;
+                case Mp3LyricsTypes.None:
+                    lblLyricsOrigin.Text = "Origin of lyrics = None";
+                    break;
+            }
+        }
 
         private void InitTxtResult()
         {
@@ -416,23 +463,35 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 Mp3LyricsMgmtHelper.MySyncLyricsFrame = new SynchronisedLyricsFrame("Description", "en", SynchedTextType.Lyrics);
             }
 
-            int lines = dgView.Rows.Count;
-            
+            // How many valid lines ?
+            //int lines = dgView.Rows.Count;
+            int lines = 0;
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                if (dgView.Rows[i].Cells[0].Value != null)
+                    lines++;
+            }
+
+
             Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text = new SynchedText[lines];
             
             // Read all rows and store into the frame
             for (int i = 0; i < lines; i++)
             {
-                Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i] = new SynchedText();
-                Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i].Time = long.Parse(dgView.Rows[i].Cells[0].Value.ToString());
 
-                // Modify lyrics
-                // \ => '\n'
-                // _ => " "
-                lyric = dgView.Rows[i].Cells[1].Value.ToString();
-                lyric = lyric.Replace(m_SepLine, "\n");
-                lyric = lyric.Replace("_", " ");
-                Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i].Text = lyric;
+                if (dgView.Rows[i].Cells[0].Value != null)
+                {
+                    Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i] = new SynchedText();
+                    Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i].Time = long.Parse(dgView.Rows[i].Cells[0].Value.ToString());
+
+                    // Modify lyrics
+                    // \ => '\n'
+                    // _ => " "
+                    lyric = dgView.Rows[i].Cells[1].Value.ToString();
+                    lyric = lyric.Replace(m_SepLine, "\n");
+                    lyric = lyric.Replace("_", " ");
+                    Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i].Text = lyric;
+                }
             }            
 
             Mp3LyricsMgmtHelper.SetTags(FileName, Mp3LyricsMgmtHelper.MySyncLyricsFrame);
@@ -547,7 +606,9 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     {
                         String lines = sr.ReadToEnd();
                         LoadLRCFile(lines);
+                        
                     }
+                    lblLyricsOrigin.Text = "Origin of lyrics = lrc: " + Path.GetFileName(fileName);
                 }
                 catch (Exception ex)
                 {
@@ -596,10 +657,11 @@ namespace Karaboss.Mp3.Mp3Lyrics
             Cursor.Current = Cursors.Default;
         }
 
-        #endregion load lrc
 
+        #endregion load lrc
 
         #endregion lrc
 
+       
     }
 }
