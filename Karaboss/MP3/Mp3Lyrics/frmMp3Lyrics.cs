@@ -232,6 +232,7 @@ namespace Karaboss.Mp3
             SizeF size;
             float delta;
             string Lyric;
+            string nextLyric;
             string s;            
             int LineNumber = 0;
 
@@ -248,8 +249,8 @@ namespace Karaboss.Mp3
                 // If next word is crlf, go to next line
                 if (i < words.Length - 1) 
                 { 
-                    string l = words[i + 1];
-                    if (l.StartsWith("\r\n"))
+                    nextLyric = words[i + 1];
+                    if (nextLyric.StartsWith("\r\n"))
                     {
                         IsNewLine = true;
                     }

@@ -2346,7 +2346,7 @@ namespace Karaboss
             string cr = "\r\n";
             string strSpaceBetween;
             bool bSpaceBetwwen = false;
-
+            string lines = string.Empty;
 
             // Space between time and lyrics [00:02.872]lyric
             if (bSpaceBetwwen)
@@ -2371,9 +2371,9 @@ namespace Karaboss
             bool bLineFeed = false;
 
             // new format of lrc
-            // [01:54.60]Pa<01:55.32>ro<01:56.15>les
-            // Start line is [01:54.60]Pa
-            // syllaves are <01:55.32>ro<01:56.15>les
+            // [01:54.60]La <01:55.32>petite <01:56.15>maison
+            // Start line is [01:54.60]La
+            // syllabes are <01:55.32>petite <01:56.15>maison
 
             // Save syllabe by syllabe
             for (int i = 0; i < dgView.Rows.Count; i++)
@@ -2412,12 +2412,12 @@ namespace Karaboss
                         if (bLineFeed)
                         {
                             // Format of timestamp is []
-                            lrcs += "[" + sTime + "]" + strSpaceBetween + sLyric + cr;
+                            lrcs = "[" + sTime + "]" + strSpaceBetween + sLyric;
                         }
                         else
                         {
-                            // Format of timestamp is <>
-                            lrcs += "<" + sTime + ">" + strSpaceBetween + sLyric + cr;
+                            // Format of timestamp is <> + space before
+                            lrcs += " <" + sTime + ">" + strSpaceBetween + sLyric.Trim();
                         }
                         
                         bLineFeed = false;
@@ -2426,13 +2426,23 @@ namespace Karaboss
                     else
                     {
                         bLineFeed = true;
+                        // Store previous line
+                        if (lrcs.Trim().Length > 0)
+                        {
+                            lines += lrcs + cr;
+                            lrcs = "";
+                        }
                     }
                 }
             }
 
+            if (lrcs.Trim().Length > 0)
+                lines += lrcs + cr;
+
+
             try
             {
-                System.IO.File.WriteAllText(File, lrcs);
+                System.IO.File.WriteAllText(File, lines);
                 System.Diagnostics.Process.Start(@File);
 
             }

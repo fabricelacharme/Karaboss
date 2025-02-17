@@ -187,115 +187,72 @@ namespace Karaboss.Mp3.Mp3Lyrics
             if (!System.IO.File.Exists(lrcFile)) return null;
 
             SyncText[] synchedTexts;
-            string[] Lyrics;
-            long[] Times;            
+            //string[] Lyrics;
+            //long[] Times;            
             long time;
+            
             string line;
             string lyric = string.Empty;
             string stime = string.Empty;
 
-            // Load Lrc file into list of lines                
-            string[] lines = System.IO.File.ReadAllLines(lrcFile);
-
-            List<string> lstLyrics = new List<string>();
-            List<long> lstTimes = new List<long>();
 
             /*
-             *  [00:04.598]IT'S                 // New line
-                <00:04.830> BEEN
-                <00:05.057> A
-                <00:05.271> HARD
-                <00:06.151> DAY'S
-                <00:06.811> NIGHT
-                [00:08.148]AND                  // New line
-            */
+            *  [00:04.598]IT'S <00:04.830>BEEN <00:05.057>A <00:05.271>HARD <00:06.151>DAY'S <00:06.811>NIGHT               // New line                                                                              
+               [00:08.148]AND                                                                                               // New line
+           */
 
-            MatchCollection mcStartLine3;
-            Regex rgnl3 = new Regex(@"\[\d{2}:\d{2}.\d{3}\]");
-            MatchCollection mcStartLine2;
-            Regex rgnl2 = new Regex(@"\[\d{2}:\d{2}.\d{2}\]");
+            // Load Lrc file into list of lines                
+            string[] lines = System.IO.File.ReadAllLines(lrcFile);
+                       
+            // Regex to capture timestamps and words
+            string pattern = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
 
-            MatchCollection mcItem3;
-            Regex rgItem3 = new Regex(@"\<\d{2}:\d{2}.\d{3}\>");
-            MatchCollection mcItem2;
-            Regex rgItem2 = new Regex(@"\<\d{2}:\d{2}.\d{2}\>");
+            // Create a list of all lines
+            List<List<(string, string)>> lstLines = new List<List<(string, string)>>();
+            List<(string Timestamp, string Word)> results = new List<(string Timestamp, string Word)>();
 
             for (int i = 0; i < lines.Length; i++)
             {
-                // Extract lyrics and time stamps
+                // study line by line
                 line = lines[i];
 
-                // Start lines
-                mcStartLine2 = rgnl2.Matches(line);  // Match [00:00.000]
-                mcStartLine3 = rgnl3.Matches(line);  // Match[00:00.00]
-                
-                // Syllabes
-                mcItem2 = rgItem2.Matches(line); // Match <00:00.00>
-                mcItem3 = rgItem3.Matches(line); // Match <00:00.000>
+                MatchCollection matches = Regex.Matches(line, pattern);
+                if (matches.Count == 0) continue;   
+                                
 
-                // No line matches a timestamp of LRC 
-                if (mcStartLine2.Count == 0 && mcStartLine3.Count == 0 && mcItem2.Count == 0 && mcItem3.Count == 0)
-                    continue;
+                foreach (Match match in matches)
+                {
+                    // Try with "[]", than with "<>"
+                    string timestamp = match.Groups[1].Value != "" ? match.Groups[1].Value : match.Groups[2].Value;
+                    string word = match.Groups[3].Value;
+                    
+                    // Clean word
+                    word = word.Replace("\r\n", "").Replace("\r", "").Replace("\n", "");
+                    // Add a "/" if timestamp was "[]"
+                    if (match.Groups[1].Value != "")
+                        word = "\r\n" + word;               // POURQUOI ajouter \r\n? => needed by PictureBox1_Paint event of frmLyrics
+                    //else
+                    //    word = " " + word;
+                    results.Add((timestamp, word));
+                }                
+            }
+            
 
-                if (mcStartLine3.Count > 0)
-                {
-                    // Start new line format [00:00.000]
-                    // Extract time
-                    stime = mcStartLine3[0].Value;
-                    // Extract lyrics
-                    lyric = m_SepLine + line.Substring(mcStartLine3[0].Index + stime.Length);
-
-                }
-                else if (mcStartLine2.Count > 0)
-                {
-                    // Start new line format [00:00.00]
-                    // Extract time
-                    stime = mcStartLine2[0].Value;
-                    // Extract lyrics
-                    lyric = m_SepLine +  line.Substring(mcStartLine2[0].Index + stime.Length);
-                }
-                else if (mcItem3.Count > 0)
-                {
-                    // Syllabe of existing line
-                    stime = mcItem3[0].Value;
-                    lyric = line.Substring(mcItem3[0].Index + stime.Length);
-                }
-                else if (mcItem2.Count > 0)
-                {
-                    // Syllabe of existing line
-                    stime = mcItem2[0].Value;
-                    lyric = line.Substring(mcItem2[0].Index + stime.Length);
-                }
-
-                // Convert stime to long
-                stime = stime.Substring(1, stime.Length - 2);
+            synchedTexts = new SyncText[results.Count];
+            
+            for (int i = 0; i < results.Count; i++)
+            {                                
+                // Timestamp
+                stime = results[i].Timestamp;
                 time = (long)TimeToMs(stime);
+                
+                // Lyric
+                lyric = results[i].Word;                  
 
-                lstLyrics.Add(lyric);
-                lstTimes.Add(time);                
+                // Create a new synchedText
+                synchedTexts[i] = new SyncText(time, lyric);                                
             }
-
-            Lyrics = new string[lstLyrics.Count];
-            Times = new long[lstTimes.Count];
-            synchedTexts = new SyncText[lstLyrics.Count];
-
-            
-            for (int i = 0; i < lstLyrics.Count; i++)
-            {
-                lyric = lstLyrics[i];
-                lyric = lyric.Replace("\r\n", "").Replace("\r", "").Replace("\n", "");
-
-
-                if (lyric.StartsWith(m_SepLine))
-                {
-                    // Add "\r\n" only to begining of lines
-                    lyric = "\r\n" + lyric.Substring(1);     // POURQUOI ajouter \r\n? => needed by PictureBox1_Paint event of frmLyrics
-                }
-               
-                time = lstTimes[i];                
-                synchedTexts[i] = new SyncText(time, lyric);
-            }
-            
+                           
             return synchedTexts;
         }
 

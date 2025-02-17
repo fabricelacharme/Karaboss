@@ -610,15 +610,12 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// </summary>
         /// <param name="Source"></param>
         private void LoadLRCFile(string FileName)
-        {
-            string stime;
+        {            
             string lyric;
             long time;
 
             Cursor.Current = Cursors.WaitCursor;
-
-            //Karaboss.Lrc.SharedFramework.Lyrics lyrics = new Karaboss.Lrc.SharedFramework.Lyrics();
-            //lyrics.ArrangeLyrics(Source);
+            
             Mp3LyricsMgmtHelper.SyncTexts = Mp3LyricsMgmtHelper.GetLrcLyrics(FileName);
             SyncText[] SyncLyrics = Mp3LyricsMgmtHelper.SyncTexts;
 
@@ -633,10 +630,9 @@ namespace Karaboss.Mp3.Mp3Lyrics
             
 
             for (int i = 0; i < lines; i++)
-            {
-                //LyricsLine l = lyrics[i];
-                time = SyncLyrics[i].Time; // l.Timeline;
-                lyric = SyncLyrics[i].Text; //l.OriLyrics;
+            {                
+                time = SyncLyrics[i].Time; 
+                lyric = SyncLyrics[i].Text;
 
                 lyric = lyric.Replace("\r\n", m_SepLine);
 
