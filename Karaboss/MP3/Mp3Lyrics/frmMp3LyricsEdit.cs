@@ -202,14 +202,17 @@ namespace Karaboss.Mp3.Mp3Lyrics
         private void PopulateDataGridView()
         {
 
+            // Origine = lrc
             SyncText[] SyncLyrics = Mp3LyricsMgmtHelper.SyncTexts;
 
+            // Origin = synchronized lyrics frame
             SynchronisedLyricsFrame SynchedLyrics = Mp3LyricsMgmtHelper.MySyncLyricsFrame;
             
             if (SynchedLyrics != null)
             {
                 for (int i = 0; i < SynchedLyrics.Text.Count(); i++)
                 {
+                    // Put "/" everywhere
                     string text = SynchedLyrics.Text[i].Text;
                     text = text.Replace("\r\n", m_SepLine);
                     text = text.Replace("\r", m_SepLine);
@@ -226,6 +229,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 {
                     long time = SyncLyrics[i].Time;
                     string text = SyncLyrics[i].Text;
+
+                    // Put "/" everywhere
                     text = text.Replace("\r\n", m_SepLine);
                     text = text.Replace("\r", m_SepLine);
                     text = text.Replace("\n", m_SepLine);
@@ -376,6 +381,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 c.DefaultCellStyle.Font = dgViewCellsFont;
                 c.ReadOnly = false;
             }
+
+            ResizeMe();
         }
 
         #endregion init
@@ -408,21 +415,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// </summary>
         private void SaveMp3Lyrics()
         {
-            //string text;
-            //string time;
-
-            /*
-            SyncText[] SyncTexts = new SyncText[dgView.RowCount];
-
-            for (int i = 0; i < dgView.RowCount; i++)
-            {
-                time = dgView.Rows[i].Cells[0].Value.ToString();
-                text = dgView.Rows[i].Cells[1].Value.ToString();
-                SyncTexts[i] = new SyncText(long.Parse(time), text);
-            }
-            */
-
-            // it isnot possible to save the file on the same file (file locked)
+           // it is not possible to save the file on the same file (file locked)
             string mp3file = Files.FindUniqueFileName(_filename);
 
             saveFileDialog = new SaveFileDialog();
@@ -430,7 +423,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
             saveFileDialog.FilterIndex = 1;
             saveFileDialog.RestoreDirectory = true;
             saveFileDialog.InitialDirectory = Path.GetDirectoryName(mp3file);
-            saveFileDialog.FileName = mp3file;
+            saveFileDialog.FileName = Path.GetFileName(mp3file);
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -460,7 +453,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
             // Reset frame text
             if (Mp3LyricsMgmtHelper.MySyncLyricsFrame == null)
             {                
-                Mp3LyricsMgmtHelper.MySyncLyricsFrame = new SynchronisedLyricsFrame("Description", "en", SynchedTextType.Lyrics);
+                Mp3LyricsMgmtHelper.MySyncLyricsFrame = new SynchronisedLyricsFrame("Karaboss", "en", SynchedTextType.Lyrics);
             }
 
             // How many valid lines ?
@@ -602,13 +595,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
                 try
                 {
-                    using (StreamReader sr = new StreamReader(fileName))
-                    {
-                        String lines = sr.ReadToEnd();
-                        LoadLRCFile(lines);
-                        
-                    }
                     lblLyricsOrigin.Text = "Origin of lyrics = lrc: " + Path.GetFileName(fileName);
+                    LoadLRCFile(fileName);
                 }
                 catch (Exception ex)
                 {
@@ -621,17 +609,20 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// Load a LRC file (timestamps + lyrics)
         /// </summary>
         /// <param name="Source"></param>
-        private void LoadLRCFile(string Source)
+        private void LoadLRCFile(string FileName)
         {
             string stime;
             string lyric;
             long time;
 
             Cursor.Current = Cursors.WaitCursor;
-         
-            Karaboss.Lrc.SharedFramework.Lyrics lyrics = new Karaboss.Lrc.SharedFramework.Lyrics();
-            lyrics.ArrangeLyrics(Source);
-            int lines = lyrics.Count;
+
+            //Karaboss.Lrc.SharedFramework.Lyrics lyrics = new Karaboss.Lrc.SharedFramework.Lyrics();
+            //lyrics.ArrangeLyrics(Source);
+            Mp3LyricsMgmtHelper.SyncTexts = Mp3LyricsMgmtHelper.GetLrcLyrics(FileName);
+            SyncText[] SyncLyrics = Mp3LyricsMgmtHelper.SyncTexts;
+
+            int lines = SyncLyrics.Length;
 
             InitGridView();
 
@@ -643,12 +634,11 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
             for (int i = 0; i < lines; i++)
             {
-                LyricsLine l = lyrics[i];
-                stime = l.Timeline;
-                lyric = l.OriLyrics;
+                //LyricsLine l = lyrics[i];
+                time = SyncLyrics[i].Time; // l.Timeline;
+                lyric = SyncLyrics[i].Text; //l.OriLyrics;
 
-                // Convert time from timestamp to milliseconds
-                time = (long)Mp3LyricsMgmtHelper.TimeToMs(stime);
+                lyric = lyric.Replace("\r\n", m_SepLine);
 
                 dgView.Rows[i].Cells[0].Value = time;
                 dgView.Rows[i].Cells[1].Value = lyric;

@@ -200,36 +200,71 @@ namespace Karaboss.Mp3.Mp3Lyrics
             List<string> lstLyrics = new List<string>();
             List<long> lstTimes = new List<long>();
 
-            MatchCollection mc3;
-            Regex r3 = new Regex(@"\[\d{2}:\d{2}.\d{3}\]");
-            MatchCollection mc2;
-            Regex r2 = new Regex(@"\[\d{2}:\d{2}.\d{2}\]");
+            /*
+             *  [00:04.598]IT'S                 // New line
+                <00:04.830> BEEN
+                <00:05.057> A
+                <00:05.271> HARD
+                <00:06.151> DAY'S
+                <00:06.811> NIGHT
+                [00:08.148]AND                  // New line
+            */
+
+            MatchCollection mcStartLine3;
+            Regex rgnl3 = new Regex(@"\[\d{2}:\d{2}.\d{3}\]");
+            MatchCollection mcStartLine2;
+            Regex rgnl2 = new Regex(@"\[\d{2}:\d{2}.\d{2}\]");
+
+            MatchCollection mcItem3;
+            Regex rgItem3 = new Regex(@"\<\d{2}:\d{2}.\d{3}\>");
+            MatchCollection mcItem2;
+            Regex rgItem2 = new Regex(@"\<\d{2}:\d{2}.\d{2}\>");
 
             for (int i = 0; i < lines.Length; i++)
             {
                 // Extract lyrics and time stamps
                 line = lines[i];
 
-                mc3 = r3.Matches(line);
-                mc2 = r2.Matches(line);
+                // Start lines
+                mcStartLine2 = rgnl2.Matches(line);  // Match [00:00.000]
+                mcStartLine3 = rgnl3.Matches(line);  // Match[00:00.00]
+                
+                // Syllabes
+                mcItem2 = rgItem2.Matches(line); // Match <00:00.00>
+                mcItem3 = rgItem3.Matches(line); // Match <00:00.000>
 
-                if (mc2.Count == 0 && mc3.Count == 0)
+                // No line matches a timestamp of LRC 
+                if (mcStartLine2.Count == 0 && mcStartLine3.Count == 0 && mcItem2.Count == 0 && mcItem3.Count == 0)
                     continue;
 
-                if (mc3.Count > 0)
+                if (mcStartLine3.Count > 0)
                 {
+                    // Start new line format [00:00.000]
                     // Extract time
-                    stime = mc3[0].Value;
+                    stime = mcStartLine3[0].Value;
                     // Extract lyrics
-                    lyric = line.Substring(mc3[0].Index + stime.Length);
+                    lyric = m_SepLine + line.Substring(mcStartLine3[0].Index + stime.Length);
 
                 }
-                else if (mc2.Count > 0)
+                else if (mcStartLine2.Count > 0)
                 {
+                    // Start new line format [00:00.00]
                     // Extract time
-                    stime = mc2[0].Value;
+                    stime = mcStartLine2[0].Value;
                     // Extract lyrics
-                    lyric = line.Substring(mc2[0].Index + stime.Length);
+                    lyric = m_SepLine +  line.Substring(mcStartLine2[0].Index + stime.Length);
+                }
+                else if (mcItem3.Count > 0)
+                {
+                    // Syllabe of existing line
+                    stime = mcItem3[0].Value;
+                    lyric = line.Substring(mcItem3[0].Index + stime.Length);
+                }
+                else if (mcItem2.Count > 0)
+                {
+                    // Syllabe of existing line
+                    stime = mcItem2[0].Value;
+                    lyric = line.Substring(mcItem2[0].Index + stime.Length);
                 }
 
                 // Convert stime to long
@@ -244,16 +279,20 @@ namespace Karaboss.Mp3.Mp3Lyrics
             Times = new long[lstTimes.Count];
             synchedTexts = new SyncText[lstLyrics.Count];
 
+            
             for (int i = 0; i < lstLyrics.Count; i++)
             {
                 lyric = lstLyrics[i];
                 lyric = lyric.Replace("\r\n", "").Replace("\r", "").Replace("\n", "");
-                lyric = "\r\n" + lyric;
-                //Lyrics[i] = lyric;                      // POURQUOI ajouter \r\n? => needed by PictureBox1_Paint event of frmLyrics
-                
-                time = lstTimes[i];
-                //Times[i] = lstTimes[i];
-                //synchedTexts[i] = new SyncText(Times[i], lyric);
+
+
+                if (lyric.StartsWith(m_SepLine))
+                {
+                    // Add "\r\n" only to begining of lines
+                    lyric = "\r\n" + lyric.Substring(1);     // POURQUOI ajouter \r\n? => needed by PictureBox1_Paint event of frmLyrics
+                }
+               
+                time = lstTimes[i];                
                 synchedTexts[i] = new SyncText(time, lyric);
             }
             
@@ -322,7 +361,11 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
                 // Retrieve the frame SyncLyrics inside the mp3 file (type of lyrics), create a new one if not found
                 SynchronisedLyricsFrame frame = GetSyncLyricsFrame(id3v2tag, SynchedTextType.Lyrics, true);
-                
+
+                frame.TextEncoding = StringType.Latin1; //StringType.UTF8;
+                frame.Description = "Karaboss";
+                frame.Format = TimestampFormat.AbsoluteMilliseconds;
+
                 frame.Text = new SynchedText[SyncLyrics.Text.Length];
                 for (int i = 0; i < SyncLyrics.Text.Length; i++)
                 {
@@ -330,6 +373,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     frame.Text[i] = SyncLyrics.Text[i];
                 }
                 
+                
+
                 // Save file
                 file.Save();
 
@@ -350,8 +395,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// <param name="tag"></param>
         /// <param name="type"></param>
         /// <param name="SyncLyrics"></param>
-        /// <returns></returns>
-        //public static SynchronisedLyricsFrame GetSyncLyricsFrame(TagLib.Id3v2.Tag tag, SynchedTextType type, SynchronisedLyricsFrame SyncLyrics)
+        /// <returns></returns>       
         public static SynchronisedLyricsFrame GetSyncLyricsFrame(TagLib.Id3v2.Tag tag, SynchedTextType type, bool create)
         {
             IEnumerator<Frame> enumerator = tag.GetEnumerator();
@@ -381,6 +425,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
             }
 
             SynchronisedLyricsFrame newframe = new SynchronisedLyricsFrame(tag.Description, "en", type);
+            newframe.TextEncoding = StringType.Latin1;
+            newframe.Format = TimestampFormat.AbsoluteMilliseconds;
             tag.AddFrame(newframe);
             return newframe;
 

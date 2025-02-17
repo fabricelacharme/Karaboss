@@ -49,14 +49,7 @@ namespace Karaboss.Utilities
         Syllabes = 1,
     }
 
-    public enum LrcExportFormats
-    {
-        None,
-        Lrc,
-        Sylt,
-    }
-
-
+   
     public static class LyricsUtilities
     {
         /// <summary>

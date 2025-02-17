@@ -56,10 +56,10 @@
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlMiddle = new System.Windows.Forms.Panel();
-            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.lblLyricsOrigin = new System.Windows.Forms.Label();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -273,14 +273,6 @@
             this.pnlMiddle.Name = "pnlMiddle";
             this.toolTip1.SetToolTip(this.pnlMiddle, resources.GetString("pnlMiddle.ToolTip"));
             // 
-            // openFileDialog
-            // 
-            resources.ApplyResources(this.openFileDialog, "openFileDialog");
-            // 
-            // saveFileDialog
-            // 
-            resources.ApplyResources(this.saveFileDialog, "saveFileDialog");
-            // 
             // pnlTop
             // 
             resources.ApplyResources(this.pnlTop, "pnlTop");
@@ -295,6 +287,14 @@
             this.lblLyricsOrigin.ForeColor = System.Drawing.Color.White;
             this.lblLyricsOrigin.Name = "lblLyricsOrigin";
             this.toolTip1.SetToolTip(this.lblLyricsOrigin, resources.GetString("lblLyricsOrigin.ToolTip"));
+            // 
+            // openFileDialog
+            // 
+            resources.ApplyResources(this.openFileDialog, "openFileDialog");
+            // 
+            // saveFileDialog
+            // 
+            resources.ApplyResources(this.saveFileDialog, "saveFileDialog");
             // 
             // frmMp3LyricsEdit
             // 

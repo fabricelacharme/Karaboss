@@ -93,7 +93,6 @@
             this.pnlMenus = new System.Windows.Forms.Panel();
             this.lblSelectTrack = new System.Windows.Forms.Label();
             this.cbSelectTrack = new System.Windows.Forms.ComboBox();
-            this.mnuSaveAsSylt = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -343,7 +342,6 @@
             this.mnuFileSaveAs,
             this.mnuFileSep2,
             this.mnuFileSaveAsLrc,
-            this.mnuSaveAsSylt,
             this.MnuSaveAsText,
             this.mnuFileSep1,
             this.mnuFileQuit});
@@ -559,12 +557,6 @@
             this.cbSelectTrack.TabStop = false;
             this.cbSelectTrack.SelectedIndexChanged += new System.EventHandler(this.cbSelectTrack_SelectedIndexChanged);
             // 
-            // mnuSaveAsSylt
-            // 
-            this.mnuSaveAsSylt.Name = "mnuSaveAsSylt";
-            resources.ApplyResources(this.mnuSaveAsSylt, "mnuSaveAsSylt");
-            this.mnuSaveAsSylt.Click += new System.EventHandler(this.mnuSaveAsSylt_Click);
-            // 
             // frmLyricsEdit
             // 
             resources.ApplyResources(this, "$this");
@@ -663,6 +655,5 @@
         private System.Windows.Forms.ComboBox cbSelectTrack;
         private System.Windows.Forms.Label lblSelectTrack;
         private System.Windows.Forms.Button btnDisplayOtherLyrics;
-        private System.Windows.Forms.ToolStripMenuItem mnuSaveAsSylt;
     }
 }
