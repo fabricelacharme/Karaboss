@@ -2368,24 +2368,27 @@ namespace Karaboss
                     lrcs += "[" + TagName + strSpaceBetween + Tag + "]" + cr;
             }
 
-            bool bLineFeed = false;
+            bool bLineFeed = true;
 
             // new format of lrc
             // [01:54.60]La <01:55.32>petite <01:56.15>maison
             // Start line is [01:54.60]La
             // syllabes are <01:55.32>petite <01:56.15>maison
 
+            // separate words and syllabes
+            // Store results in a list
+            List<(string stime, string lyric)> results = new List<(string, string)>();
+
             // Save syllabe by syllabe
             for (int i = 0; i < dgView.Rows.Count; i++)
-            {
+            {                                
                 vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
                 vTime = dgView.Rows[i].Cells[COL_TIME].Value;
 
-                if (vTime != null && vLyric != null)
+                if (vTime != null && vLyric != null && vTime.ToString() != "" && vLyric.ToString() != "")
                 {
                     sLyric = vLyric.ToString();
                     sLyric = sLyric.Replace("_", " ");
-
 
                     if (sLyric.Trim() != m_SepLine && sLyric.Trim() != m_SepParagraph)
                     {
@@ -2411,13 +2414,14 @@ namespace Karaboss
                         
                         if (bLineFeed)
                         {
-                            // Format of timestamp is []
-                            lrcs = "[" + sTime + "]" + strSpaceBetween + sLyric;
+                            // Format of timestamp is []                                                        
+                            results.Add(("[" + sTime + "]", sLyric));
+
                         }
                         else
                         {
                             // Format of timestamp is <> + space before
-                            lrcs += " <" + sTime + ">" + strSpaceBetween + sLyric.Trim();
+                            results.Add(("<" + sTime + ">", sLyric));
                         }
                         
                         bLineFeed = false;
@@ -2426,19 +2430,90 @@ namespace Karaboss
                     else
                     {
                         bLineFeed = true;
-                        // Store previous line
-                        if (lrcs.Trim().Length > 0)
-                        {
-                            lines += lrcs + cr;
-                            lrcs = "";
-                        }
+                        
+                    }
+                }
+            }
+
+            string nextLyric = string.Empty;
+            string nextTime = string.Empty;
+            
+            bool bKeepForNextSyllabe = false;
+            string keepLyric = string.Empty;
+            string keepTime = string.Empty;
+
+            for (int i = 0; i < results.Count; i++)
+            {
+                sTime = results[i].stime;
+                sLyric = results[i].lyric;
+
+                if (i < results.Count - 1)
+                {
+                    nextLyric = results[i + 1].lyric;
+                    nextTime = results[i + 1].stime;
+                }
+                else
+                {
+                    nextLyric = "";
+                    nextTime = "";
+                }
+                // No space before and after => must be merged with previous or next lyric
+                if (!sLyric.EndsWith(" ") && nextLyric.Length > 0 && !nextLyric.StartsWith(" ") && nextTime.IndexOf("[") == -1)
+                {
+                    results[i] = (results[i].stime, results[i].lyric + "-");
+                }
+            }
+
+            for (int i = 0; i < results.Count; i++)
+            {                                
+                sTime = results[i].stime;
+                sLyric = results[i].lyric;
+
+
+                // Keep all syllabes ending with a "-" until a syllabe without "-"
+                if (sLyric.EndsWith("-")) 
+                {
+                    sLyric = sLyric.Substring(0, sLyric.Length - 1).Trim();
+                    keepLyric += sLyric;
+                    if (keepTime == "")
+                        keepTime = sTime;
+                    continue;
+                } 
+                else if (keepLyric != "") 
+                {
+                    // no trailing "-" => this is the last syllabe of a word
+                    bKeepForNextSyllabe = true;
+                }                                                
+                
+                if (sTime.IndexOf("[") > -1)
+                {
+                    // Store previous line 
+                    if (lrcs.Trim().Length > 0)
+                    {
+                        lines += lrcs + cr;
+                    }
+                    // Format of timestamp is [] 
+                    lrcs = sTime + sLyric.Trim();
+                }
+                else
+                {
+                    if (!bKeepForNextSyllabe)
+                    {
+                        // Format of timestamp is <> + space before
+                        lrcs += " " + sTime + sLyric.Trim();
+                    }
+                    else
+                    {
+                        lrcs += " " + keepTime + keepLyric + sLyric.Trim();
+                        bKeepForNextSyllabe = false;
+                        keepLyric = "";
+                        keepTime = "";
                     }
                 }
             }
 
             if (lrcs.Trim().Length > 0)
                 lines += lrcs + cr;
-
 
             try
             {
