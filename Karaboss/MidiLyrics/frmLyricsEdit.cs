@@ -2379,7 +2379,7 @@ namespace Karaboss
             // Store results in a list
             List<(string stime, string lyric)> results = new List<(string, string)>();
 
-            // Save syllabe by syllabe
+            // Apply treatments choosen
             for (int i = 0; i < dgView.Rows.Count; i++)
             {                                
                 vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
@@ -2442,6 +2442,8 @@ namespace Karaboss
             string keepLyric = string.Empty;
             string keepTime = string.Empty;
 
+            
+            // Add a trailing "-" to syllabes without space with the next syllabe (ie it is a word composed of several syllabes)
             for (int i = 0; i < results.Count; i++)
             {
                 sTime = results[i].stime;
@@ -2457,7 +2459,8 @@ namespace Karaboss
                     nextLyric = "";
                     nextTime = "";
                 }
-                // No space before and after => must be merged with previous or next lyric
+                // No trailing space in the current, no starting space in the next and the next is not a new line ([]) 
+                // => this syllabe must be merged with the next one
                 if (!sLyric.EndsWith(" ") && nextLyric.Length > 0 && !nextLyric.StartsWith(" ") && nextTime.IndexOf("[") == -1)
                 {
                     results[i] = (results[i].stime, results[i].lyric + "-");
@@ -2469,22 +2472,34 @@ namespace Karaboss
                 sTime = results[i].stime;
                 sLyric = results[i].lyric;
 
-
-                // Keep all syllabes ending with a "-" until a syllabe without "-"
+                // Keep all syllabes ending with a trailing "-" until a syllabe without a "-"
                 if (sLyric.EndsWith("-")) 
                 {
-                    sLyric = sLyric.Substring(0, sLyric.Length - 1).Trim();
-                    keepLyric += sLyric;
+                    sLyric = sLyric.Substring(0, sLyric.Length - 1).Trim();  // remove the "-"
+                    keepLyric += sLyric;                                     // add syllabe to previous ones   
                     if (keepTime == "")
-                        keepTime = sTime;
+                        keepTime = sTime;                                    // keep only the first timestamp (beginning of the word)   
+
+                    if (sTime.IndexOf("[") > -1)                             // if new line, store previous one
+                    {
+                        // Store previous line 
+                        if (lrcs.Trim().Length > 0)
+                        {
+                            lines += lrcs + cr;
+                        }
+                        lrcs = "";
+                    }
+
+                    // Skip 
                     continue;
                 } 
                 else if (keepLyric != "") 
                 {
-                    // no trailing "-" => this is the last syllabe of a word
+                    // no trailing "-" and there are syllabes into keeplyric => this is the last syllabe of a word
                     bKeepForNextSyllabe = true;
                 }                                                
                 
+                // This is the start of a new line
                 if (sTime.IndexOf("[") > -1)
                 {
                     // Store previous line 
@@ -2497,6 +2512,7 @@ namespace Karaboss
                 }
                 else
                 {
+                    // This is a normal syllabe 
                     if (!bKeepForNextSyllabe)
                     {
                         // Format of timestamp is <> + space before
@@ -2504,7 +2520,19 @@ namespace Karaboss
                     }
                     else
                     {
-                        lrcs += " " + keepTime + keepLyric + sLyric.Trim();
+                        // this is The last syllabe of a word
+                        if (keepTime.IndexOf("[") > -1)
+                        {
+                            // if the word stored in keeplyric was a starting line []
+                            lrcs += keepTime + keepLyric + sLyric.Trim();
+                        }
+                        else
+                        {
+                            // if the word stored in keeplyric was a normal word, add a space before the <00:00.000>  
+                            lrcs += " " + keepTime + keepLyric + sLyric.Trim();
+                        }
+
+                        // Reset variables used to store syllabes of a word
                         bKeepForNextSyllabe = false;
                         keepLyric = "";
                         keepTime = "";
