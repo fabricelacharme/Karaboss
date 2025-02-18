@@ -225,18 +225,23 @@ namespace Karaboss.Mp3.Mp3Lyrics
             string lyric = string.Empty;
             long time;
             string stime = string.Empty;
-            
+
+            // Format 1
             // [00:04.598]IT'S <00:04.830>BEEN <00:05.057>A <00:05.271>HARD <00:06.151>DAY'S <00:06.811>NIGHT               // New line                                                                              
             // [00:08.148]AND                                                                                               // New line
             //
-            // Can be also ?
+            // Format 2:  Can be also ?
             // [00:04.598]It's
-            // < 00:04.830 > been
-            // < 00:05.057 > a
-            // < 00:05.271 > hard
-            // < 00:06.151 > day's
-            // < 00:06.811 > night
+            // <00:04.830> been
+            // <00:05.057> a
+            // <00:05.271> hard
+            // <00:06.151> day's
+            // <00:06.811> night
             // [00:08.148]And
+            //
+            // Format 3: and also
+            // [00:23.76]J'AI FAIT UNE CHANSON, 
+            // [00:25.10]JE SAIS PAS POURQUOI
 
             // Load Lrc file into list of lines                
             //string[] lines = System.IO.File.ReadAllLines(lrcFile);
@@ -244,17 +249,31 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
             try
             {
-                // Load lrc into a string
+                // Load lrc into a single string
                 string tx = System.IO.File.ReadAllText(lrcFile);
+                
+                // Split by "[" to have lines
                 lines = tx.Split('[');
 
+                // Treatment for each line
                 for (int i = 0; i < lines.Length; i++)
                 {
                     line = lines[i];
                     if (line.Trim().Length == 0) continue;
+
+                    line = line.Trim();
+                    
+                    // Add "[" removed by the split
                     line = "[" + line;
-                    line = line.Replace("> ", ">");
-                    line = line.Replace(Environment.NewLine, " ");
+                    
+                    // Use case: format 2
+                    line = line.Replace("> ", ">");                 // Remove space after > (format 2)
+                    line = line.Replace(Environment.NewLine, " ");  // Remove \r\nb         (format 2)
+                    
+                    // Use case: LRC full line (format 3)
+                    if (line.IndexOf("<") == -1)
+                        line = line.Replace(" ", "_");                  // Replace spaces by "_" in order to keep the whole sentences (format 3)
+                                                                        // otherwise it will be removed by the pattern
                     lines[i] = line;
                 }
             } catch (Exception e) { MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); return null; }
@@ -287,12 +306,13 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     string word = match.Groups[3].Value;
                     
                     // Clean word
-                    word = word.Replace("\r\n", "").Replace("\r", "").Replace("\n", "");
-                    // Add a "/" if timestamp was "[]"
+                    word = word.Replace("\r\n", "").Replace("\r", "").Replace("\n", "").Replace("_", " ");
+                    
+                    // Add a linefeed if timestamp was "[]"
                     if (match.Groups[1].Value != "")
                         word = "\r\n" + word;               // POURQUOI ajouter \r\n? => needed by PictureBox1_Paint event of frmLyrics
-                    //else
-                    //    word = " " + word;
+                    
+                    
                     results.Add((timestamp, word));
                 }                
             }
