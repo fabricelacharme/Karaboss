@@ -177,35 +177,96 @@ namespace Karaboss.Mp3.Mp3Lyrics
         }
 
         /// <summary>
-        /// Get lyrics from LRC file
+        /// Find out what type of digits the file is made out
+        /// </summary>
+        /// <param name="lines"></param>
+        /// <returns></returns>
+        private static string GetPatternLRC(string[] lines)
+        {
+            string line;
+            string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
+            string pattern2digits = @"(?:\[(\d{2}:\d{2}\.\d{2})\]|<(\d{2}:\d{2}\.\d{2})>)(\S+)";
+
+            // Select right pattern
+            int digits3 = 0;
+            int digits2 = 0;
+
+            // Find out what type of digits the file is made of: 2 or 3
+            for (int i = 0; i < lines.Length; i++)
+            {
+                line = lines[i];
+                MatchCollection matches3digits = Regex.Matches(line, pattern3digits);
+                MatchCollection matches2digits = Regex.Matches(line, pattern2digits);
+                if (matches3digits.Count > 0) digits3++;
+                else if (matches2digits.Count > 0) digits2++;
+            }
+
+            if (digits3 == 0 && digits2 == 0)                            
+                return null;            
+
+            return digits3 > digits2 ? pattern3digits : pattern2digits;                        
+        }
+
+
+        /// <summary>
+        /// Get lyrics from LRC file if exists
         /// </summary>
         /// <param name="FileName"></param>
         /// <returns></returns>        
         public static SyncText[] GetLrcLyrics(string FileName)
         {            
+            // Search for existing LRC file
             string lrcFile = Path.ChangeExtension(FileName, ".lrc");
             if (!System.IO.File.Exists(lrcFile)) return null;
 
-            SyncText[] synchedTexts;
-            //string[] Lyrics;
-            //long[] Times;            
-            long time;
-            
+            SyncText[] synchedTexts;            
             string line;
+            
             string lyric = string.Empty;
+            long time;
             string stime = string.Empty;
-
-
-            /*
-            *  [00:04.598]IT'S <00:04.830>BEEN <00:05.057>A <00:05.271>HARD <00:06.151>DAY'S <00:06.811>NIGHT               // New line                                                                              
-               [00:08.148]AND                                                                                               // New line
-           */
+            
+            // [00:04.598]IT'S <00:04.830>BEEN <00:05.057>A <00:05.271>HARD <00:06.151>DAY'S <00:06.811>NIGHT               // New line                                                                              
+            // [00:08.148]AND                                                                                               // New line
+            //
+            // Can be also ?
+            // [00:04.598]It's
+            // < 00:04.830 > been
+            // < 00:05.057 > a
+            // < 00:05.271 > hard
+            // < 00:06.151 > day's
+            // < 00:06.811 > night
+            // [00:08.148]And
 
             // Load Lrc file into list of lines                
-            string[] lines = System.IO.File.ReadAllLines(lrcFile);
-                       
-            // Regex to capture timestamps and words
-            string pattern = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
+            //string[] lines = System.IO.File.ReadAllLines(lrcFile);
+            string[] lines;
+
+            try
+            {
+                // Load lrc into a string
+                string tx = System.IO.File.ReadAllText(lrcFile);
+                lines = tx.Split('[');
+
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    line = lines[i];
+                    if (line.Trim().Length == 0) continue;
+                    line = "[" + line;
+                    line = line.Replace("> ", ">");
+                    line = line.Replace(Environment.NewLine, " ");
+                    lines[i] = line;
+                }
+            } catch (Exception e) { MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); return null; }
+
+            // Regex to capture timestamps and words => for milliseconds having 3 digits or 2
+            // Find out what type of digits the file is made out
+            string pattern = GetPatternLRC(lines);
+            if (pattern == null)
+            {
+                MessageBox.Show("Invalid lrc file, no timestamps found: " + Path.GetFileName(FileName), "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
 
             // Create a list of all lines
             List<List<(string, string)>> lstLines = new List<List<(string, string)>>();
@@ -219,7 +280,6 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 MatchCollection matches = Regex.Matches(line, pattern);
                 if (matches.Count == 0) continue;   
                                 
-
                 foreach (Match match in matches)
                 {
                     // Try with "[]", than with "<>"
@@ -238,6 +298,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
             }
             
 
+            // Load synchronized lyrics into synchedTextx
             synchedTexts = new SyncText[results.Count];
             
             for (int i = 0; i < results.Count; i++)
