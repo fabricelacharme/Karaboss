@@ -712,6 +712,7 @@ namespace Karaboss.Mp3
             {
                 case Mp3LyricsTypes.LyricsWithTimeStamps:
                     Mp3LyricsMgmtHelper.SyncTexts = Mp3LyricsMgmtHelper.GetSyncLyrics(SyncLyricsFrame);
+                    Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectSyncLyrics(SyncLyricsFrame);    
                     DisplayFrmMp3Lyrics();
                     break;
 

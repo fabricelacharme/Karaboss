@@ -35,5 +35,6 @@
         private System.Windows.Forms.Button btnFrmMin;
         private System.Windows.Forms.Button btnFrmMax;
         private System.Windows.Forms.Button btnFrmClose;
+        private lyrics.KaraokeEffect kEffect;
     }
 }

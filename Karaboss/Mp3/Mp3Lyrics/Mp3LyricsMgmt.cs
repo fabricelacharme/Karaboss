@@ -17,7 +17,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
         LRCFile,
         LyricsWithoutTimeStamps,
     }
-
+    
+    [Serializable()]
     public struct SyncText
     {
         public long Time { get; set; }
@@ -36,6 +37,16 @@ namespace Karaboss.Mp3.Mp3Lyrics
         public static SynchronisedLyricsFrame MySyncLyricsFrame;
         public static string m_SepLine = "/";
         public static Mp3LyricsTypes m_mp3lyricstype = Mp3LyricsTypes.None;
+
+        
+        #region kEffect
+
+        // Line of struct SyncText
+        public static List<lyrics.SyncText> SyncLine = new List<lyrics.SyncText>();
+        // List of lines of struct SyncText
+        public static List<List<lyrics.SyncText>> SyncLyrics = new List<List<lyrics.SyncText>>();
+
+        #endregion KEffect
 
 
         /// <summary>
@@ -114,8 +125,10 @@ namespace Karaboss.Mp3.Mp3Lyrics
         }
 
 
+        #region get synched lyrics
+
         /// <summary>
-        /// Get sync lyrics
+        /// Get sync lyrics in SyncText[]
         /// </summary>
         /// <param name="SyncLyricsFrame"></param>
         /// <returns></returns>
@@ -154,7 +167,6 @@ namespace Karaboss.Mp3.Mp3Lyrics
                             lyric = "\r\n" + lyric.Substring(1);
 
                         if (lyric.EndsWith("\r") || lyric.EndsWith("\n"))
-
                             lyric = "\r\n" + lyric.Substring(0, lyric.Length - 1);
                     }
                     synchedTexts[i] = new SyncText(time, lyric);
@@ -173,8 +185,100 @@ namespace Karaboss.Mp3.Mp3Lyrics
             }
             
             return synchedTexts;
-
         }
+
+        /// <summary>
+        /// Get sytnc lyrics in List<List<SyncText>> for KEffect
+        /// </summary>
+        /// <param name="SyncLyricsFrame"></param>
+        /// <returns></returns>
+        public static List<List<lyrics.SyncText>> GetKEffectSyncLyrics(SynchronisedLyricsFrame SyncLyricsFrame)
+        {
+            string lyric;
+            long time;
+            lyrics.SyncText sct;
+            bool bNewLine = false;
+            List<lyrics.SyncText> SyncLine = new List<lyrics.SyncText>();
+            List<List<lyrics.SyncText>> SyncLyrics = new List<List<lyrics.SyncText>>();
+
+
+            bool bHasLineFeeds = false;
+            // 1. Search for linefeed
+            for (int i = 0; i < SyncLyricsFrame.Text.Count(); i++)
+            {
+                lyric = SyncLyricsFrame.Text[i].Text;
+                if (lyric.IndexOf("\r") >= 0 || lyric.IndexOf("\n") >= 0)
+                {
+                    bHasLineFeeds = true;
+                    break;
+                }
+            }
+
+            // If linefeeds,
+            if (bHasLineFeeds)
+            {
+                // Read all items of []
+                for (int i = 0; i < SyncLyricsFrame.Text.Count(); i++)
+                {
+                    lyric = SyncLyricsFrame.Text[i].Text;
+                    time = SyncLyricsFrame.Text[i].Time;
+                    bNewLine = false;
+
+                    if (lyric.Trim() != "")
+                    {
+                        // Search for new lines
+                        if (lyric.StartsWith("\r") || lyric.StartsWith("\n"))
+                        {
+                            lyric = lyric.Substring(1);
+                            bNewLine = true;
+                        }
+
+                        if (lyric.EndsWith("\r") || lyric.EndsWith("\n"))
+                        {
+                            lyric = lyric.Substring(0, lyric.Length - 1);
+                            bNewLine = true;
+                        }
+                    }
+
+                    sct = new lyrics.SyncText(time, lyric);
+                    if (bNewLine)
+                    {
+                        if (SyncLine.Count > 0)
+                            SyncLyrics.Add(SyncLine);
+                        
+                        SyncLine = new List<lyrics.SyncText>();
+                        SyncLine.Add(sct);
+                    }
+                    else
+                    {
+                        SyncLine.Add(sct);
+                    }
+                }
+
+                // Store last line
+                if(SyncLine.Count > 0)
+                    SyncLyrics.Add(SyncLine);
+            }
+            else
+            {
+                // If no linefeeds, display lyrics with \r\n
+                for (int i = 0; i < SyncLyricsFrame.Text.Count(); i++)
+                {
+                    lyric = SyncLyricsFrame.Text[i].Text.Trim();
+                    time = SyncLyricsFrame.Text[i].Time;
+                    sct = new lyrics.SyncText(time, lyric);
+                    SyncLine = new List<lyrics.SyncText>();
+                    SyncLine.Add(sct);
+                    SyncLyrics.Add(SyncLine);
+                }
+            }
+
+            return SyncLyrics;
+        }
+
+
+        #endregion get synched lyrics
+
 
         /// <summary>
         /// Find out what type of digits the file is made out

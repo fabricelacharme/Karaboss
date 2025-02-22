@@ -57,9 +57,7 @@ namespace Karaboss.Mp3
         int keeplines = 1;
               
         double millisecondsElapsed;
-
-        //string[] _lyrics;
-        //long[] _times;
+        
 
         public frmMp3Lyrics()
         {
@@ -84,7 +82,7 @@ namespace Karaboss.Mp3
 
             LoadLyrics();
          
-            InitializeKaraokeTextHighlighter();
+            InitializeKaraokeText();
 
             AddMouseMoveHandler(this);
         }
@@ -106,6 +104,13 @@ namespace Karaboss.Mp3
                 words[i] = SyncLyrics[i].Text;
                 times[i] = SyncLyrics[i].Time;
             }
+
+            // Karaoke Effect
+            kEffect.TransitionEffect = lyrics.TransitionEffects.Progressive;
+            kEffect.nbLyricsLines = 3;
+            kEffect.SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;
+
+
         }
 
         /// <summary>
@@ -116,7 +121,7 @@ namespace Karaboss.Mp3
         {
             lblTitle.Text = text;
         }
-        private void InitializeKaraokeTextHighlighter()
+        private void InitializeKaraokeText()
         {
             _maxline = GetMaxLineLength();
 
@@ -146,6 +151,7 @@ namespace Karaboss.Mp3
         public void Start()
         {            
             timer.Start();
+            kEffect.Start();
         }
 
         public void Stop()
@@ -160,6 +166,9 @@ namespace Karaboss.Mp3
         public void GetPositionFromPlayer(double position)
         {
             millisecondsElapsed = position * 1000;
+
+            kEffect.SetPos(position * 1000);
+            
         }
 
         #region Timer
@@ -329,6 +338,7 @@ namespace Karaboss.Mp3
             this.pBox = new System.Windows.Forms.PictureBox();
             this.pnlTimer = new System.Windows.Forms.Timer(this.components);
             this.pnlWindow = new System.Windows.Forms.Panel();
+            this.kEffect = new lyrics.KaraokeEffect();
             this.pnlTop.SuspendLayout();
             this.pnlTitle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBox)).BeginInit();
@@ -457,10 +467,27 @@ namespace Karaboss.Mp3
             this.pnlWindow.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlWindow_MouseUp);
             this.pnlWindow.Resize += new System.EventHandler(this.pnlWindow_Resize);
             // 
+            // kEffect
+            // 
+            this.kEffect.Image = null;
+            this.kEffect.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 65.33334F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            resources.ApplyResources(this.kEffect, "kEffect");
+            this.kEffect.Name = "kEffect";
+            this.kEffect.nbLyricsLines = 1;
+            this.kEffect.Position = 0;
+            this.kEffect.StepPercent = 0.01F;
+            this.kEffect.SyncLine = ((System.Collections.Generic.List<lyrics.SyncText>)(resources.GetObject("kEffect.SyncLine")));
+            this.kEffect.SyncLyrics = ((System.Collections.Generic.List<System.Collections.Generic.List<lyrics.SyncText>>)(resources.GetObject("kEffect.SyncLyrics")));
+            this.kEffect.TransitionEffect = lyrics.TransitionEffects.Progressive;
+            this.kEffect.TxtAlreadyPlayedColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(51)))));
+            this.kEffect.TxtBeingPlayedColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.kEffect.TxtNotYetPlayedColor = System.Drawing.Color.White;
+            // 
             // frmMp3Lyrics
             // 
             resources.ApplyResources(this, "$this");
             this.ControlBox = false;
+            this.Controls.Add(this.kEffect);
             this.Controls.Add(this.pnlWindow);
             this.Controls.Add(this.pBox);
             this.Controls.Add(this.pnlTop);
@@ -576,7 +603,7 @@ namespace Karaboss.Mp3
         #endregion Images
 
 
-        #region Karaoke Text Highlighter
+        #region Karaoke Text measures
         /// <summary>
         /// Ajuste la taille de la fonte en fonction de la taille de pBox
         /// </summary>
@@ -699,7 +726,7 @@ namespace Karaboss.Mp3
             return maxline;
         }
 
-        #endregion
+        #endregion karaoke test measures
 
 
         #region Move Window

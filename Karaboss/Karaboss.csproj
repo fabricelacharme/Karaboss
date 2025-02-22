@@ -817,6 +817,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\KaraokeEffect\KaraokeEffect\KaraokeEffect\KaraokeEffect.csproj">
+      <Project>{6D414DBF-73A0-4804-8C02-B50271B91357}</Project>
+      <Name>KaraokeEffect</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AutoUpdater\AutoUpdater.csproj">
       <Project>{f8b4da50-0645-4ed3-b62c-5e3422696c31}</Project>
       <Name>AutoUpdater</Name>
