@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2024 Fabrice Lacharme
+/* Copyright (c) 2025 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -40,6 +40,7 @@ using Sanford.Multimedia.Midi;
 using System.IO; // debug
 using Karaboss.Resources.Localization;
 using Karaboss.Configuration;
+using Karaboss.Mp3;
 using Sanford.Multimedia.Midi.UI;
 using PrgAutoUpdater;
 using System.Net;
@@ -133,6 +134,7 @@ namespace Karaboss
             searchControl.SelectedIndexChanged += new Search.SelectedIndexChangedEventHandler(Global_SelectedIndexChanged);
             searchControl.PlayMidi += new Search.PlayMidiEventHandler(Global_PlayMidi);
             searchControl.PlayCDG += new Search.PlayCDGEventHandler(Global_PlayCDG);
+            searchControl.PlayMp3 += new Search.PlayMp3EventHandler(Global_PlayMp3);
             searchControl.SearchContentChanged += new Search.ContentChangedEventHandler(Search_ContentChanged);
             searchControl.NavigateTo += new Search.NavigateToEventHandler(Item_NavigateTo);
             searchControl.SongRootChanged += new Search.SongRootChangedEventHandler(Search_SongRootChanged);
@@ -141,14 +143,15 @@ namespace Karaboss
             #region explorerControl events
             // The EXPLORER page           
             xplorerControl.SelectedIndexChanged += new xplorer.SelectedIndexChangedEventHandler(Global_SelectedIndexChanged);            
-            xplorerControl.PlayMidi += new xplorer.PlayMidiEventHandler(Global_xPlayMidi);
-            xplorerControl.PlayCDG += new xplorer.PlayCDGEventHandler(Global_PlayCDG);
-            xplorerControl.PlayAbc += new xplorer.PlayAbcEventHandler(Global_xPlayAbc);
             
+            xplorerControl.PlayMidi += new xplorer.PlayMidiEventHandler(Global_xPlayMidi);
+            xplorerControl.PlayCDG += new xplorer.PlayCDGEventHandler(Global_xPlayCDG);
+            xplorerControl.PlayAbc += new xplorer.PlayAbcEventHandler(Global_xPlayAbc);            
             xplorerControl.PlayXml += new xplorer.PlayXmlEventHandler(Global_xPlayXml);
             xplorerControl.PlayMxl += new xplorer.PlayMxlEventHandler(Global_xPlayMxl);
-
+            xplorerControl.PlayMp3 += new xplorer.PlayMp3EventHandler(Global_xPlayMp3); 
             xplorerControl.PlayTxt += new xplorer.PlayTxtEventHandler(Global_xPlayTxt);
+
             xplorerControl.LvContentChanged += new xplorer.ContentChangedEventHandler(Xplorer_ContentChanged);
             xplorerControl.CreateNewMidiFile += new xplorer.CreateNewMidiFileEventHandler(Xplorer_CreateNewMidiFile);
 
@@ -157,12 +160,15 @@ namespace Karaboss
             #region playlistsControl events
             // The PLAYLISTS page
             playlistsControl.SelectedIndexChanged += new playlists.SelectedIndexChangedEventHandler(Global_SelectedIndexChanged);
+            
             playlistsControl.PlayMidi += new playlists.PlayMidiEventHandler(Global_PlayMidi);
             playlistsControl.PlayCDG += new playlists.PlayCDGEventHandler(Global_PlayCDG);
             playlistsControl.PlayAbc += new playlists.PlayAbcEventHandler(Global_PlayAbc);
             playlistsControl.PlayXml += new playlists.PlayXmlEventHandler(Global_PlayXml);
             playlistsControl.PlayMxl += new playlists.PlayXmlEventHandler(Global_PlayMxl);
             playlistsControl.PlayTxt += new playlists.PlayTxtEventHandler(Global_PlayTxt);
+            playlistsControl.PlayMp3 += new playlists.PlayMp3EventHandler(Global_PlayMp3);
+            
             playlistsControl.NavigateTo += new playlists.NavigateToEventHandler(Item_NavigateTo);
             #endregion
 
@@ -1381,17 +1387,50 @@ namespace Karaboss
 
         // Specific xplorerControl    
         // Lauch a file from explorer, no playlist
+        #region from explorer
+        
+        /// <summary>
+        /// Launch Midi file from explorer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="bplay"></param>
         private void Global_xPlayMidi(object sender, FileInfo fi, bool bplay)
         {
             Karaclass.m_MxmlPath = "";
             DisplayMidiPlayer(fi.FullName, null, bplay);
         }
 
+        /// <summary>
+        /// Lauch CDG file from explorer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="bplay"></param>
+        private void Global_xPlayCDG(object sender, FileInfo fi, bool bplay)
+        {
+            Karaclass.m_MxmlPath = "";
+            DisplayCDGPlayer(fi.FullName, null, bplay);
+        }
+
+
+        /// <summary>
+        /// Launch ABC file from explorer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="bplay"></param>
         private void Global_xPlayAbc(object sender, FileInfo fi, bool bplay)
         {
             DisplayAbcPlayer(fi.FullName, null, bplay);
         }
 
+        /// <summary>
+        /// Launch Xml file from explorer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="bplay"></param>
         private void Global_xPlayXml(object sender, FileInfo fi, bool bplay)
         {
             Karaclass.m_MxmlPath = "";
@@ -1399,13 +1438,24 @@ namespace Karaboss
             DisplayXmlPlayer(fi.FullName, null, bplay);
         }
 
+        /// <summary>
+        /// Lauch mxl file from explorer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="bplay"></param>
         private void Global_xPlayMxl(object sender, FileInfo fi, bool bplay)
         {
             Karaclass.m_MxmlPath = fi.FullName;
             DisplayMxlPlayer(fi.FullName, null, bplay);
         }
 
-
+        /// <summary>
+        /// Launch txt file from explorer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="bplay"></param>
         private void Global_xPlayTxt(object sender, FileInfo fi, bool bplay)
         {
             Karaclass.m_XmlPath = "";
@@ -1413,16 +1463,45 @@ namespace Karaboss
             DisplayTxtPlayer(fi.FullName, null, bplay);
         }
 
+        /// <summary>
+        /// Launch mp3 file from explorer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="bplay"></param>
+        private void Global_xPlayMp3(Object sender, FileInfo fi, bool bplay)
+        {
+            Karaclass.m_XmlPath = "";
+            Karaclass.m_MxmlPath = "";
+            DisplayMp3Player(fi.FullName, null, bplay);
+        }
+
+        #endregion from explorer
+
 
         // Specific playlist
         // Launch a file from playlist, not from explorer
+        #region from playlists
 
-        private void Global_PlayCDG(object sender, FileInfo fi, bool bplay)
+        /// <summary>
+        /// Launch CDG file from playlist
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="bplay"></param>
+        private void Global_PlayCDG(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
             string fpath = fi.FullName;
-            LaunchCDGPlayer(fpath, true);
+            DisplayCDGPlayer(fpath, pl, bplay);
         }
 
+        /// <summary>
+        /// Launch midi file from playlist
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="pl"></param>
+        /// <param name="bplay"></param>
         private void Global_PlayMidi(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
             Karaclass.m_XmlPath = "";
@@ -1430,11 +1509,25 @@ namespace Karaboss
             DisplayMidiPlayer(fi.FullName, pl, bplay);
         }
 
+        /// <summary>
+        /// Launch abc file from playlist
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="pl"></param>
+        /// <param name="bplay"></param>
         private void Global_PlayAbc(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
             DisplayAbcPlayer(fi.FullName, pl, bplay);
         }
 
+        /// <summary>
+        /// Launch xml file from playlist
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="pl"></param>
+        /// <param name="bplay"></param>
         private void Global_PlayXml(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
             Karaclass.m_MxmlPath = fi.FullName;
@@ -1442,12 +1535,26 @@ namespace Karaboss
             DisplayXmlPlayer(fi.FullName, pl, bplay);
         }
 
+        /// <summary>
+        /// Launch mxl file from playlist
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="pl"></param>
+        /// <param name="bplay"></param>
         private void Global_PlayMxl(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
             Karaclass.m_MxmlPath = fi.FullName;
             DisplayMxlPlayer(fi.FullName, pl, bplay);
         }
 
+        /// <summary>
+        /// Launch txt file from playlist
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="pl"></param>
+        /// <param name="bplay"></param>
         private void Global_PlayTxt(object sender, FileInfo fi, Playlist pl, bool bplay)
         {
             Karaclass.m_XmlPath = "";
@@ -1455,6 +1562,56 @@ namespace Karaboss
             DisplayTxtPlayer(fi.FullName, pl, bplay);
         }
 
+        /// <summary>
+        /// Launch mp3 file from playlist
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="pl"></param>
+        /// <param name="bplay"></param>
+        private void Global_PlayMp3(object sender, FileInfo fi, Playlist pl, bool bplay)
+        {
+            Karaclass.m_XmlPath = "";
+            Karaclass.m_MxmlPath = "";
+            DisplayMp3Player(fi.FullName, pl, bplay);
+
+        }
+
+        #endregion from playlists
+
+
+        private void DisplayMp3Player(string fpath, Playlist pl, bool bplay)
+        {
+            if (fpath != null)
+            {
+                if (File.Exists(fpath) == false)
+                {
+                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
+            Cursor.Current = Cursors.WaitCursor;
+
+            // Close form frmMp3Player
+            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            {
+                Application.OpenForms["frmPlayer"].Close();
+            }
+
+            // Affiche le formulaire frmCDGPlayer 
+            if (Application.OpenForms["frmMp3Player"] == null)
+            {
+                Form frmMp3Player = new frmMp3Player(fpath, pl, bplay);
+                frmMp3Player.Show();
+            }
+            else
+            {
+                Application.OpenForms["frmMp3Player"].Close();
+                Form frmMp3Player = new frmMp3Player(fpath, pl, bplay);
+                frmMp3Player.Show();
+            }
+        }
 
         /// <summary>
         /// Display the CDG player
@@ -1462,7 +1619,7 @@ namespace Karaboss
         /// <param name="fpath"></param>
         /// <param name="fname"></param>
         /// <param name="bPlayNow"></param>
-        private void LaunchCDGPlayer(string fpath, bool bPlayNow)
+        private void DisplayCDGPlayer(string fpath, Playlist pl, bool bPlayNow)
         {            
             if (fpath != null)
             {
@@ -1473,24 +1630,31 @@ namespace Karaboss
                 }
             }
 
+
+            // Close form frmMp3Player
+            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+            {
+                Application.OpenForms["frmMp3Player"].Close();
+            }
+
             Cursor.Current = Cursors.WaitCursor;
 
             // Affiche le formulaire frmCDGPlayer 
             if (Application.OpenForms["frmCDGPlayer"] == null)
             {
-                Form frmCDGPlayer = new frmCDGPlayer(fpath);
+                Form frmCDGPlayer = new frmCDGPlayer(fpath, pl, bPlayNow);
                 frmCDGPlayer.Show();
             }
             else
             {
                 Application.OpenForms["frmCDGPlayer"].Close();
-                Form frmCDGPlayer = new frmCDGPlayer(fpath);
+                Form frmCDGPlayer = new frmCDGPlayer(fpath, pl, bPlayNow);
                 frmCDGPlayer.Show();
             }
         }
 
         /// <summary>
-        /// Displat ABC, MML text player
+        /// Display ABC, MML text player
         /// </summary>
         /// <param name="filename"></param>
         /// <param name="bPlayNow"></param>
@@ -1535,6 +1699,12 @@ namespace Karaboss
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
                 Application.OpenForms["frmPlayer"].Close();
+            }
+
+            // Close form frmMp3Player
+            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+            {
+                Application.OpenForms["frmMp3Player"].Close();
             }
 
             #endregion
@@ -1622,6 +1792,13 @@ namespace Karaboss
                 Application.OpenForms["frmChords"].Close();
             }
 
+            // Close form frmMp3Player
+            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+            {
+                Application.OpenForms["frmMp3Player"].Close();
+            }
+
+
             #endregion
 
             // Affiche le formulaire frmPlay             
@@ -1695,6 +1872,12 @@ namespace Karaboss
             if (Application.OpenForms.OfType<frmChords>().Count() > 0)
             {
                 Application.OpenForms["frmChords"].Close();
+            }
+
+            // Close form frmMp3Player
+            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+            {
+                Application.OpenForms["frmMp3Player"].Close();
             }
             #endregion
 
@@ -1797,6 +1980,12 @@ namespace Karaboss
             {
                 Application.OpenForms["frmChords"].Close();
             }
+
+            // Close form frmMp3Player
+            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+            {
+                Application.OpenForms["frmMp3Player"].Close();
+            }
             #endregion
 
             // Close form frmPlay 
@@ -1842,17 +2031,7 @@ namespace Karaboss
             base.OnLoad(e);
         }
 
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
-
+       
         private void ShowSplashSoundFonts()
         {                        
             // Splash window because the the loading of sound fonts takes a very long time if a big file is used
@@ -1868,7 +2047,7 @@ namespace Karaboss
             // Remove splash windows for sound fonts
             if (Application.OpenForms.OfType<frmLoading>().Count() > 0)
             {
-                frmLoading frmLoading = GetForm<frmLoading>();
+                frmLoading frmLoading = Utilities.FormUtilities.GetForm<frmLoading>();
                 frmLoading.Close();
             }           
         }
@@ -1877,7 +2056,7 @@ namespace Karaboss
         {
             if (Application.OpenForms.OfType<frmSplashScreen>().Count() > 0)
             {
-                frmSplashScreen frmSplashScreen = GetForm<frmSplashScreen>();
+                frmSplashScreen frmSplashScreen = Utilities.FormUtilities.GetForm<frmSplashScreen>();
                 frmSplashScreen.Msg(message);
             }
         }
@@ -1973,7 +2152,7 @@ namespace Karaboss
                 case ".zip":
                 case ".cdg":
                     {
-                        LaunchCDGPlayer(cmdpath, bPlayNow);
+                        DisplayCDGPlayer(cmdpath, null, bPlayNow);
                         break;
                     }
 
@@ -2019,6 +2198,11 @@ namespace Karaboss
                         DisplayTxtPlayer(cmdpath, null, bPlayNow);
                         break;
                     }
+                case ".mp3":
+                    Karaclass.m_MxmlPath = "";
+                    DisplayMp3Player(cmdpath, null, bPlayNow);
+                    break;
+
                 default:
                     try
                     {
@@ -2134,47 +2318,52 @@ namespace Karaboss
                 // Close existing windows
                 if (Application.OpenForms.OfType<frmLoading>().Count() > 0)
                 {
-                    frmLoading frmLoading = GetForm<frmLoading>();
+                    frmLoading frmLoading = Utilities.FormUtilities.GetForm<frmLoading>();
                     frmLoading.Close();
                 }
 
                 if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                 {
-                    frmPlayer frmPlayer = GetForm<frmPlayer>();
+                    frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                     frmPlayer.Close();
                 }
 
                 if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
                 {
-                    frmPianoTraining frmPianoTraining = GetForm<frmPianoTraining>();
+                    frmPianoTraining frmPianoTraining = Utilities.FormUtilities.GetForm<frmPianoTraining>();
                     frmPianoTraining.Close();
                 }
 
                 if (Application.OpenForms.OfType<frmGuitarTraining>().Count() > 0)
                 {
-                    frmGuitarTraining frmGuitarTraining = GetForm<frmGuitarTraining>();
+                    frmGuitarTraining frmGuitarTraining = Utilities.FormUtilities.GetForm<frmGuitarTraining>();
                     frmGuitarTraining.Close();
                 }
 
 
                 if (Application.OpenForms.OfType<frmExternalMidiPlay>().Count() > 0)
                 {
-                    frmExternalMidiPlay frmExternalMidiPlay = GetForm<frmExternalMidiPlay>();
+                    frmExternalMidiPlay frmExternalMidiPlay = Utilities.FormUtilities.GetForm<frmExternalMidiPlay>();
                     frmExternalMidiPlay.Close();
                 }
 
                 if (Application.OpenForms.OfType<frmExternalMidiRecord>().Count() > 0)
                 {
-                    frmExternalMidiRecord frmExternalMidiRecord = GetForm<frmExternalMidiRecord>();
+                    frmExternalMidiRecord frmExternalMidiRecord = Utilities.FormUtilities.GetForm<frmExternalMidiRecord>();
                     frmExternalMidiRecord.Close();
                 }
 
                 if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
                 {
-                    FrmTextPlayer frm = GetForm<FrmTextPlayer>();
+                    FrmTextPlayer frm = Utilities.FormUtilities.GetForm<FrmTextPlayer>();
                     frm.Close();
                 }
 
+                if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+                {
+                    frmMp3Player frm = Utilities.FormUtilities.GetForm<frmMp3Player>();
+                    frm.Close();
+                }
 
                 Dispose();
                 //Environment.Exit(Environment.ExitCode);
@@ -3092,10 +3281,7 @@ namespace Karaboss
         private void ResetOutPutDevice()
         {            
             try
-            {
-                //if (outDevice != null)
-                //    outDevice.Dispose();
-
+            {                
                 outDevice?.Dispose();
                 outDevice = new OutputDevice(outDeviceID);
 

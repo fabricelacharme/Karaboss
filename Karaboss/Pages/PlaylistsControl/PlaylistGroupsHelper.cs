@@ -100,6 +100,27 @@ namespace Karaboss
             }
         }
 
+        /// <summary>
+        /// Replace a plalistGroupItem in a playlistGroup
+        /// </summary>
+        /// <param name="plg"></param>
+        /// <param name="plgi"></param>
+        public void ReplacePlaylist(PlaylistGroup plg, PlaylistGroupItem plgi, Playlist pl)
+        {
+            PlaylistGroupItem plgitem = plg.plGroupItems.Where(z => z.Key == plgi.Key).FirstOrDefault();
+            if (plgitem != null)
+            {
+                Playlist pltarget = plgitem.Playlists.Where(z => z.Name == pl.Name).FirstOrDefault();
+                plgitem.Playlists.Remove(pltarget);
+                plgitem.Playlists.Add(pl);
+
+                //plgitem.Name = plgi.Name;
+                //plgitem.ParentKey = plgi.ParentKey;
+                //plgitem.Playlists = plgi.Playlists;
+            }
+        }
+
+
         public PlaylistGroupItem CreateEmptyPlaylistGroupItem(string Name = "myPlaylists1", PlaylistGroupItem Parent = null)
         {
             PlaylistGroupItem plgi = new PlaylistGroupItem();

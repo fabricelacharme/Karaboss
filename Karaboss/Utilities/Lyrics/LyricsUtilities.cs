@@ -34,6 +34,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -41,6 +42,14 @@ using System.Windows.Forms;
 
 namespace Karaboss.Utilities
 {
+
+    public enum LrcLinesSyllabesFormats
+    {
+        Lines = 0,
+        Syllabes = 1,
+    }
+
+   
     public static class LyricsUtilities
     {
         /// <summary>
@@ -234,7 +243,7 @@ namespace Karaboss.Utilities
         }
 
         /// <summary>
-        /// Convert time to ticks
+        /// Convert time to ticks in seconds
         /// 01:15.510 (min 2digits, sec 2 digits, ms 3 digits)
         /// </summary>
         /// <param name="time"></param>
@@ -242,6 +251,8 @@ namespace Karaboss.Utilities
         public static int TimeToTicks(string time, double Division, int max)
         {
             int tic = 0;
+            
+            // Caculate duration in seconds
             double dur;
 
             string[] split1 = time.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
@@ -325,8 +336,8 @@ namespace Karaboss.Utilities
         #region LRC
 
         /// <summary>
-        /// Returns lyrics by lines 
-        /// format [00:08.834]QUAND J'AI RENCONTRE JOSEPHINE"
+        /// LRC: Returns lyrics by lines 
+        /// format: 1 timestamp + full line = [00:04.598]IT'S BEEN A HARD DAY'S NIGHT
         /// </summary>
         /// <param name="lstLyricsItems"></param>
         /// <param name="strSpaceBetween"></param>
@@ -401,10 +412,94 @@ namespace Karaboss.Utilities
             return lstLines;
         }
 
+        /// <summary>
+        /// SYLT: Return lyrics by line
+        /// format: 1 timestamp + full line = [00:04.598]/IT'S BEEN A HARD DAY'S NIGHT
+        /// Difference with GetLrcLines: add a / character in front of each line 
+        /// </summary>
+        /// <param name="lstLyricsItems"></param>
+        /// <param name="strSpaceBetween"></param>
+        /// <returns></returns>
+        public static List<string> GetSyltLines(List<(string, string, string)> lstLyricsItems, string strSpaceBetween)
+        {
+            string sLine;
+            List<string> Lines = GetLrcLines(lstLyricsItems, strSpaceBetween);
+            List<string> lstLines = new List<string>();
+
+            for (int i = 0; i < Lines.Count; i++)
+            {
+                sLine = Lines[i];
+                if (sLine.Length > 11)
+                    sLine = sLine.Substring(0, 11) + "/" + sLine.Substring(11);
+                else
+                    sLine = sLine.Substring(0, 11) + "/";
+                lstLines.Add(sLine);
+            }
+            return lstLines;
+
+            #region deleteme
+            /*
+            // ===================================================
+            List<string> lstLines = new List<string>();
+            
+            string sTime;
+            string sType;
+            string sLyric;
+            string sLine = string.Empty;
+            
+            try
+            {
+                // sTime, sType, sLyric
+                for (int i = 0; i < lstLyricsItems.Count; i++)
+                {
+                    sTime = lstLyricsItems[i].Item1;
+                    sType = lstLyricsItems[i].Item2;
+                    sLyric = lstLyricsItems[i].Item3;
+
+                    if (sType == "text")      // Do not add empty lyrics to a line ?
+                    {
+                        if (sLyric.StartsWith("/"))
+                        {
+                            // Save current line
+                            if (sLine != "")
+                            {
+                                // Add new line
+                                lstLines.Add(sLine);
+                            }
+
+                            sLine = sTime + strSpaceBetween + sLyric;    // time + lyric for the beginning of a line 
+                        }
+                        else
+                        {
+                            // Line continuation
+                            sLine += sLyric; // only lyric for the continuation of a line                        
+                        }
+                    }
+                   
+                }
+                // Save last line
+                if (sLine != "")
+                {
+                    lstLines.Add(sLine);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //return null;
+            }
+
+            return lstLines;
+            */
+            #endregion deleteme
+        }
+
+
 
         /// <summary>
         /// Return lyrics by line with their timestamps
         /// Format [00:08.834]QUAND [00:09.107]J'AI [00:09.196]REN[00:09.469]CON[00:09.558]TRE [00:09.926]JO[00:10.107]SE[00:10.307]PHI[00:10.656]NE
+        /// This is needed by the next function GetLrcLinesCut in order to cut a line in two lines 
         /// </summary>
         /// <param name="lstLyricsItems"></param>
         /// <param name="strSpaceBetween"></param>
@@ -481,9 +576,77 @@ namespace Karaboss.Utilities
             return lstTimeLines;
         }
 
+        /// <summary>
+        /// Return lyrics by line with their timestamps
+        /// Format [00:08.834]QUAND [00:09.107]J'AI [00:09.196]REN[00:09.469]CON[00:09.558]TRE [00:09.926]JO[00:10.107]SE[00:10.307]PHI[00:10.656]NE
+        /// Same as GetLrcTimeLines ?
+        /// </summary>
+        /// <param name="lstLyricsItems"></param>
+        /// <param name="strSpaceBetween"></param>
+        /// <returns></returns>
+        public static List<string> GetSyltTimeLines(List<(string, string, string)> lstLyricsItems, string strSpaceBetween)
+        {
+            List<string> lstTimeLines = GetLrcTimeLines(lstLyricsItems, strSpaceBetween);
+            return lstTimeLines;
+            
+            /*
+            List<string> lstTimeLines = new List<string>();
+            
+            string sTime;
+            string sType;
+            string sLyric;
+            string sTimeLine = string.Empty;            
+
+            try
+            {
+                // sTime, sType, sLyric
+                for (int i = 0; i < lstLyricsItems.Count; i++)
+                {
+                    sTime = lstLyricsItems[i].Item1;
+                    sType = lstLyricsItems[i].Item2;
+                    sLyric = lstLyricsItems[i].Item3;
+
+                    if (sType == "text")      // Do not add empty lyrics to a line ?
+                    {
+                        if (sLyric.StartsWith("/"))
+                        {
+                            if (sTimeLine != "")
+                            {
+                                // Add new line
+                                lstTimeLines.Add(sTimeLine);
+                            }
+                            sTimeLine = sTime + strSpaceBetween + sLyric;
+                        }
+                        else
+                        {
+                            sTimeLine += sTime + strSpaceBetween + sLyric;
+                        }                                                
+                    }                   
+                }
+
+                // Save last line
+                if (sTimeLine != "")
+                {
+                    // Remove last space
+                    if (sTimeLine.Length > 0 && sTimeLine.EndsWith(" "))
+                        sTimeLine = sTimeLine.Remove(sTimeLine.Length - 1, 1);
+                    lstTimeLines.Add(sTimeLine);
+                }
+            }
+            catch (Exception e) { MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+
+            return lstTimeLines;
+            */
+        }
+
+
+
 
         /// <summary>
         /// Return lyrics by line and cut lines to MaxLength characters
+        /// [00:04.598]IT'S BEEN A HARD DAY'S NIGHT
+        /// [00:08.148]AND I'VE BEEN WORKING LIKE A
+        /// [00:10.349]DOG
         /// </summary>
         /// <param name="lstTimeLines"></param>
         /// <param name="MaxLength"></param>
@@ -513,7 +676,143 @@ namespace Karaboss.Utilities
                 for (int i = 0; i < lstTimeLines.Count; i++)
                 {
                     sTimeLine = lstTimeLines[i];
+                    // Split by space character
+                    words = sTimeLine.Split(' ');                    
+                    Times = new string[words.Length];
+
+                    for (int j = 0; j < words.Length; j++)
+                    {
+                        Times[j] = words[j].Substring(0, 11);
+                        words[j] = Regex.Replace(words[j], removepattern, replace);
+                    }
+                    lstWords.Add(words);
+                    lstTimes.Add(Times);
+                }
+
+                // Manage length
+                // for each line, test if its length is greater than MaxLength
+                // If yes, create a second line
+                strPartialLine = string.Empty;   // Words of a line without timestamps in order to estimate length
+                sLine = string.Empty;
+                string[] ItemsW;
+                string[] ItemsT;
+                for (int i = 0; i < lstWords.Count; i++)
+                {
+                    ItemsT = lstTimes[i];
+                    ItemsW = lstWords[i];
+                    sLine = string.Empty;
+
+                    for (int j = 0; j < ItemsW.Count(); j++)
+                    {
+                        bStartLine = (j == 0);
+                        sLyric = ItemsW[j];
+                        sTime = ItemsT[j];
+
+                        if (!bStartLine && (strPartialLine + " " + sLyric).Length > MaxLength)
+                        {
+                            // if length of words is greater than MaxLength
+                            // Remove last space
+                            if (sLine.Length > 0 && sLine.EndsWith(" "))
+                                sLine = sLine.Remove(sLine.Length - 1, 1);
+                            lstLinesCut.Add(sLine);
+
+                            // Restart a new line
+                            sLine = sTime + sLyric + " ";
+                            strPartialLine = sLyric + " ";
+
+                        }
+                        else
+                        {
+                            if (bStartLine)
+                            {
+                                sLine = sTime + sLyric + " ";
+                                strPartialLine = sLyric + " ";
+                            }
+                            else
+                            {
+                                sLine += sLyric + " ";
+                                strPartialLine += sLyric + " ";
+                            }
+                        }
+                    }
+
+                    // Remove last space
+                    if (sLine.Length > 0 && sLine.EndsWith(" "))
+                        sLine = sLine.Remove(sLine.Length - 1, 1);
+                    lstLinesCut.Add(sLine);
+                    sLine = string.Empty;
+                }
+
+                // Save last line
+                if (sLine != string.Empty)
+                {
+                    // Remove last space
+                    if (sLine.Length > 0 && sLine.EndsWith(" "))
+                        sLine = sLine.Remove(sLine.Length - 1, 1);
+                    lstLinesCut.Add(sLine);
+                }
+            }
+            catch (Exception e) 
+            { 
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //return null;
+            }
+            return lstLinesCut;
+        }
+
+
+
+        /// <summary>
+        /// Return lyrics by line and cut lines to MaxLength characters
+        /// Same as GetLrcLinesCut, but with a / character at the beginning of each line ?
+        /// </summary>
+        /// <param name="lstTimeLines"></param>
+        /// <param name="MaxLength"></param>
+        /// <returns></returns>
+        public static List<string> GetSyltLinesCut(List<string> lstTimeLines, int MaxLength)
+        {
+            string strLine = string.Empty;
+            List<string> LinesCut = GetLrcLinesCut(lstTimeLines, MaxLength);
+            List<string> lstLinesCut = new List<string>();
+
+            for (int i = 0; i < LinesCut.Count; i++)
+            {
+                strLine = LinesCut[i];
+                strLine = strLine.Substring(0, 11) + "/" + strLine.Substring(11);
+                
+                lstLinesCut.Add(strLine);
+            }
+            return lstLinesCut;
+
+            #region deleteme
+            /*
+            List<string[]> lstWords = new List<string[]>();
+            List<string[]> lstTimes = new List<string[]>();
+
+            string sTimeLine;
+            string strPartialLine;
+            string sLine;
+            bool bStartLine;
+            string sLyric;
+            string sTime;
+
+            string[] words;
+            string[] Times;
+            string removepattern = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
+            string replace = @"";
+
+            List<string> lstLinesCut = new List<string>();
+
+            try
+            {
+
+                for (int i = 0; i < lstTimeLines.Count; i++)
+                {
+                    sTimeLine = lstTimeLines[i];
+                    
+                    // Split by spaces
                     words = sTimeLine.Split(' ');
+                    
                     Times = new string[words.Length];
                     for (int j = 0; j < words.Length; j++)
                     {
@@ -584,12 +883,14 @@ namespace Karaboss.Utilities
                     lstLinesCut.Add(sLine);
                 }
             }
-            catch (Exception e) 
-            { 
+            catch (Exception e)
+            {
                 MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 //return null;
             }
             return lstLinesCut;
+            */
+            #endregion deleteme
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2016 Fabrice Lacharme
+/* Copyright (c) 2025 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -50,6 +50,7 @@ using FlShell.Interop;
 using ComTypes = System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using FlShell.Resources.Localization;
+using System.Text.RegularExpressions;
 
 namespace FlShell
 {
@@ -68,6 +69,8 @@ namespace FlShell
     public delegate void PlayMxlEventHandler(object sender, FileInfo fi, bool bplay);
     // Play txt file
     public delegate void PlayTxtEventHandler(object sender, FileInfo fi, bool bplay);
+    // Play mp3 file
+    public delegate void PlayMp3EventHandler(object sender, FileInfo fi, bool bplay);
     // Playlists management
     public delegate void AddToPlaylistByNameHandler(object sender, ShellItem[] fls, string plname, string key = null, bool newPlaylist = false);
     // Display number of directories and files
@@ -91,12 +94,14 @@ namespace FlShell
 
         // Specific Karaboss : Play a song, a playlist or edit a song
         public event SelectedIndexChangedEventHandler SelectedIndexChanged;
+        
         public event PlayMidiEventHandler PlayMidi;
         public event PlayCDGEventHandler PlayCDG;
         public event PlayAbcEventHandler PlayAbc;
         public event PlayTxtEventHandler PlayTxt;
         public event PlayXmlEventHandler PlayXml;
         public event PlayMxlEventHandler PlayMxl;
+        public event PlayMp3EventHandler PlayMp3;
 
         public event AddToPlaylistByNameHandler AddToPlaylist;
         
@@ -1303,6 +1308,7 @@ namespace FlShell
 
         #endregion
 
+
         #region menus
 
 
@@ -1507,7 +1513,7 @@ namespace FlShell
    
         private void ListView_HandleCreated(object sender, EventArgs e)
         {
-            SetWindowTheme(m_ListView.Handle, "explorer", null);            
+            SetWindowTheme(m_ListView.Handle, "Explorer", null);            
         }
 
         private void ListView_DoubleClick(object sender, EventArgs e)
@@ -1515,8 +1521,9 @@ namespace FlShell
             //if (SelectedItems.Length > 0)
             if (m_ListView.SelectedItems.Count > 0)
             {
-                ShellItem item = (ShellItem)m_ListView.SelectedItems[0].Tag;
-                if (item != null && item.IsFolder)
+                ShellItem item = (ShellItem)m_ListView.SelectedItems[0].Tag;               
+
+                if (item != null && item.IsFolder && !Regex.IsMatch(item.DisplayName, "\\.zip$"))
                     Navigate(item);
                 else
                 {
@@ -1830,6 +1837,11 @@ namespace FlShell
                     case ".txt":
                         {
                             PlayTxt?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
+                    case ".mp3":
+                        {
+                            PlayMp3?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
                     default:

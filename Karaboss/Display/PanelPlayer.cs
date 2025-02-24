@@ -12,8 +12,7 @@ namespace Karaboss.Display
 {
     public partial class PanelPlayer : UserControl
     {
-        
-        
+                
         public PanelPlayer()
         {
             InitializeComponent();
@@ -46,6 +45,6 @@ namespace Karaboss.Display
 
         public void DisplayPercent(string tx) { lblPercent.Text = tx;}
 
-        public void displayElapsed(string tx) { lblElapsed.Text = tx;}
+        public void DisplayElapsed(string tx) { lblElapsed.Text = tx;}
     }
 }

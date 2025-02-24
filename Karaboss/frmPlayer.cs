@@ -45,7 +45,7 @@ using System.Text.RegularExpressions;
 using MusicXml;
 using MusicTxt;
 using System.Linq;
-using Karaboss.Lyrics;
+using Karaboss.MidiLyrics;
 using Karaboss.Utilities;
 
 namespace Karaboss
@@ -65,7 +65,7 @@ namespace Karaboss
         #region Lyrics declaration
 
         // Lyrics management
-        public LyricsMgmt myLyricsMgmt;
+        public MidiLyricsMgmt myLyricsMgmt;
         
 
         // SlideShow directory
@@ -943,7 +943,7 @@ namespace Karaboss
             Track track;
             switch (myLyricsMgmt.ChordsOriginatedFrom)
             {
-                case LyricsMgmt.ChordsOrigins.Discovery:
+                case MidiLyricsMgmt.ChordsOrigins.Discovery:
                     // the question is: which track for displaying the chords?
                     // LyricsTrackNum?
                     // MelodyTrackNum?
@@ -971,7 +971,7 @@ namespace Karaboss
                     }
                     break;
 
-                case LyricsMgmt.ChordsOrigins.Lyrics:
+                case MidiLyricsMgmt.ChordsOrigins.Lyrics:
                     // Origin = lyrics, track is same as lyrics
                     track = sequence1.tracks[myLyricsMgmt.LyricsTrackNum];
 
@@ -985,7 +985,7 @@ namespace Karaboss
                     }
                     break;
 
-                case LyricsMgmt.ChordsOrigins.XmlEmbedded:
+                case MidiLyricsMgmt.ChordsOrigins.XmlEmbedded:
                     // Origin = Xml, track is MXmlReader.TrackChordsNumber
                     if (MXmlReader == null)
                         return;
@@ -2110,7 +2110,7 @@ namespace Karaboss
             {
                 try
                 {
-                    outDeviceProcessId = outDevice.Pid;
+                    outDeviceProcessId = outDevice.Pid;                    
 
                     string outDeviceName = OutputDeviceBase.GetDeviceCapabilities(outDevice.DeviceID).name;
                     lblOutputDevice.Text = outDeviceName;
@@ -2778,7 +2778,7 @@ namespace Karaboss
 
             // load lyrics and chords if included in lyrics
             //  ********************** Why not load embedded chords here if bShowChords is true ? *****************
-            myLyricsMgmt = new LyricsMgmt(sequence1);
+            myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
 
 
@@ -2928,7 +2928,7 @@ namespace Karaboss
                 // Active le formulaire frmExplorer
                 if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
                 {
-                    frmExplorer = GetForm<frmExplorer>();
+                    frmExplorer = Utilities.FormUtilities.GetForm<frmExplorer>();
                     frmExplorer.RefreshExplorer( Path.GetFileName(MIDIfileName));
                 }
 
@@ -2976,7 +2976,7 @@ namespace Karaboss
                 // Active le formulaire frmExplorer
                 if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
                 {
-                    frmExplorer = GetForm<frmExplorer>();
+                    frmExplorer = Utilities.FormUtilities.GetForm<frmExplorer>();
                     frmExplorer.RefreshExplorer();
                 }
             }
@@ -3324,7 +3324,7 @@ namespace Karaboss
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
 
-                myLyricsMgmt = new LyricsMgmt(sequence1);
+                myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
                 // Save chords to track in order to display them in the score
                 AddChordsToTrack();
@@ -3470,7 +3470,7 @@ namespace Karaboss
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
 
-                myLyricsMgmt = new LyricsMgmt(sequence1);
+                myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
                 // Load chords in LyricsMgmt in order to be displayed in the lyrics form                
                 LoadXmlChordsInLyrics();
@@ -3617,7 +3617,7 @@ namespace Karaboss
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
 
-                myLyricsMgmt = new LyricsMgmt(sequence1);
+                myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
                 /*
                 * Bug when format is 0, Karaboss change the format to 1.
@@ -3794,7 +3794,7 @@ namespace Karaboss
             TrkInsertLyrics(track, newpLyrics, newLyricType);
 
             // Reload myLyricMgmt
-            myLyricsMgmt = new LyricsMgmt(sequence1);
+            myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
 
             // Refresh frmLyric
@@ -4381,7 +4381,7 @@ namespace Karaboss
         {
             if (myLyricsMgmt == null)
             {
-                myLyricsMgmt = new LyricsMgmt(sequence1);
+                myLyricsMgmt = new MidiLyricsMgmt(sequence1);
             }
             myLyricsMgmt.MelodyTrackNum = melodytracknum;
             myLyricsMgmt.LyricsTrackNum = lyricstracknum;
@@ -4418,7 +4418,7 @@ namespace Karaboss
                 // infos
                 // MXmlReader.lstChords
                 // MXmlReader.TrackChordsNumber
-                myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.XmlEmbedded;
+                myLyricsMgmt.ChordsOriginatedFrom = MidiLyricsMgmt.ChordsOrigins.XmlEmbedded;
 
                 myLyricsMgmt.lstXmlChords = MXmlReader.lstChords;
             }
@@ -5402,32 +5402,6 @@ namespace Karaboss
         /// <param name="channel"></param>
         private void CreateNewMelody(Track track, int measures)
         {
-            #region old code
-            /*
-            int noteC = 60;
-            int ticks = 0;
-            int number = noteC;
-            int division = sequence1.Division;
-            int duration = 1 * division;
-
-            int nbblacks = measures * sequence1.Numerator * 4 / sequence1.Denominator;
-
-            // Ajoute une note au ticks = 0           
-            ticks = 0;
-            int velocity = Karaclass.m_Velocity;
-
-            MidiNote note = new MidiNote(ticks, channel, number, duration, velocity, false);
-            
-
-            // Ajoute une note au ticks -1
-            ticks = (nbblacks - 1) * division;
-            note = new MidiNote(ticks, channel, number, duration, velocity, false);
-            track.addNote(note);
-
-            track.Volume = 80;
-            */
-            #endregion old code
-
             SetTrackLength(track, measures);
 
         }
@@ -5449,21 +5423,7 @@ namespace Karaboss
             // ticks + 1            
             int ticks = _measurelen * measures;
 
-            /*
-            var split = BitConverter.GetBytes(0);
-            byte[] bytes = new byte[3];
-            bytes[0] = split[2]; //11;
-            bytes[1] = split[1]; //113;
-            bytes[2] = split[0]; //176;
-
-            MetaMessage mtMsg = new MetaMessage(MetaType.EndOfTrack, bytes);
-            track.Insert(ticks, mtMsg);            
-            //track.OffsetEndOfTrack(ticks);
-            */
-
             track.EndOfTrackOffset = ticks - 1;
-
-
 
         }
 
@@ -5968,7 +5928,7 @@ namespace Karaboss
             // FAB
             SetTitle("New.mid");
 
-            myLyricsMgmt = new LyricsMgmt(sequence1);
+            myLyricsMgmt = new MidiLyricsMgmt(sequence1);
             //bHasLyrics = myLyricsMgmt.OrgplLyrics.Count > 0;             
 
             // Display midi file infos
@@ -6306,6 +6266,7 @@ namespace Karaboss
         /// </summary>
         private void GetPeakVolume()
         {
+            
             float? peak = AudioControl.AudioManager.GetApplicationMasterPeakVolume(outDeviceProcessId);
             VuMasterPeakVolume.Level = Convert.ToInt32(peak);
         }
@@ -6602,7 +6563,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
             {
-                frmExplorer = GetForm<frmExplorer>();
+                frmExplorer = Utilities.FormUtilities.GetForm<frmExplorer>();
                 frmExplorer.DisplaySong(song);
             }
         }
@@ -7288,6 +7249,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void btnTranspoPlus_Click(object sender, EventArgs e)
         {
+            // Transpose by 1 or 2 
             int amount = Properties.Settings.Default.TransposeAmount;
 
             TransposeDelta += amount;
@@ -7301,6 +7263,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void btnTranspoMinus_Click(object sender, EventArgs e)
         {
+            // Transpose by 1 or 2 
             int amount = Properties.Settings.Default.TransposeAmount;
             TransposeDelta -= amount;
             ModTranspose(-amount);
@@ -8769,21 +8732,7 @@ namespace Karaboss
 
         #endregion Save File
 
-
-        #region Locate form
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
-
-        #endregion Locate form
-
+      
         #endregion Utilities
     }
 

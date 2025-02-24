@@ -565,7 +565,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
             {
-                frmLyrics = getForm<frmLyric>();
+                frmLyrics = Utilities.FormUtilities.GetForm<frmLyric>();
                 pt = frmLyrics.Handle;
             }
             return pt;
@@ -581,7 +581,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
             {
-                FrmPianoTraining = getForm<frmPianoTraining>();
+                FrmPianoTraining = Utilities.FormUtilities.GetForm<frmPianoTraining>();
                 pt = FrmPianoTraining.Handle;
             }
             return pt;
@@ -1050,17 +1050,6 @@ namespace Karaboss
             Dispose();
         }
 
-
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm getForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
 
 
         #endregion form load

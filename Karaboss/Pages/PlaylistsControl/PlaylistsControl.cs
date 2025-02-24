@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2018 Fabrice Lacharme
+/* Copyright (c) 2025 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -39,6 +39,7 @@ using Karaboss.Resources.Localization;
 using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
+using FlShell;
 
 namespace Karaboss.playlists
 {
@@ -50,7 +51,8 @@ namespace Karaboss.playlists
     public delegate void PlayTxtEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayXmlEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void PlayMxlEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
-    public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayCDGEventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
+    public delegate void PlayMp3EventHandler(object sender, FileInfo fi, Playlist pl, bool bplay);
     public delegate void NavigateToEventHandler(Object sender, string path, string file);
 
 
@@ -64,6 +66,7 @@ namespace Karaboss.playlists
         public event PlayXmlEventHandler PlayXml;
         public event PlayXmlEventHandler PlayMxl;
         public event PlayCDGEventHandler PlayCDG;
+        public event PlayMp3EventHandler PlayMp3;
         public event NavigateToEventHandler NavigateTo;
 
         #region playlists                
@@ -704,6 +707,11 @@ namespace Karaboss.playlists
                 listView.Items.Remove(_itemPhantom);
                 _itemPhantom = null;
             }
+
+            // Save changes
+            PlReorder();
+            
+
         }
 
         /// <summary>
@@ -1483,7 +1491,7 @@ namespace Karaboss.playlists
                             case ".zip":
                             case ".cdg":
                                 {
-                                    PlayCDG?.Invoke(this, fi, bplay);
+                                    PlayCDG?.Invoke(this, fi, currentPlaylist, bplay);
                                     break;
                                 }
 
@@ -1507,6 +1515,11 @@ namespace Karaboss.playlists
                             case ".mxl":
                                 {
                                     PlayMxl?.Invoke(this, fi, currentPlaylist, bplay);
+                                    break;
+                                }
+                            case ".mp3":
+                                {
+                                    PlayMp3?.Invoke(this, fi, currentPlaylist, bplay);
                                     break;
                                 }
                             default:
@@ -1796,12 +1809,16 @@ namespace Karaboss.playlists
 
             for (int i = 0; i < listView.Items.Count; i++)
             {
-                string sng = listView.Items[i].Name;
+                string sng = listView.Items[i].Text;
                 PlaylistItem pi = GetPlaylistItem(sng);
                 newpl.Songs.Add(pi);
             }
             currentPlaylist = newpl;
-            
+
+
+            PlGroupHelper.ReplacePlaylist(PlGroup, currentPlaylistGroupItem, currentPlaylist);
+           
+
             SaveAllPlaylist();
             ShowPlContent(currentPlaylist, 0);
         }
@@ -2403,7 +2420,12 @@ namespace Karaboss.playlists
                     case ".zip":
                     case ".cdg":
                         {
-                            PlayCDG?.Invoke(this, new FileInfo(file), bplay);
+                            PlayCDG?.Invoke(this, new FileInfo(file), null, bplay);
+                            break;
+                        }
+                    case ".mp3":
+                        {
+                            PlayMp3?.Invoke(this, new FileInfo(file), null, bplay);
                             break;
                         }
                     default:

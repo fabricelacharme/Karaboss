@@ -32,6 +32,7 @@
 
 #endregion
 
+using Karaboss.Utilities;
 using System;
 using System.Windows.Forms;
 using static Karaboss.Karaclass;
@@ -43,12 +44,12 @@ namespace Karaboss
     {        
 
         #region properties
-        public Karaclass.LrcFormats LrcFormat
+        public LrcLinesSyllabesFormats LrcLinesSyllabesFormat
         {
             get { 
                 if (OptFormatLines.Checked) 
-                    return Karaclass.LrcFormats.Lines;
-                else return Karaclass.LrcFormats.Syllables;
+                    return LrcLinesSyllabesFormats.Lines;
+                else return LrcLinesSyllabesFormats.Syllabes;
             }
         }
 
@@ -120,8 +121,8 @@ namespace Karaboss
                 chkAlphaNumeric.Checked = Properties.Settings.Default.bLrcRemoveNonAlphaNumeric;
 
                 // Export to lines or syllabes
-                Karaclass.LrcFormats LrcFormat = Properties.Settings.Default.lrcFormatLinesSyllabes == 0 ? LrcFormats.Lines : LrcFormats.Syllables;
-                OptFormatLines.Checked = LrcFormat == Karaclass.LrcFormats.Lines;
+                LrcLinesSyllabesFormats LrcLinesSyllabesFormat = Properties.Settings.Default.lrcFormatLinesSyllabes == 0 ? LrcLinesSyllabesFormats.Lines : LrcLinesSyllabesFormats.Syllabes;
+                OptFormatLines.Checked = LrcLinesSyllabesFormat == LrcLinesSyllabesFormats.Lines;
 
                 chkCutLines.Checked = Properties.Settings.Default.bLrcCutLines;
                 UpdCutLines.Value = Properties.Settings.Default.LrcCutLinesChars;

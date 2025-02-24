@@ -12,7 +12,7 @@ namespace Karaboss.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.12.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.13.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -1475,6 +1475,108 @@ namespace Karaboss.Properties {
             }
             set {
                 this["bLrcForceLowerCase"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point frmMp3PlayerLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["frmMp3PlayerLocation"]));
+            }
+            set {
+                this["frmMp3PlayerLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("fabrice.lacharme@gmail.com")]
+        public string BassRegistrationEmail {
+            get {
+                return ((string)(this["BassRegistrationEmail"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2X1632326152222")]
+        public string BassRegistrationKey {
+            get {
+                return ((string)(this["BassRegistrationKey"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point frmMp3LyricsLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["frmMp3LyricsLocation"]));
+            }
+            set {
+                this["frmMp3LyricsLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmMp3LyricsMaximized {
+            get {
+                return ((bool)(this["frmMp3LyricsMaximized"]));
+            }
+            set {
+                this["frmMp3LyricsMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600, 600")]
+        public global::System.Drawing.Size frmMp3LyricsSize {
+            get {
+                return ((global::System.Drawing.Size)(this["frmMp3LyricsSize"]));
+            }
+            set {
+                this["frmMp3LyricsSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point frmMp3LyricsEditLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["frmMp3LyricsEditLocation"]));
+            }
+            set {
+                this["frmMp3LyricsEditLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmMp3LyricsEditMaximized {
+            get {
+                return ((bool)(this["frmMp3LyricsEditMaximized"]));
+            }
+            set {
+                this["frmMp3LyricsEditMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("800, 600")]
+        public global::System.Drawing.Size frmMp3LyricsEditSize {
+            get {
+                return ((global::System.Drawing.Size)(this["frmMp3LyricsEditSize"]));
+            }
+            set {
+                this["frmMp3LyricsEditSize"] = value;
             }
         }
     }

@@ -202,7 +202,7 @@ namespace Karaboss
 
                 if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                 {
-                    frmPlayer frmPlayer = GetForm<frmPlayer>();                    
+                    frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();                    
                     frmPlayer.FileModified();
                 }
                 MessageBox.Show("Tags saved successfully", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -350,17 +350,6 @@ namespace Karaboss
             track.Insert(currentTick, mtMsg);
         }
 
-
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
 
         private void Text_Changed(object sender, EventArgs e)
         {

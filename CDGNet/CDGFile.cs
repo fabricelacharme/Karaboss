@@ -262,62 +262,42 @@ namespace CDGNet
                     case CDG_INST_MEMORY_PRESET:
                         memoryPreset(ref pack);
                         return;
-
-
                         
                     case CDG_INST_BORDER_PRESET:
                         borderPreset(ref pack);
                         return;
-
-
                         
                     case CDG_INST_TILE_BLOCK:
                         tileBlock(ref pack, false);
                         return;
-
-
                         
                     case CDG_INST_SCROLL_PRESET:
                         scroll(ref pack, false);
                         return;
-
-
                         
                     case CDG_INST_SCROLL_COPY:
                         scroll(ref pack, true);
                         return;
-
-
                         
                     case CDG_INST_DEF_TRANSP_COL:
                         defineTransparentColour(ref pack);
                         return;
-
-
                         
                     case CDG_INST_LOAD_COL_TBL_LO:
                         loadColorTable(ref pack, 0);
                         return;
-
-
                         
                     case CDG_INST_LOAD_COL_TBL_HIGH:
                         loadColorTable(ref pack, 1);
                         return;
-
-
                         
                     case CDG_INST_TILE_BLOCK_XOR:
                         tileBlock(ref pack, true);
                         return;
-
-
                         
                     default:
                         //Ignore the unsupported commands
-                        return;
-
-                        
+                        return;                        
                 }
             }
         }

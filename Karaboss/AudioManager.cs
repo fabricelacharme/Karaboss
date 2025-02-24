@@ -46,7 +46,7 @@ namespace AudioControl
     /// Usage: 
     /// using AudioControl;
     /// Set the master volume : AudioManager.SetMasterVolume((float)sldMainVolume.Value);
-    /// Get the amster volume : float v = AudioManager.GetMasterVolume();
+    /// Get the master volume : float v = AudioManager.GetMasterVolume();
     /// </summary>
     public static class AudioManager
     {

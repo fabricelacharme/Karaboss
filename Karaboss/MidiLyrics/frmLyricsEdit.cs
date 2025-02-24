@@ -42,10 +42,9 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Karaboss.Resources.Localization;
 using Karaboss.Lrc.SharedFramework;
-using Karaboss.Lyrics;
+using Karaboss.MidiLyrics;
 using Karaboss.Utilities;
 using static Karaboss.Karaclass;
-using System.Reflection;
 using System.Text;
 
 
@@ -70,7 +69,7 @@ namespace Karaboss
 
         #region declarations
 
-        private LyricsMgmt _myLyricsMgmt;        
+        private MidiLyricsMgmt _myLyricsMgmt;        
         private List<plLyric> localplLyrics;
 
         #region Internal lyrics separators
@@ -155,7 +154,7 @@ namespace Karaboss
         /// <param name="myLyricsMgmt"></param>
         /// <param name="fileName"></param>
         /// <param name="EditChords"></param>
-        public frmLyricsEdit(Sequence sequence, List<plLyric> plLyrics, LyricsMgmt myLyricsMgmt, string fileName, bool EditChords = false)
+        public frmLyricsEdit(Sequence sequence, List<plLyric> plLyrics, MidiLyricsMgmt myLyricsMgmt, string fileName, bool EditChords = false)
         {
             InitializeComponent();
 
@@ -283,7 +282,7 @@ namespace Karaboss
             localplLyrics = LoadModifiedLyrics(true);
 
             // Display new lyrics in frmPlayer
-            _myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.Lyrics;
+            _myLyricsMgmt.ChordsOriginatedFrom = MidiLyricsMgmt.ChordsOrigins.Lyrics;
             ReplaceLyrics(localplLyrics);
         }
 
@@ -377,8 +376,8 @@ namespace Karaboss
             int plTicksOn = 0;
             string plRealTime = "00:00.00";
             int pNote = 0;
-            string pElement; // = string.Empty;
-            string pReplace; // = string.Empty;
+            string pElement; 
+            string pReplace; 
 
             if (dgView.Rows[Row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[Row].Cells[COL_TICKS].Value.ToString()))
             {
@@ -482,7 +481,7 @@ namespace Karaboss
             localplLyrics = LoadModifiedLyrics(true);
 
             // Display new lyrics in frmPlayer
-            _myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.Lyrics;
+            _myLyricsMgmt.ChordsOriginatedFrom = MidiLyricsMgmt.ChordsOrigins.Lyrics;
             ReplaceLyrics(localplLyrics);
 
             // Save file
@@ -505,7 +504,7 @@ namespace Karaboss
             string tx = Karaboss.Resources.Localization.Strings.DeleteAllLyrics;            
             if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
             {
-                frmPlayer frmPlayer = GetForm<frmPlayer>();
+                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                 frmPlayer.DeleteAllLyrics();
 
                 localplLyrics = new List<plLyric>();
@@ -535,7 +534,7 @@ namespace Karaboss
             localplLyrics = LoadModifiedLyrics();
 
             // Display new lyrics in frmPlayer
-            _myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.Lyrics;
+            _myLyricsMgmt.ChordsOriginatedFrom = MidiLyricsMgmt.ChordsOrigins.Lyrics;
             ReplaceLyrics(localplLyrics);
 
             // Set cursor as default
@@ -549,7 +548,7 @@ namespace Karaboss
                     int pTime = Convert.ToInt32(dgView.Rows[Row].Cells[COL_TICKS].Value);
                     if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                     {
-                        frmPlayer frmPlayer = GetForm<frmPlayer>();
+                        frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                         frmPlayer.FirstPlaySong(pTime);
                     }
                 }
@@ -925,18 +924,7 @@ namespace Karaboss
             Text = "Karaboss - " + Strings.EditWords  + " - " + displayName;
         }
 
-
-        /// <summary>
-        /// Locate form
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <returns></returns>
-        private TForm GetForm<TForm>()
-            where TForm : Form
-        {
-            return (TForm)Application.OpenForms.OfType<TForm>().FirstOrDefault();
-        }
-
+        
         /// <summary>
         /// Display modifications into a textbox
         /// </summary>
@@ -987,7 +975,7 @@ namespace Karaboss
                     {
                         // Chords edition
                         // Extract chord name from the lyrics
-                        if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == LyricsMgmt.ChordsOrigins.Lyrics)
+                        if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
                         {
                             // Remove chord from lyrics
                             plElement = Regex.Replace(plElement, _myLyricsMgmt.RemoveChordPattern, @"");
@@ -1460,13 +1448,13 @@ namespace Karaboss
 
             switch (_myLyricsMgmt.ChordsOriginatedFrom)
             {
-                case LyricsMgmt.ChordsOrigins.Lyrics:
+                case MidiLyricsMgmt.ChordsOrigins.Lyrics:
                     // Chords are included inthe lyrics
                     break;
                 // Chords are not included in the lyrics
-                case LyricsMgmt.ChordsOrigins.XmlEmbedded:
-                case LyricsMgmt.ChordsOrigins.MidiEmbedded:
-                case LyricsMgmt.ChordsOrigins.Discovery:
+                case MidiLyricsMgmt.ChordsOrigins.XmlEmbedded:
+                case MidiLyricsMgmt.ChordsOrigins.MidiEmbedded:
+                case MidiLyricsMgmt.ChordsOrigins.Discovery:
                     break;
             }
 
@@ -1512,7 +1500,7 @@ namespace Karaboss
                     {
                         // Chords edition
                         // Extract chord name from the lyrics
-                        if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == LyricsMgmt.ChordsOrigins.Lyrics)
+                        if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
                         {
                             // Remove chord
                             plElement = Regex.Replace(plElement, _myLyricsMgmt.RemoveChordPattern, @"");
@@ -1585,7 +1573,7 @@ namespace Karaboss
                 {
                     // Chords edition
                     // Extract chord name from the lyrics
-                    if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == LyricsMgmt.ChordsOrigins.Lyrics)
+                    if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
                     {
                         // Remove chord
                         plElement = Regex.Replace(plElement, _myLyricsMgmt.RemoveChordPattern, @"");
@@ -1802,7 +1790,7 @@ namespace Karaboss
                 {
                     if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                     {
-                        frmPlayer frmPlayer = GetForm<frmPlayer>();
+                        frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                         frmPlayer.bfilemodified = false;
                     }
                 }
@@ -2000,7 +1988,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
-                frmPlayer frmPlayer = GetForm<frmPlayer>();
+                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                 frmPlayer.ReplaceLyrics(l, ltype, melodytracknum);
             }
         }
@@ -2019,6 +2007,17 @@ namespace Karaboss
         /// <param name="e"></param>
         private void mnuFileSaveAsLrc_Click(object sender, EventArgs e)
         {
+            GetLrcSaveOptions();
+
+            
+        }
+
+        /// <summary>
+        /// Get save lrc options
+        /// </summary>
+        /// <param name="LrcExportFormat"></param>
+        private void GetLrcSaveOptions()
+        {
             DialogResult dr;
             frmLrcOptions LrcOptionsDialog = new frmLrcOptions();
             dr = LrcOptionsDialog.ShowDialog();
@@ -2035,24 +2034,28 @@ namespace Karaboss
             // Remove all non-alphanumeric characters
             bool bRemoveNonAlphaNumeric = LrcOptionsDialog.bRemoveNonAlphaNumeric;
             // Save to line or to syllabes
-            Karaclass.LrcFormats LrcFormat = LrcOptionsDialog.LrcFormat;
+            LrcLinesSyllabesFormats LrcLinesSyllabesFormat = LrcOptionsDialog.LrcLinesSyllabesFormat;
 
             // Cut lines over x characters
             bool bCutLines = LrcOptionsDialog.bCutLines;
             int LrcCutLinesChars = LrcOptionsDialog.LrcCutLinesChars;
 
-            SaveLrcFileName(LrcFormat, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bCutLines, LrcCutLinesChars);
+
+            SaveLrcFileName(LrcLinesSyllabesFormat, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bCutLines, LrcCutLinesChars);
         }
 
         /// <summary>
         /// Select file to save and format tags
-        /// The switch to lines or syllabes save proc
         /// </summary>
-        /// <param name="LrcFormat"></param>
+        /// <param name="LrcExportFormat"></param>
+        /// <param name="LrcLinesSyllabesFormat"></param>
         /// <param name="bRemoveAccents"></param>
         /// <param name="bUpperCase"></param>
+        /// <param name="bLowerCase"></param>
         /// <param name="bRemoveNonAlphaNumeric"></param>
-        private void SaveLrcFileName(Karaclass.LrcFormats LrcFormat, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bCutLines, int LrcCutLinesChars)
+        /// <param name="bCutLines"></param>
+        /// <param name="LrcCutLinesChars"></param>
+        private void SaveLrcFileName(LrcLinesSyllabesFormats LrcLinesSyllabesFormat, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bCutLines, int LrcCutLinesChars)
         {
             #region select filename
 
@@ -2117,116 +2120,31 @@ namespace Karaboss
             @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
             @I	Information  ex Date(of Karaoke file, not song)
             @V	(single) Version ex 0100 ?             
-            */                                                
+            */
             Tag_Title = (sequence1.TTag != null && sequence1.TTag.Count > 1) ? sequence1.TTag[0] : "";
             Tag_Artist = (sequence1.TTag != null && sequence1.TTag.Count > 1) ? sequence1.TTag[1] : "";
-            
-            
+
+
             if (Tag_Artist == "" && Tag_Title == "")
             {
                 List<string> lstTags = Utilities.LyricsUtilities.GetTagsFromFileName(fullPath);
                 Tag_Artist = lstTags[0];
                 Tag_Title = lstTags[1];
             }
-            
 
-            switch (LrcFormat)
+
+            switch (LrcLinesSyllabesFormat)
             {
-                case LrcFormats.Lines:
+                case LrcLinesSyllabesFormats.Lines:
                     SaveLRCLines(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, bCutLines, LrcCutLinesChars);
                     break;
-                case LrcFormats.Syllables:
+                case LrcLinesSyllabesFormats.Syllabes:
                     SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
                     break;
-            }
+            }                                
         }
-
-        /// <summary>
-        /// Save lyrics to lrc format, syllabe by syllabe
-        /// </summary>
-        /// <param name="FileName"></param>
-        private void SaveLRCSyllabes(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
-        {
-            string sTime;
-            string sLyric;
-            object vLyric;
-            object vTime;
-            string lrcs = string.Empty;
-            string cr = "\r\n";
-            string strSpaceBetween;
-            bool bSpaceBetwwen = false;
-
-
-            // Space between time and lyrics [00:02.872]lyric
-            if (bSpaceBetwwen)
-                strSpaceBetween = " ";
-            else
-                strSpaceBetween = string.Empty;
-
-            List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
-            List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
-            string Tag;
-            string TagName;
-            for (int i = 0; i < TagsList.Count; i++)
-            {
-                Tag = TagsList[i];
-                TagName = TagsNames[i];
-                Tag = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(Tag) : Tag;
-                Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
-                if (Tag != "")
-                    lrcs += "[" + TagName + strSpaceBetween + Tag + "]" + cr;
-            }
-
-            // Save syllabe by syllabe
-            for (int i = 0; i < dgView.Rows.Count; i++)
-            {
-                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
-                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
-
-                if (vTime != null && vLyric != null)
-                {
-                    sLyric = vLyric.ToString();
-                    sLyric = sLyric.Replace("_", " ");                    
-
-
-                    if (sLyric.Trim() != cr)
-                    {
-                        // Remove chords
-                        if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)
-                            sLyric = Regex.Replace(sLyric, _myLyricsMgmt.RemoveChordPattern, @"");
-
-                        // Remove accents
-                        sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
-
-                        //Uppercase letters
-                        sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
-
-                        // Lowercase letters
-                        sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
-
-                        // Remove non-alphanumeric chars
-                        sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
-
-                        // Save also empty lyrics
-                        sTime = vTime.ToString();
-                        lrcs += "[" + sTime + "]" + strSpaceBetween + sLyric + cr;
-                        
-                    }
-                }
-            }
-
-            try
-            {
-                System.IO.File.WriteAllText(File, lrcs);
-                System.Diagnostics.Process.Start(@File);
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
+      
+            
         /// <summary>
         /// Save Lyrics .lrc file format and by lines
         /// </summary>
@@ -2355,6 +2273,7 @@ namespace Karaboss
                     }
                 }
             }
+            
             #endregion List of Lyrics
 
            
@@ -2365,8 +2284,11 @@ namespace Karaboss
             List<string> lstTimeLines = Utilities.LyricsUtilities.GetLrcTimeLines(lstLyricsItems, strSpaceBetween);
 
             // Store lyrics by line and cut lines to MaxLength characters using lstTimeLines
-            List<string> lstLinesCut = Utilities.LyricsUtilities.GetLrcLinesCut(lstTimeLines, MaxLength);
-                   
+            List<string> lstLinesCut = new List<string>();
+            if (bControlLength) 
+            {
+                lstLinesCut = Utilities.LyricsUtilities.GetLrcLinesCut(lstTimeLines, MaxLength);
+            }
 
 
             #region send all to string 
@@ -2409,6 +2331,230 @@ namespace Karaboss
                 MessageBox.Show(ex.Message);
             }
         }
+               
+        /// <summary>
+        /// Save lyrics to new LRC format [01:54.60]Pa<01:55.32>ro<01:56.15>les
+        /// </summary>
+        /// <param name="FileName"></param>
+        private void SaveLRCSyllabes(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
+        {
+            string sTime;
+            string sLyric;
+            object vLyric;
+            object vTime;
+            string lrcs = string.Empty;
+            string cr = "\r\n";
+            string strSpaceBetween;
+            bool bSpaceBetwwen = false;
+            string lines = string.Empty;
+
+            // Space between time and lyrics [00:02.872]lyric
+            if (bSpaceBetwwen)
+                strSpaceBetween = " ";
+            else
+                strSpaceBetween = string.Empty;
+
+            List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
+            List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
+            string Tag;
+            string TagName;
+            for (int i = 0; i < TagsList.Count; i++)
+            {
+                Tag = TagsList[i];
+                TagName = TagsNames[i];
+                Tag = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(Tag) : Tag;
+                Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
+                if (Tag != "")
+                    lrcs += "[" + TagName + strSpaceBetween + Tag + "]" + cr;
+            }
+
+            bool bLineFeed = true;
+
+            // new format of lrc
+            // [01:54.60]La <01:55.32>petite <01:56.15>maison
+            // Start line is [01:54.60]La
+            // syllabes are <01:55.32>petite <01:56.15>maison
+
+            // separate words and syllabes
+            // Store results in a list
+            List<(string stime, string lyric)> results = new List<(string, string)>();
+
+            // Apply treatments choosen
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {                                
+                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
+                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+
+                if (vTime != null && vLyric != null && vTime.ToString() != "" && vLyric.ToString() != "")
+                {
+                    sLyric = vLyric.ToString();
+                    sLyric = sLyric.Replace("_", " ");
+
+                    if (sLyric.Trim() != m_SepLine && sLyric.Trim() != m_SepParagraph)
+                    {
+                        // Remove chords
+                        if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)
+                            sLyric = Regex.Replace(sLyric, _myLyricsMgmt.RemoveChordPattern, @"");
+
+                        // Remove accents
+                        sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
+
+                        //Uppercase letters
+                        sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
+
+                        // Lowercase letters
+                        sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
+
+                        // Remove non-alphanumeric chars
+                        sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
+
+                        // Save also empty lyrics
+                        sTime = vTime.ToString();
+
+                        
+                        if (bLineFeed)
+                        {
+                            // Format of timestamp is []                                                        
+                            results.Add(("[" + sTime + "]", sLyric));
+
+                        }
+                        else
+                        {
+                            // Format of timestamp is <> + space before
+                            results.Add(("<" + sTime + ">", sLyric));
+                        }
+                        
+                        bLineFeed = false;
+
+                    } 
+                    else
+                    {
+                        bLineFeed = true;
+                        
+                    }
+                }
+            }
+
+            string nextLyric = string.Empty;
+            string nextTime = string.Empty;
+            
+            bool bKeepForNextSyllabe = false;
+            string keepLyric = string.Empty;
+            string keepTime = string.Empty;
+
+            
+            // Add a trailing "-" to syllabes without space with the next syllabe (ie it is a word composed of several syllabes)
+            for (int i = 0; i < results.Count; i++)
+            {
+                sTime = results[i].stime;
+                sLyric = results[i].lyric;
+
+                if (i < results.Count - 1)
+                {
+                    nextLyric = results[i + 1].lyric;
+                    nextTime = results[i + 1].stime;
+                }
+                else
+                {
+                    nextLyric = "";
+                    nextTime = "";
+                }
+                // No trailing space in the current, no starting space in the next and the next is not a new line ([]) 
+                // => this syllabe must be merged with the next one
+                if (!sLyric.EndsWith(" ") && nextLyric.Length > 0 && !nextLyric.StartsWith(" ") && nextTime.IndexOf("[") == -1)
+                {
+                    results[i] = (results[i].stime, results[i].lyric + "-");
+                }
+            }
+
+            for (int i = 0; i < results.Count; i++)
+            {                                
+                sTime = results[i].stime;
+                sLyric = results[i].lyric;
+
+                // Keep all syllabes ending with a trailing "-" until a syllabe without a "-"
+                if (sLyric.EndsWith("-")) 
+                {
+                    sLyric = sLyric.Substring(0, sLyric.Length - 1).Trim();  // remove the "-"
+                    keepLyric += sLyric;                                     // add syllabe to previous ones   
+                    if (keepTime == "")
+                        keepTime = sTime;                                    // keep only the first timestamp (beginning of the word)   
+
+                    if (sTime.IndexOf("[") > -1)                             // if new line, store previous one
+                    {
+                        // Store previous line 
+                        if (lrcs.Trim().Length > 0)
+                        {
+                            lines += lrcs + cr;
+                        }
+                        lrcs = "";
+                    }
+
+                    // Skip 
+                    continue;
+                } 
+                else if (keepLyric != "") 
+                {
+                    // no trailing "-" and there are syllabes into keeplyric => this is the last syllabe of a word
+                    bKeepForNextSyllabe = true;
+                }                                                
+                
+                // This is the start of a new line
+                if (sTime.IndexOf("[") > -1)
+                {
+                    // Store previous line 
+                    if (lrcs.Trim().Length > 0)
+                    {
+                        lines += lrcs + cr;
+                    }
+                    // Format of timestamp is [] 
+                    lrcs = sTime + sLyric.Trim();
+                }
+                else
+                {
+                    // This is a normal syllabe 
+                    if (!bKeepForNextSyllabe)
+                    {
+                        // Format of timestamp is <> + space before
+                        lrcs += " " + sTime + sLyric.Trim();
+                    }
+                    else
+                    {
+                        // this is The last syllabe of a word
+                        if (keepTime.IndexOf("[") > -1)
+                        {
+                            // if the word stored in keeplyric was a starting line []
+                            lrcs += keepTime + keepLyric + sLyric.Trim();
+                        }
+                        else
+                        {
+                            // if the word stored in keeplyric was a normal word, add a space before the <00:00.000>  
+                            lrcs += " " + keepTime + keepLyric + sLyric.Trim();
+                        }
+
+                        // Reset variables used to store syllabes of a word
+                        bKeepForNextSyllabe = false;
+                        keepLyric = "";
+                        keepTime = "";
+                    }
+                }
+            }
+
+            if (lrcs.Trim().Length > 0)
+                lines += lrcs + cr;
+
+            try
+            {
+                System.IO.File.WriteAllText(File, lines);
+                System.Diagnostics.Process.Start(@File);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+       
 
         #endregion Save lrc
 
@@ -2425,6 +2571,8 @@ namespace Karaboss
             openFileDialog.Title = "Open a .lrc file";
             openFileDialog.DefaultExt = "lrc";
             openFileDialog.Filter = "lrc files|*.lrc|All files|*.*";
+
+            // Get initial directory from midi file
             if (MIDIfileName != null || MIDIfileName != "")
                 openFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
 
@@ -2441,10 +2589,9 @@ namespace Karaboss
                         LoadLRCFile(lines);
                     }
                 }
-                catch (Exception errl)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("The file could not be read:");
-                    Console.WriteLine(errl.Message);
+                    MessageBox.Show("The file could not be read:" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -2828,7 +2975,7 @@ namespace Karaboss
             localplLyrics = LoadModifiedLyrics();
 
             // Display new lyrics in frmPlayer
-            _myLyricsMgmt.ChordsOriginatedFrom = LyricsMgmt.ChordsOrigins.Lyrics;
+            _myLyricsMgmt.ChordsOriginatedFrom = MidiLyricsMgmt.ChordsOrigins.Lyrics;
             ReplaceLyrics(localplLyrics);
 
             // save file
@@ -2887,7 +3034,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
             {
-                frmPlayer frmPlayer = GetForm<frmPlayer>();
+                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                 frmPlayer.InitSaveFile(fullName);
 
                 // Reset title
@@ -2948,7 +3095,7 @@ namespace Karaboss
 
                 if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                 {
-                    frmPlayer frmPlayer = GetForm<frmPlayer>();
+                    frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
                     frmPlayer.InitSaveFile(fileName);
 
                     bfilemodified = false;
@@ -3166,7 +3313,7 @@ namespace Karaboss
 
                 if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
                 {
-                    frmPlayer frmPlayer = GetForm<frmPlayer>();                    
+                    frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();                    
                     frmPlayer.FileModified();
                 }
                 MessageBox.Show("Tags saved successfully", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);               
@@ -3727,5 +3874,6 @@ namespace Karaboss
 
         #endregion TxtResult
 
+       
     }
 }

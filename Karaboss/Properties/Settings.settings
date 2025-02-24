@@ -365,5 +365,32 @@
     <Setting Name="bLrcForceLowerCase" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="frmMp3PlayerLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="BassRegistrationEmail" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">fabrice.lacharme@gmail.com</Value>
+    </Setting>
+    <Setting Name="BassRegistrationKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">2X1632326152222</Value>
+    </Setting>
+    <Setting Name="frmMp3LyricsLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="frmMp3LyricsMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="frmMp3LyricsSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">600, 600</Value>
+    </Setting>
+    <Setting Name="frmMp3LyricsEditLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="frmMp3LyricsEditMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="frmMp3LyricsEditSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">800, 600</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
