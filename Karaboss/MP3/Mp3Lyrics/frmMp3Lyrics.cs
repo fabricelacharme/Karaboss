@@ -106,7 +106,7 @@ namespace Karaboss.Mp3
             }
 
             // Karaoke Effect
-            kEffect.TransitionEffect = lyrics.TransitionEffects.Progressive;
+            kEffect.TransitionEffect = lyrics.TransitionEffects.None;
             kEffect.nbLyricsLines = 3;
             kEffect.SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;
 
@@ -161,6 +161,8 @@ namespace Karaboss.Mp3
             bLineFeedRequired = false;
             pBox.Invalidate(); // Trigger a repaint
             timer.Stop();
+
+            kEffect.Stop();
         }
 
         public void GetPositionFromPlayer(double position)
