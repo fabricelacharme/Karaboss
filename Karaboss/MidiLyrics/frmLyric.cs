@@ -385,11 +385,13 @@ namespace Karaboss
             this.SetStyle(ControlStyles.UserPaint, true);
 
             #region Move form without title bar
+
             Application.AddMessageFilter(this);
             controlsToMove.Add(this);
             // UserControls picball & pBox manage themselves this move.            
             controlsToMove.Add(this.pnlTittle);
             controlsToMove.Add(this.lblTittle);
+            
             #endregion
            
 

@@ -1,4 +1,4 @@
-﻿namespace lyrics
+﻿namespace keffect
 {
     partial class KaraokeEffect
     {

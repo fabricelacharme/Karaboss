@@ -1,36 +1,66 @@
-﻿using System;
+﻿#region License
+
+/* Copyright (c) 2025 Fabrice Lacharme
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), to 
+ * deal in the Software without restriction, including without limitation the 
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+ * sell copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software. 
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+ * THE SOFTWARE.
+ */
+
+#endregion
+
+#region Contact
+
+/*
+ * Fabrice Lacharme
+ * Email: fabrice.lacharme@gmail.com
+ */
+
+#endregion
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace lyrics
+
+namespace keffect
 {
+   
 
-    public enum TransitionEffects
+    public partial class KaraokeEffect : UserControl, IMessageFilter
     {
-        None,
-        Progressive,
-    }
 
+        #region Move form without title bar
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+        public const int WM_LBUTTONDOWN = 0x0201;
 
-    public struct SyncText
-    {
-        public long time;
-        public string lyric;
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+        private HashSet<Control> controlsToMove = new HashSet<Control>();
+        #endregion
 
-        public SyncText(long time, string lyric)
-        {
-            this.time = time;
-            this.lyric = lyric;
-        }
-    }
-
-    public partial class KaraokeEffect : UserControl
-    {
 
         #region decl
 
@@ -52,8 +82,10 @@ namespace lyrics
 
         private StringFormat sf;
 
-        private int _FirstLine = 0;
-        private int _LastLine = 0;
+        private int _FirstLineToShow = 0;
+        private int _LastLineToShow = 0;
+
+        private int _lastLine = -1;
         private int _line = 0;
         private int _lines = 0;
         private int _lineHeight = 0;
@@ -61,10 +93,75 @@ namespace lyrics
         private string _biggestLine =string.Empty;
 
         #endregion decl
+     
+
+        [Serializable()]
+        public struct kSyncText
+        {
+            public long Time { get; set; }
+            public string Text { get; set; }
+
+            public kSyncText(long time, string text)
+            {
+                this.Time = time;
+                this.Text = text;
+            }
+        }
 
 
         #region properties
-        
+
+        /// <summary>
+        /// Display lyrics option: top, Center, Bottom
+        /// </summary>
+        public enum OptionsDisplay
+        {
+            Top = 0,
+            Center = 1,
+            Bottom = 2,
+        }
+
+        private OptionsDisplay _OptionDisplay;
+        /// <summary>
+        /// Display lyrics option: top, Center, Bottom
+        /// </summary>
+        public OptionsDisplay OptionDisplay
+        {
+            get { return _OptionDisplay; }
+            set
+            {
+                _OptionDisplay = value;
+                pBox.Invalidate();
+            }
+        }
+
+
+        private List<kSyncText> _SyncLine;
+        public List<kSyncText> SyncLine
+        {
+            get { return _SyncLine; }
+            set { _SyncLine = value; }
+        }
+
+        private List<List<kSyncText>> _SyncLyrics;
+        public List<List<kSyncText>> SyncLyrics
+        {
+            get { return _SyncLyrics; }
+            set
+            {
+                if (value == null) return;
+
+                _SyncLyrics = value;
+                Init();
+            }
+        }
+
+        public enum TransitionEffects
+        {
+            None,
+            Progressive,
+        }
+
         private TransitionEffects _transitionEffect;
         public TransitionEffects TransitionEffect 
         { 
@@ -83,29 +180,7 @@ namespace lyrics
             get { return _position; }
             set { _position = value; }
         }
-
-
-        private List<SyncText> _SyncLine;
-        public List<SyncText> SyncLine
-        {
-            get { return _SyncLine; }
-            set { _SyncLine = value; }
-        }
-
-        private List<List<SyncText>> _SyncLyrics;
-        public List<List<SyncText>> SyncLyrics
-        {
-            get { return _SyncLyrics; }
-            set 
-            { 
-                if (value == null) return;
-
-                _SyncLyrics = value; 
-                Init();              
-            }
-        }
       
-
         private float _steppercent = 0.01F;
         [Description("Increment to display a syllable progressively")]
         public float StepPercent
@@ -119,7 +194,11 @@ namespace lyrics
         public int nbLyricsLines
         {
             get { return _nbLyricsLines; }
-            set { _nbLyricsLines = value; }
+            set { 
+                _nbLyricsLines = value;
+                Init();
+                pBox.Invalidate();
+            }
         }
                
         private Font _karaokeFont;
@@ -214,6 +293,16 @@ namespace lyrics
         {
             InitializeComponent();
 
+
+            #region Move form without title bar
+            
+            Application.AddMessageFilter(this);
+            controlsToMove.Add(this);
+            controlsToMove.Add(this.pBox);
+            
+            #endregion
+
+
             this.SetStyle(
                  System.Windows.Forms.ControlStyles.UserPaint |
                  System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
@@ -226,6 +315,28 @@ namespace lyrics
                        
         }
 
+        #region Move Window
+
+        /// <summary>
+        /// Move form without title bar
+        /// The message is sent to the parent Form (this.ParentForm.Handle)
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        public bool PreFilterMessage(ref Message m)
+        {
+            if (m.Msg == WM_LBUTTONDOWN &&
+                 controlsToMove.Contains(Control.FromHandle(m.HWnd)))
+            {
+                ReleaseCapture();
+                SendMessage(this.ParentForm.Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+                return true;
+            }
+            return false;
+        }
+
+        #endregion Move Window
+
         private void SetDefaultValues()
         {
             sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
@@ -235,8 +346,8 @@ namespace lyrics
             _steppercent = 0.01F;
 
             // Add new line "Hello World"
-            SyncLyrics = new List<List<SyncText>>();
-            SyncLine = new List<SyncText> { new SyncText(0, "Hello"), new SyncText(500, " World") };                        
+            SyncLyrics = new List<List<kSyncText>>();
+            SyncLine = new List<kSyncText> { new kSyncText(0, "Hello"), new kSyncText(500, " World") };                        
             SyncLyrics.Add(SyncLine);
 
             _nbLyricsLines = 1;
@@ -251,7 +362,7 @@ namespace lyrics
             Lines = new List<string[]>();
             Times = new List<long[]>();
             
-            List<SyncText> syncline = new List<SyncText>();
+            List<kSyncText> syncline = new List<kSyncText>();
             string[] s;
             long[] t;
 
@@ -263,8 +374,8 @@ namespace lyrics
 
                 for (int j = 0; j < syncline.Count; j++ )
                 {
-                    t[j] = syncline[j].time;
-                    s[j] = syncline[j].lyric;
+                    t[j] = syncline[j].Time;
+                    s[j] = syncline[j].Text;
                 }
                 Times.Add(t);
                 Lines.Add(s);                
@@ -272,8 +383,8 @@ namespace lyrics
                           
             
             _lines = Lines.Count;
-            if (_lines < _nbLyricsLines) 
-                _nbLyricsLines = _lines;
+            //if (_lines < _nbLyricsLines) 
+            //    _nbLyricsLines = _lines;
 
             
             string[] line;
@@ -297,7 +408,7 @@ namespace lyrics
             _biggestLine = GetBiggestLine();
             AjustText(_biggestLine);
 
-            _LastLine = SetLastLineToShow(_FirstLine, _lines, _nbLyricsLines);
+            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
 
         }
 
@@ -423,10 +534,10 @@ namespace lyrics
             // ======================================================================================================
             var otherpath = new GraphicsPath();
 
-            for (int i = _FirstLine; i <= _LastLine; i++)
+            for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
             {
                 x0 = HCenterText(Texts[i]);     // Center horizontally
-                otherpath.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLine) * _lineHeight), StringFormat.GenericDefault);
+                otherpath.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLineToShow) * _lineHeight), StringFormat.GenericDefault);
             }
             e.Graphics.FillPath(new SolidBrush(Color.White), otherpath);
 
@@ -443,8 +554,8 @@ namespace lyrics
             var path = new GraphicsPath();
 
             // Add the full text line to the graphical path            
-            x0 = HCenterText(Texts[_FirstLine]);      // Center horizontally
-            path.AddString(Texts[_FirstLine], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), StringFormat.GenericDefault);
+            x0 = HCenterText(Texts[_FirstLineToShow]);      // Center horizontally
+            path.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), StringFormat.GenericDefault);
 
             // Fill graphical path in white => full text is white
             e.Graphics.FillPath(new SolidBrush(Color.White), path);
@@ -522,36 +633,76 @@ namespace lyrics
       /// <returns></returns>
         private int GetLine(int pos)
         {
+            /*
             for (int i = 0; i < Lines.Count; i++)
             {
                 if (pos < Times[i][Times[i].Count() - 1])
+                {
+                    return i;                                        
+                }
+            }
+            return 0;
+            */
+            /*
+            for (int i = 0; i < Lines.Count; i++)
+            {
+                if (pos >= Times[i][0])
                 {
                     return i;
                 }
             }
             return 0;
-        }
+            */
 
-
-        /// <summary>
-        /// Retrive index of current syllabe in the current line
-        /// </summary>
-        /// <returns></returns>       
-        private int GetIndex(int pos)
-        {
-            // For each line of lyrics
             for (int j = 0; j < Lines.Count; j++)
             {
                 // Search for which timespamp is greater than pos
-                for (int i = 0; i < Times[_line].Length; i++)
+                for (int i = 0; i < Times[j].Length; i++)
                 {
-                    if (pos < Times[_line][i])
+                    if (pos < Times[j][i])
                     {
-                        return i + 1;
+                        return j;
                     }
                 }
             }
             return Lines.Count - 1;
+
+            /*
+            for (int i = Lines.Count -1; i >= 0; i--)
+            {
+                if (pos >= Times[i][0])
+                {
+                    return i;
+                }
+
+            }
+            return 0;
+            */
+        }
+
+
+        /// <summary>
+        /// Retrieve index of current syllabe in the current line
+        /// </summary>
+        /// <returns></returns>       
+        private int GetIndex(int pos)
+        {
+          
+            
+            for (int j = Lines.Count - 1; j >= 0; j--)
+            {
+                for (int i = Times[j].Length - 1; i >= 0; i--)
+                {
+                    if (Times[j][i] > 0 && pos > Times[j][i])
+                    {                        
+                        _line = j;
+                        return i + 1;
+                    }
+                }
+            }
+            
+            return 0;
+            
         }
 
 
@@ -565,7 +716,8 @@ namespace lyrics
             float res = 0;
             for (int i = 0; i < idx; i++)
             {                
-                res += MeasureString(Lines[_line][i], _karaokeFont.Size);
+                if (i < Lines[_line].Count())                
+                    res += MeasureString(Lines[_line][i], _karaokeFont.Size);
             }
             return res;
         }
@@ -687,10 +839,7 @@ namespace lyrics
 
         #endregion ajust text
 
-
-     
-                      
-
+                          
         #region start stop
 
         // Start Display lyrics
@@ -709,8 +858,8 @@ namespace lyrics
         public void Stop()
         {
             _line = 0;
-            _FirstLine = 0;
-            _LastLine = SetLastLineToShow(_FirstLine, _lines, _nbLyricsLines);
+            _FirstLineToShow = 0;
+            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
 
             percent = 0;
             lastpercent = 0;
@@ -733,6 +882,7 @@ namespace lyrics
 
         private void SetPosition(int pos)
         {
+            /*
             // line changed by trackbar            
             int line = GetLine(pos);
 
@@ -749,16 +899,16 @@ namespace lyrics
                     lastCurLength = 0;
                     CurLength = 0;
                     _line = GetLine(pos);
-                    _FirstLine = _line;
-                    _LastLine = SetLastLineToShow(_FirstLine, _lines, _nbLyricsLines);
+                    _FirstLineToShow = _line;
+                    _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
                 }
                 else
                 {
                     // Is it the end of the text to display?
                     //Console.WriteLine("*** END");                    
                     _line = 0;
-                    _FirstLine = 0;
-                    _LastLine = SetLastLineToShow(_FirstLine, _lines, _nbLyricsLines);
+                    _FirstLineToShow = 0;
+                    _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
 
                     percent = 0;
                     lastpercent = 0;
@@ -769,8 +919,9 @@ namespace lyrics
                     pBox.Invalidate();
                     return;
                 }
-
             }
+            */
+
 
             // Search index of lyric to play
             index = GetIndex(pos);
@@ -779,8 +930,29 @@ namespace lyrics
             CurLength = GetCurLength(index);
 
             // New word to highlight
-            if (index != lastindex)
+            // Warning: in cas of full lines, idex is always the same and not different than lastIndex
+            if (index != lastindex || _line != _lastLine)
             {
+                                
+                if (_line !=  _lastLine)
+                {
+                    _lastLine = _line;
+                    percent = 0;
+                    lastpercent = 0;
+                    index = 0;
+                    lastindex = -1;
+                    lastCurLength = 0;
+                    CurLength = 0;
+                }
+                
+                _FirstLineToShow = _line;
+                _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
+
+
+                //Console.WriteLine("test Line : " + line);
+                Console.WriteLine("Line : " + _line + " - index : " + index);
+
+                
                 // Save last value of percent
                 lastpercent = percent;
 

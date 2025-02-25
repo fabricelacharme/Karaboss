@@ -54,6 +54,7 @@ namespace PicControl
 
        
         #region Move form without title bar
+
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
         public const int WM_LBUTTONDOWN = 0x0201;
@@ -63,6 +64,7 @@ namespace PicControl
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
         private HashSet<Control> controlsToMove = new HashSet<Control>();
+        
         #endregion
        
 
@@ -588,9 +590,11 @@ namespace PicControl
             _chordFont = new Font("Comic Sans MS", this._karaokeFont.Size);
 
             #region Move form without title bar
+
             Application.AddMessageFilter(this);
             controlsToMove.Add(this);
             controlsToMove.Add(this.pboxWnd);
+            
             #endregion
             
             m_ImageFilePaths = new List<string>();
@@ -610,6 +614,8 @@ namespace PicControl
 
         #region methods
 
+        #region Move Windows
+
         /// <summary>
         /// Move form without title bar
         /// The message is sent to the parent Form (this.ParentForm.Handle)
@@ -627,6 +633,8 @@ namespace PicControl
             }
             return false;
         }
+
+        #endregion MoveWindows
 
         /// <summary>
         /// Define new slideShow directory and frequency

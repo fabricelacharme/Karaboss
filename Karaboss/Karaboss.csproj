@@ -204,6 +204,12 @@
     <Compile Include="Mp3\Mp3Lyrics\frmMp3LyricsEdit.Designer.cs">
       <DependentUpon>frmMp3LyricsEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Mp3\Mp3Lyrics\frmMp3LyrOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Mp3\Mp3Lyrics\frmMp3LyrOptions.Designer.cs">
+      <DependentUpon>frmMp3LyrOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Mp3\Mp3Player\frmMp3Player.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -618,6 +624,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Mp3\Mp3Lyrics\frmMp3Lyrics.resx">
       <DependentUpon>frmMp3Lyrics.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Mp3\Mp3Lyrics\frmMp3LyricsEdit.fr.resx">
       <DependentUpon>frmMp3LyricsEdit.cs</DependentUpon>
@@ -627,6 +634,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Mp3\Mp3Lyrics\frmMp3LyricsEdit.resx">
       <DependentUpon>frmMp3LyricsEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mp3\Mp3Lyrics\frmMp3LyrOptions.resx">
+      <DependentUpon>frmMp3LyrOptions.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Mp3\Mp3Player\frmMp3Player.fr.resx">
       <DependentUpon>frmMp3Player.cs</DependentUpon>
@@ -817,10 +828,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\KaraokeEffect\KaraokeEffect\KaraokeEffect\KaraokeEffect.csproj">
-      <Project>{6D414DBF-73A0-4804-8C02-B50271B91357}</Project>
-      <Name>KaraokeEffect</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AutoUpdater\AutoUpdater.csproj">
       <Project>{f8b4da50-0645-4ed3-b62c-5e3422696c31}</Project>
       <Name>AutoUpdater</Name>
@@ -848,6 +855,10 @@
     <ProjectReference Include="..\Hqub.MusicBrainz.API\Hqub.MusicBrainz.API.csproj">
       <Project>{77832ded-eefe-4db9-94af-b0be02cec356}</Project>
       <Name>Hqub.MusicBrainz.API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaraokeEffect\KaraokeEffect.csproj">
+      <Project>{6d414dbf-73a0-4804-8c02-b50271b91357}</Project>
+      <Name>KaraokeEffect</Name>
     </ProjectReference>
     <ProjectReference Include="..\KMusicTxt\KMusicTxt.csproj">
       <Project>{ee194ac1-0d74-4a84-84d6-c9be8ced2c10}</Project>

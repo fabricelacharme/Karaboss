@@ -1,4 +1,37 @@
-﻿using System;
+﻿#region License
+
+/* Copyright (c) 2025 Fabrice Lacharme
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), to 
+ * deal in the Software without restriction, including without limitation the 
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+ * sell copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software. 
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+ * THE SOFTWARE.
+ */
+
+#endregion
+
+#region Contact
+
+/*
+ * Fabrice Lacharme
+ * Email: fabrice.lacharme@gmail.com
+ */
+
+#endregion
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,6 +39,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using TagLib;
 using TagLib.Id3v2;
+using keffect;
 
 namespace Karaboss.Mp3.Mp3Lyrics
 {
@@ -42,9 +76,9 @@ namespace Karaboss.Mp3.Mp3Lyrics
         #region kEffect
 
         // Line of struct SyncText
-        public static List<lyrics.SyncText> SyncLine = new List<lyrics.SyncText>();
+        public static List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
         // List of lines of struct SyncText
-        public static List<List<lyrics.SyncText>> SyncLyrics = new List<List<lyrics.SyncText>>();
+        public static List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
 
         #endregion KEffect
 
@@ -192,14 +226,14 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// </summary>
         /// <param name="SyncLyricsFrame"></param>
         /// <returns></returns>
-        public static List<List<lyrics.SyncText>> GetKEffectSyncLyrics(SynchronisedLyricsFrame SyncLyricsFrame)
+        public static List<List<keffect.KaraokeEffect.kSyncText>> GetKEffectSyncLyrics(SynchronisedLyricsFrame SyncLyricsFrame)
         {
             string lyric;
             long time;
-            lyrics.SyncText sct;
+            keffect.KaraokeEffect.kSyncText sct;
             bool bNewLine = false;
-            List<lyrics.SyncText> SyncLine = new List<lyrics.SyncText>();
-            List<List<lyrics.SyncText>> SyncLyrics = new List<List<lyrics.SyncText>>();
+            List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+            List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
 
 
             bool bHasLineFeeds = false;
@@ -240,13 +274,13 @@ namespace Karaboss.Mp3.Mp3Lyrics
                         }
                     }
 
-                    sct = new lyrics.SyncText(time, lyric);
+                    sct = new keffect.KaraokeEffect.kSyncText(time, lyric);
                     if (bNewLine)
                     {
                         if (SyncLine.Count > 0)
                             SyncLyrics.Add(SyncLine);
                         
-                        SyncLine = new List<lyrics.SyncText>();
+                        SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
                         SyncLine.Add(sct);
                     }
                     else
@@ -266,8 +300,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 {
                     lyric = SyncLyricsFrame.Text[i].Text.Trim();
                     time = SyncLyricsFrame.Text[i].Time;
-                    sct = new lyrics.SyncText(time, lyric);
-                    SyncLine = new List<lyrics.SyncText>();
+                    sct = new keffect.KaraokeEffect.kSyncText(time, lyric);
+                    SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
                     SyncLine.Add(sct);
                     SyncLyrics.Add(SyncLine);
                 }
