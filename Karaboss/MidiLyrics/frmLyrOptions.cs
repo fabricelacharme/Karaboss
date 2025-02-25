@@ -64,9 +64,7 @@ namespace Karaboss
         // Chord color
         private Color _chordNextColor;
         private Color _chordHighlightColor;
-
         private bool _bShowChords = false;
-
 
 
         // Force Uppercase

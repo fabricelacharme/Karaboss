@@ -42,9 +42,14 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using keffect;
 using static keffect.KaraokeEffect;
+using TagLib.Mpeg4;
+using System.Xml.Linq;
 
 namespace Karaboss.Mp3
 {
+
+    
+
     public partial class frmMp3Lyrics : Form, IMessageFilter
     {
 
@@ -70,6 +75,41 @@ namespace Karaboss.Mp3
         private Font _karaokeFont;
 
         private frmMp3LyrOptions frmMp3LyrOptions;
+
+        #region properties
+        
+        private Font _karaokefont;
+        public Font KaraokeFont
+        {
+            get { return _karaokeFont; }
+            set
+            {
+                try
+                {
+                    _karaokeFont = value;
+                    // Redraw
+                    karaokeEffect1.KaraokeFont = _karaokeFont;
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Error: " + e.Message);
+                }
+            }
+        }
+
+        private int _nbLyricsLines = 3;
+        // number of lines to display
+        public int nbLyricsLines
+        {
+            get { return _nbLyricsLines; }
+            set
+            {
+                _nbLyricsLines = value;
+                karaokeEffect1.nbLyricsLines = _nbLyricsLines;
+            }
+        }
+
+        #endregion properties
 
         public frmMp3Lyrics()
         {
@@ -99,6 +139,24 @@ namespace Karaboss.Mp3
             InitializeKaraokeText();
 
             AddMouseMoveHandler(this);
+
+            LoadOptions();
+
+        }
+
+
+        private void LoadOptions()
+        {
+            try
+            {
+                KaraokeFont = Properties.Settings.Default.KaraokeFont;
+                nbLyricsLines = Properties.Settings.Default.TxtNbLines;
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
 

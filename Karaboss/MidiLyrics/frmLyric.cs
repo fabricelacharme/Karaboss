@@ -686,7 +686,7 @@ namespace Karaboss
             }
             catch (Exception e)
             {
-                Console.Write("Error: " + e.Message);
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);                
             }
         }
 

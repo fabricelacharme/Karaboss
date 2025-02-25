@@ -42,7 +42,7 @@ namespace Karaboss.Mp3
         private PictureBoxSizeMode SizeMode;
 
         // Number of lines to display
-        private int NbLines;
+        private int _nbLyricsLines;
 
         // Font
         private Font _karaokeFont;
@@ -54,15 +54,17 @@ namespace Karaboss.Mp3
         // Force Uppercase
         private bool bForceUppercase = false;
 
+        private frmMp3Lyrics frmMp3Lyrics;
+        
         #endregion options
 
         public frmMp3LyrOptions()
         {
             InitializeComponent();
-
             LoadDefaultOptions();
 
             LoadOptions();
+            SetOptions();
         }
 
         private void LoadDefaultOptions ()
@@ -101,8 +103,8 @@ namespace Karaboss.Mp3
 
         private void UpDownNbLines_ValueChanged(object sender, EventArgs e)
         {
-            NbLines = (int)UpDownNbLines.Value;
-            karaokeEffect1.nbLyricsLines = NbLines;
+            _nbLyricsLines = (int)UpDownNbLines.Value;
+            karaokeEffect1.nbLyricsLines = _nbLyricsLines;
         }
 
 
@@ -115,6 +117,8 @@ namespace Karaboss.Mp3
         private void btnApply_Click(object sender, EventArgs e)
         {
             ApplyChanges();
+            
+
         }
 
         /// <summary>
@@ -139,6 +143,17 @@ namespace Karaboss.Mp3
         private void ApplyChanges()
         {
             SaveOptions();
+
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                frmMp3Lyrics = Utilities.FormUtilities.GetForm<frmMp3Lyrics>();
+
+                frmMp3Lyrics.nbLyricsLines = _nbLyricsLines;
+                frmMp3Lyrics.KaraokeFont = _karaokeFont;
+
+
+            }
         }
 
         /// <summary>
@@ -213,7 +228,7 @@ namespace Karaboss.Mp3
 
 
                 // Nb lines to display
-                NbLines = Properties.Settings.Default.TxtNbLines;
+                _nbLyricsLines = Properties.Settings.Default.TxtNbLines;
 
 
                 // SlideShow directory
@@ -258,13 +273,71 @@ namespace Karaboss.Mp3
                 TxtHighlightColor = Color.Red;
                 TxtBeforeColor = Color.YellowGreen;
                 TxtContourColor = Color.Black;
-                NbLines = 3;
+                _nbLyricsLines = 3;
                 bColorContour = true;
 
                 dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName) + "\\slideshow";
 
                 freqSlideShow = 10;
                 SizeMode = PictureBoxSizeMode.Zoom;
+            }
+        }
+
+
+        /// <summary>
+        /// Appply options to option form
+        /// </summary>
+        private void SetOptions()
+        {
+            try
+            {                
+
+                // Nombre de lignes à afficher
+                UpDownNbLines.Value = _nbLyricsLines;
+
+                // Slideshow
+                txtSlideShow.Text = dirSlideShow;
+                txtSlideShowFreq.Text = freqSlideShow.ToString();
+
+                // buttons
+                pictBackColor.BackColor = TxtBackColor;
+                pictBefore.BackColor = TxtBeforeColor;
+
+                chkContour.Checked = bColorContour;
+                pictContour.BackColor = TxtContourColor;
+
+                pictHighlight.BackColor = TxtHighlightColor;
+                pictNext.BackColor = TxtNextColor;
+
+
+                // Force uppercase
+                chkTextUppercase.Checked = bForceUppercase;
+                //pBox.bforceUppercase = bForceUppercase;
+
+                // picturebox            
+                //pBox.FreqDirSlideShow = freqSlideShow;
+                karaokeEffect1.nbLyricsLines = _nbLyricsLines;
+                //pBox.CurrentTime = 30;
+
+
+                //pBox.TxtBackColor = TxtBackColor;
+
+                //pBox.bColorContour = bColorContour;
+                //pBox.TxtContourColor = TxtContourColor;
+
+                //pBox.TxtNextColor = TxtNextColor;
+                //pBox.TxtHighlightColor = TxtHighlightColor;
+                //pBox.TxtBeforeColor = TxtBeforeColor;
+
+
+                cbSizeMode.SelectedText = SizeMode.ToString();
+
+                //pBox.OptionBackground = bgOption;
+            }
+            catch (Exception e)
+            {
+                Console.Write("Error: " + e.Message);
+
             }
         }
 
@@ -292,7 +365,7 @@ namespace Karaboss.Mp3
                 // Force Uppercase
                 Properties.Settings.Default.bForceUppercase = bForceUppercase;
 
-                Properties.Settings.Default.TxtNbLines = NbLines;
+                Properties.Settings.Default.TxtNbLines = _nbLyricsLines;
 
                 dirSlideShow = txtSlideShow.Text.Trim();
                 if (Directory.Exists(dirSlideShow) == false)
