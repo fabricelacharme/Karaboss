@@ -684,7 +684,7 @@ namespace keffect
 
             
             int y0 = VCenterText();
-            int x0;
+            int x0 = 0;
 
             // ======================================================================================================
             // 1. Draw and color all lines from _linedeb to _linefin in white
@@ -694,8 +694,10 @@ namespace keffect
 
             for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
             {
-                x0 = HCenterText(Texts[i]);     // Center horizontally
-                otherpath.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLineToShow) * _lineHeight), StringFormat.GenericDefault);
+                if (i < Texts.Count()) {
+                    x0 = HCenterText(Texts[i]);     // Center horizontally
+                    otherpath.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLineToShow) * _lineHeight), StringFormat.GenericDefault);
+                }
             }
             e.Graphics.FillPath(new SolidBrush(Color.White), otherpath);
 
@@ -712,8 +714,11 @@ namespace keffect
             var path = new GraphicsPath();
 
             // Add the full text line to the graphical path            
-            x0 = HCenterText(Texts[_FirstLineToShow]);      // Center horizontally
-            path.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), StringFormat.GenericDefault);
+            if (_FirstLineToShow < Texts.Count())
+            {
+                x0 = HCenterText(Texts[_FirstLineToShow]);      // Center horizontally
+                path.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), StringFormat.GenericDefault);
+            }
 
             // Fill graphical path in white => full text is white
             e.Graphics.FillPath(new SolidBrush(Color.White), path);
