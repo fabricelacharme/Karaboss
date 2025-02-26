@@ -329,6 +329,10 @@ namespace Karaboss.Mp3
 
         #endregion properties
 
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public frmMp3Lyrics()
         {
             InitializeComponent();
@@ -349,9 +353,6 @@ namespace Karaboss.Mp3
             
             #endregion
 
-
-            //LoadDefaultImage();
-
             LoadLyrics();
          
             InitializeKaraokeText();
@@ -359,10 +360,11 @@ namespace Karaboss.Mp3
             AddMouseMoveHandler(this);
 
             LoadOptions();
-
         }
 
-
+        /// <summary>
+        /// Load options
+        /// </summary>
         private void LoadOptions()
         {
             try
@@ -480,7 +482,19 @@ namespace Karaboss.Mp3
             
         }
 
-      
+
+        #region diaporama
+
+        /// <summary>
+        /// Stop diaporama
+        /// </summary>
+        public void StopDiaporama()
+        {
+            karaokeEffect1.Terminate();
+        }
+
+
+        #endregion diaporama
 
 
         #region Form Events
@@ -562,7 +576,7 @@ namespace Karaboss.Mp3
             SetBackground(DefaultDirSlideShow);
         }
         */
-
+        /*
         public void SetBackground(string dirImages)
         {
             m_ImageFilePaths.Clear();
@@ -574,6 +588,7 @@ namespace Karaboss.Mp3
             }
 
         }
+        */
 
         private void LoadImageList(string dir)
         {

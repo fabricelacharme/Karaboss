@@ -115,6 +115,7 @@ namespace keffect
 
 
         #region SlideShow
+        public Rectangle m_DisplayRectangle { get; set; }
 
         private BackgroundWorker backgroundWorkerSlideShow;
 
@@ -272,7 +273,6 @@ namespace keffect
             }
         }
 
-
         private List<kSyncText> _SyncLine;
         public List<kSyncText> SyncLine
         {
@@ -411,7 +411,7 @@ namespace keffect
             set { _txtcontourcolor = value; }
         }
 
-        
+        /*
         [Description("Background image behind the text")]
         public Image Image
         {
@@ -433,10 +433,12 @@ namespace keffect
             }
         }
         //public override Image BackgroundImage { get => base.BackgroundImage; set => base.BackgroundImage = value; }
-
-
+        */
 
         #endregion properties
+
+
+
 
         /// <summary>
         /// Constructor
@@ -682,7 +684,58 @@ namespace keffect
             e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
             e.Graphics.PageUnit = GraphicsUnit.Pixel;
 
-            
+
+            #region draw background image
+            int x;
+            int y;
+
+            if (m_CurrentImage != null)
+            {
+                #region sizemode
+                switch (_sizemode)
+                {
+                    case PictureBoxSizeMode.AutoSize:
+                        x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
+                        y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
+                        m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
+                        break;
+                    case PictureBoxSizeMode.CenterImage:
+                        x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
+                        y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
+                        m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
+                        break;
+                    case PictureBoxSizeMode.Normal:
+                        // coin superieur gauche
+                        m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                        break;
+                    case PictureBoxSizeMode.StretchImage:
+                        //  l'image est étirée ou réduite pour s'ajuster à PictureBox.
+                        m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                        break;
+                    case PictureBoxSizeMode.Zoom:
+                        m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                        break;
+                }
+                #endregion
+
+                try
+                {
+                    e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
+
+                }
+                catch (Exception dr)
+                {
+                    Console.Write("Error drawing image: " + dr.Message);
+                }
+
+            }
+
+
+            #endregion draw background image
+
+
+            #region draw text
+
             int y0 = VCenterText();
             int x0 = 0;
 
@@ -758,7 +811,8 @@ namespace keffect
 
             r.Dispose();
             path.Dispose();
-           
+
+            #endregion draw text
         }
 
         #endregion Control Load Resize
@@ -788,12 +842,14 @@ namespace keffect
             return maxline;
         }
 
-               
-      /// <summary>
-      /// Retrieve which line for pos
-      /// </summary>
-      /// <param name="pos"></param>
-      /// <returns></returns>
+
+        #region deleteme
+
+        /// <summary>
+        /// Retrieve which line for pos
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
         private int GetLine(int pos)
         {
             /*
@@ -843,6 +899,7 @@ namespace keffect
             */
         }
 
+        #endregion deleteme
 
         /// <summary>
         /// Retrieve index of current syllabe in the current line
@@ -981,10 +1038,27 @@ namespace keffect
         /// <returns></returns>
         private int VCenterText()
         {
+            int y = 0;
+            
             // Height of control minus height of lines to show
-            //int res = (pBox.ClientSize.Height - (_nbLyricsLines + 1) * _lineHeight) / 2;
-            int res = (pBox.ClientSize.Height - (_nbLyricsLines) * _lineHeight) / 2;
-            return res > 0 ? res : 0;
+            switch (_OptionDisplay)
+            {
+                case OptionsDisplay.Center:
+                    y = (pBox.ClientSize.Height - (_nbLyricsLines) * _lineHeight) / 2;
+                    break;
+                
+                case OptionsDisplay.Top:
+                    y = 0;
+                    break;
+                
+                case OptionsDisplay.Bottom:
+                    y = pBox.ClientSize.Height - (_nbLyricsLines * (_lineHeight + 1));
+                    break;
+            }
+
+
+            
+            return y > 0 ? y : 0;
         }
 
         /// <summary>
@@ -1231,14 +1305,14 @@ namespace keffect
                             // Initialize backgroundworker
                             InitBackGroundWorker();
                             random = new Random();
-                            Start();
+                            StartBgW();
                             break;
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.Write("Error: " + e.Message);
+                Console.WriteLine("Error: " + e.Message);
             }
 
         }
@@ -1253,8 +1327,7 @@ namespace keffect
         }
 
         private string SelectRndFile(List<string> files)
-        {
-            //string retfile;// = string.Empty;
+        {            
             if (files.Count > 0)
             {
                 int rand = random.Next(0, files.Count);
@@ -1348,7 +1421,7 @@ namespace keffect
                 catch (Exception op)
                 {
                     m_CurrentImage = null;
-                    Console.Write("Error opening image " + op.Message);
+                    Console.WriteLine("Error opening image " + op.Message);
                 }
 
 
@@ -1377,7 +1450,7 @@ namespace keffect
                 }
                 catch (Exception u)
                 {
-                    Console.Write("Error UpdateTimerEnable " + u.Message);
+                    Console.WriteLine("Error UpdateTimerEnable " + u.Message);
                 }
             }
         }
@@ -1402,7 +1475,7 @@ namespace keffect
             catch (Exception est)
             {
                 //m_Restart = true;
-                Console.Write("Error starting backgroundworker: " + est.Message);
+                Console.WriteLine("Error starting backgroundworker: " + est.Message);
             }
         }
 

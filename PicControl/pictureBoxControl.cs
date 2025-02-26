@@ -687,7 +687,7 @@ namespace PicControl
                             // Initialize backgroundworker
                             InitBackGroundWorker();
                             random = new Random();
-                            Start();
+                            StartBgW();
                             break;
                     }
                 }
@@ -2291,8 +2291,7 @@ namespace PicControl
         #region backgroundworker
 
         private string SelectRndFile(List<string> files)
-        {
-            //string retfile;// = string.Empty;
+        {            
             if (files.Count > 0)
             {            
                 int rand = random.Next(0, files.Count);
@@ -2318,7 +2317,7 @@ namespace PicControl
         {           
             if (m_Restart == true)
             {
-                Stop();                
+                StopBgW();                
 
                 int C = m_ImageFilePaths.Count;
 
@@ -2330,7 +2329,7 @@ namespace PicControl
                         pboxWnd.Image = Image.FromFile(m_ImageFilePaths[0]);
                         break;
                     default:                        
-                        Start();
+                        StartBgW();
                         break;
                 }
             }
@@ -2421,11 +2420,11 @@ namespace PicControl
         }
 
 
-        private void Start()
+        private void StartBgW()
         {
             if (backgroundWorkerSlideShow.IsBusy)
             {
-                Stop();                
+                StopBgW();                
             }
 
             try
@@ -2444,7 +2443,7 @@ namespace PicControl
             }
         }
 
-        private void Stop()
+        private void StopBgW()
         {
             if (backgroundWorkerSlideShow.IsBusy)
             {
@@ -2455,7 +2454,27 @@ namespace PicControl
         }
 
 
-       
+        /// <summary>
+        /// Terminate
+        /// </summary>
+        public void Terminate()
+        {
+            m_Cancel = true;
+            m_Restart = false;
+
+            m_ImageFilePaths = new List<string>();
+            if (m_ImageStream != null)
+            {
+                m_ImageStream.Dispose();
+                m_ImageStream = null;
+            }
+
+            if (backgroundWorkerSlideShow != null)
+            {
+                backgroundWorkerSlideShow.CancelAsync();
+            }
+
+        }
 
         #endregion backgroundworker
 
@@ -2680,27 +2699,7 @@ namespace PicControl
 
         }              
 
-        /// <summary>
-        /// Terminate
-        /// </summary>
-        public void Terminate()
-        {
-            m_Cancel = true;
-            m_Restart = false;           
-           
-            m_ImageFilePaths = new List<string>();
-            if (m_ImageStream != null)
-            {
-                m_ImageStream.Dispose();
-                m_ImageStream = null;
-            }            
-
-            if (backgroundWorkerSlideShow != null)
-            {
-                backgroundWorkerSlideShow.CancelAsync();                
-            }
-            
-        }
+  
 
         #endregion paint resize
 

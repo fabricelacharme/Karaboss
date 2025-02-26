@@ -139,39 +139,15 @@ namespace Karaboss.Mp3
         private void btnOk_Click(object sender, EventArgs e)
         {
             ApplyChanges();
-            Dispose();
+            Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            Dispose();
+            Close();
         }
 
-        /// <summary>
-        /// Apply changes to frmMp3Lyrics
-        /// </summary>
-        private void ApplyChanges()
-        {
-            SaveOptions();
-
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-            {
-                Cursor.Current = Cursors.WaitCursor;
-                frmMp3Lyrics = Utilities.FormUtilities.GetForm<frmMp3Lyrics>();
-
-                frmMp3Lyrics.nbLyricsLines = _nbLyricsLines;
-                frmMp3Lyrics.KaraokeFont = _karaokeFont;
-
-                frmMp3Lyrics.TxtNextColor = TxtNextColor;
-                frmMp3Lyrics.TxtHighlightColor = TxtHighlightColor;
-                frmMp3Lyrics.TxtBeforeColor = TxtBeforeColor;
-
-
-
-            }
-        }
-
-
+      
         /// <summary>
         /// Apply colors to option form
         /// </summary>
@@ -391,6 +367,54 @@ namespace Karaboss.Mp3
             }
         }
 
+
+        /// <summary>
+        /// Apply changes to frmMp3Lyrics
+        /// </summary>
+        private void ApplyChanges()
+        {
+            SaveOptions();
+
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                frmMp3Lyrics = Utilities.FormUtilities.GetForm<frmMp3Lyrics>();
+
+                frmMp3Lyrics.KaraokeFont = _karaokeFont;
+
+                // Text colors                
+                frmMp3Lyrics.TxtBackColor = TxtBackColor;
+
+                frmMp3Lyrics.TxtNextColor = TxtNextColor;
+                frmMp3Lyrics.TxtHighlightColor = TxtHighlightColor;
+                frmMp3Lyrics.TxtBeforeColor = TxtBeforeColor;
+
+                frmMp3Lyrics.bColorContour = bColorContour;
+                frmMp3Lyrics.TxtContourColor = TxtContourColor;
+           
+                // force uppercase
+                frmMp3Lyrics.bForceUppercase = bForceUppercase;
+
+                _nbLyricsLines = Convert.ToInt32(UpDownNbLines.Value);
+                frmMp3Lyrics.nbLyricsLines = _nbLyricsLines;
+
+                frmMp3Lyrics.SizeMode = SizeMode;
+
+                // Diaporam, Backcolor ou transparent
+                frmMp3Lyrics.OptionBackground = bgOption;
+
+                // Text display: Center, Top, Bottom
+                frmMp3Lyrics.OptionDisplay = OptionDisplay;
+
+                frmMp3Lyrics.bTextBackGround = chkTextBackground.Checked;
+
+                // SlideShow frequency
+                frmMp3Lyrics.FreqSlideShow = freqSlideShow;
+
+                // directory for slide show
+                frmMp3Lyrics.DirSlideShow = dirSlideShow;
+            }
+        }
 
         private void SaveOptions ()
         {

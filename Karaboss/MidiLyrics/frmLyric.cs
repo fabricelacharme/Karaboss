@@ -371,7 +371,11 @@ namespace Karaboss
 
 
         public List<pictureBoxControl.plLyric> plLyrics;
-                                                  
+                       
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="_myLyricsMgmt"></param>
         public frmLyric(MidiLyricsMgmt _myLyricsMgmt)
         {
             InitializeComponent();

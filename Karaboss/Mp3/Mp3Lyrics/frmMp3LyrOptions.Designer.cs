@@ -339,19 +339,30 @@
             // 
             // karaokeEffect1
             // 
-            this.karaokeEffect1.Image = null;
-            this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 65.33334F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.karaokeEffect1.bColorContour = false;
+            this.karaokeEffect1.bforceUppercase = false;
+            this.karaokeEffect1.bTextBackGround = false;
+            this.karaokeEffect1.FreqDirSlideShow = 10;            
+            this.karaokeEffect1.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 78.66666F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             resources.ApplyResources(this.karaokeEffect1, "karaokeEffect1");
+            this.karaokeEffect1.m_Alpha = 255;
+            this.karaokeEffect1.m_CurrentImage = null;
             this.karaokeEffect1.Name = "karaokeEffect1";
             this.karaokeEffect1.nbLyricsLines = 1;
+            this.karaokeEffect1.OptionBackground = null;
             this.karaokeEffect1.OptionDisplay = keffect.KaraokeEffect.OptionsDisplay.Top;
             this.karaokeEffect1.Position = 0;
+            this.karaokeEffect1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
             this.karaokeEffect1.StepPercent = 0.01F;
             this.karaokeEffect1.SyncLine = ((System.Collections.Generic.List<keffect.KaraokeEffect.kSyncText>)(resources.GetObject("karaokeEffect1.SyncLine")));
             this.karaokeEffect1.SyncLyrics = ((System.Collections.Generic.List<System.Collections.Generic.List<keffect.KaraokeEffect.kSyncText>>)(resources.GetObject("karaokeEffect1.SyncLyrics")));
             this.karaokeEffect1.TransitionEffect = keffect.KaraokeEffect.TransitionEffects.Progressive;
+            this.karaokeEffect1.TransparencyKey = System.Drawing.Color.Lime;
             this.karaokeEffect1.TxtAlreadyPlayedColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(51)))));
+            this.karaokeEffect1.TxtBackColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.TxtBeingPlayedColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.karaokeEffect1.TxtContourColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.TxtNotYetPlayedColor = System.Drawing.Color.White;
             // 
             // frmMp3LyrOptions
