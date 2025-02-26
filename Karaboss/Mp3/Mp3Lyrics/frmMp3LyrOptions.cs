@@ -39,7 +39,17 @@ namespace Karaboss.Mp3
         private int freqSlideShow;
 
         // Size mode of the picture background
-        private PictureBoxSizeMode SizeMode;
+
+        private PictureBoxSizeMode _sizeMode;
+        public PictureBoxSizeMode SizeMode
+        {
+            get { return _sizeMode; }
+            set
+            {
+                _sizeMode = value;
+                karaokeEffect1.SizeMode = _sizeMode;
+            }
+        }
 
         // Number of lines to display
         private int _nbLyricsLines;
@@ -329,8 +339,7 @@ namespace Karaboss.Mp3
         private void SetOptions()
         {
             try
-            {                
-
+           {                
                 // Nombre de lignes à afficher
                 UpDownNbLines.Value = _nbLyricsLines;
 
@@ -351,27 +360,29 @@ namespace Karaboss.Mp3
 
                 // Force uppercase
                 chkTextUppercase.Checked = bForceUppercase;
-                //karaokeEffect1.bforceUppercase = bForceUppercase;
+                karaokeEffect1.bforceUppercase = bForceUppercase;
 
                 // picturebox            
-                //karaokeEffect1.FreqDirSlideShow = freqSlideShow;
-                karaokeEffect1.nbLyricsLines = _nbLyricsLines;
-                //karaokeEffect1.CurrentTime = 30;
+                karaokeEffect1.FreqDirSlideShow = freqSlideShow;
+                karaokeEffect1.nbLyricsLines = _nbLyricsLines;                
 
 
-                //karaokeEffect1.TxtBackColor = TxtBackColor;
+                karaokeEffect1.TxtBackColor = TxtBackColor;
 
-                //karaokeEffect1.bColorContour = bColorContour;
-                //karaokeEffect1.TxtContourColor = TxtContourColor;
+                karaokeEffect1.bColorContour = bColorContour;
+                karaokeEffect1.TxtContourColor = TxtContourColor;
 
-                karaokeEffect1.TxtNotYetPlayedColor = TxtNextColor; //pBox.TxtNextColor = TxtNextColor;
-                karaokeEffect1.TxtBeingPlayedColor = TxtHighlightColor;//pBox.TxtHighlightColor = TxtHighlightColor;
-                karaokeEffect1.TxtAlreadyPlayedColor = TxtBeforeColor;//pBox.TxtBeforeColor = TxtBeforeColor;
+                karaokeEffect1.TxtNotYetPlayedColor = TxtNextColor; 
+                karaokeEffect1.TxtBeingPlayedColor = TxtHighlightColor;
+                karaokeEffect1.TxtAlreadyPlayedColor = TxtBeforeColor;
 
 
                 cbSizeMode.SelectedText = SizeMode.ToString();
 
-                //karaokeEffect1.OptionBackground = bgOption;
+                karaokeEffect1.OptionBackground = bgOption;
+
+                karaokeEffect1.SetBackground(dirSlideShow);
+
             }
             catch (Exception e)
             {

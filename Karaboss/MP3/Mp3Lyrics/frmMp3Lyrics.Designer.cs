@@ -25,6 +25,12 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMp3Lyrics));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.btnEditLyrics = new System.Windows.Forms.Button();
+            this.btnExportLyricsToText = new System.Windows.Forms.Button();
+            this.btnFrmOptions = new System.Windows.Forms.Button();
+            this.btnFrmMin = new System.Windows.Forms.Button();
+            this.btnFrmMax = new System.Windows.Forms.Button();
+            this.btnFrmClose = new System.Windows.Forms.Button();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.pnlTitle = new System.Windows.Forms.Panel();
             this.lblTitle = new System.Windows.Forms.Label();
@@ -32,16 +38,78 @@
             this.pnlTimer = new System.Windows.Forms.Timer(this.components);
             this.karaokeEffect1 = new keffect.KaraokeEffect();
             this.pnlWindow = new System.Windows.Forms.Panel();
-            this.btnEditLyrics = new System.Windows.Forms.Button();
-            this.btnExportLyricsToText = new System.Windows.Forms.Button();
-            this.btnFrmOptions = new System.Windows.Forms.Button();
-            this.btnFrmMin = new System.Windows.Forms.Button();
-            this.btnFrmMax = new System.Windows.Forms.Button();
-            this.btnFrmClose = new System.Windows.Forms.Button();
             this.pnlTop.SuspendLayout();
             this.pnlTitle.SuspendLayout();
             this.pnlWindow.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // btnEditLyrics
+            // 
+            this.btnEditLyrics.BackColor = System.Drawing.Color.Gray;
+            this.btnEditLyrics.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnEditLyrics, "btnEditLyrics");
+            this.btnEditLyrics.Name = "btnEditLyrics";
+            this.btnEditLyrics.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnEditLyrics, resources.GetString("btnEditLyrics.ToolTip"));
+            this.btnEditLyrics.UseVisualStyleBackColor = false;
+            this.btnEditLyrics.Click += new System.EventHandler(this.btnEditLyrics_Click);
+            // 
+            // btnExportLyricsToText
+            // 
+            this.btnExportLyricsToText.BackColor = System.Drawing.Color.Gray;
+            this.btnExportLyricsToText.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnExportLyricsToText, "btnExportLyricsToText");
+            this.btnExportLyricsToText.Name = "btnExportLyricsToText";
+            this.btnExportLyricsToText.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnExportLyricsToText, resources.GetString("btnExportLyricsToText.ToolTip"));
+            this.btnExportLyricsToText.UseVisualStyleBackColor = false;
+            this.btnExportLyricsToText.Click += new System.EventHandler(this.btnExportLyricsToText_Click);
+            // 
+            // btnFrmOptions
+            // 
+            this.btnFrmOptions.BackColor = System.Drawing.Color.Gray;
+            this.btnFrmOptions.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnFrmOptions, "btnFrmOptions");
+            this.btnFrmOptions.Name = "btnFrmOptions";
+            this.btnFrmOptions.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnFrmOptions, resources.GetString("btnFrmOptions.ToolTip"));
+            this.btnFrmOptions.UseVisualStyleBackColor = false;
+            this.btnFrmOptions.Click += new System.EventHandler(this.btnFrmOptions_Click);
+            // 
+            // btnFrmMin
+            // 
+            this.btnFrmMin.BackColor = System.Drawing.Color.Gray;
+            this.btnFrmMin.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnFrmMin, "btnFrmMin");
+            this.btnFrmMin.Name = "btnFrmMin";
+            this.btnFrmMin.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnFrmMin, resources.GetString("btnFrmMin.ToolTip"));
+            this.btnFrmMin.UseVisualStyleBackColor = false;
+            this.btnFrmMin.Click += new System.EventHandler(this.btnFrmMin_Click);
+            // 
+            // btnFrmMax
+            // 
+            this.btnFrmMax.BackColor = System.Drawing.Color.Gray;
+            this.btnFrmMax.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnFrmMax, "btnFrmMax");
+            this.btnFrmMax.Name = "btnFrmMax";
+            this.btnFrmMax.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnFrmMax, resources.GetString("btnFrmMax.ToolTip"));
+            this.btnFrmMax.UseVisualStyleBackColor = false;
+            this.btnFrmMax.Click += new System.EventHandler(this.btnFrmMax_Click);
+            // 
+            // btnFrmClose
+            // 
+            this.btnFrmClose.BackColor = System.Drawing.Color.Gray;
+            this.btnFrmClose.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.btnFrmClose, "btnFrmClose");
+            this.btnFrmClose.Name = "btnFrmClose";
+            this.btnFrmClose.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnFrmClose, resources.GetString("btnFrmClose.ToolTip"));
+            this.btnFrmClose.UseVisualStyleBackColor = false;
+            this.btnFrmClose.Click += new System.EventHandler(this.btnFrmClose_Click);
+            this.btnFrmClose.MouseLeave += new System.EventHandler(this.btnFrmClose_MouseLeave);
+            this.btnFrmClose.MouseHover += new System.EventHandler(this.btnFrmClose_MouseHover);
             // 
             // pnlTop
             // 
@@ -85,7 +153,7 @@
             this.karaokeEffect1.FreqDirSlideShow = 10;
             this.karaokeEffect1.Image = null;
             this.karaokeEffect1.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 93.33334F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 65.33334F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.karaokeEffect1.m_Alpha = 255;
             this.karaokeEffect1.m_CurrentImage = null;
             this.karaokeEffect1.Name = "karaokeEffect1";
@@ -116,66 +184,6 @@
             this.pnlWindow.Controls.Add(this.btnFrmClose);
             resources.ApplyResources(this.pnlWindow, "pnlWindow");
             this.pnlWindow.Name = "pnlWindow";
-            // 
-            // btnEditLyrics
-            // 
-            this.btnEditLyrics.BackColor = System.Drawing.Color.Gray;
-            this.btnEditLyrics.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
-            resources.ApplyResources(this.btnEditLyrics, "btnEditLyrics");
-            this.btnEditLyrics.Name = "btnEditLyrics";
-            this.btnEditLyrics.TabStop = false;
-            this.toolTip1.SetToolTip(this.btnEditLyrics, resources.GetString("btnEditLyrics.ToolTip"));
-            this.btnEditLyrics.UseVisualStyleBackColor = false;
-            // 
-            // btnExportLyricsToText
-            // 
-            this.btnExportLyricsToText.BackColor = System.Drawing.Color.Gray;
-            this.btnExportLyricsToText.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
-            resources.ApplyResources(this.btnExportLyricsToText, "btnExportLyricsToText");
-            this.btnExportLyricsToText.Name = "btnExportLyricsToText";
-            this.btnExportLyricsToText.TabStop = false;
-            this.toolTip1.SetToolTip(this.btnExportLyricsToText, resources.GetString("btnExportLyricsToText.ToolTip"));
-            this.btnExportLyricsToText.UseVisualStyleBackColor = false;
-            // 
-            // btnFrmOptions
-            // 
-            this.btnFrmOptions.BackColor = System.Drawing.Color.Gray;
-            this.btnFrmOptions.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
-            resources.ApplyResources(this.btnFrmOptions, "btnFrmOptions");
-            this.btnFrmOptions.Name = "btnFrmOptions";
-            this.btnFrmOptions.TabStop = false;
-            this.toolTip1.SetToolTip(this.btnFrmOptions, resources.GetString("btnFrmOptions.ToolTip"));
-            this.btnFrmOptions.UseVisualStyleBackColor = false;
-            // 
-            // btnFrmMin
-            // 
-            this.btnFrmMin.BackColor = System.Drawing.Color.Gray;
-            this.btnFrmMin.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
-            resources.ApplyResources(this.btnFrmMin, "btnFrmMin");
-            this.btnFrmMin.Name = "btnFrmMin";
-            this.btnFrmMin.TabStop = false;
-            this.toolTip1.SetToolTip(this.btnFrmMin, resources.GetString("btnFrmMin.ToolTip"));
-            this.btnFrmMin.UseVisualStyleBackColor = false;
-            // 
-            // btnFrmMax
-            // 
-            this.btnFrmMax.BackColor = System.Drawing.Color.Gray;
-            this.btnFrmMax.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
-            resources.ApplyResources(this.btnFrmMax, "btnFrmMax");
-            this.btnFrmMax.Name = "btnFrmMax";
-            this.btnFrmMax.TabStop = false;
-            this.toolTip1.SetToolTip(this.btnFrmMax, resources.GetString("btnFrmMax.ToolTip"));
-            this.btnFrmMax.UseVisualStyleBackColor = false;
-            // 
-            // btnFrmClose
-            // 
-            this.btnFrmClose.BackColor = System.Drawing.Color.Gray;
-            this.btnFrmClose.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
-            resources.ApplyResources(this.btnFrmClose, "btnFrmClose");
-            this.btnFrmClose.Name = "btnFrmClose";
-            this.btnFrmClose.TabStop = false;
-            this.toolTip1.SetToolTip(this.btnFrmClose, resources.GetString("btnFrmClose.ToolTip"));
-            this.btnFrmClose.UseVisualStyleBackColor = false;
             // 
             // frmMp3Lyrics
             // 

@@ -103,6 +103,10 @@ namespace Karaboss.Mp3
         private frmMp3LyricsSimple frmMp3LyricsSimple;
         private frmMp3Lyrics frmMp3Lyrics;
 
+
+        // SlideShow directory
+        public string dirSlideShow;
+
         public frmMp3Player(string FileName, Playlist myPlayList, bool bplay)
         {
             InitializeComponent();
@@ -841,11 +845,29 @@ namespace Karaboss.Mp3
 
             frmMp3Lyrics.DisplaySinger(tx);
 
+            // cas d'une playlist ou non : met à jour le diaporama
+            SetSlideShow();
 
             StartKaraoke();
         }
 
-        
+        /// <summary>
+        /// SliadeShow of frmMp3Lyrics
+        /// </summary>
+        private void SetSlideShow()
+        {
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            {
+                // cas d'une playlist ou non : met à jour le diaporama
+                if (currentPlaylistItem != null)
+                    dirSlideShow = currentPlaylistItem.DirSlideShow;
+                else
+                    dirSlideShow = Properties.Settings.Default.dirSlideShow;
+
+                frmMp3Lyrics.SetSlideShow(dirSlideShow);
+
+            }
+        }
 
         /// <summary>
         /// Display with simple lyrics

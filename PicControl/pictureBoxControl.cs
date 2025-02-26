@@ -506,8 +506,6 @@ namespace PicControl
             }
         }
 
-
-
         #endregion properties
     
 

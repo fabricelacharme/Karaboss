@@ -110,6 +110,21 @@ namespace Karaboss.Mp3
         }
 
 
+        private Karaclass.OptionsDisplay _OptionDisplay;
+        /// <summary>
+        /// Display lyrics option: top, Center, Bottom
+        /// </summary>
+        public Karaclass.OptionsDisplay OptionDisplay
+        {
+            get { return _OptionDisplay; }
+            set
+            {
+                _OptionDisplay = value;
+                karaokeEffect1.OptionDisplay = (keffect.KaraokeEffect.OptionsDisplay)_OptionDisplay;
+            }
+        }
+
+
         #region text color
 
         private bool _bTextBackGround = false;
@@ -122,7 +137,7 @@ namespace Karaboss.Mp3
             set
             {
                 _bTextBackGround = value;
-                //pBox.bTextBackGround = _bTextBackGround;
+                karaokeEffect1.bTextBackGround = _bTextBackGround;
             }
         }
 
@@ -134,7 +149,7 @@ namespace Karaboss.Mp3
             set
             {
                 _txtHighlightColor = value;
-                karaokeEffect1.TxtBeingPlayedColor = _txtHighlightColor; //pBox.TxtHighlightColor = _txtHighlightColor;
+                karaokeEffect1.TxtBeingPlayedColor = _txtHighlightColor; 
             }
         }
 
@@ -146,7 +161,7 @@ namespace Karaboss.Mp3
             set
             {
                 _txtNextColor = value;
-                karaokeEffect1.TxtNotYetPlayedColor = _txtNextColor; //pBox.TxtNextColor = _txtNextColor;
+                karaokeEffect1.TxtNotYetPlayedColor = _txtNextColor; 
             }
         }
         // Text sung color
@@ -169,7 +184,7 @@ namespace Karaboss.Mp3
             set
             {
                 _bColorContour = value;
-                //pBox.bColorContour = _bColorContour;
+                karaokeEffect1.bColorContour = _bColorContour;
             }
         }
         // Text contour
@@ -180,7 +195,7 @@ namespace Karaboss.Mp3
             set
             {
                 _txtContourColor = value;
-                //pBox.TxtContourColor = _txtContourColor;
+                karaokeEffect1.TxtContourColor = _txtContourColor;
             }
         }
 
@@ -192,13 +207,34 @@ namespace Karaboss.Mp3
             set
             {
                 _txtBackColor = value;
-                //pBox.TxtBackColor = _txtBackColor;
+                karaokeEffect1.TxtBackColor = _txtBackColor;
             }
         }
 
 
         #endregion
 
+
+        #region text characteristics
+
+        private bool _bForceUppercase = false;
+        public bool bForceUppercase
+        {
+            get { return _bForceUppercase; }
+            set
+            {
+
+                if (value != _bForceUppercase)
+                {
+                    _bForceUppercase = value;
+                    karaokeEffect1.bforceUppercase = _bForceUppercase;
+                    //LoadSong(myLyricsMgmt.plLyrics);
+                }
+            }
+        }
+
+
+        #endregion text characteristics
 
         #region dirslideshow
 
@@ -229,7 +265,7 @@ namespace Karaboss.Mp3
                 else
                     _dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
 
-                //pBox.SetBackground(_dirSlideShow);
+                karaokeEffect1.SetBackground(_dirSlideShow);
             }
         }
 
@@ -241,7 +277,7 @@ namespace Karaboss.Mp3
             set
             {
                 _freqSlideShow = value;
-                //pBox.FreqDirSlideShow = _freqSlideShow;
+                karaokeEffect1.FreqDirSlideShow = _freqSlideShow;
             }
         }
 
@@ -253,7 +289,7 @@ namespace Karaboss.Mp3
             set
             {
                 _sizeMode = value;
-                //pBox.SizeMode = _sizeMode;
+                karaokeEffect1.SizeMode = _sizeMode;
             }
         }
 
@@ -271,18 +307,18 @@ namespace Karaboss.Mp3
                 switch (_optionbackground)
                 {
                     case "Diaporama":
-                        //pBox.OptionBackground = "Diaporama";
+                        karaokeEffect1.OptionBackground = "Diaporama";
                         break;
                     case "SolidColor":
-                        //pBox.OptionBackground = "SolidColor";
+                        karaokeEffect1.OptionBackground = "SolidColor";
                         break;
                     case "Transparent":
-                        //TransparencyKey = pBox.TransparencyKey;
-                        //BackColor = pBox.TransparencyKey;
-                        //pBox.OptionBackground = "Transparent";
+                        TransparencyKey = karaokeEffect1.TransparencyKey;
+                        BackColor = karaokeEffect1.TransparencyKey;
+                        karaokeEffect1.OptionBackground = "Transparent";
                         break;
                     default:
-                        //pBox.OptionBackground = "Diaporama";
+                        karaokeEffect1.OptionBackground = "Diaporama";
                         break;
                 }
             }
@@ -314,7 +350,7 @@ namespace Karaboss.Mp3
             #endregion
 
 
-            LoadDefaultImage();
+            //LoadDefaultImage();
 
             LoadLyrics();
          
@@ -331,8 +367,67 @@ namespace Karaboss.Mp3
         {
             try
             {
-                KaraokeFont = Properties.Settings.Default.KaraokeFont;
-                nbLyricsLines = Properties.Settings.Default.TxtNbLines;
+                _karaokeFont = Properties.Settings.Default.KaraokeFont;
+                karaokeEffect1.KaraokeFont = _karaokeFont;
+                //karaokeEffect1.bShowParagraphs = Karaclass.m_ShowParagraph;
+                
+                // Force Uppercase
+                _bForceUppercase = Karaclass.m_ForceUppercase;               
+
+                string bgOption = Properties.Settings.Default.BackGroundOption;
+                switch (bgOption)
+                {
+                    case "Diaporama":
+                        _optionbackground = "Diaporama";
+                        break;
+                    case "SolidColor":
+                        _optionbackground = "SolidColor";
+                        break;
+                    case "Transparent":
+                        _optionbackground = "Transparent";
+                        break;
+
+                    default:
+                        _optionbackground = "Diaporama";
+                        break;
+                }
+                OptionBackground = _optionbackground;
+
+                switch (Properties.Settings.Default.LyricsOptionDisplay)
+                {
+                    case "Top":
+                        _OptionDisplay = Karaclass.OptionsDisplay.Top;
+                        break;
+                    case "Center":
+                        _OptionDisplay = Karaclass.OptionsDisplay.Center;
+                        break;
+                    case "Bottom":
+                        _OptionDisplay = Karaclass.OptionsDisplay.Bottom;
+                        break;
+                    default:
+                        _OptionDisplay = Karaclass.OptionsDisplay.Center;
+                        break;
+                }
+                OptionDisplay = _OptionDisplay;
+
+                bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
+
+                TxtBackColor = Properties.Settings.Default.TxtBackColor;
+
+                // Text colors
+                TxtNextColor = Properties.Settings.Default.TxtNextColor;
+                TxtHighlightColor = Properties.Settings.Default.TxtHighlightColor;
+                TxtBeforeColor = Properties.Settings.Default.TxtBeforeColor;
+                bColorContour = Properties.Settings.Default.bColorContour;
+                TxtContourColor = Properties.Settings.Default.TxtContourColor;               
+
+
+                // Number of Lines to display
+                _nbLyricsLines = Properties.Settings.Default.TxtNbLines;
+                // Frequency of slide show
+                FreqSlideShow = Properties.Settings.Default.freqSlideShow;
+                // Position image
+                SizeMode = Properties.Settings.Default.SizeMode;
 
             }
             catch (Exception e)
@@ -449,12 +544,24 @@ namespace Karaboss.Mp3
 
         #region Images
 
+        /// <summary>
+        /// Remet les options courante pour le cas des playlists
+        /// La cinématique d'attente bouzille tout
+        /// </summary>
+        /// <param name="dirSlideShow"></param>
+        public void SetSlideShow(string dirSlideShow)
+        {
+            DirSlideShow = dirSlideShow;
+        }
+
+        /*
         private void LoadDefaultImage()
         {
             m_ImageFilePaths = new List<string>();
             DefaultDirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             SetBackground(DefaultDirSlideShow);
         }
+        */
 
         public void SetBackground(string dirImages)
         {
@@ -462,8 +569,8 @@ namespace Karaboss.Mp3
             LoadImageList(dirImages);
             if ( m_ImageFilePaths.Count > 0)
             {
-                //pBox.SizeMode = PictureBoxSizeMode.StretchImage;
-                //pBox.Image = Image.FromFile(m_ImageFilePaths[0]);
+                karaokeEffect1.SizeMode = PictureBoxSizeMode.StretchImage;
+                karaokeEffect1.Image = Image.FromFile(m_ImageFilePaths[0]);
             }
 
         }
@@ -558,15 +665,7 @@ namespace Karaboss.Mp3
             btnExportLyricsToText.Top = btnFrmOptions.Top + btnFrmOptions.Height + 1;
         }
 
-        private void btnFrmClose_MouseHover(object sender, EventArgs e)
-        {
-            btnFrmClose.Image = Properties.Resources.CloseOver;
-        }
-
-        private void btnFrmClose_MouseLeave(object sender, EventArgs e)
-        {
-            btnFrmClose.Image = Properties.Resources.Close;
-        }
+       
 
         /// <summary>
         /// Move form without title bar
@@ -602,6 +701,7 @@ namespace Karaboss.Mp3
 
 
         #region pnlWindow Events
+
         /// <summary>
         /// Close form
         /// </summary>
@@ -610,6 +710,16 @@ namespace Karaboss.Mp3
         private void btnFrmClose_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btnFrmClose_MouseHover(object sender, EventArgs e)
+        {
+            btnFrmClose.Image = Properties.Resources.CloseOver;
+        }
+
+        private void btnFrmClose_MouseLeave(object sender, EventArgs e)
+        {
+            btnFrmClose.Image = Properties.Resources.Close;
         }
 
         /// <summary>
@@ -625,6 +735,11 @@ namespace Karaboss.Mp3
                 WindowState = FormWindowState.Maximized;
         }
 
+        private void btnFrmMax_MouseLeave(object sender, EventArgs e)
+        {
+            btnFrmMax.Image = Properties.Resources.Max;
+        }
+
         /// <summary>
         /// Minimize form
         /// </summary>
@@ -635,6 +750,13 @@ namespace Karaboss.Mp3
             this.WindowState = FormWindowState.Minimized;
         }
 
+        private void btnFrmOptions_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            frmMp3LyrOptions = new frmMp3LyrOptions();
+            frmMp3LyrOptions.ShowDialog();
+        }
+      
 
         /// <summary>
         /// Export lyrics to text
@@ -666,11 +788,7 @@ namespace Karaboss.Mp3
 
         #endregion
 
-        private void btnFrmOptions_Click(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            frmMp3LyrOptions = new frmMp3LyrOptions();
-            frmMp3LyrOptions.ShowDialog();
-        }
+
+       
     }
 }

@@ -929,6 +929,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\MaxOver.png" />
     <None Include="Resources\magnifyplus24.png" />
     <None Include="Resources\magnifyminus24.png" />
     <None Include="Resources\Silence.png" />
@@ -963,7 +964,6 @@
     <None Include="Resources\Search-icon.png" />
     <None Include="Resources\treble30.png" />
     <EmbeddedResource Include="Resources\treble.png" />
-    <None Include="Resources\Max.png" />
     <None Include="Resources\MaxNormal.png" />
     <Content Include="karaboss.ico" />
     <None Include="Resources\Close.bmp" />
