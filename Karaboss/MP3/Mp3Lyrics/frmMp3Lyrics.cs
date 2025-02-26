@@ -109,6 +109,188 @@ namespace Karaboss.Mp3
             }
         }
 
+
+        #region text color
+
+        private bool _bTextBackGround = false;
+        /// <summary>
+        /// Black background of text
+        /// </summary>
+        public bool bTextBackGround
+        {
+            get { return _bTextBackGround; }
+            set
+            {
+                _bTextBackGround = value;
+                //pBox.bTextBackGround = _bTextBackGround;
+            }
+        }
+
+        // Text color
+        private Color _txtHighlightColor;
+        public Color TxtHighlightColor
+        {
+            get { return _txtHighlightColor; }
+            set
+            {
+                _txtHighlightColor = value;
+                karaokeEffect1.TxtBeingPlayedColor = _txtHighlightColor; //pBox.TxtHighlightColor = _txtHighlightColor;
+            }
+        }
+
+        // Text to sing color
+        private Color _txtNextColor;
+        public Color TxtNextColor
+        {
+            get { return _txtNextColor; }
+            set
+            {
+                _txtNextColor = value;
+                karaokeEffect1.TxtNotYetPlayedColor = _txtNextColor; //pBox.TxtNextColor = _txtNextColor;
+            }
+        }
+        // Text sung color
+        private Color _txtBeforeColor;
+        public Color TxtBeforeColor
+        {
+            get { return _txtBeforeColor; }
+            set
+            {
+                _txtBeforeColor = value;
+                karaokeEffect1.TxtAlreadyPlayedColor = _txtBeforeColor; //pBox.TxtBeforeColor = _txtBeforeColor;
+            }
+        }
+        // Contour
+        private bool _bColorContour = true;
+        public bool bColorContour
+        {
+            get
+            { return _bColorContour; }
+            set
+            {
+                _bColorContour = value;
+                //pBox.bColorContour = _bColorContour;
+            }
+        }
+        // Text contour
+        private Color _txtContourColor;
+        public Color TxtContourColor
+        {
+            get { return _txtContourColor; }
+            set
+            {
+                _txtContourColor = value;
+                //pBox.TxtContourColor = _txtContourColor;
+            }
+        }
+
+        // Background color
+        private Color _txtBackColor;
+        public Color TxtBackColor
+        {
+            get { return _txtBackColor; }
+            set
+            {
+                _txtBackColor = value;
+                //pBox.TxtBackColor = _txtBackColor;
+            }
+        }
+
+
+        #endregion
+
+
+        #region dirslideshow
+
+        private bool _allowModifyDirSlideShow = true;
+        public bool AlloModifyDirSlideShow
+        {
+            get { return _allowModifyDirSlideShow; }
+            set { _allowModifyDirSlideShow = value; }
+        }
+
+        // SlideShow directory
+        private string _dirSlideShow = string.Empty;
+        public string DirSlideShow
+        {
+            get { return _dirSlideShow; }
+            set
+            {
+
+                // Change only if not in playlist mode
+                //if (_bplaylist)
+                //    return;
+
+                if (value == null || value == "")
+                    value = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+
+                if (Directory.Exists(value))
+                    _dirSlideShow = value;
+                else
+                    _dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+
+                //pBox.SetBackground(_dirSlideShow);
+            }
+        }
+
+        // SlideShow frequency
+        private int _freqSlideShow;
+        public int FreqSlideShow
+        {
+            get { return _freqSlideShow; }
+            set
+            {
+                _freqSlideShow = value;
+                //pBox.FreqDirSlideShow = _freqSlideShow;
+            }
+        }
+
+
+        private PictureBoxSizeMode _sizeMode;
+        public PictureBoxSizeMode SizeMode
+        {
+            get { return _sizeMode; }
+            set
+            {
+                _sizeMode = value;
+                //pBox.SizeMode = _sizeMode;
+            }
+        }
+
+        /// <summary>
+        /// Background option : Diaporam, SolidColor, Transparent
+        /// </summary>
+        private string _optionbackground = "Diaporama";
+        public string OptionBackground
+        {
+            get { return _optionbackground; }
+            set
+            {
+                _optionbackground = value;
+
+                switch (_optionbackground)
+                {
+                    case "Diaporama":
+                        //pBox.OptionBackground = "Diaporama";
+                        break;
+                    case "SolidColor":
+                        //pBox.OptionBackground = "SolidColor";
+                        break;
+                    case "Transparent":
+                        //TransparencyKey = pBox.TransparencyKey;
+                        //BackColor = pBox.TransparencyKey;
+                        //pBox.OptionBackground = "Transparent";
+                        break;
+                    default:
+                        //pBox.OptionBackground = "Diaporama";
+                        break;
+                }
+            }
+        }
+
+        #endregion dirslideshow
+
+
         #endregion properties
 
         public frmMp3Lyrics()

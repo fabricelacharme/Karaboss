@@ -96,8 +96,8 @@ namespace Karaboss.Mp3
             SyncLyrics.Add(SyncLine);
 
             karaokeEffect1.SyncLyrics = SyncLyrics;
-            
-            
+
+            karaokeEffect1.SetPos(1000);
 
         }
 
@@ -151,6 +151,11 @@ namespace Karaboss.Mp3
 
                 frmMp3Lyrics.nbLyricsLines = _nbLyricsLines;
                 frmMp3Lyrics.KaraokeFont = _karaokeFont;
+
+                frmMp3Lyrics.TxtNextColor = TxtNextColor;
+                frmMp3Lyrics.TxtHighlightColor = TxtHighlightColor;
+                frmMp3Lyrics.TxtBeforeColor = TxtBeforeColor;
+
 
 
             }
@@ -325,9 +330,9 @@ namespace Karaboss.Mp3
                 //pBox.bColorContour = bColorContour;
                 //pBox.TxtContourColor = TxtContourColor;
 
-                //pBox.TxtNextColor = TxtNextColor;
-                //pBox.TxtHighlightColor = TxtHighlightColor;
-                //pBox.TxtBeforeColor = TxtBeforeColor;
+                karaokeEffect1.TxtNotYetPlayedColor = TxtNextColor; //pBox.TxtNextColor = TxtNextColor;
+                karaokeEffect1.TxtBeingPlayedColor = TxtHighlightColor;//pBox.TxtHighlightColor = TxtHighlightColor;
+                karaokeEffect1.TxtAlreadyPlayedColor = TxtBeforeColor;//pBox.TxtBeforeColor = TxtBeforeColor;
 
 
                 cbSizeMode.SelectedText = SizeMode.ToString();

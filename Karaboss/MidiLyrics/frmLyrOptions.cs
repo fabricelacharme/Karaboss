@@ -607,8 +607,7 @@ namespace Karaboss
                 // Chords
                 frmLyric.ChordNextColor = _chordNextColor;
                 frmLyric.ChordHighlightColor = _chordHighlightColor;
-                frmLyric.bShowChords = _bShowChords;
-                
+                frmLyric.bShowChords = _bShowChords;                
 
                 // force uppercase
                 frmLyric.bForceUppercase = bForceUppercase;
@@ -630,11 +629,8 @@ namespace Karaboss
                 frmLyric.FreqSlideShow = freqSlideShow;               
                 
                 // directory for slide show
-
-                frmLyric.DirSlideShow = dirSlideShow;
-                
+                frmLyric.DirSlideShow = dirSlideShow;                
             }
-
          }
 
         /// <summary>
