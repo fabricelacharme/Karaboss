@@ -448,8 +448,9 @@ namespace Karaboss.Mp3
             if (Mp3LyricsMgmtHelper.SyncLyrics == null) return;
 
             // Karaoke Effect
-            karaokeEffect1.TransitionEffect = TransitionEffects.None;            
+            karaokeEffect1.TransitionEffect = TransitionEffects.None;
             karaokeEffect1.SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;
+                                    
             karaokeEffect1.nbLyricsLines = 3;
         }
 

@@ -67,7 +67,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
     public static class Mp3LyricsMgmtHelper
     {
                
-        public static SyncText[] SyncTexts;
+        //public static SyncText[] SyncTexts;
         public static SynchronisedLyricsFrame MySyncLyricsFrame;
         public static string m_SepLine = "/";
         public static Mp3LyricsTypes m_mp3lyricstype = Mp3LyricsTypes.None;
@@ -161,12 +161,13 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
         #region get synched lyrics
 
+        /*
         /// <summary>
         /// Get sync lyrics in SyncText[]
         /// </summary>
         /// <param name="SyncLyricsFrame"></param>
         /// <returns></returns>
-        public static SyncText[] GetSyncLyrics(SynchronisedLyricsFrame SyncLyricsFrame)
+        public static SyncText[] GetSyncLyricsOld(SynchronisedLyricsFrame SyncLyricsFrame)
         {
             SyncText[] synchedTexts;
             string lyric;
@@ -221,8 +222,10 @@ namespace Karaboss.Mp3.Mp3Lyrics
             return synchedTexts;
         }
 
+        */
+
         /// <summary>
-        /// Get sytnc lyrics in List<List<SyncText>> for KEffect
+        /// Get sync lyrics in List<List<SyncText>> for KEffect from SynchronisedLyricsFrame
         /// </summary>
         /// <param name="SyncLyricsFrame"></param>
         /// <returns></returns>
@@ -311,6 +314,125 @@ namespace Karaboss.Mp3.Mp3Lyrics
         }
 
 
+        /// <summary>
+        ///  Get LRC Lyrics
+        /// </summary>
+        /// <param name="FileName"></param>
+        /// <returns></returns>
+        public static List<List<keffect.KaraokeEffect.kSyncText>> GetKEffectLrcLyrics(string FileName)
+        {
+            // Search for existing LRC file
+            string lrcFile = Path.ChangeExtension(FileName, ".lrc");
+            if (!System.IO.File.Exists(lrcFile)) return null;
+
+            //SyncText[] synchedTexts;
+            string line;
+
+            string lyric = string.Empty;
+            long time;
+            string stime = string.Empty;
+
+            // Format 1
+            // [00:04.598]IT'S <00:04.830>BEEN <00:05.057>A <00:05.271>HARD <00:06.151>DAY'S <00:06.811>NIGHT               // New line                                                                              
+            // [00:08.148]AND                                                                                               // New line
+            //
+            // Format 2:  Can be also ?
+            // [00:04.598]It's
+            // <00:04.830> been
+            // <00:05.057> a
+            // <00:05.271> hard
+            // <00:06.151> day's
+            // <00:06.811> night
+            // [00:08.148]And
+            //
+            // Format 3: and also
+            // [00:23.76]J'AI FAIT UNE CHANSON, 
+            // [00:25.10]JE SAIS PAS POURQUOI
+
+            // Load Lrc file into list of lines                
+            //string[] lines = System.IO.File.ReadAllLines(lrcFile);
+            string[] lines;
+
+            try
+            {
+                // Load lrc into a single string
+                string tx = System.IO.File.ReadAllText(lrcFile);
+
+                // Split by "[" to have lines
+                lines = tx.Split('[');
+
+                // Treatment for each line
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    line = lines[i];
+                    if (line.Trim().Length == 0) continue;
+
+                    line = line.Trim();
+
+                    // Add "[" removed by the split
+                    line = "[" + line;
+
+                    // Use case: format 2
+                    line = line.Replace("> ", ">");                 // Remove space after > (format 2)
+                    line = line.Replace(Environment.NewLine, " ");  // Remove \r\nb         (format 2)
+
+                    // Use case: LRC full line (format 3)
+                    if (line.IndexOf("<") == -1)
+                        line = line.Replace(" ", "_");                  // Replace spaces by "_" in order to keep the whole sentences (format 3)
+                                                                        // otherwise it will be removed by the pattern
+                    lines[i] = line;
+                }
+            }
+            catch (Exception e) { MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); return null; }
+
+            // Regex to capture timestamps and words => for milliseconds having 3 digits or 2
+            // Find out what type of digits the file is made out
+            string pattern = GetPatternLRC(lines);
+            if (pattern == null)
+            {
+                MessageBox.Show("Invalid lrc file, no timestamps found: " + Path.GetFileName(FileName), "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
+
+            // Create a list of all lines
+            // Load lyrics in KaraokeEffect format
+            List<keffect.KaraokeEffect.kSyncText> SyncLine;
+            List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
+            
+            for (int i = 0; i < lines.Length; i++)
+            {
+                // study line by line
+                line = lines[i];
+
+                MatchCollection matches = Regex.Matches(line, pattern);
+                if (matches.Count == 0) continue;
+
+                SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+
+                foreach (Match match in matches)
+                {
+                    // Try with "[]", than with "<>"
+                    string timestamp = match.Groups[1].Value != "" ? match.Groups[1].Value : match.Groups[2].Value;
+                    string word = match.Groups[3].Value;
+
+                    // Clean word
+                    word = word.Replace("\r\n", "").Replace("\r", "").Replace("\n", "").Replace("_", " ");
+
+                    // Add a linefeed if timestamp was "[]"
+                    if (match.Groups[1].Value != "")
+                        word = "\r\n" + word;               // POURQUOI ajouter \r\n? => needed by PictureBox1_Paint event of frmLyrics
+
+                    time = (long)TimeToMs(timestamp);
+                    
+                    SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, word));
+                }
+                SyncLyrics.Add(SyncLine);
+            }               
+
+            return SyncLyrics;
+        }
+
         #endregion get synched lyrics
 
 
@@ -345,13 +467,13 @@ namespace Karaboss.Mp3.Mp3Lyrics
             return digits3 > digits2 ? pattern3digits : pattern2digits;                        
         }
 
-
+        /*
         /// <summary>
         /// Get lyrics from LRC file if exists
         /// </summary>
         /// <param name="FileName"></param>
         /// <returns></returns>        
-        public static SyncText[] GetLrcLyrics(string FileName)
+        public static SyncText[] GetLrcLyricsOld(string FileName)
         {            
             // Search for existing LRC file
             string lrcFile = Path.ChangeExtension(FileName, ".lrc");
@@ -470,11 +592,13 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
                 // Create a new synchedText
                 synchedTexts[i] = new SyncText(time, lyric);                                
-            }
-                           
+            }          
+
             return synchedTexts;
         }
+        */
 
+      
 
         /// <summary>
         /// Convert a time stamp 01:15.510 (min 2digits, sec 2 digits, ms 3 digits) to milliseconds

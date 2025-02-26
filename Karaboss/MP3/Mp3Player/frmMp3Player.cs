@@ -723,6 +723,11 @@ namespace Karaboss.Mp3
         /// <param name="FileName"></param>
         private void DisplayOtherInfos(string FileName)
         {
+
+            // Reset static infos
+            Mp3LyricsMgmtHelper.SyncLyrics = new System.Collections.Generic.List<System.Collections.Generic.List<keffect.KaraokeEffect.kSyncText>>();
+            Mp3LyricsMgmtHelper.SyncLine = new System.Collections.Generic.List<keffect.KaraokeEffect.kSyncText>();
+            
             Player.GetMp3Infos(Mp3FullPath);
             pBox.Image = Player.AlbumArtImage;
             TagLib.Tag Tag = Player.Tag;
@@ -748,18 +753,19 @@ namespace Karaboss.Mp3
             switch (Mp3LyricsType)
             {
                 case Mp3LyricsTypes.LyricsWithTimeStamps:
-                    Mp3LyricsMgmtHelper.SyncTexts = Mp3LyricsMgmtHelper.GetSyncLyrics(SyncLyricsFrame);
-                    Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectSyncLyrics(SyncLyricsFrame);    
+                    //Mp3LyricsMgmtHelper.SyncTexts = Mp3LyricsMgmtHelper.GetSyncLyrics(SyncLyricsFrame);            // deprecated ?????????
+                    Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectSyncLyrics(SyncLyricsFrame);    // KaraokeEffect
                     DisplayFrmMp3Lyrics();
                     break;
 
                 case Mp3LyricsTypes.LRCFile:
-                    Mp3LyricsMgmtHelper.SyncTexts = Mp3LyricsMgmtHelper.GetLrcLyrics(FileName);
+                    //Mp3LyricsMgmtHelper.SyncTexts = Mp3LyricsMgmtHelper.GetLrcLyrics(FileName);                    // deprecated ????
+                    Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(FileName);
                     DisplayFrmMp3Lyrics();
                     break;
                 
                 case Mp3LyricsTypes.LyricsWithoutTimeStamps:
-                    Mp3LyricsMgmtHelper.SyncTexts = null;
+                    //Mp3LyricsMgmtHelper.SyncTexts = null;
                     string tx = string.Empty;
                     if (TagLyrics != null)
                         tx += TagLyrics;
@@ -770,7 +776,7 @@ namespace Karaboss.Mp3
                 
 
                 default:
-                    Mp3LyricsMgmtHelper.SyncTexts = null;
+                    //Mp3LyricsMgmtHelper.SyncTexts = null;
                     
                     // Close form if exists
                     if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
@@ -787,24 +793,7 @@ namespace Karaboss.Mp3
         private void mnuEditLyrics_Click(object sender, EventArgs e)
         {
             DisplayFrmMp3Lyrics();
-            DisplayMp3EditLyricsForm();
-
-            /*
-            switch (Mp3LyricsMgmtHelper.m_mp3lyricstype)
-            {
-                case Mp3LyricsTypes.LyricsWithTimeStamps:             // Lyrics exist => display frmMp3Lyrics                                           
-                case Mp3LyricsTypes.LRCFile:
-                    DisplayFrmMp3Lyrics();
-                    DisplayMp3EditLyricsForm();
-                    break;
-
-                case Mp3LyricsTypes.LyricsWithoutTimeStamps:        // Lyrics does not exist => display frmMp3LyricsEdit
-                case Mp3LyricsTypes.None:
-                    DisplayFrmMp3Lyrics();
-                    DisplayMp3EditLyricsForm();
-                    break;
-            }
-            */
+            DisplayMp3EditLyricsForm();            
         }
 
 
@@ -1343,7 +1332,7 @@ namespace Karaboss.Mp3
             }
             catch (Exception ex)
             {
-                Console.Write("Error positionHScrollBarNew.Value - " + ex.Message);
+                Console.Write("Error positionHScrollBar.Value - " + ex.Message);
             }
             #endregion position hscrollbar
             

@@ -193,7 +193,12 @@ namespace keffect
         public bool bforceUppercase
         {
             get { return _bforceUppercase; }
-            set { _bforceUppercase = value; }
+            set 
+            { 
+                _bforceUppercase = value;
+                Init();
+            
+            }
         }
 
         private bool _bTextBackGround = false;
@@ -410,31 +415,7 @@ namespace keffect
             get { return _txtcontourcolor; }
             set { _txtcontourcolor = value; }
         }
-
-        /*
-        [Description("Background image behind the text")]
-        public Image Image
-        {
-            get { return m_CurrentImage; }
-            set 
-            { 
-                m_CurrentImage = value;
-                try
-                {
-                    pBox.BackgroundImage = m_CurrentImage;
-                    pBox.BackgroundImageLayout = ImageLayout.Stretch;
-                    //pBox.Image = value;
-                    pBox.Invalidate();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-        //public override Image BackgroundImage { get => base.BackgroundImage; set => base.BackgroundImage = value; }
-        */
-
+       
         #endregion properties
 
 
@@ -535,17 +516,18 @@ namespace keffect
                 for (int j = 0; j < syncline.Count; j++ )
                 {
                     t[j] = syncline[j].Time;
-                    s[j] = syncline[j].Text;
+
+                    if (_bforceUppercase)
+                        s[j] = syncline[j].Text.ToUpper();
+                    else
+                        s[j] = syncline[j].Text;
                 }
                 Times.Add(t);
                 Lines.Add(s);                
             }
                           
             
-            _lines = Lines.Count;
-            //if (_lines < _nbLyricsLines) 
-            //    _nbLyricsLines = _lines;
-
+            _lines = Lines.Count;           
             
             string[] line;
             string Tx;
@@ -670,9 +652,7 @@ namespace keffect
         #region Control Load Resize paint
         private void KaraokeEffect_Resize(object sender, EventArgs e)
         {
-            // Increase _steppercent if Width increase
-            //_steppercent = _steppercent * Width/500;
-
+            // Increase _steppercent if Width increase          
             AjustText(_biggestLine);
             pBox.Invalidate();
         }
@@ -1197,7 +1177,8 @@ namespace keffect
                 // |--- last word ---|--- new word --------------------------|
                 //                   | percent => percent+pas => percent+pas
 
-                percent = (lastCurLength / LinesLengths[_line]);
+                if (_line < LinesLengths.Count())
+                    percent = (lastCurLength / LinesLengths[_line]);
 
 
 

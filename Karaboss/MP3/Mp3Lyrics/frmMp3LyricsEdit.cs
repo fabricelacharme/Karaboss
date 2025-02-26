@@ -34,6 +34,7 @@
 using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -234,8 +235,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
         private void PopulateDataGridView()
         {
 
-            // Origine = lrc
-            SyncText[] SyncLyrics = Mp3LyricsMgmtHelper.SyncTexts;
+            // Origine = lrc            
+            List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;
 
             // Origin = synchronized lyrics frame
             SynchronisedLyricsFrame SynchedLyrics = Mp3LyricsMgmtHelper.MySyncLyricsFrame;
@@ -257,20 +258,25 @@ namespace Karaboss.Mp3.Mp3Lyrics
             }
             else if (SyncLyrics != null)
             {
-                for (int i = 0; i < SyncLyrics.Length; i++)
+                
+                // For each line
+                for (int j = 0; j < SyncLyrics.Count; j++)
                 {
-                    long time = SyncLyrics[i].Time;
-                    string text = SyncLyrics[i].Text;
+                    // For each syllabes
+                    for (int i = 0; i < SyncLyrics[j].Count; i ++)
+                    {
+                        long time = SyncLyrics[j][i].Time;
+                        string text = SyncLyrics[j][i].Text;
 
-                    // Put "/" everywhere
-                    text = text.Replace("\r\n", m_SepLine);
-                    text = text.Replace("\r", m_SepLine);
-                    text = text.Replace("\n", m_SepLine);
-                    text = text.Replace(" ", "_");
+                        // Put "/" everywhere
+                        text = text.Replace("\r\n", m_SepLine);
+                        text = text.Replace("\r", m_SepLine);
+                        text = text.Replace("\n", m_SepLine);
+                        text = text.Replace(" ", "_");
 
-
-                    dgView.Rows.Add(time, text);
-                }
+                        dgView.Rows.Add(time, text);
+                    }
+                }                                           
             }
         }
 
@@ -279,6 +285,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
 
         #region Menus
+
         /// <summary>
         /// Menu File Quit
         /// </summary>
@@ -606,6 +613,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
 
         #region load lrc
+
         /// <summary>
         /// Menu: load lrc file
         /// </summary>
@@ -642,36 +650,37 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// </summary>
         /// <param name="Source"></param>
         private void LoadLRCFile(string FileName)
-        {            
-            string lyric;
+        {                        
             long time;
+            string text;
+            
 
             Cursor.Current = Cursors.WaitCursor;
-            
-            Mp3LyricsMgmtHelper.SyncTexts = Mp3LyricsMgmtHelper.GetLrcLyrics(FileName);
-            SyncText[] SyncLyrics = Mp3LyricsMgmtHelper.SyncTexts;
 
-            int lines = SyncLyrics.Length;
+            Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(FileName);
+            List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;            
 
-            InitGridView();
-
-            if (dgView.Rows.Count < lines)
+           InitGridView();
+           
+            // For each line
+            for (int j = 0; j < SyncLyrics.Count; j++)
             {
-                dgView.Rows.Add(lines - dgView.Rows.Count);
+                // For each syllabes
+                for (int i = 0; i < SyncLyrics[j].Count; i++)
+                {
+                    time = SyncLyrics[j][i].Time;
+                    text = SyncLyrics[j][i].Text;
+
+                    // Put "/" everywhere
+                    text = text.Replace("\r\n", m_SepLine);
+                    text = text.Replace("\r", m_SepLine);
+                    text = text.Replace("\n", m_SepLine);
+                    text = text.Replace(" ", "_");
+
+                    dgView.Rows.Add(time, text);
+                }
             }
-            
-
-            for (int i = 0; i < lines; i++)
-            {                
-                time = SyncLyrics[i].Time; 
-                lyric = SyncLyrics[i].Text;
-
-                lyric = lyric.Replace("\r\n", m_SepLine);
-
-                dgView.Rows[i].Cells[0].Value = time;
-                dgView.Rows[i].Cells[1].Value = lyric;
-            }
-          
+           
             Cursor.Current = Cursors.Default;
         }
 
