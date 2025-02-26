@@ -37,8 +37,10 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 
 
@@ -110,6 +112,141 @@ namespace keffect
 
 
         #region properties
+
+
+        #region SlideShow
+
+        private BackgroundWorker backgroundWorkerSlideShow;
+
+        private Random random;
+        private string[] bgFiles;
+        private string DefaultDirSlideShow;
+
+        private List<string> m_ImageFilePaths;
+        private MemoryStream m_ImageStream = null;
+        
+        private ManualResetEvent m_FinishEvent = new ManualResetEvent(false);
+
+        private bool m_Cancel = false;
+        private bool m_Restart = false;
+
+        delegate void UpdateTimerEnableCallback(bool enabled);
+
+        public bool IsBusy
+        {
+            get
+            {
+
+                if (backgroundWorkerSlideShow != null)
+                    return backgroundWorkerSlideShow.IsBusy;
+                else
+                    return false;
+            }
+        }
+
+
+        /// <summary>
+        /// SlideShow frequency
+        /// </summary>
+        private int _freqdirslideshow = 10;
+        public int FreqDirSlideShow
+        {
+            get { return _freqdirslideshow; }
+            set { _freqdirslideshow = value; }
+        }
+
+        /// <summary>
+        /// Size mode of picturebox
+        /// </summary>
+        private PictureBoxSizeMode _sizemode;
+        public PictureBoxSizeMode SizeMode
+        {
+            get { return _sizemode; }
+            set
+            {
+                _sizemode = value;
+                pBox.SizeMode = _sizemode;
+            }
+        }
+
+        private int PAUSE_TIME;
+        private int rndIter = 0;
+        private string strCurrentImage; // current image to insure that random will provide a different one
+
+        public ImageLayout imgLayout { get; set; }
+        public Image m_CurrentImage { get; set; }
+        public int m_Alpha { get; set; }
+
+
+        #endregion SlideShow
+
+
+        private bool _bColorContour = false;
+        public bool bColorContour
+        {
+            get { return _bColorContour; }
+            set { _bColorContour = value; }
+        }
+
+        private bool _bforceUppercase = false;
+        public bool bforceUppercase
+        {
+            get { return _bforceUppercase; }
+            set { _bforceUppercase = value; }
+        }
+
+        private bool _bTextBackGround = false;
+        public bool bTextBackGround
+        {
+            get { return _bTextBackGround; }
+            set { _bTextBackGround = value; }
+        }
+       
+
+        /// <summary>
+        /// Transparency color
+        /// </summary>
+        private Color _transparencykey = Color.Lime;
+        public Color TransparencyKey
+        {
+            get { return _transparencykey; }
+            set { _transparencykey = value; }
+        }
+
+        private string _optionbackground;
+        public string OptionBackground
+        {
+            get { return _optionbackground; }
+            set
+            {
+                _optionbackground = value;
+
+                switch (_optionbackground)
+                {
+                    case "Diaporama":
+                        break;
+                    case "SolidColor":
+                        m_Cancel = true;
+                        Terminate();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        pBox.BackColor = _txtbackcolor;
+                        pBox.Invalidate();
+                        break;
+                    case "Transparent":
+                        m_Cancel = true;
+                        Terminate();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        pBox.BackColor = _transparencykey;
+                        pBox.Invalidate();
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+        }
 
         /// <summary>
         /// Display lyrics option: top, Center, Bottom
@@ -259,7 +396,22 @@ namespace keffect
         }
 
 
-        private Image m_CurrentImage;
+        private Color _txtbackcolor;
+        public Color TxtBackColor
+        {
+            get { return _txtbackcolor; }
+            set { _txtbackcolor = value; }
+        }
+
+
+        private Color _txtcontourcolor;
+        public Color TxtContourColor
+        {
+            get { return _txtcontourcolor; }
+            set { _txtcontourcolor = value; }
+        }
+
+        
         [Description("Background image behind the text")]
         public Image Image
         {
@@ -339,6 +491,12 @@ namespace keffect
 
         private void SetDefaultValues()
         {
+
+            m_ImageFilePaths = new List<string>();
+            m_Alpha = 255;
+            imgLayout = ImageLayout.Stretch;
+
+
             sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
             sf.Alignment = StringAlignment.Center;
             _karaokeFont = new Font("Comic Sans MS", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
@@ -997,5 +1155,285 @@ namespace keffect
         }
 
         #endregion start stop
+
+
+        #region SlideShow
+
+
+        private void LoadImageList(string dir)
+        {
+            bgFiles = Directory.GetFiles(@dir, "*.jpg");
+            m_ImageFilePaths.Clear();
+            for (int i = 0; i < bgFiles.Length; ++i)
+            {
+                string file = bgFiles[i];
+                m_ImageFilePaths.Add(file);
+            }
+        }
+
+        /// <summary>
+        /// Define new slideShow directory and frequency
+        /// </summary>
+        /// <param name="dirImages"></param>
+        public void SetBackground(string dirImages)
+        {
+            try
+            {
+                UpdateTimerEnable(false);
+
+                m_Cancel = true;
+                m_Restart = true;
+
+                m_CurrentImage = null;
+                strCurrentImage = string.Empty;
+                rndIter = 0;
+
+                pBox.Image = null;
+                pBox.Invalidate();
+                m_ImageFilePaths.Clear();
+
+                if (dirImages == null)
+                {
+                    pBox.BackColor = Color.Black;
+                }
+                else if (Directory.Exists(dirImages))
+                {
+                    int C = 0;
+
+                    if (_optionbackground == "Diaporama")
+                    {
+                        LoadImageList(dirImages);
+                        C = m_ImageFilePaths.Count;
+                    }
+
+                    switch (C)
+                    {
+                        case 0:
+                            // No image, just background color
+                            m_Cancel = true;
+                            break;
+                        case 1:
+                            // Single image
+                            m_Cancel = true;
+                            pBox.Image = Image.FromFile(m_ImageFilePaths[0]);
+                            break;
+                        default:
+                            // Slideshow => backgroundworker
+
+                            //m_Cancel = true;
+                            m_Cancel = false;
+
+                            // Initialize backgroundworker
+                            InitBackGroundWorker();
+                            random = new Random();
+                            Start();
+                            break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write("Error: " + e.Message);
+            }
+
+        }
+
+        private void InitBackGroundWorker()
+        {
+            backgroundWorkerSlideShow = new System.ComponentModel.BackgroundWorker();
+            backgroundWorkerSlideShow.WorkerSupportsCancellation = true;
+            backgroundWorkerSlideShow.WorkerReportsProgress = true;
+            backgroundWorkerSlideShow.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerSlideShow_DoWork);
+            backgroundWorkerSlideShow.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerSlideShow_RunWorkerCompleted);
+        }
+
+        private string SelectRndFile(List<string> files)
+        {
+            //string retfile;// = string.Empty;
+            if (files.Count > 0)
+            {
+                int rand = random.Next(0, files.Count);
+                if (files[rand] != strCurrentImage || rndIter > 10)
+                {
+                    rndIter = 0;
+                    strCurrentImage = files[rand];
+                    return files[rand];
+                }
+                else
+                {
+                    rndIter++;
+                    return SelectRndFile(files);
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private void backgroundWorkerSlideShow_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (m_Restart == true)
+            {
+                StopBgW();
+
+                int C = m_ImageFilePaths.Count;
+
+                switch (C)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        pBox.Image = Image.FromFile(m_ImageFilePaths[0]);
+                        break;
+                    default:
+                        StartBgW();
+                        break;
+                }
+            }
+            else
+            {
+                backgroundWorkerSlideShow.Dispose();
+                SetBackground(DefaultDirSlideShow);
+            }
+        }
+
+        private void backgroundWorkerSlideShow_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<string> files = (List<string>)e.Argument;
+
+            do
+            {
+                if (m_Cancel == true)
+                {
+                    break;
+                }
+
+                string file = SelectRndFile(files);
+
+
+                UpdateTimerEnable(true);
+                m_FinishEvent.Reset();
+
+                if (m_ImageStream != null)
+                {
+                    m_ImageStream.Dispose();
+                    m_ImageStream = null;
+                }
+
+                try
+                {
+                    using (FileStream fs = File.OpenRead(file))
+                    {
+                        byte[] ba = new byte[fs.Length];
+                        fs.Read(ba, 0, ba.Length);
+                        m_ImageStream = new MemoryStream(ba);
+
+                        if (m_CurrentImage != null)
+                        {
+                            m_CurrentImage.Dispose();
+                            m_CurrentImage = null;
+                        }
+
+                        m_CurrentImage = Image.FromStream(m_ImageStream);
+                        fs.Dispose();
+                        pBox.Invalidate();
+                    }
+                }
+                catch (Exception op)
+                {
+                    m_CurrentImage = null;
+                    Console.Write("Error opening image " + op.Message);
+                }
+
+
+                // do not launch if new slideshow is required
+                if (m_Restart == false)
+                {
+                    //UpdateTimerEnable(true);
+                    //m_FinishEvent.WaitOne();
+                    m_FinishEvent.Reset();
+
+                    PAUSE_TIME = 1000 * _freqdirslideshow;
+                    Thread.Sleep(PAUSE_TIME);
+                }
+            } while (m_Cancel == false);
+        }
+
+
+        private void UpdateTimerEnable(bool enabled)
+        {
+            if (this.InvokeRequired)
+            {
+                try
+                {
+                    UpdateTimerEnableCallback d = new UpdateTimerEnableCallback(UpdateTimerEnable);
+                    pBox.Invoke(d, new object[] { enabled });
+                }
+                catch (Exception u)
+                {
+                    Console.Write("Error UpdateTimerEnable " + u.Message);
+                }
+            }
+        }
+
+
+        private void StartBgW()
+        {
+            if (backgroundWorkerSlideShow.IsBusy)
+            {
+                StopBgW();
+            }
+
+            try
+            {
+                if (!backgroundWorkerSlideShow.IsBusy)
+                {
+                    m_Restart = false;
+                    m_Cancel = false;
+                    backgroundWorkerSlideShow.RunWorkerAsync(m_ImageFilePaths);
+                }
+            }
+            catch (Exception est)
+            {
+                //m_Restart = true;
+                Console.Write("Error starting backgroundworker: " + est.Message);
+            }
+        }
+
+        private void StopBgW()
+        {
+            if (backgroundWorkerSlideShow.IsBusy)
+            {
+                backgroundWorkerSlideShow.CancelAsync();
+
+                m_Cancel = true;
+            }
+        }
+
+        /// <summary>
+        /// Terminate
+        /// </summary>
+        public void Terminate()
+        {
+            m_Cancel = true;
+            m_Restart = false;
+
+            m_ImageFilePaths = new List<string>();
+            if (m_ImageStream != null)
+            {
+                m_ImageStream.Dispose();
+                m_ImageStream = null;
+            }
+
+            if (backgroundWorkerSlideShow != null)
+            {
+                backgroundWorkerSlideShow.CancelAsync();
+            }
+
+        }
+
+        #endregion SlideShow
+
     }
 }

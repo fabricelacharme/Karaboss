@@ -382,8 +382,7 @@ namespace PicControl
             set { _bforceuppercase = value;
                 if (_bdemo)
                     LoadDemoText();
-            }
-        
+            }        
         }
 
         public Font KaraokeFont
@@ -400,7 +399,6 @@ namespace PicControl
                 {
                     Console.Write("Error: " + e.Message);
                 }
-
             }
         }
 

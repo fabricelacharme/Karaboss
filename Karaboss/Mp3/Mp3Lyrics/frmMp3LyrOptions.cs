@@ -161,6 +161,40 @@ namespace Karaboss.Mp3
             }
         }
 
+
+        /// <summary>
+        /// Apply colors to option form
+        /// </summary>
+        private void ApplyNewColors()
+        {
+            // picturebox
+
+            karaokeEffect1.TxtBackColor = TxtBackColor;
+
+            karaokeEffect1.bColorContour = bColorContour;
+            karaokeEffect1.TxtContourColor = TxtContourColor;
+            karaokeEffect1.TxtNotYetPlayedColor = TxtNextColor;
+            karaokeEffect1.TxtBeingPlayedColor = TxtHighlightColor;
+            karaokeEffect1.TxtAlreadyPlayedColor = TxtBeforeColor;
+
+            karaokeEffect1.OptionDisplay = (keffect.KaraokeEffect.OptionsDisplay)OptionDisplay;
+           
+
+            //Color of buttons
+            pictBackColor.BackColor = TxtBackColor;
+            pictBefore.BackColor = TxtBeforeColor;
+            pictContour.BackColor = TxtContourColor;
+            pictHighlight.BackColor = TxtHighlightColor;
+            pictNext.BackColor = TxtNextColor;
+        }
+
+
+        private bool IsNumeric(string s)
+        {
+            float output;
+            return float.TryParse(s, out output);
+        }
+
         /// <summary>
         /// Load options stored in properties
         /// </summary>
@@ -317,18 +351,18 @@ namespace Karaboss.Mp3
 
                 // Force uppercase
                 chkTextUppercase.Checked = bForceUppercase;
-                //pBox.bforceUppercase = bForceUppercase;
+                //karaokeEffect1.bforceUppercase = bForceUppercase;
 
                 // picturebox            
-                //pBox.FreqDirSlideShow = freqSlideShow;
+                //karaokeEffect1.FreqDirSlideShow = freqSlideShow;
                 karaokeEffect1.nbLyricsLines = _nbLyricsLines;
-                //pBox.CurrentTime = 30;
+                //karaokeEffect1.CurrentTime = 30;
 
 
-                //pBox.TxtBackColor = TxtBackColor;
+                //karaokeEffect1.TxtBackColor = TxtBackColor;
 
-                //pBox.bColorContour = bColorContour;
-                //pBox.TxtContourColor = TxtContourColor;
+                //karaokeEffect1.bColorContour = bColorContour;
+                //karaokeEffect1.TxtContourColor = TxtContourColor;
 
                 karaokeEffect1.TxtNotYetPlayedColor = TxtNextColor; //pBox.TxtNextColor = TxtNextColor;
                 karaokeEffect1.TxtBeingPlayedColor = TxtHighlightColor;//pBox.TxtHighlightColor = TxtHighlightColor;
@@ -337,7 +371,7 @@ namespace Karaboss.Mp3
 
                 cbSizeMode.SelectedText = SizeMode.ToString();
 
-                //pBox.OptionBackground = bgOption;
+                //karaokeEffect1.OptionBackground = bgOption;
             }
             catch (Exception e)
             {
@@ -412,74 +446,214 @@ namespace Karaboss.Mp3
 
         #endregion Apply changes
 
+
+        #region select colors
+
+        /// <summary>
+        /// Dialog get color
+        /// </summary>
+        /// <param name="defColor"></param>
+        /// <returns></returns>
+        private Color DlgGetColor(Color defColor)
+        {
+            ColorDialog MyDialog = new ColorDialog()
+            {
+                AllowFullOpen = true,
+                ShowHelp = true,
+                Color = defColor,
+            };
+
+            if (MyDialog.ShowDialog() == DialogResult.OK)
+                return MyDialog.Color;
+            else
+                return defColor;
+        }
+
+        #endregion select colors
+
+
         private void btnFonts_Click(object sender, EventArgs e)
         {
+            try
+            {
+                // Show the dialog.
+                fontDialog1.Font = _karaokeFont;
 
+                if (fontDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    txtFont.Text = fontDialog1.Font.Name;
+                    _karaokeFont = fontDialog1.Font;
+                    karaokeEffect1.KaraokeFont = _karaokeFont;
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                _karaokeFont = new Font("Arial", this.Font.Size);
+
+            }
         }
 
         private void btnSungColor_Click(object sender, EventArgs e)
         {
-
+            Color clr = DlgGetColor(TxtBeforeColor);
+            if (clr == TxtBeforeColor)
+                return;
+            TxtBeforeColor = clr;
+            pictBefore.BackColor = clr;
+            ApplyNewColors();
         }
 
         private void btnSingColor_Click(object sender, EventArgs e)
         {
 
+            Color clr = DlgGetColor(TxtHighlightColor);
+            if (clr == TxtHighlightColor)
+                return;
+            TxtHighlightColor = clr;
+            pictHighlight.BackColor = clr;
+            ApplyNewColors();
         }
 
         private void btnForeColor_Click(object sender, EventArgs e)
         {
-
+            Color clr = DlgGetColor(TxtNextColor);
+            if (clr == TxtNextColor)
+                return;
+            TxtNextColor = clr;
+            pictNext.BackColor = clr;
+            ApplyNewColors();
         }
 
         private void chkContour_CheckedChanged(object sender, EventArgs e)
         {
-
+            bColorContour = chkContour.Checked;
+            ApplyNewColors();
         }
 
         private void cbOptionsTextDisplay_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            switch (cbOptionsTextDisplay.SelectedIndex)
+            {
+                case 0:
+                    OptionDisplay = Karaclass.OptionsDisplay.Top;
+                    karaokeEffect1.OptionDisplay = keffect.KaraokeEffect.OptionsDisplay.Top;
+                    break;
+                case 1:
+                    OptionDisplay = Karaclass.OptionsDisplay.Center;
+                    karaokeEffect1.OptionDisplay = keffect.KaraokeEffect.OptionsDisplay.Center;
+                    break;
+                case 2:
+                    OptionDisplay = Karaclass.OptionsDisplay.Bottom;
+                    karaokeEffect1.OptionDisplay = keffect.KaraokeEffect.OptionsDisplay.Bottom;
+                    break;
+            }
         }
 
         private void chkTextBackground_CheckedChanged(object sender, EventArgs e)
         {
-
+            karaokeEffect1.bTextBackGround = chkTextBackground.Checked;
         }
 
         private void chkTextUppercase_CheckedChanged(object sender, EventArgs e)
         {
-
+            bForceUppercase = chkTextUppercase.Checked;
+            karaokeEffect1.bforceUppercase = bForceUppercase;
+            Karaclass.m_ForceUppercase = bForceUppercase;
         }
 
         private void radioDiaporama_CheckedChanged(object sender, EventArgs e)
         {
+            if (radioDiaporama.Checked)
+            {
+                btnBackColor.Visible = false;
+                pictBackColor.Visible = false;
 
+                karaokeEffect1.OptionBackground = "Diaporama";
+                bgOption = "Diaporama";
+                karaokeEffect1.SetBackground(dirSlideShow);
+            }
         }
 
         private void btnBackColor_Click(object sender, EventArgs e)
         {
 
+            Color clr = DlgGetColor(TxtBackColor);
+            if (clr == TxtBackColor)
+                return;
+            TxtBackColor = clr;
+            pictBackColor.BackColor = clr;
+            ApplyNewColors();
         }
 
         private void btnDirSlideShow_Click(object sender, EventArgs e)
         {
+            folderBrowserDialog1.SelectedPath = dirSlideShow;
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                dirSlideShow = folderBrowserDialog1.SelectedPath;
 
+                Cursor.Current = Cursors.WaitCursor;
+                txtSlideShow.Text = dirSlideShow;
+                karaokeEffect1.SetBackground(dirSlideShow);
+            }
         }
 
         private void btnResetDir_Click(object sender, EventArgs e)
         {
 
+            dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            txtSlideShow.Text = dirSlideShow;
+            karaokeEffect1.SetBackground(dirSlideShow);
         }
 
         private void cbSizeMode_SelectedIndexChanged(object sender, EventArgs e)
         {
+            string sel = cbSizeMode.Text;
 
+            switch (sel)
+            {
+                case "Normal":
+                    SizeMode = PictureBoxSizeMode.Normal;
+                    break;
+                case "StretchImage":
+                    SizeMode = PictureBoxSizeMode.StretchImage;
+                    break;
+                case "AutoSize":
+                    SizeMode = PictureBoxSizeMode.AutoSize;
+                    break;
+                case "CenterImage":
+                    SizeMode = PictureBoxSizeMode.CenterImage;
+                    break;
+                case "Zoom":
+                    SizeMode = PictureBoxSizeMode.Zoom;
+                    break;
+
+            }
+            karaokeEffect1.SizeMode = SizeMode;
         }
 
         private void txtSlideShowFreq_TextChanged(object sender, EventArgs e)
         {
+            string f = txtSlideShowFreq.Text;
+            f = f.Trim();
+            if (f != "" && IsNumeric(f))
+            {
+                try
+                {
+                    int freq = Convert.ToInt32(f);
 
+                    freqSlideShow = freq;
+                    karaokeEffect1.FreqDirSlideShow = freqSlideShow;
+                }
+                catch (Exception eee)
+                {
+                    Console.Write(eee.Message);
+                }
+
+            }
         }
     }
 }

@@ -67,6 +67,8 @@
             this.chkTextBackground = new System.Windows.Forms.CheckBox();
             this.cbOptionsTextDisplay = new System.Windows.Forms.ComboBox();
             this.karaokeEffect1 = new keffect.KaraokeEffect();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.fontDialog1 = new System.Windows.Forms.FontDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictBackColor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictContour)).BeginInit();
@@ -338,7 +340,7 @@
             // karaokeEffect1
             // 
             this.karaokeEffect1.Image = null;
-            this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 60F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 65.33334F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             resources.ApplyResources(this.karaokeEffect1, "karaokeEffect1");
             this.karaokeEffect1.Name = "karaokeEffect1";
             this.karaokeEffect1.nbLyricsLines = 1;
@@ -446,5 +448,7 @@
         private System.Windows.Forms.CheckBox chkTextBackground;
         private System.Windows.Forms.ComboBox cbOptionsTextDisplay;
         private keffect.KaraokeEffect karaokeEffect1;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.FontDialog fontDialog1;
     }
 }
