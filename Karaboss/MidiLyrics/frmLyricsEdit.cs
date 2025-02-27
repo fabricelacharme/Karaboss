@@ -559,19 +559,14 @@ namespace Karaboss
 
         private void BtnFontPlus_Click(object sender, EventArgs e)
         {
-            //float emSize = txtResult.Font.Size;
-            //emSize++;
             _fontSize++;
             _lyricseditfont = new Font(_lyricseditfont.FontFamily, _fontSize);
-
-            //txtResult.Font = new Font(txtResult.Font.FontFamily, emSize);
+            
             txtResult.Font = _lyricseditfont;
         }
 
         private void BtnFontMoins_Click(object sender, EventArgs e)
         {
-            //float emSize = txtResult.Font.Size;
-            //emSize--;
             if (_fontSize > 5)
             {
                 _fontSize--;
@@ -579,9 +574,6 @@ namespace Karaboss
                 txtResult.Font = _lyricseditfont;
             }
             
-
-            //if (emSize > 5)
-            //    txtResult.Font = new Font(txtResult.Font.FontFamily, emSize);
         }
 
 
@@ -874,7 +866,7 @@ namespace Karaboss
             }
             catch (Exception e)
             {
-                Console.Write("Error: " + e.Message);
+                Console.WriteLine("Error: " + e.Message);
             }
         }
 
@@ -931,11 +923,11 @@ namespace Karaboss
         /// <param name="lLyrics"></param>
         private void PopulateTextBox(List<plLyric> lLyrics)
         {
-            string plElement; // = string.Empty;            
+            string plElement; 
             string tx = string.Empty;
-            int iParagraph; // = -1;            
-            int iLineFeed; // = -1;
-            string reste; // = string.Empty;
+            int iParagraph;          
+            int iLineFeed; 
+            string reste; 
 
             if (lLyrics == null)
                 return;

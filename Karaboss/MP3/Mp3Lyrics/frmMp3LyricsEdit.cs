@@ -39,6 +39,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using TagLib;
 using TagLib.Id3v2;
 
@@ -75,11 +76,17 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
         private string _filename;
 
+        // Manage locally lyrics
+        List<List<keffect.KaraokeEffect.kSyncText>> localSyncLyrics;
+
+
         public frmMp3LyricsEdit(string FileName)
         {
             InitializeComponent();
 
             _filename = FileName;
+
+            LoadOptions();
 
             // Inits
             SetTitle(Path.GetFileName(_filename));
@@ -88,6 +95,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
             InitGridView();
 
             PopulateDataGridView();
+            localSyncLyrics = GetUniqueSource();
+            PopulateTextBox(localSyncLyrics);
         }
 
         #region Form Load and Close
@@ -229,12 +238,28 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
         #region Populate gridview
 
+
+        private List<List<keffect.KaraokeEffect.kSyncText>> GetUniqueSource()
+        {            
+            // Origin = synchronized lyrics frame            
+            if (Mp3LyricsMgmtHelper.MySyncLyricsFrame != null)
+            {
+                return Mp3LyricsMgmtHelper.GetKEffectSyncLyrics(Mp3LyricsMgmtHelper.MySyncLyricsFrame);       
+            }
+            else if (Mp3LyricsMgmtHelper.SyncLyrics != null)
+            {
+                return Mp3LyricsMgmtHelper.SyncLyrics;
+            }
+
+            return null;
+        }
+
+
         /// <summary>
         /// Populate gridview with lyrics
         /// </summary>
         private void PopulateDataGridView()
         {
-
             // Origine = lrc            
             List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;
 
@@ -350,6 +375,12 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
 
         #region init
+
+        private void LoadOptions()
+        {
+            _lyricseditfont = Properties.Settings.Default.LyricsEditFont;
+            _fontSize = _lyricseditfont.Size;
+        }
 
         private void SetOriginOfLyrics()
         {
@@ -685,10 +716,81 @@ namespace Karaboss.Mp3.Mp3Lyrics
         }
 
 
+
         #endregion load lrc
 
         #endregion lrc
 
-       
+
+        #region Text
+
+        /// <summary>
+        /// Display text into the rich textbox
+        /// </summary>
+        /// <param name="lLyrics"></param>
+        private void PopulateTextBox(List<List<keffect.KaraokeEffect.kSyncText>> lSyncLyrics)
+        {
+            string line = string.Empty;
+            string tx = string.Empty;
+            string cr = "\r\n";
+            string Element;
+
+            for (int j = 0; j < lSyncLyrics.Count; j++)
+            {
+                line = string.Empty;
+
+                for (int i = 0; i < lSyncLyrics[j].Count; i ++)
+                {
+                    Element = lSyncLyrics[j][i].Text;
+                    Element = Element.Replace(Environment.NewLine, "");
+                    line += Element;
+                }                
+                tx += line + cr;
+            }
+
+            txtResult.Text = tx;
+
+            txtResult.SelectAll();
+            txtResult.SelectionAlignment = HorizontalAlignment.Center;
+        }
+
+
+        private void btnDeleteAllLyrics_Click(object sender, EventArgs e)
+        {
+            string tx = Karaboss.Resources.Localization.Strings.DeleteAllLyrics;
+            if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+            {
+                //frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
+                //frmPlayer.DeleteAllLyrics();
+
+                //localplLyrics = new List<plLyric>();
+
+                InitGridView();
+                txtResult.Text = string.Empty; 
+
+                // File was modified
+                //FileModified();
+            }
+        }
+
+        private void BtnFontPlus_Click(object sender, EventArgs e)
+        {
+            _fontSize++;
+            _lyricseditfont = new Font(_lyricseditfont.FontFamily, _fontSize);
+            txtResult.Font = _lyricseditfont;
+        }
+
+        private void BtnFontMoins_Click(object sender, EventArgs e)
+        {
+            if (_fontSize > 5)
+            {
+                _fontSize--;
+                _lyricseditfont = new Font(_lyricseditfont.FontFamily, _fontSize);
+                txtResult.Font = _lyricseditfont;
+            }
+
+        }
+
+        #endregion Text
     }
 }

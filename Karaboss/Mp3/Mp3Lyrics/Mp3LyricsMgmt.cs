@@ -316,6 +316,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
         /// <summary>
         ///  Get LRC Lyrics
+        ///  Important : LRC files are mandatory composed of full words. Syllabes are not possible because we don't know how to distinguish them from words
         /// </summary>
         /// <param name="FileName"></param>
         /// <returns></returns>
@@ -419,9 +420,18 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     // Clean word
                     word = word.Replace("\r\n", "").Replace("\r", "").Replace("\n", "").Replace("_", " ");
 
+                    // Add a space only if a line composed of words and not a full line
+                    // => separate different words of a line
+                    if (matches.Count > 1)
+                        word = word + " ";
+                    
                     // Add a linefeed if timestamp was "[]"
                     if (match.Groups[1].Value != "")
-                        word = "\r\n" + word;               // POURQUOI ajouter \r\n? => needed by PictureBox1_Paint event of frmLyrics
+                    {
+                        // Why add a \r\n? => Keep information of start new line
+                        // This will be replaced by a "/" in frmMp3EditLyrics
+                        word = Environment.NewLine + word;    
+                    }
 
                     time = (long)TimeToMs(timestamp);
                     
@@ -473,7 +483,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// </summary>
         /// <param name="FileName"></param>
         /// <returns></returns>        
-        public static SyncText[] GetLrcLyricsOld(string FileName)
+        public static SyncText[] GetLrcLyrics(string FileName)
         {            
             // Search for existing LRC file
             string lrcFile = Path.ChangeExtension(FileName, ".lrc");

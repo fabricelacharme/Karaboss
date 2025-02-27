@@ -506,6 +506,8 @@ namespace keffect
             List<kSyncText> syncline = new List<kSyncText>();
             string[] s;
             long[] t;
+            string tx;
+
 
             for (int i = 0; i < _SyncLyrics.Count; i++)
             {
@@ -517,10 +519,13 @@ namespace keffect
                 {
                     t[j] = syncline[j].Time;
 
+                    // Clean text
+                    tx = syncline[j].Text;
+                    tx = tx.Replace(Environment.NewLine, "");
                     if (_bforceUppercase)
-                        s[j] = syncline[j].Text.ToUpper();
-                    else
-                        s[j] = syncline[j].Text;
+                        tx = tx.ToUpper();
+
+                    s[j] = tx;
                 }
                 Times.Add(t);
                 Lines.Add(s);                
@@ -1096,48 +1101,7 @@ namespace keffect
         }
 
         private void SetPosition(int pos)
-        {
-            /*
-            // line changed by trackbar            
-            int line = GetLine(pos);
-
-            // If pos is greater than last position of currentline
-            if (line != _line || pos > Times[_line][Times[_line].Count() - 1])
-            {
-                if (_line < Lines.Count - 1)
-                {
-                    //Console.WriteLine("*** New line");
-                    percent = 0;
-                    lastpercent = 0;
-                    index = 0;
-                    lastindex = -1;
-                    lastCurLength = 0;
-                    CurLength = 0;
-                    _line = GetLine(pos);
-                    _FirstLineToShow = _line;
-                    _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
-                }
-                else
-                {
-                    // Is it the end of the text to display?
-                    //Console.WriteLine("*** END");                    
-                    _line = 0;
-                    _FirstLineToShow = 0;
-                    _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
-
-                    percent = 0;
-                    lastpercent = 0;
-                    index = 0;
-                    lastindex = -1;
-                    lastCurLength = 0;
-                    CurLength = 0;
-                    pBox.Invalidate();
-                    return;
-                }
-            }
-            */
-
-
+        {       
             // Search index of lyric to play
             index = GetIndex(pos);
 
@@ -1195,7 +1159,6 @@ namespace keffect
                     _steppercent = d / 3000;
                 }
                 
-
                 lastCurLength = CurLength;
                 lastindex = index;
                 pBox.Invalidate();
