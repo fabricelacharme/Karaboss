@@ -80,6 +80,10 @@ namespace Karaboss.Mp3.Mp3Lyrics
         List<List<keffect.KaraokeEffect.kSyncText>> localSyncLyrics;
 
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="FileName"></param>
         public frmMp3LyricsEdit(string FileName)
         {
             InitializeComponent();

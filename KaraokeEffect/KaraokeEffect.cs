@@ -182,21 +182,22 @@ namespace keffect
         #endregion SlideShow
 
 
-        private bool _bColorContour = false;
-        public bool bColorContour
-        {
-            get { return _bColorContour; }
-            set { _bColorContour = value; }
-        }
+      
 
+
+        // Text To Upper
         private bool _bforceUppercase = false;
         public bool bforceUppercase
         {
             get { return _bforceUppercase; }
             set 
-            { 
-                _bforceUppercase = value;
-                Init();
+            {
+                if (value != _bforceUppercase)
+                {
+                    _bforceUppercase = value;
+                    Init();
+                    pBox.Invalidate();
+                }
             
             }
         }
@@ -415,7 +416,21 @@ namespace keffect
             get { return _txtcontourcolor; }
             set { _txtcontourcolor = value; }
         }
-       
+
+        private bool _bColorContour = false;
+        public bool bColorContour
+        {
+            get { return _bColorContour; }
+            set 
+            {
+                if (value != _bColorContour)
+                {
+                    _bColorContour = value;
+                    pBox.Invalidate();
+                }
+            }
+        }
+
         #endregion properties
 
 
@@ -481,7 +496,7 @@ namespace keffect
 
 
             sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
-            sf.Alignment = StringAlignment.Center;
+            //sf.Alignment = StringAlignment.Center;
             _karaokeFont = new Font("Comic Sans MS", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
             
             _steppercent = 0.01F;
@@ -667,8 +682,9 @@ namespace keffect
             // Antialiasing
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
-            e.Graphics.PageUnit = GraphicsUnit.Pixel;
+            e.Graphics.PageUnit = GraphicsUnit.Pixel;           
 
+            SolidBrush colorBrush;
 
             #region draw background image
             int x;
@@ -734,13 +750,17 @@ namespace keffect
             {
                 if (i < Texts.Count()) {
                     x0 = HCenterText(Texts[i]);     // Center horizontally
-                    otherpath.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLineToShow) * _lineHeight), StringFormat.GenericDefault);
+                    otherpath.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLineToShow) * _lineHeight), sf);
                 }
             }
-            e.Graphics.FillPath(new SolidBrush(Color.White), otherpath);
+
+            colorBrush = new SolidBrush(_NotYetPlayedColor);
+            //e.Graphics.FillPath(new SolidBrush(Color.White), otherpath);
+            e.Graphics.FillPath(colorBrush, otherpath);
 
             // Borders of text
-            e.Graphics.DrawPath(new Pen(Color.Black, 1), otherpath);
+            if (_bColorContour)
+                e.Graphics.DrawPath(new Pen(Color.Black, 1), otherpath);
 
             otherpath.Dispose();
 
@@ -755,15 +775,18 @@ namespace keffect
             if (_FirstLineToShow < Texts.Count())
             {
                 x0 = HCenterText(Texts[_FirstLineToShow]);      // Center horizontally
-                path.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), StringFormat.GenericDefault);
+                path.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
             }
 
             // Fill graphical path in white => full text is white
-            e.Graphics.FillPath(new SolidBrush(Color.White), path);
+            //e.Graphics.FillPath(new SolidBrush(Color.White), path);
+            e.Graphics.FillPath(colorBrush, path);
 
-            // ===================
-            // Color in green syllabes before current syllabe
-            // ===================
+
+
+            // ======================================================
+            // Color in GREEN the syllabes before current syllabe
+            // ======================================================
             // Create a region from the graphical path
             Region r = new Region(path);
             // Create a retangle of the graphical path
@@ -773,12 +796,17 @@ namespace keffect
 
             // update region on the intersection between region and 2nd rectangle
             r.Intersect(intersectRectBefore);
-            e.Graphics.FillRegion(Brushes.Green, r);
+
+            colorBrush = new SolidBrush(_AlreadyPlayedColor);
+            //e.Graphics.FillRegion(Brushes.Green, r);
+            e.Graphics.FillRegion(colorBrush, r);
+
+           
 
 
-            // =======================
-            // Color in green current syllabe
-            // =======================
+            // ======================================================
+            // Color in RED the  current syllabe
+            // ======================================================
             r = new Region(path);
 
             // Create another rectangle shorter than the 1st one (percent of the first)                       
@@ -789,11 +817,20 @@ namespace keffect
             r.Intersect(intersectRect);
 
             // Fill updated region in red => percent portion of text is red
-            e.Graphics.FillRegion(Brushes.Red, r);
+            colorBrush = new SolidBrush(_BeingPlayedColor);
+            //e.Graphics.FillRegion(Brushes.Red, r);
+            e.Graphics.FillRegion(colorBrush, r);
+
+            
+
 
             // Borders of text
-            e.Graphics.DrawPath(new Pen(Color.Black, 1), path);
+            if (_bColorContour)
+                e.Graphics.DrawPath(new Pen(_txtcontourcolor, 1), path);
+            
 
+
+            colorBrush.Dispose();
             r.Dispose();
             path.Dispose();
 
@@ -1109,10 +1146,11 @@ namespace keffect
             CurLength = GetCurLength(index);
 
             // New word to highlight
-            // Warning: in cas of full lines, idex is always the same and not different than lastIndex
+            // Warning: in cas of full lines, index is always the same and not different than lastIndex
             if (index != lastindex || _line != _lastLine)
             {
                                 
+                // Line changed
                 if (_line !=  _lastLine)
                 {
                     _lastLine = _line;

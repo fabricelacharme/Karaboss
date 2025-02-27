@@ -107,7 +107,14 @@ namespace Karaboss.Mp3
 
             karaokeEffect1.SyncLyrics = SyncLyrics;
 
-            karaokeEffect1.SetPos(1000);
+            // Needed to put exactly these 4 positions in order to have "Lorem ipsum" in red and "dolor" in green
+            // I don't even understand how my creation works            
+            karaokeEffect1.TransitionEffect = keffect.KaraokeEffect.TransitionEffects.None;
+            
+            karaokeEffect1.SetPos(10);   // index, _line, _lastline put to 0
+            karaokeEffect1.SetPos(510);  // after Lorem
+            karaokeEffect1.SetPos(1010); // after ipsum
+            karaokeEffect1.SetPos(1510); // after dolor
 
         }
 
@@ -485,27 +492,46 @@ namespace Karaboss.Mp3
         #region select colors
 
         /// <summary>
-        /// Dialog get color
+        /// Dialog get color (+ custom colors 27/02/2025)
         /// </summary>
         /// <param name="defColor"></param>
         /// <returns></returns>
         private Color DlgGetColor(Color defColor)
         {
-            ColorDialog MyDialog = new ColorDialog()
+            ColorDialog MyDialog;
+
+            // Custom color (BGR instead of RGB !!!!!)
+            Int32 key = defColor.B << 16 | defColor.G << 8 | defColor.R;
+            int[] bg_colors = { key };
+
+
+            if (defColor.IsKnownColor)
             {
-                AllowFullOpen = true,
-                ShowHelp = true,
-                Color = defColor,
-            };
+                MyDialog = new ColorDialog()
+                {
+                    AllowFullOpen = true,
+                    ShowHelp = true,
+                    Color = defColor,
+                };
+            }
+            else
+            {
+                MyDialog = new ColorDialog()
+                {
+                    AllowFullOpen = true,
+                    ShowHelp = true,
+                    Color = defColor,
+                    CustomColors = bg_colors,
+                   
+                };
+            }
+
 
             if (MyDialog.ShowDialog() == DialogResult.OK)
                 return MyDialog.Color;
             else
                 return defColor;
-        }
-
-        #endregion select colors
-
+        }        
 
         private void btnFonts_Click(object sender, EventArgs e)
         {
@@ -519,15 +545,12 @@ namespace Karaboss.Mp3
                     txtFont.Text = fontDialog1.Font.Name;
                     _karaokeFont = fontDialog1.Font;
                     karaokeEffect1.KaraokeFont = _karaokeFont;
-
-
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
                 _karaokeFont = new Font("Arial", this.Font.Size);
-
             }
         }
 
@@ -561,6 +584,25 @@ namespace Karaboss.Mp3
             pictNext.BackColor = clr;
             ApplyNewColors();
         }
+
+
+        /// <summary>
+        /// Set color of text contour
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnContourColor_Click(object sender, EventArgs e)
+        {
+            Color clr = DlgGetColor(TxtContourColor);
+            if (clr == TxtContourColor)
+                return;
+            TxtContourColor = clr;
+            pictContour.BackColor = clr;
+            ApplyNewColors();
+        }
+
+        #endregion select colors
+
 
         private void chkContour_CheckedChanged(object sender, EventArgs e)
         {
@@ -687,8 +729,9 @@ namespace Karaboss.Mp3
                 {
                     Console.Write(eee.Message);
                 }
-
             }
         }
+
+      
     }
 }

@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2024 Fabrice Lacharme
+/* Copyright (c) 2025 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -423,13 +423,33 @@ namespace Karaboss
         /// <returns></returns>
         private Color DlgGetColor(Color defColor)
         {
-            ColorDialog MyDialog = new ColorDialog()
+            ColorDialog MyDialog;
+
+            // Custom color (BGR instead of RGB !!!!!)
+            Int32 key = defColor.B << 16 | defColor.G << 8 | defColor.R;
+            int[] bg_colors = { key };
+
+
+            if (defColor.IsKnownColor)
             {
-                AllowFullOpen = true,
-                ShowHelp = true,
-                Color = defColor,
-            };
-            
+                MyDialog = new ColorDialog()
+                {
+                    AllowFullOpen = true,
+                    ShowHelp = true,
+                    Color = defColor,
+                };
+            }
+            else
+            {
+                MyDialog = new ColorDialog()
+                {
+                    AllowFullOpen = true,
+                    ShowHelp = true,
+                    Color = defColor,
+                    CustomColors = bg_colors,
+                };
+            }
+
             if (MyDialog.ShowDialog() == DialogResult.OK)
                 return MyDialog.Color;
             else
