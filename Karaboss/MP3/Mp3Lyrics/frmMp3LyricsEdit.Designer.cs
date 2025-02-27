@@ -37,6 +37,8 @@
             this.pnlRightBottom = new System.Windows.Forms.Panel();
             this.txtResult = new System.Windows.Forms.RichTextBox();
             this.pnlRightTop = new System.Windows.Forms.Panel();
+            this.BtnFontMoins = new System.Windows.Forms.Button();
+            this.BtnFontPlus = new System.Windows.Forms.Button();
             this.btnDeleteAllLyrics = new System.Windows.Forms.Button();
             this.btnInsertParagraph = new System.Windows.Forms.Button();
             this.btnInsertCr = new System.Windows.Forms.Button();
@@ -60,8 +62,6 @@
             this.lblLyricsOrigin = new System.Windows.Forms.Label();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.BtnFontMoins = new System.Windows.Forms.Button();
-            this.BtnFontPlus = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -98,6 +98,7 @@
             this.clText});
             resources.ApplyResources(this.dgView, "dgView");
             this.dgView.Name = "dgView";
+            this.dgView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgView_CellEndEdit);
             // 
             // clTime
             // 
@@ -138,6 +139,22 @@
             resources.ApplyResources(this.pnlRightTop, "pnlRightTop");
             this.pnlRightTop.Name = "pnlRightTop";
             // 
+            // BtnFontMoins
+            // 
+            resources.ApplyResources(this.BtnFontMoins, "BtnFontMoins");
+            this.BtnFontMoins.Name = "BtnFontMoins";
+            this.toolTip1.SetToolTip(this.BtnFontMoins, resources.GetString("BtnFontMoins.ToolTip"));
+            this.BtnFontMoins.UseVisualStyleBackColor = true;
+            this.BtnFontMoins.Click += new System.EventHandler(this.BtnFontMoins_Click);
+            // 
+            // BtnFontPlus
+            // 
+            resources.ApplyResources(this.BtnFontPlus, "BtnFontPlus");
+            this.BtnFontPlus.Name = "BtnFontPlus";
+            this.toolTip1.SetToolTip(this.BtnFontPlus, resources.GetString("BtnFontPlus.ToolTip"));
+            this.BtnFontPlus.UseVisualStyleBackColor = true;
+            this.BtnFontPlus.Click += new System.EventHandler(this.BtnFontPlus_Click);
+            // 
             // btnDeleteAllLyrics
             // 
             this.btnDeleteAllLyrics.Image = global::Karaboss.Properties.Resources.delete_icon;
@@ -153,6 +170,7 @@
             this.btnInsertParagraph.Name = "btnInsertParagraph";
             this.toolTip1.SetToolTip(this.btnInsertParagraph, resources.GetString("btnInsertParagraph.ToolTip"));
             this.btnInsertParagraph.UseVisualStyleBackColor = true;
+            this.btnInsertParagraph.Click += new System.EventHandler(this.btnInsertParagraph_Click);
             // 
             // btnInsertCr
             // 
@@ -161,6 +179,7 @@
             this.btnInsertCr.TabStop = false;
             this.toolTip1.SetToolTip(this.btnInsertCr, resources.GetString("btnInsertCr.ToolTip"));
             this.btnInsertCr.UseVisualStyleBackColor = true;
+            this.btnInsertCr.Click += new System.EventHandler(this.btnInsertCr_Click);
             // 
             // btnInsertText
             // 
@@ -279,22 +298,6 @@
             resources.ApplyResources(this.lblLyricsOrigin, "lblLyricsOrigin");
             this.lblLyricsOrigin.ForeColor = System.Drawing.Color.White;
             this.lblLyricsOrigin.Name = "lblLyricsOrigin";
-            // 
-            // BtnFontMoins
-            // 
-            resources.ApplyResources(this.BtnFontMoins, "BtnFontMoins");
-            this.BtnFontMoins.Name = "BtnFontMoins";
-            this.toolTip1.SetToolTip(this.BtnFontMoins, resources.GetString("BtnFontMoins.ToolTip"));
-            this.BtnFontMoins.UseVisualStyleBackColor = true;
-            this.BtnFontMoins.Click += new System.EventHandler(this.BtnFontMoins_Click);
-            // 
-            // BtnFontPlus
-            // 
-            resources.ApplyResources(this.BtnFontPlus, "BtnFontPlus");
-            this.BtnFontPlus.Name = "BtnFontPlus";
-            this.toolTip1.SetToolTip(this.BtnFontPlus, resources.GetString("BtnFontPlus.ToolTip"));
-            this.BtnFontPlus.UseVisualStyleBackColor = true;
-            this.BtnFontPlus.Click += new System.EventHandler(this.BtnFontPlus_Click);
             // 
             // frmMp3LyricsEdit
             // 
