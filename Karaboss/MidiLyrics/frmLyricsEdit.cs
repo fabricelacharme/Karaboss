@@ -1165,7 +1165,7 @@ namespace Karaboss
                 {
 
                     string sval = dgView.CurrentCell.Value.ToString().Trim();
-                    Regex regex = new Regex(@"\d\d:\d\d.\d\d");
+                    Regex regex = new Regex(@"\d\d:\d\d.\d\d\d");
                     Match match = regex.Match(sval);
                     if (sval != "" && !match.Success)
                     {
@@ -1175,12 +1175,12 @@ namespace Karaboss
                             int min = total / 60;
                             int sec = total - min * 60;
 
-                            dgView.CurrentCell.Value = string.Format("{0:00}:{1:00}.00", min, sec);
+                            dgView.CurrentCell.Value = string.Format("{0:00}:{1:00}.000", min, sec);
                         }
                         else
                         {
-                            MessageBox.Show("Please use format 00:00.00", "Time", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            dgView.CurrentCell.Value = "00:00.00";
+                            MessageBox.Show("Please use format 00:00.000", "Time", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            dgView.CurrentCell.Value = "00:00.000";
                         }
                     }
 
@@ -1318,6 +1318,12 @@ namespace Karaboss
             dgView.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
             dgView.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
+            // Header Column width (with rows numbers)
+            dgView.RowHeadersWidth = 60;
+
+            dgView.RowsAdded += new DataGridViewRowsAddedEventHandler(dgView_RowsAdded);
+            dgView.RowsRemoved += new DataGridViewRowsRemovedEventHandler(dgView_RowsRemoved);
+
 
             // Selection
             dgView.DefaultCellStyle.SelectionBackColor = dgViewSelectionBackColor;
@@ -1399,6 +1405,16 @@ namespace Karaboss
                 c.DefaultCellStyle.Font = dgViewCellsFont;
                 c.ReadOnly = false;
             }
+        }
+
+        private void dgView_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            NumberRows();
+        }
+
+        private void dgView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            NumberRows();
         }
 
 
@@ -1707,6 +1723,16 @@ namespace Karaboss
             }
         }
 
+
+        private void NumberRows()
+        {
+            foreach (DataGridViewRow r in dgView.Rows)
+            {
+                dgView.Rows[r.Index].HeaderCell.Value =
+                                    (r.Index + 1).ToString();
+            }
+        }
+
         #endregion gridview
 
 
@@ -1880,6 +1906,15 @@ namespace Karaboss
         /// </summary>
         private List<plLyric> LoadModifiedLyrics(bool bIncludeChordsInLyrics = false)
         {
+
+            int line;
+            if (!CheckTimes(out line))
+            {
+                MessageBox.Show("Time on line " + line + " is incorrect", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dgView.CurrentCell = dgView.Rows[line - 1].Cells[0];
+                return null;
+            }
+
             int plTicksOn;
             string val;
             plLyric.CharTypes plType;
@@ -3866,6 +3901,38 @@ namespace Karaboss
 
         #endregion TxtResult
 
-       
+
+        #region Text
+
+        /// <summary>
+        /// Check if times in dgview are greater than previous ones
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        private bool CheckTimes(out int line)
+        {
+            long time;
+            long lasttime = -1;
+
+            for (int i = 0; i < dgView.RowCount; i++)
+            {
+                if (dgView.Rows[i].Cells[0].Value == null || dgView.Rows[i].Cells[0].Value.ToString() == "") continue;
+
+                time = Convert.ToInt32(dgView.Rows[i].Cells[0].Value);
+
+                if (time > lasttime)
+                    lasttime = time;
+                else if (time < lasttime)
+                {
+                    line = i + 1;
+                    return false;
+                }
+            }
+            line = -1;
+            return true;
+        }
+
+        #endregion Text
+
     }
 }

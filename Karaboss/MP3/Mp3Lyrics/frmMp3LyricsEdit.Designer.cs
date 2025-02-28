@@ -99,6 +99,7 @@
             resources.ApplyResources(this.dgView, "dgView");
             this.dgView.Name = "dgView";
             this.dgView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgView_CellEndEdit);
+            this.dgView.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgView_CellEnter);
             // 
             // clTime
             // 

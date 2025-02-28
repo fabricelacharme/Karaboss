@@ -38,6 +38,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
@@ -864,6 +865,55 @@ namespace Karaboss.Mp3.Mp3Lyrics
         #region Text
 
         /// <summary>
+        /// Show line of texbox currently edited
+        /// </summary>
+        private void ShowCurrentLine()
+        {
+            int r = dgView.CurrentCell.RowIndex;
+
+            // Text before current
+            string tx = string.Empty;
+            string s; 
+
+            for (int row = 0; row < r; row++)
+            {
+                s = string.Empty;
+
+                if (dgView.Rows[row].Cells[1].Value != null && dgView.Rows[row].Cells[1].Value.ToString() != "")
+                {                                       
+                    s = dgView.Rows[row].Cells[1].Value.ToString();
+
+                    if (row == 0)
+                    {
+                        if (s.StartsWith(m_SepLine))
+                            s = s.Replace(m_SepLine, "");   // J'me comprends
+                    }
+
+
+                    s = s.Replace(m_SepParagraph, "\n\n");
+                    s = s.Replace(m_SepLine, "\n");                                        
+                }
+
+                s = s.Replace("_", " ");
+                tx += s;
+            }
+
+            if (tx != "")
+            {
+                int start = txtResult.Text.IndexOf(tx);
+                if (start == 0)
+                {
+                    int L = tx.Length;
+                    txtResult.SelectionColor = txtResult.ForeColor;
+
+                    txtResult.SelectionStart = 0;
+                    txtResult.SelectionLength = L;
+                    txtResult.SelectionColor = Color.White;
+                }
+            }
+        }
+
+        /// <summary>
         /// Display text into the rich textbox
         /// </summary>
         /// <param name="lLyrics"></param>
@@ -903,7 +953,14 @@ namespace Karaboss.Mp3.Mp3Lyrics
             if (!CheckTimes(out line))
             {
                 MessageBox.Show("Time on line " + line + " is incorrect", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                dgView.CurrentCell  = dgView.Rows[line - 1].Cells[0];
+                try
+                {
+                    dgView.CurrentCell = dgView.Rows[line - 1].Cells[0];
+                }
+                catch (Exception e) 
+                {
+                    Console.WriteLine(e.Message);
+                }
                 return null;
             }
             
@@ -1012,8 +1069,12 @@ namespace Karaboss.Mp3.Mp3Lyrics
         }
 
 
+
         #endregion Text
 
-       
+        private void dgView_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            ShowCurrentLine();
+        }
     }
 }
