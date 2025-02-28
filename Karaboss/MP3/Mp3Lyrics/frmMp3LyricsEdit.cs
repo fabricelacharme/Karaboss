@@ -716,33 +716,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// <param name="e"></param>
         private void mnuFileSaveAsLrc_Click(object sender, EventArgs e)
         {
-
-            GetLrcSaveOptions();
-            /*
-            string text;
-            string time;
-
-            SyncText[] SyncTexts = new SyncText[dgView.RowCount];
-
-            for (int i = 0; i < dgView.RowCount - 1; i++)
-            {
-                time = dgView.Rows[i].Cells[0].Value.ToString();
-                text = dgView.Rows[i].Cells[1].Value.ToString();
-                SyncTexts[i] = new SyncText(long.Parse(time), text);
-            }
-            saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Lyrics files (*.lrc)|*.lrc|All files (*.*)|*.*";
-            saveFileDialog.FilterIndex = 1;
-            saveFileDialog.RestoreDirectory = true;
-            saveFileDialog.InitialDirectory = Path.GetDirectoryName(_filename);
-            saveFileDialog.FileName = Path.GetFileNameWithoutExtension(_filename) + ".lrc";
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string filename = saveFileDialog.FileName;
-                SaveLyricsToLrcFormat(SyncTexts, filename);
-            }
-            */
+            GetLrcSaveOptions();            
         }
 
         /// <summary>
@@ -891,6 +865,9 @@ namespace Karaboss.Mp3.Mp3Lyrics
         {
             string sLine;
             string sTime;
+            long time;
+            TimeSpan ts;
+            string tsp;
             string sLyric;
             string sType;
             object vLyric;
@@ -943,12 +920,38 @@ namespace Karaboss.Mp3.Mp3Lyrics
             {
                 vLyric = dgView.Rows[i].Cells[1].Value;
                 vTime = dgView.Rows[i].Cells[0].Value;
+                // Same as vLyric
                 vType = dgView.Rows[i].Cells[1].Value;
 
                 if (vTime != null && vLyric != null && vType != null)
                 {
                     // lyrics: Trim all and replace underscore by a space
                     sLyric = vLyric.ToString().Trim();
+
+                    sTime = vTime.ToString();
+                    time = long.Parse(sTime);
+                    ts = TimeSpan.FromMilliseconds(time);
+                    tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                    sTime = "[" + tsp + "]";  // Transform to [00:00.000] format
+
+                    
+                    // /hey
+                    // jude
+                    sType = vType.ToString().Trim();
+                    if (sType.IndexOf(m_SepParagraph) != -1)
+                    {
+                        sType = "par";
+                        lstLyricsItems.Add((sTime, sType, m_SepParagraph));
+                    }
+                    else if (sType.IndexOf(m_SepLine) != -1)
+                    {
+                        sType = "cr";
+                        lstLyricsItems.Add((sTime, sType, m_SepLine));
+                    }
+                    
+                    sLyric = sLyric.Replace(m_SepParagraph, "");
+                    sLyric = sLyric.Replace(m_SepLine, "");
+                    sType = "text";
 
                     /* Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
                     * We must keep the undercores located inside the string for next split with spaces
@@ -963,41 +966,30 @@ namespace Karaboss.Mp3.Mp3Lyrics
                             sb[0] = ' ';
                         if (sLyric.EndsWith(@"_"))
                             sb[sLyric.Length - 1] = ' ';
-                        sLyric = sb.ToString();                       
-                    }
+                        sLyric = sb.ToString();
+                    }                                       
+                   
+                    if (sLyric != "")   // Universal code for syllabes & lines: lyrics like " " can be added
+                    {                            
+                        // Remove accents
+                        sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
 
-                    sType = vType.ToString().Trim();
-                    sTime = "[" + vTime.ToString() + "]";
+                        //Uppercase letters
+                        sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
 
-                    if (sType != "cr" && sType != "par")
-                    {
-                        if (sLyric != "")   // Universal code for syllabes & lines: lyrics like " " can be added
-                        {                            
+                        // Lowercase letters
+                        sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
 
-                            // Remove accents
-                            sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
+                        // Remove non alphanumeric chars
+                        sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
 
-                            //Uppercase letters
-                            sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
-
-                            // Lowercase letters
-                            sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
-
-                            // Remove non alphanumeric chars
-                            sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
-
-                            lstLyricsItems.Add((sTime, sType, sLyric));
-                        }
-                    }
-                    else
-                    {
                         lstLyricsItems.Add((sTime, sType, sLyric));
                     }
+                    
                 }
             }
 
             #endregion List of Lyrics
-
 
             // Store lyrics in lines            
             List<string> lstLines = Utilities.LyricsUtilities.GetLrcLines(lstLyricsItems, strSpaceBetween);
@@ -1062,9 +1054,17 @@ namespace Karaboss.Mp3.Mp3Lyrics
         private void SaveLRCSyllabes(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
         {
             string sTime;
+            long time;
+            TimeSpan ts;
+            string tsp;
+
+            string sType;
             string sLyric;
+            
             object vLyric;
             object vTime;
+            object vType;
+
             string lrcs = string.Empty;
             string cr = "\r\n";
             string strSpaceBetween;
@@ -1107,51 +1107,61 @@ namespace Karaboss.Mp3.Mp3Lyrics
             {
                 vLyric = dgView.Rows[i].Cells[1].Value;
                 vTime = dgView.Rows[i].Cells[0].Value;
+                vType = dgView.Rows[i].Cells[1].Value;
 
                 if (vTime != null && vLyric != null && vTime.ToString() != "" && vLyric.ToString() != "")
                 {
+                    
                     sLyric = vLyric.ToString();
                     sLyric = sLyric.Replace("_", " ");
 
-                    if (sLyric.Trim() != m_SepLine && sLyric.Trim() != m_SepParagraph)
-                    {                        
-
-                        // Remove accents
-                        sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
-
-                        //Uppercase letters
-                        sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
-
-                        // Lowercase letters
-                        sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
-
-                        // Remove non-alphanumeric chars
-                        sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
-
-                        // Save also empty lyrics
-                        sTime = vTime.ToString();
+                    sTime = vTime.ToString();
+                    time = long.Parse(sTime);
+                    ts = TimeSpan.FromMilliseconds(time);
+                    tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                    sTime = tsp;  // Transform to [00:00.000] format
 
 
-                        if (bLineFeed)
-                        {
-                            // Format of timestamp is []                                                        
-                            results.Add(("[" + sTime + "]", sLyric));
+                    // /hey
+                    // jude
+                    sType = vType.ToString().Trim();
+                    if (sType.IndexOf(m_SepParagraph) != -1 || sType.IndexOf(m_SepLine) != -1)                    
+                        bLineFeed = true;
+                        
 
-                        }
-                        else
-                        {
-                            // Format of timestamp is <> + space before
-                            results.Add(("<" + sTime + ">", sLyric));
-                        }
+                    sLyric = sLyric.Replace(m_SepParagraph, "");
+                    sLyric = sLyric.Replace(m_SepLine, "");
 
-                        bLineFeed = false;
+                    
+                    // Remove accents
+                    sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
+
+                    //Uppercase letters
+                    sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
+
+                    // Lowercase letters
+                    sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
+
+                    // Remove non-alphanumeric chars
+                    sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
+
+                    // Save also empty lyrics
+                    sTime = vTime.ToString();
+
+                    if (bLineFeed)
+                    {
+                        // Format of timestamp is []                                                        
+                        results.Add(("[" + sTime + "]", sLyric));
 
                     }
                     else
                     {
-                        bLineFeed = true;
-
+                        // Format of timestamp is <> + space before
+                        results.Add(("<" + sTime + ">", sLyric));
                     }
+                    
+                    bLineFeed = false;
+                   
                 }
             }
 
@@ -1272,54 +1282,6 @@ namespace Karaboss.Mp3.Mp3Lyrics
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }
-        }
-
-
-
-
-        /// <summary>
-        /// Save to text file
-        /// </summary>
-        /// <param name="SyncTexts"></param>
-        /// <param name="filename"></param>
-        private void SaveLyricsToLrcFormat(SyncText[] SyncTexts, string filename)
-        {
-            long time;
-            TimeSpan ts;
-            string tsp;
-            string lyric;
-
-            try
-            {
-                // Save to text file
-                for (int i = 0; i < SyncTexts.Length; i++)
-                {
-                    if (SyncTexts[i].Text != null && SyncTexts[i].Text != "")
-                    {
-                        // the time is in millisecond format. It must be converted to timestamp format
-                        
-                        time = SyncTexts[i].Time;
-                        ts = TimeSpan.FromMilliseconds(time);                        
-                        tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
-
-                        lyric = SyncTexts[i].Text;
-                        lyric = lyric.Replace("_", " ");
-
-                        string line = "[" + tsp + "]" + lyric + "\r\n";
-                        System.IO.File.AppendAllText(filename, line);
-                    }
-                }
-
-                // Open lrc file
-                if (System.IO.File.Exists(filename)) 
-                {
-                    System.Diagnostics.Process.Start(@filename);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error saving lyrics to lrc: " + ex.Message);
             }
         }
 
@@ -1612,15 +1574,13 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 txtResult.Font = _lyricseditfont;
             }
 
-        }
-
-
-
-        #endregion Text
+        }        
 
         private void dgView_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
             ShowCurrentLine();
         }
+
+        #endregion Text
     }
 }

@@ -167,6 +167,7 @@ namespace keffect
             {
                 _sizemode = value;
                 pBox.SizeMode = _sizemode;
+                
             }
         }
 
@@ -196,7 +197,7 @@ namespace keffect
                 {
                     _bforceUppercase = value;
                     Init();
-                    pBox.Invalidate();
+                    pBox.Invalidate();                    
                 }            
             }
         }
@@ -208,7 +209,7 @@ namespace keffect
             set 
             {                 
                 _bTextBackGround = value;
-                pBox.Invalidate();
+                pBox.Invalidate();                
             }
         }
        
@@ -235,14 +236,16 @@ namespace keffect
                 {
                     case "Diaporama":
                         break;
+
                     case "SolidColor":
                         m_Cancel = true;
                         Terminate();
-                        pBox.Image = null;
+                        pBox.Image = null;                        
                         m_CurrentImage = null;
                         pBox.BackColor = _txtbackcolor;
-                        pBox.Invalidate();
+                        pBox.Invalidate();                        
                         break;
+
                     case "Transparent":
                         m_Cancel = true;
                         Terminate();
@@ -251,6 +254,7 @@ namespace keffect
                         pBox.BackColor = _transparencykey;
                         pBox.Invalidate();
                         break;
+
                     default:
                         break;
                 }
@@ -278,7 +282,7 @@ namespace keffect
             set
             {
                 _OptionDisplay = value;
-                pBox.Invalidate();
+                pBox.Invalidate();                
             }
         }
 
@@ -343,7 +347,7 @@ namespace keffect
             set { 
                 _nbLyricsLines = value;
                 Init();
-                pBox.Invalidate();
+                pBox.Invalidate();                
             }
         }
                
@@ -363,8 +367,8 @@ namespace keffect
             get { return _backcolor; }
             set { 
                 _backcolor = value; 
-                pBox.BackColor = value;
-                pBox.Invalidate();
+                pBox.BackColor = value;                
+                pBox.Invalidate();                
             }
         }
 
@@ -377,7 +381,7 @@ namespace keffect
             set 
             { 
                 _AlreadyPlayedColor = value; 
-                pBox.Invalidate();
+                pBox.Invalidate();                
             }
         }
 
@@ -386,9 +390,9 @@ namespace keffect
         public Color TxtBeingPlayedColor
         {
             get { return _BeingPlayedColor; }
-            set {
-                pBox.Invalidate();
-                _BeingPlayedColor = value; 
+            set {                
+                _BeingPlayedColor = value;
+                pBox.Invalidate();                
             }
         }
 
@@ -400,7 +404,7 @@ namespace keffect
             set 
             { 
                 _NotYetPlayedColor = value;
-                pBox.Invalidate();
+                pBox.Invalidate();                
             }
         }
 
@@ -429,7 +433,7 @@ namespace keffect
                 if (value != _bColorContour)
                 {
                     _bColorContour = value;
-                    pBox.Invalidate();
+                    pBox.Invalidate();                    
                 }
             }
         }
@@ -446,7 +450,6 @@ namespace keffect
         {
             InitializeComponent();
 
-
             #region Move form without title bar
             
             Application.AddMessageFilter(this);
@@ -455,18 +458,16 @@ namespace keffect
             
             #endregion
 
-
             this.SetStyle(
                  System.Windows.Forms.ControlStyles.UserPaint |
                  System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
                  System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
-                 true);
+                 true);                        
 
             SetDefaultValues();
-
-            Init();
-                       
+            Init();                       
         }
+
 
         #region Move Window
 
@@ -600,6 +601,7 @@ namespace keffect
         
         }
 
+
         #region measures
         /// <summary>
         /// Measure the length of a string with a specific size
@@ -673,19 +675,33 @@ namespace keffect
 
 
         #region Control Load Resize paint
+
+        /// <summary>
+        /// Resize control
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void KaraokeEffect_Resize(object sender, EventArgs e)
         {
             // Increase _steppercent if Width increase          
             AjustText(_biggestLine);
-            pBox.Invalidate();
+            pBox.Invalidate();            
         }
 
+        /// <summary>
+        /// Paint control
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pBox_Paint(object sender, PaintEventArgs e)
         {           
             // Antialiasing
+            
+            //e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+            //e.Graphics.PageUnit = GraphicsUnit.Pixel;
+
+            e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
-            e.Graphics.PageUnit = GraphicsUnit.Pixel;           
 
             SolidBrush colorBrush;
 
@@ -740,6 +756,7 @@ namespace keffect
 
             #region draw text
 
+            // Center text vertically
             int y0 = VCenterText();
             int x0 = 0;
 
@@ -747,15 +764,16 @@ namespace keffect
             RectangleF Rbg;
 
             // ======================================================================================================
-            // 1. Draw and color all lines from _linedeb to _linefin in white
+            // 1. Draw and color all lines from _linedeb + 1 to _linefin in white
             // We want to display only a few number of lines (variable _nbLyricsLines = number of lines to display)  
+            // linedeb which is the current line is displayed in the next paragraph
             // ======================================================================================================
             var path = new GraphicsPath();
 
-            for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
+            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
             {
                 if (i < Texts.Count()) {
-                    x0 = HCenterText(Texts[i]);     // Center horizontally
+                    x0 = HCenterText(Texts[i]);     // Center text horizontally
                                         
                     #region background of syllabe                              
                     if (_bTextBackGround)
@@ -774,6 +792,7 @@ namespace keffect
                 }
             }
 
+            // _NotYetPlayedColor is the color for text not played (typically white)
             colorBrush = new SolidBrush(_NotYetPlayedColor);            
             e.Graphics.FillPath(colorBrush, path);
 
@@ -785,7 +804,8 @@ namespace keffect
 
 
             // =============================================
-            // 2. Color in green/Red the current line
+            // 2. Color the current line in whithe
+            // and than color portions above the white in green (already played) and red (currently played) 
             // =============================================
             // Create a graphical path
             path = new GraphicsPath();
@@ -797,8 +817,13 @@ namespace keffect
                 path.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
             }
 
-            // Fill graphical path in white => full text is white
-            //e.Graphics.FillPath(new SolidBrush(Color.White), path);
+            // Color first in black
+            using (SolidBrush outlineBrush = new SolidBrush(Color.Black))
+            {
+                e.Graphics.FillPath(outlineBrush, path);
+            }
+
+            // Fill graphical path in white => full text is white            
             e.Graphics.FillPath(colorBrush, path);
 
             
@@ -816,10 +841,9 @@ namespace keffect
             // update region on the intersection between region and 2nd rectangle
             r.Intersect(intersectRectBefore);
 
-            colorBrush = new SolidBrush(_AlreadyPlayedColor);            
-            e.Graphics.FillRegion(colorBrush, r);
+            colorBrush = new SolidBrush(_AlreadyPlayedColor);
+            e.Graphics.FillRegion(colorBrush, r);            
 
-            
 
             // ======================================================
             // Color in RED the  current syllabe
@@ -848,7 +872,7 @@ namespace keffect
             path.Dispose();
 
             #endregion draw text
-        }
+        }       
 
         #endregion Control Load Resize
 
@@ -1137,7 +1161,7 @@ namespace keffect
             lastindex = -1;
             lastCurLength = 0;
             CurLength = 0;
-            pBox.Invalidate();
+            pBox.Invalidate();            
         }
 
         /// <summary>
@@ -1212,7 +1236,7 @@ namespace keffect
                 
                 lastCurLength = CurLength;
                 lastindex = index;
-                pBox.Invalidate();
+                pBox.Invalidate();                
             }
             else
             {
@@ -1223,7 +1247,7 @@ namespace keffect
                 {
                     percent = (CurLength / LinesLengths[_line]);
                 }
-                pBox.Invalidate();
+                pBox.Invalidate();                
             }
 
         }
@@ -1263,7 +1287,7 @@ namespace keffect
                 rndIter = 0;
 
                 pBox.Image = null;
-                pBox.Invalidate();
+                pBox.Invalidate();                
                 m_ImageFilePaths.Clear();
 
                 if (dirImages == null)
@@ -1410,7 +1434,7 @@ namespace keffect
 
                         m_CurrentImage = Image.FromStream(m_ImageStream);
                         fs.Dispose();
-                        pBox.Invalidate();
+                        pBox.Invalidate();                        
                     }
                 }
                 catch (Exception op)
@@ -1441,7 +1465,7 @@ namespace keffect
                 try
                 {
                     UpdateTimerEnableCallback d = new UpdateTimerEnableCallback(UpdateTimerEnable);
-                    pBox.Invoke(d, new object[] { enabled });
+                    pBox.Invoke(d, new object[] { enabled });                    
                 }
                 catch (Exception u)
                 {
@@ -1508,5 +1532,6 @@ namespace keffect
 
         #endregion SlideShow
 
+       
     }
 }

@@ -434,63 +434,7 @@ namespace Karaboss.Utilities
                     sLine = sLine.Substring(0, 11) + "/";
                 lstLines.Add(sLine);
             }
-            return lstLines;
-
-            #region deleteme
-            /*
-            // ===================================================
-            List<string> lstLines = new List<string>();
-            
-            string sTime;
-            string sType;
-            string sLyric;
-            string sLine = string.Empty;
-            
-            try
-            {
-                // sTime, sType, sLyric
-                for (int i = 0; i < lstLyricsItems.Count; i++)
-                {
-                    sTime = lstLyricsItems[i].Item1;
-                    sType = lstLyricsItems[i].Item2;
-                    sLyric = lstLyricsItems[i].Item3;
-
-                    if (sType == "text")      // Do not add empty lyrics to a line ?
-                    {
-                        if (sLyric.StartsWith("/"))
-                        {
-                            // Save current line
-                            if (sLine != "")
-                            {
-                                // Add new line
-                                lstLines.Add(sLine);
-                            }
-
-                            sLine = sTime + strSpaceBetween + sLyric;    // time + lyric for the beginning of a line 
-                        }
-                        else
-                        {
-                            // Line continuation
-                            sLine += sLyric; // only lyric for the continuation of a line                        
-                        }
-                    }
-                   
-                }
-                // Save last line
-                if (sLine != "")
-                {
-                    lstLines.Add(sLine);
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //return null;
-            }
-
-            return lstLines;
-            */
-            #endregion deleteme
+            return lstLines;           
         }
 
 
