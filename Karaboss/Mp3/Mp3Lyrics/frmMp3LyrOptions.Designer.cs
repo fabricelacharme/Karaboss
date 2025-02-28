@@ -69,6 +69,7 @@
             this.karaokeEffect1 = new keffect.KaraokeEffect();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
+            this.chkHighLightProgressive = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictBackColor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictContour)).BeginInit();
@@ -94,12 +95,14 @@
             resources.ApplyResources(this.radioTransparent, "radioTransparent");
             this.radioTransparent.Name = "radioTransparent";
             this.radioTransparent.UseVisualStyleBackColor = true;
+            this.radioTransparent.CheckedChanged += new System.EventHandler(this.radioTransparent_CheckedChanged);
             // 
             // radioSolidColor
             // 
             resources.ApplyResources(this.radioSolidColor, "radioSolidColor");
             this.radioSolidColor.Name = "radioSolidColor";
             this.radioSolidColor.UseVisualStyleBackColor = true;
+            this.radioSolidColor.CheckedChanged += new System.EventHandler(this.radioSolidColor_CheckedChanged);
             // 
             // radioDiaporama
             // 
@@ -367,10 +370,18 @@
             this.karaokeEffect1.TxtContourColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.TxtNotYetPlayedColor = System.Drawing.Color.White;
             // 
+            // chkHighLightProgressive
+            // 
+            resources.ApplyResources(this.chkHighLightProgressive, "chkHighLightProgressive");
+            this.chkHighLightProgressive.Name = "chkHighLightProgressive";
+            this.chkHighLightProgressive.UseVisualStyleBackColor = true;
+            this.chkHighLightProgressive.CheckedChanged += new System.EventHandler(this.chkHighLightProgressive_CheckedChanged);
+            // 
             // frmMp3LyrOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkHighLightProgressive);
             this.Controls.Add(this.karaokeEffect1);
             this.Controls.Add(this.chkTextUppercase);
             this.Controls.Add(this.txtFont);
@@ -463,5 +474,6 @@
         private keffect.KaraokeEffect karaokeEffect1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.FontDialog fontDialog1;
+        private System.Windows.Forms.CheckBox chkHighLightProgressive;
     }
 }

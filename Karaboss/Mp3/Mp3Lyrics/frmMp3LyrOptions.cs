@@ -30,6 +30,8 @@ namespace Karaboss.Mp3
         // Background color
         private Color TxtBackColor;
 
+        private bool bProgressiveHighlight = false;
+
         private Karaclass.OptionsDisplay OptionDisplay;
         private string bgOption = "Diaporama";
 
@@ -68,6 +70,10 @@ namespace Karaboss.Mp3
         
         #endregion options
 
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public frmMp3LyrOptions()
         {
             InitializeComponent();
@@ -203,9 +209,12 @@ namespace Karaboss.Mp3
                 bForceUppercase = Karaclass.m_ForceUppercase;
 
                 TxtBackColor = Properties.Settings.Default.TxtBackColor;
-                // Colors
+                
+                
+                // Lyrics Colors
                 TxtNextColor = Properties.Settings.Default.TxtNextColor;
                 TxtHighlightColor = Properties.Settings.Default.TxtHighlightColor;
+                bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;  // Progressive Highlight 
                 TxtBeforeColor = Properties.Settings.Default.TxtBeforeColor;
 
                 bColorContour = Properties.Settings.Default.bColorContour;
@@ -345,6 +354,11 @@ namespace Karaboss.Mp3
                 chkTextUppercase.Checked = bForceUppercase;
                 karaokeEffect1.bforceUppercase = bForceUppercase;
 
+                // Progressive highlight
+                chkHighLightProgressive.Checked = bProgressiveHighlight;
+                karaokeEffect1.TransitionEffect = bProgressiveHighlight ? keffect.KaraokeEffect.TransitionEffects.Progressive : keffect.KaraokeEffect.TransitionEffects.None;
+
+
                 // picturebox            
                 karaokeEffect1.FreqDirSlideShow = freqSlideShow;
                 karaokeEffect1.nbLyricsLines = _nbLyricsLines;                
@@ -394,6 +408,7 @@ namespace Karaboss.Mp3
 
                 frmMp3Lyrics.TxtNextColor = TxtNextColor;
                 frmMp3Lyrics.TxtHighlightColor = TxtHighlightColor;
+                frmMp3Lyrics.bProgressiveHighlight = bProgressiveHighlight;     // Progressive highlight
                 frmMp3Lyrics.TxtBeforeColor = TxtBeforeColor;
 
                 frmMp3Lyrics.bColorContour = bColorContour;
@@ -436,6 +451,7 @@ namespace Karaboss.Mp3
 
                 Properties.Settings.Default.TxtNextColor = TxtNextColor;
                 Properties.Settings.Default.TxtHighlightColor = TxtHighlightColor;
+                Properties.Settings.Default.bProgressiveHighlight = bProgressiveHighlight;  // Progressive highlight
                 Properties.Settings.Default.TxtBeforeColor = TxtBeforeColor;
 
                
@@ -641,6 +657,7 @@ namespace Karaboss.Mp3
             Karaclass.m_ForceUppercase = bForceUppercase;
         }
 
+        #region back ground
         private void radioDiaporama_CheckedChanged(object sender, EventArgs e)
         {
             if (radioDiaporama.Checked)
@@ -653,6 +670,34 @@ namespace Karaboss.Mp3
                 karaokeEffect1.SetBackground(dirSlideShow);
             }
         }
+
+        private void radioSolidColor_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioSolidColor.Checked)
+            {
+                btnBackColor.Visible = true;
+                pictBackColor.Visible = true;
+
+                karaokeEffect1.OptionBackground = "SolidColor";
+                bgOption = "SolidColor";
+            }
+        }
+
+        private void radioTransparent_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioTransparent.Checked)
+            {
+                btnBackColor.Visible = false;
+                pictBackColor.Visible = false;
+
+                karaokeEffect1.OptionBackground = "Transparent";
+                bgOption = "Transparent";
+            }
+        }
+
+
+        #endregion back ground
+
 
         private void btnBackColor_Click(object sender, EventArgs e)
         {
@@ -732,6 +777,11 @@ namespace Karaboss.Mp3
             }
         }
 
-      
+        private void chkHighLightProgressive_CheckedChanged(object sender, EventArgs e)
+        {
+            bProgressiveHighlight = chkHighLightProgressive.Checked;
+        }
+
+     
     }
 }

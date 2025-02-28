@@ -1579,5 +1579,17 @@ namespace Karaboss.Properties {
                 this["frmMp3LyricsEditSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool bProgressiveHighlight {
+            get {
+                return ((bool)(this["bProgressiveHighlight"]));
+            }
+            set {
+                this["bProgressiveHighlight"] = value;
+            }
+        }
     }
 }

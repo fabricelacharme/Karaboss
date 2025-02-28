@@ -1848,8 +1848,7 @@ namespace PicControl
             string tx = syl.text;
                         
             try
-            {
-                //float x0 = rRect[syl.posline].X;
+            {                
 
                 #region background of syllabe                              
                 if (_bTextBackGround)

@@ -392,5 +392,8 @@
     <Setting Name="frmMp3LyricsEditSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">800, 600</Value>
     </Setting>
+    <Setting Name="bProgressiveHighlight" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

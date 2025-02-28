@@ -233,8 +233,19 @@ namespace Karaboss.Mp3
             }
         }
 
+        private bool _bprogressivehighlight = false;
+        public bool bProgressiveHighlight
+        {
+            get { return _bprogressivehighlight; }
+            set 
+            {  
+                _bprogressivehighlight= value;
+                karaokeEffect1.TransitionEffect = _bprogressivehighlight? TransitionEffects.Progressive : TransitionEffects.None;
+            }
+        }
 
         #endregion text characteristics
+
 
         #region dirslideshow
 

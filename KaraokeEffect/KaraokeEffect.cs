@@ -197,8 +197,7 @@ namespace keffect
                     _bforceUppercase = value;
                     Init();
                     pBox.Invalidate();
-                }
-            
+                }            
             }
         }
 
@@ -206,7 +205,11 @@ namespace keffect
         public bool bTextBackGround
         {
             get { return _bTextBackGround; }
-            set { _bTextBackGround = value; }
+            set 
+            {                 
+                _bTextBackGround = value;
+                pBox.Invalidate();
+            }
         }
        
 
@@ -740,36 +743,52 @@ namespace keffect
             int y0 = VCenterText();
             int x0 = 0;
 
+            int Wbg;            
+            RectangleF Rbg;
+
             // ======================================================================================================
             // 1. Draw and color all lines from _linedeb to _linefin in white
             // We want to display only a few number of lines (variable _nbLyricsLines = number of lines to display)  
             // ======================================================================================================
-            var otherpath = new GraphicsPath();
+            var path = new GraphicsPath();
 
             for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
             {
                 if (i < Texts.Count()) {
                     x0 = HCenterText(Texts[i]);     // Center horizontally
-                    otherpath.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLineToShow) * _lineHeight), sf);
+                                        
+                    #region background of syllabe                              
+                    if (_bTextBackGround)
+                    {                        
+                        Wbg = (int)LinesLengths[i];
+                        // Black background to make text more visible
+                        Rbg = new RectangleF(x0, y0 + (i - _FirstLineToShow) * _lineHeight, Wbg, _lineHeight);
+                        // background
+                        e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+                    }
+                    #endregion
+
+                    // Draw lines of lyrics
+                    path.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLineToShow) * _lineHeight), sf);
+
                 }
             }
 
-            colorBrush = new SolidBrush(_NotYetPlayedColor);
-            //e.Graphics.FillPath(new SolidBrush(Color.White), otherpath);
-            e.Graphics.FillPath(colorBrush, otherpath);
+            colorBrush = new SolidBrush(_NotYetPlayedColor);            
+            e.Graphics.FillPath(colorBrush, path);
 
             // Borders of text
             if (_bColorContour)
-                e.Graphics.DrawPath(new Pen(Color.Black, 1), otherpath);
+                e.Graphics.DrawPath(new Pen(_txtcontourcolor, 1), path);
 
-            otherpath.Dispose();
+            path.Dispose();
 
 
             // =============================================
             // 2. Color in green/Red the current line
             // =============================================
             // Create a graphical path
-            var path = new GraphicsPath();
+            path = new GraphicsPath();
 
             // Add the full text line to the graphical path            
             if (_FirstLineToShow < Texts.Count())
@@ -782,7 +801,7 @@ namespace keffect
             //e.Graphics.FillPath(new SolidBrush(Color.White), path);
             e.Graphics.FillPath(colorBrush, path);
 
-
+            
 
             // ======================================================
             // Color in GREEN the syllabes before current syllabe
@@ -797,12 +816,10 @@ namespace keffect
             // update region on the intersection between region and 2nd rectangle
             r.Intersect(intersectRectBefore);
 
-            colorBrush = new SolidBrush(_AlreadyPlayedColor);
-            //e.Graphics.FillRegion(Brushes.Green, r);
+            colorBrush = new SolidBrush(_AlreadyPlayedColor);            
             e.Graphics.FillRegion(colorBrush, r);
 
-           
-
+            
 
             // ======================================================
             // Color in RED the  current syllabe
@@ -817,18 +834,14 @@ namespace keffect
             r.Intersect(intersectRect);
 
             // Fill updated region in red => percent portion of text is red
-            colorBrush = new SolidBrush(_BeingPlayedColor);
-            //e.Graphics.FillRegion(Brushes.Red, r);
+            colorBrush = new SolidBrush(_BeingPlayedColor);            
             e.Graphics.FillRegion(colorBrush, r);
 
             
-
-
             // Borders of text
             if (_bColorContour)
                 e.Graphics.DrawPath(new Pen(_txtcontourcolor, 1), path);
             
-
 
             colorBrush.Dispose();
             r.Dispose();
