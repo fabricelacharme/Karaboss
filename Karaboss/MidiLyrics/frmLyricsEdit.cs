@@ -2034,9 +2034,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void mnuFileSaveAsLrc_Click(object sender, EventArgs e)
         {
-            GetLrcSaveOptions();
-
-            
+            GetLrcSaveOptions();            
         }
 
         /// <summary>
@@ -2158,7 +2156,6 @@ namespace Karaboss
                 Tag_Artist = lstTags[0];
                 Tag_Title = lstTags[1];
             }
-
 
             switch (LrcLinesSyllabesFormat)
             {

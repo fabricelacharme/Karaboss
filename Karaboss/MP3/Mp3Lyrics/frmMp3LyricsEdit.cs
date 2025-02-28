@@ -39,6 +39,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
+using System.Text.RegularExpressions;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
@@ -707,8 +709,16 @@ namespace Karaboss.Mp3.Mp3Lyrics
         #region lrc
 
         #region save lrc
+        /// <summary>
+        /// Menu: save to format LRC
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuFileSaveAsLrc_Click(object sender, EventArgs e)
         {
+
+            GetLrcSaveOptions();
+            /*
             string text;
             string time;
 
@@ -732,8 +742,541 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 string filename = saveFileDialog.FileName;
                 SaveLyricsToLrcFormat(SyncTexts, filename);
             }
-
+            */
         }
+
+        /// <summary>
+        /// Get save lrc options
+        /// </summary>
+        /// <param name="LrcExportFormat"></param>
+        private void GetLrcSaveOptions()
+        {
+            DialogResult dr;
+            frmLrcOptions LrcOptionsDialog = new frmLrcOptions();
+            dr = LrcOptionsDialog.ShowDialog();
+
+            if (dr == System.Windows.Forms.DialogResult.Cancel)
+                return;
+
+            // Remove accents
+            bool bRemoveAccents = LrcOptionsDialog.bRemoveAccents;
+            // Force Upper Case
+            bool bUpperCase = LrcOptionsDialog.bUpperCase;
+            // Force Lower Case
+            bool bLowerCase = LrcOptionsDialog.bLowerCase;
+            // Remove all non-alphanumeric characters
+            bool bRemoveNonAlphaNumeric = LrcOptionsDialog.bRemoveNonAlphaNumeric;
+            // Save to line or to syllabes
+            LrcLinesSyllabesFormats LrcLinesSyllabesFormat = LrcOptionsDialog.LrcLinesSyllabesFormat;
+
+            // Cut lines over x characters
+            bool bCutLines = LrcOptionsDialog.bCutLines;
+            int LrcCutLinesChars = LrcOptionsDialog.LrcCutLinesChars;
+
+
+            SaveLrcFileName(LrcLinesSyllabesFormat, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bCutLines, LrcCutLinesChars);
+        }
+
+
+        /// <summary>
+        /// Select file to save and format tags
+        /// </summary>
+        /// <param name="LrcExportFormat"></param>
+        /// <param name="LrcLinesSyllabesFormat"></param>
+        /// <param name="bRemoveAccents"></param>
+        /// <param name="bUpperCase"></param>
+        /// <param name="bLowerCase"></param>
+        /// <param name="bRemoveNonAlphaNumeric"></param>
+        /// <param name="bCutLines"></param>
+        /// <param name="LrcCutLinesChars"></param>
+        private void SaveLrcFileName(LrcLinesSyllabesFormats LrcLinesSyllabesFormat, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bCutLines, int LrcCutLinesChars)
+        {
+            #region select filename
+
+            string defExt = ".lrc";
+            string fName = "New" + defExt;
+            string fPath = Path.GetDirectoryName(_filename);
+
+            string fullName;
+            string defName;
+
+            #region search name
+
+            if (fPath == null || fPath == "")
+            {
+                if (Directory.Exists(CreateNewMidiFile._DefaultDirectory))
+                    fPath = CreateNewMidiFile._DefaultDirectory;
+                else
+                    fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            }
+            else
+            {
+                fName = Path.GetFileName(_filename);
+            }
+
+            // Extension forced to lrc            
+            string fullPath = fPath + "\\" + Path.GetFileNameWithoutExtension(fName) + defExt;
+            fullName = Utilities.Files.FindUniqueFileName(fullPath);                            // Add (2), (3) etc.. if necessary    
+            defName = Path.GetFileNameWithoutExtension(fullName);                               // Default name to propose to dialog
+
+            #endregion search name                   
+
+            string defFilter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
+
+            saveFileDialog.Title = "Save to LRC format";
+            saveFileDialog.Filter = defFilter;
+            saveFileDialog.DefaultExt = defExt;
+            saveFileDialog.InitialDirectory = @fPath;
+            saveFileDialog.FileName = defName;
+
+            if (saveFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            #endregion
+
+            string Tag_Tool = "Karaboss https://karaboss.lacharme.net";
+
+            string Tag_Title = string.Empty;
+            string Tag_Artist = string.Empty;
+            string Tag_Album = string.Empty;
+            string Tag_Lang = string.Empty;
+            string Tag_By = string.Empty;
+            string Tag_DPlus = string.Empty;
+
+            fullPath = saveFileDialog.FileName;
+
+            // Search Title & Artist
+            // Classic Karaoke Midi tags
+            /*
+            @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
+            @L	(single) Language	FRAN, ENGL        
+            @W	(multiple) Copyright (of Karaoke file, not song)        
+            @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
+            @I	Information  ex Date(of Karaoke file, not song)
+            @V	(single) Version ex 0100 ?             
+            */
+            //Tag_Title = (sequence1.TTag != null && sequence1.TTag.Count > 1) ? sequence1.TTag[0] : "";
+            //Tag_Artist = (sequence1.TTag != null && sequence1.TTag.Count > 1) ? sequence1.TTag[1] : "";
+
+
+            if (Tag_Artist == "" && Tag_Title == "")
+            {
+                List<string> lstTags = Utilities.LyricsUtilities.GetTagsFromFileName(fullPath);
+                Tag_Artist = lstTags[0];
+                Tag_Title = lstTags[1];
+            }
+
+            switch (LrcLinesSyllabesFormat)
+            {
+                case LrcLinesSyllabesFormats.Lines:
+                    SaveLRCLines(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, bCutLines, LrcCutLinesChars);
+                    break;
+                case LrcLinesSyllabesFormats.Syllabes:
+                    SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Save Lyrics .lrc file format and by lines
+        /// </summary>
+        /// <param name="File"></param>
+        /// <param name="Tag_Title"></param>
+        /// <param name="Tag_Artist"></param>
+        /// <param name="Tag_Album"></param>
+        /// <param name="Tag_Lang"></param>
+        /// <param name="Tag_By"></param>
+        /// <param name="Tag_DPlus"></param>
+        private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus, bool bControlLength, int MaxLength)
+        {
+            string sLine;
+            string sTime;
+            string sLyric;
+            string sType;
+            object vLyric;
+            object vTime;
+            object vType;
+            string lrcs;
+            string cr = "\r\n";
+            string strSpaceBetween;
+            bool bSpaceBetwwen = false;
+
+            // Space between time and lyrics [00:02.872]lyric
+            if (bSpaceBetwwen)
+                strSpaceBetween = " ";
+            else
+                strSpaceBetween = string.Empty;
+
+            #region meta data
+
+            // List to store lines
+            List<string> lstHeaderLines = new List<string>();
+
+            // Store meta datas
+            List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
+            List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
+            string Tag;
+            string TagName;
+            for (int i = 0; i < TagsList.Count; i++)
+            {
+                Tag = TagsList[i];
+                TagName = TagsNames[i];
+                Tag = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(Tag) : Tag;
+                Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
+                if (Tag != "")
+                {
+                    sLine = "[" + TagName + strSpaceBetween + Tag + "]";
+                    // lrcs += sLine + cr;
+                    lstHeaderLines.Add(sLine);
+                }
+            }
+            #endregion meta data
+
+
+            #region List of lyrics
+
+            // Store lyrics in a list
+            // sTime, sType, sLyric
+            List<(string, string, string)> lstLyricsItems = new List<(string, string, string)>();
+
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                vLyric = dgView.Rows[i].Cells[1].Value;
+                vTime = dgView.Rows[i].Cells[0].Value;
+                vType = dgView.Rows[i].Cells[1].Value;
+
+                if (vTime != null && vLyric != null && vType != null)
+                {
+                    // lyrics: Trim all and replace underscore by a space
+                    sLyric = vLyric.ToString().Trim();
+
+                    /* Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
+                    * We must keep the undercores located inside the string for next split with spaces
+                    * ex: _the_air,_(get_to_poppin')
+                    * So big bug if we use sLyric = sLyric.Replace("_", " ");
+                    */
+                    if (sLyric.Length > 0)
+                    {
+                        // replace leading or trailing underscore by a space ' '
+                        StringBuilder sb = new StringBuilder(sLyric);
+                        if (sLyric.StartsWith(@"_"))
+                            sb[0] = ' ';
+                        if (sLyric.EndsWith(@"_"))
+                            sb[sLyric.Length - 1] = ' ';
+                        sLyric = sb.ToString();                       
+                    }
+
+                    sType = vType.ToString().Trim();
+                    sTime = "[" + vTime.ToString() + "]";
+
+                    if (sType != "cr" && sType != "par")
+                    {
+                        if (sLyric != "")   // Universal code for syllabes & lines: lyrics like " " can be added
+                        {                            
+
+                            // Remove accents
+                            sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
+
+                            //Uppercase letters
+                            sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
+
+                            // Lowercase letters
+                            sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
+
+                            // Remove non alphanumeric chars
+                            sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
+
+                            lstLyricsItems.Add((sTime, sType, sLyric));
+                        }
+                    }
+                    else
+                    {
+                        lstLyricsItems.Add((sTime, sType, sLyric));
+                    }
+                }
+            }
+
+            #endregion List of Lyrics
+
+
+            // Store lyrics in lines            
+            List<string> lstLines = Utilities.LyricsUtilities.GetLrcLines(lstLyricsItems, strSpaceBetween);
+
+            // Store timestamps + lyrics in lines
+            List<string> lstTimeLines = Utilities.LyricsUtilities.GetLrcTimeLines(lstLyricsItems, strSpaceBetween);
+
+            // Store lyrics by line and cut lines to MaxLength characters using lstTimeLines
+            List<string> lstLinesCut = new List<string>();
+            if (bControlLength)
+            {
+                lstLinesCut = Utilities.LyricsUtilities.GetLrcLinesCut(lstTimeLines, MaxLength);
+            }
+
+
+            #region send all to string 
+            // Header
+            lrcs = string.Empty;
+            for (int i = 0; i < lstHeaderLines.Count; i++)
+            {
+                lrcs += lstHeaderLines[i] + cr;
+            }
+
+            // Lines
+            if (bControlLength)
+            {
+                for (int i = 0; i < lstLinesCut.Count; i++)
+                {
+                    // Replace underscores located in the middle of the lyrics
+                    // ex: " the_air,_(get_to_poppin')"
+                    lrcs += lstLinesCut[i].Replace("_", " ") + cr;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < lstLines.Count; i++)
+                {
+                    // Replace underscores located in the middle of the lyrics
+                    // ex: " the_air,_(get_to_poppin')"
+                    lrcs += lstLines[i].Replace("_", " ") + cr;
+                }
+            }
+            #endregion send all to string
+
+            try
+            {
+                System.IO.File.WriteAllText(File, lrcs);
+                System.Diagnostics.Process.Start(@File);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// Save lyrics to new LRC format [01:54.60]Pa<01:55.32>ro<01:56.15>les
+        /// </summary>
+        /// <param name="FileName"></param>
+        private void SaveLRCSyllabes(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
+        {
+            string sTime;
+            string sLyric;
+            object vLyric;
+            object vTime;
+            string lrcs = string.Empty;
+            string cr = "\r\n";
+            string strSpaceBetween;
+            bool bSpaceBetwwen = false;
+            string lines = string.Empty;
+
+            // Space between time and lyrics [00:02.872]lyric
+            if (bSpaceBetwwen)
+                strSpaceBetween = " ";
+            else
+                strSpaceBetween = string.Empty;
+
+            List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
+            List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
+            string Tag;
+            string TagName;
+            for (int i = 0; i < TagsList.Count; i++)
+            {
+                Tag = TagsList[i];
+                TagName = TagsNames[i];
+                Tag = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(Tag) : Tag;
+                Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
+                if (Tag != "")
+                    lrcs += "[" + TagName + strSpaceBetween + Tag + "]" + cr;
+            }
+
+            bool bLineFeed = true;
+
+            // new format of lrc
+            // [01:54.60]La <01:55.32>petite <01:56.15>maison
+            // Start line is [01:54.60]La
+            // syllabes are <01:55.32>petite <01:56.15>maison
+
+            // separate words and syllabes
+            // Store results in a list
+            List<(string stime, string lyric)> results = new List<(string, string)>();
+
+            // Apply treatments choosen
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                vLyric = dgView.Rows[i].Cells[1].Value;
+                vTime = dgView.Rows[i].Cells[0].Value;
+
+                if (vTime != null && vLyric != null && vTime.ToString() != "" && vLyric.ToString() != "")
+                {
+                    sLyric = vLyric.ToString();
+                    sLyric = sLyric.Replace("_", " ");
+
+                    if (sLyric.Trim() != m_SepLine && sLyric.Trim() != m_SepParagraph)
+                    {                        
+
+                        // Remove accents
+                        sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
+
+                        //Uppercase letters
+                        sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
+
+                        // Lowercase letters
+                        sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
+
+                        // Remove non-alphanumeric chars
+                        sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
+
+                        // Save also empty lyrics
+                        sTime = vTime.ToString();
+
+
+                        if (bLineFeed)
+                        {
+                            // Format of timestamp is []                                                        
+                            results.Add(("[" + sTime + "]", sLyric));
+
+                        }
+                        else
+                        {
+                            // Format of timestamp is <> + space before
+                            results.Add(("<" + sTime + ">", sLyric));
+                        }
+
+                        bLineFeed = false;
+
+                    }
+                    else
+                    {
+                        bLineFeed = true;
+
+                    }
+                }
+            }
+
+            string nextLyric = string.Empty;
+            string nextTime = string.Empty;
+
+            bool bKeepForNextSyllabe = false;
+            string keepLyric = string.Empty;
+            string keepTime = string.Empty;
+
+
+            // Add a trailing "-" to syllabes without space with the next syllabe (ie it is a word composed of several syllabes)
+            for (int i = 0; i < results.Count; i++)
+            {
+                sTime = results[i].stime;
+                sLyric = results[i].lyric;
+
+                if (i < results.Count - 1)
+                {
+                    nextLyric = results[i + 1].lyric;
+                    nextTime = results[i + 1].stime;
+                }
+                else
+                {
+                    nextLyric = "";
+                    nextTime = "";
+                }
+                // No trailing space in the current, no starting space in the next and the next is not a new line ([]) 
+                // => this syllabe must be merged with the next one
+                if (!sLyric.EndsWith(" ") && nextLyric.Length > 0 && !nextLyric.StartsWith(" ") && nextTime.IndexOf("[") == -1)
+                {
+                    results[i] = (results[i].stime, results[i].lyric + "-");
+                }
+            }
+
+            for (int i = 0; i < results.Count; i++)
+            {
+                sTime = results[i].stime;
+                sLyric = results[i].lyric;
+
+                // Keep all syllabes ending with a trailing "-" until a syllabe without a "-"
+                if (sLyric.EndsWith("-"))
+                {
+                    sLyric = sLyric.Substring(0, sLyric.Length - 1).Trim();  // remove the "-"
+                    keepLyric += sLyric;                                     // add syllabe to previous ones   
+                    if (keepTime == "")
+                        keepTime = sTime;                                    // keep only the first timestamp (beginning of the word)   
+
+                    if (sTime.IndexOf("[") > -1)                             // if new line, store previous one
+                    {
+                        // Store previous line 
+                        if (lrcs.Trim().Length > 0)
+                        {
+                            lines += lrcs + cr;
+                        }
+                        lrcs = "";
+                    }
+
+                    // Skip 
+                    continue;
+                }
+                else if (keepLyric != "")
+                {
+                    // no trailing "-" and there are syllabes into keeplyric => this is the last syllabe of a word
+                    bKeepForNextSyllabe = true;
+                }
+
+                // This is the start of a new line
+                if (sTime.IndexOf("[") > -1)
+                {
+                    // Store previous line 
+                    if (lrcs.Trim().Length > 0)
+                    {
+                        lines += lrcs + cr;
+                    }
+                    // Format of timestamp is [] 
+                    lrcs = sTime + sLyric.Trim();
+                }
+                else
+                {
+                    // This is a normal syllabe 
+                    if (!bKeepForNextSyllabe)
+                    {
+                        // Format of timestamp is <> + space before
+                        lrcs += " " + sTime + sLyric.Trim();
+                    }
+                    else
+                    {
+                        // this is The last syllabe of a word
+                        if (keepTime.IndexOf("[") > -1)
+                        {
+                            // if the word stored in keeplyric was a starting line []
+                            lrcs += keepTime + keepLyric + sLyric.Trim();
+                        }
+                        else
+                        {
+                            // if the word stored in keeplyric was a normal word, add a space before the <00:00.000>  
+                            lrcs += " " + keepTime + keepLyric + sLyric.Trim();
+                        }
+
+                        // Reset variables used to store syllabes of a word
+                        bKeepForNextSyllabe = false;
+                        keepLyric = "";
+                        keepTime = "";
+                    }
+                }
+            }
+
+            if (lrcs.Trim().Length > 0)
+                lines += lrcs + cr;
+
+            try
+            {
+                System.IO.File.WriteAllText(File, lines);
+                System.Diagnostics.Process.Start(@File);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+
 
         /// <summary>
         /// Save to text file
