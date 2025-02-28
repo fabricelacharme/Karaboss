@@ -808,6 +808,10 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 {
                     lblLyricsOrigin.Text = "Origin of lyrics = lrc: " + Path.GetFileName(fileName);
                     LoadLRCFile(fileName);
+
+                    localSyncLyrics = LoadModifiedLyrics();
+                    if (localSyncLyrics != null)
+                        PopulateTextBox(localSyncLyrics);
                 }
                 catch (Exception ex)
                 {
@@ -888,7 +892,6 @@ namespace Karaboss.Mp3.Mp3Lyrics
                         if (s.StartsWith(m_SepLine))
                             s = s.Replace(m_SepLine, "");   // J'me comprends
                     }
-
 
                     s = s.Replace(m_SepParagraph, "\n\n");
                     s = s.Replace(m_SepLine, "\n");                                        
