@@ -1591,5 +1591,17 @@ namespace Karaboss.Properties {
                 this["bProgressiveHighlight"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int LrcMillisecondsDigits {
+            get {
+                return ((int)(this["LrcMillisecondsDigits"]));
+            }
+            set {
+                this["LrcMillisecondsDigits"] = value;
+            }
+        }
     }
 }

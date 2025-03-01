@@ -709,12 +709,21 @@ namespace Karaboss.Mp3
         }
 
         /// <summary>
-        /// Export mp3 Lyrics tags to a text file
+        /// Export mp3 Lyrics tags to a text file / or from lrc having the same name 
         /// </summary>
         public void ExportLyricsTags()
         {
-            TagLib.Id3v2.SynchronisedLyricsFrame SyncLyricsFrame = Player.SyncLyricsFrame;
-            Mp3LyricsMgmtHelper.ExportSyncLyricsToText(SyncLyricsFrame);  
+            switch (Mp3LyricsMgmtHelper.m_mp3lyricstype) {
+                case Mp3LyricsTypes.LyricsWithTimeStamps:            
+                    // Lyrics included in the mp3 file
+                    TagLib.Id3v2.SynchronisedLyricsFrame SyncLyricsFrame = Player.SyncLyricsFrame;
+                    Mp3LyricsMgmtHelper.ExportSyncLyricsToText(SyncLyricsFrame);
+                    break;
+
+                case Mp3LyricsTypes.LRCFile:
+                    Mp3LyricsMgmtHelper.ExportSyncLyricsToText(Mp3LyricsMgmtHelper.SyncLyrics);
+                    break;
+            }
         }
 
         /// <summary>
@@ -723,7 +732,6 @@ namespace Karaboss.Mp3
         /// <param name="FileName"></param>
         private void DisplayOtherInfos(string FileName)
         {
-
             // Reset static infos
             Mp3LyricsMgmtHelper.SyncLyrics = new System.Collections.Generic.List<System.Collections.Generic.List<keffect.KaraokeEffect.kSyncText>>();
             Mp3LyricsMgmtHelper.SyncLine = new System.Collections.Generic.List<keffect.KaraokeEffect.kSyncText>();

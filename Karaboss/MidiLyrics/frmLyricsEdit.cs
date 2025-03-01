@@ -142,6 +142,8 @@ namespace Karaboss
         private Font _lyricseditfont;
         private float _fontSize = 8.25f;
 
+        private int _LrcMillisecondsDigits = 2;
+
         private readonly List<string> lsInstruments = Sanford.Multimedia.Midi.MidiFile.LoadInstruments();
 
         #endregion declarations
@@ -838,6 +840,8 @@ namespace Karaboss
             {
                 _lyricseditfont = Properties.Settings.Default.LyricsEditFont;
                 _fontSize = _lyricseditfont.Size;
+
+                _LrcMillisecondsDigits = Properties.Settings.Default.LrcMillisecondsDigits;
 
                 // Regardless the origin of chords (lyrics, from Xml/mxl, discovery)
                 // Karaboss is working internally in Midi and chords will be saved in the lyrics 
@@ -2256,13 +2260,7 @@ namespace Karaboss
                         if (sLyric.EndsWith(@"_"))
                             sb[sLyric.Length - 1] = ' ';
                         sLyric = sb.ToString();
-
-                        /*
-                        if (sLyric.StartsWith("_"))
-                            sLyric = sLyric.Remove(0, 1).Insert(0, " ");
-                        if (sLyric.EndsWith("_"))
-                            sLyric = sLyric.Substring(0, sLyric.Length - 1) + " ";
-                        */
+                       
                     }
 
                     sType = vType.ToString().Trim();

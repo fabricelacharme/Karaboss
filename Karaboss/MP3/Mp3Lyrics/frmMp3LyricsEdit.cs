@@ -78,6 +78,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
         private Font _lyricseditfont;
         private float _fontSize = 8.25f;
 
+        private int _LrcMillisecondsDigits = 2;
+
         private string _filename;
 
         // Manage locally lyrics
@@ -172,7 +174,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     //ReplaceLyrics(localplLyrics);
 
                     // Save file
-                    //SaveFileProc();
+                    SaveMp3Lyrics();
+                    
                     return;
                 }
                 else
@@ -377,7 +380,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
             localSyncLyrics = LoadModifiedLyrics();
             if (localSyncLyrics != null)
                 PopulateTextBox(localSyncLyrics);
-
+            
+            FileModified();
         }
 
         /// <summary>
@@ -400,6 +404,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 localSyncLyrics = LoadModifiedLyrics();
                 if (localSyncLyrics != null)
                     PopulateTextBox(localSyncLyrics);
+
+                FileModified();
             }
             catch (Exception Ex)
             {
@@ -474,7 +480,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
             //ColorSepRows();
 
             // File was modified
-            //FileModified();
+            FileModified();
         }
 
         /// <summary>
@@ -495,6 +501,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
             localSyncLyrics = LoadModifiedLyrics();
             if (localSyncLyrics != null)
                 PopulateTextBox(localSyncLyrics);
+
+            FileModified();
         }
 
         #endregion gridview edition
@@ -506,6 +514,9 @@ namespace Karaboss.Mp3.Mp3Lyrics
         {
             _lyricseditfont = Properties.Settings.Default.LyricsEditFont;
             _fontSize = _lyricseditfont.Size;
+
+            // 2 or 3 digits for timestamp format 00:00.00 or 00:00.000
+            _LrcMillisecondsDigits = Properties.Settings.Default.LrcMillisecondsDigits;
         }
 
         private void SetOriginOfLyrics()
@@ -647,7 +658,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 System.IO.File.Copy(_filename, filename, true);
 
                 // Save sync lyrics into the copy of initial file
-                SaveFrame(filename);
+                SaveFrame(filename);                
             }
         }
       
@@ -669,8 +680,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 Mp3LyricsMgmtHelper.MySyncLyricsFrame = new SynchronisedLyricsFrame("Karaboss", "en", SynchedTextType.Lyrics);
             }
 
-            // How many valid lines ?
-            //int lines = dgView.Rows.Count;
+            // How many valid lines ?            
             int lines = 0;
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
@@ -678,13 +688,11 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     lines++;
             }
 
-
             Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text = new SynchedText[lines];
             
             // Read all rows and store into the frame
             for (int i = 0; i < lines; i++)
             {
-
                 if (dgView.Rows[i].Cells[0].Value != null)
                 {
                     Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i] = new SynchedText();
@@ -701,7 +709,32 @@ namespace Karaboss.Mp3.Mp3Lyrics
             }            
 
             Mp3LyricsMgmtHelper.SetTags(FileName, Mp3LyricsMgmtHelper.MySyncLyricsFrame);
+
+            bfilemodified = false;
         }
+
+
+        /// <summary>
+        /// File was modified
+        /// </summary>
+        private void FileModified()
+        {
+            bfilemodified = true;
+            string fName = Path.GetFileName(_filename);
+            if (fName != null && fName != "")
+            {
+                string fExt = Path.GetExtension(fName);             // Extension
+                fName = Path.GetFileNameWithoutExtension(fName);    // name without extension
+
+                string fShortName = fName.Replace("*", "");
+                if (fShortName == fName)
+                    fName += "*";
+
+                fName += fExt;
+                SetTitle(fName);
+            }
+        }
+
 
         #endregion Save mp3 Lyrics
 
@@ -931,7 +964,12 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     sTime = vTime.ToString();
                     time = long.Parse(sTime);
                     ts = TimeSpan.FromMilliseconds(time);
-                    tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                    
+                    if (_LrcMillisecondsDigits == 2)
+                        tsp = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds/10);
+                    else
+                        tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+
                     sTime = "[" + tsp + "]";  // Transform to [00:00.000] format
 
                     
@@ -1118,7 +1156,12 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     sTime = vTime.ToString();
                     time = long.Parse(sTime);
                     ts = TimeSpan.FromMilliseconds(time);
-                    tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                    
+                    if(_LrcMillisecondsDigits == 2)
+                        tsp = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds/10);
+                    else
+                        tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+
                     sTime = tsp;  // Transform to [00:00.000] format
 
 
@@ -1317,6 +1360,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     localSyncLyrics = LoadModifiedLyrics();
                     if (localSyncLyrics != null)
                         PopulateTextBox(localSyncLyrics);
+
+                    FileModified();
                 }
                 catch (Exception ex)
                 {
@@ -1554,7 +1599,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 txtResult.Text = string.Empty; 
 
                 // File was modified
-                //FileModified();
+                FileModified();
             }
         }
 
