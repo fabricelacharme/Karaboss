@@ -2065,6 +2065,8 @@ namespace Karaboss
             // Save to line or to syllabes
             LrcLinesSyllabesFormats LrcLinesSyllabesFormat = LrcOptionsDialog.LrcLinesSyllabesFormat;
 
+            _LrcMillisecondsDigits = LrcOptionsDialog.LrcMillisecondsDigits;
+
             // Cut lines over x characters
             bool bCutLines = LrcOptionsDialog.bCutLines;
             int LrcCutLinesChars = LrcOptionsDialog.LrcCutLinesChars;
@@ -2187,6 +2189,9 @@ namespace Karaboss
         {
             string sLine;
             string sTime;
+            long time;
+            TimeSpan ts;
+            string tsp;
             string sLyric;                    
             string sType;
             object vLyric;
@@ -2237,8 +2242,10 @@ namespace Karaboss
 
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
-                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
-                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;                
+                //vTime = dgView.Rows[i].Cells[COL_TIME].Value;               
+                vTime = dgView.Rows[i].Cells[COL_TICKS].Value;
+
                 vType = dgView.Rows[i].Cells[COL_TYPE].Value;
 
                 if (vTime != null && vLyric != null && vType != null)
@@ -2259,12 +2266,21 @@ namespace Karaboss
                             sb[0] = ' ';
                         if (sLyric.EndsWith(@"_"))
                             sb[sLyric.Length - 1] = ' ';
-                        sLyric = sb.ToString();
-                       
+                        sLyric = sb.ToString();                       
                     }
 
                     sType = vType.ToString().Trim();
-                    sTime = "[" + vTime.ToString() + "]";
+
+                    // Translate time to right format of milliseconds
+                    sTime = vTime.ToString();
+                    time = long.Parse(sTime);
+                    ts = TimeSpan.FromMilliseconds(time);
+                    if (_LrcMillisecondsDigits == 2)
+                        tsp = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                    else
+                        tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                    sTime = "[" + tsp + "]";                    
+
 
                     if (sType != "cr" && sType != "par")
                     {
@@ -2363,7 +2379,12 @@ namespace Karaboss
             string sTime;
             string sLyric;
             object vLyric;
+            
             object vTime;
+            long time;
+            TimeSpan ts;
+            string tsp;
+
             string lrcs = string.Empty;
             string cr = "\r\n";
             string strSpaceBetween;
@@ -2405,7 +2426,8 @@ namespace Karaboss
             for (int i = 0; i < dgView.Rows.Count; i++)
             {                                
                 vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
-                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+                //vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+                vTime = dgView.Rows[i].Cells[COL_TICKS].Value;
 
                 if (vTime != null && vLyric != null && vTime.ToString() != "" && vLyric.ToString() != "")
                 {
@@ -2431,19 +2453,27 @@ namespace Karaboss
                         sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
 
                         // Save also empty lyrics
-                        sTime = vTime.ToString();
-
                         
+
+                        // Translate time to right format of milliseconds
+                        sTime = vTime.ToString();
+                        time = long.Parse(sTime);
+                        ts = TimeSpan.FromMilliseconds(time);
+                        if (_LrcMillisecondsDigits == 2)
+                            tsp = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                        else
+                            tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+
+
                         if (bLineFeed)
                         {
                             // Format of timestamp is []                                                        
-                            results.Add(("[" + sTime + "]", sLyric));
-
+                            results.Add(("[" + tsp + "]", sLyric));
                         }
                         else
                         {
                             // Format of timestamp is <> + space before
-                            results.Add(("<" + sTime + ">", sLyric));
+                            results.Add(("<" + tsp + ">", sLyric));
                         }
                         
                         bLineFeed = false;

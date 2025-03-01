@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="dgView.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer1.Panel1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="txtResult.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlRightBottom.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="btnDeleteAllLyrics.Text" xml:space="preserve">
     <value>Supprimer les &amp;paroles</value>
   </data>
@@ -135,13 +147,16 @@
   <data name="btnSave.Text" xml:space="preserve">
     <value>&amp;Enregistrer les paroles dans le fichier mp3</value>
   </data>
+  <data name="pnlRightTop.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer1.Panel2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>54, 20</value>
-  </data>
-  <data name="mnuFile.Text" xml:space="preserve">
-    <value>&amp;Fichier</value>
-  </data>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
     <value>249, 22</value>
   </data>
@@ -166,11 +181,11 @@
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
   </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 20</value>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>54, 20</value>
   </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>&amp;Edition</value>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;Fichier</value>
   </data>
   <data name="mnuEditLoadLRCFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>263, 22</value>
@@ -178,16 +193,67 @@
   <data name="mnuEditLoadLRCFile.Text" xml:space="preserve">
     <value>Charger un fichier texte (format .lrc)</value>
   </data>
-  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>43, 20</value>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 20</value>
   </data>
-  <data name="mnuHelp.Text" xml:space="preserve">
-    <value>&amp;Aide</value>
+  <data name="mnuEdit.Text" xml:space="preserve">
+    <value>&amp;Edition</value>
   </data>
   <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
     <value>131, 22</value>
   </data>
   <data name="mnuHelpAbout.Text" xml:space="preserve">
     <value>&amp;A propos...</value>
+  </data>
+  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 20</value>
+  </data>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Aide</value>
+  </data>
+  <data name="menuStrip1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlMiddle.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblLyricsOrigin.Size" type="System.Drawing.Size, System.Drawing">
+    <value>114, 15</value>
+  </data>
+  <data name="lblLyricsOrigin.Text" xml:space="preserve">
+    <value>Origine des paroles</value>
+  </data>
+  <data name="lblLyricsOrigin.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlTop.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAALAAAAEwAAABMAAAATAAAAEwAAABNAAAAIgAAACMAAADFAAAAXQAAACkAAAAAAAAAAAAA
+        AAAAAAAAAAAAVgAAAP4AAAD0AAAA7wAAAO8AAADvAAAA8AAAAKkAAAAGAAAAdwAAACcAAAD+AAAAJgAA
+        AAAAAAAAAAAAAAAAAOoAAABqAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAH8AAADVAAAA/wAA
+        APsAAAA3AAAAAAAAAAAAAAD7AAAAMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtwAA
+        AP8AAAD/AAAA/QAAABYAAAAAAAAA+wAAADUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAACpAAAA/wAAAMcAAAASAAAADgAAAPsAAAA1AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAkAAAAAAAAAKAAAAATAAAA3QAAAMwAAAD7AAAANQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAowAAAHMAAAAAAAAAmgAAAP0AAABsAAAA+wAAADUAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAJsAAADLAAAABAAAAAoAAAA8AAAAAQAAAPsAAAA1AAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAACbAAAAyAAAAAQAAAAAAAAAAAAAAAAAAAD7AAAANQAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAmwAAAMgAAAAEAAAAAAAAAAAAAAAAAAAA+wAAADUAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKUAAADIAAAABAAAAAAAAAAAAAAAAAAAAPsAAAA1AAAAAAAA
+        AAAAAAAAAAAAAAAAAB4AAAD7AAAA/wAAAP8AAAD/AAAAsQAAAAAAAAAAAAAAAAAAAAAAAAD7AAAANQAA
+        AAAAAAAAAAAAAAAAAAAAAAA1AAAA/AAAAP8AAAD+AAAA2AAAAAUAAAAAAAAAAAAAAAAAAAAAAAAA/QAA
+        ADQAAAAAAAAAAAAAAAAAAAAAAAAAMgAAAPsAAAD/AAAA3QAAABQAAAABAAAAAAAAAAAAAAAAAAAAAAAA
+        AMEAAAC1AAAANAAAADUAAAA1AAAAMQAAAHMAAAD/AAAA4wAAAAsAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAaAAAAwQAAAP0AAAD7AAAA+wAAAPsAAAD+AAAAqgAAABMAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAA/78AAIDvAAB/xwAAf8MAAH/jAAB/9AAAf9kAAH/PAAB/zwAAf88AAH/PAAB+DwAAfh8AAH4/
+        AAA+fwAAgP8AAA==
+</value>
+  </data>
+  <data name="$this.ToolTip" xml:space="preserve">
+    <value />
   </data>
 </root>

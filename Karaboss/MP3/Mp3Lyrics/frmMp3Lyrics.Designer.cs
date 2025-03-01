@@ -35,9 +35,9 @@
             this.pnlTitle = new System.Windows.Forms.Panel();
             this.lblTitle = new System.Windows.Forms.Label();
             this.picBalls = new BallsControl.Balls();
-            this.pnlTimer = new System.Windows.Forms.Timer(this.components);
             this.karaokeEffect1 = new keffect.KaraokeEffect();
             this.pnlWindow = new System.Windows.Forms.Panel();
+            this.pnlTimer = new System.Windows.Forms.Timer(this.components);
             this.pnlTop.SuspendLayout();
             this.pnlTitle.SuspendLayout();
             this.pnlWindow.SuspendLayout();
@@ -140,10 +140,6 @@
             resources.ApplyResources(this.picBalls, "picBalls");
             this.picBalls.Name = "picBalls";
             // 
-            // pnlTimer
-            // 
-            this.pnlTimer.Tick += new System.EventHandler(this.pnlTimer_Tick);
-            // 
             // karaokeEffect1
             // 
             this.karaokeEffect1.bColorContour = false;
@@ -184,6 +180,10 @@
             this.pnlWindow.Controls.Add(this.btnFrmClose);
             resources.ApplyResources(this.pnlWindow, "pnlWindow");
             this.pnlWindow.Name = "pnlWindow";
+            // 
+            // pnlTimer
+            // 
+            this.pnlTimer.Tick += new System.EventHandler(this.pnlTimer_Tick);
             // 
             // frmMp3Lyrics
             // 

@@ -32,8 +32,10 @@
 
 #endregion
 
+using FlShell.Interop;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -331,7 +333,7 @@ namespace Karaboss.Utilities
             return tic;
         }
 
-
+      
         #region LRC
 
         /// <summary>

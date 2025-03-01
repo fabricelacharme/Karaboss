@@ -163,6 +163,18 @@
   <data name="chkAlphaNumeric.Text" xml:space="preserve">
     <value>Supprimer les caractères non alphanumériques</value>
   </data>
+  <data name="OptFormat2Digits.Size" type="System.Drawing.Size, System.Drawing">
+    <value>184, 17</value>
+  </data>
+  <data name="OptFormat2Digits.Text" xml:space="preserve">
+    <value>Centièmes de seconde [00:05.12]</value>
+  </data>
+  <data name="OptFormat3Digits.Size" type="System.Drawing.Size, System.Drawing">
+    <value>145, 17</value>
+  </data>
+  <data name="OptFormat3Digits.Text" xml:space="preserve">
+    <value>Millisecondes [00.05.123]</value>
+  </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Karaboss - Exporter au format LRC</value>
   </data>

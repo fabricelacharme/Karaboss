@@ -776,6 +776,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
             // Save to line or to syllabes
             LrcLinesSyllabesFormats LrcLinesSyllabesFormat = LrcOptionsDialog.LrcLinesSyllabesFormat;
 
+            _LrcMillisecondsDigits = LrcOptionsDialog.LrcMillisecondsDigits;
+
             // Cut lines over x characters
             bool bCutLines = LrcOptionsDialog.bCutLines;
             int LrcCutLinesChars = LrcOptionsDialog.LrcCutLinesChars;
@@ -1189,7 +1191,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
 
                     // Save also empty lyrics
-                    sTime = vTime.ToString();
+                    //sTime = vTime.ToString();
 
                     if (bLineFeed)
                     {
