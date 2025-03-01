@@ -46,6 +46,7 @@ using Karaboss.MidiLyrics;
 using Karaboss.Utilities;
 using static Karaboss.Karaclass;
 using System.Text;
+using Karaboss.Mp3.Mp3Lyrics;
 
 
 namespace Karaboss
@@ -2243,8 +2244,8 @@ namespace Karaboss
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
                 vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;                
-                //vTime = dgView.Rows[i].Cells[COL_TIME].Value;               
-                vTime = dgView.Rows[i].Cells[COL_TICKS].Value;
+                vTime = dgView.Rows[i].Cells[COL_TIME].Value;               
+                //vTime = dgView.Rows[i].Cells[COL_TICKS].Value;  // NON ! ticks != duration
 
                 vType = dgView.Rows[i].Cells[COL_TYPE].Value;
 
@@ -2273,13 +2274,15 @@ namespace Karaboss
 
                     // Translate time to right format of milliseconds
                     sTime = vTime.ToString();
-                    time = long.Parse(sTime);
-                    ts = TimeSpan.FromMilliseconds(time);
+                    
                     if (_LrcMillisecondsDigits == 2)
-                        tsp = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-                    else
-                        tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
-                    sTime = "[" + tsp + "]";                    
+                    {
+                        time = (long)Mp3LyricsMgmtHelper.TimeToMs(sTime);
+                        ts = TimeSpan.FromMilliseconds(time);
+                        sTime = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                    }
+                                                           
+                    sTime = "[" + sTime + "]";                    
 
 
                     if (sType != "cr" && sType != "par")
@@ -2426,8 +2429,8 @@ namespace Karaboss
             for (int i = 0; i < dgView.Rows.Count; i++)
             {                                
                 vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
-                //vTime = dgView.Rows[i].Cells[COL_TIME].Value;
-                vTime = dgView.Rows[i].Cells[COL_TICKS].Value;
+                vTime = dgView.Rows[i].Cells[COL_TIME].Value;  // [01:02:123]
+                // vTime = dgView.Rows[i].Cells[COL_TICKS].Value;  // non !!! les ticks n'ont rien à voir avec les durées
 
                 if (vTime != null && vLyric != null && vTime.ToString() != "" && vLyric.ToString() != "")
                 {
@@ -2457,23 +2460,23 @@ namespace Karaboss
 
                         // Translate time to right format of milliseconds
                         sTime = vTime.ToString();
-                        time = long.Parse(sTime);
-                        ts = TimeSpan.FromMilliseconds(time);
                         if (_LrcMillisecondsDigits == 2)
-                            tsp = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-                        else
-                            tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                        {
+                            time = (long)Mp3LyricsMgmtHelper.TimeToMs(sTime); // [00:01.123] => 1256
+                            ts = TimeSpan.FromMilliseconds(time);
+                            sTime = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                        }
 
 
                         if (bLineFeed)
                         {
                             // Format of timestamp is []                                                        
-                            results.Add(("[" + tsp + "]", sLyric));
+                            results.Add(("[" + sTime + "]", sLyric));
                         }
                         else
                         {
                             // Format of timestamp is <> + space before
-                            results.Add(("<" + tsp + ">", sLyric));
+                            results.Add(("<" + sTime + ">", sLyric));
                         }
                         
                         bLineFeed = false;
