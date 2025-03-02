@@ -383,7 +383,9 @@ namespace Karaboss.Mp3
                 _karaokeFont = Properties.Settings.Default.KaraokeFont;
                 karaokeEffect1.KaraokeFont = _karaokeFont;
                 //karaokeEffect1.bShowParagraphs = Karaclass.m_ShowParagraph;
-                
+
+                bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;
+
                 // Force Uppercase
                 _bForceUppercase = Karaclass.m_ForceUppercase;               
 
@@ -441,6 +443,7 @@ namespace Karaboss.Mp3
                 FreqSlideShow = Properties.Settings.Default.freqSlideShow;
                 // Position image
                 SizeMode = Properties.Settings.Default.SizeMode;
+
 
             }
             catch (Exception e)

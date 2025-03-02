@@ -68,16 +68,20 @@ namespace keffect
 
         private float percent = 0;
         private float lastpercent = 0;
+        private long _timerintervall = 50;      // Intervall of timer of frmMp3Player
 
         private List<string[]> Lines;
         private List<long[]> Times;
         private string[] Texts;
         private float[] LinesLengths;        
         
-        private int index = 0;
-        private int lastindex = -1;        
+        private int nextindex = 0;
+        private int lastindex = 0;        
         private float CurLength;
         private float lastCurLength;
+
+        long _nexttime;
+        long _lasttime;
 
         private Font m_font;   // used to measure strings without changing _karaokeFont
         private float emSize = 40;
@@ -145,7 +149,6 @@ namespace keffect
             }
         }
 
-
         /// <summary>
         /// SlideShow frequency
         /// </summary>
@@ -182,10 +185,7 @@ namespace keffect
 
         #endregion SlideShow
 
-
       
-
-
         // Text To Upper
         private bool _bforceUppercase = false;
         public bool bforceUppercase
@@ -258,7 +258,6 @@ namespace keffect
                     default:
                         break;
                 }
-
             }
         }
 
@@ -318,8 +317,7 @@ namespace keffect
             get { return _transitionEffect; } 
             set { _transitionEffect = value; }
         }
-        
-        
+                
         private int _position = 0;
         /// <summary>
         /// Player position => highlight lyrics at this position
@@ -408,7 +406,6 @@ namespace keffect
             }
         }
 
-
         private Color _txtbackcolor;
         public Color TxtBackColor
         {
@@ -439,8 +436,6 @@ namespace keffect
         }
 
         #endregion properties
-
-
 
 
         /// <summary>
@@ -695,11 +690,7 @@ namespace keffect
         /// <param name="e"></param>
         private void pBox_Paint(object sender, PaintEventArgs e)
         {           
-            // Antialiasing
-            
-            //e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
-            //e.Graphics.PageUnit = GraphicsUnit.Pixel;
-
+            // Antialiasing      
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
@@ -761,55 +752,17 @@ namespace keffect
             int x0 = 0;
 
             int Wbg;            
-            RectangleF Rbg;
-
-            // ======================================================================================================
-            // 1. Draw and color all lines from _linedeb + 1 to _linefin in white
-            // We want to display only a few number of lines (variable _nbLyricsLines = number of lines to display)  
-            // linedeb which is the current line is displayed in the next paragraph
-            // ======================================================================================================
-            var path = new GraphicsPath();
-
-            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
-            {
-                if (i < Texts.Count()) {
-                    x0 = HCenterText(Texts[i]);     // Center text horizontally
-                                        
-                    #region background of syllabe                              
-                    if (_bTextBackGround)
-                    {                        
-                        Wbg = (int)LinesLengths[i];
-                        // Black background to make text more visible
-                        Rbg = new RectangleF(x0, y0 + (i - _FirstLineToShow) * _lineHeight, Wbg, _lineHeight);
-                        // background
-                        e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
-                    }
-                    #endregion
-
-                    // Draw lines of lyrics
-                    path.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLineToShow) * _lineHeight), sf);
-
-                }
-            }
-
-            // _NotYetPlayedColor is the color for text not played (typically white)
-            colorBrush = new SolidBrush(_NotYetPlayedColor);            
-            e.Graphics.FillPath(colorBrush, path);
-
-            // Borders of text
-            if (_bColorContour)
-                e.Graphics.DrawPath(new Pen(_txtcontourcolor, 1), path);
-
-            path.Dispose();
-
+            RectangleF Rbg;        
 
             // =============================================
-            // 2. Color the current line in whithe
+            // WHITE
+            // 1. Color the current line in whithe
             // and than color portions above the white in green (already played) and red (currently played) 
             // =============================================
             // Create a graphical path
-            path = new GraphicsPath();
+            var path = new GraphicsPath();
 
+            
             // Add the full text line to the graphical path            
             if (_FirstLineToShow < Texts.Count())
             {
@@ -823,13 +776,14 @@ namespace keffect
                 e.Graphics.FillPath(outlineBrush, path);
             }
 
-            // Fill graphical path in white => full text is white            
+            // Fill graphical path in white => full text is white
+            colorBrush = new SolidBrush(_NotYetPlayedColor);
             e.Graphics.FillPath(colorBrush, path);
-
             
 
             // ======================================================
-            // Color in GREEN the syllabes before current syllabe
+            // GREEN
+            // 2. Color in GREEN the syllabes before current syllabe
             // ======================================================
             // Create a region from the graphical path
             Region r = new Region(path);
@@ -846,13 +800,13 @@ namespace keffect
 
 
             // ======================================================
-            // Color in RED the  current syllabe
+            // RED
+            // 3. Color in RED the  current syllabe
             // ======================================================
             r = new Region(path);
 
             // Create another rectangle shorter than the 1st one (percent of the first)                       
             RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);
-
 
             // update region on the intersection between region and 2nd rectangle
             r.Intersect(intersectRect);
@@ -860,8 +814,49 @@ namespace keffect
             // Fill updated region in red => percent portion of text is red
             colorBrush = new SolidBrush(_BeingPlayedColor);            
             e.Graphics.FillRegion(colorBrush, r);
-
             
+            // Borders of text
+            if (_bColorContour)
+                e.Graphics.DrawPath(new Pen(_txtcontourcolor, 1), path);
+                                                
+            path.Dispose();
+
+
+            // ======================================================================================================
+            // NEXT LINES
+            // 4. Draw and color all lines from _linedeb + 1 to _linefin in white
+            // We want to display only a few number of lines (variable _nbLyricsLines = number of lines to display)  
+            // linedeb which is the current line is displayed in the next paragraph
+            // ======================================================================================================
+            path = new GraphicsPath();
+
+            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
+            {
+                if (i < Texts.Count())
+                {
+                    x0 = HCenterText(Texts[i]);     // Center text horizontally
+
+                    #region background of syllabe                              
+                    if (_bTextBackGround)
+                    {
+                        Wbg = (int)LinesLengths[i];
+                        // Black background to make text more visible
+                        Rbg = new RectangleF(x0, y0 + (i - _FirstLineToShow) * _lineHeight, Wbg, _lineHeight);
+                        // background
+                        e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+                    }
+                    #endregion
+
+                    // Draw lines of lyrics
+                    path.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLineToShow) * _lineHeight), sf);
+
+                }
+            }
+
+            // _NotYetPlayedColor is the color for text not played (typically white)
+            colorBrush = new SolidBrush(_NotYetPlayedColor);
+            e.Graphics.FillPath(colorBrush, path);
+
             // Borders of text
             if (_bColorContour)
                 e.Graphics.DrawPath(new Pen(_txtcontourcolor, 1), path);
@@ -900,74 +895,14 @@ namespace keffect
             }
             return maxline;
         }
-
-
-        #region deleteme
+      
 
         /// <summary>
-        /// Retrieve which line for pos
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <returns></returns>
-        private int GetLine(int pos)
-        {
-            /*
-            for (int i = 0; i < Lines.Count; i++)
-            {
-                if (pos < Times[i][Times[i].Count() - 1])
-                {
-                    return i;                                        
-                }
-            }
-            return 0;
-            */
-            /*
-            for (int i = 0; i < Lines.Count; i++)
-            {
-                if (pos >= Times[i][0])
-                {
-                    return i;
-                }
-            }
-            return 0;
-            */
-
-            for (int j = 0; j < Lines.Count; j++)
-            {
-                // Search for which timespamp is greater than pos
-                for (int i = 0; i < Times[j].Length; i++)
-                {
-                    if (pos < Times[j][i])
-                    {
-                        return j;
-                    }
-                }
-            }
-            return Lines.Count - 1;
-
-            /*
-            for (int i = Lines.Count -1; i >= 0; i--)
-            {
-                if (pos >= Times[i][0])
-                {
-                    return i;
-                }
-
-            }
-            return 0;
-            */
-        }
-
-        #endregion deleteme
-
-        /// <summary>
-        /// Retrieve index of current syllabe in the current line
+        /// Retrieve nextindex of current syllabe in the current line
         /// </summary>
         /// <returns></returns>       
-        private int GetIndex(int pos)
-        {
-          
-            
+        private int GetNextIndex(int pos)
+        {                      
             for (int j = Lines.Count - 1; j >= 0; j--)
             {
                 for (int i = Times[j].Length - 1; i >= 0; i--)
@@ -982,7 +917,7 @@ namespace keffect
             return 0;            
         }
 
-
+       
         /// <summary>
         /// Mesure length of a portion of line
         /// </summary>
@@ -1003,6 +938,7 @@ namespace keffect
 
 
         #region adjust text
+
         /// <summary>
         /// Ajust size of font regarding size of pictureBox1
         /// </summary>
@@ -1142,8 +1078,9 @@ namespace keffect
             _line = 0;
             percent = 0;
             lastpercent = 0;
-            index = 0;
-            lastindex = -1;
+            nextindex = 0;
+            lastindex = 0;
+            _lasttime = 0;
             lastCurLength = 0;
             CurLength = 0;
 
@@ -1157,8 +1094,9 @@ namespace keffect
 
             percent = 0;
             lastpercent = 0;
-            index = 0;
-            lastindex = -1;
+            nextindex = 0;
+            lastindex = 0;
+            _lasttime = 0;
             lastCurLength = 0;
             CurLength = 0;
             pBox.Invalidate();            
@@ -1176,37 +1114,45 @@ namespace keffect
 
         private void SetPosition(int pos)
         {       
-            // Search index of lyric to play
-            index = GetIndex(pos);
+            // Search nextindex of lyric to play
+            nextindex = GetNextIndex(pos);
 
             // Length of partial line
-            CurLength = GetCurLength(index);
+            CurLength = GetCurLength(nextindex);
 
             // New word to highlight
-            // Warning: in cas of full lines, index is always the same and not different than lastIndex
-            if (index != lastindex || _line != _lastLine)
-            {
-                                
+            // Warning: in cas of full lines, nextindex is always the same and not different than lastIndex
+            if (nextindex != lastindex || _line != _lastLine)
+            {                                
                 // Line changed
                 if (_line !=  _lastLine)
                 {
                     _lastLine = _line;
                     percent = 0;
                     lastpercent = 0;
-                    index = 0;
-                    lastindex = -1;
+                    nextindex = 0;
+                    lastindex = 0;
                     lastCurLength = 0;
                     CurLength = 0;
+
+                    _lasttime = _nexttime;
                 }
                 
                 _FirstLineToShow = _line;
                 _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
 
+                //Console.WriteLine("nexttime before: " + _nexttime);
+                if (nextindex < Times[_line].Count())
+                {
+                    _nexttime = Times[_line][nextindex];                                      
+                }
+                //Console.WriteLine("nexttime after: " + _nexttime);
+                //Console.WriteLine("lasttime: " + _lasttime);
 
-                //Console.WriteLine("test Line : " + line);
-                Console.WriteLine("Line : " + _line + " - index : " + index);
 
-                
+                //Console.WriteLine("Line : " + _line + " - nextindex : " + nextindex + " - nexttime : " + _nexttime + " - lasttime " + _lasttime);
+
+
                 // Save last value of percent
                 lastpercent = percent;
 
@@ -1223,25 +1169,42 @@ namespace keffect
 
                 // Caculate distance between LastCurLength et CurLength
                 float d = (float)(CurLength - lastCurLength);
+
                 if (_transitionEffect == TransitionEffects.None)
                 {
                     _steppercent = d;
                 }
                 else if (_transitionEffect == TransitionEffects.Progressive)
                 {
-                    
+
                     // Set 3000 occurences to reach the end 
-                    _steppercent = d / 3000;
+                    //_steppercent = d / 3000;
+
+                    if (d > 0 && (_nexttime - _lasttime) > 0)
+                    {
+                        //Console.WriteLine("_nexttime = " + _nexttime + " - _lasttime = " + _lasttime);
+
+                        //_steppercent = (_nexttime - _lasttime) / (d * _timerintervall);
+                        //_steppercent = (_nexttime - _lasttime) / (1000*(float)_timerintervall);
+
+                        _steppercent = (_nexttime - _lasttime) / (d*(float)_timerintervall);
+                        
+
+                        //Console.WriteLine("_steppercent = " + _steppercent);
+                    }
+                    
                 }
                 
                 lastCurLength = CurLength;
-                lastindex = index;
+                lastindex = nextindex;
+                
                 pBox.Invalidate();                
             }
             else
             {
-                // if same index: progressive increase of percent
+                // if same nextindex: progressive increase of percent
                 percent += _steppercent;
+                //Console.WriteLine("percent = " + percent);
 
                 if (percent > (CurLength / LinesLengths[_line]))
                 {
