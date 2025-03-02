@@ -33,13 +33,16 @@
 #endregion
 
 using FlShell.Interop;
+using Hqub.MusicBrainz.API.Entities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using static System.Windows.Forms.LinkLabel;
 
 namespace Karaboss.Utilities
 {
@@ -340,7 +343,7 @@ namespace Karaboss.Utilities
         #region LRC
 
         /// <summary>
-        /// LRC: Returns lyrics by lines 
+        /// LRC: Returns lyrics by lines <time, type, lyric)
         /// format: 1 timestamp + full line = 
         /// [00:03.598]
         /// [00:04.598]IT'S BEEN A HARD DAY'S NIGHT
@@ -363,6 +366,58 @@ namespace Karaboss.Utilities
             // ("[00:04.59]", "cr", "/")
             // ("[00:04.59]", "text", "IT'S")
 
+            string tx = string.Empty;
+            for (int i = 0; i < lstLyricsItems.Count; i++)
+            {
+                sTime = lstLyricsItems[i].Item1;
+                sLyric = lstLyricsItems[i].Item3;
+                tx += sTime + sLyric;
+            }
+            
+            // Split by "[" to have lines
+            string[] lines = tx.Split('/');
+
+            // [00:05.67]HEY [00:06.48]JUDE [00:08.51]DON'T [00:08.91]MAKE [00:09.32]IT [00:09.73]BAD
+            // [00:09.73]/
+            // [00:12.16]TAKE [00:12.56]A [00:12.97]SAD [00:13.78]SONG [00:15.00]AND [00:15.40]MAKE [00:15.81]IT [00:16.21]BET[00:17.02]TER
+            // [00:17.02]/
+            // [00:17.02]/
+            // [00:19.05]RE[00:19.45]MEM[00:19.86]BER [00:20.67]TO [00:21.08]LET
+
+            string removepattern3 = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
+            string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
+            string replace = @"";
+
+            int digits = GetDigitsLRC(lines);
+
+            string line;
+            // Treatment for each line
+            for (int i = 0; i < lines.Length; i++)
+            {
+                line = lines[i];
+                line = line.Trim();
+                if (line.Length == 0) continue;
+                
+
+                if (digits == 2)
+                {
+                    if (line.Length < 10) continue;
+                    sTime = line.Substring(0, 10);
+                    line = Regex.Replace(line, removepattern2, replace);
+                }
+                else
+                {
+                    if (line.Length < 11) continue;
+                    sTime = line.Substring(0, 11);
+                    line = Regex.Replace(line, removepattern3, replace);
+                }
+                                               
+                line = sTime + line.Trim(); 
+                lstLines.Add(line); ;
+
+            }
+
+            /*
             try
             {
                 // sTime, sType, sLyric
@@ -444,9 +499,74 @@ namespace Karaboss.Utilities
                 //return null;
             }
 
+            */
+
             return lstLines;
         }
-   
+
+
+        /// <summary>
+        /// Find out what type of digits the file is made out
+        /// </summary>
+        /// <param name="lines"></param>
+        /// <returns></returns>
+        private static int GetDigitsLRC(string[] lines)
+        {
+            string line;
+            string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\])";
+            string pattern2digits = @"(?:\[(\d{2}:\d{2}\.\d{2})\])";
+
+            // Select right pattern
+            int digits3 = 0;
+            int digits2 = 0;
+
+            // Find out what type of digits the file is made of: 2 or 3
+            for (int i = 0; i < lines.Length; i++)
+            {
+                line = lines[i];
+                MatchCollection matches3digits = Regex.Matches(line, pattern3digits);
+                MatchCollection matches2digits = Regex.Matches(line, pattern2digits);
+                if (matches3digits.Count > 0) digits3++;
+                else if (matches2digits.Count > 0) digits2++;
+            }
+
+            if (digits3 == 0 && digits2 == 0)
+                return -1;
+
+            return digits3 > digits2 ? 3 : 2;
+        }
+
+
+        /// <summary>
+        /// Find out what type of digits the file is made out
+        /// </summary>
+        /// <param name="lines"></param>
+        /// <returns></returns>
+        private static string GetPatternLRC(string[] lines)
+        {
+            string line;
+            string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
+            string pattern2digits = @"(?:\[(\d{2}:\d{2}\.\d{2})\]|<(\d{2}:\d{2}\.\d{2})>)(\S+)";
+
+            // Select right pattern
+            int digits3 = 0;
+            int digits2 = 0;
+
+            // Find out what type of digits the file is made of: 2 or 3
+            for (int i = 0; i < lines.Length; i++)
+            {
+                line = lines[i];
+                MatchCollection matches3digits = Regex.Matches(line, pattern3digits);
+                MatchCollection matches2digits = Regex.Matches(line, pattern2digits);
+                if (matches3digits.Count > 0) digits3++;
+                else if (matches2digits.Count > 0) digits2++;
+            }
+
+            if (digits3 == 0 && digits2 == 0)
+                return null;
+
+            return digits3 > digits2 ? pattern3digits : pattern2digits;
+        }
 
         /// <summary>
         /// Return lyrics by line with their timestamps
@@ -463,6 +583,99 @@ namespace Karaboss.Utilities
             string sLyric;
             string sTimeLine = string.Empty;
 
+
+            string tx = string.Empty;
+            for (int i = 0; i < lstLyricsItems.Count; i++)
+            {
+                sTime = lstLyricsItems[i].Item1;
+                sLyric = lstLyricsItems[i].Item3.Replace(" ", "_");
+                tx += sTime + sLyric;
+            }
+
+            tx = tx.Replace(m_SepParagraph, m_SepLine);
+
+            // Split by "[" to have lines
+            string[] lines = tx.Split('/');
+            string line;
+            string[] items;
+            string item;
+            tx = string.Empty;
+
+            // Regex to capture timestamps and words => for milliseconds having 3 digits or 2
+            // Find out what type of digits the file is made out
+            int digits = GetDigitsLRC(lines);
+            string pattern = GetPatternLRC(lines);
+            if (pattern == null)
+            {
+                MessageBox.Show("Invalid lrc file, no timestamps found", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+            string timestamp;
+            string word;            
+
+            for (int i = 0; i < lines.Count(); i++)
+            {
+                line = lines[i];
+                tx = string.Empty;
+
+                
+                // Case lines with only a timestamp [00:03.12]
+                if (digits == 2)
+                {
+                    if (line.Length == 10 && line.StartsWith("[") && line.EndsWith("]"))
+                    {
+                        tx = line;
+                    }
+                    else
+                    {
+                        line = line.Replace("] ", "]");  // Match does not work with lyrics having a space before it ([00:12.45] Hello)
+                        line = line.Replace("[", " [");
+                        line = line.Replace("  [", " [");
+                        line = line.Trim();
+
+                        MatchCollection matches2 = Regex.Matches(line, pattern);
+                        if (matches2.Count == 0) continue;
+
+                        foreach (Match match in matches2)
+                        {
+                            timestamp = match.Groups[1].Value != "" ? match.Groups[1].Value : match.Groups[2].Value;
+                            word = match.Groups[3].Value;
+
+                            tx += "[" + timestamp + "]" + word + " ";
+                        }
+                    }
+                }
+                else if (digits == 3)
+                {
+                    if (line.Length == 11 && line.StartsWith("[") && line.EndsWith("]"))
+                    {
+                        tx = line;
+                    }
+                    else
+                    {
+                        line = line.Replace("] ", "]");  // Match does not work with lyrics having a space before it ([00:12.45] Hello)
+                        line = line.Replace("[", " [");
+                        line = line.Replace("  [", " [");
+                        line = line.Trim();
+
+                        MatchCollection matches3 = Regex.Matches(line, pattern);
+                        if (matches3.Count == 0) continue;
+
+                        foreach (Match match in matches3)
+                        {
+                            timestamp = match.Groups[1].Value != "" ? match.Groups[1].Value : match.Groups[2].Value;
+                            word = match.Groups[3].Value;
+
+                            tx += "[" + timestamp + "]" + word + " ";
+                        }
+                    }
+                }
+
+                
+                lstTimeLines.Add(tx);
+            }
+
+            /*
             try
             {
                 // sTime, sType, sLyric
@@ -521,8 +734,6 @@ namespace Karaboss.Utilities
                         else
                             sTimeLine += sTime + strSpaceBetween + sLyric;
                     }
-
-
                 }
 
                 // Save last line
@@ -536,6 +747,7 @@ namespace Karaboss.Utilities
 
             }
             catch (Exception e) { MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            */
 
             return lstTimeLines;
         }      
@@ -576,7 +788,7 @@ namespace Karaboss.Utilities
 
                 for (int i = 0; i < lstTimeLines.Count; i++)
                 {
-                    sTimeLine = lstTimeLines[i];
+                    sTimeLine = lstTimeLines[i].Trim();
                     MatchCollection mc3 = Regex.Matches(sTimeLine, removepattern3);
                     MatchCollection mc2 = Regex.Matches(sTimeLine, removepattern2);
 
@@ -589,16 +801,22 @@ namespace Karaboss.Utilities
                     {
                         for (int j = 0; j < words.Length; j++)
                         {
-                            Times[j] = words[j].Substring(0, 10);
-                            words[j] = Regex.Replace(words[j], removepattern2, replace);
+                            if (words[j].Length >= 10)
+                            {
+                                Times[j] = words[j].Substring(0, 10);
+                                words[j] = Regex.Replace(words[j], removepattern2, replace);
+                            }
                         }
                     }
                     else
                     {
                         for (int j = 0; j < words.Length; j++)
                         {
-                            Times[j] = words[j].Substring(0, 11);
-                            words[j] = Regex.Replace(words[j], removepattern3, replace);
+                            if (words[j].Length >= 11)
+                            {
+                                Times[j] = words[j].Substring(0, 11);
+                                words[j] = Regex.Replace(words[j], removepattern3, replace);
+                            }
                         }
                     }
 

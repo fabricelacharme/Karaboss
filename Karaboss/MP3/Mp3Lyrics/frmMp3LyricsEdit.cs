@@ -1025,7 +1025,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
                             sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
                             sLyric = sLyric.Replace(" ", "_");
 
-                            lstLyricsItems.Add((sTime, sType, m_SepParagraph + sLyric));
+                            lstLyricsItems.Add((sTime, "cr", m_SepLine));
+                            lstLyricsItems.Add((sTime, sType, sLyric));
                         }
                     }
                     else if (sLyric.IndexOf(m_SepLine) > -1)
@@ -1064,7 +1065,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
                             sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
                             sLyric = sLyric.Replace(" ", "_");
 
-                            lstLyricsItems.Add((sTime, sType, m_SepLine + sLyric));
+                            lstLyricsItems.Add((sTime, "cr", m_SepLine));
+                            lstLyricsItems.Add((sTime, sType, sLyric));
                         }
                     }
                     else

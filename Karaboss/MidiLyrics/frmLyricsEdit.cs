@@ -2347,7 +2347,7 @@ namespace Karaboss
                 {
                     // Replace underscores located in the middle of the lyrics
                     // ex: " the_air,_(get_to_poppin')"
-                    lrcs += lstLinesCut[i].Replace("_", " ") + cr;
+                    lrcs += lstLinesCut[i].Replace("]_", "]").Replace(" ", "").Replace("_", " ") + cr;
                 }
             }
             else
@@ -2355,8 +2355,8 @@ namespace Karaboss
                 for (int i = 0; i < lstLines.Count; i++)
                 {
                     // Replace underscores located in the middle of the lyrics
-                    // ex: " the_air,_(get_to_poppin')"
-                    lrcs += lstLines[i].Replace("_", " ") + cr;
+                    // ex: " the_air,_(get_to_poppin')"                    
+                    lrcs += lstLines[i].Replace("]_", "]").Replace(" ", "").Replace("_", " ") + cr;
                 }
             }
             #endregion send all to string

@@ -395,6 +395,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
             }
             catch (Exception e) { MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); return null; }
 
+
             // Regex to capture timestamps and words => for milliseconds having 3 digits or 2
             // Find out what type of digits the file is made out
             string pattern = GetPatternLRC(lines);
@@ -409,7 +410,10 @@ namespace Karaboss.Mp3.Mp3Lyrics
             // Load lyrics in KaraokeEffect format
             List<keffect.KaraokeEffect.kSyncText> SyncLine;
             List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
-            
+
+            string timestamp;
+            string word;
+
             for (int i = 0; i < lines.Length; i++)
             {
                 // study line by line
@@ -427,8 +431,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 foreach (Match match in matches)
                 {
                     // Try with "[]", than with "<>"
-                    string timestamp = match.Groups[1].Value != "" ? match.Groups[1].Value : match.Groups[2].Value;
-                    string word = match.Groups[3].Value;
+                    timestamp = match.Groups[1].Value != "" ? match.Groups[1].Value : match.Groups[2].Value;
+                    word = match.Groups[3].Value;
 
                     // Clean word
                     word = word.Replace("\r\n", "").Replace("\r", "").Replace("\n", "").Replace("_", " ").Replace("/", "");
