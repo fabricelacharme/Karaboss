@@ -415,6 +415,10 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 // study line by line
                 line = lines[i];
 
+                // Warning lines with only a time stamp, without lyric [00:08.05] is rejected
+                if (line.StartsWith("[") && line.EndsWith("]"))
+                    line = line + "/";
+
                 MatchCollection matches = Regex.Matches(line, pattern);
                 if (matches.Count == 0) continue;
 
@@ -427,7 +431,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     string word = match.Groups[3].Value;
 
                     // Clean word
-                    word = word.Replace("\r\n", "").Replace("\r", "").Replace("\n", "").Replace("_", " ");
+                    word = word.Replace("\r\n", "").Replace("\r", "").Replace("\n", "").Replace("_", " ").Replace("/", "");
 
                     // Add a space only if a line composed of words and not a full line
                     // => separate different words of a line

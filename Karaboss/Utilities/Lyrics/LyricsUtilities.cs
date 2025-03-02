@@ -53,6 +53,9 @@ namespace Karaboss.Utilities
    
     public static class LyricsUtilities
     {
+        public static string m_SepLine = "/";
+        public static string m_SepParagraph = "\\";
+
         /// <summary>
         /// Conversion table accented chars to non accentued chars
         /// </summary>
@@ -333,70 +336,101 @@ namespace Karaboss.Utilities
             return tic;
         }
 
-      
+
         #region LRC
 
         /// <summary>
         /// LRC: Returns lyrics by lines 
-        /// format: 1 timestamp + full line = [00:04.598]IT'S BEEN A HARD DAY'S NIGHT
+        /// format: 1 timestamp + full line = 
+        /// [00:03.598]
+        /// [00:04.598]IT'S BEEN A HARD DAY'S NIGHT
         /// </summary>
         /// <param name="lstLyricsItems"></param>
         /// <param name="strSpaceBetween"></param>
         /// <returns></returns>
         public static List<string> GetLrcLines(List<(string, string, string)> lstLyricsItems, string strSpaceBetween)
         {
-            List<string> lstLines = new List<string>();
-
-            bool bStartLine;
-            string sTime;
-            string sType;
+            List<string> lstLines = new List<string>();            
+            string sTime;            
             string sLyric;
             string sLine = string.Empty;
 
-            bStartLine = true;
+            // Case full lines
+            // ("[00:08.05]", "cr", "/")
+            // ("[00:08.06]", "text", "/ENCORE_UN_SOIR")
+
+            // Case syllabes
+            // ("[00:04.59]", "cr", "/")
+            // ("[00:04.59]", "text", "IT'S")
 
             try
             {
                 // sTime, sType, sLyric
                 for (int i = 0; i < lstLyricsItems.Count; i++)
                 {
-                    sTime = lstLyricsItems[i].Item1;
-                    sType = lstLyricsItems[i].Item2;
+                    sTime = lstLyricsItems[i].Item1;                    
                     sLyric = lstLyricsItems[i].Item3;
 
-                    if (sType == "text")      // Do not add empty lyrics to a line ?
+                    if (sLyric.Trim() == m_SepParagraph)
                     {
-
-                        if (bStartLine)
-                        {
-                            if (sLyric.Length > 0 && sLyric.StartsWith(" "))
-                                sLyric = sLyric.Remove(0, 1);
-                            sLine = sTime + strSpaceBetween + sLyric;    // time + lyric for the beginning of a line                        
-                            bStartLine = false;
-                        }
-                        else
-                        {
-                            // Line continuation
-                            sLine += sLyric; // only lyric for the continuation of a line                        
-                        }
-                    }
-                    else
-                    {
-                        // Remove last space
-                        if (sLine.Length > 0 && sLine.EndsWith(" "))
-                            sLine = sLine.Remove(sLine.Length - 1, 1);
-
                         // Save current line
                         if (sLine != "")
                         {
                             // Add new line
                             lstLines.Add(sLine);
                         }
-
-                        // Reset all
-                        bStartLine = true;
-                        sLine = string.Empty;
+                        sLine = sTime;
+                        // Add new line
+                        //lstLines.Add(sLine);
+                        //sLine = string.Empty;
                     }
+                    else if (sLyric.Trim() == m_SepLine)
+                    {
+                        // Save current line
+                        if (sLine != "")
+                        {
+                            // Add new line
+                            lstLines.Add(sLine);
+                        }
+                        sLine = sTime;
+                        // Add new line
+                        //lstLines.Add(sLine);
+                        //sLine = string.Empty;
+                    }
+                    else if (sLyric.Trim().StartsWith(m_SepParagraph))
+                    {
+                        // Save current line
+                        if (sLine != "")
+                        {
+                            // Add new line
+                            lstLines.Add(sLine);
+                        }
+                        // Start a new line
+                        sLyric = sLyric.Replace(m_SepParagraph, "");
+                        if (sLyric.Length > 0 && sLyric.StartsWith(" "))
+                            sLyric = sLyric.Remove(0, 1);
+                        sLine = sTime + strSpaceBetween + sLyric;
+                    }
+                    else if (sLyric.Trim().StartsWith(m_SepLine))
+                    {
+                        // Save current line
+                        if (sLine != "")
+                        {
+                            // Add new line
+                            lstLines.Add(sLine);
+                        }
+                        // Start a new line
+                        sLyric = sLyric.Replace(m_SepLine, "");
+                        if (sLyric.Length > 0 && sLyric.StartsWith(" "))
+                            sLyric = sLyric.Remove(0, 1);
+                        sLine = sTime + strSpaceBetween + sLyric;
+
+                    }
+                    else
+                    {
+                        // Line continuation
+                        sLine += sLyric; // only lyric for the continuation of a line   
+                    }                   
                 }
                 // Save last line
                 if (sLine != "")
@@ -412,35 +446,7 @@ namespace Karaboss.Utilities
 
             return lstLines;
         }
-
-        /*
-        /// <summary>
-        /// SYLT: Return lyrics by line
-        /// format: 1 timestamp + full line = [00:04.598]/IT'S BEEN A HARD DAY'S NIGHT
-        /// Difference with GetLrcLines: add a / character in front of each line 
-        /// </summary>
-        /// <param name="lstLyricsItems"></param>
-        /// <param name="strSpaceBetween"></param>
-        /// <returns></returns>
-        public static List<string> GetSyltLines(List<(string, string, string)> lstLyricsItems, string strSpaceBetween)
-        {
-            string sLine;
-            List<string> Lines = GetLrcLines(lstLyricsItems, strSpaceBetween);
-            List<string> lstLines = new List<string>();
-
-            for (int i = 0; i < Lines.Count; i++)
-            {
-                sLine = Lines[i];
-                if (sLine.Length > 11)
-                    sLine = sLine.Substring(0, 11) + "/" + sLine.Substring(11);
-                else
-                    sLine = sLine.Substring(0, 11) + "/";
-                lstLines.Add(sLine);
-            }
-            return lstLines;           
-        }
-        */
-
+   
 
         /// <summary>
         /// Return lyrics by line with their timestamps
@@ -452,14 +458,10 @@ namespace Karaboss.Utilities
         /// <returns></returns>
         public static List<string> GetLrcTimeLines(List<(string, string, string)> lstLyricsItems, string strSpaceBetween)
         {
-            List<string> lstTimeLines = new List<string>();
-
-            bool bStartLine;
+            List<string> lstTimeLines = new List<string>();            
             string sTime;
-            string sType;
             string sLyric;
             string sTimeLine = string.Empty;
-            bStartLine = true;
 
             try
             {
@@ -467,45 +469,60 @@ namespace Karaboss.Utilities
                 for (int i = 0; i < lstLyricsItems.Count; i++)
                 {
                     sTime = lstLyricsItems[i].Item1;
-                    sType = lstLyricsItems[i].Item2;
+                    //sType = lstLyricsItems[i].Item2;
                     sLyric = lstLyricsItems[i].Item3;
 
-                    if (sType == "text")      // Do not add empty lyrics to a line ?
-                    {
-                        if (bStartLine)
-                        {
-                            if (sLyric.Length > 0 && sLyric.StartsWith(" "))
-                                sLyric = sLyric.Remove(0, 1);
-                            sTimeLine = sTime + strSpaceBetween + sLyric;
-                            bStartLine = false;
-                        }
-                        else
-                        {
-                            // Line continuation
 
-                            // Case of spaces at the left of the lyrics
-                            // Add a space to the left to allow split by space
-                            if (sLyric.Length > 0 && sLyric.StartsWith(" "))
-                                sTimeLine += " " + sTime + strSpaceBetween + sLyric.Remove(0, 1);
-                            else
-                                sTimeLine += sTime + strSpaceBetween + sLyric;
-                        }
-                    }
-                    else
+                    if (sLyric.Trim() == m_SepParagraph)
                     {
-                        if (sTimeLine.Length > 0 && sTimeLine.EndsWith(" "))
-                            sTimeLine = sTimeLine.Remove(sTimeLine.Length - 1, 1);
-
                         if (sTimeLine != "")
                         {
                             // Add new line
                             lstTimeLines.Add(sTimeLine);
                         }
-
-                        // Reset all
-                        bStartLine = true;
-                        sTimeLine = string.Empty;
+                        sTimeLine = sTime;
                     }
+                    else if (sLyric.Trim() == m_SepLine)
+                    {
+                        if (sTimeLine != "")
+                        {
+                            // Add new line
+                            lstTimeLines.Add(sTimeLine);
+                        }
+                        sTimeLine = sTime;
+                    }
+                    else if (sLyric.Trim().StartsWith(m_SepParagraph))
+                    {
+                        if (sTimeLine != "")
+                        {
+                            // Add new line
+                            lstTimeLines.Add(sTimeLine);
+                        }
+                        sLyric = sLyric.Replace(m_SepParagraph, "");
+                        sTimeLine = sTime + strSpaceBetween + sLyric;
+                    }
+                    else if (sLyric.Trim().StartsWith(m_SepLine))
+                    {
+                        if (sTimeLine != "")
+                        {
+                            // Add new line
+                            lstTimeLines.Add(sTimeLine);
+                        }
+                        sLyric = sLyric.Replace(m_SepLine, "");
+                        sTimeLine = sTime + strSpaceBetween + sLyric;
+                    }
+                    else
+                    {
+                        // Line continuation
+                        // Case of spaces at the left of the lyrics
+                        // Add a space to the left to allow split by space
+                        if (sLyric.Length > 0 && sLyric.StartsWith(" "))
+                            sTimeLine += " " + sTime + strSpaceBetween + sLyric.Remove(0, 1);
+                        else
+                            sTimeLine += sTime + strSpaceBetween + sLyric;
+                    }
+
+
                 }
 
                 // Save last line
@@ -516,29 +533,12 @@ namespace Karaboss.Utilities
                         sTimeLine = sTimeLine.Remove(sTimeLine.Length - 1, 1);
                     lstTimeLines.Add(sTimeLine);
                 }
+
             }
             catch (Exception e) { MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 
             return lstTimeLines;
-        }
-
-
-        /*
-        /// <summary>
-        /// Return lyrics by line with their timestamps
-        /// Format [00:08.834]QUAND [00:09.107]J'AI [00:09.196]REN[00:09.469]CON[00:09.558]TRE [00:09.926]JO[00:10.107]SE[00:10.307]PHI[00:10.656]NE
-        /// Same as GetLrcTimeLines ?
-        /// </summary>
-        /// <param name="lstLyricsItems"></param>
-        /// <param name="strSpaceBetween"></param>
-        /// <returns></returns>
-        public static List<string> GetSyltTimeLines(List<(string, string, string)> lstLyricsItems, string strSpaceBetween)
-        {
-            List<string> lstTimeLines = GetLrcTimeLines(lstLyricsItems, strSpaceBetween);
-            return lstTimeLines;
-                        
-        }
-        */
+        }      
 
 
 
@@ -675,33 +675,8 @@ namespace Karaboss.Utilities
                 //return null;
             }
             return lstLinesCut;
-        }
+        }      
 
-
-        /*
-        /// <summary>
-        /// Return lyrics by line and cut lines to MaxLength characters
-        /// Same as GetLrcLinesCut, but with a / character at the beginning of each line ?
-        /// </summary>
-        /// <param name="lstTimeLines"></param>
-        /// <param name="MaxLength"></param>
-        /// <returns></returns>
-        public static List<string> GetSyltLinesCut(List<string> lstTimeLines, int MaxLength)
-        {
-            string strLine = string.Empty;
-            List<string> LinesCut = GetLrcLinesCut(lstTimeLines, MaxLength);
-            List<string> lstLinesCut = new List<string>();
-
-            for (int i = 0; i < LinesCut.Count; i++)
-            {
-                strLine = LinesCut[i];
-                strLine = strLine.Substring(0, 11) + "/" + strLine.Substring(11);
-                
-                lstLinesCut.Add(strLine);
-            }
-            return lstLinesCut;          
-        }
-        */
 
         /// <summary>
         /// Extraxt artist and song frem file name

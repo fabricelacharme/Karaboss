@@ -974,58 +974,137 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
                     sTime = "[" + tsp + "]";  // Transform to [00:00.000] format
 
-                    
-                    // /hey
-                    // jude
-                    sType = vType.ToString().Trim();
-                    if (sType.IndexOf(m_SepParagraph) != -1)
+
+                    // Case: only a "/" or a "\"
+                    // Case: a string beginning with a "/" or a "\"
+                    // Case: a string
+
+                    if (sLyric.Trim() == m_SepParagraph )
                     {
                         sType = "par";
                         lstLyricsItems.Add((sTime, sType, m_SepParagraph));
                     }
-                    else if (sType.IndexOf(m_SepLine) != -1)
+                    else if ( sLyric.Trim() == m_SepLine) 
                     {
                         sType = "cr";
                         lstLyricsItems.Add((sTime, sType, m_SepLine));
                     }
-                    
-                    sLyric = sLyric.Replace(m_SepParagraph, "");
-                    sLyric = sLyric.Replace(m_SepLine, "");
-                    sType = "text";
-
-                    /* Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
-                    * We must keep the undercores located inside the string for next split with spaces
-                    * ex: _the_air,_(get_to_poppin')
-                    * So big bug if we use sLyric = sLyric.Replace("_", " ");
-                    */
-                    if (sLyric.Length > 0)
+                    else if (sLyric.IndexOf(m_SepParagraph) > -1)
                     {
-                        // replace leading or trailing underscore by a space ' '
-                        StringBuilder sb = new StringBuilder(sLyric);
-                        if (sLyric.StartsWith(@"_"))
-                            sb[0] = ' ';
-                        if (sLyric.EndsWith(@"_"))
-                            sb[sLyric.Length - 1] = ' ';
-                        sLyric = sb.ToString();
-                    }                                       
-                   
-                    if (sLyric != "")   // Universal code for syllabes & lines: lyrics like " " can be added
-                    {                            
-                        // Remove accents
-                        sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
+                        sLyric = sLyric.Replace(m_SepParagraph, "");
+                        sType = "text";
+                        /* Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
+                         * We must keep the undercores located inside the string for next split with spaces
+                         * ex: _the_air,_(get_to_poppin')
+                         * So big bug if we use sLyric = sLyric.Replace("_", " ");
+                        */
+                        if (sLyric.Length > 0)
+                        {
+                            // replace leading or trailing underscore by a space ' '
+                            StringBuilder sb = new StringBuilder(sLyric);
+                            if (sLyric.StartsWith(@"_"))
+                                sb[0] = ' ';
+                            if (sLyric.EndsWith(@"_"))
+                                sb[sLyric.Length - 1] = ' ';
+                            sLyric = sb.ToString();
+                        }
+                        if (sLyric != "")   // Universal code for syllabes & lines: lyrics like " " can be added
+                        {
+                            // Remove accents
+                            sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
 
-                        //Uppercase letters
-                        sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
+                            //Uppercase letters
+                            sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
 
-                        // Lowercase letters
-                        sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
+                            // Lowercase letters
+                            sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
 
-                        // Remove non alphanumeric chars
-                        sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
+                            // Remove non alphanumeric chars
+                            // Prevent removal of '_' character 
+                            sLyric = sLyric.Replace("_", " ");
+                            sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
+                            sLyric = sLyric.Replace(" ", "_");
 
-                        lstLyricsItems.Add((sTime, sType, sLyric));
+                            lstLyricsItems.Add((sTime, sType, m_SepParagraph + sLyric));
+                        }
                     }
-                    
+                    else if (sLyric.IndexOf(m_SepLine) > -1)
+                    {
+                        sLyric = sLyric.Replace(m_SepLine, "");
+                        sType = "text";
+                        /* Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
+                         * We must keep the undercores located inside the string for next split with spaces
+                         * ex: _the_air,_(get_to_poppin')
+                         * So big bug if we use sLyric = sLyric.Replace("_", " ");
+                        */
+                        if (sLyric.Length > 0)
+                        {
+                            // replace leading or trailing underscore by a space ' '
+                            StringBuilder sb = new StringBuilder(sLyric);
+                            if (sLyric.StartsWith(@"_"))
+                                sb[0] = ' ';
+                            if (sLyric.EndsWith(@"_"))
+                                sb[sLyric.Length - 1] = ' ';
+                            sLyric = sb.ToString();
+                        }
+                        if (sLyric != "")   // Universal code for syllabes & lines: lyrics like " " can be added
+                        {
+                            // Remove accents
+                            sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
+
+                            //Uppercase letters
+                            sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
+
+                            // Lowercase letters
+                            sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
+
+                            // Remove non alphanumeric chars
+                            // Prevent removal of '_' character 
+                            sLyric = sLyric.Replace("_", " ");
+                            sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
+                            sLyric = sLyric.Replace(" ", "_");
+
+                            lstLyricsItems.Add((sTime, sType, m_SepLine + sLyric));
+                        }
+                    }
+                    else
+                    {                        
+                        sType = "text";
+                        /* Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
+                         * We must keep the undercores located inside the string for next split with spaces
+                         * ex: _the_air,_(get_to_poppin')
+                         * So big bug if we use sLyric = sLyric.Replace("_", " ");
+                        */
+                        if (sLyric.Length > 0)
+                        {
+                            // replace leading or trailing underscore by a space ' '
+                            StringBuilder sb = new StringBuilder(sLyric);
+                            if (sLyric.StartsWith(@"_"))
+                                sb[0] = ' ';
+                            if (sLyric.EndsWith(@"_"))
+                                sb[sLyric.Length - 1] = ' ';
+                            sLyric = sb.ToString();
+                        }
+                        if (sLyric != "")   // Universal code for syllabes & lines: lyrics like " " can be added
+                        {
+                            // Remove accents
+                            sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
+
+                            //Uppercase letters
+                            sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
+
+                            // Lowercase letters
+                            sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
+
+                            // Remove non alphanumeric chars
+                            // Prevent removal of '_' character 
+                            sLyric = sLyric.Replace("_", " ");
+                            sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
+                            sLyric = sLyric.Replace(" ", "_");
+
+                            lstLyricsItems.Add((sTime, sType, sLyric));
+                        }
+                    }                                            
                 }
             }
 
