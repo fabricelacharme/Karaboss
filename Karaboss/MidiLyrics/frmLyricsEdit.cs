@@ -2237,6 +2237,59 @@ namespace Karaboss
 
             #region List of lyrics
 
+            // Put everuthing into a string
+            string tx = string.Empty;
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
+                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+
+                if (vTime != null && vLyric != null)
+                {
+                    // Convert milliseconds digit
+                    sTime = vTime.ToString();
+                    if (_LrcMillisecondsDigits == 2)
+                    {
+                        time = (long)Mp3LyricsMgmtHelper.TimeToMs(sTime);
+                        ts = TimeSpan.FromMilliseconds(time);
+                        sTime = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                    }
+
+                    sTime = "[" + sTime + "]";
+                    sLyric = vLyric.ToString();
+
+                    if (sLyric != "" && sLyric != m_SepLine && sLyric != m_SepParagraph) 
+                    {
+                        // Remove chords
+                        if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)
+                            sLyric = Regex.Replace(sLyric, _myLyricsMgmt.RemoveChordPattern, @"");
+
+                        // Remove accents
+                        sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
+
+                        //Uppercase letters
+                        sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
+
+                        // Lowercase letters
+                        sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
+
+                        // Remove non alphanumeric chars
+                        // Protect underscore
+                        sLyric = sLyric.Replace("_", " ");
+                        sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
+                        sLyric = sLyric.Replace(" ", "_");
+
+
+                    }
+                    tx += sTime + sLyric;
+                }
+            }
+
+            tx = tx.Replace(m_SepParagraph, m_SepLine);
+
+            string[] lstLyricsItems = tx.Split('/');
+
+            /*
             // Store lyrics in a list
             // sTime, sType, sLyric
             List<(string, string, string)> lstLyricsItems = new List<(string, string, string)>();
@@ -2254,11 +2307,11 @@ namespace Karaboss
                     // lyrics: Trim all and replace underscore by a space
                     sLyric = vLyric.ToString().Trim();
 
-                    /* Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
-                    * We must keep the undercores located inside the string for next split with spaces
-                    * ex: _the_air,_(get_to_poppin')
-                    * So big bug if we use sLyric = sLyric.Replace("_", " ");
-                    */
+                    // Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
+                    // We must keep the undercores located inside the string for next split with spaces
+                    // ex: _the_air,_(get_to_poppin')
+                    // So big bug if we use sLyric = sLyric.Replace("_", " ");
+                    //
                     if (sLyric.Length > 0 )
                     {
                         // replace leading or trailing underscore by a space ' '
@@ -2315,20 +2368,25 @@ namespace Karaboss
                 }
             }
             
+            */
+
             #endregion List of Lyrics
 
            
             // Store lyrics in lines            
-            List<string> lstLines = Utilities.LyricsUtilities.GetLrcLines(lstLyricsItems, strSpaceBetween);
-            
+            List<string> lstLines = Utilities.LyricsUtilities.GetLrcLines(lstLyricsItems, _LrcMillisecondsDigits);
+
+
+
             // Store timestamps + lyrics in lines
-            List<string> lstTimeLines = Utilities.LyricsUtilities.GetLrcTimeLines(lstLyricsItems, strSpaceBetween);
+            List<string> lstTimeLines = Utilities.LyricsUtilities.GetLrcTimeLines(lstLyricsItems, _LrcMillisecondsDigits);
+             
 
             // Store lyrics by line and cut lines to MaxLength characters using lstTimeLines
             List<string> lstLinesCut = new List<string>();
             if (bControlLength) 
             {
-                lstLinesCut = Utilities.LyricsUtilities.GetLrcLinesCut(lstTimeLines, MaxLength);
+                lstLinesCut = Utilities.LyricsUtilities.GetLrcLinesCut(lstTimeLines, MaxLength, _LrcMillisecondsDigits);
             }
 
 
@@ -2347,7 +2405,8 @@ namespace Karaboss
                 {
                     // Replace underscores located in the middle of the lyrics
                     // ex: " the_air,_(get_to_poppin')"
-                    lrcs += lstLinesCut[i].Replace("]_", "]").Replace(" ", "").Replace("_", " ") + cr;
+                    //lrcs += lstLinesCut[i].Replace("]_", "]").Replace(" ", "").Replace("_", " ") + cr;
+                    lrcs += lstLinesCut[i] + cr;
                 }
             }
             else

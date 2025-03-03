@@ -36,11 +36,14 @@ using FlShell.Interop;
 using Hqub.MusicBrainz.API.Entities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Security;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Windows.Forms;
 using static System.Windows.Forms.LinkLabel;
 
@@ -504,6 +507,49 @@ namespace Karaboss.Utilities
             return lstLines;
         }
 
+        public static List<string> GetLrcLines(string[] lstLyricsItems, int _LrcMillisecondsDigits)
+        {
+            // [00:04.59]
+            // [00:04.59]IT'S[00:04.83]BEEN[00:05.05]A[00:05.27]HARD[00:06.15]DAY'S[00:06.81]NIGHT[00:08.14]
+            // [00:08.14]AND[00:08.37]I'VE[00:08.60]BEEN[00:08.79]WOR[00:09.04]KING[00:09.91]LIKE[00:10.14]A[00:10.34]DOG[00:11.66]
+            // [00:11.66]IT'S[00:11.88]BEEN[00:12.09]A[00:12.32]HARD[00:13.22]DAY'S[00:13.89]NIGHT[00:15.19]
+
+
+            List<string> lstLines = new List<string>();
+            string line;            
+            string sTime;
+            string tx;
+            string removepattern3 = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
+            string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
+            string removePattern;
+            int removeChars;
+            string replace = @"";
+
+            if (_LrcMillisecondsDigits == 2)
+            {
+                removePattern = removepattern2;
+                removeChars = 10;
+            }
+            else
+            {
+                removePattern = removepattern3;
+                removeChars = 11;
+            }
+
+            for (int i = 0; i < lstLyricsItems.Count(); i++)
+            {
+                line = lstLyricsItems[i]; 
+                sTime = line.Substring(0, removeChars);
+
+                // Remove all timestamps form line 
+                line = Regex.Replace(line, removePattern, replace);
+                line = sTime + line;
+                // Store result
+                lstLines.Add(line);
+            }
+
+            return lstLines;
+        }
 
         /// <summary>
         /// Find out what type of digits the file is made out
@@ -576,7 +622,7 @@ namespace Karaboss.Utilities
         /// <param name="lstLyricsItems"></param>
         /// <param name="strSpaceBetween"></param>
         /// <returns></returns>
-        public static List<string> GetLrcTimeLines(List<(string, string, string)> lstLyricsItems, string strSpaceBetween)
+        public static List<string> GetLrcTimeLines(List<(string, string, string)> lstLyricsItems, int _LrcMillisecondsDigits)
         {
             List<string> lstTimeLines = new List<string>();            
             string sTime;
@@ -750,8 +796,79 @@ namespace Karaboss.Utilities
             */
 
             return lstTimeLines;
-        }      
+        }
 
+        public static List<string> GetLrcTimeLines(string[] lstLyricsItems, int _LrcMillisecondsDigits)
+        {
+            List<string> lstTimeLines = new List<string>();
+            string line;
+            string sTime;
+            string[] items;
+            string item;
+            string tx;
+
+            string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
+            string pattern2digits = @"(?:\[(\d{2}:\d{2}\.\d{2})\]|<(\d{2}:\d{2}\.\d{2})>)(\S+)";
+            string pattern;
+
+            string removepattern3 = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
+            string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
+            string removePattern;
+            int removeChars;
+            string replace = @"";
+
+            string timestamp;
+            string word;
+
+            if (_LrcMillisecondsDigits == 2)
+            {
+                removeChars = 10;
+                removePattern = removepattern2;
+                pattern = pattern2digits;
+            }
+            else
+            {
+                removeChars = 11;
+                removePattern = removepattern3;
+                pattern = pattern3digits;
+            }
+
+
+            for (int i = 0; i < lstLyricsItems.Count(); i++)
+            {
+                // Clean
+                line = lstLyricsItems[i];
+                sTime = line.Substring(0, removeChars);
+
+                tx = string.Empty;
+
+                if (line.Length > removeChars)
+                {
+                    line = line.Replace("] ", "]");  // Match does not work with lyrics having a space before it ([00:12.45] Hello)
+                    line = line.Replace("[", " [");
+                    line = line.Replace("  [", " [");
+                    line = line.Trim();
+
+                    MatchCollection matches = Regex.Matches(line, pattern);
+                    if (matches.Count == 0) continue;
+
+                    foreach (Match match in matches)
+                    {
+                        timestamp = match.Groups[1].Value != "" ? match.Groups[1].Value : match.Groups[2].Value;
+                        word = match.Groups[3].Value;
+
+                        tx += "[" + timestamp + "]" + word + " ";
+                    }
+
+                    line = tx;
+                }
+                
+
+                lstTimeLines.Add(line);
+            }
+
+            return lstTimeLines;
+        }
 
 
         /// <summary>
@@ -763,7 +880,7 @@ namespace Karaboss.Utilities
         /// <param name="lstTimeLines"></param>
         /// <param name="MaxLength"></param>
         /// <returns></returns>
-        public static List<string> GetLrcLinesCut(List<string> lstTimeLines, int MaxLength)
+        public static List<string> GetLrcLinesCut(List<string> lstTimeLines, int MaxLength, int _LrcMillisecondsDigits)
         {
             List<string[]> lstWords = new List<string[]>();
             List<string[]> lstTimes = new List<string[]>();
@@ -779,47 +896,46 @@ namespace Karaboss.Utilities
             string[] Times;
             string removepattern3 = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
             string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
+            string removepattern;
             string replace = @"";
 
             List<string> lstLinesCut = new List<string>();
 
+            if (_LrcMillisecondsDigits == 2) 
+            {
+                removepattern = removepattern2;
+            }
+            else
+            {
+                removepattern = removepattern3;
+            }
+
             try
             {
-
                 for (int i = 0; i < lstTimeLines.Count; i++)
                 {
                     sTimeLine = lstTimeLines[i].Trim();
-                    MatchCollection mc3 = Regex.Matches(sTimeLine, removepattern3);
-                    MatchCollection mc2 = Regex.Matches(sTimeLine, removepattern2);
 
-                    
+                    // Remove underscores to ba able to split
+                    //sTimeLine = sTimeLine.Replace("_", " ");
+
+                    MatchCollection mc = Regex.Matches(sTimeLine, removepattern);
+                        
                     // Split by space character
-                    words = sTimeLine.Split(' ');                    
+                    words = sTimeLine.Split(' ');
                     Times = new string[words.Length];
 
-                    if (mc2.Count > 0)
+                    if (mc.Count > 0)
                     {
                         for (int j = 0; j < words.Length; j++)
                         {
                             if (words[j].Length >= 10)
                             {
                                 Times[j] = words[j].Substring(0, 10);
-                                words[j] = Regex.Replace(words[j], removepattern2, replace);
+                                words[j] = Regex.Replace(words[j], removepattern, replace);
                             }
                         }
-                    }
-                    else
-                    {
-                        for (int j = 0; j < words.Length; j++)
-                        {
-                            if (words[j].Length >= 11)
-                            {
-                                Times[j] = words[j].Substring(0, 11);
-                                words[j] = Regex.Replace(words[j], removepattern3, replace);
-                            }
-                        }
-                    }
-
+                    }                        
                     lstWords.Add(words);
                     lstTimes.Add(Times);
                 }
@@ -887,8 +1003,8 @@ namespace Karaboss.Utilities
                     lstLinesCut.Add(sLine);
                 }
             }
-            catch (Exception e) 
-            { 
+            catch (Exception e)
+            {
                 MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 //return null;
             }

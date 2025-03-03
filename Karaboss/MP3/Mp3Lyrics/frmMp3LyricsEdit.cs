@@ -947,6 +947,23 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
             #region List of lyrics
 
+            // Put everuthing into a string
+            string tx = string.Empty;
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                vLyric = dgView.Rows[i].Cells[1].Value;
+                vTime = dgView.Rows[i].Cells[0].Value;
+                if (vTime != null && vLyric != null)
+                    tx += vTime.ToString() + vLyric.ToString();
+            }
+
+            // Replace "]/" by "]"
+            tx = tx.Replace("]/", "]");
+
+            // Replace double [][] by last one (to have the right timestamp)
+            string[] lst = tx.Split(']', '[');
+
+
             // Store lyrics in a list
             // sTime, sType, sLyric
             List<(string, string, string)> lstLyricsItems = new List<(string, string, string)>();
@@ -1116,13 +1133,13 @@ namespace Karaboss.Mp3.Mp3Lyrics
             List<string> lstLines = Utilities.LyricsUtilities.GetLrcLines(lstLyricsItems, strSpaceBetween);
 
             // Store timestamps + lyrics in lines
-            List<string> lstTimeLines = Utilities.LyricsUtilities.GetLrcTimeLines(lstLyricsItems, strSpaceBetween);
+            List<string> lstTimeLines = Utilities.LyricsUtilities.GetLrcTimeLines(lstLyricsItems, _LrcMillisecondsDigits);
 
             // Store lyrics by line and cut lines to MaxLength characters using lstTimeLines
             List<string> lstLinesCut = new List<string>();
             if (bControlLength)
             {
-                lstLinesCut = Utilities.LyricsUtilities.GetLrcLinesCut(lstTimeLines, MaxLength);
+                lstLinesCut = Utilities.LyricsUtilities.GetLrcLinesCut(lstTimeLines, MaxLength, _LrcMillisecondsDigits);
             }
 
 
