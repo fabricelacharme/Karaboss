@@ -729,13 +729,16 @@ namespace Karaboss.Utilities
             for (int i = 0; i < lstLyricsItems.Count; i++)
             {
                 line = lstLyricsItems[i];
-                sTime = line.Substring(0, removeChars);
+                if (line != "" && line.Length >= removeChars)
+                {
+                    sTime = line.Substring(0, removeChars);
 
-                // Remove all timestamps form line 
-                line = Regex.Replace(line, removePattern, replace);
-                line = sTime + line;
-                // Store result
-                lstLines.Add(line);
+                    // Remove all timestamps form line 
+                    line = Regex.Replace(line, removePattern, replace);
+                    line = sTime + line;
+                    // Store result
+                    lstLines.Add(line);
+                }
             }
 
             return lstLines;
@@ -1100,12 +1103,12 @@ namespace Karaboss.Utilities
             {
                 // Clean
                 line = lstLyricsItems[i];
-                sTime = line.Substring(0, removeChars);
-
-                tx = string.Empty;
 
                 if (line.Length > removeChars)
                 {
+                    sTime = line.Substring(0, removeChars);
+                    tx = string.Empty;
+
                     line = line.Replace("] ", "]");  // Remove space after ] : Match does not work with lyrics having a space before it ([00:12.45] Hello)
                     line = line.Replace("[", " [");  // Add a space before [
                     line = line.Replace("  [", " [");  // Clean if added space was useless
