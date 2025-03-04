@@ -47,6 +47,8 @@ using Karaboss.Utilities;
 using static Karaboss.Karaclass;
 using System.Text;
 using Karaboss.Mp3.Mp3Lyrics;
+using System.Web;
+using System.Diagnostics.Eventing.Reader;
 
 
 namespace Karaboss
@@ -2189,15 +2191,12 @@ namespace Karaboss
         private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus, bool bControlLength, int MaxLength)
         {
             string sLine;
-            string sTime;
-            long time;
-            TimeSpan ts;
-            string tsp;
+            string sTime;           
             string sLyric;                    
-            string sType;
+            
             object vLyric;
             object vTime;
-            object vType;
+            
             string lrcs;
             string cr = "\r\n";
             string strSpaceBetween;
@@ -2227,8 +2226,7 @@ namespace Karaboss
                 Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
                 if (Tag != "")
                 {
-                    sLine = "[" + TagName + strSpaceBetween + Tag + "]";
-                    // lrcs += sLine + cr;
+                    sLine = "[" + TagName + strSpaceBetween + Tag + "]";                    
                     lstHeaderLines.Add(sLine);
                 }
             }
@@ -2237,12 +2235,36 @@ namespace Karaboss
 
             #region List of lyrics
 
-            // Put everuthing into a string
+            // Store rows of dgView in a list
+            List<(string, string)> lstDgRows = new List<(string, string)>();           
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
+                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+                if (vTime != null && vLyric != null)
+                {
+                    sTime = vTime.ToString();
+                    sLyric = vLyric.ToString();
+                    lstDgRows.Add((sTime, sLyric));
+                }
+            }
+
+            // Make treatment of lyrics
+            List<string> lstLyricsItems = Utilities.LyricsUtilities.LrcExtractDgRows(lstDgRows, _LrcMillisecondsDigits, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _myLyricsMgmt);
+
+            #region deleteme
+            /*
+            bool bHasStartingLink = false;
+            bool bPreviousHasTrailingLink = true;            
+            bool bMerge = false;
+
+            // Put everything into a string tx
             string tx = string.Empty;
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
                 vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
                 vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+                bMerge = false;
 
                 if (vTime != null && vLyric != null)
                 {
@@ -2258,7 +2280,7 @@ namespace Karaboss
                     sTime = "[" + sTime + "]";
                     sLyric = vLyric.ToString();
 
-                    if (sLyric != "" && sLyric != m_SepLine && sLyric != m_SepParagraph) 
+                    if (sLyric != "" && sLyric != m_SepLine && sLyric != m_SepParagraph)
                     {
                         // Remove chords
                         if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)
@@ -2279,109 +2301,112 @@ namespace Karaboss
                         sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
                         sLyric = sLyric.Replace(" ", "_");
 
+                        // check if syllabes has to be merged because they belong to a word
+                        bHasStartingLink = sLyric.StartsWith("_");                        
 
+                        // if previous syllabe bas a trailing underscore or if the current starts with an underscore => no merge
+                        if (bPreviousHasTrailingLink || bHasStartingLink)
+                            bMerge = false;
+                        else
+                            bMerge = true;
+
+                        // Save for next syllabe checking
+                        bPreviousHasTrailingLink = sLyric.EndsWith("_");
+                 
+                        // If the current lyric has not link and previous
+                        if (bMerge)
+                            tx += sLyric;
+                        else
+                            tx += sTime + sLyric;
                     }
-                    tx += sTime + sLyric;
-                }
-            }
-
-            tx = tx.Replace(m_SepParagraph, m_SepLine);
-
-            string[] lstLyricsItems = tx.Split('/');
-
-            /*
-            // Store lyrics in a list
-            // sTime, sType, sLyric
-            List<(string, string, string)> lstLyricsItems = new List<(string, string, string)>();
-
-            for (int i = 0; i < dgView.Rows.Count; i++)
-            {
-                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;                
-                vTime = dgView.Rows[i].Cells[COL_TIME].Value;               
-                //vTime = dgView.Rows[i].Cells[COL_TICKS].Value;  // NON ! ticks != duration
-
-                vType = dgView.Rows[i].Cells[COL_TYPE].Value;
-
-                if (vTime != null && vLyric != null && vType != null)
-                {
-                    // lyrics: Trim all and replace underscore by a space
-                    sLyric = vLyric.ToString().Trim();
-
-                    // Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
-                    // We must keep the undercores located inside the string for next split with spaces
-                    // ex: _the_air,_(get_to_poppin')
-                    // So big bug if we use sLyric = sLyric.Replace("_", " ");
-                    //
-                    if (sLyric.Length > 0 )
+                    else if (sLyric == m_SepLine || sLyric == m_SepParagraph)
                     {
-                        // replace leading or trailing underscore by a space ' '
-                        StringBuilder sb = new StringBuilder(sLyric);
-                        if (sLyric.StartsWith(@"_"))
-                            sb[0] = ' ';
-                        if (sLyric.EndsWith(@"_"))
-                            sb[sLyric.Length - 1] = ' ';
-                        sLyric = sb.ToString();                       
-                    }
-
-                    sType = vType.ToString().Trim();
-
-                    // Translate time to right format of milliseconds
-                    sTime = vTime.ToString();
-                    
-                    if (_LrcMillisecondsDigits == 2)
-                    {
-                        time = (long)Mp3LyricsMgmtHelper.TimeToMs(sTime);
-                        ts = TimeSpan.FromMilliseconds(time);
-                        sTime = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-                    }
-                                                           
-                    sTime = "[" + sTime + "]";                    
-
-
-                    if (sType != "cr" && sType != "par")
-                    {
-                        if (sLyric != "")   // Universal code for syllabes & lines: lyrics like " " can be added
-                        {
-                            // Remove chords
-                            if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)
-                                sLyric = Regex.Replace(sLyric, _myLyricsMgmt.RemoveChordPattern, @"");
-
-                            // Remove accents
-                            sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
-
-                            //Uppercase letters
-                            sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
-
-                            // Lowercase letters
-                            sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
-
-                            // Remove non alphanumeric chars
-                            sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
-
-                            lstLyricsItems.Add((sTime, sType, sLyric));
-                        }
-                    }
-                    else
-                    {
-                        lstLyricsItems.Add((sTime, sType, sLyric));
+                        tx += sTime + sLyric;
+                        // Avoid "merge = true" for the first syllabe of the next line
+                        bPreviousHasTrailingLink = true;
                     }
                 }
             }
             
+            string pattern;            
+            if (_LrcMillisecondsDigits == 2) {
+                pattern = @"\[\d{2}[:]\d{2}[.]\d{2}\]\\";
+            }
+            else
+            {
+                pattern = @"\[\d{2}[:]\d{2}[.]\d{3}\]\\";
+            }
+
+            var match = Regex.Match(tx, pattern);
+
+            string txParagraphs = string.Empty;
+            int startx = 0;
+            
+            List<string> lstParagraphs = new List<string>();
+            
+            // Search paragraphs patterns in tx
+            // and create a line each time we encounter a paragraph
+            while (match.Success)
+            {
+                if (match.Success)
+                {                   
+                    if (match.Index < tx.Length)
+                        txParagraphs = tx.Substring(startx, match.Index - startx);
+                    else
+                        txParagraphs = tx.Substring(match.Index);
+                    
+                    // Add text before paragraph
+                    if (txParagraphs.Trim() != "")
+                        lstParagraphs.Add(txParagraphs);
+
+                    // Add timestamp for paragraph (& remove paragraph character)                    
+                    lstParagraphs.Add(match.Value.Replace(m_SepParagraph, ""));
+
+                    // next start
+                    startx = match.Index + match.Value.Length;
+                }
+                match = match.NextMatch();
+            };
+
+            // add rest of string tx having no paragraph
+            if (startx < tx.Length)
+            {
+                lstParagraphs.Add(tx.Substring(startx));
+            }
+
+            // Split each line by linefeeds
+            
+            // TOSO : Maybe with the same method above ?
+
+            string line;
+            string[] items;
+            List<string> lstLyricsItems = new List<string>();
+            for (int i = 0; i < lstParagraphs.Count; i++)
+            {
+                line = lstParagraphs[i];
+                if (line.Trim() != "")
+                {
+                    items = line.Split('/');
+                    for (int j = 0; j < items.Count(); j++)
+                    {
+                        lstLyricsItems.Add(items[j]);
+                    }
+                }
+            }
             */
+            #endregion deleteme
 
-            #endregion List of Lyrics
+            #endregion List of Lyrics            
 
-           
-            // Store lyrics in lines            
+            // Store lyrics in lines (remove timestamps from lines, except for the first word)
+            // [00:04.59]It's_been_a_hard_day's_night
             List<string> lstLines = Utilities.LyricsUtilities.GetLrcLines(lstLyricsItems, _LrcMillisecondsDigits);
 
-
-
-            // Store timestamps + lyrics in lines
+            // Store timestamps + lyrics in lines (add spaces if not existing)
+            // initial [00:04.59]It's[00:04.83]_been[00:05.05]_a[00:05.27]_hard[00:06.15]_day's[00:06.81]_night[00:08.14]
+            // result [00:04.59]It's [00:04.83]_been [00:05.05]_a [00:05.27]_hard [00:06.15]_day's [00:06.81]_night [00:08.14]
             List<string> lstTimeLines = Utilities.LyricsUtilities.GetLrcTimeLines(lstLyricsItems, _LrcMillisecondsDigits);
              
-
             // Store lyrics by line and cut lines to MaxLength characters using lstTimeLines
             List<string> lstLinesCut = new List<string>();
             if (bControlLength) 
@@ -2391,6 +2416,7 @@ namespace Karaboss
 
 
             #region send all to string 
+
             // Header
             lrcs = string.Empty;
             for (int i = 0; i < lstHeaderLines.Count; i++)
@@ -2398,19 +2424,18 @@ namespace Karaboss
                 lrcs += lstHeaderLines[i] + cr;
             }
 
-            // Lines
+            // Select cut or not cut
             if (bControlLength)
             {
+                // If cut lines to 32 chars
                 for (int i = 0; i < lstLinesCut.Count; i++)
-                {
-                    // Replace underscores located in the middle of the lyrics
-                    // ex: " the_air,_(get_to_poppin')"
-                    //lrcs += lstLinesCut[i].Replace("]_", "]").Replace(" ", "").Replace("_", " ") + cr;
-                    lrcs += lstLinesCut[i] + cr;
+                {                                     
+                    lrcs += lstLinesCut[i].Replace("_", " ").Replace("] ", "]") + cr;
                 }
             }
             else
             {
+                // No cut
                 for (int i = 0; i < lstLines.Count; i++)
                 {
                     // Replace underscores located in the middle of the lyrics
@@ -2420,6 +2445,9 @@ namespace Karaboss
             }
             #endregion send all to string
 
+
+            // Open file
+            #region open file
             try
             {
                 System.IO.File.WriteAllText(File, lrcs);
@@ -2428,10 +2456,11 @@ namespace Karaboss
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            #endregion open file
         }
-               
+
         /// <summary>
         /// Save lyrics to new LRC format [01:54.60]Pa<01:55.32>ro<01:56.15>les
         /// </summary>
