@@ -900,7 +900,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         {
             string sLine;
             string sTime;
-            long time;
+            double time;
             TimeSpan ts;
             string tsp;
             string sLyric;
@@ -945,6 +945,23 @@ namespace Karaboss.Mp3.Mp3Lyrics
             #endregion meta data
 
 
+            List<(double, string)> lstDgRows = new List<(double, string)>();
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                vTime = dgView.Rows[i].Cells[0].Value;
+                vLyric = dgView.Rows[i].Cells[1].Value;                
+                if (vTime != null && vLyric != null)
+                {
+                    time = double.Parse(vTime.ToString());
+                    sLyric = vLyric.ToString();
+                    lstDgRows.Add((time, sLyric));
+                }
+            }
+
+            // Make treatment of lyrics
+            List<string> lstLyricsItems = Utilities.LyricsUtilities.LrcExtractDgRows(lstDgRows, _LrcMillisecondsDigits, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, null);
+
+            /*
             #region List of lyrics
 
             // Put everuthing into a string
@@ -1010,11 +1027,11 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     {
                         sLyric = sLyric.Replace(m_SepParagraph, "");
                         sType = "text";
-                        /* Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
-                         * We must keep the undercores located inside the string for next split with spaces
-                         * ex: _the_air,_(get_to_poppin')
-                         * So big bug if we use sLyric = sLyric.Replace("_", " ");
-                        */
+                        // * Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
+                        // * We must keep the undercores located inside the string for next split with spaces
+                        // * ex: _the_air,_(get_to_poppin')
+                        // * So big bug if we use sLyric = sLyric.Replace("_", " ");
+                        //
                         if (sLyric.Length > 0)
                         {
                             // replace leading or trailing underscore by a space ' '
@@ -1050,11 +1067,11 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     {
                         sLyric = sLyric.Replace(m_SepLine, "");
                         sType = "text";
-                        /* Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
-                         * We must keep the undercores located inside the string for next split with spaces
-                         * ex: _the_air,_(get_to_poppin')
-                         * So big bug if we use sLyric = sLyric.Replace("_", " ");
-                        */
+                        //* Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
+                        // * We must keep the undercores located inside the string for next split with spaces
+                        // * ex: _the_air,_(get_to_poppin')
+                        // * So big bug if we use sLyric = sLyric.Replace("_", " ");
+                        //
                         if (sLyric.Length > 0)
                         {
                             // replace leading or trailing underscore by a space ' '
@@ -1089,11 +1106,11 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     else
                     {                        
                         sType = "text";
-                        /* Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
-                         * We must keep the undercores located inside the string for next split with spaces
-                         * ex: _the_air,_(get_to_poppin')
-                         * So big bug if we use sLyric = sLyric.Replace("_", " ");
-                        */
+                        //* Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
+                        // * We must keep the undercores located inside the string for next split with spaces
+                        // * ex: _the_air,_(get_to_poppin')
+                        // * So big bug if we use sLyric = sLyric.Replace("_", " ");
+                        //
                         if (sLyric.Length > 0)
                         {
                             // replace leading or trailing underscore by a space ' '
@@ -1129,8 +1146,10 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
             #endregion List of Lyrics
 
+            */
+
             // Store lyrics in lines            
-            List<string> lstLines = Utilities.LyricsUtilities.GetLrcLines(lstLyricsItems, strSpaceBetween);
+            List<string> lstLines = Utilities.LyricsUtilities.GetLrcLines(lstLyricsItems, _LrcMillisecondsDigits);
 
             // Store timestamps + lyrics in lines
             List<string> lstTimeLines = Utilities.LyricsUtilities.GetLrcTimeLines(lstLyricsItems, _LrcMillisecondsDigits);

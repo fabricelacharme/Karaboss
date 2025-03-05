@@ -340,10 +340,10 @@ namespace Karaboss.Utilities
 
         #region LRC
 
-        public static List<string> LrcExtractDgRows(List<(string, string)> lstDgRows, int _LrcMillisecondsDigits, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, MidiLyricsMgmt _myLyricsMgmt)
+        public static List<string> LrcExtractDgRows(List<(double, string)> lstDgRows, int _LrcMillisecondsDigits, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, MidiLyricsMgmt _myLyricsMgmt = null)
         {            
             string sTime;
-            long time;
+            double time;
             TimeSpan ts;
 
             string sLyric;
@@ -357,22 +357,33 @@ namespace Karaboss.Utilities
             for (int i = 0; i < lstDgRows.Count; i++)
             {
                 bMerge = false;
-
                 
-                // Convert milliseconds digit
-                sTime = lstDgRows[i].Item1;
+                // Mifi format for timestamp is milliseconds
+                // Convert from "00:01.123" to "00.01.12" if necessary
+                time = lstDgRows[i].Item1;
+                ts = TimeSpan.FromMilliseconds(time);
                 if (_LrcMillisecondsDigits == 2)
                 {
-                    time = (long)Mp3LyricsMgmtHelper.TimeToMs(sTime);
-                    ts = TimeSpan.FromMilliseconds(time);
+                    //time = (long)Mp3LyricsMgmtHelper.TimeToMs(sTime);                    
                     sTime = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
                 }
+                else
+                {
+                    sTime = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                }
 
-                sTime = "[" + sTime + "]";
+                    sTime = "[" + sTime + "]";
                 sLyric = lstDgRows[i].Item2;
 
                 if (sLyric != "" && sLyric != m_SepLine && sLyric != m_SepParagraph)
                 {
+                    // Test if a line feed is inside the lyric
+                    if (sLyric.StartsWith(m_SepLine))
+                    {
+                        sLyric = sLyric.Substring(1) + " ";
+                    }
+                    
+                    
                     // Remove chords
                     if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)
                         sLyric = Regex.Replace(sLyric, _myLyricsMgmt.RemoveChordPattern, @"");

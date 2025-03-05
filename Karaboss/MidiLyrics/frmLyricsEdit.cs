@@ -2191,7 +2191,8 @@ namespace Karaboss
         private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus, bool bControlLength, int MaxLength)
         {
             string sLine;
-            string sTime;           
+            string sTime;
+            double time;
             string sLyric;                    
             
             object vLyric;
@@ -2228,16 +2229,18 @@ namespace Karaboss
             #region List of lyrics
 
             // Store rows of dgView in a list
-            List<(string, string)> lstDgRows = new List<(string, string)>();           
+            List<(double, string)> lstDgRows = new List<(double, string)>();           
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
-                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
                 vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;                
                 if (vTime != null && vLyric != null)
                 {
                     sTime = vTime.ToString();
+                    time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
                     sLyric = vLyric.ToString();
-                    lstDgRows.Add((sTime, sLyric));
+
+                    lstDgRows.Add((time, sLyric));
                 }
             }
 

@@ -496,7 +496,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
            
 
         /// <summary>
-        /// Convert a time stamp 01:15.510 (min 2digits, sec 2 digits, ms 3 digits) to milliseconds
+        /// Convert a time stamp 01:15.510 (min 2digits, sec 2 digits, ms 2 or 3 digits) to milliseconds
         /// </summary>
         /// <param name="stime"></param>
         /// <returns></returns>
