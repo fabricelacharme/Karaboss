@@ -1337,5 +1337,12 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("ChordsOriginFromUserInput", resourceCulture);
             }
         }
+        internal static string LyricsWereRecorded
+        {
+            get
+            {
+                return ResourceManager.GetString("LyricsWereRecorded", resourceCulture);
+            }
+        }
     }
 }

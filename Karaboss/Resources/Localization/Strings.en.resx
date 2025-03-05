@@ -540,4 +540,7 @@
   <data name="ChordsOriginFromUserInput" xml:space="preserve">
     <value>Chords are entered manually and will be recorded in the lyrics</value>
   </data>
+  <data name="LyricsWereRecorded" xml:space="preserve">
+    <value>The lyrics were recorded in the file</value>
+  </data>
 </root>

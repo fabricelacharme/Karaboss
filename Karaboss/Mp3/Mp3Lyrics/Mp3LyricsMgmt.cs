@@ -551,13 +551,13 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// </summary>
         /// <param name="FullPath"></param>
         /// <param name="SyncLyrics"></param>
-        public static void SetTags(string FullPath, SynchronisedLyricsFrame SyncLyrics)
+        public static bool SetTags(string FullPath, SynchronisedLyricsFrame SyncLyrics)
         {
             TagLib.Tag _tag;
 
             try
             {
-                if (FullPath == null) return;
+                if (FullPath == null) return false;
                 
                 TagLib.File file = TagLib.File.Create(FullPath);
                 _tag = file.GetTag(TagTypes.Id3v2);
@@ -579,18 +579,17 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     frame.Text[i] = new SynchedText();
                     frame.Text[i] = SyncLyrics.Text[i];
                 }
-                
-                
-
+                                
                 // Save file
                 file.Save();
 
+                return true;
             }
             catch (Exception e)
-            {
-                //Console.WriteLine(e.Message);
+            {                
                 MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _tag = null;
+                return false;
             }
         }
 

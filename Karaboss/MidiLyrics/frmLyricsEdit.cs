@@ -1789,7 +1789,7 @@ namespace Karaboss
             if (bfilemodified == true)
             {
                 //string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
-                String tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
+                string tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
 
                 DialogResult dr = MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (dr == DialogResult.Cancel)
@@ -2226,9 +2226,11 @@ namespace Karaboss
             #endregion meta data
 
 
-            #region List of lyrics
-
             // Store rows of dgView in a list
+            // the aim is to have the same procedure between frmLyricsEdit and frmMp3LyricsEdit
+
+            #region Read dgView
+
             List<(double, string)> lstDgRows = new List<(double, string)>();           
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
@@ -2237,6 +2239,7 @@ namespace Karaboss
                 if (vTime != null && vLyric != null)
                 {
                     sTime = vTime.ToString();
+                    // Convert times to milliseconds (to have the same entry foramt with frmMp3LyricsEdit)
                     time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
                     sLyric = vLyric.ToString();
 
@@ -2244,154 +2247,11 @@ namespace Karaboss
                 }
             }
 
-            // Make treatment of lyrics
-            List<string> lstLyricsItems = Utilities.LyricsUtilities.LrcExtractDgRows(lstDgRows, _LrcMillisecondsDigits, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _myLyricsMgmt);
+            #endregion Read dgView
 
-            #region deleteme
-            /*
-            bool bHasStartingLink = false;
-            bool bPreviousHasTrailingLink = true;            
-            bool bMerge = false;
 
-            // Put everything into a string tx
-            string tx = string.Empty;
-            for (int i = 0; i < dgView.Rows.Count; i++)
-            {
-                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
-                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
-                bMerge = false;
-
-                if (vTime != null && vLyric != null)
-                {
-                    // Convert milliseconds digit
-                    sTime = vTime.ToString();
-                    if (_LrcMillisecondsDigits == 2)
-                    {
-                        time = (long)Mp3LyricsMgmtHelper.TimeToMs(sTime);
-                        ts = TimeSpan.FromMilliseconds(time);
-                        sTime = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-                    }
-
-                    sTime = "[" + sTime + "]";
-                    sLyric = vLyric.ToString();
-
-                    if (sLyric != "" && sLyric != m_SepLine && sLyric != m_SepParagraph)
-                    {
-                        // Remove chords
-                        if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)
-                            sLyric = Regex.Replace(sLyric, _myLyricsMgmt.RemoveChordPattern, @"");
-
-                        // Remove accents
-                        sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
-
-                        //Uppercase letters
-                        sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
-
-                        // Lowercase letters
-                        sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
-
-                        // Remove non alphanumeric chars
-                        // Protect underscore
-                        sLyric = sLyric.Replace("_", " ");
-                        sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
-                        sLyric = sLyric.Replace(" ", "_");
-
-                        // check if syllabes has to be merged because they belong to a word
-                        bHasStartingLink = sLyric.StartsWith("_");                        
-
-                        // if previous syllabe bas a trailing underscore or if the current starts with an underscore => no merge
-                        if (bPreviousHasTrailingLink || bHasStartingLink)
-                            bMerge = false;
-                        else
-                            bMerge = true;
-
-                        // Save for next syllabe checking
-                        bPreviousHasTrailingLink = sLyric.EndsWith("_");
-                 
-                        // If the current lyric has not link and previous
-                        if (bMerge)
-                            tx += sLyric;
-                        else
-                            tx += sTime + sLyric;
-                    }
-                    else if (sLyric == m_SepLine || sLyric == m_SepParagraph)
-                    {
-                        tx += sTime + sLyric;
-                        // Avoid "merge = true" for the first syllabe of the next line
-                        bPreviousHasTrailingLink = true;
-                    }
-                }
-            }
-            
-            string pattern;            
-            if (_LrcMillisecondsDigits == 2) {
-                pattern = @"\[\d{2}[:]\d{2}[.]\d{2}\]\\";
-            }
-            else
-            {
-                pattern = @"\[\d{2}[:]\d{2}[.]\d{3}\]\\";
-            }
-
-            var match = Regex.Match(tx, pattern);
-
-            string txParagraphs = string.Empty;
-            int startx = 0;
-            
-            List<string> lstParagraphs = new List<string>();
-            
-            // Search paragraphs patterns in tx
-            // and create a line each time we encounter a paragraph
-            while (match.Success)
-            {
-                if (match.Success)
-                {                   
-                    if (match.Index < tx.Length)
-                        txParagraphs = tx.Substring(startx, match.Index - startx);
-                    else
-                        txParagraphs = tx.Substring(match.Index);
-                    
-                    // Add text before paragraph
-                    if (txParagraphs.Trim() != "")
-                        lstParagraphs.Add(txParagraphs);
-
-                    // Add timestamp for paragraph (& remove paragraph character)                    
-                    lstParagraphs.Add(match.Value.Replace(m_SepParagraph, ""));
-
-                    // next start
-                    startx = match.Index + match.Value.Length;
-                }
-                match = match.NextMatch();
-            };
-
-            // add rest of string tx having no paragraph
-            if (startx < tx.Length)
-            {
-                lstParagraphs.Add(tx.Substring(startx));
-            }
-
-            // Split each line by linefeeds
-            
-            // TOSO : Maybe with the same method above ?
-
-            string line;
-            string[] items;
-            List<string> lstLyricsItems = new List<string>();
-            for (int i = 0; i < lstParagraphs.Count; i++)
-            {
-                line = lstParagraphs[i];
-                if (line.Trim() != "")
-                {
-                    items = line.Split('/');
-                    for (int j = 0; j < items.Count(); j++)
-                    {
-                        lstLyricsItems.Add(items[j]);
-                    }
-                }
-            }
-            */
-            #endregion deleteme
-
-            #endregion List of Lyrics            
+            // Make treatment of lyrics (same for frmLyricsEdit and frmMp3LyricsEdit)
+            List<string> lstLyricsItems = Utilities.LyricsUtilities.LrcExtractDgRows(lstDgRows, _LrcMillisecondsDigits, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _myLyricsMgmt);                             
 
             // Store lyrics in lines (remove timestamps from lines, except for the first word)
             // [00:04.59]It's_been_a_hard_day's_night

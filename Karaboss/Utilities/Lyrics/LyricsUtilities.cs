@@ -376,13 +376,7 @@ namespace Karaboss.Utilities
                 sLyric = lstDgRows[i].Item2;
 
                 if (sLyric != "" && sLyric != m_SepLine && sLyric != m_SepParagraph)
-                {
-                    // Test if a line feed is inside the lyric
-                    if (sLyric.StartsWith(m_SepLine))
-                    {
-                        sLyric = sLyric.Substring(1) + " ";
-                    }
-                    
+                {                   
                     
                     // Remove chords
                     if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)

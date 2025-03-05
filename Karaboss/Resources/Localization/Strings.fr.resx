@@ -540,4 +540,7 @@
   <data name="ChordsOriginFromUserInput" xml:space="preserve">
     <value>Les accords sont saisis manuellement et seront enregistrés dans les paroles</value>
   </data>
+  <data name="LyricsWereRecorded" xml:space="preserve">
+    <value>Les paroles ont été enregistrées dans le fichier</value>
+  </data>
 </root>
