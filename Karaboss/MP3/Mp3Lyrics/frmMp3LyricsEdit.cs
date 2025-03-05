@@ -84,9 +84,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
         // Manage locally lyrics
         List<List<keffect.KaraokeEffect.kSyncText>> localSyncLyrics;
-        
 
-
+       
         /// <summary>
         /// Constructor
         /// </summary>

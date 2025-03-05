@@ -147,10 +147,16 @@
     <value>&amp;File</value>
   </data>
   <data name="mnuEditLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuEditLyrics.Text" xml:space="preserve">
     <value>Edit &amp;lyrics</value>
+  </data>
+  <data name="mnuEditLRCGenerator.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuEditLRCGenerator.Text" xml:space="preserve">
+    <value>LRC Generator</value>
   </data>
   <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
     <value>39, 20</value>
@@ -262,7 +268,7 @@
     <value>btnTempoMinus</value>
   </data>
   <data name="&gt;&gt;btnTempoMinus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.8, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.9, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTempoMinus.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -283,7 +289,7 @@
     <value>btnTempoPlus</value>
   </data>
   <data name="&gt;&gt;btnTempoPlus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.8, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.9, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTempoPlus.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -370,7 +376,7 @@
     <value>btnTranspoMinus</value>
   </data>
   <data name="&gt;&gt;btnTranspoMinus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.8, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.9, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTranspoMinus.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -391,7 +397,7 @@
     <value>btnTranspoPlus</value>
   </data>
   <data name="&gt;&gt;btnTranspoPlus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.8, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.9, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTranspoPlus.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -554,7 +560,7 @@
     <value>pnlDisplay</value>
   </data>
   <data name="&gt;&gt;pnlDisplay.Type" xml:space="preserve">
-    <value>Karaboss.Display.PanelPlayer, Karaboss, Version=1.0.10.8, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Display.PanelPlayer, Karaboss, Version=1.0.10.9, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pnlDisplay.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -581,7 +587,7 @@
     <value>btnPrev</value>
   </data>
   <data name="&gt;&gt;btnPrev.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.8, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.9, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnPrev.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -608,7 +614,7 @@
     <value>btnNext</value>
   </data>
   <data name="&gt;&gt;btnNext.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.8, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.9, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnNext.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -662,7 +668,7 @@
     <value>btnStop</value>
   </data>
   <data name="&gt;&gt;btnStop.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.8, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.9, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnStop.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -689,7 +695,7 @@
     <value>btnPlay</value>
   </data>
   <data name="&gt;&gt;btnPlay.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.8, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.9, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnPlay.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -870,6 +876,12 @@
   </data>
   <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuEditLRCGenerator.Name" xml:space="preserve">
+    <value>mnuEditLRCGenerator</value>
+  </data>
+  <data name="&gt;&gt;mnuEditLRCGenerator.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmMp3Player</value>

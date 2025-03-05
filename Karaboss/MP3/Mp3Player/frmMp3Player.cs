@@ -76,11 +76,8 @@ namespace Karaboss.Mp3
 
         private int bouclestart = 0;
         private int laststart = 0;      // Start time to play        
-        
-        
-        //private int _duration;
-        private double _totalSeconds;
-        //private float _frequency;
+                       
+        private double _totalSeconds;        
 
         private int TransposeValue = 0;
         private long FrequencyRatio = 100;
@@ -102,7 +99,7 @@ namespace Karaboss.Mp3
         //forms
         private frmMp3LyricsSimple frmMp3LyricsSimple;
         private frmMp3Lyrics frmMp3Lyrics;
-
+        
 
         // SlideShow directory
         public string dirSlideShow;
@@ -606,6 +603,38 @@ namespace Karaboss.Mp3
 
 
         #region menus
+
+        /// <summary>
+        /// Open LRC Generator
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuEditLRCGenerator_Click(object sender, EventArgs e)
+        {           
+            // Display frmLrcGenerator
+            
+            if (Application.OpenForms.OfType<frmLrcGenerator>().Count() == 0)
+            {
+                try
+                {
+                    frmLrcGenerator frmLrcGenerator;
+                    frmLrcGenerator = new frmLrcGenerator();
+                    frmLrcGenerator.Show();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                }
+            }
+            else
+            {
+                if (Application.OpenForms["frmLrcGenerator"].WindowState == FormWindowState.Minimized)
+                    Application.OpenForms["frmLrcGenerator"].WindowState = FormWindowState.Normal;
+                Application.OpenForms["frmLrcGenerator"].Show();
+                Application.OpenForms["frmLrcGenerator"].Activate();
+            }
+
+        }
 
         /// <summary>
         /// Valid or not some menus if playing or not
@@ -1368,9 +1397,10 @@ namespace Karaboss.Mp3
         }
 
 
+
+
         #endregion Timer
 
-
-
+       
     }
 }

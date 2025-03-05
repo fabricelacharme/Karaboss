@@ -1603,5 +1603,41 @@ namespace Karaboss.Properties {
                 this["LrcMillisecondsDigits"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point frmLrcGeneratorLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["frmLrcGeneratorLocation"]));
+            }
+            set {
+                this["frmLrcGeneratorLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmLrcGeneratorMaximized {
+            get {
+                return ((bool)(this["frmLrcGeneratorMaximized"]));
+            }
+            set {
+                this["frmLrcGeneratorMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600, 600")]
+        public global::System.Drawing.Size frmLrcGeneratorSize {
+            get {
+                return ((global::System.Drawing.Size)(this["frmLrcGeneratorSize"]));
+            }
+            set {
+                this["frmLrcGeneratorSize"] = value;
+            }
+        }
     }
 }

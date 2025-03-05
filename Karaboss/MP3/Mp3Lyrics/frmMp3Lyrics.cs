@@ -46,9 +46,7 @@ using TagLib.Mpeg4;
 using System.Xml.Linq;
 
 namespace Karaboss.Mp3
-{
-
-    
+{    
 
     public partial class frmMp3Lyrics : Form, IMessageFilter
     {
@@ -73,6 +71,7 @@ namespace Karaboss.Mp3
         private List<string> m_ImageFilePaths;
         private string[] bgFiles;
         private Font _karaokeFont;
+        private long _timerintervall = 50;
 
         private frmMp3LyrOptions frmMp3LyrOptions;
 
@@ -384,6 +383,8 @@ namespace Karaboss.Mp3
                 karaokeEffect1.KaraokeFont = _karaokeFont;
                 //karaokeEffect1.bShowParagraphs = Karaclass.m_ShowParagraph;
 
+                karaokeEffect1.timerIntervall = _timerintervall;
+
                 bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;
 
                 // Force Uppercase
@@ -476,9 +477,11 @@ namespace Karaboss.Mp3
         {
             lblTitle.Text = text;
         }
+        
+        
         private void InitializeKaraokeText()
         {
-          
+           
         }
        
         public void Start()

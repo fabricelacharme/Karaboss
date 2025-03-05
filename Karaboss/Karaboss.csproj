@@ -180,6 +180,12 @@
     <Compile Include="Display\PanelPlayer.Designer.cs">
       <DependentUpon>PanelPlayer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Lrc\frmLrcGenerator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Lrc\frmLrcGenerator.Designer.cs">
+      <DependentUpon>frmLrcGenerator.cs</DependentUpon>
+    </Compile>
     <Compile Include="MidiLyrics\frmLrcOptions.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -586,6 +592,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GuitarTraining\frmGuitarTraining.resx">
       <DependentUpon>frmGuitarTraining.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lrc\frmLrcGenerator.resx">
+      <DependentUpon>frmLrcGenerator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MidiLyrics\frmLrcOptions.fr.resx">
       <DependentUpon>frmLrcOptions.cs</DependentUpon>

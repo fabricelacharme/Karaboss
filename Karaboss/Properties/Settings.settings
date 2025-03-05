@@ -398,5 +398,14 @@
     <Setting Name="LrcMillisecondsDigits" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
+    <Setting Name="frmLrcGeneratorLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="frmLrcGeneratorMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="frmLrcGeneratorSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">600, 600</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

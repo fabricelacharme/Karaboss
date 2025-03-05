@@ -70,6 +70,15 @@ namespace keffect
         private float lastpercent = 0;
         private long _timerintervall = 50;      // Intervall of timer of frmMp3Player
 
+        public long timerIntervall
+        {
+            get { return _timerintervall; }
+            set { 
+                
+                if (value >= 10)
+                    _timerintervall = value; }
+        }
+
         private List<string[]> Lines;
         private List<long[]> Times;
         private string[] Texts;
@@ -1185,11 +1194,11 @@ namespace keffect
                         //Console.WriteLine("_nexttime = " + _nexttime + " - _lasttime = " + _lasttime);
 
                         //_steppercent = (_nexttime - _lasttime) / (d * _timerintervall);
-                        //_steppercent = (_nexttime - _lasttime) / (1000*(float)_timerintervall);
+                        //_steppercent = (float)(_nexttime - _lasttime) / 1000000*(float)(_timerintervall);
 
                         _steppercent = (_nexttime - _lasttime) / (d*(float)_timerintervall);
-                        
 
+                        //Console.WriteLine("timerintervall = " + _timerintervall);
                         //Console.WriteLine("_steppercent = " + _steppercent);
                     }
                     
