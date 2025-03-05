@@ -418,6 +418,10 @@ namespace Karaboss.Utilities
                 }                
             }
 
+
+            // ===================================================
+            // Split a string using a pattern (paragraph pattern)
+            // ===================================================
             string pattern;
             if (_LrcMillisecondsDigits == 2)
             {
@@ -457,8 +461,7 @@ namespace Karaboss.Utilities
                     startx = match.Index + match.Value.Length;
                 }
                 match = match.NextMatch();
-            }
-            ;
+            };
 
             // add rest of string tx having no paragraph
             if (startx < tx.Length)
@@ -466,13 +469,16 @@ namespace Karaboss.Utilities
                 lstParagraphs.Add(tx.Substring(startx));
             }
 
+
             // Split each line by linefeeds
-
-            // TOSO : Maybe with the same method above ?
-
             string line;
             string[] items;
             List<string> lstLyricsItems = new List<string>();
+            
+
+            // TODO : Maybe with the same method above ?
+           
+            // Method 2                       
             for (int i = 0; i < lstParagraphs.Count; i++)
             {
                 line = lstParagraphs[i];
@@ -486,6 +492,7 @@ namespace Karaboss.Utilities
                 }
             }
 
+            // Return value
             return lstLyricsItems;
         }
 
@@ -652,6 +659,7 @@ namespace Karaboss.Utilities
             return lstLines;
         }
 
+        /*
         public static List<string> GetLrcLines(string[] lstLyricsItems, int _LrcMillisecondsDigits)
         {
             // [00:04.59]
@@ -695,7 +703,7 @@ namespace Karaboss.Utilities
 
             return lstLines;
         }
-
+        */
 
         public static List<string> GetLrcLines(List<string> lstLyricsItems, int _LrcMillisecondsDigits)
         {
@@ -703,7 +711,6 @@ namespace Karaboss.Utilities
             // [00:04.59]IT'S[00:04.83]BEEN[00:05.05]A[00:05.27]HARD[00:06.15]DAY'S[00:06.81]NIGHT[00:08.14]
             // [00:08.14]AND[00:08.37]I'VE[00:08.60]BEEN[00:08.79]WOR[00:09.04]KING[00:09.91]LIKE[00:10.14]A[00:10.34]DOG[00:11.66]
             // [00:11.66]IT'S[00:11.88]BEEN[00:12.09]A[00:12.32]HARD[00:13.22]DAY'S[00:13.89]NIGHT[00:15.19]
-
 
             List<string> lstLines = new List<string>();
             string line;
@@ -740,7 +747,6 @@ namespace Karaboss.Utilities
                     lstLines.Add(line);
                 }
             }
-
             return lstLines;
         }
 
@@ -1068,8 +1074,6 @@ namespace Karaboss.Utilities
             List<string> lstTimeLines = new List<string>();
             string line;
             string sTime;
-            string[] items;
-            string item;
             string tx;
 
             string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
@@ -1080,8 +1084,6 @@ namespace Karaboss.Utilities
             string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
             string removePattern;
             int removeChars;
-            string replace = @"";
-
             string timestamp;
             string word;
 
@@ -1097,7 +1099,6 @@ namespace Karaboss.Utilities
                 removePattern = removepattern3;
                 pattern = pattern3digits;
             }
-
             
             for (int i = 0; i < lstLyricsItems.Count; i++)
             {
@@ -1127,16 +1128,13 @@ namespace Karaboss.Utilities
 
                         tx += "[" + timestamp + "]" + word + " ";
                     }
-
                     line = tx;
                 }
-
-
                 lstTimeLines.Add(line);
             }
-
             return lstTimeLines;
         }
+
 
         /// <summary>
         /// Return lyrics by line and cut lines to MaxLength characters
@@ -1195,26 +1193,7 @@ namespace Karaboss.Utilities
                     //[00:12.16]Take_ [00:12.56]a_ [00:12.97]sad_ [00:13.78]song_ [00:15.00]and_ [00:15.40]make_ [00:15.81]it_ [00:16.21]bet [00:17.02]ter._"
 
                     // Split by space character
-                    words = sTimeLine.Split(' ');
-
-                    /*
-                    string w;
-                    for (int j = 0; j < words.Count(); j++)
-                    {
-                        if (j < words.Count() - 1)
-                        {
-                            w = Regex.Replace(words[j], removepattern, replace) + Regex.Replace(words[j + 1], removepattern, replace);
-                            if (w.StartsWith("_"))
-                                w = w.Substring(1);
-                            if (w.EndsWith("_"))
-                                w = w.Substring(0, w.Length - 1);
-
-                            if (w.IndexOf("_") == -1)
-                                Console.WriteLine("");
-                        }
-                    }
-                    */
-
+                    words = sTimeLine.Split(' ');                   
                     Times = new string[words.Length];
 
                     if (mc.Count > 0)

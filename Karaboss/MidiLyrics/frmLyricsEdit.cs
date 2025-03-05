@@ -2199,14 +2199,6 @@ namespace Karaboss
             
             string lrcs;
             string cr = "\r\n";
-            string strSpaceBetween;
-            bool bSpaceBetwwen = false;            
-
-            // Space between time and lyrics [00:02.872]lyric
-            if (bSpaceBetwwen)
-                strSpaceBetween = " ";
-            else
-                strSpaceBetween = string.Empty;
 
             #region meta data
 
@@ -2226,7 +2218,7 @@ namespace Karaboss
                 Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
                 if (Tag != "")
                 {
-                    sLine = "[" + TagName + strSpaceBetween + Tag + "]";                    
+                    sLine = "[" + TagName + Tag + "]";                    
                     lstHeaderLines.Add(sLine);
                 }
             }
@@ -2473,20 +2465,12 @@ namespace Karaboss
             
             object vTime;
             long time;
-            TimeSpan ts;
-            string tsp;
+            TimeSpan ts;            
 
             string lrcs = string.Empty;
-            string cr = "\r\n";
-            string strSpaceBetween;
-            bool bSpaceBetwwen = false;
+            string cr = "\r\n";                       
             string lines = string.Empty;
-
-            // Space between time and lyrics [00:02.872]lyric
-            if (bSpaceBetwwen)
-                strSpaceBetween = " ";
-            else
-                strSpaceBetween = string.Empty;
+           
 
             List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
             List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
@@ -2499,7 +2483,7 @@ namespace Karaboss
                 Tag = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(Tag) : Tag;
                 Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
                 if (Tag != "")
-                    lrcs += "[" + TagName + strSpaceBetween + Tag + "]" + cr;
+                    lrcs += "[" + TagName + Tag + "]" + cr;
             }
 
             bool bLineFeed = true;
