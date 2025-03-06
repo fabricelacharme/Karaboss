@@ -1639,5 +1639,29 @@ namespace Karaboss.Properties {
                 this["frmLrcGeneratorSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmMp3PlayerMaximized {
+            get {
+                return ((bool)(this["frmMp3PlayerMaximized"]));
+            }
+            set {
+                this["frmMp3PlayerMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600, 600")]
+        public global::System.Drawing.Size frmMp3PlayerSize {
+            get {
+                return ((global::System.Drawing.Size)(this["frmMp3PlayerSize"]));
+            }
+            set {
+                this["frmMp3PlayerSize"] = value;
+            }
+        }
     }
 }

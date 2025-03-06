@@ -35,11 +35,13 @@ using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+//using static System.Net.Mime.MediaTypeNames;
 
 namespace Karaboss.Mp3
 {
@@ -47,6 +49,20 @@ namespace Karaboss.Mp3
     {
 
        
+        // Size player
+        // 514;127
+        private enum PlayerAppearances
+        {
+            Player,
+            LrcGenerator,
+        }
+        private PlayerAppearances PlayerAppearance;
+        // Dimensions        
+        private readonly int SimpleMp3PlayerWidth = 517;
+        private readonly int SimpleMp3PlayerHeight = 194;
+
+
+
         private Mp3LyricsTypes Mp3LyricsType;
         public bool bfilemodified = false;
 
@@ -108,10 +124,16 @@ namespace Karaboss.Mp3
         {
             InitializeComponent();
 
+            // Allow form keydown
+            this.KeyPreview = true;
+
             Mp3FullPath = FileName;
             SetTitle(FileName);
 
             InitControls();
+
+            // Player appearance is normal player
+            PlayerAppearance = PlayerAppearances.Player;            
 
             // Create mp3 Player instance                                    
             Player = new Mp3Player(FileName);
@@ -168,17 +190,35 @@ namespace Karaboss.Mp3
 
         private void frmMp3Player_Load(object sender, EventArgs e)
         {
-            Location = Properties.Settings.Default.frmMp3PlayerLocation;
-            // Verify if this windows is visible in extended screens
-            Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
-            foreach (Screen screen in Screen.AllScreens)
-                rect = Rectangle.Union(rect, screen.Bounds);
+            // Set window location and size
+            #region window size & location
+            // If window is maximized
+            if (Properties.Settings.Default.frmMp3PlayerMaximized)
+            {
+                Location = Properties.Settings.Default.frmMp3PlayerLocation;
+                WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                Location = Properties.Settings.Default.frmMp3PlayerLocation;
+                // Verify if this windows is visible in extended screens
+                Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
+                foreach (Screen screen in Screen.AllScreens)
+                    rect = Rectangle.Union(rect, screen.Bounds);
 
-            if (Location.X > rect.Width)
-                Location = new Point(0, Location.Y);
-            if (Location.Y > rect.Height)
-                Location = new Point(Location.X, 0);
-           
+                if (Location.X > rect.Width)
+                    Location = new Point(0, Location.Y);
+                if (Location.Y > rect.Height)
+                    Location = new Point(Location.X, 0);
+
+                Size = Properties.Settings.Default.frmMp3PlayerSize;
+            }
+            #endregion
+
+
+            // Redim form according to the visibility of the LRC Generator
+            SetPlayerAppearance();
+
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -193,7 +233,23 @@ namespace Karaboss.Mp3
             // Copy window location to app settings                
             if (WindowState != FormWindowState.Minimized)
             {
-                 Properties.Settings.Default.frmMp3PlayerLocation = Location;
+                if (WindowState == FormWindowState.Maximized)
+                {
+                    Properties.Settings.Default.frmMp3PlayerLocation = RestoreBounds.Location;
+                    Properties.Settings.Default.frmMp3PlayerMaximized = true;
+
+                }
+                else if (WindowState == FormWindowState.Normal)
+                {
+                    Properties.Settings.Default.frmMp3PlayerLocation = Location;
+
+                    // SDave only if not default size
+                    if (Height != SimpleMp3PlayerHeight)
+                        Properties.Settings.Default.frmMp3PlayerSize = Size;
+
+                    Properties.Settings.Default.frmMp3PlayerMaximized = false;
+                }
+
                 // Save settings
                 Properties.Settings.Default.Save();
             }
@@ -232,6 +288,95 @@ namespace Karaboss.Mp3
         {
             Player.Reset();            
         }
+        
+
+        /// <summary>
+        /// Redim form if simple player or LRc generator
+        /// </summary>
+        private void SetPlayerAppearance()
+        {
+            switch (PlayerAppearance)
+            {
+                case PlayerAppearances.Player:
+                    
+                    // Hide LRC Generator
+
+                    // Save size                
+                    #region save size
+                    // Copy window location to app settings                
+                    if (WindowState != FormWindowState.Minimized)
+                    {
+                        if (WindowState == FormWindowState.Maximized)
+                        {
+                            Properties.Settings.Default.frmMp3PlayerLocation = RestoreBounds.Location;
+                            Properties.Settings.Default.frmMp3PlayerMaximized = true;
+
+                        }
+                        else if (WindowState == FormWindowState.Normal)
+                        {
+                            Properties.Settings.Default.frmMp3PlayerLocation = Location;
+                            if (Height != SimpleMp3PlayerHeight)
+                                Properties.Settings.Default.frmMp3PlayerSize = Size;
+                            Properties.Settings.Default.frmMp3PlayerMaximized = false;
+                        }
+
+                        // Save settings
+                        Properties.Settings.Default.Save();
+                    }
+                    #endregion
+
+                    this.MaximizeBox = false;
+                    this.FormBorderStyle = FormBorderStyle.FixedSingle;
+                    pnlMiddle.Visible = false;
+
+
+                    if (this.WindowState == FormWindowState.Maximized)
+                        WindowState = FormWindowState.Normal;
+
+                    // Redim size to simple player
+                    this.Size = new Size(SimpleMp3PlayerWidth, SimpleMp3PlayerHeight);
+                    break;
+
+
+                case PlayerAppearances.LrcGenerator:
+                    // Show LRC Generator
+                    this.MaximizeBox = true;
+                    this.FormBorderStyle = FormBorderStyle.Sizable;
+
+                    // Show LRC Generator                    
+                    pnlMiddle.Visible = true;
+
+                    #region window size & location
+                    // If window is maximized
+                    if (Properties.Settings.Default.frmMp3PlayerMaximized)
+                    {
+                        Location = Properties.Settings.Default.frmMp3PlayerLocation;
+                        WindowState = FormWindowState.Maximized;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            if (Properties.Settings.Default.frmMp3PlayerSize.Height == SimpleMp3PlayerHeight)
+                            {
+                                this.Size = new Size(Properties.Settings.Default.frmMp3PlayerSize.Width, 600);
+                            }
+                            else
+                                Size = Properties.Settings.Default.frmMp3PlayerSize;
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+                    #endregion
+
+                    InitLrcGenerator();
+
+                    break;                    
+            }
+        }
+
 
         #endregion Form load close resize
 
@@ -610,30 +755,21 @@ namespace Karaboss.Mp3
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void mnuEditLRCGenerator_Click(object sender, EventArgs e)
-        {           
-            // Display frmLrcGenerator
-            
-            if (Application.OpenForms.OfType<frmLrcGenerator>().Count() == 0)
+        {
+            mnuEditLRCGenerator.Checked = !mnuEditLRCGenerator.Checked;
+
+            // If LRC Generator visible
+            if (mnuEditLRCGenerator.Checked)
             {
-                try
-                {
-                    frmLrcGenerator frmLrcGenerator;
-                    frmLrcGenerator = new frmLrcGenerator();
-                    frmLrcGenerator.Show();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                }
+                // Display Lrc Generator
+                PlayerAppearance = PlayerAppearances.LrcGenerator;
             }
             else
             {
-                if (Application.OpenForms["frmLrcGenerator"].WindowState == FormWindowState.Minimized)
-                    Application.OpenForms["frmLrcGenerator"].WindowState = FormWindowState.Normal;
-                Application.OpenForms["frmLrcGenerator"].Show();
-                Application.OpenForms["frmLrcGenerator"].Activate();
+                // Hide Lrc Generator
+                PlayerAppearance = PlayerAppearances.Player;
             }
-
+            SetPlayerAppearance();          
         }
 
         /// <summary>
@@ -1399,8 +1535,189 @@ namespace Karaboss.Mp3
 
 
 
+
         #endregion Timer
 
-       
+
+        #region LRC generator
+
+        string _lrcFileName;
+
+        private void InitLrcGenerator()
+        {
+            txtLyrics.Text = "";
+            txtTimes.Text = "";
+        }
+
+
+        /// <summary>
+        /// Import an LRC file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuImportLrcFile_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog1.Title = "Open a .lrc file";
+            OpenFileDialog1.DefaultExt = "lrc";
+            OpenFileDialog1.Filter = "lrc files|*.lrc|All files|*.*";
+
+            OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
+
+            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                _lrcFileName = OpenFileDialog1.FileName;
+
+                Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(_lrcFileName);
+                List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;
+
+                txtLyrics.Text = "";
+                txtTimes.Text = "";
+
+                string text;
+                long time;                
+                string cr = "\r\n";
+
+                // For each line
+                for (int j = 0; j < SyncLyrics.Count; j++)
+                {
+                    // For each syllabes
+                    for (int i = 0; i < SyncLyrics[j].Count; i++)
+                    {
+                        time = SyncLyrics[j][i].Time;
+                        text = SyncLyrics[j][i].Text;
+                        
+                        // Put "/" everywhere
+                        text = text.Replace("\r\n", "");
+                        text = text.Replace("\r", "");
+                        text = text.Replace("\n", "");
+                        text = text.Trim();
+
+                        txtLyrics.Text += text + cr;
+                        txtTimes.Text += time.ToString() + cr;
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Import a text file (no timestamps)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuImportRawLyrics_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog1.Title = "Open a .txt file";
+            OpenFileDialog1.DefaultExt = "txt";
+            OpenFileDialog1.Filter = "text files|*.txt|All files|*.*";
+
+            OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
+
+            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                _lrcFileName = OpenFileDialog1.FileName;
+
+                txtLyrics.Text = "";
+                txtTimes.Text = "";
+
+                string[] lines = System.IO.File.ReadAllLines(_lrcFileName);
+                string line;
+                string cr = "\r\n";
+
+                for (int i = 0; i < lines.Count(); i++)
+                {
+                    line = lines[i].Trim();
+                    if (line != "")
+                    {
+                        if (i  == lines.Count() - 1)
+                            txtLyrics.Text += line;
+                        else
+                            txtLyrics.Text += line + cr;
+                    }
+                }
+
+            }
+        
+        }
+
+        private void mnuExportLRCMeta_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mnuExportLrcNoMeta_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDisplayMetadata_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion LRC generator
+
+        private void frmMp3Player_KeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Space:
+                    //PlayPauseMusic();
+                    break;
+
+                case Keys.F12:
+                    //bSequencerAlwaysOn = !bSequencerAlwaysOn;
+                    // bForceShowSequencer was true, but user decided to hide the sequencer by clicking on the menu
+                    //if (bSequencerAlwaysOn == false && bForceShowSequencer == true)
+                    //    bForceShowSequencer = false;
+                    //RedimIfSequencerVisible();
+                    break;
+            }
+        }
+
+        private void frmMp3Player_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Space:
+                    PlayPauseMusic();
+                    break;
+
+                case Keys.Left:
+                    if (PlayerState == PlayerStates.Paused)
+                        StopMusic();
+                    break;
+
+                case Keys.Add:
+                case Keys.Subtract:
+                case Keys.D6:
+                case Keys.Decimal:
+                    // Tempo +-
+                    //KeyboardSelectTempo(e);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// I am able to detect alpha-numeric keys. However i am not able to detect arrow keys
+        /// ProcessCmdKey save my life
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="keyData"></param>
+        /// <returns></returns>
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+           
+            if ((PlayerState == PlayerStates.Paused) || (PlayerState == PlayerStates.Stopped))
+            {
+                if (keyData == Keys.Left)
+                {
+                    StopMusic();
+                    return true;
+                }
+            }
+                       
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
     }
 }

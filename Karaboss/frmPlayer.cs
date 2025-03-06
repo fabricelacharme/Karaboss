@@ -2314,12 +2314,8 @@ namespace Karaboss
                     // Restore form
                     Application.OpenForms["frmExplorer"].Restore();
                     Application.OpenForms["frmExplorer"].Activate();
-
                 }
-
-
                 Dispose();
-
             }
         }
 
@@ -4744,9 +4740,9 @@ namespace Karaboss
                 pnlTop.Visible = true;
                 pnlMiddle.Visible = true;
 
-
-
+                
                 #region window size & location
+                
                 // If window is maximized
                 if (Properties.Settings.Default.frmPlayerMaximized)
                 {
