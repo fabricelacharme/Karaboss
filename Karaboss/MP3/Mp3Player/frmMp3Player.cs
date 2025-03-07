@@ -1757,9 +1757,18 @@ namespace Karaboss.Mp3
         string _lrcFileName;
         int _index = 0;
 
+        private enum LrcModes
+        {
+            Sync,
+            Edit
+        }
+        private LrcModes LrcMode;
+
         private void InitLrcGenerator()
         {
             if (PlayerAppearance != PlayerAppearances.LrcGenerator) return;
+
+            LrcMode = LrcModes.Edit;
 
             lvLyrics.Items.Clear();
             _index = 0;
@@ -1934,6 +1943,11 @@ namespace Karaboss.Mp3
         
         }
 
+        /// <summary>
+        /// Export lrc file with metadata
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuExportLRCMeta_Click(object sender, EventArgs e)
         {
             
@@ -2061,6 +2075,11 @@ namespace Karaboss.Mp3
             #endregion save lrc
         }
 
+        /// <summary>
+        /// Export lrc file without metadata
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuExportLrcNoMeta_Click(object sender, EventArgs e)
         {
 
@@ -2143,8 +2162,36 @@ namespace Karaboss.Mp3
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
+        /// <summary>
+        /// Switch to sync or edit mode
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSwithcSyncEdit_Click(object sender, EventArgs e)
+        {
+            SetSyncEditMode();
+
+        }
+
+
+        private void SetSyncEditMode()
+        {
+            switch (LrcMode)
+            {
+                case LrcModes.Edit:
+                    LrcMode = LrcModes.Sync;
+                    btnSwithcSyncEdit.Text = "Switch to edit mode";
+                    break;
+
+                case LrcModes.Sync:
+                    LrcMode = LrcModes.Edit;
+                    btnSwithcSyncEdit.Text = "Switch to sync mode";
+                    break;
+            }
+        }
+
         #endregion LRC generator
 
-       
+
     }
 }

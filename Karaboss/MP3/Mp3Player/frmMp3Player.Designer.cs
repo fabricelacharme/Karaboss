@@ -56,7 +56,19 @@
             this.OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.txtTitle = new System.Windows.Forms.TextBox();
+            this.txtAuthor = new System.Windows.Forms.TextBox();
+            this.txtArtist = new System.Windows.Forms.TextBox();
+            this.txtAlbum = new System.Windows.Forms.TextBox();
             this.pnlMiddle = new System.Windows.Forms.Panel();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cbLanguage = new System.Windows.Forms.ComboBox();
+            this.txtYourName = new System.Windows.Forms.TextBox();
+            this.lblHotkeys = new System.Windows.Forms.Label();
             this.lvLyrics = new System.Windows.Forms.ListView();
             this.lblLyrics = new System.Windows.Forms.Label();
             this.lblTimes = new System.Windows.Forms.Label();
@@ -68,15 +80,7 @@
             this.mnuExport = new System.Windows.Forms.ToolStripDropDownButton();
             this.mnuExportLRCMeta = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuExportLrcNoMeta = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnDisplayMetadata = new System.Windows.Forms.ToolStripButton();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.lblHotkeys = new System.Windows.Forms.Label();
-            this.txtTitle = new System.Windows.Forms.TextBox();
-            this.txtAuthor = new System.Windows.Forms.TextBox();
-            this.txtYourName = new System.Windows.Forms.TextBox();
-            this.txtArtist = new System.Windows.Forms.TextBox();
-            this.txtAlbum = new System.Windows.Forms.TextBox();
-            this.cbLanguage = new System.Windows.Forms.ComboBox();
             this.btnTempoMinus = new Karaboss.Buttons.MinusButtonControl();
             this.btnTempoPlus = new Karaboss.Buttons.PlusButtonControl();
             this.btnTranspoMinus = new Karaboss.Buttons.MinusButtonControl();
@@ -86,11 +90,7 @@
             this.btnNext = new Karaboss.NoSelectButton();
             this.btnStop = new Karaboss.NoSelectButton();
             this.btnPlay = new Karaboss.NoSelectButton();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.btnSwithcSyncEdit = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.pnlControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBox)).BeginInit();
@@ -460,9 +460,34 @@
             this.Timer1.Interval = 50;
             this.Timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
+            // txtTitle
+            // 
+            resources.ApplyResources(this.txtTitle, "txtTitle");
+            this.txtTitle.Name = "txtTitle";
+            this.toolTip1.SetToolTip(this.txtTitle, resources.GetString("txtTitle.ToolTip"));
+            // 
+            // txtAuthor
+            // 
+            resources.ApplyResources(this.txtAuthor, "txtAuthor");
+            this.txtAuthor.Name = "txtAuthor";
+            this.toolTip1.SetToolTip(this.txtAuthor, resources.GetString("txtAuthor.ToolTip"));
+            // 
+            // txtArtist
+            // 
+            resources.ApplyResources(this.txtArtist, "txtArtist");
+            this.txtArtist.Name = "txtArtist";
+            this.toolTip1.SetToolTip(this.txtArtist, resources.GetString("txtArtist.ToolTip"));
+            // 
+            // txtAlbum
+            // 
+            resources.ApplyResources(this.txtAlbum, "txtAlbum");
+            this.txtAlbum.Name = "txtAlbum";
+            this.toolTip1.SetToolTip(this.txtAlbum, resources.GetString("txtAlbum.ToolTip"));
+            // 
             // pnlMiddle
             // 
             this.pnlMiddle.BackColor = System.Drawing.Color.LightGray;
+            this.pnlMiddle.Controls.Add(this.btnSwithcSyncEdit);
             this.pnlMiddle.Controls.Add(this.label6);
             this.pnlMiddle.Controls.Add(this.label5);
             this.pnlMiddle.Controls.Add(this.label4);
@@ -482,6 +507,48 @@
             this.pnlMiddle.Controls.Add(this.toolStrip1);
             resources.ApplyResources(this.pnlMiddle, "pnlMiddle");
             this.pnlMiddle.Name = "pnlMiddle";
+            // 
+            // label6
+            // 
+            resources.ApplyResources(this.label6, "label6");
+            this.label6.Name = "label6";
+            // 
+            // label5
+            // 
+            resources.ApplyResources(this.label5, "label5");
+            this.label5.Name = "label5";
+            // 
+            // label4
+            // 
+            resources.ApplyResources(this.label4, "label4");
+            this.label4.Name = "label4";
+            // 
+            // label3
+            // 
+            resources.ApplyResources(this.label3, "label3");
+            this.label3.Name = "label3";
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Name = "label1";
+            // 
+            // cbLanguage
+            // 
+            this.cbLanguage.FormattingEnabled = true;
+            resources.ApplyResources(this.cbLanguage, "cbLanguage");
+            this.cbLanguage.Name = "cbLanguage";
+            // 
+            // txtYourName
+            // 
+            resources.ApplyResources(this.txtYourName, "txtYourName");
+            this.txtYourName.Name = "txtYourName";
+            // 
+            // lblHotkeys
+            // 
+            this.lblHotkeys.BackColor = System.Drawing.Color.Silver;
+            resources.ApplyResources(this.lblHotkeys, "lblHotkeys");
+            this.lblHotkeys.Name = "lblHotkeys";
             // 
             // lvLyrics
             // 
@@ -510,9 +577,9 @@
             resources.ApplyResources(this.toolStrip1, "toolStrip1");
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuImport,
-            this.mnuExport,
-            this.btnDisplayMetadata});
+            this.mnuExport});
             this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             // 
             // mnuImport
             // 
@@ -555,54 +622,6 @@
             this.mnuExportLrcNoMeta.Name = "mnuExportLrcNoMeta";
             resources.ApplyResources(this.mnuExportLrcNoMeta, "mnuExportLrcNoMeta");
             this.mnuExportLrcNoMeta.Click += new System.EventHandler(this.mnuExportLrcNoMeta_Click);
-            // 
-            // btnDisplayMetadata
-            // 
-            this.btnDisplayMetadata.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            resources.ApplyResources(this.btnDisplayMetadata, "btnDisplayMetadata");
-            this.btnDisplayMetadata.Name = "btnDisplayMetadata";
-            this.btnDisplayMetadata.Click += new System.EventHandler(this.btnDisplayMetadata_Click);
-            // 
-            // lblHotkeys
-            // 
-            this.lblHotkeys.BackColor = System.Drawing.Color.Silver;
-            resources.ApplyResources(this.lblHotkeys, "lblHotkeys");
-            this.lblHotkeys.Name = "lblHotkeys";
-            // 
-            // txtTitle
-            // 
-            resources.ApplyResources(this.txtTitle, "txtTitle");
-            this.txtTitle.Name = "txtTitle";
-            this.toolTip1.SetToolTip(this.txtTitle, resources.GetString("txtTitle.ToolTip"));
-            // 
-            // txtAuthor
-            // 
-            resources.ApplyResources(this.txtAuthor, "txtAuthor");
-            this.txtAuthor.Name = "txtAuthor";
-            this.toolTip1.SetToolTip(this.txtAuthor, resources.GetString("txtAuthor.ToolTip"));
-            // 
-            // txtYourName
-            // 
-            resources.ApplyResources(this.txtYourName, "txtYourName");
-            this.txtYourName.Name = "txtYourName";
-            // 
-            // txtArtist
-            // 
-            resources.ApplyResources(this.txtArtist, "txtArtist");
-            this.txtArtist.Name = "txtArtist";
-            this.toolTip1.SetToolTip(this.txtArtist, resources.GetString("txtArtist.ToolTip"));
-            // 
-            // txtAlbum
-            // 
-            resources.ApplyResources(this.txtAlbum, "txtAlbum");
-            this.txtAlbum.Name = "txtAlbum";
-            this.toolTip1.SetToolTip(this.txtAlbum, resources.GetString("txtAlbum.ToolTip"));
-            // 
-            // cbLanguage
-            // 
-            this.cbLanguage.FormattingEnabled = true;
-            resources.ApplyResources(this.cbLanguage, "cbLanguage");
-            this.cbLanguage.Name = "cbLanguage";
             // 
             // btnTempoMinus
             // 
@@ -693,30 +712,12 @@
             this.btnPlay.MouseLeave += new System.EventHandler(this.btnPlay_MouseLeave);
             this.btnPlay.MouseHover += new System.EventHandler(this.btnPlay_MouseHover);
             // 
-            // label1
+            // btnSwithcSyncEdit
             // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
-            // 
-            // label3
-            // 
-            resources.ApplyResources(this.label3, "label3");
-            this.label3.Name = "label3";
-            // 
-            // label4
-            // 
-            resources.ApplyResources(this.label4, "label4");
-            this.label4.Name = "label4";
-            // 
-            // label5
-            // 
-            resources.ApplyResources(this.label5, "label5");
-            this.label5.Name = "label5";
-            // 
-            // label6
-            // 
-            resources.ApplyResources(this.label6, "label6");
-            this.label6.Name = "label6";
+            resources.ApplyResources(this.btnSwithcSyncEdit, "btnSwithcSyncEdit");
+            this.btnSwithcSyncEdit.Name = "btnSwithcSyncEdit";
+            this.btnSwithcSyncEdit.UseVisualStyleBackColor = true;
+            this.btnSwithcSyncEdit.Click += new System.EventHandler(this.btnSwithcSyncEdit_Click);
             // 
             // frmMp3Player
             // 
@@ -794,7 +795,6 @@
         private System.Windows.Forms.ToolStripDropDownButton mnuExport;
         private System.Windows.Forms.ToolStripMenuItem mnuExportLRCMeta;
         private System.Windows.Forms.ToolStripMenuItem mnuExportLrcNoMeta;
-        private System.Windows.Forms.ToolStripButton btnDisplayMetadata;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Label lblLyrics;
@@ -812,5 +812,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button btnSwithcSyncEdit;
     }
 }
