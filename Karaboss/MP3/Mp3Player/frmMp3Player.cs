@@ -1610,7 +1610,10 @@ namespace Karaboss.Mp3
             if (_index < lvLyrics.Items.Count)
             {
                 lvLyrics.Items[_index].Text = tsp;
-                lvLyrics.EnsureVisible(_index);
+                if (_index < lvLyrics.Items.Count - 2)
+                    lvLyrics.EnsureVisible(_index + 2);
+                else
+                    lvLyrics.EnsureVisible(_index);
                 _index++;
             }            
         }
@@ -1738,7 +1741,7 @@ namespace Karaboss.Mp3
                 lvi = lvLyrics.Items[i];
                 sTime = lvi.Text;
                 time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
-                sLyric = "/" + lvi.SubItems.ToString();
+                sLyric = "/" + lvi.SubItems[0].ToString();                 //BUG !!!!!!!!!!!!!!!!
                         
             
                 // Use case : lyrics begins with a linefeed
