@@ -405,7 +405,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="frmLrcGeneratorSize" Type="System.Drawing.Size" Scope="User">
-      <Value Profile="(Default)">600, 600</Value>
+      <Value Profile="(Default)">550, 500</Value>
     </Setting>
     <Setting Name="frmMp3PlayerMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

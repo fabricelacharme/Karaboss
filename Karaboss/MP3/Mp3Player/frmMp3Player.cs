@@ -295,7 +295,21 @@ namespace Karaboss.Mp3
         {
             Player.Reset();            
         }
-        
+
+        private void frmMp3Player_Resize(object sender, EventArgs e)
+        {
+            if (PlayerAppearance == PlayerAppearances.LrcGenerator)
+            {
+                lvLyrics.Width = this.ClientSize.Width - lvLyrics.Left - 6;
+                lvLyrics.Columns[0].Width = 90;
+                lvLyrics.Columns[1].Width = lvLyrics.ClientSize.Width - 17 - lvLyrics.Columns[0].Width;
+
+                lvLyrics.Height = pnlMiddle.Height - lvLyrics.Top - lblTimes.Height - 10;
+
+                lblTimes.Top = lvLyrics.Top + lvLyrics.Height + 5;
+                lblLyrics.Top = lblTimes.Top;
+            }
+        }
 
         /// <summary>
         /// Redim form if simple player or LRc generator
@@ -930,20 +944,17 @@ namespace Karaboss.Mp3
             
             switch (Mp3LyricsType)
             {
-                case Mp3LyricsTypes.LyricsWithTimeStamps:
-                    //Mp3LyricsMgmtHelper.SyncTexts = Mp3LyricsMgmtHelper.GetSyncLyrics(SyncLyricsFrame);            // deprecated ?????????
+                case Mp3LyricsTypes.LyricsWithTimeStamps:                    
                     Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectSyncLyrics(SyncLyricsFrame);    // KaraokeEffect
                     DisplayFrmMp3Lyrics();
                     break;
 
-                case Mp3LyricsTypes.LRCFile:
-                    //Mp3LyricsMgmtHelper.SyncTexts = Mp3LyricsMgmtHelper.GetLrcLyrics(FileName);                    // deprecated ????
+                case Mp3LyricsTypes.LRCFile:                    
                     Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(FileName);
                     DisplayFrmMp3Lyrics();
                     break;
                 
-                case Mp3LyricsTypes.LyricsWithoutTimeStamps:
-                    //Mp3LyricsMgmtHelper.SyncTexts = null;
+                case Mp3LyricsTypes.LyricsWithoutTimeStamps:                    
                     string tx = string.Empty;
                     if (TagLyrics != null)
                         tx += TagLyrics;
@@ -1211,9 +1222,9 @@ namespace Karaboss.Mp3
             // chTime
             // 
             chTimeStamp.Tag = "Lyric.TimeStamp";
-            chTimeStamp.TextAlign = HorizontalAlignment.Right;
+            chTimeStamp.TextAlign = HorizontalAlignment.Left;
             chTimeStamp.Text = "Timestamp";
-            chTimeStamp.Width = 150;
+            chTimeStamp.Width = 90;
             // 
             // chLyric
             // 
@@ -1248,7 +1259,149 @@ namespace Karaboss.Mp3
             // Sort the items in the list in ascending order.
             //lvLyrics.Sorting = SortOrder.Ascending;
 
+            #region add langs
+            string[] langs = new string[] {
+                "Arabic",
+                "Armenian",
+                "Bulgarian",
+                "Cambodian",
+                "Chinese",
+                "Croatian",
+                "Czech",
+                "Danish",
+                "Dutch",
+                "English,American",
+                "Esperanto",
+                "Estonian",
+                "Finnish",
+                "French",
+                "Georgian",
+                "German",
+                "Greek",
+                "Hebrew",
+                "Hungarian",
+                "Indonesian",
+                "Irish",
+                "Italian",
+                "Japanese",
+                "Korean",
+                "Laothian",
+                "Lithuanian",
+                "Maori",
+                "Norwegian",
+                "Portuguese",
+                "Romanian",
+                "Russian",
+                "Serbian",
+                "Slovenian",
+                "Spanish",
+                "Swedish",
+                "Thai",
+                "Tibetan",
+                "Turkish",
+                "Ukrainian",
+                "Uzbek",
+                "Vietnamese",
+                "Wolof",
+                "Yiddish",
+                "Zulu",
+                "Abkhazian",
+                "Afar",
+                "Afrikaans",
+                "Albanian",
+                "Amharic",
+                "Assamese",
+                "Aymara",
+                "Azerbaijani",
+                "Bashkir",
+                "Basque",
+                "Bengali,Bangla",
+                "Bhutani",
+                "Bihari",
+                "Bislama",
+                "Breton",
+                "Burmese",
+                "Byelorussian",
+                "Catalan",
+                "Corsican",
+                "Faeroese",
+                "Fiji",
+                "Frisian",
+                "Gaelic(ScotsGaelic)",
+                "Galician",
+                "Greenlandic",
+                "Guarani",
+                "Gujarati",
+                "Hausa",
+                "Hindi",
+                "Icelandic",
+                "Interlingua",
+                "Interlingue",
+                "Inupiak",
+                "Javanese",
+                "Kannada",
+                "Kashmiri",
+                "Kazakh",
+                "Kinyarwanda",
+                "Kirghiz",
+                "Kirundi",
+                "Kurdish",
+                "Latin",
+                "Latvian,Lettish",
+                "Lingala",
+                "Macedonian",
+                "Malagasy",
+                "Malay",
+                "Malayalam",
+                "Maltese",
+                "Marathi",
+                "Moldavian",
+                "Mongolian",
+                "Nauru",
+                "Nepali",
+                "Occitan",
+                "Oriya",
+                "Oromo,Afan",
+                "Pashto,Pushto",
+                "Persian",
+                "Polish",
+                "Punjabi",
+                "Quechua",
+                "Rhaeto-Romance",
+                "Samoan",
+                "Sangro",
+                "Sanskrit",
+                "Serbo-Croatian",
+                "Sesotho",
+                "Setswana",
+                "Shona",
+                "Sindhi",
+                "Singhalese",
+                "Siswati",
+                "Slovak",
+                "Somali",
+                "Sudanese",
+                "Swahili",
+                "Tagalog",
+                "Tajik",
+                "Tamil",
+                "Tatar",
+                "Telugu",
+                "Tigrinya",
+                "Tonga",
+                "Tsonga",
+                "Turkmen",
+                "Twi",
+                "Urdu",
+                "Volapuk",
+                "Welsh",
+                "Xhosa",
+                "Yoruba",
+            };
+            #endregion Add langs
 
+            cbLanguage.Items.AddRange(langs);
+            cbLanguage.SelectedItem = "French";
             
 
             #endregion listview
@@ -1611,15 +1764,33 @@ namespace Karaboss.Mp3
             lvLyrics.Items.Clear();
             _index = 0;
             _LrcMillisecondsDigits = Properties.Settings.Default.LrcMillisecondsDigits;
+
+
+            lblHotkeys.Font = new Font("Courier New", 9);
+            lblHotkeys.Text = "<ENTER>" + " " + "Add a new timestamp" +"\r\n" + "<SPACE>" + " "+ "Pause Music" + "\r\n" + "<-" + "      " + "Stop Music";
+
+            txtTitle.Text = Player.Tag.Title;
+            txtAlbum.Text = Player.Tag.Album;
+            if (Player.Tag.Performers.Count() > 0)
+            {
+                txtArtist.Text = Player.Tag.Performers[0].ToString();
+                txtAuthor.Text = Player.Tag.Performers[0].ToString();
+            }
+            
         }
 
         /// <summary>
         /// Key Enter was hit
         /// </summary>
-        private void SelectLrcLine() 
+        private void AddNewLrcTimeStamp() 
         {
-            //if (txtLyrics.Text.Trim() == "") return;
             if (PlayerState != PlayerStates.Playing) return;
+
+            if (lvLyrics.Items.Count == 0)
+            {
+                MessageBox.Show("Please add lyrics before entering timestamps", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }                        
 
             TimeSpan ts;            
             string tsp;
@@ -1640,8 +1811,11 @@ namespace Karaboss.Mp3
                     lvLyrics.EnsureVisible(_index + 2);
                 else
                     lvLyrics.EnsureVisible(_index);
-               
+
+
+                lblTimes.Text = _index.ToString(); // count number of lines done
                 
+                // Select line (paint in blue)
                 lvLyrics.Items[_index].Selected = true;
                 lvLyrics.Focus();
 
@@ -1706,6 +1880,9 @@ namespace Karaboss.Mp3
                         lvLyrics.Items.Add(lvi);
                     }
                 }
+
+                lblLyrics.Text = lvLyrics.Items.Count.ToString();
+                lblTimes.Text = lblLyrics.Text;
             }
         }
 
@@ -1749,9 +1926,8 @@ namespace Karaboss.Mp3
                 }
 
                 lblLyrics.Text = lvLyrics.Items.Count.ToString();
-                lblTimes.Text = lvLyrics.Items.Count.ToString();
+                lblTimes.Text = "0";
                 
-
                 lvLyrics.Items[0].Selected = true;
                 lvLyrics.Focus();
             }
@@ -1930,7 +2106,8 @@ namespace Karaboss.Mp3
                 case Keys.Enter:
                     if (PlayerAppearance == PlayerAppearances.LrcGenerator)
                     {
-                        SelectLrcLine();
+                        // Add a new timestamp
+                        AddNewLrcTimeStamp();
                     }
                     break;
 
@@ -1968,5 +2145,6 @@ namespace Karaboss.Mp3
 
         #endregion LRC generator
 
+       
     }
 }

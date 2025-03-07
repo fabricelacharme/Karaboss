@@ -57,6 +57,7 @@
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.pnlMiddle = new System.Windows.Forms.Panel();
+            this.lvLyrics = new System.Windows.Forms.ListView();
             this.lblLyrics = new System.Windows.Forms.Label();
             this.lblTimes = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -69,7 +70,13 @@
             this.mnuExportLrcNoMeta = new System.Windows.Forms.ToolStripMenuItem();
             this.btnDisplayMetadata = new System.Windows.Forms.ToolStripButton();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.lvLyrics = new System.Windows.Forms.ListView();
+            this.lblHotkeys = new System.Windows.Forms.Label();
+            this.txtTitle = new System.Windows.Forms.TextBox();
+            this.txtAuthor = new System.Windows.Forms.TextBox();
+            this.txtYourName = new System.Windows.Forms.TextBox();
+            this.txtArtist = new System.Windows.Forms.TextBox();
+            this.txtAlbum = new System.Windows.Forms.TextBox();
+            this.cbLanguage = new System.Windows.Forms.ComboBox();
             this.btnTempoMinus = new Karaboss.Buttons.MinusButtonControl();
             this.btnTempoPlus = new Karaboss.Buttons.PlusButtonControl();
             this.btnTranspoMinus = new Karaboss.Buttons.MinusButtonControl();
@@ -79,6 +86,11 @@
             this.btnNext = new Karaboss.NoSelectButton();
             this.btnStop = new Karaboss.NoSelectButton();
             this.btnPlay = new Karaboss.NoSelectButton();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.pnlControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBox)).BeginInit();
@@ -451,6 +463,18 @@
             // pnlMiddle
             // 
             this.pnlMiddle.BackColor = System.Drawing.Color.LightGray;
+            this.pnlMiddle.Controls.Add(this.label6);
+            this.pnlMiddle.Controls.Add(this.label5);
+            this.pnlMiddle.Controls.Add(this.label4);
+            this.pnlMiddle.Controls.Add(this.label3);
+            this.pnlMiddle.Controls.Add(this.label1);
+            this.pnlMiddle.Controls.Add(this.cbLanguage);
+            this.pnlMiddle.Controls.Add(this.txtAlbum);
+            this.pnlMiddle.Controls.Add(this.txtYourName);
+            this.pnlMiddle.Controls.Add(this.txtArtist);
+            this.pnlMiddle.Controls.Add(this.txtAuthor);
+            this.pnlMiddle.Controls.Add(this.txtTitle);
+            this.pnlMiddle.Controls.Add(this.lblHotkeys);
             this.pnlMiddle.Controls.Add(this.lvLyrics);
             this.pnlMiddle.Controls.Add(this.lblLyrics);
             this.pnlMiddle.Controls.Add(this.lblTimes);
@@ -458,6 +482,13 @@
             this.pnlMiddle.Controls.Add(this.toolStrip1);
             resources.ApplyResources(this.pnlMiddle, "pnlMiddle");
             this.pnlMiddle.Name = "pnlMiddle";
+            // 
+            // lvLyrics
+            // 
+            this.lvLyrics.HideSelection = false;
+            resources.ApplyResources(this.lvLyrics, "lvLyrics");
+            this.lvLyrics.Name = "lvLyrics";
+            this.lvLyrics.UseCompatibleStateImageBehavior = false;
             // 
             // lblLyrics
             // 
@@ -532,12 +563,46 @@
             this.btnDisplayMetadata.Name = "btnDisplayMetadata";
             this.btnDisplayMetadata.Click += new System.EventHandler(this.btnDisplayMetadata_Click);
             // 
-            // lvLyrics
+            // lblHotkeys
             // 
-            this.lvLyrics.HideSelection = false;
-            resources.ApplyResources(this.lvLyrics, "lvLyrics");
-            this.lvLyrics.Name = "lvLyrics";
-            this.lvLyrics.UseCompatibleStateImageBehavior = false;
+            this.lblHotkeys.BackColor = System.Drawing.Color.Silver;
+            resources.ApplyResources(this.lblHotkeys, "lblHotkeys");
+            this.lblHotkeys.Name = "lblHotkeys";
+            // 
+            // txtTitle
+            // 
+            resources.ApplyResources(this.txtTitle, "txtTitle");
+            this.txtTitle.Name = "txtTitle";
+            this.toolTip1.SetToolTip(this.txtTitle, resources.GetString("txtTitle.ToolTip"));
+            // 
+            // txtAuthor
+            // 
+            resources.ApplyResources(this.txtAuthor, "txtAuthor");
+            this.txtAuthor.Name = "txtAuthor";
+            this.toolTip1.SetToolTip(this.txtAuthor, resources.GetString("txtAuthor.ToolTip"));
+            // 
+            // txtYourName
+            // 
+            resources.ApplyResources(this.txtYourName, "txtYourName");
+            this.txtYourName.Name = "txtYourName";
+            // 
+            // txtArtist
+            // 
+            resources.ApplyResources(this.txtArtist, "txtArtist");
+            this.txtArtist.Name = "txtArtist";
+            this.toolTip1.SetToolTip(this.txtArtist, resources.GetString("txtArtist.ToolTip"));
+            // 
+            // txtAlbum
+            // 
+            resources.ApplyResources(this.txtAlbum, "txtAlbum");
+            this.txtAlbum.Name = "txtAlbum";
+            this.toolTip1.SetToolTip(this.txtAlbum, resources.GetString("txtAlbum.ToolTip"));
+            // 
+            // cbLanguage
+            // 
+            this.cbLanguage.FormattingEnabled = true;
+            resources.ApplyResources(this.cbLanguage, "cbLanguage");
+            this.cbLanguage.Name = "cbLanguage";
             // 
             // btnTempoMinus
             // 
@@ -628,6 +693,31 @@
             this.btnPlay.MouseLeave += new System.EventHandler(this.btnPlay_MouseLeave);
             this.btnPlay.MouseHover += new System.EventHandler(this.btnPlay_MouseHover);
             // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Name = "label1";
+            // 
+            // label3
+            // 
+            resources.ApplyResources(this.label3, "label3");
+            this.label3.Name = "label3";
+            // 
+            // label4
+            // 
+            resources.ApplyResources(this.label4, "label4");
+            this.label4.Name = "label4";
+            // 
+            // label5
+            // 
+            resources.ApplyResources(this.label5, "label5");
+            this.label5.Name = "label5";
+            // 
+            // label6
+            // 
+            resources.ApplyResources(this.label6, "label6");
+            this.label6.Name = "label6";
+            // 
             // frmMp3Player
             // 
             resources.ApplyResources(this, "$this");
@@ -644,6 +734,7 @@
             this.Load += new System.EventHandler(this.frmMp3Player_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmMp3Player_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmMp3Player_KeyUp);
+            this.Resize += new System.EventHandler(this.frmMp3Player_Resize);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.pnlControls.ResumeLayout(false);
@@ -709,5 +800,17 @@
         private System.Windows.Forms.Label lblLyrics;
         private System.Windows.Forms.Label lblTimes;
         private System.Windows.Forms.ListView lvLyrics;
+        private System.Windows.Forms.Label lblHotkeys;
+        private System.Windows.Forms.TextBox txtTitle;
+        private System.Windows.Forms.TextBox txtYourName;
+        private System.Windows.Forms.TextBox txtArtist;
+        private System.Windows.Forms.TextBox txtAuthor;
+        private System.Windows.Forms.TextBox txtAlbum;
+        private System.Windows.Forms.ComboBox cbLanguage;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label6;
     }
 }
