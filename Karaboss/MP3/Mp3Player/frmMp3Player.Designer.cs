@@ -57,9 +57,9 @@
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.pnlMiddle = new System.Windows.Forms.Panel();
+            this.lblLyrics = new System.Windows.Forms.Label();
+            this.lblTimes = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtTimes = new System.Windows.Forms.TextBox();
-            this.txtLyrics = new System.Windows.Forms.TextBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.mnuImport = new System.Windows.Forms.ToolStripDropDownButton();
             this.mnuImportLrcFile = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,6 +68,8 @@
             this.mnuExportLRCMeta = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuExportLrcNoMeta = new System.Windows.Forms.ToolStripMenuItem();
             this.btnDisplayMetadata = new System.Windows.Forms.ToolStripButton();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.lvLyrics = new System.Windows.Forms.ListView();
             this.btnTempoMinus = new Karaboss.Buttons.MinusButtonControl();
             this.btnTempoPlus = new Karaboss.Buttons.PlusButtonControl();
             this.btnTranspoMinus = new Karaboss.Buttons.MinusButtonControl();
@@ -449,29 +451,28 @@
             // pnlMiddle
             // 
             this.pnlMiddle.BackColor = System.Drawing.Color.LightGray;
+            this.pnlMiddle.Controls.Add(this.lvLyrics);
+            this.pnlMiddle.Controls.Add(this.lblLyrics);
+            this.pnlMiddle.Controls.Add(this.lblTimes);
             this.pnlMiddle.Controls.Add(this.label2);
-            this.pnlMiddle.Controls.Add(this.txtTimes);
-            this.pnlMiddle.Controls.Add(this.txtLyrics);
             this.pnlMiddle.Controls.Add(this.toolStrip1);
             resources.ApplyResources(this.pnlMiddle, "pnlMiddle");
             this.pnlMiddle.Name = "pnlMiddle";
+            // 
+            // lblLyrics
+            // 
+            resources.ApplyResources(this.lblLyrics, "lblLyrics");
+            this.lblLyrics.Name = "lblLyrics";
+            // 
+            // lblTimes
+            // 
+            resources.ApplyResources(this.lblTimes, "lblTimes");
+            this.lblTimes.Name = "lblTimes";
             // 
             // label2
             // 
             resources.ApplyResources(this.label2, "label2");
             this.label2.Name = "label2";
-            // 
-            // txtTimes
-            // 
-            resources.ApplyResources(this.txtTimes, "txtTimes");
-            this.txtTimes.Name = "txtTimes";
-            this.txtTimes.TabStop = false;
-            // 
-            // txtLyrics
-            // 
-            resources.ApplyResources(this.txtLyrics, "txtLyrics");
-            this.txtLyrics.Name = "txtLyrics";
-            this.txtLyrics.TabStop = false;
             // 
             // toolStrip1
             // 
@@ -530,6 +531,13 @@
             resources.ApplyResources(this.btnDisplayMetadata, "btnDisplayMetadata");
             this.btnDisplayMetadata.Name = "btnDisplayMetadata";
             this.btnDisplayMetadata.Click += new System.EventHandler(this.btnDisplayMetadata_Click);
+            // 
+            // lvLyrics
+            // 
+            this.lvLyrics.HideSelection = false;
+            resources.ApplyResources(this.lvLyrics, "lvLyrics");
+            this.lvLyrics.Name = "lvLyrics";
+            this.lvLyrics.UseCompatibleStateImageBehavior = false;
             // 
             // btnTempoMinus
             // 
@@ -696,8 +704,10 @@
         private System.Windows.Forms.ToolStripMenuItem mnuExportLRCMeta;
         private System.Windows.Forms.ToolStripMenuItem mnuExportLrcNoMeta;
         private System.Windows.Forms.ToolStripButton btnDisplayMetadata;
-        private System.Windows.Forms.TextBox txtLyrics;
-        private System.Windows.Forms.TextBox txtTimes;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Label lblLyrics;
+        private System.Windows.Forms.Label lblTimes;
+        private System.Windows.Forms.ListView lvLyrics;
     }
 }

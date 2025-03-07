@@ -663,52 +663,7 @@ namespace Karaboss.Utilities
 
             return lstLines;
         }
-
-        /*
-        public static List<string> GetLrcLines(string[] lstLyricsItems, int _LrcMillisecondsDigits)
-        {
-            // [00:04.59]
-            // [00:04.59]IT'S[00:04.83]BEEN[00:05.05]A[00:05.27]HARD[00:06.15]DAY'S[00:06.81]NIGHT[00:08.14]
-            // [00:08.14]AND[00:08.37]I'VE[00:08.60]BEEN[00:08.79]WOR[00:09.04]KING[00:09.91]LIKE[00:10.14]A[00:10.34]DOG[00:11.66]
-            // [00:11.66]IT'S[00:11.88]BEEN[00:12.09]A[00:12.32]HARD[00:13.22]DAY'S[00:13.89]NIGHT[00:15.19]
-
-
-            List<string> lstLines = new List<string>();
-            string line;            
-            string sTime;
-            string tx;
-            string removepattern3 = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
-            string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
-            string removePattern;
-            int removeChars;
-            string replace = @"";
-
-            if (_LrcMillisecondsDigits == 2)
-            {
-                removePattern = removepattern2;
-                removeChars = 10;
-            }
-            else
-            {
-                removePattern = removepattern3;
-                removeChars = 11;
-            }
-
-            for (int i = 0; i < lstLyricsItems.Count(); i++)
-            {
-                line = lstLyricsItems[i]; 
-                sTime = line.Substring(0, removeChars);
-
-                // Remove all timestamps form line 
-                line = Regex.Replace(line, removePattern, replace);
-                line = sTime + line;
-                // Store result
-                lstLines.Add(line);
-            }
-
-            return lstLines;
-        }
-        */
+      
 
         public static List<string> GetLrcLines(List<string> lstLyricsItems, int _LrcMillisecondsDigits)
         {
@@ -1333,6 +1288,131 @@ namespace Karaboss.Utilities
 
             return new List<string> { Tag_Artist, Tag_Title };
         }
+
+
+        #region save lrc
+
+        /// <summary>
+        /// Save Lyrics .lrc file format and by lines
+        /// </summary>
+        /// <param name="File"></param>
+        /// <param name="lstDgRows"></param>
+        /// <param name="bRemoveAccents"></param>
+        /// <param name="bUpperCase"></param>
+        /// <param name="bLowerCase"></param>
+        /// <param name="bRemoveNonAlphaNumeric"></param>
+        /// <param name="Tag_Tool"></param>
+        /// <param name="Tag_Title"></param>
+        /// <param name="Tag_Artist"></param>
+        /// <param name="Tag_Album"></param>
+        /// <param name="Tag_Lang"></param>
+        /// <param name="Tag_By"></param>
+        /// <param name="Tag_DPlus"></param>
+        /// <param name="bControlLength"></param>
+        /// <param name="MaxLength"></param>
+        /// <param name="_LrcMillisecondsDigits"></param>
+        /// <param name="_myLyricsMgmt"></param>
+        public static void SaveLRCLines(string File, List<(double, string)> lstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus, bool bControlLength, int MaxLength, int _LrcMillisecondsDigits, MidiLyricsMgmt _myLyricsMgmt = null)
+        {
+            string sLine;
+
+            string lrcs;
+            string cr = "\r\n";
+
+            #region meta data
+
+            // List to store lines
+            List<string> lstHeaderLines = new List<string>();
+
+            // Store meta datas
+            List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
+            List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
+            string Tag;
+            string TagName;
+            for (int i = 0; i < TagsList.Count; i++)
+            {
+                Tag = TagsList[i];
+                TagName = TagsNames[i];
+                Tag = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(Tag) : Tag;
+                Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
+                if (Tag != "")
+                {
+                    sLine = "[" + TagName + Tag + "]";
+                    lstHeaderLines.Add(sLine);
+                }
+            }
+            #endregion meta data
+
+
+            // Make treatment of lyrics (same for frmLyricsEdit and frmMp3LyricsEdit)
+            List<string> lstLyricsItems = Utilities.LyricsUtilities.LrcExtractDgRows(lstDgRows, _LrcMillisecondsDigits, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _myLyricsMgmt);
+
+            // Store lyrics in lines (remove timestamps from lines, except for the first word)
+            // [00:04.59]It's_been_a_hard_day's_night
+            List<string> lstLines = Utilities.LyricsUtilities.GetLrcLines(lstLyricsItems, _LrcMillisecondsDigits);
+
+            // Store timestamps + lyrics in lines (add spaces if not existing)
+            // initial [00:04.59]It's[00:04.83]_been[00:05.05]_a[00:05.27]_hard[00:06.15]_day's[00:06.81]_night[00:08.14]
+            // result [00:04.59]It's [00:04.83]_been [00:05.05]_a [00:05.27]_hard [00:06.15]_day's [00:06.81]_night [00:08.14]
+            List<string> lstTimeLines = Utilities.LyricsUtilities.GetLrcTimeLines(lstLyricsItems, _LrcMillisecondsDigits);
+
+            // Store lyrics by line and cut lines to MaxLength characters using lstTimeLines
+            List<string> lstLinesCut = new List<string>();
+            if (bControlLength)
+            {
+                lstLinesCut = Utilities.LyricsUtilities.GetLrcLinesCut(lstTimeLines, MaxLength, _LrcMillisecondsDigits);
+            }
+
+
+            #region send all to string 
+
+            // Header
+            lrcs = string.Empty;
+            for (int i = 0; i < lstHeaderLines.Count; i++)
+            {
+                lrcs += lstHeaderLines[i] + cr;
+            }
+
+            // Select cut or not cut
+            if (bControlLength)
+            {
+                // If cut lines to 32 chars
+                for (int i = 0; i < lstLinesCut.Count; i++)
+                {
+                    lrcs += lstLinesCut[i].Replace("_", " ").Replace("] ", "]") + cr;
+                }
+            }
+            else
+            {
+                // No cut
+                for (int i = 0; i < lstLines.Count; i++)
+                {
+                    // Replace underscores located in the middle of the lyrics
+                    // ex: " the_air,_(get_to_poppin')"                    
+                    lrcs += lstLines[i].Replace("]_", "]").Replace(" ", "").Replace("_", " ") + cr;
+                }
+            }
+            #endregion send all to string
+
+
+            // Open file
+            #region open file
+            try
+            {
+                System.IO.File.WriteAllText(File, lrcs);
+                System.Diagnostics.Process.Start(@File);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            #endregion open file
+        }
+
+
+
+        #endregion save lrc
 
 
         #endregion LRC

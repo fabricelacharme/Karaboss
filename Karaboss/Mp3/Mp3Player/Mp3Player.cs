@@ -267,7 +267,7 @@ namespace Karaboss.Mp3
         }
 
         /// <summary>
-        /// Get player position
+        /// Get player position (seconds)
         /// </summary>
         /// <returns></returns>
         private double GetPosition()

@@ -126,16 +126,16 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>112, 22</value>
   </data>
   <data name="mnuFileOpen.Text" xml:space="preserve">
     <value>&amp;Open...</value>
   </data>
   <data name="MnuFileSep.Size" type="System.Drawing.Size, System.Drawing">
-    <value>177, 6</value>
+    <value>109, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>112, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>E&amp;xit</value>
@@ -147,13 +147,13 @@
     <value>&amp;File</value>
   </data>
   <data name="mnuEditLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>150, 22</value>
   </data>
   <data name="mnuEditLyrics.Text" xml:space="preserve">
     <value>Edit &amp;lyrics</value>
   </data>
   <data name="mnuEditLRCGenerator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>150, 22</value>
   </data>
   <data name="mnuEditLRCGenerator.Text" xml:space="preserve">
     <value>LRC Generator</value>
@@ -165,7 +165,7 @@
     <value>&amp;Edit</value>
   </data>
   <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>116, 22</value>
   </data>
   <data name="mnuHelpAbout.Text" xml:space="preserve">
     <value>&amp;About...</value>
@@ -180,7 +180,7 @@
     <value>0, 0</value>
   </data>
   <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>514, 24</value>
+    <value>526, 24</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
@@ -710,7 +710,7 @@
     <value>272, 25</value>
   </data>
   <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 24</value>
+    <value>24, 80</value>
   </data>
   <data name="sldMainVolume.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -770,7 +770,7 @@
     <value>0, 334</value>
   </data>
   <data name="pnlControls.Size" type="System.Drawing.Size, System.Drawing">
-    <value>514, 127</value>
+    <value>526, 127</value>
   </data>
   <data name="pnlControls.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -796,6 +796,87 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>590, 17</value>
   </metadata>
+  <data name="lvLyrics.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 40</value>
+  </data>
+  <data name="lvLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>505, 240</value>
+  </data>
+  <data name="lvLyrics.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="&gt;&gt;lvLyrics.Name" xml:space="preserve">
+    <value>lvLyrics</value>
+  </data>
+  <data name="&gt;&gt;lvLyrics.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lvLyrics.Parent" xml:space="preserve">
+    <value>pnlMiddle</value>
+  </data>
+  <data name="&gt;&gt;lvLyrics.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lblLyrics.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblLyrics.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblLyrics.Location" type="System.Drawing.Point, System.Drawing">
+    <value>143, 283</value>
+  </data>
+  <data name="lblLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 13</value>
+  </data>
+  <data name="lblLyrics.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="lblLyrics.Text" xml:space="preserve">
+    <value>label3</value>
+  </data>
+  <data name="&gt;&gt;lblLyrics.Name" xml:space="preserve">
+    <value>lblLyrics</value>
+  </data>
+  <data name="&gt;&gt;lblLyrics.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblLyrics.Parent" xml:space="preserve">
+    <value>pnlMiddle</value>
+  </data>
+  <data name="&gt;&gt;lblLyrics.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblTimes.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblTimes.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblTimes.Location" type="System.Drawing.Point, System.Drawing">
+    <value>24, 283</value>
+  </data>
+  <data name="lblTimes.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 13</value>
+  </data>
+  <data name="lblTimes.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="lblTimes.Text" xml:space="preserve">
+    <value>label1</value>
+  </data>
+  <data name="&gt;&gt;lblTimes.Name" xml:space="preserve">
+    <value>lblTimes</value>
+  </data>
+  <data name="&gt;&gt;lblTimes.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblTimes.Parent" xml:space="preserve">
+    <value>pnlMiddle</value>
+  </data>
+  <data name="&gt;&gt;lblTimes.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -827,75 +908,7 @@
     <value>pnlMiddle</value>
   </data>
   <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="txtTimes.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Arial Narrow, 12pt</value>
-  </data>
-  <data name="txtTimes.Location" type="System.Drawing.Point, System.Drawing">
-    <value>44, 53</value>
-  </data>
-  <data name="txtTimes.Multiline" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="txtTimes.Size" type="System.Drawing.Size, System.Drawing">
-    <value>69, 237</value>
-  </data>
-  <data name="txtTimes.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="txtTimes.Text" xml:space="preserve">
-    <value>00:12.43
-00:13.01
-00:14.15</value>
-  </data>
-  <data name="txtTimes.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;txtTimes.Name" xml:space="preserve">
-    <value>txtTimes</value>
-  </data>
-  <data name="&gt;&gt;txtTimes.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtTimes.Parent" xml:space="preserve">
-    <value>pnlMiddle</value>
-  </data>
-  <data name="&gt;&gt;txtTimes.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="txtLyrics.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Arial Narrow, 12pt</value>
-  </data>
-  <data name="txtLyrics.Location" type="System.Drawing.Point, System.Drawing">
-    <value>119, 53</value>
-  </data>
-  <data name="txtLyrics.Multiline" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="txtLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>296, 237</value>
-  </data>
-  <data name="txtLyrics.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="txtLyrics.Text" xml:space="preserve">
-    <value>Inutile combat
-La petite maison
-dans la prairie
-</value>
-  </data>
-  <data name="&gt;&gt;txtLyrics.Name" xml:space="preserve">
-    <value>txtLyrics</value>
-  </data>
-  <data name="&gt;&gt;txtLyrics.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtLyrics.Parent" xml:space="preserve">
-    <value>pnlMiddle</value>
-  </data>
-  <data name="&gt;&gt;txtLyrics.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>688, 17</value>
@@ -1024,7 +1037,7 @@ dans la prairie
     <value>pnlMiddle</value>
   </data>
   <data name="&gt;&gt;toolStrip1.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="pnlMiddle.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -1033,7 +1046,7 @@ dans la prairie
     <value>0, 24</value>
   </data>
   <data name="pnlMiddle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>514, 310</value>
+    <value>526, 310</value>
   </data>
   <data name="pnlMiddle.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -1050,6 +1063,9 @@ dans la prairie
   <data name="&gt;&gt;pnlMiddle.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <metadata name="saveFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>793, 17</value>
+  </metadata>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -1057,7 +1073,10 @@ dans la prairie
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>514, 461</value>
+    <value>526, 461</value>
+  </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>
@@ -1178,6 +1197,12 @@ dans la prairie
   </data>
   <data name="&gt;&gt;btnDisplayMetadata.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;saveFileDialog1.Name" xml:space="preserve">
+    <value>saveFileDialog1</value>
+  </data>
+  <data name="&gt;&gt;saveFileDialog1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmMp3Player</value>

@@ -220,10 +220,7 @@ namespace Karaboss.xplorer
         public void RefreshContents(string fullPath = "")
         {
             shellListView.RefreshContents(fullPath);
-        }
-        
-
-
+        }        
 
         #endregion
 

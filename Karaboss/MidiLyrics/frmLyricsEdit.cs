@@ -49,6 +49,7 @@ using System.Text;
 using Karaboss.Mp3.Mp3Lyrics;
 using System.Web;
 using System.Diagnostics.Eventing.Reader;
+using TextPlayer.MML;
 
 
 namespace Karaboss
@@ -2169,7 +2170,8 @@ namespace Karaboss
             switch (LrcLinesSyllabesFormat)
             {
                 case LrcLinesSyllabesFormats.Lines:
-                    SaveLRCLines(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, bCutLines, LrcCutLinesChars);
+                    List<(double, string)> lstDgRows = LRCReadDgViewData();
+                    Utilities.LyricsUtilities.SaveLRCLines(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, bCutLines, LrcCutLinesChars, _LrcMillisecondsDigits, _myLyricsMgmt);
                     break;
                 case LrcLinesSyllabesFormats.Syllabes:
                     SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
@@ -2179,18 +2181,11 @@ namespace Karaboss
       
             
         /// <summary>
-        /// Save Lyrics .lrc file format and by lines
+        /// Read dgView data
         /// </summary>
-        /// <param name="File"></param>
-        /// <param name="Tag_Title"></param>
-        /// <param name="Tag_Artist"></param>
-        /// <param name="Tag_Album"></param>
-        /// <param name="Tag_Lang"></param>
-        /// <param name="Tag_By"></param>
-        /// <param name="Tag_DPlus"></param>
-        private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus, bool bControlLength, int MaxLength)
+        /// <returns></returns>
+        private List<(double, string)> LRCReadDgViewData()
         {
-            string sLine;
             string sTime;
             double time;
             string sLyric;                    
@@ -2198,6 +2193,50 @@ namespace Karaboss
             object vLyric;
             object vTime;
             
+            // Store rows of dgView in a list
+            // the aim is to have the same procedure between frmLyricsEdit and frmMp3LyricsEdit            
+
+            List<(double, string)> lstDgRows = new List<(double, string)>();           
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;                
+                if (vTime != null && vLyric != null)
+                {
+                    sTime = vTime.ToString();
+                    // Convert times to milliseconds (to have the same entry format with frmMp3LyricsEdit)
+                    time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
+                    sLyric = vLyric.ToString();
+
+                    lstDgRows.Add((time, sLyric));
+                }
+            }            
+
+            return lstDgRows;      
+        }
+
+        /// <summary>
+        /// Save Lyrics .lrc file format and by lines
+        /// </summary>
+        /// <param name="File"></param>
+        /// <param name="lstDgRows"></param>
+        /// <param name="bRemoveAccents"></param>
+        /// <param name="bUpperCase"></param>
+        /// <param name="bLowerCase"></param>
+        /// <param name="bRemoveNonAlphaNumeric"></param>
+        /// <param name="Tag_Tool"></param>
+        /// <param name="Tag_Title"></param>
+        /// <param name="Tag_Artist"></param>
+        /// <param name="Tag_Album"></param>
+        /// <param name="Tag_Lang"></param>
+        /// <param name="Tag_By"></param>
+        /// <param name="Tag_DPlus"></param>
+        /// <param name="bControlLength"></param>
+        /// <param name="MaxLength"></param>
+        private void SaveLRCLines2(string File, List<(double, string)> lstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus, bool bControlLength, int MaxLength)
+        {
+            string sLine;
+
             string lrcs;
             string cr = "\r\n";
 
@@ -2219,39 +2258,15 @@ namespace Karaboss
                 Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
                 if (Tag != "")
                 {
-                    sLine = "[" + TagName + Tag + "]";                    
+                    sLine = "[" + TagName + Tag + "]";
                     lstHeaderLines.Add(sLine);
                 }
             }
             #endregion meta data
 
-
-            // Store rows of dgView in a list
-            // the aim is to have the same procedure between frmLyricsEdit and frmMp3LyricsEdit
-
-            #region Read dgView
-
-            List<(double, string)> lstDgRows = new List<(double, string)>();           
-            for (int i = 0; i < dgView.Rows.Count; i++)
-            {
-                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
-                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;                
-                if (vTime != null && vLyric != null)
-                {
-                    sTime = vTime.ToString();
-                    // Convert times to milliseconds (to have the same entry foramt with frmMp3LyricsEdit)
-                    time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
-                    sLyric = vLyric.ToString();
-
-                    lstDgRows.Add((time, sLyric));
-                }
-            }
-
-            #endregion Read dgView
-
-
+           
             // Make treatment of lyrics (same for frmLyricsEdit and frmMp3LyricsEdit)
-            List<string> lstLyricsItems = Utilities.LyricsUtilities.LrcExtractDgRows(lstDgRows, _LrcMillisecondsDigits, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _myLyricsMgmt);                             
+            List<string> lstLyricsItems = Utilities.LyricsUtilities.LrcExtractDgRows(lstDgRows, _LrcMillisecondsDigits, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _myLyricsMgmt);
 
             // Store lyrics in lines (remove timestamps from lines, except for the first word)
             // [00:04.59]It's_been_a_hard_day's_night
@@ -2261,10 +2276,10 @@ namespace Karaboss
             // initial [00:04.59]It's[00:04.83]_been[00:05.05]_a[00:05.27]_hard[00:06.15]_day's[00:06.81]_night[00:08.14]
             // result [00:04.59]It's [00:04.83]_been [00:05.05]_a [00:05.27]_hard [00:06.15]_day's [00:06.81]_night [00:08.14]
             List<string> lstTimeLines = Utilities.LyricsUtilities.GetLrcTimeLines(lstLyricsItems, _LrcMillisecondsDigits);
-             
+
             // Store lyrics by line and cut lines to MaxLength characters using lstTimeLines
             List<string> lstLinesCut = new List<string>();
-            if (bControlLength) 
+            if (bControlLength)
             {
                 lstLinesCut = Utilities.LyricsUtilities.GetLrcLinesCut(lstTimeLines, MaxLength, _LrcMillisecondsDigits);
             }
@@ -2284,7 +2299,7 @@ namespace Karaboss
             {
                 // If cut lines to 32 chars
                 for (int i = 0; i < lstLinesCut.Count; i++)
-                {                                     
+                {
                     lrcs += lstLinesCut[i].Replace("_", " ").Replace("] ", "]") + cr;
                 }
             }
@@ -2315,6 +2330,7 @@ namespace Karaboss
             }
             #endregion open file
         }
+
 
         /// <summary>
         /// Save lyrics to new LRC format [01:54.60]Pa<01:55.32>ro<01:56.15>les
