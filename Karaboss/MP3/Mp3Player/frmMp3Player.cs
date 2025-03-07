@@ -42,6 +42,10 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Xml.Linq;
+using TagLib.Id3v2;
+using Un4seen.Bass;
 //using static System.Net.Mime.MediaTypeNames;
 //using static System.Net.Mime.MediaTypeNames;
 
@@ -1196,6 +1200,29 @@ namespace Karaboss.Mp3
 
             #region listview
 
+            #region listview header
+            ColumnHeader chTimeStamp = new System.Windows.Forms.ColumnHeader();
+            ColumnHeader chLyric = new System.Windows.Forms.ColumnHeader();
+
+            lvLyrics.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            chTimeStamp,
+            chLyric,});
+            // 
+            // chTime
+            // 
+            chTimeStamp.Tag = "Lyric.TimeStamp";
+            chTimeStamp.TextAlign = HorizontalAlignment.Right;
+            chTimeStamp.Text = "Timestamp";
+            chTimeStamp.Width = 150;
+            // 
+            // chLyric
+            // 
+            chLyric.Text = "Lyrics";
+            chLyric.TextAlign = HorizontalAlignment.Center;
+            chLyric.Width = 350;
+
+            #endregion listview header
+
             //lvArtists.Dock = DockStyle.Fill;
 
             lvLyrics.Font = new Font("Segoe UI", 12F);
@@ -1222,8 +1249,7 @@ namespace Karaboss.Mp3
             //lvLyrics.Sorting = SortOrder.Ascending;
 
 
-            lvLyrics.Columns.Add("Times", 80, HorizontalAlignment.Right);
-            lvLyrics.Columns.Add("Lyrics", 350, HorizontalAlignment.Center);
+            
 
             #endregion listview
         }
@@ -1614,6 +1640,11 @@ namespace Karaboss.Mp3
                     lvLyrics.EnsureVisible(_index + 2);
                 else
                     lvLyrics.EnsureVisible(_index);
+               
+                
+                lvLyrics.Items[_index].Selected = true;
+                lvLyrics.Focus();
+
                 _index++;
             }            
         }
@@ -1641,8 +1672,10 @@ namespace Karaboss.Mp3
                 lvLyrics.Items.Clear();
 
                 string text;
-                long time;                
-                
+                long time;
+                string sTime;
+                TimeSpan ts;
+                string tsp;
                 ListViewItem lvi;
 
                 // For each line
@@ -1652,6 +1685,14 @@ namespace Karaboss.Mp3
                     for (int i = 0; i < SyncLyrics[j].Count; i++)
                     {
                         time = SyncLyrics[j][i].Time;
+                        ts = TimeSpan.FromMilliseconds(time);
+                        if (_LrcMillisecondsDigits == 2)
+                            tsp = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                        else
+                            tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+
+                        sTime = tsp;  // Transform to [00:00.000] format
+
                         text = SyncLyrics[j][i].Text;
                         
                         // Put "/" everywhere
@@ -1660,7 +1701,7 @@ namespace Karaboss.Mp3
                         text = text.Replace("\n", "");
                         text = text.Trim();
 
-                        lvi = new ListViewItem( new string[] { time.ToString(), text });
+                        lvi = new ListViewItem( new string[] { sTime, text });
                         
                         lvLyrics.Items.Add(lvi);
                     }
@@ -1709,7 +1750,10 @@ namespace Karaboss.Mp3
 
                 lblLyrics.Text = lvLyrics.Items.Count.ToString();
                 lblTimes.Text = lvLyrics.Items.Count.ToString();
+                
 
+                lvLyrics.Items[0].Selected = true;
+                lvLyrics.Focus();
             }
         
         }
@@ -1741,7 +1785,7 @@ namespace Karaboss.Mp3
                 lvi = lvLyrics.Items[i];
                 sTime = lvi.Text;
                 time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
-                sLyric = "/" + lvi.SubItems[0].ToString();                 //BUG !!!!!!!!!!!!!!!!
+                sLyric = "/" + lvi.SubItems[1].Text;                 //BUG !!!!!!!!!!!!!!!!
                         
             
                 // Use case : lyrics begins with a linefeed
