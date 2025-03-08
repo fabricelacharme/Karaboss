@@ -942,6 +942,8 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\witch2.png" />
+    <None Include="Resources\mp3-logo-200.png" />
     <None Include="Resources\MaxOver.png" />
     <None Include="Resources\magnifyplus24.png" />
     <None Include="Resources\magnifyminus24.png" />

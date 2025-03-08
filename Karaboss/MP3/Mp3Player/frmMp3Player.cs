@@ -62,7 +62,7 @@ namespace Karaboss.Mp3
         }
         private PlayerAppearances PlayerAppearance;
         // Dimensions        
-        private readonly int SimpleMp3PlayerWidth = 517;
+        private readonly int SimpleMp3PlayerWidth = 530;
         private readonly int SimpleMp3PlayerHeight = 194;
 
         private int _LrcMillisecondsDigits = 2;
@@ -940,7 +940,10 @@ namespace Karaboss.Mp3
             Mp3LyricsMgmtHelper.SyncLine = new System.Collections.Generic.List<keffect.KaraokeEffect.kSyncText>();
             
             Player.GetMp3Infos(Mp3FullPath);
+            
+            
             pBox.Image = Player.AlbumArtImage;
+            
             TagLib.Tag Tag = Player.Tag;
 
             if (Tag == null) return;

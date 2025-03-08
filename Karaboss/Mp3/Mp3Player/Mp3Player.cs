@@ -452,7 +452,8 @@ namespace Karaboss.Mp3
                 }
                 else
                 {
-                    _albumartimage = null; // = Properties.Resources.gramophone;
+                    //_albumartimage = null; // = Properties.Resources.gramophone;
+                    _albumartimage = Properties.Resources.mp3_logo_200;
                 }
             }
             catch (Exception ex) 
