@@ -223,6 +223,7 @@
       <DependentUpon>frmMp3Player.cs</DependentUpon>
     </Compile>
     <Compile Include="Mp3\Mp3Lyrics\Mp3LyricsMgmt.cs" />
+    <Compile Include="Mp3\Mp3Player\ListViewEx.cs" />
     <Compile Include="Mp3\Mp3Player\Mp3Player.cs" />
     <Compile Include="Utilities\Forms\FormUtilities.cs" />
     <Compile Include="Utilities\IO\Files.cs" />

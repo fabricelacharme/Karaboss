@@ -1630,7 +1630,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("550, 500")]
+        [global::System.Configuration.DefaultSettingValueAttribute("675, 530")]
         public global::System.Drawing.Size frmLrcGeneratorSize {
             get {
                 return ((global::System.Drawing.Size)(this["frmLrcGeneratorSize"]));

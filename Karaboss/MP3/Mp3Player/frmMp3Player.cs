@@ -33,7 +33,6 @@
 #endregion
 using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Resources.Localization;
-using Karaboss.Search;
 using Karaboss.Utilities;
 using System;
 using System.Collections.Generic;
@@ -42,19 +41,18 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Xml.Linq;
-using TagLib.Id3v2;
-using Un4seen.Bass;
-//using static System.Net.Mime.MediaTypeNames;
-//using static System.Net.Mime.MediaTypeNames;
+using ListViewEx;
+
 
 namespace Karaboss.Mp3
 {
     public partial class frmMp3Player : Form
     {
+        #region declarations
+        // Listviws editing
+        private Control[] Editors;
+        private List<string> lstSaveItems = new List<string>();
 
-       
         // Size player
         // 514;127
         private enum PlayerAppearances
@@ -106,6 +104,20 @@ namespace Karaboss.Mp3
 
         private readonly string _InternalSepLines = "¼";
 
+        // Playlists
+        private readonly Playlist currentPlaylist;
+        private PlaylistItem currentPlaylistItem;
+
+        //forms
+        private frmMp3LyricsSimple frmMp3LyricsSimple;
+        private frmMp3Lyrics frmMp3Lyrics;
+
+
+        // SlideShow directory
+        public string dirSlideShow;
+        
+        #endregion declarations
+
         #region Bass
 
         //private SYNCPROC _OnEndingSync;
@@ -114,22 +126,17 @@ namespace Karaboss.Mp3
 
         #endregion Bass
 
-        // Playlists
-        private readonly Playlist currentPlaylist;
-        private PlaylistItem currentPlaylistItem;
-
-        //forms
-        private frmMp3LyricsSimple frmMp3LyricsSimple;
-        private frmMp3Lyrics frmMp3Lyrics;
-        
-
-        // SlideShow directory
-        public string dirSlideShow;        
+       
 
         public frmMp3Player(string FileName, Playlist myPlayList, bool bplay)
         {
             InitializeComponent();
-            
+
+            //
+            // TODO: Add any constructor code after InitializeComponent call
+            //
+            lvLyrics.SubItemClicked += new ListViewEx.SubItemEventHandler(lvLyrics_SubItemClicked);
+            lvLyrics.SubItemEndEditing += new ListViewEx.SubItemEndEditingEventHandler(lvLyrics_SubItemEndEditing);
 
             // Allow form keydown
             this.KeyPreview = true;
@@ -178,6 +185,8 @@ namespace Karaboss.Mp3
         }
 
      
+
+
         /// <summary>
         /// Display duration and set HScrollbar maximum
         /// </summary>
@@ -226,6 +235,14 @@ namespace Karaboss.Mp3
             // Redim form according to the visibility of the LRC Generator
             SetPlayerAppearance();
 
+            Editors = new Control[] {
+                                txtEditing,     //numericUpDown1,		// for column 1                    
+                                txtEditing,		// for column 2									
+                                //dateTimePicker1,	// for column 3
+								//comboBox1,			// for column 4																	
+									};
+
+            lvLyrics.DoubleClickActivation = true;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -308,6 +325,8 @@ namespace Karaboss.Mp3
 
                 lblTimes.Top = lvLyrics.Top + lvLyrics.Height + 5;
                 lblLyrics.Top = lblTimes.Top;
+
+                lblMode.Width = ClientSize.Width - lblMode.Left - 6;
             }
         }
 
@@ -1402,9 +1421,25 @@ namespace Karaboss.Mp3
 
             cbLanguage.Items.AddRange(langs);
             cbLanguage.SelectedItem = "French";
-            
+
 
             #endregion listview
+
+
+            #region editing
+
+            txtEditing.Font = lvLyrics.Font;
+            txtEditing.TextAlign = HorizontalAlignment.Center;
+
+            // Passer en mode synchro
+            btnSwitchSyncEdit.Text = Strings.SwitchToSyncMode; // "Switch to sync mode";
+            // Mode édition: chargez un fichier LRC à modifier ou des paroles à synchroniser
+            lblMode.Text = Strings.DescrEditMode; // "Edit mode: load an LRC file to be modified or lyrics to be synchronised";
+
+
+
+            #endregion editing
+
         }
 
 
@@ -1861,6 +1896,9 @@ namespace Karaboss.Mp3
                 string tsp;
                 ListViewItem lvi;
 
+                // Clear save times list
+                lstSaveItems.Clear();
+
                 // For each line
                 for (int j = 0; j < SyncLyrics.Count; j++)
                 {
@@ -1887,6 +1925,9 @@ namespace Karaboss.Mp3
                         lvi = new ListViewItem( new string[] { sTime, text });
                         
                         lvLyrics.Items.Add(lvi);
+                        
+                        // Save times
+                        lstSaveItems.Add(sTime);
                     }
                 }
 
@@ -1941,6 +1982,11 @@ namespace Karaboss.Mp3
                 lvLyrics.Focus();
             }
         
+            if (MessageBox.Show(Strings.SwitchToSyncMode + "?", "Karaboss", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                SetSyncEditMode();
+            }
+
         }
 
         /// <summary>
@@ -1950,14 +1996,20 @@ namespace Karaboss.Mp3
         /// <param name="e"></param>
         private void mnuExportLRCMeta_Click(object sender, EventArgs e)
         {
+            SaveLRCFile();
+
+        }
+
+        private void SaveLRCFile()
+        {
             
-            /*
-            if (txtLyrics.Lines.Count() != txtTimes.Lines.Count())
+            if (lvLyrics.Items.Count == 0)
             {
-                MessageBox.Show("Some lines have no timestamp", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show("Some lines have no timestamp", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Nothing to save", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            */
+            
 
             #region Read data
             List<(double, string)> lstDgRows = new List<(double, string)>();
@@ -1970,14 +2022,14 @@ namespace Karaboss.Mp3
             bool bParagraph = true; // true for the first line in order to avoid a linefeed
 
             ListViewItem lvi = new ListViewItem();
-            for (int i = 0; i < lvLyrics.Items.Count; i ++)
+            for (int i = 0; i < lvLyrics.Items.Count; i++)
             {
                 lvi = lvLyrics.Items[i];
                 sTime = lvi.Text;
                 time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
                 sLyric = "/" + lvi.SubItems[1].Text;                 //BUG !!!!!!!!!!!!!!!!
-                        
-            
+
+
                 // Use case : lyrics begins with a linefeed
                 // like "/it's been a hard..."
                 if (sLyric.Length > 1 && sLyric.StartsWith("/"))
@@ -2075,6 +2127,7 @@ namespace Karaboss.Mp3
             #endregion save lrc
         }
 
+
         /// <summary>
         /// Export lrc file without metadata
         /// </summary>
@@ -2082,14 +2135,9 @@ namespace Karaboss.Mp3
         /// <param name="e"></param>
         private void mnuExportLrcNoMeta_Click(object sender, EventArgs e)
         {
-
+            SaveLRCFile();
         }
-
-        private void btnDisplayMetadata_Click(object sender, EventArgs e)
-        {
-
-        }
-        
+             
 
         private void frmMp3Player_KeyUp(object sender, KeyEventArgs e)
         {
@@ -2161,37 +2209,103 @@ namespace Karaboss.Mp3
                        
             return base.ProcessCmdKey(ref msg, keyData);
         }
-
+        
         /// <summary>
-        /// Switch to sync or edit mode
+        ///  Switch to sync or edit mode
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnSwithcSyncEdit_Click(object sender, EventArgs e)
+        private void btnSwitchSyncEdit_Click(object sender, EventArgs e)
         {
             SetSyncEditMode();
-
         }
-
 
         private void SetSyncEditMode()
         {
             switch (LrcMode)
             {
                 case LrcModes.Edit:
+                    
+                    if (lvLyrics.Items.Count == 0)
+                    {
+                        MessageBox.Show("Please load an LRC file or lyrics before", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                                        
+                    // Swithc to sync mode
                     LrcMode = LrcModes.Sync;
-                    btnSwithcSyncEdit.Text = "Switch to edit mode";
+
+                    // Passer en mode édition
+                    btnSwitchSyncEdit.Text = Strings.SwitchToEditMode; // "Switch to edit mode"; 
+                    // Mode synchro : lancer la musique et taper la touche ENTREE à chque fois que vous entendez une ligne des paroles affichée.
+                    lblMode.Text = Strings.DescSyncMode; // "Sync mode: start the music and press ENTER each time you hear a line of lyrics displayed.";
+
+                    for (int i = 0; i < lvLyrics.Items.Count; i++)
+                    {                        
+                        lvLyrics.Items[i].Text = "";
+                    }
+
+                    for (int i = 0; i < lvLyrics.Items.Count; i++)
+                    {
+                        lvLyrics.Items[i].Selected = false;
+                    }
+
+                    if (lvLyrics.Items.Count > 0)
+                    {
+                        lvLyrics.Items[0].Selected = true;
+                        lvLyrics.Focus();
+                    }
+
                     break;
 
                 case LrcModes.Sync:
+                    // Switch to edit mode
                     LrcMode = LrcModes.Edit;
-                    btnSwithcSyncEdit.Text = "Switch to sync mode";
+
+                    // Passer en mode synchro
+                    btnSwitchSyncEdit.Text = Strings.SwitchToSyncMode; // "Switch to sync mode";  
+                    // Mode édition: chargez un fichier LRC à modifier ou des paroles à synchroniser
+                    lblMode.Text = Strings.DescrEditMode; // "Edit mode: load an LRC file to be modified or lyrics to be synchronised";
+                    
+                    for (int i = 0; i < lstSaveItems.Count; i++)
+                    {
+                        lvLyrics.Items[i].Text = lstSaveItems[i];
+                    }
+
+                    for (int i = 0; i < lvLyrics.Items.Count; i++)
+                    {
+                        lvLyrics.Items[i].Selected = false;
+                    }
                     break;
             }
         }
 
+        private void lvLyrics_SubItemEndEditing(object sender, SubItemEndEditingEventArgs e)
+        {
+            
+        }
+
+        private void lvLyrics_SubItemClicked(object sender, SubItemEventArgs e)
+        {
+            if (LrcMode == LrcModes.Edit)
+                lvLyrics.StartEditing(Editors[e.SubItem], e.Item, e.SubItem);
+        }
+
+        private void lvLyrics_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        {           
+            ListViewItem item;
+            int idx = lvLyrics.GetSubItemAt(e.X, e.Y, out item);
+
+            toolTip1.SetToolTip(lvLyrics, null);
+        }
+
+
+
+
+
+
         #endregion LRC generator
 
-
+       
     }
 }

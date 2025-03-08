@@ -543,4 +543,16 @@
   <data name="LyricsWereRecorded" xml:space="preserve">
     <value>The lyrics were recorded in the file</value>
   </data>
+  <data name="SwitchToSyncMode" xml:space="preserve">
+    <value>Switch to sync mode</value>
+  </data>
+  <data name="DescrEditMode" xml:space="preserve">
+    <value>Edit mode: load an LRC file to be modified or lyrics to be synchronised.</value>
+  </data>
+  <data name="SwitchToEditMode" xml:space="preserve">
+    <value>Switch to edit mode</value>
+  </data>
+  <data name="DescSyncMode" xml:space="preserve">
+    <value>Sync mode: start the music and press ENTER each time you hear a line of lyrics displayed.</value>
+  </data>
 </root>

@@ -543,4 +543,16 @@
   <data name="LyricsWereRecorded" xml:space="preserve">
     <value>Les paroles ont été enregistrées dans le fichier</value>
   </data>
+  <data name="SwitchToSyncMode" xml:space="preserve">
+    <value>Passer en mode synchro</value>
+  </data>
+  <data name="DescrEditMode" xml:space="preserve">
+    <value>Mode édition: chargez un fichier LRC à modifier ou des paroles à synchroniser.</value>
+  </data>
+  <data name="SwitchToEditMode" xml:space="preserve">
+    <value>Passer en mode édition</value>
+  </data>
+  <data name="DescSyncMode" xml:space="preserve">
+    <value>Mode synchro : lancer la musique et taper la touche ENTREE à chaque fois que vous entendez une ligne des paroles affichées.</value>
+  </data>
 </root>

@@ -60,6 +60,7 @@
             this.txtAuthor = new System.Windows.Forms.TextBox();
             this.txtArtist = new System.Windows.Forms.TextBox();
             this.txtAlbum = new System.Windows.Forms.TextBox();
+            this.txtEditing = new System.Windows.Forms.TextBox();
             this.pnlMiddle = new System.Windows.Forms.Panel();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -69,18 +70,19 @@
             this.cbLanguage = new System.Windows.Forms.ComboBox();
             this.txtYourName = new System.Windows.Forms.TextBox();
             this.lblHotkeys = new System.Windows.Forms.Label();
-            this.lvLyrics = new System.Windows.Forms.ListView();
             this.lblLyrics = new System.Windows.Forms.Label();
             this.lblTimes = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.lblMode = new System.Windows.Forms.Label();
+            this.toolstrip1 = new System.Windows.Forms.ToolStrip();
             this.mnuImport = new System.Windows.Forms.ToolStripDropDownButton();
             this.mnuImportLrcFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuImportRawLyrics = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuExport = new System.Windows.Forms.ToolStripDropDownButton();
             this.mnuExportLRCMeta = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuExportLrcNoMeta = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnSwitchSyncEdit = new System.Windows.Forms.ToolStripButton();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.lvLyrics = new ListViewEx.ListViewEx();
             this.btnTempoMinus = new Karaboss.Buttons.MinusButtonControl();
             this.btnTempoPlus = new Karaboss.Buttons.PlusButtonControl();
             this.btnTranspoMinus = new Karaboss.Buttons.MinusButtonControl();
@@ -90,12 +92,11 @@
             this.btnNext = new Karaboss.NoSelectButton();
             this.btnStop = new Karaboss.NoSelectButton();
             this.btnPlay = new Karaboss.NoSelectButton();
-            this.btnSwithcSyncEdit = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.pnlControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBox)).BeginInit();
             this.pnlMiddle.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
+            this.toolstrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -484,10 +485,16 @@
             this.txtAlbum.Name = "txtAlbum";
             this.toolTip1.SetToolTip(this.txtAlbum, resources.GetString("txtAlbum.ToolTip"));
             // 
+            // txtEditing
+            // 
+            resources.ApplyResources(this.txtEditing, "txtEditing");
+            this.txtEditing.Name = "txtEditing";
+            this.toolTip1.SetToolTip(this.txtEditing, resources.GetString("txtEditing.ToolTip"));
+            // 
             // pnlMiddle
             // 
             this.pnlMiddle.BackColor = System.Drawing.Color.LightGray;
-            this.pnlMiddle.Controls.Add(this.btnSwithcSyncEdit);
+            this.pnlMiddle.Controls.Add(this.txtEditing);
             this.pnlMiddle.Controls.Add(this.label6);
             this.pnlMiddle.Controls.Add(this.label5);
             this.pnlMiddle.Controls.Add(this.label4);
@@ -503,8 +510,8 @@
             this.pnlMiddle.Controls.Add(this.lvLyrics);
             this.pnlMiddle.Controls.Add(this.lblLyrics);
             this.pnlMiddle.Controls.Add(this.lblTimes);
-            this.pnlMiddle.Controls.Add(this.label2);
-            this.pnlMiddle.Controls.Add(this.toolStrip1);
+            this.pnlMiddle.Controls.Add(this.lblMode);
+            this.pnlMiddle.Controls.Add(this.toolstrip1);
             resources.ApplyResources(this.pnlMiddle, "pnlMiddle");
             this.pnlMiddle.Name = "pnlMiddle";
             // 
@@ -550,13 +557,6 @@
             resources.ApplyResources(this.lblHotkeys, "lblHotkeys");
             this.lblHotkeys.Name = "lblHotkeys";
             // 
-            // lvLyrics
-            // 
-            this.lvLyrics.HideSelection = false;
-            resources.ApplyResources(this.lvLyrics, "lvLyrics");
-            this.lvLyrics.Name = "lvLyrics";
-            this.lvLyrics.UseCompatibleStateImageBehavior = false;
-            // 
             // lblLyrics
             // 
             resources.ApplyResources(this.lblLyrics, "lblLyrics");
@@ -567,19 +567,20 @@
             resources.ApplyResources(this.lblTimes, "lblTimes");
             this.lblTimes.Name = "lblTimes";
             // 
-            // label2
+            // lblMode
             // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
+            resources.ApplyResources(this.lblMode, "lblMode");
+            this.lblMode.Name = "lblMode";
             // 
-            // toolStrip1
+            // toolstrip1
             // 
-            resources.ApplyResources(this.toolStrip1, "toolStrip1");
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            resources.ApplyResources(this.toolstrip1, "toolstrip1");
+            this.toolstrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuImport,
-            this.mnuExport});
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
+            this.mnuExport,
+            this.btnSwitchSyncEdit});
+            this.toolstrip1.Name = "toolstrip1";
+            this.toolstrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             // 
             // mnuImport
             // 
@@ -622,6 +623,25 @@
             this.mnuExportLrcNoMeta.Name = "mnuExportLrcNoMeta";
             resources.ApplyResources(this.mnuExportLrcNoMeta, "mnuExportLrcNoMeta");
             this.mnuExportLrcNoMeta.Click += new System.EventHandler(this.mnuExportLrcNoMeta_Click);
+            // 
+            // btnSwitchSyncEdit
+            // 
+            this.btnSwitchSyncEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            resources.ApplyResources(this.btnSwitchSyncEdit, "btnSwitchSyncEdit");
+            this.btnSwitchSyncEdit.Name = "btnSwitchSyncEdit";
+            this.btnSwitchSyncEdit.Click += new System.EventHandler(this.btnSwitchSyncEdit_Click);
+            // 
+            // lvLyrics
+            // 
+            this.lvLyrics.AllowColumnReorder = true;
+            this.lvLyrics.DoubleClickActivation = true;
+            this.lvLyrics.FullRowSelect = true;
+            this.lvLyrics.HideSelection = false;
+            resources.ApplyResources(this.lvLyrics, "lvLyrics");
+            this.lvLyrics.Name = "lvLyrics";
+            this.lvLyrics.UseCompatibleStateImageBehavior = false;
+            this.lvLyrics.View = System.Windows.Forms.View.Details;
+            this.lvLyrics.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lvLyrics_MouseMove);
             // 
             // btnTempoMinus
             // 
@@ -712,13 +732,6 @@
             this.btnPlay.MouseLeave += new System.EventHandler(this.btnPlay_MouseLeave);
             this.btnPlay.MouseHover += new System.EventHandler(this.btnPlay_MouseHover);
             // 
-            // btnSwithcSyncEdit
-            // 
-            resources.ApplyResources(this.btnSwithcSyncEdit, "btnSwithcSyncEdit");
-            this.btnSwithcSyncEdit.Name = "btnSwithcSyncEdit";
-            this.btnSwithcSyncEdit.UseVisualStyleBackColor = true;
-            this.btnSwithcSyncEdit.Click += new System.EventHandler(this.btnSwithcSyncEdit_Click);
-            // 
             // frmMp3Player
             // 
             resources.ApplyResources(this, "$this");
@@ -743,8 +756,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pBox)).EndInit();
             this.pnlMiddle.ResumeLayout(false);
             this.pnlMiddle.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
+            this.toolstrip1.ResumeLayout(false);
+            this.toolstrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -788,18 +801,18 @@
         private System.Windows.Forms.ToolStripMenuItem mnuEditLyrics;
         private System.Windows.Forms.ToolStripMenuItem mnuEditLRCGenerator;
         private System.Windows.Forms.Panel pnlMiddle;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStrip toolstrip1;
         private System.Windows.Forms.ToolStripDropDownButton mnuImport;
         private System.Windows.Forms.ToolStripMenuItem mnuImportLrcFile;
         private System.Windows.Forms.ToolStripMenuItem mnuImportRawLyrics;
         private System.Windows.Forms.ToolStripDropDownButton mnuExport;
         private System.Windows.Forms.ToolStripMenuItem mnuExportLRCMeta;
         private System.Windows.Forms.ToolStripMenuItem mnuExportLrcNoMeta;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblMode;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Label lblLyrics;
         private System.Windows.Forms.Label lblTimes;
-        private System.Windows.Forms.ListView lvLyrics;
+        private ListViewEx.ListViewEx lvLyrics;
         private System.Windows.Forms.Label lblHotkeys;
         private System.Windows.Forms.TextBox txtTitle;
         private System.Windows.Forms.TextBox txtYourName;
@@ -812,6 +825,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Button btnSwithcSyncEdit;
+        private System.Windows.Forms.TextBox txtEditing;
+        private System.Windows.Forms.ToolStripButton btnSwitchSyncEdit;
     }
 }
