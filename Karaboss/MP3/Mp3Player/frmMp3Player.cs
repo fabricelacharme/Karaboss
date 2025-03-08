@@ -1243,7 +1243,7 @@ namespace Karaboss.Mp3
             chTimeStamp.Tag = "Lyric.TimeStamp";
             chTimeStamp.TextAlign = HorizontalAlignment.Left;
             chTimeStamp.Text = "Timestamp";
-            chTimeStamp.Width = 90;
+            chTimeStamp.Width = 90;            
             // 
             // chLyric
             // 
@@ -1857,7 +1857,7 @@ namespace Karaboss.Mp3
                     lvLyrics.EnsureVisible(_index);
 
 
-                lblTimes.Text = _index.ToString(); // count number of lines done
+                lblTimes.Text = (_index + 1).ToString(); // count number of lines done
                 
                 // Select line (paint in blue)
                 lvLyrics.Items[_index].Selected = true;
@@ -1876,8 +1876,8 @@ namespace Karaboss.Mp3
         {
             OpenFileDialog1.Title = "Open a .lrc file";
             OpenFileDialog1.DefaultExt = "lrc";
-            OpenFileDialog1.Filter = "lrc files|*.lrc|All files|*.*";
-
+            OpenFileDialog1.Filter = "Lrc files|*.lrc|All files|*.*";
+            
             OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
 
             if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
@@ -1946,7 +1946,7 @@ namespace Karaboss.Mp3
         {
             OpenFileDialog1.Title = "Open a .txt file";
             OpenFileDialog1.DefaultExt = "txt";
-            OpenFileDialog1.Filter = "text files|*.txt|All files|*.*";
+            OpenFileDialog1.Filter = "Text files|*.txt|All files|*.*";
 
             OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
 
@@ -1980,13 +1980,12 @@ namespace Karaboss.Mp3
                 
                 lvLyrics.Items[0].Selected = true;
                 lvLyrics.Focus();
-            }
-        
-            if (MessageBox.Show(Strings.SwitchToSyncMode + "?", "Karaboss", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                SetSyncEditMode();
-            }
 
+                if (MessageBox.Show(Strings.SwitchToSyncMode + "?", "Karaboss", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    SetSyncEditMode();
+                }
+            }
         }
 
         /// <summary>
@@ -1997,22 +1996,39 @@ namespace Karaboss.Mp3
         private void mnuExportLRCMeta_Click(object sender, EventArgs e)
         {
             SaveLRCFile();
-
         }
 
         private void SaveLRCFile()
-        {
-            
+        {            
             if (lvLyrics.Items.Count == 0)
             {
-                //MessageBox.Show("Some lines have no timestamp", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
                 MessageBox.Show("Nothing to save", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            
+            else
+            {
+                //ListViewItem lvi;
+                string ts;
+                string lyric;
+                ListViewItem lv;
 
-            #region Read data
-            List<(double, string)> lstDgRows = new List<(double, string)>();
+                for (int i = 0; i < lvLyrics.Items.Count; i++)
+                {
+                    lv = lvLyrics.Items[i];
+                    ts = lv.Text.Trim();
+                    lyric = lv.SubItems[1].Text.Trim();
+
+                    if (ts == "")
+                    {
+                        MessageBox.Show("Line "+ i + " has no timestamp", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }                    
+                }
+            }
+
+                #region Read data
+                List<(double, string)> lstDgRows = new List<(double, string)>();
             string sLyric;
             string sTime;
             double time;
@@ -2220,6 +2236,9 @@ namespace Karaboss.Mp3
             SetSyncEditMode();
         }
 
+        /// <summary>
+        /// Display things according to mode sync or edition
+        /// </summary>
         private void SetSyncEditMode()
         {
             switch (LrcMode)
@@ -2298,10 +2317,6 @@ namespace Karaboss.Mp3
 
             toolTip1.SetToolTip(lvLyrics, null);
         }
-
-
-
-
 
 
         #endregion LRC generator

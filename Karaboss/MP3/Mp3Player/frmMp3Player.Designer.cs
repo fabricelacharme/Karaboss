@@ -452,10 +452,6 @@
             this.lnlVol.ForeColor = System.Drawing.Color.White;
             this.lnlVol.Name = "lnlVol";
             // 
-            // OpenFileDialog1
-            // 
-            this.OpenFileDialog1.FileName = "OpenFileDialog1";
-            // 
             // Timer1
             // 
             this.Timer1.Interval = 50;
