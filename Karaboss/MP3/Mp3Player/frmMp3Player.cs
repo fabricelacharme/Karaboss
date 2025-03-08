@@ -1995,20 +1995,29 @@ namespace Karaboss.Mp3
         /// <param name="e"></param>
         private void mnuExportLRCMeta_Click(object sender, EventArgs e)
         {
-            SaveLRCFile();
+            SaveLRCFile(true);
         }
 
-        private void SaveLRCFile()
-        {            
+        /// <summary>
+        /// Export lrc file without metadata
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuExportLrcNoMeta_Click(object sender, EventArgs e)
+        {
+            SaveLRCFile(false);
+        }
+
+        private void SaveLRCFile(bool bWithMetadata)
+        {
+            #region guard
             if (lvLyrics.Items.Count == 0)
-            {
-                
+            {                
                 MessageBox.Show("Nothing to save", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             else
-            {
-                //ListViewItem lvi;
+            {                
                 string ts;
                 string lyric;
                 ListViewItem lv;
@@ -2026,9 +2035,11 @@ namespace Karaboss.Mp3
                     }                    
                 }
             }
+            #endregion guard
 
-                #region Read data
-                List<(double, string)> lstDgRows = new List<(double, string)>();
+
+            #region Read data from listview
+            List<(double, string)> lstDgRows = new List<(double, string)>();
             string sLyric;
             string sTime;
             double time;
@@ -2043,7 +2054,7 @@ namespace Karaboss.Mp3
                 lvi = lvLyrics.Items[i];
                 sTime = lvi.Text;
                 time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
-                sLyric = "/" + lvi.SubItems[1].Text;                 //BUG !!!!!!!!!!!!!!!!
+                sLyric = "/" + lvi.SubItems[1].Text;                 
 
 
                 // Use case : lyrics begins with a linefeed
@@ -2067,7 +2078,7 @@ namespace Karaboss.Mp3
                     bParagraph = true;
                 }
             }
-            #endregion Read data
+            #endregion Read data form listviean
 
             #region select filename
 
@@ -2112,9 +2123,9 @@ namespace Karaboss.Mp3
 
             #endregion select filename
 
-            #region save LRC
-            string Tag_Tool = "Karaboss https://karaboss.lacharme.net";
 
+            #region metadata
+            string Tag_Tool = string.Empty;
             string Tag_Title = string.Empty;
             string Tag_Artist = string.Empty;
             string Tag_Album = string.Empty;
@@ -2122,15 +2133,33 @@ namespace Karaboss.Mp3
             string Tag_By = string.Empty;
             string Tag_DPlus = string.Empty;
 
-            fullPath = saveFileDialog1.FileName;
-
-            if (Tag_Artist == "" && Tag_Title == "")
+            if (bWithMetadata)
             {
-                List<string> lstTags = Utilities.LyricsUtilities.GetTagsFromFileName(fullPath);
-                Tag_Artist = lstTags[0];
-                Tag_Title = lstTags[1];
+                Tag_Tool = "Karaboss https://karaboss.lacharme.net";
+                Tag_Title = txtTitle.Text;
+                Tag_Artist = txtArtist.Text;
+                Tag_Album = txtAlbum.Text;
+                Tag_Lang = cbLanguage.Text;
+                Tag_By = txtAuthor.Text;
+                Tag_DPlus = string.Empty;
+
+                fullPath = saveFileDialog1.FileName;
+
+                if (Tag_Artist == "" && Tag_Title == "")
+                {
+                    List<string> lstTags = Utilities.LyricsUtilities.GetTagsFromFileName(fullPath);
+                    Tag_Artist = lstTags[0];
+                    Tag_Title = lstTags[1];
+                }
+            }
+            else
+            {
+
             }
 
+            #endregion metadata
+
+            #region save LRC
             bool bRemoveAccents = false;
             bool bUpperCase = false;
             bool bLowerCase = false;
@@ -2142,19 +2171,7 @@ namespace Karaboss.Mp3
 
             #endregion save lrc
         }
-
-
-        /// <summary>
-        /// Export lrc file without metadata
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void mnuExportLrcNoMeta_Click(object sender, EventArgs e)
-        {
-            SaveLRCFile();
-        }
-             
-
+                    
         private void frmMp3Player_KeyUp(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Karaboss Midi Player by Fabrice Lacharme")]
-[assembly: AssemblyDescription("Karaoke Midi Player by Fabrice Lacharme")]
+[assembly: AssemblyDescription("Midi sequencer & Karaoke Player by Fabrice Lacharme")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Fabrice Lacharme")]
 [assembly: AssemblyProduct("Karaboss")]
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.0.10.9")]
-[assembly: AssemblyFileVersion("1.0.10.9")]
+[assembly: AssemblyVersion("1.0.10.10")]
+[assembly: AssemblyFileVersion("1.0.10.10")]
