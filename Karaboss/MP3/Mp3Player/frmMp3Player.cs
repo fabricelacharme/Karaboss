@@ -1816,12 +1816,15 @@ namespace Karaboss.Mp3
             lblHotkeys.Font = new Font("Courier New", 9);
             lblHotkeys.Text = "<ENTER>" + " " + "Add a new timestamp" +"\r\n" + "<SPACE>" + " "+ "Pause Music" + "\r\n" + "<-" + "      " + "Stop Music";
 
-            txtTitle.Text = Player.Tag.Title;
-            txtAlbum.Text = Player.Tag.Album;
-            if (Player.Tag.Performers.Count() > 0)
+            if (Player.Tag != null)
             {
-                txtArtist.Text = Player.Tag.Performers[0].ToString();
-                txtAuthor.Text = Player.Tag.Performers[0].ToString();
+                txtTitle.Text = Player.Tag.Title;
+                txtAlbum.Text = Player.Tag.Album;
+                if (Player.Tag.Performers.Count() > 0)
+                {
+                    txtArtist.Text = Player.Tag.Performers[0].ToString();
+                    txtAuthor.Text = Player.Tag.Performers[0].ToString();
+                }
             }
             
         }
