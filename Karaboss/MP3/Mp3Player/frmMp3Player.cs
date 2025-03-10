@@ -1915,16 +1915,7 @@ namespace Karaboss.Mp3
                     for (int i = 0; i < SyncLyrics[j].Count; i++)
                     {
                         time = SyncLyrics[j][i].Time;
-
-                        tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
-                        /*
-                        ts = TimeSpan.FromMilliseconds(time);
-                        if (_LrcMillisecondsDigits == 2)
-                            tsp = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-                        else
-                            tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
-                        */
-
+                        tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);                       
                         sTime = tsp;  // Transform to [00:00.000] format
 
                         text = SyncLyrics[j][i].Text;

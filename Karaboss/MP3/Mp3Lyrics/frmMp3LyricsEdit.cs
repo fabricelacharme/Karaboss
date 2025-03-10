@@ -53,7 +53,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
     public partial class frmMp3LyricsEdit: Form
     {
         bool bfilemodified = false;
-
+        string _lrcFileName;
 
         #region dgView Colors
 
@@ -267,7 +267,6 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
         #region Populate gridview
 
-
         private List<List<keffect.KaraokeEffect.kSyncText>> GetUniqueSource()
         {            
             // Origin = synchronized lyrics frame            
@@ -339,7 +338,10 @@ namespace Karaboss.Mp3.Mp3Lyrics
                         dgView.Rows.Add(time, sTime, text);
                     }
                 }                                           
-            }            
+            }
+
+            lblLyrics.Text = (dgView.Rows.Count - 1).ToString();
+            lblTimes.Text = lblLyrics.Text;
         }
 
 
@@ -621,6 +623,9 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 c.ReadOnly = false;
             }            
             ResizeMe();
+
+            lblLyrics.Text = "0";
+            lblTimes.Text = lblLyrics.Text;
         }
 
         private void dgView_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
@@ -1344,35 +1349,14 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// <param name="e"></param>
         private void mnuEditLoadLRCFile_Click(object sender, EventArgs e)
         {
-            openFileDialog.Title = "Open a .lrc file";
-            openFileDialog.DefaultExt = "lrc";
-            openFileDialog.Filter = "lrc files|*.lrc|All files|*.*";
-            
-            // Get initial directory from mp3 file
-            if (_filename != null || _filename != "")
-                openFileDialog.InitialDirectory = Path.GetDirectoryName(_filename);
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string fileName = openFileDialog.FileName;
+            LoadLrcFile();
 
-                try
-                {
-                    lblLyricsOrigin.Text = "Origin of lyrics = lrc: " + Path.GetFileName(fileName);
-                    LoadLRCFile(fileName);
-
-                    localSyncLyrics = LoadModifiedLyrics();
-                    if (localSyncLyrics != null)
-                        PopulateTextBox(localSyncLyrics);
-
-                    FileModified();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("The file could not be read:" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
+           
         }
+
+      
+
 
         /// <summary>
         /// Load a LRC file (timestamps + lyrics)
@@ -1381,9 +1365,9 @@ namespace Karaboss.Mp3.Mp3Lyrics
         private void LoadLRCFile(string FileName)
         {                        
             long time;
+            string sTime;
             string text;
             
-
             Cursor.Current = Cursors.WaitCursor;
 
             Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(FileName);
@@ -1398,6 +1382,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 for (int i = 0; i < SyncLyrics[j].Count; i++)
                 {
                     time = SyncLyrics[j][i].Time;
+                    sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
                     text = SyncLyrics[j][i].Text;
 
                     // Put "/" everywhere
@@ -1406,14 +1391,12 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     text = text.Replace("\n", m_SepLine);
                     text = text.Replace(" ", "_");
 
-                    dgView.Rows.Add(time, text);
+                    dgView.Rows.Add(time, sTime, text);
                 }
             }
            
             Cursor.Current = Cursors.Default;
         }
-
-
 
         #endregion load lrc
 
@@ -1589,6 +1572,11 @@ namespace Karaboss.Mp3.Mp3Lyrics
             return true;
         }
 
+        /// <summary>
+        /// Delete all lyrics
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnDeleteAllLyrics_Click(object sender, EventArgs e)
         {
             string tx = Karaboss.Resources.Localization.Strings.DeleteAllLyrics;
@@ -1631,9 +1619,6 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
         #region lrc generator
 
-        
-
-
         private void mnuEditImportRawLyrics_Click(object sender, EventArgs e)
         {
 
@@ -1675,11 +1660,21 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     break;
             }
         }
+        
         private void SetSyncEditMode()
         {
             switch (LrcMode)
             {
                 case LrcModes.Edit:
+
+                    #region guard
+                    if (dgView.Rows.Count == 1)
+                    {
+                        MessageBox.Show("Please load an LRC file or lyrics before", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    #endregion guard
+
                     // Swithc to sync mode
                     LrcMode = LrcModes.Sync;
 
@@ -1709,9 +1704,118 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
 
 
+
+
         #endregion lrc generator
 
+        /// <summary>
+        /// Import an LRC file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuImportLrcFile_Click(object sender, EventArgs e)
+        {
+            LoadLrcFile();
+        }
+
+        private void LoadLrcFile()
+        {
+            openFileDialog.Title = "Open a .lrc file";
+            openFileDialog.DefaultExt = "lrc";
+            openFileDialog.Filter = "lrc files|*.lrc|All files|*.*";
+
+            // Get initial directory from mp3 file
+            if (_filename != null || _filename != "")
+                openFileDialog.InitialDirectory = Path.GetDirectoryName(_filename);
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                _lrcFileName = openFileDialog.FileName;
+
+                try
+                {
+                    lblLyricsOrigin.Text = "Origin of lyrics = lrc: " + Path.GetFileName(_lrcFileName);
+                    LoadLRCFile(_lrcFileName);
+
+                    localSyncLyrics = LoadModifiedLyrics();
+                    if (localSyncLyrics != null)
+                        PopulateTextBox(localSyncLyrics);
 
 
+                    lblLyrics.Text = (dgView.Rows.Count - 1).ToString();
+                    lblTimes.Text = lblLyrics.Text;
+
+                    FileModified();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("The file could not be read:" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Import a text file (no timestamps)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuImportRawLyrics_Click(object sender, EventArgs e)
+        {
+            
+            openFileDialog.Title = "Open a .txt file";
+            openFileDialog.DefaultExt = "txt";
+            openFileDialog.Filter = "Text files|*.txt|All files|*.*";
+
+            openFileDialog.InitialDirectory = Path.GetDirectoryName(_filename);
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                _lrcFileName = openFileDialog.FileName;
+
+                // Reset dgView
+                InitGridView();
+                
+                string[] lines = System.IO.File.ReadAllLines(_lrcFileName);
+                if (lines.Count() == 0)
+                {
+                    return;
+                }
+                
+                
+                string line;
+
+                for (int i = 0; i < lines.Count(); i++)
+                {
+                    line = lines[i].Trim();
+                    if (line != "")
+                    {
+
+                        // Add lyrics to listview
+                        dgView.Rows.Add("", "", line);
+                        
+                    }
+                }
+
+                lblLyrics.Text = dgView.Rows.ToString();
+                lblTimes.Text = "0";
+
+                dgView.Rows[0].Selected = true;                
+
+                if (MessageBox.Show(Strings.SwitchToSyncMode + "?", "Karaboss", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    SetSyncEditMode();
+                }
+            }
+        }
+
+        private void mnuExportLRCMeta_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mnuExportLrcNoMeta_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
