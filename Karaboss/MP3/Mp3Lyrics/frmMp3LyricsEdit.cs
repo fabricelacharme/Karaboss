@@ -54,6 +54,9 @@ namespace Karaboss.Mp3.Mp3Lyrics
     {
         bool bfilemodified = false;
         string _lrcFileName;
+        int _index;
+
+        private Mp3Player Player;
 
         #region dgView Colors
 
@@ -74,6 +77,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         private readonly string m_SepParagraph = "\\";
 
         #endregion
+
 
         int COL_MS = 0;
         int COL_TIME = 1;                        
@@ -113,12 +117,12 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
             // Inits
             LrcMode = LrcModes.Edit;
+            InitLrcGenerator();
             SetLrcMode();
 
             SetTitle(Path.GetFileName(_filename));
             SetOriginOfLyrics();
-            
-            
+                        
             InitTxtResult();
             InitGridView();
 
@@ -247,6 +251,10 @@ namespace Karaboss.Mp3.Mp3Lyrics
             }
             if (WP - W > 0)
                 dgView.Columns[dgView.Columns.Count - 1].Width = WP - W;
+
+            pnlSync.Width = pnlTop.Width;
+            pnlEdit.Width = pnlSync.Width;
+            lblMode.Width = pnlTop.Width;
 
         }
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
@@ -534,6 +542,18 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
         #region init
 
+        private void InitLrcGenerator()
+        {
+            
+            _index = 0;
+            _LrcMillisecondsDigits = Properties.Settings.Default.LrcMillisecondsDigits;
+
+            lblHotkeys.Font = new Font("Courier New", 9);
+            lblHotkeys.Text = "<ENTER>" + " " + "Add a new timestamp" + "\r\n" + "<SPACE>" + " " + "Pause Music" + "\r\n" + "<-" + "      " + "Stop Music";
+
+           
+        }
+
         private void LoadOptions()
         {
             _lyricseditfont = Properties.Settings.Default.LyricsEditFont;
@@ -622,7 +642,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 c.DefaultCellStyle.Font = dgViewCellsFont;
                 c.ReadOnly = false;
             }            
-            ResizeMe();
+            //ResizeMe();
 
             lblLyrics.Text = "0";
             lblTimes.Text = lblLyrics.Text;

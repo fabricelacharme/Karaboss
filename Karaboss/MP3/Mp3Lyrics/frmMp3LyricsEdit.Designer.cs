@@ -103,6 +103,7 @@
             // 
             // pnlEdit
             // 
+            this.pnlEdit.BackColor = System.Drawing.Color.LightGray;
             this.pnlEdit.Controls.Add(this.BtnFontMoins);
             this.pnlEdit.Controls.Add(this.BtnFontPlus);
             this.pnlEdit.Controls.Add(this.btnDeleteAllLyrics);
@@ -255,6 +256,7 @@
             // pnlSync
             // 
             this.pnlSync.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.pnlSync.Controls.Add(this.pnlEdit);
             this.pnlSync.Controls.Add(this.label6);
             this.pnlSync.Controls.Add(this.label5);
             this.pnlSync.Controls.Add(this.label4);
@@ -479,7 +481,6 @@
             // pnlTop
             // 
             this.pnlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.pnlTop.Controls.Add(this.pnlEdit);
             this.pnlTop.Controls.Add(this.toolstrip1);
             this.pnlTop.Controls.Add(this.lblMode);
             this.pnlTop.Controls.Add(this.lblLyricsOrigin);

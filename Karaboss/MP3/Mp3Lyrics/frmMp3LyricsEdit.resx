@@ -394,7 +394,7 @@
     <value>7</value>
   </data>
   <data name="pnlEdit.Location" type="System.Drawing.Point, System.Drawing">
-    <value>876, 71</value>
+    <value>135, 2</value>
   </data>
   <data name="pnlEdit.Size" type="System.Drawing.Size, System.Drawing">
     <value>828, 93</value>
@@ -409,7 +409,7 @@
     <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;pnlEdit.Parent" xml:space="preserve">
-    <value>pnlTop</value>
+    <value>pnlSync</value>
   </data>
   <data name="&gt;&gt;pnlEdit.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -445,7 +445,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;toolstrip1.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>0</value>
   </data>
   <data name="mnuImport.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -571,7 +571,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblMode.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>1</value>
   </data>
   <data name="lblLyricsOrigin.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -604,7 +604,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;lblLyricsOrigin.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>2</value>
   </data>
   <data name="label6.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -634,7 +634,7 @@
     <value>pnlSync</value>
   </data>
   <data name="&gt;&gt;label6.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="label5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -664,7 +664,7 @@
     <value>pnlSync</value>
   </data>
   <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="label4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -694,7 +694,7 @@
     <value>pnlSync</value>
   </data>
   <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="label3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -724,7 +724,7 @@
     <value>pnlSync</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -754,7 +754,7 @@
     <value>pnlSync</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="cbLanguage.Location" type="System.Drawing.Point, System.Drawing">
     <value>479, 65</value>
@@ -775,7 +775,7 @@
     <value>pnlSync</value>
   </data>
   <data name="&gt;&gt;cbLanguage.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="txtAlbum.Location" type="System.Drawing.Point, System.Drawing">
     <value>266, 65</value>
@@ -802,7 +802,7 @@
     <value>pnlSync</value>
   </data>
   <data name="&gt;&gt;txtAlbum.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="txtYourName.Location" type="System.Drawing.Point, System.Drawing">
     <value>479, 39</value>
@@ -826,7 +826,7 @@
     <value>pnlSync</value>
   </data>
   <data name="&gt;&gt;txtYourName.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="txtArtist.Location" type="System.Drawing.Point, System.Drawing">
     <value>266, 39</value>
@@ -853,7 +853,7 @@
     <value>pnlSync</value>
   </data>
   <data name="&gt;&gt;txtArtist.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="txtAuthor.Location" type="System.Drawing.Point, System.Drawing">
     <value>479, 13</value>
@@ -880,7 +880,7 @@
     <value>pnlSync</value>
   </data>
   <data name="&gt;&gt;txtAuthor.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="txtTitle.Location" type="System.Drawing.Point, System.Drawing">
     <value>266, 13</value>
@@ -907,7 +907,7 @@
     <value>pnlSync</value>
   </data>
   <data name="&gt;&gt;txtTitle.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="lblHotkeys.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -937,10 +937,10 @@
     <value>pnlSync</value>
   </data>
   <data name="&gt;&gt;lblHotkeys.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <data name="pnlSync.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 72</value>
+    <value>6, 72</value>
   </data>
   <data name="pnlSync.Size" type="System.Drawing.Size, System.Drawing">
     <value>852, 93</value>
@@ -958,7 +958,7 @@
     <value>pnlTop</value>
   </data>
   <data name="&gt;&gt;pnlSync.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>3</value>
   </data>
   <data name="splitContainer1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
