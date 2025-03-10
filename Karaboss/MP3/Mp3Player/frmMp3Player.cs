@@ -127,7 +127,6 @@ namespace Karaboss.Mp3
         #endregion Bass
 
        
-
         public frmMp3Player(string FileName, Playlist myPlayList, bool bplay)
         {
             InitializeComponent();
@@ -946,7 +945,7 @@ namespace Karaboss.Mp3
             
             TagLib.Tag Tag = Player.Tag;
 
-            if (Tag == null) return;
+            //if (Tag == null) return;
 
             Mp3LyricsType = Mp3LyricsTypes.None;
 
@@ -1846,12 +1845,16 @@ namespace Karaboss.Mp3
             string tsp;
             
 
-            double time = Player.Position;
-            ts = TimeSpan.FromMilliseconds(time * 1000);
+            double time = Player.Position * 1000;
+
+            tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+            /*
+            ts = TimeSpan.FromMilliseconds(time);
             if (_LrcMillisecondsDigits == 2)
                 tsp = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
             else
                 tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+            */
 
                       
             if (_index < lvLyrics.Items.Count)
@@ -1912,11 +1915,15 @@ namespace Karaboss.Mp3
                     for (int i = 0; i < SyncLyrics[j].Count; i++)
                     {
                         time = SyncLyrics[j][i].Time;
+
+                        tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                        /*
                         ts = TimeSpan.FromMilliseconds(time);
                         if (_LrcMillisecondsDigits == 2)
                             tsp = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
                         else
                             tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                        */
 
                         sTime = tsp;  // Transform to [00:00.000] format
 
@@ -2279,6 +2286,7 @@ namespace Karaboss.Mp3
 
                     // Passer en mode édition
                     btnSwitchSyncEdit.Text = Strings.SwitchToEditMode; // "Switch to edit mode"; 
+
                     // Mode synchro : lancer la musique et taper la touche ENTREE à chque fois que vous entendez une ligne des paroles affichée.
                     lblMode.Text = Strings.DescSyncMode; // "Sync mode: start the music and press ENTER each time you hear a line of lyrics displayed.";
 
@@ -2306,6 +2314,7 @@ namespace Karaboss.Mp3
 
                     // Passer en mode synchro
                     btnSwitchSyncEdit.Text = Strings.SwitchToSyncMode; // "Switch to sync mode";  
+
                     // Mode édition: chargez un fichier LRC à modifier ou des paroles à synchroniser
                     lblMode.Text = Strings.DescrEditMode; // "Edit mode: load an LRC file to be modified or lyrics to be synchronised";
                     
@@ -2342,8 +2351,7 @@ namespace Karaboss.Mp3
         }
 
 
-        #endregion LRC generator
 
-       
+        #endregion LRC generator
     }
 }

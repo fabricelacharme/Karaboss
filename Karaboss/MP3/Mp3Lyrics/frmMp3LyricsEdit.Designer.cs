@@ -32,19 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMp3LyricsEdit));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.dgView = new System.Windows.Forms.DataGridView();
-            this.clTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.clText = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlRightBottom = new System.Windows.Forms.Panel();
             this.txtResult = new System.Windows.Forms.RichTextBox();
-            this.pnlRightTop = new System.Windows.Forms.Panel();
-            this.BtnFontMoins = new System.Windows.Forms.Button();
-            this.BtnFontPlus = new System.Windows.Forms.Button();
-            this.btnDeleteAllLyrics = new System.Windows.Forms.Button();
-            this.btnInsertParagraph = new System.Windows.Forms.Button();
-            this.btnInsertCr = new System.Windows.Forms.Button();
-            this.btnInsertText = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +43,7 @@
             this.mnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuEditLoadLRCFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEditImportLrcFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlMiddle = new System.Windows.Forms.Panel();
@@ -62,16 +51,52 @@
             this.lblLyricsOrigin = new System.Windows.Forms.Label();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.mnuEditImportRawLyrics = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuEditExportAsLrc = new System.Windows.Forms.ToolStripMenuItem();
+            this.pnlSync = new System.Windows.Forms.Panel();
+            this.pnlEdit = new System.Windows.Forms.Panel();
+            this.btnInsertParagraph = new System.Windows.Forms.Button();
+            this.btnInsertCr = new System.Windows.Forms.Button();
+            this.btnInsertText = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.BtnFontMoins = new System.Windows.Forms.Button();
+            this.BtnFontPlus = new System.Windows.Forms.Button();
+            this.btnDeleteAllLyrics = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cbLanguage = new System.Windows.Forms.ComboBox();
+            this.txtAlbum = new System.Windows.Forms.TextBox();
+            this.txtYourName = new System.Windows.Forms.TextBox();
+            this.txtArtist = new System.Windows.Forms.TextBox();
+            this.txtAuthor = new System.Windows.Forms.TextBox();
+            this.txtTitle = new System.Windows.Forms.TextBox();
+            this.lblHotkeys = new System.Windows.Forms.Label();
+            this.lblMode = new System.Windows.Forms.Label();
+            this.toolstrip1 = new System.Windows.Forms.ToolStrip();
+            this.mnuImport = new System.Windows.Forms.ToolStripDropDownButton();
+            this.mnuImportLrcFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuImportRawLyrics = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuExport = new System.Windows.Forms.ToolStripDropDownButton();
+            this.mnuExportLRCMeta = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuExportLrcNoMeta = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnSwitchSyncEdit = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgView)).BeginInit();
             this.pnlRightBottom.SuspendLayout();
-            this.pnlRightTop.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.pnlMiddle.SuspendLayout();
             this.pnlTop.SuspendLayout();
+            this.pnlSync.SuspendLayout();
+            this.pnlEdit.SuspendLayout();
+            this.toolstrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -82,97 +107,183 @@
             // 
             // splitContainer1.Panel1
             // 
-            resources.ApplyResources(this.splitContainer1.Panel1, "splitContainer1.Panel1");
             this.splitContainer1.Panel1.Controls.Add(this.dgView);
-            this.toolTip1.SetToolTip(this.splitContainer1.Panel1, resources.GetString("splitContainer1.Panel1.ToolTip"));
             // 
             // splitContainer1.Panel2
             // 
-            resources.ApplyResources(this.splitContainer1.Panel2, "splitContainer1.Panel2");
             this.splitContainer1.Panel2.Controls.Add(this.pnlRightBottom);
-            this.splitContainer1.Panel2.Controls.Add(this.pnlRightTop);
-            this.toolTip1.SetToolTip(this.splitContainer1.Panel2, resources.GetString("splitContainer1.Panel2.ToolTip"));
-            this.toolTip1.SetToolTip(this.splitContainer1, resources.GetString("splitContainer1.ToolTip"));
             this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
             // 
             // dgView
             // 
-            resources.ApplyResources(this.dgView, "dgView");
             this.dgView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.clTime,
-            this.clText});
+            resources.ApplyResources(this.dgView, "dgView");
             this.dgView.Name = "dgView";
-            this.toolTip1.SetToolTip(this.dgView, resources.GetString("dgView.ToolTip"));
             this.dgView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgView_CellEndEdit);
             this.dgView.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgView_CellEnter);
             // 
-            // clTime
-            // 
-            resources.ApplyResources(this.clTime, "clTime");
-            this.clTime.Name = "clTime";
-            // 
-            // clText
-            // 
-            resources.ApplyResources(this.clText, "clText");
-            this.clText.Name = "clText";
-            // 
             // pnlRightBottom
             // 
-            resources.ApplyResources(this.pnlRightBottom, "pnlRightBottom");
             this.pnlRightBottom.Controls.Add(this.txtResult);
+            resources.ApplyResources(this.pnlRightBottom, "pnlRightBottom");
             this.pnlRightBottom.Name = "pnlRightBottom";
-            this.toolTip1.SetToolTip(this.pnlRightBottom, resources.GetString("pnlRightBottom.ToolTip"));
             // 
             // txtResult
             // 
-            resources.ApplyResources(this.txtResult, "txtResult");
             this.txtResult.BackColor = System.Drawing.Color.Black;
             this.txtResult.Cursor = System.Windows.Forms.Cursors.Default;
             this.txtResult.DetectUrls = false;
+            resources.ApplyResources(this.txtResult, "txtResult");
             this.txtResult.ForeColor = System.Drawing.Color.MediumTurquoise;
             this.txtResult.Name = "txtResult";
             this.txtResult.ReadOnly = true;
-            this.toolTip1.SetToolTip(this.txtResult, resources.GetString("txtResult.ToolTip"));
             // 
-            // pnlRightTop
+            // menuStrip1
             // 
-            resources.ApplyResources(this.pnlRightTop, "pnlRightTop");
-            this.pnlRightTop.Controls.Add(this.BtnFontMoins);
-            this.pnlRightTop.Controls.Add(this.BtnFontPlus);
-            this.pnlRightTop.Controls.Add(this.btnDeleteAllLyrics);
-            this.pnlRightTop.Controls.Add(this.btnInsertParagraph);
-            this.pnlRightTop.Controls.Add(this.btnInsertCr);
-            this.pnlRightTop.Controls.Add(this.btnInsertText);
-            this.pnlRightTop.Controls.Add(this.btnDelete);
-            this.pnlRightTop.Controls.Add(this.btnSave);
-            this.pnlRightTop.Name = "pnlRightTop";
-            this.toolTip1.SetToolTip(this.pnlRightTop, resources.GetString("pnlRightTop.ToolTip"));
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFile,
+            this.mnuEdit,
+            this.mnuHelp});
+            resources.ApplyResources(this.menuStrip1, "menuStrip1");
+            this.menuStrip1.Name = "menuStrip1";
             // 
-            // BtnFontMoins
+            // mnuFile
             // 
-            resources.ApplyResources(this.BtnFontMoins, "BtnFontMoins");
-            this.BtnFontMoins.Name = "BtnFontMoins";
-            this.toolTip1.SetToolTip(this.BtnFontMoins, resources.GetString("BtnFontMoins.ToolTip"));
-            this.BtnFontMoins.UseVisualStyleBackColor = true;
-            this.BtnFontMoins.Click += new System.EventHandler(this.BtnFontMoins_Click);
+            this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFileSave,
+            this.mnuFileSep2,
+            this.mnuFileSaveAsLrc,
+            this.mnuFileSep1,
+            this.mnuFileQuit});
+            this.mnuFile.Name = "mnuFile";
+            resources.ApplyResources(this.mnuFile, "mnuFile");
             // 
-            // BtnFontPlus
+            // mnuFileSave
             // 
-            resources.ApplyResources(this.BtnFontPlus, "BtnFontPlus");
-            this.BtnFontPlus.Name = "BtnFontPlus";
-            this.toolTip1.SetToolTip(this.BtnFontPlus, resources.GetString("BtnFontPlus.ToolTip"));
-            this.BtnFontPlus.UseVisualStyleBackColor = true;
-            this.BtnFontPlus.Click += new System.EventHandler(this.BtnFontPlus_Click);
+            this.mnuFileSave.Name = "mnuFileSave";
+            resources.ApplyResources(this.mnuFileSave, "mnuFileSave");
+            this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
             // 
-            // btnDeleteAllLyrics
+            // mnuFileSep2
             // 
-            resources.ApplyResources(this.btnDeleteAllLyrics, "btnDeleteAllLyrics");
-            this.btnDeleteAllLyrics.Image = global::Karaboss.Properties.Resources.delete_icon;
-            this.btnDeleteAllLyrics.Name = "btnDeleteAllLyrics";
-            this.toolTip1.SetToolTip(this.btnDeleteAllLyrics, resources.GetString("btnDeleteAllLyrics.ToolTip"));
-            this.btnDeleteAllLyrics.UseVisualStyleBackColor = true;
-            this.btnDeleteAllLyrics.Click += new System.EventHandler(this.btnDeleteAllLyrics_Click);
+            this.mnuFileSep2.Name = "mnuFileSep2";
+            resources.ApplyResources(this.mnuFileSep2, "mnuFileSep2");
+            // 
+            // mnuFileSaveAsLrc
+            // 
+            this.mnuFileSaveAsLrc.Name = "mnuFileSaveAsLrc";
+            resources.ApplyResources(this.mnuFileSaveAsLrc, "mnuFileSaveAsLrc");
+            this.mnuFileSaveAsLrc.Click += new System.EventHandler(this.mnuFileSaveAsLrc_Click);
+            // 
+            // mnuFileSep1
+            // 
+            this.mnuFileSep1.Name = "mnuFileSep1";
+            resources.ApplyResources(this.mnuFileSep1, "mnuFileSep1");
+            // 
+            // mnuFileQuit
+            // 
+            this.mnuFileQuit.Name = "mnuFileQuit";
+            resources.ApplyResources(this.mnuFileQuit, "mnuFileQuit");
+            this.mnuFileQuit.Click += new System.EventHandler(this.mnuFileQuit_Click);
+            // 
+            // mnuEdit
+            // 
+            this.mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuEditImportLrcFile,
+            this.mnuEditImportRawLyrics,
+            this.toolStripSeparator1,
+            this.mnuEditExportAsLrc});
+            this.mnuEdit.Name = "mnuEdit";
+            resources.ApplyResources(this.mnuEdit, "mnuEdit");
+            // 
+            // mnuEditImportLrcFile
+            // 
+            this.mnuEditImportLrcFile.Name = "mnuEditImportLrcFile";
+            resources.ApplyResources(this.mnuEditImportLrcFile, "mnuEditImportLrcFile");
+            this.mnuEditImportLrcFile.Click += new System.EventHandler(this.mnuEditLoadLRCFile_Click);
+            // 
+            // mnuHelp
+            // 
+            this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuHelpAbout});
+            this.mnuHelp.Name = "mnuHelp";
+            resources.ApplyResources(this.mnuHelp, "mnuHelp");
+            // 
+            // mnuHelpAbout
+            // 
+            this.mnuHelpAbout.Name = "mnuHelpAbout";
+            resources.ApplyResources(this.mnuHelpAbout, "mnuHelpAbout");
+            this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
+            // 
+            // pnlMiddle
+            // 
+            this.pnlMiddle.Controls.Add(this.splitContainer1);
+            resources.ApplyResources(this.pnlMiddle, "pnlMiddle");
+            this.pnlMiddle.Name = "pnlMiddle";
+            // 
+            // pnlTop
+            // 
+            this.pnlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlTop.Controls.Add(this.pnlEdit);
+            this.pnlTop.Controls.Add(this.toolstrip1);
+            this.pnlTop.Controls.Add(this.lblMode);
+            this.pnlTop.Controls.Add(this.lblLyricsOrigin);
+            this.pnlTop.Controls.Add(this.pnlSync);
+            resources.ApplyResources(this.pnlTop, "pnlTop");
+            this.pnlTop.Name = "pnlTop";
+            // 
+            // lblLyricsOrigin
+            // 
+            resources.ApplyResources(this.lblLyricsOrigin, "lblLyricsOrigin");
+            this.lblLyricsOrigin.ForeColor = System.Drawing.Color.White;
+            this.lblLyricsOrigin.Name = "lblLyricsOrigin";
+            // 
+            // mnuEditImportRawLyrics
+            // 
+            this.mnuEditImportRawLyrics.Name = "mnuEditImportRawLyrics";
+            resources.ApplyResources(this.mnuEditImportRawLyrics, "mnuEditImportRawLyrics");
+            this.mnuEditImportRawLyrics.Click += new System.EventHandler(this.mnuEditImportRawLyrics_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
+            // 
+            // mnuEditExportAsLrc
+            // 
+            this.mnuEditExportAsLrc.Name = "mnuEditExportAsLrc";
+            resources.ApplyResources(this.mnuEditExportAsLrc, "mnuEditExportAsLrc");
+            this.mnuEditExportAsLrc.Click += new System.EventHandler(this.mnuEditExportAsLrc_Click);
+            // 
+            // pnlSync
+            // 
+            this.pnlSync.Controls.Add(this.label6);
+            this.pnlSync.Controls.Add(this.label5);
+            this.pnlSync.Controls.Add(this.label4);
+            this.pnlSync.Controls.Add(this.label3);
+            this.pnlSync.Controls.Add(this.label1);
+            this.pnlSync.Controls.Add(this.cbLanguage);
+            this.pnlSync.Controls.Add(this.txtAlbum);
+            this.pnlSync.Controls.Add(this.txtYourName);
+            this.pnlSync.Controls.Add(this.txtArtist);
+            this.pnlSync.Controls.Add(this.txtAuthor);
+            this.pnlSync.Controls.Add(this.txtTitle);
+            this.pnlSync.Controls.Add(this.lblHotkeys);
+            resources.ApplyResources(this.pnlSync, "pnlSync");
+            this.pnlSync.Name = "pnlSync";
+            // 
+            // pnlEdit
+            // 
+            this.pnlEdit.Controls.Add(this.BtnFontMoins);
+            this.pnlEdit.Controls.Add(this.BtnFontPlus);
+            this.pnlEdit.Controls.Add(this.btnDeleteAllLyrics);
+            this.pnlEdit.Controls.Add(this.btnSave);
+            this.pnlEdit.Controls.Add(this.btnInsertParagraph);
+            this.pnlEdit.Controls.Add(this.btnInsertCr);
+            this.pnlEdit.Controls.Add(this.btnInsertText);
+            this.pnlEdit.Controls.Add(this.btnDelete);
+            resources.ApplyResources(this.pnlEdit, "pnlEdit");
+            this.pnlEdit.Name = "pnlEdit";
             // 
             // btnInsertParagraph
             // 
@@ -180,7 +291,6 @@
             this.btnInsertParagraph.Name = "btnInsertParagraph";
             this.toolTip1.SetToolTip(this.btnInsertParagraph, resources.GetString("btnInsertParagraph.ToolTip"));
             this.btnInsertParagraph.UseVisualStyleBackColor = true;
-            this.btnInsertParagraph.Click += new System.EventHandler(this.btnInsertParagraph_Click);
             // 
             // btnInsertCr
             // 
@@ -189,7 +299,6 @@
             this.btnInsertCr.TabStop = false;
             this.toolTip1.SetToolTip(this.btnInsertCr, resources.GetString("btnInsertCr.ToolTip"));
             this.btnInsertCr.UseVisualStyleBackColor = true;
-            this.btnInsertCr.Click += new System.EventHandler(this.btnInsertCr_Click);
             // 
             // btnInsertText
             // 
@@ -197,7 +306,6 @@
             this.btnInsertText.Name = "btnInsertText";
             this.toolTip1.SetToolTip(this.btnInsertText, resources.GetString("btnInsertText.ToolTip"));
             this.btnInsertText.UseVisualStyleBackColor = true;
-            this.btnInsertText.Click += new System.EventHandler(this.btnInsertText_Click);
             // 
             // btnDelete
             // 
@@ -205,121 +313,162 @@
             this.btnDelete.Name = "btnDelete";
             this.toolTip1.SetToolTip(this.btnDelete, resources.GetString("btnDelete.ToolTip"));
             this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // BtnFontMoins
+            // 
+            resources.ApplyResources(this.BtnFontMoins, "BtnFontMoins");
+            this.BtnFontMoins.Name = "BtnFontMoins";
+            this.toolTip1.SetToolTip(this.BtnFontMoins, resources.GetString("BtnFontMoins.ToolTip"));
+            this.BtnFontMoins.UseVisualStyleBackColor = true;
+            // 
+            // BtnFontPlus
+            // 
+            resources.ApplyResources(this.BtnFontPlus, "BtnFontPlus");
+            this.BtnFontPlus.Name = "BtnFontPlus";
+            this.toolTip1.SetToolTip(this.BtnFontPlus, resources.GetString("BtnFontPlus.ToolTip"));
+            this.BtnFontPlus.UseVisualStyleBackColor = true;
+            // 
+            // btnDeleteAllLyrics
+            // 
+            this.btnDeleteAllLyrics.Image = global::Karaboss.Properties.Resources.delete_icon;
+            resources.ApplyResources(this.btnDeleteAllLyrics, "btnDeleteAllLyrics");
+            this.btnDeleteAllLyrics.Name = "btnDeleteAllLyrics";
+            this.toolTip1.SetToolTip(this.btnDeleteAllLyrics, resources.GetString("btnDeleteAllLyrics.ToolTip"));
+            this.btnDeleteAllLyrics.UseVisualStyleBackColor = true;
             // 
             // btnSave
             // 
-            resources.ApplyResources(this.btnSave, "btnSave");
             this.btnSave.Image = global::Karaboss.Properties.Resources.floppy_icon;
+            resources.ApplyResources(this.btnSave, "btnSave");
             this.btnSave.Name = "btnSave";
             this.toolTip1.SetToolTip(this.btnSave, resources.GetString("btnSave.ToolTip"));
             this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // menuStrip1
+            // label6
             // 
-            resources.ApplyResources(this.menuStrip1, "menuStrip1");
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFile,
-            this.mnuEdit,
-            this.mnuHelp});
-            this.menuStrip1.Name = "menuStrip1";
-            this.toolTip1.SetToolTip(this.menuStrip1, resources.GetString("menuStrip1.ToolTip"));
+            resources.ApplyResources(this.label6, "label6");
+            this.label6.Name = "label6";
             // 
-            // mnuFile
+            // label5
             // 
-            resources.ApplyResources(this.mnuFile, "mnuFile");
-            this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFileSave,
-            this.mnuFileSep2,
-            this.mnuFileSaveAsLrc,
-            this.mnuFileSep1,
-            this.mnuFileQuit});
-            this.mnuFile.Name = "mnuFile";
+            resources.ApplyResources(this.label5, "label5");
+            this.label5.Name = "label5";
             // 
-            // mnuFileSave
+            // label4
             // 
-            resources.ApplyResources(this.mnuFileSave, "mnuFileSave");
-            this.mnuFileSave.Name = "mnuFileSave";
-            this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
+            resources.ApplyResources(this.label4, "label4");
+            this.label4.Name = "label4";
             // 
-            // mnuFileSep2
+            // label3
             // 
-            resources.ApplyResources(this.mnuFileSep2, "mnuFileSep2");
-            this.mnuFileSep2.Name = "mnuFileSep2";
+            resources.ApplyResources(this.label3, "label3");
+            this.label3.Name = "label3";
             // 
-            // mnuFileSaveAsLrc
+            // label1
             // 
-            resources.ApplyResources(this.mnuFileSaveAsLrc, "mnuFileSaveAsLrc");
-            this.mnuFileSaveAsLrc.Name = "mnuFileSaveAsLrc";
-            this.mnuFileSaveAsLrc.Click += new System.EventHandler(this.mnuFileSaveAsLrc_Click);
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Name = "label1";
             // 
-            // mnuFileSep1
+            // cbLanguage
             // 
-            resources.ApplyResources(this.mnuFileSep1, "mnuFileSep1");
-            this.mnuFileSep1.Name = "mnuFileSep1";
+            this.cbLanguage.FormattingEnabled = true;
+            resources.ApplyResources(this.cbLanguage, "cbLanguage");
+            this.cbLanguage.Name = "cbLanguage";
             // 
-            // mnuFileQuit
+            // txtAlbum
             // 
-            resources.ApplyResources(this.mnuFileQuit, "mnuFileQuit");
-            this.mnuFileQuit.Name = "mnuFileQuit";
-            this.mnuFileQuit.Click += new System.EventHandler(this.mnuFileQuit_Click);
+            resources.ApplyResources(this.txtAlbum, "txtAlbum");
+            this.txtAlbum.Name = "txtAlbum";
+            this.toolTip1.SetToolTip(this.txtAlbum, resources.GetString("txtAlbum.ToolTip"));
             // 
-            // mnuEdit
+            // txtYourName
             // 
-            resources.ApplyResources(this.mnuEdit, "mnuEdit");
-            this.mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuEditLoadLRCFile});
-            this.mnuEdit.Name = "mnuEdit";
+            resources.ApplyResources(this.txtYourName, "txtYourName");
+            this.txtYourName.Name = "txtYourName";
             // 
-            // mnuEditLoadLRCFile
+            // txtArtist
             // 
-            resources.ApplyResources(this.mnuEditLoadLRCFile, "mnuEditLoadLRCFile");
-            this.mnuEditLoadLRCFile.Name = "mnuEditLoadLRCFile";
-            this.mnuEditLoadLRCFile.Click += new System.EventHandler(this.mnuEditLoadLRCFile_Click);
+            resources.ApplyResources(this.txtArtist, "txtArtist");
+            this.txtArtist.Name = "txtArtist";
+            this.toolTip1.SetToolTip(this.txtArtist, resources.GetString("txtArtist.ToolTip"));
             // 
-            // mnuHelp
+            // txtAuthor
             // 
-            resources.ApplyResources(this.mnuHelp, "mnuHelp");
-            this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuHelpAbout});
-            this.mnuHelp.Name = "mnuHelp";
+            resources.ApplyResources(this.txtAuthor, "txtAuthor");
+            this.txtAuthor.Name = "txtAuthor";
+            this.toolTip1.SetToolTip(this.txtAuthor, resources.GetString("txtAuthor.ToolTip"));
             // 
-            // mnuHelpAbout
+            // txtTitle
             // 
-            resources.ApplyResources(this.mnuHelpAbout, "mnuHelpAbout");
-            this.mnuHelpAbout.Name = "mnuHelpAbout";
-            this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
+            resources.ApplyResources(this.txtTitle, "txtTitle");
+            this.txtTitle.Name = "txtTitle";
+            this.toolTip1.SetToolTip(this.txtTitle, resources.GetString("txtTitle.ToolTip"));
             // 
-            // pnlMiddle
+            // lblHotkeys
             // 
-            resources.ApplyResources(this.pnlMiddle, "pnlMiddle");
-            this.pnlMiddle.Controls.Add(this.splitContainer1);
-            this.pnlMiddle.Name = "pnlMiddle";
-            this.toolTip1.SetToolTip(this.pnlMiddle, resources.GetString("pnlMiddle.ToolTip"));
+            this.lblHotkeys.BackColor = System.Drawing.Color.Silver;
+            resources.ApplyResources(this.lblHotkeys, "lblHotkeys");
+            this.lblHotkeys.Name = "lblHotkeys";
             // 
-            // pnlTop
+            // lblMode
             // 
-            resources.ApplyResources(this.pnlTop, "pnlTop");
-            this.pnlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.pnlTop.Controls.Add(this.lblLyricsOrigin);
-            this.pnlTop.Name = "pnlTop";
-            this.toolTip1.SetToolTip(this.pnlTop, resources.GetString("pnlTop.ToolTip"));
+            resources.ApplyResources(this.lblMode, "lblMode");
+            this.lblMode.Name = "lblMode";
             // 
-            // lblLyricsOrigin
+            // toolstrip1
             // 
-            resources.ApplyResources(this.lblLyricsOrigin, "lblLyricsOrigin");
-            this.lblLyricsOrigin.ForeColor = System.Drawing.Color.White;
-            this.lblLyricsOrigin.Name = "lblLyricsOrigin";
-            this.toolTip1.SetToolTip(this.lblLyricsOrigin, resources.GetString("lblLyricsOrigin.ToolTip"));
+            resources.ApplyResources(this.toolstrip1, "toolstrip1");
+            this.toolstrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuImport,
+            this.mnuExport,
+            this.btnSwitchSyncEdit});
+            this.toolstrip1.Name = "toolstrip1";
+            this.toolstrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             // 
-            // openFileDialog
+            // mnuImport
             // 
-            resources.ApplyResources(this.openFileDialog, "openFileDialog");
+            this.mnuImport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.mnuImport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuImportLrcFile,
+            this.mnuImportRawLyrics});
+            resources.ApplyResources(this.mnuImport, "mnuImport");
+            this.mnuImport.Name = "mnuImport";
             // 
-            // saveFileDialog
+            // mnuImportLrcFile
             // 
-            resources.ApplyResources(this.saveFileDialog, "saveFileDialog");
+            this.mnuImportLrcFile.Name = "mnuImportLrcFile";
+            resources.ApplyResources(this.mnuImportLrcFile, "mnuImportLrcFile");
+            // 
+            // mnuImportRawLyrics
+            // 
+            this.mnuImportRawLyrics.Name = "mnuImportRawLyrics";
+            resources.ApplyResources(this.mnuImportRawLyrics, "mnuImportRawLyrics");
+            // 
+            // mnuExport
+            // 
+            this.mnuExport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.mnuExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuExportLRCMeta,
+            this.mnuExportLrcNoMeta});
+            resources.ApplyResources(this.mnuExport, "mnuExport");
+            this.mnuExport.Name = "mnuExport";
+            // 
+            // mnuExportLRCMeta
+            // 
+            this.mnuExportLRCMeta.Name = "mnuExportLRCMeta";
+            resources.ApplyResources(this.mnuExportLRCMeta, "mnuExportLRCMeta");
+            // 
+            // mnuExportLrcNoMeta
+            // 
+            this.mnuExportLrcNoMeta.Name = "mnuExportLrcNoMeta";
+            resources.ApplyResources(this.mnuExportLrcNoMeta, "mnuExportLrcNoMeta");
+            // 
+            // btnSwitchSyncEdit
+            // 
+            this.btnSwitchSyncEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            resources.ApplyResources(this.btnSwitchSyncEdit, "btnSwitchSyncEdit");
+            this.btnSwitchSyncEdit.Name = "btnSwitchSyncEdit";
+            this.btnSwitchSyncEdit.Click += new System.EventHandler(this.btnSwitchSyncEdit_Click);
             // 
             // frmMp3LyricsEdit
             // 
@@ -329,7 +478,6 @@
             this.Controls.Add(this.pnlTop);
             this.Controls.Add(this.menuStrip1);
             this.Name = "frmMp3LyricsEdit";
-            this.toolTip1.SetToolTip(this, resources.GetString("$this.ToolTip"));
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMp3LyricsEdit_FormClosing);
             this.Load += new System.EventHandler(this.frmMp3LyricsEdit_Load);
             this.Resize += new System.EventHandler(this.frmMp3LyricsEdit_Resize);
@@ -339,12 +487,16 @@
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgView)).EndInit();
             this.pnlRightBottom.ResumeLayout(false);
-            this.pnlRightTop.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.pnlMiddle.ResumeLayout(false);
             this.pnlTop.ResumeLayout(false);
             this.pnlTop.PerformLayout();
+            this.pnlSync.ResumeLayout(false);
+            this.pnlSync.PerformLayout();
+            this.pnlEdit.ResumeLayout(false);
+            this.toolstrip1.ResumeLayout(false);
+            this.toolstrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -368,21 +520,44 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.DataGridView dgView;
         private System.Windows.Forms.Panel pnlRightBottom;
-        private System.Windows.Forms.Panel pnlRightTop;
         private System.Windows.Forms.RichTextBox txtResult;
+        private System.Windows.Forms.ToolStripMenuItem mnuEdit;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditImportLrcFile;
+        private System.Windows.Forms.Panel pnlTop;
+        private System.Windows.Forms.Label lblLyricsOrigin;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditImportRawLyrics;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditExportAsLrc;
+        private System.Windows.Forms.Panel pnlEdit;
+        private System.Windows.Forms.Button BtnFontMoins;
+        private System.Windows.Forms.Button BtnFontPlus;
         private System.Windows.Forms.Button btnDeleteAllLyrics;
+        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnInsertParagraph;
         private System.Windows.Forms.Button btnInsertCr;
         private System.Windows.Forms.Button btnInsertText;
         private System.Windows.Forms.Button btnDelete;
-        private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.DataGridViewTextBoxColumn clTime;
-        private System.Windows.Forms.DataGridViewTextBoxColumn clText;
-        private System.Windows.Forms.ToolStripMenuItem mnuEdit;
-        private System.Windows.Forms.ToolStripMenuItem mnuEditLoadLRCFile;
-        private System.Windows.Forms.Panel pnlTop;
-        private System.Windows.Forms.Label lblLyricsOrigin;
-        private System.Windows.Forms.Button BtnFontMoins;
-        private System.Windows.Forms.Button BtnFontPlus;
+        private System.Windows.Forms.Panel pnlSync;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cbLanguage;
+        private System.Windows.Forms.TextBox txtAlbum;
+        private System.Windows.Forms.TextBox txtYourName;
+        private System.Windows.Forms.TextBox txtArtist;
+        private System.Windows.Forms.TextBox txtAuthor;
+        private System.Windows.Forms.TextBox txtTitle;
+        private System.Windows.Forms.Label lblHotkeys;
+        private System.Windows.Forms.Label lblMode;
+        private System.Windows.Forms.ToolStrip toolstrip1;
+        private System.Windows.Forms.ToolStripDropDownButton mnuImport;
+        private System.Windows.Forms.ToolStripMenuItem mnuImportLrcFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuImportRawLyrics;
+        private System.Windows.Forms.ToolStripDropDownButton mnuExport;
+        private System.Windows.Forms.ToolStripMenuItem mnuExportLRCMeta;
+        private System.Windows.Forms.ToolStripMenuItem mnuExportLrcNoMeta;
+        private System.Windows.Forms.ToolStripButton btnSwitchSyncEdit;
     }
 }

@@ -2415,7 +2415,7 @@ namespace Karaboss
                         {
                             time = (long)Mp3LyricsMgmtHelper.TimeToMs(sTime); // [00:01.123] => 1256
                             ts = TimeSpan.FromMilliseconds(time);
-                            sTime = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                            sTime = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, Math.Round(ts.Milliseconds / (double)10));
                         }
 
 

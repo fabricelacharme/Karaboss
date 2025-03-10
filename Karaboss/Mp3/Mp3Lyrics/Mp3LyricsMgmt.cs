@@ -543,6 +543,21 @@ namespace Karaboss.Mp3.Mp3Lyrics
             return dur;
         }
 
+        /// <summary>
+        /// Convert milliseconds to a LRC timespan
+        /// </summary>
+        /// <param name="ms"></param>
+        /// <param name="_LrcMillisecondsDigits"></param>
+        /// <returns></returns>
+        public static string MsToTime(double ms, int _LrcMillisecondsDigits)
+        {
+            TimeSpan ts = TimeSpan.FromMilliseconds(ms);            
+            
+            if (_LrcMillisecondsDigits == 2)
+                return string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, Math.Round(ts.Milliseconds / (double)10));
+            else
+                return string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);            
+        }
 
         #region id3v2
 

@@ -361,6 +361,9 @@ namespace Karaboss.Utilities
                 // Mifi format for timestamp is milliseconds
                 // Convert from "00:01.123" to "00.01.12" if necessary
                 time = lstDgRows[i].Item1;
+
+                sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                /*
                 ts = TimeSpan.FromMilliseconds(time);
                 if (_LrcMillisecondsDigits == 2)
                 {
@@ -371,8 +374,9 @@ namespace Karaboss.Utilities
                 {
                     sTime = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
                 }
+                */
 
-                    sTime = "[" + sTime + "]";
+                sTime = "[" + sTime + "]";
                 sLyric = lstDgRows[i].Item2;
 
                 if (sLyric != "" && sLyric != m_SepLine && sLyric != m_SepParagraph)
