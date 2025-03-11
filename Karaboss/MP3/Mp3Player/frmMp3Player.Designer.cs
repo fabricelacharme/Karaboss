@@ -61,7 +61,20 @@
             this.txtArtist = new System.Windows.Forms.TextBox();
             this.txtAlbum = new System.Windows.Forms.TextBox();
             this.txtEditing = new System.Windows.Forms.TextBox();
+            this.BtnFontMoins = new System.Windows.Forms.Button();
+            this.BtnFontPlus = new System.Windows.Forms.Button();
+            this.btnDeleteAllLyrics = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.btnInsertParagraph = new System.Windows.Forms.Button();
+            this.btnInsertCr = new System.Windows.Forms.Button();
+            this.btnInsertText = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
             this.pnlMiddle = new System.Windows.Forms.Panel();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.dgView = new System.Windows.Forms.DataGridView();
+            this.txtResult = new System.Windows.Forms.RichTextBox();
+            this.lblLyrics = new System.Windows.Forms.Label();
+            this.lblTimes = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -70,8 +83,6 @@
             this.cbLanguage = new System.Windows.Forms.ComboBox();
             this.txtYourName = new System.Windows.Forms.TextBox();
             this.lblHotkeys = new System.Windows.Forms.Label();
-            this.lblLyrics = new System.Windows.Forms.Label();
-            this.lblTimes = new System.Windows.Forms.Label();
             this.lblMode = new System.Windows.Forms.Label();
             this.toolstrip1 = new System.Windows.Forms.ToolStrip();
             this.mnuImport = new System.Windows.Forms.ToolStripDropDownButton();
@@ -82,22 +93,10 @@
             this.mnuExportLrcNoMeta = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSwitchSyncEdit = new System.Windows.Forms.ToolStripButton();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.dgView = new System.Windows.Forms.DataGridView();
             this.pnlLrc = new System.Windows.Forms.Panel();
             this.pnlTop = new System.Windows.Forms.Panel();
-            this.pnlSync = new System.Windows.Forms.Panel();
             this.pnlEdit = new System.Windows.Forms.Panel();
-            this.BtnFontMoins = new System.Windows.Forms.Button();
-            this.BtnFontPlus = new System.Windows.Forms.Button();
-            this.btnDeleteAllLyrics = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.btnInsertParagraph = new System.Windows.Forms.Button();
-            this.btnInsertCr = new System.Windows.Forms.Button();
-            this.btnInsertText = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.txtResult = new System.Windows.Forms.RichTextBox();
-            this.lvLyrics = new ListViewEx.ListViewEx();
+            this.pnlSync = new System.Windows.Forms.Panel();
             this.btnTempoMinus = new Karaboss.Buttons.MinusButtonControl();
             this.btnTempoPlus = new Karaboss.Buttons.PlusButtonControl();
             this.btnTranspoMinus = new Karaboss.Buttons.MinusButtonControl();
@@ -111,16 +110,16 @@
             this.pnlControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBox)).BeginInit();
             this.pnlMiddle.SuspendLayout();
-            this.toolstrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgView)).BeginInit();
-            this.pnlLrc.SuspendLayout();
-            this.pnlTop.SuspendLayout();
-            this.pnlSync.SuspendLayout();
-            this.pnlEdit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgView)).BeginInit();
+            this.toolstrip1.SuspendLayout();
+            this.pnlLrc.SuspendLayout();
+            this.pnlTop.SuspendLayout();
+            this.pnlEdit.SuspendLayout();
+            this.pnlSync.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -511,15 +510,124 @@
             this.txtEditing.Name = "txtEditing";
             this.toolTip1.SetToolTip(this.txtEditing, resources.GetString("txtEditing.ToolTip"));
             // 
+            // BtnFontMoins
+            // 
+            resources.ApplyResources(this.BtnFontMoins, "BtnFontMoins");
+            this.BtnFontMoins.Name = "BtnFontMoins";
+            this.toolTip1.SetToolTip(this.BtnFontMoins, resources.GetString("BtnFontMoins.ToolTip"));
+            this.BtnFontMoins.UseVisualStyleBackColor = true;
+            this.BtnFontMoins.Click += new System.EventHandler(this.BtnFontMoins_Click);
+            // 
+            // BtnFontPlus
+            // 
+            resources.ApplyResources(this.BtnFontPlus, "BtnFontPlus");
+            this.BtnFontPlus.Name = "BtnFontPlus";
+            this.toolTip1.SetToolTip(this.BtnFontPlus, resources.GetString("BtnFontPlus.ToolTip"));
+            this.BtnFontPlus.UseVisualStyleBackColor = true;
+            this.BtnFontPlus.Click += new System.EventHandler(this.BtnFontPlus_Click);
+            // 
+            // btnDeleteAllLyrics
+            // 
+            this.btnDeleteAllLyrics.Image = global::Karaboss.Properties.Resources.delete_icon;
+            resources.ApplyResources(this.btnDeleteAllLyrics, "btnDeleteAllLyrics");
+            this.btnDeleteAllLyrics.Name = "btnDeleteAllLyrics";
+            this.toolTip1.SetToolTip(this.btnDeleteAllLyrics, resources.GetString("btnDeleteAllLyrics.ToolTip"));
+            this.btnDeleteAllLyrics.UseVisualStyleBackColor = true;
+            this.btnDeleteAllLyrics.Click += new System.EventHandler(this.btnDeleteAllLyrics_Click_1);
+            // 
+            // btnSave
+            // 
+            this.btnSave.Image = global::Karaboss.Properties.Resources.floppy_icon;
+            resources.ApplyResources(this.btnSave, "btnSave");
+            this.btnSave.Name = "btnSave";
+            this.toolTip1.SetToolTip(this.btnSave, resources.GetString("btnSave.ToolTip"));
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // btnInsertParagraph
+            // 
+            resources.ApplyResources(this.btnInsertParagraph, "btnInsertParagraph");
+            this.btnInsertParagraph.Name = "btnInsertParagraph";
+            this.toolTip1.SetToolTip(this.btnInsertParagraph, resources.GetString("btnInsertParagraph.ToolTip"));
+            this.btnInsertParagraph.UseVisualStyleBackColor = true;
+            this.btnInsertParagraph.Click += new System.EventHandler(this.btnInsertParagraph_Click);
+            // 
+            // btnInsertCr
+            // 
+            resources.ApplyResources(this.btnInsertCr, "btnInsertCr");
+            this.btnInsertCr.Name = "btnInsertCr";
+            this.btnInsertCr.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnInsertCr, resources.GetString("btnInsertCr.ToolTip"));
+            this.btnInsertCr.UseVisualStyleBackColor = true;
+            this.btnInsertCr.Click += new System.EventHandler(this.btnInsertCr_Click);
+            // 
+            // btnInsertText
+            // 
+            resources.ApplyResources(this.btnInsertText, "btnInsertText");
+            this.btnInsertText.Name = "btnInsertText";
+            this.toolTip1.SetToolTip(this.btnInsertText, resources.GetString("btnInsertText.ToolTip"));
+            this.btnInsertText.UseVisualStyleBackColor = true;
+            this.btnInsertText.Click += new System.EventHandler(this.btnInsertText_Click);
+            // 
+            // btnDelete
+            // 
+            resources.ApplyResources(this.btnDelete, "btnDelete");
+            this.btnDelete.Name = "btnDelete";
+            this.toolTip1.SetToolTip(this.btnDelete, resources.GetString("btnDelete.ToolTip"));
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
             // pnlMiddle
             // 
             this.pnlMiddle.BackColor = System.Drawing.Color.LightGray;
             this.pnlMiddle.Controls.Add(this.splitContainer1);
             this.pnlMiddle.Controls.Add(this.lblLyrics);
             this.pnlMiddle.Controls.Add(this.lblTimes);
-            this.pnlMiddle.Controls.Add(this.lvLyrics);
             resources.ApplyResources(this.pnlMiddle, "pnlMiddle");
             this.pnlMiddle.Name = "pnlMiddle";
+            // 
+            // splitContainer1
+            // 
+            resources.ApplyResources(this.splitContainer1, "splitContainer1");
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.dgView);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.txtResult);
+            this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
+            // 
+            // dgView
+            // 
+            this.dgView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            resources.ApplyResources(this.dgView, "dgView");
+            this.dgView.Name = "dgView";
+            this.dgView.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dgView_CellBeginEdit);
+            this.dgView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgView_CellEndEdit);
+            this.dgView.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgView_CellEnter);
+            // 
+            // txtResult
+            // 
+            this.txtResult.BackColor = System.Drawing.Color.Black;
+            this.txtResult.Cursor = System.Windows.Forms.Cursors.Default;
+            this.txtResult.DetectUrls = false;
+            resources.ApplyResources(this.txtResult, "txtResult");
+            this.txtResult.ForeColor = System.Drawing.Color.MediumTurquoise;
+            this.txtResult.Name = "txtResult";
+            this.txtResult.ReadOnly = true;
+            // 
+            // lblLyrics
+            // 
+            resources.ApplyResources(this.lblLyrics, "lblLyrics");
+            this.lblLyrics.Name = "lblLyrics";
+            // 
+            // lblTimes
+            // 
+            resources.ApplyResources(this.lblTimes, "lblTimes");
+            this.lblTimes.Name = "lblTimes";
             // 
             // label6
             // 
@@ -562,16 +670,6 @@
             this.lblHotkeys.BackColor = System.Drawing.Color.Silver;
             resources.ApplyResources(this.lblHotkeys, "lblHotkeys");
             this.lblHotkeys.Name = "lblHotkeys";
-            // 
-            // lblLyrics
-            // 
-            resources.ApplyResources(this.lblLyrics, "lblLyrics");
-            this.lblLyrics.Name = "lblLyrics";
-            // 
-            // lblTimes
-            // 
-            resources.ApplyResources(this.lblTimes, "lblTimes");
-            this.lblTimes.Name = "lblTimes";
             // 
             // lblMode
             // 
@@ -638,12 +736,6 @@
             this.btnSwitchSyncEdit.Name = "btnSwitchSyncEdit";
             this.btnSwitchSyncEdit.Click += new System.EventHandler(this.btnSwitchSyncEdit_Click);
             // 
-            // dgView
-            // 
-            this.dgView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            resources.ApplyResources(this.dgView, "dgView");
-            this.dgView.Name = "dgView";
-            // 
             // pnlLrc
             // 
             this.pnlLrc.Controls.Add(this.pnlMiddle);
@@ -662,6 +754,20 @@
             resources.ApplyResources(this.pnlTop, "pnlTop");
             this.pnlTop.Name = "pnlTop";
             // 
+            // pnlEdit
+            // 
+            this.pnlEdit.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.pnlEdit.Controls.Add(this.BtnFontMoins);
+            this.pnlEdit.Controls.Add(this.BtnFontPlus);
+            this.pnlEdit.Controls.Add(this.btnDeleteAllLyrics);
+            this.pnlEdit.Controls.Add(this.btnSave);
+            this.pnlEdit.Controls.Add(this.btnInsertParagraph);
+            this.pnlEdit.Controls.Add(this.btnInsertCr);
+            this.pnlEdit.Controls.Add(this.btnInsertText);
+            this.pnlEdit.Controls.Add(this.btnDelete);
+            resources.ApplyResources(this.pnlEdit, "pnlEdit");
+            this.pnlEdit.Name = "pnlEdit";
+            // 
             // pnlSync
             // 
             this.pnlSync.BackColor = System.Drawing.Color.LightGray;
@@ -679,115 +785,6 @@
             this.pnlSync.Controls.Add(this.txtAlbum);
             resources.ApplyResources(this.pnlSync, "pnlSync");
             this.pnlSync.Name = "pnlSync";
-            // 
-            // pnlEdit
-            // 
-            this.pnlEdit.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.pnlEdit.Controls.Add(this.BtnFontMoins);
-            this.pnlEdit.Controls.Add(this.BtnFontPlus);
-            this.pnlEdit.Controls.Add(this.btnDeleteAllLyrics);
-            this.pnlEdit.Controls.Add(this.btnSave);
-            this.pnlEdit.Controls.Add(this.btnInsertParagraph);
-            this.pnlEdit.Controls.Add(this.btnInsertCr);
-            this.pnlEdit.Controls.Add(this.btnInsertText);
-            this.pnlEdit.Controls.Add(this.btnDelete);
-            resources.ApplyResources(this.pnlEdit, "pnlEdit");
-            this.pnlEdit.Name = "pnlEdit";
-            // 
-            // BtnFontMoins
-            // 
-            resources.ApplyResources(this.BtnFontMoins, "BtnFontMoins");
-            this.BtnFontMoins.Name = "BtnFontMoins";
-            this.toolTip1.SetToolTip(this.BtnFontMoins, resources.GetString("BtnFontMoins.ToolTip"));
-            this.BtnFontMoins.UseVisualStyleBackColor = true;
-            // 
-            // BtnFontPlus
-            // 
-            resources.ApplyResources(this.BtnFontPlus, "BtnFontPlus");
-            this.BtnFontPlus.Name = "BtnFontPlus";
-            this.toolTip1.SetToolTip(this.BtnFontPlus, resources.GetString("BtnFontPlus.ToolTip"));
-            this.BtnFontPlus.UseVisualStyleBackColor = true;
-            // 
-            // btnDeleteAllLyrics
-            // 
-            this.btnDeleteAllLyrics.Image = global::Karaboss.Properties.Resources.delete_icon;
-            resources.ApplyResources(this.btnDeleteAllLyrics, "btnDeleteAllLyrics");
-            this.btnDeleteAllLyrics.Name = "btnDeleteAllLyrics";
-            this.toolTip1.SetToolTip(this.btnDeleteAllLyrics, resources.GetString("btnDeleteAllLyrics.ToolTip"));
-            this.btnDeleteAllLyrics.UseVisualStyleBackColor = true;
-            // 
-            // btnSave
-            // 
-            this.btnSave.Image = global::Karaboss.Properties.Resources.floppy_icon;
-            resources.ApplyResources(this.btnSave, "btnSave");
-            this.btnSave.Name = "btnSave";
-            this.toolTip1.SetToolTip(this.btnSave, resources.GetString("btnSave.ToolTip"));
-            this.btnSave.UseVisualStyleBackColor = true;
-            // 
-            // btnInsertParagraph
-            // 
-            resources.ApplyResources(this.btnInsertParagraph, "btnInsertParagraph");
-            this.btnInsertParagraph.Name = "btnInsertParagraph";
-            this.toolTip1.SetToolTip(this.btnInsertParagraph, resources.GetString("btnInsertParagraph.ToolTip"));
-            this.btnInsertParagraph.UseVisualStyleBackColor = true;
-            // 
-            // btnInsertCr
-            // 
-            resources.ApplyResources(this.btnInsertCr, "btnInsertCr");
-            this.btnInsertCr.Name = "btnInsertCr";
-            this.btnInsertCr.TabStop = false;
-            this.toolTip1.SetToolTip(this.btnInsertCr, resources.GetString("btnInsertCr.ToolTip"));
-            this.btnInsertCr.UseVisualStyleBackColor = true;
-            // 
-            // btnInsertText
-            // 
-            resources.ApplyResources(this.btnInsertText, "btnInsertText");
-            this.btnInsertText.Name = "btnInsertText";
-            this.toolTip1.SetToolTip(this.btnInsertText, resources.GetString("btnInsertText.ToolTip"));
-            this.btnInsertText.UseVisualStyleBackColor = true;
-            // 
-            // btnDelete
-            // 
-            resources.ApplyResources(this.btnDelete, "btnDelete");
-            this.btnDelete.Name = "btnDelete";
-            this.toolTip1.SetToolTip(this.btnDelete, resources.GetString("btnDelete.ToolTip"));
-            this.btnDelete.UseVisualStyleBackColor = true;
-            // 
-            // splitContainer1
-            // 
-            resources.ApplyResources(this.splitContainer1, "splitContainer1");
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.dgView);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.txtResult);
-            this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
-            // 
-            // txtResult
-            // 
-            this.txtResult.BackColor = System.Drawing.Color.Black;
-            this.txtResult.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtResult.DetectUrls = false;
-            resources.ApplyResources(this.txtResult, "txtResult");
-            this.txtResult.ForeColor = System.Drawing.Color.MediumTurquoise;
-            this.txtResult.Name = "txtResult";
-            this.txtResult.ReadOnly = true;
-            // 
-            // lvLyrics
-            // 
-            this.lvLyrics.AllowColumnReorder = true;
-            this.lvLyrics.DoubleClickActivation = true;
-            this.lvLyrics.FullRowSelect = true;
-            this.lvLyrics.HideSelection = false;
-            resources.ApplyResources(this.lvLyrics, "lvLyrics");
-            this.lvLyrics.Name = "lvLyrics";
-            this.lvLyrics.UseCompatibleStateImageBehavior = false;
-            this.lvLyrics.View = System.Windows.Forms.View.Details;
-            this.lvLyrics.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lvLyrics_MouseMove);
             // 
             // btnTempoMinus
             // 
@@ -902,19 +899,19 @@
             ((System.ComponentModel.ISupportInitialize)(this.pBox)).EndInit();
             this.pnlMiddle.ResumeLayout(false);
             this.pnlMiddle.PerformLayout();
-            this.toolstrip1.ResumeLayout(false);
-            this.toolstrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgView)).EndInit();
-            this.pnlLrc.ResumeLayout(false);
-            this.pnlTop.ResumeLayout(false);
-            this.pnlTop.PerformLayout();
-            this.pnlSync.ResumeLayout(false);
-            this.pnlSync.PerformLayout();
-            this.pnlEdit.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgView)).EndInit();
+            this.toolstrip1.ResumeLayout(false);
+            this.toolstrip1.PerformLayout();
+            this.pnlLrc.ResumeLayout(false);
+            this.pnlTop.ResumeLayout(false);
+            this.pnlTop.PerformLayout();
+            this.pnlEdit.ResumeLayout(false);
+            this.pnlSync.ResumeLayout(false);
+            this.pnlSync.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -969,7 +966,6 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Label lblLyrics;
         private System.Windows.Forms.Label lblTimes;
-        private ListViewEx.ListViewEx lvLyrics;
         private System.Windows.Forms.Label lblHotkeys;
         private System.Windows.Forms.TextBox txtTitle;
         private System.Windows.Forms.TextBox txtYourName;

@@ -1183,17 +1183,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
 
                     sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
-                    /*
-                    ts = TimeSpan.FromMilliseconds(time);
-                    
-                    if(_LrcMillisecondsDigits == 2)
-                        tsp = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds/10);
-                    else
-                        tsp = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
-
-                    sTime = tsp;  // Transform to [00:00.000] format
-                    */
-
+                   
                     // /hey
                     // jude
                     sType = vType.ToString().Trim();

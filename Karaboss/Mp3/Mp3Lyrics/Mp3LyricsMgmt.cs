@@ -551,10 +551,26 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// <returns></returns>
         public static string MsToTime(double ms, int _LrcMillisecondsDigits)
         {
-            TimeSpan ts = TimeSpan.FromMilliseconds(ms);            
-            
+            int mls;
+            int sec;
+            int min;
+
+            TimeSpan ts = TimeSpan.FromMilliseconds(ms);
+
             if (_LrcMillisecondsDigits == 2)
-                return string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, Math.Round(ts.Milliseconds / (double)10));
+            {
+                mls = (int)Math.Round(ts.Milliseconds / (double)10);
+                sec = ts.Seconds;
+                min = ts.Minutes;
+                if (mls == 100)
+                {
+                    mls = 0;
+                    sec += 1;
+                    if (sec == 60)
+                        min += 1;
+                }
+                return string.Format("{0:00}:{1:00}.{2:00}", min, sec, mls);
+            }
             else
                 return string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);            
         }

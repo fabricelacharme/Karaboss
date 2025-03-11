@@ -361,20 +361,7 @@ namespace Karaboss.Utilities
                 // Mifi format for timestamp is milliseconds
                 // Convert from "00:01.123" to "00.01.12" if necessary
                 time = lstDgRows[i].Item1;
-
-                sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
-                /*
-                ts = TimeSpan.FromMilliseconds(time);
-                if (_LrcMillisecondsDigits == 2)
-                {
-                    //time = (long)Mp3LyricsMgmtHelper.TimeToMs(sTime);                    
-                    sTime = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-                }
-                else
-                {
-                    sTime = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
-                }
-                */
+                sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);                
 
                 sTime = "[" + sTime + "]";
                 sLyric = lstDgRows[i].Item2;
@@ -579,91 +566,7 @@ namespace Karaboss.Utilities
                 line = sTime + line.Trim(); 
                 lstLines.Add(line); ;
 
-            }
-
-            /*
-            try
-            {
-                // sTime, sType, sLyric
-                for (int i = 0; i < lstLyricsItems.Count; i++)
-                {
-                    sTime = lstLyricsItems[i].Item1;                    
-                    sLyric = lstLyricsItems[i].Item3;
-
-                    if (sLyric.Trim() == m_SepParagraph)
-                    {
-                        // Save current line
-                        if (sLine != "")
-                        {
-                            // Add new line
-                            lstLines.Add(sLine);
-                        }
-                        sLine = sTime;
-                        // Add new line
-                        //lstLines.Add(sLine);
-                        //sLine = string.Empty;
-                    }
-                    else if (sLyric.Trim() == m_SepLine)
-                    {
-                        // Save current line
-                        if (sLine != "")
-                        {
-                            // Add new line
-                            lstLines.Add(sLine);
-                        }
-                        sLine = sTime;
-                        // Add new line
-                        //lstLines.Add(sLine);
-                        //sLine = string.Empty;
-                    }
-                    else if (sLyric.Trim().StartsWith(m_SepParagraph))
-                    {
-                        // Save current line
-                        if (sLine != "")
-                        {
-                            // Add new line
-                            lstLines.Add(sLine);
-                        }
-                        // Start a new line
-                        sLyric = sLyric.Replace(m_SepParagraph, "");
-                        if (sLyric.Length > 0 && sLyric.StartsWith(" "))
-                            sLyric = sLyric.Remove(0, 1);
-                        sLine = sTime + strSpaceBetween + sLyric;
-                    }
-                    else if (sLyric.Trim().StartsWith(m_SepLine))
-                    {
-                        // Save current line
-                        if (sLine != "")
-                        {
-                            // Add new line
-                            lstLines.Add(sLine);
-                        }
-                        // Start a new line
-                        sLyric = sLyric.Replace(m_SepLine, "");
-                        if (sLyric.Length > 0 && sLyric.StartsWith(" "))
-                            sLyric = sLyric.Remove(0, 1);
-                        sLine = sTime + strSpaceBetween + sLyric;
-
-                    }
-                    else
-                    {
-                        // Line continuation
-                        sLine += sLyric; // only lyric for the continuation of a line   
-                    }                   
-                }
-                // Save last line
-                if (sLine != "")
-                {
-                    lstLines.Add(sLine);
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //return null;
-            }
-
-            */
+            }          
 
             return lstLines;
         }
