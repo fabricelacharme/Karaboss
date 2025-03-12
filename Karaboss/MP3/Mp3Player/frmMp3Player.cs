@@ -1373,8 +1373,10 @@ namespace Karaboss.Mp3
             //this.VuPeakVolumeRight.Location = new Point(220, 7);
 
             #endregion Peak volume
-     
-                   
+
+            btnSwitchSyncEdit.Text = Strings.SwitchToSyncMode;
+            lblMode.Text = Strings.DescrEditMode; // "Edit mode: load an LRC file to be modified or lyrics to be synchronised";
+
             #region dgview
 
             InitGridView();
@@ -2578,13 +2580,13 @@ namespace Karaboss.Mp3
         /// </summary>
         private void ShowCurrentLine()
         {
-            int r = dgView.CurrentCell.RowIndex;
+            int line = dgView.CurrentCell.RowIndex;
 
             // Text before current
             string tx = string.Empty;
             string s;
 
-            for (int row = 0; row <= r; row++)
+            for (int row = 0; row <= line; row++)
             {
                 s = string.Empty;
 
@@ -2608,6 +2610,19 @@ namespace Karaboss.Mp3
 
             if (tx != "")
             {
+                //Check if line is visible
+
+                //get the first visible char index
+                int firstVisibleChar = txtResult.GetCharIndexFromPosition(new Point(0, 0));
+                //get the line index from the char index
+                int firstVisibleLine = txtResult.GetLineFromCharIndex(firstVisibleChar);
+                
+
+                int lastVisibleCharIndex = txtResult.GetCharIndexFromPosition(new Point(0, txtResult.Height));
+                int lastVisibleLine = txtResult.GetLineFromCharIndex(lastVisibleCharIndex);
+                
+
+
                 int start = txtResult.Text.IndexOf(tx);
                 if (start == 0)
                 {                   
@@ -2617,14 +2632,18 @@ namespace Karaboss.Mp3
                     txtResult.SelectionLength = L;                    
                     txtResult.SelectionColor = Color.White;
 
-                    txtResult.SelectedText = tx;
-                    txtResult.ScrollToCaret();
+                    // If line is before the first visible line
+                    // If line is after the last visible line
+                    if (line < firstVisibleLine || line > lastVisibleLine)
+                    {
+                        txtResult.SelectedText = tx;
+                        txtResult.ScrollToCaret();
 
-                    txtResult.SelectionColor = txtResult.ForeColor;
-                    txtResult.SelectionStart = 0;
-                    txtResult.SelectionLength = L;
-                    txtResult.SelectionColor = Color.White;
-
+                        txtResult.SelectionColor = txtResult.ForeColor;
+                        txtResult.SelectionStart = 0;
+                        txtResult.SelectionLength = L;
+                        txtResult.SelectionColor = Color.White;
+                    }
                 }
             }
         }
@@ -2641,14 +2660,18 @@ namespace Karaboss.Mp3
             string cr = "\r\n";
             string Element;
 
+            // For each line
             for (int j = 0; j < lSyncLyrics.Count; j++)
             {
                 line = string.Empty;
 
+                // For each item of a line
                 for (int i = 0; i < lSyncLyrics[j].Count; i++)
                 {
                     Element = lSyncLyrics[j][i].Text;
+                    
                     Element = Element.Replace(Environment.NewLine, "");
+                    
                     line += Element;
                 }
                 tx += line + cr;
@@ -2684,6 +2707,9 @@ namespace Karaboss.Mp3
             long time;
             string text;
             string cr = "\r\n";
+            int iParagraph;
+            int iLineFeed;
+
 
             List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
             List<List<keffect.KaraokeEffect.kSyncText>> lSyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
@@ -2698,23 +2724,54 @@ namespace Karaboss.Mp3
                 time = Convert.ToInt32(dgView.Rows[i].Cells[COL_MS].Value);
                 text = dgView.Rows[i].Cells[COL_TEXT].Value.ToString();
 
-                // If start of line
-                if (text.IndexOf(m_SepLine) != -1)
+                iLineFeed = text.IndexOf(m_SepLine);
+                iParagraph = text.IndexOf(m_SepParagraph);
+
+                
+                // If paragraph
+                // Create 2 lines: an empty line + a line
+                if (iParagraph != -1)
                 {
+                    // Save previous
                     if (SyncLine.Count > 0)
                         lSyncLyrics.Add(SyncLine);
+
+                    // 1. add empty line for the first cr
+                    SyncLine = new List<keffect.KaraokeEffect.kSyncText>();                    
+                    kst = new keffect.KaraokeEffect.kSyncText(time, "");
+                    SyncLine.Add(kst);
+                    lSyncLyrics.Add(SyncLine);
+
+                    //2. create new line
                     SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
 
-                    text = text.Replace(m_SepLine, "");
+                    // new item with cr for the second cr
+                    text = text.Replace(m_SepParagraph, "");
                     text = cr + text;
 
                 }
+                // If linefeed
+                else if (iLineFeed != -1)
+                {
+                    // Save previous
+                    if (SyncLine.Count > 0)
+                        lSyncLyrics.Add(SyncLine);
+                    
+                    // Create new line
+                    SyncLine = new List<keffect.KaraokeEffect.kSyncText>();                   
+                    
+                    // new item with cr
+                    text = text.Replace(m_SepLine, "");                    
+                    text = cr + text;
+                }                
 
+                // Add new item to the current line 
                 text = text.Replace("_", " ");
                 kst = new keffect.KaraokeEffect.kSyncText(time, text);
                 SyncLine.Add(kst);
             }
 
+            // Save last line
             if (SyncLine.Count > 0)
                 lSyncLyrics.Add(SyncLine);
 
@@ -2911,12 +2968,17 @@ namespace Karaboss.Mp3
                 return;
 
             int Row = dgView.CurrentRow.Index;
-            long time = 0;
+            double time = 0;
             string lyric;
+            string sTime = string.Empty; ;
+
+            if (dgView.Rows[Row].Cells[COL_TIME].Value != null)
+                sTime = dgView.Rows[Row].Cells[COL_TIME].Value.ToString();
+
 
             if (dgView.Rows[Row].Cells[COL_MS].Value != null && IsNumeric(dgView.Rows[Row].Cells[COL_MS].Value.ToString()))
             {
-                time = Convert.ToInt32(dgView.Rows[Row].Cells[COL_MS].Value);
+                time = double.Parse(dgView.Rows[Row].Cells[COL_MS].Value.ToString());
             }
 
             if (sep == "cr")
@@ -2925,7 +2987,7 @@ namespace Karaboss.Mp3
                 lyric = m_SepParagraph;
 
             // time, type, note, text, text
-            dgView.Rows.Insert(Row, time, lyric);
+            dgView.Rows.Insert(Row, time, sTime, lyric);
 
 
             //Load modification into local list of lyrics

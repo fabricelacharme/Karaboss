@@ -118,6 +118,24 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>54, 20</value>
+  </data>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;Fichier</value>
+  </data>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 20</value>
+  </data>
+  <data name="mnuEdit.Text" xml:space="preserve">
+    <value>&amp;Edition</value>
+  </data>
+  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 20</value>
+  </data>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Aide</value>
+  </data>
   <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
     <value>116, 22</value>
   </data>
@@ -133,12 +151,6 @@
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
   </data>
-  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>54, 20</value>
-  </data>
-  <data name="mnuFile.Text" xml:space="preserve">
-    <value>&amp;Fichier</value>
-  </data>
   <data name="mnuEditLyrics.Size" type="System.Drawing.Size, System.Drawing">
     <value>162, 22</value>
   </data>
@@ -148,35 +160,32 @@
   <data name="mnuEditLRCGenerator.Size" type="System.Drawing.Size, System.Drawing">
     <value>162, 22</value>
   </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 20</value>
-  </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>&amp;Edition</value>
-  </data>
   <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
     <value>131, 22</value>
   </data>
   <data name="mnuHelpAbout.Text" xml:space="preserve">
     <value>&amp;A propos...</value>
   </data>
-  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>43, 20</value>
+  <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 24</value>
   </data>
-  <data name="mnuHelp.Text" xml:space="preserve">
-    <value>&amp;Aide</value>
+  <data name="btnDeleteAllLyrics.Text" xml:space="preserve">
+    <value>&amp;Supprimer les paroles</value>
   </data>
-  <data name="mnuImportLrcFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>245, 26</value>
+  <data name="btnSave.Text" xml:space="preserve">
+    <value>&amp;Enregistrer les paroles dans le fichier mp3</value>
   </data>
-  <data name="mnuImportLrcFile.Text" xml:space="preserve">
-    <value>Importer un fichier .LRC</value>
+  <data name="btnInsertParagraph.Text" xml:space="preserve">
+    <value>Nouveau paragraphe (\)</value>
   </data>
-  <data name="mnuImportRawLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>245, 26</value>
+  <data name="btnInsertCr.Text" xml:space="preserve">
+    <value>Retour à la ligne (/)</value>
   </data>
-  <data name="mnuImportRawLyrics.Text" xml:space="preserve">
-    <value>Importer des paroles</value>
+  <data name="btnInsertText.Text" xml:space="preserve">
+    <value>&amp;Inserer une ligne</value>
+  </data>
+  <data name="btnDelete.Text" xml:space="preserve">
+    <value>&amp;Supprimer la ligne</value>
   </data>
   <data name="mnuImport.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -198,18 +207,6 @@
   </data>
   <data name="mnuImport.Text" xml:space="preserve">
     <value>Importer</value>
-  </data>
-  <data name="mnuExportLRCMeta.Size" type="System.Drawing.Size, System.Drawing">
-    <value>360, 26</value>
-  </data>
-  <data name="mnuExportLRCMeta.Text" xml:space="preserve">
-    <value>Exporter en .LRC avec les métadonnées)</value>
-  </data>
-  <data name="mnuExportLrcNoMeta.Size" type="System.Drawing.Size, System.Drawing">
-    <value>360, 26</value>
-  </data>
-  <data name="mnuExportLrcNoMeta.Text" xml:space="preserve">
-    <value>Exporter en .LRC (sans les métadonnées)</value>
   </data>
   <data name="mnuExport.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -247,7 +244,37 @@
         nOccAdABIDXXE1nzAAAAAElFTkSuQmCC
 </value>
   </data>
+  <data name="btnSwitchSyncEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>182, 25</value>
+  </data>
+  <data name="btnSwitchSyncEdit.Text" xml:space="preserve">
+    <value>Passer en mode synchro</value>
+  </data>
   <data name="toolstrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>334, 28</value>
+    <value>359, 28</value>
+  </data>
+  <data name="mnuImportLrcFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 26</value>
+  </data>
+  <data name="mnuImportLrcFile.Text" xml:space="preserve">
+    <value>Importer un fichier .LRC</value>
+  </data>
+  <data name="mnuImportRawLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 26</value>
+  </data>
+  <data name="mnuImportRawLyrics.Text" xml:space="preserve">
+    <value>Importer des paroles</value>
+  </data>
+  <data name="mnuExportLRCMeta.Size" type="System.Drawing.Size, System.Drawing">
+    <value>360, 26</value>
+  </data>
+  <data name="mnuExportLRCMeta.Text" xml:space="preserve">
+    <value>Exporter en .LRC avec les métadonnées)</value>
+  </data>
+  <data name="mnuExportLrcNoMeta.Size" type="System.Drawing.Size, System.Drawing">
+    <value>360, 26</value>
+  </data>
+  <data name="mnuExportLrcNoMeta.Text" xml:space="preserve">
+    <value>Exporter en .LRC (sans les métadonnées)</value>
   </data>
 </root>

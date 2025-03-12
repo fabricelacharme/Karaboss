@@ -947,6 +947,7 @@ namespace Karaboss
                 iParagraph = plElement.LastIndexOf(_InternalSepParagraphs);
                 iLineFeed = plElement.LastIndexOf(_InternalSepLines);                
 
+                // If paragraph
                 if (iParagraph == 0 || (plElement.Length > _InternalSepParagraphs.Length && iParagraph == plElement.Length - _InternalSepParagraphs.Length))
                 {
                     tx += "\r\n\r\n";
@@ -958,6 +959,7 @@ namespace Karaboss
                             reste = plElement.Substring(0, iParagraph);
                     }
                 }
+                // If Linefeed
                 else if (iLineFeed == 0 || (plElement.Length > _InternalSepLines.Length && iLineFeed == plElement.Length - _InternalSepLines.Length))
                 {
                     tx += "\r\n";
