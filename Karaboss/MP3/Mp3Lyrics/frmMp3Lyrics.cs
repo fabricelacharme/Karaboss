@@ -40,10 +40,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using keffect;
 using static keffect.KaraokeEffect;
-using TagLib.Mpeg4;
-using System.Xml.Linq;
 
 namespace Karaboss.Mp3
 {    
@@ -226,8 +223,7 @@ namespace Karaboss.Mp3
                 if (value != _bForceUppercase)
                 {
                     _bForceUppercase = value;
-                    karaokeEffect1.bforceUppercase = _bForceUppercase;
-                    //LoadSong(myLyricsMgmt.plLyrics);
+                    karaokeEffect1.bforceUppercase = _bForceUppercase;                    
                 }
             }
         }
@@ -370,6 +366,8 @@ namespace Karaboss.Mp3
             AddMouseMoveHandler(this);
 
             LoadOptions();
+
+            SetOptions();
         }
 
         /// <summary>
@@ -380,15 +378,11 @@ namespace Karaboss.Mp3
             try
             {
                 _karaokeFont = Properties.Settings.Default.KaraokeFont;
-                karaokeEffect1.KaraokeFont = _karaokeFont;
-                //karaokeEffect1.bShowParagraphs = Karaclass.m_ShowParagraph;
-
-                karaokeEffect1.timerIntervall = _timerintervall;
 
                 bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;
 
                 // Force Uppercase
-                _bForceUppercase = Karaclass.m_ForceUppercase;               
+               bForceUppercase = Karaclass.m_ForceUppercase;               
 
                 string bgOption = Properties.Settings.Default.BackGroundOption;
                 switch (bgOption)
@@ -453,6 +447,13 @@ namespace Karaboss.Mp3
             }
         }
 
+        private void SetOptions()
+        {
+            karaokeEffect1.nbLyricsLines = _nbLyricsLines;
+            karaokeEffect1.KaraokeFont = _karaokeFont;
+            karaokeEffect1.timerIntervall = _timerintervall;
+
+        }
 
         /// <summary>
         /// Load lyrics from Mp3LyricsMgmtHelper.SyncTexts

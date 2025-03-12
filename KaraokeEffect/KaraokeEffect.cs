@@ -776,6 +776,18 @@ namespace keffect
             if (_FirstLineToShow < Texts.Count())
             {
                 x0 = HCenterText(Texts[_FirstLineToShow]);      // Center horizontally
+
+                #region background of syllabe                              
+                if (_bTextBackGround)
+                {
+                    Wbg = (int)(1.04*LinesLengths[_FirstLineToShow]);
+                    // Black background to make text more visible
+                    Rbg = new RectangleF((int)(0.94*x0), (int)(1.04*y0), Wbg, _lineHeight);
+                    // background
+                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+                }
+                #endregion
+
                 path.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
             }
 
@@ -835,7 +847,7 @@ namespace keffect
             // NEXT LINES
             // 4. Draw and color all lines from _linedeb + 1 to _linefin in white
             // We want to display only a few number of lines (variable _nbLyricsLines = number of lines to display)  
-            // linedeb which is the current line is displayed in the next paragraph
+            // linedeb which is the current line is displayed in the previous paragraph
             // ======================================================================================================
             path = new GraphicsPath();
 
@@ -848,9 +860,9 @@ namespace keffect
                     #region background of syllabe                              
                     if (_bTextBackGround)
                     {
-                        Wbg = (int)LinesLengths[i];
+                        Wbg = (int)(1.04*LinesLengths[i]);
                         // Black background to make text more visible
-                        Rbg = new RectangleF(x0, y0 + (i - _FirstLineToShow) * _lineHeight, Wbg, _lineHeight);
+                        Rbg = new RectangleF((int)(0.94*x0), (int)(1.04 * y0) + (i - _FirstLineToShow) * _lineHeight, Wbg, _lineHeight);
                         // background
                         e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
                     }

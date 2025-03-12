@@ -647,6 +647,9 @@
     <EmbeddedResource Include="Mp3\Mp3Lyrics\frmMp3LyricsEdit.resx">
       <DependentUpon>frmMp3LyricsEdit.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Mp3\Mp3Lyrics\frmMp3LyrOptions.fr.resx">
+      <DependentUpon>frmMp3LyrOptions.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Mp3\Mp3Lyrics\frmMp3LyrOptions.resx">
       <DependentUpon>frmMp3LyrOptions.cs</DependentUpon>
       <SubType>Designer</SubType>

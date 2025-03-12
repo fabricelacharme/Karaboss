@@ -1,16 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Karaboss.Mp3.Mp3Lyrics;
-using keffect;
-using TagLib.Mpeg4;
 
 namespace Karaboss.Mp3
 {
@@ -62,6 +55,10 @@ namespace Karaboss.Mp3
         // Contour color
         private bool bColorContour = true;
         private Color TxtContourColor;
+
+
+        // Background
+        private bool bTextBackGround = false;
 
         // Force Uppercase
         private bool bForceUppercase = false;
@@ -209,8 +206,9 @@ namespace Karaboss.Mp3
                 bForceUppercase = Karaclass.m_ForceUppercase;
 
                 TxtBackColor = Properties.Settings.Default.TxtBackColor;
-                
-                
+
+                bTextBackGround =  bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
+
                 // Lyrics Colors
                 TxtNextColor = Properties.Settings.Default.TxtNextColor;
                 TxtHighlightColor = Properties.Settings.Default.TxtHighlightColor;
@@ -316,6 +314,7 @@ namespace Karaboss.Mp3
                 TxtContourColor = Color.Black;
                 _nbLyricsLines = 3;
                 bColorContour = true;
+                bTextBackGround = false;
 
                 dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName) + "\\slideshow";
 
@@ -345,6 +344,7 @@ namespace Karaboss.Mp3
 
                 chkContour.Checked = bColorContour;
                 pictContour.BackColor = TxtContourColor;
+                
 
                 pictHighlight.BackColor = TxtHighlightColor;
                 pictNext.BackColor = TxtNextColor;
@@ -363,6 +363,8 @@ namespace Karaboss.Mp3
                 karaokeEffect1.FreqDirSlideShow = freqSlideShow;
                 karaokeEffect1.nbLyricsLines = _nbLyricsLines;                
 
+                // Lyrics background
+                karaokeEffect1.bTextBackGround = bTextBackGround;
 
                 karaokeEffect1.TxtBackColor = TxtBackColor;
 
