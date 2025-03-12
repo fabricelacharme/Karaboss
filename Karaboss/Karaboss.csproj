@@ -223,7 +223,6 @@
       <DependentUpon>frmMp3Player.cs</DependentUpon>
     </Compile>
     <Compile Include="Mp3\Mp3Lyrics\Mp3LyricsMgmt.cs" />
-    <Compile Include="Mp3\Mp3Player\ListViewEx.cs" />
     <Compile Include="Mp3\Mp3Player\Mp3Player.cs" />
     <Compile Include="Utilities\Forms\FormUtilities.cs" />
     <Compile Include="Utilities\IO\Files.cs" />
@@ -942,6 +941,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\mp3.ico" />
     <None Include="Resources\witch2.png" />
     <None Include="Resources\mp3-logo-200.png" />
     <None Include="Resources\MaxOver.png" />
@@ -964,6 +964,7 @@
     <None Include="Resources\D.png" />
     <None Include="Resources\checkgreen24.png" />
     <None Include="Resources\checkgreen16.png" />
+    <None Include="Resources\gear.ico" />
     <Content Include="Resources\Ico\mml.ico" />
     <None Include="Resources\Media-Controls-Skip-To-Start-icon.png" />
     <None Include="Resources\Media-Controls-Skip-To-End-icon.png" />

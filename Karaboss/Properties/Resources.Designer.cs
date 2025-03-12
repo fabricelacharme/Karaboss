@@ -921,6 +921,16 @@ namespace Karaboss.Properties {
         }
         
         /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+        /// </summary>
+        internal static System.Drawing.Icon gear {
+            get {
+                object obj = ResourceManager.GetObject("gear", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap help {
@@ -1106,6 +1116,16 @@ namespace Karaboss.Properties {
         internal static System.Drawing.Icon mml {
             get {
                 object obj = ResourceManager.GetObject("mml", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+        /// </summary>
+        internal static System.Drawing.Icon mp3 {
+            get {
+                object obj = ResourceManager.GetObject("mp3", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

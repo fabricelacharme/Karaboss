@@ -1663,5 +1663,17 @@ namespace Karaboss.Properties {
                 this["frmMp3PlayerSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool bExportMetadata {
+            get {
+                return ((bool)(this["bExportMetadata"]));
+            }
+            set {
+                this["bExportMetadata"] = value;
+            }
+        }
     }
 }

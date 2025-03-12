@@ -44,12 +44,7 @@ using Karaboss.Resources.Localization;
 using Karaboss.Lrc.SharedFramework;
 using Karaboss.MidiLyrics;
 using Karaboss.Utilities;
-using static Karaboss.Karaclass;
-using System.Text;
 using Karaboss.Mp3.Mp3Lyrics;
-using System.Web;
-using System.Diagnostics.Eventing.Reader;
-using TextPlayer.MML;
 
 
 namespace Karaboss

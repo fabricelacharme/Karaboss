@@ -348,7 +348,7 @@
             this.karaokeEffect1.bTextBackGround = false;
             this.karaokeEffect1.FreqDirSlideShow = 10;
             this.karaokeEffect1.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 65.33334F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 61.33333F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             resources.ApplyResources(this.karaokeEffect1, "karaokeEffect1");
             this.karaokeEffect1.m_Alpha = 255;
             this.karaokeEffect1.m_CurrentImage = null;
@@ -362,6 +362,7 @@
             this.karaokeEffect1.StepPercent = 0.01F;
             this.karaokeEffect1.SyncLine = ((System.Collections.Generic.List<keffect.KaraokeEffect.kSyncText>)(resources.GetObject("karaokeEffect1.SyncLine")));
             this.karaokeEffect1.SyncLyrics = ((System.Collections.Generic.List<System.Collections.Generic.List<keffect.KaraokeEffect.kSyncText>>)(resources.GetObject("karaokeEffect1.SyncLyrics")));
+            this.karaokeEffect1.timerIntervall = ((long)(50));
             this.karaokeEffect1.TransitionEffect = keffect.KaraokeEffect.TransitionEffects.Progressive;
             this.karaokeEffect1.TransparencyKey = System.Drawing.Color.Lime;
             this.karaokeEffect1.TxtAlreadyPlayedColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(51)))));

@@ -95,6 +95,12 @@ namespace Karaboss
             get { return _LrcMillisecondsDigits; }
         }
 
+
+        public bool bSaveMetadata
+        {
+            get { return chkMetadata.Checked; }
+        }
+
         #endregion properties
 
 
@@ -132,6 +138,10 @@ namespace Karaboss
 
                 chkCutLines.Checked = Properties.Settings.Default.bLrcCutLines;
                 UpdCutLines.Value = Properties.Settings.Default.LrcCutLinesChars;
+
+                // Export Metadata
+                chkMetadata.Checked = Properties.Settings.Default.bExportMetadata;
+
 
                 _LrcMillisecondsDigits = Properties.Settings.Default.LrcMillisecondsDigits;
                 OptFormat2Digits.Checked = _LrcMillisecondsDigits == 2;
@@ -282,6 +292,11 @@ namespace Karaboss
                 _LrcMillisecondsDigits = 3;
             else
                 _LrcMillisecondsDigits = 2;
+        }
+
+        private void chkMetadata_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

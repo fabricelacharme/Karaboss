@@ -413,5 +413,8 @@
     <Setting Name="frmMp3PlayerSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">600, 600</Value>
     </Setting>
+    <Setting Name="bExportMetadata" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
