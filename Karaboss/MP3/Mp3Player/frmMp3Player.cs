@@ -1006,6 +1006,9 @@ namespace Karaboss.Mp3
         public void DisplayMp3EditLyricsForm()
         {
             // Display lyrics editor
+            OpenCloseLrcGenerator();
+
+            /*
             if (Application.OpenForms.OfType<frmMp3LyricsEdit>().Count() == 0)
             {
                 try
@@ -1026,6 +1029,7 @@ namespace Karaboss.Mp3
                 Application.OpenForms["frmMp3LyricsEdit"].Show();
                 Application.OpenForms["frmMp3LyricsEdit"].Activate();
             }
+            */
         }
 
         /// <summary>
