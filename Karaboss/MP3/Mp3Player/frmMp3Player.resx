@@ -812,7 +812,7 @@
     <value>272, 25</value>
   </data>
   <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 24</value>
+    <value>24, 80</value>
   </data>
   <data name="sldMainVolume.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -1613,7 +1613,7 @@
     <value>0</value>
   </data>
   <data name="lblMode.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Arial Narrow, 14.25pt</value>
+    <value>Segoe UI, 14.25pt</value>
   </data>
   <data name="lblMode.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
