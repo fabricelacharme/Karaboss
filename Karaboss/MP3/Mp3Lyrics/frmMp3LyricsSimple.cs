@@ -1,17 +1,39 @@
 ﻿using System.Drawing;
+using System.Web;
 using System.Windows.Forms;
 
 namespace Karaboss.Mp3
 {
     public partial class frmMp3LyricsSimple : Form
     {
-        public frmMp3LyricsSimple()
+        string _title;
+        public frmMp3LyricsSimple(string Title)
         {
             InitializeComponent();
+
+            _title = Title;
+            SetTitle(_title);
         }
 
+        /// <summary>
+        /// Set Title of form
+        /// </summary>
+        /// <param name="title"></param>
+        private void SetTitle(string title)
+        {
+            Text = "Karaboss - " + title.Trim();
+        }
+
+        /// <summary>
+        /// Display lyrics
+        /// </summary>
+        /// <param name="tx"></param>
         public void DisplayText(string tx)
         {
+            if (tx.IndexOf("\r\n") == -1)
+            {
+                tx = tx.Replace("\n", "\r\n");
+            }
             this.txtLyrics.Text = tx;
         }
 

@@ -24,13 +24,26 @@ namespace Karaboss.Mp3
         #endregion events
 
   
-        private string _FileName;
+        //private string _FileName;
         private int _stream;
         private bool mBassInitalized;
 
 
         #region properties
-        
+
+        private string _FileName;
+        public string FileName
+        {
+            get { return _FileName; }
+            set 
+            {                 
+                _FileName = value;
+                if (mBassInitalized)
+                    Load(_FileName);        
+            }
+        }
+
+
         // Image of song
         private Image _albumartimage;
         public Image AlbumArtImage { get { return _albumartimage; } }
@@ -75,13 +88,19 @@ namespace Karaboss.Mp3
             if (!InitBass()) return;            
         }
 
-        public Mp3Player(string FileName)
+        public Mp3Player(string fileName)
         {
-            _FileName = FileName;
+            // NEW
+            if (!InitBass()) return;
+
+            FileName = fileName;
+            
+            /*
             if (InitBass())
             {                
                 Load(_FileName);
             }
+            */
         }
 
 
@@ -172,25 +191,46 @@ namespace Karaboss.Mp3
         /// </summary>
         public void Play(string FileName)
         {
-            Stop();
+            Stop();            
+            Load(FileName);
 
-            //if (InitBass())
-            //{
-                Load(FileName);
-
-                if (_stream != 0)
+            if (_stream != 0)
+            {
+                try
                 {
-                    try
-                    {
-                        bool success = Bass.BASS_ChannelPlay(_stream, false);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("*** Unsucessful play: " + ex.Message, "Karaboss" ,MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    }
+                    bool success = Bass.BASS_ChannelPlay(_stream, false);
                 }
-            //}
+                catch (Exception ex)
+                {
+                    MessageBox.Show("*** Unsucessful play: " + ex.Message, "Karaboss" ,MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                }
+            }
+            else
+            {
+                MessageBox.Show("Unable to play, stream = 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+           
+        }
+
+        public void Play()
+        {
+            if (_stream != 0)
+            {
+                try
+                {
+                    bool success = Bass.BASS_ChannelPlay(_stream, false);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("*** Unsucessful play: " + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                }
+            }
+            else
+            {
+                MessageBox.Show("Unable to play, stream = 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>

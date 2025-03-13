@@ -40,6 +40,7 @@ using System.Windows.Forms;
 using TagLib;
 using TagLib.Id3v2;
 using keffect;
+using AzLyrics.Api;
 
 namespace Karaboss.Mp3.Mp3Lyrics
 {
@@ -337,10 +338,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
             // Search for existing LRC file
             string lrcFile = Path.ChangeExtension(FileName, ".lrc");
             if (!System.IO.File.Exists(lrcFile)) return null;
-
-            //SyncText[] synchedTexts;
+            
             string line;
-
             string lyric = string.Empty;
             long time;
             string stime = string.Empty;
@@ -462,6 +461,41 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
             return SyncLyrics;
         }
+
+
+        /// <summary>
+        /// Create SyncLyrics from a string
+        /// </summary>
+        /// <param name="TagLyrics"></param>
+        /// <returns></returns>
+        public static List<List<keffect.KaraokeEffect.kSyncText>> GetKEffectStringLyrics(string TagLyrics)
+        {
+            if (TagLyrics == null || TagLyrics == "") return null;
+
+            string cr = Environment.NewLine;
+            string[] lines = TagLyrics.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            string line;
+            List<keffect.KaraokeEffect.kSyncText> SyncLine;
+            List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
+            long time;
+            string text;
+
+            for (int i = 0; i < lines.Count(); i++)
+            {
+                line = lines[i].Trim();
+
+                time = 0;
+                text = cr + line;                
+                SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+                SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, text));
+
+                SyncLyrics.Add(SyncLine );
+            }
+
+            return SyncLyrics;
+        }
+
+
 
         #endregion get synched lyrics
 

@@ -28,19 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMp3LyricsSimple));
             this.txtLyrics = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // txtLyrics
             // 
             this.txtLyrics.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtLyrics.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLyrics.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtLyrics.Location = new System.Drawing.Point(0, 0);
             this.txtLyrics.Multiline = true;
             this.txtLyrics.Name = "txtLyrics";
             this.txtLyrics.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtLyrics.Size = new System.Drawing.Size(800, 450);
             this.txtLyrics.TabIndex = 0;
+            this.txtLyrics.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // frmMp3LyricsSimple
             // 
@@ -48,6 +50,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.txtLyrics);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMp3LyricsSimple";
             this.Text = "frmMp3Lyrics";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMp3LyricsSimple_FormClosing);
