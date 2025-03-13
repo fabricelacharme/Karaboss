@@ -1,4 +1,6 @@
-﻿namespace Karaboss.Mp3.Mp3Lyrics
+﻿using System;
+
+namespace Karaboss.Mp3.Mp3Lyrics
 {
     partial class frmMp3LyricsEdit
     {
@@ -526,6 +528,11 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        private void mnuExportLRCMeta_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

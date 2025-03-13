@@ -42,14 +42,16 @@
             this.txtLyrics.Size = new System.Drawing.Size(800, 450);
             this.txtLyrics.TabIndex = 0;
             // 
-            // frmMp3Lyrics
+            // frmMp3LyricsSimple
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.txtLyrics);
-            this.Name = "frmMp3Lyrics";
+            this.Name = "frmMp3LyricsSimple";
             this.Text = "frmMp3Lyrics";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMp3LyricsSimple_FormClosing);
+            this.Load += new System.EventHandler(this.frmMp3LyricsSimple_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -880,7 +880,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool bPauseBetweenSongs {
             get {
                 return ((bool)(this["bPauseBetweenSongs"]));
@@ -1673,6 +1673,42 @@ namespace Karaboss.Properties {
             }
             set {
                 this["bExportMetadata"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point frmMp3LyricsSimpleLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["frmMp3LyricsSimpleLocation"]));
+            }
+            set {
+                this["frmMp3LyricsSimpleLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmMp3LyricsSimpleMaximized {
+            get {
+                return ((bool)(this["frmMp3LyricsSimpleMaximized"]));
+            }
+            set {
+                this["frmMp3LyricsSimpleMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600, 600")]
+        public global::System.Drawing.Size frmMp3LyricsSimpleSize {
+            get {
+                return ((global::System.Drawing.Size)(this["frmMp3LyricsSimpleSize"]));
+            }
+            set {
+                this["frmMp3LyricsSimpleSize"] = value;
             }
         }
     }

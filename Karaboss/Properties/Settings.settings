@@ -216,7 +216,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="bPauseBetweenSongs" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="CountdownSongs" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
@@ -415,6 +415,15 @@
     </Setting>
     <Setting Name="bExportMetadata" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="frmMp3LyricsSimpleLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="frmMp3LyricsSimpleMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="frmMp3LyricsSimpleSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">600, 600</Value>
     </Setting>
   </Settings>
 </SettingsFile>

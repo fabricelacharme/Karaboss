@@ -1345,11 +1345,13 @@ namespace Karaboss
                 dgView.Columns[0].HeaderText = "Ticks";
                 dgView.Columns[0].ToolTipText = "Number of ticks";
                 dgView.Columns[0].Width = 70;
+                dgView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
                 dgView.Columns[1].Name = "dRealTime";
                 dgView.Columns[1].HeaderText = "Time";
                 dgView.Columns[1].ToolTipText = "Time";
-                dgView.Columns[0].Width = 80;
+                dgView.Columns[1].Width = 80;
+                dgView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
                 dgView.Columns[2].Name = "dType";
                 dgView.Columns[2].HeaderText = "Type";
@@ -1375,11 +1377,13 @@ namespace Karaboss
                 dgView.Columns[0].HeaderText = "Ticks";
                 dgView.Columns[0].ToolTipText = "Number of ticks";
                 dgView.Columns[0].Width = 70;
+                dgView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
                 dgView.Columns[1].Name = "dRealTime";
                 dgView.Columns[1].HeaderText = "Time";
                 dgView.Columns[1].ToolTipText = "Time";
                 dgView.Columns[1].Width = 80;
+                dgView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
                 dgView.Columns[2].Name = "dType";
                 dgView.Columns[2].HeaderText = "Type";

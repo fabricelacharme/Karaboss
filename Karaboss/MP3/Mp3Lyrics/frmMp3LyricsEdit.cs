@@ -38,15 +38,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Text.RegularExpressions;
-using System.Text;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Linq;
 using TagLib;
 using TagLib.Id3v2;
-using System.Reflection;
 
 namespace Karaboss.Mp3.Mp3Lyrics
 {
@@ -1712,11 +1706,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
             SetLrcMode();
         }
 
-
-
-
-
-        #endregion lrc generator
+        
 
         /// <summary>
         /// Import an LRC file
@@ -1818,14 +1808,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
             }
         }
 
-        private void mnuExportLRCMeta_Click(object sender, EventArgs e)
-        {
 
-        }
+        #endregion lrc generator
 
-        private void mnuExportLrcNoMeta_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

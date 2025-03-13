@@ -98,8 +98,11 @@ namespace Karaboss.Mp3.Mp3Lyrics
             string lrcFile;
 
             if (SyncLyricsFrame != null && SyncLyricsFrame.Text.Count() > 0)
+            {
+                //m_mp3lyricstype = Mp3LyricsTypes.LyricsWithTimeStamps;
                 return Mp3LyricsTypes.LyricsWithTimeStamps;
-            
+            }
+
             if (lType == Mp3LyricsTypes.None) { 
                 lrcFile = Path.ChangeExtension(FileName, ".lrc");
                 if (System.IO.File.Exists(lrcFile))
