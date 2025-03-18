@@ -24,7 +24,7 @@ namespace Karaboss.Mp3
         #endregion events
 
   
-        //private string _FileName;
+        
         private int _stream;
         private bool mBassInitalized;
 

@@ -209,6 +209,11 @@ namespace Karaboss
             return Regex.IsMatch(filename, "^.+(\\.txt)$", RegexOptions.IgnoreCase);
         }
 
+        public static bool IsMp3(string filename)
+        {
+            return Regex.IsMatch(filename, "^.+(\\.mp3)$", RegexOptions.IgnoreCase);
+        }
+
         public static bool IsMidiExtension(string f)
         {
             if (f == null || f == "")

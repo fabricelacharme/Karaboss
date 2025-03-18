@@ -240,7 +240,8 @@ namespace AudioControl
         // int nProcessID = Process.GetCurrentProcess().Id;
         public static float? GetApplicationMasterPeakVolume(int pid)
         {
-            IAudioMeterInformation masterpeakvol = GetMasterPeakVolume(pid);
+            IAudioMeterInformation masterpeakvol = GetMasterPeakVolume(pid);            
+
             if (masterpeakvol == null)
                 return null;
 

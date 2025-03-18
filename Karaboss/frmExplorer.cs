@@ -59,7 +59,7 @@ namespace Karaboss
     {
 
         MusicXmlReader MXmlReader = new MusicXmlReader();
-        MusicTxtReader MTxtReader; //= new MusicTxtReader();
+        MusicTxtReader MTxtReader; 
 
         #region configuration
         private ConfigurationForm m_configurationForm;
@@ -252,6 +252,11 @@ namespace Karaboss
 
 
         #region sideBarControl events
+
+        public void NavigateTo(string strPath, string file)
+        {
+            xplorerControl.Navigate(strPath, file);
+        }
 
         /// <summary>
         /// Display Home folder
@@ -1016,7 +1021,8 @@ namespace Karaboss
                 tx = "";
                 for (i = 0; i < sequence1.KTag.Count; i++)
                 {
-                    tx += sequence1.KTag[i] + cr;
+                    if (sequence1.KTag[i] != null)
+                        tx += sequence1.KTag[i] + cr;
                 }
                 MidiInfos.KTags = tx;
             }
@@ -1027,7 +1033,8 @@ namespace Karaboss
                 tx = "";
                 for (i = 0; i < sequence1.VTag.Count; i++)
                 {
-                    tx += sequence1.VTag[i] + cr;
+                    if (sequence1.VTag[i] != null)
+                        tx += sequence1.VTag[i] + cr;
                 }
                 MidiInfos.VTags = tx;
             }
@@ -1038,7 +1045,8 @@ namespace Karaboss
                 tx = "";
                 for (i = 0; i < sequence1.LTag.Count; i++)
                 {
-                    tx += sequence1.LTag[i] + cr;
+                    if (sequence1.LTag[i] != null)
+                        tx += sequence1.LTag[i] + cr;
                 }
                 MidiInfos.LTags = tx;
             }
@@ -1049,7 +1057,8 @@ namespace Karaboss
                 tx = "";
                 for (i = 0; i < sequence1.WTag.Count; i++)
                 {
-                    tx += sequence1.WTag[i] + cr;
+                    if (sequence1.WTag[i] != null)
+                        tx += sequence1.WTag[i] + cr;
                 }
                 MidiInfos.WTags = tx;
             }
@@ -1060,7 +1069,8 @@ namespace Karaboss
                 tx = "";
                 for (i = 0; i < sequence1.TTag.Count; i++)
                 {
-                    tx += sequence1.TTag[i].Replace('\n', ' ').Replace('\r', ' ') + cr;
+                    if (sequence1.TTag[i] != null)
+                        tx += sequence1.TTag[i].Replace('\n', ' ').Replace('\r', ' ') + cr;
                 }
                 MidiInfos.TTags = tx;
             }
@@ -1071,7 +1081,8 @@ namespace Karaboss
                 tx = "";
                 for (i = 0; i < sequence1.ITag.Count; i++)
                 {
-                    tx += sequence1.ITag[i].Replace('\n', ' ').Replace('\r', ' ') + cr;
+                    if (sequence1.ITag[i] != null)
+                        tx += sequence1.ITag[i].Replace('\n', ' ').Replace('\r', ' ') + cr;
                 }
                 MidiInfos.ITags = tx;
             }

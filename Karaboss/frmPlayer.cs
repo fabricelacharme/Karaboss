@@ -1,6 +1,6 @@
 #region License
 
-/* Copyright (c) 2018 Fabrice Lacharme
+/* Copyright (c) 2025 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -60,7 +60,12 @@ namespace Karaboss
 
         public bool bfilemodified = false;
 
-
+        private enum Directions
+        {
+            Forward,
+            Backward
+        }
+        private Directions _direction;
 
         #region Lyrics declaration
 
@@ -466,9 +471,85 @@ namespace Karaboss
 
         #region next
 
+       
+
+        private void playMidiSong(Directions _direction)
+        {
+            string folder;
+            int index;
+
+            // We have this information : Mp3FullPath which is the path of the file being played                
+            if (Application.OpenForms.OfType<frmExplorer>().Count() == 0) return;
+
+            frmExplorer frmExplorer = Application.OpenForms.OfType<frmExplorer>().First();
+            
+            // List of midi files filtered by extension
+            folder = Path.GetDirectoryName(MIDIfileFullPath);
+            var files = Directory
+                .EnumerateFiles(folder) //<--- .NET 4.5
+                 .Where(file => file.ToLower().EndsWith("mid") || file.ToLower().EndsWith("kar") || file.ToLower().EndsWith("xml") || file.ToLower().EndsWith("mxl"))
+                 .ToList();
+
+            if (!files.Contains(MIDIfileFullPath)) return;
+            index = files.IndexOf(MIDIfileFullPath);
+
+            try
+            {
+                switch (_direction)
+                {
+                    // Next file
+                    case Directions.Forward:
+                        if (index >= files.Count - 1) return;
+                        MIDIfileFullPath = files[index + 1];
+                        break;
+
+                    // Previous file
+                    case Directions.Backward:
+                        if (index == 0) return;
+                        MIDIfileFullPath = files[index - 1];
+                        break;
+
+                }
+
+                // Stop player
+                StopMusic();
+
+                // Select new file in the explorer
+                MIDIfileName = Path.GetFileName(MIDIfileFullPath);
+                string path = Path.GetDirectoryName(MIDIfileFullPath);
+                path = "file:///" + path.Replace("\\", "/");
+                frmExplorer.NavigateTo(path, MIDIfileName);
+
+                // Update display
+                SetTitle(MIDIfileFullPath);
+
+                // Unload frmLyric
+                // Ferme le formulaire frmLyric
+                if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+                {
+                    frmLyric.Close();                
+                }
+
+                // Play file
+                SelectFileToLoadAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                StopMusic();
+            }
+        }
+
         private void BtnNext_Click(object sender, EventArgs e)
         {
-            PlayNextSong();
+            if (currentPlaylist == null)
+            {
+                playMidiSong(Directions.Forward);
+            }
+            else
+            {
+                PlayNextSong();
+            }
         }
 
         private void BtnNext_MouseHover(object sender, EventArgs e)
@@ -489,7 +570,14 @@ namespace Karaboss
 
         private void BtnPrev_Click(object sender, EventArgs e)
         {
-            PlayPrevSong();
+            if (currentPlaylist == null)
+            {
+                playMidiSong(Directions.Backward);
+            }
+            else
+            {
+                PlayPrevSong();
+            }
         }
 
         private void BtnPrev_MouseLeave(object sender, EventArgs e)
@@ -3188,6 +3276,7 @@ namespace Karaboss
         private void HandleSysExMessagePlayed(object sender, SysExMessageEventArgs e)
         {
             // outDevice.Send(e.Message); Sometimes causes an exception to be thrown because the output device is overloaded.
+            //Console.WriteLine("************** " + e.Message.SysExType.ToString());
         }
 
         private void HandleStopped(object sender, StoppedEventArgs e)
@@ -6264,8 +6353,26 @@ namespace Karaboss
         {
             
             float? peak = AudioControl.AudioManager.GetApplicationMasterPeakVolume(outDeviceProcessId);
+            
+            //int level = Convert.ToInt32(peak);
+            //int LeftLevel = LOWORD(level);
+            //int RightLevel = HIWORD(level);
+            //Console.WriteLine(level + " " + LeftLevel + " " + RightLevel);
+
+            //VuMasterPeakVolume.Level = level;
             VuMasterPeakVolume.Level = Convert.ToInt32(peak);
         }
+
+        private static int HIWORD(int n)
+        {
+            return (n >> 16) & 0xffff;
+        }
+
+        private static int LOWORD(int n)
+        {
+            return n & 0xffff;
+        }
+
 
         /// <summary>
         /// Initialize control peak volume level
@@ -7386,8 +7493,8 @@ namespace Karaboss
         private void Timer1_Tick(object sender, EventArgs e)
         {
             if(!scrolling)
-            {
-
+            {                
+                
                 // Display time elapse
                 double dpercent = 100 * sequencer1.Position / (double)_totalTicks;
                 double maintenant = (dpercent * _durationPercent) / 100;  //seconds                                                

@@ -43,6 +43,8 @@ using System.Linq;
 using System.Windows.Forms;
 using TagLib.Id3v2;
 using TagLib;
+using Karaboss.xplorer;
+using System.Reflection;
 
 
 
@@ -684,15 +686,108 @@ namespace Karaboss.Mp3
             StopMusic();
         }
 
-        private void btnNext_Click(object sender, EventArgs e)
+        private enum Directions
         {
-            //PlayNextSong();
-            PlayNextPlaylistSong();
+            Forward,
+            Backward
+        }
+        private Directions _direction;
+
+        /// <summary>
+        /// Play next or previous mp3 in the current directory
+        /// </summary>
+        /// <param name="_direction"></param>
+        private void PlayMp3Song(Directions _direction)
+        {
+            string folder;            
+            int index;
+
+            // We have this information : Mp3FullPath which is the path of the file being played                
+            if (Application.OpenForms.OfType<frmExplorer>().Count() == 0) return;
+            
+            frmExplorer frmExplorer = Application.OpenForms.OfType<frmExplorer>().First();
+
+            // List of mp3 files filtered by mp3 extension
+            folder = Path.GetDirectoryName(Mp3FullPath);
+            var files = Directory
+                .EnumerateFiles(folder) //<--- .NET 4.5
+                 .Where(file => file.ToLower().EndsWith("mp3"))
+                 .ToList();
+
+            if (!files.Contains(Mp3FullPath)) return;            
+            index = files.IndexOf(Mp3FullPath);
+
+            try
+            {
+                switch (_direction)
+                {
+                    // Next file
+                    case Directions.Forward:
+                        if (index >= files.Count - 1) return;
+                        Mp3FullPath = files[index + 1];                        
+                        break;
+
+                    // Previous file
+                    case Directions.Backward:
+                        if (index == 0) return;
+                        Mp3FullPath = files[index - 1];
+                        break;
+
+                }
+
+                // Stop player
+                StopMusic();
+
+                // Select new file in the explorer
+                Mp3FileName = Path.GetFileName(Mp3FullPath);
+                string path = Path.GetDirectoryName(Mp3FullPath);
+                path = "file:///" + path.Replace("\\", "/");
+                frmExplorer.NavigateTo(path, Mp3FileName);
+
+                // Update display
+                SetTitle(Mp3FullPath);
+                DisplayMp3Characteristics();
+                DisplayOtherInfos(Mp3FullPath);
+                
+                // Play file
+                PlayPauseMusic();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                StopMusic();
+            }
+        }
+
+        private void btnNext_Click(object sender, EventArgs e)
+        {            
+
+            // play next song in the directory
+            if (currentPlaylist == null)
+            {
+                PlayMp3Song(Directions.Forward);               
+            }
+            else
+            {
+
+                // Play next song of the playlist
+                // if currentPlaylist completed : all stops
+                PlayNextPlaylistSong();
+            }
         }
 
         private void btnPrev_Click(object sender, EventArgs e)
-        {
-            PlayPrevSong();
+        {            
+
+            if (currentPlaylist == null)
+            {
+                PlayMp3Song(Directions.Backward);                             
+            }
+            else
+            {
+                // Playlist
+                PlayPrevSong();
+            }
         }
 
         #endregion buttons
