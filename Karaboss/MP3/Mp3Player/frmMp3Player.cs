@@ -588,14 +588,18 @@ namespace Karaboss.Mp3
             try
             {
                 PlayerState = PlayerStates.Playing;
-                
-                
+                                
                 _index = 0;  // for timestamps entering
                 lstSaveTimestamps.Clear();       // Clear timestamps 
 
                 BtnStatus();
                 ValideMenus(false);                
                 Player.Play(Mp3FullPath);
+
+                // Set Volume, frequency & transpose
+                SetInitialListenValues();
+
+
                 StartKaraoke();
                 Timer1.Start();
                 
@@ -605,6 +609,25 @@ namespace Karaboss.Mp3
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
+
+        private void SetInitialListenValues()
+        {
+            // Frequency
+            //FrequencyRatio = 100;            
+            if (FrequencyRatio != 100)
+                AdjustMp3Freq(FrequencyRatio);
+
+            // Transpose
+            //TransposeValue = 0;            
+            if (TransposeValue != 0)
+                AdjustMp3Pitch(TransposeValue);
+
+            // Volume
+            //sldMainVolume.Value = 104;            
+            if (sldMainVolume.Value != 104)
+                Player.AdjustVolume((float)sldMainVolume.Value);
+        }
+
 
         /// <summary>
         /// Stop Music player
@@ -794,6 +817,7 @@ namespace Karaboss.Mp3
 
 
         #region Tempo/freq
+
         /// <summary>
         /// Tempo/freq +
         /// </summary>
@@ -841,6 +865,26 @@ namespace Karaboss.Mp3
             Player.ChangeFrequency(amount);           
         }
 
+        private void KeyboardSelectTempo(KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Oemplus:
+                case Keys.Add:
+                    FrequencyRatio += 10;
+                    AdjustMp3Freq(FrequencyRatio);
+                    break;
+
+                case Keys.D6:
+                case Keys.OemMinus:
+                case Keys.Subtract:
+                    FrequencyRatio -= 10;
+                    AdjustMp3Freq(FrequencyRatio);
+                    break;
+            }
+        }
+
+
         #endregion Tempo/freq
 
 
@@ -881,7 +925,7 @@ namespace Karaboss.Mp3
             Player.AdjustPitch(amount);          
         }
 
-        #endregion Transpose
+        #endregion Transpose        
 
 
         #region MouseHover
@@ -1926,7 +1970,10 @@ namespace Karaboss.Mp3
             pnlEdit.Visible = true;
 
             lblHotkeys.Font = new Font("Courier New", 9);
-            lblHotkeys.Text = "<ENTER>" + " " + "Add a new timestamp" +"\r\n" + "<SPACE>" + " "+ "Pause Music" + "\r\n" + "<-" + "      " + "Stop Music";
+            lblHotkeys.Text = "<ENTER>" + " " + "Add a new timestamp" + "\r\n" + "<DEL>" + "   " + "Remove current timestamp" + "\r\n" + "<SPACE>" + " "+ "Pause Music" ;
+
+            lblHotkeysOthers.Font = lblHotkeys.Font;
+            lblHotkeysOthers.Text = "+" + "       " + "Accelerate" + "\r\n" + "-" + "       " + "Slow down" + "\r\n" + "<-" + "      " + "Stop Music";
 
             if (Player.Tag != null)
             {
@@ -1983,6 +2030,26 @@ namespace Karaboss.Mp3
             }            
         }
 
+        /// <summary>
+        /// Remove current timestamp in case we have hit ENTER too soon
+        /// </summary>
+        private void RemoveCurrentLrcTimeStamp()
+        {
+            if (PlayerState != PlayerStates.Playing || PlayerAppearance != PlayerAppearances.LrcGenerator) return;
+            if (dgView.Rows.Count == 1)
+            {
+                MessageBox.Show("Please add lyrics before entering timestamps", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            _index--;
+            dgView.Rows[_index].Cells[COL_MS].Value = "";
+            dgView.Rows[_index].Cells[COL_TIME].Value = "";
+
+            // Select line (paint in blue) and scroll
+            dgView.Rows[_index].Selected = true;
+            dgView.CurrentCell = dgView.Rows[_index].Cells[0];
+
+        }
 
         #region load lrc
 
@@ -2828,10 +2895,21 @@ namespace Karaboss.Mp3
                 case Keys.D6:
                 case Keys.Decimal:
                     // Tempo +-
-                    //KeyboardSelectTempo(e);
+                    KeyboardSelectTempo(e);
+                    break;
+
+                case Keys.Delete:
+                    if (PlayerAppearance == PlayerAppearances.LrcGenerator && PlayerState == PlayerStates.Playing)
+                    {
+                        // Remove currentline of timestamp in case we have hit ENTER too soon
+                        RemoveCurrentLrcTimeStamp();
+                    }
                     break;
             }
         }
+
+        
+
 
         /// <summary>
         /// I am able to detect alpha-numeric keys. However i am not able to detect arrow keys

@@ -45,23 +45,14 @@
             this.pnlControls = new System.Windows.Forms.Panel();
             this.pBox = new System.Windows.Forms.PictureBox();
             this.lblPlaylist = new System.Windows.Forms.Label();
-            this.btnTempoMinus = new Karaboss.Buttons.MinusButtonControl();
-            this.btnTempoPlus = new Karaboss.Buttons.PlusButtonControl();
             this.lblTempoValue = new System.Windows.Forms.Label();
             this.lblTemp = new System.Windows.Forms.Label();
-            this.btnTranspoMinus = new Karaboss.Buttons.MinusButtonControl();
-            this.btnTranspoPlus = new Karaboss.Buttons.PlusButtonControl();
             this.lblTranspoValue = new System.Windows.Forms.Label();
             this.lblTransp = new System.Windows.Forms.Label();
             this.VuPeakVolumeRight = new VU_MeterLibrary.VuMeter();
             this.VuPeakVolumeLeft = new VU_MeterLibrary.VuMeter();
             this.lblMainVolume = new System.Windows.Forms.Label();
-            this.pnlDisplay = new Karaboss.Display.PanelPlayer();
-            this.btnPrev = new Karaboss.NoSelectButton();
-            this.btnNext = new Karaboss.NoSelectButton();
             this.positionHScrollBar = new ColorSlider.ColorSlider();
-            this.btnStop = new Karaboss.NoSelectButton();
-            this.btnPlay = new Karaboss.NoSelectButton();
             this.sldMainVolume = new ColorSlider.ColorSlider();
             this.lnlVol = new System.Windows.Forms.Label();
             this.OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -104,6 +95,16 @@
             this.pnlEdit = new System.Windows.Forms.Panel();
             this.pnlSync = new System.Windows.Forms.Panel();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.lblHotkeysOthers = new System.Windows.Forms.Label();
+            this.btnTempoMinus = new Karaboss.Buttons.MinusButtonControl();
+            this.btnTempoPlus = new Karaboss.Buttons.PlusButtonControl();
+            this.btnTranspoMinus = new Karaboss.Buttons.MinusButtonControl();
+            this.btnTranspoPlus = new Karaboss.Buttons.PlusButtonControl();
+            this.pnlDisplay = new Karaboss.Display.PanelPlayer();
+            this.btnPrev = new Karaboss.NoSelectButton();
+            this.btnNext = new Karaboss.NoSelectButton();
+            this.btnStop = new Karaboss.NoSelectButton();
+            this.btnPlay = new Karaboss.NoSelectButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -255,18 +256,6 @@
             this.lblPlaylist.ForeColor = System.Drawing.Color.PaleGreen;
             this.lblPlaylist.Name = "lblPlaylist";
             // 
-            // btnTempoMinus
-            // 
-            resources.ApplyResources(this.btnTempoMinus, "btnTempoMinus");
-            this.btnTempoMinus.Name = "btnTempoMinus";
-            this.btnTempoMinus.Click += new System.EventHandler(this.btnTempoMinus_Click);
-            // 
-            // btnTempoPlus
-            // 
-            resources.ApplyResources(this.btnTempoPlus, "btnTempoPlus");
-            this.btnTempoPlus.Name = "btnTempoPlus";
-            this.btnTempoPlus.Click += new System.EventHandler(this.btnTempoPlus_Click);
-            // 
             // lblTempoValue
             // 
             this.lblTempoValue.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
@@ -279,18 +268,6 @@
             resources.ApplyResources(this.lblTemp, "lblTemp");
             this.lblTemp.ForeColor = System.Drawing.Color.White;
             this.lblTemp.Name = "lblTemp";
-            // 
-            // btnTranspoMinus
-            // 
-            resources.ApplyResources(this.btnTranspoMinus, "btnTranspoMinus");
-            this.btnTranspoMinus.Name = "btnTranspoMinus";
-            this.btnTranspoMinus.Click += new System.EventHandler(this.btnTranspoMinus_Click);
-            // 
-            // btnTranspoPlus
-            // 
-            resources.ApplyResources(this.btnTranspoPlus, "btnTranspoPlus");
-            this.btnTranspoPlus.Name = "btnTranspoPlus";
-            this.btnTranspoPlus.Click += new System.EventHandler(this.btnTranspoPlus_Click);
             // 
             // lblTranspoValue
             // 
@@ -395,41 +372,6 @@
             this.lblMainVolume.ForeColor = System.Drawing.Color.White;
             this.lblMainVolume.Name = "lblMainVolume";
             // 
-            // pnlDisplay
-            // 
-            resources.ApplyResources(this.pnlDisplay, "pnlDisplay");
-            this.pnlDisplay.Name = "pnlDisplay";
-            // 
-            // btnPrev
-            // 
-            this.btnPrev.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.btnPrev.FlatAppearance.BorderSize = 0;
-            this.btnPrev.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.btnPrev.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            resources.ApplyResources(this.btnPrev, "btnPrev");
-            this.btnPrev.Image = global::Karaboss.Properties.Resources.btn_black_prev;
-            this.btnPrev.Name = "btnPrev";
-            this.btnPrev.TabStop = false;
-            this.btnPrev.UseVisualStyleBackColor = false;
-            this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
-            this.btnPrev.MouseLeave += new System.EventHandler(this.btnPrev_MouseLeave);
-            this.btnPrev.MouseHover += new System.EventHandler(this.btnPrev_MouseHover);
-            // 
-            // btnNext
-            // 
-            this.btnNext.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.btnNext.FlatAppearance.BorderSize = 0;
-            this.btnNext.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.btnNext.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            resources.ApplyResources(this.btnNext, "btnNext");
-            this.btnNext.Image = global::Karaboss.Properties.Resources.btn_black_next;
-            this.btnNext.Name = "btnNext";
-            this.btnNext.TabStop = false;
-            this.btnNext.UseVisualStyleBackColor = false;
-            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
-            this.btnNext.MouseLeave += new System.EventHandler(this.btnNext_MouseLeave);
-            this.btnNext.MouseHover += new System.EventHandler(this.btnNext_MouseHover);
-            // 
             // positionHScrollBar
             // 
             this.positionHScrollBar.BackColor = System.Drawing.Color.Transparent;
@@ -490,36 +432,6 @@
             0,
             0});
             this.positionHScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.positionHScrollBar_Scroll);
-            // 
-            // btnStop
-            // 
-            this.btnStop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.btnStop.FlatAppearance.BorderSize = 0;
-            this.btnStop.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.btnStop.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            resources.ApplyResources(this.btnStop, "btnStop");
-            this.btnStop.Image = global::Karaboss.Properties.Resources.btn_black_stop;
-            this.btnStop.Name = "btnStop";
-            this.btnStop.TabStop = false;
-            this.btnStop.UseVisualStyleBackColor = false;
-            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
-            this.btnStop.MouseLeave += new System.EventHandler(this.btnStop_MouseLeave);
-            this.btnStop.MouseHover += new System.EventHandler(this.btnStop_MouseHover);
-            // 
-            // btnPlay
-            // 
-            this.btnPlay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.btnPlay.FlatAppearance.BorderSize = 0;
-            this.btnPlay.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.btnPlay.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            resources.ApplyResources(this.btnPlay, "btnPlay");
-            this.btnPlay.Image = global::Karaboss.Properties.Resources.btn_black_play;
-            this.btnPlay.Name = "btnPlay";
-            this.btnPlay.TabStop = false;
-            this.btnPlay.UseVisualStyleBackColor = false;
-            this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
-            this.btnPlay.MouseLeave += new System.EventHandler(this.btnPlay_MouseLeave);
-            this.btnPlay.MouseHover += new System.EventHandler(this.btnPlay_MouseHover);
             // 
             // sldMainVolume
             // 
@@ -857,9 +769,105 @@
             // pnlSync
             // 
             this.pnlSync.BackColor = System.Drawing.Color.LightGray;
+            this.pnlSync.Controls.Add(this.lblHotkeysOthers);
             this.pnlSync.Controls.Add(this.lblHotkeys);
             resources.ApplyResources(this.pnlSync, "pnlSync");
             this.pnlSync.Name = "pnlSync";
+            // 
+            // lblHotkeysOthers
+            // 
+            this.lblHotkeysOthers.BackColor = System.Drawing.Color.Silver;
+            resources.ApplyResources(this.lblHotkeysOthers, "lblHotkeysOthers");
+            this.lblHotkeysOthers.Name = "lblHotkeysOthers";
+            // 
+            // btnTempoMinus
+            // 
+            resources.ApplyResources(this.btnTempoMinus, "btnTempoMinus");
+            this.btnTempoMinus.Name = "btnTempoMinus";
+            this.btnTempoMinus.Click += new System.EventHandler(this.btnTempoMinus_Click);
+            // 
+            // btnTempoPlus
+            // 
+            resources.ApplyResources(this.btnTempoPlus, "btnTempoPlus");
+            this.btnTempoPlus.Name = "btnTempoPlus";
+            this.btnTempoPlus.Click += new System.EventHandler(this.btnTempoPlus_Click);
+            // 
+            // btnTranspoMinus
+            // 
+            resources.ApplyResources(this.btnTranspoMinus, "btnTranspoMinus");
+            this.btnTranspoMinus.Name = "btnTranspoMinus";
+            this.btnTranspoMinus.Click += new System.EventHandler(this.btnTranspoMinus_Click);
+            // 
+            // btnTranspoPlus
+            // 
+            resources.ApplyResources(this.btnTranspoPlus, "btnTranspoPlus");
+            this.btnTranspoPlus.Name = "btnTranspoPlus";
+            this.btnTranspoPlus.Click += new System.EventHandler(this.btnTranspoPlus_Click);
+            // 
+            // pnlDisplay
+            // 
+            resources.ApplyResources(this.pnlDisplay, "pnlDisplay");
+            this.pnlDisplay.Name = "pnlDisplay";
+            // 
+            // btnPrev
+            // 
+            this.btnPrev.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.btnPrev.FlatAppearance.BorderSize = 0;
+            this.btnPrev.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.btnPrev.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.btnPrev, "btnPrev");
+            this.btnPrev.Image = global::Karaboss.Properties.Resources.btn_black_prev;
+            this.btnPrev.Name = "btnPrev";
+            this.btnPrev.TabStop = false;
+            this.btnPrev.UseVisualStyleBackColor = false;
+            this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
+            this.btnPrev.MouseLeave += new System.EventHandler(this.btnPrev_MouseLeave);
+            this.btnPrev.MouseHover += new System.EventHandler(this.btnPrev_MouseHover);
+            // 
+            // btnNext
+            // 
+            this.btnNext.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.btnNext.FlatAppearance.BorderSize = 0;
+            this.btnNext.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.btnNext.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.btnNext, "btnNext");
+            this.btnNext.Image = global::Karaboss.Properties.Resources.btn_black_next;
+            this.btnNext.Name = "btnNext";
+            this.btnNext.TabStop = false;
+            this.btnNext.UseVisualStyleBackColor = false;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            this.btnNext.MouseLeave += new System.EventHandler(this.btnNext_MouseLeave);
+            this.btnNext.MouseHover += new System.EventHandler(this.btnNext_MouseHover);
+            // 
+            // btnStop
+            // 
+            this.btnStop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.btnStop.FlatAppearance.BorderSize = 0;
+            this.btnStop.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.btnStop.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.btnStop, "btnStop");
+            this.btnStop.Image = global::Karaboss.Properties.Resources.btn_black_stop;
+            this.btnStop.Name = "btnStop";
+            this.btnStop.TabStop = false;
+            this.btnStop.UseVisualStyleBackColor = false;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            this.btnStop.MouseLeave += new System.EventHandler(this.btnStop_MouseLeave);
+            this.btnStop.MouseHover += new System.EventHandler(this.btnStop_MouseHover);
+            // 
+            // btnPlay
+            // 
+            this.btnPlay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.btnPlay.FlatAppearance.BorderSize = 0;
+            this.btnPlay.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.btnPlay.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            resources.ApplyResources(this.btnPlay, "btnPlay");
+            this.btnPlay.Image = global::Karaboss.Properties.Resources.btn_black_play;
+            this.btnPlay.Name = "btnPlay";
+            this.btnPlay.TabStop = false;
+            this.btnPlay.UseVisualStyleBackColor = false;
+            this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
+            this.btnPlay.MouseLeave += new System.EventHandler(this.btnPlay_MouseLeave);
+            this.btnPlay.MouseHover += new System.EventHandler(this.btnPlay_MouseHover);
             // 
             // frmMp3Player
             // 
@@ -979,5 +987,6 @@
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.RichTextBox txtResult;
+        private System.Windows.Forms.Label lblHotkeysOthers;
     }
 }
