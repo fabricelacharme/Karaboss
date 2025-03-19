@@ -2041,14 +2041,16 @@ namespace Karaboss.Mp3
                 MessageBox.Show("Please add lyrics before entering timestamps", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            _index--;
-            dgView.Rows[_index].Cells[COL_MS].Value = "";
-            dgView.Rows[_index].Cells[COL_TIME].Value = "";
+            if (_index > 0)
+            {
+                _index--;
+                dgView.Rows[_index].Cells[COL_MS].Value = "";
+                dgView.Rows[_index].Cells[COL_TIME].Value = "";
 
-            // Select line (paint in blue) and scroll
-            dgView.Rows[_index].Selected = true;
-            dgView.CurrentCell = dgView.Rows[_index].Cells[0];
-
+                // Select line (paint in blue) and scroll
+                dgView.Rows[_index].Selected = true;
+                dgView.CurrentCell = dgView.Rows[_index].Cells[0];
+            }
         }
 
         #region load lrc
