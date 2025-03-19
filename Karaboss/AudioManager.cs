@@ -446,6 +446,8 @@ namespace AudioControl
 
         #endregion
 
+       
+
     }
 
     #region Abstracted COM interfaces from Windows CoreAudio API
