@@ -1375,15 +1375,27 @@ namespace Karaboss.Mp3
             pnlDisplay.DisplayBeat("");
 
             #region volume
+            sldMainVolume.ShowDivisionsText = false;
+            sldMainVolume.ShowSmallScale = false;
+            sldMainVolume.TickStyle = TickStyle.Both;
+            sldMainVolume.TickColor = Color.White;
+            sldMainVolume.TickAdd = 0;
+            sldMainVolume.TickDivide = 0;
 
+            sldMainVolume.Orientation = Orientation.Vertical;
             sldMainVolume.Maximum = 130;    // Closer to 127
             sldMainVolume.Minimum = 0;
             sldMainVolume.ScaleDivisions = 13;
+            sldMainVolume.ScaleSubDivisions = 5;
             sldMainVolume.Value = 104;
             sldMainVolume.SmallChange = 13;
             sldMainVolume.LargeChange = 13;
             sldMainVolume.MouseWheelBarPartitions = 10;
-            sldMainVolume.Size = new Size(24, 80);
+
+            sldMainVolume.Left = 272;
+            sldMainVolume.Top = 25;
+            sldMainVolume.Width = 24;
+            sldMainVolume.Height = 80;
 
             lblMainVolume.Text = String.Format("{0}%", 100 * sldMainVolume.Value / sldMainVolume.Maximum);
 
@@ -1446,7 +1458,7 @@ namespace Karaboss.Mp3
             this.VuPeakVolumeLeft.UseLedLight = false;
             this.VuPeakVolumeLeft.VerticalBar = true;
             this.VuPeakVolumeLeft.VuText = "VU";
-            //this.VuPeakVolumeLeft.Location = new Point(220, 7);
+            this.VuPeakVolumeLeft.Location = new Point(220, 7);
 
 
 
@@ -1505,7 +1517,7 @@ namespace Karaboss.Mp3
             this.VuPeakVolumeRight.UseLedLight = false;
             this.VuPeakVolumeRight.VerticalBar = true;
             this.VuPeakVolumeRight.VuText = "VU";
-            //this.VuPeakVolumeRight.Location = new Point(220, 7);
+            this.VuPeakVolumeRight.Location = new Point(236, 7);
 
             #endregion Peak volume
 

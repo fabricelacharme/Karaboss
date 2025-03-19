@@ -32,6 +32,7 @@
 
 #endregion
 using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 // ReSharper disable SuspiciousTypeConversion.Global
 // ReSharper disable InconsistentNaming
@@ -232,6 +233,8 @@ namespace AudioControl
             }
         }
 
+        
+
         #endregion
 
         #region Individual Application Volume Manipulation
@@ -247,9 +250,39 @@ namespace AudioControl
 
             float peak;
             masterpeakvol.GetPeakValue(out peak);
+            
+            // FAB TEST
+            //masterpeakvol.GetChannelsPeakValues()
+
             Marshal.ReleaseComObject(masterpeakvol);
             return peak * 100;
         }
+
+        // FAB
+        public static float? GetApplicationChannelPeakVolume(int pid, int index)
+        {
+            IAudioMeterInformation channelpeakvol = GetMasterPeakVolume(pid);
+
+            if (channelpeakvol == null)
+                return null;
+
+            float peak;
+            //masterpeakvol.GetPeakValue(out peak);
+
+            // FAB TEST
+            //masterpeakvol.GetChannelsPeakValues()
+            channelpeakvol.GetMeteringChannelCount(out var Count);
+            float[] peakValues = new float[Count];
+            GCHandle Params = GCHandle.Alloc(peakValues, GCHandleType.Pinned);
+            channelpeakvol.GetChannelsPeakValues(peakValues.Length, Params.AddrOfPinnedObject());
+            Params.Free();
+            return peakValues[index] * 100.0f;
+
+            //Marshal.ReleaseComObject(masterpeakvol);
+            //return peak * 100;
+        }
+
+
 
         public static float? GetApplicationVolume(int pid)
         {
@@ -362,12 +395,10 @@ namespace AudioControl
         // https://github.com/maindefine/volumecontrol/blob/master/C%23/CoreAudioApi/AudioMeterInformation.cs
         private static IAudioMeterInformation GetMasterPeakVolume(int pid)
         {
-
             IMMDeviceEnumerator deviceEnumerator = null;
             IAudioSessionEnumerator sessionEnumerator = null;
             IAudioSessionManager2 mgr = null;
             IMMDevice speakers = null;
-
             IAudioSessionControl2 ctl = null;
 
             try
@@ -438,17 +469,12 @@ namespace AudioControl
                 //if (ctl != null) Marshal.ReleaseComObject(ctl);
 
             }
-
-
         }
 
-
-
         #endregion
-
        
-
     }
+   
 
     #region Abstracted COM interfaces from Windows CoreAudio API
 

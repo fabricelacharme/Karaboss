@@ -94,8 +94,8 @@
             this.pnlTop = new System.Windows.Forms.Panel();
             this.pnlEdit = new System.Windows.Forms.Panel();
             this.pnlSync = new System.Windows.Forms.Panel();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.lblHotkeysOthers = new System.Windows.Forms.Label();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.btnTempoMinus = new Karaboss.Buttons.MinusButtonControl();
             this.btnTempoPlus = new Karaboss.Buttons.PlusButtonControl();
             this.btnTranspoMinus = new Karaboss.Buttons.MinusButtonControl();

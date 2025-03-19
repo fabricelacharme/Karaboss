@@ -667,7 +667,9 @@ namespace Karaboss
                     lblStatus.Text = "Stopped";
                     lblStatus.ForeColor = Color.Red;
                     btnStartRec.Enabled = true;
-                    VuMasterPeakVolume.Level = 0;
+                    VuPeakVolumeLeft.Level = 0;
+                    VuPeakVolumeRight.Level = 0;
+
                     break;
 
                 case PlayerStates.LaunchNextSong:       // pause between 2 songs of a playlist
@@ -685,7 +687,7 @@ namespace Karaboss
                     btnStop.Enabled = true;   // to allow stop
                     lblStatus.Text = "Next";
                     lblStatus.ForeColor = Color.Violet;
-                    VuMasterPeakVolume.Level = 0;
+                    VuPeakVolumeLeft.Level = 0;
                     break;
 
                 case PlayerStates.WaitingPaused:
@@ -697,7 +699,8 @@ namespace Karaboss
                     break;
 
                 case PlayerStates.NextSong:     // Select next song of a playlist
-                    VuMasterPeakVolume.Level = 0;
+                    VuPeakVolumeLeft.Level = 0;
+                    VuPeakVolumeRight.Level= 0;
                     break;
 
                 default:
@@ -1131,16 +1134,24 @@ namespace Karaboss
             //important:   use "leftWidth" to position controls                       
 
             #region volume
-
+            sldMainVolume.ShowDivisionsText = false;
+            sldMainVolume.ShowSmallScale = false;
+            sldMainVolume.TickStyle = TickStyle.Both;
+            sldMainVolume.TickColor = Color.White;
+            sldMainVolume.TickAdd = 0;
+            sldMainVolume.TickDivide = 0;
+            
+            sldMainVolume.Orientation = Orientation.Vertical;
             sldMainVolume.Maximum = 130;    // Closer to 127
             sldMainVolume.Minimum = 0;
             sldMainVolume.ScaleDivisions = 13;
+            sldMainVolume.ScaleSubDivisions = 5;
             sldMainVolume.Value = 104;
             sldMainVolume.SmallChange = 13;
             sldMainVolume.LargeChange = 13;
             sldMainVolume.MouseWheelBarPartitions = 10;
 
-            sldMainVolume.Left = 249;
+            sldMainVolume.Left = 272;
             sldMainVolume.Top = 25;
             sldMainVolume.Width = 24;
             sldMainVolume.Height = 80;
@@ -6352,88 +6363,141 @@ namespace Karaboss
         private void GetPeakVolume()
         {
             
-            float? peak = AudioControl.AudioManager.GetApplicationMasterPeakVolume(outDeviceProcessId);
-            
+            //float? peak = AudioControl.AudioManager.GetApplicationMasterPeakVolume(outDeviceProcessId);
+
+            float? peakleft = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDeviceProcessId, 0);
+            float? peakright = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDeviceProcessId, 1);
+
             //int level = Convert.ToInt32(peak);
-            //int LeftLevel = LOWORD(level);
-            //int RightLevel = HIWORD(level);
+            int LeftLevel = Convert.ToInt32(peakleft);
+            int RightLevel = Convert.ToInt32(peakright);
             //Console.WriteLine(level + " " + LeftLevel + " " + RightLevel);
 
             //VuMasterPeakVolume.Level = level;
-            VuMasterPeakVolume.Level = Convert.ToInt32(peak);
+            VuPeakVolumeLeft.Level = LeftLevel;
+            VuPeakVolumeRight.Level = RightLevel;
         }
 
-        private static int HIWORD(int n)
-        {
-            return (n >> 16) & 0xffff;
-        }
-
-        private static int LOWORD(int n)
-        {
-            return n & 0xffff;
-        }
-
+       
 
         /// <summary>
         /// Initialize control peak volume level
         /// </summary>
         private void Init_peakLevel()
         {
-            this.VuMasterPeakVolume.AnalogMeter = false;
-            this.VuMasterPeakVolume.BackColor = System.Drawing.Color.DimGray;
-            this.VuMasterPeakVolume.DialBackground = System.Drawing.Color.White;
-            this.VuMasterPeakVolume.DialTextNegative = System.Drawing.Color.Red;
-            this.VuMasterPeakVolume.DialTextPositive = System.Drawing.Color.Black;
-            this.VuMasterPeakVolume.DialTextZero = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeLeft.AnalogMeter = false;
+            this.VuPeakVolumeLeft.BackColor = System.Drawing.Color.DimGray;
+            this.VuPeakVolumeLeft.DialBackground = System.Drawing.Color.White;
+            this.VuPeakVolumeLeft.DialTextNegative = System.Drawing.Color.Red;
+            this.VuPeakVolumeLeft.DialTextPositive = System.Drawing.Color.Black;
+            this.VuPeakVolumeLeft.DialTextZero = System.Drawing.Color.DarkGreen;
 
             // LED 1
-            this.VuMasterPeakVolume.Led1ColorOff = System.Drawing.Color.DarkGreen;
-            this.VuMasterPeakVolume.Led1ColorOn = System.Drawing.Color.LimeGreen;
+            this.VuPeakVolumeLeft.Led1ColorOff = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeLeft.Led1ColorOn = System.Drawing.Color.LimeGreen;
             //this.VuMasterPeakVolume.Led1Count = 12;
-            this.VuMasterPeakVolume.Led1Count = 14;
+            this.VuPeakVolumeLeft.Led1Count = 14;
 
             // LED 2
-            this.VuMasterPeakVolume.Led2ColorOff = System.Drawing.Color.Olive;
-            this.VuMasterPeakVolume.Led2ColorOn = System.Drawing.Color.Yellow;
+            this.VuPeakVolumeLeft.Led2ColorOff = System.Drawing.Color.Olive;
+            this.VuPeakVolumeLeft.Led2ColorOn = System.Drawing.Color.Yellow;
             //this.VuMasterPeakVolume.Led2Count = 12;
-            this.VuMasterPeakVolume.Led2Count = 14;
+            this.VuPeakVolumeLeft.Led2Count = 14;
 
             // LED 3
-            this.VuMasterPeakVolume.Led3ColorOff = System.Drawing.Color.Maroon;
-            this.VuMasterPeakVolume.Led3ColorOn = System.Drawing.Color.Red;
+            this.VuPeakVolumeLeft.Led3ColorOff = System.Drawing.Color.Maroon;
+            this.VuPeakVolumeLeft.Led3ColorOn = System.Drawing.Color.Red;
             //this.VuMasterPeakVolume.Led3Count = 8;
-            this.VuMasterPeakVolume.Led3Count = 10;
+            this.VuPeakVolumeLeft.Led3Count = 10;
 
             // LED size
-            this.VuMasterPeakVolume.LedSize = new System.Drawing.Size(12, 2);
+            this.VuPeakVolumeLeft.LedSize = new System.Drawing.Size(12, 2);
 
-            this.VuMasterPeakVolume.LedSpace = 1;
-            this.VuMasterPeakVolume.Level = 0;
-            this.VuMasterPeakVolume.LevelMax = 127;
+            this.VuPeakVolumeLeft.LedSpace = 1;
+            this.VuPeakVolumeLeft.Level = 0;
+            this.VuPeakVolumeLeft.LevelMax = 127;
 
             //this.VuMasterPeakVolume.Location = new System.Drawing.Point(220, 33);
-            this.VuMasterPeakVolume.MeterScale = VU_MeterLibrary.MeterScale.Log10;
-            this.VuMasterPeakVolume.Name = "VuMasterPeakVolume";
-            this.VuMasterPeakVolume.NeedleColor = System.Drawing.Color.Black;
-            this.VuMasterPeakVolume.PeakHold = false;
-            this.VuMasterPeakVolume.Peakms = 1000;
-            this.VuMasterPeakVolume.PeakNeedleColor = System.Drawing.Color.Red;
-            this.VuMasterPeakVolume.ShowDialOnly = false;
-            this.VuMasterPeakVolume.ShowLedPeak = false;
-            this.VuMasterPeakVolume.ShowTextInDial = false;
-            this.VuMasterPeakVolume.Size = new System.Drawing.Size(14, 120);
-            this.VuMasterPeakVolume.TabIndex = 5;
-            this.VuMasterPeakVolume.TextInDial = new string[] {
+            this.VuPeakVolumeLeft.MeterScale = VU_MeterLibrary.MeterScale.Log10;
+            this.VuPeakVolumeLeft.Name = "VuPeakVolumeLeft";
+            this.VuPeakVolumeLeft.NeedleColor = System.Drawing.Color.Black;
+            this.VuPeakVolumeLeft.PeakHold = false;
+            this.VuPeakVolumeLeft.Peakms = 1000;
+            this.VuPeakVolumeLeft.PeakNeedleColor = System.Drawing.Color.Red;
+            this.VuPeakVolumeLeft.ShowDialOnly = false;
+            this.VuPeakVolumeLeft.ShowLedPeak = false;
+            this.VuPeakVolumeLeft.ShowTextInDial = false;
+            this.VuPeakVolumeLeft.Size = new System.Drawing.Size(14, 120);
+            this.VuPeakVolumeLeft.TabIndex = 5;
+            this.VuPeakVolumeLeft.TextInDial = new string[] {
             "-40",
             "-20",
             "-10",
             "-5",
             "0",
             "+6"};
-            this.VuMasterPeakVolume.UseLedLight = false;
-            this.VuMasterPeakVolume.VerticalBar = true;
-            this.VuMasterPeakVolume.VuText = "VU";
-            this.VuMasterPeakVolume.Location = new Point(226, 7);
+            this.VuPeakVolumeLeft.UseLedLight = false;
+            this.VuPeakVolumeLeft.VerticalBar = true;
+            this.VuPeakVolumeLeft.VuText = "VU";
+            this.VuPeakVolumeLeft.Location = new Point(220, 7);
+
+
+            // Right
+            this.VuPeakVolumeRight.AnalogMeter = false;
+            this.VuPeakVolumeRight.BackColor = System.Drawing.Color.DimGray;
+            this.VuPeakVolumeRight.DialBackground = System.Drawing.Color.White;
+            this.VuPeakVolumeRight.DialTextNegative = System.Drawing.Color.Red;
+            this.VuPeakVolumeRight.DialTextPositive = System.Drawing.Color.Black;
+            this.VuPeakVolumeRight.DialTextZero = System.Drawing.Color.DarkGreen;
+
+            // LED 1
+            this.VuPeakVolumeRight.Led1ColorOff = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeRight.Led1ColorOn = System.Drawing.Color.LimeGreen;
+            //this.VuMasterPeakVolume.Led1Count = 12;
+            this.VuPeakVolumeRight.Led1Count = 14;
+
+            // LED 2
+            this.VuPeakVolumeRight.Led2ColorOff = System.Drawing.Color.Olive;
+            this.VuPeakVolumeRight.Led2ColorOn = System.Drawing.Color.Yellow;
+            //this.VuMasterPeakVolume.Led2Count = 12;
+            this.VuPeakVolumeRight.Led2Count = 14;
+
+            // LED 3
+            this.VuPeakVolumeRight.Led3ColorOff = System.Drawing.Color.Maroon;
+            this.VuPeakVolumeRight.Led3ColorOn = System.Drawing.Color.Red;
+            //this.VuMasterPeakVolume.Led3Count = 8;
+            this.VuPeakVolumeRight.Led3Count = 10;
+
+            // LED size
+            this.VuPeakVolumeRight.LedSize = new System.Drawing.Size(12, 2);
+
+            this.VuPeakVolumeRight.LedSpace = 1;
+            this.VuPeakVolumeRight.Level = 0;
+            this.VuPeakVolumeRight.LevelMax = 127;
+
+            //this.VuMasterPeakVolume.Location = new System.Drawing.Point(220, 33);
+            this.VuPeakVolumeRight.MeterScale = VU_MeterLibrary.MeterScale.Log10;
+            this.VuPeakVolumeRight.Name = "VuPeakVolumeRight";
+            this.VuPeakVolumeRight.NeedleColor = System.Drawing.Color.Black;
+            this.VuPeakVolumeRight.PeakHold = false;
+            this.VuPeakVolumeRight.Peakms = 1000;
+            this.VuPeakVolumeRight.PeakNeedleColor = System.Drawing.Color.Red;
+            this.VuPeakVolumeRight.ShowDialOnly = false;
+            this.VuPeakVolumeRight.ShowLedPeak = false;
+            this.VuPeakVolumeRight.ShowTextInDial = false;
+            this.VuPeakVolumeRight.Size = new System.Drawing.Size(14, 120);
+            this.VuPeakVolumeRight.TabIndex = 5;
+            this.VuPeakVolumeRight.TextInDial = new string[] {
+            "-40",
+            "-20",
+            "-10",
+            "-5",
+            "0",
+            "+6"};
+            this.VuPeakVolumeRight.UseLedLight = false;
+            this.VuPeakVolumeRight.VerticalBar = true;
+            this.VuPeakVolumeRight.VuText = "VU";
+            this.VuPeakVolumeRight.Location = new Point(236, 7);
 
         }
 
