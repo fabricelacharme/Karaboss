@@ -7438,7 +7438,10 @@ namespace Karaboss
 
         private void ModTempo()
         {
-            _tempo = TempoDelta * TempoOrig / 100;
+            // _TempoDeltat is 100 at start
+            // TempoOrig is sequencer1.Tempo at start
+
+            _tempo = TempoDelta * TempoOrig / 100;  // _tempo is a percent of TempoOrig
             _tempoplayed = _tempo;
 
             // Change clock tempo
@@ -7452,7 +7455,7 @@ namespace Karaboss
 
             // Update display duration
             _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. Duration for ScrollTo dislay of sheetmusic
-            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn); // real duration for multiple tempos
+            _duration = (TempoDelta/100.0f) * TempoUtilities.GetMidiDuration(_totalTicks, _ppqn); // real duration for multiple tempos
 
             int Min = (int)(_duration / 60);
             int Sec = (int)(_duration - (Min * 60));
@@ -8899,7 +8902,6 @@ namespace Karaboss
 
         #endregion Save File
 
-      
         #endregion Utilities
     }
 
