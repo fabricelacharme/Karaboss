@@ -252,10 +252,10 @@
     <value>Surbrillance</value>
   </data>
   <data name="chkTopMost.Size" type="System.Drawing.Size, System.Drawing">
-    <value>155, 17</value>
+    <value>191, 17</value>
   </data>
   <data name="chkTopMost.Text" xml:space="preserve">
-    <value>Fenêtre des paoles en haut</value>
+    <value>Fenêtre des paroles toujours visible</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
