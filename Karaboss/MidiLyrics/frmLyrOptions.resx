@@ -117,110 +117,953 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="&gt;&gt;btnChordHighlightColor.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pnlBalls.Name" xml:space="preserve">
-    <value>pnlBalls</value>
-  </data>
-  <data name="label8.Text" xml:space="preserve">
-    <value>Text Color:</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="btnBackColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="label9.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 63</value>
+  <data name="btnBackColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 162</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="pictBackColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;label9.Name" xml:space="preserve">
-    <value>label9</value>
-  </data>
-  <data name="&gt;&gt;radioDiaporama.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="pictContour.Size" type="System.Drawing.Size, System.Drawing">
-    <value>21, 21</value>
+  <data name="btnBackColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 21</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="pictContour.TabIndex" type="System.Int32, mscorlib">
-    <value>28</value>
+  <data name="btnBackColor.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
   </data>
-  <data name="radioSolidColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="btnBackColor.Text" xml:space="preserve">
+    <value>Back color</value>
   </data>
-  <data name="label10.TabIndex" type="System.Int32, mscorlib">
-    <value>50</value>
+  <data name="btnBackColor.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
-  <data name="btnApply.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+  <data name="&gt;&gt;btnBackColor.Name" xml:space="preserve">
+    <value>btnBackColor</value>
   </data>
-  <data name="pictContour.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="&gt;&gt;btnBackColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;txtSlideShowFreq.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>153, 323</value>
-  </data>
-  <data name="chkDisplayBalls.Text" xml:space="preserve">
-    <value>Display balls</value>
-  </data>
-  <data name="&gt;&gt;btnApply.Parent" xml:space="preserve">
+  <data name="&gt;&gt;btnBackColor.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;pBox.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;btnBackColor.ZOrder" xml:space="preserve">
+    <value>46</value>
   </data>
   <data name="btnSungColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="pnlBalls.TabIndex" type="System.Int32, mscorlib">
-    <value>37</value>
+  <data name="btnSungColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>530, 51</value>
   </data>
-  <data name="&gt;&gt;chkContour.Name" xml:space="preserve">
-    <value>chkContour</value>
+  <data name="btnSungColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 21</value>
+  </data>
+  <data name="btnSungColor.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="btnSungColor.Text" xml:space="preserve">
+    <value>Before</value>
+  </data>
+  <data name="&gt;&gt;btnSungColor.Name" xml:space="preserve">
+    <value>btnSungColor</value>
+  </data>
+  <data name="&gt;&gt;btnSungColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnSungColor.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnSungColor.ZOrder" xml:space="preserve">
+    <value>45</value>
+  </data>
+  <data name="btnSingColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnSingColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>530, 76</value>
+  </data>
+  <data name="btnSingColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 21</value>
+  </data>
+  <data name="btnSingColor.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="btnSingColor.Text" xml:space="preserve">
+    <value>Highlight</value>
+  </data>
+  <data name="&gt;&gt;btnSingColor.Name" xml:space="preserve">
+    <value>btnSingColor</value>
+  </data>
+  <data name="&gt;&gt;btnSingColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnSingColor.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnSingColor.ZOrder" xml:space="preserve">
+    <value>44</value>
+  </data>
+  <data name="btnForeColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnForeColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>530, 101</value>
+  </data>
+  <data name="btnForeColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 21</value>
+  </data>
+  <data name="btnForeColor.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="btnForeColor.Text" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="&gt;&gt;btnForeColor.Name" xml:space="preserve">
+    <value>btnForeColor</value>
+  </data>
+  <data name="&gt;&gt;btnForeColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnForeColor.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnForeColor.ZOrder" xml:space="preserve">
+    <value>43</value>
+  </data>
+  <data name="btnApply.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnApply.Location" type="System.Drawing.Point, System.Drawing">
+    <value>472, 374</value>
+  </data>
+  <data name="btnApply.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 25</value>
+  </data>
+  <data name="btnApply.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="btnApply.Text" xml:space="preserve">
+    <value>&amp;Appliquer</value>
+  </data>
+  <data name="&gt;&gt;btnApply.Name" xml:space="preserve">
+    <value>btnApply</value>
+  </data>
+  <data name="&gt;&gt;btnApply.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnApply.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnApply.ZOrder" xml:space="preserve">
+    <value>42</value>
+  </data>
+  <data name="btnOk.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnOk.Location" type="System.Drawing.Point, System.Drawing">
+    <value>578, 374</value>
+  </data>
+  <data name="btnOk.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 25</value>
+  </data>
+  <data name="btnOk.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="btnOk.Text" xml:space="preserve">
+    <value>&amp;Ok</value>
   </data>
   <data name="&gt;&gt;btnOk.Name" xml:space="preserve">
     <value>btnOk</value>
   </data>
-  <data name="pictNext.Location" type="System.Drawing.Point, System.Drawing">
-    <value>628, 101</value>
+  <data name="&gt;&gt;btnOk.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="chkTextBackground.Text" xml:space="preserve">
-    <value>Text Background</value>
+  <data name="&gt;&gt;btnOk.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
-  <data name="&gt;&gt;chkContour.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;btnOk.ZOrder" xml:space="preserve">
+    <value>41</value>
+  </data>
+  <data name="btnCancel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnCancel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>684, 374</value>
+  </data>
+  <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 25</value>
+  </data>
+  <data name="btnCancel.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="btnCancel.Text" xml:space="preserve">
+    <value>A&amp;nnuler</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.Name" xml:space="preserve">
+    <value>btnCancel</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.ZOrder" xml:space="preserve">
+    <value>40</value>
+  </data>
+  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>530, 156</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>83, 13</value>
+  </data>
+  <data name="label1.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Number of lines:</value>
+  </data>
+  <data name="&gt;&gt;label1.Name" xml:space="preserve">
+    <value>label1</value>
+  </data>
+  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
+    <value>39</value>
+  </data>
+  <metadata name="folderBrowserDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="txtSlideShow.Location" type="System.Drawing.Point, System.Drawing">
+    <value>110, 298</value>
+  </data>
+  <data name="txtSlideShow.Size" type="System.Drawing.Size, System.Drawing">
+    <value>385, 20</value>
+  </data>
+  <data name="txtSlideShow.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
   </data>
-  <data name="chkDisplayBalls.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="&gt;&gt;txtSlideShow.Name" xml:space="preserve">
+    <value>txtSlideShow</value>
+  </data>
+  <data name="&gt;&gt;txtSlideShow.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtSlideShow.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtSlideShow.ZOrder" xml:space="preserve">
+    <value>38</value>
+  </data>
+  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="label7.Text" xml:space="preserve">
-    <value>Font:</value>
+  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 301</value>
   </data>
-  <data name="picChordHighlight.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>103, 13</value>
+  </data>
+  <data name="label2.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>SlideShow directory:</value>
+  </data>
+  <data name="&gt;&gt;label2.Name" xml:space="preserve">
+    <value>label2</value>
+  </data>
+  <data name="&gt;&gt;label2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
+    <value>37</value>
+  </data>
+  <data name="btnDirSlideShow.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;chkDisplayBalls.ZOrder" xml:space="preserve">
-    <value>14</value>
+  <data name="btnDirSlideShow.Location" type="System.Drawing.Point, System.Drawing">
+    <value>501, 295</value>
+  </data>
+  <data name="btnDirSlideShow.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 23</value>
+  </data>
+  <data name="btnDirSlideShow.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="btnDirSlideShow.Text" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="&gt;&gt;btnDirSlideShow.Name" xml:space="preserve">
+    <value>btnDirSlideShow</value>
+  </data>
+  <data name="&gt;&gt;btnDirSlideShow.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnDirSlideShow.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnDirSlideShow.ZOrder" xml:space="preserve">
+    <value>36</value>
+  </data>
+  <data name="btnContourColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnContourColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>564, 126</value>
+  </data>
+  <data name="btnContourColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>58, 21</value>
+  </data>
+  <data name="btnContourColor.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="btnContourColor.Text" xml:space="preserve">
+    <value>Contour</value>
+  </data>
+  <data name="&gt;&gt;btnContourColor.Name" xml:space="preserve">
+    <value>btnContourColor</value>
+  </data>
+  <data name="&gt;&gt;btnContourColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnContourColor.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnContourColor.ZOrder" xml:space="preserve">
+    <value>35</value>
+  </data>
+  <data name="label3.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 323</value>
+  </data>
+  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 13</value>
+  </data>
+  <data name="label3.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>Frequency:</value>
+  </data>
+  <data name="&gt;&gt;label3.Name" xml:space="preserve">
+    <value>label3</value>
+  </data>
+  <data name="&gt;&gt;label3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label3.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
+    <value>32</value>
+  </data>
+  <data name="txtSlideShowFreq.Location" type="System.Drawing.Point, System.Drawing">
+    <value>110, 320</value>
+  </data>
+  <data name="txtSlideShowFreq.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 20</value>
+  </data>
+  <data name="txtSlideShowFreq.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="txtSlideShowFreq.Text" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;txtSlideShowFreq.Name" xml:space="preserve">
+    <value>txtSlideShowFreq</value>
+  </data>
+  <data name="&gt;&gt;txtSlideShowFreq.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtSlideShowFreq.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtSlideShowFreq.ZOrder" xml:space="preserve">
+    <value>33</value>
+  </data>
+  <data name="label4.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>153, 323</value>
+  </data>
+  <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>53, 13</value>
+  </data>
+  <data name="label4.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="label4.Text" xml:space="preserve">
+    <value>(seconds)</value>
+  </data>
+  <data name="&gt;&gt;label4.Name" xml:space="preserve">
+    <value>label4</value>
+  </data>
+  <data name="&gt;&gt;label4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label4.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
+    <value>31</value>
+  </data>
+  <data name="label5.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label5.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  </data>
+  <data name="label5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 275</value>
+  </data>
+  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 13</value>
+  </data>
+  <data name="label5.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="label5.Text" xml:space="preserve">
+    <value>DIAPORAMA</value>
+  </data>
+  <data name="&gt;&gt;label5.Name" xml:space="preserve">
+    <value>label5</value>
+  </data>
+  <data name="&gt;&gt;label5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label5.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
+    <value>30</value>
+  </data>
+  <data name="cbSizeMode.Items" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="cbSizeMode.Items1" xml:space="preserve">
+    <value>StretchImage</value>
+  </data>
+  <data name="cbSizeMode.Items2" xml:space="preserve">
+    <value>AutoSize</value>
+  </data>
+  <data name="cbSizeMode.Items3" xml:space="preserve">
+    <value>CenterImage</value>
+  </data>
+  <data name="cbSizeMode.Items4" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="cbSizeMode.Location" type="System.Drawing.Point, System.Drawing">
+    <value>110, 346</value>
+  </data>
+  <data name="cbSizeMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 21</value>
+  </data>
+  <data name="cbSizeMode.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="&gt;&gt;cbSizeMode.Name" xml:space="preserve">
+    <value>cbSizeMode</value>
+  </data>
+  <data name="&gt;&gt;cbSizeMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbSizeMode.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;cbSizeMode.ZOrder" xml:space="preserve">
+    <value>29</value>
+  </data>
+  <data name="label6.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 346</value>
+  </data>
+  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>47, 13</value>
+  </data>
+  <data name="label6.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="label6.Text" xml:space="preserve">
+    <value>Position:</value>
+  </data>
+  <data name="&gt;&gt;label6.Name" xml:space="preserve">
+    <value>label6</value>
+  </data>
+  <data name="&gt;&gt;label6.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label6.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label6.ZOrder" xml:space="preserve">
+    <value>28</value>
+  </data>
+  <data name="btnResetDir.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnResetDir.Location" type="System.Drawing.Point, System.Drawing">
+    <value>567, 295</value>
+  </data>
+  <data name="btnResetDir.Size" type="System.Drawing.Size, System.Drawing">
+    <value>46, 23</value>
+  </data>
+  <data name="btnResetDir.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="btnResetDir.Text" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="&gt;&gt;btnResetDir.Name" xml:space="preserve">
+    <value>btnResetDir</value>
+  </data>
+  <data name="&gt;&gt;btnResetDir.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnResetDir.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnResetDir.ZOrder" xml:space="preserve">
+    <value>27</value>
+  </data>
+  <data name="radioDiaporama.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="radioDiaporama.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="radioDiaporama.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 81</value>
+  </data>
+  <data name="radioDiaporama.Size" type="System.Drawing.Size, System.Drawing">
+    <value>76, 17</value>
+  </data>
+  <data name="radioDiaporama.TabIndex" type="System.Int32, mscorlib">
+    <value>29</value>
+  </data>
+  <data name="radioDiaporama.Text" xml:space="preserve">
+    <value>Diaporama</value>
+  </data>
+  <data name="&gt;&gt;radioDiaporama.Name" xml:space="preserve">
+    <value>radioDiaporama</value>
+  </data>
+  <data name="&gt;&gt;radioDiaporama.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;radioDiaporama.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;radioDiaporama.ZOrder" xml:space="preserve">
+    <value>22</value>
+  </data>
+  <data name="radioSolidColor.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="radioSolidColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="radioSolidColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 106</value>
+  </data>
+  <data name="radioSolidColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 17</value>
+  </data>
+  <data name="radioSolidColor.TabIndex" type="System.Int32, mscorlib">
+    <value>30</value>
+  </data>
+  <data name="radioSolidColor.Text" xml:space="preserve">
+    <value>Solid Color</value>
+  </data>
+  <data name="&gt;&gt;radioSolidColor.Name" xml:space="preserve">
+    <value>radioSolidColor</value>
+  </data>
+  <data name="&gt;&gt;radioSolidColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;radioSolidColor.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;radioSolidColor.ZOrder" xml:space="preserve">
+    <value>21</value>
+  </data>
+  <data name="radioTransparent.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="radioTransparent.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="radioTransparent.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 131</value>
+  </data>
+  <data name="radioTransparent.Size" type="System.Drawing.Size, System.Drawing">
+    <value>82, 17</value>
+  </data>
+  <data name="radioTransparent.TabIndex" type="System.Int32, mscorlib">
+    <value>31</value>
+  </data>
+  <data name="radioTransparent.Text" xml:space="preserve">
+    <value>Transparent</value>
+  </data>
+  <data name="&gt;&gt;radioTransparent.Name" xml:space="preserve">
+    <value>radioTransparent</value>
+  </data>
+  <data name="&gt;&gt;radioTransparent.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;radioTransparent.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;radioTransparent.ZOrder" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="label8.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label8.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  </data>
+  <data name="label8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label8.Location" type="System.Drawing.Point, System.Drawing">
+    <value>531, 33</value>
+  </data>
+  <data name="label8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>69, 13</value>
+  </data>
+  <data name="label8.TabIndex" type="System.Int32, mscorlib">
+    <value>32</value>
+  </data>
+  <data name="label8.Text" xml:space="preserve">
+    <value>Text Color:</value>
+  </data>
+  <data name="&gt;&gt;label8.Name" xml:space="preserve">
+    <value>label8</value>
+  </data>
+  <data name="&gt;&gt;label8.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label8.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label8.ZOrder" xml:space="preserve">
+    <value>19</value>
+  </data>
+  <data name="label9.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="label9.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="chkTextBackground.Size" type="System.Drawing.Size, System.Drawing">
-    <value>108, 17</value>
+  <data name="label9.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 63</value>
   </data>
-  <data name="&gt;&gt;picChordBefore.Parent" xml:space="preserve">
+  <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
+    <value>68, 13</value>
+  </data>
+  <data name="label9.TabIndex" type="System.Int32, mscorlib">
+    <value>34</value>
+  </data>
+  <data name="label9.Text" xml:space="preserve">
+    <value>Background:</value>
+  </data>
+  <data name="&gt;&gt;label9.Name" xml:space="preserve">
+    <value>label9</value>
+  </data>
+  <data name="&gt;&gt;label9.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label9.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="pBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>385, 187</value>
+  <data name="&gt;&gt;label9.ZOrder" xml:space="preserve">
+    <value>17</value>
   </data>
-  <data name="label5.TabIndex" type="System.Int32, mscorlib">
+  <data name="UpDownNbLines.Location" type="System.Drawing.Point, System.Drawing">
+    <value>616, 151</value>
+  </data>
+  <data name="UpDownNbLines.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 20</value>
+  </data>
+  <data name="UpDownNbLines.TabIndex" type="System.Int32, mscorlib">
+    <value>35</value>
+  </data>
+  <data name="&gt;&gt;UpDownNbLines.Name" xml:space="preserve">
+    <value>UpDownNbLines</value>
+  </data>
+  <data name="&gt;&gt;UpDownNbLines.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;UpDownNbLines.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;UpDownNbLines.ZOrder" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="chkDisplayBalls.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkDisplayBalls.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkDisplayBalls.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 30</value>
+  </data>
+  <data name="chkDisplayBalls.Size" type="System.Drawing.Size, System.Drawing">
+    <value>84, 17</value>
+  </data>
+  <data name="chkDisplayBalls.TabIndex" type="System.Int32, mscorlib">
+    <value>36</value>
+  </data>
+  <data name="chkDisplayBalls.Text" xml:space="preserve">
+    <value>Display balls</value>
+  </data>
+  <data name="&gt;&gt;chkDisplayBalls.Name" xml:space="preserve">
+    <value>chkDisplayBalls</value>
+  </data>
+  <data name="&gt;&gt;chkDisplayBalls.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkDisplayBalls.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;chkDisplayBalls.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="pictureBox2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pictureBox2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>22, 0</value>
+  </data>
+  <data name="pictureBox2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>17, 15</value>
+  </data>
+  <data name="pictureBox2.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>StretchImage</value>
+  </data>
+  <data name="pictureBox2.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;pictureBox2.Name" xml:space="preserve">
+    <value>pictureBox2</value>
+  </data>
+  <data name="&gt;&gt;pictureBox2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pictureBox2.Parent" xml:space="preserve">
+    <value>pnlBalls</value>
+  </data>
+  <data name="&gt;&gt;pictureBox2.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="pictureBox1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pictureBox1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="pictureBox1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>17, 15</value>
+  </data>
+  <data name="pictureBox1.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>StretchImage</value>
+  </data>
+  <data name="pictureBox1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.Name" xml:space="preserve">
+    <value>pictureBox1</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.Parent" xml:space="preserve">
+    <value>pnlBalls</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="pnlBalls.Location" type="System.Drawing.Point, System.Drawing">
+    <value>130, 30</value>
+  </data>
+  <data name="pnlBalls.Size" type="System.Drawing.Size, System.Drawing">
+    <value>385, 17</value>
+  </data>
+  <data name="pnlBalls.TabIndex" type="System.Int32, mscorlib">
+    <value>37</value>
+  </data>
+  <data name="&gt;&gt;pnlBalls.Name" xml:space="preserve">
+    <value>pnlBalls</value>
+  </data>
+  <data name="&gt;&gt;pnlBalls.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlBalls.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pnlBalls.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="pictBackColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pictBackColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>98, 161</value>
+  </data>
+  <data name="pictBackColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>21, 21</value>
+  </data>
+  <data name="pictBackColor.TabIndex" type="System.Int32, mscorlib">
+    <value>33</value>
+  </data>
+  <data name="pictBackColor.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;pictBackColor.Name" xml:space="preserve">
+    <value>pictBackColor</value>
+  </data>
+  <data name="&gt;&gt;pictBackColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pictBackColor.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pictBackColor.ZOrder" xml:space="preserve">
     <value>18</value>
+  </data>
+  <data name="pictContour.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pictContour.Location" type="System.Drawing.Point, System.Drawing">
+    <value>628, 126</value>
+  </data>
+  <data name="pictContour.Size" type="System.Drawing.Size, System.Drawing">
+    <value>21, 21</value>
+  </data>
+  <data name="pictContour.TabIndex" type="System.Int32, mscorlib">
+    <value>28</value>
+  </data>
+  <data name="&gt;&gt;pictContour.Name" xml:space="preserve">
+    <value>pictContour</value>
+  </data>
+  <data name="&gt;&gt;pictContour.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pictContour.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pictContour.ZOrder" xml:space="preserve">
+    <value>23</value>
+  </data>
+  <data name="pictNext.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pictNext.Location" type="System.Drawing.Point, System.Drawing">
+    <value>628, 101</value>
+  </data>
+  <data name="pictNext.Size" type="System.Drawing.Size, System.Drawing">
+    <value>21, 21</value>
+  </data>
+  <data name="pictNext.TabIndex" type="System.Int32, mscorlib">
+    <value>27</value>
+  </data>
+  <data name="&gt;&gt;pictNext.Name" xml:space="preserve">
+    <value>pictNext</value>
+  </data>
+  <data name="&gt;&gt;pictNext.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pictNext.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pictNext.ZOrder" xml:space="preserve">
+    <value>24</value>
+  </data>
+  <data name="pictHighlight.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pictHighlight.Location" type="System.Drawing.Point, System.Drawing">
+    <value>628, 76</value>
+  </data>
+  <data name="pictHighlight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>21, 21</value>
+  </data>
+  <data name="pictHighlight.TabIndex" type="System.Int32, mscorlib">
+    <value>26</value>
+  </data>
+  <data name="&gt;&gt;pictHighlight.Name" xml:space="preserve">
+    <value>pictHighlight</value>
+  </data>
+  <data name="&gt;&gt;pictHighlight.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pictHighlight.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pictHighlight.ZOrder" xml:space="preserve">
+    <value>25</value>
+  </data>
+  <data name="pictBefore.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pictBefore.Location" type="System.Drawing.Point, System.Drawing">
+    <value>628, 51</value>
+  </data>
+  <data name="pictBefore.Size" type="System.Drawing.Size, System.Drawing">
+    <value>21, 21</value>
+  </data>
+  <data name="pictBefore.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="&gt;&gt;pictBefore.Name" xml:space="preserve">
+    <value>pictBefore</value>
+  </data>
+  <data name="&gt;&gt;pictBefore.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pictBefore.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pictBefore.ZOrder" xml:space="preserve">
+    <value>26</value>
+  </data>
+  <data name="cbOptionsTextDisplay.Items" xml:space="preserve">
+    <value>Top</value>
   </data>
   <data name="cbOptionsTextDisplay.Items1" xml:space="preserve">
     <value>Center</value>
@@ -228,230 +1071,119 @@
   <data name="cbOptionsTextDisplay.Items2" xml:space="preserve">
     <value>Bottom</value>
   </data>
-  <data name="btnSungColor.Text" xml:space="preserve">
-    <value>Before</value>
+  <data name="cbOptionsTextDisplay.Location" type="System.Drawing.Point, System.Drawing">
+    <value>530, 177</value>
   </data>
-  <data name="chkTextBackground.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="cbOptionsTextDisplay.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 21</value>
   </data>
-  <data name="&gt;&gt;chkContour.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pictContour.Name" xml:space="preserve">
-    <value>pictContour</value>
-  </data>
-  <data name="pictNext.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="chkContour.TabIndex" type="System.Int32, mscorlib">
-    <value>40</value>
-  </data>
-  <data name="radioSolidColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 106</value>
-  </data>
-  <data name="chkTextUppercase.TabIndex" type="System.Int32, mscorlib">
-    <value>45</value>
-  </data>
-  <data name="label1.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;pictContour.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnContourColor.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="btnOk.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 25</value>
-  </data>
-  <data name="btnFonts.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
-  <data name="btnResetDir.Text" xml:space="preserve">
-    <value>Reset</value>
-  </data>
-  <data name="chkForceShowChords.TabIndex" type="System.Int32, mscorlib">
-    <value>51</value>
-  </data>
-  <data name="pictNext.Size" type="System.Drawing.Size, System.Drawing">
-    <value>21, 21</value>
-  </data>
-  <data name="chkForceShowChords.Location" type="System.Drawing.Point, System.Drawing">
-    <value>670, 107</value>
-  </data>
-  <data name="&gt;&gt;btnChordHighlightColor.Name" xml:space="preserve">
-    <value>btnChordHighlightColor</value>
-  </data>
-  <data name="btnChordNormalColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>670, 52</value>
-  </data>
-  <data name="&gt;&gt;pictureBox2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnForeColor.ZOrder" xml:space="preserve">
-    <value>42</value>
-  </data>
-  <data name="label8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>69, 13</value>
-  </data>
-  <data name="btnResetDir.TabIndex" type="System.Int32, mscorlib">
-    <value>24</value>
-  </data>
-  <data name="&gt;&gt;txtSlideShowFreq.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label10.Name" xml:space="preserve">
-    <value>label10</value>
-  </data>
-  <data name="&gt;&gt;btnOk.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Karaboss - Lyrics options</value>
-  </data>
-  <data name="&gt;&gt;btnSungColor.Name" xml:space="preserve">
-    <value>btnSungColor</value>
-  </data>
-  <data name="radioDiaporama.Size" type="System.Drawing.Size, System.Drawing">
-    <value>76, 17</value>
-  </data>
-  <data name="&gt;&gt;radioTransparent.ZOrder" xml:space="preserve">
-    <value>19</value>
+  <data name="cbOptionsTextDisplay.TabIndex" type="System.Int32, mscorlib">
+    <value>38</value>
   </data>
   <data name="cbOptionsTextDisplay.Text" xml:space="preserve">
     <value>Center</value>
   </data>
-  <data name="&gt;&gt;txtFont.Parent" xml:space="preserve">
+  <data name="&gt;&gt;cbOptionsTextDisplay.Name" xml:space="preserve">
+    <value>cbOptionsTextDisplay</value>
+  </data>
+  <data name="&gt;&gt;cbOptionsTextDisplay.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbOptionsTextDisplay.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;pictHighlight.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="txtSlideShow.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;pnlBalls.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtFont.Name" xml:space="preserve">
-    <value>txtFont</value>
-  </data>
-  <data name="&gt;&gt;chkDisplayBalls.Name" xml:space="preserve">
-    <value>chkDisplayBalls</value>
-  </data>
-  <data name="&gt;&gt;btnForeColor.Name" xml:space="preserve">
-    <value>btnForeColor</value>
-  </data>
-  <data name="&gt;&gt;pnlBalls.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;cbOptionsTextDisplay.ZOrder" xml:space="preserve">
     <value>13</value>
   </data>
-  <data name="radioDiaporama.TabIndex" type="System.Int32, mscorlib">
-    <value>29</value>
+  <data name="chkTextBackground.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
-  <data name="&gt;&gt;pictureBox1.Name" xml:space="preserve">
-    <value>pictureBox1</value>
+  <data name="chkTextBackground.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;radioTransparent.Parent" xml:space="preserve">
+  <data name="chkTextBackground.Location" type="System.Drawing.Point, System.Drawing">
+    <value>530, 204</value>
+  </data>
+  <data name="chkTextBackground.Size" type="System.Drawing.Size, System.Drawing">
+    <value>108, 17</value>
+  </data>
+  <data name="chkTextBackground.TabIndex" type="System.Int32, mscorlib">
+    <value>39</value>
+  </data>
+  <data name="chkTextBackground.Text" xml:space="preserve">
+    <value>Text Background</value>
+  </data>
+  <data name="&gt;&gt;chkTextBackground.Name" xml:space="preserve">
+    <value>chkTextBackground</value>
+  </data>
+  <data name="&gt;&gt;chkTextBackground.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkTextBackground.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="radioTransparent.Size" type="System.Drawing.Size, System.Drawing">
-    <value>82, 17</value>
+  <data name="&gt;&gt;chkTextBackground.ZOrder" xml:space="preserve">
+    <value>12</value>
   </data>
-  <data name="btnForeColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 21</value>
+  <data name="chkContour.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
-  <data name="&gt;&gt;btnApply.ZOrder" xml:space="preserve">
-    <value>41</value>
+  <data name="chkContour.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;cbSizeMode.Parent" xml:space="preserve">
+  <data name="chkContour.Location" type="System.Drawing.Point, System.Drawing">
+    <value>530, 131</value>
+  </data>
+  <data name="chkContour.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="chkContour.TabIndex" type="System.Int32, mscorlib">
+    <value>40</value>
+  </data>
+  <data name="&gt;&gt;chkContour.Name" xml:space="preserve">
+    <value>chkContour</value>
+  </data>
+  <data name="&gt;&gt;chkContour.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkContour.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="cbSizeMode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 21</value>
+  <data name="&gt;&gt;chkContour.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="label7.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>527, 248</value>
+  </data>
+  <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>31, 13</value>
+  </data>
+  <data name="label7.TabIndex" type="System.Int32, mscorlib">
+    <value>42</value>
+  </data>
+  <data name="label7.Text" xml:space="preserve">
+    <value>Font:</value>
   </data>
   <data name="&gt;&gt;label7.Name" xml:space="preserve">
     <value>label7</value>
   </data>
-  <data name="btnContourColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="&gt;&gt;label7.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;folderBrowserDialog1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.FolderBrowserDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnCancel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;pictBefore.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label8.Parent" xml:space="preserve">
+  <data name="&gt;&gt;label7.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;pictHighlight.ZOrder" xml:space="preserve">
-    <value>24</value>
+  <data name="&gt;&gt;label7.ZOrder" xml:space="preserve">
+    <value>10</value>
   </data>
-  <data name="label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;radioSolidColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;chkTextUppercase.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;radioTransparent.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;chkTextUppercase.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="btnDirSlideShow.Size" type="System.Drawing.Size, System.Drawing">
-    <value>59, 23</value>
-  </data>
-  <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>68, 13</value>
-  </data>
-  <data name="pictHighlight.TabIndex" type="System.Int32, mscorlib">
-    <value>26</value>
-  </data>
-  <data name="label4.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
-  </data>
-  <data name="&gt;&gt;pictureBox1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnResetDir.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="pictNext.TabIndex" type="System.Int32, mscorlib">
-    <value>27</value>
-  </data>
-  <data name="btnOk.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>796, 411</value>
-  </data>
-  <data name="&gt;&gt;btnChordHighlightColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnCancel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="btnApply.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>31</value>
-  </data>
-  <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 25</value>
-  </data>
-  <data name="&gt;&gt;btnFonts.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="radioDiaporama.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="pBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>130, 47</value>
   </data>
   <data name="pBox.LyricsTimes" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
@@ -464,392 +1196,325 @@
         AAASAAAAEwAAABQAAAAVAAAAFgAAABcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAs=
 </value>
   </data>
-  <data name="&gt;&gt;txtSlideShow.Name" xml:space="preserve">
-    <value>txtSlideShow</value>
-  </data>
-  <data name="btnOk.Location" type="System.Drawing.Point, System.Drawing">
-    <value>578, 374</value>
-  </data>
-  <data name="label10.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;btnResetDir.Name" xml:space="preserve">
-    <value>btnResetDir</value>
-  </data>
-  <data name="picChordHighlight.Size" type="System.Drawing.Size, System.Drawing">
-    <value>21, 21</value>
-  </data>
-  <data name="&gt;&gt;label9.ZOrder" xml:space="preserve">
-    <value>16</value>
-  </data>
-  <data name="cbSizeMode.Items2" xml:space="preserve">
-    <value>AutoSize</value>
-  </data>
-  <data name="cbSizeMode.Items3" xml:space="preserve">
-    <value>CenterImage</value>
-  </data>
-  <data name="cbSizeMode.Items1" xml:space="preserve">
-    <value>StretchImage</value>
-  </data>
-  <data name="txtSlideShowFreq.Location" type="System.Drawing.Point, System.Drawing">
-    <value>110, 320</value>
-  </data>
-  <data name="btnApply.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 25</value>
-  </data>
-  <data name="btnBackColor.Text" xml:space="preserve">
-    <value>Back color</value>
+  <data name="pBox.LyricsWords" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAMAgAAAJoBbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1u
+        ZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5XV0sIG1zY29ybGliLCBWZXJzaW9u
+        PTQuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49Yjc3YTVjNTYxOTM0ZTA4OQUB
+        AAAAMFN5c3RlbS5Db2xsZWN0aW9ucy5HZW5lcmljLkxpc3RgMVtbU3lzdGVtLlN0cmluZwMAAAAGX2l0
+        ZW1zBV9zaXplCF92ZXJzaW9uBgAACAgCAAAACQMAAAAYAAAAGAAAABEDAAAAIAAAAAYEAAAABkxvcmVt
+        IAYFAAAABmlwc3VtIAYGAAAABmRvbG9yIAYHAAAABHNpdCAGCAAAAAVhbWV0LAYJAAAADGNvbnNlY3Rl
+        dHVyIAYKAAAADGFkaXBpc2ljaW5nIAYLAAAABWVsaXQsBgwAAAAEc2VkIAYNAAAAA2RvIAYOAAAACGVp
+        dXNtb2QgBg8AAAAHdGVtcG9yIAYQAAAACmluY2lkaWR1bnQGEQAAAAN1dCAGEgAAAAdsYWJvcmUgBhMA
+        AAADZXQgBhQAAAAHZG9sb3JlIAYVAAAABm1hZ25hIAYWAAAAB2FsaXF1YS4GFwAAAANVdCAGGAAAAAVl
+        bmltIAYZAAAAA2FkIAYaAAAABm1pbmltIAYbAAAAB3ZlbmlhbSwNCAs=
+</value>
   </data>
   <data name="pBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 4, 4, 4</value>
   </data>
-  <data name="cbOptionsTextDisplay.TabIndex" type="System.Int32, mscorlib">
-    <value>38</value>
+  <data name="pBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>385, 187</value>
   </data>
-  <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>31, 13</value>
-  </data>
-  <data name="label8.TabIndex" type="System.Int32, mscorlib">
-    <value>32</value>
-  </data>
-  <data name="UpDownNbLines.Size" type="System.Drawing.Size, System.Drawing">
-    <value>35, 20</value>
-  </data>
-  <data name="&gt;&gt;txtSlideShow.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 275</value>
-  </data>
-  <data name="chkForceShowChords.Text" xml:space="preserve">
-    <value>Show chords</value>
-  </data>
-  <data name="&gt;&gt;btnChordNormalColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="label1.Text" xml:space="preserve">
-    <value>Number of lines:</value>
-  </data>
-  <data name="&gt;&gt;btnContourColor.ZOrder" xml:space="preserve">
-    <value>34</value>
-  </data>
-  <data name="chkTextUppercase.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>47, 13</value>
-  </data>
-  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 156</value>
-  </data>
-  <data name="&gt;&gt;btnContourColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pictNext.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="txtSlideShow.Size" type="System.Drawing.Size, System.Drawing">
-    <value>385, 20</value>
+  <data name="pBox.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
   </data>
   <data name="&gt;&gt;pBox.Name" xml:space="preserve">
     <value>pBox</value>
   </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>frmLyrOptions</value>
+  <data name="&gt;&gt;pBox.Type" xml:space="preserve">
+    <value>PicControl.pictureBoxControl, PicControl, Version=1.0.0.9, Culture=neutral, PublicKeyToken=null</value>
   </data>
-  <data name="label7.TabIndex" type="System.Int32, mscorlib">
-    <value>42</value>
-  </data>
-  <data name="&gt;&gt;label7.Parent" xml:space="preserve">
+  <data name="&gt;&gt;pBox.Parent" xml:space="preserve">
     <value>$this</value>
-  </data>
-  <data name="cbSizeMode.Location" type="System.Drawing.Point, System.Drawing">
-    <value>110, 346</value>
   </data>
   <data name="&gt;&gt;pBox.ZOrder" xml:space="preserve">
-    <value>33</value>
-  </data>
-  <data name="&gt;&gt;btnCancel.Name" xml:space="preserve">
-    <value>btnCancel</value>
-  </data>
-  <data name="&gt;&gt;txtSlideShowFreq.Name" xml:space="preserve">
-    <value>txtSlideShowFreq</value>
-  </data>
-  <data name="btnChordNormalColor.Text" xml:space="preserve">
-    <value>Normal</value>
-  </data>
-  <data name="label3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;btnSingColor.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="label3.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>671, 34</value>
-  </data>
-  <data name="radioSolidColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 17</value>
-  </data>
-  <data name="&gt;&gt;label6.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="btnChordHighlightColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 21</value>
-  </data>
-  <data name="&gt;&gt;txtFont.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="chkForceShowChords.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="pictureBox2.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
-    <value>StretchImage</value>
-  </data>
-  <data name="picChordBefore.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="cbOptionsTextDisplay.Items" xml:space="preserve">
-    <value>Top</value>
-  </data>
-  <data name="&gt;&gt;label6.ZOrder" xml:space="preserve">
-    <value>27</value>
-  </data>
-  <data name="label9.Text" xml:space="preserve">
-    <value>Background:</value>
-  </data>
-  <data name="&gt;&gt;pictNext.Name" xml:space="preserve">
-    <value>pictNext</value>
-  </data>
-  <data name="&gt;&gt;btnApply.Name" xml:space="preserve">
-    <value>btnApply</value>
-  </data>
-  <data name="&gt;&gt;label5.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="pictHighlight.Size" type="System.Drawing.Size, System.Drawing">
-    <value>21, 21</value>
-  </data>
-  <data name="label9.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="radioSolidColor.Text" xml:space="preserve">
-    <value>Solid Color</value>
-  </data>
-  <data name="btnDirSlideShow.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;pictBackColor.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="txtSlideShow.Location" type="System.Drawing.Point, System.Drawing">
-    <value>110, 298</value>
-  </data>
-  <data name="&gt;&gt;label4.Name" xml:space="preserve">
-    <value>label4</value>
-  </data>
-  <data name="label5.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="chkContour.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 131</value>
-  </data>
-  <data name="&gt;&gt;picChordBefore.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnForeColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 101</value>
-  </data>
-  <data name="chkTextBackground.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnContourColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>564, 126</value>
-  </data>
-  <data name="&gt;&gt;label10.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="picChordBefore.TabIndex" type="System.Int32, mscorlib">
-    <value>48</value>
-  </data>
-  <data name="radioDiaporama.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 301</value>
-  </data>
-  <data name="&gt;&gt;radioDiaporama.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label7.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
-    <value>30</value>
-  </data>
-  <data name="pictureBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>17, 15</value>
-  </data>
-  <data name="btnChordHighlightColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;btnCancel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnChordHighlightColor.TabIndex" type="System.Int32, mscorlib">
-    <value>47</value>
-  </data>
-  <data name="label4.Text" xml:space="preserve">
-    <value>(seconds)</value>
-  </data>
-  <data name="&gt;&gt;label9.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;chkContour.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="cbOptionsTextDisplay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 21</value>
-  </data>
-  <data name="&gt;&gt;btnOk.ZOrder" xml:space="preserve">
-    <value>40</value>
-  </data>
-  <data name="btnResetDir.Location" type="System.Drawing.Point, System.Drawing">
-    <value>567, 295</value>
-  </data>
-  <data name="btnBackColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 162</value>
-  </data>
-  <data name="txtFont.Size" type="System.Drawing.Size, System.Drawing">
-    <value>148, 20</value>
-  </data>
-  <data name="&gt;&gt;label5.Name" xml:space="preserve">
-    <value>label5</value>
-  </data>
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 13</value>
-  </data>
-  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>103, 13</value>
-  </data>
-  <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
-    <value>29</value>
-  </data>
-  <data name="btnForeColor.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="picChordHighlight.TabIndex" type="System.Int32, mscorlib">
-    <value>49</value>
-  </data>
-  <data name="&gt;&gt;pictHighlight.Name" xml:space="preserve">
-    <value>pictHighlight</value>
-  </data>
-  <data name="btnBackColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 21</value>
-  </data>
-  <data name="&gt;&gt;UpDownNbLines.Name" xml:space="preserve">
-    <value>UpDownNbLines</value>
-  </data>
-  <data name="btnSingColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 76</value>
-  </data>
-  <data name="&gt;&gt;UpDownNbLines.ZOrder" xml:space="preserve">
-    <value>15</value>
-  </data>
-  <data name="txtSlideShowFreq.Text" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="label7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>527, 248</value>
-  </data>
-  <data name="btnCancel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>684, 374</value>
-  </data>
-  <data name="txtSlideShowFreq.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
+    <value>34</value>
+  </data>
+  <metadata name="fontDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>186, 17</value>
+  </metadata>
+  <data name="btnFonts.Location" type="System.Drawing.Point, System.Drawing">
+    <value>718, 243</value>
   </data>
   <data name="btnFonts.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 23</value>
   </data>
-  <data name="&gt;&gt;cbOptionsTextDisplay.Parent" xml:space="preserve">
+  <data name="btnFonts.TabIndex" type="System.Int32, mscorlib">
+    <value>43</value>
+  </data>
+  <data name="btnFonts.Text" xml:space="preserve">
+    <value>...</value>
+  </data>
+  <data name="&gt;&gt;btnFonts.Name" xml:space="preserve">
+    <value>btnFonts</value>
+  </data>
+  <data name="&gt;&gt;btnFonts.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnFonts.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="chkTextBackground.TabIndex" type="System.Int32, mscorlib">
-    <value>39</value>
+  <data name="&gt;&gt;btnFonts.ZOrder" xml:space="preserve">
+    <value>9</value>
   </data>
-  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>60, 13</value>
+  <data name="txtFont.Location" type="System.Drawing.Point, System.Drawing">
+    <value>564, 246</value>
   </data>
-  <data name="pictBackColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>21, 21</value>
+  <data name="txtFont.Size" type="System.Drawing.Size, System.Drawing">
+    <value>148, 20</value>
   </data>
-  <data name="pictureBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>17, 15</value>
+  <data name="txtFont.TabIndex" type="System.Int32, mscorlib">
+    <value>44</value>
   </data>
-  <data name="btnResetDir.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="&gt;&gt;txtFont.Name" xml:space="preserve">
+    <value>txtFont</value>
   </data>
-  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 323</value>
+  <data name="&gt;&gt;txtFont.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;label6.Name" xml:space="preserve">
-    <value>label6</value>
+  <data name="&gt;&gt;txtFont.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
-  <data name="label6.AutoSize" type="System.Boolean, mscorlib">
+  <data name="&gt;&gt;txtFont.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="chkTextUppercase.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="&gt;&gt;txtSlideShow.ZOrder" xml:space="preserve">
-    <value>37</value>
+  <data name="chkTextUppercase.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkTextUppercase.Location" type="System.Drawing.Point, System.Drawing">
+    <value>530, 223</value>
+  </data>
+  <data name="chkTextUppercase.Size" type="System.Drawing.Size, System.Drawing">
+    <value>108, 17</value>
+  </data>
+  <data name="chkTextUppercase.TabIndex" type="System.Int32, mscorlib">
+    <value>45</value>
+  </data>
+  <data name="chkTextUppercase.Text" xml:space="preserve">
+    <value>Force Uppercase</value>
+  </data>
+  <data name="&gt;&gt;chkTextUppercase.Name" xml:space="preserve">
+    <value>chkTextUppercase</value>
+  </data>
+  <data name="&gt;&gt;chkTextUppercase.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkTextUppercase.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;chkTextUppercase.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="chkForceShowChords.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkForceShowChords.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkForceShowChords.Location" type="System.Drawing.Point, System.Drawing">
+    <value>670, 107</value>
+  </data>
+  <data name="chkForceShowChords.Size" type="System.Drawing.Size, System.Drawing">
+    <value>88, 17</value>
+  </data>
+  <data name="chkForceShowChords.TabIndex" type="System.Int32, mscorlib">
+    <value>51</value>
+  </data>
+  <data name="chkForceShowChords.Text" xml:space="preserve">
+    <value>Show chords</value>
+  </data>
+  <data name="&gt;&gt;chkForceShowChords.Name" xml:space="preserve">
+    <value>chkForceShowChords</value>
+  </data>
+  <data name="&gt;&gt;chkForceShowChords.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkForceShowChords.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;chkForceShowChords.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="label10.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label10.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  </data>
+  <data name="label10.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
+    <value>671, 34</value>
+  </data>
+  <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
+    <value>83, 13</value>
+  </data>
+  <data name="label10.TabIndex" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <data name="label10.Text" xml:space="preserve">
+    <value>Chords Color:</value>
+  </data>
+  <data name="&gt;&gt;label10.Name" xml:space="preserve">
+    <value>label10</value>
+  </data>
+  <data name="&gt;&gt;label10.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label10.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label10.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="picChordHighlight.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="picChordHighlight.Location" type="System.Drawing.Point, System.Drawing">
+    <value>768, 77</value>
+  </data>
+  <data name="picChordHighlight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>21, 21</value>
+  </data>
+  <data name="picChordHighlight.TabIndex" type="System.Int32, mscorlib">
+    <value>49</value>
+  </data>
+  <data name="&gt;&gt;picChordHighlight.Name" xml:space="preserve">
+    <value>picChordHighlight</value>
+  </data>
+  <data name="&gt;&gt;picChordHighlight.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;picChordHighlight.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;picChordHighlight.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="picChordBefore.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="picChordBefore.Location" type="System.Drawing.Point, System.Drawing">
+    <value>768, 52</value>
+  </data>
+  <data name="picChordBefore.Size" type="System.Drawing.Size, System.Drawing">
+    <value>21, 21</value>
+  </data>
+  <data name="picChordBefore.TabIndex" type="System.Int32, mscorlib">
+    <value>48</value>
+  </data>
+  <data name="&gt;&gt;picChordBefore.Name" xml:space="preserve">
+    <value>picChordBefore</value>
+  </data>
+  <data name="&gt;&gt;picChordBefore.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;picChordBefore.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;picChordBefore.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="btnChordHighlightColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="btnChordHighlightColor.Location" type="System.Drawing.Point, System.Drawing">
     <value>670, 77</value>
   </data>
-  <data name="&gt;&gt;label6.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnChordHighlightColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 21</value>
   </data>
-  <data name="pictBefore.TabIndex" type="System.Int32, mscorlib">
-    <value>25</value>
+  <data name="btnChordHighlightColor.TabIndex" type="System.Int32, mscorlib">
+    <value>47</value>
   </data>
-  <data name="&gt;&gt;pictContour.Parent" xml:space="preserve">
+  <data name="btnChordHighlightColor.Text" xml:space="preserve">
+    <value>Highlight</value>
+  </data>
+  <data name="&gt;&gt;btnChordHighlightColor.Name" xml:space="preserve">
+    <value>btnChordHighlightColor</value>
+  </data>
+  <data name="&gt;&gt;btnChordHighlightColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnChordHighlightColor.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="pictBackColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>98, 161</value>
+  <data name="&gt;&gt;btnChordHighlightColor.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="btnChordNormalColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnChordNormalColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>670, 52</value>
   </data>
   <data name="btnChordNormalColor.Size" type="System.Drawing.Size, System.Drawing">
     <value>92, 21</value>
   </data>
-  <data name="&gt;&gt;radioSolidColor.ZOrder" xml:space="preserve">
-    <value>20</value>
+  <data name="btnChordNormalColor.TabIndex" type="System.Int32, mscorlib">
+    <value>46</value>
   </data>
-  <data name="&gt;&gt;radioSolidColor.Name" xml:space="preserve">
-    <value>radioSolidColor</value>
+  <data name="btnChordNormalColor.Text" xml:space="preserve">
+    <value>Normal</value>
   </data>
-  <data name="&gt;&gt;btnSungColor.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnChordNormalColor.Name" xml:space="preserve">
+    <value>btnChordNormalColor</value>
+  </data>
+  <data name="&gt;&gt;btnChordNormalColor.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnForeColor.Parent" xml:space="preserve">
+  <data name="&gt;&gt;btnChordNormalColor.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="pictBefore.Location" type="System.Drawing.Point, System.Drawing">
-    <value>628, 51</value>
+  <data name="&gt;&gt;btnChordNormalColor.ZOrder" xml:space="preserve">
+    <value>6</value>
   </data>
-  <data name="pnlBalls.Size" type="System.Drawing.Size, System.Drawing">
-    <value>385, 17</value>
+  <data name="chkTopMost.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
-  <data name="&gt;&gt;chkForceShowChords.ZOrder" xml:space="preserve">
+  <data name="chkTopMost.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkTopMost.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 241</value>
+  </data>
+  <data name="chkTopMost.Size" type="System.Drawing.Size, System.Drawing">
+    <value>136, 17</value>
+  </data>
+  <data name="chkTopMost.TabIndex" type="System.Int32, mscorlib">
+    <value>52</value>
+  </data>
+  <data name="chkTopMost.Text" xml:space="preserve">
+    <value>Windows lyrics topmost</value>
+  </data>
+  <data name="&gt;&gt;chkTopMost.Name" xml:space="preserve">
+    <value>chkTopMost</value>
+  </data>
+  <data name="&gt;&gt;chkTopMost.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkTopMost.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;chkTopMost.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;btnBackColor.Parent" xml:space="preserve">
-    <value>$this</value>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>113</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
   </data>
-  <data name="&gt;&gt;pictHighlight.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>796, 411</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -977,663 +1642,28 @@
         Dn//8B////gf///4P///////
 </value>
   </data>
-  <data name="label8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterScreen</value>
   </data>
-  <data name="chkTextBackground.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 204</value>
-  </data>
-  <data name="label10.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
-  </data>
-  <data name="&gt;&gt;label8.ZOrder" xml:space="preserve">
-    <value>18</value>
-  </data>
-  <data name="pnlBalls.Location" type="System.Drawing.Point, System.Drawing">
-    <value>130, 30</value>
-  </data>
-  <data name="&gt;&gt;label8.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnDirSlideShow.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="txtFont.Location" type="System.Drawing.Point, System.Drawing">
-    <value>564, 246</value>
-  </data>
-  <data name="chkDisplayBalls.Size" type="System.Drawing.Size, System.Drawing">
-    <value>84, 17</value>
-  </data>
-  <data name="&gt;&gt;radioDiaporama.ZOrder" xml:space="preserve">
-    <value>21</value>
-  </data>
-  <data name="picChordBefore.Location" type="System.Drawing.Point, System.Drawing">
-    <value>768, 52</value>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Karaboss - Lyrics options</value>
   </data>
   <data name="&gt;&gt;folderBrowserDialog1.Name" xml:space="preserve">
     <value>folderBrowserDialog1</value>
   </data>
-  <data name="btnChordNormalColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;picChordHighlight.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="chkTextUppercase.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="chkDisplayBalls.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;label10.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="btnBackColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;pictNext.ZOrder" xml:space="preserve">
-    <value>23</value>
-  </data>
-  <data name="&gt;&gt;radioDiaporama.Name" xml:space="preserve">
-    <value>radioDiaporama</value>
-  </data>
-  <data name="&gt;&gt;btnContourColor.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="label6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;UpDownNbLines.Type" xml:space="preserve">
-    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="radioTransparent.Text" xml:space="preserve">
-    <value>Transparent</value>
-  </data>
-  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="chkTextUppercase.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 223</value>
-  </data>
-  <data name="radioTransparent.TabIndex" type="System.Int32, mscorlib">
-    <value>31</value>
-  </data>
-  <data name="&gt;&gt;label3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="pictBackColor.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="btnOk.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="btnDirSlideShow.Text" xml:space="preserve">
-    <value>Change</value>
-  </data>
-  <data name="pictureBox1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="pictContour.Location" type="System.Drawing.Point, System.Drawing">
-    <value>628, 126</value>
-  </data>
-  <data name="&gt;&gt;btnDirSlideShow.Name" xml:space="preserve">
-    <value>btnDirSlideShow</value>
-  </data>
-  <data name="&gt;&gt;label3.Name" xml:space="preserve">
-    <value>label3</value>
-  </data>
-  <data name="btnContourColor.Text" xml:space="preserve">
-    <value>Contour</value>
-  </data>
-  <data name="label3.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="UpDownNbLines.Location" type="System.Drawing.Point, System.Drawing">
-    <value>616, 151</value>
-  </data>
-  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="pictureBox2.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;pictContour.ZOrder" xml:space="preserve">
-    <value>22</value>
-  </data>
-  <data name="label1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnFonts.TabIndex" type="System.Int32, mscorlib">
-    <value>43</value>
-  </data>
-  <data name="&gt;&gt;chkTextBackground.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="btnCancel.Text" xml:space="preserve">
-    <value>A&amp;nnuler</value>
-  </data>
-  <data name="&gt;&gt;pictBackColor.Name" xml:space="preserve">
-    <value>pictBackColor</value>
-  </data>
-  <data name="&gt;&gt;btnResetDir.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="chkContour.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="pictureBox1.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
-    <value>StretchImage</value>
-  </data>
-  <data name="&gt;&gt;btnChordNormalColor.Name" xml:space="preserve">
-    <value>btnChordNormalColor</value>
-  </data>
-  <data name="label3.Text" xml:space="preserve">
-    <value>Frequency:</value>
-  </data>
-  <data name="&gt;&gt;pictureBox1.Parent" xml:space="preserve">
-    <value>pnlBalls</value>
-  </data>
-  <data name="&gt;&gt;btnBackColor.ZOrder" xml:space="preserve">
-    <value>45</value>
-  </data>
-  <data name="&gt;&gt;chkDisplayBalls.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;radioSolidColor.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pictureBox2.Name" xml:space="preserve">
-    <value>pictureBox2</value>
-  </data>
-  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>38</value>
-  </data>
-  <data name="btnChordNormalColor.TabIndex" type="System.Int32, mscorlib">
-    <value>46</value>
-  </data>
-  <data name="label2.Text" xml:space="preserve">
-    <value>SlideShow directory:</value>
-  </data>
-  <data name="cbSizeMode.Items" xml:space="preserve">
-    <value>Normal</value>
-  </data>
-  <data name="btnChordHighlightColor.Text" xml:space="preserve">
-    <value>Highlight</value>
-  </data>
-  <data name="chkDisplayBalls.TabIndex" type="System.Int32, mscorlib">
-    <value>36</value>
-  </data>
-  <data name="&gt;&gt;btnSungColor.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="label8.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
-  </data>
-  <data name="pBox.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
-  </data>
-  <data name="&gt;&gt;pictureBox2.Parent" xml:space="preserve">
-    <value>pnlBalls</value>
-  </data>
-  <data name="&gt;&gt;chkDisplayBalls.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label7.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="btnSingColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 21</value>
-  </data>
-  <data name="&gt;&gt;label4.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pictNext.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnFonts.Name" xml:space="preserve">
-    <value>btnFonts</value>
-  </data>
-  <data name="&gt;&gt;btnApply.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cbOptionsTextDisplay.ZOrder" xml:space="preserve">
-    <value>12</value>
-  </data>
-  <data name="&gt;&gt;pnlBalls.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="label4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;chkTextBackground.Name" xml:space="preserve">
-    <value>chkTextBackground</value>
-  </data>
-  <data name="radioTransparent.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;cbSizeMode.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnResetDir.ZOrder" xml:space="preserve">
-    <value>26</value>
-  </data>
-  <data name="&gt;&gt;label10.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnSingColor.ZOrder" xml:space="preserve">
-    <value>43</value>
+  <data name="&gt;&gt;folderBrowserDialog1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FolderBrowserDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;fontDialog1.Name" xml:space="preserve">
     <value>fontDialog1</value>
   </data>
-  <data name="&gt;&gt;chkForceShowChords.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="btnApply.Location" type="System.Drawing.Point, System.Drawing">
-    <value>472, 374</value>
-  </data>
-  <data name="chkTextUppercase.Size" type="System.Drawing.Size, System.Drawing">
-    <value>108, 17</value>
-  </data>
-  <data name="cbOptionsTextDisplay.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 177</value>
-  </data>
-  <data name="&gt;&gt;chkTextUppercase.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;chkForceShowChords.Name" xml:space="preserve">
-    <value>chkForceShowChords</value>
-  </data>
-  <data name="label10.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnSingColor.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="UpDownNbLines.TabIndex" type="System.Int32, mscorlib">
-    <value>35</value>
-  </data>
-  <data name="&gt;&gt;picChordBefore.Name" xml:space="preserve">
-    <value>picChordBefore</value>
-  </data>
-  <data name="&gt;&gt;pictureBox1.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;chkTextBackground.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="radioSolidColor.TabIndex" type="System.Int32, mscorlib">
-    <value>30</value>
-  </data>
-  <data name="chkContour.Size" type="System.Drawing.Size, System.Drawing">
-    <value>15, 14</value>
-  </data>
-  <data name="chkForceShowChords.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label5.Text" xml:space="preserve">
-    <value>DIAPORAMA</value>
-  </data>
-  <data name="chkForceShowChords.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 17</value>
-  </data>
-  <data name="&gt;&gt;cbOptionsTextDisplay.Name" xml:space="preserve">
-    <value>cbOptionsTextDisplay</value>
-  </data>
-  <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 13</value>
-  </data>
-  <data name="pictureBox2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>22, 0</value>
-  </data>
-  <data name="&gt;&gt;btnSungColor.ZOrder" xml:space="preserve">
-    <value>44</value>
-  </data>
-  <data name="&gt;&gt;cbSizeMode.ZOrder" xml:space="preserve">
-    <value>28</value>
-  </data>
   <data name="&gt;&gt;fontDialog1.Type" xml:space="preserve">
     <value>System.Windows.Forms.FontDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="pictureBox2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;pictureBox2.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;cbOptionsTextDisplay.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="label8.Location" type="System.Drawing.Point, System.Drawing">
-    <value>531, 33</value>
-  </data>
-  <data name="btnBackColor.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="btnCancel.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;txtFont.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="txtFont.TabIndex" type="System.Int32, mscorlib">
-    <value>44</value>
-  </data>
-  <data name="&gt;&gt;btnFonts.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="pBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>130, 47</value>
-  </data>
-  <data name="&gt;&gt;btnBackColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="radioTransparent.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 131</value>
-  </data>
-  <data name="&gt;&gt;pictBefore.ZOrder" xml:space="preserve">
-    <value>25</value>
-  </data>
-  <data name="label10.Text" xml:space="preserve">
-    <value>Chords Color:</value>
-  </data>
-  <data name="label8.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="btnDirSlideShow.Location" type="System.Drawing.Point, System.Drawing">
-    <value>501, 295</value>
-  </data>
-  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;btnSingColor.Name" xml:space="preserve">
-    <value>btnSingColor</value>
-  </data>
-  <data name="chkTextUppercase.Text" xml:space="preserve">
-    <value>Force Uppercase</value>
-  </data>
-  <data name="&gt;&gt;btnDirSlideShow.ZOrder" xml:space="preserve">
-    <value>35</value>
-  </data>
-  <data name="&gt;&gt;label5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label9.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;btnFonts.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="chkDisplayBalls.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 30</value>
-  </data>
-  <data name="label6.Text" xml:space="preserve">
-    <value>Position:</value>
-  </data>
-  <data name="&gt;&gt;chkTextBackground.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>53, 13</value>
-  </data>
-  <data name="&gt;&gt;label3.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;btnCancel.ZOrder" xml:space="preserve">
-    <value>39</value>
-  </data>
-  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
-    <value>CenterScreen</value>
-  </data>
-  <data name="btnBackColor.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="picChordHighlight.Location" type="System.Drawing.Point, System.Drawing">
-    <value>768, 77</value>
-  </data>
-  <data name="&gt;&gt;btnSingColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnForeColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;label4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="pictureBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="&gt;&gt;label1.Name" xml:space="preserve">
-    <value>label1</value>
-  </data>
-  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="btnSingColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="picChordBefore.Size" type="System.Drawing.Size, System.Drawing">
-    <value>21, 21</value>
-  </data>
-  <data name="label4.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="pictHighlight.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;picChordHighlight.Name" xml:space="preserve">
-    <value>picChordHighlight</value>
-  </data>
-  <data name="btnSungColor.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;radioTransparent.Name" xml:space="preserve">
-    <value>radioTransparent</value>
-  </data>
-  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>36</value>
-  </data>
-  <data name="pictBefore.Size" type="System.Drawing.Size, System.Drawing">
-    <value>21, 21</value>
-  </data>
-  <data name="&gt;&gt;picChordBefore.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;txtSlideShow.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="pictBackColor.TabIndex" type="System.Int32, mscorlib">
-    <value>33</value>
-  </data>
-  <data name="&gt;&gt;btnChordHighlightColor.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="btnDirSlideShow.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
-  </data>
-  <data name="label7.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="pictureBox1.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;label2.Name" xml:space="preserve">
-    <value>label2</value>
-  </data>
-  <data name="label6.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
-  </data>
-  <data name="btnContourColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 21</value>
-  </data>
-  <data name="radioSolidColor.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
-  </data>
-  <data name="&gt;&gt;btnBackColor.Name" xml:space="preserve">
-    <value>btnBackColor</value>
-  </data>
-  <data name="btnApply.Text" xml:space="preserve">
-    <value>&amp;Appliquer</value>
-  </data>
-  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 13</value>
-  </data>
-  <data name="txtSlideShowFreq.Size" type="System.Drawing.Size, System.Drawing">
-    <value>35, 20</value>
-  </data>
-  <data name="label2.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="cbSizeMode.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="&gt;&gt;pictBefore.Name" xml:space="preserve">
-    <value>pictBefore</value>
-  </data>
-  <data name="label9.TabIndex" type="System.Int32, mscorlib">
-    <value>34</value>
-  </data>
-  <data name="&gt;&gt;pictBefore.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="btnSungColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 51</value>
-  </data>
-  <data name="&gt;&gt;btnForeColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>frmLyrOptions</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="radioTransparent.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 346</value>
-  </data>
-  <data name="btnSingColor.Text" xml:space="preserve">
-    <value>Highlight</value>
-  </data>
-  <data name="&gt;&gt;pictBackColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnOk.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="radioDiaporama.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 81</value>
-  </data>
-  <data name="btnForeColor.Text" xml:space="preserve">
-    <value>Next</value>
-  </data>
-  <data name="pBox.LyricsWords" mimetype="application/x-microsoft.net.object.binary.base64">
-    <value>
-        AAEAAAD/////AQAAAAAAAAAMAgAAAJoBbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1u
-        ZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5XV0sIG1zY29ybGliLCBWZXJzaW9u
-        PTQuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49Yjc3YTVjNTYxOTM0ZTA4OQUB
-        AAAAMFN5c3RlbS5Db2xsZWN0aW9ucy5HZW5lcmljLkxpc3RgMVtbU3lzdGVtLlN0cmluZwMAAAAGX2l0
-        ZW1zBV9zaXplCF92ZXJzaW9uBgAACAgCAAAACQMAAAAYAAAAGAAAABEDAAAAIAAAAAYEAAAABkxvcmVt
-        IAYFAAAABmlwc3VtIAYGAAAABmRvbG9yIAYHAAAABHNpdCAGCAAAAAVhbWV0LAYJAAAADGNvbnNlY3Rl
-        dHVyIAYKAAAADGFkaXBpc2ljaW5nIAYLAAAABWVsaXQsBgwAAAAEc2VkIAYNAAAAA2RvIAYOAAAACGVp
-        dXNtb2QgBg8AAAAHdGVtcG9yIAYQAAAACmluY2lkaWR1bnQGEQAAAAN1dCAGEgAAAAdsYWJvcmUgBhMA
-        AAADZXQgBhQAAAAHZG9sb3JlIAYVAAAABm1hZ25hIAYWAAAAB2FsaXF1YS4GFwAAAANVdCAGGAAAAAVl
-        bmltIAYZAAAAA2FkIAYaAAAABm1pbmltIAYbAAAAB3ZlbmlhbSwNCAs=
-</value>
-  </data>
-  <data name="&gt;&gt;chkTextUppercase.Name" xml:space="preserve">
-    <value>chkTextUppercase</value>
-  </data>
-  <data name="btnResetDir.Size" type="System.Drawing.Size, System.Drawing">
-    <value>46, 23</value>
-  </data>
-  <data name="&gt;&gt;cbSizeMode.Name" xml:space="preserve">
-    <value>cbSizeMode</value>
-  </data>
-  <data name="pictHighlight.Location" type="System.Drawing.Point, System.Drawing">
-    <value>628, 76</value>
-  </data>
-  <data name="&gt;&gt;label8.Name" xml:space="preserve">
-    <value>label8</value>
-  </data>
-  <data name="&gt;&gt;btnContourColor.Name" xml:space="preserve">
-    <value>btnContourColor</value>
-  </data>
-  <data name="btnSungColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 21</value>
-  </data>
-  <data name="&gt;&gt;chkForceShowChords.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnFonts.Location" type="System.Drawing.Point, System.Drawing">
-    <value>718, 243</value>
-  </data>
-  <data name="btnOk.Text" xml:space="preserve">
-    <value>&amp;Ok</value>
-  </data>
-  <data name="chkContour.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;btnChordNormalColor.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;btnChordNormalColor.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="label7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label5.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
-  </data>
-  <data name="&gt;&gt;picChordHighlight.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;txtSlideShowFreq.ZOrder" xml:space="preserve">
-    <value>32</value>
-  </data>
-  <data name="&gt;&gt;picChordHighlight.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="pictBefore.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="radioDiaporama.Text" xml:space="preserve">
-    <value>Diaporama</value>
-  </data>
-  <data name="&gt;&gt;UpDownNbLines.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pictBackColor.ZOrder" xml:space="preserve">
-    <value>17</value>
-  </data>
-  <data name="&gt;&gt;label1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pBox.Type" xml:space="preserve">
-    <value>PicControl.pictureBoxControl, PicControl, Version=1.0.0.9, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="cbSizeMode.Items4" xml:space="preserve">
-    <value>Zoom</value>
-  </data>
-  <data name="&gt;&gt;btnDirSlideShow.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <metadata name="folderBrowserDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="fontDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>186, 17</value>
-  </metadata>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>113</value>
-  </metadata>
 </root>

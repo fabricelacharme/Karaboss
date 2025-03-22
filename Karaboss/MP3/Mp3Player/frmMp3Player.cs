@@ -43,8 +43,6 @@ using System.Linq;
 using System.Windows.Forms;
 using TagLib.Id3v2;
 using TagLib;
-using Karaboss.xplorer;
-using System.Reflection;
 
 
 
@@ -303,8 +301,7 @@ namespace Karaboss.Mp3
                 {
                     e.Cancel = true;
 
-                    // Save LRC file
-                    //SaveMp3Lyrics(Mp3FullPath);
+                    // Save LRC file                    
                     GetLrcSaveOptions();
 
                     return;
@@ -346,13 +343,7 @@ namespace Karaboss.Mp3
                 Application.OpenForms["frmMp3Lyrics"].Close();
             }
 
-            /*
-            if (Application.OpenForms.OfType<frmMp3LyricsEdit>().Count() > 0)
-            {
-                Application.OpenForms["frmMp3LyricsEdit"].Close();
-            }
-            */
-
+            
             // Active le formulaire frmExplorer
             if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
             {
@@ -1564,7 +1555,6 @@ namespace Karaboss.Mp3
             dgView.ColumnCount = 3;
 
             
-
             dgView.Columns[COL_MS].Name = "dMs";
             dgView.Columns[COL_MS].HeaderText = "Ms";
             dgView.Columns[COL_MS].ToolTipText = "Milliseconds";            
@@ -1981,11 +1971,17 @@ namespace Karaboss.Mp3
 
             pnlEdit.Visible = true;
 
-            lblHotkeys.Font = new Font("Courier New", 9);
-            lblHotkeys.Text = "<ENTER>" + " " + "Add a new timestamp" + "\r\n" + "<DEL>" + "   " + "Remove current timestamp" + "\r\n" + "<SPACE>" + " "+ "Pause Music" ;
+            // first hotkeys
+            lblHotkeys.Font = new Font("Courier New", 9);                        
+            string tx = Strings.Mp3TimeStampHotKey1;
+            tx = string.Format(tx, Environment.NewLine);            
+            lblHotkeys.Text = tx; // "<ENTER>" + " " + "Add a new timestamp" + "\r\n" + "<DEL>" + "   " + "Remove current timestamp" + "\r\n" + "<SPACE>" + " "+ "Pause Music" ;
 
+            // 2nd hotkeys
             lblHotkeysOthers.Font = lblHotkeys.Font;
-            lblHotkeysOthers.Text = "+" + "       " + "Accelerate" + "\r\n" + "-" + "       " + "Slow down" + "\r\n" + "<-" + "      " + "Stop Music";
+            tx = Strings.Mp3TimeStampHotKey2;
+            tx = string.Format(tx, Environment.NewLine);
+            lblHotkeysOthers.Text = tx; // "+" + "       " + "Accelerate" + "\r\n" + "-" + "       " + "Slow down" + "\r\n" + "<-" + "      " + "Stop Music";
 
             if (Player.Tag != null)
             {
@@ -2887,8 +2883,12 @@ namespace Karaboss.Mp3
             switch (e.KeyCode)
             {
                 case Keys.Space:
-                    if (PlayerState == PlayerStates.Playing || PlayerState == PlayerStates.Paused)                       
-                        PlayPauseMusic();
+                    
+                    // If editing lyrics: exit
+                    if (PlayerAppearance == PlayerAppearances.LrcGenerator && LrcMode == LrcModes.Edit)
+                        return;
+                                        
+                    PlayPauseMusic();
                     break;
 
                 case Keys.Left:
@@ -2897,7 +2897,7 @@ namespace Karaboss.Mp3
                     break;
 
                 case Keys.Enter:
-                    if (PlayerAppearance == PlayerAppearances.LrcGenerator && PlayerState == PlayerStates.Playing)
+                    if (PlayerAppearance == PlayerAppearances.LrcGenerator && LrcMode == LrcModes.Sync && PlayerState == PlayerStates.Playing)
                     {
                         // Add a new timestamp
                         AddNewLrcTimeStamp();

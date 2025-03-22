@@ -555,4 +555,10 @@
   <data name="DescSyncMode" xml:space="preserve">
     <value>Sync mode: start the music and press ENTER each time you hear a line of lyrics displayed.</value>
   </data>
+  <data name="Mp3TimeStampHotKey1" xml:space="preserve">
+    <value>&lt;ENTER&gt; Add a new timestamp{0}&lt;DEL&gt;   Remove current timestamp{0}&lt;SPACE&gt; Pause Music"</value>
+  </data>
+  <data name="Mp3TimeStampHotKey2" xml:space="preserve">
+    <value>+       Accelerate{0}-       Slow down{0}&lt;-      Stop Music</value>
+  </data>
 </root>

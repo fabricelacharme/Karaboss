@@ -79,6 +79,7 @@
             this.picChordBefore = new System.Windows.Forms.PictureBox();
             this.btnChordHighlightColor = new System.Windows.Forms.Button();
             this.btnChordNormalColor = new System.Windows.Forms.Button();
+            this.chkTopMost = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -146,10 +147,6 @@
             resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
             // 
-            // folderBrowserDialog1
-            // 
-            resources.ApplyResources(this.folderBrowserDialog1, "folderBrowserDialog1");
-            // 
             // txtSlideShow
             // 
             resources.ApplyResources(this.txtSlideShow, "txtSlideShow");
@@ -199,7 +196,6 @@
             // 
             // cbSizeMode
             // 
-            resources.ApplyResources(this.cbSizeMode, "cbSizeMode");
             this.cbSizeMode.FormattingEnabled = true;
             this.cbSizeMode.Items.AddRange(new object[] {
             resources.GetString("cbSizeMode.Items"),
@@ -207,6 +203,7 @@
             resources.GetString("cbSizeMode.Items2"),
             resources.GetString("cbSizeMode.Items3"),
             resources.GetString("cbSizeMode.Items4")});
+            resources.ApplyResources(this.cbSizeMode, "cbSizeMode");
             this.cbSizeMode.Name = "cbSizeMode";
             this.cbSizeMode.SelectedIndexChanged += new System.EventHandler(this.CbSizeMode_SelectedIndexChanged);
             // 
@@ -280,69 +277,69 @@
             // 
             // pnlBalls
             // 
-            resources.ApplyResources(this.pnlBalls, "pnlBalls");
             this.pnlBalls.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.pnlBalls.Controls.Add(this.pictureBox2);
             this.pnlBalls.Controls.Add(this.pictureBox1);
+            resources.ApplyResources(this.pnlBalls, "pnlBalls");
             this.pnlBalls.Name = "pnlBalls";
             // 
             // pictureBox2
             // 
-            resources.ApplyResources(this.pictureBox2, "pictureBox2");
             this.pictureBox2.Image = global::Karaboss.Properties.Resources.ball;
+            resources.ApplyResources(this.pictureBox2, "pictureBox2");
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.TabStop = false;
             // 
             // pictureBox1
             // 
-            resources.ApplyResources(this.pictureBox1, "pictureBox1");
             this.pictureBox1.Image = global::Karaboss.Properties.Resources.ball;
+            resources.ApplyResources(this.pictureBox1, "pictureBox1");
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.TabStop = false;
             // 
             // pictBackColor
             // 
-            resources.ApplyResources(this.pictBackColor, "pictBackColor");
             this.pictBackColor.BackColor = System.Drawing.Color.Black;
+            resources.ApplyResources(this.pictBackColor, "pictBackColor");
             this.pictBackColor.Name = "pictBackColor";
             this.pictBackColor.TabStop = false;
             // 
             // pictContour
             // 
-            resources.ApplyResources(this.pictContour, "pictContour");
             this.pictContour.BackColor = System.Drawing.Color.Black;
+            resources.ApplyResources(this.pictContour, "pictContour");
             this.pictContour.Name = "pictContour";
             this.pictContour.TabStop = false;
             // 
             // pictNext
             // 
-            resources.ApplyResources(this.pictNext, "pictNext");
             this.pictNext.BackColor = System.Drawing.Color.White;
+            resources.ApplyResources(this.pictNext, "pictNext");
             this.pictNext.Name = "pictNext";
             this.pictNext.TabStop = false;
             // 
             // pictHighlight
             // 
-            resources.ApplyResources(this.pictHighlight, "pictHighlight");
             this.pictHighlight.BackColor = System.Drawing.Color.Red;
+            resources.ApplyResources(this.pictHighlight, "pictHighlight");
             this.pictHighlight.Name = "pictHighlight";
             this.pictHighlight.TabStop = false;
             // 
             // pictBefore
             // 
-            resources.ApplyResources(this.pictBefore, "pictBefore");
             this.pictBefore.BackColor = System.Drawing.Color.LightGreen;
+            resources.ApplyResources(this.pictBefore, "pictBefore");
             this.pictBefore.Name = "pictBefore";
             this.pictBefore.TabStop = false;
             // 
             // cbOptionsTextDisplay
             // 
-            resources.ApplyResources(this.cbOptionsTextDisplay, "cbOptionsTextDisplay");
             this.cbOptionsTextDisplay.FormattingEnabled = true;
             this.cbOptionsTextDisplay.Items.AddRange(new object[] {
             resources.GetString("cbOptionsTextDisplay.Items"),
             resources.GetString("cbOptionsTextDisplay.Items1"),
             resources.GetString("cbOptionsTextDisplay.Items2")});
+            resources.ApplyResources(this.cbOptionsTextDisplay, "cbOptionsTextDisplay");
             this.cbOptionsTextDisplay.Name = "cbOptionsTextDisplay";
             this.cbOptionsTextDisplay.SelectedIndexChanged += new System.EventHandler(this.cbOptionsTextDisplay_SelectedIndexChanged);
             // 
@@ -371,7 +368,6 @@
             // 
             // pBox
             // 
-            resources.ApplyResources(this.pBox, "pBox");
             this.pBox.BackColor = System.Drawing.Color.Black;
             this.pBox.bColorContour = true;
             this.pBox.bDemo = false;
@@ -389,6 +385,7 @@
             this.pBox.FreqDirSlideShow = 0;
             this.pBox.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pBox.KaraokeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            resources.ApplyResources(this.pBox, "pBox");
             this.pBox.LyricsTimes = ((System.Collections.Generic.List<int>)(resources.GetObject("pBox.LyricsTimes")));
             this.pBox.LyricsWords = ((System.Collections.Generic.List<string>)(resources.GetObject("pBox.LyricsWords")));
             this.pBox.m_Alpha = 255;
@@ -444,15 +441,15 @@
             // 
             // picChordHighlight
             // 
-            resources.ApplyResources(this.picChordHighlight, "picChordHighlight");
             this.picChordHighlight.BackColor = System.Drawing.Color.DarkRed;
+            resources.ApplyResources(this.picChordHighlight, "picChordHighlight");
             this.picChordHighlight.Name = "picChordHighlight";
             this.picChordHighlight.TabStop = false;
             // 
             // picChordBefore
             // 
-            resources.ApplyResources(this.picChordBefore, "picChordBefore");
             this.picChordBefore.BackColor = System.Drawing.Color.DarkOrange;
+            resources.ApplyResources(this.picChordBefore, "picChordBefore");
             this.picChordBefore.Name = "picChordBefore";
             this.picChordBefore.TabStop = false;
             // 
@@ -470,10 +467,20 @@
             this.btnChordNormalColor.UseVisualStyleBackColor = true;
             this.btnChordNormalColor.Click += new System.EventHandler(this.btnChordNormalColor_Click);
             // 
+            // chkTopMost
+            // 
+            resources.ApplyResources(this.chkTopMost, "chkTopMost");
+            this.chkTopMost.Checked = true;
+            this.chkTopMost.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTopMost.Name = "chkTopMost";
+            this.chkTopMost.UseVisualStyleBackColor = true;
+            this.chkTopMost.CheckedChanged += new System.EventHandler(this.chkTopMost_CheckedChanged);
+            // 
             // frmLyrOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkTopMost);
             this.Controls.Add(this.chkForceShowChords);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.picChordHighlight);
@@ -594,5 +601,6 @@
         private System.Windows.Forms.PictureBox picChordBefore;
         private System.Windows.Forms.Button btnChordHighlightColor;
         private System.Windows.Forms.Button btnChordNormalColor;
+        private System.Windows.Forms.CheckBox chkTopMost;
     }
 }

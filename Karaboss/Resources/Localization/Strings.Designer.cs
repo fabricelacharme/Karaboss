@@ -1372,5 +1372,19 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("DescSyncMode", resourceCulture);
             }
         }
+        internal static string Mp3TimeStampHotKey1
+        {
+            get
+            {
+                return ResourceManager.GetString("Mp3TimeStampHotKey1", resourceCulture);
+            }
+        }
+        internal static string Mp3TimeStampHotKey2
+        {
+            get
+            {
+                return ResourceManager.GetString("Mp3TimeStampHotKey2", resourceCulture);
+            }
+        }
     }
 }

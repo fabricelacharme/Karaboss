@@ -300,6 +300,282 @@
   <data name="mnuHelpAbout.Text" xml:space="preserve">
     <value>&amp;About...</value>
   </data>
+  <data name="&gt;&gt;pBox.Name" xml:space="preserve">
+    <value>pBox</value>
+  </data>
+  <data name="&gt;&gt;pBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pBox.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;pBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;lblPlaylist.Name" xml:space="preserve">
+    <value>lblPlaylist</value>
+  </data>
+  <data name="&gt;&gt;lblPlaylist.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblPlaylist.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;lblPlaylist.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;btnTempoMinus.Name" xml:space="preserve">
+    <value>btnTempoMinus</value>
+  </data>
+  <data name="&gt;&gt;btnTempoMinus.Type" xml:space="preserve">
+    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnTempoMinus.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnTempoMinus.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;btnTempoPlus.Name" xml:space="preserve">
+    <value>btnTempoPlus</value>
+  </data>
+  <data name="&gt;&gt;btnTempoPlus.Type" xml:space="preserve">
+    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnTempoPlus.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnTempoPlus.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;lblTempoValue.Name" xml:space="preserve">
+    <value>lblTempoValue</value>
+  </data>
+  <data name="&gt;&gt;lblTempoValue.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblTempoValue.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;lblTempoValue.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;lblTemp.Name" xml:space="preserve">
+    <value>lblTemp</value>
+  </data>
+  <data name="&gt;&gt;lblTemp.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblTemp.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;lblTemp.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoMinus.Name" xml:space="preserve">
+    <value>btnTranspoMinus</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoMinus.Type" xml:space="preserve">
+    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoMinus.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoMinus.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoPlus.Name" xml:space="preserve">
+    <value>btnTranspoPlus</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoPlus.Type" xml:space="preserve">
+    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoPlus.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoPlus.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;lblTranspoValue.Name" xml:space="preserve">
+    <value>lblTranspoValue</value>
+  </data>
+  <data name="&gt;&gt;lblTranspoValue.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblTranspoValue.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;lblTranspoValue.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;lblTransp.Name" xml:space="preserve">
+    <value>lblTransp</value>
+  </data>
+  <data name="&gt;&gt;lblTransp.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblTransp.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;lblTransp.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;VuPeakVolumeRight.Name" xml:space="preserve">
+    <value>VuPeakVolumeRight</value>
+  </data>
+  <data name="&gt;&gt;VuPeakVolumeRight.Type" xml:space="preserve">
+    <value>VU_MeterLibrary.VuMeter, VU_MeterLibrary, Version=1.0.0.1, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;VuPeakVolumeRight.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;VuPeakVolumeRight.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;VuPeakVolumeLeft.Name" xml:space="preserve">
+    <value>VuPeakVolumeLeft</value>
+  </data>
+  <data name="&gt;&gt;VuPeakVolumeLeft.Type" xml:space="preserve">
+    <value>VU_MeterLibrary.VuMeter, VU_MeterLibrary, Version=1.0.0.1, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;VuPeakVolumeLeft.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;VuPeakVolumeLeft.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;lblMainVolume.Name" xml:space="preserve">
+    <value>lblMainVolume</value>
+  </data>
+  <data name="&gt;&gt;lblMainVolume.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblMainVolume.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;lblMainVolume.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="&gt;&gt;pnlDisplay.Name" xml:space="preserve">
+    <value>pnlDisplay</value>
+  </data>
+  <data name="&gt;&gt;pnlDisplay.Type" xml:space="preserve">
+    <value>Karaboss.Display.PanelPlayer, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;pnlDisplay.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;pnlDisplay.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;btnPrev.Name" xml:space="preserve">
+    <value>btnPrev</value>
+  </data>
+  <data name="&gt;&gt;btnPrev.Type" xml:space="preserve">
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnPrev.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnPrev.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;btnNext.Name" xml:space="preserve">
+    <value>btnNext</value>
+  </data>
+  <data name="&gt;&gt;btnNext.Type" xml:space="preserve">
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnNext.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnNext.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="&gt;&gt;positionHScrollBar.Name" xml:space="preserve">
+    <value>positionHScrollBar</value>
+  </data>
+  <data name="&gt;&gt;positionHScrollBar.Type" xml:space="preserve">
+    <value>ColorSlider.ColorSlider, ColorSlider, Version=1.0.0.5, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;positionHScrollBar.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;positionHScrollBar.ZOrder" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="&gt;&gt;btnStop.Name" xml:space="preserve">
+    <value>btnStop</value>
+  </data>
+  <data name="&gt;&gt;btnStop.Type" xml:space="preserve">
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnStop.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnStop.ZOrder" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="&gt;&gt;btnPlay.Name" xml:space="preserve">
+    <value>btnPlay</value>
+  </data>
+  <data name="&gt;&gt;btnPlay.Type" xml:space="preserve">
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnPlay.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnPlay.ZOrder" xml:space="preserve">
+    <value>18</value>
+  </data>
+  <data name="&gt;&gt;sldMainVolume.Name" xml:space="preserve">
+    <value>sldMainVolume</value>
+  </data>
+  <data name="&gt;&gt;sldMainVolume.Type" xml:space="preserve">
+    <value>ColorSlider.ColorSlider, ColorSlider, Version=1.0.0.5, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;sldMainVolume.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;sldMainVolume.ZOrder" xml:space="preserve">
+    <value>19</value>
+  </data>
+  <data name="&gt;&gt;lnlVol.Name" xml:space="preserve">
+    <value>lnlVol</value>
+  </data>
+  <data name="&gt;&gt;lnlVol.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lnlVol.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;lnlVol.ZOrder" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="pnlControls.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="pnlControls.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 566</value>
+  </data>
+  <data name="pnlControls.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1329, 127</value>
+  </data>
+  <data name="pnlControls.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;pnlControls.Name" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;pnlControls.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlControls.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pnlControls.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="pBox.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -356,48 +632,6 @@
   </data>
   <data name="&gt;&gt;lblPlaylist.ZOrder" xml:space="preserve">
     <value>1</value>
-  </data>
-  <data name="btnTempoMinus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>314, 70</value>
-  </data>
-  <data name="btnTempoMinus.Size" type="System.Drawing.Size, System.Drawing">
-    <value>32, 32</value>
-  </data>
-  <data name="btnTempoMinus.TabIndex" type="System.Int32, mscorlib">
-    <value>60</value>
-  </data>
-  <data name="&gt;&gt;btnTempoMinus.Name" xml:space="preserve">
-    <value>btnTempoMinus</value>
-  </data>
-  <data name="&gt;&gt;btnTempoMinus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;btnTempoMinus.Parent" xml:space="preserve">
-    <value>pnlControls</value>
-  </data>
-  <data name="&gt;&gt;btnTempoMinus.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="btnTempoPlus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>314, 30</value>
-  </data>
-  <data name="btnTempoPlus.Size" type="System.Drawing.Size, System.Drawing">
-    <value>32, 32</value>
-  </data>
-  <data name="btnTempoPlus.TabIndex" type="System.Int32, mscorlib">
-    <value>59</value>
-  </data>
-  <data name="&gt;&gt;btnTempoPlus.Name" xml:space="preserve">
-    <value>btnTempoPlus</value>
-  </data>
-  <data name="&gt;&gt;btnTempoPlus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;btnTempoPlus.Parent" xml:space="preserve">
-    <value>pnlControls</value>
-  </data>
-  <data name="&gt;&gt;btnTempoPlus.ZOrder" xml:space="preserve">
-    <value>3</value>
   </data>
   <data name="lblTempoValue.Font" type="System.Drawing.Font, System.Drawing">
     <value>Consolas, 8.25pt</value>
@@ -464,48 +698,6 @@
   </data>
   <data name="&gt;&gt;lblTemp.ZOrder" xml:space="preserve">
     <value>5</value>
-  </data>
-  <data name="btnTranspoMinus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>359, 70</value>
-  </data>
-  <data name="btnTranspoMinus.Size" type="System.Drawing.Size, System.Drawing">
-    <value>32, 32</value>
-  </data>
-  <data name="btnTranspoMinus.TabIndex" type="System.Int32, mscorlib">
-    <value>56</value>
-  </data>
-  <data name="&gt;&gt;btnTranspoMinus.Name" xml:space="preserve">
-    <value>btnTranspoMinus</value>
-  </data>
-  <data name="&gt;&gt;btnTranspoMinus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;btnTranspoMinus.Parent" xml:space="preserve">
-    <value>pnlControls</value>
-  </data>
-  <data name="&gt;&gt;btnTranspoMinus.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="btnTranspoPlus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>359, 30</value>
-  </data>
-  <data name="btnTranspoPlus.Size" type="System.Drawing.Size, System.Drawing">
-    <value>32, 32</value>
-  </data>
-  <data name="btnTranspoPlus.TabIndex" type="System.Int32, mscorlib">
-    <value>55</value>
-  </data>
-  <data name="&gt;&gt;btnTranspoPlus.Name" xml:space="preserve">
-    <value>btnTranspoPlus</value>
-  </data>
-  <data name="&gt;&gt;btnTranspoPlus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;btnTranspoPlus.Parent" xml:space="preserve">
-    <value>pnlControls</value>
-  </data>
-  <data name="&gt;&gt;btnTranspoPlus.ZOrder" xml:space="preserve">
-    <value>7</value>
   </data>
   <data name="lblTranspoValue.Font" type="System.Drawing.Font, System.Drawing">
     <value>Consolas, 8.25pt</value>
@@ -649,81 +841,6 @@
   <data name="&gt;&gt;lblMainVolume.ZOrder" xml:space="preserve">
     <value>12</value>
   </data>
-  <data name="pnlDisplay.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 7</value>
-  </data>
-  <data name="pnlDisplay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>200, 45</value>
-  </data>
-  <data name="pnlDisplay.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;pnlDisplay.Name" xml:space="preserve">
-    <value>pnlDisplay</value>
-  </data>
-  <data name="&gt;&gt;pnlDisplay.Type" xml:space="preserve">
-    <value>Karaboss.Display.PanelPlayer, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;pnlDisplay.Parent" xml:space="preserve">
-    <value>pnlControls</value>
-  </data>
-  <data name="&gt;&gt;pnlDisplay.ZOrder" xml:space="preserve">
-    <value>13</value>
-  </data>
-  <data name="btnPrev.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="btnPrev.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnPrev.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 71</value>
-  </data>
-  <data name="btnPrev.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 50</value>
-  </data>
-  <data name="btnPrev.TabIndex" type="System.Int32, mscorlib">
-    <value>44</value>
-  </data>
-  <data name="&gt;&gt;btnPrev.Name" xml:space="preserve">
-    <value>btnPrev</value>
-  </data>
-  <data name="&gt;&gt;btnPrev.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;btnPrev.Parent" xml:space="preserve">
-    <value>pnlControls</value>
-  </data>
-  <data name="&gt;&gt;btnPrev.ZOrder" xml:space="preserve">
-    <value>14</value>
-  </data>
-  <data name="btnNext.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="btnNext.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnNext.Location" type="System.Drawing.Point, System.Drawing">
-    <value>158, 71</value>
-  </data>
-  <data name="btnNext.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 50</value>
-  </data>
-  <data name="btnNext.TabIndex" type="System.Int32, mscorlib">
-    <value>43</value>
-  </data>
-  <data name="&gt;&gt;btnNext.Name" xml:space="preserve">
-    <value>btnNext</value>
-  </data>
-  <data name="&gt;&gt;btnNext.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;btnNext.Parent" xml:space="preserve">
-    <value>pnlControls</value>
-  </data>
-  <data name="&gt;&gt;btnNext.ZOrder" xml:space="preserve">
-    <value>15</value>
-  </data>
   <data name="positionHScrollBar.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 6pt</value>
   </data>
@@ -751,60 +868,6 @@
   <data name="&gt;&gt;positionHScrollBar.ZOrder" xml:space="preserve">
     <value>16</value>
   </data>
-  <data name="btnStop.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="btnStop.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnStop.Location" type="System.Drawing.Point, System.Drawing">
-    <value>108, 71</value>
-  </data>
-  <data name="btnStop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 50</value>
-  </data>
-  <data name="btnStop.TabIndex" type="System.Int32, mscorlib">
-    <value>42</value>
-  </data>
-  <data name="&gt;&gt;btnStop.Name" xml:space="preserve">
-    <value>btnStop</value>
-  </data>
-  <data name="&gt;&gt;btnStop.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;btnStop.Parent" xml:space="preserve">
-    <value>pnlControls</value>
-  </data>
-  <data name="&gt;&gt;btnStop.ZOrder" xml:space="preserve">
-    <value>17</value>
-  </data>
-  <data name="btnPlay.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="btnPlay.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnPlay.Location" type="System.Drawing.Point, System.Drawing">
-    <value>58, 71</value>
-  </data>
-  <data name="btnPlay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 50</value>
-  </data>
-  <data name="btnPlay.TabIndex" type="System.Int32, mscorlib">
-    <value>41</value>
-  </data>
-  <data name="&gt;&gt;btnPlay.Name" xml:space="preserve">
-    <value>btnPlay</value>
-  </data>
-  <data name="&gt;&gt;btnPlay.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;btnPlay.Parent" xml:space="preserve">
-    <value>pnlControls</value>
-  </data>
-  <data name="&gt;&gt;btnPlay.ZOrder" xml:space="preserve">
-    <value>18</value>
-  </data>
   <data name="sldMainVolume.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 6pt</value>
   </data>
@@ -812,7 +875,7 @@
     <value>267, 25</value>
   </data>
   <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 24</value>
+    <value>24, 80</value>
   </data>
   <data name="sldMainVolume.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -864,30 +927,6 @@
   </data>
   <data name="&gt;&gt;lnlVol.ZOrder" xml:space="preserve">
     <value>20</value>
-  </data>
-  <data name="pnlControls.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="pnlControls.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 566</value>
-  </data>
-  <data name="pnlControls.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1329, 127</value>
-  </data>
-  <data name="pnlControls.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;pnlControls.Name" xml:space="preserve">
-    <value>pnlControls</value>
-  </data>
-  <data name="&gt;&gt;pnlControls.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlControls.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pnlControls.ZOrder" xml:space="preserve">
-    <value>1</value>
   </data>
   <metadata name="OpenFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>266, 12</value>
@@ -1613,13 +1652,13 @@
     <value>7, 7</value>
   </data>
   <data name="lblHotkeys.Size" type="System.Drawing.Size, System.Drawing">
-    <value>240, 70</value>
+    <value>280, 70</value>
   </data>
   <data name="lblHotkeys.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
   </data>
   <data name="lblHotkeys.Text" xml:space="preserve">
-    <value>&lt;ENTER&gt; Add a new timestamp</value>
+    <value>Multi-line \r\n label</value>
   </data>
   <data name="lblHotkeys.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -1789,90 +1828,6 @@
   <data name="btnSwitchSyncEdit.Text" xml:space="preserve">
     <value>Switch to sync mode</value>
   </data>
-  <data name="&gt;&gt;pnlTop.Name" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;pnlTop.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlTop.Parent" xml:space="preserve">
-    <value>pnlLrc</value>
-  </data>
-  <data name="&gt;&gt;pnlTop.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="pnlLrc.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="pnlLrc.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 24</value>
-  </data>
-  <data name="pnlLrc.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1329, 542</value>
-  </data>
-  <data name="pnlLrc.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;pnlLrc.Name" xml:space="preserve">
-    <value>pnlLrc</value>
-  </data>
-  <data name="&gt;&gt;pnlLrc.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlLrc.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pnlLrc.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;pnlEdit.Name" xml:space="preserve">
-    <value>pnlEdit</value>
-  </data>
-  <data name="&gt;&gt;pnlEdit.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlEdit.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;pnlEdit.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;pnlSync.Name" xml:space="preserve">
-    <value>pnlSync</value>
-  </data>
-  <data name="&gt;&gt;pnlSync.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlSync.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;pnlSync.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="pnlTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="pnlTop.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="pnlTop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1329, 150</value>
-  </data>
-  <data name="pnlTop.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;pnlTop.Name" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;pnlTop.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlTop.Parent" xml:space="preserve">
-    <value>pnlLrc</value>
-  </data>
-  <data name="&gt;&gt;pnlTop.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="pnlEdit.Location" type="System.Drawing.Point, System.Drawing">
     <value>364, 38</value>
   </data>
@@ -1896,6 +1851,24 @@
   </data>
   <data name="&gt;&gt;pnlEdit.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="lblHotkeysOthers.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblHotkeysOthers.Location" type="System.Drawing.Point, System.Drawing">
+    <value>300, 7</value>
+  </data>
+  <data name="lblHotkeysOthers.Size" type="System.Drawing.Size, System.Drawing">
+    <value>280, 70</value>
+  </data>
+  <data name="lblHotkeysOthers.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="lblHotkeysOthers.Text" xml:space="preserve">
+    <value>&lt;ENTER&gt; Add a new timestamp</value>
+  </data>
+  <data name="lblHotkeysOthers.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="&gt;&gt;lblHotkeysOthers.Name" xml:space="preserve">
     <value>lblHotkeysOthers</value>
@@ -1933,39 +1906,270 @@
   <data name="&gt;&gt;pnlSync.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="lblHotkeysOthers.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="pnlTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
   </data>
-  <data name="lblHotkeysOthers.Location" type="System.Drawing.Point, System.Drawing">
-    <value>256, 7</value>
+  <data name="pnlTop.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
   </data>
-  <data name="lblHotkeysOthers.Size" type="System.Drawing.Size, System.Drawing">
-    <value>228, 70</value>
+  <data name="pnlTop.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1329, 150</value>
   </data>
-  <data name="lblHotkeysOthers.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
+  <data name="pnlTop.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
   </data>
-  <data name="lblHotkeysOthers.Text" xml:space="preserve">
-    <value>&lt;ENTER&gt; Add a new timestamp</value>
+  <data name="&gt;&gt;pnlTop.Name" xml:space="preserve">
+    <value>pnlTop</value>
   </data>
-  <data name="lblHotkeysOthers.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+  <data name="&gt;&gt;pnlTop.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;lblHotkeysOthers.Name" xml:space="preserve">
-    <value>lblHotkeysOthers</value>
+  <data name="&gt;&gt;pnlTop.Parent" xml:space="preserve">
+    <value>pnlLrc</value>
   </data>
-  <data name="&gt;&gt;lblHotkeysOthers.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;pnlTop.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
-  <data name="&gt;&gt;lblHotkeysOthers.Parent" xml:space="preserve">
-    <value>pnlSync</value>
+  <data name="pnlLrc.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
   </data>
-  <data name="&gt;&gt;lblHotkeysOthers.ZOrder" xml:space="preserve">
+  <data name="pnlLrc.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 24</value>
+  </data>
+  <data name="pnlLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1329, 542</value>
+  </data>
+  <data name="pnlLrc.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;pnlLrc.Name" xml:space="preserve">
+    <value>pnlLrc</value>
+  </data>
+  <data name="&gt;&gt;pnlLrc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlLrc.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pnlLrc.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="saveFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>793, 17</value>
   </metadata>
+  <data name="btnTempoMinus.Location" type="System.Drawing.Point, System.Drawing">
+    <value>314, 70</value>
+  </data>
+  <data name="btnTempoMinus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 32</value>
+  </data>
+  <data name="btnTempoMinus.TabIndex" type="System.Int32, mscorlib">
+    <value>60</value>
+  </data>
+  <data name="&gt;&gt;btnTempoMinus.Name" xml:space="preserve">
+    <value>btnTempoMinus</value>
+  </data>
+  <data name="&gt;&gt;btnTempoMinus.Type" xml:space="preserve">
+    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnTempoMinus.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnTempoMinus.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="btnTempoPlus.Location" type="System.Drawing.Point, System.Drawing">
+    <value>314, 30</value>
+  </data>
+  <data name="btnTempoPlus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 32</value>
+  </data>
+  <data name="btnTempoPlus.TabIndex" type="System.Int32, mscorlib">
+    <value>59</value>
+  </data>
+  <data name="&gt;&gt;btnTempoPlus.Name" xml:space="preserve">
+    <value>btnTempoPlus</value>
+  </data>
+  <data name="&gt;&gt;btnTempoPlus.Type" xml:space="preserve">
+    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnTempoPlus.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnTempoPlus.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="btnTranspoMinus.Location" type="System.Drawing.Point, System.Drawing">
+    <value>359, 70</value>
+  </data>
+  <data name="btnTranspoMinus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 32</value>
+  </data>
+  <data name="btnTranspoMinus.TabIndex" type="System.Int32, mscorlib">
+    <value>56</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoMinus.Name" xml:space="preserve">
+    <value>btnTranspoMinus</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoMinus.Type" xml:space="preserve">
+    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoMinus.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoMinus.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="btnTranspoPlus.Location" type="System.Drawing.Point, System.Drawing">
+    <value>359, 30</value>
+  </data>
+  <data name="btnTranspoPlus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 32</value>
+  </data>
+  <data name="btnTranspoPlus.TabIndex" type="System.Int32, mscorlib">
+    <value>55</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoPlus.Name" xml:space="preserve">
+    <value>btnTranspoPlus</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoPlus.Type" xml:space="preserve">
+    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoPlus.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnTranspoPlus.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="pnlDisplay.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 7</value>
+  </data>
+  <data name="pnlDisplay.Size" type="System.Drawing.Size, System.Drawing">
+    <value>200, 45</value>
+  </data>
+  <data name="pnlDisplay.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;pnlDisplay.Name" xml:space="preserve">
+    <value>pnlDisplay</value>
+  </data>
+  <data name="&gt;&gt;pnlDisplay.Type" xml:space="preserve">
+    <value>Karaboss.Display.PanelPlayer, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;pnlDisplay.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;pnlDisplay.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="btnPrev.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnPrev.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnPrev.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 71</value>
+  </data>
+  <data name="btnPrev.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 50</value>
+  </data>
+  <data name="btnPrev.TabIndex" type="System.Int32, mscorlib">
+    <value>44</value>
+  </data>
+  <data name="&gt;&gt;btnPrev.Name" xml:space="preserve">
+    <value>btnPrev</value>
+  </data>
+  <data name="&gt;&gt;btnPrev.Type" xml:space="preserve">
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnPrev.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnPrev.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="btnNext.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnNext.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnNext.Location" type="System.Drawing.Point, System.Drawing">
+    <value>158, 71</value>
+  </data>
+  <data name="btnNext.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 50</value>
+  </data>
+  <data name="btnNext.TabIndex" type="System.Int32, mscorlib">
+    <value>43</value>
+  </data>
+  <data name="&gt;&gt;btnNext.Name" xml:space="preserve">
+    <value>btnNext</value>
+  </data>
+  <data name="&gt;&gt;btnNext.Type" xml:space="preserve">
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnNext.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnNext.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="btnStop.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnStop.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnStop.Location" type="System.Drawing.Point, System.Drawing">
+    <value>108, 71</value>
+  </data>
+  <data name="btnStop.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 50</value>
+  </data>
+  <data name="btnStop.TabIndex" type="System.Int32, mscorlib">
+    <value>42</value>
+  </data>
+  <data name="&gt;&gt;btnStop.Name" xml:space="preserve">
+    <value>btnStop</value>
+  </data>
+  <data name="&gt;&gt;btnStop.Type" xml:space="preserve">
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnStop.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnStop.ZOrder" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="btnPlay.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnPlay.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnPlay.Location" type="System.Drawing.Point, System.Drawing">
+    <value>58, 71</value>
+  </data>
+  <data name="btnPlay.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 50</value>
+  </data>
+  <data name="btnPlay.TabIndex" type="System.Int32, mscorlib">
+    <value>41</value>
+  </data>
+  <data name="&gt;&gt;btnPlay.Name" xml:space="preserve">
+    <value>btnPlay</value>
+  </data>
+  <data name="&gt;&gt;btnPlay.Type" xml:space="preserve">
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnPlay.Parent" xml:space="preserve">
+    <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnPlay.ZOrder" xml:space="preserve">
+    <value>18</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -2001,6 +2205,9 @@
         RwBMcEcA8A8AAMADAACAAQAAgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAEAAIAB
         AADAAwAA8A8AAA==
 </value>
+  </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>

@@ -555,4 +555,10 @@
   <data name="DescSyncMode" xml:space="preserve">
     <value>Mode synchro : lancer la musique et taper la touche ENTREE à chaque fois que vous entendez une ligne des paroles affichées.</value>
   </data>
+  <data name="Mp3TimeStampHotKey1" xml:space="preserve">
+    <value>&lt;ENTREE&gt; Ajouter un horodatage{0}&lt;SUPPR&gt;  Supprimer l'horodatage{0}&lt;ESPACE&gt; Mettre en pause</value>
+  </data>
+  <data name="Mp3TimeStampHotKey2" xml:space="preserve">
+    <value>+       Accélérer{0}-       Ralentir{0}&lt;-      Stopper la musique</value>
+  </data>
 </root>

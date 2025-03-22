@@ -66,6 +66,8 @@ namespace Karaboss
         private Color _chordHighlightColor;
         private bool _bShowChords = false;
 
+        // Lyrics TopMost
+        private bool _bTopMost = false;
 
         // Force Uppercase
         private bool bForceUppercase = false;
@@ -135,6 +137,10 @@ namespace Karaboss
                 bColorContour = Properties.Settings.Default.bColorContour;
                 TxtContourColor = Properties.Settings.Default.TxtContourColor;
                 chkContour.Checked = bColorContour;
+
+                // Window lyris topmost
+                _bTopMost = Properties.Settings.Default.frmLyricsTopMost;
+                chkTopMost.Checked = _bTopMost;
 
                 // Backgroud color beside lyrics to help to read when an image is displayed
                 chkTextBackground.Checked = Properties.Settings.Default.bLyricsBackGround;
@@ -269,6 +275,10 @@ namespace Karaboss
                 Properties.Settings.Default.bColorContour = bColorContour;
                 Properties.Settings.Default.TxtContourColor = TxtContourColor;
 
+                // window lyrics topmost
+                Properties.Settings.Default.frmLyricsTopMost = _bTopMost;
+
+
                 // Force Uppercase
                 Properties.Settings.Default.bForceUppercase = bForceUppercase;
 
@@ -344,6 +354,9 @@ namespace Karaboss
                 picChordBefore.BackColor = _chordNextColor;
                 picChordHighlight.BackColor = _chordHighlightColor;
                 pBox.bShowChords = _bShowChords;
+
+                // Window Lyrics TopMost
+                chkTopMost.Checked = _bTopMost;
 
                 // Force uppercase
                 chkTextUppercase.Checked = bForceUppercase;
@@ -632,6 +645,9 @@ namespace Karaboss
                 // force uppercase
                 frmLyric.bForceUppercase = bForceUppercase;
 
+                //Window lyrics TopMost
+                frmLyric.bTopMost = _bTopMost;
+
                 NbLines = Convert.ToInt32(UpDownNbLines.Value);
                 frmLyric.TxtNbLines = NbLines;
 
@@ -676,7 +692,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void FrmLyrOptions_Load(object sender, EventArgs e)
         {
-
+            this.TopMost = true;
         }
 
         /// <summary>
@@ -834,6 +850,16 @@ namespace Karaboss
         }
 
         /// <summary>
+        /// Window lyrics always on top
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkTopMost_CheckedChanged(object sender, EventArgs e)
+        {
+            _bTopMost = chkTopMost.Checked;
+        }
+
+        /// <summary>
         /// Number of Karaoke lines to display
         /// </summary>
         /// <param name="sender"></param>
@@ -960,5 +986,6 @@ namespace Karaboss
         }
         #endregion chords
 
+       
     }
 }

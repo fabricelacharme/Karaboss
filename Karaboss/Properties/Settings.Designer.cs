@@ -1711,5 +1711,17 @@ namespace Karaboss.Properties {
                 this["frmMp3LyricsSimpleSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmLyricsTopMost {
+            get {
+                return ((bool)(this["frmLyricsTopMost"]));
+            }
+            set {
+                this["frmLyricsTopMost"] = value;
+            }
+        }
     }
 }

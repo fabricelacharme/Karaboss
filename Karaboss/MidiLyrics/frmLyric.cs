@@ -357,6 +357,19 @@ namespace Karaboss
         #endregion dirslideshow
 
 
+        #region TopMost
+        private bool _bTopMost = false;
+        public bool bTopMost
+        {
+            get { return _bTopMost; }
+            set { 
+                _bTopMost = value; 
+                this.TopMost = _bTopMost;
+            }
+        }
+
+        #endregion TopMost
+
         private int _beatDuration = 0;
         public int BeatDuration
         {
@@ -379,6 +392,9 @@ namespace Karaboss
         public frmLyric(MidiLyricsMgmt _myLyricsMgmt)
         {
             InitializeComponent();
+
+            // Allow form keydown
+            this.KeyPreview = true;
 
             this.myLyricsMgmt = _myLyricsMgmt;
 
@@ -687,6 +703,9 @@ namespace Karaboss
                 // Position image
                 SizeMode = Properties.Settings.Default.SizeMode;
 
+                bTopMost = Properties.Settings.Default.frmLyricsTopMost;
+
+
             }
             catch (Exception e)
             {
@@ -827,6 +846,20 @@ namespace Karaboss
                 btnFrmMax.Image = global::Karaboss.Properties.Resources.Max;
             }
         }
+
+        private void frmLyric_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Escape:
+                    if (WindowState == FormWindowState.Maximized)
+                    {
+                        WindowState = FormWindowState.Normal;
+                    }
+                    break;
+            }
+        }
+
 
         #endregion form load close resize
 
@@ -1120,6 +1153,7 @@ namespace Karaboss
 
         #endregion pnlWindow        
 
+      
     }
 
 
