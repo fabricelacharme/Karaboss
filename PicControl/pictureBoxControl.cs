@@ -1361,7 +1361,7 @@ namespace PicControl
                 femsize = g.DpiX * inisize / 72;
 
                 float textSize = MeasureString(S, femsize);
-                long comp = (long)(0.95*pboxWnd.ClientSize.Width);                
+                long comp = (long)(0.94*pboxWnd.ClientSize.Width);                
 
                 // Texte trop large
                 if (textSize > comp)
