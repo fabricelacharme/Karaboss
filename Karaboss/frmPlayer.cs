@@ -8650,9 +8650,6 @@ namespace Karaboss
         /// </summary>
         private void DisplaySongDuration(double dur)
         {
-            // Affichage du BEAT
-            //lblBeat.Text = "1|" + sequence1.Numerator;
-
             int Min = (int)(dur / 60);
             int Sec = (int)(dur - (Min * 60));
 

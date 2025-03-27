@@ -50,6 +50,7 @@ using Karaboss.Mru;
 using MusicXml;
 using MusicTxt;
 using System.Collections.Generic;
+using Karaboss.Utilities;
 
 
 namespace Karaboss
@@ -999,18 +1000,20 @@ namespace Karaboss
 
             // song duration
             #region song duration
-            double ppqn = sequence1.Division;
             double totalticks = sequence1.GetLength();
-            double tempo = sequence1.Tempo;
-            double duration = tempo * (totalticks / ppqn) / 1000000; //seconds
-
+            double ppqn = sequence1.Division;
+            // Load tempos map            
+            TempoUtilities.lstTempos = TempoUtilities.GetAllTempoChanges(sequence1);
+            double duration = TempoUtilities.GetMidiDuration(totalticks, ppqn);  // Real duration according to tempo changes                        
+            //double tempo = sequence1.Tempo;                        
+            //double duration = tempo * (totalticks / ppqn) / 1000000; //seconds
             int Min = (int)(duration / 60);
-            int Sec = (int)(duration - (Min * 60));                    
-            
-            
-            MidiInfos.Tracks = sequence1.tracks.Count;
-            MidiInfos.Format = sequence1.OrigFormat;
+            int Sec = (int)(duration - (Min * 60));
             MidiInfos.Duration = string.Format("{0:00}:{1:00}", Min, Sec);
+
+
+            MidiInfos.Tracks = sequence1.tracks.Count;
+            MidiInfos.Format = sequence1.OrigFormat;                                    
             MidiInfos.Lyrics = sequence1.HasLyrics;
             #endregion
 

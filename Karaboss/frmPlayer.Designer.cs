@@ -1023,6 +1023,7 @@ namespace Karaboss
             // 
             resources.ApplyResources(this.btnDump, "btnDump");
             this.btnDump.Name = "btnDump";
+            this.btnDump.TabStop = false;
             this.btnDump.UseVisualStyleBackColor = true;
             this.btnDump.Click += new System.EventHandler(this.btnDump_Click);
             // 

@@ -121,37 +121,6 @@
     <value>17, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1149, 24</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="menuStrip1.Text" xml:space="preserve">
-    <value>menuStrip1</value>
-  </data>
-  <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
-    <value>menuStrip1</value>
-  </data>
-  <data name="&gt;&gt;menuStrip1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>37, 20</value>
-  </data>
-  <data name="mnuFile.Text" xml:space="preserve">
-    <value>&amp;File</value>
-  </data>
   <data name="mnuFileNew.Size" type="System.Drawing.Size, System.Drawing">
     <value>207, 22</value>
   </data>
@@ -231,11 +200,11 @@
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>E&amp;xit</value>
   </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>39, 20</value>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>37, 20</value>
   </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>&amp;Edit</value>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;File</value>
   </data>
   <data name="mnuEditAddLyrics.Size" type="System.Drawing.Size, System.Drawing">
     <value>176, 22</value>
@@ -270,11 +239,11 @@
   <data name="MnuEditEnterNotes.Text" xml:space="preserve">
     <value>Enter notes</value>
   </data>
-  <data name="mnuDisplay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>57, 20</value>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 20</value>
   </data>
-  <data name="mnuDisplay.Text" xml:space="preserve">
-    <value>Display</value>
+  <data name="mnuEdit.Text" xml:space="preserve">
+    <value>&amp;Edit</value>
   </data>
   <data name="mnuDisplayLyricsWindows.Size" type="System.Drawing.Size, System.Drawing">
     <value>198, 22</value>
@@ -306,12 +275,6 @@
   <data name="mnuDisplayZoom.Text" xml:space="preserve">
     <value>Zoom</value>
   </data>
-  <data name="mnuDisplayScrolling.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
-  </data>
-  <data name="mnuDisplayScrolling.Text" xml:space="preserve">
-    <value>Scrolling</value>
-  </data>
   <data name="mnuDisplayScrollingHorz.Size" type="System.Drawing.Size, System.Drawing">
     <value>129, 22</value>
   </data>
@@ -324,23 +287,23 @@
   <data name="mnuDisplayScrollingVert.Text" xml:space="preserve">
     <value>Vertical</value>
   </data>
-  <data name="mnuMidi.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 20</value>
+  <data name="mnuDisplayScrolling.Size" type="System.Drawing.Size, System.Drawing">
+    <value>198, 22</value>
   </data>
-  <data name="mnuMidi.Text" xml:space="preserve">
-    <value>&amp;MIDI</value>
+  <data name="mnuDisplayScrolling.Text" xml:space="preserve">
+    <value>Scrolling</value>
+  </data>
+  <data name="mnuDisplay.Size" type="System.Drawing.Size, System.Drawing">
+    <value>57, 20</value>
+  </data>
+  <data name="mnuDisplay.Text" xml:space="preserve">
+    <value>Display</value>
   </data>
   <data name="mnuMidiNewTrack.Size" type="System.Drawing.Size, System.Drawing">
     <value>173, 22</value>
   </data>
   <data name="mnuMidiNewTrack.Text" xml:space="preserve">
     <value>&amp;New track</value>
-  </data>
-  <data name="MnuMidiImportTracks.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
-  </data>
-  <data name="MnuMidiImportTracks.Text" xml:space="preserve">
-    <value>Import tracks from</value>
   </data>
   <data name="MnuMidiImporTracksFromMidi.Size" type="System.Drawing.Size, System.Drawing">
     <value>117, 22</value>
@@ -353,6 +316,12 @@
   </data>
   <data name="MnuMidiImportTracksFromText.Text" xml:space="preserve">
     <value>Text file</value>
+  </data>
+  <data name="MnuMidiImportTracks.Size" type="System.Drawing.Size, System.Drawing">
+    <value>173, 22</value>
+  </data>
+  <data name="MnuMidiImportTracks.Text" xml:space="preserve">
+    <value>Import tracks from</value>
   </data>
   <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
     <value>170, 6</value>
@@ -399,11 +368,11 @@
   <data name="mnuMidiSplitHands.Text" xml:space="preserve">
     <value>Split Hands</value>
   </data>
-  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="mnuMidi.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 20</value>
   </data>
-  <data name="mnuHelp.Text" xml:space="preserve">
-    <value>&amp;Help</value>
+  <data name="mnuMidi.Text" xml:space="preserve">
+    <value>&amp;MIDI</value>
   </data>
   <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
     <value>167, 22</value>
@@ -416,6 +385,37 @@
   </data>
   <data name="mnuHelpAboutSong.Text" xml:space="preserve">
     <value>About this song...</value>
+  </data>
+  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 20</value>
+  </data>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Help</value>
+  </data>
+  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1149, 24</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="menuStrip1.Text" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
   <metadata name="openMidiFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>126, 17</value>
@@ -592,7 +592,7 @@
     <value>btnMute1</value>
   </data>
   <data name="&gt;&gt;btnMute1.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.CheckButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.CheckButtonControl, Karaboss, Version=1.0.10.13, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnMute1.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -613,7 +613,7 @@
     <value>btnTranspoMinus</value>
   </data>
   <data name="&gt;&gt;btnTranspoMinus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.13, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTranspoMinus.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -634,7 +634,7 @@
     <value>btnTranspoPlus</value>
   </data>
   <data name="&gt;&gt;btnTranspoPlus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.13, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTranspoPlus.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -655,7 +655,7 @@
     <value>btnTempoMinus</value>
   </data>
   <data name="&gt;&gt;btnTempoMinus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.13, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTempoMinus.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -676,7 +676,7 @@
     <value>btnTempoPlus</value>
   </data>
   <data name="&gt;&gt;btnTempoPlus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.13, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTempoPlus.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -823,7 +823,7 @@
     <value>btnPrev</value>
   </data>
   <data name="&gt;&gt;btnPrev.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.13, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnPrev.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -850,7 +850,7 @@
     <value>btnNext</value>
   </data>
   <data name="&gt;&gt;btnNext.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.13, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnNext.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -858,9 +858,6 @@
   <data name="&gt;&gt;btnNext.ZOrder" xml:space="preserve">
     <value>13</value>
   </data>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>432, 56</value>
-  </metadata>
   <data name="btnStop.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
@@ -876,6 +873,9 @@
   <data name="btnStop.TabIndex" type="System.Int32, mscorlib">
     <value>38</value>
   </data>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>432, 56</value>
+  </metadata>
   <data name="btnStop.ToolTip" xml:space="preserve">
     <value>Stop</value>
   </data>
@@ -883,7 +883,7 @@
     <value>btnStop</value>
   </data>
   <data name="&gt;&gt;btnStop.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.13, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnStop.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -913,7 +913,7 @@
     <value>btnPlay</value>
   </data>
   <data name="&gt;&gt;btnPlay.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.12, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.13, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnPlay.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -948,6 +948,27 @@
   <data name="&gt;&gt;progressBarPlayer.ZOrder" xml:space="preserve">
     <value>16</value>
   </data>
+  <data name="lblStatus.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Consolas, 12pt</value>
+  </data>
+  <data name="lblStatus.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblStatus.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1, 2</value>
+  </data>
+  <data name="lblStatus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 19</value>
+  </data>
+  <data name="lblStatus.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblStatus.Text" xml:space="preserve">
+    <value>Stopped</value>
+  </data>
+  <data name="lblStatus.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
   <data name="&gt;&gt;lblStatus.Name" xml:space="preserve">
     <value>lblStatus</value>
   </data>
@@ -960,6 +981,27 @@
   <data name="&gt;&gt;lblStatus.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="lblBeat.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Consolas, 12pt</value>
+  </data>
+  <data name="lblBeat.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblBeat.Location" type="System.Drawing.Point, System.Drawing">
+    <value>142, 2</value>
+  </data>
+  <data name="lblBeat.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 19</value>
+  </data>
+  <data name="lblBeat.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="lblBeat.Text" xml:space="preserve">
+    <value>1|4</value>
+  </data>
+  <data name="lblBeat.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
   <data name="&gt;&gt;lblBeat.Name" xml:space="preserve">
     <value>lblBeat</value>
   </data>
@@ -971,6 +1013,27 @@
   </data>
   <data name="&gt;&gt;lblBeat.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <data name="lblElapsed.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Consolas, 12pt</value>
+  </data>
+  <data name="lblElapsed.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblElapsed.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1, 22</value>
+  </data>
+  <data name="lblElapsed.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 19</value>
+  </data>
+  <data name="lblElapsed.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="lblElapsed.Text" xml:space="preserve">
+    <value>00:00</value>
+  </data>
+  <data name="lblElapsed.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="&gt;&gt;lblElapsed.Name" xml:space="preserve">
     <value>lblElapsed</value>
@@ -1229,7 +1292,7 @@
     <value>267, 25</value>
   </data>
   <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
-    <value>24, 80</value>
+    <value>80, 24</value>
   </data>
   <data name="sldMainVolume.TabIndex" type="System.Int32, mscorlib">
     <value>30</value>
@@ -1357,105 +1420,6 @@
   <data name="&gt;&gt;pnlBottom.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="lblStatus.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Consolas, 12pt</value>
-  </data>
-  <data name="lblStatus.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblStatus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1, 2</value>
-  </data>
-  <data name="lblStatus.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 19</value>
-  </data>
-  <data name="lblStatus.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="lblStatus.Text" xml:space="preserve">
-    <value>Stopped</value>
-  </data>
-  <data name="lblStatus.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;lblStatus.Name" xml:space="preserve">
-    <value>lblStatus</value>
-  </data>
-  <data name="&gt;&gt;lblStatus.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblStatus.Parent" xml:space="preserve">
-    <value>pnlDisplay</value>
-  </data>
-  <data name="&gt;&gt;lblStatus.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="lblBeat.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Consolas, 12pt</value>
-  </data>
-  <data name="lblBeat.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblBeat.Location" type="System.Drawing.Point, System.Drawing">
-    <value>142, 2</value>
-  </data>
-  <data name="lblBeat.Size" type="System.Drawing.Size, System.Drawing">
-    <value>60, 19</value>
-  </data>
-  <data name="lblBeat.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="lblBeat.Text" xml:space="preserve">
-    <value>1|4</value>
-  </data>
-  <data name="lblBeat.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
-  </data>
-  <data name="&gt;&gt;lblBeat.Name" xml:space="preserve">
-    <value>lblBeat</value>
-  </data>
-  <data name="&gt;&gt;lblBeat.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblBeat.Parent" xml:space="preserve">
-    <value>pnlDisplay</value>
-  </data>
-  <data name="&gt;&gt;lblBeat.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="lblElapsed.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Consolas, 12pt</value>
-  </data>
-  <data name="lblElapsed.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblElapsed.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1, 22</value>
-  </data>
-  <data name="lblElapsed.Size" type="System.Drawing.Size, System.Drawing">
-    <value>60, 19</value>
-  </data>
-  <data name="lblElapsed.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="lblElapsed.Text" xml:space="preserve">
-    <value>00:00</value>
-  </data>
-  <data name="lblElapsed.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;lblElapsed.Name" xml:space="preserve">
-    <value>lblElapsed</value>
-  </data>
-  <data name="&gt;&gt;lblElapsed.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblElapsed.Parent" xml:space="preserve">
-    <value>pnlDisplay</value>
-  </data>
-  <data name="&gt;&gt;lblElapsed.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <metadata name="timer2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>679, 17</value>
   </metadata>
@@ -1465,258 +1429,6 @@
   <metadata name="timer4.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>104, 56</value>
   </metadata>
-  <data name="&gt;&gt;btnDump.Name" xml:space="preserve">
-    <value>btnDump</value>
-  </data>
-  <data name="&gt;&gt;btnDump.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnDump.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;btnDump.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;lblHelp.Name" xml:space="preserve">
-    <value>lblHelp</value>
-  </data>
-  <data name="&gt;&gt;lblHelp.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblHelp.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblHelp.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;lblBass.Name" xml:space="preserve">
-    <value>lblBass</value>
-  </data>
-  <data name="&gt;&gt;lblBass.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblBass.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblBass.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;lblTreble.Name" xml:space="preserve">
-    <value>lblTreble</value>
-  </data>
-  <data name="&gt;&gt;lblTreble.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblTreble.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblTreble.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;lblCurNoteInfo.Name" xml:space="preserve">
-    <value>lblCurNoteInfo</value>
-  </data>
-  <data name="&gt;&gt;lblCurNoteInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblCurNoteInfo.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblCurNoteInfo.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;lblDotted.Name" xml:space="preserve">
-    <value>lblDotted</value>
-  </data>
-  <data name="&gt;&gt;lblDotted.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblDotted.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblDotted.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;lblEdit.Name" xml:space="preserve">
-    <value>lblEdit</value>
-  </data>
-  <data name="&gt;&gt;lblEdit.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblEdit.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblEdit.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;lblSaisieNotes.Name" xml:space="preserve">
-    <value>lblSaisieNotes</value>
-  </data>
-  <data name="&gt;&gt;lblSaisieNotes.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblSaisieNotes.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblSaisieNotes.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;lblBecarre.Name" xml:space="preserve">
-    <value>lblBecarre</value>
-  </data>
-  <data name="&gt;&gt;lblBecarre.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblBecarre.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblBecarre.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;lblQuadrupleCrocheNote.Name" xml:space="preserve">
-    <value>lblQuadrupleCrocheNote</value>
-  </data>
-  <data name="&gt;&gt;lblQuadrupleCrocheNote.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblQuadrupleCrocheNote.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblQuadrupleCrocheNote.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;lblTripleCrocheNote.Name" xml:space="preserve">
-    <value>lblTripleCrocheNote</value>
-  </data>
-  <data name="&gt;&gt;lblTripleCrocheNote.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblTripleCrocheNote.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblTripleCrocheNote.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;lblDoubleCrocheNote.Name" xml:space="preserve">
-    <value>lblDoubleCrocheNote</value>
-  </data>
-  <data name="&gt;&gt;lblDoubleCrocheNote.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblDoubleCrocheNote.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblDoubleCrocheNote.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="&gt;&gt;lblBemol.Name" xml:space="preserve">
-    <value>lblBemol</value>
-  </data>
-  <data name="&gt;&gt;lblBemol.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblBemol.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblBemol.ZOrder" xml:space="preserve">
-    <value>12</value>
-  </data>
-  <data name="&gt;&gt;lblDiese.Name" xml:space="preserve">
-    <value>lblDiese</value>
-  </data>
-  <data name="&gt;&gt;lblDiese.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblDiese.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblDiese.ZOrder" xml:space="preserve">
-    <value>13</value>
-  </data>
-  <data name="&gt;&gt;lblRondNote.Name" xml:space="preserve">
-    <value>lblRondNote</value>
-  </data>
-  <data name="&gt;&gt;lblRondNote.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblRondNote.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblRondNote.ZOrder" xml:space="preserve">
-    <value>14</value>
-  </data>
-  <data name="&gt;&gt;lblCrocheNote.Name" xml:space="preserve">
-    <value>lblCrocheNote</value>
-  </data>
-  <data name="&gt;&gt;lblCrocheNote.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblCrocheNote.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblCrocheNote.ZOrder" xml:space="preserve">
-    <value>15</value>
-  </data>
-  <data name="&gt;&gt;lblBlackNote.Name" xml:space="preserve">
-    <value>lblBlackNote</value>
-  </data>
-  <data name="&gt;&gt;lblBlackNote.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblBlackNote.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblBlackNote.ZOrder" xml:space="preserve">
-    <value>16</value>
-  </data>
-  <data name="&gt;&gt;lblWhiteNote.Name" xml:space="preserve">
-    <value>lblWhiteNote</value>
-  </data>
-  <data name="&gt;&gt;lblWhiteNote.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblWhiteNote.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblWhiteNote.ZOrder" xml:space="preserve">
-    <value>17</value>
-  </data>
-  <data name="&gt;&gt;lblGomme.Name" xml:space="preserve">
-    <value>lblGomme</value>
-  </data>
-  <data name="&gt;&gt;lblGomme.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblGomme.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;lblGomme.ZOrder" xml:space="preserve">
-    <value>18</value>
-  </data>
-  <data name="pnlTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="pnlTop.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 24</value>
-  </data>
-  <data name="pnlTop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1149, 50</value>
-  </data>
-  <data name="pnlTop.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="&gt;&gt;pnlTop.Name" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;pnlTop.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlTop.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pnlTop.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="btnDump.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -2263,53 +1975,29 @@
   <data name="&gt;&gt;lblGomme.ZOrder" xml:space="preserve">
     <value>18</value>
   </data>
-  <data name="&gt;&gt;TimeStartVLine.Name" xml:space="preserve">
-    <value>TimeStartVLine</value>
+  <data name="pnlTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
   </data>
-  <data name="&gt;&gt;TimeStartVLine.Type" xml:space="preserve">
+  <data name="pnlTop.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 24</value>
+  </data>
+  <data name="pnlTop.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1149, 50</value>
+  </data>
+  <data name="pnlTop.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;pnlTop.Name" xml:space="preserve">
+    <value>pnlTop</value>
+  </data>
+  <data name="&gt;&gt;pnlTop.Type" xml:space="preserve">
     <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;TimeStartVLine.Parent" xml:space="preserve">
-    <value>pnlMiddle</value>
-  </data>
-  <data name="&gt;&gt;TimeStartVLine.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;TimeVLine.Name" xml:space="preserve">
-    <value>TimeVLine</value>
-  </data>
-  <data name="&gt;&gt;TimeVLine.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;TimeVLine.Parent" xml:space="preserve">
-    <value>pnlMiddle</value>
-  </data>
-  <data name="&gt;&gt;TimeVLine.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="pnlMiddle.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="pnlMiddle.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 74</value>
-  </data>
-  <data name="pnlMiddle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1149, 362</value>
-  </data>
-  <data name="pnlMiddle.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
-  </data>
-  <data name="&gt;&gt;pnlMiddle.Name" xml:space="preserve">
-    <value>pnlMiddle</value>
-  </data>
-  <data name="&gt;&gt;pnlMiddle.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlMiddle.Parent" xml:space="preserve">
+  <data name="&gt;&gt;pnlTop.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;pnlMiddle.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="&gt;&gt;pnlTop.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="TimeStartVLine.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 149</value>
@@ -2353,6 +2041,30 @@
   <data name="&gt;&gt;TimeVLine.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="pnlMiddle.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="pnlMiddle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 74</value>
+  </data>
+  <data name="pnlMiddle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1149, 362</value>
+  </data>
+  <data name="pnlMiddle.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;pnlMiddle.Name" xml:space="preserve">
+    <value>pnlMiddle</value>
+  </data>
+  <data name="&gt;&gt;pnlMiddle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlMiddle.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pnlMiddle.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <metadata name="saveMidiFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>191, 56</value>
   </metadata>
@@ -2364,9 +2076,6 @@
   </metadata>
   <metadata name="sequencer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>380, 17</value>
-  </metadata>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>432, 56</value>
   </metadata>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
