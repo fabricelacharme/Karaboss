@@ -258,7 +258,12 @@ namespace AudioControl
             return peak * 100;
         }
 
-        // FAB
+        /// <summary>
+        /// Get peak volume of a specific channel of an application
+        /// </summary>
+        /// <param name="pid"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public static float? GetApplicationChannelPeakVolume(int pid, int index)
         {
             IAudioMeterInformation channelpeakvol = GetMasterPeakVolume(pid);
@@ -266,20 +271,16 @@ namespace AudioControl
             if (channelpeakvol == null)
                 return null;
 
-            float peak;
-            //masterpeakvol.GetPeakValue(out peak);
-
-            // FAB TEST
-            //masterpeakvol.GetChannelsPeakValues()
             channelpeakvol.GetMeteringChannelCount(out var Count);
             float[] peakValues = new float[Count];
             GCHandle Params = GCHandle.Alloc(peakValues, GCHandleType.Pinned);
             channelpeakvol.GetChannelsPeakValues(peakValues.Length, Params.AddrOfPinnedObject());
             Params.Free();
+            
+            if (index >= peakValues.Length)
+                return null;
             return peakValues[index] * 100.0f;
 
-            //Marshal.ReleaseComObject(masterpeakvol);
-            //return peak * 100;
         }
 
 

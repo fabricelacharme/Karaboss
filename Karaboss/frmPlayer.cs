@@ -6362,20 +6362,34 @@ namespace Karaboss
         /// </summary>
         private void GetPeakVolume()
         {
-            
-            //float? peak = AudioControl.AudioManager.GetApplicationMasterPeakVolume(outDeviceProcessId);
+            try
+            {
+                // Master volume
+                //float? peak = AudioControl.AudioManager.GetApplicationMasterPeakVolume(outDeviceProcessId);
+                //int level = Convert.ToInt32(peak);
+                //VuMasterPeakVolume.Level = level;
 
-            float? peakleft = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDeviceProcessId, 0);
-            float? peakright = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDeviceProcessId, 1);
 
-            //int level = Convert.ToInt32(peak);
-            int LeftLevel = Convert.ToInt32(peakleft);
-            int RightLevel = Convert.ToInt32(peakright);
-            //Console.WriteLine(level + " " + LeftLevel + " " + RightLevel);
+                // Volume per channels (left & right)
+                float? peakleft = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDeviceProcessId, 0);
+                float? peakright = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDeviceProcessId, 1);
 
-            //VuMasterPeakVolume.Level = level;
-            VuPeakVolumeLeft.Level = LeftLevel;
-            VuPeakVolumeRight.Level = RightLevel;
+                if (peakleft == null || peakright == null)
+                    return;
+
+                int LeftLevel = Convert.ToInt32(peakleft);
+                int RightLevel = Convert.ToInt32(peakright);                
+                
+                if (LeftLevel < VuPeakVolumeLeft.LevelMax)
+                    VuPeakVolumeLeft.Level = LeftLevel;
+                if (RightLevel < VuPeakVolumeRight.LevelMax)
+                    VuPeakVolumeRight.Level = RightLevel;
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
        
@@ -6394,30 +6408,26 @@ namespace Karaboss
 
             // LED 1
             this.VuPeakVolumeLeft.Led1ColorOff = System.Drawing.Color.DarkGreen;
-            this.VuPeakVolumeLeft.Led1ColorOn = System.Drawing.Color.LimeGreen;
-            //this.VuMasterPeakVolume.Led1Count = 12;
+            this.VuPeakVolumeLeft.Led1ColorOn = System.Drawing.Color.LimeGreen;            
             this.VuPeakVolumeLeft.Led1Count = 14;
 
             // LED 2
             this.VuPeakVolumeLeft.Led2ColorOff = System.Drawing.Color.Olive;
-            this.VuPeakVolumeLeft.Led2ColorOn = System.Drawing.Color.Yellow;
-            //this.VuMasterPeakVolume.Led2Count = 12;
+            this.VuPeakVolumeLeft.Led2ColorOn = System.Drawing.Color.Yellow;            
             this.VuPeakVolumeLeft.Led2Count = 14;
 
             // LED 3
             this.VuPeakVolumeLeft.Led3ColorOff = System.Drawing.Color.Maroon;
-            this.VuPeakVolumeLeft.Led3ColorOn = System.Drawing.Color.Red;
-            //this.VuMasterPeakVolume.Led3Count = 8;
+            this.VuPeakVolumeLeft.Led3ColorOn = System.Drawing.Color.Red;            
             this.VuPeakVolumeLeft.Led3Count = 10;
 
             // LED size
             this.VuPeakVolumeLeft.LedSize = new System.Drawing.Size(12, 2);
 
             this.VuPeakVolumeLeft.LedSpace = 1;
-            this.VuPeakVolumeLeft.Level = 0;
-            this.VuPeakVolumeLeft.LevelMax = 127;
+            this.VuPeakVolumeLeft.Level = 0;            
+            this.VuPeakVolumeLeft.LevelMax = 127;            
 
-            //this.VuMasterPeakVolume.Location = new System.Drawing.Point(220, 33);
             this.VuPeakVolumeLeft.MeterScale = VU_MeterLibrary.MeterScale.Log10;
             this.VuPeakVolumeLeft.Name = "VuPeakVolumeLeft";
             this.VuPeakVolumeLeft.NeedleColor = System.Drawing.Color.Black;
@@ -6452,20 +6462,17 @@ namespace Karaboss
 
             // LED 1
             this.VuPeakVolumeRight.Led1ColorOff = System.Drawing.Color.DarkGreen;
-            this.VuPeakVolumeRight.Led1ColorOn = System.Drawing.Color.LimeGreen;
-            //this.VuMasterPeakVolume.Led1Count = 12;
+            this.VuPeakVolumeRight.Led1ColorOn = System.Drawing.Color.LimeGreen;            
             this.VuPeakVolumeRight.Led1Count = 14;
 
             // LED 2
             this.VuPeakVolumeRight.Led2ColorOff = System.Drawing.Color.Olive;
-            this.VuPeakVolumeRight.Led2ColorOn = System.Drawing.Color.Yellow;
-            //this.VuMasterPeakVolume.Led2Count = 12;
+            this.VuPeakVolumeRight.Led2ColorOn = System.Drawing.Color.Yellow;            
             this.VuPeakVolumeRight.Led2Count = 14;
 
             // LED 3
             this.VuPeakVolumeRight.Led3ColorOff = System.Drawing.Color.Maroon;
-            this.VuPeakVolumeRight.Led3ColorOn = System.Drawing.Color.Red;
-            //this.VuMasterPeakVolume.Led3Count = 8;
+            this.VuPeakVolumeRight.Led3ColorOn = System.Drawing.Color.Red;            
             this.VuPeakVolumeRight.Led3Count = 10;
 
             // LED size
@@ -6474,8 +6481,7 @@ namespace Karaboss
             this.VuPeakVolumeRight.LedSpace = 1;
             this.VuPeakVolumeRight.Level = 0;
             this.VuPeakVolumeRight.LevelMax = 127;
-
-            //this.VuMasterPeakVolume.Location = new System.Drawing.Point(220, 33);
+            
             this.VuPeakVolumeRight.MeterScale = VU_MeterLibrary.MeterScale.Log10;
             this.VuPeakVolumeRight.Name = "VuPeakVolumeRight";
             this.VuPeakVolumeRight.NeedleColor = System.Drawing.Color.Black;
