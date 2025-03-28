@@ -1,59 +1,106 @@
-﻿using System;
+﻿#region License
+
+/* Copyright (c) 2025 Fabrice Lacharme
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), to 
+ * deal in the Software without restriction, including without limitation the 
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+ * sell copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software. 
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+ * THE SOFTWARE.
+ */
+
+#endregion
+
+#region Contact
+
+/*
+ * Fabrice Lacharme
+ * Email: fabrice.lacharme@gmail.com
+ */
+
+#endregion
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 
-namespace lyrics
+
+namespace keffect
 {
+   
 
-    public enum TransitionEffects
+    public partial class KaraokeEffect : UserControl, IMessageFilter
     {
-        None,
-        Progressive,
-    }
 
+        #region Move form without title bar
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+        public const int WM_LBUTTONDOWN = 0x0201;
 
-    public struct SyncText
-    {
-        public long time;
-        public string lyric;
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+        private HashSet<Control> controlsToMove = new HashSet<Control>();
+        #endregion
 
-        public SyncText(long time, string lyric)
-        {
-            this.time = time;
-            this.lyric = lyric;
-        }
-    }
-
-    public partial class KaraokeEffect : UserControl
-    {
 
         #region decl
 
         private float percent = 0;
         private float lastpercent = 0;
+        private long _timerintervall = 50;      // Intervall of timer of frmMp3Player
+
+        public long timerIntervall
+        {
+            get { return _timerintervall; }
+            set { 
+                
+                if (value >= 10)
+                    _timerintervall = value; }
+        }
 
         private List<string[]> Lines;
         private List<long[]> Times;
         private string[] Texts;
         private float[] LinesLengths;        
         
-        private int index = 0;
-        private int lastindex = -1;        
+        private int nextindex = 0;
+        private int lastindex = 0;        
         private float CurLength;
         private float lastCurLength;
+
+        long _nexttime;
+        long _lasttime;
 
         private Font m_font;   // used to measure strings without changing _karaokeFont
         private float emSize = 40;
 
         private StringFormat sf;
 
-        private int _FirstLine = 0;
-        private int _LastLine = 0;
+        private int _FirstLineToShow = 0;
+        private int _LastLineToShow = 0;
+
+        private int _lastLine = -1;
         private int _line = 0;
         private int _lines = 0;
         private int _lineHeight = 0;
@@ -61,18 +108,225 @@ namespace lyrics
         private string _biggestLine =string.Empty;
 
         #endregion decl
+     
+
+        [Serializable()]
+        public struct kSyncText
+        {
+            public long Time { get; set; }
+            public string Text { get; set; }
+
+            public kSyncText(long time, string text)
+            {
+                this.Time = time;
+                this.Text = text;
+            }
+        }
 
 
         #region properties
+
+
+        #region SlideShow
+        public Rectangle m_DisplayRectangle { get; set; }
+
+        private BackgroundWorker backgroundWorkerSlideShow;
+
+        private Random random;
+        private string[] bgFiles;
+        private string DefaultDirSlideShow;
+
+        private List<string> m_ImageFilePaths;
+        private MemoryStream m_ImageStream = null;
         
+        private ManualResetEvent m_FinishEvent = new ManualResetEvent(false);
+
+        private bool m_Cancel = false;
+        private bool m_Restart = false;
+
+        delegate void UpdateTimerEnableCallback(bool enabled);
+
+        public bool IsBusy
+        {
+            get
+            {
+
+                if (backgroundWorkerSlideShow != null)
+                    return backgroundWorkerSlideShow.IsBusy;
+                else
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// SlideShow frequency
+        /// </summary>
+        private int _freqdirslideshow = 10;
+        public int FreqDirSlideShow
+        {
+            get { return _freqdirslideshow; }
+            set { _freqdirslideshow = value; }
+        }
+
+        /// <summary>
+        /// Size mode of picturebox
+        /// </summary>
+        private PictureBoxSizeMode _sizemode;
+        public PictureBoxSizeMode SizeMode
+        {
+            get { return _sizemode; }
+            set
+            {
+                _sizemode = value;
+                pBox.SizeMode = _sizemode;
+                
+            }
+        }
+
+        private int PAUSE_TIME;
+        private int rndIter = 0;
+        private string strCurrentImage; // current image to insure that random will provide a different one
+
+        public ImageLayout imgLayout { get; set; }
+        public Image m_CurrentImage { get; set; }
+        public int m_Alpha { get; set; }
+
+
+        #endregion SlideShow
+
+      
+        // Text To Upper
+        private bool _bforceUppercase = false;
+        public bool bforceUppercase
+        {
+            get { return _bforceUppercase; }
+            set 
+            {
+                if (value != _bforceUppercase)
+                {
+                    _bforceUppercase = value;
+                    Init();
+                    pBox.Invalidate();                    
+                }            
+            }
+        }
+
+        private bool _bTextBackGround = false;
+        public bool bTextBackGround
+        {
+            get { return _bTextBackGround; }
+            set 
+            {                 
+                _bTextBackGround = value;
+                pBox.Invalidate();                
+            }
+        }
+       
+
+        /// <summary>
+        /// Transparency color
+        /// </summary>
+        private Color _transparencykey = Color.Lime;
+        public Color TransparencyKey
+        {
+            get { return _transparencykey; }
+            set { _transparencykey = value; }
+        }
+
+        private string _optionbackground;
+        public string OptionBackground
+        {
+            get { return _optionbackground; }
+            set
+            {
+                _optionbackground = value;
+
+                switch (_optionbackground)
+                {
+                    case "Diaporama":
+                        break;
+
+                    case "SolidColor":
+                        m_Cancel = true;
+                        Terminate();
+                        pBox.Image = null;                        
+                        m_CurrentImage = null;
+                        pBox.BackColor = _txtbackcolor;
+                        pBox.Invalidate();                        
+                        break;
+
+                    case "Transparent":
+                        m_Cancel = true;
+                        Terminate();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        pBox.BackColor = _transparencykey;
+                        pBox.Invalidate();
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Display lyrics option: top, Center, Bottom
+        /// </summary>
+        public enum OptionsDisplay
+        {
+            Top = 0,
+            Center = 1,
+            Bottom = 2,
+        }
+
+        private OptionsDisplay _OptionDisplay;
+        /// <summary>
+        /// Display lyrics option: top, Center, Bottom
+        /// </summary>
+        public OptionsDisplay OptionDisplay
+        {
+            get { return _OptionDisplay; }
+            set
+            {
+                _OptionDisplay = value;
+                pBox.Invalidate();                
+            }
+        }
+
+        private List<kSyncText> _SyncLine;
+        public List<kSyncText> SyncLine
+        {
+            get { return _SyncLine; }
+            set { _SyncLine = value; }
+        }
+
+        private List<List<kSyncText>> _SyncLyrics;
+        public List<List<kSyncText>> SyncLyrics
+        {
+            get { return _SyncLyrics; }
+            set
+            {
+                if (value == null) return;
+
+                _SyncLyrics = value;
+                Init();
+            }
+        }
+
+        public enum TransitionEffects
+        {
+            None,
+            Progressive,
+        }
+
         private TransitionEffects _transitionEffect;
         public TransitionEffects TransitionEffect 
         { 
             get { return _transitionEffect; } 
             set { _transitionEffect = value; }
         }
-        
-        
+                
         private int _position = 0;
         /// <summary>
         /// Player position => highlight lyrics at this position
@@ -83,29 +337,7 @@ namespace lyrics
             get { return _position; }
             set { _position = value; }
         }
-
-
-        private List<SyncText> _SyncLine;
-        public List<SyncText> SyncLine
-        {
-            get { return _SyncLine; }
-            set { _SyncLine = value; }
-        }
-
-        private List<List<SyncText>> _SyncLyrics;
-        public List<List<SyncText>> SyncLyrics
-        {
-            get { return _SyncLyrics; }
-            set 
-            { 
-                if (value == null) return;
-
-                _SyncLyrics = value; 
-                Init();              
-            }
-        }
       
-
         private float _steppercent = 0.01F;
         [Description("Increment to display a syllable progressively")]
         public float StepPercent
@@ -119,7 +351,11 @@ namespace lyrics
         public int nbLyricsLines
         {
             get { return _nbLyricsLines; }
-            set { _nbLyricsLines = value; }
+            set { 
+                _nbLyricsLines = value;
+                Init();
+                pBox.Invalidate();                
+            }
         }
                
         private Font _karaokeFont;
@@ -138,8 +374,8 @@ namespace lyrics
             get { return _backcolor; }
             set { 
                 _backcolor = value; 
-                pBox.BackColor = value;
-                pBox.Invalidate();
+                pBox.BackColor = value;                
+                pBox.Invalidate();                
             }
         }
 
@@ -152,7 +388,7 @@ namespace lyrics
             set 
             { 
                 _AlreadyPlayedColor = value; 
-                pBox.Invalidate();
+                pBox.Invalidate();                
             }
         }
 
@@ -161,9 +397,9 @@ namespace lyrics
         public Color TxtBeingPlayedColor
         {
             get { return _BeingPlayedColor; }
-            set {
-                pBox.Invalidate();
-                _BeingPlayedColor = value; 
+            set {                
+                _BeingPlayedColor = value;
+                pBox.Invalidate();                
             }
         }
 
@@ -175,37 +411,41 @@ namespace lyrics
             set 
             { 
                 _NotYetPlayedColor = value;
-                pBox.Invalidate();
+                pBox.Invalidate();                
             }
         }
 
-
-        private Image m_CurrentImage;
-        [Description("Background image behind the text")]
-        public Image Image
+        private Color _txtbackcolor;
+        public Color TxtBackColor
         {
-            get { return m_CurrentImage; }
+            get { return _txtbackcolor; }
+            set { _txtbackcolor = value; }
+        }
+
+
+        private Color _txtcontourcolor;
+        public Color TxtContourColor
+        {
+            get { return _txtcontourcolor; }
+            set { _txtcontourcolor = value; }
+        }
+
+        private bool _bColorContour = false;
+        public bool bColorContour
+        {
+            get { return _bColorContour; }
             set 
-            { 
-                m_CurrentImage = value;
-                try
+            {
+                if (value != _bColorContour)
                 {
-                    pBox.BackgroundImage = m_CurrentImage;
-                    pBox.BackgroundImageLayout = ImageLayout.Stretch;
-                    //pBox.Image = value;
-                    pBox.Invalidate();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _bColorContour = value;
+                    pBox.Invalidate();                    
                 }
             }
         }
-        //public override Image BackgroundImage { get => base.BackgroundImage; set => base.BackgroundImage = value; }
-
-
 
         #endregion properties
+
 
         /// <summary>
         /// Constructor
@@ -214,29 +454,64 @@ namespace lyrics
         {
             InitializeComponent();
 
+            #region Move form without title bar
+            
+            Application.AddMessageFilter(this);
+            controlsToMove.Add(this);
+            controlsToMove.Add(this.pBox);
+            
+            #endregion
+
             this.SetStyle(
                  System.Windows.Forms.ControlStyles.UserPaint |
                  System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
                  System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
-                 true);
+                 true);                        
 
             SetDefaultValues();
-
-            Init();
-                       
+            Init();                       
         }
+
+
+        #region Move Window
+
+        /// <summary>
+        /// Move form without title bar
+        /// The message is sent to the parent Form (this.ParentForm.Handle)
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        public bool PreFilterMessage(ref Message m)
+        {
+            if (m.Msg == WM_LBUTTONDOWN &&
+                 controlsToMove.Contains(Control.FromHandle(m.HWnd)))
+            {
+                ReleaseCapture();
+                SendMessage(this.ParentForm.Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+                return true;
+            }
+            return false;
+        }
+
+        #endregion Move Window
 
         private void SetDefaultValues()
         {
+
+            m_ImageFilePaths = new List<string>();
+            m_Alpha = 255;
+            imgLayout = ImageLayout.Stretch;
+
+
             sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
-            sf.Alignment = StringAlignment.Center;
+            //sf.Alignment = StringAlignment.Center;
             _karaokeFont = new Font("Comic Sans MS", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
             
             _steppercent = 0.01F;
 
             // Add new line "Hello World"
-            SyncLyrics = new List<List<SyncText>>();
-            SyncLine = new List<SyncText> { new SyncText(0, "Hello"), new SyncText(500, " World") };                        
+            SyncLyrics = new List<List<kSyncText>>();
+            SyncLine = new List<kSyncText> { new kSyncText(0, "Hello"), new kSyncText(500, " World") };                        
             SyncLyrics.Add(SyncLine);
 
             _nbLyricsLines = 1;
@@ -251,9 +526,11 @@ namespace lyrics
             Lines = new List<string[]>();
             Times = new List<long[]>();
             
-            List<SyncText> syncline = new List<SyncText>();
+            List<kSyncText> syncline = new List<kSyncText>();
             string[] s;
             long[] t;
+            string tx;
+
 
             for (int i = 0; i < _SyncLyrics.Count; i++)
             {
@@ -263,18 +540,22 @@ namespace lyrics
 
                 for (int j = 0; j < syncline.Count; j++ )
                 {
-                    t[j] = syncline[j].time;
-                    s[j] = syncline[j].lyric;
+                    t[j] = syncline[j].Time;
+
+                    // Clean text
+                    tx = syncline[j].Text;
+                    tx = tx.Replace(Environment.NewLine, "");
+                    if (_bforceUppercase)
+                        tx = tx.ToUpper();
+
+                    s[j] = tx;
                 }
                 Times.Add(t);
                 Lines.Add(s);                
             }
                           
             
-            _lines = Lines.Count;
-            if (_lines < _nbLyricsLines) 
-                _nbLyricsLines = _lines;
-
+            _lines = Lines.Count;           
             
             string[] line;
             string Tx;
@@ -297,7 +578,7 @@ namespace lyrics
             _biggestLine = GetBiggestLine();
             AjustText(_biggestLine);
 
-            _LastLine = SetLastLineToShow(_FirstLine, _lines, _nbLyricsLines);
+            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
 
         }
 
@@ -323,6 +604,7 @@ namespace lyrics
             return LastLine;
         
         }
+
 
         #region measures
         /// <summary>
@@ -397,61 +679,133 @@ namespace lyrics
 
 
         #region Control Load Resize paint
+
+        /// <summary>
+        /// Resize control
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void KaraokeEffect_Resize(object sender, EventArgs e)
         {
-            // Increase _steppercent if Width increase
-            //_steppercent = _steppercent * Width/500;
-
+            // Increase _steppercent if Width increase          
             AjustText(_biggestLine);
-            pBox.Invalidate();
+            pBox.Invalidate();            
         }
 
+        /// <summary>
+        /// Paint control
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pBox_Paint(object sender, PaintEventArgs e)
         {           
-            // Antialiasing
+            // Antialiasing      
+            e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
-            e.Graphics.PageUnit = GraphicsUnit.Pixel;
 
-            
-            int y0 = VCenterText();
-            int x0;
+            SolidBrush colorBrush;
 
-            // ======================================================================================================
-            // 1. Draw and color all lines from _linedeb to _linefin in white
-            // We want to display only a few number of lines (variable _nbLyricsLines = number of lines to display)  
-            // ======================================================================================================
-            var otherpath = new GraphicsPath();
+            #region draw background image
+            int x;
+            int y;
 
-            for (int i = _FirstLine; i <= _LastLine; i++)
+            if (m_CurrentImage != null)
             {
-                x0 = HCenterText(Texts[i]);     // Center horizontally
-                otherpath.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLine) * _lineHeight), StringFormat.GenericDefault);
+                #region sizemode
+                switch (_sizemode)
+                {
+                    case PictureBoxSizeMode.AutoSize:
+                        x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
+                        y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
+                        m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
+                        break;
+                    case PictureBoxSizeMode.CenterImage:
+                        x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
+                        y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
+                        m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
+                        break;
+                    case PictureBoxSizeMode.Normal:
+                        // coin superieur gauche
+                        m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                        break;
+                    case PictureBoxSizeMode.StretchImage:
+                        //  l'image est étirée ou réduite pour s'ajuster à PictureBox.
+                        m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                        break;
+                    case PictureBoxSizeMode.Zoom:
+                        m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                        break;
+                }
+                #endregion
+
+                try
+                {
+                    e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
+
+                }
+                catch (Exception dr)
+                {
+                    Console.Write("Error drawing image: " + dr.Message);
+                }
+
             }
-            e.Graphics.FillPath(new SolidBrush(Color.White), otherpath);
 
-            // Borders of text
-            e.Graphics.DrawPath(new Pen(Color.Black, 1), otherpath);
 
-            otherpath.Dispose();
+            #endregion draw background image
 
+
+            #region draw text
+
+            // Center text vertically
+            int y0 = VCenterText();
+            int x0 = 0;
+
+            int Wbg;            
+            RectangleF Rbg;        
 
             // =============================================
-            // 2. Color in green/Red the current line
+            // WHITE
+            // 1. Color the current line in whithe
+            // and than color portions above the white in green (already played) and red (currently played) 
             // =============================================
             // Create a graphical path
             var path = new GraphicsPath();
 
+            
             // Add the full text line to the graphical path            
-            x0 = HCenterText(Texts[_FirstLine]);      // Center horizontally
-            path.AddString(Texts[_FirstLine], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), StringFormat.GenericDefault);
+            if (_FirstLineToShow < Texts.Count())
+            {
+                x0 = HCenterText(Texts[_FirstLineToShow]);      // Center horizontally
+
+                #region background of syllabe                              
+                if (_bTextBackGround)
+                {
+                    Wbg = (int)(1.04*LinesLengths[_FirstLineToShow]);
+                    // Black background to make text more visible
+                    Rbg = new RectangleF((int)(0.94*x0), (int)(1.04*y0), Wbg, _lineHeight);
+                    // background
+                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+                }
+                #endregion
+
+                path.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
+            }
+
+            // Color first in black
+            using (SolidBrush outlineBrush = new SolidBrush(Color.Black))
+            {
+                e.Graphics.FillPath(outlineBrush, path);
+            }
 
             // Fill graphical path in white => full text is white
-            e.Graphics.FillPath(new SolidBrush(Color.White), path);
+            colorBrush = new SolidBrush(_NotYetPlayedColor);
+            e.Graphics.FillPath(colorBrush, path);
+            
 
-            // ===================
-            // Color in green syllabes before current syllabe
-            // ===================
+            // ======================================================
+            // GREEN
+            // 2. Color in GREEN the syllabes before current syllabe
+            // ======================================================
             // Create a region from the graphical path
             Region r = new Region(path);
             // Create a retangle of the graphical path
@@ -461,31 +815,80 @@ namespace lyrics
 
             // update region on the intersection between region and 2nd rectangle
             r.Intersect(intersectRectBefore);
-            e.Graphics.FillRegion(Brushes.Green, r);
+
+            colorBrush = new SolidBrush(_AlreadyPlayedColor);
+            e.Graphics.FillRegion(colorBrush, r);            
 
 
-            // =======================
-            // Color in green current syllabe
-            // =======================
+            // ======================================================
+            // RED
+            // 3. Color in RED the  current syllabe
+            // ======================================================
             r = new Region(path);
 
             // Create another rectangle shorter than the 1st one (percent of the first)                       
             RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);
 
-
             // update region on the intersection between region and 2nd rectangle
             r.Intersect(intersectRect);
 
             // Fill updated region in red => percent portion of text is red
-            e.Graphics.FillRegion(Brushes.Red, r);
+            colorBrush = new SolidBrush(_BeingPlayedColor);            
+            e.Graphics.FillRegion(colorBrush, r);
+            
+            // Borders of text
+            if (_bColorContour)
+                e.Graphics.DrawPath(new Pen(_txtcontourcolor, 1), path);
+                                                
+            path.Dispose();
+
+
+            // ======================================================================================================
+            // NEXT LINES
+            // 4. Draw and color all lines from _linedeb + 1 to _linefin in white
+            // We want to display only a few number of lines (variable _nbLyricsLines = number of lines to display)  
+            // linedeb which is the current line is displayed in the previous paragraph
+            // ======================================================================================================
+            path = new GraphicsPath();
+
+            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
+            {
+                if (i < Texts.Count())
+                {
+                    x0 = HCenterText(Texts[i]);     // Center text horizontally
+
+                    #region background of syllabe                              
+                    if (_bTextBackGround)
+                    {
+                        Wbg = (int)(1.04*LinesLengths[i]);
+                        // Black background to make text more visible
+                        Rbg = new RectangleF((int)(0.94*x0), (int)(1.04 * y0) + (i - _FirstLineToShow) * _lineHeight, Wbg, _lineHeight);
+                        // background
+                        e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+                    }
+                    #endregion
+
+                    // Draw lines of lyrics
+                    path.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLineToShow) * _lineHeight), sf);
+
+                }
+            }
+
+            // _NotYetPlayedColor is the color for text not played (typically white)
+            colorBrush = new SolidBrush(_NotYetPlayedColor);
+            e.Graphics.FillPath(colorBrush, path);
 
             // Borders of text
-            e.Graphics.DrawPath(new Pen(Color.Black, 1), path);
+            if (_bColorContour)
+                e.Graphics.DrawPath(new Pen(_txtcontourcolor, 1), path);
+            
 
+            colorBrush.Dispose();
             r.Dispose();
             path.Dispose();
-           
-        }
+
+            #endregion draw text
+        }       
 
         #endregion Control Load Resize
 
@@ -513,48 +916,29 @@ namespace lyrics
             }
             return maxline;
         }
-
-               
-      /// <summary>
-      /// Retrieve which line for pos
-      /// </summary>
-      /// <param name="pos"></param>
-      /// <returns></returns>
-        private int GetLine(int pos)
-        {
-            for (int i = 0; i < Lines.Count; i++)
-            {
-                if (pos < Times[i][Times[i].Count() - 1])
-                {
-                    return i;
-                }
-            }
-            return 0;
-        }
-
+      
 
         /// <summary>
-        /// Retrive index of current syllabe in the current line
+        /// Retrieve nextindex of current syllabe in the current line
         /// </summary>
         /// <returns></returns>       
-        private int GetIndex(int pos)
-        {
-            // For each line of lyrics
-            for (int j = 0; j < Lines.Count; j++)
+        private int GetNextIndex(int pos)
+        {                      
+            for (int j = Lines.Count - 1; j >= 0; j--)
             {
-                // Search for which timespamp is greater than pos
-                for (int i = 0; i < Times[_line].Length; i++)
+                for (int i = Times[j].Length - 1; i >= 0; i--)
                 {
-                    if (pos < Times[_line][i])
-                    {
+                    if (Times[j][i] > 0 && pos > Times[j][i])
+                    {                        
+                        _line = j;
                         return i + 1;
                     }
                 }
-            }
-            return Lines.Count - 1;
+            }            
+            return 0;            
         }
 
-
+       
         /// <summary>
         /// Mesure length of a portion of line
         /// </summary>
@@ -565,7 +949,8 @@ namespace lyrics
             float res = 0;
             for (int i = 0; i < idx; i++)
             {                
-                res += MeasureString(Lines[_line][i], _karaokeFont.Size);
+                if (i < Lines[_line].Count())                
+                    res += MeasureString(Lines[_line][i], _karaokeFont.Size);
             }
             return res;
         }
@@ -574,6 +959,7 @@ namespace lyrics
 
 
         #region adjust text
+
         /// <summary>
         /// Ajust size of font regarding size of pictureBox1
         /// </summary>
@@ -668,10 +1054,27 @@ namespace lyrics
         /// <returns></returns>
         private int VCenterText()
         {
+            int y = 0;
+            
             // Height of control minus height of lines to show
-            //int res = (pBox.ClientSize.Height - (_nbLyricsLines + 1) * _lineHeight) / 2;
-            int res = (pBox.ClientSize.Height - (_nbLyricsLines) * _lineHeight) / 2;
-            return res > 0 ? res : 0;
+            switch (_OptionDisplay)
+            {
+                case OptionsDisplay.Center:
+                    y = (pBox.ClientSize.Height - (_nbLyricsLines) * _lineHeight) / 2;
+                    break;
+                
+                case OptionsDisplay.Top:
+                    y = 0;
+                    break;
+                
+                case OptionsDisplay.Bottom:
+                    y = pBox.ClientSize.Height - (_nbLyricsLines * (_lineHeight + 1));
+                    break;
+            }
+
+
+            
+            return y > 0 ? y : 0;
         }
 
         /// <summary>
@@ -687,10 +1090,7 @@ namespace lyrics
 
         #endregion ajust text
 
-
-     
-                      
-
+                          
         #region start stop
 
         // Start Display lyrics
@@ -699,8 +1099,9 @@ namespace lyrics
             _line = 0;
             percent = 0;
             lastpercent = 0;
-            index = 0;
-            lastindex = -1;
+            nextindex = 0;
+            lastindex = 0;
+            _lasttime = 0;
             lastCurLength = 0;
             CurLength = 0;
 
@@ -709,16 +1110,17 @@ namespace lyrics
         public void Stop()
         {
             _line = 0;
-            _FirstLine = 0;
-            _LastLine = SetLastLineToShow(_FirstLine, _lines, _nbLyricsLines);
+            _FirstLineToShow = 0;
+            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
 
             percent = 0;
             lastpercent = 0;
-            index = 0;
-            lastindex = -1;
+            nextindex = 0;
+            lastindex = 0;
+            _lasttime = 0;
             lastCurLength = 0;
             CurLength = 0;
-            pBox.Invalidate();
+            pBox.Invalidate();            
         }
 
         /// <summary>
@@ -732,55 +1134,46 @@ namespace lyrics
         }
 
         private void SetPosition(int pos)
-        {
-            // line changed by trackbar            
-            int line = GetLine(pos);
-
-            // If pos is greater than last position of currentline
-            if (line != _line || pos > Times[_line][Times[_line].Count() - 1])
-            {
-                if (_line < Lines.Count - 1)
-                {
-                    //Console.WriteLine("*** New line");
-                    percent = 0;
-                    lastpercent = 0;
-                    index = 0;
-                    lastindex = -1;
-                    lastCurLength = 0;
-                    CurLength = 0;
-                    _line = GetLine(pos);
-                    _FirstLine = _line;
-                    _LastLine = SetLastLineToShow(_FirstLine, _lines, _nbLyricsLines);
-                }
-                else
-                {
-                    // Is it the end of the text to display?
-                    //Console.WriteLine("*** END");                    
-                    _line = 0;
-                    _FirstLine = 0;
-                    _LastLine = SetLastLineToShow(_FirstLine, _lines, _nbLyricsLines);
-
-                    percent = 0;
-                    lastpercent = 0;
-                    index = 0;
-                    lastindex = -1;
-                    lastCurLength = 0;
-                    CurLength = 0;
-                    pBox.Invalidate();
-                    return;
-                }
-
-            }
-
-            // Search index of lyric to play
-            index = GetIndex(pos);
+        {       
+            // Search nextindex of lyric to play
+            nextindex = GetNextIndex(pos);
 
             // Length of partial line
-            CurLength = GetCurLength(index);
+            CurLength = GetCurLength(nextindex);
 
             // New word to highlight
-            if (index != lastindex)
-            {
+            // Warning: in cas of full lines, nextindex is always the same and not different than lastIndex
+            if (nextindex != lastindex || _line != _lastLine)
+            {                                
+                // Line changed
+                if (_line !=  _lastLine)
+                {
+                    _lastLine = _line;
+                    percent = 0;
+                    lastpercent = 0;
+                    nextindex = 0;
+                    lastindex = 0;
+                    lastCurLength = 0;
+                    CurLength = 0;
+
+                    _lasttime = _nexttime;
+                }
+                
+                _FirstLineToShow = _line;
+                _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
+
+                //Console.WriteLine("nexttime before: " + _nexttime);
+                if (nextindex < Times[_line].Count())
+                {
+                    _nexttime = Times[_line][nextindex];                                      
+                }
+                //Console.WriteLine("nexttime after: " + _nexttime);
+                //Console.WriteLine("lasttime: " + _lasttime);
+
+
+                //Console.WriteLine("Line : " + _line + " - nextindex : " + nextindex + " - nexttime : " + _nexttime + " - lasttime " + _lasttime);
+
+
                 // Save last value of percent
                 lastpercent = percent;
 
@@ -790,42 +1183,339 @@ namespace lyrics
                 // |--- last word ---|--- new word --------------------------|
                 //                   | percent => percent+pas => percent+pas
 
-                percent = (lastCurLength / LinesLengths[_line]);
+                if (_line < LinesLengths.Count())
+                    percent = (lastCurLength / LinesLengths[_line]);
 
 
 
                 // Caculate distance between LastCurLength et CurLength
                 float d = (float)(CurLength - lastCurLength);
+
                 if (_transitionEffect == TransitionEffects.None)
                 {
                     _steppercent = d;
                 }
                 else if (_transitionEffect == TransitionEffects.Progressive)
                 {
-                    
+
                     // Set 3000 occurences to reach the end 
-                    _steppercent = d / 3000;
+                    //_steppercent = d / 3000;
+
+                    if (d > 0 && (_nexttime - _lasttime) > 0)
+                    {
+                        //Console.WriteLine("_nexttime = " + _nexttime + " - _lasttime = " + _lasttime);
+
+                        //_steppercent = (_nexttime - _lasttime) / (d * _timerintervall);
+                        //_steppercent = (float)(_nexttime - _lasttime) / 1000000*(float)(_timerintervall);
+
+                        _steppercent = (_nexttime - _lasttime) / (d*(float)_timerintervall);
+
+                        //Console.WriteLine("timerintervall = " + _timerintervall);
+                        //Console.WriteLine("_steppercent = " + _steppercent);
+                    }
+                    
                 }
                 
-
                 lastCurLength = CurLength;
-                lastindex = index;
-                pBox.Invalidate();
+                lastindex = nextindex;
+                
+                pBox.Invalidate();                
             }
             else
             {
-                // if same index: progressive increase of percent
+                // if same nextindex: progressive increase of percent
                 percent += _steppercent;
+                //Console.WriteLine("percent = " + percent);
 
                 if (percent > (CurLength / LinesLengths[_line]))
                 {
                     percent = (CurLength / LinesLengths[_line]);
                 }
-                pBox.Invalidate();
+                pBox.Invalidate();                
             }
 
         }
 
         #endregion start stop
+
+
+        #region SlideShow
+
+
+        private void LoadImageList(string dir)
+        {
+            bgFiles = Directory.GetFiles(@dir, "*.jpg");
+            m_ImageFilePaths.Clear();
+            for (int i = 0; i < bgFiles.Length; ++i)
+            {
+                string file = bgFiles[i];
+                m_ImageFilePaths.Add(file);
+            }
+        }
+
+        /// <summary>
+        /// Define new slideShow directory and frequency
+        /// </summary>
+        /// <param name="dirImages"></param>
+        public void SetBackground(string dirImages)
+        {
+            try
+            {
+                UpdateTimerEnable(false);
+
+                m_Cancel = true;
+                m_Restart = true;
+
+                m_CurrentImage = null;
+                strCurrentImage = string.Empty;
+                rndIter = 0;
+
+                pBox.Image = null;
+                pBox.Invalidate();                
+                m_ImageFilePaths.Clear();
+
+                if (dirImages == null)
+                {
+                    pBox.BackColor = Color.Black;
+                }
+                else if (Directory.Exists(dirImages))
+                {
+                    int C = 0;
+
+                    if (_optionbackground == "Diaporama")
+                    {
+                        LoadImageList(dirImages);
+                        C = m_ImageFilePaths.Count;
+                    }
+
+                    switch (C)
+                    {
+                        case 0:
+                            // No image, just background color
+                            m_Cancel = true;
+                            break;
+                        case 1:
+                            // Single image
+                            m_Cancel = true;
+                            pBox.Image = Image.FromFile(m_ImageFilePaths[0]);
+                            break;
+                        default:
+                            // Slideshow => backgroundworker
+
+                            //m_Cancel = true;
+                            m_Cancel = false;
+
+                            // Initialize backgroundworker
+                            InitBackGroundWorker();
+                            random = new Random();
+                            StartBgW();
+                            break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.Message);
+            }
+
+        }
+
+        private void InitBackGroundWorker()
+        {
+            backgroundWorkerSlideShow = new System.ComponentModel.BackgroundWorker();
+            backgroundWorkerSlideShow.WorkerSupportsCancellation = true;
+            backgroundWorkerSlideShow.WorkerReportsProgress = true;
+            backgroundWorkerSlideShow.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerSlideShow_DoWork);
+            backgroundWorkerSlideShow.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerSlideShow_RunWorkerCompleted);
+        }
+
+        private string SelectRndFile(List<string> files)
+        {            
+            if (files.Count > 0)
+            {
+                int rand = random.Next(0, files.Count);
+                if (files[rand] != strCurrentImage || rndIter > 10)
+                {
+                    rndIter = 0;
+                    strCurrentImage = files[rand];
+                    return files[rand];
+                }
+                else
+                {
+                    rndIter++;
+                    return SelectRndFile(files);
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private void backgroundWorkerSlideShow_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (m_Restart == true)
+            {
+                StopBgW();
+
+                int C = m_ImageFilePaths.Count;
+
+                switch (C)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        pBox.Image = Image.FromFile(m_ImageFilePaths[0]);
+                        break;
+                    default:
+                        StartBgW();
+                        break;
+                }
+            }
+            else
+            {
+                backgroundWorkerSlideShow.Dispose();
+                SetBackground(DefaultDirSlideShow);
+            }
+        }
+
+        private void backgroundWorkerSlideShow_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<string> files = (List<string>)e.Argument;
+
+            do
+            {
+                if (m_Cancel == true)
+                {
+                    break;
+                }
+
+                string file = SelectRndFile(files);
+
+
+                UpdateTimerEnable(true);
+                m_FinishEvent.Reset();
+
+                if (m_ImageStream != null)
+                {
+                    m_ImageStream.Dispose();
+                    m_ImageStream = null;
+                }
+
+                try
+                {
+                    using (FileStream fs = File.OpenRead(file))
+                    {
+                        byte[] ba = new byte[fs.Length];
+                        fs.Read(ba, 0, ba.Length);
+                        m_ImageStream = new MemoryStream(ba);
+
+                        if (m_CurrentImage != null)
+                        {
+                            m_CurrentImage.Dispose();
+                            m_CurrentImage = null;
+                        }
+
+                        m_CurrentImage = Image.FromStream(m_ImageStream);
+                        fs.Dispose();
+                        pBox.Invalidate();                        
+                    }
+                }
+                catch (Exception op)
+                {
+                    m_CurrentImage = null;
+                    Console.WriteLine("Error opening image " + op.Message);
+                }
+
+
+                // do not launch if new slideshow is required
+                if (m_Restart == false)
+                {
+                    //UpdateTimerEnable(true);
+                    //m_FinishEvent.WaitOne();
+                    m_FinishEvent.Reset();
+
+                    PAUSE_TIME = 1000 * _freqdirslideshow;
+                    Thread.Sleep(PAUSE_TIME);
+                }
+            } while (m_Cancel == false);
+        }
+
+
+        private void UpdateTimerEnable(bool enabled)
+        {
+            if (this.InvokeRequired)
+            {
+                try
+                {
+                    UpdateTimerEnableCallback d = new UpdateTimerEnableCallback(UpdateTimerEnable);
+                    pBox.Invoke(d, new object[] { enabled });                    
+                }
+                catch (Exception u)
+                {
+                    Console.WriteLine("Error UpdateTimerEnable " + u.Message);
+                }
+            }
+        }
+
+
+        private void StartBgW()
+        {
+            if (backgroundWorkerSlideShow.IsBusy)
+            {
+                StopBgW();
+            }
+
+            try
+            {
+                if (!backgroundWorkerSlideShow.IsBusy)
+                {
+                    m_Restart = false;
+                    m_Cancel = false;
+                    backgroundWorkerSlideShow.RunWorkerAsync(m_ImageFilePaths);
+                }
+            }
+            catch (Exception est)
+            {
+                //m_Restart = true;
+                Console.WriteLine("Error starting backgroundworker: " + est.Message);
+            }
+        }
+
+        private void StopBgW()
+        {
+            if (backgroundWorkerSlideShow.IsBusy)
+            {
+                backgroundWorkerSlideShow.CancelAsync();
+
+                m_Cancel = true;
+            }
+        }
+
+        /// <summary>
+        /// Terminate
+        /// </summary>
+        public void Terminate()
+        {
+            m_Cancel = true;
+            m_Restart = false;
+
+            m_ImageFilePaths = new List<string>();
+            if (m_ImageStream != null)
+            {
+                m_ImageStream.Dispose();
+                m_ImageStream = null;
+            }
+
+            if (backgroundWorkerSlideShow != null)
+            {
+                backgroundWorkerSlideShow.CancelAsync();
+            }
+
+        }
+
+        #endregion SlideShow
+
+       
     }
 }

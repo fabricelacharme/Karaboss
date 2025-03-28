@@ -44,8 +44,7 @@ using Karaboss.Resources.Localization;
 using Karaboss.Lrc.SharedFramework;
 using Karaboss.MidiLyrics;
 using Karaboss.Utilities;
-using static Karaboss.Karaclass;
-using System.Text;
+using Karaboss.Mp3.Mp3Lyrics;
 
 
 namespace Karaboss
@@ -141,6 +140,8 @@ namespace Karaboss
         // txtResult, BtnFontPlus
         private Font _lyricseditfont;
         private float _fontSize = 8.25f;
+
+        private int _LrcMillisecondsDigits = 2;
 
         private readonly List<string> lsInstruments = Sanford.Multimedia.Midi.MidiFile.LoadInstruments();
 
@@ -559,19 +560,14 @@ namespace Karaboss
 
         private void BtnFontPlus_Click(object sender, EventArgs e)
         {
-            //float emSize = txtResult.Font.Size;
-            //emSize++;
             _fontSize++;
             _lyricseditfont = new Font(_lyricseditfont.FontFamily, _fontSize);
-
-            //txtResult.Font = new Font(txtResult.Font.FontFamily, emSize);
+            
             txtResult.Font = _lyricseditfont;
         }
 
         private void BtnFontMoins_Click(object sender, EventArgs e)
         {
-            //float emSize = txtResult.Font.Size;
-            //emSize--;
             if (_fontSize > 5)
             {
                 _fontSize--;
@@ -579,9 +575,6 @@ namespace Karaboss
                 txtResult.Font = _lyricseditfont;
             }
             
-
-            //if (emSize > 5)
-            //    txtResult.Font = new Font(txtResult.Font.FontFamily, emSize);
         }
 
 
@@ -847,6 +840,8 @@ namespace Karaboss
                 _lyricseditfont = Properties.Settings.Default.LyricsEditFont;
                 _fontSize = _lyricseditfont.Size;
 
+                _LrcMillisecondsDigits = Properties.Settings.Default.LrcMillisecondsDigits;
+
                 // Regardless the origin of chords (lyrics, from Xml/mxl, discovery)
                 // Karaboss is working internally in Midi and chords will be saved in the lyrics 
                 // Chords update will be possible if the end user decided to show the chords by clicking a specific button in the karaoke window
@@ -874,7 +869,7 @@ namespace Karaboss
             }
             catch (Exception e)
             {
-                Console.Write("Error: " + e.Message);
+                Console.WriteLine("Error: " + e.Message);
             }
         }
 
@@ -931,11 +926,11 @@ namespace Karaboss
         /// <param name="lLyrics"></param>
         private void PopulateTextBox(List<plLyric> lLyrics)
         {
-            string plElement; // = string.Empty;            
+            string plElement; 
             string tx = string.Empty;
-            int iParagraph; // = -1;            
-            int iLineFeed; // = -1;
-            string reste; // = string.Empty;
+            int iParagraph;          
+            int iLineFeed; 
+            string reste; 
 
             if (lLyrics == null)
                 return;
@@ -947,6 +942,7 @@ namespace Karaboss
                 iParagraph = plElement.LastIndexOf(_InternalSepParagraphs);
                 iLineFeed = plElement.LastIndexOf(_InternalSepLines);                
 
+                // If paragraph
                 if (iParagraph == 0 || (plElement.Length > _InternalSepParagraphs.Length && iParagraph == plElement.Length - _InternalSepParagraphs.Length))
                 {
                     tx += "\r\n\r\n";
@@ -958,6 +954,7 @@ namespace Karaboss
                             reste = plElement.Substring(0, iParagraph);
                     }
                 }
+                // If Linefeed
                 else if (iLineFeed == 0 || (plElement.Length > _InternalSepLines.Length && iLineFeed == plElement.Length - _InternalSepLines.Length))
                 {
                     tx += "\r\n";
@@ -1173,7 +1170,7 @@ namespace Karaboss
                 {
 
                     string sval = dgView.CurrentCell.Value.ToString().Trim();
-                    Regex regex = new Regex(@"\d\d:\d\d.\d\d");
+                    Regex regex = new Regex(@"\d\d:\d\d.\d\d\d");
                     Match match = regex.Match(sval);
                     if (sval != "" && !match.Success)
                     {
@@ -1183,12 +1180,12 @@ namespace Karaboss
                             int min = total / 60;
                             int sec = total - min * 60;
 
-                            dgView.CurrentCell.Value = string.Format("{0:00}:{1:00}.00", min, sec);
+                            dgView.CurrentCell.Value = string.Format("{0:00}:{1:00}.000", min, sec);
                         }
                         else
                         {
-                            MessageBox.Show("Please use format 00:00.00", "Time", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            dgView.CurrentCell.Value = "00:00.00";
+                            MessageBox.Show("Please use format 00:00.000", "Time", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            dgView.CurrentCell.Value = "00:00.000";
                         }
                     }
 
@@ -1326,6 +1323,12 @@ namespace Karaboss
             dgView.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
             dgView.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
+            // Header Column width (with rows numbers)
+            dgView.RowHeadersWidth = 60;
+
+            dgView.RowsAdded += new DataGridViewRowsAddedEventHandler(dgView_RowsAdded);
+            dgView.RowsRemoved += new DataGridViewRowsRemovedEventHandler(dgView_RowsRemoved);
+
 
             // Selection
             dgView.DefaultCellStyle.SelectionBackColor = dgViewSelectionBackColor;
@@ -1342,11 +1345,13 @@ namespace Karaboss
                 dgView.Columns[0].HeaderText = "Ticks";
                 dgView.Columns[0].ToolTipText = "Number of ticks";
                 dgView.Columns[0].Width = 70;
+                dgView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
                 dgView.Columns[1].Name = "dRealTime";
                 dgView.Columns[1].HeaderText = "Time";
                 dgView.Columns[1].ToolTipText = "Time";
-                dgView.Columns[0].Width = 80;
+                dgView.Columns[1].Width = 80;
+                dgView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
                 dgView.Columns[2].Name = "dType";
                 dgView.Columns[2].HeaderText = "Type";
@@ -1372,11 +1377,13 @@ namespace Karaboss
                 dgView.Columns[0].HeaderText = "Ticks";
                 dgView.Columns[0].ToolTipText = "Number of ticks";
                 dgView.Columns[0].Width = 70;
+                dgView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
                 dgView.Columns[1].Name = "dRealTime";
                 dgView.Columns[1].HeaderText = "Time";
                 dgView.Columns[1].ToolTipText = "Time";
                 dgView.Columns[1].Width = 80;
+                dgView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
                 dgView.Columns[2].Name = "dType";
                 dgView.Columns[2].HeaderText = "Type";
@@ -1407,6 +1414,16 @@ namespace Karaboss
                 c.DefaultCellStyle.Font = dgViewCellsFont;
                 c.ReadOnly = false;
             }
+        }
+
+        private void dgView_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            NumberRows();
+        }
+
+        private void dgView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            NumberRows();
         }
 
 
@@ -1715,6 +1732,16 @@ namespace Karaboss
             }
         }
 
+
+        private void NumberRows()
+        {
+            foreach (DataGridViewRow r in dgView.Rows)
+            {
+                dgView.Rows[r.Index].HeaderCell.Value =
+                                    (r.Index + 1).ToString();
+            }
+        }
+
         #endregion gridview
 
 
@@ -1764,7 +1791,7 @@ namespace Karaboss
             if (bfilemodified == true)
             {
                 //string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
-                String tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
+                string tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
 
                 DialogResult dr = MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (dr == DialogResult.Cancel)
@@ -1888,6 +1915,15 @@ namespace Karaboss
         /// </summary>
         private List<plLyric> LoadModifiedLyrics(bool bIncludeChordsInLyrics = false)
         {
+
+            int line;
+            if (!CheckTimes(out line))
+            {
+                MessageBox.Show("Time on line " + line + " is incorrect", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dgView.CurrentCell = dgView.Rows[line - 1].Cells[0];
+                return null;
+            }
+
             int plTicksOn;
             string val;
             plLyric.CharTypes plType;
@@ -2007,9 +2043,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void mnuFileSaveAsLrc_Click(object sender, EventArgs e)
         {
-            GetLrcSaveOptions();
-
-            
+            GetLrcSaveOptions();            
         }
 
         /// <summary>
@@ -2035,6 +2069,8 @@ namespace Karaboss
             bool bRemoveNonAlphaNumeric = LrcOptionsDialog.bRemoveNonAlphaNumeric;
             // Save to line or to syllabes
             LrcLinesSyllabesFormats LrcLinesSyllabesFormat = LrcOptionsDialog.LrcLinesSyllabesFormat;
+
+            _LrcMillisecondsDigits = LrcOptionsDialog.LrcMillisecondsDigits;
 
             // Cut lines over x characters
             bool bCutLines = LrcOptionsDialog.bCutLines;
@@ -2132,11 +2168,11 @@ namespace Karaboss
                 Tag_Title = lstTags[1];
             }
 
-
             switch (LrcLinesSyllabesFormat)
             {
                 case LrcLinesSyllabesFormats.Lines:
-                    SaveLRCLines(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, bCutLines, LrcCutLinesChars);
+                    List<(double, string)> lstDgRows = LRCReadDgViewData();
+                    Utilities.LyricsUtilities.SaveLRCLines(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, bCutLines, LrcCutLinesChars, _LrcMillisecondsDigits, _myLyricsMgmt);
                     break;
                 case LrcLinesSyllabesFormats.Syllabes:
                     SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
@@ -2146,34 +2182,64 @@ namespace Karaboss
       
             
         /// <summary>
+        /// Read dgView data
+        /// </summary>
+        /// <returns></returns>
+        private List<(double, string)> LRCReadDgViewData()
+        {
+            string sTime;
+            double time;
+            string sLyric;                    
+            
+            object vLyric;
+            object vTime;
+            
+            // Store rows of dgView in a list
+            // the aim is to have the same procedure between frmLyricsEdit and frmMp3LyricsEdit            
+
+            List<(double, string)> lstDgRows = new List<(double, string)>();           
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;                
+                if (vTime != null && vLyric != null)
+                {
+                    sTime = vTime.ToString();
+                    // Convert times to milliseconds (to have the same entry format with frmMp3LyricsEdit)
+                    time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
+                    sLyric = vLyric.ToString();
+
+                    lstDgRows.Add((time, sLyric));
+                }
+            }            
+
+            return lstDgRows;      
+        }
+
+        /// <summary>
         /// Save Lyrics .lrc file format and by lines
         /// </summary>
         /// <param name="File"></param>
+        /// <param name="lstDgRows"></param>
+        /// <param name="bRemoveAccents"></param>
+        /// <param name="bUpperCase"></param>
+        /// <param name="bLowerCase"></param>
+        /// <param name="bRemoveNonAlphaNumeric"></param>
+        /// <param name="Tag_Tool"></param>
         /// <param name="Tag_Title"></param>
         /// <param name="Tag_Artist"></param>
         /// <param name="Tag_Album"></param>
         /// <param name="Tag_Lang"></param>
         /// <param name="Tag_By"></param>
         /// <param name="Tag_DPlus"></param>
-        private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus, bool bControlLength, int MaxLength)
+        /// <param name="bControlLength"></param>
+        /// <param name="MaxLength"></param>
+        private void SaveLRCLines2(string File, List<(double, string)> lstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus, bool bControlLength, int MaxLength)
         {
             string sLine;
-            string sTime;
-            string sLyric;                    
-            string sType;
-            object vLyric;
-            object vTime;
-            object vType;
+
             string lrcs;
             string cr = "\r\n";
-            string strSpaceBetween;
-            bool bSpaceBetwwen = false;            
-
-            // Space between time and lyrics [00:02.872]lyric
-            if (bSpaceBetwwen)
-                strSpaceBetween = " ";
-            else
-                strSpaceBetween = string.Empty;
 
             #region meta data
 
@@ -2193,105 +2259,35 @@ namespace Karaboss
                 Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
                 if (Tag != "")
                 {
-                    sLine = "[" + TagName + strSpaceBetween + Tag + "]";
-                    // lrcs += sLine + cr;
+                    sLine = "[" + TagName + Tag + "]";
                     lstHeaderLines.Add(sLine);
                 }
             }
             #endregion meta data
 
-
-            #region List of lyrics
-
-            // Store lyrics in a list
-            // sTime, sType, sLyric
-            List<(string, string, string)> lstLyricsItems = new List<(string, string, string)>();
-
-            for (int i = 0; i < dgView.Rows.Count; i++)
-            {
-                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
-                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
-                vType = dgView.Rows[i].Cells[COL_TYPE].Value;
-
-                if (vTime != null && vLyric != null && vType != null)
-                {
-                    // lyrics: Trim all and replace underscore by a space
-                    sLyric = vLyric.ToString().Trim();
-
-                    /* Case of lyric containing spaces in the middle: only replace first or last occurence of underscore
-                    * We must keep the undercores located inside the string for next split with spaces
-                    * ex: _the_air,_(get_to_poppin')
-                    * So big bug if we use sLyric = sLyric.Replace("_", " ");
-                    */
-                    if (sLyric.Length > 0 )
-                    {
-                        // replace leading or trailing underscore by a space ' '
-                        StringBuilder sb = new StringBuilder(sLyric);
-                        if (sLyric.StartsWith(@"_"))
-                            sb[0] = ' ';
-                        if (sLyric.EndsWith(@"_"))
-                            sb[sLyric.Length - 1] = ' ';
-                        sLyric = sb.ToString();
-
-                        /*
-                        if (sLyric.StartsWith("_"))
-                            sLyric = sLyric.Remove(0, 1).Insert(0, " ");
-                        if (sLyric.EndsWith("_"))
-                            sLyric = sLyric.Substring(0, sLyric.Length - 1) + " ";
-                        */
-                    }
-
-                    sType = vType.ToString().Trim();
-                    sTime = "[" + vTime.ToString() + "]";
-
-                    if (sType != "cr" && sType != "par")
-                    {
-                        if (sLyric != "")   // Universal code for syllabes & lines: lyrics like " " can be added
-                        {
-                            // Remove chords
-                            if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)
-                                sLyric = Regex.Replace(sLyric, _myLyricsMgmt.RemoveChordPattern, @"");
-
-                            // Remove accents
-                            sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
-
-                            //Uppercase letters
-                            sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
-
-                            // Lowercase letters
-                            sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
-
-                            // Remove non alphanumeric chars
-                            sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
-
-                            lstLyricsItems.Add((sTime, sType, sLyric));
-                        }
-                    }
-                    else
-                    {
-                        lstLyricsItems.Add((sTime, sType, sLyric));
-                    }
-                }
-            }
-            
-            #endregion List of Lyrics
-
            
-            // Store lyrics in lines            
-            List<string> lstLines = Utilities.LyricsUtilities.GetLrcLines(lstLyricsItems, strSpaceBetween);
-            
-            // Store timestamps + lyrics in lines
-            List<string> lstTimeLines = Utilities.LyricsUtilities.GetLrcTimeLines(lstLyricsItems, strSpaceBetween);
+            // Make treatment of lyrics (same for frmLyricsEdit and frmMp3LyricsEdit)
+            List<string> lstLyricsItems = Utilities.LyricsUtilities.LrcExtractDgRows(lstDgRows, _LrcMillisecondsDigits, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _myLyricsMgmt);
+
+            // Store lyrics in lines (remove timestamps from lines, except for the first word)
+            // [00:04.59]It's_been_a_hard_day's_night
+            List<string> lstLines = Utilities.LyricsUtilities.GetLrcLines(lstLyricsItems, _LrcMillisecondsDigits);
+
+            // Store timestamps + lyrics in lines (add spaces if not existing)
+            // initial [00:04.59]It's[00:04.83]_been[00:05.05]_a[00:05.27]_hard[00:06.15]_day's[00:06.81]_night[00:08.14]
+            // result [00:04.59]It's [00:04.83]_been [00:05.05]_a [00:05.27]_hard [00:06.15]_day's [00:06.81]_night [00:08.14]
+            List<string> lstTimeLines = Utilities.LyricsUtilities.GetLrcTimeLines(lstLyricsItems, _LrcMillisecondsDigits);
 
             // Store lyrics by line and cut lines to MaxLength characters using lstTimeLines
             List<string> lstLinesCut = new List<string>();
-            if (bControlLength) 
+            if (bControlLength)
             {
-                lstLinesCut = Utilities.LyricsUtilities.GetLrcLinesCut(lstTimeLines, MaxLength);
+                lstLinesCut = Utilities.LyricsUtilities.GetLrcLinesCut(lstTimeLines, MaxLength, _LrcMillisecondsDigits);
             }
 
 
             #region send all to string 
+
             // Header
             lrcs = string.Empty;
             for (int i = 0; i < lstHeaderLines.Count; i++)
@@ -2299,27 +2295,30 @@ namespace Karaboss
                 lrcs += lstHeaderLines[i] + cr;
             }
 
-            // Lines
+            // Select cut or not cut
             if (bControlLength)
             {
+                // If cut lines to 32 chars
                 for (int i = 0; i < lstLinesCut.Count; i++)
                 {
-                    // Replace underscores located in the middle of the lyrics
-                    // ex: " the_air,_(get_to_poppin')"
-                    lrcs += lstLinesCut[i].Replace("_", " ") + cr;
+                    lrcs += lstLinesCut[i].Replace("_", " ").Replace("] ", "]") + cr;
                 }
             }
             else
             {
+                // No cut
                 for (int i = 0; i < lstLines.Count; i++)
                 {
                     // Replace underscores located in the middle of the lyrics
-                    // ex: " the_air,_(get_to_poppin')"
-                    lrcs += lstLines[i].Replace("_", " ") + cr;
+                    // ex: " the_air,_(get_to_poppin')"                    
+                    lrcs += lstLines[i].Replace("]_", "]").Replace(" ", "").Replace("_", " ") + cr;
                 }
             }
             #endregion send all to string
 
+
+            // Open file
+            #region open file
             try
             {
                 System.IO.File.WriteAllText(File, lrcs);
@@ -2328,10 +2327,12 @@ namespace Karaboss
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            #endregion open file
         }
-               
+
+
         /// <summary>
         /// Save lyrics to new LRC format [01:54.60]Pa<01:55.32>ro<01:56.15>les
         /// </summary>
@@ -2341,18 +2342,15 @@ namespace Karaboss
             string sTime;
             string sLyric;
             object vLyric;
+            
             object vTime;
-            string lrcs = string.Empty;
-            string cr = "\r\n";
-            string strSpaceBetween;
-            bool bSpaceBetwwen = false;
-            string lines = string.Empty;
+            long time;
+            TimeSpan ts;            
 
-            // Space between time and lyrics [00:02.872]lyric
-            if (bSpaceBetwwen)
-                strSpaceBetween = " ";
-            else
-                strSpaceBetween = string.Empty;
+            string lrcs = string.Empty;
+            string cr = "\r\n";                       
+            string lines = string.Empty;
+           
 
             List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
             List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
@@ -2365,7 +2363,7 @@ namespace Karaboss
                 Tag = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(Tag) : Tag;
                 Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
                 if (Tag != "")
-                    lrcs += "[" + TagName + strSpaceBetween + Tag + "]" + cr;
+                    lrcs += "[" + TagName + Tag + "]" + cr;
             }
 
             bool bLineFeed = true;
@@ -2383,7 +2381,8 @@ namespace Karaboss
             for (int i = 0; i < dgView.Rows.Count; i++)
             {                                
                 vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
-                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+                vTime = dgView.Rows[i].Cells[COL_TIME].Value;  // [01:02:123]
+                // vTime = dgView.Rows[i].Cells[COL_TICKS].Value;  // non !!! les ticks n'ont rien à voir avec les durées
 
                 if (vTime != null && vLyric != null && vTime.ToString() != "" && vLyric.ToString() != "")
                 {
@@ -2409,14 +2408,22 @@ namespace Karaboss
                         sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
 
                         // Save also empty lyrics
-                        sTime = vTime.ToString();
-
                         
+
+                        // Translate time to right format of milliseconds
+                        sTime = vTime.ToString();
+                        if (_LrcMillisecondsDigits == 2)
+                        {
+                            time = (long)Mp3LyricsMgmtHelper.TimeToMs(sTime); // [00:01.123] => 1256
+                            ts = TimeSpan.FromMilliseconds(time);
+                            sTime = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, Math.Round(ts.Milliseconds / (double)10));
+                        }
+
+
                         if (bLineFeed)
                         {
                             // Format of timestamp is []                                                        
                             results.Add(("[" + sTime + "]", sLyric));
-
                         }
                         else
                         {
@@ -3874,6 +3881,38 @@ namespace Karaboss
 
         #endregion TxtResult
 
-       
+
+        #region Text
+
+        /// <summary>
+        /// Check if times in dgview are greater than previous ones
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        private bool CheckTimes(out int line)
+        {
+            long time;
+            long lasttime = -1;
+
+            for (int i = 0; i < dgView.RowCount; i++)
+            {
+                if (dgView.Rows[i].Cells[0].Value == null || dgView.Rows[i].Cells[0].Value.ToString() == "") continue;
+
+                time = Convert.ToInt32(dgView.Rows[i].Cells[0].Value);
+
+                if (time > lasttime)
+                    lasttime = time;
+                else if (time < lasttime)
+                {
+                    line = i + 1;
+                    return false;
+                }
+            }
+            line = -1;
+            return true;
+        }
+
+        #endregion Text
+
     }
 }

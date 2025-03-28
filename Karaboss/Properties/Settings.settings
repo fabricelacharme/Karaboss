@@ -216,7 +216,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="bPauseBetweenSongs" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="CountdownSongs" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
@@ -391,6 +391,42 @@
     </Setting>
     <Setting Name="frmMp3LyricsEditSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">800, 600</Value>
+    </Setting>
+    <Setting Name="bProgressiveHighlight" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LrcMillisecondsDigits" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="frmLrcGeneratorLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="frmLrcGeneratorMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="frmLrcGeneratorSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">675, 530</Value>
+    </Setting>
+    <Setting Name="frmMp3PlayerMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="frmMp3PlayerSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">600, 600</Value>
+    </Setting>
+    <Setting Name="bExportMetadata" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="frmMp3LyricsSimpleLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="frmMp3LyricsSimpleMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="frmMp3LyricsSimpleSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">600, 600</Value>
+    </Setting>
+    <Setting Name="frmLyricsTopMost" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

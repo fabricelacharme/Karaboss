@@ -54,6 +54,7 @@ namespace PicControl
 
        
         #region Move form without title bar
+
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
         public const int WM_LBUTTONDOWN = 0x0201;
@@ -63,6 +64,7 @@ namespace PicControl
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
         private HashSet<Control> controlsToMove = new HashSet<Control>();
+        
         #endregion
        
 
@@ -380,8 +382,7 @@ namespace PicControl
             set { _bforceuppercase = value;
                 if (_bdemo)
                     LoadDemoText();
-            }
-        
+            }        
         }
 
         public Font KaraokeFont
@@ -398,7 +399,6 @@ namespace PicControl
                 {
                     Console.Write("Error: " + e.Message);
                 }
-
             }
         }
 
@@ -506,8 +506,6 @@ namespace PicControl
             }
         }
 
-
-
         #endregion properties
     
 
@@ -588,9 +586,11 @@ namespace PicControl
             _chordFont = new Font("Comic Sans MS", this._karaokeFont.Size);
 
             #region Move form without title bar
+
             Application.AddMessageFilter(this);
             controlsToMove.Add(this);
             controlsToMove.Add(this.pboxWnd);
+            
             #endregion
             
             m_ImageFilePaths = new List<string>();
@@ -610,6 +610,8 @@ namespace PicControl
 
         #region methods
 
+        #region Move Windows
+
         /// <summary>
         /// Move form without title bar
         /// The message is sent to the parent Form (this.ParentForm.Handle)
@@ -627,6 +629,8 @@ namespace PicControl
             }
             return false;
         }
+
+        #endregion MoveWindows
 
         /// <summary>
         /// Define new slideShow directory and frequency
@@ -683,7 +687,7 @@ namespace PicControl
                             // Initialize backgroundworker
                             InitBackGroundWorker();
                             random = new Random();
-                            Start();
+                            StartBgW();
                             break;
                     }
                 }
@@ -1357,7 +1361,7 @@ namespace PicControl
                 femsize = g.DpiX * inisize / 72;
 
                 float textSize = MeasureString(S, femsize);
-                long comp = (long)(0.95*pboxWnd.ClientSize.Width);                
+                long comp = (long)(0.94*pboxWnd.ClientSize.Width);                
 
                 // Texte trop large
                 if (textSize > comp)
@@ -1844,8 +1848,7 @@ namespace PicControl
             string tx = syl.text;
                         
             try
-            {
-                //float x0 = rRect[syl.posline].X;
+            {                
 
                 #region background of syllabe                              
                 if (_bTextBackGround)
@@ -2287,8 +2290,7 @@ namespace PicControl
         #region backgroundworker
 
         private string SelectRndFile(List<string> files)
-        {
-            //string retfile;// = string.Empty;
+        {            
             if (files.Count > 0)
             {            
                 int rand = random.Next(0, files.Count);
@@ -2314,7 +2316,7 @@ namespace PicControl
         {           
             if (m_Restart == true)
             {
-                Stop();                
+                StopBgW();                
 
                 int C = m_ImageFilePaths.Count;
 
@@ -2326,7 +2328,7 @@ namespace PicControl
                         pboxWnd.Image = Image.FromFile(m_ImageFilePaths[0]);
                         break;
                     default:                        
-                        Start();
+                        StartBgW();
                         break;
                 }
             }
@@ -2417,11 +2419,11 @@ namespace PicControl
         }
 
 
-        private void Start()
+        private void StartBgW()
         {
             if (backgroundWorkerSlideShow.IsBusy)
             {
-                Stop();                
+                StopBgW();                
             }
 
             try
@@ -2440,7 +2442,7 @@ namespace PicControl
             }
         }
 
-        private void Stop()
+        private void StopBgW()
         {
             if (backgroundWorkerSlideShow.IsBusy)
             {
@@ -2451,7 +2453,27 @@ namespace PicControl
         }
 
 
-       
+        /// <summary>
+        /// Terminate
+        /// </summary>
+        public void Terminate()
+        {
+            m_Cancel = true;
+            m_Restart = false;
+
+            m_ImageFilePaths = new List<string>();
+            if (m_ImageStream != null)
+            {
+                m_ImageStream.Dispose();
+                m_ImageStream = null;
+            }
+
+            if (backgroundWorkerSlideShow != null)
+            {
+                backgroundWorkerSlideShow.CancelAsync();
+            }
+
+        }
 
         #endregion backgroundworker
 
@@ -2676,27 +2698,7 @@ namespace PicControl
 
         }              
 
-        /// <summary>
-        /// Terminate
-        /// </summary>
-        public void Terminate()
-        {
-            m_Cancel = true;
-            m_Restart = false;           
-           
-            m_ImageFilePaths = new List<string>();
-            if (m_ImageStream != null)
-            {
-                m_ImageStream.Dispose();
-                m_ImageStream = null;
-            }            
-
-            if (backgroundWorkerSlideShow != null)
-            {
-                backgroundWorkerSlideShow.CancelAsync();                
-            }
-            
-        }
+  
 
         #endregion paint resize
 

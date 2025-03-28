@@ -921,6 +921,16 @@ namespace Karaboss.Properties {
         }
         
         /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+        /// </summary>
+        internal static System.Drawing.Icon gear {
+            get {
+                object obj = ResourceManager.GetObject("gear", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap help {
@@ -1107,6 +1117,26 @@ namespace Karaboss.Properties {
             get {
                 object obj = ResourceManager.GetObject("mml", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+        /// </summary>
+        internal static System.Drawing.Icon mp3 {
+            get {
+                object obj = ResourceManager.GetObject("mp3", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap mp3_logo_200 {
+            get {
+                object obj = ResourceManager.GetObject("mp3_logo_200", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -1480,6 +1510,16 @@ namespace Karaboss.Properties {
             get {
                 object obj = ResourceManager.GetObject("table_multiple", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+        /// </summary>
+        internal static System.Drawing.Icon text {
+            get {
+                object obj = ResourceManager.GetObject("text", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         

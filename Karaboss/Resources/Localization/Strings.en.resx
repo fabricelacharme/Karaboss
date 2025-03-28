@@ -540,4 +540,25 @@
   <data name="ChordsOriginFromUserInput" xml:space="preserve">
     <value>Chords are entered manually and will be recorded in the lyrics</value>
   </data>
+  <data name="LyricsWereRecorded" xml:space="preserve">
+    <value>The lyrics were recorded in the file</value>
+  </data>
+  <data name="SwitchToSyncMode" xml:space="preserve">
+    <value>Switch to sync mode</value>
+  </data>
+  <data name="DescrEditMode" xml:space="preserve">
+    <value>Edit mode: load an LRC file to be modified or lyrics to be synchronised.</value>
+  </data>
+  <data name="SwitchToEditMode" xml:space="preserve">
+    <value>Switch to edit mode</value>
+  </data>
+  <data name="DescSyncMode" xml:space="preserve">
+    <value>Sync mode: start the music and press ENTER each time you hear a line of lyrics displayed.</value>
+  </data>
+  <data name="Mp3TimeStampHotKey1" xml:space="preserve">
+    <value>&lt;ENTER&gt; Add a new timestamp{0}&lt;DEL&gt;   Remove current timestamp{0}&lt;SPACE&gt; Pause Music"</value>
+  </data>
+  <data name="Mp3TimeStampHotKey2" xml:space="preserve">
+    <value>+       Accelerate{0}-       Slow down{0}&lt;-      Stop Music</value>
+  </data>
 </root>

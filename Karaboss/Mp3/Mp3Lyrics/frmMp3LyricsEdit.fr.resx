@@ -120,6 +120,9 @@
   <data name="btnDeleteAllLyrics.Text" xml:space="preserve">
     <value>Supprimer les &amp;paroles</value>
   </data>
+  <data name="btnSave.Text" xml:space="preserve">
+    <value>&amp;Enregistrer les paroles dans le fichier mp3</value>
+  </data>
   <data name="btnInsertParagraph.Text" xml:space="preserve">
     <value>Nouveau paragraphe (\)</value>
   </data>
@@ -132,15 +135,117 @@
   <data name="btnDelete.Text" xml:space="preserve">
     <value>&amp;Supprimer la ligne</value>
   </data>
-  <data name="btnSave.Text" xml:space="preserve">
-    <value>&amp;Enregistrer les paroles dans le fichier mp3</value>
+  <data name="pnlEdit.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>54, 20</value>
+  <data name="mnuImport.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIFSURBVDhPpZLtS1NhGMbPPxJmmlYSgqHiKzGU1EDxg4iK
+        YKyG2WBogqMYJQOtCEVRFBGdTBCJfRnkS4VaaWNT5sqx1BUxRXxDHYxAJLvkusEeBaPAB+5z4Jzn+t3X
+        /aLhnEfjo8m+dCoa+7/C3O2Hqe0zDC+8KG+cRZHZhdzaaWTVTCLDMIY0vfM04Nfh77/G/sEhwpEDbO3t
+        I7TxE8urEVy99fT/AL5gWDLrTB/hnF4XsW0khCu5ln8DmJliT2AXrcNBsU1gj/MH4nMeKwBrPktM28xM
+        cX79DFKrHHD5d9D26hvicx4pABt2lpg10zYzU0zr7+e3xXGcrkEB2O2TNec9nJFwB3alZn5jZorfeDZh
+        6Q3g8s06BeCoKF4MRURoH1+BY2oNCbeb0TIclIYxOhzf8frTOuo7FxCbbVIAzpni0iceEc8vhzEwGkJD
+        lx83ymxifejdKjRNk/8PWnyIyTQqAJek0jqHwfEVscu31baIu8+90sTE4nY025dQ2/5FIPpnXlzKuK8A
+        HBUzHot52djqQ6HZhfR7IwK4mKpHtvEDMqvfCiQ6zaAAXM8x94aIWTNrLLG4kVUzgaTSPlzLtyJOZxbb
+        1wtfyg4Q+AfA3aZlButjSfxGcUJBk4g5tuP3haQKRKXcUQDOmbvNTpPOJeFFjordZmbWTNvMTHFUcpUC
+        nOccAdABIDXXE1nzAAAAAElFTkSuQmCC
+</value>
   </data>
-  <data name="mnuFile.Text" xml:space="preserve">
-    <value>&amp;Fichier</value>
+  <data name="mnuExport.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIFSURBVDhPpZLtS1NhGMbPPxJmmlYSgqHiKzGU1EDxg4iK
+        YKyG2WBogqMYJQOtCEVRFBGdTBCJfRnkS4VaaWNT5sqx1BUxRXxDHYxAJLvkusEeBaPAB+5z4Jzn+t3X
+        /aLhnEfjo8m+dCoa+7/C3O2Hqe0zDC+8KG+cRZHZhdzaaWTVTCLDMIY0vfM04Nfh77/G/sEhwpEDbO3t
+        I7TxE8urEVy99fT/AL5gWDLrTB/hnF4XsW0khCu5ln8DmJliT2AXrcNBsU1gj/MH4nMeKwBrPktM28xM
+        cX79DFKrHHD5d9D26hvicx4pABt2lpg10zYzU0zr7+e3xXGcrkEB2O2TNec9nJFwB3alZn5jZorfeDZh
+        6Q3g8s06BeCoKF4MRURoH1+BY2oNCbeb0TIclIYxOhzf8frTOuo7FxCbbVIAzpni0iceEc8vhzEwGkJD
+        lx83ymxifejdKjRNk/8PWnyIyTQqAJek0jqHwfEVscu31baIu8+90sTE4nY025dQ2/5FIPpnXlzKuK8A
+        HBUzHot52djqQ6HZhfR7IwK4mKpHtvEDMqvfCiQ6zaAAXM8x94aIWTNrLLG4kVUzgaTSPlzLtyJOZxbb
+        1wtfyg4Q+AfA3aZlButjSfxGcUJBk4g5tuP3haQKRKXcUQDOmbvNTpPOJeFFjordZmbWTNvMTHFUcpUC
+        nOccAdABIDXXE1nzAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnSwitchSyncEdit.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIFSURBVDhPpZLtS1NhGMbPPxJmmlYSgqHiKzGU1EDxg4iK
+        YKyG2WBogqMYJQOtCEVRFBGdTBCJfRnkS4VaaWNT5sqx1BUxRXxDHYxAJLvkusEeBaPAB+5z4Jzn+t3X
+        /aLhnEfjo8m+dCoa+7/C3O2Hqe0zDC+8KG+cRZHZhdzaaWTVTCLDMIY0vfM04Nfh77/G/sEhwpEDbO3t
+        I7TxE8urEVy99fT/AL5gWDLrTB/hnF4XsW0khCu5ln8DmJliT2AXrcNBsU1gj/MH4nMeKwBrPktM28xM
+        cX79DFKrHHD5d9D26hvicx4pABt2lpg10zYzU0zr7+e3xXGcrkEB2O2TNec9nJFwB3alZn5jZorfeDZh
+        6Q3g8s06BeCoKF4MRURoH1+BY2oNCbeb0TIclIYxOhzf8frTOuo7FxCbbVIAzpni0iceEc8vhzEwGkJD
+        lx83ymxifejdKjRNk/8PWnyIyTQqAJek0jqHwfEVscu31baIu8+90sTE4nY025dQ2/5FIPpnXlzKuK8A
+        HBUzHot52djqQ6HZhfR7IwK4mKpHtvEDMqvfCiQ6zaAAXM8x94aIWTNrLLG4kVUzgaTSPlzLtyJOZxbb
+        1wtfyg4Q+AfA3aZlButjSfxGcUJBk4g5tuP3haQKRKXcUQDOmbvNTpPOJeFFjordZmbWTNvMTHFUcpUC
+        nOccAdABIDXXE1nzAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="toolstrip1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblMode.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblLyricsOrigin.Size" type="System.Drawing.Size, System.Drawing">
+    <value>114, 15</value>
+  </data>
+  <data name="lblLyricsOrigin.Text" xml:space="preserve">
+    <value>Origine des paroles</value>
+  </data>
+  <data name="lblLyricsOrigin.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label6.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label5.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label4.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label3.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cbLanguage.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="txtYourName.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblHotkeys.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlSync.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="dgView.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer1.Panel1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="txtResult.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer1.Panel2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblLyrics.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblTimes.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
     <value>249, 22</value>
@@ -166,17 +271,23 @@
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
   </data>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>54, 20</value>
+  </data>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;Fichier</value>
+  </data>
   <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 20</value>
   </data>
   <data name="mnuEdit.Text" xml:space="preserve">
     <value>&amp;Edition</value>
   </data>
-  <data name="mnuEditLoadLRCFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>263, 22</value>
+  <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
+    <value>131, 22</value>
   </data>
-  <data name="mnuEditLoadLRCFile.Text" xml:space="preserve">
-    <value>Charger un fichier texte (format .lrc)</value>
+  <data name="mnuHelpAbout.Text" xml:space="preserve">
+    <value>&amp;A propos...</value>
   </data>
   <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
     <value>43, 20</value>
@@ -184,10 +295,43 @@
   <data name="mnuHelp.Text" xml:space="preserve">
     <value>&amp;Aide</value>
   </data>
-  <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
-    <value>131, 22</value>
+  <data name="menuStrip1.ToolTip" xml:space="preserve">
+    <value />
   </data>
-  <data name="mnuHelpAbout.Text" xml:space="preserve">
-    <value>&amp;A propos...</value>
+  <data name="pnlTop.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlMiddle.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlBottom.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAALAAAAEwAAABMAAAATAAAAEwAAABNAAAAIgAAACMAAADFAAAAXQAAACkAAAAAAAAAAAAA
+        AAAAAAAAAAAAVgAAAP4AAAD0AAAA7wAAAO8AAADvAAAA8AAAAKkAAAAGAAAAdwAAACcAAAD+AAAAJgAA
+        AAAAAAAAAAAAAAAAAOoAAABqAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAH8AAADVAAAA/wAA
+        APsAAAA3AAAAAAAAAAAAAAD7AAAAMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtwAA
+        AP8AAAD/AAAA/QAAABYAAAAAAAAA+wAAADUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAACpAAAA/wAAAMcAAAASAAAADgAAAPsAAAA1AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAkAAAAAAAAAKAAAAATAAAA3QAAAMwAAAD7AAAANQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAowAAAHMAAAAAAAAAmgAAAP0AAABsAAAA+wAAADUAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAJsAAADLAAAABAAAAAoAAAA8AAAAAQAAAPsAAAA1AAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAACbAAAAyAAAAAQAAAAAAAAAAAAAAAAAAAD7AAAANQAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAmwAAAMgAAAAEAAAAAAAAAAAAAAAAAAAA+wAAADUAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKUAAADIAAAABAAAAAAAAAAAAAAAAAAAAPsAAAA1AAAAAAAA
+        AAAAAAAAAAAAAAAAAB4AAAD7AAAA/wAAAP8AAAD/AAAAsQAAAAAAAAAAAAAAAAAAAAAAAAD7AAAANQAA
+        AAAAAAAAAAAAAAAAAAAAAAA1AAAA/AAAAP8AAAD+AAAA2AAAAAUAAAAAAAAAAAAAAAAAAAAAAAAA/QAA
+        ADQAAAAAAAAAAAAAAAAAAAAAAAAAMgAAAPsAAAD/AAAA3QAAABQAAAABAAAAAAAAAAAAAAAAAAAAAAAA
+        AMEAAAC1AAAANAAAADUAAAA1AAAAMQAAAHMAAAD/AAAA4wAAAAsAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAaAAAAwQAAAP0AAAD7AAAA+wAAAPsAAAD+AAAAqgAAABMAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAA/78AAIDvAAB/xwAAf8MAAH/jAAB/9AAAf9kAAH/PAAB/zwAAf88AAH/PAAB+DwAAfh8AAH4/
+        AAA+fwAAgP8AAA==
+</value>
+  </data>
+  <data name="$this.ToolTip" xml:space="preserve">
+    <value />
   </data>
 </root>

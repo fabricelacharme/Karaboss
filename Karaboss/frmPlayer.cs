@@ -1,6 +1,6 @@
 #region License
 
-/* Copyright (c) 2018 Fabrice Lacharme
+/* Copyright (c) 2025 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -60,7 +60,12 @@ namespace Karaboss
 
         public bool bfilemodified = false;
 
-
+        private enum Directions
+        {
+            Forward,
+            Backward
+        }
+        private Directions _direction;
 
         #region Lyrics declaration
 
@@ -466,9 +471,85 @@ namespace Karaboss
 
         #region next
 
+       
+
+        private void playMidiSong(Directions _direction)
+        {
+            string folder;
+            int index;
+
+            // We have this information : Mp3FullPath which is the path of the file being played                
+            if (Application.OpenForms.OfType<frmExplorer>().Count() == 0) return;
+
+            frmExplorer frmExplorer = Application.OpenForms.OfType<frmExplorer>().First();
+            
+            // List of midi files filtered by extension
+            folder = Path.GetDirectoryName(MIDIfileFullPath);
+            var files = Directory
+                .EnumerateFiles(folder) //<--- .NET 4.5
+                 .Where(file => file.ToLower().EndsWith("mid") || file.ToLower().EndsWith("kar") || file.ToLower().EndsWith("xml") || file.ToLower().EndsWith("mxl"))
+                 .ToList();
+
+            if (!files.Contains(MIDIfileFullPath)) return;
+            index = files.IndexOf(MIDIfileFullPath);
+
+            try
+            {
+                switch (_direction)
+                {
+                    // Next file
+                    case Directions.Forward:
+                        if (index >= files.Count - 1) return;
+                        MIDIfileFullPath = files[index + 1];
+                        break;
+
+                    // Previous file
+                    case Directions.Backward:
+                        if (index == 0) return;
+                        MIDIfileFullPath = files[index - 1];
+                        break;
+
+                }
+
+                // Stop player
+                StopMusic();
+
+                // Select new file in the explorer
+                MIDIfileName = Path.GetFileName(MIDIfileFullPath);
+                string path = Path.GetDirectoryName(MIDIfileFullPath);
+                path = "file:///" + path.Replace("\\", "/");
+                frmExplorer.NavigateTo(path, MIDIfileName);
+
+                // Update display
+                SetTitle(MIDIfileFullPath);
+
+                // Unload frmLyric
+                // Ferme le formulaire frmLyric
+                if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+                {
+                    frmLyric.Close();                
+                }
+
+                // Play file
+                SelectFileToLoadAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                StopMusic();
+            }
+        }
+
         private void BtnNext_Click(object sender, EventArgs e)
         {
-            PlayNextSong();
+            if (currentPlaylist == null)
+            {
+                playMidiSong(Directions.Forward);
+            }
+            else
+            {
+                PlayNextSong();
+            }
         }
 
         private void BtnNext_MouseHover(object sender, EventArgs e)
@@ -489,7 +570,14 @@ namespace Karaboss
 
         private void BtnPrev_Click(object sender, EventArgs e)
         {
-            PlayPrevSong();
+            if (currentPlaylist == null)
+            {
+                playMidiSong(Directions.Backward);
+            }
+            else
+            {
+                PlayPrevSong();
+            }
         }
 
         private void BtnPrev_MouseLeave(object sender, EventArgs e)
@@ -579,7 +667,9 @@ namespace Karaboss
                     lblStatus.Text = "Stopped";
                     lblStatus.ForeColor = Color.Red;
                     btnStartRec.Enabled = true;
-                    VuMasterPeakVolume.Level = 0;
+                    VuPeakVolumeLeft.Level = 0;
+                    VuPeakVolumeRight.Level = 0;
+
                     break;
 
                 case PlayerStates.LaunchNextSong:       // pause between 2 songs of a playlist
@@ -597,7 +687,7 @@ namespace Karaboss
                     btnStop.Enabled = true;   // to allow stop
                     lblStatus.Text = "Next";
                     lblStatus.ForeColor = Color.Violet;
-                    VuMasterPeakVolume.Level = 0;
+                    VuPeakVolumeLeft.Level = 0;
                     break;
 
                 case PlayerStates.WaitingPaused:
@@ -609,7 +699,8 @@ namespace Karaboss
                     break;
 
                 case PlayerStates.NextSong:     // Select next song of a playlist
-                    VuMasterPeakVolume.Level = 0;
+                    VuPeakVolumeLeft.Level = 0;
+                    VuPeakVolumeRight.Level= 0;
                     break;
 
                 default:
@@ -1043,16 +1134,24 @@ namespace Karaboss
             //important:   use "leftWidth" to position controls                       
 
             #region volume
-
+            sldMainVolume.ShowDivisionsText = false;
+            sldMainVolume.ShowSmallScale = false;
+            sldMainVolume.TickStyle = TickStyle.Both;
+            sldMainVolume.TickColor = Color.White;
+            sldMainVolume.TickAdd = 0;
+            sldMainVolume.TickDivide = 0;
+            
+            sldMainVolume.Orientation = Orientation.Vertical;
             sldMainVolume.Maximum = 130;    // Closer to 127
             sldMainVolume.Minimum = 0;
             sldMainVolume.ScaleDivisions = 13;
+            sldMainVolume.ScaleSubDivisions = 5;
             sldMainVolume.Value = 104;
             sldMainVolume.SmallChange = 13;
             sldMainVolume.LargeChange = 13;
             sldMainVolume.MouseWheelBarPartitions = 10;
 
-            sldMainVolume.Left = 249;
+            sldMainVolume.Left = 272;
             sldMainVolume.Top = 25;
             sldMainVolume.Width = 24;
             sldMainVolume.Height = 80;
@@ -2314,12 +2413,8 @@ namespace Karaboss
                     // Restore form
                     Application.OpenForms["frmExplorer"].Restore();
                     Application.OpenForms["frmExplorer"].Activate();
-
                 }
-
-
                 Dispose();
-
             }
         }
 
@@ -3192,6 +3287,7 @@ namespace Karaboss
         private void HandleSysExMessagePlayed(object sender, SysExMessageEventArgs e)
         {
             // outDevice.Send(e.Message); Sometimes causes an exception to be thrown because the output device is overloaded.
+            //Console.WriteLine("************** " + e.Message.SysExType.ToString());
         }
 
         private void HandleStopped(object sender, StoppedEventArgs e)
@@ -4744,9 +4840,9 @@ namespace Karaboss
                 pnlTop.Visible = true;
                 pnlMiddle.Visible = true;
 
-
-
+                
                 #region window size & location
+                
                 // If window is maximized
                 if (Properties.Settings.Default.frmPlayerMaximized)
                 {
@@ -6266,71 +6362,148 @@ namespace Karaboss
         /// </summary>
         private void GetPeakVolume()
         {
-            
-            float? peak = AudioControl.AudioManager.GetApplicationMasterPeakVolume(outDeviceProcessId);
-            VuMasterPeakVolume.Level = Convert.ToInt32(peak);
+            try
+            {
+                // Master volume
+                //float? peak = AudioControl.AudioManager.GetApplicationMasterPeakVolume(outDeviceProcessId);
+                //int level = Convert.ToInt32(peak);
+                //VuMasterPeakVolume.Level = level;
+
+
+                // Volume per channels (left & right)
+                float? peakleft = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDeviceProcessId, 0);
+                float? peakright = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDeviceProcessId, 1);
+
+                if (peakleft == null || peakright == null)
+                    return;
+
+                int LeftLevel = Convert.ToInt32(peakleft);
+                int RightLevel = Convert.ToInt32(peakright);                
+                
+                if (LeftLevel < VuPeakVolumeLeft.LevelMax)
+                    VuPeakVolumeLeft.Level = LeftLevel;
+                if (RightLevel < VuPeakVolumeRight.LevelMax)
+                    VuPeakVolumeRight.Level = RightLevel;
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
+
+       
 
         /// <summary>
         /// Initialize control peak volume level
         /// </summary>
         private void Init_peakLevel()
         {
-            this.VuMasterPeakVolume.AnalogMeter = false;
-            this.VuMasterPeakVolume.BackColor = System.Drawing.Color.DimGray;
-            this.VuMasterPeakVolume.DialBackground = System.Drawing.Color.White;
-            this.VuMasterPeakVolume.DialTextNegative = System.Drawing.Color.Red;
-            this.VuMasterPeakVolume.DialTextPositive = System.Drawing.Color.Black;
-            this.VuMasterPeakVolume.DialTextZero = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeLeft.AnalogMeter = false;
+            this.VuPeakVolumeLeft.BackColor = System.Drawing.Color.DimGray;
+            this.VuPeakVolumeLeft.DialBackground = System.Drawing.Color.White;
+            this.VuPeakVolumeLeft.DialTextNegative = System.Drawing.Color.Red;
+            this.VuPeakVolumeLeft.DialTextPositive = System.Drawing.Color.Black;
+            this.VuPeakVolumeLeft.DialTextZero = System.Drawing.Color.DarkGreen;
 
             // LED 1
-            this.VuMasterPeakVolume.Led1ColorOff = System.Drawing.Color.DarkGreen;
-            this.VuMasterPeakVolume.Led1ColorOn = System.Drawing.Color.LimeGreen;
-            //this.VuMasterPeakVolume.Led1Count = 12;
-            this.VuMasterPeakVolume.Led1Count = 14;
+            this.VuPeakVolumeLeft.Led1ColorOff = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeLeft.Led1ColorOn = System.Drawing.Color.LimeGreen;            
+            this.VuPeakVolumeLeft.Led1Count = 14;
 
             // LED 2
-            this.VuMasterPeakVolume.Led2ColorOff = System.Drawing.Color.Olive;
-            this.VuMasterPeakVolume.Led2ColorOn = System.Drawing.Color.Yellow;
-            //this.VuMasterPeakVolume.Led2Count = 12;
-            this.VuMasterPeakVolume.Led2Count = 14;
+            this.VuPeakVolumeLeft.Led2ColorOff = System.Drawing.Color.Olive;
+            this.VuPeakVolumeLeft.Led2ColorOn = System.Drawing.Color.Yellow;            
+            this.VuPeakVolumeLeft.Led2Count = 14;
 
             // LED 3
-            this.VuMasterPeakVolume.Led3ColorOff = System.Drawing.Color.Maroon;
-            this.VuMasterPeakVolume.Led3ColorOn = System.Drawing.Color.Red;
-            //this.VuMasterPeakVolume.Led3Count = 8;
-            this.VuMasterPeakVolume.Led3Count = 10;
+            this.VuPeakVolumeLeft.Led3ColorOff = System.Drawing.Color.Maroon;
+            this.VuPeakVolumeLeft.Led3ColorOn = System.Drawing.Color.Red;            
+            this.VuPeakVolumeLeft.Led3Count = 10;
 
             // LED size
-            this.VuMasterPeakVolume.LedSize = new System.Drawing.Size(12, 2);
+            this.VuPeakVolumeLeft.LedSize = new System.Drawing.Size(12, 2);
 
-            this.VuMasterPeakVolume.LedSpace = 1;
-            this.VuMasterPeakVolume.Level = 0;
-            this.VuMasterPeakVolume.LevelMax = 127;
+            this.VuPeakVolumeLeft.LedSpace = 1;
+            this.VuPeakVolumeLeft.Level = 0;            
+            this.VuPeakVolumeLeft.LevelMax = 127;            
 
-            //this.VuMasterPeakVolume.Location = new System.Drawing.Point(220, 33);
-            this.VuMasterPeakVolume.MeterScale = VU_MeterLibrary.MeterScale.Log10;
-            this.VuMasterPeakVolume.Name = "VuMasterPeakVolume";
-            this.VuMasterPeakVolume.NeedleColor = System.Drawing.Color.Black;
-            this.VuMasterPeakVolume.PeakHold = false;
-            this.VuMasterPeakVolume.Peakms = 1000;
-            this.VuMasterPeakVolume.PeakNeedleColor = System.Drawing.Color.Red;
-            this.VuMasterPeakVolume.ShowDialOnly = false;
-            this.VuMasterPeakVolume.ShowLedPeak = false;
-            this.VuMasterPeakVolume.ShowTextInDial = false;
-            this.VuMasterPeakVolume.Size = new System.Drawing.Size(14, 120);
-            this.VuMasterPeakVolume.TabIndex = 5;
-            this.VuMasterPeakVolume.TextInDial = new string[] {
+            this.VuPeakVolumeLeft.MeterScale = VU_MeterLibrary.MeterScale.Log10;
+            this.VuPeakVolumeLeft.Name = "VuPeakVolumeLeft";
+            this.VuPeakVolumeLeft.NeedleColor = System.Drawing.Color.Black;
+            this.VuPeakVolumeLeft.PeakHold = false;
+            this.VuPeakVolumeLeft.Peakms = 1000;
+            this.VuPeakVolumeLeft.PeakNeedleColor = System.Drawing.Color.Red;
+            this.VuPeakVolumeLeft.ShowDialOnly = false;
+            this.VuPeakVolumeLeft.ShowLedPeak = false;
+            this.VuPeakVolumeLeft.ShowTextInDial = false;
+            this.VuPeakVolumeLeft.Size = new System.Drawing.Size(14, 120);
+            this.VuPeakVolumeLeft.TabIndex = 5;
+            this.VuPeakVolumeLeft.TextInDial = new string[] {
             "-40",
             "-20",
             "-10",
             "-5",
             "0",
             "+6"};
-            this.VuMasterPeakVolume.UseLedLight = false;
-            this.VuMasterPeakVolume.VerticalBar = true;
-            this.VuMasterPeakVolume.VuText = "VU";
-            this.VuMasterPeakVolume.Location = new Point(226, 7);
+            this.VuPeakVolumeLeft.UseLedLight = false;
+            this.VuPeakVolumeLeft.VerticalBar = true;
+            this.VuPeakVolumeLeft.VuText = "VU";
+            this.VuPeakVolumeLeft.Location = new Point(220, 7);
+
+
+            // Right
+            this.VuPeakVolumeRight.AnalogMeter = false;
+            this.VuPeakVolumeRight.BackColor = System.Drawing.Color.DimGray;
+            this.VuPeakVolumeRight.DialBackground = System.Drawing.Color.White;
+            this.VuPeakVolumeRight.DialTextNegative = System.Drawing.Color.Red;
+            this.VuPeakVolumeRight.DialTextPositive = System.Drawing.Color.Black;
+            this.VuPeakVolumeRight.DialTextZero = System.Drawing.Color.DarkGreen;
+
+            // LED 1
+            this.VuPeakVolumeRight.Led1ColorOff = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeRight.Led1ColorOn = System.Drawing.Color.LimeGreen;            
+            this.VuPeakVolumeRight.Led1Count = 14;
+
+            // LED 2
+            this.VuPeakVolumeRight.Led2ColorOff = System.Drawing.Color.Olive;
+            this.VuPeakVolumeRight.Led2ColorOn = System.Drawing.Color.Yellow;            
+            this.VuPeakVolumeRight.Led2Count = 14;
+
+            // LED 3
+            this.VuPeakVolumeRight.Led3ColorOff = System.Drawing.Color.Maroon;
+            this.VuPeakVolumeRight.Led3ColorOn = System.Drawing.Color.Red;            
+            this.VuPeakVolumeRight.Led3Count = 10;
+
+            // LED size
+            this.VuPeakVolumeRight.LedSize = new System.Drawing.Size(12, 2);
+
+            this.VuPeakVolumeRight.LedSpace = 1;
+            this.VuPeakVolumeRight.Level = 0;
+            this.VuPeakVolumeRight.LevelMax = 127;
+            
+            this.VuPeakVolumeRight.MeterScale = VU_MeterLibrary.MeterScale.Log10;
+            this.VuPeakVolumeRight.Name = "VuPeakVolumeRight";
+            this.VuPeakVolumeRight.NeedleColor = System.Drawing.Color.Black;
+            this.VuPeakVolumeRight.PeakHold = false;
+            this.VuPeakVolumeRight.Peakms = 1000;
+            this.VuPeakVolumeRight.PeakNeedleColor = System.Drawing.Color.Red;
+            this.VuPeakVolumeRight.ShowDialOnly = false;
+            this.VuPeakVolumeRight.ShowLedPeak = false;
+            this.VuPeakVolumeRight.ShowTextInDial = false;
+            this.VuPeakVolumeRight.Size = new System.Drawing.Size(14, 120);
+            this.VuPeakVolumeRight.TabIndex = 5;
+            this.VuPeakVolumeRight.TextInDial = new string[] {
+            "-40",
+            "-20",
+            "-10",
+            "-5",
+            "0",
+            "+6"};
+            this.VuPeakVolumeRight.UseLedLight = false;
+            this.VuPeakVolumeRight.VerticalBar = true;
+            this.VuPeakVolumeRight.VuText = "VU";
+            this.VuPeakVolumeRight.Location = new Point(236, 7);
 
         }
 
@@ -7271,7 +7444,10 @@ namespace Karaboss
 
         private void ModTempo()
         {
-            _tempo = TempoDelta * TempoOrig / 100;
+            // _TempoDeltat is 100 at start
+            // TempoOrig is sequencer1.Tempo at start
+
+            _tempo = TempoDelta * TempoOrig / 100;  // _tempo is a percent of TempoOrig
             _tempoplayed = _tempo;
 
             // Change clock tempo
@@ -7285,7 +7461,7 @@ namespace Karaboss
 
             // Update display duration
             _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. Duration for ScrollTo dislay of sheetmusic
-            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn); // real duration for multiple tempos
+            _duration = (TempoDelta/100.0f) * TempoUtilities.GetMidiDuration(_totalTicks, _ppqn); // real duration for multiple tempos
 
             int Min = (int)(_duration / 60);
             int Sec = (int)(_duration - (Min * 60));
@@ -7390,8 +7566,8 @@ namespace Karaboss
         private void Timer1_Tick(object sender, EventArgs e)
         {
             if(!scrolling)
-            {
-
+            {                
+                
                 // Display time elapse
                 double dpercent = 100 * sequencer1.Position / (double)_totalTicks;
                 double maintenant = (dpercent * _durationPercent) / 100;  //seconds                                                
@@ -8480,9 +8656,6 @@ namespace Karaboss
         /// </summary>
         private void DisplaySongDuration(double dur)
         {
-            // Affichage du BEAT
-            //lblBeat.Text = "1|" + sequence1.Numerator;
-
             int Min = (int)(dur / 60);
             int Sec = (int)(dur - (Min * 60));
 
@@ -8732,7 +8905,6 @@ namespace Karaboss
 
         #endregion Save File
 
-      
         #endregion Utilities
     }
 

@@ -880,7 +880,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool bPauseBetweenSongs {
             get {
                 return ((bool)(this["bPauseBetweenSongs"]));
@@ -1577,6 +1577,150 @@ namespace Karaboss.Properties {
             }
             set {
                 this["frmMp3LyricsEditSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool bProgressiveHighlight {
+            get {
+                return ((bool)(this["bProgressiveHighlight"]));
+            }
+            set {
+                this["bProgressiveHighlight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int LrcMillisecondsDigits {
+            get {
+                return ((int)(this["LrcMillisecondsDigits"]));
+            }
+            set {
+                this["LrcMillisecondsDigits"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point frmLrcGeneratorLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["frmLrcGeneratorLocation"]));
+            }
+            set {
+                this["frmLrcGeneratorLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmLrcGeneratorMaximized {
+            get {
+                return ((bool)(this["frmLrcGeneratorMaximized"]));
+            }
+            set {
+                this["frmLrcGeneratorMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("675, 530")]
+        public global::System.Drawing.Size frmLrcGeneratorSize {
+            get {
+                return ((global::System.Drawing.Size)(this["frmLrcGeneratorSize"]));
+            }
+            set {
+                this["frmLrcGeneratorSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmMp3PlayerMaximized {
+            get {
+                return ((bool)(this["frmMp3PlayerMaximized"]));
+            }
+            set {
+                this["frmMp3PlayerMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600, 600")]
+        public global::System.Drawing.Size frmMp3PlayerSize {
+            get {
+                return ((global::System.Drawing.Size)(this["frmMp3PlayerSize"]));
+            }
+            set {
+                this["frmMp3PlayerSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool bExportMetadata {
+            get {
+                return ((bool)(this["bExportMetadata"]));
+            }
+            set {
+                this["bExportMetadata"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point frmMp3LyricsSimpleLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["frmMp3LyricsSimpleLocation"]));
+            }
+            set {
+                this["frmMp3LyricsSimpleLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmMp3LyricsSimpleMaximized {
+            get {
+                return ((bool)(this["frmMp3LyricsSimpleMaximized"]));
+            }
+            set {
+                this["frmMp3LyricsSimpleMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600, 600")]
+        public global::System.Drawing.Size frmMp3LyricsSimpleSize {
+            get {
+                return ((global::System.Drawing.Size)(this["frmMp3LyricsSimpleSize"]));
+            }
+            set {
+                this["frmMp3LyricsSimpleSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmLyricsTopMost {
+            get {
+                return ((bool)(this["frmLyricsTopMost"]));
+            }
+            set {
+                this["frmLyricsTopMost"] = value;
             }
         }
     }

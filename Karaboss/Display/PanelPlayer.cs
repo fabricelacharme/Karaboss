@@ -31,6 +31,10 @@ namespace Karaboss.Display
                 case "Stopped":
                     lblStatus.ForeColor = Color.Red;
                     break;
+                case "Next":
+                    lblStatus.ForeColor = Color.Violet;
+                    break;
+                
                 default:
                     lblStatus.ForeColor = Color.White;
                     break;

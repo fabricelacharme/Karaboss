@@ -89,6 +89,18 @@ namespace Karaboss
             get { return chkCutLines.Checked; }
         }
 
+        private int _LrcMillisecondsDigits = 2;
+        public int LrcMillisecondsDigits
+        {
+            get { return _LrcMillisecondsDigits; }
+        }
+
+
+        public bool bSaveMetadata
+        {
+            get { return chkMetadata.Checked; }
+        }
+
         #endregion properties
 
 
@@ -127,6 +139,14 @@ namespace Karaboss
                 chkCutLines.Checked = Properties.Settings.Default.bLrcCutLines;
                 UpdCutLines.Value = Properties.Settings.Default.LrcCutLinesChars;
 
+                // Export Metadata
+                chkMetadata.Checked = Properties.Settings.Default.bExportMetadata;
+
+
+                _LrcMillisecondsDigits = Properties.Settings.Default.LrcMillisecondsDigits;
+                OptFormat2Digits.Checked = _LrcMillisecondsDigits == 2;
+                OptFormat3Digits.Checked = _LrcMillisecondsDigits == 3;
+
                 // Default value for OptFormatSyllabes is Checked => no event at loading form
                 // So manage this use case
                 // The event OptFormatLines.Checked is managed by OptFormatLines_CheckedChanged
@@ -162,6 +182,8 @@ namespace Karaboss
 
                 Properties.Settings.Default.bLrcCutLines = chkCutLines.Checked;
                 Properties.Settings.Default.LrcCutLinesChars = (int)UpdCutLines.Value;
+
+                Properties.Settings.Default.LrcMillisecondsDigits = _LrcMillisecondsDigits;
 
                 // Save settings
                 Properties.Settings.Default.Save();
@@ -253,6 +275,28 @@ namespace Karaboss
         {
             if (chkUpperCase.Checked)
                 chkLowerCase.Checked = false;
+        }
+       
+
+        private void OptFormat2Digits_CheckedChanged(object sender, EventArgs e)
+        {
+            if (OptFormat2Digits.Checked)
+                _LrcMillisecondsDigits = 2;
+            else
+                _LrcMillisecondsDigits = 3;
+        }
+
+        private void OptFormat3Digits_CheckedChanged(object sender, EventArgs e)
+        {
+            if (OptFormat3Digits.Checked)
+                _LrcMillisecondsDigits = 3;
+            else
+                _LrcMillisecondsDigits = 2;
+        }
+
+        private void chkMetadata_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

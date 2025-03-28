@@ -42,22 +42,27 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.chkLowerCase = new System.Windows.Forms.CheckBox();
             this.chkAlphaNumeric = new System.Windows.Forms.CheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.OptFormat2Digits = new System.Windows.Forms.RadioButton();
+            this.OptFormat3Digits = new System.Windows.Forms.RadioButton();
+            this.chkMetadata = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.UpdCutLines)).BeginInit();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnOk
             // 
-            resources.ApplyResources(this.btnOk, "btnOk");
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+            resources.ApplyResources(this.btnOk, "btnOk");
             this.btnOk.Name = "btnOk";
             this.btnOk.UseVisualStyleBackColor = true;
             // 
             // btnCancel
             // 
-            resources.ApplyResources(this.btnCancel, "btnCancel");
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            resources.ApplyResources(this.btnCancel, "btnCancel");
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -81,12 +86,12 @@
             // 
             // groupBox1
             // 
-            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Controls.Add(this.lblCutLines);
             this.groupBox1.Controls.Add(this.UpdCutLines);
             this.groupBox1.Controls.Add(this.chkCutLines);
             this.groupBox1.Controls.Add(this.OptFormatLines);
             this.groupBox1.Controls.Add(this.OptFormatSyllabes);
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
@@ -137,11 +142,11 @@
             // 
             // groupBox2
             // 
-            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Controls.Add(this.chkLowerCase);
             this.groupBox2.Controls.Add(this.chkAlphaNumeric);
             this.groupBox2.Controls.Add(this.chkRemoveAccents);
             this.groupBox2.Controls.Add(this.chkUpperCase);
+            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
             // 
@@ -158,11 +163,44 @@
             this.chkAlphaNumeric.Name = "chkAlphaNumeric";
             this.chkAlphaNumeric.UseVisualStyleBackColor = true;
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.OptFormat2Digits);
+            this.groupBox3.Controls.Add(this.OptFormat3Digits);
+            resources.ApplyResources(this.groupBox3, "groupBox3");
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.TabStop = false;
+            // 
+            // OptFormat2Digits
+            // 
+            resources.ApplyResources(this.OptFormat2Digits, "OptFormat2Digits");
+            this.OptFormat2Digits.Checked = true;
+            this.OptFormat2Digits.Name = "OptFormat2Digits";
+            this.OptFormat2Digits.TabStop = true;
+            this.OptFormat2Digits.UseVisualStyleBackColor = true;
+            this.OptFormat2Digits.CheckedChanged += new System.EventHandler(this.OptFormat2Digits_CheckedChanged);
+            // 
+            // OptFormat3Digits
+            // 
+            resources.ApplyResources(this.OptFormat3Digits, "OptFormat3Digits");
+            this.OptFormat3Digits.Name = "OptFormat3Digits";
+            this.OptFormat3Digits.UseVisualStyleBackColor = true;
+            this.OptFormat3Digits.CheckedChanged += new System.EventHandler(this.OptFormat3Digits_CheckedChanged);
+            // 
+            // chkMetadata
+            // 
+            resources.ApplyResources(this.chkMetadata, "chkMetadata");
+            this.chkMetadata.Name = "chkMetadata";
+            this.chkMetadata.UseVisualStyleBackColor = true;
+            this.chkMetadata.CheckedChanged += new System.EventHandler(this.chkMetadata_CheckedChanged);
+            // 
             // frmLrcOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
+            this.Controls.Add(this.chkMetadata);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnCancel);
@@ -177,7 +215,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.UpdCutLines)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -196,5 +237,9 @@
         private System.Windows.Forms.NumericUpDown UpdCutLines;
         private System.Windows.Forms.CheckBox chkCutLines;
         private System.Windows.Forms.CheckBox chkLowerCase;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.RadioButton OptFormat2Digits;
+        private System.Windows.Forms.RadioButton OptFormat3Digits;
+        private System.Windows.Forms.CheckBox chkMetadata;
     }
 }

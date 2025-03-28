@@ -1337,5 +1337,54 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("ChordsOriginFromUserInput", resourceCulture);
             }
         }
+        internal static string LyricsWereRecorded
+        {
+            get
+            {
+                return ResourceManager.GetString("LyricsWereRecorded", resourceCulture);
+            }
+        }
+        internal static string SwitchToSyncMode
+        {
+            get
+            {
+                return ResourceManager.GetString("SwitchToSyncMode", resourceCulture);
+            }
+        }
+        internal static string DescrEditMode
+        {
+            get
+            {
+                return ResourceManager.GetString("DescrEditMode", resourceCulture);
+            }
+        }
+        internal static string SwitchToEditMode
+        {
+            get
+            {
+                return ResourceManager.GetString("SwitchToEditMode", resourceCulture);
+            }
+        }
+        internal static string DescSyncMode
+        {
+            get
+            {
+                return ResourceManager.GetString("DescSyncMode", resourceCulture);
+            }
+        }
+        internal static string Mp3TimeStampHotKey1
+        {
+            get
+            {
+                return ResourceManager.GetString("Mp3TimeStampHotKey1", resourceCulture);
+            }
+        }
+        internal static string Mp3TimeStampHotKey2
+        {
+            get
+            {
+                return ResourceManager.GetString("Mp3TimeStampHotKey2", resourceCulture);
+            }
+        }
     }
 }

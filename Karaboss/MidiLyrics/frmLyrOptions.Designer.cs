@@ -79,6 +79,7 @@
             this.picChordBefore = new System.Windows.Forms.PictureBox();
             this.btnChordHighlightColor = new System.Windows.Forms.Button();
             this.btnChordNormalColor = new System.Windows.Forms.Button();
+            this.chkTopMost = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -470,10 +471,20 @@
             this.btnChordNormalColor.UseVisualStyleBackColor = true;
             this.btnChordNormalColor.Click += new System.EventHandler(this.btnChordNormalColor_Click);
             // 
+            // chkTopMost
+            // 
+            resources.ApplyResources(this.chkTopMost, "chkTopMost");
+            this.chkTopMost.Checked = true;
+            this.chkTopMost.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTopMost.Name = "chkTopMost";
+            this.chkTopMost.UseVisualStyleBackColor = true;
+            this.chkTopMost.CheckedChanged += new System.EventHandler(this.chkTopMost_CheckedChanged);
+            // 
             // frmLyrOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkTopMost);
             this.Controls.Add(this.chkForceShowChords);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.picChordHighlight);
@@ -594,5 +605,6 @@
         private System.Windows.Forms.PictureBox picChordBefore;
         private System.Windows.Forms.Button btnChordHighlightColor;
         private System.Windows.Forms.Button btnChordNormalColor;
+        private System.Windows.Forms.CheckBox chkTopMost;
     }
 }

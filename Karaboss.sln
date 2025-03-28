@@ -58,7 +58,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KMusicTxt", "KMusicTxt\KMus
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChordAnalyser", "ChordAnalyser\ChordAnalyser.csproj", "{038AF1E8-FE5D-465D-BF42-CC322755BC42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaraokeEffect", "..\KaraokeEffect\KaraokeEffect\KaraokeEffect\KaraokeEffect.csproj", "{6D414DBF-73A0-4804-8C02-B50271B91357}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaraokeEffect", "KaraokeEffect\KaraokeEffect.csproj", "{6D414DBF-73A0-4804-8C02-B50271B91357}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

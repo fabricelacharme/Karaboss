@@ -87,6 +87,7 @@ namespace Karaboss
             this.lblPercent = new System.Windows.Forms.Label();
             this.lblDuration = new System.Windows.Forms.Label();
             this.pnlBottom = new System.Windows.Forms.Panel();
+            this.VuPeakVolumeRight = new VU_MeterLibrary.VuMeter();
             this.lblRecord = new System.Windows.Forms.Label();
             this.lblMuteMelody = new System.Windows.Forms.Label();
             this.btnMute1 = new Karaboss.Buttons.CheckButtonControl();
@@ -97,7 +98,7 @@ namespace Karaboss
             this.lblTranspoValue = new System.Windows.Forms.Label();
             this.lblTempoValue = new System.Windows.Forms.Label();
             this.lblOutputDevice = new System.Windows.Forms.Label();
-            this.VuMasterPeakVolume = new VU_MeterLibrary.VuMeter();
+            this.VuPeakVolumeLeft = new VU_MeterLibrary.VuMeter();
             this.btnPrev = new Karaboss.NoSelectButton();
             this.btnNext = new Karaboss.NoSelectButton();
             this.btnStop = new Karaboss.NoSelectButton();
@@ -522,6 +523,7 @@ namespace Karaboss
             // pnlBottom
             // 
             this.pnlBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlBottom.Controls.Add(this.VuPeakVolumeRight);
             this.pnlBottom.Controls.Add(this.lblRecord);
             this.pnlBottom.Controls.Add(this.lblMuteMelody);
             this.pnlBottom.Controls.Add(this.btnMute1);
@@ -532,7 +534,7 @@ namespace Karaboss
             this.pnlBottom.Controls.Add(this.lblTranspoValue);
             this.pnlBottom.Controls.Add(this.lblTempoValue);
             this.pnlBottom.Controls.Add(this.lblOutputDevice);
-            this.pnlBottom.Controls.Add(this.VuMasterPeakVolume);
+            this.pnlBottom.Controls.Add(this.VuPeakVolumeLeft);
             this.pnlBottom.Controls.Add(this.btnPrev);
             this.pnlBottom.Controls.Add(this.btnNext);
             this.pnlBottom.Controls.Add(this.btnStop);
@@ -552,6 +554,48 @@ namespace Karaboss
             this.pnlBottom.Controls.Add(this.lblInfosF);
             resources.ApplyResources(this.pnlBottom, "pnlBottom");
             this.pnlBottom.Name = "pnlBottom";
+            // 
+            // VuPeakVolumeRight
+            // 
+            this.VuPeakVolumeRight.AnalogMeter = false;
+            this.VuPeakVolumeRight.BackColor = System.Drawing.Color.DimGray;
+            this.VuPeakVolumeRight.DialBackground = System.Drawing.Color.White;
+            this.VuPeakVolumeRight.DialTextNegative = System.Drawing.Color.Red;
+            this.VuPeakVolumeRight.DialTextPositive = System.Drawing.Color.Black;
+            this.VuPeakVolumeRight.DialTextZero = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeRight.Led1ColorOff = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeRight.Led1ColorOn = System.Drawing.Color.LimeGreen;
+            this.VuPeakVolumeRight.Led1Count = 14;
+            this.VuPeakVolumeRight.Led2ColorOff = System.Drawing.Color.Olive;
+            this.VuPeakVolumeRight.Led2ColorOn = System.Drawing.Color.Yellow;
+            this.VuPeakVolumeRight.Led2Count = 14;
+            this.VuPeakVolumeRight.Led3ColorOff = System.Drawing.Color.Maroon;
+            this.VuPeakVolumeRight.Led3ColorOn = System.Drawing.Color.Red;
+            this.VuPeakVolumeRight.Led3Count = 6;
+            this.VuPeakVolumeRight.LedSize = new System.Drawing.Size(12, 2);
+            this.VuPeakVolumeRight.LedSpace = 1;
+            this.VuPeakVolumeRight.Level = 0;
+            this.VuPeakVolumeRight.LevelMax = 127;
+            resources.ApplyResources(this.VuPeakVolumeRight, "VuPeakVolumeRight");
+            this.VuPeakVolumeRight.MeterScale = VU_MeterLibrary.MeterScale.Log10;
+            this.VuPeakVolumeRight.Name = "VuPeakVolumeRight";
+            this.VuPeakVolumeRight.NeedleColor = System.Drawing.Color.Black;
+            this.VuPeakVolumeRight.PeakHold = true;
+            this.VuPeakVolumeRight.Peakms = 1000;
+            this.VuPeakVolumeRight.PeakNeedleColor = System.Drawing.Color.Red;
+            this.VuPeakVolumeRight.ShowDialOnly = false;
+            this.VuPeakVolumeRight.ShowLedPeak = false;
+            this.VuPeakVolumeRight.ShowTextInDial = false;
+            this.VuPeakVolumeRight.TextInDial = new string[] {
+        "-40",
+        "-20",
+        "-10",
+        "-5",
+        "0",
+        "+6"};
+            this.VuPeakVolumeRight.UseLedLight = false;
+            this.VuPeakVolumeRight.VerticalBar = true;
+            this.VuPeakVolumeRight.VuText = "VU";
             // 
             // lblRecord
             // 
@@ -616,46 +660,46 @@ namespace Karaboss
             this.lblOutputDevice.ForeColor = System.Drawing.Color.PaleGreen;
             this.lblOutputDevice.Name = "lblOutputDevice";
             // 
-            // VuMasterPeakVolume
+            // VuPeakVolumeLeft
             // 
-            this.VuMasterPeakVolume.AnalogMeter = false;
-            this.VuMasterPeakVolume.DialBackground = System.Drawing.Color.White;
-            this.VuMasterPeakVolume.DialTextNegative = System.Drawing.Color.Red;
-            this.VuMasterPeakVolume.DialTextPositive = System.Drawing.Color.Black;
-            this.VuMasterPeakVolume.DialTextZero = System.Drawing.Color.DarkGreen;
-            this.VuMasterPeakVolume.Led1ColorOff = System.Drawing.Color.DarkGreen;
-            this.VuMasterPeakVolume.Led1ColorOn = System.Drawing.Color.LimeGreen;
-            this.VuMasterPeakVolume.Led1Count = 6;
-            this.VuMasterPeakVolume.Led2ColorOff = System.Drawing.Color.Olive;
-            this.VuMasterPeakVolume.Led2ColorOn = System.Drawing.Color.Yellow;
-            this.VuMasterPeakVolume.Led2Count = 6;
-            this.VuMasterPeakVolume.Led3ColorOff = System.Drawing.Color.Maroon;
-            this.VuMasterPeakVolume.Led3ColorOn = System.Drawing.Color.Red;
-            this.VuMasterPeakVolume.Led3Count = 4;
-            this.VuMasterPeakVolume.LedSize = new System.Drawing.Size(6, 14);
-            this.VuMasterPeakVolume.LedSpace = 3;
-            this.VuMasterPeakVolume.Level = 0;
-            this.VuMasterPeakVolume.LevelMax = 127;
-            resources.ApplyResources(this.VuMasterPeakVolume, "VuMasterPeakVolume");
-            this.VuMasterPeakVolume.MeterScale = VU_MeterLibrary.MeterScale.Log10;
-            this.VuMasterPeakVolume.Name = "VuMasterPeakVolume";
-            this.VuMasterPeakVolume.NeedleColor = System.Drawing.Color.Black;
-            this.VuMasterPeakVolume.PeakHold = true;
-            this.VuMasterPeakVolume.Peakms = 1000;
-            this.VuMasterPeakVolume.PeakNeedleColor = System.Drawing.Color.Red;
-            this.VuMasterPeakVolume.ShowDialOnly = false;
-            this.VuMasterPeakVolume.ShowLedPeak = false;
-            this.VuMasterPeakVolume.ShowTextInDial = false;
-            this.VuMasterPeakVolume.TextInDial = new string[] {
+            this.VuPeakVolumeLeft.AnalogMeter = false;
+            this.VuPeakVolumeLeft.DialBackground = System.Drawing.Color.White;
+            this.VuPeakVolumeLeft.DialTextNegative = System.Drawing.Color.Red;
+            this.VuPeakVolumeLeft.DialTextPositive = System.Drawing.Color.Black;
+            this.VuPeakVolumeLeft.DialTextZero = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeLeft.Led1ColorOff = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeLeft.Led1ColorOn = System.Drawing.Color.LimeGreen;
+            this.VuPeakVolumeLeft.Led1Count = 14;
+            this.VuPeakVolumeLeft.Led2ColorOff = System.Drawing.Color.Olive;
+            this.VuPeakVolumeLeft.Led2ColorOn = System.Drawing.Color.Yellow;
+            this.VuPeakVolumeLeft.Led2Count = 14;
+            this.VuPeakVolumeLeft.Led3ColorOff = System.Drawing.Color.Maroon;
+            this.VuPeakVolumeLeft.Led3ColorOn = System.Drawing.Color.Red;
+            this.VuPeakVolumeLeft.Led3Count = 6;
+            this.VuPeakVolumeLeft.LedSize = new System.Drawing.Size(12, 2);
+            this.VuPeakVolumeLeft.LedSpace = 1;
+            this.VuPeakVolumeLeft.Level = 0;
+            this.VuPeakVolumeLeft.LevelMax = 127;
+            resources.ApplyResources(this.VuPeakVolumeLeft, "VuPeakVolumeLeft");
+            this.VuPeakVolumeLeft.MeterScale = VU_MeterLibrary.MeterScale.Log10;
+            this.VuPeakVolumeLeft.Name = "VuPeakVolumeLeft";
+            this.VuPeakVolumeLeft.NeedleColor = System.Drawing.Color.Black;
+            this.VuPeakVolumeLeft.PeakHold = true;
+            this.VuPeakVolumeLeft.Peakms = 1000;
+            this.VuPeakVolumeLeft.PeakNeedleColor = System.Drawing.Color.Red;
+            this.VuPeakVolumeLeft.ShowDialOnly = false;
+            this.VuPeakVolumeLeft.ShowLedPeak = false;
+            this.VuPeakVolumeLeft.ShowTextInDial = false;
+            this.VuPeakVolumeLeft.TextInDial = new string[] {
         "-40",
         "-20",
         "-10",
         "-5",
         "0",
         "+6"};
-            this.VuMasterPeakVolume.UseLedLight = false;
-            this.VuMasterPeakVolume.VerticalBar = true;
-            this.VuMasterPeakVolume.VuText = "VU";
+            this.VuPeakVolumeLeft.UseLedLight = false;
+            this.VuPeakVolumeLeft.VerticalBar = true;
+            this.VuPeakVolumeLeft.VuText = "VU";
             // 
             // btnPrev
             // 
@@ -979,6 +1023,7 @@ namespace Karaboss
             // 
             resources.ApplyResources(this.btnDump, "btnDump");
             this.btnDump.Name = "btnDump";
+            this.btnDump.TabStop = false;
             this.btnDump.UseVisualStyleBackColor = true;
             this.btnDump.Click += new System.EventHandler(this.btnDump_Click);
             // 
@@ -1325,7 +1370,7 @@ namespace Karaboss
         private NoSelectButton btnStop;
         private NoSelectButton btnNext;
         private NoSelectButton btnPrev;
-        private VU_MeterLibrary.VuMeter VuMasterPeakVolume;
+        private VU_MeterLibrary.VuMeter VuPeakVolumeLeft;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ToolStripMenuItem MnuEditScore;
         private System.Windows.Forms.ToolStripMenuItem MnuEditEnterNotes;
@@ -1354,6 +1399,7 @@ namespace Karaboss
         private System.Windows.Forms.ToolStripMenuItem MnuFileImportMusicXml;
         private System.Windows.Forms.Button btnDump;
         private System.Windows.Forms.ToolStripMenuItem mnuEditLyricsChords;
+        private VU_MeterLibrary.VuMeter VuPeakVolumeRight;
     }
 }
 

@@ -1,4 +1,4 @@
-﻿namespace lyrics
+﻿namespace keffect
 {
     partial class KaraokeEffect
     {
@@ -37,7 +37,7 @@
             this.pBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pBox.Location = new System.Drawing.Point(0, 0);
             this.pBox.Name = "pBox";
-            this.pBox.Size = new System.Drawing.Size(410, 169);
+            this.pBox.Size = new System.Drawing.Size(387, 214);
             this.pBox.TabIndex = 0;
             this.pBox.TabStop = false;
             this.pBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pBox_Paint);
@@ -48,7 +48,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.pBox);
             this.Name = "KaraokeEffect";
-            this.Size = new System.Drawing.Size(410, 169);
+            this.Size = new System.Drawing.Size(387, 214);
             this.Resize += new System.EventHandler(this.KaraokeEffect_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.pBox)).EndInit();
             this.ResumeLayout(false);
