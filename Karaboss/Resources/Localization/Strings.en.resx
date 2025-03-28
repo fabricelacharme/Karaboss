@@ -561,4 +561,10 @@
   <data name="Mp3TimeStampHotKey2" xml:space="preserve">
     <value>+       Accelerate{0}-       Slow down{0}&lt;-      Stop Music</value>
   </data>
+  <data name="ThisLine" xml:space="preserve">
+    <value>This line</value>
+  </data>
+  <data name="AllLines" xml:space="preserve">
+    <value>All lines starting form this line</value>
+  </data>
 </root>

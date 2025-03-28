@@ -350,7 +350,13 @@ namespace Karaboss.Mp3
                 // Restore form
                 Application.OpenForms["frmExplorer"].Restore();
                 Application.OpenForms["frmExplorer"].Activate();
-            }            
+            }
+
+
+            // Save settings
+            Properties.Settings.Default.LyricsEditFont = _lyricseditfont;
+            Properties.Settings.Default.Save();
+
 
             Dispose();
         }
@@ -3548,7 +3554,7 @@ namespace Karaboss.Mp3
 
             object otime;
             object otsp;
-            object otext;
+            //object otext;
 
             string time = string.Empty;
             string tsp = string.Empty;
@@ -3619,6 +3625,140 @@ namespace Karaboss.Mp3
                 FileModified();
             }
         }
+
+
+
+        #region Major or minor timestamps
+        /// <summary>
+        /// Add 10 ms to timestamps starting from position
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnMsPlus_Click(object sender, EventArgs e)
+        {            
+
+            if (dgView.CurrentRow == null)
+                return;
+           
+            //Declare the menu items and the shortcut menu.
+            Button btnSender = (Button)sender;           
+            Point ptLowerLeft = new Point(0, btnSender.Height);
+            ptLowerLeft = btnSender.PointToScreen(ptLowerLeft);
+
+            ContextMenuStrip ctButtonAddMs = new ContextMenuStrip();
+            var mnuAddMsThisLine = new ToolStripMenuItem(Strings.ThisLine);
+            var mnuAddMsAllLines = new ToolStripMenuItem(Strings.AllLines);            
+            ctButtonAddMs.Items.AddRange(new ToolStripMenuItem[] { mnuAddMsThisLine, mnuAddMsAllLines });
+
+            mnuAddMsAllLines.Click += mnuAddMsAllLines_Click;
+            mnuAddMsThisLine.Click += mnuAddMsThisLine_Click;
+                    
+            ctButtonAddMs.Show(ptLowerLeft);
+
+        }
+
+        private void mnuAddMsThisLine_Click(object sender, EventArgs e)
+        {
+            string tsp;
+            int Row = dgView.CurrentRow.Index;
+            
+            if (dgView.Rows[Row].Cells[COL_MS].Value != null && IsNumeric(dgView.Rows[Row].Cells[COL_MS].Value.ToString()))
+            {
+                double time = double.Parse(dgView.Rows[Row].Cells[COL_MS].Value.ToString());
+                time += 100;
+                dgView.Rows[Row].Cells[COL_MS].Value = time;
+
+                tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                dgView.Rows[Row].Cells[COL_TIME].Value = tsp;
+            }            
+        }
+
+        private void mnuAddMsAllLines_Click(object sender, EventArgs e)
+        {
+            string tsp;
+            int Row = dgView.CurrentRow.Index;
+
+            for (int i = Row; i < dgView.Rows.Count; i++)
+            {
+                if (dgView.Rows[i].Cells[COL_MS].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_MS].Value.ToString()))
+                {
+                    double time = double.Parse(dgView.Rows[i].Cells[COL_MS].Value.ToString());
+                    time += 100;
+                    dgView.Rows[i].Cells[COL_MS].Value = time;
+
+                    tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                    dgView.Rows[i].Cells[COL_TIME].Value = tsp;
+                }
+            }
+        }
+
+
+
+        /// <summary>
+        /// Minor 10 ms to timestamps starting from position
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnMsMinor_Click(object sender, EventArgs e)
+        {            
+            if (dgView.CurrentRow == null)
+                return;
+
+
+            //Declare the menu items and the shortcut menu.
+            Button btnSender = (Button)sender;
+            Point ptLowerLeft = new Point(0, btnSender.Height);
+            ptLowerLeft = btnSender.PointToScreen(ptLowerLeft);
+
+            ContextMenuStrip ctButtonAddMs = new ContextMenuStrip();
+            var mnuMinorMsAllLines = new ToolStripMenuItem( Strings.AllLines);
+            var mnuMinorMsThisLine = new ToolStripMenuItem(Strings.ThisLine);
+            ctButtonAddMs.Items.AddRange(new ToolStripMenuItem[] { mnuMinorMsThisLine, mnuMinorMsAllLines });
+
+            mnuMinorMsAllLines.Click += mnuMinorMsAllLines_Click;
+            mnuMinorMsThisLine.Click += mnuMinorMsThisLine_Click;
+
+            ctButtonAddMs.Show(ptLowerLeft);           
+        }
+
+        private void mnuMinorMsThisLine_Click(object sender, EventArgs e)
+        {
+            string tsp;
+            int Row = dgView.CurrentRow.Index;
+           
+            if (dgView.Rows[Row].Cells[COL_MS].Value != null && IsNumeric(dgView.Rows[Row].Cells[COL_MS].Value.ToString()))
+            {
+                double time = double.Parse(dgView.Rows[Row].Cells[COL_MS].Value.ToString());
+                time -= 100;
+                dgView.Rows[Row].Cells[COL_MS].Value = time;
+
+                tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                dgView.Rows[Row].Cells[COL_TIME].Value = tsp;
+            }
+            
+        }
+
+        private void mnuMinorMsAllLines_Click(object sender, EventArgs e)
+        {
+            string tsp;
+            int Row = dgView.CurrentRow.Index;
+
+            for (int i = Row; i < dgView.Rows.Count; i++)
+            {
+                if (dgView.Rows[i].Cells[COL_MS].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_MS].Value.ToString()))
+                {
+                    double time = double.Parse(dgView.Rows[i].Cells[COL_MS].Value.ToString());
+                    time -= 100;
+                    dgView.Rows[i].Cells[COL_MS].Value = time;
+
+                    tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                    dgView.Rows[i].Cells[COL_TIME].Value = tsp;
+                }
+            }
+        }
+
+        #endregion Major or minor timestamps
+
 
         #endregion buttons edition
 
@@ -4105,5 +4245,9 @@ namespace Karaboss.Mp3
         }
 
         #endregion dgview context menu
+
+
+
+       
     }
 }

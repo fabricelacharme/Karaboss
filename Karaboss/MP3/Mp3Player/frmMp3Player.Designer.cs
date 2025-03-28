@@ -96,6 +96,8 @@
             this.pnlSync = new System.Windows.Forms.Panel();
             this.lblHotkeysOthers = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.btnMsPlus = new System.Windows.Forms.Button();
+            this.btnMsMinor = new System.Windows.Forms.Button();
             this.btnTempoMinus = new Karaboss.Buttons.MinusButtonControl();
             this.btnTempoPlus = new Karaboss.Buttons.PlusButtonControl();
             this.btnTranspoMinus = new Karaboss.Buttons.MinusButtonControl();
@@ -541,6 +543,7 @@
             // 
             resources.ApplyResources(this.BtnFontMoins, "BtnFontMoins");
             this.BtnFontMoins.Name = "BtnFontMoins";
+            this.BtnFontMoins.TabStop = false;
             this.toolTip1.SetToolTip(this.BtnFontMoins, resources.GetString("BtnFontMoins.ToolTip"));
             this.BtnFontMoins.UseVisualStyleBackColor = true;
             this.BtnFontMoins.Click += new System.EventHandler(this.BtnFontMoins_Click);
@@ -549,6 +552,7 @@
             // 
             resources.ApplyResources(this.BtnFontPlus, "BtnFontPlus");
             this.BtnFontPlus.Name = "BtnFontPlus";
+            this.BtnFontPlus.TabStop = false;
             this.toolTip1.SetToolTip(this.BtnFontPlus, resources.GetString("BtnFontPlus.ToolTip"));
             this.BtnFontPlus.UseVisualStyleBackColor = true;
             this.BtnFontPlus.Click += new System.EventHandler(this.BtnFontPlus_Click);
@@ -744,6 +748,8 @@
             // pnlEdit
             // 
             this.pnlEdit.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.pnlEdit.Controls.Add(this.btnMsMinor);
+            this.pnlEdit.Controls.Add(this.btnMsPlus);
             this.pnlEdit.Controls.Add(this.BtnFontMoins);
             this.pnlEdit.Controls.Add(this.txtTitle);
             this.pnlEdit.Controls.Add(this.lblLa);
@@ -779,6 +785,24 @@
             this.lblHotkeysOthers.BackColor = System.Drawing.Color.Silver;
             resources.ApplyResources(this.lblHotkeysOthers, "lblHotkeysOthers");
             this.lblHotkeysOthers.Name = "lblHotkeysOthers";
+            // 
+            // btnMsPlus
+            // 
+            resources.ApplyResources(this.btnMsPlus, "btnMsPlus");
+            this.btnMsPlus.Name = "btnMsPlus";
+            this.btnMsPlus.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnMsPlus, resources.GetString("btnMsPlus.ToolTip"));
+            this.btnMsPlus.UseVisualStyleBackColor = true;
+            this.btnMsPlus.Click += new System.EventHandler(this.btnMsPlus_Click);
+            // 
+            // btnMsMinor
+            // 
+            resources.ApplyResources(this.btnMsMinor, "btnMsMinor");
+            this.btnMsMinor.Name = "btnMsMinor";
+            this.btnMsMinor.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnMsMinor, resources.GetString("btnMsMinor.ToolTip"));
+            this.btnMsMinor.UseVisualStyleBackColor = true;
+            this.btnMsMinor.Click += new System.EventHandler(this.btnMsMinor_Click);
             // 
             // btnTempoMinus
             // 
@@ -988,5 +1012,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.RichTextBox txtResult;
         private System.Windows.Forms.Label lblHotkeysOthers;
+        private System.Windows.Forms.Button btnMsMinor;
+        private System.Windows.Forms.Button btnMsPlus;
     }
 }

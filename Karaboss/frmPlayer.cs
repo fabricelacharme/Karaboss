@@ -3018,7 +3018,7 @@ namespace Karaboss
                     return;
                 }
 
-                SetTitle(MIDIfileName);
+                SetTitle(Path.GetFileName(MIDIfileName));
 
                 // Active le formulaire frmExplorer
                 if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
