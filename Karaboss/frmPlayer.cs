@@ -855,6 +855,8 @@ namespace Karaboss
                     sequencer1.Start();
                 }
 
+                sequencer1.Tempo = TempoOrig;
+
 
                 // main timer
                 timer1.Start();
@@ -875,8 +877,7 @@ namespace Karaboss
                 {
                     timer4.Interval = BeatIntervall;
                 }
-                timer4.Start();
-
+                timer4.Start();                
 
             }
             catch (Exception ex)
@@ -884,6 +885,10 @@ namespace Karaboss
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
+
+
+       
+
 
         #region Mute
         /// <summary>
@@ -3117,6 +3122,21 @@ namespace Karaboss
                 MetaMessage msg = e.Message;
                 byte[] data = msg.GetBytes();
                 _tempoplayed = ((data[0] << 16) | (data[1] << 8) | data[2]);
+
+                
+                // Tempo was modified by user
+                if (TempoDelta != 100)
+                {
+                    _tempoplayed = TempoDelta * _tempoplayed / 100;  // _tempo is a percent of TempoOrig
+                    
+                    if (sequence1.Tempo != _tempoplayed)
+                    {
+                        sequencer1.Tempo = _tempoplayed;
+                        UpdateMidiTimes();
+                    }
+                }
+
+
             }
 
             // TODO add change of Time Signature ?
@@ -7451,7 +7471,8 @@ namespace Karaboss
             _tempoplayed = _tempo;
 
             // Change clock tempo
-            sequencer1.Tempo = _tempo;
+            if (PlayerState == PlayerStates.Playing)
+                sequencer1.Tempo = _tempo;
 
 
             lblTempoValue.Text = string.Format("{0}%", TempoDelta);
@@ -7743,7 +7764,7 @@ namespace Karaboss
             bReglageChanged = false;
 
             #endregion beat animation
-
+            
 
             // Tempo change during play
             if (_tempoplayed != _tempo)
