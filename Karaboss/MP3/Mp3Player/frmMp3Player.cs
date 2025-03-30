@@ -80,6 +80,13 @@ namespace Karaboss.Mp3
 
         string _lrcFileName;
 
+        private enum Directions
+        {
+            Forward,
+            Backward
+        }
+        private Directions _direction;
+
         #region lrc generator
 
         int _index = 0;
@@ -547,8 +554,6 @@ namespace Karaboss.Mp3
                     btnStop.Image = Properties.Resources.btn_black_stop;
                     btnStop.Enabled = true;   // to allow stop                    
                     pnlDisplay.DisplayStatus("Paused");
-                    //lblStatus.Text = "Paused next singer";
-                    //lblStatus.ForeColor = Color.Yellow;
                     break;
 
                 case PlayerStates.Waiting:
@@ -557,9 +562,6 @@ namespace Karaboss.Mp3
                     btnPlay.Enabled = true;  // to allow pause
                     btnStop.Enabled = true;   // to allow stop
                     pnlDisplay.DisplayStatus("Next");
-                    //lblStatus.Text = "Next";
-                    //lblStatus.ForeColor = Color.Violet;
-                    //VuMasterPeakVolume.Level = 0;
                     break;
 
                 case PlayerStates.WaitingPaused:
@@ -567,8 +569,6 @@ namespace Karaboss.Mp3
                     btnPlay.Enabled = true;  // to allow play
                     btnStop.Enabled = true;   // to allow stop
                     pnlDisplay.DisplayStatus("Paused");
-                    //lblStatus.Text = "Paused";
-                    //lblStatus.ForeColor = Color.Yellow;
                     break;
 
                 case PlayerStates.NextSong:     // Select next song of a playlist
@@ -580,7 +580,7 @@ namespace Karaboss.Mp3
             }
         }
 
-        public void FirstPlaySong()
+        public void FirstPlaySong(double start = 0)
         {
             try
             {
@@ -591,11 +591,10 @@ namespace Karaboss.Mp3
 
                 BtnStatus();
                 ValideMenus(false);                
-                Player.Play(Mp3FullPath);
+                Player.Play(Mp3FullPath, start);
 
                 // Set Volume, frequency & transpose
                 SetInitialListenValues();
-
 
                 StartKaraoke();
                 Timer1.Start();
@@ -646,7 +645,7 @@ namespace Karaboss.Mp3
         /// <summary>
         /// Button play clicked: manage actions according to player status 
         /// </summary>
-        private void PlayPauseMusic()
+        private void PlayPauseMusic(double start = 0)
         {
             switch (PlayerState)
             {
@@ -666,7 +665,7 @@ namespace Karaboss.Mp3
 
                 default:
                     // First play                
-                    FirstPlaySong();
+                    FirstPlaySong(start);
                     break;
             }
         }
@@ -698,7 +697,35 @@ namespace Karaboss.Mp3
         #region buttons
         private void btnPlay_Click(object sender, EventArgs e)
         {
+            // Check if we are currently editing lyrics
+            if (PlayerAppearance == PlayerAppearances.LrcGenerator && LrcMode == LrcModes.Edit && dgView.Rows.Count > 1)
+            {
+                int Row = dgView.CurrentRow.Index;
+                double time = 0;
+                string sTime = string.Empty; ;
+
+                if (dgView.Rows[Row].Cells[COL_MS].Value != null && IsNumeric(dgView.Rows[Row].Cells[COL_MS].Value.ToString()))
+                {
+                    // Load frmMp3Lyrics
+                    DisplayFrmMp3Lyrics();                    
+                    
+                    // Reload modified lyrics before playing
+                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                    {                                                
+                        frmMp3Lyrics.SetLyrics(localSyncLyrics);
+                    }
+                    
+
+                    // play from a specific time
+                    time = double.Parse(dgView.Rows[Row].Cells[COL_MS].Value.ToString());
+                    PlayPauseMusic(time/1000);          // time in seconds
+                    return;
+                }
+            }
+            
+            // Play from start
             PlayPauseMusic();
+            
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -706,13 +733,7 @@ namespace Karaboss.Mp3
             StopMusic();
         }
 
-        private enum Directions
-        {
-            Forward,
-            Backward
-        }
-        private Directions _direction;
-
+      
         /// <summary>
         /// Play next or previous mp3 in the current directory
         /// </summary>
@@ -1199,12 +1220,14 @@ namespace Karaboss.Mp3
         public void ExportLyricsTags()
         {
             switch (Mp3LyricsMgmtHelper.m_mp3lyricstype) {
-                case Mp3LyricsTypes.LyricsWithTimeStamps:            
-                    // Lyrics included in the mp3 file
+
+                // Lyrics included in the mp3 file
+                case Mp3LyricsTypes.LyricsWithTimeStamps:                                
                     TagLib.Id3v2.SynchronisedLyricsFrame SyncLyricsFrame = Player.SyncLyricsFrame;
                     Mp3LyricsMgmtHelper.ExportSyncLyricsToText(SyncLyricsFrame);
                     break;
 
+                // Lyrics from a LRC file
                 case Mp3LyricsTypes.LRCFile:
                     Mp3LyricsMgmtHelper.ExportSyncLyricsToText(Mp3LyricsMgmtHelper.SyncLyrics);
                     break;
@@ -3630,7 +3653,7 @@ namespace Karaboss.Mp3
 
         #region Major or minor timestamps
         /// <summary>
-        /// Add 10 ms to timestamps starting from position
+        /// Add 100 ms to timestamps
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -3657,6 +3680,11 @@ namespace Karaboss.Mp3
 
         }
 
+        /// <summary>
+        /// Add 100 ms to timestamp of the current line
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuAddMsThisLine_Click(object sender, EventArgs e)
         {
             string tsp;
@@ -3670,9 +3698,16 @@ namespace Karaboss.Mp3
 
                 tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
                 dgView.Rows[Row].Cells[COL_TIME].Value = tsp;
+
+                localSyncLyrics = LoadModifiedLyrics();
             }            
         }
 
+        /// <summary>
+        /// Add 100 ms to timestamps starting from position
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuAddMsAllLines_Click(object sender, EventArgs e)
         {
             string tsp;
@@ -3690,12 +3725,15 @@ namespace Karaboss.Mp3
                     dgView.Rows[i].Cells[COL_TIME].Value = tsp;
                 }
             }
+
+            localSyncLyrics = LoadModifiedLyrics();
+
         }
 
 
 
         /// <summary>
-        /// Minor 10 ms to timestamps starting from position
+        /// Substract 100 ms to timestamps
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -3721,6 +3759,11 @@ namespace Karaboss.Mp3
             ctButtonAddMs.Show(ptLowerLeft);           
         }
 
+        /// <summary>
+        /// Substract 100 ms to timestamp of the current line
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuMinorMsThisLine_Click(object sender, EventArgs e)
         {
             string tsp;
@@ -3734,10 +3777,17 @@ namespace Karaboss.Mp3
 
                 tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
                 dgView.Rows[Row].Cells[COL_TIME].Value = tsp;
+
+                localSyncLyrics = LoadModifiedLyrics();
             }
             
         }
 
+        /// <summary>
+        /// Substract 100 ms to timestamps starting from position
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuMinorMsAllLines_Click(object sender, EventArgs e)
         {
             string tsp;
@@ -3755,6 +3805,8 @@ namespace Karaboss.Mp3
                     dgView.Rows[i].Cells[COL_TIME].Value = tsp;
                 }
             }
+            
+            localSyncLyrics = LoadModifiedLyrics();
         }
 
         #endregion Major or minor timestamps

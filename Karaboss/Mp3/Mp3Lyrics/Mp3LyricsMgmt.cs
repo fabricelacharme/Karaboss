@@ -186,7 +186,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
 
         /// <summary>
-        /// Axport lyrics issued form a LRC File
+        /// Export lyrics issued form a LRC File
         /// </summary>
         /// <param name="SyncLyrics"></param>
         public static void ExportSyncLyricsToText(List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics)

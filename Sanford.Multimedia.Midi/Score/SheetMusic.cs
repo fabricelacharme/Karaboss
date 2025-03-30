@@ -4482,6 +4482,27 @@ namespace Sanford.Multimedia.Midi.Score
 
         #region tempos
 
+        /// <summary>
+        /// Get tempo at a given time
+        /// </summary>
+        /// <param name="ticks"></param>
+        /// <returns></returns>
+        public TempoSymbol GetTempoAt(int ticks)
+        {
+            if (_lsttemposymbols == null)
+                return null;
+            
+            for (int i = 0; i < _lsttemposymbols.Count; i++)
+            {
+                if (ticks >= _lsttemposymbols[i].StartTime)
+                {
+                    return _lsttemposymbols[i];
+                }
+            }
+           
+            return null;
+        }
+
 
         /// <summary>
         /// Return the selected tempo symbol

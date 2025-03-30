@@ -47,6 +47,8 @@ using MusicTxt;
 using System.Linq;
 using Karaboss.MidiLyrics;
 using Karaboss.Utilities;
+using static Karaboss.Pages.ABCnotation.MyMidi;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Karaboss
 {
@@ -3121,19 +3123,19 @@ namespace Karaboss
             {
                 MetaMessage msg = e.Message;
                 byte[] data = msg.GetBytes();
-                _tempoplayed = ((data[0] << 16) | (data[1] << 8) | data[2]);
+                _tempo = ((data[0] << 16) | (data[1] << 8) | data[2]);
 
                 
                 // Tempo was modified by user
                 if (TempoDelta != 100)
                 {
-                    _tempoplayed = TempoDelta * _tempoplayed / 100;  // _tempo is a percent of TempoOrig
+                    _tempo = TempoDelta * _tempo / 100;  // _tempo is a percent of TempoOrig
                     
-                    if (sequence1.Tempo != _tempoplayed)
-                    {
-                        sequencer1.Tempo = _tempoplayed;
+                    //if (sequence1.Tempo != _tempoplayed)
+                    //{
+                        sequencer1.Tempo = _tempo;
                         UpdateMidiTimes();
-                    }
+                    //}
                 }
 
 
@@ -7464,15 +7466,23 @@ namespace Karaboss
 
         private void ModTempo()
         {
+            //Some songs may have changes in tempo.
+            //Changing the tempo at time t by a certain percentage means changing the tempo at time t by that percentage and all subsequent tempos.
+            //You therefore need to find the valid tempo at time t and let the HandleMetaMessagePlayed event handle subsequent tempo changes.
             // _TempoDeltat is 100 at start
-            // TempoOrig is sequencer1.Tempo at start
-
-            _tempo = TempoDelta * TempoOrig / 100;  // _tempo is a percent of TempoOrig
-            _tempoplayed = _tempo;
-
-            // Change clock tempo
-            if (PlayerState == PlayerStates.Playing)
-                sequencer1.Tempo = _tempo;
+            
+            // Calculate new tempo                                    
+            int t = sequencer1.Position;
+            List<TempoSymbol> l = sheetmusic.lstTempoSymbols;
+            TempoSymbol ts = sheetmusic.GetTempoAt(t);
+            if (ts != null)
+            {
+                _tempo = ts.Tempo * TempoDelta / 100;
+                
+                if (PlayerState == PlayerStates.Playing || PlayerState == PlayerStates.Paused)
+                    sequencer1.Tempo = _tempo;
+            }                
+            
 
 
             lblTempoValue.Text = string.Format("{0}%", TempoDelta);
@@ -7767,8 +7777,8 @@ namespace Karaboss
             
 
             // Tempo change during play
-            if (_tempoplayed != _tempo)
-                DisplayFileInfos(_tempoplayed);
+            if (_tempo != _tempoplayed)
+                DisplayFileInfos(_tempo);
 
         }
 
@@ -8757,8 +8767,6 @@ namespace Karaboss
         private void DisplayFileInfos(int tempo)
         {
             _tempoplayed = tempo;
-            //double dur = _tempoplayed * (_totalTicks / _ppqn) / 1000000; //seconds            
-            //DisplaySongDuration(dur);
                         
             int bpm = GetBPM(tempo);
             

@@ -360,8 +360,7 @@ namespace Karaboss.Mp3
             #endregion
 
             LoadLyrics();
-         
-            InitializeKaraokeText();
+                     
 
             AddMouseMoveHandler(this);
 
@@ -471,6 +470,16 @@ namespace Karaboss.Mp3
         }
 
         /// <summary>
+        /// Set lyrics
+        /// </summary>
+        /// <param name="lyrics"></param>
+        public void SetLyrics(List<List<kSyncText>> lyrics)
+        {
+            karaokeEffect1.SyncLyrics = lyrics;
+        }
+
+
+        /// <summary>
         /// Display singer and song names
         /// </summary>
         /// <param name="text"></param>
@@ -478,12 +487,7 @@ namespace Karaboss.Mp3
         {
             lblTitle.Text = text;
         }
-        
-        
-        private void InitializeKaraokeText()
-        {
-           
-        }
+                        
        
         public void Start()
         {                    
@@ -587,27 +591,7 @@ namespace Karaboss.Mp3
             DirSlideShow = dirSlideShow;
         }
 
-        /*
-        private void LoadDefaultImage()
-        {
-            m_ImageFilePaths = new List<string>();
-            DefaultDirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-            SetBackground(DefaultDirSlideShow);
-        }
-        */
-        /*
-        public void SetBackground(string dirImages)
-        {
-            m_ImageFilePaths.Clear();
-            LoadImageList(dirImages);
-            if ( m_ImageFilePaths.Count > 0)
-            {
-                karaokeEffect1.SizeMode = PictureBoxSizeMode.StretchImage;
-                karaokeEffect1.Image = Image.FromFile(m_ImageFilePaths[0]);
-            }
-
-        }
-        */
+      
 
         private void LoadImageList(string dir)
         {
