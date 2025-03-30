@@ -33,6 +33,7 @@
             this.pnlBalls = new System.Windows.Forms.Panel();
             this.pnlTittle = new System.Windows.Forms.Panel();
             this.lblTittle = new System.Windows.Forms.Label();
+            this.picBalls = new BallsControl.Balls();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlWindow = new System.Windows.Forms.Panel();
             this.btnEditLyricsChords = new System.Windows.Forms.Button();
@@ -45,10 +46,9 @@
             this.btnFrmMin = new System.Windows.Forms.Button();
             this.btnFrmMax = new System.Windows.Forms.Button();
             this.btnFrmClose = new System.Windows.Forms.Button();
+            this.pBox = new PicControl.pictureBoxControl();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.pBox = new PicControl.pictureBoxControl();
-            this.picBalls = new BallsControl.Balls();
             this.pnlBalls.SuspendLayout();
             this.pnlTittle.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -75,6 +75,14 @@
             this.lblTittle.BackColor = System.Drawing.Color.Black;
             this.lblTittle.ForeColor = System.Drawing.Color.Teal;
             this.lblTittle.Name = "lblTittle";
+            // 
+            // picBalls
+            // 
+            this.picBalls.BallsBackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.picBalls.BallsNumber = 0;
+            this.picBalls.Division = 0F;
+            resources.ApplyResources(this.picBalls, "picBalls");
+            this.picBalls.Name = "picBalls";
             // 
             // panel1
             // 
@@ -206,10 +214,6 @@
             this.btnFrmClose.MouseLeave += new System.EventHandler(this.BtnFrmClose_MouseLeave);
             this.btnFrmClose.MouseHover += new System.EventHandler(this.BtnFrmClose_MouseHover);
             // 
-            // timer1
-            // 
-            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
-            // 
             // pBox
             // 
             this.pBox.bColorContour = true;
@@ -248,13 +252,9 @@
             this.pBox.TxtNbLines = 3;
             this.pBox.TxtNextColor = System.Drawing.Color.White;
             // 
-            // picBalls
+            // timer1
             // 
-            this.picBalls.BallsBackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.picBalls.BallsNumber = 0;
-            this.picBalls.Division = 0F;
-            resources.ApplyResources(this.picBalls, "picBalls");
-            this.picBalls.Name = "picBalls";
+            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
             // frmLyric
             // 

@@ -186,10 +186,10 @@
     <Compile Include="Lrc\frmLrcGenerator.Designer.cs">
       <DependentUpon>frmLrcGenerator.cs</DependentUpon>
     </Compile>
-    <Compile Include="MidiLyrics\frmLrcOptions.cs">
+    <Compile Include="Midi\MidiLyrics\frmLrcOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MidiLyrics\frmLrcOptions.Designer.cs">
+    <Compile Include="Midi\MidiLyrics\frmLrcOptions.Designer.cs">
       <DependentUpon>frmLrcOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="Mp3\Mp3Lyrics\frmMp3Lyrics.cs">
@@ -303,7 +303,7 @@
     <Compile Include="Lrc\NeteaseMusic.cs" />
     <Compile Include="Lrc\SharedFramework.cs" />
     <Compile Include="Lrc\Time.cs" />
-    <Compile Include="MidiLyrics\MidiLyricsMgmt.cs" />
+    <Compile Include="Midi\MidiLyrics\MidiLyricsMgmt.cs" />
     <Compile Include="Mru\MruList.cs" />
     <Compile Include="Mru\RegistryTools.cs" />
     <Compile Include="Pages\ABCnotation\Midi.cs" />
@@ -337,10 +337,10 @@
     <Compile Include="frmLoading.Designer.cs">
       <DependentUpon>frmLoading.cs</DependentUpon>
     </Compile>
-    <Compile Include="MidiLyrics\frmLyricsEdit.cs">
+    <Compile Include="Midi\MidiLyrics\frmLyricsEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MidiLyrics\frmLyricsEdit.Designer.cs">
+    <Compile Include="Midi\MidiLyrics\frmLyricsEdit.Designer.cs">
       <DependentUpon>frmLyricsEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="frmMessageBox.cs">
@@ -367,10 +367,10 @@
     <Compile Include="frmRecorder.Designer.cs">
       <DependentUpon>frmRecorder.cs</DependentUpon>
     </Compile>
-    <Compile Include="MidiLyrics\frmLyricsSelectTrack.cs">
+    <Compile Include="Midi\MidiLyrics\frmLyricsSelectTrack.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MidiLyrics\frmLyricsSelectTrack.Designer.cs">
+    <Compile Include="Midi\MidiLyrics\frmLyricsSelectTrack.Designer.cs">
       <DependentUpon>frmLyricsSelectTrack.cs</DependentUpon>
     </Compile>
     <Compile Include="frmSplashScreen.cs">
@@ -385,16 +385,16 @@
     <Compile Include="frmTags.Designer.cs">
       <DependentUpon>frmTags.cs</DependentUpon>
     </Compile>
-    <Compile Include="MidiLyrics\frmLyric.cs">
+    <Compile Include="Midi\MidiLyrics\frmLyric.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MidiLyrics\frmLyric.designer.cs">
+    <Compile Include="Midi\MidiLyrics\frmLyric.designer.cs">
       <DependentUpon>frmLyric.cs</DependentUpon>
     </Compile>
-    <Compile Include="MidiLyrics\frmLyrOptions.cs">
+    <Compile Include="Midi\MidiLyrics\frmLyrOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MidiLyrics\frmLyrOptions.Designer.cs">
+    <Compile Include="Midi\MidiLyrics\frmLyrOptions.Designer.cs">
       <DependentUpon>frmLyrOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="frmExplorer.cs">
@@ -439,10 +439,10 @@
     <Compile Include="Pages\PlaylistsControl\FrmNewPlaylist.Designer.cs">
       <DependentUpon>FrmNewPlaylist.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmPlayer.cs">
+    <Compile Include="Midi\MidiPlayer\frmPlayer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmPlayer.Designer.cs">
+    <Compile Include="Midi\MidiPlayer\frmPlayer.Designer.cs">
       <DependentUpon>frmPlayer.cs</DependentUpon>
     </Compile>
     <Compile Include="Karaclass.cs" />
@@ -596,13 +596,13 @@
     <EmbeddedResource Include="Lrc\frmLrcGenerator.resx">
       <DependentUpon>frmLrcGenerator.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MidiLyrics\frmLrcOptions.fr.resx">
+    <EmbeddedResource Include="Midi\MidiLyrics\frmLrcOptions.fr.resx">
       <DependentUpon>frmLrcOptions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MidiLyrics\frmLrcOptions.resx">
+    <EmbeddedResource Include="Midi\MidiLyrics\frmLrcOptions.resx">
       <DependentUpon>frmLrcOptions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MidiLyrics\frmLyricsSelectTrack.fr.resx">
+    <EmbeddedResource Include="Midi\MidiLyrics\frmLyricsSelectTrack.fr.resx">
       <DependentUpon>frmLyricsSelectTrack.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmModifyTempo.fr.resx">
@@ -688,29 +688,29 @@
     <EmbeddedResource Include="frmLoading.resx">
       <DependentUpon>frmLoading.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MidiLyrics\frmLyricsEdit.en.resx">
+    <EmbeddedResource Include="Midi\MidiLyrics\frmLyricsEdit.en.resx">
       <DependentUpon>frmLyricsEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MidiLyrics\frmLyricsEdit.fr.resx">
-      <DependentUpon>frmLyricsEdit.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MidiLyrics\frmLyricsEdit.resx">
+    <EmbeddedResource Include="Midi\MidiLyrics\frmLyricsEdit.fr.resx">
       <DependentUpon>frmLyricsEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="MidiLyrics\frmLyric.en.resx">
+    <EmbeddedResource Include="Midi\MidiLyrics\frmLyricsEdit.resx">
+      <DependentUpon>frmLyricsEdit.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmLyric.en.resx">
       <DependentUpon>frmLyric.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="MidiLyrics\frmLyric.fr.resx">
+    <EmbeddedResource Include="Midi\MidiLyrics\frmLyric.fr.resx">
       <DependentUpon>frmLyric.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="MidiLyrics\frmLyrOptions.en.resx">
+    <EmbeddedResource Include="Midi\MidiLyrics\frmLyrOptions.en.resx">
       <DependentUpon>frmLyrOptions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MidiLyrics\frmLyrOptions.fr.resx">
+    <EmbeddedResource Include="Midi\MidiLyrics\frmLyrOptions.fr.resx">
       <DependentUpon>frmLyrOptions.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -721,11 +721,11 @@
     <EmbeddedResource Include="frmPianoRoll.resx">
       <DependentUpon>frmPianoRoll.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmPlayer.en.resx">
+    <EmbeddedResource Include="Midi\MidiPlayer\frmPlayer.en.resx">
       <DependentUpon>frmPlayer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmPlayer.fr.resx">
+    <EmbeddedResource Include="Midi\MidiPlayer\frmPlayer.fr.resx">
       <DependentUpon>frmPlayer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -738,7 +738,7 @@
     <EmbeddedResource Include="frmRecorder.resx">
       <DependentUpon>frmRecorder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MidiLyrics\frmLyricsSelectTrack.resx">
+    <EmbeddedResource Include="Midi\MidiLyrics\frmLyricsSelectTrack.resx">
       <DependentUpon>frmLyricsSelectTrack.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSplashScreen.resx">
@@ -747,11 +747,11 @@
     <EmbeddedResource Include="frmTags.resx">
       <DependentUpon>frmTags.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MidiLyrics\frmLyric.resx">
+    <EmbeddedResource Include="Midi\MidiLyrics\frmLyric.resx">
       <DependentUpon>frmLyric.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="MidiLyrics\frmLyrOptions.resx">
+    <EmbeddedResource Include="Midi\MidiLyrics\frmLyrOptions.resx">
       <DependentUpon>frmLyrOptions.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -781,7 +781,7 @@
     <EmbeddedResource Include="Pages\PlaylistsControl\FrmNewPlaylist.resx">
       <DependentUpon>FrmNewPlaylist.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmPlayer.resx">
+    <EmbeddedResource Include="Midi\MidiPlayer\frmPlayer.resx">
       <DependentUpon>frmPlayer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

@@ -7712,8 +7712,6 @@ namespace Karaboss
             // 21 balls: 1 fix, 20 moving to the fix one
             if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
             {
-                //if (frmLyric != null)
-                //    frmLyric.MoveBalls(sequencer1.Position);
                 frmLyric?.MoveBalls(sequencer1.Position);
 
             }

@@ -564,10 +564,7 @@ namespace Karaboss
         public void LoadBallsTimes(List<plLyric> plLyrics)
         {
             if (!bShowBalls || plLyrics.Count == 0)
-                { return; }
-            
-            //string lyric;
-            //string chord;
+                { return; }         
                         
             LyricsTimes = new List<int>();
 
@@ -576,8 +573,6 @@ namespace Karaboss
 
             for (int i = 0; i < plLyrics.Count; i++)
             {
-                //chord = plLyrics[i].Element.Item1;
-                //lyric = plLyrics[i].Element.Item2;
                 plType = plLyrics[i].CharType;
                 plTime = plLyrics[i].TicksOn;
 

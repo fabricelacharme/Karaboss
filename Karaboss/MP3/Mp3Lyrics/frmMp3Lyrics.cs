@@ -72,8 +72,10 @@ namespace Karaboss.Mp3
 
         private frmMp3LyrOptions frmMp3LyrOptions;
 
+        private int currentTextPos = 0;
+
         #region properties
-        
+
         private Font _karaokefont;
         public Font KaraokeFont
         {
@@ -479,6 +481,9 @@ namespace Karaboss.Mp3
         }
 
 
+        
+
+
         /// <summary>
         /// Display singer and song names
         /// </summary>
@@ -518,6 +523,62 @@ namespace Karaboss.Mp3
 
 
         #endregion diaporama
+
+
+        #region balls
+
+        /// <summary>
+        /// Load balls times
+        /// </summary>
+        /// <param name="SyncLyrics"></param>
+        public void LoadBallsTimes(List<List<kSyncText>> SyncLyrics)
+        {
+            List<kSyncText> syncline = new List<kSyncText>();
+            List<int> LyricsTimes = new List<int>();
+
+            currentTextPos = 0;
+
+            for (int i = 0; i < SyncLyrics.Count; i++)
+            {
+                syncline = SyncLyrics[i];
+
+                for (int j = 0; j < syncline.Count; j++)
+                {
+                    LyricsTimes.Add((int)syncline[j].Time);
+                }
+            }
+
+            //picBalls.Division = myLyricsMgmt.Division;    // Equivalent for Division in mp3 ?????
+            picBalls.LoadTimes(LyricsTimes);
+            picBalls.Start();
+        }
+
+        public void MoveBalls(int songposition)
+        {
+            // déclencheur : timer_3
+            // 21 balls: 1 fix, 20 moving to the fix one  
+            // la position currentTextPos est calculée avec timer_2 et non pas timer_3 trop rapide    
+            if (Karaclass.m_DisplayBalls)
+                picBalls.MoveBallsToLyrics(songposition, currentTextPos);
+        }
+
+        public void UnlightFixedBall()
+        {
+            picBalls.UnlightFixedBall();
+        }
+
+        public void StartTimerBalls()
+        {
+            picBalls.BallsNumber = 22;
+            picBalls.Start();
+        }
+
+        public void StopTimerBalls()
+        {
+            picBalls.Stop();
+        }
+
+        #endregion
 
 
         #region Form Events

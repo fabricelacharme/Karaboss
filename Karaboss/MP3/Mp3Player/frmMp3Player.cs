@@ -659,7 +659,8 @@ namespace Karaboss.Mp3
                     // if paused => play                                    
                     PlayerState = PlayerStates.Playing;
                     BtnStatus();
-                    Timer1.Start();                    
+                    Timer1.Start();
+                    Timer3.Start(); // Balls
                     Player.Resume();
                     break;
 
@@ -1922,12 +1923,14 @@ namespace Karaboss.Mp3
 
                 case PlayerStates.Stopped:
                     Timer1.Stop();
+                    Timer3.Stop(); // Balls 
                     AfterStopped();
                     break;
 
                 case PlayerStates.Paused:                    
                     Player.Pause();
                     Timer1.Stop();
+                    Timer3.Stop(); // Balls 
                     break;
 
                 case PlayerStates.NextSong:                                       
@@ -1955,6 +1958,22 @@ namespace Karaboss.Mp3
             #endregion position hscrollbar
             
         }
+
+        /// <summary>
+        /// Timer 3: for balls animation 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Timer3_Tick(object sender, EventArgs e)
+        {
+            // 21 balls: 1 fix, 20 moving to the fix one
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            {
+                frmMp3Lyrics?.MoveBalls((int)Player.Position);
+
+            }
+        }
+
 
         private void SendPositionToKaraoke(double pos)
         {
@@ -4296,10 +4315,41 @@ namespace Karaboss.Mp3
             }
         }
 
+
+
+
         #endregion dgview context menu
 
 
+        #region aniballs
+
+        /// <summary>
+        /// Start balls animation
+        /// </summary>
+        private void StartTimerBalls()
+        {
+            Timer3.Interval = 1;
+            Timer3.Start();
+
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                frmMp3Lyrics.StartTimerBalls();
+        }
+
+        /// <summary>
+        /// Terminate balls animation
+        /// </summary>
+        private void StopTimerBalls()
+        {
+            Timer3.Stop();
+
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                frmMp3Lyrics.StopTimerBalls();
+
+        }
 
        
+
+        #endregion aniballs
+
     }
 }
