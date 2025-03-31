@@ -887,10 +887,7 @@ namespace Karaboss
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
-
-
        
-
 
         #region Mute
         /// <summary>
@@ -4699,61 +4696,7 @@ namespace Karaboss
 
    
 
-        #region deleteme
-        /*
-        /// <summary>
-        /// Create new track containing lyrics type text
-        /// </summary>
-        public void AddTrackWords()
-        {
-            //int f = sequence1.Format;
-            int C = sequence1.tracks.Count;
-            int trackindex = 2; // track 2 by default, named "Words"
-            bool bCreate = true;
-
-            // Check if enough tracks in sequence
-            if (C == 0)
-                trackindex = 0;
-            else if (C == 1)
-                trackindex = 1;
-            else if (C > 2)
-            {
-                // Check if and empty track exists at position trackindex
-                Track wtrack = sequence1.tracks[2];
-
-                if (wtrack.Notes.Count == 0)
-                {
-                    // If empty track exists at position 2 => take this track
-                    bCreate = false;
-                }
-            }
-
-            if (bCreate)
-            {
-                // Create new track
-                int clef = 2; // Clef.None
-                Track track = InsertTrack(trackindex, "Words", "AcousticGrandPiano", 0, 0, 79, sequence1.Tempo, sequence1.Time, clef);
-                InsertTrackControl(track, trackindex);
-
-                RedrawSheetMusic();
-                SetScrollBarValues();
-
-                // If a new track was created, the melody track may have changed
-
-                if (myLyricsMgmt.MelodyTrackNum >= trackindex)
-                {
-                    //melodytracknum++;
-                    myLyricsMgmt.MelodyTrackNum++;
-                }
-            }
-
-            // Return track number where text lyrics are set (normaly 2)
-            //return trackindex;
-            myLyricsMgmt.LyricsTrackNum = trackindex;
-        }
-        */
-
-        #endregion deleteme
+    
 
         /// <summary>
         /// Menu: open lyrics editor
@@ -5276,8 +5219,7 @@ namespace Karaboss
         {
             DspEdit(true);
 
-            //if (Application.OpenForms["frmModifyTempo"] != null)
-            //    Application.OpenForms["frmModifyTempo"].Close();
+            
             Application.OpenForms["frmModifyTempo"]?.Close();
 
 
@@ -7398,9 +7340,7 @@ namespace Karaboss
         /// <exception cref="NotImplementedException"></exception>
         private void Tempo_DoubleClick(object sender, EventArgs e, TempoSymbol tmps)
         {
-            //if (Application.OpenForms["frmModifyTempo"] != null)
-            //    Application.OpenForms["frmModifyTempo"].Close();
-
+            
             Application.OpenForms["frmModifyTempo"]?.Close();
 
             if (Application.OpenForms["frmModifyTempo"] == null)
@@ -7477,13 +7417,22 @@ namespace Karaboss
             TempoSymbol ts = sheetmusic.GetTempoAt(t);
             if (ts != null)
             {
+                //Console.WriteLine("Tempo at {0} = {1}", t, ts.Tempo);
+
                 _tempo = ts.Tempo * TempoDelta / 100;
-                
+                //Console.WriteLine("TempoDelta = {0}", TempoDelta);
+                //Console.WriteLine("New Tempo = {0}", _tempo);
+
+                //Console.WriteLine("sequencer1.Tempo at {0} = {1}", t, sequencer1.Tempo);
                 if (PlayerState == PlayerStates.Playing || PlayerState == PlayerStates.Paused)
-                    sequencer1.Tempo = _tempo;
+                {
+                    //sequencer1.Tempo = _tempo;
+                    sequencer1.Stop();
+                    sequencer1.Tempo = sequencer1.Tempo * (TempoDelta / 100);
+                    sequencer1.Continue();
+                }
             }                
             
-
 
             lblTempoValue.Text = string.Format("{0}%", TempoDelta);
 
@@ -7601,8 +7550,7 @@ namespace Karaboss
                 
                 // Display time elapse
                 double dpercent = 100 * sequencer1.Position / (double)_totalTicks;
-                double maintenant = (dpercent * _durationPercent) / 100;  //seconds                                                
-                //double maintenant2 = TempoUtilities.GetMidiDuration(sequencer1.Position, sequence1.Division);
+                double maintenant = (dpercent * _durationPercent) / 100;  //seconds                                                                
                 
                 DisplayTimeElapse(dpercent);              
 
