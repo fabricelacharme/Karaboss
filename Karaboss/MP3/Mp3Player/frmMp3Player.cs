@@ -45,7 +45,6 @@ using TagLib.Id3v2;
 using TagLib;
 
 
-
 namespace Karaboss.Mp3
 {
     public partial class frmMp3Player : Form
@@ -598,6 +597,9 @@ namespace Karaboss.Mp3
 
                 StartKaraoke();
                 Timer1.Start();
+
+                // Start balls
+                StartTimerBalls();
                 
             }
             catch (Exception ex)
@@ -687,7 +689,11 @@ namespace Karaboss.Mp3
             VuPeakVolumeRight.Level = 0;
 
             DisplayTimeElapse(0);
-            StopKaraoke();                
+            StopKaraoke();
+            
+            // Stop balls
+            StopTimerBalls();
+
             ValideMenus(true);
 
             positionHScrollBar.Value = positionHScrollBar.Minimum;
@@ -1969,7 +1975,7 @@ namespace Karaboss.Mp3
             // 21 balls: 1 fix, 20 moving to the fix one
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
             {
-                frmMp3Lyrics?.MoveBalls((int)Player.Position);
+                frmMp3Lyrics?.MoveBalls((int)(Player.Position * 1000));
 
             }
         }
@@ -4344,11 +4350,8 @@ namespace Karaboss.Mp3
 
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 frmMp3Lyrics.StopTimerBalls();
-
         }
-
        
-
         #endregion aniballs
 
     }

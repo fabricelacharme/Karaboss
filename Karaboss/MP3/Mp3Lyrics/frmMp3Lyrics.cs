@@ -362,7 +362,8 @@ namespace Karaboss.Mp3
             #endregion
 
             LoadLyrics();
-                     
+            
+            LoadBallsTimes(Mp3LyricsMgmtHelper.SyncLyrics);
 
             AddMouseMoveHandler(this);
 
@@ -472,17 +473,14 @@ namespace Karaboss.Mp3
         }
 
         /// <summary>
-        /// Set lyrics
+        /// Send lyrics to KaraokeEffect
         /// </summary>
         /// <param name="lyrics"></param>
         public void SetLyrics(List<List<kSyncText>> lyrics)
         {
             karaokeEffect1.SyncLyrics = lyrics;
         }
-
-
         
-
 
         /// <summary>
         /// Display singer and song names
@@ -548,18 +546,58 @@ namespace Karaboss.Mp3
                 }
             }
 
-            //picBalls.Division = myLyricsMgmt.Division;    // Equivalent for Division in mp3 ?????
+            picBalls.Division = 480; // myLyricsMgmt.Division;    // Equivalent for Division in mp3 ?????
             picBalls.LoadTimes(LyricsTimes);
             picBalls.Start();
         }
 
+
+        /// <summary>
+        /// Move balls according to songposition
+        /// </summary>
+        /// <param name="songposition"></param>
         public void MoveBalls(int songposition)
         {
+            // Find syllabe related to songposition
+            currentTextPos = FindIndexSyllabe(songposition);
+
             // déclencheur : timer_3
             // 21 balls: 1 fix, 20 moving to the fix one  
             // la position currentTextPos est calculée avec timer_2 et non pas timer_3 trop rapide    
             if (Karaclass.m_DisplayBalls)
                 picBalls.MoveBallsToLyrics(songposition, currentTextPos);
+        }
+
+        /// <summary>
+        /// Find syllabe related to songposition
+        /// </summary>
+        /// <param name="songposition"></param>
+        /// <returns></returns>
+        private int FindIndexSyllabe(int songposition)
+        {           
+            int i = 0;
+            int j = 0;
+
+            int idx = 0;
+
+            List<kSyncText> syncline = new List<kSyncText>();
+            for (i = 0; i < Mp3LyricsMgmtHelper.SyncLyrics.Count; i++)
+            {
+                syncline = Mp3LyricsMgmtHelper.SyncLyrics[i];
+                for (j = 0; j < syncline.Count; j++)
+                {
+                    if (songposition < syncline[j].Time)
+                    {
+                        return idx;
+                        
+                    }
+                    else
+                    {
+                        idx++;
+                    }
+                }
+            }
+            return 0;
         }
 
         public void UnlightFixedBall()
