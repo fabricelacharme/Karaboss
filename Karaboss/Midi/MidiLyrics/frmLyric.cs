@@ -814,17 +814,12 @@ namespace Karaboss
                 {
                     Properties.Settings.Default.frmLyricLocation = Location;
                     Properties.Settings.Default.frmLyricSize = Size;
-                    Properties.Settings.Default.frmLyricMaximized = false;
-
-                    //Properties.Settings.Default.ChordNextColor = Color.FromArgb(255, 196, 13);
-                    //Properties.Settings.Default.ChordHighlightColor = Color.FromArgb(238, 17, 17);
+                    Properties.Settings.Default.frmLyricMaximized = false;                   
 
                 }
                 // Save settings
                 Properties.Settings.Default.Save();
-            }
-
-            //pBox.Terminate();
+            }            
 
             Dispose();
             

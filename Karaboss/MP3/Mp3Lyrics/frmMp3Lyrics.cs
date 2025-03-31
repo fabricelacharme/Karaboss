@@ -335,6 +335,21 @@ namespace Karaboss.Mp3
         #endregion dirslideshow
 
 
+        #region balls
+        // Show balls
+        private bool _bShowBalls = true;
+        public bool bShowBalls
+        {
+            get { return _bShowBalls; }
+            set
+            {
+                _bShowBalls = value;
+                pnlTop.Visible = _bShowBalls;
+            }
+        }
+
+        #endregion balls
+
         #endregion properties
 
 
@@ -344,6 +359,9 @@ namespace Karaboss.Mp3
         public frmMp3Lyrics()
         {
             InitializeComponent();
+
+            // Allow form keydown
+            this.KeyPreview = true;
 
             // Graphic optimization
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
@@ -362,15 +380,17 @@ namespace Karaboss.Mp3
             #endregion
 
             LoadLyrics();
-            
-            LoadBallsTimes(Mp3LyricsMgmtHelper.SyncLyrics);
 
+            
             AddMouseMoveHandler(this);
 
             LoadOptions();
 
             SetOptions();
+            
         }
+
+        #region options
 
         /// <summary>
         /// Load options
@@ -441,6 +461,8 @@ namespace Karaboss.Mp3
                 // Position image
                 SizeMode = Properties.Settings.Default.SizeMode;
 
+                // show balls
+                bShowBalls = Karaclass.m_DisplayBalls;
 
             }
             catch (Exception e)
@@ -455,8 +477,15 @@ namespace Karaboss.Mp3
             karaokeEffect1.KaraokeFont = _karaokeFont;
             karaokeEffect1.timerIntervall = _timerintervall;
 
+            // Load balls times
+            if (_bShowBalls)
+                LoadBallsTimes(Mp3LyricsMgmtHelper.SyncLyrics);
         }
 
+
+        #endregion options
+
+        #region lyrics
         /// <summary>
         /// Load lyrics from Mp3LyricsMgmtHelper.SyncTexts
         /// They must begin with \r\n because of PictureBox1_Paint
@@ -480,7 +509,7 @@ namespace Karaboss.Mp3
         {
             karaokeEffect1.SyncLyrics = lyrics;
         }
-        
+        #endregion lyrics
 
         /// <summary>
         /// Display singer and song names
@@ -531,6 +560,11 @@ namespace Karaboss.Mp3
         /// <param name="SyncLyrics"></param>
         public void LoadBallsTimes(List<List<kSyncText>> SyncLyrics)
         {
+            #region guard
+            if (!_bShowBalls || SyncLyrics.Count == 0) return;
+            #endregion guard
+
+
             List<kSyncText> syncline = new List<kSyncText>();
             List<int> LyricsTimes = new List<int>();
 
@@ -673,6 +707,19 @@ namespace Karaboss.Mp3
         private void frmMp3Lyrics_Resize(object sender, EventArgs e)
         {
             
+        }
+
+        private void frmMp3Lyrics_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Escape:
+                    if (WindowState == FormWindowState.Maximized)
+                    {
+                        WindowState = FormWindowState.Normal;
+                    }
+                    break;
+            }
         }
 
         #endregion Form Events
@@ -903,8 +950,9 @@ namespace Karaboss.Mp3
             }
         }
 
-        #endregion
 
+
+        #endregion
 
        
     }
