@@ -3130,8 +3130,7 @@ namespace Karaboss
 
                     Console.WriteLine("Tempo from HandleMetaMessagePlayed afeter update: " + sequencer1.Tempo);
                     
-                    
-                    
+                                       
                     //UpdateMidiTimes();                    
                     lblTempoValue.Text = string.Format("{0}%", TempoDelta);
 
@@ -3141,6 +3140,8 @@ namespace Karaboss
                     // Update display duration
                     _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. Duration for ScrollTo dislay of sheetmusic
                     _duration = (TempoDelta / 100.0f) * TempoUtilities.GetMidiDuration(_totalTicks, _ppqn); // real duration for multiple tempos
+
+                    //_durationPercent = _duration;
 
                     int Min = (int)(_duration / 60);
                     int Sec = (int)(_duration - (Min * 60));
@@ -7427,7 +7428,8 @@ namespace Karaboss
             // Update display duration
             _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. Duration for ScrollTo dislay of sheetmusic
             _duration = (TempoDelta / 100.0f) * TempoUtilities.GetMidiDuration(_totalTicks, _ppqn); // real duration for multiple tempos
-
+            //_durationPercent = _duration;
+            
             int Min = (int)(_duration / 60);
             int Sec = (int)(_duration - (Min * 60));
             lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
@@ -8671,6 +8673,7 @@ namespace Karaboss
 
             _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. For sheetmusic offset
             _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);  // Real duration according to tempo changes
+            //_durationPercent = _duration;
 
             _bpm = GetBPM(_tempo);
 
