@@ -41,14 +41,11 @@ using System.Diagnostics;
 using Sanford.Multimedia.Midi.Score;
 using Karaboss.Resources.Localization;
 using System.IO;
-using System.Text.RegularExpressions;
 using MusicXml;
 using MusicTxt;
 using System.Linq;
 using Karaboss.MidiLyrics;
 using Karaboss.Utilities;
-using static Karaboss.Pages.ABCnotation.MyMidi;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Karaboss
 {
@@ -302,7 +299,7 @@ namespace Karaboss
         #endregion
 
         /// <summary>
-        /// Initializations
+        /// Constructor
         /// </summary>
         /// <param name="FileName"></param>        
         public frmPlayer(int numinstance, string FileName, Playlist myPlayList, bool bplay, OutputDevice outputDevice)
@@ -3122,20 +3119,36 @@ namespace Karaboss
                 byte[] data = msg.GetBytes();
                 _tempo = ((data[0] << 16) | (data[1] << 8) | data[2]);
 
-                
-                // Tempo was modified by user
+                Console.WriteLine("Tempo from HandleMetaMessagePlayed : " + _tempo);
+
+                // Modifies the tempo according to user settings
                 if (TempoDelta != 100)
                 {
-                    _tempo = TempoDelta * _tempo / 100;  // _tempo is a percent of TempoOrig
+                    _tempo = TempoDelta * _tempo / 100;  
+                                        
+                    sequencer1.Tempo = _tempo;
+
+                    Console.WriteLine("Tempo from HandleMetaMessagePlayed afeter update: " + sequencer1.Tempo);
                     
-                    //if (sequence1.Tempo != _tempoplayed)
-                    //{
-                        sequencer1.Tempo = _tempo;
-                        UpdateMidiTimes();
-                    //}
+                    
+                    
+                    //UpdateMidiTimes();                    
+                    lblTempoValue.Text = string.Format("{0}%", TempoDelta);
+
+                    // Update Midi Times            
+                    _bpm = GetBPM(_tempo);
+
+                    // Update display duration
+                    _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. Duration for ScrollTo dislay of sheetmusic
+                    _duration = (TempoDelta / 100.0f) * TempoUtilities.GetMidiDuration(_totalTicks, _ppqn); // real duration for multiple tempos
+
+                    int Min = (int)(_duration / 60);
+                    int Sec = (int)(_duration - (Min * 60));
+                    lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
+
+                    //DisplayFileInfos();
+
                 }
-
-
             }
 
             // TODO add change of Time Signature ?
@@ -7376,6 +7389,52 @@ namespace Karaboss
             ModTempo();
         }
 
+        private void ModTempo()
+        {
+            //Some songs may have changes in tempo.
+            //Changing the tempo at time t by a certain percentage means changing the tempo at time t by that percentage and all subsequent tempos.
+            //You therefore need to find the valid tempo at time t and let the HandleMetaMessagePlayed event handle subsequent tempo changes.
+            // _TempoDeltat is 100 at start
+
+            // Calculate new tempo                                    
+            int t = sequencer1.Position;
+            List<TempoSymbol> l = sheetmusic.lstTempoSymbols;
+            TempoSymbol ts = sheetmusic.GetTempoAt(t);
+            if (ts != null)
+            {                
+                _tempo = ts.Tempo * TempoDelta / 100;                             
+                
+                if (PlayerState == PlayerStates.Playing || PlayerState == PlayerStates.Paused)
+                {
+                    // Stop/Start seems to be enough to take into account tempo change
+                    // because HandleMetaMessagePlayed is called for all tempo changes
+
+                    sequencer1.Stop();
+                    //sequencer1.Tempo = sequencer1.Tempo * (TempoDelta / 100);           // sequencer1.tempo (clock in fact) is different than _tempo !!!!
+                                                                                         
+                    //Console.WriteLine("Tempo modified during play: " + sequencer1.Tempo);
+
+                    sequencer1.Continue();
+                }
+            }
+
+
+            lblTempoValue.Text = string.Format("{0}%", TempoDelta);
+
+            // Update Midi Times            
+            _bpm = GetBPM(_tempo);
+
+            // Update display duration
+            _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. Duration for ScrollTo dislay of sheetmusic
+            _duration = (TempoDelta / 100.0f) * TempoUtilities.GetMidiDuration(_totalTicks, _ppqn); // real duration for multiple tempos
+
+            int Min = (int)(_duration / 60);
+            int Sec = (int)(_duration - (Min * 60));
+            lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
+
+            DisplayFileInfos();
+
+        }
 
         /// <summary>
         /// Transpose higher
@@ -7404,53 +7463,7 @@ namespace Karaboss
             ModTranspose(-amount);
         }
 
-        private void ModTempo()
-        {
-            //Some songs may have changes in tempo.
-            //Changing the tempo at time t by a certain percentage means changing the tempo at time t by that percentage and all subsequent tempos.
-            //You therefore need to find the valid tempo at time t and let the HandleMetaMessagePlayed event handle subsequent tempo changes.
-            // _TempoDeltat is 100 at start
-            
-            // Calculate new tempo                                    
-            int t = sequencer1.Position;
-            List<TempoSymbol> l = sheetmusic.lstTempoSymbols;
-            TempoSymbol ts = sheetmusic.GetTempoAt(t);
-            if (ts != null)
-            {
-                //Console.WriteLine("Tempo at {0} = {1}", t, ts.Tempo);
-
-                _tempo = ts.Tempo * TempoDelta / 100;
-                //Console.WriteLine("TempoDelta = {0}", TempoDelta);
-                //Console.WriteLine("New Tempo = {0}", _tempo);
-
-                //Console.WriteLine("sequencer1.Tempo at {0} = {1}", t, sequencer1.Tempo);
-                if (PlayerState == PlayerStates.Playing || PlayerState == PlayerStates.Paused)
-                {
-                    //sequencer1.Tempo = _tempo;
-                    sequencer1.Stop();
-                    sequencer1.Tempo = sequencer1.Tempo * (TempoDelta / 100);
-                    sequencer1.Continue();
-                }
-            }                
-            
-
-            lblTempoValue.Text = string.Format("{0}%", TempoDelta);
-
-            // Update Midi Times            
-            _bpm = GetBPM(_tempo);
-
-            // Update display duration
-            _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. Duration for ScrollTo dislay of sheetmusic
-            _duration = (TempoDelta/100.0f) * TempoUtilities.GetMidiDuration(_totalTicks, _ppqn); // real duration for multiple tempos
-
-            int Min = (int)(_duration / 60);
-            int Sec = (int)(_duration - (Min * 60));
-            lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
-
-            DisplayFileInfos();
-
-        }
-
+        
         private void ModTranspose(int amount)
         {
             btnTempoMinus.Enabled = false;
@@ -7550,8 +7563,11 @@ namespace Karaboss
                 
                 // Display time elapse
                 double dpercent = 100 * sequencer1.Position / (double)_totalTicks;
-                double maintenant = (dpercent * _durationPercent) / 100;  //seconds                                                                
-                
+
+                // FAB 01/04/2025
+                double maintenant = (dpercent * _durationPercent) / 100;  //seconds
+                //double maintenant = (dpercent * _duration) / 100;  //seconds
+
                 DisplayTimeElapse(dpercent);              
 
                 //Eteint la boule fixe;
