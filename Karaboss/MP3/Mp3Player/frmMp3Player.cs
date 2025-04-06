@@ -2016,6 +2016,10 @@ namespace Karaboss.Mp3
             LrcMode = LrcModes.Edit;
 
             _lyricseditfont = Properties.Settings.Default.LyricsEditFont;
+            if (_lyricseditfont == null)
+                _lyricseditfont = new Font("Segoe UI", 9, FontStyle.Regular, GraphicsUnit.Pixel);
+            
+                
             _fontSize = _lyricseditfont.Size;
             txtResult.Font = _lyricseditfont;
 
