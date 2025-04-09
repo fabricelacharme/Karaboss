@@ -6350,7 +6350,7 @@ namespace Karaboss
                 //float? peak = AudioControl.AudioManager.GetApplicationMasterPeakVolume(outDeviceProcessId);
                 //int level = Convert.ToInt32(peak);
                 //VuMasterPeakVolume.Level = level;
-
+               
 
                 // Volume per channels (left & right)
                 float? peakleft = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDeviceProcessId, 0);
