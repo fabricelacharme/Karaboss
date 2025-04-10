@@ -95,7 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AudioManager.cs" />
+    <Compile Include="Audio\AudioManager.cs" />
     <Compile Include="Buttons\CheckButtonControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

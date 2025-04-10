@@ -28,6 +28,7 @@ namespace Sanford.Multimedia.Midi.UI
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OutputDeviceDialog));
             this.outputLabel = new System.Windows.Forms.Label();
             this.outputComboBox = new System.Windows.Forms.ComboBox();
             this.cancelButton = new System.Windows.Forms.Button();
@@ -37,67 +38,44 @@ namespace Sanford.Multimedia.Midi.UI
             // 
             // outputLabel
             // 
-            this.outputLabel.AutoSize = true;
-            this.outputLabel.Location = new System.Drawing.Point(84, 9);
+            resources.ApplyResources(this.outputLabel, "outputLabel");
             this.outputLabel.Name = "outputLabel";
-            this.outputLabel.Size = new System.Drawing.Size(39, 13);
-            this.outputLabel.TabIndex = 9;
-            this.outputLabel.Text = "Output";
             // 
             // outputComboBox
             // 
-            this.outputComboBox.AccessibleDescription = "Chooses the MIDI output device to use for sending sample dump standard messages.";
-            this.outputComboBox.AccessibleName = "MIDI Device Output";
+            resources.ApplyResources(this.outputComboBox, "outputComboBox");
             this.outputComboBox.AccessibleRole = System.Windows.Forms.AccessibleRole.DropList;
             this.outputComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.outputComboBox.FormattingEnabled = true;
-            this.outputComboBox.Location = new System.Drawing.Point(13, 25);
             this.outputComboBox.Name = "outputComboBox";
-            this.outputComboBox.Size = new System.Drawing.Size(186, 21);
-            this.outputComboBox.TabIndex = 8;
             // 
             // cancelButton
             // 
-            this.cancelButton.AccessibleDescription = "The cancel button";
-            this.cancelButton.AccessibleName = "Cancel";
+            resources.ApplyResources(this.cancelButton, "cancelButton");
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(124, 85);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 23);
-            this.cancelButton.TabIndex = 7;
-            this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // okButton
             // 
-            this.okButton.AccessibleDescription = "The okay button.";
-            this.okButton.AccessibleName = "Okay";
+            resources.ApplyResources(this.okButton, "okButton");
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(13, 85);
             this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 6;
-            this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
             // chkSavePreferences
             // 
-            this.chkSavePreferences.AutoSize = true;
-            this.chkSavePreferences.Location = new System.Drawing.Point(13, 53);
+            resources.ApplyResources(this.chkSavePreferences, "chkSavePreferences");
             this.chkSavePreferences.Name = "chkSavePreferences";
-            this.chkSavePreferences.Size = new System.Drawing.Size(137, 17);
-            this.chkSavePreferences.TabIndex = 10;
-            this.chkSavePreferences.Text = "Save Output Parameter";
             this.chkSavePreferences.UseVisualStyleBackColor = true;
             this.chkSavePreferences.CheckedChanged += new System.EventHandler(this.chkSavePreferences_CheckedChanged);
             // 
             // OutputDeviceDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(218, 114);
             this.Controls.Add(this.chkSavePreferences);
             this.Controls.Add(this.outputLabel);
             this.Controls.Add(this.outputComboBox);
@@ -106,8 +84,6 @@ namespace Sanford.Multimedia.Midi.UI
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "OutputDeviceDialog";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MIDI Output Device";
             this.ResumeLayout(false);
             this.PerformLayout();
 

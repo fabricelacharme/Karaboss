@@ -28,6 +28,7 @@ namespace Sanford.Multimedia.Midi.UI
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InputDeviceDialog));
             this.inputLabel = new System.Windows.Forms.Label();
             this.inputComboBox = new System.Windows.Forms.ComboBox();
             this.cancelButton = new System.Windows.Forms.Button();
@@ -36,56 +37,37 @@ namespace Sanford.Multimedia.Midi.UI
             // 
             // inputLabel
             // 
-            this.inputLabel.AutoSize = true;
-            this.inputLabel.Location = new System.Drawing.Point(84, 9);
+            resources.ApplyResources(this.inputLabel, "inputLabel");
             this.inputLabel.Name = "inputLabel";
-            this.inputLabel.Size = new System.Drawing.Size(31, 13);
-            this.inputLabel.TabIndex = 13;
-            this.inputLabel.Text = "Input";
             // 
             // inputComboBox
             // 
-            this.inputComboBox.AccessibleDescription = "Chooses the MIDI input device to use for sending sample dump standard messages.";
-            this.inputComboBox.AccessibleName = "MIDI Device Input";
+            resources.ApplyResources(this.inputComboBox, "inputComboBox");
             this.inputComboBox.AccessibleRole = System.Windows.Forms.AccessibleRole.DropList;
             this.inputComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.inputComboBox.FormattingEnabled = true;
-            this.inputComboBox.Location = new System.Drawing.Point(13, 25);
             this.inputComboBox.Name = "inputComboBox";
-            this.inputComboBox.Size = new System.Drawing.Size(186, 21);
-            this.inputComboBox.TabIndex = 12;
             // 
             // cancelButton
             // 
-            this.cancelButton.AccessibleDescription = "The cancel button";
-            this.cancelButton.AccessibleName = "Cancel";
+            resources.ApplyResources(this.cancelButton, "cancelButton");
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(124, 75);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 23);
-            this.cancelButton.TabIndex = 11;
-            this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // okButton
             // 
-            this.okButton.AccessibleDescription = "The okay button.";
-            this.okButton.AccessibleName = "Okay";
+            resources.ApplyResources(this.okButton, "okButton");
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(13, 75);
             this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 10;
-            this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
             // InputDeviceDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(218, 114);
             this.Controls.Add(this.inputLabel);
             this.Controls.Add(this.inputComboBox);
             this.Controls.Add(this.cancelButton);
@@ -93,8 +75,6 @@ namespace Sanford.Multimedia.Midi.UI
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "InputDeviceDialog";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MIDI Input Device";
             this.ResumeLayout(false);
             this.PerformLayout();
 

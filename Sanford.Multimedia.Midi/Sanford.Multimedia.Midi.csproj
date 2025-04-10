@@ -473,9 +473,15 @@
       <SubType>Designer</SubType>
       <DependentUpon>DeviceDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Sequencing\UI\InputDeviceDialog.fr.resx">
+      <DependentUpon>InputDeviceDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sequencing\UI\InputDeviceDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>InputDeviceDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sequencing\UI\OutputDeviceDialog.fr.resx">
+      <DependentUpon>OutputDeviceDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Sequencing\UI\OutputDeviceDialog.resx">
       <SubType>Designer</SubType>

@@ -32,7 +32,6 @@
 
 #endregion
 using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
 // ReSharper disable SuspiciousTypeConversion.Global
 // ReSharper disable InconsistentNaming
@@ -233,14 +232,17 @@ namespace AudioControl
             }
         }
 
-        
+
 
         #endregion
 
         #region Individual Application Volume Manipulation
 
-        // FAB
-        // int nProcessID = Process.GetCurrentProcess().Id;
+        /// <summary>
+        /// Gezt master volume of a specific application
+        /// </summary>
+        /// <param name="pid"></param>
+        /// <returns></returns>
         public static float? GetApplicationMasterPeakVolume(int pid)
         {
             IAudioMeterInformation masterpeakvol = GetMasterPeakVolume(pid);            
@@ -261,8 +263,8 @@ namespace AudioControl
         /// <summary>
         /// Get peak volume of a specific channel of an application
         /// </summary>
-        /// <param name="pid"></param>
-        /// <param name="index"></param>
+        /// <param name="pid index of outputdevice"></param>
+        /// <param name="index canal right or left"></param>
         /// <returns></returns>
         public static float? GetApplicationChannelPeakVolume(int pid, int index)
         {
@@ -392,7 +394,11 @@ namespace AudioControl
         }
 
 
-        // Fab: get the master volume peak
+        /// <summary>
+        /// returns IAudioMeterInformation interface of selected output device
+        /// </summary>
+        /// <param name="pid index of selected output device"></param>
+        /// <returns></returns>
         // https://github.com/maindefine/volumecontrol/blob/master/C%23/CoreAudioApi/AudioMeterInformation.cs
         private static IAudioMeterInformation GetMasterPeakVolume(int pid)
         {
@@ -441,7 +447,9 @@ namespace AudioControl
                         int cpid;
                         ctl.GetProcessId(out cpid);
 
-                        if (cpid == pid)
+                        
+                        //if (cpid == pid)                        
+                        if (i == pid)           // use index of output device in the list of devices instead of process id                        
                         {
                             //volumeControl = ctl as ISimpleAudioVolume;
                             mastervol = ctl as IAudioMeterInformation;
