@@ -23,8 +23,7 @@ namespace Karaboss.Mp3
 
         #endregion events
 
-  
-        
+         
         private int _stream;
         private bool mBassInitalized;
 
@@ -187,7 +186,7 @@ namespace Karaboss.Mp3
         }
     
         /// <summary>
-        /// Play mp3
+        /// Play mp3 starting from start
         /// </summary>
         public void Play(string FileName)
         {
@@ -213,6 +212,9 @@ namespace Karaboss.Mp3
            
         }
 
+        /// <summary>
+        /// Play mp3 starting from start
+        /// </summary>
         public void Play()
         {
             if (_stream != 0)
@@ -232,6 +234,38 @@ namespace Karaboss.Mp3
                 MessageBox.Show("Unable to play, stream = 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        /// <summary>
+        /// Play mp3 starting from a specific position (in seconds)
+        /// </summary>
+        /// <param name="start"></param>
+        public void Play (string FileName, double pos = 0)
+        {
+            Stop();
+            Load(FileName);
+
+            if (_stream != 0)
+            {
+                try
+                {                    
+                    // Offset to pos seconds
+                    if (pos > 0)                    
+                        Bass.BASS_ChannelSetPosition(_stream, Bass.BASS_ChannelSeconds2Bytes(_stream, pos));
+
+                    // Play
+                    bool success = Bass.BASS_ChannelPlay(_stream, false);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("*** Unsucessful play: " + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Unable to play, stream = 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
 
         /// <summary>
         /// Resume (same as play ?)
@@ -344,7 +378,7 @@ namespace Karaboss.Mp3
             {
                 if (_stream == 0) return;
                 Bass.BASS_ChannelSetPosition(_stream, Bass.BASS_ChannelSeconds2Bytes(_stream, pos));
-                Console.WriteLine("*** SetPosition : " + pos);
+                //Console.WriteLine("*** SetPosition : " + pos);
             }
             catch (Exception ex)
             {
@@ -434,10 +468,16 @@ namespace Karaboss.Mp3
         #region TagLib
         // Taglib
 
+
+        /// <summary>
+        /// Extract mp3 tags (image & lyrics)
+        /// </summary>
+        /// <param name="Path"></param>
         public void GetMp3Infos(string Path)
         {
+            // Get image
             GetAlbumArtImage(Path);
-            //GetTagsFromFile(Path);
+            // Get song length, tags, lyrics
             GetTags(Path);
         }
 

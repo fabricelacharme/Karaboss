@@ -41,7 +41,6 @@ using System.Diagnostics;
 using Sanford.Multimedia.Midi.Score;
 using Karaboss.Resources.Localization;
 using System.IO;
-using System.Text.RegularExpressions;
 using MusicXml;
 using MusicTxt;
 using System.Linq;
@@ -300,7 +299,7 @@ namespace Karaboss
         #endregion
 
         /// <summary>
-        /// Initializations
+        /// Constructor
         /// </summary>
         /// <param name="FileName"></param>        
         public frmPlayer(int numinstance, string FileName, Playlist myPlayList, bool bplay, OutputDevice outputDevice)
@@ -855,6 +854,8 @@ namespace Karaboss
                     sequencer1.Start();
                 }
 
+                sequencer1.Tempo = TempoOrig;
+
 
                 // main timer
                 timer1.Start();
@@ -875,8 +876,7 @@ namespace Karaboss
                 {
                     timer4.Interval = BeatIntervall;
                 }
-                timer4.Start();
-
+                timer4.Start();                
 
             }
             catch (Exception ex)
@@ -884,6 +884,7 @@ namespace Karaboss
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
+       
 
         #region Mute
         /// <summary>
@@ -3018,7 +3019,7 @@ namespace Karaboss
                     return;
                 }
 
-                SetTitle(MIDIfileName);
+                SetTitle(Path.GetFileName(MIDIfileName));
 
                 // Active le formulaire frmExplorer
                 if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
@@ -3116,7 +3117,43 @@ namespace Karaboss
             {
                 MetaMessage msg = e.Message;
                 byte[] data = msg.GetBytes();
-                _tempoplayed = ((data[0] << 16) | (data[1] << 8) | data[2]);
+                _tempo = ((data[0] << 16) | (data[1] << 8) | data[2]);
+
+                Console.WriteLine("Tempo from HandleMetaMessagePlayed : " + _tempo);
+
+                // Modifies the tempo according to user settings
+                if (TempoDelta != 100)
+                {
+                    _tempo = TempoDelta * _tempo / 100;  
+                                        
+                    sequencer1.Tempo = _tempo;
+
+                    Console.WriteLine("Tempo from HandleMetaMessagePlayed after update: " + sequencer1.Tempo);
+                    
+                                       
+                    //UpdateMidiTimes();                    
+                    lblTempoValue.Text = string.Format("{0}%", TempoDelta);
+
+                    // Update Midi Times            
+                    _bpm = GetBPM(_tempo);
+
+                    // Update display duration
+                    //_durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. Duration for ScrollTo dislay of sheetmusic
+                    _durationPercent = (100.0f / TempoDelta) * _tempo * (_totalTicks / _ppqn) / 1000000;
+
+
+
+                    _duration = (TempoDelta / 100.0f) * TempoUtilities.GetMidiDuration(_totalTicks, _ppqn); // real duration for multiple tempos
+
+                    //_durationPercent = _duration;
+
+                    int Min = (int)(_duration / 60);
+                    int Sec = (int)(_duration - (Min * 60));
+                    lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
+
+                    //DisplayFileInfos();
+
+                }
             }
 
             // TODO add change of Time Signature ?
@@ -4677,61 +4714,7 @@ namespace Karaboss
 
    
 
-        #region deleteme
-        /*
-        /// <summary>
-        /// Create new track containing lyrics type text
-        /// </summary>
-        public void AddTrackWords()
-        {
-            //int f = sequence1.Format;
-            int C = sequence1.tracks.Count;
-            int trackindex = 2; // track 2 by default, named "Words"
-            bool bCreate = true;
-
-            // Check if enough tracks in sequence
-            if (C == 0)
-                trackindex = 0;
-            else if (C == 1)
-                trackindex = 1;
-            else if (C > 2)
-            {
-                // Check if and empty track exists at position trackindex
-                Track wtrack = sequence1.tracks[2];
-
-                if (wtrack.Notes.Count == 0)
-                {
-                    // If empty track exists at position 2 => take this track
-                    bCreate = false;
-                }
-            }
-
-            if (bCreate)
-            {
-                // Create new track
-                int clef = 2; // Clef.None
-                Track track = InsertTrack(trackindex, "Words", "AcousticGrandPiano", 0, 0, 79, sequence1.Tempo, sequence1.Time, clef);
-                InsertTrackControl(track, trackindex);
-
-                RedrawSheetMusic();
-                SetScrollBarValues();
-
-                // If a new track was created, the melody track may have changed
-
-                if (myLyricsMgmt.MelodyTrackNum >= trackindex)
-                {
-                    //melodytracknum++;
-                    myLyricsMgmt.MelodyTrackNum++;
-                }
-            }
-
-            // Return track number where text lyrics are set (normaly 2)
-            //return trackindex;
-            myLyricsMgmt.LyricsTrackNum = trackindex;
-        }
-        */
-
-        #endregion deleteme
+    
 
         /// <summary>
         /// Menu: open lyrics editor
@@ -5254,8 +5237,7 @@ namespace Karaboss
         {
             DspEdit(true);
 
-            //if (Application.OpenForms["frmModifyTempo"] != null)
-            //    Application.OpenForms["frmModifyTempo"].Close();
+            
             Application.OpenForms["frmModifyTempo"]?.Close();
 
 
@@ -6368,11 +6350,19 @@ namespace Karaboss
                 //float? peak = AudioControl.AudioManager.GetApplicationMasterPeakVolume(outDeviceProcessId);
                 //int level = Convert.ToInt32(peak);
                 //VuMasterPeakVolume.Level = level;
-
+               
 
                 // Volume per channels (left & right)
-                float? peakleft = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDeviceProcessId, 0);
-                float? peakright = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDeviceProcessId, 1);
+                //float? peakleft = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDeviceProcessId, 0);
+                //float? peakright = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDeviceProcessId, 1);
+                //Console.WriteLine("outDeviceProcessId = " + outDeviceProcessId);
+
+
+                // Use the ID of the output device instead of its processID: outDevice.DeviceID
+                float? peakleft = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDevice.DeviceID, 0);
+                float? peakright = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDevice.DeviceID, 1);
+
+
 
                 if (peakleft == null || peakright == null)
                     return;
@@ -7376,9 +7366,7 @@ namespace Karaboss
         /// <exception cref="NotImplementedException"></exception>
         private void Tempo_DoubleClick(object sender, EventArgs e, TempoSymbol tmps)
         {
-            //if (Application.OpenForms["frmModifyTempo"] != null)
-            //    Application.OpenForms["frmModifyTempo"].Close();
-
+            
             Application.OpenForms["frmModifyTempo"]?.Close();
 
             if (Application.OpenForms["frmModifyTempo"] == null)
@@ -7414,6 +7402,53 @@ namespace Karaboss
             ModTempo();
         }
 
+        private void ModTempo()
+        {
+            //Some songs may have changes in tempo.
+            //Changing the tempo at time t by a certain percentage means changing the tempo at time t by that percentage and all subsequent tempos.
+            //You therefore need to find the valid tempo at time t and let the HandleMetaMessagePlayed event handle subsequent tempo changes.
+            // _TempoDeltat is 100 at start
+
+            // Calculate new tempo                                    
+            int t = sequencer1.Position;
+            List<TempoSymbol> l = sheetmusic.lstTempoSymbols;
+            TempoSymbol ts = sheetmusic.GetTempoAt(t);
+            if (ts != null)
+            {                
+                _tempo = ts.Tempo * TempoDelta / 100;                             
+                
+                if (PlayerState == PlayerStates.Playing || PlayerState == PlayerStates.Paused)
+                {
+                    // Stop/Start seems to be enough to take into account tempo change
+                    // because HandleMetaMessagePlayed is called for all tempo changes
+
+                    sequencer1.Stop();
+                    //sequencer1.Tempo = sequencer1.Tempo * (TempoDelta / 100);           // sequencer1.tempo (clock in fact) is different than _tempo !!!!
+                                                                                         
+                    //Console.WriteLine("Tempo modified during play: " + sequencer1.Tempo);
+
+                    sequencer1.Continue();
+                }
+            }
+
+
+            lblTempoValue.Text = string.Format("{0}%", TempoDelta);
+
+            // Update Midi Times            
+            _bpm = GetBPM(_tempo);
+
+            // Update display duration
+            _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. Duration for ScrollTo dislay of sheetmusic
+            _duration = (TempoDelta / 100.0f) * TempoUtilities.GetMidiDuration(_totalTicks, _ppqn); // real duration for multiple tempos
+            //_durationPercent = _duration;
+            
+            int Min = (int)(_duration / 60);
+            int Sec = (int)(_duration - (Min * 60));
+            lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
+
+            DisplayFileInfos();
+
+        }
 
         /// <summary>
         /// Transpose higher
@@ -7442,35 +7477,7 @@ namespace Karaboss
             ModTranspose(-amount);
         }
 
-        private void ModTempo()
-        {
-            // _TempoDeltat is 100 at start
-            // TempoOrig is sequencer1.Tempo at start
-
-            _tempo = TempoDelta * TempoOrig / 100;  // _tempo is a percent of TempoOrig
-            _tempoplayed = _tempo;
-
-            // Change clock tempo
-            sequencer1.Tempo = _tempo;
-
-
-            lblTempoValue.Text = string.Format("{0}%", TempoDelta);
-
-            // Update Midi Times            
-            _bpm = GetBPM(_tempo);
-
-            // Update display duration
-            _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. Duration for ScrollTo dislay of sheetmusic
-            _duration = (TempoDelta/100.0f) * TempoUtilities.GetMidiDuration(_totalTicks, _ppqn); // real duration for multiple tempos
-
-            int Min = (int)(_duration / 60);
-            int Sec = (int)(_duration - (Min * 60));
-            lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
-
-            DisplayFileInfos();
-
-        }
-
+        
         private void ModTranspose(int amount)
         {
             btnTempoMinus.Enabled = false;
@@ -7570,9 +7577,11 @@ namespace Karaboss
                 
                 // Display time elapse
                 double dpercent = 100 * sequencer1.Position / (double)_totalTicks;
-                double maintenant = (dpercent * _durationPercent) / 100;  //seconds                                                
-                //double maintenant2 = TempoUtilities.GetMidiDuration(sequencer1.Position, sequence1.Division);
-                
+
+                // FAB 01/04/2025
+                double maintenant = (dpercent * _durationPercent) / 100;  //seconds
+                //double maintenant = (dpercent * _duration) / 100;  //seconds
+
                 DisplayTimeElapse(dpercent);              
 
                 //Eteint la boule fixe;
@@ -7681,8 +7690,6 @@ namespace Karaboss
             // 21 balls: 1 fix, 20 moving to the fix one
             if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
             {
-                //if (frmLyric != null)
-                //    frmLyric.MoveBalls(sequencer1.Position);
                 frmLyric?.MoveBalls(sequencer1.Position);
 
             }
@@ -7743,11 +7750,11 @@ namespace Karaboss
             bReglageChanged = false;
 
             #endregion beat animation
-
+            
 
             // Tempo change during play
-            if (_tempoplayed != _tempo)
-                DisplayFileInfos(_tempoplayed);
+            if (_tempo != _tempoplayed)
+                DisplayFileInfos(_tempo);
 
         }
 
@@ -8678,6 +8685,7 @@ namespace Karaboss
 
             _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. For sheetmusic offset
             _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);  // Real duration according to tempo changes
+            //_durationPercent = _duration;
 
             _bpm = GetBPM(_tempo);
 
@@ -8736,8 +8744,6 @@ namespace Karaboss
         private void DisplayFileInfos(int tempo)
         {
             _tempoplayed = tempo;
-            //double dur = _tempoplayed * (_totalTicks / _ppqn) / 1000000; //seconds            
-            //DisplaySongDuration(dur);
                         
             int bpm = GetBPM(tempo);
             

@@ -199,6 +199,7 @@
             this.Name = "frmMp3Lyrics";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMp3Lyrics_FormClosing);
             this.Load += new System.EventHandler(this.frmMp3Lyrics_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmMp3Lyrics_KeyDown);
             this.Resize += new System.EventHandler(this.frmMp3Lyrics_Resize);
             this.pnlTop.ResumeLayout(false);
             this.pnlTitle.ResumeLayout(false);

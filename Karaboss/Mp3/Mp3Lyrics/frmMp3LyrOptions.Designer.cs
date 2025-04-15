@@ -70,12 +70,19 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
             this.chkHighLightProgressive = new System.Windows.Forms.CheckBox();
+            this.chkDisplayBalls = new System.Windows.Forms.CheckBox();
+            this.pnlBalls = new System.Windows.Forms.Panel();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictBackColor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictContour)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictNext)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictHighlight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictBefore)).BeginInit();
+            this.pnlBalls.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // label9
@@ -378,10 +385,41 @@
             this.chkHighLightProgressive.UseVisualStyleBackColor = true;
             this.chkHighLightProgressive.CheckedChanged += new System.EventHandler(this.chkHighLightProgressive_CheckedChanged);
             // 
+            // chkDisplayBalls
+            // 
+            resources.ApplyResources(this.chkDisplayBalls, "chkDisplayBalls");
+            this.chkDisplayBalls.Name = "chkDisplayBalls";
+            this.chkDisplayBalls.UseVisualStyleBackColor = true;
+            this.chkDisplayBalls.CheckedChanged += new System.EventHandler(this.chkDisplayBalls_CheckedChanged);
+            // 
+            // pnlBalls
+            // 
+            this.pnlBalls.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.pnlBalls.Controls.Add(this.pictureBox2);
+            this.pnlBalls.Controls.Add(this.pictureBox1);
+            resources.ApplyResources(this.pnlBalls, "pnlBalls");
+            this.pnlBalls.Name = "pnlBalls";
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::Karaboss.Properties.Resources.ball;
+            resources.ApplyResources(this.pictureBox2, "pictureBox2");
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::Karaboss.Properties.Resources.ball;
+            resources.ApplyResources(this.pictureBox1, "pictureBox1");
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.TabStop = false;
+            // 
             // frmMp3LyrOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.pnlBalls);
+            this.Controls.Add(this.chkDisplayBalls);
             this.Controls.Add(this.chkHighLightProgressive);
             this.Controls.Add(this.karaokeEffect1);
             this.Controls.Add(this.chkTextUppercase);
@@ -428,6 +466,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictNext)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictHighlight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictBefore)).EndInit();
+            this.pnlBalls.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -476,5 +517,9 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.FontDialog fontDialog1;
         private System.Windows.Forms.CheckBox chkHighLightProgressive;
+        private System.Windows.Forms.CheckBox chkDisplayBalls;
+        private System.Windows.Forms.Panel pnlBalls;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

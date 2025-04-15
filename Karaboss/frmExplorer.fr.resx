@@ -122,37 +122,37 @@
     <value>0, 439</value>
   </data>
   <data name="mnuFileNew.Size" type="System.Drawing.Size, System.Drawing">
-    <value>165, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileNew.Text" xml:space="preserve">
     <value>&amp;Nouveau</value>
   </data>
   <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>165, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileOpen.Text" xml:space="preserve">
     <value>&amp;Ouvrir</value>
   </data>
   <data name="mnuFileEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>165, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileEdit.Text" xml:space="preserve">
     <value>&amp;Editer</value>
   </data>
   <data name="MnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>162, 6</value>
+    <value>177, 6</value>
   </data>
   <data name="MnuFileRecentFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>165, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="MnuFileRecentFiles.Text" xml:space="preserve">
     <value>Fichiers récents</value>
   </data>
   <data name="MnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>162, 6</value>
+    <value>177, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>165, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
@@ -176,13 +176,13 @@
     <value>Inverser auteur et chanson (F7)</value>
   </data>
   <data name="mnuEditRename.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuEditRename.Text" xml:space="preserve">
     <value>Renommer</value>
   </data>
   <data name="mnuEditReplaceAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuEditReplaceAll.Text" xml:space="preserve">
     <value>Tout remplacer (F4)</value>
@@ -194,34 +194,34 @@
     <value>&amp;Edition</value>
   </data>
   <data name="mnuDisplaySearch.Size" type="System.Drawing.Size, System.Drawing">
-    <value>322, 22</value>
+    <value>323, 22</value>
   </data>
   <data name="mnuDisplaySearch.Text" xml:space="preserve">
     <value>Rechercher...</value>
   </data>
   <data name="mnuDisplayExplore.Size" type="System.Drawing.Size, System.Drawing">
-    <value>322, 22</value>
+    <value>323, 22</value>
   </data>
   <data name="mnuDisplayExplore.Text" xml:space="preserve">
     <value>Explorateur</value>
   </data>
   <data name="mnuDisplayPlaylist.Size" type="System.Drawing.Size, System.Drawing">
-    <value>322, 22</value>
+    <value>323, 22</value>
   </data>
   <data name="MnuDisplayConnected.Size" type="System.Drawing.Size, System.Drawing">
-    <value>322, 22</value>
+    <value>323, 22</value>
   </data>
   <data name="MnuDisplayConnected.Text" xml:space="preserve">
     <value>Trouver  artistes, chansons &amp;&amp; paroles sur le web</value>
   </data>
   <data name="MnuDisplayPianoTraining.Size" type="System.Drawing.Size, System.Drawing">
-    <value>322, 22</value>
+    <value>323, 22</value>
   </data>
   <data name="MnuDisplayPianoTraining.Text" xml:space="preserve">
     <value>Entrainement au piano</value>
   </data>
   <data name="MnuDisplayGuitarTraining.Size" type="System.Drawing.Size, System.Drawing">
-    <value>322, 22</value>
+    <value>323, 22</value>
   </data>
   <data name="MnuDisplayGuitarTraining.Text" xml:space="preserve">
     <value>Entrainement à la guitare</value>
@@ -231,6 +231,12 @@
   </data>
   <data name="mnuDisplay.Text" xml:space="preserve">
     <value>&amp;Affichage</value>
+  </data>
+  <data name="mnuToolsOption.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="MnuToolsSep1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>177, 6</value>
   </data>
   <data name="mnuToolsMngtFilesDeleteEmptyDirs.Size" type="System.Drawing.Size, System.Drawing">
     <value>377, 22</value>
@@ -283,8 +289,14 @@
   <data name="mnuToolsMngtFilesSearchSameNameInASingleDirectory.Text" xml:space="preserve">
     <value>Rechercher noms identiques dans un répertoire</value>
   </data>
+  <data name="mnuToolsMngtFiles.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
   <data name="mnuToolsMngtFiles.Text" xml:space="preserve">
     <value>Gérer mes fichiers</value>
+  </data>
+  <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>177, 6</value>
   </data>
   <data name="mnuTools.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 20</value>
@@ -293,28 +305,34 @@
     <value>&amp;Outils</value>
   </data>
   <data name="mnuMidiInputDevice.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>189, 22</value>
+  </data>
+  <data name="mnuMidiInputDevice.Text" xml:space="preserve">
+    <value>&amp;Périphérique d'entrée</value>
   </data>
   <data name="mnuMidiOutputDevice.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>189, 22</value>
+  </data>
+  <data name="mnuMidiOutputDevice.Text" xml:space="preserve">
+    <value>Périphérique de &amp;sortie</value>
   </data>
   <data name="MnuMidiSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>171, 6</value>
+    <value>186, 6</value>
   </data>
   <data name="MnuMidiExternalPlay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>130, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="MnuMidiExternalPlay.Text" xml:space="preserve">
     <value>Jouer</value>
   </data>
   <data name="MnuMidiExternalRecord.Size" type="System.Drawing.Size, System.Drawing">
-    <value>130, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="MnuMidiExternalRecord.Text" xml:space="preserve">
     <value>Enregistrer</value>
   </data>
   <data name="MnuMidiExternal.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>189, 22</value>
   </data>
   <data name="MnuMidiExternal.Text" xml:space="preserve">
     <value>Instrument externe</value>

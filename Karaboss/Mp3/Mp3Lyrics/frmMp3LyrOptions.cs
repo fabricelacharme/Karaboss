@@ -205,6 +205,9 @@ namespace Karaboss.Mp3
                 // Force Uppercase
                 bForceUppercase = Karaclass.m_ForceUppercase;
 
+                // Display balls on lyrics
+                chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
+
                 TxtBackColor = Properties.Settings.Default.TxtBackColor;
 
                 bTextBackGround =  bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
@@ -329,8 +332,10 @@ namespace Karaboss.Mp3
         /// </summary>
         private void SetOptions()
         {
-            try
-           {                
+           try
+           {
+                pnlBalls.Visible = chkDisplayBalls.Checked;
+
                 // Nombre de lignes à afficher
                 UpDownNbLines.Value = _nbLyricsLines;
 
@@ -403,6 +408,8 @@ namespace Karaboss.Mp3
                 Cursor.Current = Cursors.WaitCursor;
                 frmMp3Lyrics = Utilities.FormUtilities.GetForm<frmMp3Lyrics>();
 
+                frmMp3Lyrics.bShowBalls = Karaclass.m_DisplayBalls;
+
                 frmMp3Lyrics.KaraokeFont = _karaokeFont;
 
                 // Text colors                
@@ -444,7 +451,10 @@ namespace Karaboss.Mp3
         {
             try
             {
-               // Background type (Diaporama, Solidcolor, Transparent
+                // Display balls
+                Properties.Settings.Default.DisplayBalls = Karaclass.m_DisplayBalls;
+
+                // Background type (Diaporama, Solidcolor, Transparent
                 Properties.Settings.Default.BackGroundOption = bgOption;
 
                 Properties.Settings.Default.KaraokeFont = _karaokeFont;
@@ -784,6 +794,10 @@ namespace Karaboss.Mp3
             bProgressiveHighlight = chkHighLightProgressive.Checked;
         }
 
-     
+        private void chkDisplayBalls_CheckedChanged(object sender, EventArgs e)
+        {
+            Karaclass.m_DisplayBalls = chkDisplayBalls.Checked;
+            pnlBalls.Visible = chkDisplayBalls.Checked;
+        }
     }
 }

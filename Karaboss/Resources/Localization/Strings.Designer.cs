@@ -1386,5 +1386,19 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("Mp3TimeStampHotKey2", resourceCulture);
             }
         }
+        internal static string ThisLine
+        {
+            get
+            {
+                return ResourceManager.GetString("ThisLine", resourceCulture);
+            }
+        }
+        internal static string AllLines
+        {
+            get
+            {
+                return ResourceManager.GetString("AllLines", resourceCulture);
+            }
+        }
     }
 }

@@ -564,10 +564,7 @@ namespace Karaboss
         public void LoadBallsTimes(List<plLyric> plLyrics)
         {
             if (!bShowBalls || plLyrics.Count == 0)
-                { return; }
-            
-            //string lyric;
-            //string chord;
+                { return; }         
                         
             LyricsTimes = new List<int>();
 
@@ -576,8 +573,6 @@ namespace Karaboss
 
             for (int i = 0; i < plLyrics.Count; i++)
             {
-                //chord = plLyrics[i].Element.Item1;
-                //lyric = plLyrics[i].Element.Item2;
                 plType = plLyrics[i].CharType;
                 plTime = plLyrics[i].TicksOn;
 
@@ -819,17 +814,12 @@ namespace Karaboss
                 {
                     Properties.Settings.Default.frmLyricLocation = Location;
                     Properties.Settings.Default.frmLyricSize = Size;
-                    Properties.Settings.Default.frmLyricMaximized = false;
-
-                    //Properties.Settings.Default.ChordNextColor = Color.FromArgb(255, 196, 13);
-                    //Properties.Settings.Default.ChordHighlightColor = Color.FromArgb(238, 17, 17);
+                    Properties.Settings.Default.frmLyricMaximized = false;                   
 
                 }
                 // Save settings
                 Properties.Settings.Default.Save();
-            }
-
-            //pBox.Terminate();
+            }            
 
             Dispose();
             
