@@ -6355,6 +6355,8 @@ namespace Karaboss
                 // Volume per channels (left & right)
                 //float? peakleft = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDeviceProcessId, 0);
                 //float? peakright = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDeviceProcessId, 1);
+                //Console.WriteLine("outDeviceProcessId = " + outDeviceProcessId);
+
 
                 // Use the ID of the output device instead of its processID: outDevice.DeviceID
                 float? peakleft = AudioControl.AudioManager.GetApplicationChannelPeakVolume(outDevice.DeviceID, 0);

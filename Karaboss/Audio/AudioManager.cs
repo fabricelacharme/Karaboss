@@ -245,7 +245,7 @@ namespace AudioControl
         /// <returns></returns>
         public static float? GetApplicationMasterPeakVolume(int pid)
         {
-            IAudioMeterInformation masterpeakvol = GetMasterPeakVolume(pid);            
+            IAudioMeterInformation masterpeakvol = GetDevicePeakVolume(pid);            
 
             if (masterpeakvol == null)
                 return null;
@@ -266,22 +266,24 @@ namespace AudioControl
         /// <param name="pid index of outputdevice"></param>
         /// <param name="index canal right or left"></param>
         /// <returns></returns>
-        public static float? GetApplicationChannelPeakVolume(int pid, int index)
+        public static float? GetApplicationChannelPeakVolume(int indexdevice, int channel)
         {
-            IAudioMeterInformation channelpeakvol = GetMasterPeakVolume(pid);
+            IAudioMeterInformation channelpeakvol = GetDevicePeakVolume(indexdevice);
 
             if (channelpeakvol == null)
                 return null;
 
+            // Number of channels
             channelpeakvol.GetMeteringChannelCount(out var Count);
             float[] peakValues = new float[Count];
+
             GCHandle Params = GCHandle.Alloc(peakValues, GCHandleType.Pinned);
             channelpeakvol.GetChannelsPeakValues(peakValues.Length, Params.AddrOfPinnedObject());
             Params.Free();
             
-            if (index >= peakValues.Length)
+            if (channel >= peakValues.Length)
                 return null;
-            return peakValues[index] * 100.0f;
+            return peakValues[channel] * 100.0f;
 
         }
 
@@ -400,7 +402,7 @@ namespace AudioControl
         /// <param name="pid index of selected output device"></param>
         /// <returns></returns>
         // https://github.com/maindefine/volumecontrol/blob/master/C%23/CoreAudioApi/AudioMeterInformation.cs
-        private static IAudioMeterInformation GetMasterPeakVolume(int pid)
+        private static IAudioMeterInformation GetDevicePeakVolume(int indexdevice)
         {
             IMMDeviceEnumerator deviceEnumerator = null;
             IAudioSessionEnumerator sessionEnumerator = null;
@@ -433,7 +435,7 @@ namespace AudioControl
 
                 // search for an audio session with the required process-id
                 //ISimpleAudioVolume volumeControl = null;
-                IAudioMeterInformation mastervol = null;
+                IAudioMeterInformation volumeControl = null;
                 
 
                 for (int i = 0; i < count; ++i)
@@ -449,23 +451,20 @@ namespace AudioControl
 
                         
                         //if (cpid == pid)                        
-                        if (i == pid)           // use index of output device in the list of devices instead of process id                        
-                        {
-                            //volumeControl = ctl as ISimpleAudioVolume;
-                            mastervol = ctl as IAudioMeterInformation;
-
+                        if (i == indexdevice)           // use index of output device in the list of devices instead of process id                        
+                        {                            
+                            volumeControl = ctl as IAudioMeterInformation;
                             break;
                         }
                     }
                     finally
                     {
+                        // provoque une erreur ...
                         //if (ctl != null) Marshal.ReleaseComObject(ctl);
                     }
                 }
-
-                
-                //return volumeControl;
-                return mastervol;
+                                
+                return volumeControl;
 
             }
             finally
