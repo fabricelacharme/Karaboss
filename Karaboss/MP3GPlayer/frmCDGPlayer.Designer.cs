@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCDGPlayer));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,6 +44,7 @@
             this.VuPeakVolumeLeft = new VU_MeterLibrary.VuMeter();
             this.sldMainVolume = new ColorSlider.ColorSlider();
             this.pnlControls = new System.Windows.Forms.Panel();
+            this.pBox = new System.Windows.Forms.PictureBox();
             this.lblPlaylist = new System.Windows.Forms.Label();
             this.btnTempoMinus = new Karaboss.Buttons.MinusButtonControl();
             this.btnTempoPlus = new Karaboss.Buttons.PlusButtonControl();
@@ -63,6 +65,7 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.menuStrip1.SuspendLayout();
             this.pnlControls.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pBox)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -265,7 +268,7 @@
             0,
             0,
             0});
-            this.sldMainVolume.Location = new System.Drawing.Point(272, 25);
+            this.sldMainVolume.Location = new System.Drawing.Point(267, 25);
             this.sldMainVolume.Maximum = new decimal(new int[] {
             100,
             0,
@@ -318,6 +321,8 @@
             // 
             // pnlControls
             // 
+            this.pnlControls.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlControls.Controls.Add(this.pBox);
             this.pnlControls.Controls.Add(this.lblPlaylist);
             this.pnlControls.Controls.Add(this.btnTempoMinus);
             this.pnlControls.Controls.Add(this.btnTempoPlus);
@@ -340,25 +345,37 @@
             this.pnlControls.Controls.Add(this.sldMainVolume);
             this.pnlControls.Controls.Add(this.lnlVol);
             this.pnlControls.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlControls.Location = new System.Drawing.Point(0, 24);
+            this.pnlControls.Location = new System.Drawing.Point(0, 28);
             this.pnlControls.Name = "pnlControls";
             this.pnlControls.Size = new System.Drawing.Size(514, 127);
             this.pnlControls.TabIndex = 1;
+            // 
+            // pBox
+            // 
+            this.pBox.Image = global::Karaboss.Properties.Resources.cdg;
+            this.pBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.pBox.Location = new System.Drawing.Point(413, 25);
+            this.pBox.Name = "pBox";
+            this.pBox.Size = new System.Drawing.Size(90, 90);
+            this.pBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pBox.TabIndex = 62;
+            this.pBox.TabStop = false;
             // 
             // lblPlaylist
             // 
             this.lblPlaylist.AutoSize = true;
             this.lblPlaylist.ForeColor = System.Drawing.Color.PaleGreen;
             this.lblPlaylist.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblPlaylist.Location = new System.Drawing.Point(415, 9);
+            this.lblPlaylist.Location = new System.Drawing.Point(410, 9);
             this.lblPlaylist.Name = "lblPlaylist";
             this.lblPlaylist.Size = new System.Drawing.Size(86, 13);
             this.lblPlaylist.TabIndex = 61;
             this.lblPlaylist.Text = "PLAYLIST: 1/10";
+            this.lblPlaylist.Visible = false;
             // 
             // btnTempoMinus
             // 
-            this.btnTempoMinus.Location = new System.Drawing.Point(319, 70);
+            this.btnTempoMinus.Location = new System.Drawing.Point(314, 70);
             this.btnTempoMinus.Name = "btnTempoMinus";
             this.btnTempoMinus.Size = new System.Drawing.Size(32, 32);
             this.btnTempoMinus.TabIndex = 60;
@@ -366,7 +383,7 @@
             // 
             // btnTempoPlus
             // 
-            this.btnTempoPlus.Location = new System.Drawing.Point(319, 30);
+            this.btnTempoPlus.Location = new System.Drawing.Point(314, 30);
             this.btnTempoPlus.Name = "btnTempoPlus";
             this.btnTempoPlus.Size = new System.Drawing.Size(32, 32);
             this.btnTempoPlus.TabIndex = 59;
@@ -378,7 +395,7 @@
             this.lblTempoValue.Font = new System.Drawing.Font("Consolas", 8.25F);
             this.lblTempoValue.ForeColor = System.Drawing.Color.PaleGreen;
             this.lblTempoValue.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblTempoValue.Location = new System.Drawing.Point(310, 110);
+            this.lblTempoValue.Location = new System.Drawing.Point(305, 110);
             this.lblTempoValue.Name = "lblTempoValue";
             this.lblTempoValue.Size = new System.Drawing.Size(50, 13);
             this.lblTempoValue.TabIndex = 58;
@@ -390,7 +407,7 @@
             this.lblTemp.Font = new System.Drawing.Font("Consolas", 8F);
             this.lblTemp.ForeColor = System.Drawing.Color.White;
             this.lblTemp.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblTemp.Location = new System.Drawing.Point(310, 8);
+            this.lblTemp.Location = new System.Drawing.Point(305, 8);
             this.lblTemp.Name = "lblTemp";
             this.lblTemp.Size = new System.Drawing.Size(50, 13);
             this.lblTemp.TabIndex = 57;
@@ -399,7 +416,7 @@
             // 
             // btnTranspoMinus
             // 
-            this.btnTranspoMinus.Location = new System.Drawing.Point(364, 70);
+            this.btnTranspoMinus.Location = new System.Drawing.Point(359, 70);
             this.btnTranspoMinus.Name = "btnTranspoMinus";
             this.btnTranspoMinus.Size = new System.Drawing.Size(32, 32);
             this.btnTranspoMinus.TabIndex = 56;
@@ -407,7 +424,7 @@
             // 
             // btnTranspoPlus
             // 
-            this.btnTranspoPlus.Location = new System.Drawing.Point(364, 30);
+            this.btnTranspoPlus.Location = new System.Drawing.Point(359, 30);
             this.btnTranspoPlus.Name = "btnTranspoPlus";
             this.btnTranspoPlus.Size = new System.Drawing.Size(32, 32);
             this.btnTranspoPlus.TabIndex = 55;
@@ -419,7 +436,7 @@
             this.lblTranspoValue.Font = new System.Drawing.Font("Consolas", 8.25F);
             this.lblTranspoValue.ForeColor = System.Drawing.Color.PaleGreen;
             this.lblTranspoValue.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblTranspoValue.Location = new System.Drawing.Point(355, 110);
+            this.lblTranspoValue.Location = new System.Drawing.Point(350, 110);
             this.lblTranspoValue.Name = "lblTranspoValue";
             this.lblTranspoValue.Size = new System.Drawing.Size(50, 13);
             this.lblTranspoValue.TabIndex = 54;
@@ -431,9 +448,9 @@
             this.lblTransp.Font = new System.Drawing.Font("Consolas", 8F);
             this.lblTransp.ForeColor = System.Drawing.Color.White;
             this.lblTransp.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lblTransp.Location = new System.Drawing.Point(355, 8);
+            this.lblTransp.Location = new System.Drawing.Point(350, 8);
             this.lblTransp.Name = "lblTransp";
-            this.lblTransp.Size = new System.Drawing.Size(50, 13);
+            this.lblTransp.Size = new System.Drawing.Size(52, 13);
             this.lblTransp.TabIndex = 53;
             this.lblTransp.Text = "Transpo\r\n";
             this.lblTransp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -459,7 +476,7 @@
             this.VuPeakVolumeRight.LedSpace = 1;
             this.VuPeakVolumeRight.Level = 0;
             this.VuPeakVolumeRight.LevelMax = 127;
-            this.VuPeakVolumeRight.Location = new System.Drawing.Point(240, 7);
+            this.VuPeakVolumeRight.Location = new System.Drawing.Point(236, 7);
             this.VuPeakVolumeRight.MeterScale = VU_MeterLibrary.MeterScale.Log10;
             this.VuPeakVolumeRight.Name = "VuPeakVolumeRight";
             this.VuPeakVolumeRight.NeedleColor = System.Drawing.Color.Black;
@@ -578,7 +595,7 @@
             this.lnlVol.Font = new System.Drawing.Font("Consolas", 8F);
             this.lnlVol.ForeColor = System.Drawing.Color.White;
             this.lnlVol.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lnlVol.Location = new System.Drawing.Point(260, 8);
+            this.lnlVol.Location = new System.Drawing.Point(255, 8);
             this.lnlVol.Name = "lnlVol";
             this.lnlVol.Size = new System.Drawing.Size(50, 13);
             this.lnlVol.TabIndex = 45;
@@ -589,11 +606,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.ClientSize = new System.Drawing.Size(514, 151);
+            this.ClientSize = new System.Drawing.Size(514, 155);
             this.Controls.Add(this.pnlControls);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmCDGPlayer";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -605,6 +622,7 @@
             this.menuStrip1.PerformLayout();
             this.pnlControls.ResumeLayout(false);
             this.pnlControls.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -644,5 +662,6 @@
         private System.Windows.Forms.Label lblTempoValue;
         private System.Windows.Forms.Label lblTemp;
         private System.Windows.Forms.Label lblPlaylist;
+        private System.Windows.Forms.PictureBox pBox;
     }
 }

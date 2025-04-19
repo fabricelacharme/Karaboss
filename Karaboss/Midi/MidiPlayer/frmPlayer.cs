@@ -234,7 +234,7 @@ namespace Karaboss
         
         // Dimensions
         private readonly int leftWidth = 179;
-        private readonly int SimplePlayerWidth = 520;
+        private readonly int SimplePlayerWidth = 530;
         private readonly int SimplePlayerHeight = 194;
 
         // Midifile characteristics

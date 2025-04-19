@@ -121,7 +121,7 @@ namespace Karaboss.Mp3
         #region player
 
         // Size player
-        // 514;127
+        // 530;194
         private enum PlayerAppearances
         {
             Player,
@@ -1556,9 +1556,7 @@ namespace Karaboss.Mp3
             InitGridView();
 
             #endregion dgview
-
             
-
         }
 
 
