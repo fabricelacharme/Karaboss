@@ -46,23 +46,23 @@
             this.pnlControls = new System.Windows.Forms.Panel();
             this.pBox = new System.Windows.Forms.PictureBox();
             this.lblPlaylist = new System.Windows.Forms.Label();
-            this.btnTempoMinus = new Karaboss.Buttons.MinusButtonControl();
-            this.btnTempoPlus = new Karaboss.Buttons.PlusButtonControl();
             this.lblTempoValue = new System.Windows.Forms.Label();
             this.lblTemp = new System.Windows.Forms.Label();
-            this.btnTranspoMinus = new Karaboss.Buttons.MinusButtonControl();
-            this.btnTranspoPlus = new Karaboss.Buttons.PlusButtonControl();
             this.lblTranspoValue = new System.Windows.Forms.Label();
             this.lblTransp = new System.Windows.Forms.Label();
             this.VuPeakVolumeRight = new VU_MeterLibrary.VuMeter();
             this.lblMainVolume = new System.Windows.Forms.Label();
+            this.lnlVol = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.btnTempoMinus = new Karaboss.Buttons.MinusButtonControl();
+            this.btnTempoPlus = new Karaboss.Buttons.PlusButtonControl();
+            this.btnTranspoMinus = new Karaboss.Buttons.MinusButtonControl();
+            this.btnTranspoPlus = new Karaboss.Buttons.PlusButtonControl();
             this.pnlDisplay = new Karaboss.Display.PanelPlayer();
             this.btnPrev = new Karaboss.NoSelectButton();
             this.btnNext = new Karaboss.NoSelectButton();
             this.btnStop = new Karaboss.NoSelectButton();
             this.btnPlay = new Karaboss.NoSelectButton();
-            this.lnlVol = new System.Windows.Forms.Label();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.menuStrip1.SuspendLayout();
             this.pnlControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBox)).BeginInit();
@@ -373,22 +373,6 @@
             this.lblPlaylist.Text = "PLAYLIST: 1/10";
             this.lblPlaylist.Visible = false;
             // 
-            // btnTempoMinus
-            // 
-            this.btnTempoMinus.Location = new System.Drawing.Point(314, 70);
-            this.btnTempoMinus.Name = "btnTempoMinus";
-            this.btnTempoMinus.Size = new System.Drawing.Size(32, 32);
-            this.btnTempoMinus.TabIndex = 60;
-            this.btnTempoMinus.Click += new System.EventHandler(this.btnTempoMinus_Click);
-            // 
-            // btnTempoPlus
-            // 
-            this.btnTempoPlus.Location = new System.Drawing.Point(314, 30);
-            this.btnTempoPlus.Name = "btnTempoPlus";
-            this.btnTempoPlus.Size = new System.Drawing.Size(32, 32);
-            this.btnTempoPlus.TabIndex = 59;
-            this.btnTempoPlus.Click += new System.EventHandler(this.btnTempoPlus_Click);
-            // 
             // lblTempoValue
             // 
             this.lblTempoValue.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
@@ -413,22 +397,6 @@
             this.lblTemp.TabIndex = 57;
             this.lblTemp.Text = "Tempo";
             this.lblTemp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnTranspoMinus
-            // 
-            this.btnTranspoMinus.Location = new System.Drawing.Point(359, 70);
-            this.btnTranspoMinus.Name = "btnTranspoMinus";
-            this.btnTranspoMinus.Size = new System.Drawing.Size(32, 32);
-            this.btnTranspoMinus.TabIndex = 56;
-            this.btnTranspoMinus.Click += new System.EventHandler(this.btnTranspoMinus_Click);
-            // 
-            // btnTranspoPlus
-            // 
-            this.btnTranspoPlus.Location = new System.Drawing.Point(359, 30);
-            this.btnTranspoPlus.Name = "btnTranspoPlus";
-            this.btnTranspoPlus.Size = new System.Drawing.Size(32, 32);
-            this.btnTranspoPlus.TabIndex = 55;
-            this.btnTranspoPlus.Click += new System.EventHandler(this.btnTranspoPlus_Click);
             // 
             // lblTranspoValue
             // 
@@ -511,6 +479,50 @@
             this.lblMainVolume.Text = "60%";
             this.lblMainVolume.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // lnlVol
+            // 
+            this.lnlVol.Font = new System.Drawing.Font("Consolas", 8F);
+            this.lnlVol.ForeColor = System.Drawing.Color.White;
+            this.lnlVol.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lnlVol.Location = new System.Drawing.Point(255, 8);
+            this.lnlVol.Name = "lnlVol";
+            this.lnlVol.Size = new System.Drawing.Size(50, 13);
+            this.lnlVol.TabIndex = 45;
+            this.lnlVol.Text = "Volume";
+            this.lnlVol.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnTempoMinus
+            // 
+            this.btnTempoMinus.Location = new System.Drawing.Point(314, 70);
+            this.btnTempoMinus.Name = "btnTempoMinus";
+            this.btnTempoMinus.Size = new System.Drawing.Size(32, 32);
+            this.btnTempoMinus.TabIndex = 60;
+            this.btnTempoMinus.Click += new System.EventHandler(this.btnTempoMinus_Click);
+            // 
+            // btnTempoPlus
+            // 
+            this.btnTempoPlus.Location = new System.Drawing.Point(314, 30);
+            this.btnTempoPlus.Name = "btnTempoPlus";
+            this.btnTempoPlus.Size = new System.Drawing.Size(32, 32);
+            this.btnTempoPlus.TabIndex = 59;
+            this.btnTempoPlus.Click += new System.EventHandler(this.btnTempoPlus_Click);
+            // 
+            // btnTranspoMinus
+            // 
+            this.btnTranspoMinus.Location = new System.Drawing.Point(359, 70);
+            this.btnTranspoMinus.Name = "btnTranspoMinus";
+            this.btnTranspoMinus.Size = new System.Drawing.Size(32, 32);
+            this.btnTranspoMinus.TabIndex = 56;
+            this.btnTranspoMinus.Click += new System.EventHandler(this.btnTranspoMinus_Click);
+            // 
+            // btnTranspoPlus
+            // 
+            this.btnTranspoPlus.Location = new System.Drawing.Point(359, 30);
+            this.btnTranspoPlus.Name = "btnTranspoPlus";
+            this.btnTranspoPlus.Size = new System.Drawing.Size(32, 32);
+            this.btnTranspoPlus.TabIndex = 55;
+            this.btnTranspoPlus.Click += new System.EventHandler(this.btnTranspoPlus_Click);
+            // 
             // pnlDisplay
             // 
             this.pnlDisplay.Location = new System.Drawing.Point(8, 7);
@@ -533,6 +545,9 @@
             this.btnPrev.TabIndex = 44;
             this.btnPrev.TabStop = false;
             this.btnPrev.UseVisualStyleBackColor = false;
+            this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
+            this.btnPrev.MouseLeave += new System.EventHandler(this.btnPrev_MouseLeave);
+            this.btnPrev.MouseHover += new System.EventHandler(this.btnPrev_MouseHover);
             // 
             // btnNext
             // 
@@ -549,6 +564,9 @@
             this.btnNext.TabIndex = 43;
             this.btnNext.TabStop = false;
             this.btnNext.UseVisualStyleBackColor = false;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            this.btnNext.MouseLeave += new System.EventHandler(this.btnNext_MouseLeave);
+            this.btnNext.MouseHover += new System.EventHandler(this.btnNext_MouseHover);
             // 
             // btnStop
             // 
@@ -589,18 +607,6 @@
             this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             this.btnPlay.MouseLeave += new System.EventHandler(this.BtnPlay_MouseLeave);
             this.btnPlay.MouseHover += new System.EventHandler(this.BtnPlay_MouseHover);
-            // 
-            // lnlVol
-            // 
-            this.lnlVol.Font = new System.Drawing.Font("Consolas", 8F);
-            this.lnlVol.ForeColor = System.Drawing.Color.White;
-            this.lnlVol.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lnlVol.Location = new System.Drawing.Point(255, 8);
-            this.lnlVol.Name = "lnlVol";
-            this.lnlVol.Size = new System.Drawing.Size(50, 13);
-            this.lnlVol.TabIndex = 45;
-            this.lnlVol.Text = "Volume";
-            this.lnlVol.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // frmCDGPlayer
             // 

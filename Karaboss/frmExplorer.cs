@@ -1593,7 +1593,12 @@ namespace Karaboss
 
         #endregion from playlists
 
-
+        /// <summary>
+        /// Display the mp3 player
+        /// </summary>
+        /// <param name="fpath"></param>
+        /// <param name="pl"></param>
+        /// <param name="bplay"></param>
         private void DisplayMp3Player(string fpath, Playlist pl, bool bplay)
         {
             if (fpath != null)
@@ -1605,6 +1610,49 @@ namespace Karaboss
                 }
             }
 
+            #region Close Windows            
+
+            // ferme le formulaire frmPianoTraining
+            if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmPianoTraining"].Close();
+            }
+
+            // ferme le formulaire frmGuitarTraining
+            if (Application.OpenForms.OfType<frmGuitarTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmGuitarTraining"].Close();
+            }
+
+            // Ferme le formulaire frmChords
+            if (Application.OpenForms.OfType<frmChords>().Count() > 0)
+            {
+                Application.OpenForms["frmChords"].Close();
+            }
+
+
+            // Ferme le formulaire FrmTextPlayer
+            if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
+            {
+                Application.OpenForms["FrmTextPlayer"].Close();
+            }
+
+            // Close form frmPlayer
+            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            {
+                Application.OpenForms["frmPlayer"].Close();
+            }
+
+            // Close form frmCDGPlayer
+            if (Application.OpenForms.OfType<frmCDGPlayer>().Count() > 0)
+            {
+                Application.OpenForms["frmCDGPlayer"].Close();
+            }
+
+            #endregion
+
+
+
             Cursor.Current = Cursors.WaitCursor;
 
             // Close form frmMp3Player
@@ -1613,7 +1661,7 @@ namespace Karaboss
                 Application.OpenForms["frmPlayer"].Close();
             }
 
-            // Affiche le formulaire frmCDGPlayer 
+            // Affiche le formulaire frmMp3Player 
             if (Application.OpenForms["frmMp3Player"] == null)
             {
                 Form frmMp3Player = new frmMp3Player(fpath, pl, bplay);
@@ -1644,6 +1692,38 @@ namespace Karaboss
                 }
             }
 
+            #region Close Windows            
+
+            // ferme le formulaire frmPianoTraining
+            if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmPianoTraining"].Close();
+            }
+
+            // ferme le formulaire frmGuitarTraining
+            if (Application.OpenForms.OfType<frmGuitarTraining>().Count() > 0)
+            {
+                Application.OpenForms["frmGuitarTraining"].Close();
+            }            
+
+            // Ferme le formulaire frmChords
+            if (Application.OpenForms.OfType<frmChords>().Count() > 0)
+            {
+                Application.OpenForms["frmChords"].Close();
+            }
+
+
+            // Ferme le formulaire FrmTextPlayer
+            if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
+            {
+                Application.OpenForms["FrmTextPlayer"].Close();
+            }
+
+            // Close form frmPlayer
+            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            {
+                Application.OpenForms["frmPlayer"].Close();
+            }
 
             // Close form frmMp3Player
             if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
@@ -1651,20 +1731,25 @@ namespace Karaboss
                 Application.OpenForms["frmMp3Player"].Close();
             }
 
+            #endregion
+          
             Cursor.Current = Cursors.WaitCursor;
 
             // Affiche le formulaire frmCDGPlayer 
-            if (Application.OpenForms["frmCDGPlayer"] == null)
+            Application.OpenForms["frmCDGPlayer"]?.Close();
+
+            try
             {
+
                 Form frmCDGPlayer = new frmCDGPlayer(fpath, pl, bPlayNow);
                 frmCDGPlayer.Show();
+
             }
-            else
+            catch (Exception ex)
             {
-                Application.OpenForms["frmCDGPlayer"].Close();
-                Form frmCDGPlayer = new frmCDGPlayer(fpath, pl, bPlayNow);
-                frmCDGPlayer.Show();
+                Console.WriteLine(ex.Message);
             }
+
         }
 
         /// <summary>
@@ -1794,16 +1879,18 @@ namespace Karaboss
                 Application.OpenForms["frmGuitarTraining"].Close();
             }
 
-            // Ferme le formulaire FrmTextPlayer
-            if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
-            {
-                Application.OpenForms["FrmTextPlayer"].Close();
-            }
-
+            
             // Ferme le formulaire frmChords
             if (Application.OpenForms.OfType<frmChords>().Count() > 0)
             {
                 Application.OpenForms["frmChords"].Close();
+            }
+
+
+            // Ferme le formulaire FrmTextPlayer
+            if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
+            {
+                Application.OpenForms["FrmTextPlayer"].Close();
             }
 
             // Close form frmMp3Player
@@ -1812,6 +1899,11 @@ namespace Karaboss
                 Application.OpenForms["frmMp3Player"].Close();
             }
 
+            // Close form frmCDGPlayer
+            if (Application.OpenForms.OfType<frmCDGPlayer>().Count() > 0)
+            {
+                Application.OpenForms["frmCDGPlayer"].Close();
+            }
 
             #endregion
 
@@ -1876,16 +1968,17 @@ namespace Karaboss
                 Application.OpenForms["frmGuitarTraining"].Close();
             }
 
-            // Ferme le formulaire FrmTextPlayer
-            if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
-            {
-                Application.OpenForms["FrmTextPlayer"].Close();
-            }
-
             // Ferme le formulaire frmChords
             if (Application.OpenForms.OfType<frmChords>().Count() > 0)
             {
                 Application.OpenForms["frmChords"].Close();
+            }
+
+
+            // Ferme le formulaire FrmTextPlayer
+            if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
+            {
+                Application.OpenForms["FrmTextPlayer"].Close();
             }
 
             // Close form frmMp3Player
@@ -1893,6 +1986,13 @@ namespace Karaboss
             {
                 Application.OpenForms["frmMp3Player"].Close();
             }
+
+            // Close form frmCDGPlayer
+            if (Application.OpenForms.OfType<frmCDGPlayer>().Count() > 0)
+            {
+                Application.OpenForms["frmCDGPlayer"].Close();
+            }
+
             #endregion
 
             // Close form frmPlay             

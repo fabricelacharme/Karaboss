@@ -49,6 +49,8 @@ using CDGNet;
 using MP3GConverter;
 using System.IO;
 using System.Text.RegularExpressions;
+using Karaboss.Mp3;
+using Karaboss.Utilities;
 
 namespace Karaboss
 {
@@ -58,6 +60,12 @@ namespace Karaboss
         #region "Private Declarations"
 
         private CDGFile mCDGFile;
+        private enum Directions
+        {
+            Forward,
+            Backward
+        }
+        private Directions _direction;
 
         private long cdgpos = 0;
 
@@ -76,8 +84,13 @@ namespace Karaboss
         //private frmExportCDG2AVI mExportForm;
 
         private bool scrolling = false;
-        int newstart = 0;
+        private int newstart = 0;
+        private int bouclestart = 0;
+        private int laststart = 0;      // Start time to play     
+
         string CDGFullPath;
+        string CDGFileName;
+
         long _duration;             // Duration of song
         float _frequency = 0;        // Frequency of song
         
@@ -85,6 +98,12 @@ namespace Karaboss
         private long FrequencyRatio = 100;
 
         private readonly bool bPlayNow = false;
+
+        // Playlists
+        private readonly Playlist currentPlaylist;
+        private PlaylistItem currentPlaylistItem;
+        private readonly string _InternalSepLines = "¼";
+
 
         /// <summary>
         /// Player status
@@ -109,20 +128,45 @@ namespace Karaboss
         public frmCDGPlayer(string filename, Playlist myPlayList, bool bplay)
         {
             InitializeComponent();            
-
             
             CDGFullPath = filename;
             SetTitle(filename);
 
-            InitControls();           
+            InitControls();
 
-            // If true, launch player
-            bPlayNow = bplay;            
+            #region playlists
+            if (myPlayList != null)
+            {
+                currentPlaylist = myPlayList;
+                // Search file to play with its filename                
+                currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == CDGFullPath).FirstOrDefault();
+
+                lblPlaylist.Visible = true;
+                int idx = currentPlaylist.SelectedIndex(currentPlaylistItem) + 1;
+                lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;
+
+                // play asap, pause, countdown
+                performPlaylistChainingChoice();
+            }
+            else
+            {
+                lblPlaylist.Visible = false;
+                // If true, launch player
+                bPlayNow = bplay;
+                // the user asked to play the song immediately                
+                if (bPlayNow)
+                {
+                    PlayPauseMusic();
+                }
+            }
+
+            #endregion playlists
+            
 
         }
 
 
-        #region "Control Events"
+        #region BASS
 
         /// <summary>
         /// Initialize Bass
@@ -215,10 +259,10 @@ namespace Karaboss
             InitBass();
 
             // the user asked to play the song immediately 
-            if (bPlayNow)
-            {
-                PlayPauseMusic();
-            }
+            //if (bPlayNow)
+            //{
+            //    PlayPauseMusic();
+            //}
         }
 
        
@@ -238,7 +282,7 @@ namespace Karaboss
                 Properties.Settings.Default.Save();
             }
 
-            StopPlayback();
+            //StopPlayback();
 
             if (Application.OpenForms.OfType<frmCDGWindow>().Count() > 0)
             {
@@ -356,7 +400,7 @@ namespace Karaboss
         #endregion
 
 
-        #region "File Access"
+        #region File Access
 
         private void BrowseCDGZip()
         {
@@ -426,7 +470,7 @@ namespace Karaboss
         #endregion
 
 
-        #region "CDG Graphics Window"
+        #region CDG Graphics Window
 
         private void ShowCDGWindow()
         {
@@ -443,62 +487,7 @@ namespace Karaboss
         #endregion
 
 
-        #region Timer              
-
-        private void Timer1_Tick(object sender, EventArgs e)
-        {
-            if (scrolling) return;
-
-            switch (PlayerState)
-            {
-                case PlayerStates.Playing:
-                    GetPeakVolume();
-                    if (cdgpos <= positionHScrollBar.Maximum && cdgpos >= positionHScrollBar.Minimum)
-                    {
-                        positionHScrollBar.Value = Convert.ToInt32(cdgpos);
-                        // Display time elapse               
-                        DisplayTimeElapse(cdgpos);                        
-                    }
-                    break;
-                
-                case PlayerStates.Paused:
-                    PauseMusic();                    
-                    Timer1.Stop();
-                    break;
-                
-                case PlayerStates.Stopped:
-                    if (mStop)
-                        stopProgress();
-                    Timer1.Stop();
-                    AfterStopped();
-                    break;
-                
-                default:
-                    break;
-            }
-           
-        }
-
-
-        private void DisplayTimeElapse(long cpos)
-        {
-            TimeSpan t = TimeSpan.FromMilliseconds(cpos);
-            string pos = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
-            pnlDisplay.DisplayElapsed(pos);
-
-            double dpercent = 100 * cpos / (double)_duration;
-            pnlDisplay.DisplayPercent(string.Format("{0}%", (int)dpercent));
-        }
-
-        #endregion Timer
-
-
-        #region buttons play stop pause
-
-        private void btnPlay_Click(object sender, EventArgs e)
-        {
-            PlayPauseMusic();
-        }
+        #region mouse Hover, Leave
 
         private void BtnPlay_MouseHover(object sender, EventArgs e)
         {
@@ -521,7 +510,7 @@ namespace Karaboss
         }
 
         private void btnStop_Click(object sender, EventArgs e)
-        {            
+        {
             StopMusic();
         }
 
@@ -535,7 +524,39 @@ namespace Karaboss
         {
             btnStop.Image = Properties.Resources.btn_black_stop;
         }
+        private void btnNext_MouseHover(object sender, EventArgs e)
+        {
+            if (PlayerState == PlayerStates.Playing)
+                btnNext.Image = Properties.Resources.btn_blue_next;
+        }
 
+        private void btnNext_MouseLeave(object sender, EventArgs e)
+        {
+            btnNext.Image = Properties.Resources.btn_black_next;
+        }
+
+        private void btnPrev_MouseHover(object sender, EventArgs e)
+        {
+            if (PlayerState == PlayerStates.Playing)
+                btnPrev.Image = Properties.Resources.btn_blue_prev;
+        }
+
+        private void btnPrev_MouseLeave(object sender, EventArgs e)
+        {
+            btnPrev.Image = Properties.Resources.btn_black_prev;
+        }
+
+
+
+        #endregion mouse Hover, Leave
+
+
+        #region buttons play stop pause
+
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+            PlayPauseMusic();
+        }       
 
         private void PlayPauseMusic()
         {
@@ -628,9 +649,7 @@ namespace Karaboss
                 this.Show();
                 this.Activate();
                 
-                mCDGFile = new CDGFile(mCDGFileName);
-
-                
+                mCDGFile = new CDGFile(mCDGFileName);                
 
                 cdgpos = 0;
                 long cdgLength = mCDGFile.getTotalDuration();
@@ -687,7 +706,10 @@ namespace Karaboss
                     //float myFrameRate = (float)Math.Round(mFrameCount / (pos / 1000), 1);
                     Application.DoEvents();
                 }
-                StopPlayback();
+
+                // stop or play next song 
+                PlayerState = PlayerStates.NextSong;
+                //StopPlayback();
             }
             catch (Exception ex)
             {
@@ -766,12 +788,14 @@ namespace Karaboss
                     btnStop.Enabled = true;  // to allow stop 
                     pnlDisplay.DisplayStatus("Playing");                    
                     break;
+
                 case PlayerStates.Paused:
                     btnPlay.Image = Properties.Resources.btn_red_pause;
                     btnPlay.Enabled = true;  // to allow play
                     btnStop.Enabled = true;  // to allow stop
                     pnlDisplay.DisplayStatus("Paused");
                     break;
+
                 case PlayerStates.Stopped:
                     btnPlay.Image = Properties.Resources.btn_black_play;
                     btnPlay.Enabled = true;   // to allow play
@@ -780,10 +804,179 @@ namespace Karaboss
                     VuPeakVolumeRight.Level = 0;
                     pnlDisplay.DisplayStatus("Stopped");
                     break;
+
+                case PlayerStates.LaunchNextSong:
+                    // pause between 2 songs of a playlist
+                    btnPlay.Image = Properties.Resources.btn_red_pause;
+                    btnPlay.Enabled = true;  // to allow play
+                    btnStop.Image = Properties.Resources.btn_black_stop;
+                    btnStop.Enabled = true;   // to allow stop                    
+                    pnlDisplay.DisplayStatus("Paused");
+                    break;
+
+                case PlayerStates.Waiting:
+                    // Count down running
+                    btnPlay.Image = Properties.Resources.btn_green_play;
+                    btnPlay.Enabled = true;  // to allow pause
+                    btnStop.Enabled = true;   // to allow stop
+                    pnlDisplay.DisplayStatus("Next");
+                    break;
+
+                case PlayerStates.WaitingPaused:
+                    btnPlay.Image = Properties.Resources.btn_red_pause;
+                    btnPlay.Enabled = true;  // to allow play
+                    btnStop.Enabled = true;   // to allow stop
+                    pnlDisplay.DisplayStatus("Paused");
+                    break;
+
+                case PlayerStates.NextSong:     // Select next song of a playlist
+                    //VuMasterPeakVolume.Level = 0;
+                    break;
+
+
                 default:
                     break;
             }
         }
+
+
+        /// <summary>
+        /// Play next or previous mp3 in the current directory
+        /// </summary>
+        /// <param name="_direction"></param>
+        private void PlayCDGSong(Directions _direction)
+        {
+            string folder;
+            int index;
+
+            // We have this information : Mp3FullPath which is the path of the file being played                
+            if (Application.OpenForms.OfType<frmExplorer>().Count() == 0) return;
+
+            frmExplorer frmExplorer = Application.OpenForms.OfType<frmExplorer>().First();
+
+            // List of mp3 files filtered by mp3 extension
+            folder = Path.GetDirectoryName(CDGFullPath);
+            var files = Directory
+                .EnumerateFiles(folder) //<--- .NET 4.5
+                 .Where(file => file.ToLower().EndsWith("zip"))
+                 .ToList();
+
+            if (!files.Contains(CDGFullPath)) return;
+            index = files.IndexOf(CDGFullPath);
+
+            try
+            {
+                switch (_direction)
+                {
+                    // Next file
+                    case Directions.Forward:
+                        if (index >= files.Count - 1) return;
+                        CDGFullPath = files[index + 1];
+                        break;
+
+                    // Previous file
+                    case Directions.Backward:
+                        if (index == 0) return;
+                        CDGFullPath = files[index - 1];
+                        break;
+
+                }
+
+                // Stop player
+                StopMusic();
+
+                // Select new file in the explorer
+                CDGFileName = Path.GetFileName(CDGFullPath);
+                string path = Path.GetDirectoryName(CDGFullPath);
+                path = "file:///" + path.Replace("\\", "/");
+                frmExplorer.NavigateTo(path, CDGFileName);
+
+                // Update display
+                SetTitle(CDGFullPath);
+                //DisplayMp3Characteristics();
+                //DisplayOtherInfos(CDGFullPath);
+
+                // Play file
+                PlayPauseMusic();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                StopMusic();
+            }
+        }
+
+        /// <summary>
+        /// Called by button PREVIOUS, play immediately the previous song
+        /// </summary>
+        private void PlayPrevSong()
+        {
+            if (PlayerState == PlayerStates.Paused)
+            {
+                laststart = bouclestart;
+                //sequencer1.Position = laststart;
+                return;
+            }
+
+            PlaylistItem pli = currentPlaylistItem;
+            if (pli == null)
+                return;
+
+            currentPlaylistItem = currentPlaylist.Previous(pli);
+
+            if (currentPlaylist == null || pli == currentPlaylistItem)
+                return;
+
+            StopMusic();
+            //Player.Reset();
+
+            CDGFileName = currentPlaylistItem.Song;
+            CDGFullPath = currentPlaylistItem.File;
+
+            // Update form
+            SetTitle(CDGFileName);
+            UpdatePlayListsForm(currentPlaylistItem.Song);
+
+            // close frmKaraoke
+            //if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            //{
+            //    frmMp3Lyrics.Close();
+            //}
+
+            PlayerState = PlayerStates.Playing;
+            SelectFileToLoadAsync(CDGFullPath);
+
+        }
+
+        private void btnNext_Click(object sender, EventArgs e)
+        {
+            // play next song in the directory
+            if (currentPlaylist == null)
+            {
+                PlayCDGSong(Directions.Forward);
+            }
+            else
+            {
+
+                // Play next song of the playlist
+                // if currentPlaylist completed : all stops
+                PlayNextPlaylistSong();
+            }
+        }
+
+        private void btnPrev_Click(object sender, EventArgs e)
+        {
+            if (currentPlaylist == null)
+            {
+                PlayCDGSong(Directions.Backward);
+            }
+            else
+            {
+                // Playlist
+                PlayPrevSong();
+            }
+        }
+
 
         #endregion buttons play stop pause
 
@@ -1013,6 +1206,62 @@ namespace Karaboss
 
         #endregion Menus
 
+
+        #region Timer              
+
+        private void DisplayTimeElapse(long cpos)
+        {
+            TimeSpan t = TimeSpan.FromMilliseconds(cpos);
+            string pos = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
+            pnlDisplay.DisplayElapsed(pos);
+
+            double dpercent = 100 * cpos / (double)_duration;
+            pnlDisplay.DisplayPercent(string.Format("{0}%", (int)dpercent));
+        }
+
+        private void Timer1_Tick(object sender, EventArgs e)
+        {
+            if (scrolling) return;
+
+            switch (PlayerState)
+            {
+                case PlayerStates.Playing:
+                    GetPeakVolume();
+                    if (cdgpos <= positionHScrollBar.Maximum && cdgpos >= positionHScrollBar.Minimum)
+                    {
+                        positionHScrollBar.Value = Convert.ToInt32(cdgpos);
+                        // Display time elapse               
+                        DisplayTimeElapse(cdgpos);
+                    }
+                    break;
+
+                case PlayerStates.Paused:
+                    PauseMusic();
+                    Timer1.Stop();
+                    break;
+
+                case PlayerStates.Stopped:
+                    if (mStop)
+                        stopProgress();
+                    Timer1.Stop();
+                    AfterStopped();
+                    break;
+
+                case PlayerStates.NextSong:
+                    PlayNextPlaylistSong();
+                    break;
+
+                default:
+                    break;
+            }
+
+        }
+
+
+       
+
+        #endregion Timer
+
         private void positionHScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
             if (e.Type == ScrollEventType.EndScroll)
@@ -1145,5 +1394,163 @@ namespace Karaboss
         }
 
         #endregion Tempo freq
+
+
+        #region Playlists  
+
+        /// <summary>
+        /// Select action to perform between 2 songs according to user's choices
+        /// Pause, Count Down, play asap
+        /// </summary>
+        private void performPlaylistChainingChoice()
+        {
+            // If mode pause between songs of a playlist 
+            // Display a waiting information (not the words)
+            if (Karaclass.m_PauseBetweenSongs)
+            {
+                PlayerState = PlayerStates.LaunchNextSong;
+                BtnStatus();
+                
+
+                // Focus on paused windows
+                this.Restore();
+                this.Activate();
+            }
+            else
+            {
+                // NO PAUSE MODE
+                if (Karaclass.m_CountdownSongs == 0)
+                {
+                    // NO Timer => play                    
+                    PlayerState = PlayerStates.Stopped;
+                    PlayPauseMusic();
+                }
+                else
+                {
+                    // No pause mode between songs of a playlist, but a timer 
+                    // Lauch Countdown timer
+                    StartCountDownTimer();
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Start count down before playing
+        /// </summary>
+        private void StartCountDownTimer()
+        {
+            PlayerState = PlayerStates.Waiting;
+            BtnStatus();
+            /*
+            w_tick = 0;
+            int sec = Karaclass.m_CountdownSongs;  // wait for x seconds
+            w_wait = sec + 4;
+
+            if (Application.OpenForms.OfType<frmLyric>().Count() == 0)
+            {
+                frmLyric = new frmLyric(myLyricsMgmt);
+                frmLyric.Show();
+            }
+
+            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+            {
+                // Display song & singer
+                string nextsong = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
+                string txt = "Next song: " + nextsong + " - Next singer: " + currentPlaylistItem.KaraokeSinger;
+                frmLyric.DisplaySinger(txt);
+
+                frmLyric.LoadWaitSong(sec);
+            }
+
+            timer5.Interval = 1000;  // interval = 1 sec      
+            timer5.Enabled = true;
+            */
+        }
+
+
+        /// <summary>
+        /// Common to button next and end of playing a song
+        /// </summary>
+        private void PlayNextPlaylistSong()
+        {
+            // If single song (no playlist) => STOP
+            if (currentPlaylist == null)
+            {
+                StopMusic();
+                return;
+            }
+
+            // Select next song of the playlist
+            PlaylistItem pli = currentPlaylistItem;
+            if (pli == null)
+                return;
+
+            currentPlaylistItem = currentPlaylist.Next(pli);
+
+            // Stop if no other song to play
+            if (pli == currentPlaylistItem)
+            {
+                StopMusic();
+                return;
+            }
+
+            StopMusic();
+
+            //Next song of the playlist
+            CDGFileName = currentPlaylistItem.Song;
+
+            // Update form
+            SetTitle(CDGFileName);
+            UpdatePlayListsForm(currentPlaylistItem.Song);
+
+            // close frmMp3Lyrics
+            if (Application.OpenForms.OfType<frmCDGWindow>().Count() > 0)
+            {
+                //mCDGWindow.Close();
+            }
+
+            
+            PlayerState = PlayerStates.Playing;
+            CDGFullPath = currentPlaylistItem.File;
+
+            SelectFileToLoadAsync(CDGFullPath);
+        }
+
+
+        /// <summary>
+        /// Update display of frmPlaylist
+        /// </summary>
+        /// <param name="song"></param>
+        private void UpdatePlayListsForm(string song)
+        {
+            int idx = currentPlaylist.SelectedIndex(currentPlaylistItem) + 1;
+            lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;
+
+            if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
+            {
+                frmExplorer frmExplorer = FormUtilities.GetForm<frmExplorer>();
+                frmExplorer.DisplaySong(song);
+            }
+        }
+
+        private void SelectFileToLoadAsync(string FileName)
+        {
+            // Load file and after launch player taking account things to do betwween 2 songs                                  
+            // Nothing here
+
+
+            // things to do betwween 2 songs
+            performPlaylistChainingChoice();
+        }
+
+
+        #endregion Playlists
+
+
+
+       
+
+        
     }
 }

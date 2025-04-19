@@ -3119,7 +3119,7 @@ namespace Karaboss
                 byte[] data = msg.GetBytes();
                 _tempo = ((data[0] << 16) | (data[1] << 8) | data[2]);
 
-                Console.WriteLine("Tempo from HandleMetaMessagePlayed : " + _tempo);
+                //Console.WriteLine("Tempo from HandleMetaMessagePlayed : " + _tempo);
 
                 // Modifies the tempo according to user settings
                 if (TempoDelta != 100)
@@ -3128,7 +3128,7 @@ namespace Karaboss
                                         
                     sequencer1.Tempo = _tempo;
 
-                    Console.WriteLine("Tempo from HandleMetaMessagePlayed after update: " + sequencer1.Tempo);
+                    //Console.WriteLine("Tempo from HandleMetaMessagePlayed after update: " + sequencer1.Tempo);
                     
                                        
                     //UpdateMidiTimes();                    
