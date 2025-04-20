@@ -78,9 +78,9 @@ namespace Karaboss
         private string mMP3FileName;
         private string mTempDir;
         private int mMP3Stream;
-        
+
         // Forms
-        private frmCDGWindow mCDGWindow = new frmCDGWindow();
+        private frmCDGLyrics mCDGWindow; // = new frmCDGLyrics();
         //private frmExportCDG2AVI mExportForm;
 
         private bool scrolling = false;
@@ -284,9 +284,9 @@ namespace Karaboss
 
             //StopPlayback();
 
-            if (Application.OpenForms.OfType<frmCDGWindow>().Count() > 0)
+            if (Application.OpenForms.OfType<frmCDGLyrics>().Count() > 0)
             {
-                Application.OpenForms["frmCDGWindow"].Close();
+                Application.OpenForms["frmCDGLyrics"].Close();
             }
 
             // Active le formulaire frmExplorer
@@ -474,6 +474,7 @@ namespace Karaboss
 
         private void ShowCDGWindow()
         {
+            mCDGWindow = new frmCDGLyrics(CDGFullPath);
             mCDGWindow.Show();
         }
 
@@ -658,7 +659,7 @@ namespace Karaboss
                 // Display progress                
                 startProgress(cdgLength);
 
-                // Show frmCDGWindow ici
+                // Show frmCDGLyrics ici
                 PlayMP3Bass(mMP3FileName);
 
 
@@ -1505,7 +1506,7 @@ namespace Karaboss
             UpdatePlayListsForm(currentPlaylistItem.Song);
 
             // close frmMp3Lyrics
-            if (Application.OpenForms.OfType<frmCDGWindow>().Count() > 0)
+            if (Application.OpenForms.OfType<frmCDGLyrics>().Count() > 0)
             {
                 //mCDGWindow.Close();
             }

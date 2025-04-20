@@ -594,36 +594,36 @@ namespace Karaboss.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool frmCDGWindowMaximized {
+        public bool frmCDGLyricsMaximized {
             get {
-                return ((bool)(this["frmCDGWindowMaximized"]));
+                return ((bool)(this["frmCDGLyricsMaximized"]));
             }
             set {
-                this["frmCDGWindowMaximized"] = value;
+                this["frmCDGLyricsMaximized"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
-        public global::System.Drawing.Point frmCDGWindowLocation {
+        public global::System.Drawing.Point frmCDGLyricsLocation {
             get {
-                return ((global::System.Drawing.Point)(this["frmCDGWindowLocation"]));
+                return ((global::System.Drawing.Point)(this["frmCDGLyricsLocation"]));
             }
             set {
-                this["frmCDGWindowLocation"] = value;
+                this["frmCDGLyricsLocation"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("316, 255")]
-        public global::System.Drawing.Size frmCDGWindowSize {
+        [global::System.Configuration.DefaultSettingValueAttribute("600, 400")]
+        public global::System.Drawing.Size frmCDGLyricsSize {
             get {
-                return ((global::System.Drawing.Size)(this["frmCDGWindowSize"]));
+                return ((global::System.Drawing.Size)(this["frmCDGLyricsSize"]));
             }
             set {
-                this["frmCDGWindowSize"] = value;
+                this["frmCDGLyricsSize"] = value;
             }
         }
         
