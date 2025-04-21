@@ -480,6 +480,8 @@ namespace Karaboss
 
         private void HideCDGWindow()
         {
+            if (mCDGWindow == null) return;
+
             mCDGWindow.PictureBox1.Image = null;
             mCDGWindow.Hide();
         }
