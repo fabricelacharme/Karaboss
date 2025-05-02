@@ -7402,6 +7402,31 @@ namespace Karaboss
             ModTempo();
         }
 
+        /// <summary>
+        /// Change tempo with the keyboard
+        /// </summary>
+        /// <param name="e"></param>
+        private void KeyboardSelectTempo(KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Oemplus:
+                case Keys.Add:
+                    if (TempoDelta > 10)
+                        TempoDelta -= 10;
+                    ModTempo();
+                    break;
+
+                case Keys.D6:
+                case Keys.OemMinus:
+                case Keys.Subtract:
+                    if (TempoDelta < 200)
+                        TempoDelta += 10;
+                    ModTempo();
+                    break;
+            }
+        }
+
         private void ModTempo()
         {
             //Some songs may have changes in tempo.
@@ -7419,8 +7444,8 @@ namespace Karaboss
                 
                 if (PlayerState == PlayerStates.Playing || PlayerState == PlayerStates.Paused)
                 {
-                    // Stop/Start seems to be enough to take into account tempo change
-                    // because HandleMetaMessagePlayed is called for all tempo changes
+                    // A Stop/Start is needed to take into account tempo change
+                    // HandleMetaMessagePlayed will manage other tempo changes
 
                     sequencer1.Stop();
                     //sequencer1.Tempo = sequencer1.Tempo * (TempoDelta / 100);           // sequencer1.tempo (clock in fact) is different than _tempo !!!!
@@ -7448,7 +7473,19 @@ namespace Karaboss
 
             DisplayFileInfos();
 
+            // File was modified - Only if sequencer is visible
+            if (bSequencerAlwaysOn || bForceShowSequencer)
+            {
+                sheetmusic.ModTempoChanges(TempoDelta);
+                //FileModified();
+                UpdateTimes();
+            }
+
+
         }
+
+
+
 
         /// <summary>
         /// Transpose higher
@@ -7506,26 +7543,7 @@ namespace Karaboss
 
         }
 
-        private void KeyboardSelectTempo(KeyEventArgs e)
-        {
-            switch (e.KeyCode)
-            {
-                case Keys.Oemplus:
-                case Keys.Add:
-                    if (TempoDelta > 10)
-                        TempoDelta -= 10;
-                    ModTempo();
-                    break;
-
-                case Keys.D6:
-                case Keys.OemMinus:
-                case Keys.Subtract:
-                    if (TempoDelta < 200)
-                        TempoDelta += 10;
-                    ModTempo();
-                    break;
-            }
-        }
+        
 
         #endregion
 

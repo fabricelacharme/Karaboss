@@ -4553,6 +4553,21 @@ namespace Sanford.Multimedia.Midi.Score
         }
 
         /// <summary>
+        /// Modify all tempos by a percentage
+        /// </summary>
+        /// <param name="TempoPercent"></param>
+        /// <returns></returns>
+        public List<TempoSymbol> ModTempoChanges(int TempoDelta)
+        {
+            foreach (TempoSymbol tps in _lsttemposymbols)
+            {
+                tps.Tempo = (int)(tps.OriginalTempo * TempoDelta / 100);
+            }
+            Invalidate();
+            return _lsttemposymbols;
+        }
+
+        /// <summary>
         /// Delete a tempo change
         /// </summary>
         /// <param name="ticks"></param>
