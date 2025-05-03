@@ -7440,7 +7440,7 @@ namespace Karaboss
             TempoSymbol ts = sheetmusic.GetTempoAt(t);
             if (ts != null)
             {                
-                _tempo = ts.Tempo * TempoDelta / 100;                             
+                _tempo = ts.OriginalTempo * TempoDelta / 100;
                 
                 if (PlayerState == PlayerStates.Playing || PlayerState == PlayerStates.Paused)
                 {
@@ -7471,19 +7471,27 @@ namespace Karaboss
             int Sec = (int)(_duration - (Min * 60));
             lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
 
-            DisplayFileInfos();
+            
 
             // File was modified - Only if sequencer is visible
             if (bSequencerAlwaysOn || bForceShowSequencer)
             {
+                // update _lsttemposymbols
                 sheetmusic.ModTempoChanges(TempoDelta);
-                //FileModified();
-                UpdateTimes();
+
+                // Save Tempo changes into the MIDI file
+                sheetmusic.UpdateTempoChanges();
+                //TempoDelta = 100;
+
+
+                // Display changes
+                DisplayFileInfos(_tempo);
+                
+
+                // MIDI file was modified
+                FileModified();                
             }
-
-
         }
-
 
 
 
@@ -7540,6 +7548,12 @@ namespace Karaboss
 
             btnTempoMinus.Enabled = true;
             btnTranspoPlus.Enabled = true;
+
+            // File was modified - Only if sequencer is visible
+            if (bSequencerAlwaysOn || bForceShowSequencer)
+            {
+                FileModified();
+            }
 
         }
 

@@ -4557,16 +4557,47 @@ namespace Sanford.Multimedia.Midi.Score
         /// </summary>
         /// <param name="TempoPercent"></param>
         /// <returns></returns>
-        public List<TempoSymbol> ModTempoChanges(int TempoDelta)
+        public void ModTempoChanges(int TempoDelta)
         {
             foreach (TempoSymbol tps in _lsttemposymbols)
             {
                 tps.Tempo = (int)(tps.OriginalTempo * TempoDelta / 100);
             }
             Invalidate();
-            return _lsttemposymbols;
+            
         }
 
+        /// <summary>
+        /// Update the tempo changes
+        /// </summary>
+        /// <param name="tempoChanges"></param>
+        public void UpdateTempoChanges()
+        {
+            if (_lsttemposymbols != null)
+            {
+                // Delete all tempos with their original values
+                // Delete all tempos in tracks
+                foreach (Track track in sequence1.tracks)
+                {
+                    track.RemoveAllTempos();
+                }
+
+                
+                // Create new tempos with the modified values
+                foreach (TempoSymbol tps in _lsttemposymbols)
+                {
+                    if (sequence1 != null && sequence1.tracks.Count > 0)
+                    {
+                        sequence1.tracks[0].insertTempo(tps.Tempo, tps.StartTime);
+                    }
+                }
+
+                //_lsttemposymbols = AddTemposToStaffs(staffs, GetAllTempoChanges());
+            }
+            //Invalidate();
+        }
+        
+        
         /// <summary>
         /// Delete a tempo change
         /// </summary>

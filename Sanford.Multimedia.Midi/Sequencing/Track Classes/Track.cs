@@ -468,12 +468,64 @@ namespace Sanford.Multimedia.Midi
                 return null;
             }
         }
-        
-        
+
+
         #endregion chords
 
 
         #region tempo
+
+        /// <summary>
+        /// Find tempo message
+        /// </summary>
+        /// <returns></returns>
+        private int findTempoMessage()
+        {
+            int id = 0;
+            MidiEvent current = GetMidiEvent(0);
+            while (current.AbsoluteTicks <= Length)
+            {
+                IMidiMessage a = current.MidiMessage;
+                if (a.MessageType == MessageType.Meta)
+                {
+                    MetaMessage Msg = (MetaMessage)current.MidiMessage;
+                    if (Msg.MetaType == MetaType.Tempo)
+                    {
+                        return id;
+                    }
+                    else
+                    {
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                            id++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion next                            
+                    }
+                }
+                else
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                        id++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion next 
+                }
+            }
+            return -1;  
+        }
+        
         /// <summary>
         /// Find Tempo Message starting from ticks and having value tempo
         /// </summary>
@@ -628,6 +680,19 @@ namespace Sanford.Multimedia.Midi
             }
         }
 
+
+        /// <summary>
+        /// Remove all Tempo messages
+        /// </summary>
+        public void RemoveAllTempos()
+        {
+            int i = findTempoMessage();
+            while (i != -1)
+            {
+                RemoveAt(i);
+                i = findTempoMessage();
+            }
+        }
         #endregion tempo
 
         #region tag

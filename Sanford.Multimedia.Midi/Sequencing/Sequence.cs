@@ -592,6 +592,10 @@ namespace Sanford.Multimedia.Midi
 
             List<Track> result = new List<Track>();
 
+            int channel;
+            int number;
+            int velocity;           
+
             foreach (Track t in this)
             {
                 Track track = new Track();
@@ -604,31 +608,26 @@ namespace Sanford.Multimedia.Midi
                         foreach (MidiEvent e in t.Iterator())
                         {
                             IMidiMessage m = e.MidiMessage;
+                            
                             if (m.MessageType == MessageType.Channel)
                             {
                                 // FAB: Amelioration 23/01/18
                                 ChannelMessage msg = (ChannelMessage)e.MidiMessage;
-                                ChannelCommand cmd = msg.Command;
-
-                                int channel = msg.MidiChannel;
-                                int number = msg.Data1;
-                                int velocity = msg.Data2;
-                                int ticks = e.AbsoluteTicks;
-
-                                //ChannelCommand cmd = ChannelMessage.UnpackCommand(m.Status);
-                                //int number = m.Data1; // note number                                
-                                number += amount;
-                                //int channel = t.MidiChannel;
-                                //int velocity = m.Data2;
+                                ChannelCommand cmd = msg.Command;                                
 
                                 if (cmd == ChannelCommand.NoteOn || cmd == ChannelCommand.NoteOff)
                                 {
+                                    channel = msg.MidiChannel;
+                                    number = msg.Data1;
+                                    velocity = msg.Data2;                                    
+                                    number += amount;
+
                                     ChannelMessage message = new ChannelMessage(cmd, channel, number, velocity);
-                                    track.Insert(ticks, message);
+                                    track.Insert(e.AbsoluteTicks, message);
                                 }
                                 else
                                 {
-                                    track.Insert(ticks, m);
+                                    track.Insert(e.AbsoluteTicks, m);
                                 }
                             }
                             else
@@ -658,7 +657,6 @@ namespace Sanford.Multimedia.Midi
                     // Add as it is
                     result.Add(t);
                 }
-
             }
 
             // Replace by new tracks
@@ -667,7 +665,10 @@ namespace Sanford.Multimedia.Midi
             {
                 this.tracks.Add(track);
             }
+
+            //GetLength();
         }
+       
 
 
         private void OnLoadCompleted(object sender, RunWorkerCompletedEventArgs e)
