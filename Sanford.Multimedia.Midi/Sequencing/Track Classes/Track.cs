@@ -1673,6 +1673,10 @@ namespace Sanford.Multimedia.Midi
             return -1;
         }
 
+        /// <summary>
+        /// Change instrument
+        /// </summary>
+        /// <param name="programchange"></param>
         public void changePatch(int programchange)
         {
             // Remove all programchange events
