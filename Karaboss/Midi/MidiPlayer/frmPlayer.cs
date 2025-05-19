@@ -469,9 +469,7 @@ namespace Karaboss
 
 
         #region next
-
        
-
         private void playMidiSong(Directions _direction)
         {
             string folder;
@@ -507,7 +505,6 @@ namespace Karaboss
                         if (index == 0) return;
                         MIDIfileFullPath = files[index - 1];
                         break;
-
                 }
 
                 // Stop player
@@ -541,6 +538,10 @@ namespace Karaboss
 
         private void BtnNext_Click(object sender, EventArgs e)
         {
+            if (bSequencerAlwaysOn || bForceShowSequencer)
+                return;
+
+
             if (currentPlaylist == null)
             {
                 playMidiSong(Directions.Forward);
@@ -569,6 +570,11 @@ namespace Karaboss
 
         private void BtnPrev_Click(object sender, EventArgs e)
         {
+            
+            if (bSequencerAlwaysOn || bForceShowSequencer)
+                return;
+
+
             if (currentPlaylist == null)
             {
                 playMidiSong(Directions.Backward);
