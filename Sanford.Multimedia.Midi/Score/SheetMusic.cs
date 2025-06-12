@@ -2383,16 +2383,8 @@ namespace Sanford.Multimedia.Midi.Score
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
         private void MnuInsertMeasures_Click(object sender, EventArgs e)
-        {
-            //aPos = PointToClient(Control.MousePosition);
-            //int X = aPos.X;
-            //int Y = aPos.Y;
+        {           
 
-            //X = X + OffsetX;
-            //X = Convert.ToInt32(X / zoom);
-
-            // Click on menu can be located on wrong staff if menu is very long           
-            //Y = selectedY;
 
             if (_selectedstaff != -1)
             {
@@ -2421,13 +2413,15 @@ namespace Sanford.Multimedia.Midi.Score
                 decimal nbMeasures = InsertMeasuresDialog.nbMeasures;
                 int startticks = (int)MeasureFrom * measurelen;
 
+                
+                
                 if (bAllTracks)
                 {
                     foreach (Track track in sequence1.tracks)
                     {
                         track.insertMeasure(startticks, (int)nbMeasures*measurelen);
                     }
-                    
+
                 }
                 else
                 {

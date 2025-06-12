@@ -2623,9 +2623,40 @@ namespace Sanford.Multimedia.Midi
             {
 
                 if (current != endOfTrackMidiEvent)
-                {
-                    // New code : move all events
-                    Move(current, current.AbsoluteTicks + offset);
+                {                    
+                    
+                    if (starttime == 0)
+                    {
+                        // Starttime is 0, do not move Tempo event, Time_signature, Key_signature
+                        if (current.MidiMessage.MessageType == MessageType.Meta && current.AbsoluteTicks == 0)
+                        {
+                            MetaMessage meta = (MetaMessage)current.MidiMessage;
+                            if (meta.MetaType == MetaType.Tempo || meta.MetaType == MetaType.TimeSignature || meta.MetaType == MetaType.KeySignature)
+                            {
+                                // Do not move tempo event, Time_signature, Key_signature
+                                // Do not move current event
+                            }
+                            else
+                            {
+                                Move(current, current.AbsoluteTicks + offset);
+                            }
+                        }
+                        else if (current.MidiMessage.MessageType == MessageType.Channel && current.AbsoluteTicks == 0)
+                        {
+                            // Do not move channel events at starttime 0
+                            // Do not move current event
+                        }
+                        else
+                        {
+                            // Move other messages at starttime 0
+                            Move(current, current.AbsoluteTicks + offset);
+                        }
+                    }
+                    else
+                    {
+                        // Starttime is not 0, so offset all events
+                        Move(current, current.AbsoluteTicks + offset);
+                    }
 
                     #region previous
                     if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
@@ -2671,6 +2702,7 @@ namespace Sanford.Multimedia.Midi
                 }
             }
 
+            
         }
 
         /// <summary>
