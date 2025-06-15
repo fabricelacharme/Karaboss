@@ -8288,6 +8288,17 @@ namespace Karaboss
                 builder.Build();
                 outDevice.Send(builder.Result);
 
+                // Fix (15/06/2025): program changes for this channel can be located in other tracks!
+                // Changing the patch only in this track is not enough
+                // Remove existing patchs in other tracks for this specific channel
+                foreach (Track trk in sequence1.tracks)
+                {
+                    if (trk != track)
+                    {
+                        trk.RemoveOtherPatchs(nChannel);
+                    }
+                }
+
                 // Really change the patch into the track                
                 track.changePatch(patch);
                 FileModified();                             

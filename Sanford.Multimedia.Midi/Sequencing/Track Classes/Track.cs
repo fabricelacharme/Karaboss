@@ -1679,7 +1679,7 @@ namespace Sanford.Multimedia.Midi
         /// <param name="programchange"></param>
         public void changePatch(int programchange)
         {
-            // Remove all programchange events
+            // Remove all programchange events for this track whatever the channel, the program change and the position
             int i = findProgramChange();
             while (i != -1)
             {
@@ -1692,7 +1692,49 @@ namespace Sanford.Multimedia.Midi
             // Insert new patch at position 0
             ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, MidiChannel, ProgramChange, 0);
             Insert(0, message);
+        }
 
+
+        /// <summary>
+        /// Find a program change event for a specific channel
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <returns></returns>
+        private int findProgramChangeChannel(int channel)
+        {
+            int id = -1;
+            foreach (MidiEvent ev in Iterator())
+            {
+                id++;
+                IMidiMessage a = ev.MidiMessage;
+                if (a.MessageType == MessageType.Channel)
+                {
+                    ChannelCommand b;
+                    if (ChannelMessage.UnpackMidiChannel2(a.Status) != channel)
+                        continue; // not the right channel
+                    b = ChannelMessage.UnpackCommand2(a.Status);
+                    if (b == ChannelCommand.ProgramChange)
+                        return id;
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Remove all patch events for a specific channel whatever the program change and the position
+        /// Use case: when changing the patch of a track, remove all patches for this channel in other tracks
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="programchange"></param>
+        public void RemoveOtherPatchs(int channel)
+        {
+            // Remove all programchange events for the channel 'channel' whatever the program change and the position
+            int i = findProgramChangeChannel(channel);
+            while (i != -1)
+            {
+                RemoveAt(i);
+                i = findProgramChangeChannel(channel);
+            }            
         }
 
         public void insertPatch(int channel, int programchange) {
