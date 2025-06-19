@@ -3985,6 +3985,8 @@ namespace Karaboss
             Track.TotalLyricsL = "";
             Track.TotalLyricsT = "";
 
+            if (l == null || l.Count == 0)
+                return;
 
             // Recréé tout les textes et lyrics
             for (int idx = 0; idx < l.Count; idx++)
