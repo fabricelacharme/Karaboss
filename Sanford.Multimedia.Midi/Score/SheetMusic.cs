@@ -2383,16 +2383,8 @@ namespace Sanford.Multimedia.Midi.Score
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
         private void MnuInsertMeasures_Click(object sender, EventArgs e)
-        {
-            //aPos = PointToClient(Control.MousePosition);
-            //int X = aPos.X;
-            //int Y = aPos.Y;
+        {           
 
-            //X = X + OffsetX;
-            //X = Convert.ToInt32(X / zoom);
-
-            // Click on menu can be located on wrong staff if menu is very long           
-            //Y = selectedY;
 
             if (_selectedstaff != -1)
             {
@@ -2421,13 +2413,15 @@ namespace Sanford.Multimedia.Midi.Score
                 decimal nbMeasures = InsertMeasuresDialog.nbMeasures;
                 int startticks = (int)MeasureFrom * measurelen;
 
+                
+                
                 if (bAllTracks)
                 {
                     foreach (Track track in sequence1.tracks)
                     {
                         track.insertMeasure(startticks, (int)nbMeasures*measurelen);
                     }
-                    
+
                 }
                 else
                 {
@@ -4552,6 +4546,52 @@ namespace Sanford.Multimedia.Midi.Score
             return result;
         }
 
+        /// <summary>
+        /// Modify all tempos by a percentage
+        /// </summary>
+        /// <param name="TempoPercent"></param>
+        /// <returns></returns>
+        public void ModTempoChanges(int TempoDelta)
+        {
+            foreach (TempoSymbol tps in _lsttemposymbols)
+            {
+                tps.Tempo = (int)(tps.OriginalTempo * TempoDelta / 100);
+            }
+            Invalidate();
+            
+        }
+
+        /// <summary>
+        /// Update the tempo changes
+        /// </summary>
+        /// <param name="tempoChanges"></param>
+        public void UpdateTempoChanges()
+        {
+            if (_lsttemposymbols != null)
+            {
+                // Delete all tempos with their original values
+                // Delete all tempos in tracks
+                foreach (Track track in sequence1.tracks)
+                {
+                    track.RemoveAllTempos();
+                }
+
+                
+                // Create new tempos with the modified values
+                foreach (TempoSymbol tps in _lsttemposymbols)
+                {
+                    if (sequence1 != null && sequence1.tracks.Count > 0)
+                    {
+                        sequence1.tracks[0].insertTempo(tps.Tempo, tps.StartTime);
+                    }
+                }
+
+                //_lsttemposymbols = AddTemposToStaffs(staffs, GetAllTempoChanges());
+            }
+            //Invalidate();
+        }
+        
+        
         /// <summary>
         /// Delete a tempo change
         /// </summary>

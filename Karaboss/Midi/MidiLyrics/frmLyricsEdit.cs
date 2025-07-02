@@ -342,7 +342,8 @@ namespace Karaboss
 
             //Load modification into local list of lyrics
             localplLyrics = LoadModifiedLyrics();
-            PopulateTextBox(localplLyrics);
+            if (localplLyrics != null)
+                PopulateTextBox(localplLyrics);
 
             // Modify height of cells according to durations
             HeightsToDurations();
@@ -456,7 +457,8 @@ namespace Karaboss
 
                 //Load modification into local list of lyrics
                 localplLyrics = LoadModifiedLyrics();
-                PopulateTextBox(localplLyrics);
+                if (localplLyrics != null)
+                    PopulateTextBox(localplLyrics);
 
                 // File was modified
                 FileModified();
@@ -690,7 +692,8 @@ namespace Karaboss
             PasteClipboard();
             //Load modification into local list of lyrics
             localplLyrics = LoadModifiedLyrics();
-            PopulateTextBox(localplLyrics);
+            if (localplLyrics != null)
+                PopulateTextBox(localplLyrics);
 
             // Color separators
             ColorSepRows();
@@ -808,7 +811,9 @@ namespace Karaboss
             }
             dgView.Rows[r].Cells[COL_TEXT].Value = "";
             localplLyrics = LoadModifiedLyrics();
-            PopulateTextBox(localplLyrics);
+            if (localplLyrics != null)
+                PopulateTextBox(localplLyrics);
+            
         }
 
         /// <summary>
@@ -826,7 +831,8 @@ namespace Karaboss
                 dgView.Rows[row].Cells[COL_TEXT].Value = dgView.Rows[row + 1].Cells[COL_TEXT].Value;
             }
             localplLyrics = LoadModifiedLyrics();
-            PopulateTextBox(localplLyrics);
+            if (localplLyrics != null)
+                PopulateTextBox(localplLyrics);
         }
 
         #endregion context menu
@@ -1259,7 +1265,9 @@ namespace Karaboss
 
             //Load modification into local list of lyrics
             localplLyrics = LoadModifiedLyrics(false);
-            PopulateTextBox(localplLyrics);
+            if (localplLyrics != null)
+                PopulateTextBox(localplLyrics);
+            
 
             // Modify height of cells according to durations
             HeightsToDurations();
@@ -1298,7 +1306,8 @@ namespace Karaboss
                         }
                         //Load modification into local list of lyrics
                         localplLyrics = LoadModifiedLyrics();
-                        PopulateTextBox(localplLyrics);
+                        if (localplLyrics != null)
+                            PopulateTextBox(localplLyrics);
 
                         // File was modified
                         FileModified();
@@ -2884,7 +2893,9 @@ namespace Karaboss
 
             //Load modification into local list of lyrics
             localplLyrics = LoadModifiedLyrics();
-            PopulateTextBox(localplLyrics);
+            
+            if (localplLyrics != null) 
+                PopulateTextBox(localplLyrics);
 
             // Color separators
             ColorSepRows();
@@ -2950,7 +2961,8 @@ namespace Karaboss
 
             PopulateDataGridViewTrack(melodytracknum);
             localplLyrics = LoadModifiedLyrics();
-            PopulateTextBox(localplLyrics);
+            if (localplLyrics != null)
+                PopulateTextBox(localplLyrics);
         }
 
         /// <summary>
@@ -3775,7 +3787,8 @@ namespace Karaboss
 
             //Load modification into local list of lyrics
             localplLyrics = LoadModifiedLyrics();
-            PopulateTextBox(localplLyrics);
+            if (localplLyrics != null)
+                PopulateTextBox(localplLyrics);
 
             // Color separators
             ColorSepRows();
@@ -3894,22 +3907,31 @@ namespace Karaboss
             long time;
             long lasttime = -1;
 
-            for (int i = 0; i < dgView.RowCount; i++)
+            try
             {
-                if (dgView.Rows[i].Cells[0].Value == null || dgView.Rows[i].Cells[0].Value.ToString() == "") continue;
-
-                time = Convert.ToInt32(dgView.Rows[i].Cells[0].Value);
-
-                if (time > lasttime)
-                    lasttime = time;
-                else if (time < lasttime)
+                for (int i = 0; i < dgView.RowCount; i++)
                 {
-                    line = i + 1;
-                    return false;
+                    if (dgView.Rows[i].Cells[0].Value == null || dgView.Rows[i].Cells[0].Value.ToString() == "") continue;
+
+                    time = Convert.ToInt32(dgView.Rows[i].Cells[0].Value);
+
+                    if (time > lasttime)
+                        lasttime = time;
+                    else if (time < lasttime)
+                    {
+                        line = i + 1;
+                        return false;
+                    }
                 }
+                line = -1;
+                return true;
             }
-            line = -1;
-            return true;
+            catch (Exception ex)
+            {
+                line = -1;
+                MessageBox.Show("Error in CheckTimes: " + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
         }
 
         #endregion Text

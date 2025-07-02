@@ -21,6 +21,7 @@ namespace Sanford.Multimedia.Midi.Score
         private int starttime;
         private int bpm;         // BPM value
         private int tempo;
+        private int orgtempo;
         private int x;           // The x (horizontal) position within the staff 
         private const float kOneMinuteInMicroseconds = 60000000;
         private bool selected = false;
@@ -31,6 +32,7 @@ namespace Sanford.Multimedia.Midi.Score
         {
             this.starttime = starttime;
             this.tempo = tempo;
+            this.orgtempo = tempo; // Store the original tempo value
             if (tempo >  0)
                 this.bpm = (int)(kOneMinuteInMicroseconds / (float)tempo);
 
@@ -82,6 +84,19 @@ namespace Sanford.Multimedia.Midi.Score
                 {
                     tempo = value;
                     bpm = (int)(kOneMinuteInMicroseconds / (float)tempo);
+                }
+            }
+        }
+
+        public int OriginalTempo
+        {
+            get { return orgtempo; }
+            set
+            {
+                if (value > 0)
+                {
+                    orgtempo = value;
+                    //bpm = (int)(kOneMinuteInMicroseconds / (float)orgtempo);
                 }
             }
         }

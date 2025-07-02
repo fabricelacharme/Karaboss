@@ -32,25 +32,32 @@
 
 #endregion
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Karaboss
 {
-    public partial class frmCDGWindow : Form
+    public partial class frmCDGLyrics : Form
     {
-        public frmCDGWindow()
+        public frmCDGLyrics(string FileName)
         {
             InitializeComponent();
+
+            // Set the form's text to the file name
+            SetTitle(FileName);
+            
         }
 
-        private void CDGWindow_DoubleClick(object sender, EventArgs e)
+
+        private void SetTitle(string Title)
+        {
+            // Set the form's text to the title
+            Title = "Karaboss - " + Path.GetFileNameWithoutExtension(Title);            
+            Text = Title;
+        }
+
+        private void frmCDGLyrics_DoubleClick(object sender, EventArgs e)
         {
             AutoSizeWindow();
         }
@@ -72,7 +79,7 @@ namespace Karaboss
             }
         }
 
-        private void CDGWindow_SizeChanged(object sender, EventArgs e)
+        private void frmCDGLyrics_SizeChanged(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Maximized)
             {
@@ -85,18 +92,18 @@ namespace Karaboss
             }
         }
 
-        private void frmCDGWindow_Load(object sender, EventArgs e)
+        private void frmCDGLyrics_Load(object sender, EventArgs e)
         {
             // Récupère la taille et position de la forme
             // Set window location
-            if (Properties.Settings.Default.frmCDGWindowMaximized)
+            if (Properties.Settings.Default.frmCDGLyricsMaximized)
             {
-                Location = Properties.Settings.Default.frmCDGWindowLocation;                
+                Location = Properties.Settings.Default.frmCDGLyricsLocation;                
                 WindowState = FormWindowState.Maximized;
             }
             else
             {
-                Location = Properties.Settings.Default.frmCDGWindowLocation;
+                Location = Properties.Settings.Default.frmCDGLyricsLocation;
                 // Verify if this windows is visible in extended screens
                 Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
                 foreach (Screen screen in Screen.AllScreens)
@@ -107,11 +114,11 @@ namespace Karaboss
                 if (Location.Y > rect.Height)
                     Location = new Point(Location.X, 0);
 
-                Size = Properties.Settings.Default.frmCDGWindowSize;
+                Size = Properties.Settings.Default.frmCDGLyricsSize;
             }
         }
 
-        private void frmCDGWindow_FormClosing(object sender, FormClosingEventArgs e)
+        private void frmCDGLyrics_FormClosing(object sender, FormClosingEventArgs e)
         {
             // enregistre la taille et la position de la forme
             // Copy window location to app settings                
@@ -119,15 +126,15 @@ namespace Karaboss
             {
                 if (WindowState == FormWindowState.Maximized)
                 {
-                    Properties.Settings.Default.frmCDGWindowLocation = RestoreBounds.Location;
-                    Properties.Settings.Default.frmCDGWindowMaximized = true;
+                    Properties.Settings.Default.frmCDGLyricsLocation = RestoreBounds.Location;
+                    Properties.Settings.Default.frmCDGLyricsMaximized = true;
 
                 }
                 else if (WindowState == FormWindowState.Normal)
                 {
-                    Properties.Settings.Default.frmCDGWindowLocation = Location;
-                    Properties.Settings.Default.frmCDGWindowSize = Size;
-                    Properties.Settings.Default.frmCDGWindowMaximized = false;
+                    Properties.Settings.Default.frmCDGLyricsLocation = Location;
+                    Properties.Settings.Default.frmCDGLyricsSize = Size;
+                    Properties.Settings.Default.frmCDGLyricsMaximized = false;
                 }
 
                 // Save settings

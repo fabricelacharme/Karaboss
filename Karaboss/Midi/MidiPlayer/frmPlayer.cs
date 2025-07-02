@@ -234,7 +234,7 @@ namespace Karaboss
         
         // Dimensions
         private readonly int leftWidth = 179;
-        private readonly int SimplePlayerWidth = 520;
+        private readonly int SimplePlayerWidth = 530;
         private readonly int SimplePlayerHeight = 194;
 
         // Midifile characteristics
@@ -469,9 +469,7 @@ namespace Karaboss
 
 
         #region next
-
        
-
         private void playMidiSong(Directions _direction)
         {
             string folder;
@@ -507,7 +505,6 @@ namespace Karaboss
                         if (index == 0) return;
                         MIDIfileFullPath = files[index - 1];
                         break;
-
                 }
 
                 // Stop player
@@ -541,6 +538,10 @@ namespace Karaboss
 
         private void BtnNext_Click(object sender, EventArgs e)
         {
+            if (bSequencerAlwaysOn || bForceShowSequencer)
+                return;
+
+
             if (currentPlaylist == null)
             {
                 playMidiSong(Directions.Forward);
@@ -569,6 +570,11 @@ namespace Karaboss
 
         private void BtnPrev_Click(object sender, EventArgs e)
         {
+            
+            if (bSequencerAlwaysOn || bForceShowSequencer)
+                return;
+
+
             if (currentPlaylist == null)
             {
                 playMidiSong(Directions.Backward);
@@ -3119,7 +3125,7 @@ namespace Karaboss
                 byte[] data = msg.GetBytes();
                 _tempo = ((data[0] << 16) | (data[1] << 8) | data[2]);
 
-                Console.WriteLine("Tempo from HandleMetaMessagePlayed : " + _tempo);
+                //Console.WriteLine("Tempo from HandleMetaMessagePlayed : " + _tempo);
 
                 // Modifies the tempo according to user settings
                 if (TempoDelta != 100)
@@ -3128,7 +3134,7 @@ namespace Karaboss
                                         
                     sequencer1.Tempo = _tempo;
 
-                    Console.WriteLine("Tempo from HandleMetaMessagePlayed after update: " + sequencer1.Tempo);
+                    //Console.WriteLine("Tempo from HandleMetaMessagePlayed after update: " + sequencer1.Tempo);
                     
                                        
                     //UpdateMidiTimes();                    
@@ -3979,6 +3985,8 @@ namespace Karaboss
             Track.TotalLyricsL = "";
             Track.TotalLyricsT = "";
 
+            if (l == null || l.Count == 0)
+                return;
 
             // Recréé tout les textes et lyrics
             for (int idx = 0; idx < l.Count; idx++)
@@ -7402,6 +7410,31 @@ namespace Karaboss
             ModTempo();
         }
 
+        /// <summary>
+        /// Change tempo with the keyboard
+        /// </summary>
+        /// <param name="e"></param>
+        private void KeyboardSelectTempo(KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Oemplus:
+                case Keys.Add:
+                    if (TempoDelta > 10)
+                        TempoDelta -= 10;
+                    ModTempo();
+                    break;
+
+                case Keys.D6:
+                case Keys.OemMinus:
+                case Keys.Subtract:
+                    if (TempoDelta < 200)
+                        TempoDelta += 10;
+                    ModTempo();
+                    break;
+            }
+        }
+
         private void ModTempo()
         {
             //Some songs may have changes in tempo.
@@ -7415,12 +7448,12 @@ namespace Karaboss
             TempoSymbol ts = sheetmusic.GetTempoAt(t);
             if (ts != null)
             {                
-                _tempo = ts.Tempo * TempoDelta / 100;                             
+                _tempo = ts.OriginalTempo * TempoDelta / 100;
                 
                 if (PlayerState == PlayerStates.Playing || PlayerState == PlayerStates.Paused)
                 {
-                    // Stop/Start seems to be enough to take into account tempo change
-                    // because HandleMetaMessagePlayed is called for all tempo changes
+                    // A Stop/Start is needed to take into account tempo change
+                    // HandleMetaMessagePlayed will manage other tempo changes
 
                     sequencer1.Stop();
                     //sequencer1.Tempo = sequencer1.Tempo * (TempoDelta / 100);           // sequencer1.tempo (clock in fact) is different than _tempo !!!!
@@ -7446,9 +7479,29 @@ namespace Karaboss
             int Sec = (int)(_duration - (Min * 60));
             lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
 
-            DisplayFileInfos();
+            
 
+            // File was modified - Only if sequencer is visible
+            if (bSequencerAlwaysOn || bForceShowSequencer)
+            {
+                // update _lsttemposymbols
+                sheetmusic.ModTempoChanges(TempoDelta);
+
+                // Save Tempo changes into the MIDI file
+                sheetmusic.UpdateTempoChanges();
+                //TempoDelta = 100;
+
+
+                // Display changes
+                DisplayFileInfos(_tempo);
+                
+
+                // MIDI file was modified
+                FileModified();                
+            }
         }
+
+
 
         /// <summary>
         /// Transpose higher
@@ -7504,28 +7557,15 @@ namespace Karaboss
             btnTempoMinus.Enabled = true;
             btnTranspoPlus.Enabled = true;
 
-        }
-
-        private void KeyboardSelectTempo(KeyEventArgs e)
-        {
-            switch (e.KeyCode)
+            // File was modified - Only if sequencer is visible
+            if (bSequencerAlwaysOn || bForceShowSequencer)
             {
-                case Keys.Oemplus:
-                case Keys.Add:
-                    if (TempoDelta > 10)
-                        TempoDelta -= 10;
-                    ModTempo();
-                    break;
-
-                case Keys.D6:
-                case Keys.OemMinus:
-                case Keys.Subtract:
-                    if (TempoDelta < 200)
-                        TempoDelta += 10;
-                    ModTempo();
-                    break;
+                FileModified();
             }
+
         }
+
+        
 
         #endregion
 
@@ -8249,6 +8289,17 @@ namespace Karaboss
                 };
                 builder.Build();
                 outDevice.Send(builder.Result);
+
+                // Fix (15/06/2025): program changes for this channel can be located in other tracks!
+                // Changing the patch only in this track is not enough
+                // Remove existing patchs in other tracks for this specific channel
+                foreach (Track trk in sequence1.tracks)
+                {
+                    if (trk != track)
+                    {
+                        trk.RemoveOtherPatchs(nChannel);
+                    }
+                }
 
                 // Really change the patch into the track                
                 track.changePatch(patch);

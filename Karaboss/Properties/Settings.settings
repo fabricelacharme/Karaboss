@@ -143,14 +143,14 @@
     <Setting Name="RemoteUrl" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://karaboss.lacharme.net/AutoupdateService.xml</Value>
     </Setting>
-    <Setting Name="frmCDGWindowMaximized" Type="System.Boolean" Scope="User">
+    <Setting Name="frmCDGLyricsMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="frmCDGWindowLocation" Type="System.Drawing.Point" Scope="User">
+    <Setting Name="frmCDGLyricsLocation" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">0, 0</Value>
     </Setting>
-    <Setting Name="frmCDGWindowSize" Type="System.Drawing.Size" Scope="User">
-      <Value Profile="(Default)">316, 255</Value>
+    <Setting Name="frmCDGLyricsSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">600, 400</Value>
     </Setting>
     <Setting Name="frmCDGPlayerLocation" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">0, 0</Value>

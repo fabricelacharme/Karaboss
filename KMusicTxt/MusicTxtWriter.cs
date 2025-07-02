@@ -165,10 +165,7 @@ namespace MusicTxt
                 trackid = i;
 
                 // Start new track
-                stream.WriteLine(string.Format("{0}, 0, Start_track", trackid));
-
-                // Name of track
-                //stream.WriteLine(string.Format("1, 0, Title_t, \"{0}\"", (track.Name == "" ? song : track.Name)));
+                stream.WriteLine(string.Format("{0}, 0, Start_track", trackid));                
 
                 // Add sequence infos in first track
                 if (i == 0)
@@ -179,9 +176,7 @@ namespace MusicTxt
 
                 // Track, Time, Instrument_name_t, Text                
                 stream.WriteLine(string.Format("{0}, 0, Instrument_name_t, \"{1}\"", trackid, MidiFile.PCtoInstrument(track.ProgramChange)));
-
-                // Track, Time, Program_c, Channel, Program_num
-                //stream.WriteLine(string.Format("{0}, 0, Program_c, {1}, {2}", trackid, track.MidiChannel, track.ProgramChange));
+                
 
                 #region events
                 foreach (MidiEvent e in track.Iterator())
@@ -211,8 +206,7 @@ namespace MusicTxt
                 }
                 #endregion events
 
-                //Track, Time, End_track
-                //stream.WriteLine(string.Format("{0}, 0, End_track", trackid));
+                
             }
 
             // Last record

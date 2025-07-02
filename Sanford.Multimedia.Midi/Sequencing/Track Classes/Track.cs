@@ -468,12 +468,64 @@ namespace Sanford.Multimedia.Midi
                 return null;
             }
         }
-        
-        
+
+
         #endregion chords
 
 
         #region tempo
+
+        /// <summary>
+        /// Find tempo message
+        /// </summary>
+        /// <returns></returns>
+        private int findTempoMessage()
+        {
+            int id = 0;
+            MidiEvent current = GetMidiEvent(0);
+            while (current.AbsoluteTicks <= Length)
+            {
+                IMidiMessage a = current.MidiMessage;
+                if (a.MessageType == MessageType.Meta)
+                {
+                    MetaMessage Msg = (MetaMessage)current.MidiMessage;
+                    if (Msg.MetaType == MetaType.Tempo)
+                    {
+                        return id;
+                    }
+                    else
+                    {
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                            id++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion next                            
+                    }
+                }
+                else
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                        id++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion next 
+                }
+            }
+            return -1;  
+        }
+        
         /// <summary>
         /// Find Tempo Message starting from ticks and having value tempo
         /// </summary>
@@ -628,6 +680,19 @@ namespace Sanford.Multimedia.Midi
             }
         }
 
+
+        /// <summary>
+        /// Remove all Tempo messages
+        /// </summary>
+        public void RemoveAllTempos()
+        {
+            int i = findTempoMessage();
+            while (i != -1)
+            {
+                RemoveAt(i);
+                i = findTempoMessage();
+            }
+        }
         #endregion tempo
 
         #region tag
@@ -1608,9 +1673,13 @@ namespace Sanford.Multimedia.Midi
             return -1;
         }
 
+        /// <summary>
+        /// Change instrument
+        /// </summary>
+        /// <param name="programchange"></param>
         public void changePatch(int programchange)
         {
-            // Remove all programchange events
+            // Remove all programchange events for this track whatever the channel, the program change and the position
             int i = findProgramChange();
             while (i != -1)
             {
@@ -1623,7 +1692,49 @@ namespace Sanford.Multimedia.Midi
             // Insert new patch at position 0
             ChannelMessage message = new ChannelMessage(ChannelCommand.ProgramChange, MidiChannel, ProgramChange, 0);
             Insert(0, message);
+        }
 
+
+        /// <summary>
+        /// Find a program change event for a specific channel
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <returns></returns>
+        private int findProgramChangeChannel(int channel)
+        {
+            int id = -1;
+            foreach (MidiEvent ev in Iterator())
+            {
+                id++;
+                IMidiMessage a = ev.MidiMessage;
+                if (a.MessageType == MessageType.Channel)
+                {
+                    ChannelCommand b;
+                    if (ChannelMessage.UnpackMidiChannel2(a.Status) != channel)
+                        continue; // not the right channel
+                    b = ChannelMessage.UnpackCommand2(a.Status);
+                    if (b == ChannelCommand.ProgramChange)
+                        return id;
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Remove all patch events for a specific channel whatever the program change and the position
+        /// Use case: when changing the patch of a track, remove all patches for this channel in other tracks
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="programchange"></param>
+        public void RemoveOtherPatchs(int channel)
+        {
+            // Remove all programchange events for the channel 'channel' whatever the program change and the position
+            int i = findProgramChangeChannel(channel);
+            while (i != -1)
+            {
+                RemoveAt(i);
+                i = findProgramChangeChannel(channel);
+            }            
         }
 
         public void insertPatch(int channel, int programchange) {
@@ -2554,9 +2665,40 @@ namespace Sanford.Multimedia.Midi
             {
 
                 if (current != endOfTrackMidiEvent)
-                {
-                    // New code : move all events
-                    Move(current, current.AbsoluteTicks + offset);
+                {                    
+                    
+                    if (starttime == 0)
+                    {
+                        // Starttime is 0, do not move Tempo event, Time_signature, Key_signature
+                        if (current.MidiMessage.MessageType == MessageType.Meta && current.AbsoluteTicks == 0)
+                        {
+                            MetaMessage meta = (MetaMessage)current.MidiMessage;
+                            if (meta.MetaType == MetaType.Tempo || meta.MetaType == MetaType.TimeSignature || meta.MetaType == MetaType.KeySignature)
+                            {
+                                // Do not move tempo event, Time_signature, Key_signature
+                                // Do not move current event
+                            }
+                            else
+                            {
+                                Move(current, current.AbsoluteTicks + offset);
+                            }
+                        }
+                        else if (current.MidiMessage.MessageType == MessageType.Channel && current.AbsoluteTicks == 0)
+                        {
+                            // Do not move channel events at starttime 0
+                            // Do not move current event
+                        }
+                        else
+                        {
+                            // Move other messages at starttime 0
+                            Move(current, current.AbsoluteTicks + offset);
+                        }
+                    }
+                    else
+                    {
+                        // Starttime is not 0, so offset all events
+                        Move(current, current.AbsoluteTicks + offset);
+                    }
 
                     #region previous
                     if (current.Previous != null && current.Previous != endOfTrackMidiEvent)
@@ -2602,6 +2744,7 @@ namespace Sanford.Multimedia.Midi
                 }
             }
 
+            
         }
 
         /// <summary>

@@ -409,11 +409,11 @@
     <Compile Include="frmToools.Designer.cs">
       <DependentUpon>frmToools.cs</DependentUpon>
     </Compile>
-    <Compile Include="MP3GPlayer\frmCDGWindow.cs">
+    <Compile Include="MP3GPlayer\frmCDGLyrics.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MP3GPlayer\frmCDGWindow.Designer.cs">
-      <DependentUpon>frmCDGWindow.cs</DependentUpon>
+    <Compile Include="MP3GPlayer\frmCDGLyrics.Designer.cs">
+      <DependentUpon>frmCDGLyrics.cs</DependentUpon>
     </Compile>
     <Compile Include="MP3GPlayer\frmCDGPlayer.cs">
       <SubType>Form</SubType>
@@ -765,8 +765,8 @@
     <EmbeddedResource Include="frmToools.resx">
       <DependentUpon>frmToools.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MP3GPlayer\frmCDGWindow.resx">
-      <DependentUpon>frmCDGWindow.cs</DependentUpon>
+    <EmbeddedResource Include="MP3GPlayer\frmCDGLyrics.resx">
+      <DependentUpon>frmCDGLyrics.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MP3GPlayer\frmCDGPlayer.resx">
       <DependentUpon>frmCDGPlayer.cs</DependentUpon>
@@ -969,6 +969,8 @@
     <None Include="Resources\checkgreen24.png" />
     <None Include="Resources\checkgreen16.png" />
     <None Include="Resources\gear.ico" />
+    <None Include="Resources\cdg.png" />
+    <None Include="Resources\cdg.ico" />
     <Content Include="Resources\Ico\mml.ico" />
     <None Include="Resources\Media-Controls-Skip-To-Start-icon.png" />
     <None Include="Resources\Media-Controls-Skip-To-End-icon.png" />

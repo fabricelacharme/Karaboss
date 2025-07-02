@@ -121,7 +121,7 @@ namespace Karaboss.Mp3
         #region player
 
         // Size player
-        // 514;127
+        // 530;194
         private enum PlayerAppearances
         {
             Player,
@@ -208,10 +208,8 @@ namespace Karaboss.Mp3
             // Create mp3 Player instance, init bass and load file                                    
             Player = new Mp3Player(FileName);
             
-
             // Create event for playing completed
             Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);
-
             
             DisplayMp3Characteristics();
             DisplayOtherInfos(Mp3FullPath);            
@@ -1556,9 +1554,7 @@ namespace Karaboss.Mp3
             InitGridView();
 
             #endregion dgview
-
             
-
         }
 
 
@@ -1727,16 +1723,9 @@ namespace Karaboss.Mp3
                 BtnStatus();
 
                 #region display singer in the Lyrics form
-                // Display the Lyric form even if no lyrics in order to display the singer
-                /*
-                if (Application.OpenForms.OfType<frmLyric>().Count() == 0)
-                {
-                    frmLyric = new frmLyric(myLyricsMgmt);
-                    frmLyric.Show();
-                }
-                */
+                
 
-                if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+                if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 {
                     // During the waiting time, display informations about the next singer
                     int nbLines;
