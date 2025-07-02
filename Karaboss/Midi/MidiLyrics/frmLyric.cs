@@ -697,6 +697,7 @@ namespace Karaboss
             for (int i = 0; i < plLyrics.Count; i++)
             {
                 if (plLyrics[i].CharType == plLyric.CharTypes.Text || plLyrics[i].CharType == plLyric.CharTypes.ParagraphSep)
+                //if (plLyrics[i].CharType == plLyric.CharTypes.Text)
                 {
                     LyricsTimes.Add(plLyrics[i].TicksOn);
                 }

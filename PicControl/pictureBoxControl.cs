@@ -2514,7 +2514,7 @@ namespace PicControl
                 // Check if syllabes[ctp] is a paragraph separator
                 if (syllabes[ctp].SylCount == 1 && syllabes[ctp].text == " ")
                 {
-                    
+                    _currentTextPos = ctp - 1; // Skip paragraph separator
                 }
                 else 
                 {                     // Update current text position

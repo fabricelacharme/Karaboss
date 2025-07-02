@@ -478,7 +478,7 @@ namespace Karaboss.MidiLyrics
             // Reduce lyric Ticksoff to the tickson of the  corresponding melody note
             // If a melody track exists, and if it is less than the actual value.
             // ===============================================
-            if (_melodytracknum != -1)
+            if (_melodytracknum != -1 && _melodytracknum < sequence1.tracks.Count)
             {
                 Sanford.Multimedia.Midi.Track trk = sequence1.tracks[_melodytracknum];
                 List<MidiNote> notes = trk.Notes;
