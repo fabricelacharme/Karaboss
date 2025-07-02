@@ -2509,6 +2509,19 @@ namespace PicControl
                     bEndOfLine = false;                    
                     vOffset = 0;
                 }
+
+                /*
+                // Check if syllabes[ctp] is a paragraph separator
+                if (syllabes[ctp].SylCount == 1 && syllabes[ctp].text == " ")
+                {
+                    
+                }
+                else 
+                {                     // Update current text position
+                    _currentTextPos = ctp;
+                }
+                */
+                
                 _currentTextPos = ctp;                
             }
            

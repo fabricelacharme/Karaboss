@@ -255,16 +255,16 @@ namespace BallsControl
         /// <summary>
         /// Move balls according to lyrics times
         /// </summary>
-        /// <param name="SongPosition"></param>
-        /// <param name="CurrentLyricsPos"></param>
-        public void MoveBallsToLyrics(int SongPosition, int textpos)
+        /// <param name="SongPosition">The sequencezr position</param>
+        /// <param name="CurrentLyricsPos">The position of the lyric</param>
+        public void MoveBallsToLyrics(int SongPosition, int LyricPos)
         {
             // 21 balls: 1 fix, 20 moving to the fixed one            
             int LyricPosition;
             int delta;
             int idLyric; // = 0;
 
-            CurrentLyricsPos = textpos;
+            CurrentLyricsPos = LyricPos;
 
             for (int j = 0; j < BallsNumber; j++)
             {
