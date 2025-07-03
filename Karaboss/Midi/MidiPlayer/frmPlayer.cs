@@ -4720,10 +4720,6 @@ namespace Karaboss
 
         #region Menu Edit
 
-   
-
-    
-
         /// <summary>
         /// Menu: open lyrics editor
         /// </summary>
