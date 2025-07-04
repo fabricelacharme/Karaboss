@@ -3097,12 +3097,13 @@ namespace Sanford.Multimedia.Midi.Score
             else
             {
                 Track track = sequence1.tracks[_selectedstaff];
-                StartTime = getPreviousNoteStart(track, StartTime);
+                // Fab : 03/07/2025
+                // StartTime must be the start time selected in the dialog
+                StartTime = ModifyStartTimesDialog.StartTime;
+                //StartTime = getPreviousNoteStart(track, StartTime);
                 track.OffsetStartTimes(StartTime, Offset);
             }
-
-            //Track track = sequence1.tracks[_selectedstaff];
-            //track.OffsetStartTimes(StartTime, Offset);
+            
 
             this.Refresh();
 
