@@ -772,7 +772,7 @@ namespace MusicXml.Domain
                                         // <coda number="1" type="start" default-y="44.97"/>
                                         var coda = new Coda();
                                         coda.Measure = curMeasure.Number;
-                                        
+
                                         if (words.Value.ToString().Length == 1)
                                         {
                                             coda.Type = CodaTypes.Start;
@@ -792,9 +792,23 @@ namespace MusicXml.Domain
                                             coda.Type = CodaTypes.DSCoda;
                                             //coda.VerseNumber = 0; // Default verse number
                                         }
-                                        
+
                                         MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Coda, Element = coda };
                                         curMeasure.MeasureElements.Add(trucmeasureElement);
+                                    }
+                                    else
+                                    {
+                                        var segno = directionType.Descendants("segno").FirstOrDefault();
+                                        if (segno != null)
+                                        {
+                                            var coda = new Coda();
+                                            coda.Measure = curMeasure.Number;
+                                            coda.Type = CodaTypes.Start;
+
+                                            MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Coda, Element = coda };
+                                            curMeasure.MeasureElements.Add(trucmeasureElement);
+
+                                        }
                                     }
                                 }
                             }
