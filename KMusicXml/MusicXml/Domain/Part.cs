@@ -605,6 +605,7 @@ namespace MusicXml.Domain
                                 MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Note, Element = note };
                                 curMeasure.MeasureElements.Add(trucmeasureElement);                                
                             }                            
+                            
                             else if (childnode.Name == "harmony")
                             {
                                 // Chords
@@ -622,6 +623,7 @@ namespace MusicXml.Domain
                                 } 
                                 
                             }                            
+                            
                             else if (childnode.Name == "backup")
                             {
                                 // voir https://www.w3.org/2021/06/musicxml40/tutorial/midi-compatible-part/
@@ -638,6 +640,7 @@ namespace MusicXml.Domain
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
                                 }                               
                             }
+                            
                             else if (childnode.Name == "forward")
                             {
                                 var dur = childnode.Descendants("duration").FirstOrDefault();
@@ -651,6 +654,7 @@ namespace MusicXml.Domain
                                 }
 
                             }                            
+                            
                             else if (childnode.Name == "barline")
                             {
                                 var barline = new Barline();
@@ -733,6 +737,7 @@ namespace MusicXml.Domain
                                     curMeasure.MeasureElements.Add(trucmeasureElement);
                                 }
                             }
+                            
                             else if (childnode.Name == "time")
                             {                                
                                 var beats = childnode.Descendants("beats").FirstOrDefault();
@@ -755,7 +760,45 @@ namespace MusicXml.Domain
                                 }
                                
                             }
-                        
+
+                            else if (childnode.Name == "direction")
+                            {
+                                var directionType = childnode.Descendants("direction-type").FirstOrDefault();
+                                if (directionType != null)
+                                {
+                                    var words = directionType.Descendants("words").FirstOrDefault();
+                                    if (words != null)
+                                    {
+                                        // <coda number="1" type="start" default-y="44.97"/>
+                                        var coda = new Coda();
+                                        coda.Measure = curMeasure.Number;
+                                        
+                                        if (words.Value.ToString().Length == 1)
+                                        {
+                                            coda.Type = CodaTypes.Start;
+                                        }
+                                        else if (words.Value.ToString().ToLower().Contains("to coda"))
+                                        {
+                                            coda.Type = CodaTypes.ToCoda;
+                                            //coda.VerseNumber = 1; // Default verse number
+                                        }
+                                        else if (words.Value.ToString().ToLower().Contains("d.s. al coda"))
+                                        {
+                                            coda.Type = CodaTypes.DSCoda;
+                                            //coda.VerseNumber = 1; // Default verse number
+                                        }
+                                        else
+                                        {
+                                            coda.Type = CodaTypes.DSCoda;
+                                            //coda.VerseNumber = 0; // Default verse number
+                                        }
+                                        
+                                        MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Coda, Element = coda };
+                                        curMeasure.MeasureElements.Add(trucmeasureElement);
+                                    }
+                                }
+                            }
+
                         }
                         _part.Measures.Add(curMeasure);
                     }

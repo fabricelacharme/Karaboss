@@ -15,6 +15,7 @@
 		Barline,
 		Ending,
 		TempoChange,
-		Time
+		Time,
+		Coda
 	}
 }

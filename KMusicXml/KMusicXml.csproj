@@ -47,6 +47,7 @@
     <Compile Include="MusicXml\Domain\Backup.cs" />
     <Compile Include="MusicXml\Domain\Chord.cs" />
     <Compile Include="MusicXml\Domain\Clef.cs" />
+    <Compile Include="MusicXml\Domain\Coda.cs" />
     <Compile Include="MusicXml\Domain\Encoding.cs" />
     <Compile Include="MusicXml\Domain\Ending.cs" />
     <Compile Include="MusicXml\Domain\Forward.cs" />

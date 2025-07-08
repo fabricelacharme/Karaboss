@@ -795,42 +795,56 @@ namespace MusicXml
         /// <returns></returns>
         private List<List<int>> CreateVerses(List<Measure> partmes)
         {
-            bool bcondition = true;
-            int y;
+            //bool bcondition = true;
+            int firstbackward;
             int pivot = 0;
-            int firstfwd = 0;
-            int firstbackward = 0;
-            List<int> bloc = new List<int>();
-            List<List<int>> mapmeasures = new List<List<int>>();
+            //int firstfwd = 0;
+            //int firstbackward = 0;
+            //List<int> bloc = new List<int>();
+            //List<List<int>> mapmeasures = new List<List<int>>();
 
-            int versenumber = 0;
-            //bool bReserved = false;
-            bool bIncreasePivot = false;
+            //int versenumber = 0;            
+            //bool bIncreasePivot = false;
+
+            // Search for a backward/forward
+            firstbackward = GetFirstBackward(pivot, partmes);
+
+            // Search for a Coda or D.S. (forward)
+            int firstCoda = GetFirstCoda(pivot, partmes);
+
             
-            // SIMPLE CASE  ===========================================================
-            // no backward/forward => no changes => mapmeasure is the list of measures
-            // ========================================================================
-            y = GetFirstBackward(pivot, partmes);
-            if (y == -1)
+            if (firstbackward == -1 && firstCoda == -1)
             {
-                bloc = new List<int>();
-                for (int i = 0; i <= partmes.Count - 1; i++)
-                {
-                    bloc.Add(i);
-                }
-                mapmeasures.Add(bloc);
-                return mapmeasures;
+                // SIMPLE CASE  ===========================================================
+                // no backward/forward => no changes => mapmeasure is the list of measures
+                // ========================================================================
+                return GetSimpleVerses(partmes);               
             }
-
-
             // COMPLEX CASE ===========================================================
-            // blocs backward/forward exist
+            // blocs backward/forward or Coda exist
             // => extract verses
             //    remove measures attached to a single verse
             // ========================================================================
+            else if (firstbackward != -1)
+            {
+                return GetBackwardForwardVerses(partmes);
+            }
+            else if (firstCoda != -1)
+            {
+                // Coda exists
+                return GetCodaVerses(partmes);
+            }
+            else
+            {
+                return null;
+            }
+
+
+
+            /*
             y = 0;
             Measure mes = new Measure();
-                        
+
             int numloop = 0;            
             int nbLoopMax = 3;
             int firstfwdminimum = 0;
@@ -868,12 +882,10 @@ namespace MusicXml
                     bloc.Add(i);
                 }
                 mapmeasures.Add(bloc);
-                
+
                 pivot = firstfwd + 1;
             }
 
-
-            
             // 2. consider a loop with several forward/backward
             while (bcondition)
             {
@@ -882,7 +894,7 @@ namespace MusicXml
                 firstfwd = GetFirstForward(pivot, partmes);
                 if (firstfwd < firstfwdminimum)
                     firstfwd = firstfwdminimum;
-                    
+
 
                 // 2. Search ascending backward from start to more
                 y = GetFirstBackward(pivot, partmes);
@@ -907,8 +919,7 @@ namespace MusicXml
                     mapmeasures.Add(bloc);
                     break;
                     #endregion leave if no more backward
-                }
-                
+                }                
 
                 // Add bloc including measures between FirstForward and FirstBackWard
                 versenumber++;                
@@ -958,18 +969,16 @@ namespace MusicXml
                     // this is the forward minimum value to take into account
                     firstfwdminimum = pivot;
                     bIncreasePivot = false; //bReserved = false;
-                    
-                    
+
+
                     // ********************* FAB 31/10/ A CONFIRMER *******************************
                     versenumber = 0;
                 } 
                 else if (bIncreasePivot) // bReserved)
                 {                    
                     pivot = y + 1;
-                    bIncreasePivot = false; // bReserved = false;
-                    
+                    bIncreasePivot = false; // bReserved = false;                    
                 }
-
 
                 #region leave if end of file
                 // get last bloc before leaving
@@ -978,7 +987,213 @@ namespace MusicXml
                     pivot = partmes.Count - 1;
                     firstfwd = GetFirstForward(pivot, partmes);
                     y = GetFirstBackward(pivot, partmes);
-                    
+
+                    // Add bloc
+                    bloc = new List<int>();
+                    for (int i = firstfwd; i <= y; i++)
+                    {
+                        mes = partmes[i];
+                        //if (mes.lstVerseNumber.Count <= 1 || mes.lstVerseNumber.Contains(versenumber))
+                        if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber) || mes.lstVerseNumber[0] == 0)
+                        {
+                            bloc.Add(i);
+                        }
+                    }
+                    mapmeasures.Add(bloc);
+                    break;
+                }
+
+                #endregion leave if end of file
+            }
+
+            return mapmeasures;
+            */
+
+
+
+        }
+
+
+        /// <summary>
+        /// Verses are simple, no forward/backward, no Coda, no D.S., no repeats
+        /// </summary>
+        /// <param name="partmes"></param>
+        /// <returns></returns>
+        private List<List<int>> GetSimpleVerses(List<Measure> partmes)
+        {
+            List<List<int>> mapmeasures = new List<List<int>>();
+            List<int> bloc = new List<int>();
+            // Simple case: no forward/backward
+            for (int i = 0; i < partmes.Count - 1; i++)
+            {
+                bloc.Add(i);
+            }
+            mapmeasures.Add(bloc);
+            return mapmeasures;
+        }
+
+        /// <summary>
+        /// Verses are complex, with forward/backward
+        /// </summary>
+        /// <param name="partmes"></param>
+        /// <returns></returns>
+        private List<List<int>> GetBackwardForwardVerses(List<Measure> partmes)
+        {
+            List<List<int>> mapmeasures = new List<List<int>>();
+            List<int> bloc = new List<int>();
+            int y = 0;
+            bool bcondition = true;            
+            int pivot = 0;
+            int firstfwd = 0;
+            int firstbackward = 0;
+            Measure mes = new Measure();
+
+            int numloop = 0;
+            int nbLoopMax = 3;
+            int firstfwdminimum = 0;
+
+            int versenumber = 0;
+            bool bIncreasePivot = false;
+
+            // 1. Consider first bloc
+            // Can be empty or not
+            // Can be some measure or repeated measures
+
+            // Get first forward/forward
+            firstfwd = GetFirstForwardUp(partmes.Count - 1, partmes);
+            firstbackward = GetFirstBackward(0, partmes);
+            // Blox exists if firstfwd is at 0
+
+            // A backward exists greater than the forward 
+            // this is a reapeat  => take twice (ex imagine)
+            if (firstbackward > 0 && firstbackward < firstfwd)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    bloc = new List<int>();
+                    for (int i = 0; i <= firstbackward; i++)
+                    {
+                        bloc.Add(i);
+                    }
+                    mapmeasures.Add(bloc);
+                }
+                pivot = firstbackward + 1;
+            }
+            else if (firstfwd > 0 && firstfwd < firstbackward)
+            {
+                // This is a simple bloc => take one (ex cigarette)
+                bloc = new List<int>();
+                for (int i = 0; i < firstfwd; i++)
+                {
+                    bloc.Add(i);
+                }
+                mapmeasures.Add(bloc);
+
+                pivot = firstfwd + 1;
+            }
+
+            // 2. consider a loop with several forward/backward
+            while (bcondition)
+            {
+                // Calculate limits of bloc if the repeats are done
+                // 1 Search descending forward from start to less
+                firstfwd = GetFirstForward(pivot, partmes);
+                if (firstfwd < firstfwdminimum)
+                    firstfwd = firstfwdminimum;
+
+
+                // 2. Search ascending backward from start to more
+                y = GetFirstBackward(pivot, partmes);
+
+
+                // If no more backward starting from "start"
+                // Create a verse with all trailing measures and leave
+                if (y == -1)
+                {
+                    #region leave if no more backward
+                    versenumber++;
+                    bloc = new List<int>();
+                    for (int i = firstfwd; i <= partmes.Count - 1; i++)
+                    {
+                        mes = partmes[i];
+                        if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber) || mes.lstVerseNumber[0] == 0)
+                        //if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber))
+                        {
+                            bloc.Add(i);
+                        }
+                    }
+                    mapmeasures.Add(bloc);
+                    break;
+                    #endregion leave if no more backward
+                }
+
+                // Add bloc including measures between FirstForward and FirstBackWard
+                versenumber++;
+                bloc = new List<int>();
+
+                for (int i = firstfwd; i <= y; i++)
+                {
+                    mes = partmes[i];
+
+                    // TODO lyriques réservés et pas réservés
+
+                    // keep only blocs 
+                    // - Without lyrics (Count = 0)
+                    // - With only one lyric number (all the verses use these single lyrics) (Count = 1)
+                    // - Which verse number is contained in the list of verses
+                    //if (mes.lstVerseNumber.Count <= 1 || mes.lstVerseNumber.Contains(versenumber))
+                    if (mes.lstVerseNumber.Count == 0 || mes.lstVerseNumber.Contains(versenumber) || mes.lstVerseNumber[0] == 0)
+                    {
+                        // If last measure of a verse
+                        // if the current verse is the last one, it means that we have looped all the verses
+                        // put bReserved to true in order to evolve the pivot value
+                        if (i == y)
+                        {
+                            if (mes.lstVerseNumber.Count > 0)
+                            {
+                                if (versenumber == mes.lstVerseNumber[mes.lstVerseNumber.Count - 1])
+                                    bIncreasePivot = true; // bReserved = true;
+                            }
+                        }
+
+                        bloc.Add(i);
+                    }
+                }
+                mapmeasures.Add(bloc);
+
+                numloop++;
+
+                // Increase pivot value               /
+                if (numloop >= nbLoopMax)
+                {
+                    pivot = y + 1;
+                    numloop = 0;
+                    nbLoopMax = 3;
+
+                    // All loops have been done: we do not have to consider previous measures
+                    // how can we prevent to calculate again firstfwd ?
+                    // this is the forward minimum value to take into account
+                    firstfwdminimum = pivot;
+                    bIncreasePivot = false; //bReserved = false;
+
+
+                    // ********************* FAB 31/10/ A CONFIRMER *******************************
+                    versenumber = 0;
+                }
+                else if (bIncreasePivot) // bReserved)
+                {
+                    pivot = y + 1;
+                    bIncreasePivot = false; // bReserved = false;                    
+                }
+
+                #region leave if end of file
+                // get last bloc before leaving
+                if (pivot > partmes.Count - 1)
+                {
+                    pivot = partmes.Count - 1;
+                    firstfwd = GetFirstForward(pivot, partmes);
+                    y = GetFirstBackward(pivot, partmes);
+
                     // Add bloc
                     bloc = new List<int>();
                     for (int i = firstfwd; i <= y; i++)
@@ -999,7 +1214,48 @@ namespace MusicXml
 
             return mapmeasures;
         }
-       
+
+        /// <summary>
+        /// Returns a list of measures that are part of the coda parts.
+        /// </summary>
+        /// <param name="partmes"></param>
+        /// <returns></returns>
+        private List<List<int>> GetCodaVerses(List<Measure> partmes)
+        {
+            List<List<int>> mapmeasures = new List<List<int>>();
+            
+            // Search for the first coda DS and add all measures before it (include the measure containing the ds coda)
+            int firstDSCoda = GetFirstDSCoda(0, partmes);
+            List<int> bloc = new List<int>();
+            for (int i = 0; i <= firstDSCoda; i++)
+            {
+                bloc.Add(i);
+            }
+            mapmeasures.Add(bloc);
+
+
+            // Search for the coda start and ToCoda and add all measures between them
+            // include the measure containing the coda start and the ToCoda
+            int firstCodaStart = GetFirstCodaStart(0, partmes);
+            int firstToCoda = GetFirstToCoda(firstCodaStart, partmes);
+            bloc = new List<int>();
+            for (int i = firstCodaStart; i <= firstToCoda; i++)
+            {                
+                bloc.Add(i);                
+            }
+            mapmeasures.Add(bloc);
+
+
+            // Search for the coda end and add all measures after it
+            bloc = new List<int>();
+            for (int i = firstDSCoda + 1; i < partmes.Count; i++)
+            {                
+                bloc.Add(i);                
+            }
+            mapmeasures.Add(bloc);
+
+            return mapmeasures;
+        }
 
         /// <summary>
         /// Return first element of type barline/forward - Search descending
@@ -1030,6 +1286,113 @@ namespace MusicXml
             // Return first element if no forward
             return 0;
         }
+
+        /// <summary>
+        /// Searches for the first measure containing a coda or related repeat direction starting from the specified
+        /// index.
+        /// </summary>
+        /// <remarks>This method iterates through the provided list of measures starting at the specified
+        /// index and checks for the presence of a coda, D.S., or D.C. repeat direction within the measure's
+        /// elements.</remarks>
+        /// <param name="start">The zero-based index of the measure to start the search from.</param>
+        /// <param name="Measures">The list of measures to search through. Cannot be null.</param>
+        /// <returns>The zero-based index of the first measure containing a coda, D.S., or D.C. repeat direction. Returns -1 if
+        /// no such measure is found.</returns>
+        private int GetFirstCoda(int start, List<Measure> Measures)
+        {
+            for (int j = start; j < Measures.Count; j++)
+            {
+                Measure measure = Measures[j];
+                List<MeasureElement> lstME = measure.MeasureElements;
+                for (int i = 0; i < lstME.Count; i++)
+                {
+                    MeasureElement measureElement = lstME[i];
+                    if (measureElement.Type == MeasureElementType.Coda)
+                    {
+                        // Found a coda
+                        return j;
+                    }
+                }
+            }
+            // Return -1 if no coda
+            return -1;
+        }
+
+        private int GetFirstCodaStart(int start, List<Measure> Measures)
+        {
+            for (int j = start; j < Measures.Count; j++)
+            {
+                Measure measure = Measures[j];
+                List<MeasureElement> lstME = measure.MeasureElements;
+                for (int i = 0; i < lstME.Count; i++)
+                {
+                    MeasureElement measureElement = lstME[i];
+                    if (measureElement.Type == MeasureElementType.Coda)
+                    {
+                        object obj = measureElement.Element;
+                        Coda coda = (Coda)measureElement.Element;
+                        if (coda.Type == CodaTypes.Start)
+                        {
+                            // Found a coda start
+                            return j;
+                        }
+                    }
+                }
+            }
+            // Return -1 if no coda
+            return -1;
+        }
+
+        private int GetFirstDSCoda(int start, List<Measure> Measures)
+        {
+            for (int j = start; j < Measures.Count; j++)
+            {
+                Measure measure = Measures[j];
+                List<MeasureElement> lstME = measure.MeasureElements;
+                for (int i = 0; i < lstME.Count; i++)
+                {
+                    MeasureElement measureElement = lstME[i];
+                    if (measureElement.Type == MeasureElementType.Coda)
+                    {
+                        object obj = measureElement.Element;
+                        Coda coda = (Coda)measureElement.Element;
+                        if (coda.Type == CodaTypes.DSCoda)
+                        {
+                            // Found a coda end
+                            return j;
+                        }
+                    }
+                }
+            }
+            // Return -1 if no coda end
+            return -1;
+        }
+
+        private int GetFirstToCoda(int start, List<Measure> Measures)
+        {
+            for (int j = start; j < Measures.Count; j++)
+            {
+                Measure measure = Measures[j];
+                List<MeasureElement> lstME = measure.MeasureElements;
+                for (int i = 0; i < lstME.Count; i++)
+                {
+                    MeasureElement measureElement = lstME[i];
+                    if (measureElement.Type == MeasureElementType.Coda)
+                    {
+                        object obj = measureElement.Element;
+                        Coda coda = (Coda)measureElement.Element;
+                        if (coda.Type == CodaTypes.ToCoda)
+                        {
+                            // Found a ToCoda
+                            return j;
+                        }
+                    }
+                }
+            }
+            // Return -1 if no ToCoda
+            return -1;
+        }
+
 
         private int GetFirstForwardUp(int end, List<Measure> Measures)
         {
