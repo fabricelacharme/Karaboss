@@ -779,18 +779,16 @@ namespace MusicXml.Domain
                                         }
                                         else if (words.Value.ToString().ToLower().Contains("to coda"))
                                         {
-                                            coda.Type = CodaTypes.ToCoda;
-                                            //coda.VerseNumber = 1; // Default verse number
+                                            coda.Type = CodaTypes.ToCoda;                                            
                                         }
                                         else if (words.Value.ToString().ToLower().Contains("d.s. al coda"))
                                         {
-                                            coda.Type = CodaTypes.DSCoda;
-                                            //coda.VerseNumber = 1; // Default verse number
+                                            coda.Type = CodaTypes.DSCoda;                                            
                                         }
                                         else
                                         {
-                                            coda.Type = CodaTypes.DSCoda;
-                                            //coda.VerseNumber = 0; // Default verse number
+                                            //coda.Type = CodaTypes.DSCoda;
+                                            continue;
                                         }
 
                                         MeasureElement trucmeasureElement = new MeasureElement { Type = MeasureElementType.Coda, Element = coda };
