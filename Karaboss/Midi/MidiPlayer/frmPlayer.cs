@@ -271,6 +271,7 @@ namespace Karaboss
         private frmPianoRoll frmPianoRoll;
         private frmPianoTraining frmPianoTraining;     
         private frmModifyTempo frmModifyTempo;
+        private frmModifyDivision frmModifyDivision;
         private readonly int NumInstance = 1;
 
         // To wait between 2 songs (playlists)
@@ -5214,7 +5215,6 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuMidiAddMeasures_Click(object sender, EventArgs e)
         {
-
             // Le numérateur de la fraction (nombre supérieur) indique le « nombre de temps » utilisés dans la mesure :
             // 2/4 signifie « une mesure à deux noires »,
             // 3/2, « une mesure à trois blanches »,
@@ -5240,10 +5240,8 @@ namespace Karaboss
         private void MnuMidiModifyTempo_Click(object sender, EventArgs e)
         {
             DspEdit(true);
-
             
             Application.OpenForms["frmModifyTempo"]?.Close();
-
 
             if (Application.OpenForms["frmModifyTempo"] == null)
             {
@@ -5251,7 +5249,6 @@ namespace Karaboss
                 frmModifyTempo.Show();
                 frmModifyTempo.Refresh();
             }
-
         }
 
         public void UpdateTimes()
@@ -5261,7 +5258,7 @@ namespace Karaboss
             FileModified();
             DisplayFileInfos();
         }
-
+      
 
         /// <summary>
         /// Modify Time Signature (4/4, 4/2 etc...)
@@ -5288,7 +5285,48 @@ namespace Karaboss
             }
         }
 
-    
+
+        /// <summary>
+        /// Modyfy the division of the midi file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuMidiModifyDivision_Click(object sender, EventArgs e)
+        {
+            DspEdit(true);
+
+            Application.OpenForms["frmModifyDivision"]?.Close();
+
+            if (Application.OpenForms["frmModifyDivision"] == null)
+            {
+                frmModifyDivision = new frmModifyDivision(sequence1);
+                frmModifyDivision.Show();
+                frmModifyDivision.Refresh();
+            }
+        }
+
+        /// <summary>
+        /// Update division of the midi file
+        /// </summary>
+        public void UpdateDivision(decimal division)
+        {
+            #region guard
+            if (division == sequence1.Division)
+                return;
+            #endregion guard
+
+            //UpdateMidiTimes();
+            sequence1.Division = Convert.ToInt32(division);
+            _ppqn = sequence1.Division;
+            _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. For sheetmusic offset
+            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);  // Real duration according to tempo changes
+
+            FileModified();
+            DisplayFileInfos();
+        }
+
+
+      
 
         /// <summary>
         /// Remove Fader in & out (enfin j'espère !)
@@ -7474,7 +7512,6 @@ namespace Karaboss
             int Min = (int)(_duration / 60);
             int Sec = (int)(_duration - (Min * 60));
             lblDuration.Text = string.Format("{0:00}:{1:00}", Min, Sec);
-
             
 
             // File was modified - Only if sequencer is visible
@@ -7487,11 +7524,9 @@ namespace Karaboss
                 sheetmusic.UpdateTempoChanges();
                 //TempoDelta = 100;
 
-
                 // Display changes
                 DisplayFileInfos(_tempo);
                 
-
                 // MIDI file was modified
                 FileModified();                
             }
@@ -8959,6 +8994,8 @@ namespace Karaboss
         #endregion Save File
 
         #endregion Utilities
+
+       
     }
 
 }

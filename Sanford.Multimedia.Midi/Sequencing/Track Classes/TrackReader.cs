@@ -477,11 +477,12 @@ namespace Sanford.Multimedia.Midi
                 ///[dd] Denominator
                 ///The denominator represents the denominator of the time signature that you would find on traditional sheet music.
                 ///The denominator specifies the number of quarter notes in a beat. 
-                ///A time signature of 4,4 means: 4 beats in the bar and each beat is a quarter note (i.e. a crotchet). 
+                ///A time signature of 4/4 means: 4 beats in the bar and each beat is a quarter note (i.e. a crotchet). 
                 ///In MIDI the denominator value is stored in a special format. i.e. the real denominator = 2^[dd].
 
                 ///[cc] MIDI ticks per metronome click
-                ///The standard MIDI clock ticks every 24 times every quarter note (crotchet) so a [cc] value of 24 would mean that the metronome clicks once every quarter note. 
+                ///The standard MIDI clock ticks every 24 times every quarter note (crotchet) so a [cc] value of 24 
+                ///would mean that the metronome clicks once every quarter note. 
                 ///A [cc] value of 6 would mean that the metronome clicks once every 1/8th of a note (quaver). 
                 ///Be warned, this midi clock is different from the clock who's pulses determine the start time and duration of the notes (see PPQN below). 
                 ///This MIDI clock ticks 24 times a second and seems to be used only to specify the rate of the metronome - 

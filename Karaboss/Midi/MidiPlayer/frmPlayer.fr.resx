@@ -313,6 +313,12 @@
   <data name="mnuMidiTimeSignature.Size" type="System.Drawing.Size, System.Drawing">
     <value>221, 22</value>
   </data>
+  <data name="mnuMidiModifyDivision.Size" type="System.Drawing.Size, System.Drawing">
+    <value>221, 22</value>
+  </data>
+  <data name="mnuMidiModifyDivision.Text" xml:space="preserve">
+    <value>Modifier la Division</value>
+  </data>
   <data name="mnuMidiRemoveFader.Size" type="System.Drawing.Size, System.Drawing">
     <value>221, 22</value>
   </data>
@@ -444,9 +450,6 @@
   </data>
   <data name="lblMainVolume.ToolTip" xml:space="preserve">
     <value />
-  </data>
-  <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
-    <value>24, 80</value>
   </data>
   <data name="sldMainVolume.ToolTip" xml:space="preserve">
     <value />
