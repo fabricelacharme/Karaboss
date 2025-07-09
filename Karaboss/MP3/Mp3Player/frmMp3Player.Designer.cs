@@ -108,6 +108,9 @@
             this.lblHotkeysOthers = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.Timer3 = new System.Windows.Forms.Timer(this.components);
+            this.btnOffsetPlus = new System.Windows.Forms.Button();
+            this.btnOffsetMinus = new System.Windows.Forms.Button();
+            this.lblTextSize = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -856,6 +859,9 @@
             // pnlEdit
             // 
             this.pnlEdit.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.pnlEdit.Controls.Add(this.lblTextSize);
+            this.pnlEdit.Controls.Add(this.btnOffsetMinus);
+            this.pnlEdit.Controls.Add(this.btnOffsetPlus);
             this.pnlEdit.Controls.Add(this.btnMsMinor);
             this.pnlEdit.Controls.Add(this.btnMsPlus);
             this.pnlEdit.Controls.Add(this.BtnFontMoins);
@@ -897,6 +903,25 @@
             // Timer3
             // 
             this.Timer3.Tick += new System.EventHandler(this.Timer3_Tick);
+            // 
+            // btnOffsetPlus
+            // 
+            resources.ApplyResources(this.btnOffsetPlus, "btnOffsetPlus");
+            this.btnOffsetPlus.Name = "btnOffsetPlus";
+            this.btnOffsetPlus.UseVisualStyleBackColor = true;
+            this.btnOffsetPlus.Click += new System.EventHandler(this.btnOffsetPlus_Click);
+            // 
+            // btnOffsetMinus
+            // 
+            resources.ApplyResources(this.btnOffsetMinus, "btnOffsetMinus");
+            this.btnOffsetMinus.Name = "btnOffsetMinus";
+            this.btnOffsetMinus.UseVisualStyleBackColor = true;
+            this.btnOffsetMinus.Click += new System.EventHandler(this.btnOffsetMinus_Click);
+            // 
+            // lblTextSize
+            // 
+            resources.ApplyResources(this.lblTextSize, "lblTextSize");
+            this.lblTextSize.Name = "lblTextSize";
             // 
             // frmMp3Player
             // 
@@ -1020,5 +1045,8 @@
         private System.Windows.Forms.Button btnMsMinor;
         private System.Windows.Forms.Button btnMsPlus;
         private System.Windows.Forms.Timer Timer3;
+        private System.Windows.Forms.Button btnOffsetPlus;
+        private System.Windows.Forms.Label lblTextSize;
+        private System.Windows.Forms.Button btnOffsetMinus;
     }
 }

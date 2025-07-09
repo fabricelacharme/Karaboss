@@ -328,7 +328,7 @@
     <value>btnTempoMinus</value>
   </data>
   <data name="&gt;&gt;btnTempoMinus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTempoMinus.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -340,7 +340,7 @@
     <value>btnTempoPlus</value>
   </data>
   <data name="&gt;&gt;btnTempoPlus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTempoPlus.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -376,7 +376,7 @@
     <value>btnTranspoMinus</value>
   </data>
   <data name="&gt;&gt;btnTranspoMinus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTranspoMinus.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -388,7 +388,7 @@
     <value>btnTranspoPlus</value>
   </data>
   <data name="&gt;&gt;btnTranspoPlus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTranspoPlus.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -460,7 +460,7 @@
     <value>pnlDisplay</value>
   </data>
   <data name="&gt;&gt;pnlDisplay.Type" xml:space="preserve">
-    <value>Karaboss.Display.PanelPlayer, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Display.PanelPlayer, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pnlDisplay.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -472,7 +472,7 @@
     <value>btnPrev</value>
   </data>
   <data name="&gt;&gt;btnPrev.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnPrev.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -484,7 +484,7 @@
     <value>btnNext</value>
   </data>
   <data name="&gt;&gt;btnNext.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnNext.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -508,7 +508,7 @@
     <value>btnStop</value>
   </data>
   <data name="&gt;&gt;btnStop.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnStop.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -520,7 +520,7 @@
     <value>btnPlay</value>
   </data>
   <data name="&gt;&gt;btnPlay.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnPlay.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -646,7 +646,7 @@
     <value>btnTempoMinus</value>
   </data>
   <data name="&gt;&gt;btnTempoMinus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTempoMinus.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -667,7 +667,7 @@
     <value>btnTempoPlus</value>
   </data>
   <data name="&gt;&gt;btnTempoPlus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTempoPlus.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -754,7 +754,7 @@
     <value>btnTranspoMinus</value>
   </data>
   <data name="&gt;&gt;btnTranspoMinus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTranspoMinus.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -775,7 +775,7 @@
     <value>btnTranspoPlus</value>
   </data>
   <data name="&gt;&gt;btnTranspoPlus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Buttons.PlusButtonControl, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnTranspoPlus.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -938,7 +938,7 @@
     <value>pnlDisplay</value>
   </data>
   <data name="&gt;&gt;pnlDisplay.Type" xml:space="preserve">
-    <value>Karaboss.Display.PanelPlayer, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.Display.PanelPlayer, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pnlDisplay.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -965,7 +965,7 @@
     <value>btnPrev</value>
   </data>
   <data name="&gt;&gt;btnPrev.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnPrev.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -992,7 +992,7 @@
     <value>btnNext</value>
   </data>
   <data name="&gt;&gt;btnNext.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnNext.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -1046,7 +1046,7 @@
     <value>btnStop</value>
   </data>
   <data name="&gt;&gt;btnStop.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnStop.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -1073,7 +1073,7 @@
     <value>btnPlay</value>
   </data>
   <data name="&gt;&gt;btnPlay.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.14, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.18, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnPlay.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -1088,7 +1088,7 @@
     <value>267, 25</value>
   </data>
   <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 24</value>
+    <value>24, 80</value>
   </data>
   <data name="sldMainVolume.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -1151,13 +1151,13 @@
     <value>590, 17</value>
   </metadata>
   <data name="txtTitle.Location" type="System.Drawing.Point, System.Drawing">
-    <value>327, 8</value>
+    <value>348, 8</value>
   </data>
   <data name="txtTitle.Size" type="System.Drawing.Size, System.Drawing">
     <value>160, 20</value>
   </data>
   <data name="txtTitle.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
+    <value>18</value>
   </data>
   <data name="txtTitle.Text" xml:space="preserve">
     <value>Title</value>
@@ -1175,16 +1175,16 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;txtTitle.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>6</value>
   </data>
   <data name="txtAuthor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>512, 8</value>
+    <value>547, 8</value>
   </data>
   <data name="txtAuthor.Size" type="System.Drawing.Size, System.Drawing">
     <value>160, 20</value>
   </data>
   <data name="txtAuthor.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
+    <value>24</value>
   </data>
   <data name="txtAuthor.Text" xml:space="preserve">
     <value>Author</value>
@@ -1202,16 +1202,16 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;txtAuthor.ZOrder" xml:space="preserve">
-    <value>20</value>
+    <value>23</value>
   </data>
   <data name="txtArtist.Location" type="System.Drawing.Point, System.Drawing">
-    <value>327, 34</value>
+    <value>348, 34</value>
   </data>
   <data name="txtArtist.Size" type="System.Drawing.Size, System.Drawing">
     <value>160, 20</value>
   </data>
   <data name="txtArtist.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
+    <value>20</value>
   </data>
   <data name="txtArtist.Text" xml:space="preserve">
     <value>Artist</value>
@@ -1229,16 +1229,16 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;txtArtist.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>9</value>
   </data>
   <data name="txtAlbum.Location" type="System.Drawing.Point, System.Drawing">
-    <value>328, 59</value>
+    <value>349, 59</value>
   </data>
   <data name="txtAlbum.Size" type="System.Drawing.Size, System.Drawing">
     <value>160, 20</value>
   </data>
   <data name="txtAlbum.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
+    <value>22</value>
   </data>
   <data name="txtAlbum.Text" xml:space="preserve">
     <value>Album</value>
@@ -1256,7 +1256,7 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;txtAlbum.ZOrder" xml:space="preserve">
-    <value>19</value>
+    <value>22</value>
   </data>
   <data name="txtEditing.Location" type="System.Drawing.Point, System.Drawing">
     <value>725, 15</value>
@@ -1289,13 +1289,13 @@
     <value>NoControl</value>
   </data>
   <data name="BtnFontMoins.Location" type="System.Drawing.Point, System.Drawing">
-    <value>43, 57</value>
+    <value>95, 57</value>
   </data>
   <data name="BtnFontMoins.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 23</value>
   </data>
   <data name="BtnFontMoins.TabIndex" type="System.Int32, mscorlib">
-    <value>43</value>
+    <value>33</value>
   </data>
   <data name="BtnFontMoins.Text" xml:space="preserve">
     <value>A-</value>
@@ -1313,19 +1313,19 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;BtnFontMoins.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>5</value>
   </data>
   <data name="BtnFontPlus.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="BtnFontPlus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 57</value>
+    <value>65, 57</value>
   </data>
   <data name="BtnFontPlus.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 23</value>
   </data>
   <data name="BtnFontPlus.TabIndex" type="System.Int32, mscorlib">
-    <value>42</value>
+    <value>32</value>
   </data>
   <data name="BtnFontPlus.Text" xml:space="preserve">
     <value>A+</value>
@@ -1343,7 +1343,7 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;BtnFontPlus.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>8</value>
   </data>
   <data name="btnDeleteAllLyrics.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleRight</value>
@@ -1358,7 +1358,7 @@
     <value>158, 23</value>
   </data>
   <data name="btnDeleteAllLyrics.TabIndex" type="System.Int32, mscorlib">
-    <value>41</value>
+    <value>30</value>
   </data>
   <data name="btnDeleteAllLyrics.Text" xml:space="preserve">
     <value>&amp;Delete Lyrics</value>
@@ -1382,7 +1382,7 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;btnDeleteAllLyrics.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>10</value>
   </data>
   <data name="btnSave.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleRight</value>
@@ -1397,7 +1397,7 @@
     <value>158, 38</value>
   </data>
   <data name="btnSave.TabIndex" type="System.Int32, mscorlib">
-    <value>40</value>
+    <value>29</value>
   </data>
   <data name="btnSave.Text" xml:space="preserve">
     <value>&amp;Record the lyrics in the mp3 file</value>
@@ -1421,7 +1421,7 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;btnSave.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>12</value>
   </data>
   <data name="btnInsertParagraph.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1433,7 +1433,7 @@
     <value>130, 23</value>
   </data>
   <data name="btnInsertParagraph.TabIndex" type="System.Int32, mscorlib">
-    <value>37</value>
+    <value>14</value>
   </data>
   <data name="btnInsertParagraph.Text" xml:space="preserve">
     <value>New paragraph (\)</value>
@@ -1454,7 +1454,7 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;btnInsertParagraph.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>14</value>
   </data>
   <data name="btnInsertCr.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1466,7 +1466,7 @@
     <value>130, 23</value>
   </data>
   <data name="btnInsertCr.TabIndex" type="System.Int32, mscorlib">
-    <value>36</value>
+    <value>13</value>
   </data>
   <data name="btnInsertCr.Text" xml:space="preserve">
     <value>Insert a Line Break (/)</value>
@@ -1487,7 +1487,7 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;btnInsertCr.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>16</value>
   </data>
   <data name="btnInsertText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1499,7 +1499,7 @@
     <value>130, 23</value>
   </data>
   <data name="btnInsertText.TabIndex" type="System.Int32, mscorlib">
-    <value>38</value>
+    <value>15</value>
   </data>
   <data name="btnInsertText.Text" xml:space="preserve">
     <value>&amp;Insert a line</value>
@@ -1520,7 +1520,7 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;btnInsertText.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>18</value>
   </data>
   <data name="btnDelete.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1532,7 +1532,7 @@
     <value>130, 23</value>
   </data>
   <data name="btnDelete.TabIndex" type="System.Int32, mscorlib">
-    <value>39</value>
+    <value>16</value>
   </data>
   <data name="btnDelete.Text" xml:space="preserve">
     <value>&amp;Delete the current line</value>
@@ -1553,7 +1553,7 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;btnDelete.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>20</value>
   </data>
   <data name="btnMsPlus.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1565,7 +1565,7 @@
     <value>56, 23</value>
   </data>
   <data name="btnMsPlus.TabIndex" type="System.Int32, mscorlib">
-    <value>44</value>
+    <value>34</value>
   </data>
   <data name="btnMsPlus.Text" xml:space="preserve">
     <value>+100 ms</value>
@@ -1583,19 +1583,19 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;btnMsPlus.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>4</value>
   </data>
   <data name="btnMsMinor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnMsMinor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>206, 57</value>
+    <value>200, 57</value>
   </data>
   <data name="btnMsMinor.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 23</value>
   </data>
   <data name="btnMsMinor.TabIndex" type="System.Int32, mscorlib">
-    <value>45</value>
+    <value>35</value>
   </data>
   <data name="btnMsMinor.Text" xml:space="preserve">
     <value>-100 ms</value>
@@ -1613,7 +1613,7 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;btnMsMinor.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>3</value>
   </data>
   <data name="&gt;&gt;lblLyrics.Name" xml:space="preserve">
     <value>lblLyrics</value>
@@ -1730,16 +1730,19 @@
     <value>NoControl</value>
   </data>
   <data name="lblLa.Location" type="System.Drawing.Point, System.Drawing">
-    <value>493, 62</value>
+    <value>514, 62</value>
   </data>
   <data name="lblLa.Size" type="System.Drawing.Size, System.Drawing">
-    <value>19, 13</value>
+    <value>31, 13</value>
   </data>
   <data name="lblLa.TabIndex" type="System.Int32, mscorlib">
     <value>27</value>
   </data>
   <data name="lblLa.Text" xml:space="preserve">
-    <value>La</value>
+    <value>Lang</value>
+  </data>
+  <data name="lblLa.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="&gt;&gt;lblLa.Name" xml:space="preserve">
     <value>lblLa</value>
@@ -1751,7 +1754,7 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;lblLa.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>7</value>
   </data>
   <data name="lblBy.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1760,16 +1763,19 @@
     <value>NoControl</value>
   </data>
   <data name="lblBy.Location" type="System.Drawing.Point, System.Drawing">
-    <value>493, 11</value>
+    <value>514, 11</value>
   </data>
   <data name="lblBy.Size" type="System.Drawing.Size, System.Drawing">
     <value>19, 13</value>
   </data>
   <data name="lblBy.TabIndex" type="System.Int32, mscorlib">
-    <value>26</value>
+    <value>23</value>
   </data>
   <data name="lblBy.Text" xml:space="preserve">
     <value>By</value>
+  </data>
+  <data name="lblBy.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="&gt;&gt;lblBy.Name" xml:space="preserve">
     <value>lblBy</value>
@@ -1781,7 +1787,7 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;lblBy.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>13</value>
   </data>
   <data name="lblAl.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1790,16 +1796,19 @@
     <value>NoControl</value>
   </data>
   <data name="lblAl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>308, 62</value>
+    <value>311, 62</value>
   </data>
   <data name="lblAl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>16, 13</value>
+    <value>36, 13</value>
   </data>
   <data name="lblAl.TabIndex" type="System.Int32, mscorlib">
-    <value>25</value>
+    <value>21</value>
   </data>
   <data name="lblAl.Text" xml:space="preserve">
-    <value>Al</value>
+    <value>Album</value>
+  </data>
+  <data name="lblAl.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="&gt;&gt;lblAl.Name" xml:space="preserve">
     <value>lblAl</value>
@@ -1811,7 +1820,7 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;lblAl.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>19</value>
   </data>
   <data name="lblAr.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1820,16 +1829,19 @@
     <value>NoControl</value>
   </data>
   <data name="lblAr.Location" type="System.Drawing.Point, System.Drawing">
-    <value>309, 37</value>
+    <value>311, 37</value>
   </data>
   <data name="lblAr.Size" type="System.Drawing.Size, System.Drawing">
-    <value>17, 13</value>
+    <value>30, 13</value>
   </data>
   <data name="lblAr.TabIndex" type="System.Int32, mscorlib">
-    <value>24</value>
+    <value>19</value>
   </data>
   <data name="lblAr.Text" xml:space="preserve">
-    <value>Ar</value>
+    <value>Artist</value>
+  </data>
+  <data name="lblAr.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="&gt;&gt;lblAr.Name" xml:space="preserve">
     <value>lblAr</value>
@@ -1841,7 +1853,7 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;lblAr.ZOrder" xml:space="preserve">
-    <value>18</value>
+    <value>21</value>
   </data>
   <data name="lblTi.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1850,16 +1862,19 @@
     <value>NoControl</value>
   </data>
   <data name="lblTi.Location" type="System.Drawing.Point, System.Drawing">
-    <value>308, 12</value>
+    <value>311, 12</value>
   </data>
   <data name="lblTi.Size" type="System.Drawing.Size, System.Drawing">
-    <value>16, 13</value>
+    <value>27, 13</value>
   </data>
   <data name="lblTi.TabIndex" type="System.Int32, mscorlib">
-    <value>23</value>
+    <value>17</value>
   </data>
   <data name="lblTi.Text" xml:space="preserve">
-    <value>Ti</value>
+    <value>Title</value>
+  </data>
+  <data name="lblTi.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="&gt;&gt;lblTi.Name" xml:space="preserve">
     <value>lblTi</value>
@@ -1871,16 +1886,16 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;lblTi.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>17</value>
   </data>
   <data name="cbLanguage.Location" type="System.Drawing.Point, System.Drawing">
-    <value>512, 59</value>
+    <value>547, 59</value>
   </data>
   <data name="cbLanguage.Size" type="System.Drawing.Size, System.Drawing">
     <value>160, 21</value>
   </data>
   <data name="cbLanguage.TabIndex" type="System.Int32, mscorlib">
-    <value>22</value>
+    <value>28</value>
   </data>
   <data name="&gt;&gt;cbLanguage.Name" xml:space="preserve">
     <value>cbLanguage</value>
@@ -1892,16 +1907,16 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;cbLanguage.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>11</value>
   </data>
   <data name="txtYourName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>512, 34</value>
+    <value>547, 34</value>
   </data>
   <data name="txtYourName.Size" type="System.Drawing.Size, System.Drawing">
     <value>160, 20</value>
   </data>
   <data name="txtYourName.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
+    <value>26</value>
   </data>
   <data name="txtYourName.Text" xml:space="preserve">
     <value>Your name</value>
@@ -1916,7 +1931,7 @@
     <value>pnlEdit</value>
   </data>
   <data name="&gt;&gt;txtYourName.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>15</value>
   </data>
   <data name="lblHotkeys.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -2101,89 +2116,95 @@
   <data name="btnSwitchSyncEdit.Text" xml:space="preserve">
     <value>Switch to sync mode</value>
   </data>
-  <data name="&gt;&gt;pnlTop.Name" xml:space="preserve">
-    <value>pnlTop</value>
+  <data name="lblTextSize.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
-  <data name="&gt;&gt;pnlTop.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="lblTextSize.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;pnlTop.Parent" xml:space="preserve">
-    <value>pnlLrc</value>
+  <data name="lblTextSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 62</value>
   </data>
-  <data name="&gt;&gt;pnlTop.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="lblTextSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>52, 13</value>
   </data>
-  <data name="pnlLrc.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
+  <data name="lblTextSize.TabIndex" type="System.Int32, mscorlib">
+    <value>31</value>
   </data>
-  <data name="pnlLrc.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 24</value>
+  <data name="lblTextSize.Text" xml:space="preserve">
+    <value>Text size:</value>
   </data>
-  <data name="pnlLrc.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1329, 542</value>
+  <data name="lblTextSize.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
-  <data name="pnlLrc.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+  <data name="&gt;&gt;lblTextSize.Name" xml:space="preserve">
+    <value>lblTextSize</value>
   </data>
-  <data name="&gt;&gt;pnlLrc.Name" xml:space="preserve">
-    <value>pnlLrc</value>
+  <data name="&gt;&gt;lblTextSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;pnlLrc.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlLrc.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pnlLrc.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;pnlEdit.Name" xml:space="preserve">
+  <data name="&gt;&gt;lblTextSize.Parent" xml:space="preserve">
     <value>pnlEdit</value>
   </data>
-  <data name="&gt;&gt;pnlEdit.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlEdit.Parent" xml:space="preserve">
-    <value>pnlTop</value>
-  </data>
-  <data name="&gt;&gt;pnlEdit.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;lblTextSize.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;pnlSync.Name" xml:space="preserve">
-    <value>pnlSync</value>
+  <data name="btnOffsetMinus.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
   </data>
-  <data name="&gt;&gt;pnlSync.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnOffsetMinus.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;pnlSync.Parent" xml:space="preserve">
-    <value>pnlTop</value>
+  <data name="btnOffsetMinus.Location" type="System.Drawing.Point, System.Drawing">
+    <value>281, 57</value>
   </data>
-  <data name="&gt;&gt;pnlSync.ZOrder" xml:space="preserve">
+  <data name="btnOffsetMinus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>24, 23</value>
+  </data>
+  <data name="btnOffsetMinus.TabIndex" type="System.Int32, mscorlib">
+    <value>37</value>
+  </data>
+  <data name="btnOffsetMinus.Text" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="&gt;&gt;btnOffsetMinus.Name" xml:space="preserve">
+    <value>btnOffsetMinus</value>
+  </data>
+  <data name="&gt;&gt;btnOffsetMinus.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnOffsetMinus.Parent" xml:space="preserve">
+    <value>pnlEdit</value>
+  </data>
+  <data name="&gt;&gt;btnOffsetMinus.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="pnlTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
+  <data name="btnOffsetPlus.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
   </data>
-  <data name="pnlTop.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+  <data name="btnOffsetPlus.Location" type="System.Drawing.Point, System.Drawing">
+    <value>257, 57</value>
   </data>
-  <data name="pnlTop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1329, 150</value>
+  <data name="btnOffsetPlus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>24, 23</value>
   </data>
-  <data name="pnlTop.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+  <data name="btnOffsetPlus.TabIndex" type="System.Int32, mscorlib">
+    <value>36</value>
   </data>
-  <data name="&gt;&gt;pnlTop.Name" xml:space="preserve">
-    <value>pnlTop</value>
+  <data name="btnOffsetPlus.Text" xml:space="preserve">
+    <value>+</value>
   </data>
-  <data name="&gt;&gt;pnlTop.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;btnOffsetPlus.Name" xml:space="preserve">
+    <value>btnOffsetPlus</value>
   </data>
-  <data name="&gt;&gt;pnlTop.Parent" xml:space="preserve">
-    <value>pnlLrc</value>
+  <data name="&gt;&gt;btnOffsetPlus.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;pnlTop.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="&gt;&gt;btnOffsetPlus.Parent" xml:space="preserve">
+    <value>pnlEdit</value>
+  </data>
+  <data name="&gt;&gt;btnOffsetPlus.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <data name="pnlEdit.Location" type="System.Drawing.Point, System.Drawing">
     <value>364, 38</value>
@@ -2244,6 +2265,54 @@
   </data>
   <data name="&gt;&gt;pnlSync.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <data name="pnlTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="pnlTop.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="pnlTop.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1329, 150</value>
+  </data>
+  <data name="pnlTop.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;pnlTop.Name" xml:space="preserve">
+    <value>pnlTop</value>
+  </data>
+  <data name="&gt;&gt;pnlTop.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlTop.Parent" xml:space="preserve">
+    <value>pnlLrc</value>
+  </data>
+  <data name="&gt;&gt;pnlTop.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="pnlLrc.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="pnlLrc.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 24</value>
+  </data>
+  <data name="pnlLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1329, 542</value>
+  </data>
+  <data name="pnlLrc.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;pnlLrc.Name" xml:space="preserve">
+    <value>pnlLrc</value>
+  </data>
+  <data name="&gt;&gt;pnlLrc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlLrc.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pnlLrc.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="lblHotkeysOthers.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
