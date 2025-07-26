@@ -181,16 +181,26 @@ namespace MusicTxt
             this.stream = strm;
             string line = string.Empty;
             string[] array;
+            string text = string.Empty;
 
             while ((line = stream.ReadLine()) != null)
             {
                 // Remove 'space' and '"'
                 if (line.Contains("\""))
                 {
+                    // check if line contains a linefeed \ or a paragraph \\
+                    // 0, 0, Lyric_t, \"La \"           syllabe normale
+                    // 0, 2880, Lyric_t, \"\\dans \"    syllabe avec linefeed \
+                    if (line.Contains("\\"))  //line.Contains("\r") || line.Contains("\n"))
+                    {                        
+                        line = line.Replace("\\", Environment.NewLine); // replace each occurence of \\ => make a linefeed if one and a paragraph if two
+                    }
+                   
+                     
                     // comma is the separator and there is a comma into the text
                     // Example: 2, 972, Lyric_t, "\Montez, Chris"
                     // put the text item having one or several comas into a single item
-                    string text = line.Split('"', '"')[1];
+                    text = line.Split('"', '"')[1];
                     if (text.Contains(','))
                     {
                         line = line.Replace(text, "lognx");  // hope this will never exist lol
@@ -203,7 +213,7 @@ namespace MusicTxt
                         array = line.Split(',').Select(p => p.Trim()).Select(p => p.Replace("\"", "")).ToArray();
                     }
                 }
-                else // split normal
+                else // split normal, ex: 0, 0, Start_track
                     array = line.Split(',').Select(p => p.Trim()).Select(p => p.Replace("\"", "")).ToArray();
 
 
@@ -510,6 +520,10 @@ namespace MusicTxt
             }
             // Format: Track, Time, Lyric_t, Text
             int ticks = Convert.ToInt32(ar[1]);
+            
+            
+            // FAB 27/07/2025
+            // Traiter les linefeeds & paragrpahs ici ?
             byte[] newdata = Encoding.Default.GetBytes(sy);
 
             MetaMessage mtMsg = new MetaMessage(MetaType.Lyric, newdata);

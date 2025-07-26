@@ -770,7 +770,7 @@ namespace Karaboss.MidiLyrics
                     plTicksOff = plTicksOn + _measurelen;
 
                     // Check if this is a chord (IsChord)
-                    Console.WriteLine("");
+                    //Console.WriteLine("");
                     if (plElement.Contains("--"))
                         pll.Add(new plLyric() { CharType = plType, Element = ("", plElement), TicksOn = plTicksOn, TicksOff = plTicksOff, IsChord = true });
                     else
