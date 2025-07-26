@@ -31,9 +31,9 @@ namespace Sanford.Multimedia.Midi.Score.UI
             tx += "\n\nThe lower numeral indicates the note value that represents one beat(the beat unit).";
             tx += "\nThe upper numeral indicates how many such beats there are grouped together in a bar.";
             tx += "\n\nFor instance,";
-            tx += "\n2 / 4 means two quarter - note(crotchet) beats per bar";
-            tx += "\n3 / 8 means three eighth - note(quaver) beats per bar.";
-            tx += "\n\nThe most common simple time signatures are 2 / 4, 3 / 4, and 4 / 4.";
+            tx += "\n2/4 means two quarter - note(crotchet) beats per bar";
+            tx += "\n3/8 means three eighth - note(quaver) beats per bar.";
+            tx += "\n\nThe most common simple time signatures are 2/4, 3/4, and 4/4.";
 
             lblExplanation.Text = tx;
 

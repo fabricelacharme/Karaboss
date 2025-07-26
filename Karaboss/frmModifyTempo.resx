@@ -258,36 +258,6 @@
   <data name="&gt;&gt;txtTempo.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="lblDivision.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblDivision.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblDivision.Location" type="System.Drawing.Point, System.Drawing">
-    <value>131, 23</value>
-  </data>
-  <data name="lblDivision.Size" type="System.Drawing.Size, System.Drawing">
-    <value>47, 13</value>
-  </data>
-  <data name="lblDivision.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="lblDivision.Text" xml:space="preserve">
-    <value>Division:</value>
-  </data>
-  <data name="&gt;&gt;lblDivision.Name" xml:space="preserve">
-    <value>lblDivision</value>
-  </data>
-  <data name="&gt;&gt;lblDivision.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblDivision.Parent" xml:space="preserve">
-    <value>groupBox1</value>
-  </data>
-  <data name="&gt;&gt;lblDivision.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <data name="lblTempo.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -316,7 +286,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;lblTempo.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>2</value>
   </data>
   <data name="lblStartTime.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -346,7 +316,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;lblStartTime.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>3</value>
   </data>
   <data name="txtBpm.Location" type="System.Drawing.Point, System.Drawing">
     <value>69, 52</value>
@@ -373,7 +343,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;txtBpm.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>4</value>
   </data>
   <data name="txtStartTime.Location" type="System.Drawing.Point, System.Drawing">
     <value>69, 85</value>
@@ -400,7 +370,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;txtStartTime.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>5</value>
   </data>
   <data name="lblBpm.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -430,28 +400,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;lblBpm.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="updDivision.Location" type="System.Drawing.Point, System.Drawing">
-    <value>184, 21</value>
-  </data>
-  <data name="updDivision.Size" type="System.Drawing.Size, System.Drawing">
-    <value>60, 20</value>
-  </data>
-  <data name="updDivision.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;updDivision.Name" xml:space="preserve">
-    <value>updDivision</value>
-  </data>
-  <data name="&gt;&gt;updDivision.Type" xml:space="preserve">
-    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;updDivision.Parent" xml:space="preserve">
-    <value>groupBox1</value>
-  </data>
-  <data name="&gt;&gt;updDivision.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>6</value>
   </data>
   <data name="groupBox1.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 79</value>

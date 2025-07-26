@@ -557,37 +557,7 @@ namespace Karaboss
                 LoadBallsTimes(plLs);
         }
 
-        /// <summary>
-        /// Load times for the Ball animation
-        /// </summary>
-        /// <param name="plLyrics"></param>
-        public void LoadBallsTimes(List<plLyric> plLyrics)
-        {
-            if (!bShowBalls || plLyrics.Count == 0)
-                { return; }         
-                        
-            LyricsTimes = new List<int>();
-
-            plLyric.CharTypes plType; // = plLyric.CharTypes.Text;
-            int plTime; // = 0;
-
-            for (int i = 0; i < plLyrics.Count; i++)
-            {
-                plType = plLyrics[i].CharType;
-                plTime = plLyrics[i].TicksOn;
-
-                if ( plType == plLyric.CharTypes.Text || plType == plLyric.CharTypes.ParagraphSep)
-                {                    
-                     LyricsTimes.Add(plTime);                       
-                }
-            }
-                
-            picBalls.Division = myLyricsMgmt.Division;
-            picBalls.LoadTimes(LyricsTimes);
-                
-            picBalls.Start();
-            
-        }
+     
 
         /// <summary>
         /// Color the syllabe according to song position
@@ -710,8 +680,43 @@ namespace Karaboss
 
         #endregion public methods
 
-       
+
         #region balls
+
+        /// <summary>
+        /// Load times for the Ball animation
+        /// </summary>
+        /// <param name="plLyrics"></param>
+        public void LoadBallsTimes(List<plLyric> plLyrics)
+        {
+            if (!bShowBalls || plLyrics.Count == 0)
+            { return; }
+
+            LyricsTimes = new List<int>();            
+
+            for (int i = 0; i < plLyrics.Count; i++)
+            {
+                if (plLyrics[i].CharType == plLyric.CharTypes.Text || plLyrics[i].CharType == plLyric.CharTypes.ParagraphSep)
+                //if (plLyrics[i].CharType == plLyric.CharTypes.Text)
+                {
+                    LyricsTimes.Add(plLyrics[i].TicksOn);
+                }
+            }
+
+            picBalls.Division = myLyricsMgmt.Division;
+            picBalls.LoadTimes(LyricsTimes);
+
+            picBalls.Start();
+
+        }
+
+        /// <summary>
+        /// Moves the balls to their positions based on the current song position.
+        /// </summary>
+        /// <remarks>This method updates the positions of the balls, with one fixed ball and others moving
+        /// toward it, based on the provided song position. The actual position of the lyrics is calculated using a
+        /// separate timer.</remarks>
+        /// <param name="songposition">The sequencer position.</param>
         public void MoveBalls(int songposition)
         {
             // déclencheur : timer_3

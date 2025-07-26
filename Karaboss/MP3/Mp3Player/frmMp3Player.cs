@@ -111,6 +111,8 @@ namespace Karaboss.Mp3
        
         private int _LrcMillisecondsDigits = 2;
 
+        private int m_MillisecondsOffset = 100; // Default offset in milliseconds to display lyrics
+
         private Mp3LyricsTypes Mp3LyricsType;
         public bool bfilemodified = false;
 
@@ -239,6 +241,16 @@ namespace Karaboss.Mp3
                 if (bPlayNow)
                 {
                     PlayPauseMusic();
+                }
+                else
+                {
+                    // If not playing, display lyrics editor
+                    mnuEditLyrics.Checked = true;
+                    LrcMode = LrcModes.Edit;
+                    // Show LRC Generator
+                    PlayerAppearance = PlayerAppearances.LrcGenerator;
+                    SetPlayerAppearance();
+                    
                 }
             }
             #endregion playlists
@@ -3713,7 +3725,7 @@ namespace Karaboss.Mp3
             if (dgView.Rows[Row].Cells[COL_MS].Value != null && IsNumeric(dgView.Rows[Row].Cells[COL_MS].Value.ToString()))
             {
                 double time = double.Parse(dgView.Rows[Row].Cells[COL_MS].Value.ToString());
-                time += 100;
+                time += m_MillisecondsOffset;
                 dgView.Rows[Row].Cells[COL_MS].Value = time;
 
                 tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
@@ -3738,7 +3750,7 @@ namespace Karaboss.Mp3
                 if (dgView.Rows[i].Cells[COL_MS].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_MS].Value.ToString()))
                 {
                     double time = double.Parse(dgView.Rows[i].Cells[COL_MS].Value.ToString());
-                    time += 100;
+                    time += m_MillisecondsOffset;
                     dgView.Rows[i].Cells[COL_MS].Value = time;
 
                     tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
@@ -3792,7 +3804,7 @@ namespace Karaboss.Mp3
             if (dgView.Rows[Row].Cells[COL_MS].Value != null && IsNumeric(dgView.Rows[Row].Cells[COL_MS].Value.ToString()))
             {
                 double time = double.Parse(dgView.Rows[Row].Cells[COL_MS].Value.ToString());
-                time -= 100;
+                time -= m_MillisecondsOffset;
                 dgView.Rows[Row].Cells[COL_MS].Value = time;
 
                 tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
@@ -3818,7 +3830,7 @@ namespace Karaboss.Mp3
                 if (dgView.Rows[i].Cells[COL_MS].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_MS].Value.ToString()))
                 {
                     double time = double.Parse(dgView.Rows[i].Cells[COL_MS].Value.ToString());
-                    time -= 100;
+                    time -= m_MillisecondsOffset;
                     dgView.Rows[i].Cells[COL_MS].Value = time;
 
                     tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
@@ -3827,6 +3839,26 @@ namespace Karaboss.Mp3
             }
             
             localSyncLyrics = LoadModifiedLyrics();
+        }
+
+        
+
+
+        private void btnOffsetPlus_Click(object sender, EventArgs e)
+        {
+            m_MillisecondsOffset += 100;
+            
+            btnMsPlus.Text = "+" + m_MillisecondsOffset.ToString() + " ms";
+            btnMsMinor.Text = "-" + m_MillisecondsOffset.ToString() + " ms";
+        }
+
+        private void btnOffsetMinus_Click(object sender, EventArgs e)
+        {
+            if (m_MillisecondsOffset > 100)
+                m_MillisecondsOffset -= 100;
+
+            btnMsPlus.Text = "+" + m_MillisecondsOffset.ToString() + " ms";
+            btnMsMinor.Text = "-" + m_MillisecondsOffset.ToString() + " ms";
         }
 
         #endregion Major or minor timestamps
@@ -4221,6 +4253,9 @@ namespace Karaboss.Mp3
                 string s = Clipboard.GetText();
                 string[] lines = s.Split('\n');
 
+                // Trim and add slash at the beginning of each line
+                //lines = FormatClipboard(lines);
+
                 int iFail = 0;
                 int iRow = 0;
                 int iCol = 0;
@@ -4233,10 +4268,8 @@ namespace Karaboss.Mp3
 
                 string c = string.Empty;
 
-                string plType = string.Empty;
-                //int plTicksOn = 0;
-                string plRealTime = string.Empty;
-                //int plNote = 0;
+                string plType = string.Empty;                
+                string plRealTime = string.Empty;                
                 string strplnote = string.Empty;
                 string plElement = string.Empty;
 
@@ -4257,11 +4290,17 @@ namespace Karaboss.Mp3
                                 oCell = dgView[iCol + i, iRow];
                                 if (!oCell.ReadOnly)
                                 {
-                                    c = sCells[i];
-                                    //c = c.Trim();
+                                    c = sCells[i];                                    
                                     c = c.Replace("\r", "");
                                     c = c.Replace(" ", "_");
 
+
+                                    if (iCol + i == COL_TEXT && !c.Trim().StartsWith("/"))
+                                    {
+                                        // If text does not start with a slash, add it
+                                        c = "/" + c;
+                                    }
+                                    
                                     oCell.Value = c;
                                 }
                             }
@@ -4286,6 +4325,8 @@ namespace Karaboss.Mp3
             }
         }
 
+
+       
 
         /// <summary>
         /// Keydown event
@@ -4346,8 +4387,9 @@ namespace Karaboss.Mp3
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 frmMp3Lyrics.StopTimerBalls();
         }
-       
+
         #endregion aniballs
 
+       
     }
 }

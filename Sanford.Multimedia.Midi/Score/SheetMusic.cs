@@ -2570,7 +2570,7 @@ namespace Sanford.Multimedia.Midi.Score
 
         /// <summary>
         /// Return end time of previous note
-        /// Used in Insert od delete times
+        /// Used in insert or delete times
         /// </summary>
         /// <param name="track"></param>
         /// <param name="ticks"></param>
@@ -3087,19 +3087,23 @@ namespace Sanford.Multimedia.Midi.Score
             {
                 foreach (Track track in sequence1.tracks)
                 {
-                    StartTime = getPreviousNoteStart(track, StartTime);
+                    // Fab : 03/07/2025
+                    // StartTime must be the start time selected in the dialog
+                    StartTime = ModifyStartTimesDialog.StartTime;
+                    //StartTime = getPreviousNoteStart(track, StartTime);
                     track.OffsetStartTimes(StartTime, Offset);
                 }
             }
             else
             {
                 Track track = sequence1.tracks[_selectedstaff];
-                StartTime = getPreviousNoteStart(track, StartTime);
+                // Fab : 03/07/2025
+                // StartTime must be the start time selected in the dialog
+                StartTime = ModifyStartTimesDialog.StartTime;
+                //StartTime = getPreviousNoteStart(track, StartTime);
                 track.OffsetStartTimes(StartTime, Offset);
             }
-
-            //Track track = sequence1.tracks[_selectedstaff];
-            //track.OffsetStartTimes(StartTime, Offset);
+            
 
             this.Refresh();
 

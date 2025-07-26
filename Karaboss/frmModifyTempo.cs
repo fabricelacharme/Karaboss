@@ -21,26 +21,14 @@ namespace Karaboss
         private bool TempoDoChange = true;
         private float _bpm;
         private float _tempo;
-        private float _starttime;
-        private decimal _division;
-
-        //frmPlayer FrmPlayer;
+        private float _starttime;                
 
         private SheetMusic sheetmusic;
         TempoSymbol _tempoSymbol;
         Sequence sequence1;
 
         
-        public int Division
-        {
-            get
-            { return Convert.ToInt32(updDivision.Value); }
-            set
-            {
-                _division = value;
-                updDivision.Value = _division;
-            }
-        }
+       
         public int Tempo
         {
             get
@@ -83,9 +71,7 @@ namespace Karaboss
                 sheetmusic.SelectTempoSymbol(_tempoSymbol);
                 
             }            
-
-            Division = sequence1.Division;
-            updDivision.Value = Convert.ToDecimal(Division);
+                      
             txtTempo.Text = _tempoSymbol.Tempo.ToString();
             txtStartTime.Text = _tempoSymbol.StartTime.ToString();            
         }
@@ -175,22 +161,7 @@ namespace Karaboss
             }
         }
 
-        private void updDivision_ValueChanged(object sender, EventArgs e)
-        {
-            decimal division; // = 0;
-            decimal val = updDivision.Value;
-            division = val;
-            if (val % PpqnClock.PpqnMinValue != 0)
-            {
-                val = (int)(Math.Round((double)val / PpqnClock.PpqnMinValue) * PpqnClock.PpqnMinValue);
-                updDivision.Value = val;
-
-                string msg = "Division must be a multiple of 24 \r\n";
-                msg += string.Format("Division will be changed from {0} to {1}", division, val);
-                MessageBox.Show(msg, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
+        
         private void txtStartTime_TextChanged(object sender, EventArgs e)
         {            
             UpdateFields();
@@ -205,11 +176,7 @@ namespace Karaboss
         {
             e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
         }
-
-        private void txtDivision_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
-        }
+      
 
         private void txtBpm_KeyPress(object sender, KeyPressEventArgs e)
         {
