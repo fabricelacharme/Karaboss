@@ -419,7 +419,11 @@ namespace keffect
         public Color TxtBackColor
         {
             get { return _txtbackcolor; }
-            set { _txtbackcolor = value; }
+            set { 
+                _txtbackcolor = value;
+                pBox.BackColor = _txtbackcolor;
+                pBox.Invalidate();
+            }
         }
 
 
