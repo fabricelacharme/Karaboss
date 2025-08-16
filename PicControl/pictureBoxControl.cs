@@ -232,6 +232,25 @@ namespace PicControl
                         pboxWnd.BackColor = txtBackColor;
                         pboxWnd.Invalidate();
                         break;
+                    
+                    case "Gradient":
+                        m_Cancel = true;
+                        Terminate();
+                        pboxWnd.Image = null;
+                        m_CurrentImage = null;
+                        pboxWnd.BackColor = txtBackColor;
+                        pboxWnd.Invalidate();
+                        break;
+
+                    case "Rhythm":
+                        m_Cancel = true;
+                        Terminate();
+                        pboxWnd.Image = null;
+                        m_CurrentImage = null;
+                        pboxWnd.BackColor = txtBackColor;
+                        pboxWnd.Invalidate();
+                        break;
+
                     case "Transparent":
                         m_Cancel = true;
                         Terminate();
@@ -437,6 +456,93 @@ namespace PicControl
                 }
             }
         }
+
+        private Color txtGrad0Color;
+        public Color TxtGrad0Color
+        {
+            get { return txtGrad0Color; }
+            set
+            {
+                txtGrad0Color = value;
+                pboxWnd.Invalidate();
+            }
+        }
+        private Color txtGrad1Color;
+        public Color TxtGrad1Color
+        {
+            get { return txtGrad1Color; }
+            set
+            {
+                txtGrad1Color = value;
+                pboxWnd.Invalidate();
+            }
+        }
+        private Color txtRhythm0Color;
+        public Color TxtRhythm0Color
+        {
+            get { return txtRhythm0Color; }
+            set
+            {
+                txtRhythm0Color = value;
+                pboxWnd.Invalidate();
+            }
+        }
+        private Color txtRhythm1Color;
+        public Color TxtRhythm1Color
+        {
+            get { return txtRhythm1Color; }
+            set
+            {
+                txtRhythm1Color = value;
+                pboxWnd.Invalidate();
+            }
+        }
+
+
+        #region Gradient & Rhythm
+        private Color _gradientColor0;
+        public Color GradientColor0
+        {
+            get { return _gradientColor0; }
+            set
+            {
+                _gradientColor0 = value;
+                pboxWnd.Invalidate();
+            }
+        }
+        private Color _gradientColor1;
+        public Color GradientColor1
+        {
+            get { return _gradientColor1; }
+            set
+            {
+                _gradientColor1 = value;
+                pboxWnd.Invalidate();
+            }
+        }
+
+        private Color _rhythmColor0;
+        public Color RhythmColor0
+        {
+            get { return _rhythmColor0; }
+            set
+            {
+                _rhythmColor0 = value;
+                pboxWnd.Invalidate();
+            }
+        }
+
+        private Color _rhythmColor1;
+        public Color RhythmColor1
+        {
+            get { return _rhythmColor1; }
+            set
+            {
+                _rhythmColor1 = value;
+                pboxWnd.Invalidate();
+            }
+        }
+        #endregion Gradient & Rhythm
 
         /// <summary>
         /// Number of lines to display

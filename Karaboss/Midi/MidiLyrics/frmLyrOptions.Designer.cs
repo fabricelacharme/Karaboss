@@ -53,7 +53,6 @@
             this.radioSolidColor = new System.Windows.Forms.RadioButton();
             this.radioTransparent = new System.Windows.Forms.RadioButton();
             this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.UpDownNbLines = new System.Windows.Forms.NumericUpDown();
             this.chkDisplayBalls = new System.Windows.Forms.CheckBox();
             this.pnlBalls = new System.Windows.Forms.Panel();
@@ -68,7 +67,6 @@
             this.chkTextBackground = new System.Windows.Forms.CheckBox();
             this.chkContour = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.pBox = new PicControl.pictureBoxControl();
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
             this.btnFonts = new System.Windows.Forms.Button();
             this.txtFont = new System.Windows.Forms.TextBox();
@@ -80,6 +78,14 @@
             this.btnChordHighlightColor = new System.Windows.Forms.Button();
             this.btnChordNormalColor = new System.Windows.Forms.Button();
             this.chkTopMost = new System.Windows.Forms.CheckBox();
+            this.grpBoxBackGround = new System.Windows.Forms.GroupBox();
+            this.radioRhythm = new System.Windows.Forms.RadioButton();
+            this.radioGradient = new System.Windows.Forms.RadioButton();
+            this.pBox = new PicControl.pictureBoxControl();
+            this.cbGrad0 = new System.Windows.Forms.ComboBox();
+            this.cbGrad1 = new System.Windows.Forms.ComboBox();
+            this.cbRhythm1 = new System.Windows.Forms.ComboBox();
+            this.cbRhythm0 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -91,6 +97,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictBefore)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picChordHighlight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picChordBefore)).BeginInit();
+            this.grpBoxBackGround.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnBackColor
@@ -147,10 +154,6 @@
             resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
             // 
-            // folderBrowserDialog1
-            // 
-            resources.ApplyResources(this.folderBrowserDialog1, "folderBrowserDialog1");
-            // 
             // txtSlideShow
             // 
             resources.ApplyResources(this.txtSlideShow, "txtSlideShow");
@@ -200,7 +203,6 @@
             // 
             // cbSizeMode
             // 
-            resources.ApplyResources(this.cbSizeMode, "cbSizeMode");
             this.cbSizeMode.FormattingEnabled = true;
             this.cbSizeMode.Items.AddRange(new object[] {
             resources.GetString("cbSizeMode.Items"),
@@ -208,6 +210,7 @@
             resources.GetString("cbSizeMode.Items2"),
             resources.GetString("cbSizeMode.Items3"),
             resources.GetString("cbSizeMode.Items4")});
+            resources.ApplyResources(this.cbSizeMode, "cbSizeMode");
             this.cbSizeMode.Name = "cbSizeMode";
             this.cbSizeMode.SelectedIndexChanged += new System.EventHandler(this.CbSizeMode_SelectedIndexChanged);
             // 
@@ -251,11 +254,6 @@
             resources.ApplyResources(this.label8, "label8");
             this.label8.Name = "label8";
             // 
-            // label9
-            // 
-            resources.ApplyResources(this.label9, "label9");
-            this.label9.Name = "label9";
-            // 
             // UpDownNbLines
             // 
             resources.ApplyResources(this.UpDownNbLines, "UpDownNbLines");
@@ -281,69 +279,69 @@
             // 
             // pnlBalls
             // 
-            resources.ApplyResources(this.pnlBalls, "pnlBalls");
             this.pnlBalls.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.pnlBalls.Controls.Add(this.pictureBox2);
             this.pnlBalls.Controls.Add(this.pictureBox1);
+            resources.ApplyResources(this.pnlBalls, "pnlBalls");
             this.pnlBalls.Name = "pnlBalls";
             // 
             // pictureBox2
             // 
-            resources.ApplyResources(this.pictureBox2, "pictureBox2");
             this.pictureBox2.Image = global::Karaboss.Properties.Resources.ball;
+            resources.ApplyResources(this.pictureBox2, "pictureBox2");
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.TabStop = false;
             // 
             // pictureBox1
             // 
-            resources.ApplyResources(this.pictureBox1, "pictureBox1");
             this.pictureBox1.Image = global::Karaboss.Properties.Resources.ball;
+            resources.ApplyResources(this.pictureBox1, "pictureBox1");
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.TabStop = false;
             // 
             // pictBackColor
             // 
-            resources.ApplyResources(this.pictBackColor, "pictBackColor");
             this.pictBackColor.BackColor = System.Drawing.Color.Black;
+            resources.ApplyResources(this.pictBackColor, "pictBackColor");
             this.pictBackColor.Name = "pictBackColor";
             this.pictBackColor.TabStop = false;
             // 
             // pictContour
             // 
-            resources.ApplyResources(this.pictContour, "pictContour");
             this.pictContour.BackColor = System.Drawing.Color.Black;
+            resources.ApplyResources(this.pictContour, "pictContour");
             this.pictContour.Name = "pictContour";
             this.pictContour.TabStop = false;
             // 
             // pictNext
             // 
-            resources.ApplyResources(this.pictNext, "pictNext");
             this.pictNext.BackColor = System.Drawing.Color.White;
+            resources.ApplyResources(this.pictNext, "pictNext");
             this.pictNext.Name = "pictNext";
             this.pictNext.TabStop = false;
             // 
             // pictHighlight
             // 
-            resources.ApplyResources(this.pictHighlight, "pictHighlight");
             this.pictHighlight.BackColor = System.Drawing.Color.Red;
+            resources.ApplyResources(this.pictHighlight, "pictHighlight");
             this.pictHighlight.Name = "pictHighlight";
             this.pictHighlight.TabStop = false;
             // 
             // pictBefore
             // 
-            resources.ApplyResources(this.pictBefore, "pictBefore");
             this.pictBefore.BackColor = System.Drawing.Color.LightGreen;
+            resources.ApplyResources(this.pictBefore, "pictBefore");
             this.pictBefore.Name = "pictBefore";
             this.pictBefore.TabStop = false;
             // 
             // cbOptionsTextDisplay
             // 
-            resources.ApplyResources(this.cbOptionsTextDisplay, "cbOptionsTextDisplay");
             this.cbOptionsTextDisplay.FormattingEnabled = true;
             this.cbOptionsTextDisplay.Items.AddRange(new object[] {
             resources.GetString("cbOptionsTextDisplay.Items"),
             resources.GetString("cbOptionsTextDisplay.Items1"),
             resources.GetString("cbOptionsTextDisplay.Items2")});
+            resources.ApplyResources(this.cbOptionsTextDisplay, "cbOptionsTextDisplay");
             this.cbOptionsTextDisplay.Name = "cbOptionsTextDisplay";
             this.cbOptionsTextDisplay.SelectedIndexChanged += new System.EventHandler(this.cbOptionsTextDisplay_SelectedIndexChanged);
             // 
@@ -369,46 +367,6 @@
             // 
             resources.ApplyResources(this.label7, "label7");
             this.label7.Name = "label7";
-            // 
-            // pBox
-            // 
-            resources.ApplyResources(this.pBox, "pBox");
-            this.pBox.BackColor = System.Drawing.Color.Black;
-            this.pBox.bColorContour = true;
-            this.pBox.bDemo = false;
-            this.pBox.BeatDuration = 0;
-            this.pBox.bforceUppercase = false;
-            this.pBox.bShowChords = false;
-            this.pBox.bShowParagraphs = true;
-            this.pBox.bTextBackGround = true;
-            this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);
-            this.pBox.ChordHighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            this.pBox.ChordNextColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
-            this.pBox.CurrentTextPos = 2;
-            this.pBox.CurrentTime = 30;
-            this.pBox.DirSlideShow = null;
-            this.pBox.FreqDirSlideShow = 0;
-            this.pBox.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pBox.KaraokeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.pBox.LyricsTimes = ((System.Collections.Generic.List<int>)(resources.GetObject("pBox.LyricsTimes")));
-            this.pBox.LyricsWords = ((System.Collections.Generic.List<string>)(resources.GetObject("pBox.LyricsWords")));
-            this.pBox.m_Alpha = 255;
-            this.pBox.m_CurrentImage = null;
-            this.pBox.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
-            this.pBox.Name = "pBox";
-            this.pBox.OptionBackground = null;
-            this.pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Bottom;
-            this.pBox.OptionShowChords = true;
-            this.pBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
-            this.pBox.TransparencyKey = System.Drawing.Color.Lime;
-            this.pBox.Txt = "Lorem ipsum dolor sit amet,\rconsectetur adipisicing elit,\rsed do eiusmod tempor i" +
-    "ncididunt\rut labore et dolore magna aliqua.\rUt enim ad minim veniam,";
-            this.pBox.TxtBackColor = System.Drawing.Color.Black;
-            this.pBox.TxtBeforeColor = System.Drawing.Color.Red;
-            this.pBox.TxtContourColor = System.Drawing.Color.White;
-            this.pBox.TxtHighlightColor = System.Drawing.Color.Coral;
-            this.pBox.TxtNbLines = 3;
-            this.pBox.TxtNextColor = System.Drawing.Color.YellowGreen;
             // 
             // btnFonts
             // 
@@ -445,15 +403,15 @@
             // 
             // picChordHighlight
             // 
-            resources.ApplyResources(this.picChordHighlight, "picChordHighlight");
             this.picChordHighlight.BackColor = System.Drawing.Color.DarkRed;
+            resources.ApplyResources(this.picChordHighlight, "picChordHighlight");
             this.picChordHighlight.Name = "picChordHighlight";
             this.picChordHighlight.TabStop = false;
             // 
             // picChordBefore
             // 
-            resources.ApplyResources(this.picChordBefore, "picChordBefore");
             this.picChordBefore.BackColor = System.Drawing.Color.DarkOrange;
+            resources.ApplyResources(this.picChordBefore, "picChordBefore");
             this.picChordBefore.Name = "picChordBefore";
             this.picChordBefore.TabStop = false;
             // 
@@ -480,10 +438,118 @@
             this.chkTopMost.UseVisualStyleBackColor = true;
             this.chkTopMost.CheckedChanged += new System.EventHandler(this.chkTopMost_CheckedChanged);
             // 
+            // grpBoxBackGround
+            // 
+            this.grpBoxBackGround.Controls.Add(this.cbRhythm1);
+            this.grpBoxBackGround.Controls.Add(this.cbRhythm0);
+            this.grpBoxBackGround.Controls.Add(this.cbGrad1);
+            this.grpBoxBackGround.Controls.Add(this.cbGrad0);
+            this.grpBoxBackGround.Controls.Add(this.radioRhythm);
+            this.grpBoxBackGround.Controls.Add(this.radioGradient);
+            this.grpBoxBackGround.Controls.Add(this.radioDiaporama);
+            this.grpBoxBackGround.Controls.Add(this.radioSolidColor);
+            this.grpBoxBackGround.Controls.Add(this.btnBackColor);
+            this.grpBoxBackGround.Controls.Add(this.pictBackColor);
+            this.grpBoxBackGround.Controls.Add(this.radioTransparent);
+            resources.ApplyResources(this.grpBoxBackGround, "grpBoxBackGround");
+            this.grpBoxBackGround.Name = "grpBoxBackGround";
+            this.grpBoxBackGround.TabStop = false;
+            // 
+            // radioRhythm
+            // 
+            resources.ApplyResources(this.radioRhythm, "radioRhythm");
+            this.radioRhythm.Name = "radioRhythm";
+            this.radioRhythm.UseVisualStyleBackColor = true;
+            this.radioRhythm.CheckedChanged += new System.EventHandler(this.radioRhythm_CheckedChanged);
+            // 
+            // radioGradient
+            // 
+            resources.ApplyResources(this.radioGradient, "radioGradient");
+            this.radioGradient.Name = "radioGradient";
+            this.radioGradient.UseVisualStyleBackColor = true;
+            this.radioGradient.CheckedChanged += new System.EventHandler(this.radioGradient_CheckedChanged);
+            // 
+            // pBox
+            // 
+            this.pBox.BackColor = System.Drawing.Color.Black;
+            this.pBox.bColorContour = true;
+            this.pBox.bDemo = false;
+            this.pBox.BeatDuration = 0;
+            this.pBox.bforceUppercase = false;
+            this.pBox.bShowChords = false;
+            this.pBox.bShowParagraphs = true;
+            this.pBox.bTextBackGround = true;
+            this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);
+            this.pBox.ChordHighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.pBox.ChordNextColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
+            this.pBox.CurrentTextPos = 2;
+            this.pBox.CurrentTime = 30;
+            this.pBox.DirSlideShow = null;
+            this.pBox.FreqDirSlideShow = 0;
+            this.pBox.GradientColor0 = System.Drawing.Color.Empty;
+            this.pBox.GradientColor1 = System.Drawing.Color.Empty;
+            this.pBox.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pBox.KaraokeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            resources.ApplyResources(this.pBox, "pBox");
+            this.pBox.LyricsTimes = ((System.Collections.Generic.List<int>)(resources.GetObject("pBox.LyricsTimes")));
+            this.pBox.LyricsWords = ((System.Collections.Generic.List<string>)(resources.GetObject("pBox.LyricsWords")));
+            this.pBox.m_Alpha = 255;
+            this.pBox.m_CurrentImage = null;
+            this.pBox.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.pBox.Name = "pBox";
+            this.pBox.OptionBackground = null;
+            this.pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Bottom;
+            this.pBox.OptionShowChords = true;
+            this.pBox.RhythmColor0 = System.Drawing.Color.Empty;
+            this.pBox.RhythmColor1 = System.Drawing.Color.Empty;
+            this.pBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
+            this.pBox.TransparencyKey = System.Drawing.Color.Lime;
+            this.pBox.Txt = "Lorem ipsum dolor sit amet,\rconsectetur adipisicing elit,\rsed do eiusmod tempor i" +
+    "ncididunt\rut labore et dolore magna aliqua.\rUt enim ad minim veniam,";
+            this.pBox.TxtBackColor = System.Drawing.Color.Black;
+            this.pBox.TxtBeforeColor = System.Drawing.Color.Red;
+            this.pBox.TxtContourColor = System.Drawing.Color.White;
+            this.pBox.TxtGrad0Color = System.Drawing.Color.Empty;
+            this.pBox.TxtGrad1Color = System.Drawing.Color.Empty;
+            this.pBox.TxtHighlightColor = System.Drawing.Color.Coral;
+            this.pBox.TxtNbLines = 3;
+            this.pBox.TxtNextColor = System.Drawing.Color.YellowGreen;
+            this.pBox.TxtRhythm0Color = System.Drawing.Color.Empty;
+            this.pBox.TxtRhythm1Color = System.Drawing.Color.Empty;
+            // 
+            // cbGrad0
+            // 
+            this.cbGrad0.FormattingEnabled = true;
+            resources.ApplyResources(this.cbGrad0, "cbGrad0");
+            this.cbGrad0.Name = "cbGrad0";
+            this.cbGrad0.SelectedIndexChanged += new System.EventHandler(this.cbGrad0_SelectedIndexChanged);
+            // 
+            // cbGrad1
+            // 
+            this.cbGrad1.FormattingEnabled = true;
+            resources.ApplyResources(this.cbGrad1, "cbGrad1");
+            this.cbGrad1.Name = "cbGrad1";
+            this.cbGrad1.SelectedIndexChanged += new System.EventHandler(this.cbGrad1_SelectedIndexChanged);
+            // 
+            // cbRhythm1
+            // 
+            this.cbRhythm1.FormattingEnabled = true;
+            resources.ApplyResources(this.cbRhythm1, "cbRhythm1");
+            this.cbRhythm1.Name = "cbRhythm1";
+            this.cbRhythm1.SelectedIndexChanged += new System.EventHandler(this.cbRhythm1_SelectedIndexChanged);
+            // 
+            // cbRhythm0
+            // 
+            this.cbRhythm0.FormattingEnabled = true;
+            resources.ApplyResources(this.cbRhythm0, "cbRhythm0");
+            this.cbRhythm0.Name = "cbRhythm0";
+            this.cbRhythm0.SelectedIndexChanged += new System.EventHandler(this.cbRhythm0_SelectedIndexChanged);
+            // 
             // frmLyrOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.grpBoxBackGround);
             this.Controls.Add(this.chkTopMost);
             this.Controls.Add(this.chkForceShowChords);
             this.Controls.Add(this.label10);
@@ -501,12 +567,7 @@
             this.Controls.Add(this.pnlBalls);
             this.Controls.Add(this.chkDisplayBalls);
             this.Controls.Add(this.UpDownNbLines);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.pictBackColor);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.radioTransparent);
-            this.Controls.Add(this.radioSolidColor);
-            this.Controls.Add(this.radioDiaporama);
             this.Controls.Add(this.pictContour);
             this.Controls.Add(this.pictNext);
             this.Controls.Add(this.pictHighlight);
@@ -530,7 +591,6 @@
             this.Controls.Add(this.btnForeColor);
             this.Controls.Add(this.btnSingColor);
             this.Controls.Add(this.btnSungColor);
-            this.Controls.Add(this.btnBackColor);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -548,6 +608,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictBefore)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picChordHighlight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picChordBefore)).EndInit();
+            this.grpBoxBackGround.ResumeLayout(false);
+            this.grpBoxBackGround.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -585,7 +647,6 @@
         private System.Windows.Forms.RadioButton radioTransparent;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.PictureBox pictBackColor;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.NumericUpDown UpDownNbLines;
         private System.Windows.Forms.CheckBox chkDisplayBalls;
         private System.Windows.Forms.Panel pnlBalls;
@@ -606,5 +667,12 @@
         private System.Windows.Forms.Button btnChordHighlightColor;
         private System.Windows.Forms.Button btnChordNormalColor;
         private System.Windows.Forms.CheckBox chkTopMost;
+        private System.Windows.Forms.GroupBox grpBoxBackGround;
+        private System.Windows.Forms.RadioButton radioGradient;
+        private System.Windows.Forms.RadioButton radioRhythm;
+        private System.Windows.Forms.ComboBox cbGrad0;
+        private System.Windows.Forms.ComboBox cbGrad1;
+        private System.Windows.Forms.ComboBox cbRhythm1;
+        private System.Windows.Forms.ComboBox cbRhythm0;
     }
 }

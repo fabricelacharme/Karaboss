@@ -175,12 +175,6 @@
   <data name="label8.Text" xml:space="preserve">
     <value>Couleur des paroles</value>
   </data>
-  <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>66, 13</value>
-  </data>
-  <data name="label9.Text" xml:space="preserve">
-    <value>Arrière plan :</value>
-  </data>
   <data name="chkDisplayBalls.Size" type="System.Drawing.Size, System.Drawing">
     <value>108, 17</value>
   </data>
@@ -256,6 +250,24 @@
   </data>
   <data name="chkTopMost.Text" xml:space="preserve">
     <value>Fenêtre des paroles toujours visible</value>
+  </data>
+  <data name="radioRhythm.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 17</value>
+  </data>
+  <data name="radioRhythm.Text" xml:space="preserve">
+    <value>Rhythme</value>
+  </data>
+  <data name="radioGradient.Size" type="System.Drawing.Size, System.Drawing">
+    <value>103, 17</value>
+  </data>
+  <data name="radioGradient.Text" xml:space="preserve">
+    <value>Gradient couleur</value>
+  </data>
+  <data name="grpBoxBackGround.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="grpBoxBackGround.Text" xml:space="preserve">
+    <value>Arrière plan</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

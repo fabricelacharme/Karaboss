@@ -37,6 +37,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.IO;
 using System.Drawing.Text;
+using GradientApp;
 
 namespace Karaboss
 {
@@ -57,9 +58,15 @@ namespace Karaboss
         private Color TxtHighlightColor;
         // Text sung color
         private Color TxtBeforeColor;
-        // Background color
-        private Color TxtBackColor;
 
+        #region background colors
+        // Background colors
+        private Color TxtBackColor;
+        private Color TxtGrad0Color;
+        private Color TxtGrad1Color;
+        private Color TxtRhythm0Color;
+        private Color TxtRhythm1Color;
+        #endregion background colors
 
         // Chord color
         private Color _chordNextColor;
@@ -123,7 +130,13 @@ namespace Karaboss
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
 
+                // Background type (Diaporama, Solidcolor, Transparent)
                 TxtBackColor = Properties.Settings.Default.TxtBackColor;
+                TxtGrad0Color = Properties.Settings.Default.TxtGrad0Color;
+                TxtGrad1Color = Properties.Settings.Default.TxtGrad1Color;
+                TxtRhythm0Color = Properties.Settings.Default.TxtRhythm0Color;
+                TxtRhythm1Color = Properties.Settings.Default.TxtRhythm1Color;
+
                 // Colors
                 TxtNextColor = Properties.Settings.Default.TxtNextColor;
                 TxtHighlightColor = Properties.Settings.Default.TxtHighlightColor;
@@ -180,6 +193,12 @@ namespace Karaboss
                     case "SolidColor":
                         radioSolidColor.Checked = true;
                         break;
+                    case "Gradient":
+                        radioGradient.Checked = true;
+                        break;
+                    case "Rhythm":
+                        radioRhythm.Checked = true;
+                        break;
                     case "Transparent":
                         radioTransparent.Checked = true;
                         break;
@@ -231,6 +250,11 @@ namespace Karaboss
             {
                 Console.Write("Error: " + e.Message);
                 TxtBackColor = Color.White;
+                TxtGrad0Color = Color.Blue;
+                TxtGrad1Color = Color.Green;
+                TxtRhythm0Color = Color.Blue;
+                TxtRhythm1Color = Color.Green;
+
                 TxtNextColor = Color.Black;
                 TxtHighlightColor = Color.Red;
                 TxtBeforeColor = Color.YellowGreen;
@@ -260,7 +284,13 @@ namespace Karaboss
 
                 Properties.Settings.Default.KaraokeFont = _karaokeFont;
 
+                // Background colors
                 Properties.Settings.Default.TxtBackColor = TxtBackColor;
+                Properties.Settings.Default.TxtGrad0Color = TxtGrad0Color;
+                Properties.Settings.Default.TxtGrad1Color = TxtGrad1Color;
+                Properties.Settings.Default.TxtRhythm0Color = TxtRhythm0Color;
+                Properties.Settings.Default.TxtRhythm1Color = TxtRhythm1Color;
+
 
                 Properties.Settings.Default.TxtNextColor = TxtNextColor;
                 Properties.Settings.Default.TxtHighlightColor = TxtHighlightColor;
@@ -340,7 +370,7 @@ namespace Karaboss
                 txtSlideShow.Text = dirSlideShow;
                 txtSlideShowFreq.Text = freqSlideShow.ToString();
 
-                // buttons
+                // Background buttons
                 pictBackColor.BackColor = TxtBackColor;
                 pictBefore.BackColor = TxtBeforeColor;
 
@@ -367,8 +397,13 @@ namespace Karaboss
                 pBox.TxtNbLines = NbLines;
                 pBox.CurrentTime = 30;
 
-
+                // Backgrounds
                 pBox.TxtBackColor = TxtBackColor;
+                pBox.TxtGrad0Color = TxtGrad0Color;
+                pBox.TxtGrad1Color = TxtGrad1Color;
+                pBox.TxtRhythm0Color = TxtRhythm0Color;
+                pBox.TxtRhythm1Color = TxtRhythm1Color;
+
 
                 pBox.bColorContour = bColorContour;
                 pBox.TxtContourColor = TxtContourColor;
@@ -400,7 +435,13 @@ namespace Karaboss
         {
             // picturebox
             
+            // Backgrounds
             pBox.TxtBackColor = TxtBackColor;
+            pBox.TxtGrad0Color = TxtGrad0Color;
+            pBox.TxtGrad1Color = TxtGrad1Color;
+            pBox.TxtRhythm0Color = TxtRhythm0Color;
+            pBox.TxtRhythm1Color = TxtRhythm1Color;
+
 
             pBox.bColorContour = bColorContour;
             pBox.TxtContourColor = TxtContourColor;
@@ -417,6 +458,7 @@ namespace Karaboss
 
             //Color of buttons
             pictBackColor.BackColor = TxtBackColor;
+
             pictBefore.BackColor = TxtBeforeColor;
             pictContour.BackColor = TxtContourColor;
             pictHighlight.BackColor = TxtHighlightColor;
@@ -447,8 +489,11 @@ namespace Karaboss
             {
                 MyDialog = new ColorDialog()
                 {
+                    AnyColor = true,
+                    FullOpen = true,
                     AllowFullOpen = true,
                     ShowHelp = true,
+
                     Color = defColor,
                 };
             }
@@ -456,6 +501,8 @@ namespace Karaboss
             {
                 MyDialog = new ColorDialog()
                 {
+                    AnyColor = true,
+                    FullOpen = true,
                     AllowFullOpen = true,
                     ShowHelp = true,
                     Color = defColor,
@@ -693,6 +740,17 @@ namespace Karaboss
         private void FrmLyrOptions_Load(object sender, EventArgs e)
         {
             this.TopMost = true;
+            cboColor.DisplayKnownColors(cbGrad0);
+            cboColor.DisplayKnownColors(cbGrad1);
+            cboColor.DisplayKnownColors(cbRhythm0);
+            cboColor.DisplayKnownColors(cbRhythm1);
+
+            // Select the selected color in the ComboBox
+            cbGrad0.SelectedIndex = cbGrad0.Items.IndexOf(TxtGrad0Color);
+            cbGrad1.SelectedIndex = cbGrad1.Items.IndexOf(TxtGrad1Color);
+            cbRhythm0.SelectedIndex = cbRhythm0.Items.IndexOf(TxtRhythm0Color);
+            cbRhythm1.SelectedIndex = cbRhythm1.Items.IndexOf(TxtRhythm1Color);
+
         }
 
         /// <summary>
@@ -748,6 +806,7 @@ namespace Karaboss
                 btnBackColor.Visible = false;
                 pictBackColor.Visible = false;
 
+
                 pBox.OptionBackground = "Diaporama";
                 bgOption = "Diaporama";
                 pBox.SetBackground(dirSlideShow);
@@ -761,8 +820,34 @@ namespace Karaboss
                 btnBackColor.Visible = true;
                 pictBackColor.Visible = true;
 
+
                 pBox.OptionBackground = "SolidColor";
                 bgOption = "SolidColor";
+            }
+        }
+
+        private void radioGradient_CheckedChanged(object sender, EventArgs e)
+        {
+            if(radioGradient.Checked)
+            {                
+              
+
+                pBox.OptionBackground = "Gradient";
+                bgOption = "Gradient";
+            }
+        }
+
+            
+
+
+        private void radioRhythm_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioRhythm.Checked)
+            {
+               
+
+                pBox.OptionBackground = "Rhythm";
+                bgOption = "Rhythm";
             }
         }
 
@@ -772,6 +857,7 @@ namespace Karaboss
             {
                 btnBackColor.Visible = false;
                 pictBackColor.Visible = false;
+
 
                 pBox.OptionBackground = "Transparent";
                 bgOption = "Transparent";
@@ -984,8 +1070,45 @@ namespace Karaboss
             picChordHighlight.BackColor = clr;
             ApplyNewColors();
         }
+
+
+
         #endregion chords
 
-       
+        private void cbGrad0_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Apply the selected color from the ComboBox to Color0 of the gradient panel
+            if (cbGrad0.SelectedItem is Color selectedColor)
+            {                               
+                TxtGrad0Color = selectedColor; // Update the TxtGrad0Color variable
+            }
+        }
+
+        private void cbGrad1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Apply the selected color from the ComboBox to TxtGrad1Color
+            if (cbGrad1.SelectedItem is Color selectedColor)
+            {                
+                TxtGrad1Color = selectedColor; // Update the TxtGrad1Color variable
+            }
+        }
+
+        private void cbRhythm0_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Apply the selected color from the ComboBox to TxtRhythm0Color
+            if (cbRhythm0.SelectedItem is Color selectedColor)
+            {
+                TxtRhythm0Color = selectedColor; // Update the TxtRhythm0Color variable
+            }
+        }
+
+        private void cbRhythm1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Apply the selected color from the ComboBox to TxtRhythm1Color of the gradient panel
+            if (cbRhythm1.SelectedItem is Color selectedColor)
+            {
+                TxtRhythm1Color = selectedColor; // Update the TxtRhythm1Color variable
+            }
+        }
     }
 }
