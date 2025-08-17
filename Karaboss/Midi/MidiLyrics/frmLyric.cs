@@ -220,6 +220,7 @@ namespace Karaboss
             }
         }
 
+
         // Text color
         private Color _txtHighlightColor;
         public Color TxtHighlightColor {
@@ -267,6 +268,48 @@ namespace Karaboss
                 pBox.TxtBackColor = _txtBackColor;
             }
         }
+
+        private Color _txtGrad0Color;
+        public Color TxtGrad0Color
+        {
+            get { return _txtGrad0Color; }
+            set
+            {
+                _txtGrad0Color = value;
+                pBox.TxtGrad0Color = _txtGrad0Color;
+            }
+        }
+        private Color _txtGrad1Color;
+        public Color TxtGrad1Color
+        {
+            get { return _txtGrad1Color; }
+            set
+            {
+                _txtGrad1Color = value;
+                pBox.TxtGrad1Color = _txtGrad1Color;
+            }
+        }
+        private Color _txtRhythm0Color;
+        public Color TxtRhythm0Color
+        {
+            get { return _txtRhythm0Color; }
+            set
+            {
+                _txtRhythm0Color = value;
+                pBox.TxtRhythm0Color = _txtRhythm0Color;
+            }
+        }
+        private Color _txtRhythm1Color;
+        public Color TxtRhythm1Color
+        {
+            get { return _txtRhythm1Color; }
+            set
+            {
+                _txtRhythm1Color = value;
+                pBox.TxtRhythm1Color = _txtRhythm1Color;
+            }
+        }
+
 
 
         #endregion
@@ -342,6 +385,14 @@ namespace Karaboss
                     case "SolidColor":
                         pBox.OptionBackground = "SolidColor";
                         break;
+
+                    case "Gradient":
+                        pBox.OptionBackground = "Gradient";
+                        break;
+                    case "Rhythm":
+                        pBox.OptionBackground = "Rhythm";
+                        break;
+
                     case "Transparent":
                         TransparencyKey = pBox.TransparencyKey;
                         BackColor = pBox.TransparencyKey;
@@ -617,6 +668,15 @@ namespace Karaboss
                     case "SolidColor":
                         _optionbackground = "SolidColor";
                         break;
+
+                    case "Gradient":
+                        _optionbackground = "Gradient";
+                        break;
+
+                    case "Rhythm":
+                        _optionbackground = "Rhythm";
+                        break;
+
                     case "Transparent":
                         _optionbackground = "Transparent";
                         break;
@@ -646,7 +706,12 @@ namespace Karaboss
 
                 bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
 
+                // Background colors
                 TxtBackColor = Properties.Settings.Default.TxtBackColor;
+                TxtGrad0Color = Properties.Settings.Default.TxtGrad0Color;
+                TxtGrad1Color = Properties.Settings.Default.TxtGrad1Color;
+                TxtRhythm0Color = Properties.Settings.Default.TxtRhythm0Color;
+                TxtRhythm1Color = Properties.Settings.Default.TxtRhythm1Color;
 
                 // Text colors
                 TxtNextColor = Properties.Settings.Default.TxtNextColor;

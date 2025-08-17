@@ -61,7 +61,7 @@ namespace Karaboss
 
         #region background colors
         // Background colors
-        private Color TxtBackColor;
+        private Color TxtBackColor;        
         private Color TxtGrad0Color;
         private Color TxtGrad1Color;
         private Color TxtRhythm0Color;
@@ -449,6 +449,7 @@ namespace Karaboss
             pBox.TxtHighlightColor = TxtHighlightColor;
             pBox.TxtBeforeColor = TxtBeforeColor;
 
+            // Top, center, bottom
             pBox.OptionDisplay = (PicControl.pictureBoxControl.OptionsDisplay)OptionDisplay;
 
             // Chords
@@ -676,7 +677,12 @@ namespace Karaboss
 
                 // Text colors                
                 frmLyric.TxtBackColor = TxtBackColor;
-                                
+                frmLyric.TxtGrad0Color = TxtGrad0Color;
+                frmLyric.TxtGrad1Color = TxtGrad1Color;
+                frmLyric.TxtRhythm0Color = TxtRhythm0Color;
+                frmLyric.TxtRhythm1Color = TxtRhythm1Color;
+
+
                 frmLyric.TxtNextColor = TxtNextColor;
                 frmLyric.TxtHighlightColor = TxtHighlightColor;
                 frmLyric.TxtBeforeColor = TxtBeforeColor;
@@ -831,15 +837,12 @@ namespace Karaboss
             if(radioGradient.Checked)
             {                
               
-
                 pBox.OptionBackground = "Gradient";
                 bgOption = "Gradient";
             }
         }
 
             
-
-
         private void radioRhythm_CheckedChanged(object sender, EventArgs e)
         {
             if (radioRhythm.Checked)
@@ -863,8 +866,6 @@ namespace Karaboss
                 bgOption = "Transparent";
             }
         }
-
-
 
 
         #endregion Background selection
@@ -1081,6 +1082,7 @@ namespace Karaboss
             if (cbGrad0.SelectedItem is Color selectedColor)
             {                               
                 TxtGrad0Color = selectedColor; // Update the TxtGrad0Color variable
+                pBox.TxtGrad0Color = TxtGrad0Color; // Update the gradient panel color
             }
         }
 
@@ -1090,6 +1092,7 @@ namespace Karaboss
             if (cbGrad1.SelectedItem is Color selectedColor)
             {                
                 TxtGrad1Color = selectedColor; // Update the TxtGrad1Color variable
+                pBox.TxtGrad1Color = TxtGrad1Color; // Update the gradient panel color
             }
         }
 
@@ -1099,6 +1102,7 @@ namespace Karaboss
             if (cbRhythm0.SelectedItem is Color selectedColor)
             {
                 TxtRhythm0Color = selectedColor; // Update the TxtRhythm0Color variable
+                pBox.TxtRhythm0Color = TxtRhythm0Color; // Update the gradient panel color
             }
         }
 
@@ -1108,6 +1112,7 @@ namespace Karaboss
             if (cbRhythm1.SelectedItem is Color selectedColor)
             {
                 TxtRhythm1Color = selectedColor; // Update the TxtRhythm1Color variable
+                pBox.TxtRhythm1Color = TxtRhythm1Color; // Update the gradient panel color
             }
         }
     }

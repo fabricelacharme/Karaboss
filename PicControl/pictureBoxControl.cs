@@ -227,6 +227,7 @@ namespace PicControl
                     case "SolidColor":
                         m_Cancel = true;
                         Terminate();
+                        _timerGradient.Stop();
                         pboxWnd.Image = null;
                         m_CurrentImage = null;
                         pboxWnd.BackColor = txtBackColor;
@@ -238,22 +239,25 @@ namespace PicControl
                         Terminate();
                         pboxWnd.Image = null;
                         m_CurrentImage = null;
-                        pboxWnd.BackColor = txtBackColor;
+                        _timerGradient.Start();
+                        //pboxWnd.BackColor = txtBackColor;
                         pboxWnd.Invalidate();
                         break;
 
                     case "Rhythm":
                         m_Cancel = true;
                         Terminate();
+                        _timerGradient.Stop();
                         pboxWnd.Image = null;
                         m_CurrentImage = null;
-                        pboxWnd.BackColor = txtBackColor;
+                        //pboxWnd.BackColor = txtBackColor;
                         pboxWnd.Invalidate();
                         break;
 
                     case "Transparent":
                         m_Cancel = true;
-                        Terminate();
+                        Terminate();    
+                        _timerGradient.Stop();
                         pboxWnd.Image = null;
                         m_CurrentImage = null;
                         pboxWnd.BackColor = _transparencykey;
@@ -500,6 +504,25 @@ namespace PicControl
 
 
         #region Gradient & Rhythm
+        readonly System.Windows.Forms.Timer _timerGradient = new System.Windows.Forms.Timer();        
+
+        // Default angle for the gradient
+        private float _angle = 45.0f;
+        private int W;
+        private int H;
+        private int speed;
+        private int _beat;        
+        public int Beat
+        {
+            get { return _beat; }
+            set
+            {
+                _beat = value;
+                speed = (int)(_beat / 12.0);
+            }
+        }
+        public float GradientAngle { get { return _angle; } set { _angle = value; pboxWnd.Invalidate(); } }
+
         private Color _gradientColor0;
         public Color GradientColor0
         {
@@ -702,8 +725,11 @@ namespace PicControl
             m_ImageFilePaths = new List<string>();
             m_Alpha = 255;
             imgLayout = ImageLayout.Stretch;
-            
-            
+
+
+            _timerGradient.Interval = 60; // 60 ms
+            _timerGradient.Tick += new EventHandler(_timerGradient_Tick);
+
             this.SetStyle(
                   System.Windows.Forms.ControlStyles.UserPaint |
                   System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
@@ -712,6 +738,43 @@ namespace PicControl
             
             SetDefaultValues();
         }
+
+
+        #region Timer
+        private void _timerGradient_Tick(object sender, EventArgs e)
+        {
+            switch (_optionbackground)
+            {
+                case "Gradient":
+                    // For diagonal gradients, we can use the angle property to set the gradient direction
+                    _angle = (_angle + 1) % 360; // Increment the angle by 1 degree, wrapping around if it exceeds 360 degrees
+                    pboxWnd.Invalidate(); // Force the panel to redraw with the new gradient
+                    break;
+
+                case "Rhythm":
+                    // For radial gradients, we don't use the angle, but we can still animate the size of the ellipse
+                    W -= speed; // Minor the width of the client rectangle at each tick with the speed value
+                    H -= speed; // Minor the height of the client rectangle at each tick with the speed value 
+
+                    if (W < speed || H < speed)
+                    {
+                        ResetSize(); // Reset the width and height to the original size
+                    }
+                    break;
+            }
+            Invalidate(); // Force the panel to redraw with the new gradient
+        }
+
+        private void ResetSize()
+        {
+            // Reset the width and height to the current client rectangle size
+            //W = ClientRectangle.Width;
+            //H = ClientRectangle.Height;
+            W = Width; // Reset width to the current width
+            H = Height; // Reset height to the current height            
+        }
+
+        #endregion Timer
 
 
         #region methods
@@ -1935,7 +1998,7 @@ namespace PicControl
         #endregion measures
 
 
-        #region draw
+        #region draw lyrics chords
 
         /// <summary>
         /// Draw current line, syllabe by syllabe
@@ -2390,7 +2453,7 @@ namespace PicControl
 
         }
 
-        #endregion draw
+        #endregion draw lyrics chords
 
 
         #region backgroundworker
@@ -2634,7 +2697,7 @@ namespace PicControl
             // Redraw the display
             pboxWnd.Invalidate();
         }
-        
+
         /// <summary>
         /// picturebox Paint event
         /// </summary>
@@ -2646,45 +2709,63 @@ namespace PicControl
             int y;
 
             // Draw background image
-            #region draw background image
-            if (m_CurrentImage != null)
-            {
-                #region sizemode
-                switch (_sizemode)
-                {
-                    case PictureBoxSizeMode.AutoSize:
-                        x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
-                        y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
-                        m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
-                        break;
-                    case PictureBoxSizeMode.CenterImage:
-                        x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
-                        y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
-                        m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
-                        break;
-                    case PictureBoxSizeMode.Normal:
-                        // coin superieur gauche
-                        m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                        break;
-                    case PictureBoxSizeMode.StretchImage:
-                        //  l'image est étirée ou réduite pour s'ajuster à PictureBox.
-                        m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                        break;
-                    case PictureBoxSizeMode.Zoom:
-                        m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                        break;
-                }
-                #endregion
+            #region draw background image or gradient
 
-                try
-                {                    
-                    e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
-                    
-                }
-                catch (Exception dr)
-                {
-                    Console.Write("Error drawing image: " + dr.Message);
-                }
+            switch (_optionbackground) {
+                
+            
+                case "Diaporama":                
+                    if (m_CurrentImage != null)
+                    {
+                        #region sizemode
+                        switch (_sizemode)
+                        {
+                            case PictureBoxSizeMode.AutoSize:
+                                x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
+                                y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
+                                m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
+                                break;
+                            case PictureBoxSizeMode.CenterImage:
+                                x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
+                                y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
+                                m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
+                                break;
+                            case PictureBoxSizeMode.Normal:
+                                // coin superieur gauche
+                                m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                                break;
+                            case PictureBoxSizeMode.StretchImage:
+                                //  l'image est étirée ou réduite pour s'ajuster à PictureBox.
+                                m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                                break;
+                            case PictureBoxSizeMode.Zoom:
+                                m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                                break;
+                        }
+                        #endregion
+
+                        try
+                        {
+                            e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
+
+                        }
+                        catch (Exception dr)
+                        {
+                            Console.Write("Error drawing image: " + dr.Message);
+                        }
+                    }
+                    break;
+
+                case "Gradient":
+                    // Draw gradient background
+                    // Create a GraphicsPath to define the area to fill
+                    GraphicsPath gp = new GraphicsPath();
+                    gp.AddRectangle(ClientRectangle);
+                    e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+                    e.Graphics.FillPath(new LinearGradientBrush(ClientRectangle, txtGrad0Color, txtGrad1Color, _angle), gp);
+                    //pboxWnd.Invalidate();
+                    gp.Dispose();
+                        break;
             }
             #endregion
 
