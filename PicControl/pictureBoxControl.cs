@@ -239,18 +239,18 @@ namespace PicControl
                         Terminate();
                         pboxWnd.Image = null;
                         m_CurrentImage = null;
-                        _timerGradient.Start();
-                        //pboxWnd.BackColor = txtBackColor;
+                        _timerGradient.Start();                        
                         pboxWnd.Invalidate();
                         break;
 
                     case "Rhythm":
                         m_Cancel = true;
                         Terminate();
-                        _timerGradient.Stop();
+                        _timerGradient.Start();
                         pboxWnd.Image = null;
                         m_CurrentImage = null;
-                        //pboxWnd.BackColor = txtBackColor;
+                        ResetSize();
+                        pboxWnd.BackColor = txtRhythm0Color;
                         pboxWnd.Invalidate();
                         break;
 
@@ -443,9 +443,11 @@ namespace PicControl
             }
         }
 
-        /// <summary>
-        /// Background color
-        /// </summary>
+
+        // Background color
+
+        private int _bpm;
+
         private Color txtBackColor;
         public Color TxtBackColor {
             get
@@ -488,6 +490,8 @@ namespace PicControl
             set
             {
                 txtRhythm0Color = value;
+                pboxWnd.BackColor = txtRhythm0Color;
+                ResetSize();
                 pboxWnd.Invalidate();
             }
         }
@@ -498,6 +502,7 @@ namespace PicControl
             set
             {
                 txtRhythm1Color = value;
+                ResetSize();
                 pboxWnd.Invalidate();
             }
         }
@@ -726,6 +731,9 @@ namespace PicControl
             m_Alpha = 255;
             imgLayout = ImageLayout.Stretch;
 
+            W = Width; // Reset width to the current width
+            H = Height; // Reset height to the current height   
+            Beat = 200; // Default speed for rhythm animation
 
             _timerGradient.Interval = 60; // 60 ms
             _timerGradient.Tick += new EventHandler(_timerGradient_Tick);
@@ -753,13 +761,13 @@ namespace PicControl
 
                 case "Rhythm":
                     // For radial gradients, we don't use the angle, but we can still animate the size of the ellipse
-                    W -= speed; // Minor the width of the client rectangle at each tick with the speed value
-                    H -= speed; // Minor the height of the client rectangle at each tick with the speed value 
+                    if (W > speed) W -= speed; // Minor the width of the client rectangle at each tick with the speed value
+                    if (H > speed) H -= speed; // Minor the height of the client rectangle at each tick with the speed value 
 
-                    if (W < speed || H < speed)
-                    {
-                        ResetSize(); // Reset the width and height to the original size
-                    }
+                    //if (W < speed || H < speed)
+                    //{
+                    //    ResetSize(); // Reset the width and height to the original size
+                    //}
                     break;
             }
             Invalidate(); // Force the panel to redraw with the new gradient
@@ -2708,6 +2716,9 @@ namespace PicControl
             int x;
             int y;
 
+            // Create a GraphicsPath to define the area to fill
+            GraphicsPath gp = new GraphicsPath();
+
             // Draw background image
             #region draw background image or gradient
 
@@ -2759,14 +2770,31 @@ namespace PicControl
                 case "Gradient":
                     // Draw gradient background
                     // Create a GraphicsPath to define the area to fill
-                    GraphicsPath gp = new GraphicsPath();
+                    gp = new GraphicsPath();
                     gp.AddRectangle(ClientRectangle);
                     e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-                    e.Graphics.FillPath(new LinearGradientBrush(ClientRectangle, txtGrad0Color, txtGrad1Color, _angle), gp);
-                    //pboxWnd.Invalidate();
-                    gp.Dispose();
-                        break;
+                    e.Graphics.FillPath(new LinearGradientBrush(ClientRectangle, txtGrad0Color, txtGrad1Color, _angle), gp);                                        
+                    break;
+
+                case "Rhythm":
+                    gp = new GraphicsPath();
+                    e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                    // Radial gradients are handled differently, so we won't set an angle here                    
+                    RectangleF rect = new RectangleF((ClientRectangle.Width - W) / 2, (ClientRectangle.Height - H) / 2, W, H);
+
+                    gp.AddEllipse(rect);
+                    using (PathGradientBrush pgb = new PathGradientBrush(gp))
+                    {
+                        pgb.CenterColor = txtRhythm1Color; // Center color of the radial gradient
+                        pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
+                        e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
+                        pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
+                    }                    
+                    break;
             }
+
+            gp.Dispose(); // Dispose the GraphicsPath to free resources
+
             #endregion
 
 
@@ -2819,6 +2847,50 @@ namespace PicControl
         }
 
 
+
+        /// <summary>
+        /// Apply the beat effect.
+        /// </summary>
+        public void OnBeat(int beat, int bpm)
+        {
+            if (bpm != _bpm) {                 
+                _bpm = bpm;
+                Beat = 80000 / _bpm; // Duration of a beat in milliseconds
+            }
+
+            BeatEffect(beat);
+        }
+
+        /// <summary>
+        /// Applies a visual effect in response to a beat event.
+        /// </summary>
+        /// <remarks>This method is a placeholder for implementing beat-based visual effects.  Depending
+        /// on the gradient style, different effects can be applied, such as  resetting dimensions or altering colors.
+        /// Currently, it resets the width and  height for radial gradients and provides a framework for future
+        /// extensions.</remarks>
+        private void BeatEffect(int beat)
+        {
+            switch (_optionbackground)
+            {
+                case "Gradient":
+                    // For diagonal gradients, you can implement a different effect if needed
+                    // For example, you could change the angle or colors on each beat
+                    // Change the colors of the radial gradient on each beat
+                    //Color temp = _color0;
+                    //_color0 = _color1;
+                    //_color1 = temp;
+                    break;
+                case "Rhythm":
+                    // Radial gradients can have a different effect, such as changing colors or sizes
+                    // For diagonal gradients, you can implement a different effect if needed
+                    // W & H are reset to their maximum at each beat
+                    //if (beat == 1) ResetSize(); // Reset the width and height to the original size
+                    ResetSize(); // Reset the width and height to the original size
+                    break;
+            }
+        }
+
+
         private void ajustTextAgain()
         {
             if (lineMax != null && syllabes != null)
@@ -2860,6 +2932,15 @@ namespace PicControl
         /// <param name="e"></param>
         private void pboxWnd_Resize(object sender, EventArgs e)
         {
+
+           if (_optionbackground == "Rhythm")
+            {
+                // Reset the width and height to the current client rectangle size
+                ResetSize();
+                pboxWnd.Invalidate(); // Invalidate the panel to force a redraw with the new size
+            }
+
+
             if (this.ParentForm != null && this.ParentForm.WindowState != FormWindowState.Minimized)
                 ajustTextAgain();
 
@@ -2896,9 +2977,9 @@ namespace PicControl
             }
             #endregion
 
-        }              
+        }
 
-  
+       
 
         #endregion paint resize
 

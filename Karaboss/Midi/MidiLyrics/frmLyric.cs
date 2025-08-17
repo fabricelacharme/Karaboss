@@ -509,6 +509,23 @@ namespace Karaboss
         #region public methods
 
         /// <summary>
+        /// Displays a visual representation of a beat on the associated PictureBox control.
+        /// </summary>
+        /// <remarks>This method triggers the <c>OnBeat</c> method of the associated PictureBox control to
+        /// display a beat. If the PictureBox control is not initialized, an error message is displayed to the
+        /// user.</remarks>
+        public void DisplayBeat(int beat, int bpm)
+        {
+            if (pBox == null)
+            {
+                MessageBox.Show("PictureBox control is not initialized.", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            pBox.OnBeat(beat, bpm);
+        }
+
+
+        /// <summary>
         /// Display singer and song names
         /// </summary>
         /// <param name="text"></param>

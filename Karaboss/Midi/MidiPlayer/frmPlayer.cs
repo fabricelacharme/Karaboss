@@ -7827,6 +7827,14 @@ namespace Karaboss
             if (_tempo != _tempoplayed)
                 DisplayFileInfos(_tempo);
 
+
+            // display beat in frmLyric if visible
+            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+            {
+                // Send beat number and division to frmLyric
+                frmLyric?.DisplayBeat(beat, _bpm);
+            }
+
         }
 
         /// <summary>
