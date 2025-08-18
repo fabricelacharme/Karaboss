@@ -731,8 +731,8 @@ namespace PicControl
             m_Alpha = 255;
             imgLayout = ImageLayout.Stretch;
 
-            W = Width; // Reset width to the current width
-            H = Height; // Reset height to the current height   
+            W = ClientSize.Width; // Reset width to the current width
+            H = ClientSize.Height; // Reset height to the current height   
             Beat = 200; // Default speed for rhythm animation
 
             _timerGradient.Interval = 60; // 60 ms
@@ -776,10 +776,11 @@ namespace PicControl
         private void ResetSize()
         {
             // Reset the width and height to the current client rectangle size
-            //W = ClientRectangle.Width;
-            //H = ClientRectangle.Height;
-            W = Width; // Reset width to the current width
-            H = Height; // Reset height to the current height            
+            W = ClientRectangle.Width;
+            H = ClientRectangle.Height;
+            //W = Width; // Reset width to the current width
+            //H = Height; // Reset height to the current height            
+            
         }
 
         #endregion Timer
@@ -2855,7 +2856,17 @@ namespace PicControl
         {
             if (bpm != _bpm) {                 
                 _bpm = bpm;
-                Beat = 80000 / _bpm; // Duration of a beat in milliseconds
+                //Beat = 80000 / _bpm; // Duration of a beat in milliseconds
+                //speed = (int)(_bpm / 12.0);
+
+                // Speed depends on the BPM and the size of the screen
+                // Assuming speed is a measure of how quickly the effect should be applied
+
+                double hypo = Math.Sqrt(ClientSize.Width * ClientSize.Width + ClientSize.Height * ClientSize.Height);
+                speed = (int)(_bpm * hypo / 2600.0F); // Speed depends on the BPM and the size of the screen
+
+                //speed = (int)(_bpm * ClientSize.Width / 1700.0F);
+                Console.WriteLine("BPM changed to: " + _bpm + " - Speed: " + speed);
             }
 
             BeatEffect(beat);
@@ -2936,7 +2947,18 @@ namespace PicControl
            if (_optionbackground == "Rhythm")
             {
                 // Reset the width and height to the current client rectangle size
+                
+                // Adapt speed to the new size
+                //speed = (int)(_bpm * ClientSize.Width / 1700.0F); // Speed depends on the BPM and the size of the screen
+                
+                double hypo = Math.Sqrt(ClientSize.Width * ClientSize.Width + ClientSize.Height * ClientSize.Height);
+                speed = (int)(_bpm * hypo / 2600.0F); // Speed depends on the BPM and the size of the screen
+
+                Console.WriteLine("BPM changed to: " + _bpm + " - Speed: " + speed);
+
                 ResetSize();
+                
+                
                 pboxWnd.Invalidate(); // Invalidate the panel to force a redraw with the new size
             }
 
