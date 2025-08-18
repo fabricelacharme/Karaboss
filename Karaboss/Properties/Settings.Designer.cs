@@ -1000,7 +1000,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Arial Narrow, 8.25pt")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Comic Sans MS, 8.25pt")]
         public global::System.Drawing.Font KaraokeFont {
             get {
                 return ((global::System.Drawing.Font)(this["KaraokeFont"]));
@@ -1300,7 +1300,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("DarkOrange")]
+        [global::System.Configuration.DefaultSettingValueAttribute("255, 196, 13")]
         public global::System.Drawing.Color ChordNextColor {
             get {
                 return ((global::System.Drawing.Color)(this["ChordNextColor"]));
@@ -1726,7 +1726,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Green")]
+        [global::System.Configuration.DefaultSettingValueAttribute("MediumTurquoise")]
         public global::System.Drawing.Color TxtGrad0Color {
             get {
                 return ((global::System.Drawing.Color)(this["TxtGrad0Color"]));
@@ -1738,7 +1738,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Blue")]
+        [global::System.Configuration.DefaultSettingValueAttribute("GreenYellow")]
         public global::System.Drawing.Color TxtGrad1Color {
             get {
                 return ((global::System.Drawing.Color)(this["TxtGrad1Color"]));
@@ -1750,7 +1750,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Green")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
         public global::System.Drawing.Color TxtRhythm0Color {
             get {
                 return ((global::System.Drawing.Color)(this["TxtRhythm0Color"]));
@@ -1762,7 +1762,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Blue")]
+        [global::System.Configuration.DefaultSettingValueAttribute("DodgerBlue")]
         public global::System.Drawing.Color TxtRhythm1Color {
             get {
                 return ((global::System.Drawing.Color)(this["TxtRhythm1Color"]));

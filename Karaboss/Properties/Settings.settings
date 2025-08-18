@@ -246,7 +246,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="KaraokeFont" Type="System.Drawing.Font" Scope="User">
-      <Value Profile="(Default)">Arial Narrow, 8.25pt</Value>
+      <Value Profile="(Default)">Comic Sans MS, 8.25pt</Value>
     </Setting>
     <Setting Name="SepSyllabe" Type="System.String" Scope="User">
       <Value Profile="(Default)">*</Value>
@@ -321,7 +321,7 @@
       <Value Profile="(Default)">Segoe UI, 9pt</Value>
     </Setting>
     <Setting Name="ChordNextColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">DarkOrange</Value>
+      <Value Profile="(Default)">255, 196, 13</Value>
     </Setting>
     <Setting Name="ChordHighlightColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Red</Value>
@@ -429,16 +429,16 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="TxtGrad0Color" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Green</Value>
+      <Value Profile="(Default)">MediumTurquoise</Value>
     </Setting>
     <Setting Name="TxtGrad1Color" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Blue</Value>
+      <Value Profile="(Default)">GreenYellow</Value>
     </Setting>
     <Setting Name="TxtRhythm0Color" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Green</Value>
+      <Value Profile="(Default)">Black</Value>
     </Setting>
     <Setting Name="TxtRhythm1Color" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Blue</Value>
+      <Value Profile="(Default)">DodgerBlue</Value>
     </Setting>
   </Settings>
 </SettingsFile>
