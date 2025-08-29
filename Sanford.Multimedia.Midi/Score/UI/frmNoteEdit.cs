@@ -276,6 +276,20 @@ namespace Sanford.Multimedia.Midi.Score.UI
             sheetmusic.DefaultVelocity = Convert.ToInt32(upDownNoteVelocity.Value);            
         }
 
+        /// <summary>
+        /// Add a value to the current velocity of selected notes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnAddVelocity_Click(object sender, EventArgs e)
+        {
+            busy = true;
+            sheetmusic.AddVelocitySelectedNotes(Convert.ToInt32(txtAddVelocity.Text));
+            sheetmusic.Refresh();
+            busy = false;
+        }
+
+
         private void btnPnlNoteCancel_Click(object sender, EventArgs e)
         {
             Close();
@@ -349,5 +363,7 @@ namespace Sanford.Multimedia.Midi.Score.UI
         }
 
         #endregion pitchbend
+
+       
     }
 }

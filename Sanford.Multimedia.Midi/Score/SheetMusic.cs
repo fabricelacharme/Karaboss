@@ -3170,8 +3170,35 @@ namespace Sanford.Multimedia.Midi.Score
             FileModified?.Invoke(this);
         }
 
+        public void AddVelocitySelectedNotes(int amount)
+        {
+            int numstaff = CurrentNote.numstaff;
+            Track trk = sequence1.tracks[numstaff];
+            List<MidiNote> _lstmidinotes = new List<MidiNote>();
+            foreach (MidiNote n in _selnotes)
+            {
+                _lstmidinotes.Add(n);
+            }
+            foreach (MidiNote mn in _lstmidinotes)
+            {
+                int newvelocity = mn.Velocity + amount;
+                if (newvelocity < 1) newvelocity = 1;
+                if (newvelocity > 127) newvelocity = 127;
+                // Delete original selected note
+                MidiNote n = new MidiNote(mn.StartTime, mn.Channel, mn.Number, mn.Duration, newvelocity, true);
+                // Create new note
+                trk.deleteNote(mn.Number, mn.StartTime);
+                trk.addNote(n, false);
+            }
+            // Update current note
+            UpdateCurrentNote(numstaff, CurrentNote.midinote.Number, CurrentNote.midinote.StartTime, false);
+            // Raise event
+            FileModified?.Invoke(this);
+        }
+
+
         #region Effects
-        
+
         public bool IsPitchBend(int channel, int starttime, int endtime)
         {
             int numstaff = CurrentNote.numstaff;

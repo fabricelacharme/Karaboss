@@ -47,13 +47,15 @@
             this.btnDefVlocity = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btnAddVelocity = new System.Windows.Forms.Button();
+            this.txtAddVelocity = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.txtPitchBends = new System.Windows.Forms.TextBox();
             this.btnRemovePitchBend = new System.Windows.Forms.Button();
             this.btnSetPitchBend = new System.Windows.Forms.Button();
             this.lblHsPitchBend = new System.Windows.Forms.Label();
             this.hsPitchBend = new ColorSlider.ColorSlider();
             this.chkPitchBend = new System.Windows.Forms.CheckBox();
-            this.txtPitchBends = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.upDownNoteVelocity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.upDownNoteValue)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -179,6 +181,8 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.tabPage1.Controls.Add(this.btnAddVelocity);
+            this.tabPage1.Controls.Add(this.txtAddVelocity);
             this.tabPage1.Controls.Add(this.btnDefVlocity);
             this.tabPage1.Controls.Add(this.lblNoteValue);
             this.tabPage1.Controls.Add(this.lblSelection);
@@ -198,6 +202,18 @@
             resources.ApplyResources(this.tabPage1, "tabPage1");
             this.tabPage1.Name = "tabPage1";
             // 
+            // btnAddVelocity
+            // 
+            resources.ApplyResources(this.btnAddVelocity, "btnAddVelocity");
+            this.btnAddVelocity.Name = "btnAddVelocity";
+            this.btnAddVelocity.UseVisualStyleBackColor = true;
+            this.btnAddVelocity.Click += new System.EventHandler(this.btnAddVelocity_Click);
+            // 
+            // txtAddVelocity
+            // 
+            resources.ApplyResources(this.txtAddVelocity, "txtAddVelocity");
+            this.txtAddVelocity.Name = "txtAddVelocity";
+            // 
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
@@ -209,6 +225,11 @@
             this.tabPage2.Controls.Add(this.chkPitchBend);
             resources.ApplyResources(this.tabPage2, "tabPage2");
             this.tabPage2.Name = "tabPage2";
+            // 
+            // txtPitchBends
+            // 
+            resources.ApplyResources(this.txtPitchBends, "txtPitchBends");
+            this.txtPitchBends.Name = "txtPitchBends";
             // 
             // btnRemovePitchBend
             // 
@@ -297,11 +318,6 @@
             this.chkPitchBend.UseVisualStyleBackColor = true;
             this.chkPitchBend.CheckedChanged += new System.EventHandler(this.chkPitchBend_CheckedChanged);
             // 
-            // txtPitchBends
-            // 
-            resources.ApplyResources(this.txtPitchBends, "txtPitchBends");
-            this.txtPitchBends.Name = "txtPitchBends";
-            // 
             // frmNoteEdit
             // 
             resources.ApplyResources(this, "$this");
@@ -354,5 +370,7 @@
         private System.Windows.Forms.Button btnRemovePitchBend;
         private System.Windows.Forms.Button btnSetPitchBend;
         private System.Windows.Forms.TextBox txtPitchBends;
+        private System.Windows.Forms.Button btnAddVelocity;
+        private System.Windows.Forms.TextBox txtAddVelocity;
     }
 }
