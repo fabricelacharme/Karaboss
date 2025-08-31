@@ -2718,7 +2718,7 @@ namespace PicControl
             int y;
 
             // Create a GraphicsPath to define the area to fill
-            GraphicsPath gp = new GraphicsPath();
+            GraphicsPath gp;
 
             // Draw background image
             #region draw background image or gradient
@@ -2774,15 +2774,76 @@ namespace PicControl
                     gp = new GraphicsPath();
                     gp.AddRectangle(ClientRectangle);
                     e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-                    e.Graphics.FillPath(new LinearGradientBrush(ClientRectangle, txtGrad0Color, txtGrad1Color, _angle), gp);                                        
+                    e.Graphics.FillPath(new LinearGradientBrush(ClientRectangle, txtGrad0Color, txtGrad1Color, _angle), gp);      
+                    gp.Dispose(); // Dispose the GraphicsPath to free resources
                     break;
 
                 case "Rhythm":
-                    gp = new GraphicsPath();
+                    int w = ClientRectangle.Width / 2;
+                    int h = ClientRectangle.Height / 2;
+
+                    
                     e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
                     // Radial gradients are handled differently, so we won't set an angle here                    
                     RectangleF rect = new RectangleF((ClientRectangle.Width - W) / 2, (ClientRectangle.Height - H) / 2, W, H);
 
+                    RectangleF rect1 = new RectangleF((w - W) / 2, (h - H) / 2, W, H); // Top-left corner
+                    RectangleF rect2 = new RectangleF(w + (w - W) / 2, (h - H) / 2, W, H); // Top-right corner                            
+                    RectangleF rect3 = new RectangleF((w - W) / 2, h + (h - H) / 2, W, H); // Bottom-left corner                                                                                    
+                    RectangleF rect4 = new RectangleF(w + (w - W) / 2, h + (h - H) / 2, W, H); // Bottom-right corner      
+
+                    //gp.AddEllipse(rect);
+
+
+
+
+                    gp = new GraphicsPath();
+                    gp.AddEllipse(rect1);
+                    using (PathGradientBrush pgb = new PathGradientBrush(gp))
+                    {
+                        pgb.CenterColor = txtRhythm1Color; // Center color of the radial gradient
+                        pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
+                        e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
+                        pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
+                    }
+                    gp.Dispose(); // Dispose the GraphicsPath to free resources
+
+                    gp = new GraphicsPath();
+                    gp.AddEllipse(rect2);
+                    using (PathGradientBrush pgb = new PathGradientBrush(gp))
+                    {
+                        pgb.CenterColor = txtRhythm1Color; // Center color of the radial gradient
+                        pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
+                        e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
+                        pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
+                    }
+                    gp.Dispose(); // Dispose the GraphicsPath to free resources
+
+                    gp = new GraphicsPath();
+                    gp.AddEllipse(rect3);
+                    using (PathGradientBrush pgb = new PathGradientBrush(gp))
+                    {
+                        pgb.CenterColor = txtRhythm1Color; // Center color of the radial gradient
+                        pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
+                        e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
+                        pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
+                    }
+                    gp.Dispose(); // Dispose the GraphicsPath to free resources
+
+                    gp = new GraphicsPath();
+                    gp.AddEllipse(rect4);
+                    using (PathGradientBrush pgb = new PathGradientBrush(gp))
+                    {
+                        pgb.CenterColor = txtRhythm1Color; // Center color of the radial gradient
+                        pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
+                        e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
+                        pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
+                    }
+                    gp.Dispose(); // Dispose the GraphicsPath to free resources
+                    
+
+                    gp = new GraphicsPath();
                     gp.AddEllipse(rect);
                     using (PathGradientBrush pgb = new PathGradientBrush(gp))
                     {
@@ -2790,11 +2851,14 @@ namespace PicControl
                         pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
                         e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
                         pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
-                    }                    
+                    }
+                    gp.Dispose(); // Dispose the GraphicsPath to free resources
+
+
                     break;
             }
 
-            gp.Dispose(); // Dispose the GraphicsPath to free resources
+            //gp.Dispose(); // Dispose the GraphicsPath to free resources
 
             #endregion
 
