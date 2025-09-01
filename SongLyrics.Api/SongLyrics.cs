@@ -52,6 +52,7 @@ namespace SongLyrics.Api
                 catch (WebException ex)
                 {
                     _error++;
+                    Console.WriteLine("\nSongLyrics: " + ex.Message);
                 }
             }
             return lyrics;

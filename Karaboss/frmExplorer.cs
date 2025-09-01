@@ -2221,6 +2221,8 @@ namespace Karaboss
             string inipath = string.Empty;
             inipath = Karaclass.GetStartDirectory();
 
+            
+
             // Mru Files
             MyMruList = new MruList(System.AppDomain.CurrentDomain.FriendlyName, MnuFileRecentFiles, MruFilesCount);
             MyMruList.FileSelected += MyMruList_FileSelected;

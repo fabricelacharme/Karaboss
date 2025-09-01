@@ -27,6 +27,7 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 using FlShell.Interop;
 using ComTypes = System.Runtime.InteropServices.ComTypes;
+using System.Linq;
 
 
 namespace FlShell
@@ -568,6 +569,12 @@ namespace FlShell
             }
         }
 
+        /// <summary>
+        /// Selects the specified item in the tree view.
+        /// located under the node node
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="value"></param>
         void SelectItem(TreeNode node, ShellItem value)
         {
             CreateChildren(node);
@@ -590,9 +597,119 @@ namespace FlShell
                         SelectItem(child, value);
                         return;
                     }
+                    else
+                    {
+                        // Check if the shellItem "value"is a deep children of the current node.
+                        // if yes, we have to build the entire subnodes of the current node until we reach the ShellItem "value".
+                        
+                        ShellItem root = FirstParentOf(value);
+                        if (root != null && folder == root)
+                        {
+                            // We have to create all the subnodes of "node" 
+                            CreateAllSubNodes(child, value);
+                            return;                            
+                        }
+
+                    }
                 }
             }
         }
+
+
+        /// <summary>
+        /// Create all the subnodes of "node" related to item 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>        
+        private void CreateAllSubNodes(TreeNode node, ShellItem item)
+        {
+            // FAB 30/07/2025
+            if (item == null) return;
+
+            ShellItem[] ArrayItems = GetArrayItems(item);
+
+            TreeNode childNode = null;
+            ShellItem parent = null;
+            ShellItem child = null;
+            foreach (ShellItem itm in ArrayItems)
+            {
+                if (parent == null)
+                {
+                    parent = itm;
+                    CreateChildren(node);
+                    node.Expand();
+                }
+                else
+                {
+                    child = itm;
+                    childNode = FindItem(child, node);
+                    if (childNode != null)
+                    {
+                        CreateChildren(childNode);
+                        childNode.Expand();
+                    }                                        
+                }
+            }
+            
+            if (childNode != null)
+                m_TreeView.SelectedNode = childNode;
+
+            return;            
+        }
+
+        /// <summary>
+        /// Retrieves an array of <see cref="ShellItem"/> objects representing the hierarchy of the specified item and
+        /// its ancestors.
+        /// </summary>
+        /// <remarks>The returned array includes the specified <paramref name="item"/> as the first
+        /// element, followed by its parent, grandparent, and so on, up to the topmost ancestor in the hierarchy. The
+        /// array is ordered from the most specific item to the most general.</remarks>
+        /// <param name="item">The <see cref="ShellItem"/> for which to retrieve the hierarchy. Must not be <see langword="null"/>.</param>
+        /// <returns>An array of <see cref="ShellItem"/> objects, starting with the specified item and ending with the topmost
+        /// ancestor. If <paramref name="item"/> is <see langword="null"/>, an empty array is returned.</returns>
+        ShellItem[] GetArrayItems (ShellItem item)
+        {
+            // FAB 30/07/2025
+            if (item == null) return new ShellItem[0];
+
+            List<ShellItem> items = new List<ShellItem>();
+            ShellItem parent = item.Parent;
+            while (parent != null && parent.Parent != null)
+            {
+                items.Add(item);
+                item = parent;
+                parent = item.Parent;
+            }
+            items.Add(item);
+            items.Reverse();
+            return items.ToArray();
+        }
+
+        /// <summary>
+        /// Finds the first parent of the specified <see cref="ShellItem"/> in the hierarchy.
+        /// </summary>
+        /// <remarks>This method traverses the parent hierarchy of the specified <see cref="ShellItem"/>
+        /// and returns the first parent  that does not have a parent of its own. If the specified <see
+        /// cref="ShellItem"/> has no parent, the method returns the item itself.</remarks>
+        /// <param name="item">The <see cref="ShellItem"/> for which to find the first parent. Cannot be <see langword="null"/>.</param>
+        /// <returns>The first parent <see cref="ShellItem"/> in the hierarchy, or <see langword="null"/> if the specified item
+        /// is <see langword="null"/>  or has no parent.</returns>
+        ShellItem FirstParentOf (ShellItem item)
+        {
+            // FAB 30/07/2025
+            if (item == null) return null;
+            ShellItem parent = item.Parent;
+            
+            while (parent != null && parent.Parent != null)
+            {                
+                item = parent;
+                parent = item.Parent;
+            }           
+            return item;
+        }
+
+      
+
 
         TreeNode FindItem(ShellItem item, TreeNode parent)
         {
@@ -914,7 +1031,12 @@ namespace FlShell
             if (!m_Navigating)
             {
                 m_Navigating = true;
-                SelectedFolder = m_ShellListView.CurrentFolder;
+                if (SelectedFolder != m_ShellListView.CurrentFolder)
+                {
+                    //SelectedFolder = null;
+                    // FAB 19/01/19: if not the same folder, then update
+                    SelectedFolder = m_ShellListView.CurrentFolder;
+                }
                 m_Navigating = false;
             }
         }

@@ -449,8 +449,7 @@ namespace Karaboss
         #region stop
 
         private void BtnStop_Click(object sender, EventArgs e)
-        {
-            //if (PlayerState != PlayerStates.Stopped)
+        {            
             StopMusic();
         }
 
@@ -4273,6 +4272,12 @@ namespace Karaboss
             }
             else
             {
+                // REstore number of lines of lyrics to display
+                if (Karaclass.m_PauseBetweenSongs)
+                {
+                    frmLyric.TxtNbLines = Properties.Settings.Default.TxtNbLines;
+                }
+
                 frmLyric.LoadSong(myLyricsMgmt.plLyrics);
             }
         }
@@ -6626,6 +6631,7 @@ namespace Karaboss
                     frmLyric.DirSlideShow = Properties.Settings.Default.dirSlideShow;
                     frmLyric.AlloModifyDirSlideShow = false;
 
+                    // Warning, number of lyrics lines is changed here
                     frmLyric.TxtNbLines = nbLines;
                     frmLyric.bTextBackGround = false;
 
@@ -7627,7 +7633,7 @@ namespace Karaboss
         /// Display Time Elapse
         /// </summary>
         private void DisplayTimeElapse(double dpercent)
-        {
+        {                
             lblPercent.Text = string.Format("{0}%", (int)dpercent);
 
             double maintenant = (dpercent * _duration) / 100;  //seconds
@@ -7697,6 +7703,7 @@ namespace Karaboss
                         break;
 
                     case PlayerStates.Waiting:        // Count down running between 2 songs of a playlist     
+                        DisplayTimeElapse(0);
                         timer1.Stop();                         
                         timer2.Stop(); // Lyrics                        
                         timer3.Stop(); // Balls                        
@@ -7704,6 +7711,7 @@ namespace Karaboss
                         break;
 
                     case PlayerStates.WaitingPaused:        // Count down paused between 2 songs of a playlist
+                        DisplayTimeElapse(0);
                         timer1.Stop();
                         timer2.Stop(); // Lyrics                        
                         timer3.Stop(); // Balls                        
@@ -7711,6 +7719,9 @@ namespace Karaboss
                         break;
 
                     case PlayerStates.LaunchNextSong:   // pause between 2 songs of a playlist
+                        // Reset display
+                        DisplayTimeElapse(0);
+
                         timer1.Stop();
                         timer2.Stop(); // Lyrics                        
                         timer3.Stop(); // Balls                        
@@ -7826,6 +7837,14 @@ namespace Karaboss
             // Tempo change during play
             if (_tempo != _tempoplayed)
                 DisplayFileInfos(_tempo);
+
+
+            // display beat in frmLyric if visible
+            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+            {
+                // Send beat number and division to frmLyric
+                frmLyric?.DisplayBeat(beat, _bpm);
+            }
 
         }
 

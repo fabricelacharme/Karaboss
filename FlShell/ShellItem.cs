@@ -123,9 +123,9 @@ namespace FlShell
                     path = "shell:///Desktop";
 
                 /*
-                if (path.Contains("file:///C:/Users/a453868/Music/Karaoke"))
+                if (path.Contains("file:///C:/Users/Fabrice/Music/Karaoke"))
                 {
-                    path = "shell:///My Music//Karaoke";
+                    path = "shell:///My Music";
                 }
                 */
 

@@ -429,6 +429,10 @@ namespace FlShell
 
         void Navigate(ShellItem folder, string file = "")
         {        
+            // à ce niveau c:\users\Fabrice\Music est transformé en MyMusic
+            
+            
+            
             NavigatingEventArgs e = new NavigatingEventArgs(folder);
             Navigating?.Invoke(this, e);
 
