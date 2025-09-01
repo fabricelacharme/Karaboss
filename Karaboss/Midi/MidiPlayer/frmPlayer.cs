@@ -449,8 +449,7 @@ namespace Karaboss
         #region stop
 
         private void BtnStop_Click(object sender, EventArgs e)
-        {
-            //if (PlayerState != PlayerStates.Stopped)
+        {            
             StopMusic();
         }
 
@@ -4273,6 +4272,12 @@ namespace Karaboss
             }
             else
             {
+                // REstore number of lines of lyrics to display
+                if (Karaclass.m_PauseBetweenSongs)
+                {
+                    frmLyric.TxtNbLines = Properties.Settings.Default.TxtNbLines;
+                }
+
                 frmLyric.LoadSong(myLyricsMgmt.plLyrics);
             }
         }
@@ -6626,6 +6631,7 @@ namespace Karaboss
                     frmLyric.DirSlideShow = Properties.Settings.Default.dirSlideShow;
                     frmLyric.AlloModifyDirSlideShow = false;
 
+                    // Warning, number of lyrics lines is changed here
                     frmLyric.TxtNbLines = nbLines;
                     frmLyric.bTextBackGround = false;
 
