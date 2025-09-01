@@ -34,10 +34,10 @@ namespace AzLyrics.Api
         }
 
         /// <summary>
-        /// Get lyrics
+        /// Deprecated: Use GetLyrics() instead.
         /// </summary>
         /// <returns></returns>
-        public string GetLyrics()
+        public string GetLyrics2()
         {
             string lyrics = string.Empty;
             using (var webClient = new AzLyricsWebClient())
@@ -45,14 +45,27 @@ namespace AzLyrics.Api
                 webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 6.3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36");
                 webClient.Encoding = Encoding.UTF8;
 
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                ServicePointManager.SecurityProtocol= SecurityProtocolType.SystemDefault;
+
                 ServicePointManager.ServerCertificateValidationCallback += new System.Net.Security.RemoteCertificateValidationCallback((s, ce, ch, ssl) => true);
 
                 try
                 {
-                    var date = webClient.DownloadString(_uri);
-                    //var date = Encoding.UTF8.GetString(webClient.DownloadData(_uri));
-                    lyrics = ExtractLyricsFromHtml(date);
+                    var data = webClient.DownloadString(_uri);
+                    //var data = Encoding.UTF8.GetString(webClient.DownloadData(_uri));
+
+                    
+
+                    // Check if the page contains "Our systems have detected unusual activity"
+                    if (data.Contains("Our systems have detected unusual activity"))
+                    {
+                        _error++;
+                        Console.WriteLine("AZLyrics Error: Our systems have detected unusual activity");
+                        return "Our systems have detected unusual activity from your computer network";
+                    }
+
+                    lyrics = ExtractLyricsFromHtml(data);
                 }
                 catch (WebException ex)
                 {
@@ -62,6 +75,44 @@ namespace AzLyrics.Api
             }
             return lyrics;
         }
+
+        /// <summary>
+        /// Retrieves the lyrics of a song from the specified URI.
+        /// </summary>
+        /// <remarks>This method fetches the HTML content of the page at the URI provided during
+        /// initialization and extracts the lyrics from it. If the page indicates unusual activity or an error occurs
+        /// during the request, an appropriate message is returned instead of the lyrics.</remarks>
+        /// <returns>A string containing the lyrics of the song if successfully retrieved; otherwise, a message indicating an
+        /// error or unusual activity.</returns>
+        public string GetLyrics()
+        {
+            string lyrics = string.Empty;
+            using (var webClient = new AzLyricsHttpClient())
+            {
+                webClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 6.3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36");
+                webClient.Timeout = TimeSpan.FromSeconds(10);
+                try
+                {
+                    var data = webClient.GetStringAsync(_uri).Result;
+                    // Check if the page contains "Our systems have detected unusual activity"
+                    if (data.Contains("Our systems have detected unusual activity"))
+                    {
+                        _error++;
+                        Console.WriteLine("AZLyrics Error: Our systems have detected unusual activity");
+                        return "Our systems have detected unusual activity from your computer network";
+                    }
+                    lyrics = ExtractLyricsFromHtml(data);
+                }
+                catch (Exception ex) when (ex is WebException || ex is AggregateException)
+                {
+                    _error++;
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+            return lyrics;
+        }
+
 
         private string ExtractLyricsFromHtml(string htmlPage)
         {
