@@ -65,7 +65,7 @@ namespace LyricsWikia.Api
                 }
                 catch (WebException ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("\nLyricsWikia: " + ex.Message);
                     _error++;
                 }
             }

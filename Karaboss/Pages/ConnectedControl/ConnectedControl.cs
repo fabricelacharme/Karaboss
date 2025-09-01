@@ -586,9 +586,11 @@ namespace Karaboss.Pages
             Cursor = Cursors.WaitCursor;
 
             string provider = string.Empty;
-            var azLyrics = new AzLyrics.Api.AzLyrics(artist, title);
-            var lyrics = azLyrics.GetLyrics();          
 
+
+            // First try AZlyrics
+            var azLyrics = new AzLyrics.Api.AzLyrics(artist, title);
+            var lyrics = azLyrics.GetLyrics();            
             if (lyrics.Length > 10 && azLyrics.Error == 0)
             {
                 //Console.Write(lyrics);
@@ -603,6 +605,7 @@ namespace Karaboss.Pages
             }
             else
             {
+                // Second try LyricsWikia
                 var lyricsWikia = new LyricsWikia.Api.LyricsWikia(artist, title);
                 lyrics = lyricsWikia.GetLyrics();
 
@@ -621,6 +624,7 @@ namespace Karaboss.Pages
                 }              
                 else
                 {
+                    // Third try SongLyrics
                     var songLyrics = new SongLyrics.Api.SongLyrics(artist, title);
                     lyrics = songLyrics.GetLyrics();
 

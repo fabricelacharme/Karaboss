@@ -106,7 +106,7 @@ namespace AzLyrics.Api
                 catch (Exception ex) when (ex is WebException || ex is AggregateException)
                 {
                     _error++;
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("\nAzLyrics: " + ex.Message);
                 }
             }
 
