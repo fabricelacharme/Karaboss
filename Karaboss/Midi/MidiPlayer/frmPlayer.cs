@@ -7633,7 +7633,7 @@ namespace Karaboss
         /// Display Time Elapse
         /// </summary>
         private void DisplayTimeElapse(double dpercent)
-        {
+        {                
             lblPercent.Text = string.Format("{0}%", (int)dpercent);
 
             double maintenant = (dpercent * _duration) / 100;  //seconds
@@ -7703,6 +7703,7 @@ namespace Karaboss
                         break;
 
                     case PlayerStates.Waiting:        // Count down running between 2 songs of a playlist     
+                        DisplayTimeElapse(0);
                         timer1.Stop();                         
                         timer2.Stop(); // Lyrics                        
                         timer3.Stop(); // Balls                        
@@ -7710,6 +7711,7 @@ namespace Karaboss
                         break;
 
                     case PlayerStates.WaitingPaused:        // Count down paused between 2 songs of a playlist
+                        DisplayTimeElapse(0);
                         timer1.Stop();
                         timer2.Stop(); // Lyrics                        
                         timer3.Stop(); // Balls                        
@@ -7717,6 +7719,9 @@ namespace Karaboss
                         break;
 
                     case PlayerStates.LaunchNextSong:   // pause between 2 songs of a playlist
+                        // Reset display
+                        DisplayTimeElapse(0);
+
                         timer1.Stop();
                         timer2.Stop(); // Lyrics                        
                         timer3.Stop(); // Balls                        
