@@ -511,7 +511,7 @@ namespace Karaboss.Mp3
 
                     InitLrcGenerator();
                     
-                    // Poluplate gridview and textbox
+                    // Populate gridview and textbox
                     PopulateDataGridView();
                     localSyncLyrics = GetUniqueSource();
                     PopulateTextBox(localSyncLyrics);
@@ -3903,6 +3903,9 @@ namespace Karaboss.Mp3
             long time;
             string sTime;
             string text;
+
+            InitGridView();
+
 
             // Origine = lrc            
             List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;
