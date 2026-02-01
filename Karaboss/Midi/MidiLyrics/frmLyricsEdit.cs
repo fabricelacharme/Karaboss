@@ -844,6 +844,8 @@ namespace Karaboss
             try
             {
                 _lyricseditfont = Properties.Settings.Default.LyricsEditFont;
+                if (_lyricseditfont == null)
+                    _lyricseditfont = new Font("Segoe UI", 9f, FontStyle.Regular, GraphicsUnit.Point);
                 _fontSize = _lyricseditfont.Size;
 
                 _LrcMillisecondsDigits = Properties.Settings.Default.LrcMillisecondsDigits;
