@@ -68,7 +68,7 @@
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.txtTitle = new System.Windows.Forms.TextBox();
-            this.txtAuthor = new System.Windows.Forms.TextBox();
+            this.txtYear = new System.Windows.Forms.TextBox();
             this.txtArtist = new System.Windows.Forms.TextBox();
             this.txtAlbum = new System.Windows.Forms.TextBox();
             this.txtEditing = new System.Windows.Forms.TextBox();
@@ -86,12 +86,11 @@
             this.lblLyrics = new System.Windows.Forms.Label();
             this.lblTimes = new System.Windows.Forms.Label();
             this.lblLa = new System.Windows.Forms.Label();
-            this.lblBy = new System.Windows.Forms.Label();
+            this.lblYear = new System.Windows.Forms.Label();
             this.lblAl = new System.Windows.Forms.Label();
             this.lblAr = new System.Windows.Forms.Label();
             this.lblTi = new System.Windows.Forms.Label();
             this.cbLanguage = new System.Windows.Forms.ComboBox();
-            this.txtYourName = new System.Windows.Forms.TextBox();
             this.lblHotkeys = new System.Windows.Forms.Label();
             this.lblMode = new System.Windows.Forms.Label();
             this.toolstrip1 = new System.Windows.Forms.ToolStrip();
@@ -104,13 +103,13 @@
             this.pnlLrc = new System.Windows.Forms.Panel();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.pnlEdit = new System.Windows.Forms.Panel();
+            this.lblTextSize = new System.Windows.Forms.Label();
+            this.btnOffsetMinus = new System.Windows.Forms.Button();
+            this.btnOffsetPlus = new System.Windows.Forms.Button();
             this.pnlSync = new System.Windows.Forms.Panel();
             this.lblHotkeysOthers = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.Timer3 = new System.Windows.Forms.Timer(this.components);
-            this.btnOffsetPlus = new System.Windows.Forms.Button();
-            this.btnOffsetMinus = new System.Windows.Forms.Button();
-            this.lblTextSize = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -608,11 +607,11 @@
             this.txtTitle.Name = "txtTitle";
             this.toolTip1.SetToolTip(this.txtTitle, resources.GetString("txtTitle.ToolTip"));
             // 
-            // txtAuthor
+            // txtYear
             // 
-            resources.ApplyResources(this.txtAuthor, "txtAuthor");
-            this.txtAuthor.Name = "txtAuthor";
-            this.toolTip1.SetToolTip(this.txtAuthor, resources.GetString("txtAuthor.ToolTip"));
+            resources.ApplyResources(this.txtYear, "txtYear");
+            this.txtYear.Name = "txtYear";
+            this.toolTip1.SetToolTip(this.txtYear, resources.GetString("txtYear.ToolTip"));
             // 
             // txtArtist
             // 
@@ -743,10 +742,10 @@
             resources.ApplyResources(this.lblLa, "lblLa");
             this.lblLa.Name = "lblLa";
             // 
-            // lblBy
+            // lblYear
             // 
-            resources.ApplyResources(this.lblBy, "lblBy");
-            this.lblBy.Name = "lblBy";
+            resources.ApplyResources(this.lblYear, "lblYear");
+            this.lblYear.Name = "lblYear";
             // 
             // lblAl
             // 
@@ -768,11 +767,6 @@
             this.cbLanguage.FormattingEnabled = true;
             resources.ApplyResources(this.cbLanguage, "cbLanguage");
             this.cbLanguage.Name = "cbLanguage";
-            // 
-            // txtYourName
-            // 
-            resources.ApplyResources(this.txtYourName, "txtYourName");
-            this.txtYourName.Name = "txtYourName";
             // 
             // lblHotkeys
             // 
@@ -872,9 +866,8 @@
             this.pnlEdit.Controls.Add(this.btnDeleteAllLyrics);
             this.pnlEdit.Controls.Add(this.cbLanguage);
             this.pnlEdit.Controls.Add(this.btnSave);
-            this.pnlEdit.Controls.Add(this.lblBy);
+            this.pnlEdit.Controls.Add(this.lblYear);
             this.pnlEdit.Controls.Add(this.btnInsertParagraph);
-            this.pnlEdit.Controls.Add(this.txtYourName);
             this.pnlEdit.Controls.Add(this.btnInsertCr);
             this.pnlEdit.Controls.Add(this.lblTi);
             this.pnlEdit.Controls.Add(this.btnInsertText);
@@ -882,9 +875,28 @@
             this.pnlEdit.Controls.Add(this.btnDelete);
             this.pnlEdit.Controls.Add(this.lblAr);
             this.pnlEdit.Controls.Add(this.txtAlbum);
-            this.pnlEdit.Controls.Add(this.txtAuthor);
+            this.pnlEdit.Controls.Add(this.txtYear);
             resources.ApplyResources(this.pnlEdit, "pnlEdit");
             this.pnlEdit.Name = "pnlEdit";
+            // 
+            // lblTextSize
+            // 
+            resources.ApplyResources(this.lblTextSize, "lblTextSize");
+            this.lblTextSize.Name = "lblTextSize";
+            // 
+            // btnOffsetMinus
+            // 
+            resources.ApplyResources(this.btnOffsetMinus, "btnOffsetMinus");
+            this.btnOffsetMinus.Name = "btnOffsetMinus";
+            this.btnOffsetMinus.UseVisualStyleBackColor = true;
+            this.btnOffsetMinus.Click += new System.EventHandler(this.btnOffsetMinus_Click);
+            // 
+            // btnOffsetPlus
+            // 
+            resources.ApplyResources(this.btnOffsetPlus, "btnOffsetPlus");
+            this.btnOffsetPlus.Name = "btnOffsetPlus";
+            this.btnOffsetPlus.UseVisualStyleBackColor = true;
+            this.btnOffsetPlus.Click += new System.EventHandler(this.btnOffsetPlus_Click);
             // 
             // pnlSync
             // 
@@ -903,25 +915,6 @@
             // Timer3
             // 
             this.Timer3.Tick += new System.EventHandler(this.Timer3_Tick);
-            // 
-            // btnOffsetPlus
-            // 
-            resources.ApplyResources(this.btnOffsetPlus, "btnOffsetPlus");
-            this.btnOffsetPlus.Name = "btnOffsetPlus";
-            this.btnOffsetPlus.UseVisualStyleBackColor = true;
-            this.btnOffsetPlus.Click += new System.EventHandler(this.btnOffsetPlus_Click);
-            // 
-            // btnOffsetMinus
-            // 
-            resources.ApplyResources(this.btnOffsetMinus, "btnOffsetMinus");
-            this.btnOffsetMinus.Name = "btnOffsetMinus";
-            this.btnOffsetMinus.UseVisualStyleBackColor = true;
-            this.btnOffsetMinus.Click += new System.EventHandler(this.btnOffsetMinus_Click);
-            // 
-            // lblTextSize
-            // 
-            resources.ApplyResources(this.lblTextSize, "lblTextSize");
-            this.lblTextSize.Name = "lblTextSize";
             // 
             // frmMp3Player
             // 
@@ -1014,14 +1007,13 @@
         private System.Windows.Forms.Label lblTimes;
         private System.Windows.Forms.Label lblHotkeys;
         private System.Windows.Forms.TextBox txtTitle;
-        private System.Windows.Forms.TextBox txtYourName;
         private System.Windows.Forms.TextBox txtArtist;
-        private System.Windows.Forms.TextBox txtAuthor;
+        private System.Windows.Forms.TextBox txtYear;
         private System.Windows.Forms.TextBox txtAlbum;
         private System.Windows.Forms.ComboBox cbLanguage;
         private System.Windows.Forms.Label lblTi;
         private System.Windows.Forms.Label lblAr;
-        private System.Windows.Forms.Label lblBy;
+        private System.Windows.Forms.Label lblYear;
         private System.Windows.Forms.Label lblAl;
         private System.Windows.Forms.Label lblLa;
         private System.Windows.Forms.TextBox txtEditing;

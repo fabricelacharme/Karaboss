@@ -2206,7 +2206,7 @@ namespace Karaboss
             object vTime;
             
             // Store rows of dgView in a list
-            // the aim is to have the same procedure between frmLyricsEdit and frmMp3LyricsEdit            
+            // the aim is to have the same procedure between midi Lyrics edition and mp3 Lyrics edition            
 
             List<(double, string)> lstDgRows = new List<(double, string)>();           
             for (int i = 0; i < dgView.Rows.Count; i++)
@@ -2216,7 +2216,7 @@ namespace Karaboss
                 if (vTime != null && vLyric != null)
                 {
                     sTime = vTime.ToString();
-                    // Convert times to milliseconds (to have the same entry format with frmMp3LyricsEdit)
+                    // Convert times to milliseconds (to have the same entry format with mp3 Lyrics edition)
                     time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
                     sLyric = vLyric.ToString();
 
@@ -2277,7 +2277,7 @@ namespace Karaboss
             #endregion meta data
 
            
-            // Make treatment of lyrics (same for frmLyricsEdit and frmMp3LyricsEdit)
+            // Make treatment of lyrics (same for midi Lyrics eEdition and mp3 Lyrics edition)
             List<string> lstLyricsItems = Utilities.LyricsUtilities.LrcExtractDgRows(lstDgRows, _LrcMillisecondsDigits, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _myLyricsMgmt);
 
             // Store lyrics in lines (remove timestamps from lines, except for the first word)

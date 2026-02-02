@@ -619,7 +619,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// </summary>
         /// <param name="FullPath"></param>
         /// <param name="SyncLyrics"></param>
-        public static bool SetTags(string FullPath, SynchronisedLyricsFrame SyncLyrics)
+        public static bool SetTags(string FullPath, string AlbumArtists, string Title, string Album, uint Year, SynchronisedLyricsFrame SyncLyrics)
         {
             TagLib.Tag _tag;
 
@@ -630,7 +630,14 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 TagLib.File file = TagLib.File.Create(FullPath);
                 _tag = file.GetTag(TagTypes.Id3v2);
 
+               
+                _tag.AlbumArtists = new string[] { AlbumArtists };                
+                _tag.Title = Title;
+                _tag.Album = Album;
                 
+                if (Year > 0)
+                    _tag.Year = Year;
+
                 // Retrieve tags from file 
                 TagLib.Id3v2.Tag id3v2tag = (TagLib.Id3v2.Tag)file.GetTag(TagLib.TagTypes.Id3v2, true);
 

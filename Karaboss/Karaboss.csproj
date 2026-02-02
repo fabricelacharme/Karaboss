@@ -217,12 +217,6 @@
     <Compile Include="Mp3\Mp3Lyrics\frmMp3LyricsSimple.Designer.cs">
       <DependentUpon>frmMp3LyricsSimple.cs</DependentUpon>
     </Compile>
-    <Compile Include="Mp3\Mp3Lyrics\frmMp3LyricsEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Mp3\Mp3Lyrics\frmMp3LyricsEdit.Designer.cs">
-      <DependentUpon>frmMp3LyricsEdit.cs</DependentUpon>
-    </Compile>
     <Compile Include="Mp3\Mp3Lyrics\frmMp3LyrOptions.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -660,14 +654,8 @@
       <DependentUpon>frmMp3Lyrics.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Mp3\Mp3Lyrics\frmMp3LyricsEdit.fr.resx">
-      <DependentUpon>frmMp3LyricsEdit.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Mp3\Mp3Lyrics\frmMp3LyricsSimple.resx">
       <DependentUpon>frmMp3LyricsSimple.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Mp3\Mp3Lyrics\frmMp3LyricsEdit.resx">
-      <DependentUpon>frmMp3LyricsEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Mp3\Mp3Lyrics\frmMp3LyrOptions.fr.resx">
       <DependentUpon>frmMp3LyrOptions.cs</DependentUpon>
