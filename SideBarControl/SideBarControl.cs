@@ -144,14 +144,14 @@ namespace VBarControl.SideBarControl
             InitializeComponent();
             
             int h = (int)(60 + SystemFonts.CaptionFont.Height - 13);
-            //this.Width = (int)(90 * (SystemFonts.CaptionFont.Size / 8.25F));
+            
 
             foreach (Control ctrl in Controls)
             {
                 if (ctrl.GetType() == typeof(NavButton.NavButton))
                 {
                     ctrl.Height = h;
-                    _buttons.Add((NavButton.NavButton)ctrl);
+                    _buttons.Add((NavButton.NavButton)ctrl);                   
                 }
             }
 

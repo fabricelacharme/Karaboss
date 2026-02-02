@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2025 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -31,6 +31,7 @@
  */
 
 #endregion
+using Hqub.MusicBrainz.API.Entities;
 using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
@@ -41,8 +42,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using TagLib.Id3v2;
 using TagLib;
+using TagLib.Id3v2;
 
 
 namespace Karaboss.Mp3
@@ -101,7 +102,7 @@ namespace Karaboss.Mp3
 
         // txtResult, BtnFontPlus
         private Font _lyricseditfont;
-        private float _fontSize = 8.25f;
+        private float _fontSize = 11f;
 
         // Manage locally lyrics
         List<List<keffect.KaraokeEffect.kSyncText>> localSyncLyrics;
@@ -302,7 +303,7 @@ namespace Karaboss.Mp3
 
         private void frmMp3Player_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (bfilemodified == true && txtResult.Text.Length > 0)
+            if (bfilemodified == true)
             {
                 //string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
                 String tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
@@ -511,7 +512,7 @@ namespace Karaboss.Mp3
 
                     InitLrcGenerator();
                     
-                    // Poluplate gridview and textbox
+                    // Populate gridview and textbox
                     PopulateDataGridView();
                     localSyncLyrics = GetUniqueSource();
                     PopulateTextBox(localSyncLyrics);
@@ -1160,7 +1161,7 @@ namespace Karaboss.Mp3
         }
 
         private void mnuFileQuit_Click(object sender, EventArgs e)
-        {
+        {            
             Close();
         }
 
@@ -2018,7 +2019,7 @@ namespace Karaboss.Mp3
 
             _lyricseditfont = Properties.Settings.Default.LyricsEditFont;
             if (_lyricseditfont == null)
-                _lyricseditfont = new Font("Segoe UI", 9, FontStyle.Regular, GraphicsUnit.Pixel);
+                _lyricseditfont = new Font("Segoe UI", 11, FontStyle.Regular, GraphicsUnit.Pixel);
             
                 
             _fontSize = _lyricseditfont.Size;
@@ -2044,6 +2045,8 @@ namespace Karaboss.Mp3
             tx = string.Format(tx, Environment.NewLine);
             lblHotkeysOthers.Text = tx; // "+" + "       " + "Accelerate" + "\r\n" + "-" + "       " + "Slow down" + "\r\n" + "<-" + "      " + "Stop Music";
 
+
+            // Display mp3 infos
             if (Player.Tag != null)
             {
                 txtTitle.Text = Player.Tag.Title;
@@ -2051,8 +2054,11 @@ namespace Karaboss.Mp3
                 if (Player.Tag.Performers.Count() > 0)
                 {
                     txtArtist.Text = Player.Tag.Performers[0].ToString();
-                    txtAuthor.Text = Player.Tag.Performers[0].ToString();
+                    
                 }
+                
+                if (Player.Tag.Year > 0)
+                    txtYear.Text = Player.Tag.Year.ToString();
             }
             
         }
@@ -2395,6 +2401,29 @@ namespace Karaboss.Mp3
 
             _LrcMillisecondsDigits = LrcOptionsDialog.LrcMillisecondsDigits;
 
+            #region warning LRC lose syllables
+            if (LrcLinesSyllabesFormat == LrcLinesSyllabesFormats.Syllabes)
+            {
+                // The LRC format does not allow words to be divided into syllables. Words must remain whole.
+                // They cannot be divided into syllables. The sentence composed of the three words “Long live karaoke” can only be divided into three parts: “Long,” “live” and “karaoke” 
+                // If you have divided the word “karaoke” into four syllables, “Ka,” “ra,” “o,” and “ke,” Karaboss will reconstruct the word “karaoke” and you will lose the syllables of the words.
+                // If you want to keep all the syllables, save the lyrics in the MP3 file.
+                string tx = Strings.Mp3SaveLRCWarning;
+                tx = string.Format(tx, Environment.NewLine);
+                string msg = tx;
+                /*
+                string msg = "Warning: The LRC format does not allow words to be divided into syllables. Words must remain whole." + Environment.NewLine + Environment.NewLine +
+                    "If you have divided words into syllables, Karaboss will reconstruct the words and you will lose the syllables of the words." + Environment.NewLine + Environment.NewLine +
+                    "If you want to keep all the syllables, save the lyrics in the MP3 file." + Environment.NewLine + Environment.NewLine +
+                    "Do you want to continue?";
+                */
+                if (MessageBox.Show(msg, "Karaboss", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                    return;
+
+
+            }
+            #endregion warning 
+
             // Cut lines over x characters
             bool bCutLines = LrcOptionsDialog.bCutLines;
             int LrcCutLinesChars = LrcOptionsDialog.LrcCutLinesChars;
@@ -2469,7 +2498,7 @@ namespace Karaboss.Mp3
             string Tag_Artist = string.Empty;
             string Tag_Album = string.Empty;
             string Tag_Lang = string.Empty;
-            string Tag_By = string.Empty;
+            string Tag_Year = string.Empty;
             string Tag_DPlus = string.Empty;            
           
             if (bWithMetadata)
@@ -2478,8 +2507,9 @@ namespace Karaboss.Mp3
                 Tag_Title = txtTitle.Text;
                 Tag_Artist = txtArtist.Text;
                 Tag_Album = txtAlbum.Text;
+                Tag_Year = txtYear.Text;
                 Tag_Lang = cbLanguage.Text;
-                Tag_By = txtAuthor.Text;
+                
                 Tag_DPlus = string.Empty;                
 
                 if (Tag_Artist == "" && Tag_Title == "")
@@ -2495,10 +2525,10 @@ namespace Karaboss.Mp3
             switch (LrcLinesSyllabesFormat)
             {
                 case LrcLinesSyllabesFormats.Lines:
-                    SaveLRCLines(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, bCutLines, LrcCutLinesChars);
+                    SaveLRCLines(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars);
                     break;
                 case LrcLinesSyllabesFormats.Syllabes:
-                    SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+                    SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus);
                     break;
             }
         }
@@ -2513,7 +2543,7 @@ namespace Karaboss.Mp3
         /// <param name="Tag_Lang"></param>
         /// <param name="Tag_By"></param>
         /// <param name="Tag_DPlus"></param>
-        private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus, bool bControlLength, int MaxLength)
+        private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_Year, string Tag_DPlus, bool bControlLength, int MaxLength)
         {
             string sLine;
             string lrcs;
@@ -2627,7 +2657,7 @@ namespace Karaboss.Mp3
         /// Save lyrics to new LRC format [01:54.60]Pa<01:55.32>ro<01:56.15>les
         /// </summary>
         /// <param name="FileName"></param>
-        private void SaveLRCSyllabes(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
+        private void SaveLRCSyllabes(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_Year, string Tag_DPlus)
         {
             string sTime;
             long time;
@@ -2653,7 +2683,7 @@ namespace Karaboss.Mp3
             else
                 strSpaceBetween = string.Empty;
 
-            List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus };
+            List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus };
             List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
             string Tag;
             string TagName;
@@ -3432,11 +3462,31 @@ namespace Karaboss.Mp3
             TagLib.File file = TagLib.File.Create(FileName);
             TagLib.Tag _tag = file.GetTag(TagTypes.Id3v2);
 
+            
+
             // Reset frame text
             if (Mp3LyricsMgmtHelper.MySyncLyricsFrame == null)
             {
                 Mp3LyricsMgmtHelper.MySyncLyricsFrame = new SynchronisedLyricsFrame("Karaboss", "en", SynchedTextType.Lyrics);
             }
+
+            // Update tags information            
+            string AlbumArtists = txtArtist.Text.Trim();
+            string Title = txtTitle.Text.Trim();
+            string Album = txtAlbum.Text.Trim();
+            uint Year = 0;
+
+            try
+            {
+                if (IsNumeric(txtYear.Text.Trim()))
+                    if (uint.TryParse(txtYear.Text.Trim(), out uint j))
+                        Year = (uint)j;
+            }
+            catch (Exception)
+            {
+                Year = 0;
+            }
+
 
             // How many valid lines ?            
             int lines = 0;
@@ -3459,14 +3509,21 @@ namespace Karaboss.Mp3
                     // Modify lyrics
                     // \ => '\n'
                     // _ => " "
-                    lyric = dgView.Rows[i].Cells[COL_TEXT].Value.ToString();
-                    lyric = lyric.Replace(m_SepLine, "\n");
-                    lyric = lyric.Replace("_", " ");
-                    Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i].Text = lyric;
+                    if (dgView.Rows[i].Cells[COL_TEXT].Value != null)
+                    {
+
+                        lyric = dgView.Rows[i].Cells[COL_TEXT].Value.ToString();
+                        lyric = lyric.Replace(m_SepLine, "\n");
+                        lyric = lyric.Replace("_", " ");
+                        Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i].Text = lyric;
+                    }
                 }
             }
 
-            if (Mp3LyricsMgmtHelper.SetTags(FileName, Mp3LyricsMgmtHelper.MySyncLyricsFrame))
+            
+
+            // Save the frame into the file
+            if (Mp3LyricsMgmtHelper.SetTags(FileName, AlbumArtists, Title, Album, Year, Mp3LyricsMgmtHelper.MySyncLyricsFrame))
             {
                 string tx = Karaboss.Resources.Localization.Strings.LyricsWereRecorded;
                 //string tx = "Les paroles ont été enregistrées dans le fichier";
@@ -3903,6 +3960,9 @@ namespace Karaboss.Mp3
             long time;
             string sTime;
             string text;
+
+            InitGridView();
+
 
             // Origine = lrc            
             List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;

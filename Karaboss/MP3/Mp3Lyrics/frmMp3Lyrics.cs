@@ -937,7 +937,7 @@ namespace Karaboss.Mp3
         }
 
         /// <summary>
-        /// Open form frmMp3LyricsEdit
+        /// Open form mp3 Lyrics edition on the same form
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

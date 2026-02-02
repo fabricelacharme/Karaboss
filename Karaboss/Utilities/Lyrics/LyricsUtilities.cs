@@ -1251,7 +1251,7 @@ namespace Karaboss.Utilities
             #endregion meta data
 
 
-            // Make treatment of lyrics (same for frmLyricsEdit and frmMp3LyricsEdit)
+            // Make treatment of lyrics (same for midi Lyrics edition and mp3 Lyrics edition)
             List<string> lstLyricsItems = Utilities.LyricsUtilities.LrcExtractDgRows(lstDgRows, _LrcMillisecondsDigits, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _myLyricsMgmt);
 
             // Store lyrics in lines (remove timestamps from lines, except for the first word)
