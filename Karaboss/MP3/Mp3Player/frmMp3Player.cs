@@ -2058,7 +2058,9 @@ namespace Karaboss.Mp3
                     txtArtist.Text = Player.Tag.Performers[0].ToString();
                     
                 }
-                txtYear.Text = Player.Tag.Year.ToString();
+                
+                if (Player.Tag.Year > 0)
+                    txtYear.Text = Player.Tag.Year.ToString();
             }
             
         }
