@@ -92,8 +92,8 @@
             // 
             // pictBackColor
             // 
-            this.pictBackColor.BackColor = System.Drawing.Color.Black;
             resources.ApplyResources(this.pictBackColor, "pictBackColor");
+            this.pictBackColor.BackColor = System.Drawing.Color.Black;
             this.pictBackColor.Name = "pictBackColor";
             this.pictBackColor.TabStop = false;
             // 
@@ -141,6 +141,7 @@
             // 
             // cbSizeMode
             // 
+            resources.ApplyResources(this.cbSizeMode, "cbSizeMode");
             this.cbSizeMode.FormattingEnabled = true;
             this.cbSizeMode.Items.AddRange(new object[] {
             resources.GetString("cbSizeMode.Items"),
@@ -148,7 +149,6 @@
             resources.GetString("cbSizeMode.Items2"),
             resources.GetString("cbSizeMode.Items3"),
             resources.GetString("cbSizeMode.Items4")});
-            resources.ApplyResources(this.cbSizeMode, "cbSizeMode");
             this.cbSizeMode.Name = "cbSizeMode";
             this.cbSizeMode.SelectedIndexChanged += new System.EventHandler(this.cbSizeMode_SelectedIndexChanged);
             // 
@@ -243,29 +243,29 @@
             // 
             // pictContour
             // 
-            this.pictContour.BackColor = System.Drawing.Color.Black;
             resources.ApplyResources(this.pictContour, "pictContour");
+            this.pictContour.BackColor = System.Drawing.Color.Black;
             this.pictContour.Name = "pictContour";
             this.pictContour.TabStop = false;
             // 
             // pictNext
             // 
-            this.pictNext.BackColor = System.Drawing.Color.White;
             resources.ApplyResources(this.pictNext, "pictNext");
+            this.pictNext.BackColor = System.Drawing.Color.White;
             this.pictNext.Name = "pictNext";
             this.pictNext.TabStop = false;
             // 
             // pictHighlight
             // 
-            this.pictHighlight.BackColor = System.Drawing.Color.Red;
             resources.ApplyResources(this.pictHighlight, "pictHighlight");
+            this.pictHighlight.BackColor = System.Drawing.Color.Red;
             this.pictHighlight.Name = "pictHighlight";
             this.pictHighlight.TabStop = false;
             // 
             // pictBefore
             // 
-            this.pictBefore.BackColor = System.Drawing.Color.LightGreen;
             resources.ApplyResources(this.pictBefore, "pictBefore");
+            this.pictBefore.BackColor = System.Drawing.Color.LightGreen;
             this.pictBefore.Name = "pictBefore";
             this.pictBefore.TabStop = false;
             // 
@@ -339,24 +339,24 @@
             // 
             // cbOptionsTextDisplay
             // 
+            resources.ApplyResources(this.cbOptionsTextDisplay, "cbOptionsTextDisplay");
             this.cbOptionsTextDisplay.FormattingEnabled = true;
             this.cbOptionsTextDisplay.Items.AddRange(new object[] {
             resources.GetString("cbOptionsTextDisplay.Items"),
             resources.GetString("cbOptionsTextDisplay.Items1"),
             resources.GetString("cbOptionsTextDisplay.Items2")});
-            resources.ApplyResources(this.cbOptionsTextDisplay, "cbOptionsTextDisplay");
             this.cbOptionsTextDisplay.Name = "cbOptionsTextDisplay";
             this.cbOptionsTextDisplay.SelectedIndexChanged += new System.EventHandler(this.cbOptionsTextDisplay_SelectedIndexChanged);
             // 
             // karaokeEffect1
             // 
+            resources.ApplyResources(this.karaokeEffect1, "karaokeEffect1");
             this.karaokeEffect1.bColorContour = false;
             this.karaokeEffect1.bforceUppercase = false;
             this.karaokeEffect1.bTextBackGround = false;
             this.karaokeEffect1.FreqDirSlideShow = 10;
             this.karaokeEffect1.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 61.33333F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            resources.ApplyResources(this.karaokeEffect1, "karaokeEffect1");
             this.karaokeEffect1.m_Alpha = 255;
             this.karaokeEffect1.m_CurrentImage = null;
             this.karaokeEffect1.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
@@ -378,6 +378,10 @@
             this.karaokeEffect1.TxtContourColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.TxtNotYetPlayedColor = System.Drawing.Color.White;
             // 
+            // folderBrowserDialog1
+            // 
+            resources.ApplyResources(this.folderBrowserDialog1, "folderBrowserDialog1");
+            // 
             // chkHighLightProgressive
             // 
             resources.ApplyResources(this.chkHighLightProgressive, "chkHighLightProgressive");
@@ -394,23 +398,23 @@
             // 
             // pnlBalls
             // 
+            resources.ApplyResources(this.pnlBalls, "pnlBalls");
             this.pnlBalls.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.pnlBalls.Controls.Add(this.pictureBox2);
             this.pnlBalls.Controls.Add(this.pictureBox1);
-            resources.ApplyResources(this.pnlBalls, "pnlBalls");
             this.pnlBalls.Name = "pnlBalls";
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = global::Karaboss.Properties.Resources.ball;
             resources.ApplyResources(this.pictureBox2, "pictureBox2");
+            this.pictureBox2.Image = global::Karaboss.Properties.Resources.ball;
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.TabStop = false;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::Karaboss.Properties.Resources.ball;
             resources.ApplyResources(this.pictureBox1, "pictureBox1");
+            this.pictureBox1.Image = global::Karaboss.Properties.Resources.ball;
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.TabStop = false;
             // 

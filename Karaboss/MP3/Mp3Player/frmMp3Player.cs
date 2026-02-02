@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2025 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -32,7 +32,6 @@
 
 #endregion
 using Hqub.MusicBrainz.API.Entities;
-using Karaboss.Lrc.NeteaseMusic;
 using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
@@ -45,7 +44,6 @@ using System.Linq;
 using System.Windows.Forms;
 using TagLib;
 using TagLib.Id3v2;
-using TagLib.Mpeg;
 
 
 namespace Karaboss.Mp3
@@ -2410,10 +2408,15 @@ namespace Karaboss.Mp3
                 // They cannot be divided into syllables. The sentence composed of the three words “Long live karaoke” can only be divided into three parts: “Long,” “live” and “karaoke” 
                 // If you have divided the word “karaoke” into four syllables, “Ka,” “ra,” “o,” and “ke,” Karaboss will reconstruct the word “karaoke” and you will lose the syllables of the words.
                 // If you want to keep all the syllables, save the lyrics in the MP3 file.
+                string tx = Strings.Mp3SaveLRCWarning;
+                tx = string.Format(tx, Environment.NewLine);
+                string msg = tx;
+                /*
                 string msg = "Warning: The LRC format does not allow words to be divided into syllables. Words must remain whole." + Environment.NewLine + Environment.NewLine +
                     "If you have divided words into syllables, Karaboss will reconstruct the words and you will lose the syllables of the words." + Environment.NewLine + Environment.NewLine +
                     "If you want to keep all the syllables, save the lyrics in the MP3 file." + Environment.NewLine + Environment.NewLine +
                     "Do you want to continue?";
+                */
                 if (MessageBox.Show(msg, "Karaboss", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                     return;
 

@@ -567,4 +567,7 @@
   <data name="AllLines" xml:space="preserve">
     <value>Toutes les lignes à partir de cette ligne</value>
   </data>
+  <data name="Mp3SaveLRCWarning" xml:space="preserve">
+    <value>Attention : le format LRC ne permet pas de diviser les mots en syllabes. Les mots doivent rester entiers.{0}{0}Si vous avez divisé les mots en syllabes, Karaboss reconstruira les mots et vous perdrez les syllabes des mots.{0}{0}Si vous souhaitez conserver toutes les syllabes, enregistrez les paroles dans le fichier MP3.{0}{0}Voulez-vous continuer ?</value>
+  </data>
 </root>

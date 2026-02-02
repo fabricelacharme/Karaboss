@@ -124,18 +124,6 @@
   <data name="mnuFile.Text" xml:space="preserve">
     <value>&amp;Fichier</value>
   </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 20</value>
-  </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>&amp;Edition</value>
-  </data>
-  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>43, 20</value>
-  </data>
-  <data name="mnuHelp.Text" xml:space="preserve">
-    <value>&amp;Aide</value>
-  </data>
   <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
     <value>116, 22</value>
   </data>
@@ -151,14 +139,23 @@
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
   </data>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 20</value>
+  </data>
+  <data name="mnuEdit.Text" xml:space="preserve">
+    <value>&amp;Edition</value>
+  </data>
   <data name="mnuEditLyrics.Size" type="System.Drawing.Size, System.Drawing">
     <value>162, 22</value>
   </data>
   <data name="mnuEditLyrics.Text" xml:space="preserve">
     <value>E&amp;diter les paroles</value>
   </data>
-  <data name="mnuEditLRCGenerator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>162, 22</value>
+  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 20</value>
+  </data>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Aide</value>
   </data>
   <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
     <value>131, 22</value>
@@ -167,13 +164,25 @@
     <value>&amp;A propos...</value>
   </data>
   <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 24</value>
+    <value>24, 80</value>
+  </data>
+  <data name="BtnFontMoins.ToolTip" xml:space="preserve">
+    <value>Diminue la taille de la fonte</value>
+  </data>
+  <data name="BtnFontPlus.ToolTip" xml:space="preserve">
+    <value>Augmente la taille de la fonte</value>
   </data>
   <data name="btnDeleteAllLyrics.Text" xml:space="preserve">
     <value>&amp;Supprimer les paroles</value>
   </data>
+  <data name="btnDeleteAllLyrics.ToolTip" xml:space="preserve">
+    <value>Supprime les paroles</value>
+  </data>
   <data name="btnSave.Text" xml:space="preserve">
     <value>&amp;Enregistrer les paroles dans le fichier mp3</value>
+  </data>
+  <data name="btnSave.ToolTip" xml:space="preserve">
+    <value>Enregistre les paroles dans le fichier mp3</value>
   </data>
   <data name="btnInsertParagraph.Text" xml:space="preserve">
     <value>Nouveau paragraphe (\)</value>
@@ -186,6 +195,33 @@
   </data>
   <data name="btnDelete.Text" xml:space="preserve">
     <value>&amp;Supprimer la ligne</value>
+  </data>
+  <data name="btnMsPlus.ToolTip" xml:space="preserve">
+    <value>Ajoute des millisecondes au texte</value>
+  </data>
+  <data name="btnMsMinor.ToolTip" xml:space="preserve">
+    <value>Enlève des millisecondes au texte</value>
+  </data>
+  <data name="lblYear.Size" type="System.Drawing.Size, System.Drawing">
+    <value>38, 13</value>
+  </data>
+  <data name="lblYear.Text" xml:space="preserve">
+    <value>Année</value>
+  </data>
+  <data name="lblAr.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 13</value>
+  </data>
+  <data name="lblAr.Text" xml:space="preserve">
+    <value>Artiste</value>
+  </data>
+  <data name="lblTi.Size" type="System.Drawing.Size, System.Drawing">
+    <value>28, 13</value>
+  </data>
+  <data name="lblTi.Text" xml:space="preserve">
+    <value>Titre</value>
+  </data>
+  <data name="toolstrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>359, 28</value>
   </data>
   <data name="mnuImport.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -207,6 +243,18 @@
   </data>
   <data name="mnuImport.Text" xml:space="preserve">
     <value>Importer</value>
+  </data>
+  <data name="mnuImportLrcFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 26</value>
+  </data>
+  <data name="mnuImportLrcFile.Text" xml:space="preserve">
+    <value>Importer un fichier .LRC</value>
+  </data>
+  <data name="mnuImportRawLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 26</value>
+  </data>
+  <data name="mnuImportRawLyrics.Text" xml:space="preserve">
+    <value>Importer des paroles</value>
   </data>
   <data name="mnuExport.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -250,31 +298,28 @@
   <data name="btnSwitchSyncEdit.Text" xml:space="preserve">
     <value>Passer en mode synchro</value>
   </data>
-  <data name="toolstrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>359, 28</value>
-  </data>
-  <data name="mnuImportLrcFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>245, 26</value>
-  </data>
-  <data name="mnuImportLrcFile.Text" xml:space="preserve">
-    <value>Importer un fichier .LRC</value>
-  </data>
-  <data name="mnuImportRawLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>245, 26</value>
-  </data>
-  <data name="mnuImportRawLyrics.Text" xml:space="preserve">
-    <value>Importer des paroles</value>
-  </data>
-  <data name="mnuExportLRCMeta.Size" type="System.Drawing.Size, System.Drawing">
-    <value>360, 26</value>
-  </data>
-  <data name="mnuExportLRCMeta.Text" xml:space="preserve">
-    <value>Exporter en .LRC avec les métadonnées)</value>
-  </data>
-  <data name="mnuExportLrcNoMeta.Size" type="System.Drawing.Size, System.Drawing">
-    <value>360, 26</value>
-  </data>
-  <data name="mnuExportLrcNoMeta.Text" xml:space="preserve">
-    <value>Exporter en .LRC (sans les métadonnées)</value>
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AABMcEcATHBHAExwRwBMcEcAVAsALlIJAJJPBgDVTwYA/E8GAPxPBgDTUgkAkFQLACpMcEcATHBHAExw
+        RwBMcEcATHBHAExwRwBgEwAJXREAl1oQAP9aEAD/WhAA/1oQAP9aEAD/WhAA/1oQAP9aEAD+XREAkF4S
+        BQhMcEcATHBHAExwRwBzHwAJbRwAwmoaAP9qGgD/uol6/+jW0f/u4t7/7uLe/9/HwP+tdWX/ahoA/2oa
+        AP9tHAC+eysSCExwRwBMcEcAfSgAnH0oAP97JgD/17Sq/9/HwP+OQir/fSgA/7qJev/y6uf//Pv4/8ih
+        lv97JgD/eyYA/4ApAJFMcEcAlTgAM481AP+PNQD/jzUA//v49P/9/Pz/38fA/481AP+PNQD/uol6//38
+        /P/7+PT/kVJA/481AP+PNQD+lTgAKqVHAJujRAD/o0QA/6NEAP/XtKr/7uLe/82Xfv+jRAD/o0QA/611
+        Zf/9/Pz//fz8/7qJev+jRAD/o0QA/6NEAJCzVQDds1UA/7NVAP+zVQD/s1UA/7NVAP+zVQD/s1UA/7NV
+        AP/Nl37//fz8//v49P+0Xyr/s1UA/7NVAP+zVQDUv2QA/82Xfv/Nl37/wX5c/82Xfv/IoZb/ynkk/82X
+        fv+/Zg3/7uLe//38/P/XtKr/v2QA/79kAP+/ZAD/v2QA/MlzAP/Nl37/7dXA/9e0qv/XtKr/38fA/+O4
+        jv/XtKr/7uLe/+3VwP/juI7/yXQI/8l0CP/JcwD/yXMA/8lzAPzQgADd47iO/+7Ts//szKX/7Myl/+3V
+        wP/u07P/3655/+3VwP/38vH/2p9k/9WOIP/VjiD/04UN/9CAAP/QgADU2ZIAmuOvX//coVH/5LJI/+a4
+        aP/qxpT/7dXA/+a4aP/jr1///fz8//Tiz//t1cD/47iO/9+kOP/ZkgD/2ZIAkOCjADLgowD/6b5Y/+m+
+        WP/pvlj/+vPp//38/P/369r/6b5Y//v49P/68+n/68N2/+vEX//pvlj/4KMA/t+fASpMcEcA6rkBmu7J
+        ZP/y1XP/8tVz//fr2v/57Mn/9NmR//fipP/9/Pz/+ezJ//nsyf/34qT/7slk/+q5AZBMcEcATHBHAO/F
+        Awny0jrB+OSI//rqkf/66pH/+ezJ//nsyf/68eL///i4//rqkf/66pH/9+KF//LSOrz10gQITHBHAExw
+        RwBMcEcA+NsBCf3qNpX97mv+/fGg//31qv/99ar//fWq//31qv/88J3//e5r/f3qNo/10gQITHBHAExw
+        RwBMcEcATHBHAExwRwBMcEcA/ucELP7qAZH86lLT/OpS+/zqUvn86lLS/uoBj/7nBClMcEcATHBHAExw
+        RwBMcEcA8A8AAMADAACAAQAAgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAEAAIAB
+        AADAAwAA8A8AAA==
+</value>
   </data>
 </root>

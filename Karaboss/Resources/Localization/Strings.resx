@@ -567,4 +567,7 @@
   <data name="AllLines" xml:space="preserve">
     <value>All lines starting from this line</value>
   </data>
+  <data name="Mp3SaveLRCWarning" xml:space="preserve">
+    <value>Warning: The LRC format does not allow words to be divided into syllables. Words must remain whole.{0}{0}If you have divided words into syllables, Karaboss will reconstruct the words and you will lose the syllables of the words.{0}{0}If you want to keep all the syllables, save the lyrics in the MP3 file.{0}{0}Do you want to continue?</value>
+  </data>
 </root>
