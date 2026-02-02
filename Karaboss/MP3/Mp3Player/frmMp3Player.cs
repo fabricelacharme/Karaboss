@@ -103,7 +103,7 @@ namespace Karaboss.Mp3
 
         // txtResult, BtnFontPlus
         private Font _lyricseditfont;
-        private float _fontSize = 8.25f;
+        private float _fontSize = 11f;
 
         // Manage locally lyrics
         List<List<keffect.KaraokeEffect.kSyncText>> localSyncLyrics;
@@ -2020,7 +2020,7 @@ namespace Karaboss.Mp3
 
             _lyricseditfont = Properties.Settings.Default.LyricsEditFont;
             if (_lyricseditfont == null)
-                _lyricseditfont = new Font("Segoe UI", 9, FontStyle.Regular, GraphicsUnit.Pixel);
+                _lyricseditfont = new Font("Segoe UI", 11, FontStyle.Regular, GraphicsUnit.Pixel);
             
                 
             _fontSize = _lyricseditfont.Size;
