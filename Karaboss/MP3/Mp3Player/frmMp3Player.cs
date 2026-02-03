@@ -3725,10 +3725,17 @@ namespace Karaboss.Mp3
         {            
             DeleteSelectedLines();
         }
-      
+
 
         private void DeleteSelectedLines()
         {
+
+            if (dgView.SelectedRows.Count == 0) 
+            { 
+                MessageBox.Show("Please select at least one line to delete", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             try
             {
                 foreach (DataGridViewRow row in dgView.SelectedRows)
