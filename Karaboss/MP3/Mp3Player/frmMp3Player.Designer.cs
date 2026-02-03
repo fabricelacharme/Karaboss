@@ -40,6 +40,9 @@
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditLyrics = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEditSep1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuEditInsertNewLine = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEditDeleteCurrentLine = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlControls = new System.Windows.Forms.Panel();
@@ -208,7 +211,10 @@
             // 
             resources.ApplyResources(this.mnuEdit, "mnuEdit");
             this.mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuEditLyrics});
+            this.mnuEditLyrics,
+            this.mnuEditSep1,
+            this.mnuEditInsertNewLine,
+            this.mnuEditDeleteCurrentLine});
             this.mnuEdit.Name = "mnuEdit";
             // 
             // mnuEditLyrics
@@ -216,6 +222,23 @@
             resources.ApplyResources(this.mnuEditLyrics, "mnuEditLyrics");
             this.mnuEditLyrics.Name = "mnuEditLyrics";
             this.mnuEditLyrics.Click += new System.EventHandler(this.mnuEditLyrics_Click);
+            // 
+            // mnuEditSep1
+            // 
+            resources.ApplyResources(this.mnuEditSep1, "mnuEditSep1");
+            this.mnuEditSep1.Name = "mnuEditSep1";
+            // 
+            // mnuEditInsertNewLine
+            // 
+            resources.ApplyResources(this.mnuEditInsertNewLine, "mnuEditInsertNewLine");
+            this.mnuEditInsertNewLine.Name = "mnuEditInsertNewLine";
+            this.mnuEditInsertNewLine.Click += new System.EventHandler(this.mnuEditInsertNewLine_Click);
+            // 
+            // mnuEditDeleteCurrentLine
+            // 
+            resources.ApplyResources(this.mnuEditDeleteCurrentLine, "mnuEditDeleteCurrentLine");
+            this.mnuEditDeleteCurrentLine.Name = "mnuEditDeleteCurrentLine";
+            this.mnuEditDeleteCurrentLine.Click += new System.EventHandler(this.mnuEditDeleteCurrentLine_Click);
             // 
             // mnuHelp
             // 
@@ -1099,5 +1122,8 @@
         private System.Windows.Forms.Button btnOffsetPlus;
         private System.Windows.Forms.Label lblTextSize;
         private System.Windows.Forms.Button btnOffsetMinus;
+        private System.Windows.Forms.ToolStripSeparator mnuEditSep1;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditInsertNewLine;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditDeleteCurrentLine;
     }
 }

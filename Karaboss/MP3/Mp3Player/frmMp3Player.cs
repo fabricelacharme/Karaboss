@@ -434,6 +434,12 @@ namespace Karaboss.Mp3
         /// </summary>
         private void SetPlayerAppearance()
         {
+
+            // Show hide edition menus according to LRC Generator visibility
+            mnuEditSep1.Visible = mnuEditLyrics.Checked;
+            mnuEditInsertNewLine.Visible = mnuEditLyrics.Checked;
+            mnuEditDeleteCurrentLine.Visible = mnuEditLyrics.Checked;
+
             switch (PlayerAppearance)
             {
                 case PlayerAppearances.Player:
@@ -1112,49 +1118,9 @@ namespace Karaboss.Mp3
 
         #region menus
 
-        /// <summary>
-        /// Open or close LRC Generator
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>       
-        private void mnuEditLyrics_Click(object sender, EventArgs e)
-        {
-            OpenCloseLrcGenerator();           
-        }
 
-
-        private void OpenCloseLrcGenerator()
-        {
-            mnuEditLyrics.Checked = !mnuEditLyrics.Checked;
-
-            // If LRC Generator visible
-            if (mnuEditLyrics.Checked)
-            {
-                // Display Lrc Generator
-                PlayerAppearance = PlayerAppearances.LrcGenerator;
-
-            }
-            else
-            {
-                // Hide Lrc Generator
-                PlayerAppearance = PlayerAppearances.Player;
-            }
-            
-            // Redim form according to player or editor
-            SetPlayerAppearance();
-        }
-
-
-
-        /// <summary>
-        /// Valid or not some menus if playing or not
-        /// </summary>
-        /// <param name="enabled"></param>
-        private void ValideMenus(bool enabled)
-        {
-            menuStrip1.Visible = enabled;                            
-        }
-
+        #region menu File
+       
         private void mnuFileOpen_Click(object sender, EventArgs e)
         {
             OpenBrowseMp3();
@@ -1164,6 +1130,68 @@ namespace Karaboss.Mp3
         {            
             Close();
         }
+
+
+        #endregion menu File
+
+
+        #region menu Edit
+
+        /// <summary>
+        /// Open or close LRC Generator
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>       
+        private void mnuEditLyrics_Click(object sender, EventArgs e)
+        {
+            OpenCloseLrcGenerator();
+        }
+
+        private void OpenCloseLrcGenerator()
+        {
+            mnuEditLyrics.Checked = !mnuEditLyrics.Checked;
+           
+
+            // If LRC Generator visible
+            if (mnuEditLyrics.Checked)
+            {                
+                // Display Lrc Generator
+                PlayerAppearance = PlayerAppearances.LrcGenerator;
+            }
+            else
+            {
+                // Hide Lrc Generator
+                PlayerAppearance = PlayerAppearances.Player;
+            }
+
+            // Redim form according to player or editor
+            SetPlayerAppearance();
+        }
+
+
+        /// <summary>
+        /// Valid or not some menus if playing or not
+        /// </summary>
+        /// <param name="enabled"></param>
+        private void ValideMenus(bool enabled)
+        {
+            menuStrip1.Visible = enabled;
+        }
+
+
+        private void mnuEditInsertNewLine_Click(object sender, EventArgs e)
+        {
+            InsertTextLine();
+        }
+
+        private void mnuEditDeleteCurrentLine_Click(object sender, EventArgs e)
+        {            
+            DeleteSelectedLines();
+        }
+
+
+        #endregion
+
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)
         {
@@ -3694,21 +3722,22 @@ namespace Karaboss.Mp3
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnDelete_Click(object sender, EventArgs e)
-        {
-            DeleteLine();
+        {            
+            DeleteSelectedLines();
         }
+      
 
-        private void DeleteLine()
+        private void DeleteSelectedLines()
         {
             try
             {
-                int row = dgView.CurrentRow.Index;
-                dgView.Rows.RemoveAt(row);
-
+                foreach (DataGridViewRow row in dgView.SelectedRows)
+                {
+                    dgView.Rows.RemoveAt(row.Index);
+                }
                 localSyncLyrics = LoadModifiedLyrics();
                 if (localSyncLyrics != null)
                     PopulateTextBox(localSyncLyrics);
-
                 FileModified();
             }
             catch (Exception Ex)
@@ -3718,6 +3747,7 @@ namespace Karaboss.Mp3
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         /// <summary>
         /// Delete all lyrics
@@ -4134,7 +4164,7 @@ namespace Karaboss.Mp3
         {
             if (e.Button == MouseButtons.Right)
             {
-                dgContextMenu = new ContextMenuStrip();
+                dgContextMenu = new ContextMenuStrip();                
                 dgContextMenu.Items.Clear();
 
 
@@ -4142,6 +4172,8 @@ namespace Karaboss.Mp3
                 ToolStripMenuItem menuInsertTextLine = new ToolStripMenuItem(Strings.InsertNewLine);
                 dgContextMenu.Items.Add(menuInsertTextLine);
                 menuInsertTextLine.Click += new System.EventHandler(this.MnuInsertTextLine_Click);
+                menuInsertTextLine.ShowShortcutKeys = true;
+                menuInsertTextLine.ShortcutKeys = Keys.Control | Keys.I;
 
                 // Insert LineFeed
                 ToolStripMenuItem menuInsertLineBreak = new ToolStripMenuItem(Strings.InsertLineBreak);
@@ -4157,7 +4189,9 @@ namespace Karaboss.Mp3
                 // Delete line
                 ToolStripMenuItem menuDeleteLine = new ToolStripMenuItem(Strings.DeleteLine);
                 dgContextMenu.Items.Add(menuDeleteLine);
-                menuDeleteLine.Click += new System.EventHandler(this.MnuDeleteLine_Click);
+                menuDeleteLine.Click += new System.EventHandler(this.MnuDeleteLine_Click);   
+                menuDeleteLine.ShowShortcutKeys = true;
+                menuDeleteLine.ShortcutKeys = Keys.Control | Keys.D;
 
 
                 ToolStripSeparator menusep1 = new ToolStripSeparator();
@@ -4225,8 +4259,9 @@ namespace Karaboss.Mp3
         /// <param name="e"></param>
         private void MnuDeleteLine_Click(object sender, EventArgs e)
         {
-            DeleteLine();
+            DeleteSelectedLines();
         }
+
 
         /// <summary>
         /// Offset up the third column
@@ -4385,9 +4420,7 @@ namespace Karaboss.Mp3
             }
         }
 
-
        
-
         /// <summary>
         /// Keydown event
         /// </summary>
@@ -4448,8 +4481,9 @@ namespace Karaboss.Mp3
                 frmMp3Lyrics.StopTimerBalls();
         }
 
+
         #endregion aniballs
 
-       
+      
     }
 }

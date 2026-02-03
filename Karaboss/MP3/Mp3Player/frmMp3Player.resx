@@ -117,25 +117,24 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="$this.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="&gt;&gt;lblTransp.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="btnInsertText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="btnNext.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="mnuImport.Text" xml:space="preserve">
     <value>Import</value>
   </data>
-  <data name="&gt;&gt;mnuImportLrcFile.Name" xml:space="preserve">
-    <value>mnuImportLrcFile</value>
+  <data name="&gt;&gt;lblAr.Parent" xml:space="preserve">
+    <value>pnlEdit</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="lblTransp.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleCenter</value>
-  </data>
-  <data name="&gt;&gt;mnuExportAsLrc.Name" xml:space="preserve">
-    <value>mnuExportAsLrc</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="lblLa.AutoSize" type="System.Boolean, mscorlib">
@@ -144,8 +143,8 @@
   <data name="dgView.TabIndex" type="System.Int32, mscorlib">
     <value>30</value>
   </data>
-  <data name="btnTranspoMinus.Size" type="System.Drawing.Size, System.Drawing">
-    <value>32, 32</value>
+  <data name="txtTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>160, 20</value>
   </data>
   <data name="btnInsertCr.ToolTip" xml:space="preserve">
     <value>Insert a Line break</value>
@@ -183,9 +182,6 @@
   <data name="&gt;&gt;btnInsertText.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="sldMainVolume.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 6pt</value>
-  </data>
   <data name="btnInsertCr.Size" type="System.Drawing.Size, System.Drawing">
     <value>130, 23</value>
   </data>
@@ -195,7 +191,7 @@
   <data name="mnuExport.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAgVJREFUOE+lku1LU2EYxs8/EmaaVhKCoeIrMZTUQPGDiIpgrIbZYGiCoxglA60I
+        wgAADsIBFShKgAAAAgVJREFUOE+lku1LU2EYxs8/EmaaVhKCoeIrMZTUQPGDiIpgrIbZYGiCoxglA60I
         RVEUEZ1MEIl9GeRLhVppY1PmyrHUFTFFfEMdjEAku+S6wR4Fo8AH7nPgnOf63df9ouGcR+Ojyb50Khr7
         v8Lc7Yep7TMML7wob5xFkdmF3NppZNVMIsMwhjS98zTg1+Hvv8b+wSHCkQNs7e0jtPETy6sRXL319P8A
         vmBYMutMH+GcXhexbSSEK7mWfwOYmWJPYBetw0GxTWCP8wficx4rAGs+S0zbzExxfv0MUqsccPl30Pbq
@@ -219,6 +215,7 @@
   <data name="txtArtist.TabIndex" type="System.Int32, mscorlib">
     <value>20</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="btnStop.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -240,6 +237,9 @@
   <data name="btnMsMinor.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 23</value>
   </data>
+  <data name="&gt;&gt;btnMsMinor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;lblTextSize.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
@@ -252,20 +252,20 @@
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>E&amp;xit</value>
   </data>
-  <data name="&gt;&gt;txtAlbum.Name" xml:space="preserve">
-    <value>txtAlbum</value>
+  <data name="lblTemp.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
   </data>
   <data name="lblMode.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;BtnFontPlus.ZOrder" xml:space="preserve">
-    <value>8</value>
+  <data name="mnuEditLyrics.Text" xml:space="preserve">
+    <value>Edit &amp;lyrics</value>
   </data>
   <data name="btnTempoMinus.Size" type="System.Drawing.Size, System.Drawing">
     <value>32, 32</value>
   </data>
-  <data name="&gt;&gt;txtTitle.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnInsertText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>144, 6</value>
   </data>
   <data name="&gt;&gt;lblMainVolume.ZOrder" xml:space="preserve">
     <value>12</value>
@@ -291,6 +291,9 @@
   <data name="&gt;&gt;btnInsertCr.ZOrder" xml:space="preserve">
     <value>15</value>
   </data>
+  <data name="mnuEditSep1.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="btnMsMinor.Text" xml:space="preserve">
     <value>-100 ms</value>
   </data>
@@ -303,8 +306,14 @@
   <data name="&gt;&gt;txtResult.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="positionHScrollBar.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="&gt;&gt;lblPlaylist.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <data name="&gt;&gt;positionHScrollBar.ZOrder" xml:space="preserve">
+    <value>16</value>
   </data>
   <data name="mnuImport.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
     <value>Magenta</value>
@@ -342,8 +351,8 @@
   <data name="btnPrev.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="&gt;&gt;txtTitle.Parent" xml:space="preserve">
-    <value>pnlEdit</value>
+  <data name="txtYear.Location" type="System.Drawing.Point, System.Drawing">
+    <value>547, 8</value>
   </data>
   <data name="lblAl.Size" type="System.Drawing.Size, System.Drawing">
     <value>36, 13</value>
@@ -360,14 +369,20 @@
   <data name="&gt;&gt;splitContainer1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;btnSave.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;mnuFileOpen.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;txtAlbum.Name" xml:space="preserve">
+    <value>txtAlbum</value>
   </data>
-  <data name="&gt;&gt;lblAr.Parent" xml:space="preserve">
-    <value>pnlEdit</value>
+  <data name="btnInsertCr.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="txtEditing.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 20</value>
+  </data>
+  <data name="toolstrip1.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="splitContainer1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -380,6 +395,9 @@
   </data>
   <data name="&gt;&gt;VuPeakVolumeRight.Type" xml:space="preserve">
     <value>VU_MeterLibrary.VuMeter, VU_MeterLibrary, Version=1.0.0.1, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="mnuEditDeleteCurrentLine.Text" xml:space="preserve">
+    <value>Delete current line</value>
   </data>
   <data name="&gt;&gt;mnuFileQuit.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -396,8 +414,11 @@
   <data name="lblTextSize.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="&gt;&gt;lblHotkeysOthers.Parent" xml:space="preserve">
-    <value>pnlSync</value>
+  <data name="mnuEditInsertNewLine.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
+    <value>Ctrl+I</value>
+  </data>
+  <data name="btnTempoMinus.Location" type="System.Drawing.Point, System.Drawing">
+    <value>314, 70</value>
   </data>
   <data name="&gt;&gt;BtnFontMoins.Name" xml:space="preserve">
     <value>BtnFontMoins</value>
@@ -417,11 +438,14 @@
   <data name="&gt;&gt;btnSave.Parent" xml:space="preserve">
     <value>pnlEdit</value>
   </data>
+  <data name="toolstrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
   <data name="txtResult.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="btnTranspoPlus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>359, 30</value>
+  <data name="btnMsPlus.Location" type="System.Drawing.Point, System.Drawing">
+    <value>144, 57</value>
   </data>
   <data name="txtArtist.Location" type="System.Drawing.Point, System.Drawing">
     <value>348, 34</value>
@@ -435,14 +459,14 @@
   <data name="mnuFileOpen.Text" xml:space="preserve">
     <value>&amp;Open...</value>
   </data>
-  <data name="&gt;&gt;mnuFileOpen.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;btnOffsetPlus.Name" xml:space="preserve">
     <value>btnOffsetPlus</value>
   </data>
   <data name="btnDeleteAllLyrics.Text" xml:space="preserve">
     <value>&amp;Delete Lyrics</value>
+  </data>
+  <data name="btnTranspoMinus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 32</value>
   </data>
   <data name="&gt;&gt;btnInsertCr.Name" xml:space="preserve">
     <value>btnInsertCr</value>
@@ -468,6 +492,9 @@
   <data name="&gt;&gt;lblAr.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="mnuEditInsertNewLine.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="&gt;&gt;btnOffsetMinus.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
@@ -492,6 +519,9 @@
   <data name="splitContainer1.Panel1.ToolTip" xml:space="preserve">
     <value />
   </data>
+  <data name="&gt;&gt;mnuImport.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripDropDownButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;lblLa.Parent" xml:space="preserve">
     <value>pnlEdit</value>
   </data>
@@ -504,9 +534,6 @@
   <data name="&gt;&gt;pnlMiddle.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;lblTimes.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <data name="lblYear.Text" xml:space="preserve">
     <value>Year</value>
   </data>
@@ -516,8 +543,8 @@
   <data name="&gt;&gt;lblTempoValue.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="btnNext.TabIndex" type="System.Int32, mscorlib">
-    <value>43</value>
+  <data name="&gt;&gt;toolstrip1.Name" xml:space="preserve">
+    <value>toolstrip1</value>
   </data>
   <data name="lblTextSize.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -549,7 +576,7 @@
   <data name="mnuImport.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAgVJREFUOE+lku1LU2EYxs8/EmaaVhKCoeIrMZTUQPGDiIpgrIbZYGiCoxglA60I
+        wgAADsIBFShKgAAAAgVJREFUOE+lku1LU2EYxs8/EmaaVhKCoeIrMZTUQPGDiIpgrIbZYGiCoxglA60I
         RVEUEZ1MEIl9GeRLhVppY1PmyrHUFTFFfEMdjEAku+S6wR4Fo8AH7nPgnOf63df9ouGcR+Ojyb50Khr7
         v8Lc7Yep7TMML7wob5xFkdmF3NppZNVMIsMwhjS98zTg1+Hvv8b+wSHCkQNs7e0jtPETy6sRXL319P8A
         vmBYMutMH+GcXhexbSSEK7mWfwOYmWJPYBetw0GxTWCP8wficx4rAGs+S0zbzExxfv0MUqsccPl30Pbq
@@ -564,14 +591,11 @@
   <data name="&gt;&gt;lnlVol.ZOrder" xml:space="preserve">
     <value>20</value>
   </data>
-  <data name="btnOffsetMinus.Size" type="System.Drawing.Size, System.Drawing">
-    <value>24, 23</value>
-  </data>
   <data name="lblTi.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="btnPrev.TabIndex" type="System.Int32, mscorlib">
-    <value>44</value>
+  <data name="&gt;&gt;mnuEditSep1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="VuPeakVolumeRight.Size" type="System.Drawing.Size, System.Drawing">
     <value>14, 103</value>
@@ -579,8 +603,8 @@
   <data name="&gt;&gt;txtTitle.Name" xml:space="preserve">
     <value>txtTitle</value>
   </data>
-  <data name="&gt;&gt;btnStop.Name" xml:space="preserve">
-    <value>btnStop</value>
+  <data name="&gt;&gt;lblTimes.Parent" xml:space="preserve">
+    <value>pnlMiddle</value>
   </data>
   <data name="&gt;&gt;pBox.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -603,8 +627,8 @@
   <data name="&gt;&gt;splitContainer1.Panel1.Name" xml:space="preserve">
     <value>splitContainer1.Panel1</value>
   </data>
-  <data name="&gt;&gt;splitContainer1.Panel1.Parent" xml:space="preserve">
-    <value>splitContainer1</value>
+  <data name="lblHotkeys.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="btnSwitchSyncEdit.Size" type="System.Drawing.Size, System.Drawing">
     <value>157, 25</value>
@@ -612,8 +636,11 @@
   <data name="&gt;&gt;lblTimes.Name" xml:space="preserve">
     <value>lblTimes</value>
   </data>
-  <data name="&gt;&gt;mnuImportRawLyrics.Name" xml:space="preserve">
-    <value>mnuImportRawLyrics</value>
+  <data name="&gt;&gt;btnTempoMinus.Name" xml:space="preserve">
+    <value>btnTempoMinus</value>
+  </data>
+  <data name="&gt;&gt;txtTitle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="splitContainer1.TabIndex" type="System.Int32, mscorlib">
     <value>31</value>
@@ -624,11 +651,14 @@
   <data name="btnOffsetPlus.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9pt</value>
   </data>
+  <data name="pnlEdit.Location" type="System.Drawing.Point, System.Drawing">
+    <value>364, 38</value>
+  </data>
   <data name="pnlTop.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="$this.ToolTip" xml:space="preserve">
-    <value />
+  <data name="splitContainer1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
   </data>
   <data name="btnDeleteAllLyrics.TabIndex" type="System.Int32, mscorlib">
     <value>30</value>
@@ -645,6 +675,9 @@
   <data name="btnPlay.TabIndex" type="System.Int32, mscorlib">
     <value>41</value>
   </data>
+  <data name="lblAl.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="btnOffsetPlus.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -660,14 +693,17 @@
   <data name="&gt;&gt;btnNext.Name" xml:space="preserve">
     <value>btnNext</value>
   </data>
-  <data name="positionHScrollBar.ToolTip" xml:space="preserve">
-    <value />
+  <data name="&gt;&gt;txtTitle.Parent" xml:space="preserve">
+    <value>pnlEdit</value>
   </data>
   <data name="btnSave.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
   </data>
   <data name="&gt;&gt;Timer1.Name" xml:space="preserve">
     <value>Timer1</value>
+  </data>
+  <data name="sldMainVolume.Text" xml:space="preserve">
+    <value>colorSlider1</value>
   </data>
   <data name="&gt;&gt;txtEditing.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -680,6 +716,9 @@
   </data>
   <data name="&gt;&gt;btnTranspoPlus.Name" xml:space="preserve">
     <value>btnTranspoPlus</value>
+  </data>
+  <data name="&gt;&gt;mnuImportLrcFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="VuPeakVolumeLeft.Size" type="System.Drawing.Size, System.Drawing">
     <value>14, 103</value>
@@ -697,6 +736,9 @@
     <value>1</value>
   </data>
   <data name="&gt;&gt;btnOffsetMinus.Parent" xml:space="preserve">
+    <value>pnlEdit</value>
+  </data>
+  <data name="&gt;&gt;cbLanguage.Parent" xml:space="preserve">
     <value>pnlEdit</value>
   </data>
   <data name="pnlEdit.Size" type="System.Drawing.Size, System.Drawing">
@@ -723,14 +765,11 @@
   <data name="txtAlbum.Text" xml:space="preserve">
     <value>Album</value>
   </data>
-  <data name="&gt;&gt;mnuImport.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripDropDownButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;lblTemp.ZOrder" xml:space="preserve">
+    <value>5</value>
   </data>
   <data name="&gt;&gt;Timer1.Type" xml:space="preserve">
     <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="mnuEditLyrics.Text" xml:space="preserve">
-    <value>Edit &amp;lyrics</value>
   </data>
   <data name="&gt;&gt;btnTranspoPlus.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -746,6 +785,9 @@
   </data>
   <data name="lblTempoValue.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleCenter</value>
+  </data>
+  <data name="pnlDisplay.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="BtnFontMoins.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 23</value>
@@ -783,8 +825,20 @@
   <data name="lblAr.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
   </data>
-  <data name="mnuImportRawLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>197, 26</value>
+  <data name="btnSwitchSyncEdit.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wgAADsIBFShKgAAAAgVJREFUOE+lku1LU2EYxs8/EmaaVhKCoeIrMZTUQPGDiIpgrIbZYGiCoxglA60I
+        RVEUEZ1MEIl9GeRLhVppY1PmyrHUFTFFfEMdjEAku+S6wR4Fo8AH7nPgnOf63df9ouGcR+Ojyb50Khr7
+        v8Lc7Yep7TMML7wob5xFkdmF3NppZNVMIsMwhjS98zTg1+Hvv8b+wSHCkQNs7e0jtPETy6sRXL319P8A
+        vmBYMutMH+GcXhexbSSEK7mWfwOYmWJPYBetw0GxTWCP8wficx4rAGs+S0zbzExxfv0MUqsccPl30Pbq
+        G+JzHikAG3aWmDXTNjNTTOvv57fFcZyuQQHY7ZM15z2ckXAHdqVmfmNmit94NmHpDeDyzToF4KgoXgxF
+        RGgfX4Fjag0Jt5vRMhyUhjE6HN/x+tM66jsXEJttUgDOmeLSJx4Rzy+HMTAaQkOXHzfKbGJ96N0qNE2T
+        /w9afIjJNCoAl6TSOofB8RWxy7fVtoi7z73SxMTidjTbl1Db/kUg+mdeXMq4rwAcFTMei3nZ2OpDodmF
+        9HsjAriYqke28QMyq98KJDrNoABczzH3hohZM2sssbiRVTOBpNI+XMu3Ik5nFtvXC1/KDhD4B8DdpmUG
+        62NJ/EZxQkGTiDm24/eFpApEpdxRAM6Zu81Ok84l4UWOit1mZtZM28xMcVRylQKc5xwB0AEgNdcTWfMA
+        AAAASUVORK5CYII=
+</value>
   </data>
   <data name="lblTemp.ToolTip" xml:space="preserve">
     <value />
@@ -795,6 +849,9 @@
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmMp3Player</value>
   </data>
+  <data name="&gt;&gt;mnuEditInsertNewLine.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;positionHScrollBar.Parent" xml:space="preserve">
     <value>pnlControls</value>
   </data>
@@ -804,32 +861,26 @@
   <data name="btnDeleteAllLyrics.Location" type="System.Drawing.Point, System.Drawing">
     <value>745, 57</value>
   </data>
-  <data name="txtYear.Location" type="System.Drawing.Point, System.Drawing">
-    <value>547, 8</value>
-  </data>
-  <data name="btnSave.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
-    <value>TextBeforeImage</value>
-  </data>
   <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
     <value>112, 22</value>
   </data>
-  <data name="txtEditing.Size" type="System.Drawing.Size, System.Drawing">
-    <value>36, 20</value>
+  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;toolTip1.Name" xml:space="preserve">
+    <value>toolTip1</value>
   </data>
   <data name="&gt;&gt;lblTemp.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="pnlEdit.Location" type="System.Drawing.Point, System.Drawing">
-    <value>364, 38</value>
+  <data name="sldMainVolume.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 6pt</value>
   </data>
   <data name="dgView.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
   <data name="pnlTop.Size" type="System.Drawing.Size, System.Drawing">
     <value>1329, 150</value>
-  </data>
-  <data name="lblHotkeysOthers.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
   <data name="BtnFontPlus.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -839,9 +890,6 @@
   </data>
   <data name="&gt;&gt;lblYear.Name" xml:space="preserve">
     <value>lblYear</value>
-  </data>
-  <data name="btnDelete.Size" type="System.Drawing.Size, System.Drawing">
-    <value>130, 23</value>
   </data>
   <data name="lnlVol.Location" type="System.Drawing.Point, System.Drawing">
     <value>255, 8</value>
@@ -855,11 +903,8 @@
   <data name="&gt;&gt;txtArtist.Parent" xml:space="preserve">
     <value>pnlEdit</value>
   </data>
-  <data name="pBox.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
   </data>
   <data name="btnPrev.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -885,8 +930,8 @@
   <data name="BtnFontMoins.Location" type="System.Drawing.Point, System.Drawing">
     <value>95, 57</value>
   </data>
-  <data name="mnuExport.Size" type="System.Drawing.Size, System.Drawing">
-    <value>67, 25</value>
+  <data name="mnuEditInsertNewLine.Text" xml:space="preserve">
+    <value>Insert new line</value>
   </data>
   <data name="menuStrip1.ToolTip" xml:space="preserve">
     <value />
@@ -894,17 +939,11 @@
   <data name="&gt;&gt;mnuHelpAbout.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;pnlEdit.Name" xml:space="preserve">
-    <value>pnlEdit</value>
-  </data>
   <data name="btnDeleteAllLyrics.ToolTip" xml:space="preserve">
     <value>Delete all the lyrics</value>
   </data>
   <data name="&gt;&gt;lblHotkeysOthers.Name" xml:space="preserve">
     <value>lblHotkeysOthers</value>
-  </data>
-  <data name="lblMainVolume.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
   <data name="lblAl.TabIndex" type="System.Int32, mscorlib">
     <value>21</value>
@@ -912,14 +951,17 @@
   <data name="lblPlaylist.Size" type="System.Drawing.Size, System.Drawing">
     <value>86, 13</value>
   </data>
-  <data name="&gt;&gt;mnuExportAsLrc.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;btnDelete.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="lblTemp.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="btnSave.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleRight</value>
+  <data name="VuPeakVolumeLeft.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="cbLanguage.Location" type="System.Drawing.Point, System.Drawing">
     <value>547, 59</value>
@@ -933,8 +975,11 @@
   <data name="&gt;&gt;pnlSync.Type" xml:space="preserve">
     <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="lblTemp.TabIndex" type="System.Int32, mscorlib">
-    <value>57</value>
+  <data name="&gt;&gt;txtResult.Name" xml:space="preserve">
+    <value>txtResult</value>
+  </data>
+  <data name="&gt;&gt;mnuExportAsLrc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;mnuEditLyrics.Name" xml:space="preserve">
     <value>mnuEditLyrics</value>
@@ -942,14 +987,17 @@
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
     <value>112, 22</value>
   </data>
+  <data name="&gt;&gt;mnuImportRawLyrics.Name" xml:space="preserve">
+    <value>mnuImportRawLyrics</value>
+  </data>
   <data name="btnInsertParagraph.ToolTip" xml:space="preserve">
     <value>Insert a new paragraph</value>
   </data>
-  <data name="&gt;&gt;lblYear.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnStop.TabIndex" type="System.Int32, mscorlib">
+    <value>42</value>
   </data>
-  <data name="btnSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>158, 38</value>
+  <data name="btnPlay.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="&gt;&gt;splitContainer1.Panel1.Type" xml:space="preserve">
     <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -968,6 +1016,9 @@
   </data>
   <data name="&gt;&gt;toolstrip1.ZOrder" xml:space="preserve">
     <value>4</value>
+  </data>
+  <data name="&gt;&gt;sldMainVolume.Parent" xml:space="preserve">
+    <value>pnlControls</value>
   </data>
   <data name="&gt;&gt;VuPeakVolumeRight.ZOrder" xml:space="preserve">
     <value>10</value>
@@ -990,17 +1041,17 @@
   <data name="btnNext.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="lblLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>13, 13</value>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Help</value>
+  </data>
+  <data name="lblHotkeys.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="lblTempoValue.TabIndex" type="System.Int32, mscorlib">
     <value>58</value>
   </data>
-  <data name="&gt;&gt;toolstrip1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="toolstrip1.ToolTip" xml:space="preserve">
-    <value />
+  <data name="&gt;&gt;mnuEditDeleteCurrentLine.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="splitContainer1.ToolTip" xml:space="preserve">
     <value />
@@ -1035,26 +1086,26 @@
   <data name="lblTextSize.Text" xml:space="preserve">
     <value>Text size:</value>
   </data>
-  <data name="&gt;&gt;lblTi.Parent" xml:space="preserve">
-    <value>pnlEdit</value>
-  </data>
   <data name="&gt;&gt;btnPlay.Parent" xml:space="preserve">
     <value>pnlControls</value>
   </data>
-  <data name="btnTempoMinus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>314, 70</value>
+  <data name="&gt;&gt;txtResult.Parent" xml:space="preserve">
+    <value>splitContainer1.Panel2</value>
   </data>
   <data name="lblMode.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
   </data>
-  <data name="lblMode.ToolTip" xml:space="preserve">
-    <value />
+  <data name="&gt;&gt;sldMainVolume.Name" xml:space="preserve">
+    <value>sldMainVolume</value>
   </data>
   <data name="&gt;&gt;BtnFontMoins.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
   <data name="pnlTop.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
+  </data>
+  <data name="&gt;&gt;mnuEditDeleteCurrentLine.Name" xml:space="preserve">
+    <value>mnuEditDeleteCurrentLine</value>
   </data>
   <data name="&gt;&gt;lblTi.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1064,6 +1115,9 @@
   </data>
   <data name="&gt;&gt;mnuFile.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblYear.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="btnDeleteAllLyrics.Size" type="System.Drawing.Size, System.Drawing">
     <value>158, 23</value>
@@ -1077,6 +1131,9 @@
   <data name="&gt;&gt;btnTranspoMinus.Parent" xml:space="preserve">
     <value>pnlControls</value>
   </data>
+  <data name="mnuEditDeleteCurrentLine.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
+    <value>Ctrl+D</value>
+  </data>
   <data name="&gt;&gt;sldMainVolume.Type" xml:space="preserve">
     <value>ColorSlider.ColorSlider, ColorSlider, Version=1.0.0.5, Culture=neutral, PublicKeyToken=null</value>
   </data>
@@ -1085,6 +1142,9 @@
   </data>
   <data name="&gt;&gt;lblMode.ZOrder" xml:space="preserve">
     <value>2</value>
+  </data>
+  <data name="lblTranspoValue.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="&gt;&gt;pnlEdit.Type" xml:space="preserve">
     <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1095,8 +1155,8 @@
   <data name="btnInsertText.ToolTip" xml:space="preserve">
     <value>Insert a new line (text)</value>
   </data>
-  <data name="lblTransp.TabIndex" type="System.Int32, mscorlib">
-    <value>53</value>
+  <data name="lblTemp.TabIndex" type="System.Int32, mscorlib">
+    <value>57</value>
   </data>
   <data name="&gt;&gt;splitContainer1.Panel2.ZOrder" xml:space="preserve">
     <value>1</value>
@@ -1107,9 +1167,6 @@
   <data name="lnlVol.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="&gt;&gt;lblTimes.Parent" xml:space="preserve">
-    <value>pnlMiddle</value>
-  </data>
   <data name="&gt;&gt;lblHotkeys.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
@@ -1119,17 +1176,14 @@
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>
   </data>
-  <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 24</value>
-  </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>1329, 693</value>
   </data>
   <data name="&gt;&gt;lblHotkeys.Parent" xml:space="preserve">
     <value>pnlSync</value>
   </data>
-  <data name="VuPeakVolumeRight.TabIndex" type="System.Int32, mscorlib">
-    <value>47</value>
+  <data name="pnlEdit.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
   <data name="&gt;&gt;lblMainVolume.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1143,17 +1197,32 @@
   <data name="txtAlbum.ToolTip" xml:space="preserve">
     <value>Album</value>
   </data>
+  <data name="&gt;&gt;cbLanguage.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
   <data name="lblMode.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 2</value>
   </data>
   <data name="btnOffsetMinus.ToolTip" xml:space="preserve">
     <value />
   </data>
+  <data name="btnOffsetPlus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>24, 23</value>
+  </data>
+  <data name="txtResult.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="sldMainVolume.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="mnuEditInsertNewLine.Size" type="System.Drawing.Size, System.Drawing">
+    <value>212, 22</value>
+  </data>
   <data name="lblMode.Size" type="System.Drawing.Size, System.Drawing">
     <value>904, 24</value>
   </data>
-  <data name="lblAl.ToolTip" xml:space="preserve">
-    <value />
+  <data name="txtArtist.Size" type="System.Drawing.Size, System.Drawing">
+    <value>160, 20</value>
   </data>
   <data name="&gt;&gt;lblYear.ZOrder" xml:space="preserve">
     <value>13</value>
@@ -1170,8 +1239,8 @@
   <data name="&gt;&gt;lblLyrics.Parent" xml:space="preserve">
     <value>pnlMiddle</value>
   </data>
-  <data name="btnPlay.ToolTip" xml:space="preserve">
-    <value />
+  <data name="btnInsertText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="pnlTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
@@ -1179,8 +1248,8 @@
   <data name="btnSwitchSyncEdit.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
     <value>Magenta</value>
   </data>
-  <data name="splitContainer1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+  <data name="btnPrev.TabIndex" type="System.Int32, mscorlib">
+    <value>44</value>
   </data>
   <data name="&gt;&gt;Timer3.Name" xml:space="preserve">
     <value>Timer3</value>
@@ -1194,11 +1263,20 @@
   <data name="VuPeakVolumeRight.Location" type="System.Drawing.Point, System.Drawing">
     <value>236, 7</value>
   </data>
-  <data name="toolstrip1.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+  <data name="&gt;&gt;txtResult.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="btnInsertCr.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+  <data name="lblTextSize.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;pnlTop.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;txtYear.Parent" xml:space="preserve">
+    <value>pnlEdit</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
   <data name="btnSave.Text" xml:space="preserve">
     <value>&amp;Record the lyrics in the mp3 file</value>
@@ -1209,14 +1287,11 @@
   <data name="lnlVol.Font" type="System.Drawing.Font, System.Drawing">
     <value>Consolas, 8pt</value>
   </data>
-  <data name="lblAr.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
+  <data name="&gt;&gt;lblYear.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="pnlSync.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
-  </data>
-  <data name="&gt;&gt;btnOffsetMinus.Name" xml:space="preserve">
-    <value>btnOffsetMinus</value>
   </data>
   <data name="lblTimes.ToolTip" xml:space="preserve">
     <value />
@@ -1224,14 +1299,17 @@
   <data name="&gt;&gt;btnOffsetMinus.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;sldMainVolume.Parent" xml:space="preserve">
-    <value>pnlControls</value>
+  <data name="mnuExport.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 25</value>
   </data>
   <data name="lblMode.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 12pt</value>
   </data>
-  <data name="&gt;&gt;mnuImportLrcFile.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="pBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>413, 25</value>
+  </data>
+  <data name="btnDelete.Size" type="System.Drawing.Size, System.Drawing">
+    <value>130, 23</value>
   </data>
   <data name="&gt;&gt;btnPlay.ZOrder" xml:space="preserve">
     <value>18</value>
@@ -1239,17 +1317,14 @@
   <data name="&gt;&gt;splitContainer1.Type" xml:space="preserve">
     <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;txtResult.Parent" xml:space="preserve">
-    <value>splitContainer1.Panel2</value>
+  <data name="&gt;&gt;mnuHelp.Name" xml:space="preserve">
+    <value>mnuHelp</value>
   </data>
   <data name="lblTransp.Font" type="System.Drawing.Font, System.Drawing">
     <value>Consolas, 8pt</value>
   </data>
   <data name="lblTranspoValue.Text" xml:space="preserve">
     <value>0</value>
-  </data>
-  <data name="&gt;&gt;pnlTop.ZOrder" xml:space="preserve">
-    <value>1</value>
   </data>
   <data name="btnPrev.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1266,14 +1341,14 @@
   <data name="dgView.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="lblTi.Text" xml:space="preserve">
-    <value>Title</value>
-  </data>
   <data name="lnlVol.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleCenter</value>
   </data>
   <data name="&gt;&gt;pnlTop.Name" xml:space="preserve">
     <value>pnlTop</value>
+  </data>
+  <data name="btnDelete.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="&gt;&gt;btnTempoPlus.ZOrder" xml:space="preserve">
     <value>3</value>
@@ -1290,8 +1365,8 @@
   <data name="pnlTop.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="&gt;&gt;pnlEdit.Parent" xml:space="preserve">
-    <value>pnlTop</value>
+  <data name="lblTextSize.TabIndex" type="System.Int32, mscorlib">
+    <value>31</value>
   </data>
   <data name="&gt;&gt;txtYear.Name" xml:space="preserve">
     <value>txtYear</value>
@@ -1305,17 +1380,14 @@
   <data name="btnMsPlus.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 23</value>
   </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
-  </data>
   <data name="lblHotkeysOthers.Text" xml:space="preserve">
     <value>&lt;ENTER&gt; Add a new timestamp</value>
   </data>
   <data name="txtAlbum.TabIndex" type="System.Int32, mscorlib">
     <value>22</value>
   </data>
-  <data name="lblTextSize.ToolTip" xml:space="preserve">
-    <value />
+  <data name="&gt;&gt;mnuEditLyrics.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="menuStrip1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1323,17 +1395,14 @@
   <data name="&gt;&gt;btnMsMinor.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="btnInsertText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>144, 6</value>
-  </data>
   <data name="mnuEditLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
     <value>39, 20</value>
   </data>
-  <data name="&gt;&gt;toolTip1.Name" xml:space="preserve">
-    <value>toolTip1</value>
+  <data name="txtArtist.Text" xml:space="preserve">
+    <value>Artist</value>
   </data>
   <data name="txtTitle.ToolTip" xml:space="preserve">
     <value>Title</value>
@@ -1344,14 +1413,14 @@
   <data name="lblTi.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="pnlDisplay.ToolTip" xml:space="preserve">
-    <value />
-  </data>
-  <data name="&gt;&gt;txtYear.Parent" xml:space="preserve">
-    <value>pnlEdit</value>
+  <data name="&gt;&gt;btnPrev.Type" xml:space="preserve">
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.22, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;lblTempoValue.Parent" xml:space="preserve">
     <value>pnlControls</value>
+  </data>
+  <data name="&gt;&gt;btnSave.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;lblYear.Parent" xml:space="preserve">
     <value>pnlEdit</value>
@@ -1359,8 +1428,11 @@
   <data name="txtResult.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="lblYear.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+  <data name="&gt;&gt;VuPeakVolumeLeft.Type" xml:space="preserve">
+    <value>VU_MeterLibrary.VuMeter, VU_MeterLibrary, Version=1.0.0.1, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="btnSave.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
+    <value>TextBeforeImage</value>
   </data>
   <data name="btnMsPlus.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1379,9 +1451,6 @@
   </data>
   <data name="&gt;&gt;MnuFileSep.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
   </data>
   <data name="lblAl.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -1415,9 +1484,6 @@
   </data>
   <data name="btnTempoPlus.ToolTip" xml:space="preserve">
     <value />
-  </data>
-  <data name="&gt;&gt;toolstrip1.Name" xml:space="preserve">
-    <value>toolstrip1</value>
   </data>
   <data name="&gt;&gt;lnlVol.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1458,9 +1524,6 @@
   <data name="pBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>90, 90</value>
   </data>
-  <data name="btnNext.ToolTip" xml:space="preserve">
-    <value />
-  </data>
   <data name="&gt;&gt;btnInsertText.Parent" xml:space="preserve">
     <value>pnlEdit</value>
   </data>
@@ -1479,11 +1542,8 @@
   <data name="lblTranspoValue.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 13</value>
   </data>
-  <data name="lblHotkeysOthers.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
-  </data>
-  <data name="&gt;&gt;MnuFileSep.Name" xml:space="preserve">
-    <value>MnuFileSep</value>
+  <data name="&gt;&gt;pnlEdit.Name" xml:space="preserve">
+    <value>pnlEdit</value>
   </data>
   <data name="btnPrev.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 50</value>
@@ -1518,14 +1578,11 @@
   <data name="&gt;&gt;splitContainer1.Panel2.Type" xml:space="preserve">
     <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="MnuFileSep.Size" type="System.Drawing.Size, System.Drawing">
-    <value>109, 6</value>
-  </data>
   <data name="&gt;&gt;lblHotkeysOthers.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="lblTranspoValue.ToolTip" xml:space="preserve">
-    <value />
+  <data name="&gt;&gt;toolstrip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="lblLa.Size" type="System.Drawing.Size, System.Drawing">
     <value>31, 13</value>
@@ -1533,11 +1590,8 @@
   <data name="pBox.TabIndex" type="System.Int32, mscorlib">
     <value>61</value>
   </data>
-  <data name="&gt;&gt;txtResult.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="txtArtist.Text" xml:space="preserve">
-    <value>Artist</value>
+  <data name="&gt;&gt;btnOffsetMinus.Name" xml:space="preserve">
+    <value>btnOffsetMinus</value>
   </data>
   <data name="&gt;&gt;lblMainVolume.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -1572,17 +1626,20 @@
   <data name="&gt;&gt;btnStop.ZOrder" xml:space="preserve">
     <value>17</value>
   </data>
+  <data name="lblTranspoValue.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Consolas, 8.25pt</value>
+  </data>
   <data name="lblTemp.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 13</value>
   </data>
   <data name="&gt;&gt;pnlTop.Parent" xml:space="preserve">
     <value>pnlLrc</value>
   </data>
-  <data name="txtResult.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
+  <data name="&gt;&gt;btnStop.Name" xml:space="preserve">
+    <value>btnStop</value>
   </data>
-  <data name="&gt;&gt;btnMsMinor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="positionHScrollBar.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
   </data>
   <data name="mnuImportRawLyrics.Text" xml:space="preserve">
     <value>Import raw lyrics</value>
@@ -1614,8 +1671,8 @@
   <data name="BtnFontMoins.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="lblTranspoValue.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Consolas, 8.25pt</value>
+  <data name="lblHotkeysOthers.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
   </data>
   <data name="&gt;&gt;VuPeakVolumeLeft.ZOrder" xml:space="preserve">
     <value>11</value>
@@ -1629,23 +1686,11 @@
   <data name="positionHScrollBar.Text" xml:space="preserve">
     <value>colorSlider1</value>
   </data>
-  <data name="lblTimes.Size" type="System.Drawing.Size, System.Drawing">
-    <value>13, 13</value>
+  <data name="&gt;&gt;mnuEditSep1.Name" xml:space="preserve">
+    <value>mnuEditSep1</value>
   </data>
-  <data name="btnSwitchSyncEdit.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAgVJREFUOE+lku1LU2EYxs8/EmaaVhKCoeIrMZTUQPGDiIpgrIbZYGiCoxglA60I
-        RVEUEZ1MEIl9GeRLhVppY1PmyrHUFTFFfEMdjEAku+S6wR4Fo8AH7nPgnOf63df9ouGcR+Ojyb50Khr7
-        v8Lc7Yep7TMML7wob5xFkdmF3NppZNVMIsMwhjS98zTg1+Hvv8b+wSHCkQNs7e0jtPETy6sRXL319P8A
-        vmBYMutMH+GcXhexbSSEK7mWfwOYmWJPYBetw0GxTWCP8wficx4rAGs+S0zbzExxfv0MUqsccPl30Pbq
-        G+JzHikAG3aWmDXTNjNTTOvv57fFcZyuQQHY7ZM15z2ckXAHdqVmfmNmit94NmHpDeDyzToF4KgoXgxF
-        RGgfX4Fjag0Jt5vRMhyUhjE6HN/x+tM66jsXEJttUgDOmeLSJx4Rzy+HMTAaQkOXHzfKbGJ96N0qNE2T
-        /w9afIjJNCoAl6TSOofB8RWxy7fVtoi7z73SxMTidjTbl1Db/kUg+mdeXMq4rwAcFTMei3nZ2OpDodmF
-        9HsjAriYqke28QMyq98KJDrNoABczzH3hohZM2sssbiRVTOBpNI+XMu3Ik5nFtvXC1/KDhD4B8DdpmUG
-        62NJ/EZxQkGTiDm24/eFpApEpdxRAM6Zu81Ok84l4UWOit1mZtZM28xMcVRylQKc5xwB0AEgNdcTWfMA
-        AAAASUVORK5CYII=
-</value>
+  <data name="&gt;&gt;pnlDisplay.Type" xml:space="preserve">
+    <value>Karaboss.Display.PanelPlayer, Karaboss, Version=1.0.10.22, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnDeleteAllLyrics.Parent" xml:space="preserve">
     <value>pnlEdit</value>
@@ -1671,8 +1716,11 @@
   <data name="lblPlaylist.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="&gt;&gt;cbLanguage.Parent" xml:space="preserve">
-    <value>pnlEdit</value>
+  <data name="&gt;&gt;BtnFontPlus.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="btnSave.Size" type="System.Drawing.Size, System.Drawing">
+    <value>158, 38</value>
   </data>
   <data name="btnInsertText.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
@@ -1695,20 +1743,32 @@
   <data name="btnMsMinor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
+  <data name="&gt;&gt;pBox.Name" xml:space="preserve">
+    <value>pBox</value>
+  </data>
+  <data name="lblLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>13, 13</value>
+  </data>
+  <data name="lblAr.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="&gt;&gt;btnDelete.ZOrder" xml:space="preserve">
+    <value>19</value>
+  </data>
+  <data name="positionHScrollBar.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 6pt</value>
+  </data>
   <data name="&gt;&gt;btnInsertText.ZOrder" xml:space="preserve">
     <value>17</value>
-  </data>
-  <data name="&gt;&gt;lblTemp.ZOrder" xml:space="preserve">
-    <value>5</value>
   </data>
   <data name="pnlControls.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
+  <data name="mnuEditDeleteCurrentLine.Size" type="System.Drawing.Size, System.Drawing">
+    <value>212, 22</value>
+  </data>
   <data name="&gt;&gt;txtArtist.Name" xml:space="preserve">
     <value>txtArtist</value>
-  </data>
-  <data name="positionHScrollBar.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
   </data>
   <data name="&gt;&gt;splitContainer1.Name" xml:space="preserve">
     <value>splitContainer1</value>
@@ -1734,11 +1794,14 @@
   <data name="btnInsertParagraph.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 32</value>
   </data>
+  <data name="mnuImportRawLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>197, 26</value>
+  </data>
   <data name="&gt;&gt;lblAr.ZOrder" xml:space="preserve">
     <value>20</value>
   </data>
-  <data name="lblHotkeys.Size" type="System.Drawing.Size, System.Drawing">
-    <value>280, 70</value>
+  <data name="txtResult.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
   </data>
   <data name="&gt;&gt;btnPrev.Name" xml:space="preserve">
     <value>btnPrev</value>
@@ -1769,9 +1832,6 @@
   </data>
   <data name="&gt;&gt;txtYear.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="splitContainer1.SplitterDistance" type="System.Int32, mscorlib">
-    <value>813</value>
   </data>
   <data name="pnlSync.ToolTip" xml:space="preserve">
     <value />
@@ -1809,14 +1869,14 @@
   <data name="lblTempoValue.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
+  <data name="&gt;&gt;btnNext.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
   <data name="BtnFontMoins.Text" xml:space="preserve">
     <value>A-</value>
   </data>
   <data name="lblTemp.Location" type="System.Drawing.Point, System.Drawing">
     <value>305, 8</value>
-  </data>
-  <data name="&gt;&gt;btnPrev.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.10.22, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;btnNext.Parent" xml:space="preserve">
     <value>pnlControls</value>
@@ -1858,20 +1918,17 @@
   <data name="lblAr.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="lblTextSize.TabIndex" type="System.Int32, mscorlib">
-    <value>31</value>
+  <data name="splitContainer1.SplitterDistance" type="System.Int32, mscorlib">
+    <value>813</value>
   </data>
-  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="lblHotkeys.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="&gt;&gt;btnTranspoMinus.Type" xml:space="preserve">
+    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.22, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="splitContainer1.Size" type="System.Drawing.Size, System.Drawing">
     <value>1329, 392</value>
   </data>
-  <data name="&gt;&gt;mnuEditLyrics.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>frmMP3Player</value>
@@ -1885,9 +1942,6 @@
   <data name="toolstrip1.Size" type="System.Drawing.Size, System.Drawing">
     <value>306, 28</value>
   </data>
-  <data name="btnInsertCr.Text" xml:space="preserve">
-    <value>Insert a Line Break (/)</value>
-  </data>
   <data name="btnTempoPlus.Location" type="System.Drawing.Point, System.Drawing">
     <value>314, 30</value>
   </data>
@@ -1897,8 +1951,8 @@
   <data name="&gt;&gt;VuPeakVolumeRight.Parent" xml:space="preserve">
     <value>pnlControls</value>
   </data>
-  <data name="&gt;&gt;btnDelete.ZOrder" xml:space="preserve">
-    <value>19</value>
+  <data name="&gt;&gt;lblHotkeysOthers.Parent" xml:space="preserve">
+    <value>pnlSync</value>
   </data>
   <data name="txtArtist.ToolTip" xml:space="preserve">
     <value>Artist</value>
@@ -1915,14 +1969,17 @@
   <data name="txtEditing.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="VuPeakVolumeLeft.ToolTip" xml:space="preserve">
-    <value />
+  <data name="MnuFileSep.Size" type="System.Drawing.Size, System.Drawing">
+    <value>109, 6</value>
+  </data>
+  <data name="&gt;&gt;mnuEditInsertNewLine.Name" xml:space="preserve">
+    <value>mnuEditInsertNewLine</value>
   </data>
   <data name="&gt;&gt;splitContainer1.Parent" xml:space="preserve">
     <value>pnlMiddle</value>
   </data>
-  <data name="&gt;&gt;txtResult.Name" xml:space="preserve">
-    <value>txtResult</value>
+  <data name="VuPeakVolumeLeft.Location" type="System.Drawing.Point, System.Drawing">
+    <value>220, 7</value>
   </data>
   <data name="btnMsMinor.Location" type="System.Drawing.Point, System.Drawing">
     <value>200, 57</value>
@@ -1930,11 +1987,14 @@
   <data name="&gt;&gt;btnTempoPlus.Parent" xml:space="preserve">
     <value>pnlControls</value>
   </data>
-  <data name="&gt;&gt;btnTranspoMinus.Type" xml:space="preserve">
-    <value>Karaboss.Buttons.MinusButtonControl, Karaboss, Version=1.0.10.22, Culture=neutral, PublicKeyToken=null</value>
+  <data name="&gt;&gt;MnuFileSep.Name" xml:space="preserve">
+    <value>MnuFileSep</value>
   </data>
   <data name="&gt;&gt;lblLa.Name" xml:space="preserve">
     <value>lblLa</value>
+  </data>
+  <data name="&gt;&gt;pnlEdit.Parent" xml:space="preserve">
+    <value>pnlTop</value>
   </data>
   <data name="btnNext.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 50</value>
@@ -1948,17 +2008,17 @@
   <data name="&gt;&gt;txtTitle.ZOrder" xml:space="preserve">
     <value>6</value>
   </data>
+  <data name="btnNext.TabIndex" type="System.Int32, mscorlib">
+    <value>43</value>
+  </data>
+  <data name="lblTransp.TabIndex" type="System.Int32, mscorlib">
+    <value>53</value>
+  </data>
   <data name="&gt;&gt;btnSwitchSyncEdit.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;cbLanguage.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="lblAr.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
-  </data>
-  <data name="VuPeakVolumeLeft.Location" type="System.Drawing.Point, System.Drawing">
-    <value>220, 7</value>
   </data>
   <data name="pnlControls.Size" type="System.Drawing.Size, System.Drawing">
     <value>1329, 127</value>
@@ -1969,11 +2029,8 @@
   <data name="btnDelete.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
   </data>
-  <data name="&gt;&gt;mnuHelp.Name" xml:space="preserve">
-    <value>mnuHelp</value>
-  </data>
-  <data name="pnlEdit.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
+  <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 24</value>
   </data>
   <data name="positionHScrollBar.Size" type="System.Drawing.Size, System.Drawing">
     <value>200, 20</value>
@@ -1996,17 +2053,14 @@
   <data name="lblHotkeysOthers.Location" type="System.Drawing.Point, System.Drawing">
     <value>300, 7</value>
   </data>
-  <data name="&gt;&gt;VuPeakVolumeLeft.Name" xml:space="preserve">
-    <value>VuPeakVolumeLeft</value>
-  </data>
   <data name="btnInsertCr.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="btnOffsetPlus.Text" xml:space="preserve">
-    <value>+</value>
+  <data name="&gt;&gt;lblTimes.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
-  <data name="btnStop.TabIndex" type="System.Int32, mscorlib">
-    <value>42</value>
+  <data name="lblMode.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="pnlLrc.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -2026,9 +2080,6 @@
   <data name="lblTimes.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="lblMode.Text" xml:space="preserve">
-    <value>Edit mode: Load an LRC file to be modified or lyrics to be synchronised</value>
-  </data>
   <data name="lblTempoValue.Font" type="System.Drawing.Font, System.Drawing">
     <value>Consolas, 8.25pt</value>
   </data>
@@ -2037,6 +2088,9 @@
   </data>
   <data name="btnDelete.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
+  </data>
+  <data name="VuPeakVolumeRight.TabIndex" type="System.Int32, mscorlib">
+    <value>47</value>
   </data>
   <data name="lblYear.Location" type="System.Drawing.Point, System.Drawing">
     <value>514, 11</value>
@@ -2047,14 +2101,14 @@
   <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 20</value>
   </data>
-  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="lblMainVolume.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="&gt;&gt;mnuHelpAbout.Name" xml:space="preserve">
     <value>mnuHelpAbout</value>
   </data>
-  <data name="lblHotkeys.ToolTip" xml:space="preserve">
-    <value />
+  <data name="&gt;&gt;cbLanguage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;pnlLrc.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -2089,11 +2143,11 @@
   <data name="lblTi.Location" type="System.Drawing.Point, System.Drawing">
     <value>311, 12</value>
   </data>
-  <data name="&gt;&gt;splitContainer1.Panel2.Name" xml:space="preserve">
-    <value>splitContainer1.Panel2</value>
-  </data>
   <data name="btnSwitchSyncEdit.Text" xml:space="preserve">
     <value>Switch to sync mode</value>
+  </data>
+  <data name="pBox.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="lnlVol.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 13</value>
@@ -2116,9 +2170,6 @@
   <data name="lblMainVolume.Location" type="System.Drawing.Point, System.Drawing">
     <value>255, 110</value>
   </data>
-  <data name="&gt;&gt;btnDelete.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;dgView.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
@@ -2134,32 +2185,32 @@
   <data name="lblYear.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 13</value>
   </data>
-  <data name="sldMainVolume.Text" xml:space="preserve">
-    <value>colorSlider1</value>
+  <data name="btnTranspoPlus.Location" type="System.Drawing.Point, System.Drawing">
+    <value>359, 30</value>
   </data>
   <data name="&gt;&gt;btnTempoPlus.Name" xml:space="preserve">
     <value>btnTempoPlus</value>
   </data>
-  <data name="&gt;&gt;VuPeakVolumeLeft.Type" xml:space="preserve">
-    <value>VU_MeterLibrary.VuMeter, VU_MeterLibrary, Version=1.0.0.1, Culture=neutral, PublicKeyToken=null</value>
+  <data name="btnOffsetPlus.Text" xml:space="preserve">
+    <value>+</value>
   </data>
   <data name="btnPlay.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
-  <data name="positionHScrollBar.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 6pt</value>
+  <data name="&gt;&gt;cbLanguage.Name" xml:space="preserve">
+    <value>cbLanguage</value>
   </data>
   <data name="pnlMiddle.Size" type="System.Drawing.Size, System.Drawing">
     <value>1329, 392</value>
   </data>
-  <data name="txtArtist.Size" type="System.Drawing.Size, System.Drawing">
-    <value>160, 20</value>
+  <data name="lblHotkeys.Size" type="System.Drawing.Size, System.Drawing">
+    <value>280, 70</value>
   </data>
   <data name="btnStop.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="mnuHelp.Text" xml:space="preserve">
-    <value>&amp;Help</value>
+  <data name="mnuEditSep1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>209, 6</value>
   </data>
   <data name="lblPlaylist.TabIndex" type="System.Int32, mscorlib">
     <value>29</value>
@@ -2170,8 +2221,8 @@
   <data name="&gt;&gt;toolstrip1.Parent" xml:space="preserve">
     <value>pnlTop</value>
   </data>
-  <data name="txtTitle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>160, 20</value>
+  <data name="lblTimes.Size" type="System.Drawing.Size, System.Drawing">
+    <value>13, 13</value>
   </data>
   <data name="&gt;&gt;btnInsertParagraph.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -2179,8 +2230,8 @@
   <data name="btnOffsetMinus.Location" type="System.Drawing.Point, System.Drawing">
     <value>281, 57</value>
   </data>
-  <data name="pBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>413, 25</value>
+  <data name="&gt;&gt;splitContainer1.Panel1.Parent" xml:space="preserve">
+    <value>splitContainer1</value>
   </data>
   <data name="&gt;&gt;splitContainer1.Panel2.Parent" xml:space="preserve">
     <value>splitContainer1</value>
@@ -2194,8 +2245,8 @@
   <data name="&gt;&gt;pBox.Type" xml:space="preserve">
     <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;positionHScrollBar.ZOrder" xml:space="preserve">
-    <value>16</value>
+  <data name="btnSave.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
   </data>
   <data name="&gt;&gt;lblTi.Name" xml:space="preserve">
     <value>lblTi</value>
@@ -2203,17 +2254,14 @@
   <data name="lblMainVolume.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="sldMainVolume.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
+  <data name="lblMode.Text" xml:space="preserve">
+    <value>Edit mode: Load an LRC file to be modified or lyrics to be synchronised</value>
   </data>
   <data name="&gt;&gt;lblLa.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;lblTranspoValue.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lblTemp.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
   </data>
   <data name="mnuExport.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
     <value>Magenta</value>
@@ -2233,8 +2281,8 @@
   <data name="lblLa.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
   </data>
-  <data name="&gt;&gt;btnTempoMinus.Name" xml:space="preserve">
-    <value>btnTempoMinus</value>
+  <data name="toolstrip1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>None</value>
   </data>
   <data name="&gt;&gt;lblTransp.ZOrder" xml:space="preserve">
     <value>9</value>
@@ -2242,11 +2290,11 @@
   <data name="&gt;&gt;btnDelete.Name" xml:space="preserve">
     <value>btnDelete</value>
   </data>
-  <data name="&gt;&gt;pBox.Name" xml:space="preserve">
-    <value>pBox</value>
+  <data name="lblHotkeysOthers.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;cbLanguage.Name" xml:space="preserve">
-    <value>cbLanguage</value>
+  <data name="&gt;&gt;lblTi.Parent" xml:space="preserve">
+    <value>pnlEdit</value>
   </data>
   <data name="dgView.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -2257,17 +2305,11 @@
   <data name="btnMsPlus.TabIndex" type="System.Int32, mscorlib">
     <value>34</value>
   </data>
-  <data name="toolstrip1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="btnMsPlus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>144, 57</value>
-  </data>
   <data name="lblLyrics.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="&gt;&gt;btnNext.ZOrder" xml:space="preserve">
-    <value>15</value>
+  <data name="lblTi.Text" xml:space="preserve">
+    <value>Title</value>
   </data>
   <data name="lblHotkeys.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
@@ -2275,8 +2317,11 @@
   <data name="btnTranspoPlus.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="&gt;&gt;sldMainVolume.Name" xml:space="preserve">
-    <value>sldMainVolume</value>
+  <data name="&gt;&gt;VuPeakVolumeLeft.Name" xml:space="preserve">
+    <value>VuPeakVolumeLeft</value>
+  </data>
+  <data name="&gt;&gt;mnuImportLrcFile.Name" xml:space="preserve">
+    <value>mnuImportLrcFile</value>
   </data>
   <data name="&gt;&gt;txtEditing.Parent" xml:space="preserve">
     <value>pnlTop</value>
@@ -2284,17 +2329,17 @@
   <data name="btnNext.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
-  <data name="&gt;&gt;pnlDisplay.Type" xml:space="preserve">
-    <value>Karaboss.Display.PanelPlayer, Karaboss, Version=1.0.10.22, Culture=neutral, PublicKeyToken=null</value>
-  </data>
   <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
   <data name="&gt;&gt;lblAl.ZOrder" xml:space="preserve">
     <value>18</value>
   </data>
-  <data name="&gt;&gt;cbLanguage.ZOrder" xml:space="preserve">
-    <value>11</value>
+  <data name="mnuEditDeleteCurrentLine.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="btnInsertCr.Text" xml:space="preserve">
+    <value>Insert a Line Break (/)</value>
   </data>
   <data name="lblTransp.ToolTip" xml:space="preserve">
     <value />
@@ -2302,14 +2347,14 @@
   <data name="&gt;&gt;btnInsertParagraph.Parent" xml:space="preserve">
     <value>pnlEdit</value>
   </data>
-  <data name="btnDelete.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+  <data name="btnOffsetMinus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>24, 23</value>
   </data>
   <data name="btnTranspoPlus.TabIndex" type="System.Int32, mscorlib">
     <value>55</value>
   </data>
-  <data name="txtResult.ToolTip" xml:space="preserve">
-    <value />
+  <data name="&gt;&gt;mnuExportAsLrc.Name" xml:space="preserve">
+    <value>mnuExportAsLrc</value>
   </data>
   <data name="lblLyrics.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -2317,15 +2362,12 @@
   <data name="pnlMiddle.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 150</value>
   </data>
-  <data name="btnOffsetPlus.Size" type="System.Drawing.Size, System.Drawing">
-    <value>24, 23</value>
+  <data name="&gt;&gt;splitContainer1.Panel2.Name" xml:space="preserve">
+    <value>splitContainer1.Panel2</value>
   </data>
   <data name="VuPeakVolumeLeft.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
   </data>
-  <metadata name="Timer3.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>332, 25</value>
-  </metadata>
   <metadata name="Timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>237, 24</value>
   </metadata>
@@ -2346,6 +2388,9 @@
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>83</value>
+  </metadata>
+  <metadata name="Timer3.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>332, 25</value>
   </metadata>
   <metadata name="toolstrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>688, 17</value>
