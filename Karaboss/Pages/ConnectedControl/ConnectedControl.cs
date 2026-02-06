@@ -570,11 +570,76 @@ namespace Karaboss.Pages
 
 
         #region lyrics
-      
+
         /// <summary>
         /// Search Lyrics
+        /// Try first AZlyrics, then SongLyrics. If no results, display message to user
         /// </summary>
         private void SearchLyrics()
+        {
+            // TODO: add a third provider (lyrics.wikia) but it is not working anymore (https://lyrics.fandom.com/wiki/Help:Lyrics_submission_guidelines)
+            // Lyrics.ovh
+            // MusicMatch
+
+
+            string artist = lblArtistNomDeTri.Text;
+            int idx = artist.IndexOf(',');
+            if (idx >= 0)
+                artist = artist.Substring(idx + 1, artist.Length - idx - 1).Trim() + " " + artist.Substring(0, idx).Trim();
+
+            string title = lvTracks.SelectedItems[0].SubItems[1].Text;
+
+            Cursor = Cursors.WaitCursor;
+
+            string provider = string.Empty;
+
+
+            // First try AZlyrics
+            var azLyrics = new AzLyrics.Api.AzLyrics(artist, title);
+            var lyrics = azLyrics.GetLyrics();
+            if (lyrics.Length > 10 && azLyrics.Error == 0)
+            {
+                //Console.Write(lyrics);
+                provider = "LYRICS FROM AZlyrics.com";
+
+                lyrics = lyrics.Replace("\r\n", "[]");
+                lyrics = lyrics.Replace("\n", "][");
+                lyrics = lyrics.Replace("[]", "\r\n");
+                lyrics = lyrics.Replace("][", "\r\n");
+                lyrics = provider + "\r\n\r\n\r\n" + lyrics;
+                txtLyrics.Text = lyrics;
+            }
+            else
+            {
+                // Second try SongLyrics
+                var songLyrics = new SongLyrics.Api.SongLyrics(artist, title);
+                lyrics = songLyrics.GetLyrics();
+                if (lyrics.Length > 10 && songLyrics.Error == 0)
+                {
+                    provider = "LYRICS FROM www.songlyrics.com";
+                    lyrics = lyrics.Replace("\r\n", "[]");
+                    lyrics = lyrics.Replace("\n", "][");
+                    lyrics = lyrics.Replace("[]", "\r\n");
+                    lyrics = lyrics.Replace("][", "\r\n");
+                    lyrics = provider + "\r\n\r\n\r\n" + artist + "\r\n\r\n" + title + "\r\n\r\n" + lyrics;
+                    txtLyrics.Text = lyrics;
+                }
+                else
+                {
+                    string result = string.Empty;
+                    result += "No results for:" + Environment.NewLine + Environment.NewLine;
+                    result += "Artist: " + artist + Environment.NewLine + Environment.NewLine;
+                    result += "Title: " + title + Environment.NewLine + Environment.NewLine;
+                    result += "Please try to search for the song on the web and submit the lyrics to AZlyrics.com or www.songlyrics.com";
+                    txtLyrics.Text = result;
+                    
+                }
+            }
+        }
+
+
+        // Deprecated because LyricsWikia is not working anymore (https://lyrics.fandom.com/wiki/Help:Lyrics_submission_guidelines)
+        private void SearchLyrics2()
         {
             string artist = lblArtistNomDeTri.Text;
             int idx = artist.IndexOf(',');
@@ -621,6 +686,8 @@ namespace Karaboss.Pages
                     lyrics = provider + "\r\n\r\n\r\n" + artist + "\r\n\r\n" + title + "\r\n\r\n" + lyrics;
 
                     txtLyrics.Text = lyrics;
+                
+                
                 }              
                 else
                 {
