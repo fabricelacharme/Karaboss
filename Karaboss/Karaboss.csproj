@@ -901,6 +901,10 @@
       <Project>{7e6a19a2-655d-400e-9f3f-ccd7b80c278f}</Project>
       <Name>LyricsWikia.Api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OvhLyrics.Api\OvhLyrics.Api.csproj">
+      <Project>{cb97f2f8-ea00-4e73-8cb4-a5c21e8ab174}</Project>
+      <Name>OvhLyrics.Api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\picControl\PicControl.csproj">
       <Project>{5A59550C-4187-4E78-B9A4-2DF31D17BD64}</Project>
       <Name>PicControl</Name>

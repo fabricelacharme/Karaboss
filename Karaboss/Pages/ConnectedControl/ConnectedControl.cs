@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2018 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -592,7 +592,7 @@ namespace Karaboss.Pages
             Cursor = Cursors.WaitCursor;
 
             string provider = string.Empty;
-
+            txtLyrics.Text = "Trying with AZlyrics.com...";
 
             // First try AZlyrics
             var azLyrics = new AzLyrics.Api.AzLyrics(artist, title);
@@ -608,9 +608,14 @@ namespace Karaboss.Pages
                 lyrics = lyrics.Replace("][", "\r\n");
                 lyrics = provider + "\r\n\r\n\r\n" + lyrics;
                 txtLyrics.Text = lyrics;
+                // Set mouse cursor to default
+                Cursor = Cursors.Default;
             }
             else
             {
+                //txtLyrics.Text = "Failed to find lyrics for:\r\n\r\n" + "Artist: " + artist + "\r\n\r\nTitle: " + title + "\r\n\r\nTrying with AZlyrics.com...";
+                txtLyrics.Text += "\r\n\r\nTrying with www.songlyrics.com...";
+
                 // Second try SongLyrics
                 var songLyrics = new SongLyrics.Api.SongLyrics(artist, title);
                 lyrics = songLyrics.GetLyrics();
@@ -623,16 +628,39 @@ namespace Karaboss.Pages
                     lyrics = lyrics.Replace("][", "\r\n");
                     lyrics = provider + "\r\n\r\n\r\n" + artist + "\r\n\r\n" + title + "\r\n\r\n" + lyrics;
                     txtLyrics.Text = lyrics;
+                    
+                    // Set mouse cursor to default
+                    Cursor = Cursors.Default;
                 }
                 else
                 {
-                    string result = string.Empty;
-                    result += "No results for:" + Environment.NewLine + Environment.NewLine;
-                    result += "Artist: " + artist + Environment.NewLine + Environment.NewLine;
-                    result += "Title: " + title + Environment.NewLine + Environment.NewLine;
-                    result += "Please try to search for the song on the web and submit the lyrics to AZlyrics.com or www.songlyrics.com";
-                    txtLyrics.Text = result;
-                    
+                    //txtLyrics.Text = "Failed to find lyrics for:\r\n\r\n" + "Artist: " + artist + "\r\n\r\nTitle: " + title + "\r\n\r\nTrying with www.songlyrics.com...";
+                    txtLyrics.Text += "\r\n\r\nTrying with OvhLyrics...";
+
+                    // Third try Lyrics.ovh
+                    var lyricsOvh = new OvhLyrics.Api.OvhLyrics(artist, title);
+                    lyrics = lyricsOvh.GetLyrics(artist, title);
+                    if (lyrics.Length > 10 && lyricsOvh.Error == 0)
+                    {
+                        provider = "LYRICS FROM OvhLyrics.api";
+                        lyrics = lyrics.Replace("\r\n", Environment.NewLine);
+                        
+                        lyrics = provider + "\r\n\r\n\r\n" + artist + "\r\n\r\n" + title + "\r\n\r\n" + lyrics;
+                        txtLyrics.Text = lyrics;
+                        //Set mouse cursor to default
+                        Cursor = Cursors.Default;
+                    }
+                    else
+                    {
+                        string result = string.Empty;
+                        result += "No results for:" + Environment.NewLine + Environment.NewLine;
+                        result += "Artist: " + artist + Environment.NewLine + Environment.NewLine;
+                        result += "Title: " + title + Environment.NewLine + Environment.NewLine;
+                        result += "Please try to search for the song on the web and submit the lyrics to AZlyrics.com or www.songlyrics.com or OvhLyrics";
+                        txtLyrics.Text = result;
+                        // Set mouse cursor to default
+                        Cursor = Cursors.Default;
+                    }
                 }
             }
         }

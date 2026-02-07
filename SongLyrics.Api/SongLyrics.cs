@@ -14,9 +14,9 @@ namespace SongLyrics.Api
         // https://www.songlyrics.com/alain-bashung/gaby-oh-gaby-lyrics/
         private const string _url = "https://www.songlyrics.com/";
 
-        // LYRICS.WIKIA
-        // https://lyrics.wikia.com/wiki/Alain_Souchon:C%27Est_Comme_Vous_Voulez
-        // private const string _url = "https://lyrics.wikia.com/wiki/";
+        // OVHLYRICS
+        // https://https://api.lyrics.ovh/v1/Miossec/Brest
+        // private const string _url = "https://api.lyrics.ovh/v1/";
 
         private int _error;
         public int Error { get { return _error; } }
