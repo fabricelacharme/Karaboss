@@ -643,8 +643,9 @@ namespace Karaboss.Pages
                     if (lyrics.Length > 10 && lyricsOvh.Error == 0)
                     {
                         provider = "LYRICS FROM OvhLyrics.api";
-                        lyrics = lyrics.Replace("\r\n", Environment.NewLine);
-                        
+                        lyrics = lyrics.Replace("\\r\\n", Environment.NewLine);
+                        lyrics = lyrics.Replace("\\n", Environment.NewLine);
+
                         lyrics = provider + "\r\n\r\n\r\n" + artist + "\r\n\r\n" + title + "\r\n\r\n" + lyrics;
                         txtLyrics.Text = lyrics;
                         //Set mouse cursor to default
