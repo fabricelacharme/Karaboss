@@ -41,6 +41,7 @@ using System.Runtime.Remoting.Contexts;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Karaboss.MidiLyrics;
+using System.Globalization;
 
 namespace Karaboss.Utilities
 {
@@ -341,7 +342,7 @@ namespace Karaboss.Utilities
         
         public class LyricsItem
         {
-            public double Time { get; set; }         
+            public string Time { get; set; }         
             public string Lyric { get; set; }
         }
 
@@ -358,9 +359,9 @@ namespace Karaboss.Utilities
         /// <returns>A list of lyric lines, where each line is represented as a list of LyricsItem objects grouped according to
         /// detected line or paragraph separators. The returned list preserves the order of lines as determined by the
         /// separators in the input.</returns>
-        public static List<List<LyricsItem>> ExtractDgRows(List<(double, string)> lstDgRows)
+        public static List<List<LyricsItem>> ExtractDgRows(List<(string, string)> lstDgRows)
         {            
-            double time;
+            string sTime;
             string sLyric;
 
 
@@ -369,7 +370,7 @@ namespace Karaboss.Utilities
 
             for (int i = 0; i < lstDgRows.Count; i++)
             {
-                time = lstDgRows[i].Item1;
+                sTime = lstDgRows[i].Item1;
                 sLyric = lstDgRows[i].Item2;
 
                 if (sLyric == "") continue;
@@ -379,6 +380,9 @@ namespace Karaboss.Utilities
                 {
                     if (sLyric == m_SepLine) 
                     {
+                        // If the first thing of the lyrics is a separator, continue to next line, otherwise we will have an empty line at the beginning of the lyrics
+                        if (lstLyricsItems.Count == 0 && lstLyricsItemsLine.Count == 0) continue;
+
                         // sLyric is a pure line separator                        
                         // It means that the next syllabe will be on a new line for lstLyricsItems and not on the same line as previous syllabes
                         // Add previous line to list of lyrics items
@@ -388,13 +392,17 @@ namespace Karaboss.Utilities
                     }
                     else if (sLyric == m_SepParagraph)
                     {
+                        // If the first thing of the lyrics is a separator, continue to next line, otherwise we will have an empty line at the beginning of the lyrics
+                        if (lstLyricsItems.Count == 0  && lstLyricsItemsLine.Count == 0 ) continue;
+
+
                         // sLyric is a pure paragraph separator
                         // Same as for line separator but with a new paragraph instead of a new line
                         // So we have to add an empty line for the new line and then add the new paragraph line
                         lstLyricsItems.Add(lstLyricsItemsLine);
                         lstLyricsItemsLine = new List<LyricsItem>();
                         
-                        lstLyricsItemsLine.Add(new LyricsItem { Time = time, Lyric = " " });
+                        lstLyricsItemsLine.Add(new LyricsItem { Time = sTime, Lyric = " " });
                         lstLyricsItems.Add(lstLyricsItemsLine);
                         lstLyricsItemsLine = new List<LyricsItem>();
 
@@ -409,7 +417,7 @@ namespace Karaboss.Utilities
                         string[] parts = sLyric.Split(new char[] { m_SepLine[0], m_SepParagraph[0] }, StringSplitOptions.RemoveEmptyEntries);
                         for (int j = 0; j < parts.Length; j++)
                         {
-                            lstLyricsItemsLine.Add(new LyricsItem { Time = time, Lyric = parts[j] });
+                            lstLyricsItemsLine.Add(new LyricsItem { Time = sTime, Lyric = parts[j] });
                         }
 
                     }
@@ -417,7 +425,7 @@ namespace Karaboss.Utilities
                 else
                 {
                     // sLyric does not contain any line or paragraph separator, add it to the list of lyrics items with its timestamp
-                    lstLyricsItemsLine.Add(new LyricsItem { Time = time, Lyric = sLyric });
+                    lstLyricsItemsLine.Add(new LyricsItem { Time = sTime, Lyric = sLyric });
                 }
             }
 
@@ -1422,7 +1430,7 @@ namespace Karaboss.Utilities
         #region KOK
 
 
-        public static string SaveLyricsToKokFormat(string fullPath, List<List<LyricsItem>> lstLines)
+        public static string SaveLyricsToKokFormat(List<List<LyricsItem>> lstLines)
         {
             /*
             * KOK format example:
@@ -1456,15 +1464,23 @@ namespace Karaboss.Utilities
 
                     if (sLyric == " ")
                     {
+                        // This is a paragraph
                         sLine += " ";
                     }
                     else
                     {
+                        // this is a normal line
                         sLyric = sLyric.Replace("_", " "); // Replace underscore by space in lyrics
-                        time = lyricsItems[j].Time;
+                        sTime = lyricsItems[j].Time;
 
-                        // Convert time to time kok format
-                        sTime = time.ToString();
+                        // Time is in format mm:ss:ms, convert to seconds with milliseconds in decimal
+                        time = TimeSpan.ParseExact(sTime, @"mm\:ss\.fff", CultureInfo.InvariantCulture).TotalSeconds;
+                        
+                        // Convert to string with 3 digits for milliseconds
+                        sTime = time.ToString("0.000", CultureInfo.InvariantCulture);
+
+                        // As in KarPbo software, Time must have a comma as decimal separator, replace dot by comma
+                        sTime = sTime.Replace(".", ",");
 
 
                         // Build line in kok format

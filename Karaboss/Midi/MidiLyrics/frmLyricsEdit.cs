@@ -2118,20 +2118,22 @@ namespace Karaboss
             if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
+            fullPath = saveMidiFileDialog.FileName;
+
             #endregion select filename
 
 
             // For each line of lyric, read all the syllabes and their timestamps
             // and store the result in a list
-            List<(double, string)> lstDgRows = LRCReadDgViewData();            
+            List<(string, string)> lstDgRows = KokReadDgViewData();            
             List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = Utilities.LyricsUtilities.ExtractDgRows(lstDgRows);
                        
-            string lines = Utilities.LyricsUtilities.SaveLyricsToKokFormat(fullPath, lstLines);
+            string lines = Utilities.LyricsUtilities.SaveLyricsToKokFormat(lstLines);
 
             try
             {
-                System.IO.File.WriteAllText(fullName, lines);
-                System.Diagnostics.Process.Start(@fullName);
+                System.IO.File.WriteAllText(fullPath, lines);
+                System.Diagnostics.Process.Start(@fullPath);
 
             }
             catch (Exception ex)
@@ -2141,6 +2143,35 @@ namespace Karaboss
 
         }
 
+
+        private List<(string, string)> KokReadDgViewData()
+        {
+            string sTime;            
+            string sLyric;
+
+            object vLyric;
+            object vTime;
+
+            // Store rows of dgView in a list
+            // the aim is to have the same procedure between midi Lyrics edition and mp3 Lyrics edition            
+
+            List<(string, string)> lstDgRows = new List<(string, string)>();
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
+                if (vTime != null && vLyric != null)
+                {
+                    sTime = vTime.ToString();
+                    // Convert times to milliseconds (to have the same entry format with mp3 Lyrics edition)
+                    //time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
+                    sLyric = vLyric.ToString();
+
+                    lstDgRows.Add((sTime, sLyric));
+                }
+            }
+            return lstDgRows;
+        }
 
         #endregion export kok
 
@@ -2261,6 +2292,8 @@ namespace Karaboss
            if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
                return;
 
+            fullPath = saveMidiFileDialog.FileName;
+
             #endregion select filename
 
             string Tag_Tool = "Karaboss https://karaboss.lacharme.net";
@@ -2271,8 +2304,7 @@ namespace Karaboss
            string Tag_Lang = string.Empty;
            string Tag_By = string.Empty;
            string Tag_DPlus = string.Empty;
-
-           fullPath = saveMidiFileDialog.FileName;
+           
 
            // Search Title & Artist
            // Classic Karaoke Midi tags
