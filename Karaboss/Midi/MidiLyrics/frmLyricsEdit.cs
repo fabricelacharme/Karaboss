@@ -45,7 +45,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using static System.Windows.Forms.LinkLabel;
 
 
 namespace Karaboss
@@ -2188,27 +2187,27 @@ namespace Karaboss
        #endregion kok import export
 
 
-       #region Lrc import export
+        #region Lrc import export
 
-       #region export lrc
+        #region export lrc
 
-       /// <summary>
-       /// Menu: Export lyrics to format LRC
-       /// </summary>
-       /// <param name="sender"></param>
-       /// <param name="e"></param>
-       private void mnuFileExportLyricsLrc_Click(object sender, EventArgs e)
-       {
-           GetLrcSaveOptions();
-       }
+        /// <summary>
+        /// Menu: Export lyrics to format LRC
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuFileExportLyricsLrc_Click(object sender, EventArgs e)
+        {
+            GetLrcSaveOptions();
+        }
 
 
 
-       /// <summary>
-       /// Get save lrc options
-       /// </summary>
-       /// <param name="LrcExportFormat"></param>
-       private void GetLrcSaveOptions()
+        /// <summary>
+        /// Get save lrc options
+        /// </summary>
+        /// <param name="LrcExportFormat"></param>
+        private void GetLrcSaveOptions()
        {
            DialogResult dr;
            frmLrcOptions LrcOptionsDialog = new frmLrcOptions();
@@ -2238,7 +2237,7 @@ namespace Karaboss
            SaveLrcFileName(LrcLinesSyllabesFormat, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bCutLines, LrcCutLinesChars);
        }
 
-       /// <summary>
+        /// <summary>
        /// Select file to save and format tags
        /// </summary>
        /// <param name="LrcExportFormat"></param>
@@ -2249,7 +2248,7 @@ namespace Karaboss
        /// <param name="bRemoveNonAlphaNumeric"></param>
        /// <param name="bCutLines"></param>
        /// <param name="LrcCutLinesChars"></param>
-       private void SaveLrcFileName(LrcLinesSyllabesFormats LrcLinesSyllabesFormat, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bCutLines, int LrcCutLinesChars)
+        private void SaveLrcFileName(LrcLinesSyllabesFormats LrcLinesSyllabesFormat, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bCutLines, int LrcCutLinesChars)
        {
            #region select filename
 
