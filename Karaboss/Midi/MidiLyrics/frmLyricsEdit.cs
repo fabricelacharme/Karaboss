@@ -2043,7 +2043,6 @@ namespace Karaboss
         #endregion Lyrics
 
 
-
         #region import export lyrics
            
 
@@ -2177,10 +2176,96 @@ namespace Karaboss
 
         #region import kok
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuEditImportLyricsKok_Click(object sender, EventArgs e)
-       {
+        {
+            string[] lines;
+            string line;
+            openFileDialog.Title = "Open a .kok file";
+            openFileDialog.DefaultExt = "kok";
+            openFileDialog.Filter = "kok files|*.kok|All files|*.*";
 
-       }
+            // Get initial directory from midi file
+            if (MIDIfileName != null || MIDIfileName != "")
+                openFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
+
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            string fullPath = openFileDialog.FileName;
+
+            
+
+            try
+            {
+                lines = File.ReadAllLines(fullPath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("The file could not be read:" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            
+            
+            if (lines.Count() == 0)
+            {
+                MessageBox.Show("The file is empty", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Here is a sample of a kok file
+            /*
+             * Mar;18,175;go;18,435;ton,;18,705; la;18,890; jeu;19,035;ne;19,155; ber;19,310;ge;19,435;re,;19,625;
+             * Trou;19,950;vant;20,240; dans;20,390; l'her;20,600;be;20,825; un;21,060; pe;21,215;tit;21,360; chat;21,535;
+            * Qui;22,265; ve;22,390;nait;22,540; de;22,720; per;22,875;dre;23,040; sa;23,220; me;23,340;re,;23,505;
+            */
+
+            // Extract pairs lyric, time in each lines in a list
+            List<List<(string, string)>> lstAll = new List<List<(string, string)>>();
+            List<(string, string)> lstLine = new List<(string, string)>();
+            
+            for (int i = 0; i < lines.Count(); i++)
+            {
+                line = lines[i];
+                string[] linesItems = line.Split(';');
+
+                string lyric = string.Empty;
+                string time = string.Empty;
+
+                lstLine = new List<(string, string)>();
+
+                for (int j = 0; j < linesItems.Count(); j++)
+                {                    
+
+                    if (j % 2 == 0)
+                        lyric = linesItems[j];
+                    else
+                    {
+                        time = linesItems[j];                                                
+                        lstLine.Add( (lyric, time));
+                        lyric = string.Empty;
+                        time = string.Empty;
+
+                    }
+                }
+                lstAll.Add(lstLine);
+            }
+
+            if (lstAll.Count() == 0)
+            {
+                MessageBox.Show("Invalid file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Populate grid
+
+
+
+        }
 
        #endregion import kok
 
@@ -3421,6 +3506,7 @@ namespace Karaboss
 
 
         #endregion import export lyrics
+
 
         #region menus
 
