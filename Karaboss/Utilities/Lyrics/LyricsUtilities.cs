@@ -338,6 +338,100 @@ namespace Karaboss.Utilities
         }
 
 
+        
+        public class LyricsItem
+        {
+            public double Time { get; set; }         
+            public string Lyric { get; set; }
+        }
+
+
+        /// <summary>
+        /// Parses a list of timestamped lyric segments and organizes them into lines based on line and paragraph
+        /// separators.
+        /// </summary>
+        /// <remarks>Line and paragraph separators within the lyric segments determine how the input is
+        /// split into lines. Empty lyric segments are ignored. If a segment consists solely of a separator, it starts a
+        /// new line or paragraph in the output.</remarks>
+        /// <param name="lstDgRows">A list of tuples where each tuple contains a timestamp and a lyric segment. The lyric segment may include
+        /// line or paragraph separators to indicate line breaks.</param>
+        /// <returns>A list of lyric lines, where each line is represented as a list of LyricsItem objects grouped according to
+        /// detected line or paragraph separators. The returned list preserves the order of lines as determined by the
+        /// separators in the input.</returns>
+        public static List<List<LyricsItem>> ExtractDgRows(List<(double, string)> lstDgRows)
+        {            
+            double time;
+            string sLyric;
+
+
+            List<List<LyricsItem>> lstLyricsItems = new List<List<LyricsItem>>();
+            List<LyricsItem> lstLyricsItemsLine = new List<LyricsItem>();
+
+            for (int i = 0; i < lstDgRows.Count; i++)
+            {
+                time = lstDgRows[i].Item1;
+                sLyric = lstDgRows[i].Item2;
+
+                if (sLyric == "") continue;
+
+                // Check if sLyric contains a line or paragraph separator
+                if (sLyric.Contains(m_SepLine) || sLyric.Contains(m_SepParagraph))
+                {
+                    if (sLyric == m_SepLine) 
+                    {
+                        // sLyric is a pure line separator                        
+                        // It means that the next syllabe will be on a new line for lstLyricsItems and not on the same line as previous syllabes
+                        // Add previous line to list of lyrics items
+                        lstLyricsItems.Add(lstLyricsItemsLine);
+                        // Start a new line
+                        lstLyricsItemsLine = new List<LyricsItem>();
+                    }
+                    else if (sLyric == m_SepParagraph)
+                    {
+                        // sLyric is a pure paragraph separator
+                        // Same as for line separator but with a new paragraph instead of a new line
+                        // So we have to add an empty line for the new line and then add the new paragraph line
+                        lstLyricsItems.Add(lstLyricsItemsLine);
+                        lstLyricsItemsLine = new List<LyricsItem>();
+                        
+                        lstLyricsItemsLine.Add(new LyricsItem { Time = time, Lyric = " " });
+                        lstLyricsItems.Add(lstLyricsItemsLine);
+                        lstLyricsItemsLine = new List<LyricsItem>();
+
+                    }
+                    else 
+                    {
+                        // sLyric contains a line or paragraph separator, split it and add each part to the list of lyrics items with its timestamp
+                        // Manage only lines starting with a separator
+                        // Ex: "/ENCORE_UN_SOIR" => this is a new line for lstLyricsItems
+                        lstLyricsItems.Add(lstLyricsItemsLine);
+                        lstLyricsItemsLine = new List<LyricsItem>();
+                        string[] parts = sLyric.Split(new char[] { m_SepLine[0], m_SepParagraph[0] }, StringSplitOptions.RemoveEmptyEntries);
+                        for (int j = 0; j < parts.Length; j++)
+                        {
+                            lstLyricsItemsLine.Add(new LyricsItem { Time = time, Lyric = parts[j] });
+                        }
+
+                    }
+                }
+                else
+                {
+                    // sLyric does not contain any line or paragraph separator, add it to the list of lyrics items with its timestamp
+                    lstLyricsItemsLine.Add(new LyricsItem { Time = time, Lyric = sLyric });
+                }
+            }
+
+            // Add last line if not empty
+            if (lstLyricsItemsLine.Count > 0)
+            {
+                lstLyricsItems.Add(lstLyricsItemsLine);
+            }
+
+            return lstLyricsItems;
+    
+        }
+
+
         #region LRC
 
         public static List<string> LrcExtractDgRows(List<(double, string)> lstDgRows, int _LrcMillisecondsDigits, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, MidiLyricsMgmt _myLyricsMgmt = null)
@@ -358,7 +452,7 @@ namespace Karaboss.Utilities
             {
                 bMerge = false;
                 
-                // Mifi format for timestamp is milliseconds
+                // Midi format for timestamp is milliseconds
                 // Convert from "00:01.123" to "00.01.12" if necessary
                 time = lstDgRows[i].Item1;
                 sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);                
@@ -1151,7 +1245,7 @@ namespace Karaboss.Utilities
 
 
         /// <summary>
-        /// Extraxt artist and song frem file name
+        /// Extraxt artist and song from file name
         /// </summary>
         /// <param name="fPath"></param>
         /// <returns></returns>
@@ -1324,6 +1418,74 @@ namespace Karaboss.Utilities
 
         #endregion LRC
 
+
+        #region KOK
+
+
+        public static string SaveLyricsToKokFormat(string fullPath, List<List<LyricsItem>> lstLines)
+        {
+            /*
+            * KOK format example:
+            * You;26.294; can;26.892; dance;27.191;
+            * You;28.685; can;29.282; jive;29.581;
+            * Ha;31.075;ving;31.523; the;31.972; time;32.27; of;32.719; your;33.167; life;33.466;
+            * Ooh,;34.661; see;35.856; that;36.304; girl,;36.752; watch;38.246; that;38.695; scene.;39.143;
+            *
+            * Dig;40.039; in;40.189; the;40.487; dan;40.637;cing;41.085; queen;41.533;
+            * Fri;50.198;day;50.497; night;50.647; and;50.945; the;51.244; lights;51.394; are;51.692; low;51.991;
+            * Loo;54.979;king;55.278; out;55.427; for;55.726; a;56.025; place;56.174; to;56.473; go;56.772;
+            * Oh,;59.013; where;59.76; they;60.059; play;60.208; the;60.507; right;60.656; mu;60.955;sic;61.254;
+            * Get;62.15;ting;62.449; in;62.599; the;62.897; swing;63.047;
+           */
+
+            string sLyric;
+            string sLine;
+            double time;
+            string sTime;
+            string result = string.Empty;
+
+            List<LyricsItem> lyricsItems;
+
+            for (int i = 0; i < lstLines.Count; i++)
+            {
+                lyricsItems = lstLines[i];
+                sLine = string.Empty;
+                for (int j = 0; j < lyricsItems.Count; j++)
+                {
+                    sLyric = lyricsItems[j].Lyric;
+
+                    if (sLyric == " ")
+                    {
+                        sLine += " ";
+                    }
+                    else
+                    {
+                        sLyric = sLyric.Replace("_", " "); // Replace underscore by space in lyrics
+                        time = lyricsItems[j].Time;
+
+                        // Convert time to time kok format
+                        sTime = time.ToString();
+
+
+                        // Build line in kok format
+                        sLine += sLyric + ";" + sTime + ";";
+                    }
+                }
+
+                // Add new line to result
+                if (result == "")
+                    result = sLine;
+                else
+                    result += Environment.NewLine + sLine;
+            }
+
+
+            return result;
+
+        }
+
+
+        #endregion KOK
 
     }
 

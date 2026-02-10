@@ -32,19 +32,20 @@
 
 #endregion
 
+using Karaboss.Lrc.SharedFramework;
+using Karaboss.MidiLyrics;
+using Karaboss.Mp3.Mp3Lyrics;
+using Karaboss.Resources.Localization;
+using Karaboss.Utilities;
+using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using Sanford.Multimedia.Midi;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
-using Karaboss.Resources.Localization;
-using Karaboss.Lrc.SharedFramework;
-using Karaboss.MidiLyrics;
-using Karaboss.Utilities;
-using Karaboss.Mp3.Mp3Lyrics;
+using System.Windows.Forms;
+using static System.Windows.Forms.LinkLabel;
 
 
 namespace Karaboss
@@ -2043,70 +2044,42 @@ namespace Karaboss
         #endregion Lyrics
 
 
-        #region Lrc import export
 
-        #region Save lrc
+        #region import export lyrics
+           
+
+        #region kok import export
+
+        #region export kok
 
         /// <summary>
-        /// Menu: Export lyrics to format LRC
+        /// Menu: Export lyrics to format KOK
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void mnuFileSaveAsLrc_Click(object sender, EventArgs e)
+        private void MnuFileExportLyricsKok_Click(object sender, EventArgs e)
         {
-            GetLrcSaveOptions();            
+            /*
+             * KOK format example:
+             * You;26.294; can;26.892; dance;27.191;
+             * You;28.685; can;29.282; jive;29.581;
+             * Ha;31.075;ving;31.523; the;31.972; time;32.27; of;32.719; your;33.167; life;33.466;
+             * Ooh,;34.661; see;35.856; that;36.304; girl,;36.752; watch;38.246; that;38.695; scene.;39.143;
+             * Dig;40.039; in;40.189; the;40.487; dan;40.637;cing;41.085; queen;41.533;
+             * Fri;50.198;day;50.497; night;50.647; and;50.945; the;51.244; lights;51.394; are;51.692; low;51.991;
+             * Loo;54.979;king;55.278; out;55.427; for;55.726; a;56.025; place;56.174; to;56.473; go;56.772;
+             * Oh,;59.013; where;59.76; they;60.059; play;60.208; the;60.507; right;60.656; mu;60.955;sic;61.254;
+             * Get;62.15;ting;62.449; in;62.599; the;62.897; swing;63.047;
+            */
+
+            ExportLyricsToKokFormat();
         }
 
-        /// <summary>
-        /// Get save lrc options
-        /// </summary>
-        /// <param name="LrcExportFormat"></param>
-        private void GetLrcSaveOptions()
-        {
-            DialogResult dr;
-            frmLrcOptions LrcOptionsDialog = new frmLrcOptions();
-            dr = LrcOptionsDialog.ShowDialog();
-
-            if (dr == System.Windows.Forms.DialogResult.Cancel)
-                return;
-
-            // Remove accents
-            bool bRemoveAccents = LrcOptionsDialog.bRemoveAccents;
-            // Force Upper Case
-            bool bUpperCase = LrcOptionsDialog.bUpperCase;
-            // Force Lower Case
-            bool bLowerCase = LrcOptionsDialog.bLowerCase;
-            // Remove all non-alphanumeric characters
-            bool bRemoveNonAlphaNumeric = LrcOptionsDialog.bRemoveNonAlphaNumeric;
-            // Save to line or to syllabes
-            LrcLinesSyllabesFormats LrcLinesSyllabesFormat = LrcOptionsDialog.LrcLinesSyllabesFormat;
-
-            _LrcMillisecondsDigits = LrcOptionsDialog.LrcMillisecondsDigits;
-
-            // Cut lines over x characters
-            bool bCutLines = LrcOptionsDialog.bCutLines;
-            int LrcCutLinesChars = LrcOptionsDialog.LrcCutLinesChars;
-
-
-            SaveLrcFileName(LrcLinesSyllabesFormat, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bCutLines, LrcCutLinesChars);
-        }
-
-        /// <summary>
-        /// Select file to save and format tags
-        /// </summary>
-        /// <param name="LrcExportFormat"></param>
-        /// <param name="LrcLinesSyllabesFormat"></param>
-        /// <param name="bRemoveAccents"></param>
-        /// <param name="bUpperCase"></param>
-        /// <param name="bLowerCase"></param>
-        /// <param name="bRemoveNonAlphaNumeric"></param>
-        /// <param name="bCutLines"></param>
-        /// <param name="LrcCutLinesChars"></param>
-        private void SaveLrcFileName(LrcLinesSyllabesFormats LrcLinesSyllabesFormat, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bCutLines, int LrcCutLinesChars)
+        private void ExportLyricsToKokFormat()
         {
             #region select filename
 
-            string defExt = ".lrc";
+            string defExt = ".kok";
             string fName = "New" + defExt;
             string fPath = Path.GetDirectoryName(MIDIfileName);
 
@@ -2127,16 +2100,16 @@ namespace Karaboss
                 fName = Path.GetFileName(MIDIfileName);
             }
 
-            // Extension forced to lrc            
+            // Extension forced to kok            
             string fullPath = fPath + "\\" + Path.GetFileNameWithoutExtension(fName) + defExt;
             fullName = Utilities.Files.FindUniqueFileName(fullPath);                            // Add (2), (3) etc.. if necessary    
             defName = Path.GetFileNameWithoutExtension(fullName);                               // Default name to propose to dialog
 
             #endregion search name                   
 
-            string defFilter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
+            string defFilter = "KOK files (*.kok)|*.kok|All files (*.*)|*.*";
 
-            saveMidiFileDialog.Title = "Save to LRC format";
+            saveMidiFileDialog.Title = "Save to KOK format";
             saveMidiFileDialog.Filter = defFilter;
             saveMidiFileDialog.DefaultExt = defExt;
             saveMidiFileDialog.InitialDirectory = @fPath;
@@ -2145,29 +2118,172 @@ namespace Karaboss
             if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
-            #endregion
+            #endregion select filename
+
+
+            // For each line of lyric, read all the syllabes and their timestamps
+            // and store the result in a list
+            List<(double, string)> lstDgRows = LRCReadDgViewData();            
+            List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = Utilities.LyricsUtilities.ExtractDgRows(lstDgRows);
+                       
+            string lines = Utilities.LyricsUtilities.SaveLyricsToKokFormat(fullPath, lstLines);
+
+            try
+            {
+                System.IO.File.WriteAllText(fullName, lines);
+                System.Diagnostics.Process.Start(@fullName);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
+
+        #endregion export kok
+
+
+        #region import kok
+
+        private void mnuEditImportLyricsKok_Click(object sender, EventArgs e)
+       {
+
+       }
+
+       #endregion import kok
+
+       #endregion kok import export
+
+
+       #region Lrc import export
+
+       #region export lrc
+
+       /// <summary>
+       /// Menu: Export lyrics to format LRC
+       /// </summary>
+       /// <param name="sender"></param>
+       /// <param name="e"></param>
+       private void mnuFileExportLyricsLrc_Click(object sender, EventArgs e)
+       {
+           GetLrcSaveOptions();
+       }
+
+
+
+       /// <summary>
+       /// Get save lrc options
+       /// </summary>
+       /// <param name="LrcExportFormat"></param>
+       private void GetLrcSaveOptions()
+       {
+           DialogResult dr;
+           frmLrcOptions LrcOptionsDialog = new frmLrcOptions();
+           dr = LrcOptionsDialog.ShowDialog();
+
+           if (dr == System.Windows.Forms.DialogResult.Cancel)
+               return;
+
+           // Remove accents
+           bool bRemoveAccents = LrcOptionsDialog.bRemoveAccents;
+           // Force Upper Case
+           bool bUpperCase = LrcOptionsDialog.bUpperCase;
+           // Force Lower Case
+           bool bLowerCase = LrcOptionsDialog.bLowerCase;
+           // Remove all non-alphanumeric characters
+           bool bRemoveNonAlphaNumeric = LrcOptionsDialog.bRemoveNonAlphaNumeric;
+           // Save to line or to syllabes
+           LrcLinesSyllabesFormats LrcLinesSyllabesFormat = LrcOptionsDialog.LrcLinesSyllabesFormat;
+
+           _LrcMillisecondsDigits = LrcOptionsDialog.LrcMillisecondsDigits;
+
+           // Cut lines over x characters
+           bool bCutLines = LrcOptionsDialog.bCutLines;
+           int LrcCutLinesChars = LrcOptionsDialog.LrcCutLinesChars;
+
+
+           SaveLrcFileName(LrcLinesSyllabesFormat, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bCutLines, LrcCutLinesChars);
+       }
+
+       /// <summary>
+       /// Select file to save and format tags
+       /// </summary>
+       /// <param name="LrcExportFormat"></param>
+       /// <param name="LrcLinesSyllabesFormat"></param>
+       /// <param name="bRemoveAccents"></param>
+       /// <param name="bUpperCase"></param>
+       /// <param name="bLowerCase"></param>
+       /// <param name="bRemoveNonAlphaNumeric"></param>
+       /// <param name="bCutLines"></param>
+       /// <param name="LrcCutLinesChars"></param>
+       private void SaveLrcFileName(LrcLinesSyllabesFormats LrcLinesSyllabesFormat, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bCutLines, int LrcCutLinesChars)
+       {
+           #region select filename
+
+           string defExt = ".lrc";
+           string fName = "New" + defExt;
+           string fPath = Path.GetDirectoryName(MIDIfileName);
+
+           string fullName;
+           string defName;
+
+           #region search name
+
+           if (fPath == null || fPath == "")
+           {
+               if (Directory.Exists(CreateNewMidiFile._DefaultDirectory))
+                   fPath = CreateNewMidiFile._DefaultDirectory;
+               else
+                   fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+           }
+           else
+           {
+               fName = Path.GetFileName(MIDIfileName);
+           }
+
+           // Extension forced to lrc            
+           string fullPath = fPath + "\\" + Path.GetFileNameWithoutExtension(fName) + defExt;
+           fullName = Utilities.Files.FindUniqueFileName(fullPath);                            // Add (2), (3) etc.. if necessary    
+           defName = Path.GetFileNameWithoutExtension(fullName);                               // Default name to propose to dialog
+
+           #endregion search name                   
+
+           string defFilter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
+
+           saveMidiFileDialog.Title = "Save to LRC format";
+           saveMidiFileDialog.Filter = defFilter;
+           saveMidiFileDialog.DefaultExt = defExt;
+           saveMidiFileDialog.InitialDirectory = @fPath;
+           saveMidiFileDialog.FileName = defName;
+
+           if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
+               return;
+
+            #endregion select filename
 
             string Tag_Tool = "Karaboss https://karaboss.lacharme.net";
 
-            string Tag_Title = string.Empty;
-            string Tag_Artist = string.Empty;
-            string Tag_Album = string.Empty;
-            string Tag_Lang = string.Empty;
-            string Tag_By = string.Empty;
-            string Tag_DPlus = string.Empty;
+           string Tag_Title = string.Empty;
+           string Tag_Artist = string.Empty;
+           string Tag_Album = string.Empty;
+           string Tag_Lang = string.Empty;
+           string Tag_By = string.Empty;
+           string Tag_DPlus = string.Empty;
 
-            fullPath = saveMidiFileDialog.FileName;
+           fullPath = saveMidiFileDialog.FileName;
 
-            // Search Title & Artist
-            // Classic Karaoke Midi tags
-            /*
-            @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
-            @L	(single) Language	FRAN, ENGL        
-            @W	(multiple) Copyright (of Karaoke file, not song)        
-            @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
-            @I	Information  ex Date(of Karaoke file, not song)
-            @V	(single) Version ex 0100 ?             
-            */
+           // Search Title & Artist
+           // Classic Karaoke Midi tags
+           /*
+           @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
+           @L	(single) Language	FRAN, ENGL        
+           @W	(multiple) Copyright (of Karaoke file, not song)        
+           @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
+           @I	Information  ex Date(of Karaoke file, not song)
+           @V	(single) Version ex 0100 ?             
+           */
             Tag_Title = (sequence1.TTag != null && sequence1.TTag.Count > 1) ? sequence1.TTag[0] : "";
             Tag_Artist = (sequence1.TTag != null && sequence1.TTag.Count > 1) ? sequence1.TTag[1] : "";
 
@@ -2572,19 +2688,19 @@ namespace Karaboss
                 MessageBox.Show(ex.Message);
             }
         }
-       
-
-        #endregion Save lrc
 
 
-        #region Load lrc
+        #endregion export lrc
+
+
+        #region import lrc
 
         /// <summary>
         /// Load a text file LRC format (times stamps + lyrics)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void mnuEditLoadLRCFile_Click(object sender, EventArgs e)
+        private void mnuEditImportLyricsLrc_Click(object sender, EventArgs e)
         {
             openFileDialog.Title = "Open a .lrc file";
             openFileDialog.DefaultExt = "lrc";
@@ -2614,6 +2730,8 @@ namespace Karaboss
             }
         }
 
+
+       
         /// <summary>
         /// Load a LRC file (times + lyrics)
         /// </summary>
@@ -2908,11 +3026,370 @@ namespace Karaboss
             Cursor.Current = Cursors.Default;
         }
 
-        #endregion Load lrc
+        #endregion import lrc
 
 
         #endregion
 
+
+        #region Text import export
+
+        #region export text
+
+        /// <summary>
+        /// Save text with all separators
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuFileExportLyricsTxt_Click(object sender, EventArgs e)
+        {
+            #region select filename
+            string defExt = ".txt";
+            string fName = "New" + defExt;
+            string fPath = Path.GetDirectoryName(MIDIfileName);
+
+            string fullName; // = string.Empty;
+            string defName; // = string.Empty;
+
+            #region search name
+            if (fPath == null || fPath == "")
+            {
+                if (Directory.Exists(CreateNewMidiFile._DefaultDirectory))
+                    fPath = CreateNewMidiFile._DefaultDirectory;
+                else
+                    fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            }
+            else
+            {
+                fName = Path.GetFileName(MIDIfileName);
+            }
+
+            // Extension forced to text                       
+            string fullPath = fPath + "\\" + fName;
+            fullName = Utilities.Files.FindUniqueFileName(fullPath);            // Add (2), (3) etc.. if necessary    
+            defName = Path.GetFileNameWithoutExtension(fullName);               // Default name to propose to dialog
+
+            #endregion search name                   
+
+            string defFilter = "TEXT files (*.txt)|*.txt|All files (*.*)|*.*";
+
+            saveMidiFileDialog.Title = "Save to TEXT format";
+            saveMidiFileDialog.Filter = defFilter;
+            saveMidiFileDialog.DefaultExt = defExt;
+            saveMidiFileDialog.InitialDirectory = @fPath;
+            saveMidiFileDialog.FileName = defName;
+
+            if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            #endregion
+
+            string FileName = saveMidiFileDialog.FileName;
+
+            SaveTextWithSep(FileName);
+        }
+
+
+        private void SaveTextWithSep(string File)
+        {
+            string sLyric;
+            string sLine = string.Empty;
+            string sType;
+            object vLyric;
+            object vTime;
+            object vType;
+            string lrcs = string.Empty;
+            string cr = "\r\n";
+
+            bool bStartLine = true;
+
+            // Save syllabe by syllabe
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
+                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+                vType = dgView.Rows[i].Cells[COL_TYPE].Value;
+
+                if (vTime != null && vLyric != null && vType != null)
+                {
+                    sLyric = vLyric.ToString().Trim();
+                    sType = vType.ToString().Trim();
+
+                    if (sLyric == "")
+                        sLyric = "_~~";
+
+                    if (sLyric != "" && sType != "cr" && sType != "par")
+                    {
+                        if (bStartLine)
+                        {
+                            sLine = sLyric + _InternalSepLines;
+                            bStartLine = false;
+                        }
+                        else
+                        {
+                            // Line continuation
+                            sLine += sLyric + _InternalSepLines;
+                        }
+                    }
+                    else if (sType == "cr" || sType == "par")
+                    {
+                        // Save current line
+                        if (sLine != "")
+                        {
+                            if (sType == "cr")
+                                lrcs += sLine + cr;
+                            else
+                                lrcs += sLine + cr + cr;
+                        }
+
+                        // Reset all
+                        bStartLine = true;
+                        sLine = string.Empty;
+                    }
+                }
+            }
+
+            // Save last line
+            if (sLine != "")
+            {
+                lrcs += sLine; // + cr;
+            }
+
+
+            // * "Oh!_la!_la_la!_vie!_en!_rose!\r\nLe!_rose!_qu'on!_nous!_pro!pose!\r\nD'avoir!_les!_quan!ti!tés!_d'choses!\r\nQui!_donnent!_en!vie!_d'autre!_chose!\r\nAie!_on!_nous!_fait!_croire!\r\nQue!_le!_bonheur!_c'est!_d'a!voir!\r\nDe!_l'avoir!_plein!_nos!_ar!moires!\r\nDérisions!_de!_nous!_dé!ri!soires!\r\ncar...!\r\nFoule!_sen!ti!men!tale!\r\nOn_a!_soif!_d'idéal!\r\nAttiré!_par!_les!_é!toiles,!_les!_voiles!\r\nQue!_des!_choses!_pas!_com!mer!ciales!\r\nFoule!_sen!ti!men!tale!\r\nIl!_faut!_voir!_comme!_on!_nous!_parle!\r\nComme!_on!_nous!_parle!\r\nIl!_se!_dé!ga!ge!\r\nDe!_ces!_cartons!_d'em!bal!lage!\r\nDes!_gens!_lavés!_hors!_d'u!sage!\r\nEt!_triste!_et!_sans_au!cun!_a!van!tage!\r\nOn!_nous!_in!flige!\r\nDes!_désirs!_qui!_nous!_af!fligent!\r\nOn!_nous!_prend!_faut!_pas!_dé!con!ner!_dès!_qu'on!_est!_né!\r\nPour!_des!_cons!_alors!_qu'on!_est!\r\nDes!_foule!_sen!ti!men!tale!\r\nOn_a!_soif!_d'idéal!\r\nAttiré!_par!_les!_é!toiles,!_les!_voiles!\r\nQue!_des!_choses!_pas!_com!mer!ciales!\r\nFoule!_sen!ti!men!tale!\r\nIl!_faut
+
+            lrcs = lrcs.Replace(_InternalSepLines + "_", " ");
+            lrcs = lrcs.Replace("_" + _InternalSepLines, " ");
+            lrcs = lrcs.Replace(_InternalSepLines + cr, cr);
+            lrcs = lrcs.Replace(" " + cr, cr);
+            lrcs = lrcs.Replace(_InternalSepLines, "*");
+
+            // Delete last sep
+            if (lrcs.Length > 0 && (lrcs.Substring(lrcs.Length - 1, 1) == "*"))
+            {
+                lrcs = lrcs.Substring(0, lrcs.Length - 1);
+            }
+
+            try
+            {
+                System.IO.File.WriteAllText(File, lrcs);
+                System.Diagnostics.Process.Start(@File);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+        #endregion export text
+
+
+        #region import text
+
+        /// <summary>
+        /// Menu: load a text file containing the melody
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuEditImportLyricsTxt_Click(object sender, EventArgs e)
+        {
+            openFileDialog.Title = "Open a text file";
+            openFileDialog.DefaultExt = "txt";
+            openFileDialog.Filter = "Txt files|*.txt|All files|*.*";
+            if (MIDIfileName != null || MIDIfileName != "")
+                openFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = openFileDialog.FileName;
+                try
+                {
+                    using (StreamReader sr = new StreamReader(fileName))
+                    {
+                        String lines = sr.ReadToEnd();
+                        LoadTextFile(lines);
+                    }
+                }
+                catch (Exception errl)
+                {
+                    Console.WriteLine("The file could not be read:");
+                    Console.WriteLine(errl.Message);
+                }
+            }
+        }
+
+      
+        /// <summary>
+        /// Use case : create from scratch, no lyrics at all 
+        /// 1. select a track with notes
+        /// 2. Loadt text file
+        /// </summary>
+        /// <param name="source"></param>
+        private void LoadTextFile(string source)
+        {
+            bool bUpdateMode = false;
+            string s;
+            string chordName = "";
+
+            // Split into peaces of words
+            source = source.Replace("\r\n", " <cr> ");
+            source = source.Replace(" <cr>  <cr> ", " <cr> <cr> ");
+            source = source.Replace("<cr> <cr>", "<par>");
+
+            // Split syllabes 
+            // go*ing => go# ing
+            source = source.Replace("*", "# ");
+
+            // Separate words by space
+            string[] stringSeparators = new string[] { " " };
+            string[] result = source.Split(stringSeparators, StringSplitOptions.None);
+            for (int i = 0; i < result.Length; i++)
+            {
+                if (result[i] == "")
+                    result[i] = "<cr>";
+            }
+
+            // Check existence of cr or par
+            for (int i = 0; i < dgView.Rows.Count - 1; i++)
+            {
+                s = dgView.Rows[i].Cells[COL_TYPE].Value.ToString();
+                if (s == "cr" || s == "par")
+                {
+                    bUpdateMode = true;
+                    break;
+                }
+            }
+
+            // Add missing lines before
+            int addl = result.Length - dgView.Rows.Count;
+            if (addl > 0)
+            {
+                for (int i = 0; i < addl; i++)
+                {
+                    dgView.Rows.Add();
+                }
+            }
+
+            // write lyrics on each line            
+            int plTicksOn = 0;
+            string plRealTime = "00:00.00";
+            int plNote = 0;
+            string plType;
+            string plElement;
+
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                s = result[i];
+
+                if (i < dgView.Rows.Count)
+                {
+                    if (s != "<cr>" && s != "<par>")
+                    {
+                        // insert TEXT
+                        plType = "text";
+
+                        if (dgView.Rows[i].Cells[COL_TICKS].Value == null)
+                        {
+                            dgView.Rows[i].Cells[COL_TICKS].Value = plTicksOn;
+                            plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
+                            dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
+                        }
+                        else
+                        {
+                            plTicksOn = 0;
+                            if (IsNumeric(dgView.Rows[i].Cells[COL_TICKS].Value.ToString()))
+                                plTicksOn = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
+                        }
+
+                        dgView.Rows[i].Cells[COL_TYPE].Value = plType;
+
+                        if (dgView.Rows[i].Cells[COL_NOTE].Value == null)
+                            dgView.Rows[i].Cells[COL_NOTE].Value = 0;
+
+                        if (s.EndsWith("#"))
+                            plElement = s.Substring(0, s.Length - 1);
+                        else
+                            plElement = s + "_";
+
+                        dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
+
+                    }
+                    else if (s == "<cr>" || s == "<par>")
+                    {
+                        if (s == "<cr>")
+                        {
+                            // insert <CR>;
+                            plType = "cr";
+                            plElement = m_SepLine;
+                        }
+                        else
+                        {
+                            plType = "par";
+                            plElement = m_SepParagraph;
+                        }
+
+                        if (dgView.Rows[i].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_TICKS].Value.ToString()))
+                        {
+                            plTicksOn = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
+                            plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
+                        }
+                        if (dgView.Rows[i].Cells[COL_NOTE].Value == null)
+                            dgView.Rows[i].Cells[COL_NOTE].Value = 0;
+
+                        if (dgView.Rows[i].Cells[COL_NOTE].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_NOTE].Value.ToString()))
+                            plNote = Convert.ToInt32(dgView.Rows[i].Cells[COL_NOTE].Value);
+
+
+                        // When we start from scratch, ie select a track with notes and add lyrics from text, there is no linefeed
+                        // So we have to unsert new rows with linefeeds
+                        // Insert new row 
+                        if (!bUpdateMode)
+                        {
+                            if (!bEditChords)
+                                dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);
+                            else
+                                dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, chordName, plNote.ToString(), plElement, plElement);
+                        }
+                        else
+                        {
+
+                            // other use case: When we want to update the lyrics, the linefeeds already exist
+                            // So we just have to update the lines
+                            // Udpdate
+
+                            dgView.Rows[i].Cells[COL_TICKS].Value = plTicksOn;
+                            dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
+                            dgView.Rows[i].Cells[COL_TYPE].Value = plType;
+                            dgView.Rows[i].Cells[COL_NOTE].Value = plNote;
+                            dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
+
+                        }
+                    }
+                }
+            }
+
+            //Load modification into local list of lyrics
+            localplLyrics = LoadModifiedLyrics();
+            if (localplLyrics != null)
+                PopulateTextBox(localplLyrics);
+
+            // Color separators
+            ColorSepRows();
+
+            // File was modified
+            FileModified();
+        }
+
+
+        #endregion import text
+
+        #endregion Text import export
+
+
+        #endregion import export lyrics
 
         #region menus
 
@@ -3458,348 +3935,7 @@ namespace Karaboss
         #endregion
 
 
-        #region Text import export
-
-        /// <summary>
-        /// Save text with all separators
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuSaveAsText_Click(object sender, EventArgs e)
-        {
-            #region select filename
-            string defExt = ".txt";
-            string fName = "New" + defExt;
-            string fPath = Path.GetDirectoryName(MIDIfileName);
-
-            string fullName; // = string.Empty;
-            string defName; // = string.Empty;
-
-            #region search name
-            if (fPath == null || fPath == "")
-            {
-                if (Directory.Exists(CreateNewMidiFile._DefaultDirectory))
-                    fPath = CreateNewMidiFile._DefaultDirectory;
-                else
-                    fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-            }
-            else
-            {
-                fName = Path.GetFileName(MIDIfileName);
-            }
-
-                                                         // Extension forced to text                       
-            string fullPath = fPath + "\\" + fName;
-            fullName = Utilities.Files.FindUniqueFileName(fullPath);            // Add (2), (3) etc.. if necessary    
-            defName = Path.GetFileNameWithoutExtension(fullName);               // Default name to propose to dialog
-
-            #endregion search name                   
-
-            string defFilter = "TEXT files (*.txt)|*.txt|All files (*.*)|*.*";
-
-            saveMidiFileDialog.Title = "Save to TEXT format";
-            saveMidiFileDialog.Filter = defFilter;
-            saveMidiFileDialog.DefaultExt = defExt;
-            saveMidiFileDialog.InitialDirectory = @fPath;
-            saveMidiFileDialog.FileName = defName;
-
-            if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
-                return;
-
-            #endregion
-
-            string FileName = saveMidiFileDialog.FileName;
-
-            SaveTextWithSep(FileName);
-        }
-
-        private void SaveTextWithSep(string File)
-        {            
-            string sLyric;
-            string sLine = string.Empty;
-            string sType;
-            object vLyric;
-            object vTime;
-            object vType;
-            string lrcs = string.Empty;
-            string cr = "\r\n";            
-
-            bool bStartLine = true;
-
-            // Save syllabe by syllabe
-            for (int i = 0; i < dgView.Rows.Count; i++)
-            {
-                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
-                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
-                vType = dgView.Rows[i].Cells[COL_TYPE].Value;
-
-                if (vTime != null && vLyric != null && vType != null)
-                {
-                    sLyric = vLyric.ToString().Trim();
-                    sType = vType.ToString().Trim();
-
-                    if (sLyric == "")
-                        sLyric = "_~~";
-
-                    if (sLyric != "" && sType != "cr" && sType != "par")
-                    {
-                        if (bStartLine)
-                        {
-                            sLine = sLyric + _InternalSepLines;
-                            bStartLine = false;
-                        }
-                        else
-                        {
-                            // Line continuation
-                            sLine += sLyric + _InternalSepLines;
-                        }
-                    }
-                    else if (sType == "cr" || sType == "par")
-                    {
-                        // Save current line
-                        if (sLine != "")
-                        {
-                            if (sType == "cr")
-                                lrcs += sLine + cr;
-                            else
-                                lrcs += sLine + cr + cr;
-                        }
-
-                        // Reset all
-                        bStartLine = true;
-                        sLine = string.Empty;
-                    }
-                }
-            }
-
-            // Save last line
-            if (sLine != "")
-            {
-                lrcs += sLine; // + cr;
-            }
-
-
-            // * "Oh!_la!_la_la!_vie!_en!_rose!\r\nLe!_rose!_qu'on!_nous!_pro!pose!\r\nD'avoir!_les!_quan!ti!tés!_d'choses!\r\nQui!_donnent!_en!vie!_d'autre!_chose!\r\nAie!_on!_nous!_fait!_croire!\r\nQue!_le!_bonheur!_c'est!_d'a!voir!\r\nDe!_l'avoir!_plein!_nos!_ar!moires!\r\nDérisions!_de!_nous!_dé!ri!soires!\r\ncar...!\r\nFoule!_sen!ti!men!tale!\r\nOn_a!_soif!_d'idéal!\r\nAttiré!_par!_les!_é!toiles,!_les!_voiles!\r\nQue!_des!_choses!_pas!_com!mer!ciales!\r\nFoule!_sen!ti!men!tale!\r\nIl!_faut!_voir!_comme!_on!_nous!_parle!\r\nComme!_on!_nous!_parle!\r\nIl!_se!_dé!ga!ge!\r\nDe!_ces!_cartons!_d'em!bal!lage!\r\nDes!_gens!_lavés!_hors!_d'u!sage!\r\nEt!_triste!_et!_sans_au!cun!_a!van!tage!\r\nOn!_nous!_in!flige!\r\nDes!_désirs!_qui!_nous!_af!fligent!\r\nOn!_nous!_prend!_faut!_pas!_dé!con!ner!_dès!_qu'on!_est!_né!\r\nPour!_des!_cons!_alors!_qu'on!_est!\r\nDes!_foule!_sen!ti!men!tale!\r\nOn_a!_soif!_d'idéal!\r\nAttiré!_par!_les!_é!toiles,!_les!_voiles!\r\nQue!_des!_choses!_pas!_com!mer!ciales!\r\nFoule!_sen!ti!men!tale!\r\nIl!_faut
-
-            lrcs = lrcs.Replace(_InternalSepLines + "_", " ");
-            lrcs = lrcs.Replace("_" + _InternalSepLines, " ");
-            lrcs = lrcs.Replace(_InternalSepLines + cr, cr);
-            lrcs = lrcs.Replace(" " + cr, cr);
-            lrcs = lrcs.Replace(_InternalSepLines, "*");
-
-            // Delete last sep
-            if (lrcs.Length > 0 && (lrcs.Substring(lrcs.Length - 1, 1) == "*"))
-            {
-                lrcs = lrcs.Substring(0, lrcs.Length - 1);
-            }
-
-            try
-            {
-                System.IO.File.WriteAllText(File, lrcs);
-                System.Diagnostics.Process.Start(@File);
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Menu: load a text file containing the melody
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuEditLoadMelodyText_Click(object sender, EventArgs e)
-        {
-            openFileDialog.Title = "Open a text file";
-            openFileDialog.DefaultExt = "txt";
-            openFileDialog.Filter = "Txt files|*.txt|All files|*.*";
-            if (MIDIfileName != null || MIDIfileName != "")
-                openFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string fileName = openFileDialog.FileName;
-                try
-                {
-                    using (StreamReader sr = new StreamReader(fileName))
-                    {
-                        String lines = sr.ReadToEnd();
-                        LoadTextFile(lines);
-                    }
-                }
-                catch (Exception errl)
-                {
-                    Console.WriteLine("The file could not be read:");
-                    Console.WriteLine(errl.Message);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Use case : create from scratch, no lyrics at all 
-        /// 1. select a track with notes
-        /// 2. Loadt text file
-        /// </summary>
-        /// <param name="source"></param>
-        private void LoadTextFile(string source)
-        {
-            bool bUpdateMode = false;
-            string s;
-            string chordName = "";
-
-            // Split into peaces of words
-            source = source.Replace("\r\n", " <cr> ");
-            source = source.Replace(" <cr>  <cr> ", " <cr> <cr> ");
-            source = source.Replace("<cr> <cr>", "<par>");
-
-            // Split syllabes 
-            // go*ing => go# ing
-            source = source.Replace("*", "# ");
-
-            // Separate words by space
-            string[] stringSeparators = new string[] { " " };
-            string[] result = source.Split(stringSeparators, StringSplitOptions.None);
-            for (int i = 0; i < result.Length; i++)
-            {
-                if (result[i] == "")
-                    result[i] = "<cr>";
-            }
-
-            // Check existence of cr or par
-            for (int i = 0; i < dgView.Rows.Count - 1; i++)
-            {
-                s = dgView.Rows[i].Cells[COL_TYPE].Value.ToString();
-                if (s == "cr" || s == "par")
-                {
-                    bUpdateMode = true;
-                    break;
-                }
-            }
-
-            // Add missing lines before
-            int addl = result.Length - dgView.Rows.Count;
-            if (addl > 0)
-            {
-                for (int i = 0; i < addl; i++)
-                {
-                    dgView.Rows.Add();
-                }
-            }
-
-            // write lyrics on each line            
-            int plTicksOn = 0;
-            string plRealTime = "00:00.00";
-            int plNote = 0;
-            string plType;
-            string plElement;
-
-
-            for (int i = 0; i < result.Length; i++)
-            {
-                s = result[i];
-
-                if (i < dgView.Rows.Count)
-                {
-                    if (s != "<cr>" && s != "<par>")
-                    {
-                        // insert TEXT
-                        plType = "text";
-
-                        if (dgView.Rows[i].Cells[COL_TICKS].Value == null)
-                        {
-                            dgView.Rows[i].Cells[COL_TICKS].Value = plTicksOn;
-                            plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
-                            dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
-                        }
-                        else
-                        {
-                            plTicksOn = 0;
-                            if (IsNumeric(dgView.Rows[i].Cells[COL_TICKS].Value.ToString()))
-                                plTicksOn = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
-                        }
-
-                        dgView.Rows[i].Cells[COL_TYPE].Value = plType;
-
-                        if (dgView.Rows[i].Cells[COL_NOTE].Value == null)
-                            dgView.Rows[i].Cells[COL_NOTE].Value = 0;
-
-                        if (s.EndsWith("#"))
-                            plElement = s.Substring(0, s.Length - 1);
-                        else
-                            plElement = s + "_";
-
-                        dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
-
-                    }
-                    else if (s == "<cr>" || s == "<par>")
-                    {
-                        if (s == "<cr>")
-                        {
-                            // insert <CR>;
-                            plType = "cr";
-                            plElement = m_SepLine;
-                        }
-                        else
-                        {
-                            plType = "par";
-                            plElement = m_SepParagraph;
-                        }
-
-                        if (dgView.Rows[i].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_TICKS].Value.ToString()))
-                        {
-                            plTicksOn = Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value);
-                            plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
-                        }
-                        if (dgView.Rows[i].Cells[COL_NOTE].Value == null)
-                            dgView.Rows[i].Cells[COL_NOTE].Value = 0;
-
-                        if (dgView.Rows[i].Cells[COL_NOTE].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_NOTE].Value.ToString()))
-                            plNote = Convert.ToInt32(dgView.Rows[i].Cells[COL_NOTE].Value);
-
-
-                        // When we start from scratch, ie select a track with notes and add lyrics from text, there is no linefeed
-                        // So we have to unsert new rows with linefeeds
-                        // Insert new row 
-                        if (!bUpdateMode)
-                        {
-                            if (!bEditChords)
-                                dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, plNote.ToString(), plElement, plElement);
-                            else
-                                dgView.Rows.Insert(i, plTicksOn, plRealTime, plType, chordName, plNote.ToString(), plElement, plElement);
-                        }
-                        else
-                        {
-
-                            // other use case: When we want to update the lyrics, the linefeeds already exist
-                            // So we just have to update the lines
-                            // Udpdate
-
-                            dgView.Rows[i].Cells[COL_TICKS].Value = plTicksOn;
-                            dgView.Rows[i].Cells[COL_TIME].Value = plRealTime;
-                            dgView.Rows[i].Cells[COL_TYPE].Value = plType;
-                            dgView.Rows[i].Cells[COL_NOTE].Value = plNote;
-                            dgView.Rows[i].Cells[COL_TEXT].Value = plElement;
-
-                        }
-                    }
-                }
-            }
-
-            //Load modification into local list of lyrics
-            localplLyrics = LoadModifiedLyrics();
-            if (localplLyrics != null)
-                PopulateTextBox(localplLyrics);
-
-            // Color separators
-            ColorSepRows();
-
-            // File was modified
-            FileModified();
-        }
-
-        #endregion Text import export
+       
 
 
         #region Tracks
@@ -3936,7 +4072,9 @@ namespace Karaboss
             }
         }
 
+
         #endregion Text
 
+       
     }
 }
