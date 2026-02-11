@@ -145,6 +145,9 @@
   <data name="&gt;&gt;mnuFileSaveAs.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;mnuEditLoadTrack.Name" xml:space="preserve">
+    <value>mnuEditLoadTrack</value>
+  </data>
   <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -170,15 +173,8 @@
   <data name="btnPlay.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleRight</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="tabPage1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
   <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
     <value>107, 22</value>
-  </data>
-  <data name="btnSaveTags.Text" xml:space="preserve">
-    <value>Save</value>
   </data>
   <data name="dType.HeaderText" xml:space="preserve">
     <value>Type</value>
@@ -195,8 +191,8 @@
   <data name="&gt;&gt;mnuEditSep1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="splitContainer1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1084, 460</value>
+  <data name="BtnFontPlus.Text" xml:space="preserve">
+    <value>A+</value>
   </data>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
     <value>180, 22</value>
@@ -210,12 +206,16 @@
   <data name="&gt;&gt;btnInsertText.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="splitContainer1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1084, 460</value>
+  </data>
   <data name="txtResult.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
   </data>
   <data name="btnSpaceLeft.Location" type="System.Drawing.Point, System.Drawing">
     <value>149, 87</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="btnSave.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
     <value>TextBeforeImage</value>
   </data>
@@ -240,9 +240,6 @@
   <data name="&gt;&gt;mnuEditLoadTrack.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="lblSelectTrack.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 8</value>
-  </data>
   <data name="btnSaveTags.Location" type="System.Drawing.Point, System.Drawing">
     <value>207, 456</value>
   </data>
@@ -251,6 +248,9 @@
   </data>
   <data name="label12.TabIndex" type="System.Int32, mscorlib">
     <value>26</value>
+  </data>
+  <data name="BtnFontMoins.Size" type="System.Drawing.Size, System.Drawing">
+    <value>29, 23</value>
   </data>
   <data name="txtWTag.ToolTip" xml:space="preserve">
     <value />
@@ -266,6 +266,9 @@
   </data>
   <data name="&gt;&gt;mnuFileExportLyrics.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="dRealTime.HeaderText" xml:space="preserve">
+    <value>Time</value>
   </data>
   <data name="&gt;&gt;splitContainer1.Panel1.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -285,8 +288,8 @@
   <data name="&gt;&gt;BtnFontMoins.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="btnInsertText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 87</value>
+  <data name="tabPage2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
   </data>
   <data name="&gt;&gt;label11.Parent" xml:space="preserve">
     <value>tabPage2</value>
@@ -315,8 +318,8 @@
   <data name="&gt;&gt;mnuEditImportLyricsKok.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="btnInsertParagraph.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+  <data name="btnInsertText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 87</value>
   </data>
   <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
     <value>14, 57</value>
@@ -335,6 +338,9 @@
   </data>
   <data name="optFormatLyrics.Text" xml:space="preserve">
     <value>Format Lyrics</value>
+  </data>
+  <data name="tabPage2.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
   </data>
   <data name="&gt;&gt;mnuEditImportLyrics.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -357,9 +363,6 @@
   <data name="tabPage2.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="tabControl1.ToolTip" xml:space="preserve">
-    <value />
-  </data>
   <data name="&gt;&gt;label10.Name" xml:space="preserve">
     <value>label10</value>
   </data>
@@ -372,14 +375,17 @@
   <data name="&gt;&gt;dTime.Name" xml:space="preserve">
     <value>dTime</value>
   </data>
+  <data name="&gt;&gt;txtKTag.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
   <data name="optFormatLyrics.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="&gt;&gt;txtVTag.Parent" xml:space="preserve">
     <value>tabPage2</value>
   </data>
-  <data name="tabControl1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1098, 492</value>
+  <data name="dType.ToolTipText" xml:space="preserve">
+    <value>Type of lyric (cr or text)</value>
   </data>
   <data name="txtResult.Text" xml:space="preserve">
     <value />
@@ -405,8 +411,8 @@
   <data name="dgView.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;tabPage2.Name" xml:space="preserve">
-    <value>tabPage2</value>
+  <data name="label10.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
   </data>
   <data name="lblSelectTrack.Text" xml:space="preserve">
     <value>Select the track containing the melody</value>
@@ -465,9 +471,6 @@
   <data name="label12.Location" type="System.Drawing.Point, System.Drawing">
     <value>14, 312</value>
   </data>
-  <data name="label10.Text" xml:space="preserve">
-    <value>@K Type of file / copyright information. Generally MIDI KARAOKE FILE</value>
-  </data>
   <data name="optFormatText.ToolTip" xml:space="preserve">
     <value>Set format 'text' for Lyrics </value>
   </data>
@@ -479,6 +482,9 @@
   </data>
   <data name="&gt;&gt;mnuEdit.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="pnlMenus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1098, 30</value>
   </data>
   <data name="label10.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -501,8 +507,8 @@
   <data name="txtWTag.Multiline" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="&gt;&gt;mnuEditLoadTrack.Name" xml:space="preserve">
-    <value>mnuEditLoadTrack</value>
+  <data name="label13.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="MnuFileExportLyricsKok.Size" type="System.Drawing.Size, System.Drawing">
     <value>180, 22</value>
@@ -531,8 +537,8 @@
   <data name="&gt;&gt;btnDeleteAllLyrics.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="BtnFontMoins.Size" type="System.Drawing.Size, System.Drawing">
-    <value>29, 23</value>
+  <data name="label14.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
   </data>
   <data name="&gt;&gt;label14.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -540,8 +546,8 @@
   <data name="&gt;&gt;tabPage2.Parent" xml:space="preserve">
     <value>tabControl1</value>
   </data>
-  <data name="label13.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="&gt;&gt;btnSpaceRight.Parent" xml:space="preserve">
+    <value>pnlTop</value>
   </data>
   <data name="pnlMenus.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 24</value>
@@ -597,8 +603,8 @@
   <data name="&gt;&gt;splitContainer1.Panel1.Type" xml:space="preserve">
     <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;label12.Name" xml:space="preserve">
-    <value>label12</value>
+  <data name="btnDeleteAllLyrics.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="&gt;&gt;label15.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -666,17 +672,17 @@
   <data name="&gt;&gt;dgView.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;btnSpaceRight.Parent" xml:space="preserve">
-    <value>pnlTop</value>
+  <data name="txtWTag.Size" type="System.Drawing.Size, System.Drawing">
+    <value>371, 39</value>
   </data>
-  <data name="label15.Location" type="System.Drawing.Point, System.Drawing">
-    <value>14, 398</value>
+  <data name="btnInsertParagraph.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
   </data>
   <data name="&gt;&gt;saveMidiFileDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="dType.ToolTipText" xml:space="preserve">
-    <value>Type of lyric (cr or text)</value>
+  <data name="&gt;&gt;txtResult.Name" xml:space="preserve">
+    <value>txtResult</value>
   </data>
   <data name="&gt;&gt;txtVTag.Name" xml:space="preserve">
     <value>txtVTag</value>
@@ -741,8 +747,8 @@
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>6, 13</value>
   </data>
-  <data name="&gt;&gt;txtResult.Name" xml:space="preserve">
-    <value>txtResult</value>
+  <data name="&gt;&gt;dNote.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="mnuHelp.Text" xml:space="preserve">
     <value>&amp;Help</value>
@@ -777,6 +783,9 @@
   <data name="BtnFontPlus.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 23</value>
   </data>
+  <data name="pnlMenus.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
   <data name="&gt;&gt;mnuEditImportLyricsTxt.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -807,8 +816,8 @@
   <data name="btnInsertCr.ToolTip" xml:space="preserve">
     <value>Insert a Line break</value>
   </data>
-  <data name="&gt;&gt;tabPage2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;txtLTag.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label12.ZOrder" xml:space="preserve">
     <value>6</value>
@@ -816,8 +825,8 @@
   <data name="mnuFileExportLyricsTxt.Text" xml:space="preserve">
     <value>Text format</value>
   </data>
-  <data name="pnlMenus.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1098, 30</value>
+  <data name="lblSelectTrack.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 8</value>
   </data>
   <data name="BtnFontMoins.Text" xml:space="preserve">
     <value>A-</value>
@@ -831,8 +840,8 @@
   <data name="MnuFileExportLyricsKok.Text" xml:space="preserve">
     <value>Kok format</value>
   </data>
-  <data name="dRealTime.HeaderText" xml:space="preserve">
-    <value>Time</value>
+  <data name="splitContainer1.SplitterDistance" type="System.Int32, mscorlib">
+    <value>513</value>
   </data>
   <data name="btnDeleteAllLyrics.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
@@ -915,8 +924,8 @@
   <data name="&gt;&gt;txtTTag.Parent" xml:space="preserve">
     <value>tabPage2</value>
   </data>
-  <data name="&gt;&gt;dNote.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="tabControl1.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
     <value>menuStrip1</value>
@@ -929,6 +938,9 @@
   </data>
   <data name="lblSelectTrack.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
+  </data>
+  <data name="&gt;&gt;txtKTag.Parent" xml:space="preserve">
+    <value>tabPage2</value>
   </data>
   <data name="mnuEditLoadTrack.ToolTipText" xml:space="preserve">
     <value>Load a track containing notes</value>
@@ -945,20 +957,17 @@
   <data name="BtnFontPlus.Location" type="System.Drawing.Point, System.Drawing">
     <value>201, 87</value>
   </data>
-  <data name="&gt;&gt;txtKTag.Parent" xml:space="preserve">
-    <value>tabPage2</value>
+  <data name="label10.Text" xml:space="preserve">
+    <value>@K Type of file / copyright information. Generally MIDI KARAOKE FILE</value>
   </data>
   <data name="&gt;&gt;label13.Parent" xml:space="preserve">
     <value>tabPage2</value>
   </data>
-  <data name="label10.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
-  </data>
   <data name="&gt;&gt;txtITag.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="pnlMenus.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
+  <data name="&gt;&gt;tabPage2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
     <value>180, 22</value>
@@ -993,14 +1002,17 @@
   <data name="lblSelectTrack.ToolTip" xml:space="preserve">
     <value />
   </data>
+  <data name="&gt;&gt;tabPage2.Name" xml:space="preserve">
+    <value>tabPage2</value>
+  </data>
   <data name="&gt;&gt;label10.Parent" xml:space="preserve">
     <value>tabPage2</value>
   </data>
   <data name="btnPlay.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
     <value>TextBeforeImage</value>
   </data>
-  <data name="tabPage2.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+  <data name="btnSaveTags.Text" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Karaboss - Edit Words</value>
@@ -1125,17 +1137,14 @@
   <data name="&gt;&gt;pnlTop.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="label14.TabIndex" type="System.Int32, mscorlib">
-    <value>24</value>
-  </data>
   <data name="cbSelectTrack.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
   <data name="&gt;&gt;btnView.ZOrder" xml:space="preserve">
     <value>13</value>
   </data>
-  <data name="tabPage2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1090, 466</value>
+  <data name="label15.Location" type="System.Drawing.Point, System.Drawing">
+    <value>14, 398</value>
   </data>
   <data name="label12.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
@@ -1161,8 +1170,8 @@
   <data name="btnDelete.Text" xml:space="preserve">
     <value>&amp;Delete line</value>
   </data>
-  <data name="&gt;&gt;txtKTag.ZOrder" xml:space="preserve">
-    <value>12</value>
+  <data name="label13.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
   </data>
   <data name="&gt;&gt;label14.Name" xml:space="preserve">
     <value>label14</value>
@@ -1230,11 +1239,8 @@
   <data name="&gt;&gt;btnDeleteAllLyrics.Name" xml:space="preserve">
     <value>btnDeleteAllLyrics</value>
   </data>
-  <data name="&gt;&gt;txtLTag.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnDelete.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+  <data name="tabPage1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
   </data>
   <data name="&gt;&gt;label10.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1248,9 +1254,6 @@
   <data name="btnSave.Location" type="System.Drawing.Point, System.Drawing">
     <value>248, 3</value>
   </data>
-  <data name="BtnFontPlus.Text" xml:space="preserve">
-    <value>A+</value>
-  </data>
   <data name="txtResult.ToolTip" xml:space="preserve">
     <value />
   </data>
@@ -1263,9 +1266,6 @@
   <data name="txtKTag.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="&gt;&gt;label15.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="label10.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -1277,6 +1277,9 @@
   </data>
   <data name="txtTTag.Multiline" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="tabControl1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1098, 492</value>
   </data>
   <data name="&gt;&gt;txtLTag.ZOrder" xml:space="preserve">
     <value>11</value>
@@ -1292,6 +1295,9 @@
   </data>
   <data name="$this.ToolTip" xml:space="preserve">
     <value />
+  </data>
+  <data name="btnDelete.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
   </data>
   <data name="btnSpaceLeft.ToolTip" xml:space="preserve">
     <value>Add a space left</value>
@@ -1331,9 +1337,6 @@
   </data>
   <data name="btnSpaceLeft.Text" xml:space="preserve">
     <value>_T</value>
-  </data>
-  <data name="label13.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
   </data>
   <data name="&gt;&gt;dgView.Parent" xml:space="preserve">
     <value>splitContainer1.Panel1</value>
@@ -1377,8 +1380,8 @@
   <data name="&gt;&gt;label13.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="btnDeleteAllLyrics.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+  <data name="&gt;&gt;btnSave.ZOrder" xml:space="preserve">
+    <value>14</value>
   </data>
   <data name="mnuEditImportLyricsKok.Text" xml:space="preserve">
     <value>Kok format</value>
@@ -1461,9 +1464,6 @@
   <data name="label13.Location" type="System.Drawing.Point, System.Drawing">
     <value>14, 160</value>
   </data>
-  <data name="tabPage2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
   <data name="&gt;&gt;mnuFileExportLyrics.Name" xml:space="preserve">
     <value>mnuFileExportLyrics</value>
   </data>
@@ -1482,6 +1482,9 @@
   <data name="btnSave.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleRight</value>
   </data>
+  <data name="&gt;&gt;txtWTag.Name" xml:space="preserve">
+    <value>txtWTag</value>
+  </data>
   <data name="mnuEditLoadTrack.Size" type="System.Drawing.Size, System.Drawing">
     <value>180, 22</value>
   </data>
@@ -1490,6 +1493,9 @@
   </data>
   <data name="label12.ToolTip" xml:space="preserve">
     <value />
+  </data>
+  <data name="tabPage2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1090, 466</value>
   </data>
   <data name="&gt;&gt;pnlMenus.Type" xml:space="preserve">
     <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1539,6 +1545,9 @@
   <data name="&gt;&gt;cbSelectTrack.Type" xml:space="preserve">
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;label12.Name" xml:space="preserve">
+    <value>label12</value>
+  </data>
   <data name="&gt;&gt;pnlBottom.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
@@ -1569,14 +1578,8 @@
   <data name="optFormatLyrics.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="&gt;&gt;btnSave.ZOrder" xml:space="preserve">
-    <value>14</value>
-  </data>
   <data name="&gt;&gt;txtVTag.ZOrder" xml:space="preserve">
     <value>9</value>
-  </data>
-  <data name="splitContainer1.SplitterDistance" type="System.Int32, mscorlib">
-    <value>513</value>
   </data>
   <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
     <value>39, 20</value>
@@ -1623,8 +1626,8 @@
   <data name="&gt;&gt;pnlMenus.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;txtWTag.Name" xml:space="preserve">
-    <value>txtWTag</value>
+  <data name="&gt;&gt;label15.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="pnlMenus.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
@@ -1686,9 +1689,6 @@
   <data name="&gt;&gt;dText.Name" xml:space="preserve">
     <value>dText</value>
   </data>
-  <data name="txtWTag.Size" type="System.Drawing.Size, System.Drawing">
-    <value>371, 39</value>
-  </data>
   <data name="btnPlay.Text" xml:space="preserve">
     <value>&amp;Play from cursor</value>
   </data>
@@ -1724,9 +1724,6 @@
   </data>
   <metadata name="dNote.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
-  </metadata>
-  <metadata name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>fr</value>
   </metadata>
   <metadata name="dRealTime.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

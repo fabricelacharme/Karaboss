@@ -246,11 +246,20 @@
   <data name="mnuFileSaveAs.Text" xml:space="preserve">
     <value>Enregistrer &amp;sous</value>
   </data>
+  <data name="mnuFileExportLyricsLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 22</value>
+  </data>
   <data name="mnuFileExportLyricsLrc.Text" xml:space="preserve">
     <value>Format LRC</value>
   </data>
+  <data name="mnuFileExportLyricsTxt.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 22</value>
+  </data>
   <data name="mnuFileExportLyricsTxt.Text" xml:space="preserve">
     <value>Format texte</value>
+  </data>
+  <data name="MnuFileExportLyricsKok.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 22</value>
   </data>
   <data name="MnuFileExportLyricsKok.Text" xml:space="preserve">
     <value>Format KOK</value>
@@ -279,11 +288,20 @@
   <data name="mnuEditSep1.Size" type="System.Drawing.Size, System.Drawing">
     <value>179, 6</value>
   </data>
+  <data name="mnuEditImportLyricsLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>142, 22</value>
+  </data>
   <data name="mnuEditImportLyricsLrc.Text" xml:space="preserve">
     <value>Format LRC</value>
   </data>
+  <data name="mnuEditImportLyricsTxt.Size" type="System.Drawing.Size, System.Drawing">
+    <value>142, 22</value>
+  </data>
   <data name="mnuEditImportLyricsTxt.Text" xml:space="preserve">
     <value>Format Texte</value>
+  </data>
+  <data name="mnuEditImportLyricsKok.Size" type="System.Drawing.Size, System.Drawing">
+    <value>142, 22</value>
   </data>
   <data name="mnuEditImportLyricsKok.Text" xml:space="preserve">
     <value>Format KOK</value>
