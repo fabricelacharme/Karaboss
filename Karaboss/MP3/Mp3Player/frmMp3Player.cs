@@ -3278,6 +3278,13 @@ namespace Karaboss.Mp3
             {
                 txtTitle.Text = Player.Tag.Title;
                 txtAlbum.Text = Player.Tag.Album;
+                
+                if (Player.Tag.AlbumArtists.Count() > 0)
+                {
+                    txtArtist.Text = Player.Tag.AlbumArtists[0].ToString();
+
+                }
+
                 if (Player.Tag.Performers.Count() > 0)
                 {
                     txtArtist.Text = Player.Tag.Performers[0].ToString();
@@ -3918,7 +3925,10 @@ namespace Karaboss.Mp3
                     {
 
                         lyric = dgView.Rows[i].Cells[COL_TEXT].Value.ToString();
+                        
+                        lyric = lyric.Replace(m_SepParagraph, "\n\n");
                         lyric = lyric.Replace(m_SepLine, "\n");
+                        
                         lyric = lyric.Replace("_", " ");
                         Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i].Text = lyric;
                     }
@@ -4398,6 +4408,7 @@ namespace Karaboss.Mp3
                 {
                     // Put "/" everywhere
                     text = SynchedLyrics.Text[i].Text;
+                    text = text.Replace("\n\n", m_SepParagraph);
                     text = text.Replace("\r\n", m_SepLine);
                     text = text.Replace("\r", m_SepLine);
                     text = text.Replace("\n", m_SepLine);

@@ -99,8 +99,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
             string lrcFile;
 
             if (SyncLyricsFrame != null && SyncLyricsFrame.Text.Count() > 0)
-            {
-                //m_mp3lyricstype = Mp3LyricsTypes.LyricsWithTimeStamps;
+            {                
                 return Mp3LyricsTypes.LyricsWithTimeStamps;
             }
 
@@ -186,7 +185,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
 
         /// <summary>
-        /// Export lyrics issued form a LRC File
+        /// Export lyrics issued form a text File
         /// </summary>
         /// <param name="SyncLyrics"></param>
         public static void ExportSyncLyricsToText(List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics)
@@ -247,7 +246,9 @@ namespace Karaboss.Mp3.Mp3Lyrics
             string lyric;
             long time;
             keffect.KaraokeEffect.kSyncText sct;
-            bool bNewLine = false;
+            
+            bool bNewLine = false;            
+
             List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
             List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
 
@@ -272,18 +273,19 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 {
                     lyric = SyncLyricsFrame.Text[i].Text;
                     time = SyncLyricsFrame.Text[i].Time;
-                    bNewLine = false;
+                    bNewLine = false;                    
 
                     if (lyric.Trim() != "")
                     {
                         // Search for new lines
                         if (lyric.StartsWith("\r") || lyric.StartsWith("\n"))
                         {
-                            lyric = lyric.Substring(1);
+                            //lyric = lyric.Substring(1);
+                            lyric = lyric.TrimStart(new char[] { '\r', '\n' });
                             bNewLine = true;
-                        }
 
-                        if (lyric.EndsWith("\r") || lyric.EndsWith("\n"))
+                        }
+                        else if (lyric.EndsWith("\r") || lyric.EndsWith("\n"))
                         {
                             lyric = lyric.Substring(0, lyric.Length - 1);
                             bNewLine = true;
@@ -291,16 +293,23 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     }
 
                     sct = new keffect.KaraokeEffect.kSyncText(time, lyric);
+
+                    
                     if (bNewLine)
                     {
+                        // New line: add line to list of lines, and create a new line
+
+                        // previous line
                         if (SyncLine.Count > 0)
                             SyncLyrics.Add(SyncLine);
-                        
+
+                        // new line
                         SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
                         SyncLine.Add(sct);
                     }
                     else
                     {
+                        // No new line, add to current line
                         SyncLine.Add(sct);
                     }
                 }
